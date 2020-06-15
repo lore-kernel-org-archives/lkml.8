@@ -6,67 +6,94 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C43C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2C3207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99E420679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbgFOP6r (ORCPT
+        id S1730539AbgFOP6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:58:47 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47831 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727785AbgFOP6q (ORCPT
+        Mon, 15 Jun 2020 11:58:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgFOP6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:58:46 -0400
-Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 05FFweKd027351
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 11:58:40 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id D9BEA42026D; Mon, 15 Jun 2020 11:58:39 -0400 (EDT)
-Date:   Mon, 15 Jun 2020 11:58:39 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     linux-kernel@vger.kernel.org, inux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org,
-        "ksummit-discuss@lists.linuxfoundation.org" 
-        <ksummit-discuss@lists.linuxfoundation.org>
-Subject: Maintainers / Kernel Summit 2020 submissions
-Message-ID: <20200615155839.GF2863913@mit.edu>
+        Mon, 15 Jun 2020 11:58:49 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D245C061A0E;
+        Mon, 15 Jun 2020 08:58:49 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jkrVW-0006KP-C2; Mon, 15 Jun 2020 17:58:46 +0200
+Date:   Mon, 15 Jun 2020 17:58:46 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Stephen Berman <stephen.berman@gmx.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200615155846.nd5n32qggusakxl7@linutronix.de>
+References: <87tuzjcovq.fsf@gmx.net>
+ <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
+ <87imfyh6yx.fsf@gmx.net>
+ <87wo4dligz.fsf@gmx.net>
+ <20200612110122.jossn5zrktcvpbpm@linutronix.de>
+ <87tuzdrgm5.fsf@gmx.net>
+ <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
+ <874krcsquv.fsf@gmx.net>
+ <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
+ <87tuzcqqul.fsf@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <87tuzcqqul.fsf@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far, we have received 5 techinical topic submissions for the Kernel
-Summit; thanks to those who have submitted.  If you have some
-additional ideas of technical topics you'd like to discuss at the
-Kernel Summit, please submit them this week.  For details on how to
-proposal a topic for the Kernel Summit, please see [1].
+On 2020-06-15 17:41:06 [+0200], Stephen Berman wrote:
+> > If you do this "t" then there should be a lot of output on your console.
+> > If you do this from an xterm then you can see the output after typing
+> > "dmesg". The output should appear also in your system log.
+> 
+> Ah, ok, I do see it in the log, it looks basically the same as the call
+> trace I posted upthread.  I wonder why there was no such output in the
+> console, could there be some setting that suppresses it even though
+> /proc/sys/kernel/sysrq has `1'?
 
-[1] https://lore.kernel.org/r/20200515163956.GA2158595@mit.edu
+You have ignore_loglevel soo everything should appear on your console.
+The is true for your tty / ctrl+alt+f1 but your xterm shell.
 
-We have not, so far, gotten any submissions for the Maintainer's
-Summit.  It's unclear whether this is because people have been
-distracted with issues relating to the pandemic situation, or whether
-things have been going swimingly from a process perspective, or if
-people are just not as motivated to suggest topics if they can't
-discuss them in a face-to-face setting as opposed to a virtual setting
----- or some combination of all of the above.
+> There were in fact 99 "Start .* acpi_ev_notify_dispatch" messages and 98
+> "End .* acpi_ev_notify_dispatch" messages.  Here's the last of them
+> before I rebooted:
+> 
+> Jun 15 08:58:25 strobe-jhalfs kernel: [  193.315014] acpi_os_execute(1109) Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a66e0 <ffff8d7aabb38480>
+> Jun 15 08:58:25 strobe-jhalfs kernel: [  193.319929] acpi_os_execute_deferred_notify(853) End   ffff8d7aa8758d00 acpi_ev_notify_dispatch+0x0/0x55(ffff8d7aa84e7eb0)
+> Jun 15 08:58:25 strobe-jhalfs kernel: [  193.321242] acpi_os_execute_deferred_notify(851) Start ffff8d7aa8758a80 acpi_ev_notify_dispatch+0x0/0x55(ffff8d7aa84e70a0)
+> Jun 15 08:58:26 strobe-jhalfs kernel: [  194.339017] acpi_os_execute(1109) Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a6730 <ffff8d7aabb384c0>
+> Jun 15 08:58:27 strobe-jhalfs kernel: [  195.363005] acpi_os_execute(1109) Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a6780 <ffff8d7aabb38500>
+> Jun 15 08:58:27 strobe-jhalfs kernel: [  195.367978] acpi_os_execute_deferred_notify(853) End   ffff8d7aa8758a80 acpi_ev_notify_dispatch+0x0/0x55(ffff8d7aa84e70a0)
+> Jun 15 08:58:27 strobe-jhalfs kernel: [  195.369234] acpi_os_execute_deferred_notify(851) Start ffff8d7aa8758240 acpi_ev_notify_dispatch+0x0/0x55(ffff8d7aa84e7a00)
+> Jun 15 08:58:28 strobe-jhalfs kernel: [  196.387017] acpi_os_execute(1109) Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a68c0 <ffff8d7aabb38540>
+> Jun 15 08:58:28 strobe-jhalfs kernel: [  196.388508] acpi_os_execute_deferred_notify(853) End   ffff8d7aa8758240 acpi_ev_notify_dispatch+0x0/0x55(ffff8d7aa84e7a00)
+> Jun 15 08:58:28 strobe-jhalfs kernel: [  196.390128] acpi_os_execute_deferred_notify(851) Start ffff8d7aa8758b80 acpi_ev_notify_dispatch+0x0/0x55(ffff8d7aa84e7460)
+> Jun 15 08:58:29 strobe-jhalfs kernel: [  197.208714] wlan1: deauthenticating from 7c:ff:4d:08:df:22 by local choice (Reason: 3=DEAUTH_LEAVING)
+> Jun 15 08:58:29 strobe-jhalfs kernel: [  197.232214] ip (4614) used greatest stack depth: 11272 bytes left
+> Jun 15 08:58:29 strobe-jhalfs kernel: Kernel logging (proc) stopped.
+> Jun 15 08:58:29 strobe-jhalfs kernel: Kernel log daemon terminating.
 
-If you do have some ideas for things that you think are worth the
-attention of a Maintainer's Summit this year, please kindly submit
-them this week.  (Again, please see [1] for submission instructions.)
-If we do not get sufficient submissions, we will need to consider
-whether or not it makes sense to hold a Maintainer's Summit this year.
+Okay. So there is "Adding" of four events/work items in total, each
+almost every second.
+Processing of one work-item took two seconds, the other one took a
+second. These events are "old" so I don't see the "adding" line for the
+Start/End.
+You could look in the log for ffff8d7aa8758a80 to seen when it was
+enqueued but it feels like ACPI enqueues more events then it is capable
+of processing.
 
-Thanks,
+> Steve Berman
 
-					- Ted
+Sebastian
