@@ -2,177 +2,201 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58780C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71DAF20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0A620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXVFNnwf"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fLVmanDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgFOASj (ORCPT
+        id S1728077AbgFOASt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 20:18:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727954AbgFOASi (ORCPT
+        Sun, 14 Jun 2020 20:18:49 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:37671 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727954AbgFOASs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 20:18:38 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AC5C05BD43;
-        Sun, 14 Jun 2020 17:18:37 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id s23so7058421pfh.7;
-        Sun, 14 Jun 2020 17:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=HeRg0Ac+mHDReRJhAPUw4er+UUsg4sIRY6elmlIlPbo=;
-        b=fXVFNnwf+iGDNV7IsoMtvEX9DL1qJ+bNadA54Zz4PjaHKiL91JukVdX8wXL858nj3k
-         tCdcNS070Xkn9xigN3eqRJt2O8QYTrnhpK7MGCkclhW19NajZt3bRyXrWUDneI344kEI
-         EVZa66/fri3drEeFXPjeFQhhVV8Zl47e+VmI7ZhuXku/xB7RXSJEQ4lQOqaunHEnl9r8
-         ZjShz2mO5jxOsQFooUzDMO72Ng5oaaP/4DDAo2UUKKOgq+piSvOWEbojKcz41EQ4qn8l
-         pMeYEbcSw9bH5FEBXnIR7uzOtiYRtJxRTiOKftK+qt5MoskHP4nB8u5d8KYglRQFrGtt
-         t1iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=HeRg0Ac+mHDReRJhAPUw4er+UUsg4sIRY6elmlIlPbo=;
-        b=qW/gshSZ8aylGcdaON6le4vHnY0iGN34sQp8ZSTelA9LVUIs1hwdya805l0IjiOaJD
-         NoveAES0nOF/INot6lz4mj9TXQUkceca5r5Rsp47ZGJzevh+tDdUh3dhIeGhN1a2xdGd
-         Iwh2OMTJBO/ODbUTJt/c3reE9bBO1qJd+trozpyezuOcL2pmud/cegckkWs2bvSkCt9x
-         /HghlJyyka+YJojQtl9BCbDAl9RE5cdBbHxL2WJMUO2uB9WkwQQ3YJLJC5ufRBK9SR5Q
-         kdM/xxmqUA0K/OF1tQG2gwkgJb5xFxXzmOVkLOjNmGpGnYIh7H3LHYcZhEJOWHxtrhfO
-         cYdA==
-X-Gm-Message-State: AOAM531hiXbjgrx5RFEeonpmv3C9GQBLBzXjq2Ql9QN9lpWXIMsAu6AR
-        Al4PNaJgfJrlHNDgkU0CnI4=
-X-Google-Smtp-Source: ABdhPJxirjMauaoGrtyFgo1IklAOQSPk2qnbKfxxwgoKbD3hkPoPxDrjY9zXnDSyMxLTMhZicfTxtg==
-X-Received: by 2002:aa7:9910:: with SMTP id z16mr20150568pff.53.1592180317301;
-        Sun, 14 Jun 2020 17:18:37 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i7sm10164447pgr.86.2020.06.14.17.18.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jun 2020 17:18:36 -0700 (PDT)
-Subject: Re: linux-next: Signed-off-by missing for commit in the hwmon-staging
- tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-References: <20200615080852.1aa4d860@canb.auug.org.au>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <d8358bdc-f8cd-162e-261d-a756974b4e92@roeck-us.net>
-Date:   Sun, 14 Jun 2020 17:18:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 14 Jun 2020 20:18:48 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200615001845epoutp011ad732912691647ee1cc96c281131ab8~Yj5IAQMvG0970309703epoutp01q
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:18:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200615001845epoutp011ad732912691647ee1cc96c281131ab8~Yj5IAQMvG0970309703epoutp01q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592180325;
+        bh=V6/8DezWH8PzYjBA5puOibvXVjWNyGR5RWHz/aMlgVg=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=fLVmanDIXzvbg6vdX01N2KDCqygi51UOSIxFRcSyaPhBdSyWOvGgCZ1zRyHVZPWVx
+         /MvuurAgQ080g75UjQSZ11TDqdFEuDkhQP6i8ssuU8/KtMsUI0FbOOdaNLhkto9ySp
+         648lIwH/BddoqpTsT0uIQv8KFLhCy0+TY18JCY+U=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200615001845epcas1p157e0e1390fb1ce353f7f1e3f88f2b2b1~Yj5HoCEqW2119221192epcas1p1i;
+        Mon, 15 Jun 2020 00:18:45 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.163]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49lX4M0RrczMqYkr; Mon, 15 Jun
+        2020 00:18:43 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A9.8D.29173.26EB6EE5; Mon, 15 Jun 2020 09:18:43 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200615001842epcas1p261adde276bcab86b90a73e0a1e58a0c9~Yj5FSRzcO0252602526epcas1p2K;
+        Mon, 15 Jun 2020 00:18:42 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200615001842epsmtrp1455dddd390f33f20cc4f551eb4947939~Yj5FNl_vq0743407434epsmtrp1O;
+        Mon, 15 Jun 2020 00:18:42 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-d1-5ee6be62299a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        29.E0.08382.26EB6EE5; Mon, 15 Jun 2020 09:18:42 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200615001842epsmtip2bfd10b61dc137cb2c491c470a28335e6~Yj5FGFFm80266502665epsmtip2S;
+        Mon, 15 Jun 2020 00:18:42 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Hyunchul Lee'" <hyc.lee@gmail.com>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>
+In-Reply-To: <20200612094250.9347-2-hyc.lee@gmail.com>
+Subject: RE: [PATCH 2/2] exfat: allow to change some mount options for
+ remount
+Date:   Mon, 15 Jun 2020 09:18:42 +0900
+Message-ID: <001501d642aa$8699aca0$93cd05e0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200615080852.1aa4d860@canb.auug.org.au>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="Q8k3qnHMX9iMEdj8wzPGA682xitmwJID8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQLoIJeKvN4MET9VoLaZYw+wi+h82gKmMzPjAhLrcmemj0pOMA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLKsWRmVeSWpSXmKPExsWy7bCmrm7yvmdxBvNjLa7df89usWfvSRaL
+        y7vmsFls+XeE1YHFY+esu+wefVtWMXp83iQXwByVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxv
+        amZgqGtoaWGupJCXmJtqq+TiE6DrlpkDtExJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquU
+        WpCSU2BoUKBXnJhbXJqXrpecn2tlaGBgZApUmZCTcfHSGpaCtaIVD1rfMTYwHhHsYuTkkBAw
+        kfg/cxVzFyMXh5DADkaJ1UemsIEkhAQ+MUq8P+YLkfjGKPG86wcjTMefBX/YIBJ7GSUWfz3P
+        BOG8BHJ+b2MCqWIT0JX492c/2CgRAQ2JfycfgcWZBQok1u49wwpicwqYSZzfsBtsqrBAgMT2
+        pQvB4iwCqhKHj0xnB7F5BSwldvXuZ4KwBSVOznzCAjFHXmL72znMEBcpSPx8uowVYpeTxK+p
+        M1ghakQkZne2gf0mIfCVXWLKux6oBheJG7eWMEHYwhKvjm9hh7ClJF72twHZHEB2tcTH/VDl
+        HYwSL77bQtjGEjfXb2AFKWEW0JRYv0sfIqwosfP3XEaItXwS7772sEJM4ZXoaBOCKFGV6Lt0
+        GGqptERX+wf2CYxKs5A8NgvJY7OQPDALYdkCRpZVjGKpBcW56anFhgXGyHG9iRGcDrXMdzBO
+        e/tB7xAjEwfjIUYJDmYlEd7utCdxQrwpiZVVqUX58UWlOanFhxhNgUE9kVlKNDkfmJDzSuIN
+        TY2MjY0tTMzMzUyNlcR5fa0uxAkJpCeWpGanphakFsH0MXFwSjUwCZrn1VYFlS38r87PJJ8e
+        yO436bXFlYysuMTsC2xihYnJk+vPKpa5rCiYnrPCUKjgSWPaTa5/iSu235HWSsnoyfzQ8ll3
+        n+HH1w9+WtQ8jTB4vpN7945Z6lv36k1/wKOwcx3r9vo7O+yFeT67mjM/4loyNUqxWK90l3CQ
+        f9XaWMu1Z+3W2klJlc29e09M4EhuZcrLUqkVWiVtyxtTfOYZXpSPZPkguaDxY/2rkrMWe47d
+        cpu+JfZy4k+z3ZYBRdumPT558s1yY+VbOyz2N8ecld2+5ELrKf8n8264Lzshxbrcef0bCyvG
+        c72n3rv8OBphLfFtzp5bRUzdKiLcQQZbgt7fvOTrdE3k5sOEyrk3lFiKMxINtZiLihMBDKxE
+        zRAEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsWy7bCSvG7SvmdxBh/Pylhcu/+e3WLP3pMs
+        Fpd3zWGz2PLvCKsDi8fOWXfZPfq2rGL0+LxJLoA5issmJTUnsyy1SN8ugSvj4qU1LAVrRSse
+        tL5jbGA8ItjFyMkhIWAi8WfBH7YuRi4OIYHdjBJXV29ghUhISxw7cYa5i5EDyBaWOHy4GKLm
+        OaPEtIU7GUFq2AR0Jf792c8GYosIaEj8O/mICcRmFiiSuN97nh2iYSOjxMV329lBEpwCZhLn
+        N+wGaxYW8JOYdnUCWAOLgKrE4SPTwWp4BSwldvXuZ4KwBSVOznzCAnIEs4CeRNtGRoj58hLb
+        385hhrhTQeLn02WsEDc4SfyaOoMVokZEYnZnG/MERuFZSCbNQpg0C8mkWUg6FjCyrGKUTC0o
+        zk3PLTYsMMxLLdcrTswtLs1L10vOz93ECI4MLc0djNtXfdA7xMjEwXiIUYKDWUmEtzvtSZwQ
+        b0piZVVqUX58UWlOavEhRmkOFiVx3huFC+OEBNITS1KzU1MLUotgskwcnFINTG61s74kTNx1
+        dd2RQgsbjy9f5/Bm97kGmy/Y1SYSFVGseKM71Sxsr/DUop9Jxh9TMuTfd86fMtVA1FXz/4q7
+        GTFW7v9Wf8h6WBZqulqN9cb/jW46zZfY2WYUyPjcnJD46ULA/F3eswVbpB9yxfB3z7tfOKXj
+        HL9JdIbtn2NSapluUebz17E8bhZ65c/Y9PTsno9X+WNbufo0eHJvMD6bYNAjeE7Id6nIVpX5
+        NTKvZNcG3nAv04pbO3Pl5Q0Zcs/tXxueivGbPv+cx1Wpa84h3OtDPexdppi4xf/7OG/S8epp
+        u0QTgs7FzzxsVbqLY5WQddwnRtOOp+45jVHhHAlSBQ6T50UfzxTb/YKtyzJKiaU4I9FQi7mo
+        OBEA3iyFQvsCAAA=
+X-CMS-MailID: 20200615001842epcas1p261adde276bcab86b90a73e0a1e58a0c9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200612094318epcas1p30139d60fdcfc3672fede8977c536a5a8
+References: <20200612094250.9347-1-hyc.lee@gmail.com>
+        <CGME20200612094318epcas1p30139d60fdcfc3672fede8977c536a5a8@epcas1p3.samsung.com>
+        <20200612094250.9347-2-hyc.lee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Q8k3qnHMX9iMEdj8wzPGA682xitmwJID8
-Content-Type: multipart/mixed; boundary="KgaW2r8bK6bDRLqcsbEsgpZ34f0XkPlnF"
+> Allow to change permission masks, allow_utime, errors. But ignore other options.
+> 
+> Signed-off-by: Hyunchul Lee <hyc.lee@gmail.com>
+> ---
+>  fs/exfat/super.c | 40 +++++++++++++++++++++++++++++-----------
+>  1 file changed, 29 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/exfat/super.c b/fs/exfat/super.c index 61c6cf240c19..3c1d47289ba2 100644
+> --- a/fs/exfat/super.c
+> +++ b/fs/exfat/super.c
+> @@ -696,9 +696,13 @@ static void exfat_free(struct fs_context *fc)  static int
+> exfat_reconfigure(struct fs_context *fc)  {
+>  	struct super_block *sb = fc->root->d_sb;
+> +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+> +	struct exfat_mount_options *new_opts;
+>  	int ret;
+>  	bool new_rdonly;
+> 
+> +	new_opts = &((struct exfat_sb_info *)fc->s_fs_info)->options;
+> +
+>  	new_rdonly = fc->sb_flags & SB_RDONLY;
+>  	if (new_rdonly != sb_rdonly(sb)) {
+>  		if (new_rdonly) {
+> @@ -708,6 +712,12 @@ static int exfat_reconfigure(struct fs_context *fc)
+>  				return ret;
+>  		}
+>  	}
+> +
+> +	/* allow to change these options but ignore others */
+> +	sbi->options.fs_fmask = new_opts->fs_fmask;
+> +	sbi->options.fs_dmask = new_opts->fs_dmask;
+> +	sbi->options.allow_utime = new_opts->allow_utime;
+> +	sbi->options.errors = new_opts->errors;
+Is there any reason why you allow a few options on remount ?
+>  	return 0;
+>  }
+> 
+> @@ -726,17 +736,25 @@ static int exfat_init_fs_context(struct fs_context *fc)
+>  	if (!sbi)
+>  		return -ENOMEM;
+> 
+> -	mutex_init(&sbi->s_lock);
+> -	ratelimit_state_init(&sbi->ratelimit, DEFAULT_RATELIMIT_INTERVAL,
+> -			DEFAULT_RATELIMIT_BURST);
+> -
+> -	sbi->options.fs_uid = current_uid();
+> -	sbi->options.fs_gid = current_gid();
+> -	sbi->options.fs_fmask = current->fs->umask;
+> -	sbi->options.fs_dmask = current->fs->umask;
+> -	sbi->options.allow_utime = -1;
+> -	sbi->options.iocharset = exfat_default_iocharset;
+> -	sbi->options.errors = EXFAT_ERRORS_RO;
+> +	if (fc->root) {
+> +		/* reconfiguration */
+> +		memcpy(&sbi->options, &EXFAT_SB(fc->root->d_sb)->options,
+> +			sizeof(struct exfat_mount_options));
+> +		sbi->options.iocharset = exfat_default_iocharset;
+> +	} else {
+> +		mutex_init(&sbi->s_lock);
+> +		ratelimit_state_init(&sbi->ratelimit,
+> +				DEFAULT_RATELIMIT_INTERVAL,
+> +				DEFAULT_RATELIMIT_BURST);
+> +
+> +		sbi->options.fs_uid = current_uid();
+> +		sbi->options.fs_gid = current_gid();
+> +		sbi->options.fs_fmask = current->fs->umask;
+> +		sbi->options.fs_dmask = current->fs->umask;
+> +		sbi->options.allow_utime = -1;
+> +		sbi->options.iocharset = exfat_default_iocharset;
+> +		sbi->options.errors = EXFAT_ERRORS_RO;
+> +	}
+> 
+>  	fc->s_fs_info = sbi;
+>  	fc->ops = &exfat_context_ops;
+> --
+> 2.17.1
 
---KgaW2r8bK6bDRLqcsbEsgpZ34f0XkPlnF
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 
-On 6/14/20 3:08 PM, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Commit
->=20
->   3c1c958a118e ("hwmon: (adm1275) Enable adm1278 ADM1278_TEMP1_EN")
->=20
-> is missing a Signed-off-by from its author.
->=20
-Uuh, yes, I completely missed that. I'll drop the patch until/unless I ge=
-t
-a signed version.
-
-Thanks for noticing.
-
-Guenter
-
-
-
---KgaW2r8bK6bDRLqcsbEsgpZ34f0XkPlnF--
-
---Q8k3qnHMX9iMEdj8wzPGA682xitmwJID8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEiHPvMQj9QTOCiqgVyx8mb86fmYEFAl7mvlsACgkQyx8mb86f
-mYEwXw//YL/mRS/+XIHL16lS71+5zK20GRqQgh8Sab6vCN+LlhBnhSf08DUu1Pwp
-c6dPBsdvAwuMEY8rDPvpAEKtTpnotqZKnrhB9Mn913rqrEOsPcMELvhqfS7XSHe5
-MaxlZQauZq6m4ynMgQmR66Ie/dMAT692dEWmnjnQrN37b9E5UwgNaymXTZg7sP0M
-weOFxt3wRw65o0eHLsMeXpCJKz58qHUBITyHGfjKHDSdH0NhrU0sk4x7EHWWSQny
-p0GmawxAVJkjp0m6stGKejufPHsv7rFDYR8tR78+BUeGDZU9r9/6N+IzxbGG2h7O
-1qbA1kkel01V8jBuO7wNVCT5V4rTxxemES1tiD0GL5TwS+0lg1ymxHR9sD2yYUwM
-JNQU1BoRFav30gtm0I/fgoUH78mzp70WZ7Yq1GwO694ykb4SfXfBkl2MnQ0gKwoD
-sFCWmiqnn7Wwxf2VIZAQXR4irtg23+6N4R95k9UqR7bTg82/bjWuFeMJ0Pky36UX
-Vu+sFTA1KGnX+670JeXSW55/5YU8t6eOcq6FFe1RnHKAPw/pR4WusOfLnO4X8J8a
-UOYuJNkCrqGp7YIV0ocFsrXIRQ8odb5jBByZqmJEgLYfOgGt6rptpNaKPH4LlEpD
-/hPWtosTmm5YsfwQ6Cbzmu4cIcHRfhNOtwdHLX1iSH8yK7poP0o=
-=7dIo
------END PGP SIGNATURE-----
-
---Q8k3qnHMX9iMEdj8wzPGA682xitmwJID8--
