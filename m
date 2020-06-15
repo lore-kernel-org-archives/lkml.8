@@ -2,153 +2,108 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA2FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4562074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4B520707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKFPDnAT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iQBqKtao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgFOL5z (ORCPT
+        id S1729719AbgFOL7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42584 "EHLO
+        Mon, 15 Jun 2020 07:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgFOL5w (ORCPT
+        with ESMTP id S1728510AbgFOL7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:57:52 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BAF1C061A0E;
-        Mon, 15 Jun 2020 04:57:52 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id m2so12847158otr.12;
-        Mon, 15 Jun 2020 04:57:52 -0700 (PDT)
+        Mon, 15 Jun 2020 07:59:41 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D3CC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 04:59:40 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u26so13953048wmn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 04:59:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R0P5cMrSEK9Tm95O2ZpUaePqKfNHRhXx34xpHo5o2b0=;
-        b=KKFPDnATCQdpxcvazDRCJ3tBuYdMbW0n+oIVf0fs9pLhg/wgMURu233HP+aFWAS1Ih
-         A1OalkKQ+Y1PAIySt0DwvE+F+zfgnD4gos6GJAc/UviDZ5paVOFA/rgLs6vA8u/2+J2V
-         kxKkqkiP/WbeaHlLiyBy478xI3B1pE7T1xcF3SrY9blbcToMfQ/SyrU8mk8Vw0DMntRU
-         FUbMcvrzcSjKGs7yCoRERxjRd3YXUcOl0fw+WTQ1y8wwVMg+B35eFu9ebYbjT8rnXl9T
-         YJvTL48DMeWUD50QkGb0mcKa9Zg2k0WFtH9jUhjSxd7dNJihH4EWyYsNzac4fP58wBgP
-         mshw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=719ofHTBd/I2peVm9y0TOXJ46xOp3IsPklsZWOMX6Ng=;
+        b=iQBqKtaoUb41/1QY2TLxDwAHEYBfZFCmUjMJQZNtmyGtBWUuVy3F9B3Cb53/As2kCn
+         w8LdlOL2O7nmWriJ5O52ZkFQWhXTih9egKBCn/xHrpYHpcMwRXAmY1rb0h0q8qkkLVy8
+         l1hJI4uEkDi5fbiDRHv7GwLQoSuyV2VfrEKB5ECTpgKJ1vJkmNlS/3VhLzU8MxubHF4F
+         BQTOkJUde9IQlvtRqmh20dLAoV7EggqCEgH6ZkKCUXk0eg7wCnG7EY3a45NjaenaikM4
+         iZIp57nDyyGIKuzpt7FgqqJFZD+WUhJQVW3RyKUErLV5ev8TLcZuj1knLd+sP5bVIDIV
+         8TVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R0P5cMrSEK9Tm95O2ZpUaePqKfNHRhXx34xpHo5o2b0=;
-        b=R4Df5u3Jma913mtN6DBX2Zr3XKHYGWHCv7K9CRfRDEx1saZO6XsVyPvyNp9G17HauA
-         ljql7UUreUNc9IjL/2imAxkwaUm4WFeWXr2B+x6wkxRfmvyvlnCz31qzNAZB43r6LFSG
-         ll22QWr4KdrkZUAaR5ze0/WyMMlAOnXBkuSe3rv4d0l0jEp14JsmqcaEXSwuLlquzzJ7
-         jg1UeNLepcBthF352Ea3HAJJ+TjUBniuFCu9Api+DxOp9HaBswho7wd4ljUe7m5t4naX
-         J046PL4B01Fo+jrVbuseupH5Lj/Miog8B093Z2K7nQYG3nrQIeAJEfsPIj5AOJzwhe5R
-         3rAg==
-X-Gm-Message-State: AOAM533jpgPRSFirJv+dmAE6uHVnN2TxvfxM7I2DDYdSp4HZCUEhOJPK
-        7RF1eUJI9ql1z7lVanqv8h+NUp0QeVcaQMODdoI=
-X-Google-Smtp-Source: ABdhPJxBjB4XUMkUcIuWL3AyOjaPgqG1u76xUXLhHBvL4oGeYWeh6wuuDxrN30yOveY+AWpOAJnqzjlcDW8oFHGXqp4=
-X-Received: by 2002:a05:6830:2003:: with SMTP id e3mr20045702otp.89.1592222271339;
- Mon, 15 Jun 2020 04:57:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=719ofHTBd/I2peVm9y0TOXJ46xOp3IsPklsZWOMX6Ng=;
+        b=QO0WKDfJW81PBQpQTgrher4HKT60bugPH4aNbKXuNhjIJp/rInSfhLKhPdlzYS3iHM
+         aBxUh79P9In8yTdc5KUSs2agfLvQsX5P60yD/yxiWC29iHke0lbH+9Z4Az0RyXkCMuU/
+         /KBkjfle9nbBLr5MYOiLN1CTHiX4lu1N4TVbCVqBvTea1+gjHBRl1vTSqW2NBkuedY+H
+         s1HsgJl643B+tzKP2Jryuci7YBuz5E3sPyGPP4tUvWv3v3ZguWYjMiXt3p+zOMrPZbIy
+         fI7Ome4dLMyLG5s5gV8FFIKil3vC+B1YZKLn6dOF9YtHz3mFfRRU8rEOz247rpsZG/aL
+         8gQQ==
+X-Gm-Message-State: AOAM533uUs2ai9jBu/VsD6aOozJx1KWPRjcBhg1mtqNBXJn75LEmHr6p
+        h/nJ3c/Ncz0aV6fyeFw7zEeyVA==
+X-Google-Smtp-Source: ABdhPJyMY/n1roSv+cYCo9nXkUw2jY0Aaoq25AgVCDcB5q2EJWWPzPzjrsggEnRh23lqIWvByW/4gA==
+X-Received: by 2002:a7b:c212:: with SMTP id x18mr12617874wmi.119.1592222379015;
+        Mon, 15 Jun 2020 04:59:39 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id q5sm24022703wrm.62.2020.06.15.04.59.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 04:59:38 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 12:59:36 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Wang Qing <wangqing@vivo.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/video/backlight: Use kobj_to_dev() instead
+Message-ID: <20200615115936.37pwp7cgmhznnyo4@holly.lan>
+References: <1592211242-31683-1-git-send-email-wangqing@vivo.com>
 MIME-Version: 1.0
-References: <20200613024130.3356-1-nramas@linux.microsoft.com> <20200613024130.3356-5-nramas@linux.microsoft.com>
-In-Reply-To: <20200613024130.3356-5-nramas@linux.microsoft.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 15 Jun 2020 07:57:40 -0400
-Message-ID: <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] LSM: Define SELinux function to measure security state
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Stephen Smalley <stephen.smalley@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592211242-31683-1-git-send-email-wangqing@vivo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 10:42 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> SELinux needs to implement the interface function, security_state(), for
-> the LSM to gather SELinux data for measuring. Define the security_state()
-> function in SELinux.
->
-> The security modules should be able to notify the LSM when there is
-> a change in the module's data. Define a function namely
-> security_state_change() in the LSM that the security modules
-> can call to provide the updated data for measurement.
->
-> Call security_state_change() function from SELinux to report data
-> when SELinux's state is updated.
->
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+On Mon, Jun 15, 2020 at 04:54:02PM +0800, Wang Qing wrote:
+> Use kobj_to_dev() instead of container_of()
+> 
+> Signed-off-by: Wang Qing <wangqing@vivo.com>
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
 > ---
-> diff --git a/security/security.c b/security/security.c
-> index a6e2d1cd95af..e7175db5a093 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -238,6 +238,11 @@ static void __init initialize_lsm(struct lsm_info *lsm)
->         }
->  }
->
-> +void security_state_change(char *lsm_name, void *state, int state_len)
-> +{
-> +       ima_lsm_state(lsm_name, state, state_len);
-> +}
-> +
-
-What's the benefit of this trivial function instead of just calling
-ima_lsm_state() directly?
-
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 7e954b555be6..bbc908a1fcd1 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -7225,6 +7225,47 @@ static __init int selinux_init(void)
->         return 0;
->  }
->
-> +static int selinux_security_state(char **lsm_name, void **state,
-> +                                 int *state_len)
-> +{
-> +       int rc = 0;
-> +       char *new_state;
-> +       static char *security_state_string = "enabled=%d;enforcing=%d";
-> +
-> +       *lsm_name = kstrdup("selinux", GFP_KERNEL);
-> +       if (!*lsm_name)
-> +               return -ENOMEM;
-> +
-> +       new_state = kzalloc(strlen(security_state_string) + 1, GFP_KERNEL);
-> +       if (!new_state) {
-> +               kfree(*lsm_name);
-> +               *lsm_name = NULL;
-> +               rc = -ENOMEM;
-> +               goto out;
-> +       }
-> +
-> +       *state_len = sprintf(new_state, security_state_string,
-> +                            !selinux_disabled(&selinux_state),
-> +                            enforcing_enabled(&selinux_state));
-
-I think I mentioned this on a previous version of these patches, but I
-would recommend including more than just the enabled and enforcing
-states in your measurement.  Other low-hanging fruit would be the
-other selinux_state booleans (checkreqprot, initialized,
-policycap[0..__POLICYDB_CAPABILITY_MAX]).  Going a bit further one
-could take a hash of the loaded policy by using security_read_policy()
-and then computing a hash using whatever hash ima prefers over the
-returned data,len pair.  You likely also need to think about how to
-allow future extensibility of the state in a backward-compatible
-manner, so that future additions do not immediately break systems
-relying on older measurements.
+>  drivers/video/backlight/lm3533_bl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>  mode change 100644 => 100755 drivers/video/backlight/lm3533_bl.c
+> 
+> diff --git a/drivers/video/backlight/lm3533_bl.c b/drivers/video/backlight/lm3533_bl.c
+> index ee09d1b..0c7830f
+> --- a/drivers/video/backlight/lm3533_bl.c
+> +++ b/drivers/video/backlight/lm3533_bl.c
+> @@ -235,7 +235,7 @@ static struct attribute *lm3533_bl_attributes[] = {
+>  static umode_t lm3533_bl_attr_is_visible(struct kobject *kobj,
+>  					     struct attribute *attr, int n)
+>  {
+> -	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct device *dev = kobj_to_dev(kobj);
+>  	struct lm3533_bl *bl = dev_get_drvdata(dev);
+>  	umode_t mode = attr->mode;
+>  
+> -- 
+> 2.7.4
+> 
