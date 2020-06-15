@@ -2,121 +2,74 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C7BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83391C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E02207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0042078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730692AbgFOQKe (ORCPT
+        id S1730850AbgFOQKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:10:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728585AbgFOQKd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:10:33 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FG3jdq097237;
-        Mon, 15 Jun 2020 12:10:28 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31mtxf3krh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 12:10:28 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FG45MO099034;
-        Mon, 15 Jun 2020 12:10:27 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31mtxf3kpf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 12:10:27 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FG14Ek001730;
-        Mon, 15 Jun 2020 16:10:24 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 31mpe81jcr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 16:10:24 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FGAMPT3080502
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 16:10:22 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6687311C054;
-        Mon, 15 Jun 2020 16:10:22 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 54C5311C069;
-        Mon, 15 Jun 2020 16:10:21 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.184.11])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jun 2020 16:10:21 +0000 (GMT)
-Message-ID: <1592237420.11061.144.camel@linux.ibm.com>
-Subject: Re: [PATCH 5/5] LSM: Define workqueue for measuring security module
- state
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Stephen Smalley <stephen.smalley@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 15 Jun 2020 12:10:20 -0400
-In-Reply-To: <CAEjxPJ61dup9HDQny_TAb7we-vcN-sM17y4x0Pos3d7ERaab9g@mail.gmail.com>
-References: <20200613024130.3356-1-nramas@linux.microsoft.com>
-         <20200613024130.3356-6-nramas@linux.microsoft.com>
-         <CAEjxPJ7v5Lu-vzqg0ZVh8zJ9uZ=odN3jt_5+9d9x+RydsNWK0g@mail.gmail.com>
-         <1592233145.11061.129.camel@linux.ibm.com>
-         <CAEjxPJ61dup9HDQny_TAb7we-vcN-sM17y4x0Pos3d7ERaab9g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 15 Jun 2020 12:10:37 -0400
+Received: from mga06.intel.com ([134.134.136.31]:25931 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728585AbgFOQKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:10:36 -0400
+IronPort-SDR: 2D+D1Ub91RTlXcwXKusZE6FNrGccbOgpOMx1ujJh61wxDXpHP6M5yZ2oydWh4z8To8TzCafAFP
+ tCEOao7pLPKA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 09:10:34 -0700
+IronPort-SDR: hEe4Gy2y6FmwjPa7jpciT7Mp1PdK5jkRkiimAFiu1AMHEiCtfpkhsvAgBUnOfDD+QGNM0+GvHd
+ khuRGVAfcsPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,515,1583222400"; 
+   d="scan'208";a="290743974"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 15 Jun 2020 09:10:33 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id A81C1217; Mon, 15 Jun 2020 19:10:32 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
+Date:   Mon, 15 Jun 2020 19:10:32 +0300
+Message-Id: <20200615161032.12906-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.27.0.rc2
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_03:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 suspectscore=0
- phishscore=0 lowpriorityscore=0 mlxscore=0 cotscore=-2147483648
- bulkscore=0 adultscore=0 mlxlogscore=999 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-15 at 11:47 -0400, Stephen Smalley wrote:
-> On Mon, Jun 15, 2020 at 10:59 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >
-> > On Mon, 2020-06-15 at 09:33 -0400, Stephen Smalley wrote:
-> > > On Fri, Jun 12, 2020 at 10:42 PM Lakshmi Ramasubramanian
-> > > <nramas@linux.microsoft.com> wrote:
-> > > >
-> > > > The data maintained by the security modules could be tampered with by
-> > > > malware. The LSM needs to periodically query the state of
-> > > > the security modules and measure the data when the state is changed.
-> > > >
-> > > > Define a workqueue for handling this periodic query and measurement.
-> > >
-> > > Won't this make it difficult/impossible to predict the IMA PCR value?
-> > > Unless I missed it, you are going to end up measuring every N minutes
-> > > even if there was no change and therefore constantly be extending the
-> > > PCR.  That will break attestation or sealing against the IMA PCR.
-> >
-> > Even if it attempts to add the same measurement to the list multiple
-> > times, unless something changed, there should only be one measurement
-> > in the list.
-> 
-> Is the PCR only extended once?
+Intel Emmitsburg PCH has the same LPSS than Intel Ice Lake.
+Add the new IDs to the list of supported devices.
 
-Yes, otherwise you wouldn't be able to verify a quote.
- ima_lookup_digest_entry() first verifies the hash isn't in the cache,
-before adding it to the measurement list and then extending the TPM.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/intel-lpss-pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Mimi
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index cc64cdda41c1..9a58032f818a 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -201,6 +201,9 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x1ac4), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
+ 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
++	/* EBG */
++	{ PCI_VDEVICE(INTEL, 0x1bad), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x1bae), (kernel_ulong_t)&bxt_uart_info },
+ 	/* GLK */
+ 	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
+-- 
+2.27.0.rc2
+
