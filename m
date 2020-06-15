@@ -2,173 +2,171 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E66FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93365C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262002074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592226515;
-	bh=uY1VUnpu37Gjl4c6oDNwu+0WIMAmjz48bEqToLKoq0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZoGGeYbB8K+A44TrnFaaBceeY599ud62BQLYCtLFgrm4hzsKhobsZ2fQnknYed98+
-	 rJwlS+d9r8GIPH4DPph8ZCjZFBZxlVbNRXIaGhxtFHU6BkJoeW/Fns/9Jc93Ip6BPy
-	 zaQCw52xvG3E1/IACTmnJIfSiiEUy0bxtj0O28CE=
+	by mail.kernel.org (Postfix) with ESMTP id 775782076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbgFONId (ORCPT
+        id S1730215AbgFONIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:08:33 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:40785 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729875AbgFONIb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:08:31 -0400
-Received: by mail-ej1-f67.google.com with SMTP id q19so17356132eja.7;
-        Mon, 15 Jun 2020 06:08:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uEfo8b2oGA/RF5D4h01gUn0rBAtABIlUd1JHMHMPDcU=;
-        b=rqV8Xm5+hLpKh53e47+AF1JuxUWpy37KePWHVmyvuC0cCAHGnuONGLfaf0iTEiB+LM
-         rTckWNaiVQhK9Y9gBZO1idEgjC7eCDtMj+cHILreMfi13pU2xMBD3vFAnvmMDVAnQZRf
-         dhvH8OVfVdsrhwHqreGgEfJCqJm3YF9X3YTRvo4z7+QCPCkJobs8lCmbkwSbqLxp/pvz
-         lIiYvIzILPSO0do7Ic5BUcFWHRFACuZxEggaK/m4irARcYZT5Dt4d0xCSGLBqt1Yu3MB
-         fHyuswWw82RhZmwkHtStA+hr8kWcF5yfPurlOeME8PF/rtJ1oScbafJsPhyazHUpiJy8
-         NbPg==
-X-Gm-Message-State: AOAM530HDatIIzOX822HAl11ZcAG6nYRA6R/sJSDV2amvLsjP6+wNRPQ
-        h/PNMCwJw9O/DK5jY7U/tCA=
-X-Google-Smtp-Source: ABdhPJzTsLPoy+Tdwxd9Pi2RDK6DJe+eZn5/8FejwDeKXrZIhvmHMNsnUFZD5BSrPyGX8Jr78E+e3A==
-X-Received: by 2002:a17:906:5602:: with SMTP id f2mr24770617ejq.381.1592226508183;
-        Mon, 15 Jun 2020 06:08:28 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id ew9sm9043561ejb.121.2020.06.15.06.08.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jun 2020 06:08:27 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 15:08:25 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on
- interrupt in exit paths
-Message-ID: <20200615130825.GA2634@kozik-lap>
-References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
- <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
- <CA+h21hrxQ1fRahyQGFS42Xuop_Q2petE=No1dft4nVb-ijUu2g@mail.gmail.com>
+        Mon, 15 Jun 2020 09:08:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47024 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729875AbgFONIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:08:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 70E58ACB8;
+        Mon, 15 Jun 2020 13:08:39 +0000 (UTC)
+Subject: Re: [PATCH] mm/slab: Add a __GFP_ACCOUNT GFP flag check for slab
+ allocation
+To:     Muchun Song <songmuchun@bytedance.com>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>
+References: <20200614063858.85118-1-songmuchun@bytedance.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <bca5f44c-5e30-17b1-09fc-6330d450433b@suse.cz>
+Date:   Mon, 15 Jun 2020 15:08:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200614063858.85118-1-songmuchun@bytedance.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+h21hrxQ1fRahyQGFS42Xuop_Q2petE=No1dft4nVb-ijUu2g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 12:23:41PM +0300, Vladimir Oltean wrote:
-> On Mon, 15 Jun 2020 at 11:18, Marc Kleine-Budde <mkl@pengutronix.de> wrote:
-> >
-> > On 6/15/20 10:07 AM, Krzysztof Kozlowski wrote:
-> > > If interrupt comes late, during probe error path or device remove (could
-> > > be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
-> > > dspi_interrupt() will access registers with the clock being disabled.  This
-> > > leads to external abort on non-linefetch on Toradex Colibri VF50 module
-> > > (with Vybrid VF5xx):
-> > >
-> > >     $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
-> > >
-> > >     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
-> > >     Internal error: : 1008 [#1] ARM
-> > >     CPU: 0 PID: 136 Comm: sh Not tainted 5.7.0-next-20200610-00009-g5c913fa0f9c5-dirty #74
-> > >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
-> > >       (regmap_mmio_read32le) from [<8061885c>] (regmap_mmio_read+0x48/0x68)
-> > >       (regmap_mmio_read) from [<8060e3b8>] (_regmap_bus_reg_read+0x24/0x28)
-> > >       (_regmap_bus_reg_read) from [<80611c50>] (_regmap_read+0x70/0x1c0)
-> > >       (_regmap_read) from [<80611dec>] (regmap_read+0x4c/0x6c)
-> > >       (regmap_read) from [<80678ca0>] (dspi_interrupt+0x3c/0xa8)
-> > >       (dspi_interrupt) from [<8017acec>] (free_irq+0x26c/0x3cc)
-> > >       (free_irq) from [<8017dcec>] (devm_irq_release+0x1c/0x20)
-> > >       (devm_irq_release) from [<805f98ec>] (release_nodes+0x1e4/0x298)
-> > >       (release_nodes) from [<805f9ac8>] (devres_release_all+0x40/0x60)
-> > >       (devres_release_all) from [<805f5134>] (device_release_driver_internal+0x108/0x1ac)
-> > >       (device_release_driver_internal) from [<805f521c>] (device_driver_detach+0x20/0x24)
-> > >
-> > > Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
-> > > Cc: <stable@vger.kernel.org>
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > >
-> > > ---
-> > >
-> > > This is an follow up of my other patch for I2C IMX driver [1]. Let's fix the
-> > > issues consistently.
-> > >
-> > > [1] https://lore.kernel.org/lkml/1592130544-19759-2-git-send-email-krzk@kernel.org/T/#u
-> > >
-> > > Changes since v1:
-> > > 1. Disable the IRQ instead of using non-devm interface.
-> > > ---
-> > >  drivers/spi/spi-fsl-dspi.c | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> > > index 58190c94561f..023e05c53b85 100644
-> > > --- a/drivers/spi/spi-fsl-dspi.c
-> > > +++ b/drivers/spi/spi-fsl-dspi.c
-> > > @@ -1400,7 +1400,7 @@ static int dspi_probe(struct platform_device *pdev)
-> > >               ret = dspi_request_dma(dspi, res->start);
-> > >               if (ret < 0) {
-> > >                       dev_err(&pdev->dev, "can't get dma channels\n");
-> > > -                     goto out_clk_put;
-> > > +                     goto disable_irq;
-> > >               }
-> > >       }
-> > >
-> > > @@ -1415,11 +1415,14 @@ static int dspi_probe(struct platform_device *pdev)
-> > >       ret = spi_register_controller(ctlr);
-> > >       if (ret != 0) {
-> > >               dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
-> > > -             goto out_clk_put;
-> > > +             goto disable_irq;
-> > >       }
-> > >
-> > >       return ret;
-> > >
-> > > +disable_irq:
-> > > +     if (dspi->irq > 0)
-> > > +             disable_irq(dspi->irq);
-> > >  out_clk_put:
-> > >       clk_disable_unprepare(dspi->clk);
-> > >  out_ctlr_put:
-> > > @@ -1435,6 +1438,8 @@ static int dspi_remove(struct platform_device *pdev)
-> > >
-> > >       /* Disconnect from the SPI framework */
-> > >       dspi_release_dma(dspi);
-> > > +     if (dspi->irq > 0)
-> > > +             disable_irq(dspi->irq);
-> >
-> > What happens, if you re-bind the driver?
-> > Is the IRQ still working?
-> > Who is taking care of calling the enable_irq() again?
-> > What happens, if you really have a shared IRQ line?
-> > Is the IRQ disabled for all other devices on the same IRQ line?
-> >
+On 6/14/20 8:38 AM, Muchun Song wrote:
+> When a kmem_cache is initialized with SLAB_ACCOUNT slab flag, we must
+> not call kmem_cache_alloc with __GFP_ACCOUNT GFP flag. In this case,
+> we can be accounted to kmemcg twice. This is not correct. So we add a
+
+Are you sure? How does that happen?
+
+The only place I see these evaluated is this condition in slab_pre_alloc_hook():
+
+        if (memcg_kmem_enabled() &&
+            ((flags & __GFP_ACCOUNT) || (s->flags & SLAB_ACCOUNT)))
+                return memcg_kmem_get_cache(s);
+
+And it doesn't matter if one or both are set? Am I missing something?
+
+> __GFP_ACCOUNT GFP flag check for slab allocation.
 > 
-> Yup, devm is completely broken for shared IRQs.
-
-Then we're back to this massive rework of using non-devm interface.
-
-Best regards,
-Krzysztof
+> We also introduce a new helper named fixup_gfp_flags to do that check.
+> We can reuse the fixup_gfp_flags for SLAB/SLUB.
+> 
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>  mm/slab.c | 10 +---------
+>  mm/slab.h | 21 +++++++++++++++++++++
+>  mm/slub.c | 10 +---------
+>  3 files changed, 23 insertions(+), 18 deletions(-)
+> 
+> diff --git a/mm/slab.c b/mm/slab.c
+> index 9350062ffc1a..6e0110bef2d6 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -126,8 +126,6 @@
+>  
+>  #include <trace/events/kmem.h>
+>  
+> -#include	"internal.h"
+> -
+>  #include	"slab.h"
+>  
+>  /*
+> @@ -2579,13 +2577,7 @@ static struct page *cache_grow_begin(struct kmem_cache *cachep,
+>  	 * Be lazy and only check for valid flags here,  keeping it out of the
+>  	 * critical path in kmem_cache_alloc().
+>  	 */
+> -	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
+> -		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
+> -		flags &= ~GFP_SLAB_BUG_MASK;
+> -		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
+> -				invalid_mask, &invalid_mask, flags, &flags);
+> -		dump_stack();
+> -	}
+> +	flags = fixup_gfp_flags(cachep, flags);
+>  	WARN_ON_ONCE(cachep->ctor && (flags & __GFP_ZERO));
+>  	local_flags = flags & (GFP_CONSTRAINT_MASK|GFP_RECLAIM_MASK);
+>  
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 815e4e9a94cd..0b91f2a7b033 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -109,6 +109,7 @@ struct memcg_cache_params {
+>  #include <linux/kmemleak.h>
+>  #include <linux/random.h>
+>  #include <linux/sched/mm.h>
+> +#include "internal.h"
+>  
+>  /*
+>   * State of the slab allocator.
+> @@ -627,6 +628,26 @@ struct kmem_cache_node {
+>  
+>  };
+>  
+> +static inline gfp_t fixup_gfp_flags(struct kmem_cache *s, gfp_t flags)
+> +{
+> +	gfp_t invalid_mask = 0;
+> +
+> +	if (unlikely(flags & GFP_SLAB_BUG_MASK))
+> +		invalid_mask |= flags & GFP_SLAB_BUG_MASK;
+> +
+> +	if (unlikely(flags & __GFP_ACCOUNT && s->flags & SLAB_ACCOUNT))
+> +		invalid_mask |= __GFP_ACCOUNT;
+> +
+> +	if (unlikely(invalid_mask)) {
+> +		flags &= ~invalid_mask;
+> +		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
+> +				invalid_mask, &invalid_mask, flags, &flags);
+> +		dump_stack();
+> +	}
+> +
+> +	return flags;
+> +}
+> +
+>  static inline struct kmem_cache_node *get_node(struct kmem_cache *s, int node)
+>  {
+>  	return s->node[node];
+> diff --git a/mm/slub.c b/mm/slub.c
+> index b8f798b50d44..49b5cb7da318 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -37,8 +37,6 @@
+>  
+>  #include <trace/events/kmem.h>
+>  
+> -#include "internal.h"
+> -
+>  /*
+>   * Lock order:
+>   *   1. slab_mutex (Global Mutex)
+> @@ -1745,13 +1743,7 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+>  
+>  static struct page *new_slab(struct kmem_cache *s, gfp_t flags, int node)
+>  {
+> -	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
+> -		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
+> -		flags &= ~GFP_SLAB_BUG_MASK;
+> -		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
+> -				invalid_mask, &invalid_mask, flags, &flags);
+> -		dump_stack();
+> -	}
+> +	flags = fixup_gfp_flags(s, flags);
+>  
+>  	return allocate_slab(s,
+>  		flags & (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK), node);
+> 
 
