@@ -2,205 +2,198 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B48C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB1420747
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:12:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FMY32hJN"
+	by mail.kernel.org (Postfix) with ESMTP id 3C77020747
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgFOCM5 (ORCPT
+        id S1728109AbgFOCRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 22:12:57 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:34130 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727946AbgFOCM4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 22:12:56 -0400
-X-UUID: 690b28f5b27e407d934ee38653768bce-20200615
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Fvc+fkRNwbSozTKxjSC5R50RqwrOETtrM9MsGb8se4I=;
-        b=FMY32hJNFbKj++5/KW2rE83sAQhxbkNuqkxW83qIQDJDEJmqvn7ChJJlrdxxmRDRWIiDQkWBz7bvswOeqUc+ePBcd8XI694/wy5mkTxdHCk/ebB+/QNYa3xThNjR17ITwlcUBf8QVQ+NpoyIQmQBdT61AwvsAzg25K/g6ds5xD0=;
-X-UUID: 690b28f5b27e407d934ee38653768bce-20200615
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1991607920; Mon, 15 Jun 2020 10:12:49 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 15 Jun 2020 10:12:48 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 15 Jun 2020 10:12:42 +0800
-Message-ID: <1592187167.18525.3.camel@mtkswgap22>
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sun, 14 Jun 2020 22:17:49 -0400
+Received: from mga09.intel.com ([134.134.136.24]:35930 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727946AbgFOCRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 22:17:49 -0400
+IronPort-SDR: OUg25t2X5eSOIiPXTPsmTf4XIehvwkMrxVD2vE2pwWUS41zbJjOjydhoQNBeP4JFOihJLAdz1c
+ 75mmKZoHDvaw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2020 19:17:48 -0700
+IronPort-SDR: Uob3CZWz0xNCSTRrbf7iB54YQSoy4usLaGVasoq/ksqhTs/VRiosycehEva16KGBqYrPirqqzE
+ ar0CvARaiFHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,513,1583222400"; 
+   d="scan'208";a="298321650"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jun 2020 19:17:43 -0700
+Cc:     baolu.lu@linux.intel.com,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 15 Jun 2020 10:12:47 +0800
-In-Reply-To: <CAAOTY__zXZvv1gcKgxnbpv2RjDLyuQ1NEz8Nr+dtn4GKE1cvMA@mail.gmail.com>
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
-         <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY__g3Fnwsoqx=x_tgdMii5K_L9TmF_9048XbAOSJwb-Cxg@mail.gmail.com>
-         <1591867563.27949.9.camel@mtkswgap22>
-         <CAAOTY_8gOjr9nBUVA6oNu0v+D0Rc0AbhJ41wBCvDpMme+kuHmA@mail.gmail.com>
-         <1591931042.32738.26.camel@mtkswgap22>
-         <CAAOTY__zXZvv1gcKgxnbpv2RjDLyuQ1NEz8Nr+dtn4GKE1cvMA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        amd-gfx <amd-gfx@lists.freedesktop.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 11/12] x86/mmu: Allocate/free PASID
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+ <1592008893-9388-12-git-send-email-fenghua.yu@intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <4d759c15-d539-cd1a-569d-eefa5fb6f039@linux.intel.com>
+Date:   Mon, 15 Jun 2020 10:13:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 4E316D16DA2B6E11B1D56A33408E80F3A733487E7613467A421F38EE6A4634C82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1592008893-9388-12-git-send-email-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KDQpPbiBGcmksIDIwMjAtMDYtMTIgYXQgMjM6MjcgKzA4MDAsIENo
-dW4tS3VhbmcgSHUgd3JvdGU6DQo+IEhpLCBOZWFsOg0KPiANCj4gTmVhbCBMaXUgPG5lYWwubGl1
-QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ25pyIMTLml6Ug6YCx5LqUIOS4iuWNiDExOjA05a+r
-6YGT77yaDQo+ID4NCj4gPiBIaSBDaHVuLUt1YW5nLA0KPiA+DQo+ID4gW3NuaXBdDQo+ID4gPiA+
-ID4gPiArLyoNCj4gPiA+ID4gPiA+ICsgKiBkZXZhcGNfdmlvbGF0aW9uX2lycSAtIHRoZSBkZXZh
-cGMgSW50ZXJydXB0IFNlcnZpY2UgUm91dGluZSAoSVNSKSB3aWxsIGR1bXANCj4gPiA+ID4gPiA+
-ICsgKiAgICAgICAgICAgICAgICAgICAgICAgdmlvbGF0aW9uIGluZm9ybWF0aW9uIGluY2x1ZGlu
-ZyB3aGljaCBtYXN0ZXIgdmlvbGF0ZXMNCj4gPiA+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAg
-ICAgICAgYWNjZXNzIHNsYXZlLg0KPiA+ID4gPiA+ID4gKyAqLw0KPiA+ID4gPiA+ID4gK3N0YXRp
-YyBpcnFyZXR1cm5fdCBkZXZhcGNfdmlvbGF0aW9uX2lycShpbnQgaXJxX251bWJlciwgdm9pZCAq
-ZGV2X2lkKQ0KPiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ICsgICAgICAgdTMyIHNsYXZlX3R5
-cGVfbnVtID0gbXRrX2RldmFwY19jdHgtPnNvYy0+c2xhdmVfdHlwZV9udW07DQo+ID4gPiA+ID4g
-PiArICAgICAgIGNvbnN0IHN0cnVjdCBtdGtfZGV2aWNlX2luZm8gKipkZXZpY2VfaW5mbzsNCj4g
-PiA+ID4gPiA+ICsgICAgICAgc3RydWN0IG10a19kZXZhcGNfdmlvX2luZm8gKnZpb19pbmZvOw0K
-PiA+ID4gPiA+ID4gKyAgICAgICBpbnQgc2xhdmVfdHlwZSwgdmlvX2lkeCwgaW5kZXg7DQo+ID4g
-PiA+ID4gPiArICAgICAgIGNvbnN0IGNoYXIgKnZpb19tYXN0ZXI7DQo+ID4gPiA+ID4gPiArICAg
-ICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPiA+ID4gPiArICAgICAgIGJvb2wgbm9ybWFs
-Ow0KPiA+ID4gPiA+ID4gKyAgICAgICB1OCBwZXJtOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+
-ID4gKyAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmZGV2YXBjX2xvY2ssIGZsYWdzKTsNCj4gPiA+
-ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsgICAgICAgZGV2aWNlX2luZm8gPSBtdGtfZGV2YXBjX2N0
-eC0+c29jLT5kZXZpY2VfaW5mbzsNCj4gPiA+ID4gPiA+ICsgICAgICAgdmlvX2luZm8gPSBtdGtf
-ZGV2YXBjX2N0eC0+c29jLT52aW9faW5mbzsNCj4gPiA+ID4gPiA+ICsgICAgICAgbm9ybWFsID0g
-ZmFsc2U7DQo+ID4gPiA+ID4gPiArICAgICAgIHZpb19pZHggPSAtMTsNCj4gPiA+ID4gPiA+ICsg
-ICAgICAgaW5kZXggPSAtMTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsgICAgICAgLyog
-VGhlcmUgYXJlIG11bHRpcGxlIERFVkFQQ19QRCAqLw0KPiA+ID4gPiA+ID4gKyAgICAgICBmb3Ig
-KHNsYXZlX3R5cGUgPSAwOyBzbGF2ZV90eXBlIDwgc2xhdmVfdHlwZV9udW07IHNsYXZlX3R5cGUr
-Kykgew0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGlmICghY2hlY2tfdHlwZTJfdmlvX3N0
-YXR1cyhzbGF2ZV90eXBlLCAmdmlvX2lkeCwgJmluZGV4KSkNCj4gPiA+ID4gPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIGlmICghbXRrX2RldmFwY19kdW1wX3Zpb19kYmcoc2xhdmVfdHlwZSwg
-JnZpb19pZHgsDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICZpbmRleCkpDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAg
-ICAgICAgICAgICAgIC8qIEVuc3VyZSB0aGF0IHZpb2xhdGlvbiBpbmZvIGFyZSB3cml0dGVuIGJl
-Zm9yZQ0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAqIGZ1cnRoZXIgb3BlcmF0aW9ucw0K
-PiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
-ICAgIHNtcF9tYigpOw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIG5vcm1hbCA9IHRydWU7
-DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgbWFza19tb2R1bGVf
-aXJxKHNsYXZlX3R5cGUsIHZpb19pZHgsIHRydWUpOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+
-ID4gKyAgICAgICAgICAgICAgIGlmIChjbGVhcl92aW9fc3RhdHVzKHNsYXZlX3R5cGUsIHZpb19p
-ZHgpKQ0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcHJfd2FybihQRlggIiVz
-LCAlczoweCV4LCAlczoweCV4XG4iLA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAiY2xlYXIgdmlvIHN0YXR1cyBmYWlsZWQiLA0KPiA+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAic2xhdmVfdHlwZSIsIHNsYXZlX3R5cGUsDQo+ID4g
-PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ2aW9faW5kZXgiLCB2aW9f
-aWR4KTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBwZXJtID0g
-Z2V0X3Blcm1pc3Npb24oc2xhdmVfdHlwZSwgaW5kZXgsIHZpb19pbmZvLT5kb21haW5faWQpOw0K
-PiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHZpb19tYXN0ZXIgPSBt
-dGtfZGV2YXBjX2N0eC0+c29jLT5tYXN0ZXJfZ2V0DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAodmlvX2luZm8tPm1hc3Rlcl9pZCwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICB2aW9faW5mby0+dmlvX2FkZHIsDQo+ID4gPiA+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgc2xhdmVfdHlwZSwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICB2aW9faW5mby0+c2hpZnRfc3RhX2JpdCwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICB2aW9faW5mby0+ZG9tYWluX2lkKTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+
-IENhbGwgbXQ2ODczX2J1c19pZF90b19tYXN0ZXIoKSBkaXJlY3RseS4gRm9yIGZpcnN0IHBhdGNo
-LCBtYWtlIHRoaW5ncw0KPiA+ID4gPiA+IGFzIHNpbXBsZSBhcyBwb3NzaWJsZS4NCj4gPiA+ID4N
-Cj4gPiA+ID4gSW4gZGV2YXBjX3Zpb2xhdGlvbl9pcnEoKSBmdW5jdGlvbiwgd2UgdXNlIGNvbW1v
-biBmbG93IHRvIGhhbmRsZSBlYWNoDQo+ID4gPiA+IGRldmFwYyB2aW9sYXRpb24gb24gZGlmZmVy
-ZW50IHBsYXRmb3Jtcy4gVGhlIG1hc3Rlcl9nZXQoKSBoYXMgZGlmZmVyZW50DQo+ID4gPiA+IGlt
-cGxlbWVudGF0aW9uIG9uIGRpZmZlcmVudCBwbGF0Zm9ybXMsIHRoYXQgd2h5IGl0IGNhbGxlZCBp
-bmRpcmVjdGx5Lg0KPiA+ID4gPg0KPiA+ID4gPiBPbmNlIHdlIGhhdmUgbmV3IHBsYXRmb3JtLCB3
-ZSBvbmx5IGhhdmUgdG8gdXBkYXRlIGRldmFwYy1tdHh4eHguYw0KPiA+ID4gPiBpbnN0ZWFkIG9m
-IGNvbW1vbiBoYW5kbGVyIGZsb3cuDQo+ID4gPg0KPiA+ID4gWW91IGp1c3QgdXBzdHJlYW0gb25l
-IFNvQyBub3csIHNvIEkgaGF2ZSBubyBpbmZvcm1hdGlvbiBvZiAybmQgU29DLg0KPiA+ID4gV2l0
-aG91dCB0aGUgMm5kIFNvQywgaG93IGRvIHdlIGtub3cgd2hhdCBpcyBjb21tb24gYW5kIHdoYXQg
-aXMgU29DIHNwZWNpYWw/DQo+ID4gPiBTbyB0aGUgZmlyc3QgcGF0Y2ggc2hvdWxkIG5vdCBjb25z
-aWRlciB0aGUgdGhpbmdzIHdoaWNoIGRvZXMgbm90IGV4aXN0IHlldC4NCj4gPiA+DQo+ID4gPiBS
-ZWdhcmRzLA0KPiA+ID4gQ2h1bi1LdWFuZy4NCj4gPiA+DQo+ID4NCj4gPiBJdCBoYXMgbG90cyBv
-ZiByZWZhY3RvcmluZyB3b3JrIG5lZWQgdG8gZG8gaWYgeW91IHJlYWxseSB3YW50IG1ha2UgaXQN
-Cj4gPiAic2ltcGxlIi4gQ291bGQgSSBleHBsYWluIG1vcmUgZGV0YWlscyBhbmQgbGV0IHlvdSBq
-dWRnZSBpdCBpcyBzaW1wbGUNCj4gPiBlbm91Z2g/DQo+IA0KPiBNYWtpbmcgZHJpdmVyICJzaW1w
-bGUiIGlzIHZlcnkgaW1wb3J0YW50LCBzbyBpdCB3b3J0aCB0byBzcGVuZCBlZmZvcnQNCj4gdG8g
-bWFrZSB0aGluZ3Mgc2ltcGxlLiBFdmVyeWJvZHkgY291bGQgbW9kaWZ5IHRoaXMgZHJpdmVyLCBz
-byBtYWtlDQo+IHRoaXMgZHJpdmVyIHNpbXBsZSBhbmQgZXZlcnlib2R5IHdvdWxkIGpvaW4gdGhp
-cyBlYXNpbHkuDQo+IA0KPiA+IEZvciBtb3N0IE1lZGlhVGVrIERFVkFQQyBodywgdGhlIHZpb2xh
-dGlvbiBpbnRlcnJ1cHQgaGFuZGxpbmcgc2VxdWVuY2UNCj4gPiBpcyBzaG93biBiZWxvdy4NCj4g
-Pg0KPiA+IDEuIERvbWFpbiBwcm9jZXNzb3IgcmVjZWl2ZXMgYSBpbnRlcnJ1cHQgaXNzdWVkIGJ5
-IERFVkFQQy4NCj4gPiAyLiBTb2Z0d2FyZSByZWFkIHRoZSB2aW9sYXRpb24gc3RhdHVzIGFuZCBp
-ZGVudGlmeSBpdC4NCj4gPiAzLiBTb2Z0d2FyZSByZWFkIHRoZSBkZWJ1ZyBpbmZvcm1hdGlvbiB3
-aGljaCBhcmUgc3RvcmVkIGluIGh3IHJlZ2lzdGVyLg0KPiA+ICAgICAgICAgYS4gZGVidWcgaW5m
-b3JtYXRpb24gaW5jbHVkZXMgbWFzdGVyIElELCBkb21haW4gSUQsIHZpb2xhdGlvbg0KPiA+IGFk
-ZHJlc3MsIC4uLg0KPiA+IDQuIFRyYW5zZmVyIGRlYnVnIGluZm9ybWF0aW9uIHRvIGh1bWFuIHJl
-YWRhYmxlIHN0cmluZ3MuDQo+ID4gNS4gRXh0cmEgaGFuZGxlciB0byBkaXNwYXRjaCBvd25lciBk
-aXJlY3RseS4NCj4gDQo+IEkgZG9uJ3Qga25vdyB3aHkgbmVlZCBleHRyYSBoYW5kbGVyPyBXaGF0
-IGRvZXMgdGhpcyBleHRyYSBoYW5kbGVyIGNvdWxkIGRvPw0KPiBJZiBpbmRlZWQgbmVlZCBpdCwg
-c2VwYXJhdGUgZXh0cmEgaGFuZGxlciBwYXJ0IHRvIGFuIGluZGVwZW5kZW50IHBhdGNoLg0KDQpZ
-ZXMsIFlvdSBhcmUgcmlnaHQuIEknbGwgbWFrZSB0aGlzIGRyaXZlciBtb3JlIHNpbXBsZSBhbmQg
-bGV0IGV2ZXJ5Ym9keQ0KY2FuIGpvaW4gaXQgZWFzaWx5LiBUaGlzIGV4dHJhIGhhbmRsZXIgbWF5
-IG5vdCBiZSBuZWNlc3NhcnkgZm9yIHdob20gdHJ5DQp0byBlbmFibGUgdGhpcyBkcml2ZXIuDQoN
-Cj4gPg0KPiA+IFdoYXQgd2UgcmVhbGx5IGNhcmUgaXMgd2hpY2ggbWFzdGVyIHZpb2xhdGVzIHRo
-ZSBydWxlcywgYW5kIHdoaWNoIHNsYXZlDQo+ID4gaGFkIGJlZW4gYWNjZXNzZWQgdW5leHBlY3Rl
-ZGx5Lg0KPiA+DQo+ID4gSGVyZSBhcmUgcGxhdGZvcm0gc3BlY2lmaWMgaW5mb3JtYXRpb246DQo+
-ID4gMS4gU2xhdmVzIGxheW91dCAocGxhdGZvcm0gZGV2aWNlcykNCj4gPiAyLiBodyByZWdpc3Rl
-ciBsYXlvdXQgd2hpY2ggYXJlIHN0b3JlZCB2aW9sYXRpb24gaW5mb3JtYXRpb24NCj4gPiAzLiBN
-YXN0ZXIgSUQgbWFwcGluZyB0YWJsZQ0KPiA+IDQuIERvbWFpbiBJRCBtYXBwaW5nIHRhYmxlDQo+
-ID4NCj4gPiBIb3BlIHRoZXNlIHN0ZXBzIGNvdWxkIGhlbHAgeW91IHVuZGVyc3RhbmQgd2hhdCBp
-cyBjb21tb24gYW5kIHdoYXQgaXMNCj4gPiBTb0Mgc3BlY2lmaWMuIElmIHlvdSB3YW50IHRvIHNl
-ZSB0aGUgMm5kIFNvQydzIGRyaXZlciwgSSBjYW4gYWxzbyBzZW5kDQo+ID4gaXQgZm9yIHlvdSB0
-byB0YWtlIGEgbG9vay4NCj4gDQo+IFBsZWFzZSB1cHN0cmVhbSAybmQgU29DJ3MgZHJpdmVyLCBz
-byBJIGNvdWxkIHJldmlldyBjb21tb24gcGFydCBhbmQNCj4gU29DIHNwZWNpZmljIHBhcnQuDQo+
-IA0KPiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KPiANCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBO
-ZWFsDQo+ID4NCj4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4g
-KyAgICAgICAgICAgICAgIGlmICghdmlvX21hc3Rlcikgew0KPiA+ID4gPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgcHJfd2FybihQRlggIm1hc3Rlcl9nZXQgZmFpbGVkXG4iKTsNCj4gPiA+
-ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHZpb19tYXN0ZXIgPSAiVU5LTk9XTl9NQVNU
-RVIiOw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIH0NCj4gPiA+ID4gPiA+ICsNCj4gPiA+
-ID4gPiA+ICsgICAgICAgICAgICAgICBwcl9pbmZvKFBGWCAiJXMgLSAlczoweCV4LCAlczoweCV4
-LCAlczoweCV4LCAlczoweCV4XG4iLA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgIlZpb2xhdGlvbiIsICJzbGF2ZV90eXBlIiwgc2xhdmVfdHlwZSwNCj4gPiA+ID4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICJzeXNfaW5kZXgiLA0KPiA+ID4gPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgZGV2aWNlX2luZm9bc2xhdmVfdHlwZV1baW5kZXhdLnN5c19pbmRleCwN
-Cj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICJjdHJsX2luZGV4IiwNCj4gPiA+
-ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRldmljZV9pbmZvW3NsYXZlX3R5cGVdW2lu
-ZGV4XS5jdHJsX2luZGV4LA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgInZp
-b19pbmRleCIsDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2VfaW5m
-b1tzbGF2ZV90eXBlXVtpbmRleF0udmlvX2luZGV4KTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgICBwcl9pbmZvKFBGWCAiJXMgJXMgJXMgJXNcbiIsDQo+ID4gPiA+
-ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAiVmlvbGF0aW9uIC0gbWFzdGVyOiIsIHZpb19t
-YXN0ZXIsDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAiYWNjZXNzIHZpb2xh
-dGlvbiBzbGF2ZToiLA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNl
-X2luZm9bc2xhdmVfdHlwZV1baW5kZXhdLmRldmljZSk7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+
-ID4gPiArICAgICAgICAgICAgICAgZGV2YXBjX3Zpb19yZWFzb24ocGVybSk7DQo+ID4gPiA+ID4g
-PiArDQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgZGV2YXBjX2V4dHJhX2hhbmRsZXIoc2xh
-dmVfdHlwZSwgdmlvX21hc3RlciwgdmlvX2lkeCwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB2aW9faW5mby0+dmlvX2FkZHIpOw0KPiA+ID4gPiA+ID4g
-Kw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShzbGF2ZV90eXBl
-LCB2aW9faWR4LCBmYWxzZSk7DQo+ID4gPiA+ID4gPiArICAgICAgIH0NCj4gPiA+ID4gPiA+ICsN
-Cj4gPiA+ID4gPiA+ICsgICAgICAgaWYgKG5vcm1hbCkgew0KPiA+ID4gPiA+ID4gKyAgICAgICAg
-ICAgICAgIHNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmRldmFwY19sb2NrLCBmbGFncyk7DQo+ID4g
-PiA+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIElSUV9IQU5ETEVEOw0KPiA+ID4gPiA+ID4g
-KyAgICAgICB9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgIHNwaW5fdW5sb2Nr
-X2lycXJlc3RvcmUoJmRldmFwY19sb2NrLCBmbGFncyk7DQo+ID4gPiA+ID4gPiArICAgICAgIHJl
-dHVybiBJUlFfSEFORExFRDsNCj4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+
-DQo+ID4gPiA+IFtzbmlwXQ0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+DQoNCg==
+Hi Fenghua,
 
+On 6/13/20 8:41 AM, Fenghua Yu wrote:
+> A PASID is allocated for an "mm" the first time any thread attaches
+> to an SVM capable device. Later device attachments (whether to the same
+> device or another SVM device) will re-use the same PASID.
+> 
+> The PASID is freed when the process exits (so no need to keep
+> reference counts on how many SVM devices are sharing the PASID).
+> 
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+> v2:
+> - Define a helper free_bind() to simplify error exit code in bind_mm()
+>    (Thomas)
+> - Fix a ret error code in bind_mm() (Thomas)
+> - Change pasid's type from "int" to "unsigned int" to have consistent
+>    pasid type in iommu (Thomas)
+> - Simplify alloc_pasid() a bit.
+> 
+>   arch/x86/include/asm/iommu.h       |   2 +
+>   arch/x86/include/asm/mmu_context.h |  14 ++++
+>   drivers/iommu/intel/svm.c          | 101 +++++++++++++++++++++++++----
+>   3 files changed, 105 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
+> index bf1ed2ddc74b..ed41259fe7ac 100644
+> --- a/arch/x86/include/asm/iommu.h
+> +++ b/arch/x86/include/asm/iommu.h
+> @@ -26,4 +26,6 @@ arch_rmrr_sanity_check(struct acpi_dmar_reserved_memory *rmrr)
+>   	return -EINVAL;
+>   }
+>   
+> +void __free_pasid(struct mm_struct *mm);
+> +
+>   #endif /* _ASM_X86_IOMMU_H */
+> diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+> index 47562147e70b..f8c91ce8c451 100644
+> --- a/arch/x86/include/asm/mmu_context.h
+> +++ b/arch/x86/include/asm/mmu_context.h
+> @@ -13,6 +13,7 @@
+>   #include <asm/tlbflush.h>
+>   #include <asm/paravirt.h>
+>   #include <asm/debugreg.h>
+> +#include <asm/iommu.h>
+>   
+>   extern atomic64_t last_mm_ctx_id;
+>   
+> @@ -117,9 +118,22 @@ static inline int init_new_context(struct task_struct *tsk,
+>   	init_new_context_ldt(mm);
+>   	return 0;
+>   }
+> +
+> +static inline void free_pasid(struct mm_struct *mm)
+> +{
+> +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
+> +		return;
+> +
+> +	if (!cpu_feature_enabled(X86_FEATURE_ENQCMD))
+> +		return;
+> +
+> +	__free_pasid(mm);
+> +}
+> +
+>   static inline void destroy_context(struct mm_struct *mm)
+>   {
+>   	destroy_context_ldt(mm);
+> +	free_pasid(mm);
+>   }
+>   
+>   extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index 4e775e12ae52..27dc866b8461 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -425,6 +425,53 @@ int intel_svm_unbind_gpasid(struct device *dev, unsigned int pasid)
+>   	return ret;
+>   }
+>   
+> +static void free_bind(struct intel_svm *svm, struct intel_svm_dev *sdev,
+> +		      bool new_pasid)
+> +{
+> +	if (new_pasid)
+> +		ioasid_free(svm->pasid);
+> +	kfree(svm);
+> +	kfree(sdev);
+> +}
+> +
+> +/*
+> + * If this mm already has a PASID, use it. Otherwise allocate a new one.
+> + * Let the caller know if a new PASID is allocated via 'new_pasid'.
+> + */
+> +static int alloc_pasid(struct intel_svm *svm, struct mm_struct *mm,
+> +		       unsigned int pasid_max, bool *new_pasid,
+> +		       unsigned int flags)
+> +{
+> +	unsigned int pasid;
+> +
+> +	*new_pasid = false;
+> +
+> +	/*
+> +	 * Reuse the PASID if the mm already has a PASID and not a private
+> +	 * PASID is requested.
+> +	 */
+> +	if (mm && mm->pasid && !(flags & SVM_FLAG_PRIVATE_PASID)) {
+> +		/*
+> +		 * Once a PASID is allocated for this mm, the PASID
+> +		 * stays with the mm until the mm is dropped. Reuse
+> +		 * the PASID which has been already allocated for the
+> +		 * mm instead of allocating a new one.
+> +		 */
+> +		ioasid_set_data(mm->pasid, svm);
+
+How about adding some sanity checks here? For example,
+
+	void *p = ioasid_find(NULL, mm->pasid, NULL);
+
+	if (!p)
+		ioasid_set_data(mm->pasid, svm);
+	else if (IS_ERR(p) || p != svm)
+		return INVALID_IOSASID;
+
+Best regards,
+baolu
