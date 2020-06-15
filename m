@@ -2,90 +2,114 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF626C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE1E20756
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TkYfY1MZ"
+	by mail.kernel.org (Postfix) with ESMTP id 95FC0207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592249196;
+	bh=AvkDF1W+evs4ACyDeBmJZSphxtaBgYojELjru6qP34U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N8GvfG0gncLKr8jm5egHbWxr31lMp4XcymrGQPCZ8ltggKgk99c7tEXYfGBXlghms
+	 lZ6hciiTw1AMaytMYD6rCP0AMsGoafoBIZFhRcge1zXcvY6VL9tzOiLKZ4pc0NnHAb
+	 WmpmG3ODMn//3kqtd7CQD9EC3zSZAn6cUOr2sXQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbgFOTYl (ORCPT
+        id S1730017AbgFOT0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:24:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729354AbgFOTYl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:24:41 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E678AC061A0E;
-        Mon, 15 Jun 2020 12:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=o/JsAlwy0uiPTZJbnxb3o/jI/kR8nbsjEu/EdGG2gWc=; b=TkYfY1MZo/dHb2UhJo+l3BaQ7c
-        vaFRZj1tB/FYkmWdEPCX86dDElEjgg5tk9m5mLEN8ALrYX1Ed6QtvS9z8kT5Uq09TuvUAK2Dx1ydt
-        hk6WkuurSOfi1TqSWEIpNlJm2lIR/YCK5WN8H8koOsM0o8MLaBk0CV4kI909BQoAq/XTxPwfKkxq8
-        lL98NcuKEGO9L/c93tY6oouMILZfuDXMbsSmmBjsihUdRlp7UO8+/S8VTL0PshAZdkRBiRaSZD2te
-        SjYuAoaFtk7gN6jr5gppjFDwrwzhMWZ+oy6H45tz8uDkFrgkgHtEUVYrg8ySIXwXbwiDLwUmElr9Z
-        cKjhYa/A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkuij-0004XU-8S; Mon, 15 Jun 2020 19:24:37 +0000
-To:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lukas Wunner <lukas@wunner.de>, Heiko Stuebner <heiko@sntech.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] tty/serial: fix serial_core.c kernel-doc warnings
-Message-ID: <e170db8e-5c8b-27ac-79a4-81b96ac0ca2d@infradead.org>
-Date:   Mon, 15 Jun 2020 12:24:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 15:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729854AbgFOT0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 15:26:33 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0B9420756;
+        Mon, 15 Jun 2020 19:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592249193;
+        bh=AvkDF1W+evs4ACyDeBmJZSphxtaBgYojELjru6qP34U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AL6Ge9s0gex0hxoxM3nzvCoe5DV/SPRIHO8CUoZbbay9M628GxRDagsRytBs1A9hF
+         IsifoHGmtCVGfPlnC3zKNzsG6zYkedW5VzfUXPM9n6gdKYZVYEA+h/q2CB3/L5Qk9H
+         XMKdQOOeOQeTwF6cws0Y/DjmJP/RimvZu81zBaXI=
+Date:   Mon, 15 Jun 2020 20:26:30 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, lukas@wunner.de,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+Message-ID: <20200615192630.GC4447@sirena.org.uk>
+References: <20200605132037.GF5413@sirena.org.uk>
+ <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+ <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+ <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
+ <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
+ <20200608112840.GC4593@sirena.org.uk>
+ <bb9dbf11-9e33-df60-f5ae-f7fdfe8458b4@gmail.com>
+ <20200615170031.GA4447@sirena.org.uk>
+ <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
+ <2f354ed0-9fb7-59ea-ddd1-78703d9c818e@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dOtxUVmLoGkyu1PA"
+Content-Disposition: inline
+In-Reply-To: <2f354ed0-9fb7-59ea-ddd1-78703d9c818e@arm.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
 
-Fix kernel-doc warnings in serial_core.c:
+--dOtxUVmLoGkyu1PA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-../drivers/tty/serial/serial_core.c:3300: warning: Function parameter or member 'port' not described in 'uart_get_rs485_mode'
-../drivers/tty/serial/serial_core.c:3300: warning: Excess function parameter 'dev' description in 'uart_get_rs485_mode'
-../drivers/tty/serial/serial_core.c:3300: warning: Excess function parameter 'rs485conf' description in 'uart_get_rs485_mode'
+On Mon, Jun 15, 2020 at 06:31:58PM +0100, Robin Murphy wrote:
 
-Fixes: c150c0f362c1 ("serial: Allow uart_get_rs485_mode() to return errno")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-serial@vger.kernel.org
----
- drivers/tty/serial/serial_core.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> Now that I've been inclined to go and look up the documentation, are we sure
+> this so-very-contentious check is even correct? From my reading of things
+> we're checking whether the RXR interrupt function is *enabled*, which still
+> says nothing about whether either condition for the interrupt being
+> *asserted* is true (RXR = 1 or DONE = 1). Thus if more than one SPI instance
+> is active at once we could still end up trying to service an IRQ on a
+> controller that didn't raise it.
 
---- linux-next-20200615.orig/drivers/tty/serial/serial_core.c
-+++ linux-next-20200615/drivers/tty/serial/serial_core.c
-@@ -3289,8 +3289,7 @@ EXPORT_SYMBOL(uart_remove_one_port);
- 
- /**
-  * uart_get_rs485_mode() - retrieve rs485 properties for given uart
-- * @dev: uart device
-- * @rs485conf: output parameter
-+ * @port: uart device's target port
-  *
-  * This function implements the device tree binding described in
-  * Documentation/devicetree/bindings/serial/rs485.txt.
+OK, I've pulled the patch from the queue for now :/
 
+--dOtxUVmLoGkyu1PA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ny2YACgkQJNaLcl1U
+h9Dlcwf/TI9wOgBtOFPjlWSb4Y2ZgnY4A2yEniFWHZl5+Z/hDkPg8DQB5gpHbOJB
+aq6nJ/zdl7Ls8/2fAZFBLoKdl1x02xn0g50XxakTsSSVgaumCRRjx/bZkpnWDRMi
+hOv3B7MZ/8QIJaoW4XW9h4Gr+FUmYL7OGkVcE0ZfPkN+raFcKBhRC6J3CZODGONN
+xa7O7JtoQu8TFEnp97ymMxfxpWdiyGRfkz0eCJMiFLjv+1CUcneJEMDJ+RRZzQbZ
+/KAoGLuKCfm0fFD5QlI9XwsSEVpPa0BHmSWbGa+cxxRZMqq0EnmYzL4TT9twKHXi
+QK/ulZP2pSHvw+ZBQfDln2Mm1nPbhQ==
+=3Gjc
+-----END PGP SIGNATURE-----
+
+--dOtxUVmLoGkyu1PA--
