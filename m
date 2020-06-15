@@ -2,256 +2,140 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C159BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D61C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 961FB20707
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yUN9zY+w"
+	by mail.kernel.org (Postfix) with ESMTP id 0FB1A20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgFOKe4 (ORCPT
+        id S1729414AbgFOKhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgFOKeu (ORCPT
+        Mon, 15 Jun 2020 06:37:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9806 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728885AbgFOKhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:34:50 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82EF1C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:34:50 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f7so16866493ejq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j5XMGazWwGhDJ5Y/GJxd/IOFuFz4Mx+W59DIWX6atAo=;
-        b=yUN9zY+w+uEF7QUjafBk8bygiw68mGJQOUSQN1qm0nXky1JJl4ooC3C4lnT6eBEIsq
-         9vNvV+fXRQ4KAj7m4pbN/bWKcyMsQyYVIB66iX8gUjSsz/bMfjOQGMgGjqEbb2YS7BZ4
-         zvkfRM/bob0uBZbS+pt+joSiVGVtobC83KXezDgob1W9PfH/z3TZs8aQyeTrsaZMS1q0
-         KZrUUdo03gANUOOLjwOBI6LD8pehI1rBeu0cqKr7ARKiJnFVE1U+upDauUgdEkgveKEf
-         K/nztd00eMKZTlqV4gsN/PVZ5gzU3TBm7XTlfeZSlvtoWxeusfty1M/jxM244rzyyTZb
-         9zEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j5XMGazWwGhDJ5Y/GJxd/IOFuFz4Mx+W59DIWX6atAo=;
-        b=jGVnB9KOsGIDDj8Ihuj+dgALugxvO+x0hwiLvFI1YxDHtpMskCcNGC2x6xvaXCo6Wc
-         4Na1NTR/IpTgQGyE+DBA7nSn2umWJoWngTzw2tq6JE3iGU4ewqEs3KNpm36ZHzoOBeay
-         /GRElPFiYXJrENAOj0/vzj/kUw80jG+cfFvy4pb88/3qKTENkFUqi6oOuPa2HTQjPOt9
-         Jtdysiya80UDbqyEPdh/W3UjlOcncNmvPuEgPVKS3hNCQFzfF6z4BvID1V5aM/1wA0mI
-         nurx0B16oz4OfiBcc5jQt0Zh6ToVY88bl7JWUhvvFj01Z2BWdz4KqwLTHYeTW1QiCVTG
-         h4rw==
-X-Gm-Message-State: AOAM5330DT9IKd2EAmeakXmNGLHtvCLQacSKqtCqnZxm1BJNm0CmVUiN
-        ShOxswEtyfc1lceZ9F4fHHAUkQ==
-X-Google-Smtp-Source: ABdhPJx1280e9KwTAh7L8gxkMqPelJpVU6bgb9LhdKNWQEIq/YWdEIkALizUMB+r3MxYtN9/T11Ilg==
-X-Received: by 2002:a17:906:fb19:: with SMTP id lz25mr25935106ejb.349.1592217288982;
-        Mon, 15 Jun 2020 03:34:48 -0700 (PDT)
-Received: from [192.168.1.3] (212-5-158-38.ip.btc-net.bg. [212.5.158.38])
-        by smtp.googlemail.com with ESMTPSA id rv14sm8837913ejb.110.2020.06.15.03.34.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 03:34:48 -0700 (PDT)
-Subject: Re: [PATCH v4 1/3] venus: Add debugfs interface to set firmware log
- level
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20200613223919.7038-1-stanimir.varbanov@linaro.org>
- <20200613223919.7038-2-stanimir.varbanov@linaro.org>
- <20200614063511.GA2611869@kroah.com>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <d86671f8-fb27-671b-cc0c-bc4ab1353943@linaro.org>
-Date:   Mon, 15 Jun 2020 13:34:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 06:37:35 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F9WB8k191943;
+        Mon, 15 Jun 2020 06:37:33 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31mua61uwf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 06:37:33 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FAIrP7011677;
+        Mon, 15 Jun 2020 06:37:33 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31mua61uvk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 06:37:32 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FATw2G015404;
+        Mon, 15 Jun 2020 10:37:30 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 31mpe83chp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 10:37:30 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FAaAMr64684452
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 10:36:10 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 990E711C05B;
+        Mon, 15 Jun 2020 10:37:27 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A22611C05C;
+        Mon, 15 Jun 2020 10:37:27 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.56.158])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 10:37:27 +0000 (GMT)
+Date:   Mon, 15 Jun 2020 12:37:25 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
+Message-ID: <20200615123725.13f6a8de.pasic@linux.ibm.com>
+In-Reply-To: <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
+References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
+        <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
+        <f7eb1154-0f52-0f12-129f-2b511f5a4685@linux.ibm.com>
+        <6356ba7f-afab-75e1-05ff-4a22b88c610e@linux.ibm.com>
+        <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200614063511.GA2611869@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-12_17:2020-06-12,2020-06-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ spamscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ clxscore=1015 adultscore=0 mlxscore=0 suspectscore=0 phishscore=0
+ priorityscore=1501 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Mon, 15 Jun 2020 11:01:55 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-On 6/14/20 9:35 AM, Greg KH wrote:
-> On Sun, Jun 14, 2020 at 01:39:17AM +0300, Stanimir Varbanov wrote:
->> This will be useful when debugging specific issues related to
->> firmware HFI interface.
->>
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> > hum, in between I found another way which seems to me much better:
+> >
+> > We already have the force_dma_unencrypted() function available which 
+> > AFAIU is what we want for encrypted memory protection and is already 
+> > used by power and x86 SEV/SME in a way that seems AFAIU compatible 
+> > with our problem.
+> >
+> > Even DMA and IOMMU are different things, I think they should be used 
+> > together in our case.
+> >
+> > What do you think?
+> >
+> > The patch would then be something like:
+> >
+> > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> > index a977e32a88f2..53476d5bbe35 100644
+> > --- a/drivers/virtio/virtio.c
+> > +++ b/drivers/virtio/virtio.c
+> > @@ -4,6 +4,7 @@
+> >  #include <linux/virtio_config.h>
+> >  #include <linux/module.h>
+> >  #include <linux/idr.h>
+> > +#include <linux/dma-direct.h>
+> >  #include <uapi/linux/virtio_ids.h>
+> >
+> >  /* Unique numbering for virtio devices. */
+> > @@ -179,6 +180,10 @@ int virtio_finalize_features(struct virtio_device 
+> > *dev)
+> >         if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+> >                 return 0;
+> >
+> > +       if (force_dma_unencrypted(&dev->dev) &&
+> > +           !virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+> > +               return -EIO;
+> > +
+> >         virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
+> >         status = dev->config->get_status(dev);
+> >         if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {  
 > 
-> You didn't cc: any of us on the patchs, like you did on 0/3 :(
+> 
+> I think this can work but need to listen from Michael
 
-yes, sorry about that.
+I don't think Christoph Hellwig will like force_dma_unencrypted()
+in virtio code:
+https://lkml.org/lkml/2020/2/20/630
 
-> 
-> 
->> ---
->>  drivers/media/platform/qcom/venus/Makefile    |  2 +-
->>  drivers/media/platform/qcom/venus/core.c      |  3 +++
->>  drivers/media/platform/qcom/venus/core.h      |  3 +++
->>  drivers/media/platform/qcom/venus/dbgfs.c     | 21 +++++++++++++++++++
->>  drivers/media/platform/qcom/venus/dbgfs.h     | 12 +++++++++++
->>  drivers/media/platform/qcom/venus/hfi_venus.c |  7 ++++++-
->>  6 files changed, 46 insertions(+), 2 deletions(-)
->>  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.c
->>  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.h
->>
->> diff --git a/drivers/media/platform/qcom/venus/Makefile b/drivers/media/platform/qcom/venus/Makefile
->> index 64af0bc1edae..dfc636865709 100644
->> --- a/drivers/media/platform/qcom/venus/Makefile
->> +++ b/drivers/media/platform/qcom/venus/Makefile
->> @@ -3,7 +3,7 @@
->>  
->>  venus-core-objs += core.o helpers.o firmware.o \
->>  		   hfi_venus.o hfi_msgs.o hfi_cmds.o hfi.o \
->> -		   hfi_parser.o pm_helpers.o
->> +		   hfi_parser.o pm_helpers.o dbgfs.o
->>  
->>  venus-dec-objs += vdec.o vdec_ctrls.o
->>  venus-enc-objs += venc.o venc_ctrls.o
->> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
->> index 203c6538044f..249141e27fea 100644
->> --- a/drivers/media/platform/qcom/venus/core.c
->> +++ b/drivers/media/platform/qcom/venus/core.c
->> @@ -290,6 +290,8 @@ static int venus_probe(struct platform_device *pdev)
->>  	if (ret)
->>  		goto err_dev_unregister;
->>  
->> +	venus_dbgfs_init(core);
->> +
->>  	return 0;
->>  
->>  err_dev_unregister:
->> @@ -337,6 +339,7 @@ static int venus_remove(struct platform_device *pdev)
->>  	v4l2_device_unregister(&core->v4l2_dev);
->>  	mutex_destroy(&core->pm_lock);
->>  	mutex_destroy(&core->lock);
->> +	venus_dbgfs_deinit(core);
->>  
->>  	return ret;
->>  }
->> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
->> index 7118612673c9..b48782f9aa95 100644
->> --- a/drivers/media/platform/qcom/venus/core.h
->> +++ b/drivers/media/platform/qcom/venus/core.h
->> @@ -12,6 +12,7 @@
->>  #include <media/v4l2-ctrls.h>
->>  #include <media/v4l2-device.h>
->>  
->> +#include "dbgfs.h"
->>  #include "hfi.h"
->>  
->>  #define VIDC_CLKS_NUM_MAX		4
->> @@ -136,6 +137,7 @@ struct venus_caps {
->>   * @priv:	a private filed for HFI operations
->>   * @ops:		the core HFI operations
->>   * @work:	a delayed work for handling system fatal error
->> + * @root:	debugfs root directory
->>   */
->>  struct venus_core {
->>  	void __iomem *base;
->> @@ -185,6 +187,7 @@ struct venus_core {
->>  	unsigned int codecs_count;
->>  	unsigned int core0_usage_count;
->>  	unsigned int core1_usage_count;
->> +	struct dentry *root;
->>  };
->>  
->>  struct vdec_controls {
->> diff --git a/drivers/media/platform/qcom/venus/dbgfs.c b/drivers/media/platform/qcom/venus/dbgfs.c
->> new file mode 100644
->> index 000000000000..782d54ac1b8f
->> --- /dev/null
->> +++ b/drivers/media/platform/qcom/venus/dbgfs.c
->> @@ -0,0 +1,21 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (C) 2020 Linaro Ltd.
->> + */
->> +
->> +#include <linux/debugfs.h>
->> +
->> +#include "core.h"
->> +
->> +extern int venus_fw_debug;
->> +
->> +void venus_dbgfs_init(struct venus_core *core)
->> +{
->> +	core->root = debugfs_create_dir("venus", NULL);
->> +	debugfs_create_x32("fw_level", 0644, core->root, &venus_fw_debug);
->> +}
->> +
->> +void venus_dbgfs_deinit(struct venus_core *core)
->> +{
->> +	debugfs_remove_recursive(core->root);
->> +}
->> diff --git a/drivers/media/platform/qcom/venus/dbgfs.h b/drivers/media/platform/qcom/venus/dbgfs.h
->> new file mode 100644
->> index 000000000000..b7b621a8472f
->> --- /dev/null
->> +++ b/drivers/media/platform/qcom/venus/dbgfs.h
->> @@ -0,0 +1,12 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/* Copyright (C) 2020 Linaro Ltd. */
->> +
->> +#ifndef __VENUS_DBGFS_H__
->> +#define __VENUS_DBGFS_H__
->> +
->> +struct venus_core;
->> +
->> +void venus_dbgfs_init(struct venus_core *core);
->> +void venus_dbgfs_deinit(struct venus_core *core);
->> +
->> +#endif
->> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
->> index 0d8855014ab3..3a04b08ab85a 100644
->> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
->> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
->> @@ -130,7 +130,7 @@ struct venus_hfi_device {
->>  };
->>  
->>  static bool venus_pkt_debug;
->> -static int venus_fw_debug = HFI_DEBUG_MSG_ERROR | HFI_DEBUG_MSG_FATAL;
->> +int venus_fw_debug = HFI_DEBUG_MSG_ERROR | HFI_DEBUG_MSG_FATAL;
->>  static bool venus_sys_idle_indicator;
->>  static bool venus_fw_low_power_mode = true;
->>  static int venus_hw_rsp_timeout = 1000;
->> @@ -1130,9 +1130,14 @@ static int venus_session_init(struct venus_inst *inst, u32 session_type,
->>  			      u32 codec)
->>  {
->>  	struct venus_hfi_device *hdev = to_hfi_priv(inst->core);
->> +	struct device *dev = hdev->core->dev;
->>  	struct hfi_session_init_pkt pkt;
->>  	int ret;
->>  
->> +	ret = venus_sys_set_debug(hdev, venus_fw_debug);
->> +	if (ret)
->> +		dev_warn(dev, "setting fw debug msg ON failed (%d)\n", ret);
-> 
-> Why do you care about this to tell the user about it?
-
-I already answered to this question in previous patchset version. I'll
-drop the message and return an error if set_debug fail.
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
--- 
-regards,
-Stan
+Regards,
+Halil
