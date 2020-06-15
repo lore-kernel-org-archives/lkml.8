@@ -2,122 +2,101 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C317DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBDA20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592230541;
-	bh=pOf9ob1yXOcLv+kngT7rJ4CcwcVjvYQLZaRnOjX9KYg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hj7vZ4FPPU2heiOo/X75+QYeH9salAWc3bp/r2jUhxCrMfeQ1RGW3aGk+7VWhBJlV
-	 TBHA9mxDzcXSHe9dr/h7heO0aUX+BDNvMukgb657cAQOQT2QdnYt/kUxG3KzpgydL+
-	 A7dUvdM4NcrSmSW/BTe5WIJRbnt9hm+G+sivuPsg=
+	by mail.kernel.org (Postfix) with ESMTP id E9B3520679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:16:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vGpLo03w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbgFOOPk (ORCPT
+        id S1730485AbgFOOQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:15:40 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:60952 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730022AbgFOOPi (ORCPT
+        Mon, 15 Jun 2020 10:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbgFOOQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:15:38 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 05FEFFuc001841;
-        Mon, 15 Jun 2020 23:15:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 05FEFFuc001841
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592230515;
-        bh=xmQzt5ozqUDfusz/+X9tTq5Zy7GppPGRYRP3NXmssX4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CoxsK5UqwzZtQIy2bAWA1dkV2aYZCFEcHX8OOVC/AC23vI4UYkamBipCyAwaQHsNC
-         W8Uf9NlwRq0KuMpuK4te2tLdIBt0Rs8NeTAJ6HMZne8e3XdKqsvtl0t3MMtOGTlO2K
-         WcvFtYLDrgQJKsEhRfJdytQl3exxC+rJ5nY53eYQ/Z+URmm3cUA31VG8eCM4oSy+21
-         OyRlAzPZEu3ycCxYygW1yiskY7999e3MOPdxa0fY1rmcEYjxoBUVfCX2j9IwPpMcUx
-         1I24NyNhJuTYLDGnEm286TqBe1C2O42phDlOZG+sHL5meVg+BGT2RRHFooVjmDA9pr
-         hPFphn4g44KpA==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id i8so1122297uak.9;
-        Mon, 15 Jun 2020 07:15:15 -0700 (PDT)
-X-Gm-Message-State: AOAM530wGKXVt7v5anSk1Ekfnc1vXHT42S13QTOHeEa/GYX/HqPdaO9x
-        fgTZJQ4xAglZcyGiXYlCc0NF9L0A/yIBLydLLSw=
-X-Google-Smtp-Source: ABdhPJwGbVy/6TjyF65GLtUD4/lPeWjMrUoVu8Kl4lBNcgY1L1EifCammXZkd6BT/Cgh7HUPvFAO52Hed6qKoukOZRQ=
-X-Received: by 2002:ab0:156d:: with SMTP id p42mr19609339uae.121.1592230514499;
- Mon, 15 Jun 2020 07:15:14 -0700 (PDT)
+        Mon, 15 Jun 2020 10:16:13 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0685FC061A0E;
+        Mon, 15 Jun 2020 07:16:12 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id mb16so17631617ejb.4;
+        Mon, 15 Jun 2020 07:16:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WC5bFIazCh8vFZr3dbJEpqc1xCdQ+Y0EsDw6h2APg/s=;
+        b=vGpLo03wEbecIwDZs6aLM5MifTH9cIaqISkQ2o8hV3akDsHB8L7PFAdBQYZlhcGMtA
+         TkrxZkXjVCEKb7U+79U16j9wr4Idqho4y+s8QngzmmDcwEtJUAiXW5oBDO/eA7GabpAd
+         cZrKTkKf86XAXvgxHcdsFjPPsYQGDPj7MT2sJ36NGA4pnP5x0ICjMUc73VfKvie0Y/WH
+         r+KoQnbycHx8PoW8PFK096V/HOnwDnFsBd2YV3PPDuZL4Y1lH9ZmiCFwhE1QdalvPgFT
+         3v+jvihcdujS8AVg55AJTK697VUH7/xbL1KNoTZR0eTUK3BgO8+dzBFH2Pbs7EGkwJNi
+         IT1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WC5bFIazCh8vFZr3dbJEpqc1xCdQ+Y0EsDw6h2APg/s=;
+        b=VPzvQgJN/SACjKdrFMmuOJIUwyCp4MA+G8wZfP6XV22kpGVgeAfLNo8Ex4gQ3FvCx8
+         bh/32z1iU32BtPSCvtbYn508fHP1y/fKgG/ZFLPD+rdT6hWV4BMKOrbwnclVketHo/8o
+         rLiVCm8CJIrxCIX5VCqEK7MEjn/f/7Xp/Ucv0mrkyLgAgCOQpiylnTz1d2Ede0TX0HHt
+         5fsgFmm3I2wG3tmvJI/TMEedIfVUOGyMhfibZrFgDFi31lv6U//ry2+ZaNhh4Yyy9yqw
+         SUo7dAkF1yYQb/b73tjqZnFgBqFHlVTcolhsT4J32Ylce/PGmINN94awcb6EJQTcwtcZ
+         PA+w==
+X-Gm-Message-State: AOAM532cDYiU5lGJHbXaAijS5XH2ukwffi/OWiQJZUkGiqfTP5kk3btE
+        3vkqRprbR09XoovXyDBRq8s=
+X-Google-Smtp-Source: ABdhPJxjOCr7M3aDqtDu1vsNHUEZH+2MiLrmJ8gWGmyUIpeeQ9Egc2sRH9S49Y4grpgwP83wTtCoKg==
+X-Received: by 2002:a17:906:1b1a:: with SMTP id o26mr25252560ejg.176.1592230571615;
+        Mon, 15 Jun 2020 07:16:11 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id s5sm9042275eji.73.2020.06.15.07.16.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 07:16:10 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] pwm: Miscellaneous fixes for 64-bit support
+Date:   Mon, 15 Jun 2020 16:16:04 +0200
+Message-Id: <20200615141606.2814208-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200604022031.164207-1-masahiroy@kernel.org> <20200604022031.164207-2-masahiroy@kernel.org>
- <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com> <CAMj1kXFhULbche0kbGr+mHofOYBU2WT8i7Bgx-qgz6Cp6AE8ow@mail.gmail.com>
-In-Reply-To: <CAMj1kXFhULbche0kbGr+mHofOYBU2WT8i7Bgx-qgz6Cp6AE8ow@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 15 Jun 2020 23:14:37 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARcq2O5redrnBnLuRXGs7HxyRxn_VSs2oRtDwOLkxLMdA@mail.gmail.com>
-Message-ID: <CAK7LNARcq2O5redrnBnLuRXGs7HxyRxn_VSs2oRtDwOLkxLMdA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] efi/libstub: refactor Makefile to not use lib-y syntax
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Atish Patra <atish.patra@wdc.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 7:41 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Mon, 15 Jun 2020 at 12:26, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Thu, 4 Jun 2020 at 04:20, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > Documentation/kbuild/makefiles.rst says:
-> > >
-> > >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
-> > >
-> > > This is because lib-y is inteded to be hooked to KBUILD_VMLINUX_LIBS,
-> > > which is passed down to scripts/link-vmlinux.sh.
-> > >
-> > > Besides, lib-y is not so interesting because objects from lib-y are
-> > > mostly linked in normal usecases. For example, lib-y only saves 364
-> > > bytes for x86_64_defconfig. You can see the details in commit
-> > > 7273ad2b08f8 ("kbuild: link lib-y objects to vmlinux forcibly when
-> > > CONFIG_MODULES=y").
-> > >
-> > > I think we should consider to deprecate lib-y syntax at some point
-> > > because we should aim for better solution like dead code elimination
-> > > or LTO.
-> > >
-> > > Other than lib/ and arch/*/lib, this Makefile is the only user of
-> > > lib-y. Replace lib-y with a custom rule.
-> > >
-> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> >
-> > Series queued in efi/urgent.
-> >
->
-> Actually, I am seeing this now
->
-> /home/ard/linux/scripts/Makefile.build:421: warning: overriding recipe
-> for target 'drivers/firmware/efi/libstub/lib.a'
-> /home/ard/linux/drivers/firmware/efi/libstub/Makefile:131: warning:
-> ignoring old recipe for target 'drivers/firmware/efi/libstub/lib.a'
+Hi,
 
+this contains a couple of fixes for issues that I ran into after
+applying Guru's series to convert PWM period and duty-cycle to 64-bit.
 
+Bartlomiej, can you provide an Acked-by on the first patch so that I can
+take it through the PWM tree along with the rest of Guru's series?
 
-Sorry, please drop this patch for now.
+Thanks,
+Thierry
 
-(Actually, it was working when I submitted it,
-but is broken after e578edc72276280b8fae57f6bf79cb443ceee7a2)
+Thierry Reding (2):
+  video: ssd1307fb: Print PWM period using 64-bit format specifier
+  pwm: iqs620a: Use 64-bit division
 
-
+ drivers/pwm/pwm-iqs620a.c       | 7 ++++---
+ drivers/video/fbdev/ssd1307fb.c | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.24.1
+
