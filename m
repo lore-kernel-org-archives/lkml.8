@@ -2,203 +2,126 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 03:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06266C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 03:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A864207BC
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 03:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD1C207BC
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 03:55:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RJN0Fr/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgFODyJ (ORCPT
+        id S1728214AbgFODzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 23:54:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727971AbgFODyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 23:54:07 -0400
-Received: from [10.44.0.192] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 291D120768;
-        Mon, 15 Jun 2020 03:53:45 +0000 (UTC)
-To:     rppt@kernel.org
-Cc:     Hoan@os.amperecomputing.com, James.Bottomley@HansenPartnership.com,
-        akpm@linux-foundation.org, bcain@codeaurora.org, bhe@redhat.com,
-        catalin.marinas@arm.com, corbet@lwn.net, dalias@libc.org,
-        davem@davemloft.net, deller@gmx.de, geert@linux-m68k.org,
-        green.hu@gmail.com, guoren@kernel.org, gxt@pku.edu.cn,
-        heiko.carstens@de.ibm.com, jcmvbkbc@gmail.com,
-        ley.foon.tan@intel.com, linux-alpha@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-c6x-dev@linux-c6x.org, linux-csky@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linux@armlinux.org.uk, linuxppc-dev@lists.ozlabs.org,
-        mattst88@gmail.com, mhocko@kernel.org, monstr@monstr.eu,
-        mpe@ellerman.id.au, msalter@redhat.com, nickhu@andestech.com,
-        openrisc@lists.librecores.org, paul.walmsley@sifive.com,
-        richard@nod.at, rppt@linux.ibm.com, shorne@gmail.com,
-        sparclinux@vger.kernel.org, tony.luck@intel.com,
-        tsbogend@alpha.franken.de, uclinux-h8-devel@lists.sourceforge.jp,
-        vgupta@synopsys.com, x86@kernel.org, ysato@users.sourceforge.jp
-References: <20200412194859.12663-5-rppt@kernel.org>
-Subject: Re: [PATCH 04/21] mm: free_area_init: use maximal zone PFNs rather
- than zone sizes
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <f53e68db-ed81-6ef6-5087-c7246d010ea2@linux-m68k.org>
-Date:   Mon, 15 Jun 2020 13:53:42 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 14 Jun 2020 23:55:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbgFODzv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 23:55:51 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D42C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 20:55:51 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d4so6972pgk.4
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 20:55:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b3r1b0ogG8RFYmtciXwkUKZ4Alfe4K9lVMAfswnI+sI=;
+        b=RJN0Fr/nvvnc1RU8+2/LOsn7FwyS0zS4HfmgrxoTwqWN8HEGW3mlq/thkvx9ltRO4l
+         bDj8uwg3w8tO7j81cWcRdTyyLtL9JdLm5JIIpV1SoqKweNUqkwS3sKIzhoQHCmG8kaYy
+         cB6nSOOnDDwLWmwRRyQodsA7dSxhJP39i75Dw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b3r1b0ogG8RFYmtciXwkUKZ4Alfe4K9lVMAfswnI+sI=;
+        b=Q82v1LsXpBY3EDB9vpKTe4+Zi7v71/KpPvasCh3zqQ5OoywqDXz1zhm0r7Bynv5gJ/
+         6fckS92UaOchQNUGcNIMUCUu1qNemRhPqRhsMrWnbDsGZc1g9fzv8FBjYqtzxkZ8G+E4
+         3zkiJt3j/rsvejYiHEQEieIR/9wMzT8ULRsN5S7klSSZHnAs1lrpABJUdpSKa7qy4N2G
+         4hMmksgqxMMKYPEvfYddqEokPTuFoV0Dp85mmMmy4XTMBcqfrFevmRKrK2Yjii1xZjjR
+         4jLiI5Kp8/SQC2SETCzjB+zNn8EY7KbHI/fsgeuz/fW6wYQOkjOpupyHKEbGFoyRSe2Z
+         80Wg==
+X-Gm-Message-State: AOAM532EmHM2tLMq9/mccOxxB/FPN3pIZ27Xv9dh2Tlm/cU10kyP85Df
+        31xRujl27b/1FuvzMJUgmRNlKw==
+X-Google-Smtp-Source: ABdhPJwLI4wae6IRMj+xuDnzaonSUOrt8BBSl10BIfHCMSHNM+4hY3EfPSgj3EXUhYZ+LP/nnVptQA==
+X-Received: by 2002:a63:480d:: with SMTP id v13mr20580425pga.286.1592193351115;
+        Sun, 14 Jun 2020 20:55:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id fv7sm10891472pjb.41.2020.06.14.20.55.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jun 2020 20:55:50 -0700 (PDT)
+Date:   Sun, 14 Jun 2020 20:55:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Paul Moore <paul@paul-moore.com>, edumazet@google.com,
+        paulmck@kernel.org, David Howells <dhowells@redhat.com>,
+        shakeelb@google.com, James Morris <jamorris@linux.microsoft.com>,
+        alex.huangjianhui@huawei.com, dylix.dailei@huawei.com,
+        chenzefeng2@huawei.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Convert nsproxy, groups, and creds to refcount_t
+Message-ID: <202006142054.C00B3E9C9@keescook>
+References: <20200612183450.4189588-1-keescook@chromium.org>
+ <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200412194859.12663-5-rppt@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
-
-From: Mike Rapoport <rppt@linux.ibm.com>
-> Currently, architectures that use free_area_init() to initialize memory map
-> and node and zone structures need to calculate zone and hole sizes. We can
-> use free_area_init_nodes() instead and let it detect the zone boundaries
-> while the architectures will only have to supply the possible limits for
-> the zones.
+On Mon, Jun 15, 2020 at 10:10:08AM +0800, Xiaoming Ni wrote:
+> On 2020/6/13 2:34, Kees Cook wrote:
+> > This series was never applied[1], and was recently pointed out as
+> > missing[2]. If someone has a tree for this, please take it. Otherwise,
+> > please Ack and I'll send it to Linus.
+> > 
+> > Thanks!
+> > 
+> > -Kees
+> > 
+> > [1] https://lore.kernel.org/lkml/20190306110549.7628-1-elena.reshetova@intel.com/
+> > [2] https://lore.kernel.org/lkml/1591957695-118312-1-git-send-email-nixiaoming@huawei.com/
+> > 
+> > Elena Reshetova (3):
+> >    nsproxy: convert nsproxy.count to refcount_t
+> >    groups: convert group_info.usage to refcount_t
+> >    creds: convert cred.usage to refcount_t
+> > 
+> >   include/linux/cred.h    | 15 +++++++-------
+> >   include/linux/nsproxy.h |  7 +++----
+> >   kernel/cred.c           | 44 ++++++++++++++++++++---------------------
+> >   kernel/groups.c         |  2 +-
+> >   kernel/nsproxy.c        |  6 +++---
+> >   net/sunrpc/auth.c       |  2 +-
+> >   6 files changed, 38 insertions(+), 38 deletions(-)
+> > 
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Should mm->mm_users also be replaced by refcount_t?
 
-This is causing some new warnings for me on boot on at least one non-MMU m68k target:
+I'll say "yes". :)
+https://lore.kernel.org/lkml/1487671124-11188-1-git-send-email-elena.reshetova@intel.com/
 
-...
-NET: Registered protocol family 17
-BUG: Bad page state in process swapper  pfn:20165
-page:41fe0ca0 refcount:0 mapcount:1 mapping:00000000 index:0x0
-flags: 0x0()
-raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
-page dumped because: nonzero mapcount
-CPU: 0 PID: 1 Comm: swapper Not tainted 5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
-Stack from 404c9ebc:
-         404c9ebc 4029ab28 4029ab28 40088470 41fe0ca0 40299e21 40299df1 404ba2a4
-         00020165 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe0ca0 40299e21
-         00000000 40088a12 41fe0ca0 41fe0ca4 0000020a 00000000 00000001 402ca000
-         00000000 41fe0ca0 41fd2c10 41fd2c10 00000000 00000000 402b2388 00000001
-         400a0934 40091056 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
-         41fe0ca0 41fd2000 41fe0ca0 40089e02 4026ecf4 40089e4e 41fe0ca0 ffffffff
-Call Trace:
-         [<40088470>] 0x40088470
-  [<40088504>] 0x40088504
-  [<40088a12>] 0x40088a12
-  [<402ca000>] 0x402ca000
-  [<400a0934>] 0x400a0934
+> In addition, is it better to change all variables that use
+> atomic_dec_and_test to control the release process to refconut_t?
 
-         [<40091056>] 0x40091056
-  [<40088db4>] 0x40088db4
-  [<40089e02>] 0x40089e02
-  [<4026ecf4>] 0x4026ecf4
-  [<40089e4e>] 0x40089e4e
+For the most part, yes. The following may find a lot of them:
+scripts/coccinelle/api/atomic_as_refcounter.cocci
 
-         [<4008ca26>] 0x4008ca26
-  [<4004adf8>] 0x4004adf8
-  [<402701ec>] 0x402701ec
-  [<4008f25e>] 0x4008f25e
-  [<400516f4>] 0x400516f4
+If you can go through that and double check for prior series from Elena,
+we can get through all the rest of them.
 
-         [<4026eec0>] 0x4026eec0
-  [<400224f0>] 0x400224f0
-  [<402ca000>] 0x402ca000
-  [<4026eeda>] 0x4026eeda
-  [<40020b00>] 0x40020b00
-...
+Thanks for bringing this topic back up!
 
-Lots more of them.
-
-...
-BUG: Bad page state in process swapper  pfn:201a0
-page:41fe1400 refcount:0 mapcount:1 mapping:00000000 index:0x0
-flags: 0x0()
-raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
-page dumped because: nonzero mapcount
-CPU: 0 PID: 1 Comm: swapper Tainted: G    B             5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
-Stack from 404c9ebc:
-         404c9ebc 4029ab28 4029ab28 40088470 41fe1400 40299e21 40299df1 404ba2a4
-         000201a0 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe1400 40299e21
-         00000000 40088a12 41fe1400 41fe1404 0000020a 0000003b 00000001 40340000
-         00000000 41fe1400 41fd2c10 41fd2c10 00000000 00000000 41fe13e0 40022826
-         00000044 404c9f44 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
-         41fe1400 41fd2000 41fe1400 40089e02 4026ecf4 40089e4e 41fe1400 ffffffff
-Call Trace:
-         [<40088470>] 0x40088470
-  [<40088504>] 0x40088504
-  [<40088a12>] 0x40088a12
-  [<40022826>] 0x40022826
-  [<40088db4>] 0x40088db4
-
-         [<40089e02>] 0x40089e02
-  [<4026ecf4>] 0x4026ecf4
-  [<40089e4e>] 0x40089e4e
-  [<4008ca26>] 0x4008ca26
-  [<4004adf8>] 0x4004adf8
-
-         [<402701ec>] 0x402701ec
-  [<4008f25e>] 0x4008f25e
-  [<400516f4>] 0x400516f4
-  [<4026eec0>] 0x4026eec0
-  [<400224f0>] 0x400224f0
-
-         [<402ca000>] 0x402ca000
-  [<4026eeda>] 0x4026eeda
-  [<40020b00>] 0x40020b00
-Freeing unused kernel memory: 648K
-This architecture does not have kernel memory protection.
-Run /init as init process
-...
-
-System boots pretty much as normal through user space after this.
-Seems to be fully operational despite all those BUGONs.
-
-Specifically this is a M5208EVB target (arch/m68k/configs/m5208evb).
-
-
-[snip]
-> diff --git a/arch/m68k/mm/init.c b/arch/m68k/mm/init.c
-> index b88d510d4fe3..6d3147662ff2 100644
-> --- a/arch/m68k/mm/init.c
-> +++ b/arch/m68k/mm/init.c
-> @@ -84,7 +84,7 @@ void __init paging_init(void)
->  	 * page_alloc get different views of the world.
->  	 */
->  	unsigned long end_mem = memory_end & PAGE_MASK;
-> -	unsigned long zones_size[MAX_NR_ZONES] = { 0, };
-> +	unsigned long max_zone_pfn[MAX_NR_ZONES] = { 0, };
->  
->  	high_memory = (void *) end_mem;
->  
-> @@ -98,8 +98,8 @@ void __init paging_init(void)
->  	 */
->  	set_fs (USER_DS);
->  
-> -	zones_size[ZONE_DMA] = (end_mem - PAGE_OFFSET) >> PAGE_SHIFT;
-> -	free_area_init(zones_size);
-> +	max_zone_pfn[ZONE_DMA] = end_mem >> PAGE_SHIFT;
-> +	free_area_init(max_zone_pfn);
-
-This worries me a little. On this target PAGE_OFFSET will be non-0.
-
-Thoughts?
-
-Regards
-Greg
-
-
-
+-- 
+Kees Cook
