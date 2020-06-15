@@ -2,183 +2,166 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90280C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62DAE206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:45:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PJPj0mok"
+	by mail.kernel.org (Postfix) with ESMTP id 1F9B92074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592265145;
+	bh=LAqX2guWt3SaWaTtIVptXEHktenJg7iaeDhOq75EGOc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=jdXF+6mnmpQgX5wxOHry6wVld4zht3rwN9v5SbiddDt0XZfV4vcMZ9C6WOY3wcjUd
+	 TkU81gSa3YmTEOHQiYK9r0PsQf6Oe3x013tGuTcaWy7rtpWE374AYZe37AmTLe2r9u
+	 w/50xIL8foBc0nYwxDtaks11bT6PKebCoYx4tmbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgFOXpc (ORCPT
+        id S1726727AbgFOXwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:45:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49536 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725960AbgFOXpb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:45:31 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FNbKsh195782;
-        Mon, 15 Jun 2020 23:45:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=fw2YQNRsCXZ/+0DlDkdWyVER1owgVj4DgmgamWytQwU=;
- b=PJPj0mokQoAcHv/verR3n7AJYAuvim9atucaoTzp4yt27Vrnpu0wlkq4brbF1ULP++aE
- NXwVAtw1XjeJpOEQW3jtn1fqtrFqQ31mTW8/qFuE2qFu7p6wmlknF0KiRZLLwFuxzg06
- WMvlZBsUMTNX9RKGyDCUBdVg5EZ6l+yWSA93QGD4gqBfqVoQBU1A+6ulmRbDGKsZUP2U
- 5E2o68d97UCOZfQn83nrCngjmrDrE8OM0bM+pYB48LmZUxg6TmDb+I6oAwaqUQkBaLuw
- Q27VHNItk8sxz+B+ZzMRalD3T8uJ8bpstNe331C5L8oGeHUQnBUG6Ru9O1QHrWGSkKcK jQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31p6e5uqmm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 15 Jun 2020 23:45:14 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FNdMiX122398;
-        Mon, 15 Jun 2020 23:45:14 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 31p6dby30x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 23:45:14 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05FNjB2l026727;
-        Mon, 15 Jun 2020 23:45:12 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jun 2020 16:45:10 -0700
-Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
- hugetlbfs files
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Colin Walters <walters@verbum.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <20200612004644.255692-1-mike.kravetz@oracle.com>
- <20200612015842.GC23230@ZenIV.linux.org.uk>
- <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
- <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
- <6e8924b0-bfc4-eaf5-1775-54f506cdf623@oracle.com>
- <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <80f869aa-810d-ef6c-8888-b46cee135907@oracle.com>
-Date:   Mon, 15 Jun 2020 16:45:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 19:52:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725960AbgFOXwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:52:20 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6A7B2068E;
+        Mon, 15 Jun 2020 23:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592265139;
+        bh=LAqX2guWt3SaWaTtIVptXEHktenJg7iaeDhOq75EGOc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=g2QUd2ngXMfEz2LsTipBItohXSvpmTBaOTiRrZKoSwAIbpdN01pkaTau0u7EATsXD
+         1j1XCGLhCbt/rateSDFiTc7BcQViqtV3HMRlLm5J3nOOqe69N1HGAm870H7wKJjki0
+         S+aXFOYX7SF+nnBPJxZUEPmc9FAaD8Y6tEO8/hiU=
+Date:   Mon, 15 Jun 2020 18:52:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+Message-ID: <20200615235217.GA1921846@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150169
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- mlxscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
- suspectscore=0 spamscore=0 bulkscore=0 malwarescore=0 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006150169
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8f9f6a77-4a65-afeb-0af9-e4868b52d7ce@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 12:53 AM, Miklos Szeredi wrote:
-> On Sat, Jun 13, 2020 at 9:12 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->> On 6/12/20 11:53 PM, Amir Goldstein wrote:
->>>
->>> The simplest thing for you to do in order to shush syzbot is what procfs does:
->>>         /*
->>>          * procfs isn't actually a stacking filesystem; however, there is
->>>          * too much magic going on inside it to permit stacking things on
->>>          * top of it
->>>          */
->>>         s->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
->>>
->>> Currently, the only in-tree stacking fs are overlayfs and ecryptfs, but there
->>> are some out of tree implementations as well (shiftfs).
->>> So you may only take that option if you do not care about the combination
->>> of hugetlbfs with any of the above.
->>>
->>> overlayfs support of mmap is not as good as one might hope.
->>> overlayfs.rst says:
->>> "If a file residing on a lower layer is opened for read-only and then
->>>  memory mapped with MAP_SHARED, then subsequent changes to
->>>  the file are not reflected in the memory mapping."
->>>
->>> So if I were you, I wouldn't go trying to fix overlayfs-huguetlb interop...
->>
->> Thanks again,
->>
->> I'll look at something as simple as s_stack_depth.
+On Sat, Jun 13, 2020 at 10:30:56PM +0800, Zhangfei Gao wrote:
+> On 2020/6/11 下午9:44, Bjorn Helgaas wrote:
+> > +++ b/drivers/iommu/iommu.c
+> > > > > > > > > > @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
+> > > > > > > > > > fwnode_handle *iommu_fwnode,
+> > > > > > > > > >             fwspec->iommu_fwnode = iommu_fwnode;
+> > > > > > > > > >             fwspec->ops = ops;
+> > > > > > > > > >             dev_iommu_fwspec_set(dev, fwspec);
+> > > > > > > > > > +
+> > > > > > > > > > +       if (dev_is_pci(dev))
+> > > > > > > > > > +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
+> > > > > > > > > > +
+> > > > > > > > > > 
+> > > > > > > > > > Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+> > > > > > > > > > Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+> > > > > > > > > > Will send this when 5.8-rc1 is open.
+> > > > > > > > > Wait, this whole fixup approach seems wrong to me.  No matter how you
+> > > > > > > > > do the fixup, it's still a fixup, which means it requires ongoing
+> > > > > > > > > maintenance.  Surely we don't want to have to add the Vendor/Device ID
+> > > > > > > > > for every new AMBA device that comes along, do we?
+> > > > > > > > > 
+> > > > > > > > Here the fake pci device has standard PCI cfg space, but physical
+> > > > > > > > implementation is base on AMBA
+> > > > > > > > They can provide pasid feature.
+> > > > > > > > However,
+> > > > > > > > 1, does not support tlp since they are not real pci devices.
+> > > > > > > > 2. does not support pri, instead support stall (provided by smmu)
+> > > > > > > > And stall is not a pci feature, so it is not described in struct pci_dev,
+> > > > > > > > but in struct iommu_fwspec.
+> > > > > > > > So we use this fixup to tell pci system that the devices can support stall,
+> > > > > > > > and hereby support pasid.
+> > > > > > > This did not answer my question.  Are you proposing that we update a
+> > > > > > > quirk every time a new AMBA device is released?  I don't think that
+> > > > > > > would be a good model.
+> > > > > > Yes, you are right, but we do not have any better idea yet.
+> > > > > > Currently we have three fake pci devices, which support stall and pasid.
+> > > > > > We have to let pci system know the device can support pasid, because of
+> > > > > > stall feature, though not support pri.
+> > > > > > Do you have any other ideas?
+> > > > > It sounds like the best way would be to allocate a PCI capability for it, so
+> > > > > detection can be done through config space, at least in future devices,
+> > > > > or possibly after a firmware update if the config space in your system
+> > > > > is controlled by firmware somewhere.  Once there is a proper mechanism
+> > > > > to do this, using fixups to detect the early devices that don't use that
+> > > > > should be uncontroversial. I have no idea what the process or timeline
+> > > > > is to add new capabilities into the PCIe specification, or if this one
+> > > > > would be acceptable to the PCI SIG at all.
+> > > > That sounds like a possibility.  The spec already defines a
+> > > > Vendor-Specific Extended Capability (PCIe r5.0, sec 7.9.5) that might
+> > > > be a candidate.
+> > > Will investigate this, thanks Bjorn
+> > FWIW, there's also a Vendor-Specific Capability that can appear in the
+> > first 256 bytes of config space (the Vendor-Specific Extended
+> > Capability must appear in the "Extended Configuration Space" from
+> > 0x100-0xfff).
+> Unfortunately our silicon does not have either Vendor-Specific Capability or
+> Vendor-Specific Extended Capability.
 > 
-> Agree.
+> Studied commit 8531e283bee66050734fb0e89d53e85fd5ce24a4
+> Looks this method requires adding member (like can_stall) to struct pci_dev,
+> looks difficult.
 
-Apologies again for in the incorrect information about writing to lower
-filesystem.
+The problem is that we don't want to add device IDs every time a new
+chip comes out.  Adding one or two device IDs for silicon that's
+already released is not a problem as long as you have a strategy for
+*future* devices so they don't require a quirk.
 
-Stacking ecryptfs on hugetlbfs does not work either.  Here is what happens
-when trying to create a new file.
+> > > > > If detection cannot be done through PCI config space, the next best
+> > > > > alternative is to pass auxiliary data through firmware. On DT based
+> > > > > machines, you can list non-hotpluggable PCIe devices and add custom
+> > > > > properties that could be read during device enumeration. I assume
+> > > > > ACPI has something similar, but I have not done that.
+> > > Yes, thanks Arnd
+> > > > ACPI has _DSM (ACPI v6.3, sec 9.1.1), which might be a candidate.  I
+> > > > like this better than a PCI capability because the property you need
+> > > > to expose is not a PCI property.
+> > > _DSM may not workable, since it is working in runtime.
+> > > We need stall information in init stage, neither too early (after allocation
+> > > of iommu_fwspec)
+> > > nor too late (before arm_smmu_add_device ).
+> > I'm not aware of a restriction on when _DSM can be evaluated.  I'm
+> > looking at ACPI v6.3, sec 9.1.1.  Are you seeing something different?
+> DSM method seems requires vendor specific guid, and code would be vendor
+> specific.
 
-[ 1188.863425] ecryptfs_write_metadata_to_contents: Error attempting to write header information to lower file; rc = [-22]
-[ 1188.865469] ecryptfs_write_metadata: Error writing metadata out to lower file; rc = [-22]
-[ 1188.867022] Error writing headers; rc = [-22]
+_DSM indeed requires a vendor-specific UUID, precisely *because*
+vendors are free to define their own functionality without requiring
+changes to the ACPI spec.  From the spec (ACPI v6.3, sec 9.1.1):
 
-I like Amir's idea of just setting s_stack_depth in hugetlbfs to prevent
-stacking.
-
-From 0fbed66b37c18919ea7edd47b113c97644f49362 Mon Sep 17 00:00:00 2001
-From: Mike Kravetz <mike.kravetz@oracle.com>
-Date: Mon, 15 Jun 2020 14:37:52 -0700
-Subject: [PATCH] hugetlbfs: prevent filesystem stacking of hugetlbfs
-
-syzbot found issues with having hugetlbfs on a union/overlay as reported
-in [1].  Due to the limitations (no write) and special functionality of
-hugetlbfs, it does not work well in filesystem stacking.  There are no
-know use cases for hugetlbfs stacking.  Rather than making modifications
-to get hugetlbfs working in such environments, simply prevent stacking.
-
-[1] https://lore.kernel.org/linux-mm/000000000000b4684e05a2968ca6@google.com/
-
-Reported-by: syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
----
- fs/hugetlbfs/inode.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 991c60c7ffe0..f32759c8e84d 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -1313,6 +1313,12 @@ hugetlbfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sb->s_magic = HUGETLBFS_MAGIC;
- 	sb->s_op = &hugetlbfs_ops;
- 	sb->s_time_gran = 1;
-+
-+	/*
-+	 * Due to the special and limited functionality of hugetlbfs, it does
-+	 * not work well as a stacking filesystem.
-+	 */
-+	sb->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
- 	sb->s_root = d_make_root(hugetlbfs_get_root(sb, ctx));
- 	if (!sb->s_root)
- 		goto out_free;
--- 
-2.25.4
-
+  New UUIDs may also be created by OEMs and IHVs for custom devices
+  and other interface or device governing bodies (e.g. the PCI SIG),
+  as long as the UUID is different from other published UUIDs.
