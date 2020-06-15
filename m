@@ -2,181 +2,154 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71D2207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691E9207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T42VgDeV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LkSwJskz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgFOWXk (ORCPT
+        id S1726654AbgFOWXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:23:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgFOWXf (ORCPT
+        Mon, 15 Jun 2020 18:23:43 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55167 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726600AbgFOWXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:23:35 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BBE7C061A0E;
-        Mon, 15 Jun 2020 15:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IDCWp2EbugCC0kC6ljaZ+2IcWTJdtn0pH9LuXNHFyAs=; b=T42VgDeVirYG+yiCdji/2v4TAG
-        sjSo852STrpCiiwNW/FhG2DBXIYVF2PoKLCFQ5NA2EcSBKDOgVVCYtl1iE8j8F1v3lGI+spqYft6y
-        JVYy0MRIfGE9dxE8sUrKHTQweIMwoZSVAn1eNa1X/44uGAnJ6jIShkMCKgg1SvqquMWc0R7sVBTvO
-        b6+pkJza7AIYXtNEgfR8uyPyp+oVvLcDvQdeE7nSkx+PGn2WrXjWx7EtPsYmY+Ep4wS6JD7/i0nf6
-        bs4SVE+KQDKCY2AA16//E2Yb5kcHPBW5LkSV0ICGgNIK4tVwcNs48LrgNf6rs40+8GVZ92yIUsZZ8
-        MkJTzrlw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkxVs-0003i5-Kc; Mon, 15 Jun 2020 22:23:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A21653060FD;
-        Tue, 16 Jun 2020 00:23:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 89C262BDC1508; Tue, 16 Jun 2020 00:23:30 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 00:23:30 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
-Subject: Re: [tip: x86/entry] x86/entry: Treat BUG/WARN as NMI-like entries
-Message-ID: <20200615222330.GI2514@hirez.programming.kicks-ass.net>
-References: <f8fe40e0088749734b4435b554f73eee53dcf7a8.1591932307.git.luto@kernel.org>
- <159199140855.16989.18012912492179715507.tip-bot2@tip-bot2>
- <20200615145018.GU2531@hirez.programming.kicks-ass.net>
- <CALCETrWhbg_61CTo9_T6s1NDFvOgUx7ebSzhXj7O_m8htePwKA@mail.gmail.com>
- <20200615194458.GL2531@hirez.programming.kicks-ass.net>
- <CALCETrUbwwoYTzyntr=bUjJU44iyt+S8bRS04OxmByP3aD4A9g@mail.gmail.com>
+        Mon, 15 Jun 2020 18:23:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592259813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jqMMZBxWd6hyp1UyBnh6ZHWn/4PP621jPkJ/KevHqC4=;
+        b=LkSwJskzxhQTpDytVNw3zgB1icmsVUgIwaE9bUYOvz9pPndNDqxWr0AeeKUoOwr1oATXMb
+        f8DUnMBIvJ7uHCcIXpDoDFYGZXuFTlonEc3JtK1qgX6uqkZfa3wFLUGEsTq2f49UFL8MOY
+        K4Gqm4m44bx03XRZZHevUsfwkFvIagM=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-14OBBdaOMpm4a5tNY-JNoQ-1; Mon, 15 Jun 2020 18:23:21 -0400
+X-MC-Unique: 14OBBdaOMpm4a5tNY-JNoQ-1
+Received: by mail-qk1-f200.google.com with SMTP id q82so733222qke.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:23:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jqMMZBxWd6hyp1UyBnh6ZHWn/4PP621jPkJ/KevHqC4=;
+        b=Yw/HynYa2K6aTo9QkmFxpDslzemS2/w7OxibXr0j/aOUeiyK5hs+HPd9xto8TovZtN
+         O6JGYWPEa5yd/s5q+TjIoSAwO6uVo3aUngiJPcLUTA2Nwxltry6UQdhAoVhmJKJd8+sb
+         4145AVjMgmZxczF+YnZfhtUfUNh9K9qEH6r+HJnLl0zsHyNQTUrg2/L3YIzNrseg7pkC
+         HM73ZeVjPSt4skcfHcnmw7vP8fitaysHgZ1irMFDlRzSnSJVzwGd3GBE9rlRwgwF8JQ3
+         oySUfK1bxODHpWK3jYl/QXVsDnRWoUhoNn7FEwybm/YzcwNnBhkehU5TSEjngMdKoQof
+         2UNw==
+X-Gm-Message-State: AOAM533TILEK7EHedY957BEsCrri1J2/MuyqEJkK1eU+KsGQXl5BNGnR
+        TOYDP9iXEtVpqXz1tSzVMF/ZznRwBgLJ22qK4Zl82tRbzGUiXNXL8Z+ukx7R8CLGPCM8hw2p2q6
+        MqOaCzwY4DrgxFAjybpZ9Rrkk
+X-Received: by 2002:ac8:7303:: with SMTP id x3mr17706237qto.44.1592259800799;
+        Mon, 15 Jun 2020 15:23:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxSUb5XIZHW5E1zJcz4VzqFpZD90tEroXjdCFUGU0zNGGOM8YwfFLC116uqeodWPbF2zjxDTA==
+X-Received: by 2002:ac8:7303:: with SMTP id x3mr17706219qto.44.1592259800592;
+        Mon, 15 Jun 2020 15:23:20 -0700 (PDT)
+Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id b24sm12209333qkj.0.2020.06.15.15.23.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 15:23:20 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Xu <peterx@redhat.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org
+Subject: [PATCH 22/25] mm/sparc64: Use mm_fault_accounting()
+Date:   Mon, 15 Jun 2020 18:23:19 -0400
+Message-Id: <20200615222319.8601-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615221607.7764-1-peterx@redhat.com>
+References: <20200615221607.7764-1-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUbwwoYTzyntr=bUjJU44iyt+S8bRS04OxmByP3aD4A9g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 02:08:16PM -0700, Andy Lutomirski wrote:
+Use the new mm_fault_accounting() helper for page fault accounting.
 
-> > All !user exceptions really should be NMI-like. If you want to go
-> > overboard, I suppose you can look at IF and have them behave interrupt
-> > like when set, but why make things complicated.
-> 
-> This entire rabbit hole opened because of #PF. So we at least need the
-> set of exceptions that are permitted to schedule if they came from
-> kernel mode to remain schedulable.
+Avoid doing page fault accounting multiple times if the page fault is retried.
 
-What exception, other than #PF, actually needs to schedule from kernel?
+CC: David S. Miller <davem@davemloft.net>
+CC: sparclinux@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/sparc/mm/fault_64.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-> Prior to the giant changes, all the non-IST *exceptions*, but not the
-> interrupts, were schedulable from kernel mode, assuming the original
-> context could schedule. Right now, interrupts can schedule, too, which
-> is nice if we ever want to fully clean up the Xen abomination. I
-> suppose we could make it so #PF opts in to special treatment again,
-> but we should decide that the result is simpler or otherwise better
-> before we do this.
-> 
-> One possible justification would be that the schedulable entry variant
-> is more complicated, and most kernel exceptions except the ones with
-> fixups are bad news, and we want the oopses to succeed. But page
-> faults are probably the most common source of oopses, so this is a bit
-> weak, and we really want page faults to work even from nasty contexts.
-
-I think I'd prefer the argument of consistent failure.
-
-Do we ever want #UD to schedule? If not, then why allow it to sometimes
-schedule and sometimes fail, better to always fail.
-
-#DB is still a giant trainwreck in this regard as well.
-
-Something like this...
-
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -216,10 +216,25 @@ static inline void handle_invalid_op(str
- 		      ILL_ILLOPN, error_get_trap_addr(regs));
- }
+diff --git a/arch/sparc/mm/fault_64.c b/arch/sparc/mm/fault_64.c
+index c0c0dd471b6b..61be0a0d79c6 100644
+--- a/arch/sparc/mm/fault_64.c
++++ b/arch/sparc/mm/fault_64.c
+@@ -269,7 +269,7 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
+ 	struct vm_area_struct *vma;
+ 	unsigned int insn = 0;
+ 	int si_code, fault_code;
+-	vm_fault_t fault;
++	vm_fault_t fault, major = 0;
+ 	unsigned long address, mm_rss;
+ 	unsigned int flags = FAULT_FLAG_DEFAULT;
  
--DEFINE_IDTENTRY_RAW(exc_invalid_op)
-+static void handle_invalid_op_kernel(struct pt_regs *regs)
-+{
-+	if (is_valid_bugaddr(regs->ip) &&
-+	    report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN) {
-+		/* Skip the ud2. */
-+		regs->ip += LEN_UD2;
-+		return;
-+	}
-+
-+	handle_invalid_op(regs);
-+}
-+
-+static void handle_invalid_op_user(struct pt_regs *regs)
- {
--	bool rcu_exit;
-+	handle_invalid_op(regs);
-+}
+@@ -317,8 +317,6 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
+ 	if (faulthandler_disabled() || !mm)
+ 		goto intr_or_no_mm;
  
-+DEFINE_IDTENTRY_RAW(exc_invalid_op)
-+{
- 	/*
- 	 * Handle BUG/WARN like NMIs instead of like normal idtentries:
- 	 * if we bugged/warned in a bad RCU context, for example, the last
-@@ -227,38 +242,25 @@ DEFINE_IDTENTRY_RAW(exc_invalid_op)
- 	 * infinitum.
- 	 */
- 	if (!user_mode(regs)) {
--		enum bug_trap_type type = BUG_TRAP_TYPE_NONE;
+-	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
 -
- 		nmi_enter();
- 		instrumentation_begin();
- 		trace_hardirqs_off_finish();
- 
--		if (is_valid_bugaddr(regs->ip))
--			type = report_bug(regs->ip, regs);
-+		handle_invalid_op_kernel(regs);
- 
- 		if (regs->flags & X86_EFLAGS_IF)
- 			trace_hardirqs_on_prepare();
- 		instrumentation_end();
- 		nmi_exit();
-+	} else {
-+		bool rcu_exit;
- 
--		if (type == BUG_TRAP_TYPE_WARN) {
--			/* Skip the ud2. */
--			regs->ip += LEN_UD2;
--			return;
--		}
--
--		/*
--		 * Else, if this was a BUG and report_bug returns or if this
--		 * was just a normal #UD, we want to continue onward and
--		 * crash.
--		 */
-+		rcu_exit = idtentry_enter_cond_rcu(regs);
-+		instrumentation_begin();
-+		handle_invalid_op_user(regs);
-+		instrumentation_end();
-+		idtentry_exit_cond_rcu(regs, rcu_exit);
+ 	if (!down_read_trylock(&mm->mmap_sem)) {
+ 		if ((regs->tstate & TSTATE_PRIV) &&
+ 		    !search_exception_tables(regs->tpc)) {
+@@ -424,6 +422,7 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
  	}
--
--	rcu_exit = idtentry_enter_cond_rcu(regs);
--	instrumentation_begin();
--	handle_invalid_op(regs);
--	instrumentation_end();
--	idtentry_exit_cond_rcu(regs, rcu_exit);
- }
  
- DEFINE_IDTENTRY(exc_coproc_segment_overrun)
+ 	fault = handle_mm_fault(vma, address, flags);
++	major |= fault & VM_FAULT_MAJOR;
+ 
+ 	if (fault_signal_pending(fault, regs))
+ 		goto exit_exception;
+@@ -439,15 +438,6 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
+ 	}
+ 
+ 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+-		if (fault & VM_FAULT_MAJOR) {
+-			current->maj_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ,
+-				      1, regs, address);
+-		} else {
+-			current->min_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN,
+-				      1, regs, address);
+-		}
+ 		if (fault & VM_FAULT_RETRY) {
+ 			flags |= FAULT_FLAG_TRIED;
+ 
+@@ -461,6 +451,8 @@ asmlinkage void __kprobes do_sparc64_fault(struct pt_regs *regs)
+ 	}
+ 	up_read(&mm->mmap_sem);
+ 
++	mm_fault_accounting(current, regs, address, major);
++
+ 	mm_rss = get_mm_rss(mm);
+ #if defined(CONFIG_TRANSPARENT_HUGEPAGE)
+ 	mm_rss -= (mm->context.thp_pte_count * (HPAGE_SIZE / PAGE_SIZE));
+-- 
+2.26.2
+
