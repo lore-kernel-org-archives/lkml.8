@@ -2,147 +2,87 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6294FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B236C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36ED32071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iOSi6SGL"
+	by mail.kernel.org (Postfix) with ESMTP id 50DC420768
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592246448;
+	bh=wYKSzzrOtt+X56zSeQ03eBE8TXYYdvcqWroESoJynwQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xUwOfWRHw/fyN7rYkcK1Yj28+FnYHD/antdWsHhj83+6wZttx8F+0lPq19KIzHAPc
+	 dL0UyJNPrYU8atbJ8640tM8FIqePJtXV2C7RiNGDwWp71RGZYFlY0Y/BB9Xzu6h+Pw
+	 HRErDjSslqZ5rF+b0cwJwCOmhVQoJDoOrryqLkPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731385AbgFOSke (ORCPT
+        id S1731405AbgFOSkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 14:40:34 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23263 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731249AbgFOSkc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 14:40:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592246431;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3LdVapGy9WTsAkwpfNEzCTfQe3Pij8/lM5ySXZsHExs=;
-        b=iOSi6SGLarrDdScRiW6WivQV/JT2U717fvdPWQPXU86jormg+4QrlYH+6CoQ1bKBcmsQ/B
-        yOW7kRTd4z9oxidxHf9YTdSea+WYeCe3RRWhWGXTJyTXsYPXL8xck6iQxf6+FPb5lAnKhS
-        S1VVssQnte2GEikXLA9qk0Y7J4KU8jk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-513-n3G_ZfGUONug8wkjJytxqA-1; Mon, 15 Jun 2020 14:40:12 -0400
-X-MC-Unique: n3G_ZfGUONug8wkjJytxqA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 15 Jun 2020 14:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731396AbgFOSkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 14:40:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5F43184D144;
-        Mon, 15 Jun 2020 18:40:06 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-41.rdu2.redhat.com [10.10.117.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3972B5D9CC;
-        Mon, 15 Jun 2020 18:40:00 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        samba-technical@lists.samba.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, x86@kernel.org,
-        kasan-dev@googlegroups.com, cocci@systeme.lip6.fr,
-        linux-wpan@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, wireguard@lists.zx2c4.com,
-        linux-ppp@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413211550.8307-2-longman@redhat.com> <20200615180753.GJ4151@kadam>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <9d084be2-29a3-7757-9386-20dbaeb5fc24@redhat.com>
-Date:   Mon, 15 Jun 2020 14:39:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mail.kernel.org (Postfix) with ESMTPSA id E512720756;
+        Mon, 15 Jun 2020 18:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592246445;
+        bh=wYKSzzrOtt+X56zSeQ03eBE8TXYYdvcqWroESoJynwQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AlbC55WjaV4nWjXst3bO4kQANNHVW3FGiuCtr8vFlGcnmBmTIfSmQIdfqtWf9eBUK
+         cIN+7izIRzNmFLxWid1bL5vtlZHL+Rmo5IF+CB3GwKRQEXag5ljpRfAwfyXz5DKRDn
+         DLrujyfyBpBB29ranjrdCSpWM2Susi+UFnuTceTc=
+Date:   Mon, 15 Jun 2020 20:40:41 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        "Park, Kyung Min" <kyung.min.park@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Neri, Ricardo" <ricardo.neri@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: Re: [RFC PATCH 1/3] Documentation/x86: Add documentation for
+ /proc/cpuinfo feature flags
+Message-ID: <20200615184041.GA177504@kroah.com>
+References: <20200610200701.16757-1-kyung.min.park@intel.com>
+ <20200610200701.16757-2-kyung.min.park@intel.com>
+ <20200615181527.GM14668@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F66C552@ORSMSX115.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200615180753.GJ4151@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F66C552@ORSMSX115.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 2:07 PM, Dan Carpenter wrote:
-> On Mon, Apr 13, 2020 at 05:15:49PM -0400, Waiman Long wrote:
->> diff --git a/mm/slab_common.c b/mm/slab_common.c
->> index 23c7500eea7d..c08bc7eb20bd 100644
->> --- a/mm/slab_common.c
->> +++ b/mm/slab_common.c
->> @@ -1707,17 +1707,17 @@ void *krealloc(const void *p, size_t new_size, gfp_t flags)
->>   EXPORT_SYMBOL(krealloc);
->>   
->>   /**
->> - * kzfree - like kfree but zero memory
->> + * kfree_sensitive - Clear sensitive information in memory before freeing
->>    * @p: object to free memory of
->>    *
->>    * The memory of the object @p points to is zeroed before freed.
->> - * If @p is %NULL, kzfree() does nothing.
->> + * If @p is %NULL, kfree_sensitive() does nothing.
->>    *
->>    * Note: this function zeroes the whole allocated buffer which can be a good
->>    * deal bigger than the requested buffer size passed to kmalloc(). So be
->>    * careful when using this function in performance sensitive code.
->>    */
->> -void kzfree(const void *p)
->> +void kfree_sensitive(const void *p)
->>   {
->>   	size_t ks;
->>   	void *mem = (void *)p;
->> @@ -1725,10 +1725,10 @@ void kzfree(const void *p)
->>   	if (unlikely(ZERO_OR_NULL_PTR(mem)))
->>   		return;
->>   	ks = ksize(mem);
->> -	memset(mem, 0, ks);
->> +	memzero_explicit(mem, ks);
->          ^^^^^^^^^^^^^^^^^^^^^^^^^
-> This is an unrelated bug fix.  It really needs to be pulled into a
-> separate patch by itself and back ported to stable kernels.
->
->>   	kfree(mem);
->>   }
->> -EXPORT_SYMBOL(kzfree);
->> +EXPORT_SYMBOL(kfree_sensitive);
->>   
->>   /**
->>    * ksize - get the actual amount of memory allocated for a given object
-> regards,
-> dan carpenter
->
-Thanks for the suggestion. I will break it out and post a version soon.
+On Mon, Jun 15, 2020 at 06:31:50PM +0000, Luck, Tony wrote:
+> > In general, this should say something along the lines that /proc/cpuinfo
+> > shows features which the kernel supports.
+> >
+> > "For a full list of CPUID flags which the CPU supports, use
+> > tools/arch/x86/tools/cpuid/cpuid"
+> >
+> > :-)
+> 
+> Dave Hansen had suggested (offline) that we add a cpuid tool to the kernel sources.
+> 
+> I think that's a lot of (duplicated) work for someone to maintain.  The version of this
+> tool at http://www.etallen.com/cpuid.html is close to 10K lines of code.
 
-Cheers,
-Longman
+10k is nothing, have you looked at tools/perf/ ?  :)
 
+greg k-h
