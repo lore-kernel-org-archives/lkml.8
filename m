@@ -2,81 +2,86 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E71DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14537C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD99206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE55420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731254AbgFOU1f (ORCPT
+        id S1731428AbgFOUaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:27:35 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:53564 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbgFOU1e (ORCPT
+        Mon, 15 Jun 2020 16:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbgFOUaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:27:34 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AAA581C0BD2; Mon, 15 Jun 2020 22:27:31 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 22:27:31 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v27 00/15] Multicolor Framework v27
-Message-ID: <20200615202731.GA18028@duo.ucw.cz>
-References: <20200615201522.19677-1-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
-Content-Disposition: inline
-In-Reply-To: <20200615201522.19677-1-dmurphy@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 15 Jun 2020 16:30:18 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF18EC061A0E;
+        Mon, 15 Jun 2020 13:30:18 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0D07A120ED49A;
+        Mon, 15 Jun 2020 13:30:17 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 13:30:17 -0700 (PDT)
+Message-Id: <20200615.133017.143361546049495568.davem@davemloft.net>
+To:     wanghai38@huawei.com
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        liuhangbin@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] mld: fix memory leak in ipv6_mc_destroy_dev()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200611075750.18545-1-wanghai38@huawei.com>
+References: <20200611075750.18545-1-wanghai38@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jun 2020 13:30:18 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wang Hai <wanghai38@huawei.com>
+Date: Thu, 11 Jun 2020 15:57:50 +0800
 
---/04w6evG8XlLl3ft
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
+> the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
+> which mca_sources are leaked after ma_put().
+> 
+> Using ip6_mc_clear_src() to take care of the missing free.
+> 
+> BUG: memory leak
+> unreferenced object 0xffff8881113d3180 (size 64):
+>   comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
+>     [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
+>     [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
+>     [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
+>     [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
+>     [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
+>     [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
+>     [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
+>     [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
+>     [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
+>     [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
+>     [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
+>     [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
+>     [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> 
+> Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wang Hai <wanghai38@huawei.com>
 
-Hi!
-
-> This is the multi color LED framework.   This framework presents clustered
-> colored LEDs into an array and allows the user space to adjust the bright=
-ness
-> of the cluster using a single file write.  The individual colored LEDs
-> intensities are controlled via a single file that is an array of
-> LEDs
-
-Please don't do this. Pinging whoever you think is blocking the merge
-is okay, but resending big series just because people are busy over
-the merge window is not cool.
-
-Thanks,
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---/04w6evG8XlLl3ft
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXufZswAKCRAw5/Bqldv6
-8oiWAJoCSSDkCf6k/qeMYDUghOTeiGFARQCfWO71W5nRBiBrtWapSuqWfwhtZsw=
-=SGoc
------END PGP SIGNATURE-----
-
---/04w6evG8XlLl3ft--
+Applied and queued up for -stable, thank you.
