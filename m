@@ -2,150 +2,85 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A87BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C91C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A08E20810
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09468206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592243931;
-	bh=elUSy4l9tA6PO/SR7s4RYiLNLDYp6VS0PuvfO3KR6Xg=;
+	s=default; t=1592243973;
+	bh=OonnPQI/Z44DweaSgstFD5k0v+bFlZ6gJPYBQ5CCQAs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TVq9K/f7y/vsSiPOdlHyDbYF/BQZ5Egl+ncek4BsK0xv3/0WVJnxx9hdtdHu6WH3d
-	 Y+e7GgnMtKau1amH7RjIfrsFSFIKYZeYl8azo0F2zKklGqjEtxa0j3kblouPI9+xV8
-	 eIYpDUcZEhubt1JpILcPo/WKS6lwyftz1GLtjWQM=
+	b=0EIAmd+pdRS3HO6sNyTNbWs3v71duHnu8NmjgmgIExfhBGqf6pLyCN394/Qh6g/7v
+	 uFalwBJ8DKv/9RaG3EQaPfH0oVj8Uwm0X2+e0h6UpBWYiAZntDjykJVxlac0BX7i4Y
+	 PP+1sVwvGRLsWDZrZWF5PyDSaY/ZQOTxPoxdKZVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbgFOR6t (ORCPT
+        id S1731275AbgFOR7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:58:49 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36971 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFOR6s (ORCPT
+        Mon, 15 Jun 2020 13:59:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42585 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFOR7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:58:48 -0400
-Received: by mail-io1-f68.google.com with SMTP id r2so402376ioo.4;
-        Mon, 15 Jun 2020 10:58:47 -0700 (PDT)
+        Mon, 15 Jun 2020 13:59:30 -0400
+Received: by mail-io1-f67.google.com with SMTP id x189so9817143iof.9;
+        Mon, 15 Jun 2020 10:59:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/74HbfroHB61O/mrzbKJJjBB8AZlHWxP2oBPibXkxY8=;
-        b=mEgiCputIv51F50IjHmQC8XZwZ8fj4Q4luzIMPsv+iK089LhJSYdoghMjWXQg7KqZl
-         gEMoWfTz4B4gF46PkYZFNGllU06G60VstN65se6rcSusM1nekabIDKh3lcb4yJ2wHyOD
-         nnZhjCd8K0J6XVf5BexXdYdvgZGRssAxUnqqBZ2Kk6leOQf43KcPkKlJNfbSQS4/q0b8
-         b3tgECBbErdrc2vAu6Tc4kZsnFuOa5Rlxdcv7uatiZUUStYjeqV8YwkNgjmhUPDr6tHD
-         wJBlNEweoGSakYc54I6hda3g7BaqLJi6qPegNgDlXEvyhKy4Y96bDIEGLqJ1Ld+gD7en
-         HxSg==
-X-Gm-Message-State: AOAM533U0kTQYx5U3qIspnDcxM5Gh19nTC93Ayntkspnp61qTyty5w5U
-        0HsgJoBKXBxdaHCZjSmFsA==
-X-Google-Smtp-Source: ABdhPJzHHZp4+2D2CPnREtsOrP4HU0FKnjC7ZBKz9hcq/Ll5x38zJ+ihu5f8fyhIDgmwsspw8rJWgw==
-X-Received: by 2002:a6b:91d4:: with SMTP id t203mr28373543iod.149.1592243927188;
-        Mon, 15 Jun 2020 10:58:47 -0700 (PDT)
+        bh=BHgT2mx8xkJ6dyh2wGvrPbLyiW7OY04S9iTFYV1Zgpg=;
+        b=rw23SjXGskCZ3jzGz9JQt9PiV/TagMMnIzG29tJPnjvWpFqEPrB/+gbmRNZCrUiA8H
+         aedApV2zvWHKFwJSPjJZ9skm6FIsTLA9WFYEFPBWI6jkKr734j6QH4QbM0QMGKMKj9vc
+         QvkQkMJyXlpBSHG5wl27QO3pXAfPlVe8neMHk4WQHctnjKnpLniy1/70Aqn9+jCwFRYq
+         J5SzJHD7lAN/fa8zhXTHYASCHydFtU3cZa2DSNfpPWOSCRL7p2FtrqjVo94tpyyWgO7U
+         SFtgjXudNhsxez1gRFx+FmGHtl4jjoJVcCm7TSGrXsg6AB1vaNKnF62LV+p0QQZNOy0n
+         YMYw==
+X-Gm-Message-State: AOAM531+dQvZqIbs7YnBb6/mY88nNgxm1FbhG47KTVAsWZcp/9QzfSzS
+        MHw4Cmve7vSTSPuxXvxwG3wCstQ=
+X-Google-Smtp-Source: ABdhPJzcQSDpOkBhHJENl2D/pzMbYPzaQ2yaqC/lvyTGhRDc0VY48ge4XqLEln/oOi42VvZqeG5+Ng==
+X-Received: by 2002:a02:ccb3:: with SMTP id t19mr23072149jap.20.1592243969677;
+        Mon, 15 Jun 2020 10:59:29 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id p9sm8303940ile.87.2020.06.15.10.58.45
+        by smtp.gmail.com with ESMTPSA id g15sm8288584ilr.5.2020.06.15.10.59.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:58:46 -0700 (PDT)
-Received: (nullmailer pid 2044691 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:58:44 -0000
-Date:   Mon, 15 Jun 2020 11:58:44 -0600
+        Mon, 15 Jun 2020 10:59:29 -0700 (PDT)
+Received: (nullmailer pid 2045960 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:59:28 -0000
+Date:   Mon, 15 Jun 2020 11:59:28 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv2 3/6] power: supply: gpio-charger: add
- charge-current-limit feature
-Message-ID: <20200615175844.GA2032047@bogus>
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com>
- <20200605224403.181015-4-sebastian.reichel@collabora.com>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        agross@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH V7 1/4] dt-bindings: clock: add ipq6018 a53 pll compatible
+Message-ID: <20200615175928.GA2045909@bogus>
+References: <1591440907-20021-1-git-send-email-sivaprak@codeaurora.org>
+ <1591440907-20021-2-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200605224403.181015-4-sebastian.reichel@collabora.com>
+In-Reply-To: <1591440907-20021-2-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 12:44:00AM +0200, Sebastian Reichel wrote:
-> Add new charge-current-limit feature to gpio-charger.
+On Sat, 06 Jun 2020 16:25:04 +0530, Sivaprakash Murugesan wrote:
+> cpus on ipq6018 are clocked by a53 pll, add device compatible for a53
+> pll found on ipq6018 devices.
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > ---
->  .../bindings/power/supply/gpio-charger.yaml   |  31 ++++
->  drivers/power/supply/gpio-charger.c           | 140 ++++++++++++++++++
->  2 files changed, 171 insertions(+)
+> [V7]
+>  * Addressed minor review comment from Rob
+>  .../devicetree/bindings/clock/qcom,a53pll.yaml         | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> index 30eabbb14ef3..e11cfdc68a51 100644
-> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
-> @@ -39,6 +39,25 @@ properties:
->      maxItems: 1
->      description: GPIO indicating the charging status
->  
-> +  charge-current-limit-gpios:
-> +    minItems: 1
-> +    maxItems: 32
-> +    description: GPIOs used for current limiting
-> +
-> +  charge-current-limit-mapping:
-> +    description: List of touples with current in uA and a GPIO bitmap (in
 
-s/touples/tuples/
-
-> +      this order). The touples must be provided in descending order of the
-
-and here.
-
-> +      current limit.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +    items:
-> +      items:
-> +        - description:
-> +            Current limit in uA
-> +        - description:
-> +            Encoded GPIO setting. Bit 0 represents last GPIO from the
-> +            charge-current-limit-gpios property. Bit 1 second to last
-> +            GPIO and so on.
-
-Seems a bit odd that bit N doesn't represent index N of the gpios.
-
-> +
->  required:
->    - compatible
->  
-> @@ -47,6 +66,12 @@ anyOf:
->      - gpios
->    - required:
->      - charge-status-gpios
-> +  - required:
-> +    - charge-current-limit-gpios
-> +
-> +dependencies:
-> +  charge-current-limit-gpios: [ charge-current-limit-mapping ]
-> +  charge-current-limit-mapping: [ charge-current-limit-gpios ]
->  
->  additionalProperties: false
->  
-> @@ -60,4 +85,10 @@ examples:
->  
->        gpios = <&gpd 28 GPIO_ACTIVE_LOW>;
->        charge-status-gpios = <&gpc 27 GPIO_ACTIVE_LOW>;
-> +
-> +      charge-current-limit-gpios = <&gpioA 11 GPIO_ACTIVE_HIGH>,
-> +                                   <&gpioA 12 GPIO_ACTIVE_HIGH>;
-> +      charge-current-limit-mapping = <2500000 0x00>, // 2.5 A => both GPIOs low
-> +                                     <700000 0x01>, // 700 mA => GPIO A.12 high
-> +                                     <0 0x02>; // 0 mA => GPIO A.11 high
->      };
+Reviewed-by: Rob Herring <robh@kernel.org>
