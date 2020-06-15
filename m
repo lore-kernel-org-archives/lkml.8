@@ -2,111 +2,211 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6979C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE982068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94692068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728805AbgFOH0a (ORCPT
+        id S1728612AbgFOH1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:26:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:11188 "EHLO mga07.intel.com"
+        Mon, 15 Jun 2020 03:27:05 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4099 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgFOH03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:26:29 -0400
-IronPort-SDR: 60xklY4WX+FAhl1RYx2oWfWpcPs81PUIbJQdQ82ydhC4HjHfkPIyigCrmth9mf5WcWXkd8mknO
- EzNCG+i3SmlQ==
+        id S1728380AbgFOH1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:27:04 -0400
+IronPort-SDR: ltgMgBL5FwXYyGaAbwwilhIwXWD0l7vN2CKqNkXpkUxyYk0/qNWooOn/pazMAgPhTah9vMFp7o
+ GsxhwVRENt7g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 00:26:27 -0700
-IronPort-SDR: 5HOmEss1pIWf5TzQZn+x4BH0I+3EofDNooFM9lJtk0qO4CpDVIIroHSYyYlJMyMacWPFgqLNVc
- Aat0iD4UvdHw==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 00:27:03 -0700
+IronPort-SDR: k23d8mGdhIi8mE0zWaRIwZT4SBlZv6wGQ1xZtWJSm5Ma7ijIyA7cY9175hQZmMK/PXEW6IPbSh
+ BQEWAnzl3JPQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="272662564"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga003.jf.intel.com with ESMTP; 15 Jun 2020 00:26:22 -0700
-Subject: Re: [PATCH v3 5/9] usb: xhci-pci: Add support for reset controllers
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        andy.shevchenko@gmail.com, lorenzo.pieralisi@arm.com
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
- <20200612171334.26385-6-nsaenzjulienne@suse.de>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <ebe423ee-e2c7-f761-dccc-c5195ea2e0ae@linux.intel.com>
-Date:   Mon, 15 Jun 2020 10:29:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+   d="scan'208";a="382434853"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.6.47]) ([10.238.6.47])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2020 00:27:00 -0700
+Subject: Re: [LKP] [sched/fair] 070f5e860e: reaim.jobs_per_min -10.5%
+ regression
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200319023819.GO11705@shao2-debian>
+ <20200612110616.20264-1-hdanton@sina.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <90f4036d-bb16-af67-8776-a2cbe67dfe7f@linux.intel.com>
+Date:   Mon, 15 Jun 2020 15:26:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200612171334.26385-6-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200612110616.20264-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.6.2020 20.13, Nicolas Saenz Julienne wrote:
-> Some atypical users of xhci-pci might need to manually reset their xHCI
-> controller before starting the HCD setup. Check if a reset controller
-> device is available to the PCI bus and trigger a reset.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+
+On 6/12/2020 7:06 PM, Hillf Danton wrote:
+> 
+> On Fri, 12 Jun 2020 14:36:49 +0800 Xing Zhengjun wrote:
+>> Hi Vincent,
+>>
+>>     We test the regression still existed in v5.7, do you have time to
+>> look at it? Thanks.
+>>
+>>   
+>> =========================================================================================
+>> tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
+>>   
+>> lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
+>>
+>> commit:
+>>     9f68395333ad7f5bfe2f83473fed363d4229f11c
+>>     070f5e860ee2bf588c99ef7b4c202451faa48236
+>>     v5.7
+>>
+>> 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7
+>> ---------------- --------------------------- ---------------------------
+>>            %stddev     %change         %stddev     %change         %stddev
+>>                \          |                \          |                \
+>>         0.69           -10.3%       0.62            -9.1%       0.62     reaim.child_systime
+>>         0.62            -1.0%       0.61            +0.5%       0.62     reaim.child_utime
+>>        66870           -10.0%      60187            -7.6%      61787     reaim.jobs_per_min
+>>        16717           -10.0%      15046            -7.6%      15446     reaim.jobs_per_min_child
+>>        97.84            -1.1%      96.75            -0.4%      97.43     reaim.jti
+>>        72000           -10.8%      64216            -8.3%      66000     reaim.max_jobs_per_min
+>>         0.36           +10.6%       0.40            +7.8%       0.39     reaim.parent_time
+>>         1.58 ą  2%     +71.0%       2.70 ą  2%     +26.9%       2.01 ą  2%  reaim.std_dev_percent
+>>         0.00 ą  5%    +110.4%       0.01 ą  3%     +48.8%       0.01 ą  7%  reaim.std_dev_time
+>>        50800            -2.4%      49600            -1.6%      50000     reaim.workload
+>>
+>>
+>> On 3/19/2020 10:38 AM, kernel test robot wrote:
+>>> Greeting,
+>>>
+>>> FYI, we noticed a -10.5% regression of reaim.jobs_per_min due to commit:
+>>>
+>>>
+>>> commit: 070f5e860ee2bf588c99ef7b4c202451faa48236 ("sched/fair: Take into account runnable_avg to classify group")
+>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>>>
+>>> in testcase: reaim
+>>> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
+>>> with following parameters:
+>>>
+>>> 	runtime: 300s
+>>> 	nr_task: 100%
+>>> 	test: five_sec
+>>> 	cpufreq_governor: performance
+>>> 	ucode: 0x21
+>>>
+>>> test-description: REAIM is an updated and improved version of AIM 7 benchmark.
+>>> test-url: https://sourceforge.net/projects/re-aim-7/
+> 
+> Hi Xing
+> 
+> After 070f5e860ee2 let's treat runnable the same way as util on
+> comparing capacity in the assumption that
+> (125 + 110 + 117) / 3 = 117 accounts for 105 within margin of error
+> before any other proposal with some more reasons.
+> 
+> thanks
+> Hillf
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8215,12 +8215,8 @@ group_has_capacity(unsigned int imbalanc
+>   	if (sgs->sum_nr_running < sgs->group_weight)
+>   		return true;
+>   
+> -	if ((sgs->group_capacity * imbalance_pct) <
+> -			(sgs->group_runnable * 100))
+> -		return false;
+> -
+> -	if ((sgs->group_capacity * 100) >
+> -			(sgs->group_util * imbalance_pct))
+> +	if ((sgs->group_capacity * 100) > (sgs->group_util * imbalance_pct) &&
+> +	    (sgs->group_capacity * 100) > (sgs->group_runnable * imbalance_pct))
+>   		return true;
+>   
+>   	return false;
+> @@ -8240,12 +8236,8 @@ group_is_overloaded(unsigned int imbalan
+>   	if (sgs->sum_nr_running <= sgs->group_weight)
+>   		return false;
+>   
+> -	if ((sgs->group_capacity * 100) <
+> -			(sgs->group_util * imbalance_pct))
+> -		return true;
+> -
+> -	if ((sgs->group_capacity * imbalance_pct) <
+> -			(sgs->group_runnable * 100))
+> +	if ((sgs->group_capacity * 100) < (sgs->group_util * imbalance_pct) ||
+> +	    (sgs->group_capacity * 100) < (sgs->group_runnable * imbalance_pct))
+>   		return true;
+>   
+>   	return false;
+> 
+
+I apply the patch based on v5.7, the regression still existed.
+
+=========================================================================================
+tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
+ 
+lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
+
+commit:
+   9f68395333ad7f5bfe2f83473fed363d4229f11c
+   070f5e860ee2bf588c99ef7b4c202451faa48236
+   v5.7
+   6b33257768b8dd3982054885ea310871be2cfe0b (Hillf's patch)
+
+9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7 
+6b33257768b8dd3982054885ea3
+---------------- --------------------------- --------------------------- 
+---------------------------
+          %stddev     %change         %stddev     %change 
+%stddev     %change         %stddev
+              \          |                \          |                \ 
+         |                \
+       0.69           -10.3%       0.62            -9.1%       0.62 
+      -10.1%       0.62        reaim.child_systime
+       0.62            -1.0%       0.61            +0.5%       0.62 
+       +0.3%       0.62        reaim.child_utime
+      66870           -10.0%      60187            -7.6%      61787 
+       -8.3%      61305        reaim.jobs_per_min
+      16717           -10.0%      15046            -7.6%      15446 
+       -8.3%      15326        reaim.jobs_per_min_child
+      97.84            -1.1%      96.75            -0.4%      97.43 
+       -0.5%      97.37        reaim.jti
+      72000           -10.8%      64216            -8.3%      66000 
+       -8.3%      66000        reaim.max_jobs_per_min
+       0.36           +10.6%       0.40            +7.8%       0.39 
+       +9.4%       0.39        reaim.parent_time
+       1.58 ±  2%     +71.0%       2.70 ±  2%     +26.9%       2.01 ± 
+2%     +33.2%       2.11        reaim.std_dev_percent
+       0.00 ±  5%    +110.4%       0.01 ±  3%     +48.8%       0.01 ± 
+7%     +65.3%       0.01 ±  3%  reaim.std_dev_time
+      50800            -2.4%      49600            -1.6%      50000 
+       -1.8%      49866        reaim.workload
+
+
+
+-- 
+Zhengjun Xing
