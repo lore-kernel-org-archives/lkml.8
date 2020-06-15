@@ -2,108 +2,121 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 528872078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592237400;
-	bh=4vibHUpfXnNsO60rZstWWs3DH4fZjS17/55KHu+PzII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HKI+BuzI3Y3eYnO5yrQwQQfIf7NUMVrQKk6G1L0a2SVlLOkiGvwNdzUUokZqvH/UH
-	 YjSsrEpdJIMbWe1CI82/xBR2j5Z8n8pO7QjaxV29/2lEo8/7mCWj8a6e+3WrJ0RNV8
-	 RP4FUK65rYSNOSFu2n8mqXJ2DsDm4yK/wItg4fEQ=
+	by mail.kernel.org (Postfix) with ESMTP id 92E02207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbgFOQJ7 (ORCPT
+        id S1730692AbgFOQKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:09:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41786 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730426AbgFOQJ6 (ORCPT
+        Mon, 15 Jun 2020 12:10:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40832 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728585AbgFOQKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:09:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id o5so18450944iow.8;
-        Mon, 15 Jun 2020 09:09:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6pcmdJx4HNdfvoURK0pS/uo9gcQBvUR51Fl9F7RD+2g=;
-        b=QDK2cHpHva3SyEo3fgkVwwT0ALXAJ9iq5u8Y7NnLgrjcwS9iu+jqO0kDaAIndbe7aA
-         8JUdqeVbmO2n7MsNMMDoh4CCo3Ef3BbGn7jwwmoRVa6rzKSUCwUg0aJjhMmJkM9m3lOW
-         qlSDTaAXwD6So59MvecYVn93bymrTRqfqhSHVhNGgykVDpqtnULQnFH61ZaGw9ViZ5Nn
-         gSL/TG7ypWrx1VvVXzRManTRq6V6VsBc0+akUh3/fjF/RrnjGscM+tczuJRkoQLfuQrm
-         CTEvew5/+A6MdTANFSnj0Cdc1oh2AQIbm4jaLHtkgN7ZGWJXCO1Xu8/n6dmC8cc69W6c
-         rSVA==
-X-Gm-Message-State: AOAM531b6soeXa36J/A9HDsQCgt1Dgnd2T6kQUju0EXOtxEBffYSjR3D
-        wYtaEUnps0Kbz1tdi4MsdQ==
-X-Google-Smtp-Source: ABdhPJxjLCBX9sKIbflLAfGJFvnKwPQdtJxMytSuki4Cyx5b84o8tX12LEkI1o1hSS+BanuS7tOEZQ==
-X-Received: by 2002:a6b:4413:: with SMTP id r19mr27931825ioa.162.1592237397848;
-        Mon, 15 Jun 2020 09:09:57 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id j63sm8448166ilg.50.2020.06.15.09.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 09:09:57 -0700 (PDT)
-Received: (nullmailer pid 1861733 invoked by uid 1000);
-        Mon, 15 Jun 2020 16:09:56 -0000
-Date:   Mon, 15 Jun 2020 10:09:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     linux-mediatek@lists.infradead.org, cawa.cheng@mediatek.com,
-        dri-devel@lists.freedesktop.org, huijuan.xie@mediatek.com,
-        eddie.huang@mediatek.com, srv_heupstream@mediatek.com,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>, yingjoe.chen@mediatek.com,
-        stonea168@163.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v16 1/1] dt-bindings: display: mediatek: convert the dpi
- bindings to yaml
-Message-ID: <20200615160956.GB1861039@bogus>
-References: <20200614073036.63969-1-jitao.shi@mediatek.com>
- <20200614073036.63969-2-jitao.shi@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200614073036.63969-2-jitao.shi@mediatek.com>
+        Mon, 15 Jun 2020 12:10:33 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FG3jdq097237;
+        Mon, 15 Jun 2020 12:10:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31mtxf3krh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 12:10:28 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FG45MO099034;
+        Mon, 15 Jun 2020 12:10:27 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31mtxf3kpf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 12:10:27 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FG14Ek001730;
+        Mon, 15 Jun 2020 16:10:24 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 31mpe81jcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 16:10:24 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FGAMPT3080502
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 16:10:22 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6687311C054;
+        Mon, 15 Jun 2020 16:10:22 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54C5311C069;
+        Mon, 15 Jun 2020 16:10:21 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.184.11])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 16:10:21 +0000 (GMT)
+Message-ID: <1592237420.11061.144.camel@linux.ibm.com>
+Subject: Re: [PATCH 5/5] LSM: Define workqueue for measuring security module
+ state
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Stephen Smalley <stephen.smalley@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 15 Jun 2020 12:10:20 -0400
+In-Reply-To: <CAEjxPJ61dup9HDQny_TAb7we-vcN-sM17y4x0Pos3d7ERaab9g@mail.gmail.com>
+References: <20200613024130.3356-1-nramas@linux.microsoft.com>
+         <20200613024130.3356-6-nramas@linux.microsoft.com>
+         <CAEjxPJ7v5Lu-vzqg0ZVh8zJ9uZ=odN3jt_5+9d9x+RydsNWK0g@mail.gmail.com>
+         <1592233145.11061.129.camel@linux.ibm.com>
+         <CAEjxPJ61dup9HDQny_TAb7we-vcN-sM17y4x0Pos3d7ERaab9g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_03:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 suspectscore=0
+ phishscore=0 lowpriorityscore=0 mlxscore=0 cotscore=-2147483648
+ bulkscore=0 adultscore=0 mlxlogscore=999 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Jun 2020 15:30:36 +0800, Jitao Shi wrote:
-> Convert display/mediatek/mediatek,dpi.txt to display/mediatek/mediatek,dpi.yaml
-> and remove the old text bindings.
+On Mon, 2020-06-15 at 11:47 -0400, Stephen Smalley wrote:
+> On Mon, Jun 15, 2020 at 10:59 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> >
+> > On Mon, 2020-06-15 at 09:33 -0400, Stephen Smalley wrote:
+> > > On Fri, Jun 12, 2020 at 10:42 PM Lakshmi Ramasubramanian
+> > > <nramas@linux.microsoft.com> wrote:
+> > > >
+> > > > The data maintained by the security modules could be tampered with by
+> > > > malware. The LSM needs to periodically query the state of
+> > > > the security modules and measure the data when the state is changed.
+> > > >
+> > > > Define a workqueue for handling this periodic query and measurement.
+> > >
+> > > Won't this make it difficult/impossible to predict the IMA PCR value?
+> > > Unless I missed it, you are going to end up measuring every N minutes
+> > > even if there was no change and therefore constantly be extending the
+> > > PCR.  That will break attestation or sealing against the IMA PCR.
+> >
+> > Even if it attempts to add the same measurement to the list multiple
+> > times, unless something changed, there should only be one measurement
+> > in the list.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../display/mediatek/mediatek,dpi.txt         | 42 --------
->  .../display/mediatek/mediatek,dpi.yaml        | 97 +++++++++++++++++++
->  2 files changed, 97 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
->  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
-> 
+> Is the PCR only extended once?
 
+Yes, otherwise you wouldn't be able to verify a quote.
+ ima_lookup_digest_entry() first verifies the hash isn't in the cache,
+before adding it to the measurement list and then extending the TPM.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.example.dt.yaml: example-0: dpi@1401d000:reg:0: [0, 335663104, 0, 4096] is too long
-
-
-See https://patchwork.ozlabs.org/patch/1308901
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Mimi
