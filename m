@@ -2,126 +2,70 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A470C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A34EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB32720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCtzq5fp"
+	by mail.kernel.org (Postfix) with ESMTP id 2EB2020644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgFOOQX (ORCPT
+        id S1730406AbgFOORA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:16:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35924 "EHLO
+        Mon, 15 Jun 2020 10:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730499AbgFOOQR (ORCPT
+        with ESMTP id S1730064AbgFOOQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:16:17 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2586C061A0E;
-        Mon, 15 Jun 2020 07:16:16 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id gl26so17588562ejb.11;
-        Mon, 15 Jun 2020 07:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8vl4ct4Yo/NmDr9GQNb+5TnEp6gny9A1HqfVqk1MUaE=;
-        b=hCtzq5fpUQIUqpy0SN85pGTDmXi8xW2pxm1r070y1RKcinJTOfC+sCONnYzTOhfyET
-         lODRUzWXMCUNSfOzTU91B3kfEr7+NHlNGxMaaLfQBOIFUVny9rNKb9L+me7n/f9AST82
-         5OzbdkWUUk/WhIL8zYrqriCQsbGpLmKXdQI/S+7dAYYeQDt3qe58uVu+Ti1eV8VyaekS
-         6mHeVkGlBKpbPzX/m2xjmwE2CpZA3djgXT+OZp+OhnEYcTSQ9oaYzswWfjvFYA7mDQVb
-         H79PqVkNbv/PbtwCSiZ6bK/r6CI0+cgr1CzlABChJqzS0oIOGnca2QN0NVl8mq3UFf4f
-         Rk9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8vl4ct4Yo/NmDr9GQNb+5TnEp6gny9A1HqfVqk1MUaE=;
-        b=BD1FfcjJWgjbR/wvZkFy46h1KGuSOson5KApbjGmdd0gl5JNAzSDqRRhqiMeK+OHsS
-         +wimjRkxe5ywSK+EjpYcuSsj1h+Dlh3KNy1MemwWfuDoRReitdTeOck6RIJZxyzxzro6
-         hJxgudq9zR9dJdP2gxfMoGcX2hQ3rM2m4lcBHf6o4oUoaX4LVemzP1DyEu2YiAJXEu/E
-         8sdwoBgeTeeF6KkX+pEgjAvEGZ9Pxzx3ET2d72jel4GX8HFi/Ql/fT8no0Snbeoiam1B
-         YWSlqtD5qYTcPV+cfQWxMM+toU8htS2Udpim3t0h30sqjuxMFSufxJP1dwQIsZRb/h1f
-         8GCw==
-X-Gm-Message-State: AOAM530ItNHD0RsZZp8zzAbNDMWT1S85bM73rsbkJlmmB3RXJ++TdNnS
-        jYzsF6VEz5MauKdSunfEy00=
-X-Google-Smtp-Source: ABdhPJx3LjCjlGePx+AwP52VAaSSHKKuHVeOcwStf5hyq+/zIgSo7KGFJEEjTEY5MoE2xx3L99gDLg==
-X-Received: by 2002:a17:906:da02:: with SMTP id fi2mr27005621ejb.41.1592230575420;
-        Mon, 15 Jun 2020 07:16:15 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id dj26sm8426010edb.4.2020.06.15.07.16.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 07:16:14 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pwm: iqs620a: Use 64-bit division
-Date:   Mon, 15 Jun 2020 16:16:06 +0200
-Message-Id: <20200615141606.2814208-3-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200615141606.2814208-1-thierry.reding@gmail.com>
-References: <20200615141606.2814208-1-thierry.reding@gmail.com>
+        Mon, 15 Jun 2020 10:16:59 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FEFDC061A0E;
+        Mon, 15 Jun 2020 07:16:59 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jkpup-009O2v-Rs; Mon, 15 Jun 2020 14:16:48 +0000
+Date:   Mon, 15 Jun 2020 15:16:47 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Sagi Grimberg <sagi@lightbitslabs.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org
+Subject: Re: [v3 PATCH] iov_iter: Move unnecessary inclusion of crypto/hash.h
+Message-ID: <20200615141647.GK23230@ZenIV.linux.org.uk>
+References: <20200611074332.GA12274@gondor.apana.org.au>
+ <20200611114911.GA17594@gondor.apana.org.au>
+ <20200612065737.GA17176@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612065737.GA17176@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PWM framework is going to change the PWM period and duty cycles to
-be 64-bit unsigned integers. To avoid build errors on platforms that do
-not natively support 64-bit division, use explicity 64-bit division.
+On Fri, Jun 12, 2020 at 04:57:37PM +1000, Herbert Xu wrote:
+> The header file linux/uio.h includes crypto/hash.h which pulls in
+> most of the Crypto API.  Since linux/uio.h is used throughout the
+> kernel this means that every tiny bit of change to the Crypto API
+> causes the entire kernel to get rebuilt.
+> 
+> This patch fixes this by moving it into lib/iov_iter.c instead
+> where it is actually used.
+> 
+> This patch also fixes the ifdef to use CRYPTO_HASH instead of just
+> CRYPTO which does not guarantee the existence of ahash.
+> 
+> Unfortunately a number of drivers were relying on linux/uio.h to
+> provide access to linux/slab.h.  This patch adds inclusions of
+> linux/slab.h as detected by build failures.
+> 
+> Also skbuff.h was relying on this to provide a declaration for
+> ahash_request.  This patch adds a forward declaration instead.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
----
- drivers/pwm/pwm-iqs620a.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
-index 674f0e238ba0..b2bb27eff623 100644
---- a/drivers/pwm/pwm-iqs620a.c
-+++ b/drivers/pwm/pwm-iqs620a.c
-@@ -46,7 +46,8 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- {
- 	struct iqs620_pwm_private *iqs620_pwm;
- 	struct iqs62x_core *iqs62x;
--	int duty_scale, ret;
-+	u64 duty_scale;
-+	int ret;
- 
- 	if (state->polarity != PWM_POLARITY_NORMAL)
- 		return -ENOTSUPP;
-@@ -69,7 +70,7 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * For lower duty cycles (e.g. 0), the PWM output is simply disabled to
- 	 * allow an external pull-down resistor to hold the GPIO3/LTX pin low.
- 	 */
--	duty_scale = state->duty_cycle * 256 / IQS620_PWM_PERIOD_NS;
-+	duty_scale = div_u64(state->duty_cycle * 256, IQS620_PWM_PERIOD_NS);
- 
- 	mutex_lock(&iqs620_pwm->lock);
- 
-@@ -81,7 +82,7 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	}
- 
- 	if (duty_scale) {
--		u8 duty_val = min(duty_scale - 1, 0xFF);
-+		u8 duty_val = min_t(u64, duty_scale - 1, 0xff);
- 
- 		ret = regmap_write(iqs62x->regmap, IQS620_PWM_DUTY_CYCLE,
- 				   duty_val);
--- 
-2.24.1
-
+Applied; let it sit in -next for a while to get better build coverage...
