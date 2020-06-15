@@ -2,112 +2,257 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC05C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E51206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40A9206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="plcRE/HT"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="VprH3CbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgFOMPk (ORCPT
+        id S1729878AbgFOMRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729642AbgFOMPi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:15:38 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D457C061A0E;
-        Mon, 15 Jun 2020 05:15:38 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f063c0085fbd8d4455f52fc.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:3c00:85fb:d8d4:455f:52fc])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E7BB41EC0299;
-        Mon, 15 Jun 2020 14:15:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592223336;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=IvLplpOzdVR3pvv87mkIgy3s3a9HTre37RLfwpBuQDk=;
-        b=plcRE/HT8GZ7mDZeXigYxsn/J0PdLHE1t9di7d6lkuXvUjT1Zof0zG7KP6SR3Uf+cE0Wjk
-        l3L4tt5jYOsrc+gkBhllMZbwzxaGLpqY/tkVRGFNbVQdfyJTtWZOL1+0huSI5i62Hg7vzW
-        CkJLUbF2zDsZnIDh3W8rolEcZRq2V8s=
-Date:   Mon, 15 Jun 2020 14:15:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Liam Merwick <liam.merwick@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Brad Campbell <lists2009@fnarfbargle.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during
- wakeup
-Message-ID: <20200615121524.GH14668@zn.tnic>
-References: <20200605200728.10145-1-sean.j.christopherson@intel.com>
- <b2ac2400-dbc1-f6bc-a397-17f1ae10bd83@oracle.com>
- <20200608172921.GC8223@linux.intel.com>
+        Mon, 15 Jun 2020 08:17:05 -0400
+Received: from mail-eopbgr760047.outbound.protection.outlook.com ([40.107.76.47]:5601
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729836AbgFOMRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:17:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AO1pMwKSyQHpWSTu9jpWY2LdE5xoYnJBoIcBpuIv0PyclGYPHHvNneqZ3V0Y1BjOoMrKi6OTR1TT0bOKrCfdwvs41d/VFGlt6T8Hb0b9mzQLTVNvTeTRPDJrRXvv4bl7JZa+Wxgm2Itzdacj33WCme+BvS1FbUNlPy+HNGaNrsRGZ2VmWSOCjO/RMo+Vh7dWefZkg/ByoMbLeXPFJ/rb7EsUHwMYus6u9NNd1G2h08Kb5Jfo7I+ACuhTojlTXdm234YwaJ+WfTM49XJIy7sUX3F6rjSIlruid9sKEv0wuwcHTSH7sv+UhJsung4j5RmfEyOlozhzdpNw+ECHs02oOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cMyxvV2FGeT9TepR4Hegun/+h4YMEw7pyq/mA4nY0+U=;
+ b=XuaD2c18idH6OmrTHnw0YVsz/fa6zy9m558G0Q7oEV+xxpPj9d2WFDE4ieS8cd71vk4NyW+LV+/7nCdrR7vRJ2cCb22iMfUOjBWIrStjuB+MJPym8m0Bfpi4KKO7efTrAkMX0/aXAUoisvO/ojEWRdvHKS4fixmQt3hsd9EuKKuFYfhJTkrCs/+pySofqyHjaqfmwZ8lxuly7TGlfW7bRQxW/nrjU0AF88u8IiHvyU+nphPqg6pnTjtdHwRKg5Fv0DFpdC9MHOC/bBpnY2hK0ebVYBW+u+se8GGjvu8f9BmU/LpYmA9nZibccNMZp4ypkDlD5iUqsMDb7IRuRruv8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cMyxvV2FGeT9TepR4Hegun/+h4YMEw7pyq/mA4nY0+U=;
+ b=VprH3CbKddnoL+7R+e4FhPWjKr+MTE2t/a92vqbGBHXZn1aNpG5MpxyaI1rgqBz8Opwpn+5eDXo6Lg01jyd8dlmBySd8vdCfLrkTYNqbVdfXZRRzsDuV4VOU8PDv9GQ5e3LEjVFi/jn+JQaVAjVgXOOhD/+IsFe5r1McPA19SjQ=
+Authentication-Results: 8bytes.org; dkim=none (message not signed)
+ header.d=none;8bytes.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
+ DM6PR12MB4435.namprd12.prod.outlook.com (2603:10b6:5:2a6::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3088.18; Mon, 15 Jun 2020 12:17:01 +0000
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::c1bc:8ef9:9ba3:99bf]) by DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::c1bc:8ef9:9ba3:99bf%10]) with mapi id 15.20.3088.029; Mon, 15 Jun
+ 2020 12:17:01 +0000
+Subject: Re: [PATCH 2/2] iommu/amd: Move Kconfig and Makefile bits down into
+ amd directory
+To:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     Joerg Roedel <joro@8bytes.org>
+References: <20200612231100.293734-1-jsnitsel@redhat.com>
+ <20200612231100.293734-3-jsnitsel@redhat.com>
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Message-ID: <357cfad9-75d5-f7cb-93e6-f85e6056c309@amd.com>
+Date:   Mon, 15 Jun 2020 19:16:50 +0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
+In-Reply-To: <20200612231100.293734-3-jsnitsel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: KU1PR03CA0001.apcprd03.prod.outlook.com
+ (2603:1096:802:18::13) To DM5PR12MB1163.namprd12.prod.outlook.com
+ (2603:10b6:3:7a::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200608172921.GC8223@linux.intel.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Suravees-MacBook-Pro.local (165.204.80.7) by KU1PR03CA0001.apcprd03.prod.outlook.com (2603:1096:802:18::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.7 via Frontend Transport; Mon, 15 Jun 2020 12:16:59 +0000
+X-Originating-IP: [165.204.80.7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 78847aa5-3fd5-4b26-c467-08d8112601df
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4435:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB44357BA1B6074014D9CEC1F3F39C0@DM6PR12MB4435.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
+X-Forefront-PRVS: 04359FAD81
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TTpeVAuHUVggxIFu65i1abImw42wPJeV8Ryh3qRaVGN83Com1bKl541w2DvpFlRpw/ynOjsCTJw8bzdjjBPXO202orRlVPB7O6CVWF3FkokGMx2mjW/Bs8CQrhKTtd7NTsigW8J+uB+yXnGQZKdiNT+7SvUs4ArNLqpug8lqGJ5cGGseMMwqT3CH3jdci3UGBVEthrGjr42CUdZEYkfViIJnghvBOXT9wwHP8xfHuvc6c2xu6c8tehYfPreYGrtCarrVlteQpaOKBQkV/AKhsPydhn8ASYmiJ5w9hwsCWsBGn+TEOR2jszfSoJ1+SnxtlbBXpIxlvcXs8wH/rMOTZs7RurzL0Dc4yAqfnfz4xfmXTP7iQPQZQCJWpqImAqpnb9cQV7lZpwqkXkZIf+bVnYpyYkc45OHWGTjxh65ptTTn5yUwtrgrp8iguDNNUCfz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(376002)(346002)(136003)(8676002)(83380400001)(5660300002)(6666004)(478600001)(8936002)(4326008)(2906002)(6506007)(53546011)(316002)(36756003)(66476007)(26005)(66946007)(66556008)(31686004)(86362001)(956004)(52116002)(6512007)(31696002)(44832011)(6486002)(2616005)(16526019)(186003)(141333003)(181643002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: lsh2IaLyut6kJaO596EU6GtmO0/0SpugbdN2p9KOHNzKSmU/fHMM5VHM4waRkdHDKeMeXczICW5w4CqkbMbztrWxBjtSFqCfM0M6fSopWiaYK2NJMH9l1MTnWuqAn01Dw+OkdLeWN4wCCvBNjiRRB6ladizkoG+qI8sYRqDH2Ae7YtMDE2vtSS2DmJddcvp2h0inWRbItCaATNBYejh8exOnNooTsO9j2ZfZYiIMBQCVSW2z2/opJcHhPJsWBxCSPLgqMtkUDBDTL5YTvTwUzjsU9aZudPa8xe7ellaxJaWiS3II64rtmoc/GisFX6yHhGFXQ7IF6dIAtkmea1mLDQe9d6XoW8gOJHFr8uU/oaX4FvDfTh+y/WgKP/OoE424/Ymgw3QIlWeZUx5pRd/JXhuRq0dsYARWKr/qhPKT8M4ThDfivTn7c5GVYEe1Qii2G3tfnixhuc1rLlKmyGXPYz8FKt+kV8qocsZbmmmSEy4=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78847aa5-3fd5-4b26-c467-08d8112601df
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 12:17:01.4564
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zbgyCUmG7Y2qnmHXF6AoXicry1OUTIUcAfKtW8vyp6+2Ts9A1b7uWNQg/j4q4Q4jJOvJ1Rp1GZLZxKqyFk9CQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4435
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 10:29:21AM -0700, Sean Christopherson wrote:
-> On Mon, Jun 08, 2020 at 11:12:35AM +0100, Liam Merwick wrote:
-> > On 05/06/2020 21:07, Sean Christopherson wrote:
-> > >Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the case
-> > >where firmware doesn't initialize or save/restore across S3.  This fixes
-> > >a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
-> > >taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
-> > >
-> > >Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already deals
-> > >with the case where the MSR is locked, and because APs already redo
-> > >init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow being
-> > >used to reinitialize APs upon wakeup.  Do the call in the early wakeup
-> > >flow to avoid dependencies in the syscore_ops chain, e.g. simply adding
-> > >a resume hook is not guaranteed to work, as KVM does VMXON in its own
-> > >resume hook, kvm_resume(), when KVM has active guests.
-> > >
-> > >Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
-> > >Cc: Maxim Levitsky <mlevitsk@redhat.com>
-> > >Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > >Cc: kvm@vger.kernel.org
-> > 
-> > Should it have the following tag since it fixes a commit introduced in 5.6?
-> > Cc: stable@vger.kernel.org # v5.6
+Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+
+Thanks,
+Suravee
+
+On 6/13/20 6:11 AM, Jerry Snitselaar wrote:
+> Move AMD Kconfig and Makefile bits down into the amd directory
+> with the rest of the AMD specific files.
 > 
-> It definitely warrants a backport to v5.6.  I didn't include a Cc to stable
-> because I swear I had seen an email fly by that stated an explicit Cc is
-> unnecessary/unwanted for tip-tree patches, but per a recent statement from
-> Boris it looks like I'm simply confused[*].  I'll add the Cc in v2.
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> ---
+>   drivers/iommu/Kconfig      | 45 +-------------------------------------
+>   drivers/iommu/Makefile     |  5 +----
+>   drivers/iommu/amd/Kconfig  | 44 +++++++++++++++++++++++++++++++++++++
+>   drivers/iommu/amd/Makefile |  4 ++++
+>   4 files changed, 50 insertions(+), 48 deletions(-)
+>   create mode 100644 drivers/iommu/amd/Kconfig
+>   create mode 100644 drivers/iommu/amd/Makefile
 > 
-> [*] https://lkml.kernel.org/r/20200417164752.GF7322@zn.tnic
-
-Yeah, I was simply parroting what Greg has told me. Maybe he should
-finally do that script. :-P
-
-Also, I believe Sasha's Skynet machine already does that...
-
-CCed both.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index b12d4ec124f6..78a8be0053b3 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -132,50 +132,7 @@ config IOMMU_PGTABLES_L2
+>   	def_bool y
+>   	depends on MSM_IOMMU && MMU && SMP && CPU_DCACHE_DISABLE=n
+>   
+> -# AMD IOMMU support
+> -config AMD_IOMMU
+> -	bool "AMD IOMMU support"
+> -	select SWIOTLB
+> -	select PCI_MSI
+> -	select PCI_ATS
+> -	select PCI_PRI
+> -	select PCI_PASID
+> -	select IOMMU_API
+> -	select IOMMU_IOVA
+> -	select IOMMU_DMA
+> -	depends on X86_64 && PCI && ACPI
+> -	---help---
+> -	  With this option you can enable support for AMD IOMMU hardware in
+> -	  your system. An IOMMU is a hardware component which provides
+> -	  remapping of DMA memory accesses from devices. With an AMD IOMMU you
+> -	  can isolate the DMA memory of different devices and protect the
+> -	  system from misbehaving device drivers or hardware.
+> -
+> -	  You can find out if your system has an AMD IOMMU if you look into
+> -	  your BIOS for an option to enable it or if you have an IVRS ACPI
+> -	  table.
+> -
+> -config AMD_IOMMU_V2
+> -	tristate "AMD IOMMU Version 2 driver"
+> -	depends on AMD_IOMMU
+> -	select MMU_NOTIFIER
+> -	---help---
+> -	  This option enables support for the AMD IOMMUv2 features of the IOMMU
+> -	  hardware. Select this option if you want to use devices that support
+> -	  the PCI PRI and PASID interface.
+> -
+> -config AMD_IOMMU_DEBUGFS
+> -	bool "Enable AMD IOMMU internals in DebugFS"
+> -	depends on AMD_IOMMU && IOMMU_DEBUGFS
+> -	---help---
+> -	  !!!WARNING!!!  !!!WARNING!!!  !!!WARNING!!!  !!!WARNING!!!
+> -
+> -	  DO NOT ENABLE THIS OPTION UNLESS YOU REALLY, -REALLY- KNOW WHAT YOU ARE DOING!!!
+> -	  Exposes AMD IOMMU device internals in DebugFS.
+> -
+> -	  This option is -NOT- intended for production environments, and should
+> -	  not generally be enabled.
+> -
+> +source "drivers/iommu/amd/Kconfig"
+>   source "drivers/iommu/intel/Kconfig"
+>   
+>   config IRQ_REMAP
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 71dd2f382e78..f356bc12b1c7 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -1,5 +1,5 @@
+>   # SPDX-License-Identifier: GPL-2.0
+> -obj-y += intel/
+> +obj-y += amd/ intel/
+>   obj-$(CONFIG_IOMMU_API) += iommu.o
+>   obj-$(CONFIG_IOMMU_API) += iommu-traces.o
+>   obj-$(CONFIG_IOMMU_API) += iommu-sysfs.o
+> @@ -12,9 +12,6 @@ obj-$(CONFIG_IOASID) += ioasid.o
+>   obj-$(CONFIG_IOMMU_IOVA) += iova.o
+>   obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
+>   obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+> -obj-$(CONFIG_AMD_IOMMU) += amd/iommu.o amd/init.o amd/quirks.o
+> -obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd/debugfs.o
+> -obj-$(CONFIG_AMD_IOMMU_V2) += amd/iommu_v2.o
+>   obj-$(CONFIG_ARM_SMMU) += arm_smmu.o
+>   arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
+>   obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+> diff --git a/drivers/iommu/amd/Kconfig b/drivers/iommu/amd/Kconfig
+> new file mode 100644
+> index 000000000000..1f061d91e0b8
+> --- /dev/null
+> +++ b/drivers/iommu/amd/Kconfig
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# AMD IOMMU support
+> +config AMD_IOMMU
+> +	bool "AMD IOMMU support"
+> +	select SWIOTLB
+> +	select PCI_MSI
+> +	select PCI_ATS
+> +	select PCI_PRI
+> +	select PCI_PASID
+> +	select IOMMU_API
+> +	select IOMMU_IOVA
+> +	select IOMMU_DMA
+> +	depends on X86_64 && PCI && ACPI
+> +	help
+> +	  With this option you can enable support for AMD IOMMU hardware in
+> +	  your system. An IOMMU is a hardware component which provides
+> +	  remapping of DMA memory accesses from devices. With an AMD IOMMU you
+> +	  can isolate the DMA memory of different devices and protect the
+> +	  system from misbehaving device drivers or hardware.
+> +
+> +	  You can find out if your system has an AMD IOMMU if you look into
+> +	  your BIOS for an option to enable it or if you have an IVRS ACPI
+> +	  table.
+> +
+> +config AMD_IOMMU_V2
+> +	tristate "AMD IOMMU Version 2 driver"
+> +	depends on AMD_IOMMU
+> +	select MMU_NOTIFIER
+> +	help
+> +	  This option enables support for the AMD IOMMUv2 features of the IOMMU
+> +	  hardware. Select this option if you want to use devices that support
+> +	  the PCI PRI and PASID interface.
+> +
+> +config AMD_IOMMU_DEBUGFS
+> +	bool "Enable AMD IOMMU internals in DebugFS"
+> +	depends on AMD_IOMMU && IOMMU_DEBUGFS
+> +	help
+> +	  !!!WARNING!!!  !!!WARNING!!!  !!!WARNING!!!  !!!WARNING!!!
+> +
+> +	  DO NOT ENABLE THIS OPTION UNLESS YOU REALLY, -REALLY- KNOW WHAT YOU ARE DOING!!!
+> +	  Exposes AMD IOMMU device internals in DebugFS.
+> +
+> +	  This option is -NOT- intended for production environments, and should
+> +	  not generally be enabled.
+> diff --git a/drivers/iommu/amd/Makefile b/drivers/iommu/amd/Makefile
+> new file mode 100644
+> index 000000000000..552f68ddcefd
+> --- /dev/null
+> +++ b/drivers/iommu/amd/Makefile
+> @@ -0,0 +1,4 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_AMD_IOMMU) += iommu.o init.o quirks.o
+> +obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += debugfs.o
+> +obj-$(CONFIG_AMD_IOMMU_V2) += iommu_v2.o
+> 
