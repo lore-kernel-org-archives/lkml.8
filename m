@@ -2,118 +2,132 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4873C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67838C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C53332067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:42:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="Pw1v3Bxi"
+	by mail.kernel.org (Postfix) with ESMTP id 4C8BD2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgFOHlk (ORCPT
+        id S1728678AbgFOHmO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:41:40 -0400
-Received: from mx.kolabnow.com ([95.128.36.41]:7638 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbgFOHkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:40:20 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out002.mykolab.com (Postfix) with ESMTP id 083687D2;
-        Mon, 15 Jun 2020 09:39:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received:received:received; s=dkim20160331; t=
-        1592206792; x=1594021193; bh=AVUUPEux4Kx1vK/R89Ot4pKZah2kg33VBPL
-        Woy8ljzY=; b=Pw1v3Bxi+u2nkCbLv9fhtn5ZOsGPKuWaD65aAkk4paWzzE/RQy9
-        gshAhSJlgOsVxsBAjjF8JHflvxT1U5iXnILl52xIKE3baA0wa1jPUXHcrzImp8Gf
-        nxGOsr4HUQjYZl/7o1ACy9f3L4r/15d5sDbCVZG9GErmfAFjMcHy3OMNyahkMi3A
-        Yp80cLtcaxqM3vH81GTIyXx85BfTM1LrdqJm9wHKV1sRRqsyXaRfs29FHc4LuxUj
-        l6AL59MpYGbRqyCekyI9GikIfS4m+AucxSHYwWAe3+Ubl3FGA0hsCvCrMcUZZfce
-        Tbztrpv9uh8AdgWLzLHCAk23+Pozxt0rHwzsAZnY8qNKnpi7WG8Tnujq0dY1fMYG
-        LCaFnNpHJonKNgu8tyCOiFfKYXKB48UKj9qAEXtfToM85EbgAFVoe49r0oc6XOc4
-        beJeS5ahnllhmtIsbPxImZlj8DpB3b6x3gTFbYVircWL479LbL6ZuKPJelQWbAr/
-        WBO3taVzCEQxZ4s+u4FOE4yijNU730U0r8I6x1vpoDS2+4BGKI9NPc1g3Vj2P0n2
-        HJESnNIqwPmpVmhGCAnoOm3Lcjj8YIuJzxe09t2mRJJla2k3ZIFiWhjrLvoorCLV
-        ftU37GbFRd5zt9PVfVPKKtAJA4u9lOu7o4kuntWRPUvmxcbrdO88n0L8=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out002.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9Uc4KvnQHTMs; Mon, 15 Jun 2020 09:39:52 +0200 (CEST)
-Received: from int-mx001.mykolab.com (unknown [10.9.13.1])
-        by ext-mx-out002.mykolab.com (Postfix) with ESMTPS id 945B5626;
-        Mon, 15 Jun 2020 09:39:52 +0200 (CEST)
-Received: from ext-subm002.mykolab.com (unknown [10.9.6.2])
-        by int-mx001.mykolab.com (Postfix) with ESMTPS id 30440343;
-        Mon, 15 Jun 2020 09:39:52 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 22/29] docs: it_IT: add two missing references
-Date:   Mon, 15 Jun 2020 09:39:50 +0200
-Message-ID: <2534109.mvXUDI8C0e@harkonnen>
-In-Reply-To: <e6ac17a4065a892e1b64e447106178a86354796e.1592203542.git.mchehab+huawei@kernel.org>
-References: <cover.1592203542.git.mchehab+huawei@kernel.org> <e6ac17a4065a892e1b64e447106178a86354796e.1592203542.git.mchehab+huawei@kernel.org>
+        Mon, 15 Jun 2020 03:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728369AbgFOHmN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:42:13 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEADC061A0E;
+        Mon, 15 Jun 2020 00:42:13 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jkjkv-0003IX-2c; Mon, 15 Jun 2020 09:42:09 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A70B41C00ED;
+        Mon, 15 Jun 2020 09:42:08 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 07:42:08 -0000
+From:   "tip-bot2 for Babu Moger" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/resctrl: Fix memory bandwidth counter width for AMD
+Cc:     Babu Moger <babu.moger@amd.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com>
+References: <159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Message-ID: <159220692843.16989.9350605607122935266.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is already fixed by https://lkml.org/lkml/2020/5/31/260
+The following commit has been merged into the x86/urgent branch of tip:
 
-On Monday, June 15, 2020 8:47:01 AM CEST Mauro Carvalho Chehab wrote:
-> there are missing references causing Sphinx warnings:
-> 
->     Documentation/translations/it_IT/process/submitting-patches.rst:384:
-> WARNING: undefined label: it_email_clients (if the link has no caption the
-> label must precede a section header)
-> Documentation/translations/it_IT/process/submitting-patches.rst:384:
-> WARNING: undefined label: it_email_clients (if the link has no caption the
-> label must precede a section header)
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/translations/it_IT/process/management-style.rst   | 2 ++
->  Documentation/translations/it_IT/process/submitting-patches.rst | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/translations/it_IT/process/management-style.rst
-> b/Documentation/translations/it_IT/process/management-style.rst index
-> 76ed074082ea..f7acee105c05 100644
-> --- a/Documentation/translations/it_IT/process/management-style.rst
-> +++ b/Documentation/translations/it_IT/process/management-style.rst
-> @@ -1,5 +1,7 @@
->  .. include:: ../disclaimer-ita.rst
-> 
-> +.. _it_managementstyle:
-> +
-> 
->  :Original: :doc:`../../../process/management-style`
->  :Translator: Alessia Mantegazza <amantegazza@vaga.pv.it>
-> 
-> diff --git a/Documentation/translations/it_IT/process/submitting-patches.rst
-> b/Documentation/translations/it_IT/process/submitting-patches.rst index
-> 7c23c08e4401..94c816b4e8f8 100644
-> --- a/Documentation/translations/it_IT/process/submitting-patches.rst
-> +++ b/Documentation/translations/it_IT/process/submitting-patches.rst
-> @@ -1,3 +1,5 @@
-> +.. _it_email_clients:
-> +
->  .. include:: ../disclaimer-ita.rst
-> 
->  :Original: :ref:`Documentation/process/submitting-patches.rst
->  :<submittingpatches>`
+Commit-ID:     2c18bd525c47f882f033b0a813ecd09c93e1ecdf
+Gitweb:        https://git.kernel.org/tip/2c18bd525c47f882f033b0a813ecd09c93e1ecdf
+Author:        Babu Moger <babu.moger@amd.com>
+AuthorDate:    Thu, 04 Jun 2020 14:45:16 -05:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 15 Jun 2020 09:35:38 +02:00
 
+x86/resctrl: Fix memory bandwidth counter width for AMD
 
+Memory bandwidth is calculated reading the monitoring counter
+at two intervals and calculating the delta. It is the software’s
+responsibility to read the count often enough to avoid having
+the count roll over _twice_ between reads.
 
+The current code hardcodes the bandwidth monitoring counter's width
+to 24 bits for AMD. This is due to default base counter width which
+is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
+to adjust the counter width. But, the AMD hardware supports much
+wider bandwidth counter with the default width of 44 bits.
 
+Kernel reads these monitoring counters every 1 second and adjusts the
+counter value for overflow. With 24 bits and scale value of 64 for AMD,
+it can only measure up to 1GB/s without overflowing. For the rates
+above 1GB/s this will fail to measure the bandwidth.
+
+Fix the issue setting the default width to 44 bits by adjusting the
+offset.
+
+AMD future products will implement CPUID 0xF.[ECX=1]:EAX.
+
+ [ bp: Let the line stick out and drop {}-brackets around a single
+   statement. ]
+
+Fixes: 4d05bf71f157 ("x86/resctrl: Introduce AMD QOS feature")
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com
+---
+ arch/x86/kernel/cpu/resctrl/core.c     | 8 ++++----
+ arch/x86/kernel/cpu/resctrl/internal.h | 1 +
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 12f967c..6a9df71 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -981,10 +981,10 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
+ 
+ 		c->x86_cache_max_rmid  = ecx;
+ 		c->x86_cache_occ_scale = ebx;
+-		if (c->x86_vendor == X86_VENDOR_INTEL)
+-			c->x86_cache_mbm_width_offset = eax & 0xff;
+-		else
+-			c->x86_cache_mbm_width_offset = -1;
++		c->x86_cache_mbm_width_offset = eax & 0xff;
++
++		if (c->x86_vendor == X86_VENDOR_AMD && !c->x86_cache_mbm_width_offset)
++			c->x86_cache_mbm_width_offset = MBM_CNTR_WIDTH_OFFSET_AMD;
+ 	}
+ }
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index f20a47d..5ffa322 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -37,6 +37,7 @@
+ #define MBA_IS_LINEAR			0x4
+ #define MBA_MAX_MBPS			U32_MAX
+ #define MAX_MBA_BW_AMD			0x800
++#define MBM_CNTR_WIDTH_OFFSET_AMD	20
+ 
+ #define RMID_VAL_ERROR			BIT_ULL(63)
+ #define RMID_VAL_UNAVAIL		BIT_ULL(62)
