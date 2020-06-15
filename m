@@ -2,76 +2,119 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 579B92067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC1E2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qKfY5RcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbgFOMqg (ORCPT
+        id S1730079AbgFOMqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:46:36 -0400
-Received: from sauhun.de ([88.99.104.3]:37664 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgFOMqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:46:36 -0400
-Received: from localhost (p54b333b6.dip0.t-ipconnect.de [84.179.51.182])
-        by pokefinder.org (Postfix) with ESMTPSA id 787C62C204E;
-        Mon, 15 Jun 2020 14:46:32 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 14:46:28 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "qiangming.xia" <qiangming.xia@mediatek.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
-Subject: Re: [PATCH] i2c: mediatek: Add i2c support for continuous mode
-Message-ID: <20200615124628.GA4423@kunai>
-References: <20200508071809.10187-1-qiangming.xia@mediatek.com>
- <1592217629.22302.4.camel@mbjsdccf07>
+        Mon, 15 Jun 2020 08:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728285AbgFOMqu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:46:50 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F380DC061A0E;
+        Mon, 15 Jun 2020 05:46:49 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id p5so15112220ile.6;
+        Mon, 15 Jun 2020 05:46:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ex4ahxPfnRJtHhHWkEbgHyzFGza84a5R1pjXHVBwv1k=;
+        b=qKfY5RcZwunYOBi349HPaH9pICMNxGTeYVJuxlg2OASzshTxktOUuR2xF4VOxC+gPh
+         /m6dq5sc5Zq6O9NEbWCvAuasEFmQUvbH+z36wkqubUp+gJ7qQkatmsqJhbE5j0ETipu6
+         oxMEy6xor4+CfJZXMtsT+BIR/6iVSk6EYbBAoq1SVtmUJyj61610y5a1sULkMdxWnKDv
+         +mjIRlj519zIpp2eNy3kqE/t/28gLV8iqkjXml8KnpSgTkgGRT/hEy938A8SdKMvDdBN
+         DKWdA5hwlb4r2IOpBjsYa80zrdpp4UJ8hBAAUjdryK1VjIj++blPq6733ZB6oNLJFLCa
+         yE9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ex4ahxPfnRJtHhHWkEbgHyzFGza84a5R1pjXHVBwv1k=;
+        b=boSdQhD/R1FMZi91wCOBLb9EJeOzTAHknzWpGP7dMU3Hx7cHdKUZ5Uz2YiF72mu0c7
+         cG1kVmpvf6umFtzffGj6h2srFy+mQqI6ejnH75OvGUCdvX4UA9SPAAXYeiRdeKVUUoTo
+         C9PhND2nB9eEXwaJ3ehA9nZ1gl7yizbF5VQxT6iCdUi1AfXwmNob0i07HTjTgD+I1Ph4
+         9XNYYpYrisNb+xPSLzcg5+V2OF6P4W+6+0PuHX+AOplEj7axS/G1B5ouK3dOyMQZqxrc
+         002brSnfi5ICoPs9NKhVwQYhy1HDT4AtaJKMWN4yTDM2qSU1eeK7r1ubVjbwxxdr6juH
+         sJQA==
+X-Gm-Message-State: AOAM533OeG/Kw/UZbfZwR4+GWLI+bKHO4oVbzSGertI0zpsOqA6sgJ0A
+        BmAqAQfSBQYM/1qkAgxzipvUc3qkvYr9i0ZKsKc=
+X-Google-Smtp-Source: ABdhPJziLUuk2qoHcHqUNeIaqipAR7Yne8rAu4BGDaYRpWHBs0TR8DrvYEjvYzreMLe1BHbse4edbW5ExC9KB2ifCwA=
+X-Received: by 2002:a05:6e02:12b3:: with SMTP id f19mr27719137ilr.13.1592225209461;
+ Mon, 15 Jun 2020 05:46:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Content-Disposition: inline
-In-Reply-To: <1592217629.22302.4.camel@mbjsdccf07>
+References: <cover.1590017578.git.syednwaris@gmail.com> <CAMpxmJUrC270rgWcADYruqA_qVeh9-N8mCVPWgJkL-8kU2bO1A@mail.gmail.com>
+In-Reply-To: <CAMpxmJUrC270rgWcADYruqA_qVeh9-N8mCVPWgJkL-8kU2bO1A@mail.gmail.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Mon, 15 Jun 2020 18:16:37 +0530
+Message-ID: <CACG_h5pP1ffeG4E-Vz_C+cX=2PGaHvNBPe+sUpP7sbfMC-0sdQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/4] Introduce the for_each_set_clump macro
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-pm <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 25, 2020 at 3:06 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> niedz., 24 maj 2020 o 07:00 Syed Nayyar Waris <syednwaris@gmail.com> napi=
+sa=C5=82(a):
+> >
+> > Hello Linus,
+> >
+> > Since this patchset primarily affects GPIO drivers, would you like
+> > to pick it up through your GPIO tree?
+> >
+> > This patchset introduces a new generic version of for_each_set_clump.
+> > The previous version of for_each_set_clump8 used a fixed size 8-bit
+> > clump, but the new generic version can work with clump of any size but
+> > less than or equal to BITS_PER_LONG. The patchset utilizes the new macr=
+o
+> > in several GPIO drivers.
+> >
+> > The earlier 8-bit for_each_set_clump8 facilitated a
+> > for-loop syntax that iterates over a memory region entire groups of set
+> > bits at a time.
+> >
+>
+> The GPIO part looks good to me. Linus: how do we go about merging it
+> given the bitops dependency?
+>
+> Bart
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+A minor change has been done in patch [2/4] to fix compilation warning.
+Kindly refer patchset v8 in future.
 
-On Mon, Jun 15, 2020 at 06:40:29PM +0800, qiangming.xia wrote:
-> Hi, Wolfram
-> 	Do you have time to take a look at this? Thanks.
-
-Please resend and CC Qii Wang who is now the maintainer of this driver.
-
-
---u3/rZRmxL6MmkK24
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7nbaAACgkQFA3kzBSg
-KbYpPA/+Pw8TxeQKArxUAcaWTX/EPixqO5I46dmHVtb8dLEURvVjQSN7sZ2WuELD
-8LoBIuzYwvGXEFQvZzIgVy4iPB+91icdaz9TpugxSPQD9EOLfIabqUxJXKZz8H+D
-y/gw0Zng3NVWO0L0b4qscEBaeEa+uoTtSh5xuxZ2rTqYErBTUnrPbvioaFrUV7/2
-uCynxVcXd5u7VRyFGZAkzNyOn/kaWOBY5IRU1dxTIUajrvHH2B4qOPzTpEvjatnG
-8968n1FRfIXucBtn1nK3uhbiCA1DAjNb1bvuhDm2gy7sBkDWk0Viz0+1REn5KaCJ
-xvoW1UQONvRvR3AYGM2ws9ywhcKlfU/mdFlXbDPDYl2rqgQ11vTE+zIAGztFtw5l
-kOPbDyV+svGqYPaRwzu7pPNQ6q/XZkFMdYhc8kW7Pwk/gcfxbE9af2fvSPik0RcO
-75++PPLviGvmyO8H+rgeZiGbILKBwMjgdLZL2rbGZ+X24oyP7MskhikWbgoe+KiO
-BznRPjs6ZU6Kx7WJp/V/IakiW2YxzRhZD282VHmlTiLGFGLTgTPz67t9SX7iVkSk
-iysMA5DaY4t86G0IJVnAqzLCNiWTb+7iSbfywEF4PtebRvsvg1KkrkLNDSuyJ5sM
-0PLQWDl+ORX3Fk7+3CZ917VMR7jbe2XdJ7Ja9rQ0uhhr6npJkuw=
-=AqiD
------END PGP SIGNATURE-----
-
---u3/rZRmxL6MmkK24--
+Thanks
+Syed Nayyar Waris
