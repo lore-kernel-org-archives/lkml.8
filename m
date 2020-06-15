@@ -2,118 +2,175 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24C8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FC3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E72207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3669206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:18:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMf5OWp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbgFORPQ (ORCPT
+        id S1729772AbgFORSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:15:16 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45421 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729354AbgFORPQ (ORCPT
+        Mon, 15 Jun 2020 13:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729354AbgFORSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:15:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d8so7049719plo.12;
-        Mon, 15 Jun 2020 10:15:14 -0700 (PDT)
+        Mon, 15 Jun 2020 13:18:00 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32CAC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:17:59 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l63so5618771pge.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4tBg685n+rvOlJARxC/GZpj7s58rUY4EPS7OgTBXC28=;
+        b=qMf5OWp/BZGBVGr6GzBckHt7yZutPv6Ww0rfvb7z0X6LV4pWqnPy6J1A3STjwKZMWi
+         nVBys61Vt7LoY86iMXOZtz8Cac6wHUA2uwAWybbItiJy9TChYqMS/gjHJq7rL09/sOEt
+         OesmI/6d7jNHv1UL/WtnVV2TkJ1V58mZCeuO+YMK4uWp9VM1H30g9Bn3c1JbNohJWFSI
+         csKqKPb8i+P6Mgo+G2Y4CwGRgBi6Vh+Y2RfjP2BhRdNoVTapT7y0zBIe3Ub5RALjtJkc
+         SQzsXAoZWDnwZnBThFKWfsLfnuezFzF4YfSabLLP3QzLPYn8qzqhyspUwgqqPjxetusa
+         4fHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FCIu8IiCUQi+aGjEXORugDoaPNJi9zDY2fZ9atryoaU=;
-        b=gHIl6kedbk4LH/4YFqG5x5svgeAgzEcupg3MDg2VFqP8wzbtv93bToEpg1lZYLiYWT
-         eOUSnCOE2me5BTzTQPLDmsBvDG0/bv7EyY/kX0e2ZEJLDQPlpIqJXrV4kxWqqKsSVUQN
-         XAx3vOtRnGnqCgzmqf00vcsw3bRZDMM+bM9ctI/eDXHdBJUhyIjYoWs1YLKkEl+zO9Gq
-         Maz9SATmmeqTMFSwmYAaH05luLkoB/meH4cPe+R1FxZ9cYqq8EkAllzaQGjnmc+wMnLY
-         /GJkYHbirVxMm4bAb1DbBiCIziEFBQxgSVAV8O6Mh2NBQAndtQAajKipkEpkQYvyXiXo
-         9nhQ==
-X-Gm-Message-State: AOAM5305byAinA2pDSiPBMCMJm8R//pCCpunF5ngCKUKWpcbjTT/NjbZ
-        0qZS7zkOMTK5J3ZZSG+FZeU=
-X-Google-Smtp-Source: ABdhPJxOzYZMBPVCwDwb/VcurGYYUBAIP1XxMjkA/Y0IHrBP84cV+ZamibvHeyBqn5f+mBmQbaGY+A==
-X-Received: by 2002:a17:90a:58f:: with SMTP id i15mr331529pji.78.1592241314281;
-        Mon, 15 Jun 2020 10:15:14 -0700 (PDT)
-Received: from sultan-book.localdomain ([89.45.90.111])
-        by smtp.gmail.com with ESMTPSA id t7sm97363pju.42.2020.06.15.10.15.11
+        bh=4tBg685n+rvOlJARxC/GZpj7s58rUY4EPS7OgTBXC28=;
+        b=LmYw2vOH2ZEuqd6xooWPXzN7uIE/97WEmdlz10HgdJJ88XjVqs/lehPpuAgcxlH9Ji
+         oy/miR2skcAR8loBmJevKmnmD0J7ImKBrYjvDI1WYSRiwnT6nuswUctGkn5JPQ8MHuTi
+         lRdpQrgGp5sX5gGUn87fRwBMQwrvG1DVgi1WwapLPOFgjKV/s9T3L8EVILa1Mdmh/neI
+         hX5YA6BGgKurXSHpiU/a8qGwtQY+Oi11/sUgp9ZzvnXzX60mS7d1BHWX3DZdgYklzXut
+         HcvoKXTSZGHMgci1WjUzPgF7yCvipjIqphVMjMf08kSyX2w+z76JsTC42pu5KAThpKY/
+         av6A==
+X-Gm-Message-State: AOAM531qyopMa+OSsx5IrNKx1lChwh4txCy5kEB4zTLXcRe2az4rHHIF
+        cJgPQ2ztd8PtQoFRne+fXvtoOA==
+X-Google-Smtp-Source: ABdhPJzDcXoNX77HGgl+fpRA2bt04/aYiGdDfkkyODxwlkE3OkNhPp/3uUdSH5iaHvmi/LICqc75gQ==
+X-Received: by 2002:a62:640b:: with SMTP id y11mr23794549pfb.195.1592241478412;
+        Mon, 15 Jun 2020 10:17:58 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id i22sm14310258pfo.92.2020.06.15.10.17.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:15:13 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 10:15:08 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        HungNien Chen <hn.chen@weidahitech.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Pavel Balan <admin@kryma.net>, Tin Huynh <tnhuynh@apm.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        You-Sheng Yang <vicamo.yang@canonical.com>
-Subject: Re: [PATCH 1/2] i2c: designware: Only check the first byte for SMBus
- block read length
-Message-ID: <20200615171508.GA2663@sultan-book.localdomain>
-References: <20200614210255.4641-1-sultan@kerneltoast.com>
- <20200614210255.4641-2-sultan@kerneltoast.com>
- <20200615094019.GP2428291@smile.fi.intel.com>
- <20200615160320.GA1949@sultan-book.localdomain>
- <CAHp75Ve1TgRrKF0_d-7dY6EZU36QszwQ1ezwE03RERKywCxGYg@mail.gmail.com>
+        Mon, 15 Jun 2020 10:17:57 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 11:17:55 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
+Subject: Re: [PATCH 1/4] arm64: dts: qcom: sc7180: Add support to skip
+ powering up of ETM
+Message-ID: <20200615171755.GA225607@xps15>
+References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
+ <8c5ff297d8c89d9d451352f189baf26c8938842a.1591708204.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Ve1TgRrKF0_d-7dY6EZU36QszwQ1ezwE03RERKywCxGYg@mail.gmail.com>
+In-Reply-To: <8c5ff297d8c89d9d451352f189baf26c8938842a.1591708204.git.saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 07:07:42PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 15, 2020 at 7:06 PM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> > On Mon, Jun 15, 2020 at 12:40:19PM +0300, Andy Shevchenko wrote:
-> > > On Sun, Jun 14, 2020 at 02:02:54PM -0700, Sultan Alsawaf wrote:
-> > > > From: Sultan Alsawaf <sultan@kerneltoast.com>
-> > > >
-> > > > SMBus block reads can be broken because the read function will just skip
-> > > > over bytes it doesn't like until reaching a byte that conforms to the
-> > > > length restrictions for block reads. This is problematic when it isn't
-> > > > known if the incoming payload is indeed a conforming block read.
-> > > >
-> > > > According to the SMBus specification, block reads will only send the
-> > > > payload length in the first byte, so we can fix this by only considering
-> > > > the first byte in a sequence for block read length purposes.
-> > >
-> > > I'm wondering if this overlaps with [1]. AFAIU that one is also makes sure that
-> > > the length is not a garbage.
-> > >
-> > > [1]: https://lore.kernel.org/linux-i2c/20200613104109.2989-1-mans@mansr.com/T/#u
-> >
-> > No overlap.
+On Tue, Jun 09, 2020 at 07:00:28PM +0530, Sai Prakash Ranjan wrote:
+> Add "qcom,skip-power-up" property to skip powering up ETM
+> on SC7180 SoC to workaround a hardware errata where CPU
+> watchdog counter is stopped when ETM power up bit is set
+> (i.e., when TRCPDCR.PU = 1).
 > 
-> Thanks for clarifying.
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
 > 
-> > That looks like a similar bug for a different driver. In my case,
-> > the adapter provides native SMBus support, so emulation is never used. This is
-> > clear to see by looking at i2c_transfer_buffer_flags(), which only uses the
-> > master_xfer functions provided by the adapter; it doesn't call the emulation
-> > path at all.
+> Depends on ETM driver change here:
+>  - https://git.linaro.org/kernel/coresight.git/commit/?h=next-v5.8-rc1&id=159e248e75b1b548276b6571d7740a35cab1f5be 
 > 
-> But do we get an advantage if this can be done in the i2c core instead
-> (once for all)?
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 7c2b79dda3d7..f684a0b87848 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1810,6 +1810,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1829,6 +1830,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1848,6 +1850,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1867,6 +1870,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1886,6 +1890,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1905,6 +1910,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1924,6 +1930,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
+>  
+>  			out-ports {
+>  				port {
+> @@ -1943,6 +1950,7 @@
+>  			clocks = <&aoss_qmp>;
+>  			clock-names = "apb_pclk";
+>  			arm,coresight-loses-context-with-cpu;
+> +			qcom,skip-power-up;
 
-We can't, because the adapter driver needs to know mid-transfer to look for the
-payload length in the first byte, and then alter the transfer size on-the-fly.
-That can't be done in the i2c core, sadly. The problem is that we don't know if
-a transfer is going to be a block read or not beforehand. And altering the
-transfer size mid-transfer is definitely a controller specific task.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Sultan
+>  
+>  			out-ports {
+>  				port {
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
