@@ -2,175 +2,90 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0710C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7507C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F97F20B80
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B30F0207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="MS7xahuA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G0mA6JzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbgFORcV (ORCPT
+        id S1731284AbgFORcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:32:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38134 "EHLO
+        Mon, 15 Jun 2020 13:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFORcU (ORCPT
+        with ESMTP id S1731196AbgFORcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:32:20 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2995C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:32:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m7so7073225plt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:32:20 -0700 (PDT)
+        Mon, 15 Jun 2020 13:32:50 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F58C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:32:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b16so8096045pfi.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:32:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=2ZLZlJpE9ABSNjpL4mZQFk3Irx9pVKzEY6qghcd2NoA=;
-        b=MS7xahuAXPifVMceikYAexMoBHjLCLpZjeeouIlKBwiHQU2ForT5LrpT8bdlC+hiLM
-         nfqrqMm0qxuFBOQWGWLd6rjKWFcznPu41dwIAd59oyAAJzcVv4K9fAfXm8F2rZDc6FR6
-         wqXJMcTzwuWLkc4BdkPdOvBxqYI1jxphDUpEIhVUhW5oh9PkI6OIplFam40MOaajTX7+
-         pibStgBiwqHp2+od5g3I8EdaL5bipPngqcQDNxcA1Ago9jVmaDc0oP+KPVmDbneSz2dn
-         NQh2ScecSde9JIZsUoOCkGl118dyauBVUcJFrBIOloPHFsr9UhcIXpm38az2hNCkHL3i
-         xA0w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MXiTVmySLinwx/ohTb+qSbZFWKUCXVmO5le+pblRvB4=;
+        b=G0mA6JzChysz4vfhRHU6jq7QE/eHCQELey0LnpzfKSltZnUX4xJrQcsFvDqNuuzn/B
+         FQxQmO1cTFK2rwGfPExYUmB1UGc+D0FhPK1IWgrpsi9Tnelh53bMnIAGxe548hlLCDgz
+         K8Qxo955RfvfEP5VJzZbZ6z34BV7rZNu9ZAzI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=2ZLZlJpE9ABSNjpL4mZQFk3Irx9pVKzEY6qghcd2NoA=;
-        b=N8sM8Jfgs7CHMW2KhOPZafmUmbfQeGp7AcB8iDPgpNGiA28jPiCfX2Z8Mqt81D/U3u
-         wmjIbCYgpXNE0bGd511r2mh508sJQouc6cSyMy6nhrBmll55LuZujpo6q3dIrBp9hKw3
-         DAumeonIullz4tMDdp0sjre1VMsJt3sRWD6TL3D0/6Wzg4LmizZULLqOSepmA+fmijt7
-         9LkuEsG2O43vnwC2usTT0aIJIyLm3DoqdkiKW5NXOdl42/d5Eb4NVbqYU8fnkLtnWGVY
-         B60lowi4Asol7abCnLktrK9JTEsINzsTerQ4uPseXW7zs2XnVcQmiE8Qx9CIqXu3abjM
-         /CMA==
-X-Gm-Message-State: AOAM532hWNZNmEJ4HNpZ0WWhZKR1X13H6wyT7rWjDuk5jCO5AZScWoHA
-        44miXpTHDW2l9bU9QSl4Xt4w1FfYLkmM0g==
-X-Google-Smtp-Source: ABdhPJxtfelaSLMp5jrGRan+wah8+XoWy+zmHLH8CZTl0rpzifd6eN00fbg0sQSkH7062uAAtsgb3w==
-X-Received: by 2002:a17:902:c404:: with SMTP id k4mr8373426plk.99.1592242340305;
-        Mon, 15 Jun 2020 10:32:20 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([2401:4900:4175:6d71:950c:f8ee:90bc:902a])
-        by smtp.gmail.com with ESMTPSA id s1sm139323pjp.14.2020.06.15.10.32.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jun 2020 10:32:19 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 23:01:54 +0530
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        hverkuil@xs4all.nl
-Subject: [PATCH v3] media: tpg: Add function to return colors' order of test
- image
-Message-ID: <20200615173153.GA2404@kaaira-HP-Pavilion-Notebook>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MXiTVmySLinwx/ohTb+qSbZFWKUCXVmO5le+pblRvB4=;
+        b=fYFClOqCmvty5fUYq9fFyZ8tcNIJtkmXHInEPyl2ye+WfSbHnIpuyVaMm49v1oncDi
+         /m34IXilngPmpca/timdxGtGZhEyVFXFpmzV5nysZ7qUoQZ+HYOznHfc1w7gwSUq3r7t
+         Aq7s+qiU/Jwu6hXB0nhyRfcOqLpBGO5HJp76cf1hJEiNmm25UWrwT+tZGuRJQLqn3ggL
+         qoSlDpUWfvgeoSU5vLK4hCU3ZELmQOcC5yJlHfOTnDoGI9WJ03/ypUJaqCIN2/a57+LI
+         4zYAajC1/lD5+17X08o4fZiZ8+I845YX/cYYCY6dkVJXg0S9iudddS4cFmXNvBrwRhyY
+         4uBQ==
+X-Gm-Message-State: AOAM533dEm/EQo0aT85MWFay0BKkcIoYnnJOqSBSMrxEnRzYAXDeOmB9
+        UPem2lUNFmrPkFUntatqkWqrkA==
+X-Google-Smtp-Source: ABdhPJwx4PYvnCYX2JxTXMHgP55Wrhu8eXLVeZVNpAxBLT0KLVHVOQYT0WO997vdvPGw+oFzo0eXRg==
+X-Received: by 2002:a62:194d:: with SMTP id 74mr25149159pfz.21.1592242370263;
+        Mon, 15 Jun 2020 10:32:50 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id f3sm115586pjw.57.2020.06.15.10.32.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 10:32:49 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 10:32:48 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org
+Subject: Re: [PATCH v6 5/5] cpufreq: qcom: Disable fast switch when scaling
+ DDR/L3
+Message-ID: <20200615173248.GV4525@google.com>
+References: <20200605213332.609-1-sibis@codeaurora.org>
+ <20200605213332.609-6-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200605213332.609-6-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is no method to know the correct order of the colors for
-a test image generated by tpg. Write a function that returns a string of
-colors' order given a tpg. It returns a NULL pointer in case of test
-patterns which do not have a well defined colors' order. Hence add a
-NULL check for text in tpg_gen_text().
+On Sat, Jun 06, 2020 at 03:03:32AM +0530, Sibi Sankar wrote:
+> Disable fast switch when the opp-tables required for scaling DDR/L3
+> are populated.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
----
+not sure a separate patch is needed for this, but anyway:
 
-Changes since v2:
-	- Create a 'define' to prevent repetition of the common color
-	  sequence string.
-	- Use 'fallthrough' on case statement to prevent repetition of
-	  code.
-
-Changes since v1:
-	- Returned NULL for patterns whose color order cannot be
-          defined. (Reported-by: kernel test robot <lkp@intel.com>)
-        - Made separate switch cases for separate test patterns
-         (Reported-by: kernel test robot <lkp@intel.com>)
-
- drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 32 +++++++++++++++++--
- include/media/tpg/v4l2-tpg.h                  |  1 +
- 2 files changed, 31 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-index 50f1e0b28b25..c96204cef155 100644
---- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-+++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-@@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- 	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
- 	unsigned div = step;
- 	unsigned first = 0;
--	unsigned len = strlen(text);
-+	unsigned len;
- 	unsigned p;
- 
--	if (font8x16 == NULL || basep == NULL)
-+	if (font8x16 == NULL || basep == NULL || text == NULL)
- 		return;
- 
-+	len = strlen(text);
-+
- 	/* Checks if it is possible to show string */
- 	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
- 		return;
-@@ -2006,6 +2008,32 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
- }
- EXPORT_SYMBOL_GPL(tpg_gen_text);
- 
-+char *tpg_g_color_order(const struct tpg_data *tpg)
-+{
-+	#define COLORBAR(order) #order "white, yellow, cyan, green, magenta, red, blue, black"
-+
-+	switch (tpg->pattern) {
-+	case TPG_PAT_75_COLORBAR:
-+	case TPG_PAT_100_COLORBAR:
-+	case TPG_PAT_CSC_COLORBAR:
-+		return COLORBAR("Left to right:");
-+	case TPG_PAT_100_HCOLORBAR:
-+		return COLORBAR("Top to bottom:");
-+	case TPG_PAT_BLACK:
-+		return "Black";
-+	case TPG_PAT_WHITE:
-+		return "White";
-+	case TPG_PAT_RED:
-+		return "Red";
-+	case TPG_PAT_GREEN:
-+		return "Green";
-+	case TPG_PAT_BLUE:
-+		return "Blue";
-+	default:
-+		return NULL;
-+	}
-+}
-+
- void tpg_update_mv_step(struct tpg_data *tpg)
- {
- 	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
-diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
-index eb191e85d363..4f79cac87b85 100644
---- a/include/media/tpg/v4l2-tpg.h
-+++ b/include/media/tpg/v4l2-tpg.h
-@@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
- bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
- void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
- 		const struct v4l2_rect *compose);
-+char *tpg_g_color_order(const struct tpg_data *tpg);
- 
- static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
- {
--- 
-2.17.1
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
