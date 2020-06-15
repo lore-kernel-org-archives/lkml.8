@@ -2,247 +2,106 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56437C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A60C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30C58207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lpoPGa06"
+	by mail.kernel.org (Postfix) with ESMTP id 0E193207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592241966;
+	bh=WDkf6lzZ6UgWs3EMY6W8Qdhefho3OZTzr9BHJ5YRgCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l7nSL0yaeMpfkBSkV0p6JUmeVz10Bz3tmBDPv2UCDOqS7upDGwaxFP0PDJ+HVodpg
+	 GFEd+NZPi8nYDnt0lwQXTwIbvVAnKjsGuSIzbUKe7NXTSFNlJLY/AxpKtgapifpJKt
+	 XZwb/NJq2TBD488hTqMp+5F+OxUm2iUYovoQmiM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbgFORZ7 (ORCPT
+        id S1731161AbgFOR0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730852AbgFORZ4 (ORCPT
+        Mon, 15 Jun 2020 13:26:02 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42802 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729682AbgFORZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 13:25:56 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BF5C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:25:56 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id e9so7861542pgo.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=X5U2nwVApxhHDTMk1l7E/NpbgEKCEjmDjLlaescVVIc=;
-        b=lpoPGa06iKLPUWZt1VgDZQ/Nry9Jqo8K5dpidp28rbymaV+taoqY9dLwpPi7jvhOKb
-         dXHKTJXdjcJ/7QeOtu8+IbMr487rKz1cNVNe5jddDmCrEdkEWgA7F8LzwTUsKWaD29yu
-         n1dIK8rUIyc7A8GCxyjXjZ4VOsw4jliLKU78E=
+Received: by mail-io1-f68.google.com with SMTP id x189so9699243iof.9;
+        Mon, 15 Jun 2020 10:25:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=X5U2nwVApxhHDTMk1l7E/NpbgEKCEjmDjLlaescVVIc=;
-        b=EPC+lDjaV/RV4bh45uoJHoOc6b7ekcVWV4IForB/8DKHHW54duzZW3me+bAHto9o2V
-         xSl364DQ+b/+MDbm/nMxn1abunkYMgNU0Z8IZV8AJBvLrasIRfXC9C8vZuq8+Kom9UtB
-         dlfdWoo8BUHGO+tcgAofKbbcdEIIB4RisrOzBVaAEneGSIYjZ2SPbxa+QrdAv6+5Lm6p
-         6G8g7xwX75RTz+0tzDJzyhNzNsKnVgDg/axu3fzX8MX4LijriIYWTzut43ke4q+CqYu6
-         g9rFlPzpEDVwiVjrfQYyLeKr/Sy/dGeIeRKgMM5e0k3mXHHK0iEnLMIUFe87sV3x3qpF
-         Ucig==
-X-Gm-Message-State: AOAM532hLYj9hAMZP3y4wWTXIfCbLd+nA26i2xjheIGI2UaztCYszLZ1
-        vOBFJbX2Njb5O9MQRTi/PUD9JA==
-X-Google-Smtp-Source: ABdhPJzoAzxB8eO5LX/l+bG/6K/K/eD3XTuKN0PhlI001wuCHJ8FQ0AfRMZNeVIWlCvAUp7las1JrA==
-X-Received: by 2002:a63:648:: with SMTP id 69mr22637399pgg.109.1592241955565;
+        bh=dS/bdtyItiFAm48ZgF1YTbFmFfDKJ+FCEj9MlB0IAp4=;
+        b=Mh0Ka0/cKEgpKLlxOSeYVWIMR6LVkaGR3s77d98ifHYMG3k2Eax8NY1OM9nctyhEJw
+         CgSnNMTtUwWe38pErH3E2fvU21HrLYHmPwn8edEJV6En26Ev/txmMvg+NvN3lNiyAyiv
+         DqZprbJCizSTxTJ/B7zMIXgyr3F9TY1BKVeLRpDCkycUbAODGkMURseBQSZO48sPBh5Z
+         ZGcQmzla5KMbNLuwFpZKDIfC/+1XhyaUiRLDZglovWDCRMkRDT4hJ/uvdAf+0eDaZZey
+         M63luWtJq55bdYxTBLfg3T2UhHNNd7s/g5+wco2O7Buy6TOMnDuHUC6MhCc4j4qNc1Xe
+         MrYQ==
+X-Gm-Message-State: AOAM533Y0eTeIdSCEqOd5Uub/6Oc86tBfF18dJDXqmcJAMrs0h6Kpf5b
+        +bZO5tJ5lkYBtAKyawWsHQ==
+X-Google-Smtp-Source: ABdhPJypddMh0DtNo4yEvMLEEWMso2FJiLJSg0Shc51QJu95Vb3Bgqf+obC4mOb9N+9IlXsrnh6G0Q==
+X-Received: by 2002:a02:6c8f:: with SMTP id w137mr23100744jab.38.1592241955783;
         Mon, 15 Jun 2020 10:25:55 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id p14sm122143pjf.32.2020.06.15.10.25.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 10:25:54 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 10:25:53 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org
-Subject: Re: [PATCH v6 4/5] cpufreq: qcom: Update the bandwidth levels on
- frequency change
-Message-ID: <20200615172553.GU4525@google.com>
-References: <20200605213332.609-1-sibis@codeaurora.org>
- <20200605213332.609-5-sibis@codeaurora.org>
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id 2sm8612606ila.0.2020.06.15.10.25.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 10:25:55 -0700 (PDT)
+Received: (nullmailer pid 1992268 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:25:52 -0000
+Date:   Mon, 15 Jun 2020 11:25:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 3/3] spi: bcm2835: Enable shared interrupt support
+Message-ID: <20200615172552.GA1978070@bogus>
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-4-f.fainelli@gmail.com>
+ <20200604041732.7ijkvad2yadtgjid@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200605213332.609-5-sibis@codeaurora.org>
+In-Reply-To: <20200604041732.7ijkvad2yadtgjid@wunner.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
-
-On Sat, Jun 06, 2020 at 03:03:31AM +0530, Sibi Sankar wrote:
-> Add support to parse optional OPP table attached to the cpu node when
-> the OPP bandwidth values are populated. This allows for scaling of
-> DDR/L3 bandwidth levels with frequency change.
+On Thu, Jun 04, 2020 at 06:17:32AM +0200, Lukas Wunner wrote:
+> On Wed, Jun 03, 2020 at 08:46:55PM -0700, Florian Fainelli wrote:
+> > +static const struct of_device_id bcm2835_spi_match[] = {
+> > +	{ .compatible = "brcm,bcm2835-spi", .data = &bcm2835_spi_interrupt },
+> > +	{ .compatible = "brcm,bcm2711-spi", .data = &bcm2835_spi_sh_interrupt },
+> > +	{ .compatible = "brcm,bcm7211-spi", .data = &bcm2835_spi_sh_interrupt },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
+> Maybe I'm missing something but I think you either have to reverse the
+> order of the entries in this array or change patch [2/3] to drop
+> "brcm,bcm2835-spi" from the compatible string:
 > 
-> v6:
->  * Add global flag to distinguish between voltage update and opp add.
->    Use the same flag before trying to scale ddr/l3 bw [Viresh]
->  * Use dev_pm_opp_find_freq_ceil to grab all opps [Viresh] 
->  * Move dev_pm_opp_of_find_icc_paths into probe [Viresh]
-> 
-> v5:
->  * Use dev_pm_opp_adjust_voltage instead [Viresh]
->  * Misc cleanup
-> 
-> v4:
->  * Split fast switch disable into another patch [Lukasz]
-> 
->  drivers/cpufreq/qcom-cpufreq-hw.c | 82 ++++++++++++++++++++++++++++++-
->  1 file changed, 80 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> index fc92a8842e252..8fa6ab6e0e4b6 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -6,6 +6,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/cpufreq.h>
->  #include <linux/init.h>
-> +#include <linux/interconnect.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> @@ -30,6 +31,48 @@
->  
->  static unsigned long cpu_hw_rate, xo_rate;
->  static struct platform_device *global_pdev;
-> +static bool icc_scaling_enabled;
+> __of_match_node() iterates over the entries in the array above and
+> calls __of_device_is_compatible() for each of them, which returns
+> success if the entry matches any of the device's compatible string.
 
-It seem you rely on 'icc_scaling_enabled' to be initialized to 'false'.
-This works during the first initialization, but not if the 'device' is
-unbound/rebound. In theory things shouldn't be different in a succesive
-initialization, however for robustness the variable should be explicitly
-set to 'false' somewhere in the code path (_probe(), _read_lut(), ...).
+The order here doesn't matter. I'm pretty sure we fixed this years ago 
+to always match to the most specific compatible.
 
-> +static int qcom_cpufreq_set_bw(struct cpufreq_policy *policy,
-> +			       unsigned long freq_khz)
-> +{
-> +	unsigned long freq_hz = freq_khz * 1000;
-> +	struct dev_pm_opp *opp;
-> +	struct device *dev;
-> +	int ret;
-> +
-> +	dev = get_cpu_device(policy->cpu);
-> +	if (!dev)
-> +		return -ENODEV;
-> +
-> +	opp = dev_pm_opp_find_freq_exact(dev, freq_hz, true);
-> +	if (IS_ERR(opp))
-> +		return PTR_ERR(opp);
-> +
-> +	ret = dev_pm_opp_set_bw(dev, opp);
-> +	dev_pm_opp_put(opp);
-> +	return ret;
-> +}
-> +
-> +static int qcom_cpufreq_update_opp(struct device *cpu_dev,
-> +				   unsigned long freq_khz,
-> +				   unsigned long volt)
-> +{
-> +	unsigned long freq_hz = freq_khz * 1000;
-> +	int ret;
-> +
-> +	/* Skip voltage update if the opp table is not available */
-> +	if (!icc_scaling_enabled)
-> +		return dev_pm_opp_add(cpu_dev, freq_hz, volt);
-> +
-> +	ret = dev_pm_opp_adjust_voltage(cpu_dev, freq_hz, volt, volt, volt);
-> +	if (ret) {
-> +		dev_err(cpu_dev, "Voltage update failed freq=%ld\n", freq_khz);
-> +		return ret;
-> +	}
-> +
-> +	return dev_pm_opp_enable(cpu_dev, freq_hz);
-> +}
->  
->  static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->  					unsigned int index)
-> @@ -39,6 +82,9 @@ static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->  
->  	writel_relaxed(index, perf_state_reg);
->  
-> +	if (icc_scaling_enabled)
-> +		qcom_cpufreq_set_bw(policy, freq);
-> +
->  	arch_set_freq_scale(policy->related_cpus, freq,
->  			    policy->cpuinfo.max_freq);
->  	return 0;
-> @@ -89,11 +135,31 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  	u32 data, src, lval, i, core_count, prev_freq = 0, freq;
->  	u32 volt;
->  	struct cpufreq_frequency_table	*table;
-> +	struct dev_pm_opp *opp;
-> +	unsigned long rate;
-> +	int ret;
->  
->  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
->  	if (!table)
->  		return -ENOMEM;
->  
-> +	ret = dev_pm_opp_of_add_table(cpu_dev);
-> +	if (!ret) {
-> +		/* Disable all opps and cross-validate against LUT */
-
-nit: IIUC the cross-validation doesn't happen in this branch, so the
-comment is a bit misleading. Maybe change it to "Disable all opps to
-cross-validate against the LUT {below,later}".
-
-> +		icc_scaling_enabled = true;
-> +		for (rate = 0; ; rate++) {
-> +			opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
-> +			if (IS_ERR(opp))
-> +				break;
-> +
-> +			dev_pm_opp_put(opp);
-> +			dev_pm_opp_disable(cpu_dev, rate);
-> +		}
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(cpu_dev, "Invalid opp table in device tree\n");
-> +		return ret;
-> +	}
-> +
->  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->  		data = readl_relaxed(base + REG_FREQ_LUT +
->  				      i * LUT_ROW_SIZE);
-> @@ -112,7 +178,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  
->  		if (freq != prev_freq && core_count != LUT_TURBO_IND) {
->  			table[i].frequency = freq;
-> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
-> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
-
-This is the cross-validation mentioned above, right? Shouldn't it include
-a check of the return value?
-
->  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
->  				freq, core_count);
->  		} else if (core_count == LUT_TURBO_IND) {
-> @@ -133,7 +199,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  			if (prev->frequency == CPUFREQ_ENTRY_INVALID) {
->  				prev->frequency = prev_freq;
->  				prev->flags = CPUFREQ_BOOST_FREQ;
-> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
-> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
-> +							volt);
-
-ditto
-
-nit: with the updated max line length it isn't necessary anymore to break
-this into multiple lines (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl?h=v5.8-rc1#n54),
-though the coding style still has the old limit.
+Rob
