@@ -2,112 +2,89 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0706C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58049C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD66207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:20:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="i5hdJ/m+"
+	by mail.kernel.org (Postfix) with ESMTP id 2EFF02078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592238038;
+	bh=GOOZ5E1WJmpmC8mwsmW+1NH3yc+2hZueDYw6zFMZVps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s9SQCWEcZ6ULjK1tP/9bqHGykZvkfyz8fXzAXaiHMH3YwEfaon1a8CuRIu7WUQCat
+	 PCNIQRLIsJj0HjLi/3vE837B3W2yU9sbXjzOQ+pmWqr2Ta1N4xXisCv2ARRdMT2U6v
+	 nNl/DA5xpnj5XyUfDGdCVc5Sk5wIQMNmJyGotFbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbgFOQU1 (ORCPT
+        id S1731002AbgFOQUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:20:27 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:65224 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729637AbgFOQU1 (ORCPT
+        Mon, 15 Jun 2020 12:20:37 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36481 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729637AbgFOQUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:20:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592238027; x=1623774027;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=KFodkFYUcobTypZK2z+lk2aPe8xpAQLyInNhOFuMluc=;
-  b=i5hdJ/m+unwqguHl4zHUEXgH7tdkwAd4sm86OrBUtDgE16ANXhK3ntPj
-   sbm7WqwH4WI/kous/AxkfZaCV5sBYcNzp6QKPi95QuKllgnIcQpj2CZIB
-   6c0/KmcS8eHhpQ8pYmoZPU66v+Ibc6zl6mbBtBhQFrYKZTU7IFmVsamZT
-   U=;
-IronPort-SDR: d+8kFcmrVjMOo4zHUcEZP8LaGpLfub6toaIfFxqqY4YchE3iHQfJmLk93bVNQkFC+x0eEvJbgZ
- iCArwFJMIFeg==
-X-IronPort-AV: E=Sophos;i="5.73,515,1583193600"; 
-   d="scan'208";a="51081083"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 15 Jun 2020 16:20:23 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id CC59CA224C;
-        Mon, 15 Jun 2020 16:20:20 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 15 Jun 2020 16:20:20 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.145) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 15 Jun 2020 16:20:02 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <david@redhat.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v16 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
-Date:   Mon, 15 Jun 2020 18:19:14 +0200
-Message-ID: <20200615161927.12637-2-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200615161927.12637-1-sjpark@amazon.com>
-References: <20200615161927.12637-1-sjpark@amazon.com>
+        Mon, 15 Jun 2020 12:20:36 -0400
+Received: by mail-io1-f68.google.com with SMTP id r77so18541349ior.3;
+        Mon, 15 Jun 2020 09:20:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gxWgc+Codkhf0VRTT86CbanEtJCVNSbZuWqCjWmeC4k=;
+        b=cohofqmQyrdNax3MbFOxOSIJA/LAuWDodYljjR9dilP9MOQcuk+3ybbWamAD2Z5rtx
+         g58mRih4n4O/CDkghRdaAxY5p3++WgchJ80/DfFlp4oBsGC/UJeos2E/39pjF+0Yp//8
+         KK32nCUQSeNUiUQhU+rrb1PP1r42KQi6Lsl2clYm4JU4nnqSmn0Ow2otTG2gYOEcMWE5
+         V+RzL0lBkqZ7AhmUqmsvG/M+N+jHtVK4+ttWPwKGjdvLhPTFPrkiN4KgDCDTOabmEbvY
+         ggUiMF+9fyN7Ym6YY/dEn+0CzZawurqwEXzF9lbBgBAc/q5t//Uhk4odJaV0/ubpmNrF
+         sCbA==
+X-Gm-Message-State: AOAM532wdg4Ia0mC86T8B6XE9r5z8zI+YArmZwYP9DUer3qxiKsCUQwV
+        pIaQpTZ8oVCxdQcAxNQ+uNkpLqE=
+X-Google-Smtp-Source: ABdhPJyia2YjUz7sBsHEEWOJHc1dA8yDt4856foCcXRteTZJaWf6MJkxsoQZ6sa16kBdtpwlIRQRZg==
+X-Received: by 2002:a05:6602:34f:: with SMTP id w15mr27863770iou.2.1592238034919;
+        Mon, 15 Jun 2020 09:20:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t63sm8493653ill.54.2020.06.15.09.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:20:34 -0700 (PDT)
+Received: (nullmailer pid 1885290 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:20:33 -0000
+Date:   Mon, 15 Jun 2020 10:20:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     festevam@gmail.com, s.hauer@pengutronix.de, shawnguo@kernel.org,
+        stigge@antcom.de, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        a.zummo@towertech.it, Linux-imx@nxp.com,
+        alexandre.belloni@bootlin.com, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH V2] dt-bindings: rtc: Convert imxdi rtc to json-schema
+Message-ID: <20200615162033.GA1885237@bogus>
+References: <1591234555-15187-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D23UWA004.ant.amazon.com (10.43.160.72) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591234555-15187-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Thu, 04 Jun 2020 09:35:55 +0800, Anson Huang wrote:
+> Convert the i.MXDI RTC binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- add "additionalProperties: false".
+> ---
+>  .../devicetree/bindings/rtc/imxdi-rtc.txt          | 20 ----------
+>  .../devicetree/bindings/rtc/imxdi-rtc.yaml         | 44 ++++++++++++++++++++++
+>  2 files changed, 44 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
+> 
 
-This commit exports 'lookup_page_ext()' to GPL modules.  It will be used
-by DAMON in following commit for the implementation of the region based
-sampling.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
-Reviewed-by: Varad Gautam <vrd@amazon.de>
----
- mm/page_ext.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index a3616f7a0e9e..9d802d01fcb5 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *page)
- 					MAX_ORDER_NR_PAGES);
- 	return get_entry(base, index);
- }
-+EXPORT_SYMBOL_GPL(lookup_page_ext);
- 
- static int __init alloc_node_page_ext(int nid)
- {
--- 
-2.17.1
-
+Applied, thanks!
