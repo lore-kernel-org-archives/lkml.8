@@ -2,189 +2,255 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 128BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E65206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FD2206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Yr1a3/ee"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p/CG2HSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbgFOPl0 (ORCPT
+        id S1730492AbgFOPmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:41:26 -0400
-Received: from mout.gmx.net ([212.227.15.15]:47219 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgFOPlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:41:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592235668;
-        bh=fHo5pNOwAc3R7Gu1OYjStGQg97puTIW4tt/Eb3clUGI=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=Yr1a3/eeaT6DCl6KVwlM2KQh8rr6sGrGNKgL74lzcPcSCu04msni5A6SbdJcDKBX6
-         uIwt4n+SLIX4+7EfOIc0eD8muuhcqF3sFleM/6Kq5oL6Q8KkBSqj6H9NOu0scxbuA1
-         TSPPShedYF/U7WhVpD0c4L4fi7Dd5mZ+2gWCpWoM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from strobe-jhalfs ([188.109.165.61]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDhlV-1jaA8B028l-00Ajng; Mon, 15
- Jun 2020 17:41:08 +0200
-From:   Stephen Berman <stephen.berman@gmx.net>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-References: <87y2owwo2o.fsf@rub.de>
-        <20200609202339.cgy57twm2zdtjhje@linutronix.de>
-        <87tuzjcovq.fsf@gmx.net>
-        <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
-        <87imfyh6yx.fsf@gmx.net> <87wo4dligz.fsf@gmx.net>
-        <20200612110122.jossn5zrktcvpbpm@linutronix.de>
-        <87tuzdrgm5.fsf@gmx.net>
-        <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
-        <874krcsquv.fsf@gmx.net>
-        <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
-Date:   Mon, 15 Jun 2020 17:41:06 +0200
-In-Reply-To: <20200615145130.bcdidqkp6w23xb6c@linutronix.de> (Sebastian
-        Andrzej Siewior's message of "Mon, 15 Jun 2020 16:51:30 +0200")
-Message-ID: <87tuzcqqul.fsf@gmx.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Mon, 15 Jun 2020 11:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgFOPmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 11:42:07 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D4BC061A0E;
+        Mon, 15 Jun 2020 08:42:06 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id b82so48819wmb.1;
+        Mon, 15 Jun 2020 08:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pAh7hXPGRHBjo/PFoe0HlRkn4NDf5lJ5Fqfadp23JQo=;
+        b=p/CG2HSHM2Vxe4vLz6JvWu6mEtKmKXkCq0B/x44m6da1I5ZrtRakC7zNayfsgGYJ/h
+         J9K9RIVonQf8JOUye3BZnWM/upjEOjsCSyqOXL3shw+IS+PA+F4lgT8W2di/wMeCfdPR
+         6kD1XbdFuhEGPJStP0FpwxNzl0s4RyRrL1WC+HW8Bj3czn4ylJbX4bSd6qY9M6+gM2kw
+         lUNFacrFoHUG2dyOU+mKPFy5sLWYGLMWuwRChR7i15D1FHfFjGbR8a09MOQVLtttCR50
+         boup2IRiyzVOX1fBVxonOW06uVJxvKp5Fuv7OozW3vRZnpqy6/hWor009cSJ6Xdw6NNw
+         K1ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pAh7hXPGRHBjo/PFoe0HlRkn4NDf5lJ5Fqfadp23JQo=;
+        b=p6oTCIZ+C1sS6dRawb8dL8p9hqyBSsmdfpsqbueg/NoR0Wewl3M+Pk1ss1Y3aFuuPp
+         GSGK2/ifagn27bEurmoNq5+uhyzHrWg1lvIfiXIa+PpdI2di2h/rvkE9K9SSS+aVG0hH
+         wM2loJhfqEs9OwIJ/MsqntcDe8/Qa2R7uHV9MTNQ/FMj7kjoXBlwPfvKzNMCHEB25bac
+         wdrbehnUCQnSH2E/q1HDJfUq15/Y8iFKFpwjcM8ZXOTjQAw/Zs8y4N/SEnTqu844/1Gn
+         83ZaZDTVkR0E32C8Z1D7K8imFiYd86VtVmX0Q56NFbTLahY+y2x2FDw+xAch7lFVRBfJ
+         AIwg==
+X-Gm-Message-State: AOAM533LQiEqZ4QEOs/mpZgjxkkUxuiBUeZbc8ASxk+pcM1qgIDqcymW
+        w/kM/OvbB7VUcAbIgX+imew=
+X-Google-Smtp-Source: ABdhPJzdrmN0ipGP+6b4MmwTothhPefBA8JJKwdk/Nlz51fDYgqjXmyqB/K/wK7SJHUOMShdfkoRag==
+X-Received: by 2002:a1c:dd44:: with SMTP id u65mr14738029wmg.180.1592235725422;
+        Mon, 15 Jun 2020 08:42:05 -0700 (PDT)
+Received: from unassigned-hostname.unassigned-domain (lputeaux-656-1-137-224.w193-252.abo.wanadoo.fr. [193.252.198.224])
+        by smtp.gmail.com with ESMTPSA id r5sm25301554wrq.0.2020.06.15.08.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 08:42:04 -0700 (PDT)
+From:   Era Mayflower <mayflowerera@gmail.com>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Era Mayflower <mayflowerera@gmail.com>
+Subject: [PATCH] macsec: Support 32bit PN netlink attribute for XPN links
+Date:   Tue, 16 Jun 2020 00:41:14 +0900
+Message-Id: <20200615154114.13184-1-mayflowerera@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:v18ZwHmkixYTPbvcHmh0GFPGw/VHii7vezbZKoQiQgH4+r7YXi4
- YC32ogQK/W0nTuNVg9fvhe/AyrxlK7KpXN3HS3RRqA/1vYfEHuNi33pVoBCnn/14w2fUcEZ
- w4zCCyUfCusjLLNBmh6A3uc1wY0PYoWEcs0rBaCuv2JpvCnzZu5U5Y1s31XP7jCsb56+bcz
- SBCpmHM6+fQudzZVylk2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5zK1/ln5gwA=:5XC6Gv9nMRKgGhmzaaJ4lY
- T+fHdZH3Snjvq/q1sisDpXKEwXvkf9aAe72tEJm4dcmDqkLXzSgcqHeXEg3kxhjChNlSnvYTN
- E6+QUcpNDCLpIPIQhXAXknZKdyge/uTg2rGU51diQRCnsGZc4UwhwLWmJ2IJYFrbgaFf0m+Pa
- N7twbz/1tikWLQ26Up2ZR6+rQNoc6YHz1xiCVioDmQ31E2wgKeFUqIC+gLB9qxL5689HboQQX
- Y8b6qTrM/BoUFBTbgc/5RjQq58Vg0HuBepLFU4hrpGjkuC9D270BTRvllTjMe8RWP/qxPLtWz
- 1STMivSHqN25ADLOGVsUewdGgVgU7odZNxNeWAzR0/U8lIOL83BZFe5N8rxmS2149+PpahMvn
- kNk7NXlYJ+rrb4LIV8X1RpSF6e0FRoqJ0hlMsejsxqwWC396I0WgL0pyexaDZhHM6F0bZGKaQ
- 55iv+UqOr11FsiOmK2TYr9CL/UaFodlnPGEZVVLDoFTKEVTdF2b6Swd9SOw7UnB6xQRNjRQYP
- pxW/x2/OFXuXrtxfbmsotQROsqfDmo6mwaSiSaxsiZpooc5WsJJaLBkkb5w2ie1/wuCSHg9h8
- HhaUJu9hWrZ0FY2pooz16egXR7Dj1aTrQT472y/iJG811qHTvIwl9PKTgxf7INrL/Pab0PGTl
- AO79eg+fBZ6EyTRAWzA7X51hWHYGNxcShkip/bDNUzxA3XMa1RCV1LnUKL8oMf3zfcZQeBVC5
- MlvNLnkyk8zd3jeEcEliULdIuKeZh8G58rswqaHLdUgYS7omwO8farQo4KoQuJ4psFlUpeQK+
- IRdZ2EyHkcEw1YvlHSZFB8rssjpi/r+twtwozxgx5Ru2peK0tRcbhjPfLzTtEKfgooxTnKIfK
- zj0NkeH09kgRvXhrdFu1ZsyGRf9osaEyrEAdUW1Dw/8oG4VB1AZHbdsXIAurgEx7dzmwrLQlB
- SgX11M29cOtUyxzPAm+0GV+FQsucC5HteQYoSHpIyBtkGvkPJ1z58EUBNLXo46l6Sg+TLqBKi
- 3NoP/jY4sSXi45heJ9//NPbsRYGsFyYMH+5qmVPs3PxeTi+vw2RcSMsEeESYUdsTAHIurPjMK
- ZQlaaznxoi+FI/8kvD8TDvvQGGuDRsJCGThbjjkhj1OQ32/7XAgH6hF9eMQtfVrGTy3jRvPBI
- 8lKeAymrz15rL4hZuQK7MvhXj/6jLBWUm8UGNWMICvE6cWMBi5tq0DmCrRNNPZEpRSuuuElXQ
- iuE348482oB1ku88H
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 16:51:30 +0200 Sebastian Andrzej Siewior <bigeasy@linut=
-ronix.de> wrote:
+Allow using 32bit netlink attribute for packet number when creating or
+updating SA in an XPN link.
+Now utilities like iproute2's `ip` do not have to know the link type
+(XPN or not) when setting the packet number field of an SA.
 
-> On 2020-06-15 09:58:00 [+0200], Stephen Berman wrote:
->> Ok, sorry, I had misunderstood, but now I've looked at the
->> documentation.  I had in fact already done `echo t >
->> /proc/sysrq-trigger' in an xterm (as root) and there was no output.
->> Later, after booting kernel 5.1.0 because of the message flooding with
->> 5.6.4, I did `echo t > /proc/sysrq-trigger' in a virtual tty (also as
->> root) and the only output was: `[ <timestamp>] sysrq: Show State'.  Is
->> this expected?  (In /proc/sys/kernel/sysrq there is `1'.)  I couldn't
->> try it in a 5.6.4 virtual tty because of the message flooding (see
->> below).
->
-> If you do this "t" then there should be a lot of output on your console.
-> If you do this from an xterm then you can see the output after typing
-> "dmesg". The output should appear also in your system log.
+Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
+---
+ drivers/net/macsec.c | 95 ++++++++++++++++++++++++++++++++------------
+ 1 file changed, 69 insertions(+), 26 deletions(-)
 
-Ah, ok, I do see it in the log, it looks basically the same as the call
-trace I posted upthread.  I wonder why there was no such output in the
-console, could there be some setting that suppresses it even though
-/proc/sys/kernel/sysrq has `1'?
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index e56547bfdac9..7d3c3a38ea81 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1691,8 +1691,7 @@ static bool validate_add_rxsa(struct nlattr **attrs)
+ 	if (nla_get_u8(attrs[MACSEC_SA_ATTR_AN]) >= MACSEC_NUM_AN)
+ 		return false;
+ 
+-	if (attrs[MACSEC_SA_ATTR_PN] &&
+-	    *(u64 *)nla_data(attrs[MACSEC_SA_ATTR_PN]) == 0)
++	if (attrs[MACSEC_SA_ATTR_PN] && nla_get_u64(attrs[MACSEC_SA_ATTR_PN]) == 0)
+ 		return false;
+ 
+ 	if (attrs[MACSEC_SA_ATTR_ACTIVE]) {
+@@ -1714,7 +1713,6 @@ static int macsec_add_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct macsec_rx_sc *rx_sc;
+ 	struct macsec_rx_sa *rx_sa;
+ 	unsigned char assoc_num;
+-	int pn_len;
+ 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
+ 	int err;
+@@ -1747,12 +1745,26 @@ static int macsec_add_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 		return -EINVAL;
+ 	}
+ 
+-	pn_len = secy->xpn ? MACSEC_XPN_PN_LEN : MACSEC_DEFAULT_PN_LEN;
+-	if (nla_len(tb_sa[MACSEC_SA_ATTR_PN]) != pn_len) {
+-		pr_notice("macsec: nl: add_rxsa: bad pn length: %d != %d\n",
+-			  nla_len(tb_sa[MACSEC_SA_ATTR_PN]), pn_len);
+-		rtnl_unlock();
+-		return -EINVAL;
++	if (tb_sa[MACSEC_SA_ATTR_PN]) {
++		switch (nla_len(tb_sa[MACSEC_SA_ATTR_PN])) {
++		case MACSEC_DEFAULT_PN_LEN:
++			break;
++
++		case MACSEC_XPN_PN_LEN:
++			if (secy->xpn)
++				break;
++
++			pr_notice("macsec: nl: add_rxsa: pn length on non-xpn links must be %d\n",
++				  MACSEC_DEFAULT_PN_LEN);
++			rtnl_unlock();
++			return -EINVAL;
++
++		default:
++			pr_notice("macsec: nl: add_rxsa: pn length must be %d or %d\n",
++				  MACSEC_DEFAULT_PN_LEN, MACSEC_XPN_PN_LEN);
++			rtnl_unlock();
++			return -EINVAL;
++		}
+ 	}
+ 
+ 	if (secy->xpn) {
+@@ -1934,7 +1946,7 @@ static bool validate_add_txsa(struct nlattr **attrs)
+ 	if (nla_get_u8(attrs[MACSEC_SA_ATTR_AN]) >= MACSEC_NUM_AN)
+ 		return false;
+ 
+-	if (nla_get_u32(attrs[MACSEC_SA_ATTR_PN]) == 0)
++	if (nla_get_u64(attrs[MACSEC_SA_ATTR_PN]) == 0)
+ 		return false;
+ 
+ 	if (attrs[MACSEC_SA_ATTR_ACTIVE]) {
+@@ -1956,7 +1968,6 @@ static int macsec_add_txsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct macsec_tx_sc *tx_sc;
+ 	struct macsec_tx_sa *tx_sa;
+ 	unsigned char assoc_num;
+-	int pn_len;
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
+ 	bool was_operational;
+ 	int err;
+@@ -1989,10 +2000,22 @@ static int macsec_add_txsa(struct sk_buff *skb, struct genl_info *info)
+ 		return -EINVAL;
+ 	}
+ 
+-	pn_len = secy->xpn ? MACSEC_XPN_PN_LEN : MACSEC_DEFAULT_PN_LEN;
+-	if (nla_len(tb_sa[MACSEC_SA_ATTR_PN]) != pn_len) {
+-		pr_notice("macsec: nl: add_txsa: bad pn length: %d != %d\n",
+-			  nla_len(tb_sa[MACSEC_SA_ATTR_PN]), pn_len);
++	switch (nla_len(tb_sa[MACSEC_SA_ATTR_PN])) {
++	case MACSEC_DEFAULT_PN_LEN:
++		break;
++
++	case MACSEC_XPN_PN_LEN:
++		if (secy->xpn)
++			break;
++
++		pr_notice("macsec: nl: add_txsa: pn length on non-xpn links must be %d\n",
++			  MACSEC_DEFAULT_PN_LEN);
++		rtnl_unlock();
++		return -EINVAL;
++
++	default:
++		pr_notice("macsec: nl: add_txsa: pn length must be %d or %d\n",
++			  MACSEC_DEFAULT_PN_LEN, MACSEC_XPN_PN_LEN);
+ 		rtnl_unlock();
+ 		return -EINVAL;
+ 	}
+@@ -2288,7 +2311,7 @@ static bool validate_upd_sa(struct nlattr **attrs)
+ 	if (nla_get_u8(attrs[MACSEC_SA_ATTR_AN]) >= MACSEC_NUM_AN)
+ 		return false;
+ 
+-	if (attrs[MACSEC_SA_ATTR_PN] && nla_get_u32(attrs[MACSEC_SA_ATTR_PN]) == 0)
++	if (attrs[MACSEC_SA_ATTR_PN] && nla_get_u64(attrs[MACSEC_SA_ATTR_PN]) == 0)
+ 		return false;
+ 
+ 	if (attrs[MACSEC_SA_ATTR_ACTIVE]) {
+@@ -2332,12 +2355,22 @@ static int macsec_upd_txsa(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+-		int pn_len;
++		switch (nla_len(tb_sa[MACSEC_SA_ATTR_PN])) {
++		case MACSEC_DEFAULT_PN_LEN:
++			break;
++
++		case MACSEC_XPN_PN_LEN:
++			if (secy->xpn)
++				break;
++
++			pr_notice("macsec: nl: upd_txsa: pn length on non-xpn links must be %d\n",
++				  MACSEC_DEFAULT_PN_LEN);
++			rtnl_unlock();
++			return -EINVAL;
+ 
+-		pn_len = secy->xpn ? MACSEC_XPN_PN_LEN : MACSEC_DEFAULT_PN_LEN;
+-		if (nla_len(tb_sa[MACSEC_SA_ATTR_PN]) != pn_len) {
+-			pr_notice("macsec: nl: upd_txsa: bad pn length: %d != %d\n",
+-				  nla_len(tb_sa[MACSEC_SA_ATTR_PN]), pn_len);
++		default:
++			pr_notice("macsec: nl: upd_txsa: pn length must be %d or %d\n",
++				  MACSEC_DEFAULT_PN_LEN, MACSEC_XPN_PN_LEN);
+ 			rtnl_unlock();
+ 			return -EINVAL;
+ 		}
+@@ -2429,12 +2462,22 @@ static int macsec_upd_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+-		int pn_len;
++		switch (nla_len(tb_sa[MACSEC_SA_ATTR_PN])) {
++		case MACSEC_DEFAULT_PN_LEN:
++			break;
++
++		case MACSEC_XPN_PN_LEN:
++			if (secy->xpn)
++				break;
+ 
+-		pn_len = secy->xpn ? MACSEC_XPN_PN_LEN : MACSEC_DEFAULT_PN_LEN;
+-		if (nla_len(tb_sa[MACSEC_SA_ATTR_PN]) != pn_len) {
+-			pr_notice("macsec: nl: upd_rxsa: bad pn length: %d != %d\n",
+-				  nla_len(tb_sa[MACSEC_SA_ATTR_PN]), pn_len);
++			pr_notice("macsec: nl: upd_rxsa: pn length on non-xpn links must be %d\n",
++				  MACSEC_DEFAULT_PN_LEN);
++			rtnl_unlock();
++			return -EINVAL;
++
++		default:
++			pr_notice("macsec: nl: upd_rxsa: pn length must be %d or %d\n",
++				  MACSEC_DEFAULT_PN_LEN, MACSEC_XPN_PN_LEN);
+ 			rtnl_unlock();
+ 			return -EINVAL;
+ 		}
 
->> The kernel log shows 305 of these messages in the 4 minutes and 17
->> seconds between the start of klogd and when I rebooted.
->
-> Okay, this is a lot.
->
->> > The interesting part is to see if there is a acpi_os_execute() adding a
->> > specific event multiple times which does not complete. Maybe at runtim=
-e,
->> > maybe at shutdown time. If that is the case then ignoring this specific
->> > event might fix the shutdown problem. With all this information so far,
->> > I don't see a relation with this problem and the commit=E2=80=A6
->>=20
->> In those 3 minutes and 8 seconds there were 5 "Adding
->> acpi_ev_asynch_enable_gpe" messages at the beginning, then 185 "Adding
->> acpi_ev_notify_dispatch" messages, which kept coming until I rebooted.
->
-> 5 acpi_ev_asynch_enable_gpe() in three minutes since boot isn't much.
-> 185 of "Adding acpi_ev_notify_dispatch" is a lot.
->
-> But to be clear, only=20
->   acpi_os_execute(1109) Adding acpi_ev_notify_dispatch" messages?
-> No
->   "acpi_os_execute_deferred_notify() Start/End acpi_ev_notify_dispatch"?=
-=20
->
-> The syslog should have captured the log on disk.
+base-commit: bc7d17d55762421b98089f5f7496e48cab89de50
+-- 
+2.20.1
 
-There were in fact 99 "Start .* acpi_ev_notify_dispatch" messages and 98
-"End .* acpi_ev_notify_dispatch" messages.  Here's the last of them
-before I rebooted:
-
-Jun 15 08:58:25 strobe-jhalfs kernel: [  193.315014] acpi_os_execute(1109) =
-Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a66e0 <ffff8d7aabb38480>
-Jun 15 08:58:25 strobe-jhalfs kernel: [  193.319929] acpi_os_execute_deferr=
-ed_notify(853) End   ffff8d7aa8758d00 acpi_ev_notify_dispatch+0x0/0x55(ffff=
-8d7aa84e7eb0)
-Jun 15 08:58:25 strobe-jhalfs kernel: [  193.321242] acpi_os_execute_deferr=
-ed_notify(851) Start ffff8d7aa8758a80 acpi_ev_notify_dispatch+0x0/0x55(ffff=
-8d7aa84e70a0)
-Jun 15 08:58:26 strobe-jhalfs kernel: [  194.339017] acpi_os_execute(1109) =
-Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a6730 <ffff8d7aabb384c0>
-Jun 15 08:58:27 strobe-jhalfs kernel: [  195.363005] acpi_os_execute(1109) =
-Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a6780 <ffff8d7aabb38500>
-Jun 15 08:58:27 strobe-jhalfs kernel: [  195.367978] acpi_os_execute_deferr=
-ed_notify(853) End   ffff8d7aa8758a80 acpi_ev_notify_dispatch+0x0/0x55(ffff=
-8d7aa84e70a0)
-Jun 15 08:58:27 strobe-jhalfs kernel: [  195.369234] acpi_os_execute_deferr=
-ed_notify(851) Start ffff8d7aa8758240 acpi_ev_notify_dispatch+0x0/0x55(ffff=
-8d7aa84e7a00)
-Jun 15 08:58:28 strobe-jhalfs kernel: [  196.387017] acpi_os_execute(1109) =
-Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a68c0 <ffff8d7aabb38540>
-Jun 15 08:58:28 strobe-jhalfs kernel: [  196.388508] acpi_os_execute_deferr=
-ed_notify(853) End   ffff8d7aa8758240 acpi_ev_notify_dispatch+0x0/0x55(ffff=
-8d7aa84e7a00)
-Jun 15 08:58:28 strobe-jhalfs kernel: [  196.390128] acpi_os_execute_deferr=
-ed_notify(851) Start ffff8d7aa8758b80 acpi_ev_notify_dispatch+0x0/0x55(ffff=
-8d7aa84e7460)
-Jun 15 08:58:29 strobe-jhalfs kernel: [  197.208714] wlan1: deauthenticatin=
-g from 7c:ff:4d:08:df:22 by local choice (Reason: 3=3DDEAUTH_LEAVING)
-Jun 15 08:58:29 strobe-jhalfs kernel: [  197.232214] ip (4614) used greates=
-t stack depth: 11272 bytes left
-Jun 15 08:58:29 strobe-jhalfs kernel: Kernel logging (proc) stopped.
-Jun 15 08:58:29 strobe-jhalfs kernel: Kernel log daemon terminating.
-
-> I attached a modified acpi_dbg.patch. Please enable:
-> - CONFIG_ACPI_DEBUG=3Dy
->
-> Looking at your 5.1 you have tracing enabled (hope it still is).
->
-> The attached patch will dump the date into the tracing buffer, so you
-> console should remain "clean". Once it records 300 of those "requests
-> for acpi_ev_notify_dispatch" it will stop recording.
-> After 4-5 minutes please do
-> 	cat /sys/kernel/debug/tracing/trace > file.txt
->
-> compress it and send it.
-
-Will do as soon as I can, hopefully later today or tomorrow.  Thanks.
-
-Steve Berman
