@@ -2,174 +2,177 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E041C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDCCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 073B220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71DAF20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OGvwz0Gx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXVFNnwf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgFOAOs (ORCPT
+        id S1728060AbgFOASj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 20:14:48 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:17495 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728007AbgFOAOr (ORCPT
+        Sun, 14 Jun 2020 20:18:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727954AbgFOASi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 20:14:47 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200615001443epoutp0210b2c0c945184631dc516b1b596f1320~Yj1m__7gD0403504035epoutp021
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:14:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200615001443epoutp0210b2c0c945184631dc516b1b596f1320~Yj1m__7gD0403504035epoutp021
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592180083;
-        bh=Akp5EA8etJhHAQSlM/rwn2tsGZ7YAFRwkc7IVXdPecw=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=OGvwz0GxLP+fwlBLxpFix4yPJO3jaGfoGNiC8bJt//4iP5su7MsPj0/9HgHexTZNA
-         STevVUhiEngGZ05jTxPxy/DpYAoZJKwjDdYKkkvzUXlmq9++74OsFVOixFA/YLpgMC
-         jbzT9XjUUEfjYka/xRNvQE0jh929OKyvEfLy56/8=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200615001443epcas1p15f84268d828bfb43e91e867a26b64fbd~Yj1mnC0vA0833108331epcas1p1j;
-        Mon, 15 Jun 2020 00:14:43 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49lWzk6KvJzMqYkr; Mon, 15 Jun
-        2020 00:14:42 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DC.3C.29173.27DB6EE5; Mon, 15 Jun 2020 09:14:42 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200615001442epcas1p2a1a4ae1b8ed916cf31223b6cde27a8f2~Yj1lZgitp1309013090epcas1p20;
-        Mon, 15 Jun 2020 00:14:42 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200615001442epsmtrp1c930b86e083243841f8c0ee3a6258ea3~Yj1lY0O4v0486504865epsmtrp1E;
-        Mon, 15 Jun 2020 00:14:42 +0000 (GMT)
-X-AuditID: b6c32a37-9b7ff700000071f5-bb-5ee6bd725a8e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FF.A0.08382.27DB6EE5; Mon, 15 Jun 2020 09:14:42 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200615001441epsmtip29f4f17c796cbdaa755668efabd641006~Yj1lLuYQI0202702027epsmtip28;
-        Mon, 15 Jun 2020 00:14:41 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Hyunchul Lee'" <hyc.lee@gmail.com>
-Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>
-In-Reply-To: <20200612094250.9347-1-hyc.lee@gmail.com>
-Subject: RE: [PATCH 1/2] exfat: call sync_filesystem for read-only remount
-Date:   Mon, 15 Jun 2020 09:14:41 +0900
-Message-ID: <001401d642a9$f74c3040$e5e490c0$@samsung.com>
+        Sun, 14 Jun 2020 20:18:38 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AC5C05BD43;
+        Sun, 14 Jun 2020 17:18:37 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id s23so7058421pfh.7;
+        Sun, 14 Jun 2020 17:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=HeRg0Ac+mHDReRJhAPUw4er+UUsg4sIRY6elmlIlPbo=;
+        b=fXVFNnwf+iGDNV7IsoMtvEX9DL1qJ+bNadA54Zz4PjaHKiL91JukVdX8wXL858nj3k
+         tCdcNS070Xkn9xigN3eqRJt2O8QYTrnhpK7MGCkclhW19NajZt3bRyXrWUDneI344kEI
+         EVZa66/fri3drEeFXPjeFQhhVV8Zl47e+VmI7ZhuXku/xB7RXSJEQ4lQOqaunHEnl9r8
+         ZjShz2mO5jxOsQFooUzDMO72Ng5oaaP/4DDAo2UUKKOgq+piSvOWEbojKcz41EQ4qn8l
+         pMeYEbcSw9bH5FEBXnIR7uzOtiYRtJxRTiOKftK+qt5MoskHP4nB8u5d8KYglRQFrGtt
+         t1iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=HeRg0Ac+mHDReRJhAPUw4er+UUsg4sIRY6elmlIlPbo=;
+        b=qW/gshSZ8aylGcdaON6le4vHnY0iGN34sQp8ZSTelA9LVUIs1hwdya805l0IjiOaJD
+         NoveAES0nOF/INot6lz4mj9TXQUkceca5r5Rsp47ZGJzevh+tDdUh3dhIeGhN1a2xdGd
+         Iwh2OMTJBO/ODbUTJt/c3reE9bBO1qJd+trozpyezuOcL2pmud/cegckkWs2bvSkCt9x
+         /HghlJyyka+YJojQtl9BCbDAl9RE5cdBbHxL2WJMUO2uB9WkwQQ3YJLJC5ufRBK9SR5Q
+         kdM/xxmqUA0K/OF1tQG2gwkgJb5xFxXzmOVkLOjNmGpGnYIh7H3LHYcZhEJOWHxtrhfO
+         cYdA==
+X-Gm-Message-State: AOAM531hiXbjgrx5RFEeonpmv3C9GQBLBzXjq2Ql9QN9lpWXIMsAu6AR
+        Al4PNaJgfJrlHNDgkU0CnI4=
+X-Google-Smtp-Source: ABdhPJxirjMauaoGrtyFgo1IklAOQSPk2qnbKfxxwgoKbD3hkPoPxDrjY9zXnDSyMxLTMhZicfTxtg==
+X-Received: by 2002:aa7:9910:: with SMTP id z16mr20150568pff.53.1592180317301;
+        Sun, 14 Jun 2020 17:18:37 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i7sm10164447pgr.86.2020.06.14.17.18.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Jun 2020 17:18:36 -0700 (PDT)
+Subject: Re: linux-next: Signed-off-by missing for commit in the hwmon-staging
+ tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
+References: <20200615080852.1aa4d860@canb.auug.org.au>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <d8358bdc-f8cd-162e-261d-a756974b4e92@roeck-us.net>
+Date:   Sun, 14 Jun 2020 17:18:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIBJJ4yXVc624qtmpPir+DFyChZQwLoIJeKqGvGHHA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNKsWRmVeSWpSXmKPExsWy7bCmvm7R3mdxBj9v6lpcu/+e3WLP3pMs
-        Fpd3zWGz2PLvCKsDi8fOWXfZPfq2rGL0+LxJLoA5KscmIzUxJbVIITUvOT8lMy/dVsk7ON45
-        3tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB2ibkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRW
-        KbUgJafA0KBArzgxt7g0L10vOT/XytDAwMgUqDIhJ2Nm602mghk8FXf797I0MB7k7GLk5JAQ
-        MJGYuescSxcjF4eQwA5Gif0Nm6CcT4wSP7b/YIZwvjFK/D3ymLGLkQOs5fQxQYj4XkaJ5e9v
-        M4OMEhJ4ySjx604yiM0moCvx789+NhBbREBD4t/JR0wgNrNAgcTavWdYQWxOATOJf5dugcWF
-        BbwkrnXsA6tnEVCV6Pv5GqyGV8BS4uaqacwQtqDEyZlPWCDmyEtsfzuHGeIFBYmfT5exgtwm
-        ImAlcaAzD6JERGJ2ZxtUyVd2ielzRSFsF4l3f6axQNjCEq+Ob2GHsKUkXva3sUO8WC3xcT9U
-        awejxIvvthC2scTN9RvANjELaEqs36UPEVaU2Pl7LiPEVj6Jd197WCGm8Ep0tAlBlAD9dOkw
-        E4QtLdHV/oF9AqPSLCRvzULy1iwk989CWLaAkWUVo1hqQXFuemqxYYExckRvYgSnQi3zHYzT
-        3n7QO8TIxMF4iFGCg1lJhLc77UmcEG9KYmVValF+fFFpTmrxIUZTYEBPZJYSTc4HJuO8knhD
-        UyNjY2MLEzNzM1NjJXFeX6sLcUIC6YklqdmpqQWpRTB9TBycUg1MHId3u55dL/TRylz1gxzr
-        K7PoKrvrzev+Z1zjU9sXFfdSnHutRJSF+eepfz5uWcoVXljR7pYdlWhx6KTs5+MKYSof5y1X
-        L+RdHrb8csXlZ3LTvFf5zrwQKDitc0mN7qv8hfWl6YECLReMDAW7zW+7be6eLaFz7snfZ6Ze
-        +UmnLrhOPcNQu31W5J5F15b6awa2iF+IXMfWceT5xdiCE3ba6WfEHxZx7Ff6LdHXEhvAmClr
-        5Dv3tZaexZM/a78uXLNKemr8tLs7qu6WRyzbKh2t8EdiQ/lxuUNPHlostpf+MWGt7rN1wl2b
-        tx0OfPLD93d800e+gxaPdvjfq/Rp4cm77Wwob+b37npacP3z14f4lViKMxINtZiLihMBj1iI
-        Uw4EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsWy7bCSvG7R3mdxBodOsVpcu/+e3WLP3pMs
-        Fpd3zWGz2PLvCKsDi8fOWXfZPfq2rGL0+LxJLoA5issmJTUnsyy1SN8ugStjZutNpoIZPBV3
-        +/eyNDAe5Oxi5OCQEDCROH1MsIuRi0NIYDejxLKp79m7GDmB4tISx06cYYaoEZY4fLgYouY5
-        o8Trw5tZQGrYBHQl/v3ZzwZiiwhoSPw7+YgJxGYWKJK433ueHaKhnVFi77yPYEWcAmYS/y7d
-        AisSFvCSuNaxDyzOIqAq0ffzNSuIzStgKXFz1TRmCFtQ4uTMJywgRzAL6Em0bWSEmC8vsf3t
-        HGaIOxUkfj5dxgpSIiJgJXGgMw+iRERidmcb8wRG4VlIBs1CGDQLyaBZSDoWMLKsYpRMLSjO
-        Tc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjgotzR2M21d90DvEyMTBeIhRgoNZSYS3O+1JnBBv
-        SmJlVWpRfnxRaU5q8SFGaQ4WJXHeG4UL44QE0hNLUrNTUwtSi2CyTBycUg1M23jW5v/cvLv4
-        6bObzDt+8Gju99mgeHR+5YI//g5Xi0/5Fs9bOycqzqp65gq156IvPLrDbrqJH+fIedTDObHa
-        3iHMXDEz8mho2crvBn5Jtx6XW3ybvPhbgWu39N6T2+d0zxXjnFpvOM+m9t92x6I53ZcXXBTY
-        p7vg2YXsZ4/Fazr99eapHnJlcEmJX7JzhphP35pJgVxNlz0PfEtr3h7z9COvqd9W/R2bvgXO
-        XRLG/u/XdhWbm3W3jVIX1p+crdujvbL+Xd2Dh/d2l6vcPb9T0nKxQ1ywz8XLthUPKpd/e8Fp
-        W9f73cr1o+WCmz3Vp/q57OZlPO9ZOVOt4OYV9+zYJU2ht7zmfn64YdqH2uJ1JkosxRmJhlrM
-        RcWJADo9abH5AgAA
-X-CMS-MailID: 20200615001442epcas1p2a1a4ae1b8ed916cf31223b6cde27a8f2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200612094312epcas1p1d8be51e8ab6e26b622e3c8437a20cfcf
-References: <CGME20200612094312epcas1p1d8be51e8ab6e26b622e3c8437a20cfcf@epcas1p1.samsung.com>
-        <20200612094250.9347-1-hyc.lee@gmail.com>
+In-Reply-To: <20200615080852.1aa4d860@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Q8k3qnHMX9iMEdj8wzPGA682xitmwJID8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hyunchul,
-> We need to commit dirty metadata and pages to disk before remounting exfat as read-only.
-> 
-> This fixes a failure in xfstests generic/452
-Could you please elaborate more the reason why generic/452 in xfstests failed ?
-> 
-> Signed-off-by: Hyunchul Lee <hyc.lee@gmail.com>
-> ---
->  fs/exfat/super.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/fs/exfat/super.c b/fs/exfat/super.c index e650e65536f8..61c6cf240c19 100644
-> --- a/fs/exfat/super.c
-> +++ b/fs/exfat/super.c
-> @@ -693,10 +693,29 @@ static void exfat_free(struct fs_context *fc)
->  	}
->  }
-> 
-> +static int exfat_reconfigure(struct fs_context *fc) {
-> +	struct super_block *sb = fc->root->d_sb;
-> +	int ret;
-int ret = 0;
-> +	bool new_rdonly;
-> +
-> +	new_rdonly = fc->sb_flags & SB_RDONLY;
-> +	if (new_rdonly != sb_rdonly(sb)) {
-If you modify it like this, would not we need new_rdonly?
-        if (fc->sb_flags & SB_RDONLY && !sb_rdonly(sb))
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Q8k3qnHMX9iMEdj8wzPGA682xitmwJID8
+Content-Type: multipart/mixed; boundary="KgaW2r8bK6bDRLqcsbEsgpZ34f0XkPlnF"
 
-> +		if (new_rdonly) {
-> +			/* volume flag will be updated in exfat_sync_fs */
-> +			ret = sync_filesystem(sb);
-> +			if (ret < 0)
-> +				return ret;
-I think that this ret check can be removed by using return ret; below ?
-> +		}
-> +	}
-> +	return 0;
-return ret;
-> +}
-> +
->  static const struct fs_context_operations exfat_context_ops = {
->  	.parse_param	= exfat_parse_param,
->  	.get_tree	= exfat_get_tree,
->  	.free		= exfat_free,
-> +	.reconfigure	= exfat_reconfigure,
->  };
-> 
->  static int exfat_init_fs_context(struct fs_context *fc)
-> --
-> 2.17.1
+--KgaW2r8bK6bDRLqcsbEsgpZ34f0XkPlnF
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 6/14/20 3:08 PM, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> Commit
+>=20
+>   3c1c958a118e ("hwmon: (adm1275) Enable adm1278 ADM1278_TEMP1_EN")
+>=20
+> is missing a Signed-off-by from its author.
+>=20
+Uuh, yes, I completely missed that. I'll drop the patch until/unless I ge=
+t
+a signed version.
+
+Thanks for noticing.
+
+Guenter
 
 
+
+--KgaW2r8bK6bDRLqcsbEsgpZ34f0XkPlnF--
+
+--Q8k3qnHMX9iMEdj8wzPGA682xitmwJID8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEiHPvMQj9QTOCiqgVyx8mb86fmYEFAl7mvlsACgkQyx8mb86f
+mYEwXw//YL/mRS/+XIHL16lS71+5zK20GRqQgh8Sab6vCN+LlhBnhSf08DUu1Pwp
+c6dPBsdvAwuMEY8rDPvpAEKtTpnotqZKnrhB9Mn913rqrEOsPcMELvhqfS7XSHe5
+MaxlZQauZq6m4ynMgQmR66Ie/dMAT692dEWmnjnQrN37b9E5UwgNaymXTZg7sP0M
+weOFxt3wRw65o0eHLsMeXpCJKz58qHUBITyHGfjKHDSdH0NhrU0sk4x7EHWWSQny
+p0GmawxAVJkjp0m6stGKejufPHsv7rFDYR8tR78+BUeGDZU9r9/6N+IzxbGG2h7O
+1qbA1kkel01V8jBuO7wNVCT5V4rTxxemES1tiD0GL5TwS+0lg1ymxHR9sD2yYUwM
+JNQU1BoRFav30gtm0I/fgoUH78mzp70WZ7Yq1GwO694ykb4SfXfBkl2MnQ0gKwoD
+sFCWmiqnn7Wwxf2VIZAQXR4irtg23+6N4R95k9UqR7bTg82/bjWuFeMJ0Pky36UX
+Vu+sFTA1KGnX+670JeXSW55/5YU8t6eOcq6FFe1RnHKAPw/pR4WusOfLnO4X8J8a
+UOYuJNkCrqGp7YIV0ocFsrXIRQ8odb5jBByZqmJEgLYfOgGt6rptpNaKPH4LlEpD
+/hPWtosTmm5YsfwQ6Cbzmu4cIcHRfhNOtwdHLX1iSH8yK7poP0o=
+=7dIo
+-----END PGP SIGNATURE-----
+
+--Q8k3qnHMX9iMEdj8wzPGA682xitmwJID8--
