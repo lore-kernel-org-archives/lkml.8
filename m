@@ -2,124 +2,128 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88514C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBCA2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592239544;
-	bh=0RD0yWcCVbH5iZJy8aa9w6yRypo5gCdy3LYCxlufcX8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=PhDcQT5ZYTkr6YzOUkHdFEtK2bLZoicNCV+Ar1Qt8nQbcUhoROzLi5O6Y6d/Qik5x
-	 8qtLKdOI7Vjvj8xbQVT1MboIXgvQJfqBKONcFH8EOhJxBe2PQtXC77F3zBTijI5ncK
-	 WiW9uViPLXIRsVYz94Ib55i+dFoARosDy0x2wbIg=
+	by mail.kernel.org (Postfix) with ESMTP id 815CF2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:45:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aUYzJCzF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730811AbgFOQpm (ORCPT
+        id S1731012AbgFOQpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgFOQpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:45:42 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CED312067B;
-        Mon, 15 Jun 2020 16:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592239541;
-        bh=0RD0yWcCVbH5iZJy8aa9w6yRypo5gCdy3LYCxlufcX8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cq05/dIg1PxK0lWi/pgKn6Q8nMKgs+F+gGUfGcDV64G7pVI4E6eiLA8QJ62KT6QqT
-         2s8CDoxzpNLgoMauYF8u+lo0cxJb9B4T+MPqykOvNLpq12i0SAZouC/0WQ7+3Kut4D
-         G59E3fvZVvdzRxgcipMQXy1L4yrvBY2fWby24ISc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3D0923522EFD; Mon, 15 Jun 2020 09:45:41 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 09:45:41 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, frederic@kernel.org
-Subject: Re: [PATCH 1/6] sched: Fix ttwu_queue_cond()
-Message-ID: <20200615164541.GH2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200615125654.678940605@infradead.org>
- <20200615131143.130326165@infradead.org>
- <20200615133409.GS2531@hirez.programming.kicks-ass.net>
+        Mon, 15 Jun 2020 12:45:50 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:55090 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFOQpt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:45:49 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id A5BB520B4780;
+        Mon, 15 Jun 2020 09:45:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A5BB520B4780
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1592239548;
+        bh=XWqIoID6oSJi5sFAyDXKdR658vGMUI/XhOZPL0DsKnA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=aUYzJCzFeQs+E1ArnYzFlomMA/IssGZNCua/12Ubl8cVtJJPgf1aW8IEd6Hb54Zuv
+         6iWDu3Nyl7+Q6Nu4kCWvt/q8Yq6G05vX28voSp3QubdOutU2hmwJ6pOurhIk+bCe0D
+         ScAH/mqlpvnydpdE9sHA5BOsIkhYeyDjbuQ/DqpY=
+Subject: Re: [PATCH 4/5] LSM: Define SELinux function to measure security
+ state
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Stephen Smalley <stephen.smalley@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200613024130.3356-1-nramas@linux.microsoft.com>
+ <20200613024130.3356-5-nramas@linux.microsoft.com>
+ <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <a9a20aa5-963e-5f49-9391-0673fdda378e@linux.microsoft.com>
+Date:   Mon, 15 Jun 2020 09:45:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615133409.GS2531@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 03:34:09PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 15, 2020 at 02:56:55PM +0200, Peter Zijlstra wrote:
-> > Where the condition:
-> > 
-> >   !cpus_share_cache(smp_processor_id(), cpu)
-> > 
-> > already implies 'cpu != smp_processor_id()', because a CPU always
-> > shares cache with itself, the secondary condition added in commit:
-> > 
-> >   2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
-> > 
-> > voids that implication, resulting in attempting to do local wake-ups
-> > through the queue mechanism.
-> > 
-> > Fixes: 2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
-> > Reported-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Tested-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  kernel/sched/core.c |   13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -2356,11 +2356,22 @@ bool cpus_share_cache(int this_cpu, int
-> >  
-> >  static inline bool ttwu_queue_cond(int cpu, int wake_flags)
-> >  {
-> > +	int this_cpu = smp_processor_id();
-> > +
-> > +	/*
-> > +	 * Only ever queue for remote wakeups. The on_cpu case can only ever
-> > +	 * happen remotely, and for the normal case it makes no sense to
-> 
-> The 'funny' thing here is, that this must be false for this patch to
-> make any difference.. I just cannot see how.
-> 
-> Also, if this is false, and p->on_cpu == 1 and p->cpu == this_cpu, then
-> p _should_ be current, in which case we should never get here either,
-> due to the 'p == current' special case in try_to_wake_up().
-> 
-> The only other option is that 'p == next', but then we'd be doing
-> wakeups from the middle of __schedule() and seems 'unlikely' too, esp.
-> so since none of the actual stack-traces we have shows that.
-> 
-> So colour me terribly confused.
+On 6/15/20 4:57 AM, Stephen Smalley wrote:
 
-I am rerunning with your patch 2 on the last bisection point that
-resulted in scheduler NULL dereferences despite having your patch.
-Hopefully some illumination will result...
+Hi Stephen,
 
-						Thanx, Paul
+Thanks for reviewing the patches.
 
-> > +	 * involve IPIs here, and would be broken, as many architectures cannot
-> > +	 * trivially IPI self in any case.
-> > +	 */
-> > +	if (cpu == this_cpu)
-> > +		return false;
+>> +void security_state_change(char *lsm_name, void *state, int state_len)
+>> +{
+>> +       ima_lsm_state(lsm_name, state, state_len);
+>> +}
+>> +
+> 
+> What's the benefit of this trivial function instead of just calling
+> ima_lsm_state() directly?
+
+One of the feedback Casey Schaufler had given earlier was that calling 
+an IMA function directly from SELinux (or, any of the Security Modules) 
+would be a layering violation.
+
+LSM framework (security/security.c) already calls IMA functions now (for 
+example, ima_bprm_check() is called from security_bprm_check()). I 
+followed the same pattern for measuring LSM data as well.
+
+Please let me know if I misunderstood Casey's comment.
+
+>> +static int selinux_security_state(char **lsm_name, void **state,
+>> +                                 int *state_len)
+>> +{
+>> +       int rc = 0;
+>> +       char *new_state;
+>> +       static char *security_state_string = "enabled=%d;enforcing=%d";
+>> +
+>> +       *lsm_name = kstrdup("selinux", GFP_KERNEL);
+>> +       if (!*lsm_name)
+>> +               return -ENOMEM;
+>> +
+>> +       new_state = kzalloc(strlen(security_state_string) + 1, GFP_KERNEL);
+>> +       if (!new_state) {
+>> +               kfree(*lsm_name);
+>> +               *lsm_name = NULL;
+>> +               rc = -ENOMEM;
+>> +               goto out;
+>> +       }
+>> +
+>> +       *state_len = sprintf(new_state, security_state_string,
+>> +                            !selinux_disabled(&selinux_state),
+>> +                            enforcing_enabled(&selinux_state));
+> 
+> I think I mentioned this on a previous version of these patches, but I
+> would recommend including more than just the enabled and enforcing
+> states in your measurement.  Other low-hanging fruit would be the
+> other selinux_state booleans (checkreqprot, initialized,
+> policycap[0..__POLICYDB_CAPABILITY_MAX]).  Going a bit further one
+> could take a hash of the loaded policy by using security_read_policy()
+> and then computing a hash using whatever hash ima prefers over the
+> returned data,len pair.  You likely also need to think about how to
+> allow future extensibility of the state in a backward-compatible
+> manner, so that future additions do not immediately break systems
+> relying on older measurements.
+> 
+
+Sure - I will address this one in the next update.
+
+thanks,
+  -lakshmi
