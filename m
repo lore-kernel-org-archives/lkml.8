@@ -2,109 +2,200 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C95BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 03:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D5320747
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434E920747
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 03:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QdrmcYg2"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aEchWPuJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgFOC7N (ORCPT
+        id S1728181AbgFOC76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 22:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbgFOC7N (ORCPT
+        Sun, 14 Jun 2020 22:59:58 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:25328 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728032AbgFOC75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 22:59:13 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20546C061A0E;
-        Sun, 14 Jun 2020 19:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=zMs2S73ZRwT7pTwkzGE7eHsG3b9G7ZiyeRv99uoKbqo=; b=QdrmcYg2iPlcqcJ+My5P2SyN3W
-        pf3VQaZGyauCZG93aJj/9cmG2CPzppRgiG8Jl0I8LIa7jfWiex2YgRPLjeFF2VYOMB+E3VQRtXKxd
-        mL7p+XJ6ReWiR42Bh2GVQyN1pXMwBzclSstfKpyRh3D6HXm+NrlJZwIcit9xPmVazKs3nv8KQ2zIN
-        XozM/5Y8qjT47ElTAkBRgLJz0Kn00W6WUJludlFKHRcd82I0xI7zU/pL1SW/RfP6Q+QoID3XB3OYw
-        jTl80VCBAsh0rL1oTajQYn8jkYMb7SfVZmGgY2T9kF4E1qtMvnBLjc/sP7U4IfAnHQmXSxEPwd0m1
-        YhpIjAvA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkfL2-0002YI-M8; Mon, 15 Jun 2020 02:59:08 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Cc:     Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] Documentation: remove SH-5 index entries
-Message-ID: <71e1f336-ef5c-f5e9-25cf-16bd4439b9f9@infradead.org>
-Date:   Sun, 14 Jun 2020 19:59:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 14 Jun 2020 22:59:57 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200615025953epoutp01fa344c0e55fd444129d43940349c37f4~YmF0CoKmT2296522965epoutp01L
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:59:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200615025953epoutp01fa344c0e55fd444129d43940349c37f4~YmF0CoKmT2296522965epoutp01L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592189993;
+        bh=eGGelpkcY/LO3yX2Zejg2CnNM824qHYvkp0EHrxeMPg=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=aEchWPuJ9kL4g8lMN0ordCsbE+rpPCNaW1/47iHuPuKLS9vCzimptTDUQRG/lJZpO
+         TNUFvE8zBh8S9/HwRJDZcKdLH+rf6mr3XYei6ls40xMKVbOyZS137m7G893KImeSx8
+         +TkIUu1eMq1hUQUIQ7pzr+Y8SiHvyownKLPgIRD0=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200615025953epcas1p48085be4f20302114c59c606082fbb8b2~YmFzlsaWR0840308403epcas1p4w;
+        Mon, 15 Jun 2020 02:59:53 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.161]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49lbfJ0ldszMqYkf; Mon, 15 Jun
+        2020 02:59:52 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9A.C8.28581.824E6EE5; Mon, 15 Jun 2020 11:59:52 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200615025951epcas1p4d8ea0dddac1fe76435ef087df930d6c9~YmFyM1tuS0840308403epcas1p4q;
+        Mon, 15 Jun 2020 02:59:51 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200615025951epsmtrp291445e1aa67729783a1a991f40e7f5a6~YmFyMKMTC1711917119epsmtrp27;
+        Mon, 15 Jun 2020 02:59:51 +0000 (GMT)
+X-AuditID: b6c32a38-2e3ff70000006fa5-49-5ee6e4278b9b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1E.46.08303.724E6EE5; Mon, 15 Jun 2020 11:59:51 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200615025951epsmtip23bf3d4e3c4062ec38e2c467a6d4643ed~YmFyCcNV-2436324363epsmtip2w;
+        Mon, 15 Jun 2020 02:59:51 +0000 (GMT)
+From:   "Sungjong Seo" <sj1557.seo@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Namjae Jeon'" <namjae.jeon@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <b29d254b-212a-bfcb-ab7c-456f481b85c8@gmail.com>
+Subject: RE: [PATCH] exfat: remove EXFAT_SB_DIRTY flag
+Date:   Mon, 15 Jun 2020 11:59:51 +0900
+Message-ID: <237301d642c1$09b77e30$1d267a90$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQJnvEdqdI23glRQ63sAxRdAmHabxwH6sMC1AgRQa20BQ3jTmaeL6gYg
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmnq7Gk2dxBp0HmC1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsfgxvd6B3ePLnOPsHm2T/7F7NB9byeaxc9Zddo++LasY
+        PT5vkgtgi8qxyUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXL
+        zAE6RUmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYGhQoFecmFtcmpeul5yfa2Vo
+        YGBkClSZkJPxtUW84Kx0xf29L9gbGM+KdzFyckgImEhc6DjO2sXIxSEksINR4uSBKywQzidG
+        id7HS6Ccz4wSk3d0MMO0LJ77mw0isYtR4sCaa1DOS0aJ6y9PsYBUsQnoSjy58ROsQ0RAT+Lk
+        yetsIDazQCOTxImX2SA2p4CtxKkpa8BqhAXMJJZ27QXrZRFQlfi8po8dxOYVsJR4O/8+M4Qt
+        KHFy5hMWiDnaEssWvoa6SEFi96ejQE9wAO1ykzg6KwmiRERidmcbVMlcDoln01MgbBeJq39/
+        sUPYwhKvjm+BsqUkPr/bywZh10vsXnUK7HsJgQZGiSOPFrJAJIwl5rcsZAbZxSygKbF+lz5E
+        WFFi5++5jBB7+STefe0BO0dCgFeio00IokRF4vuHnSwwq678uMo0gVFpFpLHZiF5bBaSD2Yh
+        LFvAyLKKUSy1oDg3PbXYsMAEOa43MYJTqZbFDsa5bz/oHWJk4mA8xCjBwawkwtud9iROiDcl
+        sbIqtSg/vqg0J7X4EKMpMKgnMkuJJucDk3leSbyhqZGxsbGFiZm5mamxkjjvSasLcUIC6Ykl
+        qdmpqQWpRTB9TBycUg1M0sGtzYs+Bsg8a5Ar7rG9cWJJVYNwhcjak3xWS8yTt965Vm8zt7so
+        /13f1Si3CUXKtgYph4PrQ1as/OhtwS3ovnlf+b2TK85J5Mp/uMqR9m22s3XVn4+zf1lL+90x
+        tS3y+6rqvYiP827uOksv6/k6brG3S91f8xyJcTur++6OtUPDoaW+odufXY7LCStxbJ9cvnKH
+        XttENb5a38I+Ke0DZ/96Xmu6FialYqnT6LTn2vInDmfl/6xwubL559nNa9NePk3/wps577IP
+        a9I89uvVwWK+lvn/uR7qr2BpVBILvCRiNLeAnXOB5+v5F60/XvAuDvo53f/n9mLvxlU8xw50
+        HQxduDOoy+f/w/+vZP4osRRnJBpqMRcVJwIA/c+LWC4EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJXlf9ybM4g73XZSx+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsfgxvd6B3ePLnOPsHm2T/7F7NB9byeaxc9Zddo++LasY
+        PT5vkgtgi+KySUnNySxLLdK3S+DKmPxyG1tBs0TF5uPtrA2M14S6GDk5JARMJBbP/c3WxcjF
+        ISSwg1FiY9sG9i5GDqCElMTBfZoQprDE4cPFECXPGSXOHb7ACNLLJqAr8eTGT2YQW0RAT+Lk
+        yetgc5gFmpkkWr80M0F0vGSUaHu6kw2kilPAVuLUlDVgHcICZhJLu/aygNgsAqoSn9f0sYPY
+        vAKWEm/n32eGsAUlTs58AlbDLKAt0fuwlRHGXrbwNTPEBwoSuz8dZQW5VETATeLorCSIEhGJ
+        2Z1tzBMYhWchmTQLyaRZSCbNQtKygJFlFaNkakFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZG
+        cFRpae1g3LPqg94hRiYOxkOMEhzMSiK83WlP4oR4UxIrq1KL8uOLSnNSiw8xSnOwKInzfp21
+        ME5IID2xJDU7NbUgtQgmy8TBKdXAlHgjwE+uLKtt4QZrztPVpQ5eWQ5JypusP0R/V75e2P2w
+        4AjDv+7Jwidfp7xvWVsfdH79jgVeAUVxe3o4rn6pazuQdtrvgrF4gJ2gUW5on3R7xIbZM3ft
+        snwWtYPhZKTU/YfvqjWaBbzvr5vavNSyt7LayPjwpjNXgyKnWSgev6i6VsLWd/PrG+elSwpk
+        xU8LbjuRbzjffe15nndLHnzz4VaOf1GxLnXGBN/qUGvp62lWyz5ePFf7tbE/0Nd2t3PFwV0y
+        3Ck/VmzXES3kOT95u+mq19FShoemdhe6Li/fJu3PwzRDwYSFo78l6cLKhKV9GgK8h2/PUTav
+        iJcQvL77Y1hf7g2/9L810597azApsRRnJBpqMRcVJwIAkIo1OxkDAAA=
+X-CMS-MailID: 20200615025951epcas1p4d8ea0dddac1fe76435ef087df930d6c9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200612012902epcas1p4194d6fa3b3f7c46a8becb9bb6ce23d56
+References: <CGME20200612012902epcas1p4194d6fa3b3f7c46a8becb9bb6ce23d56@epcas1p4.samsung.com>
+        <20200612012834.13503-1-kohada.t2@gmail.com>
+        <219a01d64094$5418d7a0$fc4a86e0$@samsung.com>
+        <b29d254b-212a-bfcb-ab7c-456f481b85c8@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
-
-Remove SH-5 documentation index entries following the removal
-of SH-5 source code.
-
-Error: Cannot open file ../arch/sh/mm/tlb-sh5.c
-Error: Cannot open file ../arch/sh/mm/tlb-sh5.c
-Error: Cannot open file ../arch/sh/include/asm/tlb_64.h
-Error: Cannot open file ../arch/sh/include/asm/tlb_64.h
-
-Fixes: 3b69e8b45711 ("Merge tag 'sh-for-5.8' of git://git.libc.org/linux-sh")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: ysato@users.sourceforge.jp
-Cc: linux-sh@vger.kernel.org
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
----
- Documentation/sh/index.rst |   12 ------------
- 1 file changed, 12 deletions(-)
-
---- lnx-58-rc1.orig/Documentation/sh/index.rst
-+++ lnx-58-rc1/Documentation/sh/index.rst
-@@ -16,18 +16,6 @@ Store Queue API
- .. kernel-doc:: arch/sh/kernel/cpu/sh4/sq.c
-    :export:
- 
--SH-5
------
--
--TLB Interfaces
--~~~~~~~~~~~~~~
--
--.. kernel-doc:: arch/sh/mm/tlb-sh5.c
--   :internal:
--
--.. kernel-doc:: arch/sh/include/asm/tlb_64.h
--   :internal:
--
- Machine Specific Interfaces
- ===========================
- 
-
+> On 2020/06/12 17:34, Sungjong Seo wrote:
+> >> remove EXFAT_SB_DIRTY flag and related codes.
+> >>
+> >> This flag is set/reset in exfat_put_super()/exfat_sync_fs() to avoid
+> >> sync_blockdev().
+> >> However ...
+> >> - exfat_put_super():
+> >> Before calling this, the VFS has already called sync_filesystem(), so
+> >> sync is never performed here.
+> >> - exfat_sync_fs():
+> >> After calling this, the VFS calls sync_blockdev(), so, it is
+> >> meaningless to check EXFAT_SB_DIRTY or to bypass sync_blockdev() here.
+> >> Not only that, but in some cases can't clear VOL_DIRTY.
+> >> ex:
+> >> VOL_DIRTY is set when rmdir starts, but when non-empty-dir is
+> >> detected, return error without setting EXFAT_SB_DIRTY.
+> >> If performe 'sync' in this state, VOL_DIRTY will not be cleared.
+> >>
+> >> Remove the EXFAT_SB_DIRTY check to ensure synchronization.
+> >> And, remove the code related to the flag.
+> >>
+> >> Signed-off-by: Tetsuhiro Kohada <kohada.t2=40gmail.com>
+> >> ---
+> >>   fs/exfat/balloc.c   =7C  4 ++--
+> >>   fs/exfat/dir.c      =7C 16 ++++++++--------
+> >>   fs/exfat/exfat_fs.h =7C  5 +----
+> >>   fs/exfat/fatent.c   =7C  7 ++-----
+> >>   fs/exfat/misc.c     =7C  3 +--
+> >>   fs/exfat/namei.c    =7C 12 ++++++------
+> >>   fs/exfat/super.c    =7C 11 +++--------
+> >>   7 files changed, 23 insertions(+), 35 deletions(-)
+> >>
+> > =5Bsnip=5D
+> >>
+> >> =40=40 -62,11 +59,9 =40=40 static int exfat_sync_fs(struct super_block=
+ *sb,
+> >> int
+> >> wait)
+> >>
+> >>   	/* If there are some dirty buffers in the bdev inode */
+> >>   	mutex_lock(&sbi->s_lock);
+> >> -	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state)) =7B
+> >> -		sync_blockdev(sb->s_bdev);
+> >> -		if (exfat_set_vol_flags(sb, VOL_CLEAN))
+> >> -			err =3D -EIO;
+> >> -	=7D
+> >
+> > I looked through most codes related to EXFAT_SB_DIRTY and VOL_DIRTY.
+> > And your approach looks good because all of them seem to be protected
+> > by s_lock.
+> >
+> > BTW, as you know, sync_filesystem() calls sync_fs() with 'nowait'
+> > first, and then calls it again with 'wait' twice. No need to sync with
+> lock twice.
+> > If so, isn't it okay to do nothing when wait is 0?
+>=20
+> I also think  =E2=80=98do=20nothing=20when=20wait=20is=200=E2=80=99=20as=
+=20you=20say,=20but=20I'm=20still=20not=0D=0A>=20sure.=0D=0A>=20=0D=0A>=20S=
+ome=20other=20Filesystems=20do=20nothing=20with=20nowait=20and=20just=20ret=
+urn.=0D=0A>=20However,=20a=20few=20Filesystems=20always=20perform=20sync.=
+=0D=0A>=20=0D=0A>=20sync_blockdev()=20waits=20for=20completion,=20so=20it=
+=20may=20be=20inappropriate=20to=20call=0D=0A>=20with=20=20nowait.=20(But=
+=20it=20was=20called=20in=20the=20original=20code)=0D=0A>=20=0D=0A>=20I'm=
+=20still=20not=20sure,=20so=20I=20excluded=20it=20in=20this=20patch.=0D=0A>=
+=20Is=20it=20okay=20to=20include=20it?=0D=0A>=20=0D=0A=0D=0AYes,=20I=20thin=
+k=20so.=20sync_filesystem()=20will=20call=20__sync_blockdev()=20without=20'=
+wait'=20first.=0D=0ASo,=20it's=20enough=20to=20call=20sync_blockdev()=20wit=
+h=20s_lock=20just=20one=20time.=0D=0A=0D=0A>=20=0D=0A>=20>>=20+=09sync_bloc=
+kdev(sb->s_bdev);=0D=0A>=20>>=20+=09if=20(exfat_set_vol_flags(sb,=20VOL_CLE=
+AN))=0D=0A>=20>>=20+=09=09err=20=3D=20-EIO;=0D=0A>=20>>=20=20=20=09mutex_un=
+lock(&sbi->s_lock);=0D=0A>=20>>=20=20=20=09return=20err;=0D=0A>=20>>=20=20=
+=20=7D=0D=0A>=20>>=20--=0D=0A>=20>>=202.25.1=0D=0A>=20>=0D=0A>=20>=0D=0A>=
+=20=0D=0A>=20BR=0D=0A>=20---=0D=0A>=20Tetsuhiro=20Kohada=20<kohada.t2=40gma=
+il.com>=0D=0A=0D=0A=0D=0A
