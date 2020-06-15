@@ -2,169 +2,72 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E253EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAE7F20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7CE20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:52:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="js9BStWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgFOLvF (ORCPT
+        id S1729753AbgFOLwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:51:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39498 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729682AbgFOLvF (ORCPT
+        Mon, 15 Jun 2020 07:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729660AbgFOLwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:51:05 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FA2gg4102076;
-        Mon, 15 Jun 2020 07:51:03 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5erdtkt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 07:51:03 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FA3w3T107339;
-        Mon, 15 Jun 2020 07:51:02 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5erdtjd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 07:51:02 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FBjY22032443;
-        Mon, 15 Jun 2020 11:51:00 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7ufaf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 11:51:00 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FBovbF56033282
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 11:50:57 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8141AAE05A;
-        Mon, 15 Jun 2020 11:50:57 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07EE8AE045;
-        Mon, 15 Jun 2020 11:50:57 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.1.141])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jun 2020 11:50:56 +0000 (GMT)
-Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
-To:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
- <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
- <f7eb1154-0f52-0f12-129f-2b511f5a4685@linux.ibm.com>
- <6356ba7f-afab-75e1-05ff-4a22b88c610e@linux.ibm.com>
- <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <52cde80c-f33a-dbb7-d0b0-2733b3eb85c3@linux.ibm.com>
-Date:   Mon, 15 Jun 2020 13:50:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 07:52:34 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 074A9C061A0E;
+        Mon, 15 Jun 2020 04:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YnvyX0I5otDowmfgXTPmGop1JAv0+IfTt+WsS0B/4C8=; b=js9BStWAXx3urINYI75BkgItmQ
+        LJW1F8iGAlCkBySvVdTbhU5Siw3MOzyz+BMFTrgOYR42/boDw+sYugHTVbFFLjlxZNHxgIeA5YnLN
+        +etqRTMztWhRuF0XthxQflby46wQMHZngt7filNCVbFZAZZTx3nbWJaRJmeYjxUXMElkxPp9tjyLd
+        iSw7CD5mkyuk8ngH6BFxyBZs43i1dYC5mRT643hz0jRp7KvXRclVDALRfou8lYSwVi2ayhkISvKle
+        jqbaYpwLycOAgQvoMiQOlq4vc+sKpfyyHgcKp4FGrzh8NPX9nx/BdgLpR1H8w+dNMTrVsTPrRyy5n
+        kq0XmTJQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jknfD-0001aX-J6; Mon, 15 Jun 2020 11:52:31 +0000
+Date:   Mon, 15 Jun 2020 04:52:31 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Subject: Re: [PATCH 17/29] docs: hugetlbpage.rst: fix some warnings
+Message-ID: <20200615115231.GR8681@bombadil.infradead.org>
+References: <cover.1592203542.git.mchehab+huawei@kernel.org>
+ <59f1aeae4839528046fd46408081fd70d53e15a6.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxlogscore=999 adultscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0
- spamscore=0 impostorscore=0 suspectscore=0 clxscore=1015
- priorityscore=1501 cotscore=-2147483648 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59f1aeae4839528046fd46408081fd70d53e15a6.1592203542.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 15, 2020 at 08:46:56AM +0200, Mauro Carvalho Chehab wrote:
+> @@ -100,38 +100,49 @@ with a huge page size selection parameter "hugepagesz=<size>".  <size> must
+>  be specified in bytes with optional scale suffix [kKmMgG].  The default huge
+>  page size may be selected with the "default_hugepagesz=<size>" boot parameter.
+>  
+> -Hugetlb boot command line parameter semantics
+> +Hugetlb
+> +	boot command line parameter semantics
 
+That's not right.  This is a single sentence, not something being defined.
 
-On 2020-06-15 05:01, Jason Wang wrote:
-> 
-> On 2020/6/12 下午7:38, Pierre Morel wrote:
->>
->>
->> On 2020-06-12 11:21, Pierre Morel wrote:
->>>
->>>
->>> On 2020-06-11 05:10, Jason Wang wrote:
->>>>
->>>> On 2020/6/10 下午9:11, Pierre Morel wrote:
->>>>> Protected Virtualisation protects the memory of the guest and
->>>>> do not allow a the host to access all of its memory.
->>>>>
->>>>> Let's refuse a VIRTIO device which does not use IOMMU
->>>>> protected access.
->>>>>
->>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>>> ---
->>>>>   drivers/s390/virtio/virtio_ccw.c | 5 +++++
->>>>>   1 file changed, 5 insertions(+)
->>>>>
->>>>> diff --git a/drivers/s390/virtio/virtio_ccw.c 
->>>>> b/drivers/s390/virtio/virtio_ccw.c
->>>>> index 5730572b52cd..06ffbc96587a 100644
->>>>> --- a/drivers/s390/virtio/virtio_ccw.c
->>>>> +++ b/drivers/s390/virtio/virtio_ccw.c
->>>>> @@ -986,6 +986,11 @@ static void virtio_ccw_set_status(struct 
->>>>> virtio_device *vdev, u8 status)
->>>>>       if (!ccw)
->>>>>           return;
->>>>> +    /* Protected Virtualisation guest needs IOMMU */
->>>>> +    if (is_prot_virt_guest() &&
->>>>> +        !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
->>>>> +            status &= ~VIRTIO_CONFIG_S_FEATURES_OK;
->>>>> +
->>>>>       /* Write the status to the host. */
->>>>>       vcdev->dma_area->status = status;
->>>>>       ccw->cmd_code = CCW_CMD_WRITE_STATUS;
->>>>
->>>>
->>>> I wonder whether we need move it to virtio core instead of ccw.
->>>>
->>>> I think the other memory protection technologies may suffer from 
->>>> this as well.
->>>>
->>>> Thanks
->>>>
->>>
->>>
->>> What would you think of the following, also taking into account 
->>> Connie's comment on where the test should be done:
->>>
->>> - declare a weak function in virtio.c code, returning that memory 
->>> protection is not in use.
->>>
->>> - overwrite the function in the arch code
->>>
->>> - call this function inside core virtio_finalize_features() and if 
->>> required fail if the device don't have VIRTIO_F_IOMMU_PLATFORM.
-> 
-> 
-> I think this is fine.
-> 
-
-Thanks,
-I try this.
-
-Regards,
-Pierre
-
-
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
