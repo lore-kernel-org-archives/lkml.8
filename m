@@ -2,98 +2,85 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06284C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4890207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:38:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3FDwr9n"
+	by mail.kernel.org (Postfix) with ESMTP id E46F3207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgFOWiU (ORCPT
+        id S1726543AbgFOWmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFOWiT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:38:19 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DE6C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:19 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id q2so10334425vsr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uB0HaPwXy50jpF9rLf6Va8RuH3FYVyhSdvvt08br5zU=;
-        b=X3FDwr9nZuJCmTh8GMOnY3FLyA7+HVUEP8pR16yq4aXwBt2APUy+WQlUH7WXO0w1yO
-         K9as3TCf0flU3QG2pe9+qgtngay4G9A79ycQaoQ4ShA7R+KHuuMILpAkdyspjt4fvz6b
-         6DskIBmOoDOnE5ANKPtw3rJuuPoEMNorRI16aJuahLNR+o/RI1Ik23dHdVKZ53W8GhiO
-         J1khFgOVTEgwxS3L+AUhna+J37YyTVU2rP6BqVu+sLwyJQw2uq4WV6kfNIneyfyzlld3
-         1owtRTKd697eSOPCJApkFir0AjBBvikH2FdzrTguRztSShfhAO2U/NyeEMkDfaUHROTb
-         wA+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uB0HaPwXy50jpF9rLf6Va8RuH3FYVyhSdvvt08br5zU=;
-        b=nVr5GvlTnoZvgdUbn4OK15Ne+Gnd7OxHUq9g+uC0wF2RTTrY65FSGTrXtzur1/OLDz
-         FwwpDUNZLkl79viQkMjjHXCUt6ih+hXN0YJu6839PZvH7DDXDj0sZRAM5HXoSSrJOHV/
-         hFBBE1YlyV+3FRdFZrHm4NePA4+Z/CLRcmBndvsJ2mSmXmVm4pmobwit8wRTuIiYncf4
-         y4mSBHari6ERTeuCd9sITmdSM5Waw1N5qJQ29QSzEW5q+0wUtCh1ginFJdpfggdauUdK
-         8v0PqwD+S/tDHsVUhi0lz8PSna5eg3ok7p0tWeUI9gg9wmyQKdW++APvR55oKPdmNMKe
-         sRPQ==
-X-Gm-Message-State: AOAM5305QCOv2noHakbumez7IC/rw/2VZAF1t6YkhXp+FheutjSu1Hy8
-        r3YzZdmIYcVEpHKiVF4JdqcGMF6qlE7i1mDtR2c=
-X-Google-Smtp-Source: ABdhPJyqW3jvG9hiix79BPnCB5e/t/YfkMU4SWUOaw1QLk2myo2b7g+Q0rTbLC0jk3VQQRfnIaMWXgzp6zg1dAxZEDU=
-X-Received: by 2002:a67:c511:: with SMTP id e17mr20082140vsk.210.1592260698905;
- Mon, 15 Jun 2020 15:38:18 -0700 (PDT)
+        Mon, 15 Jun 2020 18:42:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726351AbgFOWmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 18:42:21 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8E52074D;
+        Mon, 15 Jun 2020 22:42:20 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 18:42:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, stable@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] proc/bootconfig: Fix to use correct quotes for
+ value
+Message-ID: <20200615184218.752a17fa@oasis.local.home>
+In-Reply-To: <ddb4adb9-bf01-abd4-38dd-d6d064569d6e@infradead.org>
+References: <159197538852.80267.10091816844311950396.stgit@devnote2>
+        <159197539793.80267.10836787284189465765.stgit@devnote2>
+        <20200615151139.5cc223fc@oasis.local.home>
+        <7abefbc81fc6aaefed6bbd2117e7bc97b90babe9.camel@perches.com>
+        <20200615172123.1fe77f3c@oasis.local.home>
+        <ddb4adb9-bf01-abd4-38dd-d6d064569d6e@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-11-jim.cromie@gmail.com> <20200615133740.GG31238@alley>
-In-Reply-To: <20200615133740.GG31238@alley>
-From:   jim.cromie@gmail.com
-Date:   Mon, 15 Jun 2020 16:37:52 -0600
-Message-ID: <CAJfuBxwtbgOFvo3k+_ucwTQkek8mo1f-AF6_u7qKDF6tBBGV+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 10/24] dyndbg: refactor parse_linerange out of ddebug_parse_query
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 7:37 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Sat 2020-06-13 09:57:24, Jim Cromie wrote:
-> > make the code-block reusable to later handle "file foo.c:101-200" etc.
->
-> > This should be a 90%+ code-move, with minimal adaptations; reindent,
-> > and scafolding.
->
-> This sentence sounds like the author did some hidden
-> microoptimizations and potentially broke the code.
-> It made me nervous.
->
-> But in fact, I do not see any real change except that the variable
-> "first" does not longer need to be defined. So, it is just a code move.
->
-> In this case, I usually write:
->
-> This patch does not change the existing behavior.
+On Mon, 15 Jun 2020 15:30:41 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-I see your point.
+> >> Please don't infect kernel sources with that style oddity.  
+> > 
+> > What do you mean? It's already "infected" all over the kernel, (has
+> > been for years!) and I kinda like it. It makes reading variables much
+> > easier on the eyes, and as I get older, that means a lot more ;-)  
+> 
+> Yeah, there is some infection, more in some places than others,
+> but I agree with Joe -- it's not needed or wanted by some of us.
 
-it was code move, reindent, add function wrapper, add call, compile
-I just dont recall if I had to touch anything else, add/move var decls etc.
+We all have preferences. But for code that I need to review, I prefer
+it.
+
+Why would you be bothered by it? Which is easier on the eyes to read
+variables?
+
+ 	struct xbc_node *leaf, *vnode;
+ 	const char *val;
+	char q;
+ 	char *key, *end = dst + size;
+ 	int ret = 0;
+
+or
+
+ 	struct xbc_node *leaf, *vnode;
+ 	char *key, *end = dst + size;
+ 	const char *val;
+	char q;
+ 	int ret = 0;
+
+?
+
+-- Steve
