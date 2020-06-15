@@ -7,44 +7,38 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A652C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E16CB2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16D120707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="DyV8XvSE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="uEPFAeAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgFOH6h (ORCPT
+        id S1728925AbgFOH6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:58:37 -0400
-Received: from www.zeus03.de ([194.117.254.33]:49210 "EHLO mail.zeus03.de"
+        Mon, 15 Jun 2020 03:58:40 -0400
+Received: from www.zeus03.de ([194.117.254.33]:49270 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbgFOH6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:58:34 -0400
+        id S1728875AbgFOH6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:58:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=k1; bh=yWGeIQMB5D8pAO
-        0LP5T88hiOoA5j2pcFLVejSajzQPc=; b=DyV8XvSEKw9fiteLuo6hRnnAfgG9gD
-        vLWIh2CXAeSXS1UmpnaYV11Hh2oukO7EbnVllnIKgy2AlfX91BcMQpFWDjj6V1MM
-        R7NqDxdrYnaP/JQ+3Akz3wwpE+4uc43prWQcr69MzjJ2+8cuUvVajuP4eXmjaGVs
-        hn7Vw4zjXXkr8=
-Received: (qmail 989221 invoked from network); 15 Jun 2020 09:58:28 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 Jun 2020 09:58:28 +0200
-X-UD-Smtp-Session: l3s3148p1@4KfPyhqoDLYgAwDPXwRdAFnN6pRlEuNX
+        :mime-version:content-transfer-encoding; s=k1; bh=L544mEjG3aL5/0
+        34ANdVIlg9WBObk6nWQy0P1oUfcjs=; b=uEPFAeAM6xxRo8E+TVrae+0qOue1qP
+        0BKLSNF5eyASLIfdhlhJtk9Bo52uvJtUubf7EwveIAZ20lQWUPA6HrUWSy1XPg7B
+        Mdqbpn6QjxxW3CzTnWEVuWUAe41/RxaqORP31WiElPoWJFUGMRcz67ediXOQ2NIZ
+        3G7afBJDSdFA4=
+Received: (qmail 989328 invoked from network); 15 Jun 2020 09:58:30 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 Jun 2020 09:58:30 +0200
+X-UD-Smtp-Session: l3s3148p1@2FruyhqoErYgAwDPXwRdAFnN6pRlEuNX
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] x86/platform/intel-mid: convert to use i2c_new_client_device()
-Date:   Mon, 15 Jun 2020 09:58:12 +0200
-Message-Id: <20200615075816.2848-4-wsa+renesas@sang-engineering.com>
+        Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 6/6] i2c: remove deprecated i2c_new_device API
+Date:   Mon, 15 Jun 2020 09:58:15 +0200
+Message-Id: <20200615075816.2848-7-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
 References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
@@ -55,33 +49,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move away from the deprecated API and return the shiny new ERRPTR where
-useful.
+All in-tree users have been converted to the new i2c_new_client_device
+function, so remove this deprecated one.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
 
 I'd like to push it via I2C for 5.8-rc2.
 
- arch/x86/platform/intel-mid/sfi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/i2c/i2c-core-base.c | 25 -------------------------
+ include/linux/i2c.h         |  8 +++-----
+ 2 files changed, 3 insertions(+), 30 deletions(-)
 
-diff --git a/arch/x86/platform/intel-mid/sfi.c b/arch/x86/platform/intel-mid/sfi.c
-index b8f7f193f383..30bd5714a3d4 100644
---- a/arch/x86/platform/intel-mid/sfi.c
-+++ b/arch/x86/platform/intel-mid/sfi.c
-@@ -287,8 +287,8 @@ void intel_scu_devices_create(void)
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index d1f278f73011..26f03a14a478 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -815,31 +815,6 @@ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *inf
+ }
+ EXPORT_SYMBOL_GPL(i2c_new_client_device);
  
- 		adapter = i2c_get_adapter(i2c_bus[i]);
- 		if (adapter) {
--			client = i2c_new_device(adapter, i2c_devs[i]);
--			if (!client)
-+			client = i2c_new_client_device(adapter, i2c_devs[i]);
-+			if (IS_ERR(client))
- 				pr_err("can't create i2c device %s\n",
- 					i2c_devs[i]->type);
- 		} else
+-/**
+- * i2c_new_device - instantiate an i2c device
+- * @adap: the adapter managing the device
+- * @info: describes one I2C device; bus_num is ignored
+- * Context: can sleep
+- *
+- * This deprecated function has the same functionality as
+- * @i2c_new_client_device, it just returns NULL instead of an ERR_PTR in case of
+- * an error for compatibility with current I2C API. It will be removed once all
+- * users are converted.
+- *
+- * This returns the new i2c client, which may be saved for later use with
+- * i2c_unregister_device(); or NULL to indicate an error.
+- */
+-struct i2c_client *
+-i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info)
+-{
+-	struct i2c_client *ret;
+-
+-	ret = i2c_new_client_device(adap, info);
+-	return IS_ERR(ret) ? NULL : ret;
+-}
+-EXPORT_SYMBOL_GPL(i2c_new_device);
+-
+-
+ /**
+  * i2c_unregister_device - reverse effect of i2c_new_*_device()
+  * @client: value returned from i2c_new_*_device()
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index c10617bb980a..b8b8963f8bb9 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -408,7 +408,7 @@ static inline bool i2c_detect_slave_mode(struct device *dev) { return false; }
+  * that are present.  This information is used to grow the driver model tree.
+  * For mainboards this is done statically using i2c_register_board_info();
+  * bus numbers identify adapters that aren't yet available.  For add-on boards,
+- * i2c_new_device() does this dynamically with the adapter already known.
++ * i2c_new_client_device() does this dynamically with the adapter already known.
+  */
+ struct i2c_board_info {
+ 	char		type[I2C_NAME_SIZE];
+@@ -439,13 +439,11 @@ struct i2c_board_info {
+ 
+ 
+ #if IS_ENABLED(CONFIG_I2C)
+-/* Add-on boards should register/unregister their devices; e.g. a board
++/*
++ * Add-on boards should register/unregister their devices; e.g. a board
+  * with integrated I2C, a config eeprom, sensors, and a codec that's
+  * used in conjunction with the primary hardware.
+  */
+-struct i2c_client *
+-i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info);
+-
+ struct i2c_client *
+ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *info);
+ 
 -- 
 2.27.0
 
