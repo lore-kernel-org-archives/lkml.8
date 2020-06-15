@@ -4,103 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F539C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C57C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DEEF20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BADD20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRyoxTnY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHc+o9kg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbgFONjV (ORCPT
+        id S1730494AbgFONkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
+        Mon, 15 Jun 2020 09:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730553AbgFONjU (ORCPT
+        with ESMTP id S1730144AbgFONkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:39:20 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71C0C061A0E;
-        Mon, 15 Jun 2020 06:39:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g12so6819473pll.10;
-        Mon, 15 Jun 2020 06:39:20 -0700 (PDT)
+        Mon, 15 Jun 2020 09:40:39 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA12C061A0E;
+        Mon, 15 Jun 2020 06:40:39 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id q69so3923975vkq.10;
+        Mon, 15 Jun 2020 06:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ah0UfBo3/l6OYZWIRiXA6j4YsIUsHqux+pOpb5M0AY0=;
-        b=sRyoxTnYJw2jFmNQCcAlCZCtb0wgrwD6mfvXsnk5zIU7TxEzSW0kSqswa/6u2er8te
-         ewa8n2nGw0nhdCdQilNylI6vN5qEF80C/CyBZPuIOX5FN/BH/9cDHbOFjhxFgMNVIVYL
-         SWx8xsGbtyARU2UFqXdqcf2DJGTUPrBdErgsapVFGfiIgSRtHAPOHhz5uQV9H/em8yfe
-         8FO3dQjIzhHcjl0OlAfu22FZCxRNqg7L1XjS2DGhCo2iFZiggmiE4zSQScxoZqVVgxu0
-         cJ1v4jYii0Gy6rwACTsfd6uSbLFB4qiStpRMyA+PVZAjSRPNEieKm1qBbHOt/t7Nfwqv
-         AfvQ==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=ElaXRnkNmeRMuixjwpXiTNYKpSD0dU9yi1zQJdGOluc=;
+        b=gHc+o9kgsumsCqjFesloEU/ufyWX3VJyGjRWxqDxYYrVadZMzpQraiPKM4R2zuvFiR
+         RheoNEJW7LqiQmhnQlXxlIC2qFIkde7Qq5se95PpPOwJWDj1AgZOBP7uv2ZG5rSTVXA2
+         KMkipN8Th899KgSJGXhQg+0e91S8wU7ku5NxCDhl2Ax9QZ6nbDYEz68b8DFI7Pnnvn6y
+         wax7l16e4qLJ+rYAzCUHPVFmwiIJ7iuQzoFRp46BdWzHvWNcT/DrbtJ0qRIpjHTJ0Lzp
+         LiJ8ZIUOoO6iyavd6kIh8sWBxmMu7kbg2t7Bu9RJvj5earU32OF2/Sz0wZW8uN/kYHA7
+         4xrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ah0UfBo3/l6OYZWIRiXA6j4YsIUsHqux+pOpb5M0AY0=;
-        b=ineuRsCAM7PtqT+vwROJkFtlmtmlPZ0cK4pIu1AxSr+yxayy9CKESZph07QvAfbh38
-         jT2v7LVQsLLSMw00teaKQEMZm2ryNtYKKOERxTSLYkMZzkwPqD4qZJymy6pZLdTTQpbJ
-         tsmPdpil2cxgExcGktbKe3cXkwu20z/k2oyD+np0PXL1tEG3gbavUowG4PyZoDrX3YVR
-         sMO4egiA69WUj4MUzyNYdJLGsJ6EkjyArlbfvH+Dj2xFjfnfI8H2Ve5jwey0BwXWRl8X
-         0+oPdzIqG5gIcB1q+YYNvX5Tze0aVbmK1TNQxPmluFTEHlAkmKAR9gGzb4Ui52ZLpSFc
-         t79Q==
-X-Gm-Message-State: AOAM531HtGO8fnQHhLBKwuqSMsNUFFTxO44LQ09eim9qb3E+T+Ha/qfK
-        sh2eswKGA6CzLQGmLl9zTVYkjNzuOFDRadvBXauNlIts1B8=
-X-Google-Smtp-Source: ABdhPJwe1BbP2x4NoKm3Y3Nenvcs1PIHbm8BsXJg3nxaVSU8wov2jEBcJw5uT1/kfK1ZnyZI4sMlWjPhNaziBXc760k=
-X-Received: by 2002:a17:902:b206:: with SMTP id t6mr21713377plr.262.1592228360257;
- Mon, 15 Jun 2020 06:39:20 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=ElaXRnkNmeRMuixjwpXiTNYKpSD0dU9yi1zQJdGOluc=;
+        b=KEQG2MJnYcTh+X9PVMQDHFjU1xd5IqULvPweUJ+CtCF5FL+h/+1jdyA66oFBJF5jpT
+         dgbsyNEqxFJReMPVTMGfN3G7KGNcz8Zvxbm579MRZphhNgwQkdVB080M2XYMN1mxZVRE
+         wfeEa8q5J+Q/7LP4ZoYXrHuUdw3z111nLlb+Yb2yUI2E8FQNGz9fAX8n+RB/PBsHUJiU
+         2IpXEKBOVTpznaYkzl10GpI21kjmwk3h7XHXkuwjGeu29Lz/EzcGH9wwBKhogWYPbqeX
+         +2AFLcpyBB4CaOS0XIr/EKDhO0KmwXe0unYV/WxCPJntdvs6LMvn6jEVAYwYvq2UkhxH
+         6c7A==
+X-Gm-Message-State: AOAM530xz9GWY1nj9Cz77Cfqi2VDsFIeDrosmE/+T/kjaATmlVNG1bbS
+        U7fizvf6YenmeXo2fq6pBhIST2zkrkxzEmPk9EM=
+X-Google-Smtp-Source: ABdhPJzMsRmgLZgO5xdVqsMeaOp9UyayolhyawQghYl9NToy2NJyfX8dqzUamTlqtF5+WFy1lmHCyClZU5ofEEU+LkQ=
+X-Received: by 2002:a1f:de43:: with SMTP id v64mr17099201vkg.13.1592228438394;
+ Mon, 15 Jun 2020 06:40:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1592227348.git.jan.kiszka@siemens.com>
-In-Reply-To: <cover.1592227348.git.jan.kiszka@siemens.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 15 Jun 2020 16:39:07 +0300
-Message-ID: <CAHp75VeudX2M0Fo5=m3UA874mighn6dEMaQkF5TOZ6rqGrvDSw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] gpio: Add support for the PCAL9535
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+References: <cover.1592135316.git.dsterba@suse.com> <CAHk-=whbO-6zmwfQaX2=cDfsq_sN1PZ6_CAbqLgw3DUptnFrPg@mail.gmail.com>
+ <20200615125701.GY27795@twin.jikos.cz> <20200615132632.GA27848@infradead.org>
+In-Reply-To: <20200615132632.GA27848@infradead.org>
+Reply-To: fdmanana@gmail.com
+From:   Filipe Manana <fdmanana@gmail.com>
+Date:   Mon, 15 Jun 2020 14:40:26 +0100
+Message-ID: <CAL3q7H52qbmGdoq4U6ChZrqFBz+ufpfqJoRZBNhWnJVaAeKm=g@mail.gmail.com>
+Subject: Re: [GIT PULL] Btrfs updates for 5.8, part 2
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     dsterba@suse.cz, Linus Torvalds <torvalds@linux-foundation.org>,
+        David Sterba <dsterba@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 4:22 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+On Mon, Jun 15, 2020 at 2:29 PM Christoph Hellwig <hch@infradead.org> wrote=
+:
 >
-> Changes in v3:
->  - extend also I2C table
->  - tag "Datasheet:" in commit log
+> On Mon, Jun 15, 2020 at 02:57:01PM +0200, David Sterba wrote:
+> > On Sun, Jun 14, 2020 at 09:50:17AM -0700, Linus Torvalds wrote:
+> > > On Sun, Jun 14, 2020 at 4:56 AM David Sterba <dsterba@suse.com> wrote=
+:
+> > > >
+> > > > Reverts are not great, but under current circumstances I don't see
+> > > > better options.
+> > >
+> > > Pulled. Are people discussing how to make iomap work for everybody?
+> > > It's a bit sad if we can't have the major filesystems move away from
+> > > the old buffer head interfaces to a common more modern one..
+> >
+> > Yes, it's fixable and we definitely want to move to iomap. The direct t=
+o
+> > buffered fallback would fix one of the problems, but this would also
+> > mean that xfs would start doing that. Such change should be treated mor=
+e
+> > like a feature development than a bugfix, imposed by another filesystem=
+,
+> > and xfs people rightfully complained.
+>
+> We can trivially key that off a flag at least for 5.8.  I suspect the
+> fallback actually is the right thing for XFS in the long run for that
+> particular case.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Thanks!
+We also have another regression (a deadlock) [1] introduced by the patchset=
+.
+I haven't looked into detail to figure out if it can be completely
+solved in btrfs or if it would need a change on iomap.
+Goldwyn was looking into it, but I don't know if he made any progress.
 
->
-> Changes in v2:
->  - add dt binding update
->
-> Jan
->
-> Jan Kiszka (2):
->   dt-bindings: gpio: pca953x: add nxp,pcal9535
->   gpio: pca953x: Add support for the PCAL9535
->
->  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
->  drivers/gpio/gpio-pca953x.c                             | 2 ++
->  2 files changed, 3 insertions(+)
->
-> --
-> 2.26.2
->
+[1] https://lore.kernel.org/linux-btrfs/CAL3q7H4F9iQJy3tgwZrWOKwenAnnn7oSth=
+QZUMEJ_vWx3WE3WQ@mail.gmail.com/#t
 
+--=20
+Filipe David Manana,
 
--- 
-With Best Regards,
-Andy Shevchenko
+=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
+ right.=E2=80=9D
