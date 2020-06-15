@@ -2,211 +2,144 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6979C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A575C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94692068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4859D206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:28:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="axkMGOdv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgFOH1F (ORCPT
+        id S1728581AbgFOH22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:27:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4099 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728380AbgFOH1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:27:04 -0400
-IronPort-SDR: ltgMgBL5FwXYyGaAbwwilhIwXWD0l7vN2CKqNkXpkUxyYk0/qNWooOn/pazMAgPhTah9vMFp7o
- GsxhwVRENt7g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 00:27:03 -0700
-IronPort-SDR: k23d8mGdhIi8mE0zWaRIwZT4SBlZv6wGQ1xZtWJSm5Ma7ijIyA7cY9175hQZmMK/PXEW6IPbSh
- BQEWAnzl3JPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="382434853"
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.6.47]) ([10.238.6.47])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2020 00:27:00 -0700
-Subject: Re: [LKP] [sched/fair] 070f5e860e: reaim.jobs_per_min -10.5%
- regression
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200319023819.GO11705@shao2-debian>
- <20200612110616.20264-1-hdanton@sina.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Message-ID: <90f4036d-bb16-af67-8776-a2cbe67dfe7f@linux.intel.com>
-Date:   Mon, 15 Jun 2020 15:26:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 03:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728399AbgFOH2Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:28:25 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C916C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:28:24 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g10so13505588wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:28:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=9ToGcomrsNJ5IsfmhCaE8bj4p8OLeJAdAKZdbE/NfmE=;
+        b=axkMGOdv9xLipRtu44iTU38CgJZWN3aUB1wusgLSnk2LzS4fkQWhlzyqCR3D23JqE+
+         wsp9mE7nsz0zDlxmsm8gh5Dg63hg4kIhHDI3RJhwcUqyUruLhbtuj8M8WMxU1djpyGCd
+         c184Q1pfdDkEui78I9h8YHkgfEsr4KdzG05EU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=9ToGcomrsNJ5IsfmhCaE8bj4p8OLeJAdAKZdbE/NfmE=;
+        b=uluA1tNVInlMDO052Liipt+MR0TJbTKkm7if5eh60YwHz9QaWkeIKipWhUDszOl1h/
+         WXyO0x9wJZZzXSMpRQZPNsJqkZkbFpU4sFGB314MX+m5/b8Zn8QoPZCiuau2YlWZB09t
+         LG8S5UEJ7H+kD247veL7jS5I/Ranh/UD/B+Pnc9DaMymQCaHDPMcsQN4w6oxblA+BHzo
+         6MvzT2BJZMlr6SE7+DiecPyOUUX2CzUg4B4qQ6DRK/z7Biecf+kDHoHKbZAoB0Dm+Pm7
+         IcTva1lnOtv0Q0E+PXJebODHAkC9K4ErBog3vmdqzzhURsYomKBu8xWzS/KR3yARwC74
+         QLBQ==
+X-Gm-Message-State: AOAM530XWXJYveVMPsFks1Vdir5rNaPwOnbloue2QO+VS5NBBR8S0x5T
+        TqxHd6ILKgR2gjrlBikHeTibVTuTjSvzjZXnZ3Ye
+X-Google-Smtp-Source: ABdhPJzNCm18ZlyzfvaKvuSBWE7doCfmV4oGQgC7ad2B8XbLG8+xVEGL+6XoLxHvsCiFmGssQL7rpcOX9LFTbvrjAZk=
+X-Received: by 2002:a1c:f608:: with SMTP id w8mr11354791wmc.78.1592206102980;
+ Mon, 15 Jun 2020 00:28:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200612110616.20264-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Mon, 15 Jun 2020 00:28:11 -0700
+Message-ID: <CAOnJCUJ_rA6TW0QgmDkXnrMoyKKMBygzs1sFQukuJ3mAF3Cu1w@mail.gmail.com>
+Subject: mm lock issue while booting Linux on 5.8-rc1 for RISC-V
+To:     linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Bjorn Topel <bjorn.topel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+I encountered the following issue while booting 5.8-rc1 on Qemu for RV64.
+I added additional dump_stack and observed that it's happening in bpf free path.
+It happens always if CONFIG_DEBUG_VM is enabled. VM_BUG_ON_MM is
+compiled away without that.
+------------------------------------------------------------------------
+forked to background, child pid 113
+[   10.328850] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted
+5.8.0-rc1-dirty #732
+[   10.331739] Workqueue: events bpf_prog_free_deferred
+[   10.334133] Call Trace:
+[   10.338039] [<ffffffe000202698>] walk_stackframe+0x0/0xa4
+[   10.339988] [<ffffffe000202880>] show_stack+0x2e/0x3a
+[   10.340902] [<ffffffe00047074c>] dump_stack+0x72/0x8c
+[   10.341451] [<ffffffe0002db4ce>] mmap_assert_locked.part.13+0x14/0x1c
+[   10.342131] [<ffffffe0002db330>] walk_page_range_novma+0x0/0x4e
+[   10.342973] [<ffffffe000204f94>] set_direct_map_invalid_noflush+0x66/0x6e
+[   10.343917] [<ffffffe0002e0706>] __vunmap+0xe8/0x212
+[   10.344680] [<ffffffe0002e0882>] __vfree+0x22/0x6e
+[   10.345270] [<ffffffe0002e0902>] vfree+0x34/0x56
+[   10.345834] [<ffffffe00027d752>] __bpf_prog_free+0x2c/0x36
+[   10.346529] [<ffffffe0002801a2>] bpf_prog_free_deferred+0x74/0x8a
+[   10.347394] [<ffffffe000219c70>] process_one_work+0x13a/0x272
+[   10.348239] [<ffffffe00021a4b4>] worker_thread+0x50/0x2e4
+[   10.348900] [<ffffffe00021ed98>] kthread+0xfc/0x10a
+[   10.349470] [<ffffffe0002013da>] ret_from_exception+0x0/0xc
+[   10.354405] mm ffffffe001018600 mmap 0000000000000000 seqnum 0 task_size 0
+[   10.354405] get_unmapped_area 0000000000000000
+[   10.354405] mmap_base 0 mmap_legacy_base 0 highest_vm_end 0
+[   10.354405] pgd ffffffe001074000 mm_users 2 mm_count 1
+pgtables_bytes 8192 map_count 0
+[   10.354405] hiwater_rss 0 hiwater_vm 0 total_vm 0 locked_vm 0
+[   10.354405] pinned_vm 0 data_vm 0 exec_vm 0 stack_vm 0
+[   10.354405] start_code ffffffe000200000 end_code ffffffe00084acc2
+start_data 0 end_data ffffffe00106dfe4
+[   10.354405] start_brk 0 brk ffffffe0010bd6d0 start_stack 0
+[   10.354405] arg_start 0 arg_end 0 env_start 0 env_end 0
+[   10.354405] binfmt 0000000000000000 flags 0 core_state 0000000000000000
+[   10.354405] ioctx_table 0000000000000000
+[   10.354405] exe_file 0000000000000000
+[   10.354405] tlb_flush_pending 0
+[   10.354405] def_flags: 0x0()
+[   10.369325] ------------[ cut here ]------------
+[   10.370763] kernel BUG at include/linux/mmap_lock.h:81!
+[   10.375235] Kernel BUG [#1]
+[   10.377198] Modules linked in:
+[   10.378931] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted 5.8.0-rc1-dirty #732
+[   10.380179] Workqueue: events bpf_prog_free_deferred
+[   10.381270] epc: ffffffe0002db4d4 ra : ffffffe0002db4d4 sp : ffffffe3eaea7c70
+[   10.382561]  gp : ffffffe00106d950 tp : ffffffe3ef752f80 t0 :
+ffffffe0010836e8
+[   10.383996]  t1 : 0000000000000064 t2 : 0000000000000000 s0 :
+ffffffe3eaea7c90
+[   10.385119]  s1 : ffffffe001018600 a0 : 0000000000000289 a1 :
+0000000000000020
+[   10.386099]  a2 : 0000000000000005 a3 : 0000000000000000 a4 :
+ffffffe001012758
+[   10.387294]  a5 : 0000000000000000 a6 : 0000000000000102 a7 :
+0000000000000006
+[   10.388265]  s2 : ffffffe3f00674c0 s3 : ffffffe00106e108 s4 :
+ffffffe00106e100
+[   10.389250]  s5 : ffffffe00106e908 s6 : 0000000000000000 s7 :
+6db6db6db6db6db7
+[   10.390272]  s8 : 0000000000000001 s9 : ffffffe00021a4f8 s10:
+ffffffffffffffff
+[   10.391293]  s11: ffffffe3f0066600 t3 : 000000000001a7a8 t4 :
+000000000001a7a8
+[   10.392314]  t5 : 0000000000000000 t6 : ffffffe00107b76b
+[   10.393096] status: 0000000000000120 badaddr: 0000000000000000
+cause: 0000000000000003
+[   10.397755] ---[ end trace 861659596ac28841 ]---
+---------------------------------------------------------------------------------------------------
 
+I haven't had the chance to bisect to figure out which commit caused
+the issue. Just wanted
+to check if it is a known issue already.
 
-On 6/12/2020 7:06 PM, Hillf Danton wrote:
-> 
-> On Fri, 12 Jun 2020 14:36:49 +0800 Xing Zhengjun wrote:
->> Hi Vincent,
->>
->>     We test the regression still existed in v5.7, do you have time to
->> look at it? Thanks.
->>
->>   
->> =========================================================================================
->> tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
->>   
->> lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
->>
->> commit:
->>     9f68395333ad7f5bfe2f83473fed363d4229f11c
->>     070f5e860ee2bf588c99ef7b4c202451faa48236
->>     v5.7
->>
->> 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7
->> ---------------- --------------------------- ---------------------------
->>            %stddev     %change         %stddev     %change         %stddev
->>                \          |                \          |                \
->>         0.69           -10.3%       0.62            -9.1%       0.62     reaim.child_systime
->>         0.62            -1.0%       0.61            +0.5%       0.62     reaim.child_utime
->>        66870           -10.0%      60187            -7.6%      61787     reaim.jobs_per_min
->>        16717           -10.0%      15046            -7.6%      15446     reaim.jobs_per_min_child
->>        97.84            -1.1%      96.75            -0.4%      97.43     reaim.jti
->>        72000           -10.8%      64216            -8.3%      66000     reaim.max_jobs_per_min
->>         0.36           +10.6%       0.40            +7.8%       0.39     reaim.parent_time
->>         1.58 ą  2%     +71.0%       2.70 ą  2%     +26.9%       2.01 ą  2%  reaim.std_dev_percent
->>         0.00 ą  5%    +110.4%       0.01 ą  3%     +48.8%       0.01 ą  7%  reaim.std_dev_time
->>        50800            -2.4%      49600            -1.6%      50000     reaim.workload
->>
->>
->> On 3/19/2020 10:38 AM, kernel test robot wrote:
->>> Greeting,
->>>
->>> FYI, we noticed a -10.5% regression of reaim.jobs_per_min due to commit:
->>>
->>>
->>> commit: 070f5e860ee2bf588c99ef7b4c202451faa48236 ("sched/fair: Take into account runnable_avg to classify group")
->>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->>>
->>> in testcase: reaim
->>> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
->>> with following parameters:
->>>
->>> 	runtime: 300s
->>> 	nr_task: 100%
->>> 	test: five_sec
->>> 	cpufreq_governor: performance
->>> 	ucode: 0x21
->>>
->>> test-description: REAIM is an updated and improved version of AIM 7 benchmark.
->>> test-url: https://sourceforge.net/projects/re-aim-7/
-> 
-> Hi Xing
-> 
-> After 070f5e860ee2 let's treat runnable the same way as util on
-> comparing capacity in the assumption that
-> (125 + 110 + 117) / 3 = 117 accounts for 105 within margin of error
-> before any other proposal with some more reasons.
-> 
-> thanks
-> Hillf
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8215,12 +8215,8 @@ group_has_capacity(unsigned int imbalanc
->   	if (sgs->sum_nr_running < sgs->group_weight)
->   		return true;
->   
-> -	if ((sgs->group_capacity * imbalance_pct) <
-> -			(sgs->group_runnable * 100))
-> -		return false;
-> -
-> -	if ((sgs->group_capacity * 100) >
-> -			(sgs->group_util * imbalance_pct))
-> +	if ((sgs->group_capacity * 100) > (sgs->group_util * imbalance_pct) &&
-> +	    (sgs->group_capacity * 100) > (sgs->group_runnable * imbalance_pct))
->   		return true;
->   
->   	return false;
-> @@ -8240,12 +8236,8 @@ group_is_overloaded(unsigned int imbalan
->   	if (sgs->sum_nr_running <= sgs->group_weight)
->   		return false;
->   
-> -	if ((sgs->group_capacity * 100) <
-> -			(sgs->group_util * imbalance_pct))
-> -		return true;
-> -
-> -	if ((sgs->group_capacity * imbalance_pct) <
-> -			(sgs->group_runnable * 100))
-> +	if ((sgs->group_capacity * 100) < (sgs->group_util * imbalance_pct) ||
-> +	    (sgs->group_capacity * 100) < (sgs->group_runnable * imbalance_pct))
->   		return true;
->   
->   	return false;
-> 
-
-I apply the patch based on v5.7, the regression still existed.
-
-=========================================================================================
-tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
- 
-lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
-
-commit:
-   9f68395333ad7f5bfe2f83473fed363d4229f11c
-   070f5e860ee2bf588c99ef7b4c202451faa48236
-   v5.7
-   6b33257768b8dd3982054885ea310871be2cfe0b (Hillf's patch)
-
-9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7 
-6b33257768b8dd3982054885ea3
----------------- --------------------------- --------------------------- 
----------------------------
-          %stddev     %change         %stddev     %change 
-%stddev     %change         %stddev
-              \          |                \          |                \ 
-         |                \
-       0.69           -10.3%       0.62            -9.1%       0.62 
-      -10.1%       0.62        reaim.child_systime
-       0.62            -1.0%       0.61            +0.5%       0.62 
-       +0.3%       0.62        reaim.child_utime
-      66870           -10.0%      60187            -7.6%      61787 
-       -8.3%      61305        reaim.jobs_per_min
-      16717           -10.0%      15046            -7.6%      15446 
-       -8.3%      15326        reaim.jobs_per_min_child
-      97.84            -1.1%      96.75            -0.4%      97.43 
-       -0.5%      97.37        reaim.jti
-      72000           -10.8%      64216            -8.3%      66000 
-       -8.3%      66000        reaim.max_jobs_per_min
-       0.36           +10.6%       0.40            +7.8%       0.39 
-       +9.4%       0.39        reaim.parent_time
-       1.58 ±  2%     +71.0%       2.70 ±  2%     +26.9%       2.01 ± 
-2%     +33.2%       2.11        reaim.std_dev_percent
-       0.00 ±  5%    +110.4%       0.01 ±  3%     +48.8%       0.01 ± 
-7%     +65.3%       0.01 ±  3%  reaim.std_dev_time
-      50800            -2.4%      49600            -1.6%      50000 
-       -1.8%      49866        reaim.workload
-
-
-
--- 
-Zhengjun Xing
+Regards,
+Atish
