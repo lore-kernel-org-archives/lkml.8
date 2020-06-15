@@ -2,103 +2,89 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ABAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03135C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8835620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592217694;
-	bh=lXL7rej+TefHWIFaMbpYGDc3wQKLdDlDqma+LFXrdjc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nJGeKB4Cjv6Rz61+AmwrYv8Tl+L2hJLkE/h4W4Cy7uoMvpj8pvEt7iFPS6cnkHHbT
-	 uEvpkNjHXGgmCDdql8tDacvspk5nKfEqmDlZYQnMqX3s/frjhSmI2DuEqrge9Z1V95
-	 EJ6CNRpD6U7XCdWOtt0F78Vu4ktLWwzHmEKfTvg0=
+	by mail.kernel.org (Postfix) with ESMTP id C7C3920679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:42:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="esgDsx5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgFOKld (ORCPT
+        id S1729580AbgFOKmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728860AbgFOKlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:41:31 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 15 Jun 2020 06:42:36 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57701 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728860AbgFOKme (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:42:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592217753;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jPHbnpsP7nJsHwqhoLDcDNp33N50coO4YGuyYQ7o3xw=;
+        b=esgDsx5j9qnPbmgrQUogsCB8lEMdTuWVL3M7D/74EW6K8qpCOrC6JPkCzTdLDf1NmSDA8r
+        DnEIP7RlITarAP7clo4oV6t52dSCzY6sXyM/TzHAMYVGJAllePWP2cAt0XGFeet9yugxVS
+        CSylEsBlgjsmYQz0f2XYukaWPSgLk0Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-314-T5eMHHQzOJucP76Svdhvjg-1; Mon, 15 Jun 2020 06:42:31 -0400
+X-MC-Unique: T5eMHHQzOJucP76Svdhvjg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA7F620739;
-        Mon, 15 Jun 2020 10:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592217690;
-        bh=lXL7rej+TefHWIFaMbpYGDc3wQKLdDlDqma+LFXrdjc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OGOq9Im6cBsPVdtab/7Bgg7k4nhtsakjRiFqAJH/nIHTR+S760HE3LzNcXvix+VVR
-         d4OnimzP05MbT5sl0bcWSXL6vVce5Tm49RPajy7+7rE4NuB+3mvV4I/NU//PfBp1JQ
-         KNKlDBfAYXmukmFvmA7JqjMKni9JUpl7+MrfoJro=
-Received: by mail-ot1-f44.google.com with SMTP id g7so12702248oti.13;
-        Mon, 15 Jun 2020 03:41:30 -0700 (PDT)
-X-Gm-Message-State: AOAM530zqM/RyOQNQrwOu4IQ4nkajsV9173DqD2JMhzHoKZV7WOwrSiQ
-        VauMBIw11A6AbJDwNHv5BxgQkzAOvAZACcgbBxM=
-X-Google-Smtp-Source: ABdhPJxtAfnS7BRUD3aYiVQIBX9PUBhev5wuEg2dXY9GecvgeYwoq047fbdU9i5Ndvc9V3w28MipNmxK5kaJ1dHIZ+E=
-X-Received: by 2002:a9d:5a12:: with SMTP id v18mr2978751oth.90.1592217690079;
- Mon, 15 Jun 2020 03:41:30 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B46C106B242;
+        Mon, 15 Jun 2020 10:42:30 +0000 (UTC)
+Received: from T590 (ovpn-12-247.pek2.redhat.com [10.72.12.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9264F768DC;
+        Mon, 15 Jun 2020 10:42:24 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 18:42:18 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] blk-mq: Remove redundant 'return' statement
+Message-ID: <20200615104218.GB19764@T590>
+References: <a93d3ae2b37c01bc1d30b0eb229241b81405e6ad.1592212094.git.baolin.wang@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200604022031.164207-1-masahiroy@kernel.org> <20200604022031.164207-2-masahiroy@kernel.org>
- <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 15 Jun 2020 12:41:18 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFhULbche0kbGr+mHofOYBU2WT8i7Bgx-qgz6Cp6AE8ow@mail.gmail.com>
-Message-ID: <CAMj1kXFhULbche0kbGr+mHofOYBU2WT8i7Bgx-qgz6Cp6AE8ow@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] efi/libstub: refactor Makefile to not use lib-y syntax
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Atish Patra <atish.patra@wdc.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a93d3ae2b37c01bc1d30b0eb229241b81405e6ad.1592212094.git.baolin.wang@linux.alibaba.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 at 12:26, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Thu, 4 Jun 2020 at 04:20, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Documentation/kbuild/makefiles.rst says:
-> >
-> >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
-> >
-> > This is because lib-y is inteded to be hooked to KBUILD_VMLINUX_LIBS,
-> > which is passed down to scripts/link-vmlinux.sh.
-> >
-> > Besides, lib-y is not so interesting because objects from lib-y are
-> > mostly linked in normal usecases. For example, lib-y only saves 364
-> > bytes for x86_64_defconfig. You can see the details in commit
-> > 7273ad2b08f8 ("kbuild: link lib-y objects to vmlinux forcibly when
-> > CONFIG_MODULES=y").
-> >
-> > I think we should consider to deprecate lib-y syntax at some point
-> > because we should aim for better solution like dead code elimination
-> > or LTO.
-> >
-> > Other than lib/ and arch/*/lib, this Makefile is the only user of
-> > lib-y. Replace lib-y with a custom rule.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
->
-> Series queued in efi/urgent.
->
+On Mon, Jun 15, 2020 at 05:12:23PM +0800, Baolin Wang wrote:
+> The blk_mq_all_tag_iter() is a void function, thus remove
+> the redundant 'return' statement in this function.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>  block/blk-mq-tag.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+> index 44f3d09..ae722f8 100644
+> --- a/block/blk-mq-tag.c
+> +++ b/block/blk-mq-tag.c
+> @@ -376,7 +376,7 @@ static void __blk_mq_all_tag_iter(struct blk_mq_tags *tags,
+>  void blk_mq_all_tag_iter(struct blk_mq_tags *tags, busy_tag_iter_fn *fn,
+>  		void *priv)
+>  {
+> -	return __blk_mq_all_tag_iter(tags, fn, priv, BT_TAG_ITER_STATIC_RQS);
+> +	__blk_mq_all_tag_iter(tags, fn, priv, BT_TAG_ITER_STATIC_RQS);
+>  }
 
-Actually, I am seeing this now
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-/home/ard/linux/scripts/Makefile.build:421: warning: overriding recipe
-for target 'drivers/firmware/efi/libstub/lib.a'
-/home/ard/linux/drivers/firmware/efi/libstub/Makefile:131: warning:
-ignoring old recipe for target 'drivers/firmware/efi/libstub/lib.a'
+-- 
+Ming
+
