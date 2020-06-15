@@ -2,501 +2,143 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C45DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60AD92071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDE920644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="liAhBnSd"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="n5s0/8gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbgFOO5X (ORCPT
+        id S1730870AbgFOO52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:57:23 -0400
-Received: from m12-14.163.com ([220.181.12.14]:60403 "EHLO m12-14.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730405AbgFOO5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:57:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=fz1sx
-        ExSGfT8zoQQAUe3tEQT+qhQk5045AMKTrFcZSM=; b=liAhBnSdyoaYN4dL/3F/X
-        dzZAEX5hJZ9mMxlziACa9fgYphyFecNMq50J7QS889bIm0xzDehhQZ1S2qH1PWfU
-        k9irnsIlvPOFUQyTPqepSR21S65XX56lzDwAXvatwuxplQwov88R8cA75UNs8oXF
-        BYq2Zlw9/GOShI6MBi7Kxs=
-Received: from SZA191027643-PM.china.huawei.com (unknown [223.74.115.177])
-        by smtp10 (Coremail) with SMTP id DsCowACXn9s7jOdepjg4Gw--.52954S4;
-        Mon, 15 Jun 2020 22:57:01 +0800 (CST)
-From:   yunaixin03610@163.com
-To:     linux-kernel@vger.kernel.org
-Cc:     yunaixin <yunaixin@huawei.com>
-Subject: [PATCH 2/5] Huawei BMA: Adding Huawei BMA driver: host_cdev_drv
-Date:   Mon, 15 Jun 2020 22:56:55 +0800
-Message-Id: <20200615145658.956-3-yunaixin03610@163.com>
-X-Mailer: git-send-email 2.26.2.windows.1
-In-Reply-To: <20200615145658.956-1-yunaixin03610@163.com>
-References: <20200615145658.956-1-yunaixin03610@163.com>
+        Mon, 15 Jun 2020 10:57:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730701AbgFOO50 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:57:26 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E33C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:57:26 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l17so15950116qki.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:57:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=08f0E4d1bwVGcK92LZLgsimdGdtdg5Nb5qVsheDv8nM=;
+        b=n5s0/8gxWICXkiIRyxsPMOCPRZJrLxXd4xZAL/CxAaJdn6OJHMv5ok3hbyF39WBwID
+         Rgx4dhjj2T8iwG1zh5nMhNczVyUNWi3b0yoPtk3BXo6bYTg60Tdtl95IQcA0isMjNrzH
+         bswHZN2ZrAyBQE2IacANevmn4h2KU9dYxKk8qGUlfmZcLRuk2ZK3Rwt309WQeZKw7f1p
+         p8iDuj5QM8QGdiV062HLEk6tSHaF5qDPTwYCVq3g3vKuWfXAqKVPhWo72PEY/QfUSIWu
+         MWvb1tCEcGg5IuP9v+zzp/QzXsbJdx3xGBbNCyGSFghyCtg1QSr/tB3myQIE00ReaG1B
+         SPKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=08f0E4d1bwVGcK92LZLgsimdGdtdg5Nb5qVsheDv8nM=;
+        b=lf+7Ji64IHufZhkV37ypgEw84mBRo5nkLBOKhkYdcCWp4O8u9Ul4dny6ytwEXn+xsV
+         tv9Zse4t7nnJhAMCDL4IA61tJsQ60c05PgztdC5Em0PoxyWwoM4dtDvg2qP6mroKHiz9
+         0i7LRvqijrzIW6FXHZ+58J6gbuYA9fcK6l6+OCRoDcyfUDw+B3YiryHkoR6ywDPCQ8F3
+         sIIh0oXSj3nmT7lrap4Y2OPgSZd8kRMCJJexAv+VR2JzNGdlXqJRbgFhUQPY4M2XRfQt
+         6Ksi7SvjOub9SGugzl55dGkccPXbqceotjtYbSEvw0LKEAwXd89Q3tRZ61rnIq2k3M5e
+         WF2g==
+X-Gm-Message-State: AOAM530ZdhGbMSbYd33B86SsdIFW2ht9/jC/DADvDtNy+YZxX7SszMpx
+        qFftldYraVM79XUL0aPs+JKGKA==
+X-Google-Smtp-Source: ABdhPJxpOsry1yNx7TCREH06ffr7AfMA7W0HDZ5XSNfs6PHbV7y78O6dcMIEw2EDUQIlx14femYuPg==
+X-Received: by 2002:a37:4656:: with SMTP id t83mr15544636qka.126.1592233045781;
+        Mon, 15 Jun 2020 07:57:25 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e53sm12573062qtk.50.2020.06.15.07.57.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 07:57:25 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 10:57:18 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Subject: Re: [PATCH 0/8] x86/entry: KCSAN/KASAN/UBSAN vs noinstr
+Message-ID: <20200615145718.GA1091@lca.pw>
+References: <20200604102241.466509982@infradead.org>
+ <CANpmjNPEXdGV-ZRYrVieJJsA01QATH+1vUixirocwKGDMsuEWQ@mail.gmail.com>
+ <CANpmjNP2ayM6Oehw08yFM4+5xTjXWcCT7P3u7FL=cCMxFJNkXw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DsCowACXn9s7jOdepjg4Gw--.52954S4
-X-Coremail-Antispam: 1Uf129KBjvAXoW3trW5XF1xZF13WrWUJw18Xwb_yoW8GryDKo
-        ZaqrnxAr1rGw4Yyw1Y9rn5ArWUu3W3A3Z8Cr4rWFn3Wa15J3WrXw12krW3X3W7ur4YkF4r
-        Za4DXrWrGayFqrWkn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-        AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUxyxRUUUUU
-X-Originating-IP: [223.74.115.177]
-X-CM-SenderInfo: 51xqtxx0lqijqwrqqiywtou0bp/xtbBZB1E5lQHJzLfmAAAsa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNP2ayM6Oehw08yFM4+5xTjXWcCT7P3u7FL=cCMxFJNkXw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yunaixin <yunaixin@huawei.com>
+On Mon, Jun 15, 2020 at 12:07:34PM +0200, 'Marco Elver' via kasan-dev wrote:
+> On Thu, 4 Jun 2020 at 13:01, Marco Elver <elver@google.com> wrote:
+> >
+> > On Thu, 4 Jun 2020 at 12:25, Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > Hai,
+> > >
+> > > Here's the remaining few patches to make KCSAN/KASAN and UBSAN work with noinstr.
+> >
+> > Thanks for assembling the series!
+> >
+> > For where it's missing (1,2,3 and last one):
+> >
+> > Acked-by: Marco Elver <elver@google.com>
+> 
+> Where was this series supposed to go? I can't find it on any tree yet.
+> 
+> How urgent is this? Boot-test seems fine without this, but likely
+> doesn't hit the corner cases. Syzbot will likely find them, and if we
+> noticeably end up breaking various sanitizers without this, I'd
+> consider this urgent.
 
-The BMA software is a system management software offered by Huawei. It supports the status monitoring, performance monitoring, and event monitoring of various components, including server CPUs, memory, hard disks, NICs, IB cards, PCIe cards, RAID controller cards, and optical modules.
+Today's linux-next had a lot of those with this .config,
 
-This host_cdev_drv driver is one of the communication driver used by BMA software. It depends on the host_edma_drv driver. The host_cdev_drv driver will create 4 char devices(hwbmc0, hwbmc1, hwbmc2, hwbmc3) once loaded. These char devices offer interfaces, including open, close, read, write and poll, to upper level applications. BMA uses them to send/receive ipmi commons to/from BMC.
+https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
 
-Signed-off-by: yunaixin <yunaixin@huawei.com>
----
- drivers/net/ethernet/huawei/bma/Kconfig       |   3 +-
- drivers/net/ethernet/huawei/bma/Makefile      |   3 +-
- .../net/ethernet/huawei/bma/cdev_drv/Kconfig  |  11 +
- .../net/ethernet/huawei/bma/cdev_drv/Makefile |   2 +
- .../ethernet/huawei/bma/cdev_drv/bma_cdev.c   | 369 ++++++++++++++++++
- 5 files changed, 386 insertions(+), 2 deletions(-)
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c
+Wondering if this patchset will cure them all?
 
-diff --git a/drivers/net/ethernet/huawei/bma/Kconfig b/drivers/net/ethernet/huawei/bma/Kconfig
-index 1a92c1dd83f3..12979128fa9d 100644
---- a/drivers/net/ethernet/huawei/bma/Kconfig
-+++ b/drivers/net/ethernet/huawei/bma/Kconfig
-@@ -1 +1,2 @@
--source "drivers/net/ethernet/huawei/bma/edma_drv/Kconfig"
-\ No newline at end of file
-+source "drivers/net/ethernet/huawei/bma/edma_drv/Kconfig"
-+source "drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig"
-\ No newline at end of file
-diff --git a/drivers/net/ethernet/huawei/bma/Makefile b/drivers/net/ethernet/huawei/bma/Makefile
-index 8f589f7986d6..c9bbcbf2a388 100644
---- a/drivers/net/ethernet/huawei/bma/Makefile
-+++ b/drivers/net/ethernet/huawei/bma/Makefile
-@@ -2,4 +2,5 @@
- # Makefile for BMA software driver
- # 
- 
--obj-$(CONFIG_BMA) += edma_drv/
-\ No newline at end of file
-+obj-$(CONFIG_BMA) += edma_drv/
-+obj-$(CONFIG_BMA) += cdev_drv/
-\ No newline at end of file
-diff --git a/drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig b/drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig
-new file mode 100644
-index 000000000000..97829c5487c2
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig
-@@ -0,0 +1,11 @@
-+#
-+# Huawei BMA software driver configuration
-+#
-+
-+config BMA
-+	tristate "Huawei BMA Software Communication Driver"
-+
-+	---help---
-+	  This driver supports Huawei BMA Software. It is used 
-+	  to communication between Huawei BMA and BMC software.
-+
-diff --git a/drivers/net/ethernet/huawei/bma/cdev_drv/Makefile b/drivers/net/ethernet/huawei/bma/cdev_drv/Makefile
-new file mode 100644
-index 000000000000..49ac00a5fff2
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/cdev_drv/Makefile
-@@ -0,0 +1,2 @@
-+obj-$(CONFIG_BMA) += host_cdev_drv.o
-+host_cdev_drv-y := bma_cdev.o
-diff --git a/drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c b/drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c
-new file mode 100644
-index 000000000000..0348a83005d6
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c
-@@ -0,0 +1,369 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Huawei iBMA driver.
-+ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/poll.h>
-+#include <linux/device.h>
-+#include <linux/cdev.h>
-+#include <linux/miscdevice.h>
-+#include <linux/netdevice.h>
-+#include "../edma_drv/bma_include.h"
-+#include "../include/bma_ker_intf.h"
-+
-+#define CDEV_NAME_PREFIX	"hwibmc"
-+
-+#ifdef DRV_VERSION
-+#define CDEV_VERSION		MICRO_TO_STR(DRV_VERSION)
-+#else
-+#define CDEV_VERSION		"0.3.4"
-+#endif
-+
-+#define CDEV_DEFAULT_NUM	4
-+#define CDEV_MAX_NUM		8
-+
-+#define CDEV_NAME_MAX_LEN	32
-+#define CDEV_INVALID_ID		(0xffffffff)
-+
-+struct cdev_statistics_s {
-+	unsigned int recv_bytes;
-+	unsigned int send_bytes;
-+	unsigned int send_pkgs;
-+	unsigned int recv_pkgs;
-+	unsigned int send_failed_count;
-+	unsigned int recv_failed_count;
-+	unsigned int open_status;
-+};
-+
-+struct cdev_dev {
-+	struct miscdevice dev_struct;
-+	struct cdev_statistics_s s;
-+	char dev_name[CDEV_NAME_MAX_LEN];
-+	dev_t dev_id;
-+	void *dev_data;
-+	atomic_t open;
-+	int type;
-+};
-+
-+struct cdev_dev_set {
-+	struct cdev_dev dev_list[CDEV_MAX_NUM];
-+	int dev_num;
-+	unsigned int init_time;
-+};
-+
-+int dev_num = CDEV_DEFAULT_NUM;	/* the dev num want to create */
-+int debug = DLOG_ERROR;                  /* debug switch */
-+module_param(dev_num, int, 0640);
-+MODULE_PARM_DESC(dev_num, "cdev num you want");
-+MODULE_PARM_DESC(debug, "Debug switch (0=close debug, 1=open debug)");
-+
-+#define CDEV_LOG(level, fmt, args...) do {\
-+	if (debug >= (level)) {\
-+		netdev_info(0, "edma_cdev: %s, %d, " fmt "\n", \
-+		__func__, __LINE__, ## args);\
-+	} \
-+} while (0)
-+
-+static int cdev_open(struct inode *inode, struct file *filp);
-+static int cdev_release(struct inode *inode, struct file *filp);
-+static unsigned int cdev_poll(struct file *file, poll_table *wait);
-+static ssize_t cdev_read(struct file *filp, char __user  *data, size_t count,
-+			 loff_t *ppos);
-+static ssize_t cdev_write(struct file *filp, const char __user *data,
-+			  size_t count, loff_t *ppos);
-+
-+struct cdev_dev_set g_cdev_set;
-+
-+#define GET_PRIVATE_DATA(f) (((struct cdev_dev *)((f)->private_data))->dev_data)
-+
-+module_param_call(debug, &edma_param_set_debug, &param_get_int, &debug, 0644);
-+
-+static int cdev_param_get_statics(char *buf, const struct kernel_param *kp)
-+{
-+	int len = 0;
-+	int i = 0;
-+	__kernel_time_t running_time = 0;
-+
-+	if (!buf)
-+		return 0;
-+
-+	GET_SYS_SECONDS(running_time);
-+	running_time -= g_cdev_set.init_time;
-+	len += sprintf(buf + len,
-+		       "============================CDEV_DRIVER_INFO=======================\n");
-+	len += sprintf(buf + len, "version      :%s\n", CDEV_VERSION);
-+
-+	len += sprintf(buf + len, "running_time :%luD %02lu:%02lu:%02lu\n",
-+		       running_time / (SECONDS_PER_DAY),
-+		       running_time % (SECONDS_PER_DAY) / SECONDS_PER_HOUR,
-+		       running_time % SECONDS_PER_HOUR / SECONDS_PER_MINUTE,
-+		       running_time % SECONDS_PER_MINUTE);
-+
-+	for (i = 0; i < g_cdev_set.dev_num; i++) {
-+		len += sprintf(buf + len,
-+			       "===================================================\n");
-+		len += sprintf(buf + len, "name      :%s\n",
-+			       g_cdev_set.dev_list[i].dev_name);
-+		len +=
-+		    sprintf(buf + len, "dev_id    :%08x\n",
-+			    g_cdev_set.dev_list[i].dev_id);
-+		len += sprintf(buf + len, "type      :%u\n",
-+			       g_cdev_set.dev_list[i].type);
-+		len += sprintf(buf + len, "status    :%s\n",
-+			       g_cdev_set.dev_list[i].s.open_status ==
-+			       1 ? "open" : "close");
-+		len += sprintf(buf + len, "send_pkgs :%u\n",
-+			       g_cdev_set.dev_list[i].s.send_pkgs);
-+		len +=
-+		    sprintf(buf + len, "send_bytes:%u\n",
-+			    g_cdev_set.dev_list[i].s.send_bytes);
-+		len += sprintf(buf + len, "send_failed_count:%u\n",
-+			       g_cdev_set.dev_list[i].s.send_failed_count);
-+		len += sprintf(buf + len, "recv_pkgs :%u\n",
-+			       g_cdev_set.dev_list[i].s.recv_pkgs);
-+		len += sprintf(buf + len, "recv_bytes:%u\n",
-+			       g_cdev_set.dev_list[i].s.recv_bytes);
-+		len += sprintf(buf + len, "recv_failed_count:%u\n",
-+			       g_cdev_set.dev_list[i].s.recv_failed_count);
-+	}
-+
-+	return len;
-+}
-+module_param_call(statistics, NULL, cdev_param_get_statics, &debug, 0444);
-+MODULE_PARM_DESC(statistics, "Statistics info of cdev driver,readonly");
-+
-+const struct file_operations g_bma_cdev_fops = {
-+	.owner = THIS_MODULE,
-+	.open = cdev_open,
-+	.release = cdev_release,
-+	.poll = cdev_poll,
-+	.read = cdev_read,
-+	.write = cdev_write,
-+};
-+
-+static int __init bma_cdev_init(void)
-+{
-+	int i = 0;
-+
-+	int ret = 0;
-+	int err_count = 0;
-+
-+	if (!bma_intf_check_edma_supported())
-+		return -ENXIO;
-+
-+	if (dev_num <= 0 || dev_num > CDEV_MAX_NUM)
-+		return -EINVAL;
-+
-+	memset(&g_cdev_set, 0, sizeof(struct cdev_dev_set));
-+	g_cdev_set.dev_num = dev_num;
-+
-+	for (i = 0; i < dev_num; i++) {
-+		struct cdev_dev *pdev = &g_cdev_set.dev_list[i];
-+
-+		sprintf(pdev->dev_name, "%s%d", CDEV_NAME_PREFIX, i);
-+		pdev->dev_struct.name = pdev->dev_name;
-+		pdev->dev_struct.minor = MISC_DYNAMIC_MINOR;
-+		pdev->dev_struct.fops = &g_bma_cdev_fops;
-+
-+		pdev->dev_id = CDEV_INVALID_ID;
-+
-+		ret = misc_register(&pdev->dev_struct);
-+
-+		if (ret) {
-+			CDEV_LOG(DLOG_DEBUG, "misc_register failed %d", i);
-+			err_count++;
-+			continue;
-+		}
-+
-+		pdev->dev_id = MKDEV(MISC_MAJOR, pdev->dev_struct.minor);
-+
-+		ret = bma_intf_register_type(TYPE_CDEV + i, 0, INTR_DISABLE,
-+					     &pdev->dev_data);
-+
-+		if (ret) {
-+			CDEV_LOG(DLOG_ERROR,
-+				 "cdev %d open failed ,result = %d",
-+				 i, ret);
-+			misc_deregister(&pdev->dev_struct);
-+			pdev->dev_id = CDEV_INVALID_ID;
-+			err_count++;
-+			continue;
-+		} else {
-+			pdev->type = TYPE_CDEV + i;
-+			atomic_set(&pdev->open, 1);
-+		}
-+
-+		CDEV_LOG(DLOG_DEBUG, "%s id is %08x", pdev->dev_struct.name,
-+			 pdev->dev_id);
-+	}
-+
-+	if (err_count == dev_num) {
-+		CDEV_LOG(DLOG_ERROR, "init cdev failed!");
-+		return -EFAULT;
-+	}
-+	GET_SYS_SECONDS(g_cdev_set.init_time);
-+	return 0;
-+}
-+
-+static void __exit bma_cdev_exit(void)
-+{
-+	while (dev_num--) {
-+		struct cdev_dev *pdev = &g_cdev_set.dev_list[dev_num];
-+
-+		if (pdev->dev_id != CDEV_INVALID_ID) {
-+			if (pdev->dev_data && pdev->type != 0)
-+				(void)bma_intf_unregister_type(&pdev->dev_data);
-+
-+			(void)misc_deregister
-+				(&g_cdev_set.dev_list[dev_num].dev_struct);
-+		}
-+	}
-+}
-+
-+int cdev_open(struct inode *inode_prt, struct file *filp)
-+{
-+	int i = 0;
-+	struct cdev_dev *pdev = NULL;
-+
-+	if (!inode_prt)
-+		return -EFAULT;
-+	if (!filp)
-+		return -EFAULT;
-+
-+	if (dev_num <= 0) {
-+		CDEV_LOG(DLOG_ERROR, "dev_num error");
-+		return -EFAULT;
-+	}
-+
-+	for (i = 0; i < dev_num; i++) {
-+		pdev = &g_cdev_set.dev_list[i];
-+
-+		if (pdev->dev_id == inode_prt->i_rdev)
-+			break;
-+	}
-+
-+	if (i == dev_num) {
-+		CDEV_LOG(DLOG_ERROR, "can not find dev id %08x",
-+			 inode_prt->i_rdev);
-+		return -ENODEV;
-+	}
-+	/*each device can be opened only onece */
-+	if (atomic_dec_and_test(&pdev->open) == 0) {
-+		CDEV_LOG(DLOG_ERROR, "%s is already opened",
-+			 pdev->dev_name);
-+			atomic_inc(&pdev->open);
-+			return -EBUSY;	/* already opened */
-+	}
-+
-+	filp->private_data = &g_cdev_set.dev_list[i];
-+	bma_intf_set_open_status(pdev->dev_data, DEV_OPEN);
-+	((struct cdev_dev *)filp->private_data)->s.open_status++;
-+
-+	return 0;
-+}
-+
-+int cdev_release(struct inode *inode_prt, struct file *filp)
-+{
-+	struct cdev_dev *pdev = NULL;
-+
-+	if (!filp)
-+		return 0;
-+
-+	pdev = (struct cdev_dev *)filp->private_data;
-+	if (pdev) {
-+		((struct cdev_dev *)filp->private_data)->s.open_status--;
-+		bma_intf_set_open_status(pdev->dev_data, DEV_CLOSE);
-+		atomic_inc(&pdev->open);
-+		filp->private_data = NULL;
-+	}
-+
-+	return 0;
-+}
-+
-+unsigned int cdev_poll(struct file *filp, poll_table *wait)
-+{
-+	unsigned int mask = 0;
-+	wait_queue_head_t *queue_head = NULL;
-+
-+	if (!filp)
-+		return 0;
-+	queue_head = (wait_queue_head_t *)
-+	    bma_cdev_get_wait_queue(GET_PRIVATE_DATA(filp));
-+
-+	if (!queue_head)
-+		return 0;
-+
-+	poll_wait(filp, queue_head, wait);
-+
-+	if (bma_cdev_check_recv(GET_PRIVATE_DATA(filp)))
-+		mask |= (POLLIN | POLLRDNORM);
-+
-+	CDEV_LOG(DLOG_DEBUG, "poll return %08x", mask);
-+
-+	return mask;
-+}
-+
-+ssize_t cdev_read(struct file *filp, char __user *data, size_t count,
-+		  loff_t *ppos)
-+{
-+	int ret = 0;
-+
-+	CDEV_LOG(DLOG_DEBUG, "data is %p,count is %u", data,
-+		 (unsigned int)count);
-+
-+	if (!data || count <= 0)
-+		return -EFAULT;
-+
-+	ret = bma_cdev_recv_msg(GET_PRIVATE_DATA(filp), data, count);
-+
-+	if (ret > 0) {
-+		((struct cdev_dev *)filp->private_data)->s.recv_bytes += ret;
-+		((struct cdev_dev *)filp->private_data)->s.recv_pkgs++;
-+	} else {
-+		((struct cdev_dev *)filp->private_data)->s.recv_failed_count++;
-+	}
-+
-+	return ret;
-+}
-+
-+ssize_t cdev_write(struct file *filp, const char __user *data, size_t count,
-+		   loff_t *ppos)
-+{
-+	int ret = 0;
-+
-+	if (!data || count <= 0)
-+		return -EFAULT;
-+
-+	CDEV_LOG(DLOG_DEBUG, "data is %p,count is %u", data,
-+		 (unsigned int)count);
-+	ret = bma_cdev_add_msg(GET_PRIVATE_DATA(filp), data, count);
-+
-+	if (ret > 0) {
-+		((struct cdev_dev *)filp->private_data)->s.send_bytes += ret;
-+		((struct cdev_dev *)filp->private_data)->s.send_pkgs++;
-+	} else {
-+		((struct cdev_dev *)filp->private_data)->s.send_failed_count++;
-+	}
-+
-+	return ret;
-+}
-+
-+MODULE_AUTHOR("HUAWEI TECHNOLOGIES CO., LTD.");
-+MODULE_DESCRIPTION("HUAWEI CDEV DRIVER");
-+MODULE_LICENSE("GPL");
-+MODULE_VERSION(CDEV_VERSION);
-+
-+module_init(bma_cdev_init);
-+module_exit(bma_cdev_exit);
--- 
-2.26.2.windows.1
-
-
+vmlinux.o: warning: objtool: exc_invalid_op()+0x337: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_double_fault()+0x217: call to __asan_report_store4_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_int3()+0x376: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: sync_regs()+0xcd: call to __asan_report_store_n_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: fixup_bad_iret()+0x13a: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_debug()+0x280: call to __asan_report_load4_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: default_do_nmi()+0x233: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_nmi()+0x67: call to __kasan_check_read() leaves .noinstr.text section
+vmlinux.o: warning: objtool: poke_int3_handler()+0x3d1: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: mce_check_crashing_cpu()+0x60: call to __kasan_check_read() leaves .noinstr.text section
+vmlinux.o: warning: objtool: mce_setup()+0x1c: call to memset() leaves .noinstr.text section
+vmlinux.o: warning: objtool: do_machine_check()+0xd3: call to mce_rdmsrl() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_machine_check()+0x2a1: call to __asan_report_store4_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_page_fault()+0xc4e: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: lockdep_hardirqs_on()+0x3a9: call to __asan_report_store8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: lockdep_hardirqs_off()+0x24a: call to __asan_report_store8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: match_held_lock()+0x4df: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: lock_is_held_type()+0x230: call to __asan_report_store4_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: debug_lockdep_rcu_enabled()+0xcd: call to __asan_report_load4_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: rcu_dynticks_eqs_enter()+0x1c: call to __kasan_check_write() leaves .noinstr.text section
+vmlinux.o: warning: objtool: rcu_dynticks_eqs_exit()+0x20: call to __kasan_check_write() leaves .noinstr.text section
+vmlinux.o: warning: objtool: rcu_eqs_exit.constprop.72()+0x24d: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: rcu_eqs_enter.constprop.73()+0x250: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: rcu_nmi_exit()+0x1f2: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: rcu_irq_exit()+0xd1: call to __ubsan_handle_load_invalid_value() leaves .noinstr.text section
+vmlinux.o: warning: objtool: rcu_nmi_enter()+0x184: call to __asan_report_load8_noabort() leaves .noinstr.text section
+vmlinux.o: warning: objtool: rcu_irq_enter()+0xd1: call to __ubsan_handle_load_invalid_value() leaves .noinstr.text section
+vmlinux.o: warning: objtool: __rcu_is_watching()+0x20: call to __kasan_check_read() leaves .noinstr.text section
+vmlinux.o: warning: objtool: debug_locks_off()+0x19: call to __kasan_check_write() leaves .noinstr.text section
