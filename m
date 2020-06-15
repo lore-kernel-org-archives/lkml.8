@@ -2,216 +2,123 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD79C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 604182076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC372076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W+HJGLEF"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JmVIt0c2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbgFOMy2 (ORCPT
+        id S1730254AbgFOMyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730165AbgFOMx7 (ORCPT
+        Mon, 15 Jun 2020 08:54:40 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:39371 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730221AbgFOMy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:53:59 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3BDC061A0E;
-        Mon, 15 Jun 2020 05:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=w36WFTF/YYDj+vMMm5K/rSmIM+0T4bCCxz1vwgNGFpA=; b=W+HJGLEFJ+lhk60iQ5Bzln2Y0z
-        4E4rSTrm4G+fl4WB3kG6VKhq7JRX1NOxJ4VDudQcbfuWr6MiK8UHjnLd5rDua/GpVNvJk9tPxn93r
-        vgDrlTV//pm4B2rsiiFdzeim5d38Bp9wr42ouCpN2TC+J0exS0D+NKzAMZkNPjh9utXIG2jfIM7V3
-        nZBhK9WSrv39wMXP9rsnw6F9ir6S/8XGWUf3c9HqQ9suZsJOhlu6rldb8fTilzIwrIoWJ4pZgE/Ki
-        tFnXFUau0lpagcsbA18pZKgoAB/kP7rytdHoXz/50+NGRqVVoA9KyvyHEz5XlNLmQPBl9LPhdc08n
-        glFWbDpg==;
-Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkocg-0000vw-DE; Mon, 15 Jun 2020 12:53:58 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 14/16] initramfs: switch initramfs unpacking to struct file based APIs
-Date:   Mon, 15 Jun 2020 14:53:21 +0200
-Message-Id: <20200615125323.930983-15-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615125323.930983-1-hch@lst.de>
-References: <20200615125323.930983-1-hch@lst.de>
+        Mon, 15 Jun 2020 08:54:26 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FCqnb8011050;
+        Mon, 15 Jun 2020 14:54:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=bXos72rf0lg0iLm1zdmI8TWdbgoRub9K+Cl/CRJ6gjQ=;
+ b=JmVIt0c2JGG9uc+PwWibzxVu6zQt6ygLyh7T4qihAFz+Rv3fOo1p/B4DHmvF/tozifkT
+ 7hmV5v9/hgm5c38E7qzIKMOcLmaTMrrOFsVLI9jCAZNrOzjD2ixwfppqUqF1ySK8xPY/
+ o93ArBWaUymS/BP8LsiAIYzbrLjG9ouuxKM1eHqzc1l2Z84qcb8ptZaHF8PRe1eqjEe4
+ 20wRmOfY/erASbEVRlzZNfXjlhRTZl+AcNLeTF9kbvVv8sMH/OgKvBkXiEuNfyoNzb6J
+ tNoJF/z+6qSb3uEDDHirsV1jYfb5H4cABCSdvHIj0Tjp6zXG61JkyJdut8a1wU9OIiCq QQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvspcu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 14:54:23 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 01069100034;
+        Mon, 15 Jun 2020 14:54:23 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA9812B35E0;
+        Mon, 15 Jun 2020 14:54:22 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 14:54:22
+ +0200
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <alexandre.torgue@st.com>
+Subject: [PATCH 2/2] pinctrl: stm32: defer probe if reset resource is not yet ready
+Date:   Mon, 15 Jun 2020 14:54:07 +0200
+Message-ID: <20200615125407.27632-3-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200615125407.27632-1-alexandre.torgue@st.com>
+References: <20200615125407.27632-1-alexandre.torgue@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no good reason to mess with file descriptors from in-kernel
-code, switch the initramfs unpacking to struct file based write
-instead.  As we don't have nice helper for chmod or chown on a struct
-file or struct path use the pathname based ones instead there.  This
-causes additional (cached) lookups, but keeps the code much simpler.
+From: Etienne Carriere <etienne.carriere@st.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/open.c                |  7 +------
- include/linux/syscalls.h |  1 -
- init/initramfs.c         | 42 ++++++++++++++++++++--------------------
- 3 files changed, 22 insertions(+), 28 deletions(-)
+Defer probe when pin controller reset is defined in the system resources
+but not yet probed.
 
-diff --git a/fs/open.c b/fs/open.c
-index 6cd48a61cda3b9..6348173532e663 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -602,7 +602,7 @@ static int chmod_common(const struct path *path, umode_t mode)
- 	return error;
- }
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index c15460ef2307..162535e7c94d 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -84,6 +84,7 @@ struct stm32_pinctrl_group {
+ struct stm32_gpio_bank {
+ 	void __iomem *base;
+ 	struct clk *clk;
++	struct reset_control *rstc;
+ 	spinlock_t lock;
+ 	struct gpio_chip gpio_chip;
+ 	struct pinctrl_gpio_range range;
+@@ -1202,13 +1203,11 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
+ 	struct of_phandle_args args;
+ 	struct device *dev = pctl->dev;
+ 	struct resource res;
+-	struct reset_control *rstc;
+ 	int npins = STM32_GPIO_PINS_PER_BANK;
+ 	int bank_nr, err;
  
--int ksys_fchmod(unsigned int fd, umode_t mode)
-+SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
- {
- 	struct fd f = fdget(fd);
- 	int err = -EBADF;
-@@ -615,11 +615,6 @@ int ksys_fchmod(unsigned int fd, umode_t mode)
- 	return err;
- }
+-	rstc = of_reset_control_get_exclusive(np, NULL);
+-	if (!IS_ERR(rstc))
+-		reset_control_deassert(rstc);
++	if (!IS_ERR(bank->rstc))
++		reset_control_deassert(bank->rstc);
  
--SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
--{
--	return ksys_fchmod(fd, mode);
--}
--
- int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
- {
- 	struct path path;
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 005463f5acc23d..5215bd413b6eb1 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1241,7 +1241,6 @@ int ksys_dup(unsigned int fildes);
- int ksys_chroot(const char __user *filename);
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
- int ksys_chdir(const char __user *filename);
--int ksys_fchmod(unsigned int fd, umode_t mode);
- int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
- int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg);
- ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
-diff --git a/init/initramfs.c b/init/initramfs.c
-index d42ec8329cd840..2d2f433ac7f01b 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -13,13 +13,13 @@
- #include <linux/memblock.h>
- #include <linux/namei.h>
+ 	if (of_address_to_resource(np, 0, &res))
+ 		return -ENODEV;
+@@ -1516,6 +1515,11 @@ int stm32_pctl_probe(struct platform_device *pdev)
+ 		struct stm32_gpio_bank *bank = &pctl->banks[i];
  
--static ssize_t __init xwrite(int fd, const char *p, size_t count)
-+static ssize_t __init xwrite(struct file *file, const char *p, size_t count)
- {
- 	ssize_t out = 0;
- 
- 	/* sys_write only can write MAX_RW_COUNT aka 2G-4K bytes at most */
- 	while (count) {
--		ssize_t rv = ksys_write(fd, p, count);
-+		ssize_t rv = kernel_write(file, p, count, &file->f_pos);
- 
- 		if (rv < 0) {
- 			if (rv == -EINTR || rv == -EAGAIN)
-@@ -317,7 +317,7 @@ static int __init maybe_link(void)
- 	return 0;
- }
- 
--static __initdata int wfd;
-+static __initdata struct file *wfile;
- 
- static int __init do_name(void)
- {
-@@ -334,16 +334,16 @@ static int __init do_name(void)
- 			int openflags = O_WRONLY|O_CREAT;
- 			if (ml != 1)
- 				openflags |= O_TRUNC;
--			wfd = ksys_open(collected, openflags, mode);
--
--			if (wfd >= 0) {
--				ksys_fchown(wfd, uid, gid);
--				ksys_fchmod(wfd, mode);
--				if (body_len)
--					ksys_ftruncate(wfd, body_len);
--				vcollected = kstrdup(collected, GFP_KERNEL);
--				state = CopyFile;
--			}
-+			wfile = filp_open(collected, openflags, mode);
-+			if (IS_ERR(wfile))
-+				return 0;
+ 		if (of_property_read_bool(child, "gpio-controller")) {
++			bank->rstc = of_reset_control_get_exclusive(child,
++								    NULL);
++			if (PTR_ERR(bank->rstc) == -EPROBE_DEFER)
++				return -EPROBE_DEFER;
 +
-+			ksys_chown(collected, uid, gid);
-+			ksys_chmod(collected, mode);
-+			if (body_len)
-+				vfs_truncate(&wfile->f_path, body_len);
-+			vcollected = kstrdup(collected, GFP_KERNEL);
-+			state = CopyFile;
- 		}
- 	} else if (S_ISDIR(mode)) {
- 		ksys_mkdir(collected, mode);
-@@ -365,16 +365,16 @@ static int __init do_name(void)
- static int __init do_copy(void)
- {
- 	if (byte_count >= body_len) {
--		if (xwrite(wfd, victim, body_len) != body_len)
-+		if (xwrite(wfile, victim, body_len) != body_len)
- 			error("write error");
--		ksys_close(wfd);
-+		fput(wfile);
- 		do_utime(vcollected, mtime);
- 		kfree(vcollected);
- 		eat(body_len);
- 		state = SkipIt;
- 		return 0;
- 	} else {
--		if (xwrite(wfd, victim, byte_count) != byte_count)
-+		if (xwrite(wfile, victim, byte_count) != byte_count)
- 			error("write error");
- 		body_len -= byte_count;
- 		eat(byte_count);
-@@ -586,21 +586,21 @@ static void __init clean_rootfs(void)
- static void __init populate_initrd_image(char *err)
- {
- 	ssize_t written;
--	int fd;
-+	struct file *file;
- 
- 	unpack_to_rootfs(__initramfs_start, __initramfs_size);
- 
- 	printk(KERN_INFO "rootfs image is not initramfs (%s); looks like an initrd\n",
- 			err);
--	fd = ksys_open("/initrd.image", O_WRONLY | O_CREAT, 0700);
--	if (fd < 0)
-+	file = filp_open("/initrd.image", O_WRONLY | O_CREAT, 0700);
-+	if (IS_ERR(file))
- 		return;
- 
--	written = xwrite(fd, (char *)initrd_start, initrd_end - initrd_start);
-+	written = xwrite(file, (char *)initrd_start, initrd_end - initrd_start);
- 	if (written != initrd_end - initrd_start)
- 		pr_err("/initrd.image: incomplete write (%zd != %ld)\n",
- 		       written, initrd_end - initrd_start);
--	ksys_close(fd);
-+	fput(file);
- }
- #endif /* CONFIG_BLK_DEV_RAM */
- 
+ 			bank->clk = of_clk_get_by_name(child, NULL);
+ 			if (IS_ERR(bank->clk)) {
+ 				if (PTR_ERR(bank->clk) != -EPROBE_DEFER)
 -- 
-2.26.2
+2.17.1
 
