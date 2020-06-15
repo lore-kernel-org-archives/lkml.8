@@ -2,106 +2,216 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C28C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A044AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4462080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LJDUo22t"
+	by mail.kernel.org (Postfix) with ESMTP id 7635F2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgFOSMj (ORCPT
+        id S1731263AbgFOSNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 14:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFOSMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 14:12:38 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B991C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 11:12:37 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id t24so14669046qtj.15
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 11:12:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Qo/ijuM+ow8dAc5wZ5WE1a+KxROlqopnh8Kv9W50dgE=;
-        b=LJDUo22t6hXKapYyqN9R7tj7xlwtHlZqlpX2Kvnahx4equE7eFy9ZeqZs8yzrvSvLU
-         toYaZ870Rz0SA+eygx4eP7sJZWNNCXwHsN9dJiyRLNxLnhidBaxqDouSATPVQjsHXjka
-         wQ2EMOeZp4bKP46wfk1reLheh6nthxQ1Q9jIIQ+0x1kQIqc7Ld7Npcx25QHHzTA4LwNs
-         4fU28+zWRzWNw7TjboUaX1yed+Ql5EwJ8R7QzN7+26TSYQwfCqdW2I2+78qEUCGWJJuA
-         wnGwrKwfOAQuATJRUovlEtAwFw8vg3yKlOkUpnJrz9QettVnlE7IVTo7lpyKgLoqdZQy
-         DVxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Qo/ijuM+ow8dAc5wZ5WE1a+KxROlqopnh8Kv9W50dgE=;
-        b=mVPIKqvgYH/T3Lkv//S1bQipIVVlw13aCtvIKgyKRHrLSudPt8EZEBRkxXpKpQtpQf
-         Nc6twzWlF/aG4RGqtQYNjZFe5LrprXaojGY1KmN+fNe3MiRJx4FMT3+WjIY8UhWDewIS
-         GdFhkj0M43WCnSPn9JXIqUbV/HXY1BlAsaG8K8xyvf7JxHNBKXVDM+lD3lcmp1+84Zvb
-         fRYXS1rPdcM40J2Qfft4xVXnWnx36juTDt7xWGchLohq0z/7HWID3K/TswvHZmfiGeZD
-         LO/35NKG01RRhlR+oWyRoqgeeqsnRVyORknHhU65UsdP5l0wdxFu3z6gEFKIWu4l7JIA
-         hj9g==
-X-Gm-Message-State: AOAM531/NKtR6kNNSDpNvdmhl8Aci89qSySoy2dYUD5D7CdjJz0b5i+N
-        cJ9WCOUjmyMfiUzHM3MAukkTkEZW1ulcc+xJQI8=
-X-Google-Smtp-Source: ABdhPJxQb4G9Cz605Z31vyYjmIjI52702EV7OleU8dKDQt9aEVVuVlDnNTCy6qMEKEPGvEGr60ypoxJJqB4nM5ufuSc=
-X-Received: by 2002:a0c:b712:: with SMTP id t18mr25455456qvd.245.1592244756513;
- Mon, 15 Jun 2020 11:12:36 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 11:12:32 -0700
-Message-Id: <20200615181232.119491-1-samitolvanen@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH] security: fix the key_permission LSM hook function type
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        KP Singh <kpsingh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Thomas Cedeno <thomascedeno@google.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 15 Jun 2020 14:13:01 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59194 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728585AbgFOSNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 14:13:00 -0400
+IronPort-SDR: Jte9bOxmer9kUGuo0EmSy6RkxpyBG2LipYcHXKvpJxSzbXfVvyxRRtZL1eDnA3jf7HHmrcYdJb
+ w5LCv2AeHnlQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 11:13:00 -0700
+IronPort-SDR: aGFdvIif39uNn6knFGFspXFXk4ZAtlyeBPnBtDASHBXf5oqChnPTpdU4q54bgMAhUzqoFoCZGM
+ ev3SwJLIgHJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,515,1583222400"; 
+   d="scan'208";a="382619746"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2020 11:12:59 -0700
+Date:   Mon, 15 Jun 2020 11:12:59 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        amd-gfx <amd-gfx@lists.freedesktop.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
+Message-ID: <20200615181259.GC13792@romley-ivt3.sc.intel.com>
+References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+ <1592008893-9388-13-git-send-email-fenghua.yu@intel.com>
+ <20200615075649.GK2497@hirez.programming.kicks-ass.net>
+ <20200615154854.GB13792@romley-ivt3.sc.intel.com>
+ <20200615160357.GA2531@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615160357.GA2531@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8c0637e950d6 ("keys: Make the KEY_NEED_* perms an enum rather than
-a mask") changed the type of the key_permission callback functions, but
-didn't change the type of the hook, which trips indirect call checking with
-Control-Flow Integrity (CFI). This change fixes the issue by changing the
-hook type to match the functions.
+On Mon, Jun 15, 2020 at 06:03:57PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 15, 2020 at 08:48:54AM -0700, Fenghua Yu wrote:
+> > Hi, Peter,
+> > On Mon, Jun 15, 2020 at 09:56:49AM +0200, Peter Zijlstra wrote:
+> > > On Fri, Jun 12, 2020 at 05:41:33PM -0700, Fenghua Yu wrote:
+> > > > +/*
+> > > > + * Apply some heuristics to see if the #GP fault was caused by a thread
+> > > > + * that hasn't had the IA32_PASID MSR initialized.  If it looks like that
+> > > > + * is the problem, try initializing the IA32_PASID MSR. If the heuristic
+> > > > + * guesses incorrectly, take one more #GP fault.
+> > > 
+> > > How is that going to help? Aren't we then going to run this same
+> > > heuristic again and again and again?
+> > 
+> > The heuristic always initializes the MSR with the per mm PASID IIF the
+> > mm has a valid PASID but the MSR doesn't have one. This heuristic usually
+> > happens only once on the first #GP in a thread.
+> 
+> But it doesn't guarantee the PASID is the right one. Suppose both the mm
+> has a PASID and the MSR has a VALID one, but the MSR isn't the mm one.
+> Then we NO-OP. So if the exception was due to us having the wrong PASID,
+> we stuck.
 
-Fixes: 8c0637e950d6 ("keys: Make the KEY_NEED_* perms an enum rather than a mask")
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- include/linux/lsm_hook_defs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The MSR for each thread was cleared during fork() and clone(). The PASID
+was cleared during mm_init(). The per-mm PASID was assigned when fist
+bind_mm() is called and remains the same value until process exit().
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 6791813cd439..24f6683f1cfc 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -360,7 +360,7 @@ LSM_HOOK(int, 0, key_alloc, struct key *key, const struct cred *cred,
- 	 unsigned long flags)
- LSM_HOOK(void, LSM_RET_VOID, key_free, struct key *key)
- LSM_HOOK(int, 0, key_permission, key_ref_t key_ref, const struct cred *cred,
--	 unsigned perm)
-+	 enum key_need_perm need_perm)
- LSM_HOOK(int, 0, key_getsecurity, struct key *key, char **_buffer)
- #endif /* CONFIG_KEYS */
- 
+The MSR is only fixed up when the first ENQCMD is executed in a thread:
+bit 31 in the MSR is 0 and the PASID in the mm is non-zero.
 
-base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
--- 
-2.27.0.290.gba653c62da-goog
+The MSR remains the same PASID value once it's fixed up until the thread
+exits.
 
+So the work flow ensures the PASID goes from mm's PASID to the MSR.
+
+The PASID could be unbund from the mm. In this case, iommu will generate
+#PF and kernel oops instead of #GP.
+
+> 
+> > If the next #GP still comes in, the heuristic finds out the MSR already
+> > has a valid PASID and thus will not fixup the MSR any more. The fixup()
+> > returns "false" and lets others to handle the #GP.
+> > 
+> > So the heuristic will be executed once (at most) and won't be executed
+> > again and again.
+> 
+> So I get that you want to set the PASID on-demand, but I find this all
+> really weird code to make that happen.
+
+We could keep PASID same in all threads sychronously by propogating the MSRs
+when the PASID is bound to the mm via IPIs or taskworks to all
+threads in the process. But the code is complex and error-prone and
+overhead could be high:
+1. The user can call driver to do binding and unbinding multiple times.
+   The IPIs or taskworks will be sent multiple times to make sure only
+   the last IPIs or taskworks take action.
+2. Even if a thread never executes ENQCMD and thus never uses the MSR,
+   the MSR still needs to be updated whenever bind_mm() and needs to be
+   context switched each time. This could cause high overhead.
+
+Setting the PASID on-demand is simpler and cleaner and was recommended
+by Thomas.
+
+> 
+> > > > +bool __fixup_pasid_exception(void)
+> > > > +{
+> > > > +	u64 pasid_msr;
+> > > > +	unsigned int pasid;
+> > > > +
+> > > > +	/*
+> > > > +	 * This function is called only when this #GP was triggered from user
+> > > > +	 * space. So the mm cannot be NULL.
+> > > > +	 */
+> > > > +	pasid = current->mm->pasid;
+> > > > +	/* If the mm doesn't have a valid PASID, then can't help. */
+> > > > +	if (invalid_pasid(pasid))
+> > > > +		return false;
+> > > > +
+> > > > +	/*
+> > > > +	 * Since IRQ is disabled now, the current task still owns the FPU on
+> > > 
+> > > That's just weird and confusing. What you want to say is that you rely
+> > > on the exception disabling the interrupt.
+> > 
+> > I checked SDM again. You are right. #GP can be interrupted by machine check
+> > or other interrupts. So I cannot assume the current task still owns the FPU.
+> > Instead of directly rdmsr() and wrmsr(), I will add helpers that can access
+> > either the MSR on the processor or the PASID state in the memory.
+> 
+> That's not in fact what I meant, but yes, you can take exceptions while
+> !IF just fine.
+> 
+> > > > +	 * this CPU and the PASID MSR can be directly accessed.
+> > > > +	 *
+> > > > +	 * If the MSR has a valid PASID, the #GP must be for some other reason.
+> > > > +	 *
+> > > > +	 * If rdmsr() is really a performance issue, a TIF_ flag may be
+> > > > +	 * added to check if the thread has a valid PASID instead of rdmsr().
+> > > 
+> > > I don't understand any of this. Nobody except us writes to this MSR, we
+> > > should bloody well know what's in it. What gives?
+> > 
+> > Patch 4 describes how to manage the MSR and patch 7 describes the format
+> > of the MSR (20-bit PASID value and bit 31 is valid bit).
+> > 
+> > Are they sufficient to help? Or do you mean something else?
+> 
+> I don't get why you need a rdmsr here, or why not having one would
+> require a TIF flag. Is that because this MSR is XSAVE/XRSTOR managed?
+
+My concern is TIF flags are precious (only 3 slots available). Defining
+a new TIF flag may be not worth it while rdmsr() can check if PASID
+is valid in the MSR. And performance here might not be a big issue
+in #GP.
+
+But if you think using TIF flag is better, I can define a new TIF flag
+and maintain it per thread (init 0 when clone()/fork(), set 1 in fixup()).
+Then we can avoid using rdmsr() to check valid PASID in the MSR.
+
+> 
+> > > > +	 */
+> > > > +	rdmsrl(MSR_IA32_PASID, pasid_msr);
+> > > > +	if (pasid_msr & MSR_IA32_PASID_VALID)
+> > > > +		return false;
+> > > > +
+> > > > +	/* Fix up the MSR if the MSR doesn't have a valid PASID. */
+> > > > +	wrmsrl(MSR_IA32_PASID, pasid | MSR_IA32_PASID_VALID);
+> 
+> How much more expensive is the wrmsr over the rdmsr? Can't we just
+> unconditionally write the current PASID and call it a day?
+
+rdmsr() and wrmsr() might have same cost.
+
+If using a TIF flag to check if the thread has a valid PASID MSR, then
+I can replace rdmsr() by checking the TIF flag and only do wrmsr()
+when the TIF flag is set.
+
+Please advice.
+
+Thanks.
+
+-Fenghua
