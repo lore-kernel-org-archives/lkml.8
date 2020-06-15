@@ -2,126 +2,189 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC11F206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0178020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592216821;
+	bh=hyUqHVvXrvWswYdtXPunHqjbBKKNx9PKUnYIGDXg85Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HMk3QUp044hrS7s85s96Pq2NgnwZWHFA42/5LxHaNyENvlQ6rCTXWfSx2nCp9uIed
+	 xV0Zyu2oH4tJgKjTkOwIbBT/yJl4fZHzNYZgcMM2afVmagApNyBZA4njUcyjk9wyVq
+	 XProZX/oQXAXiEB4FKbH7ScxcMH124mke4zrm5TA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgFOKYk (ORCPT
+        id S1729153AbgFOK07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:24:40 -0400
-Received: from mga05.intel.com ([192.55.52.43]:44816 "EHLO mga05.intel.com"
+        Mon, 15 Jun 2020 06:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgFOKYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:24:25 -0400
-IronPort-SDR: xTQoMOai+79a0VMSW6vB0JQ2mLh6f5u76zxCxoCKDMriqo4vIaKZTd3zuDeKz7uUFRfixzkUXJ
- N1s0U51xfpTg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 03:24:12 -0700
-IronPort-SDR: QHNkefPRDepG2BFbs+0Y3tudqdRM70isz34I66Nj59VSt0I2p9Zdf+zIemowO/QBeLIhyjg6m4
- BbuWOJYUhU6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="382505677"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 15 Jun 2020 03:24:09 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 15 Jun 2020 13:24:08 +0300
-Date:   Mon, 15 Jun 2020 13:24:08 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200615102408.GF3213128@kuha.fi.intel.com>
-References: <20200511204635.GC136540@google.com>
- <20200512134154.GC2085641@kuha.fi.intel.com>
- <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com>
- <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
- <20200612124634.GD3213128@kuha.fi.intel.com>
- <CAL_Jsq+ORkzHchpD0qsH97zDJzXGj3jWy8=orXSVhNQd4kr9Kg@mail.gmail.com>
+        id S1728885AbgFOK05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:26:57 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 362A620738;
+        Mon, 15 Jun 2020 10:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592216816;
+        bh=hyUqHVvXrvWswYdtXPunHqjbBKKNx9PKUnYIGDXg85Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dxZlvUL6DUxfzWe0YuM1i6dHK8Oh0IgZFJCsi2GQ4Ssj6mW4ylhE3CcvG9c4O4R28
+         G7iat2uLRwcFzd3HB+Ox/FcVDIe2VJvc17Z9iQ4j7MkZz3PGWUN77FQXRSUodFFKRq
+         rprI0FQQjr9e7YBnjXkN1Tt7qpKk7PwYAqY1jt8g=
+Received: by mail-oi1-f172.google.com with SMTP id a3so15439700oid.4;
+        Mon, 15 Jun 2020 03:26:56 -0700 (PDT)
+X-Gm-Message-State: AOAM5306J15G22zR/p+/mD2cmadymmvD1jb2myyLzQHrW0q/Tg+/uteB
+        EbfRo9BAhLnbKBweNRKV6me0CPInSxVg+JI6OAM=
+X-Google-Smtp-Source: ABdhPJwFl0io0Eq+GPpq4WFiP9Xu+DdILz72bZT1brO1yijkO5duX1PIP3h6EN4mfEuni4hlMgQnqxUejHextMUFkNo=
+X-Received: by 2002:aca:ba03:: with SMTP id k3mr1896542oif.33.1592216815522;
+ Mon, 15 Jun 2020 03:26:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+ORkzHchpD0qsH97zDJzXGj3jWy8=orXSVhNQd4kr9Kg@mail.gmail.com>
+References: <20200604022031.164207-1-masahiroy@kernel.org> <20200604022031.164207-2-masahiroy@kernel.org>
+In-Reply-To: <20200604022031.164207-2-masahiroy@kernel.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 15 Jun 2020 12:26:43 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com>
+Message-ID: <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] efi/libstub: refactor Makefile to not use lib-y syntax
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Atish Patra <atish.patra@wdc.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Thu, 4 Jun 2020 at 04:20, Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Documentation/kbuild/makefiles.rst says:
+>
+>   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+>
+> This is because lib-y is inteded to be hooked to KBUILD_VMLINUX_LIBS,
+> which is passed down to scripts/link-vmlinux.sh.
+>
+> Besides, lib-y is not so interesting because objects from lib-y are
+> mostly linked in normal usecases. For example, lib-y only saves 364
+> bytes for x86_64_defconfig. You can see the details in commit
+> 7273ad2b08f8 ("kbuild: link lib-y objects to vmlinux forcibly when
+> CONFIG_MODULES=y").
+>
+> I think we should consider to deprecate lib-y syntax at some point
+> because we should aim for better solution like dead code elimination
+> or LTO.
+>
+> Other than lib/ and arch/*/lib, this Makefile is the only user of
+> lib-y. Replace lib-y with a custom rule.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-> > Either I'm missing something, or the devicetree description of the
-> > Type-C connectors really is way too complex, way too "low level",
-> > causing us potential problems without providing anything that we could
-> > actually ever use in the operating system.
-> 
-> Well, all bindings are a balancing act of being flexible enough vs.
-> high-level enough to be stable. What I need is something that's going
-> to work for everyone, not just CrOS. Adding a new property at time is
-> death by 1000 cuts and usually a sign of someone only fixing their own
-> immediate problem.
+Series queued in efi/urgent.
 
-If you referring to the phandles that are related to the muxes, then
-those we will need. Those phandles point to the components that can
-configure the muxes, but those components are not the muxes
-themselves. On these platforms the muxes can not be configured
-directly, and this is by the way the normal setup these days. I have
-even alternate mode adapters that do not configure the mux directly
-from the microcontroller. So we are not talking about the first
-platform with this setup here.
+Thanks
 
-The problem is that these components are not physically connected to
-the connector, so we can't place them to the OF graph. The mux should
-be placed into the graph (we may not be able to configure the muxes,
-but we may still be able to read their status), but these components
-should not.
-
-I was really hoping that we could follow the "mux-controller"
-bindings, but it just did not feel it would work perfectly with these
-components that are not exactly the mux-controllers, but more like
-proxies to the actual mux-controllers. We could probable ignore that
-fact if the real mux-controllers were not visible to us, but
-unfortunately they are visible to us. More importantly, the "muxes"
-that we need to use with USB Type-C connectors will not always be
-actual muxes at all. Depending on the platform, for example the USB
-role switching will be handled by a mux, or a dual-role capable USB
-controller.
-
-But I'm open for suggestions here. The only thing that I can say for
-sure about this is that we can't rely on OF graph with the muxes.
-Right now I actually only have a wish that we had a reference array
-that would hold all the phandles to the components that can configure
-the lines behind the connector a bit like in mux bindings, but
-regardless of were they real muxes, "proxy" to the muxes, or
-anything else. Then we would need to define also somekind of device
-property for each known function, like "orientation", "role" and so
-on, that would return index to the component (mux, or what ever it is)
-in the reference array that can handle that particular function.
-
-I also don't feel comfortable using the name "mux" with these because,
-they really will not always be muxes. That's why I talk about switches,
-though I'm not sure if that's any better.
-
-Sorry about the long mail.
-
-thanks,
-
--- 
-heikki
+> ---
+>
+> Changes in v2:
+>   - Add more description
+>
+>  drivers/firmware/efi/libstub/Makefile | 49 +++++++++++++++------------
+>  1 file changed, 27 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+> index cce4a7436052..7d81dc45cadf 100644
+> --- a/drivers/firmware/efi/libstub/Makefile
+> +++ b/drivers/firmware/efi/libstub/Makefile
+> @@ -44,7 +44,7 @@ OBJECT_FILES_NON_STANDARD     := y
+>  # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
+>  KCOV_INSTRUMENT                        := n
+>
+> -lib-y                          := efi-stub-helper.o gop.o secureboot.o tpm.o \
+> +stub-obj-y                     := efi-stub-helper.o gop.o secureboot.o tpm.o \
+>                                    file.o mem.o random.o randomalloc.o pci.o \
+>                                    skip_spaces.o lib-cmdline.o lib-ctype.o \
+>                                    alignedmem.o relocate.o vsprintf.o
+> @@ -55,15 +55,19 @@ efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
+>  $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
+>         $(call if_changed_rule,cc_o_c)
+>
+> -lib-$(CONFIG_EFI_GENERIC_STUB) += efi-stub.o fdt.o string.o \
+> +stub-obj-$(CONFIG_EFI_GENERIC_STUB)    += efi-stub.o fdt.o string.o \
+>                                    $(patsubst %.c,lib-%.o,$(efi-deps-y))
+>
+> -lib-$(CONFIG_ARM)              += arm32-stub.o
+> -lib-$(CONFIG_ARM64)            += arm64-stub.o
+> -lib-$(CONFIG_X86)              += x86-stub.o
+> +stub-obj-$(CONFIG_ARM)         += arm32-stub.o
+> +stub-obj-$(CONFIG_ARM64)       += arm64-stub.o
+> +stub-obj-$(CONFIG_X86)         += x86-stub.o
+>  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+>
+> +targets                                += $(stub-obj-y)
+> +stub-obj-y                     := $(patsubst %.o,%.stub.o, $(stub-obj-y))
+> +targets                                += $(stub-obj-y)
+> +
+>  #
+>  # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
+>  # .bss section, so the .bss section of the EFI stub needs to be included in the
+> @@ -83,23 +87,6 @@ STUBCOPY_FLAGS-$(CONFIG_ARM) += --rename-section .data=.data.efistub \
+>                                    --rename-section .bss=.bss.efistub,load,alloc
+>  STUBCOPY_RELOC-$(CONFIG_ARM)   := R_ARM_ABS
+>
+> -#
+> -# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
+> -# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
+> -# So let's apply the __init annotations at the section level, by prefixing
+> -# the section names directly. This will ensure that even all the inline string
+> -# literals are covered.
+> -# The fact that the stub and the kernel proper are essentially the same binary
+> -# also means that we need to be extra careful to make sure that the stub does
+> -# not rely on any absolute symbol references, considering that the virtual
+> -# kernel mapping that the linker uses is not active yet when the stub is
+> -# executing. So build all C dependencies of the EFI stub into libstub, and do
+> -# a verification pass to see if any absolute relocations exist in any of the
+> -# object files.
+> -#
+> -extra-y                                := $(lib-y)
+> -lib-y                          := $(patsubst %.o,%.stub.o,$(lib-y))
+> -
+>  STUBCOPY_FLAGS-$(CONFIG_ARM64) += --prefix-alloc-sections=.init \
+>                                    --prefix-symbols=__efistub_
+>  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
+> @@ -121,3 +108,21 @@ quiet_cmd_stubcopy = STUBCPY $@
+>                 /bin/false;                                             \
+>         fi;                                                             \
+>         $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
+> +
+> +# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
+> +# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
+> +# So let's apply the __init annotations at the section level, by prefixing
+> +# the section names directly. This will ensure that even all the inline string
+> +# literals are covered.
+> +# The fact that the stub and the kernel proper are essentially the same binary
+> +# also means that we need to be extra careful to make sure that the stub does
+> +# not rely on any absolute symbol references, considering that the virtual
+> +# kernel mapping that the linker uses is not active yet when the stub is
+> +# executing. So build all C dependencies of the EFI stub into libstub, and do
+> +# a verification pass to see if any absolute relocations exist in any of the
+> +# object files.
+> +#
+> +extra-y += lib.a
+> +
+> +$(obj)/lib.a: $(addprefix $(obj)/, $(stub-obj-y)) FORCE
+> +       $(call if_changed,ar)
+> --
+> 2.25.1
+>
