@@ -2,104 +2,89 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E410C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AA8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D352207F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:28:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OO0Hsoq7"
+	by mail.kernel.org (Postfix) with ESMTP id 3C299207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592238540;
+	bh=U213PqxUIyke/ueHCuQ8qiXMvMkXwAf1Ol4fY9m+HaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k8jhQc5ex0zwrb5yadFzZYuZzl6HQny0TR+p0h0BeUpqVLJI1J2uM58NXK3ZuCgh1
+	 h/RnqAG2wgyV7ehk09Qhdc8sZHnUtfNU2wWOkO6TPaQzh+ZOs82KqnxafG3x/D/wbB
+	 zUwM62+o0ndb0jhqFJMyKKAYOIvhmYzaGjR/Twic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbgFOQ2g (ORCPT
+        id S1730921AbgFOQ27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730447AbgFOQ2f (ORCPT
+        Mon, 15 Jun 2020 12:28:59 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37403 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730447AbgFOQ26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:28:35 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAE3C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:28:34 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l27so18147705ejc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dmwX7P1qa5AxhzzJ+vXMBvRvKi99lt5x3CENqnU7BDw=;
-        b=OO0Hsoq7pEyhd+RhOtlLw3eIuo0gsRaaDxCHKadHohKQfIIQ/9Mtk36ofZ79Xn/fVe
-         2/SghCCNBVGjo+xthRh9+r0HrA9X+gLQVqwl6PPJc5GPGE9c21JAZYxrzaO4vushKDIY
-         yDMmXHJAHEDwQlurhRRU+LadbJm/2cTz8GR4w=
+        Mon, 15 Jun 2020 12:28:58 -0400
+Received: by mail-io1-f67.google.com with SMTP id r2so71005ioo.4;
+        Mon, 15 Jun 2020 09:28:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dmwX7P1qa5AxhzzJ+vXMBvRvKi99lt5x3CENqnU7BDw=;
-        b=JCQ2vMih5OhfP2zbD7ewM12np1OT+9TwCCB6Y5V/0OpQG6PP0/juzyi2oF2HSqpDUG
-         pOsHosbls7Y4VFG2j1JvVOgpZpeqmCYrEGIzM5kk20sG9u5nlV6/eZ5JWA1tW+VnPHPE
-         2yLFlUwFcll4De9pn0ZxDWpFdzyNF0J8lwcjnT2sSvyj9H3TmZioeVGxA+rotCDimxcA
-         pHmWUNVpMHhnHR5OcKSIQn2olGrYaMoK2NEJllr8QdCbFHTdeR/R8c6Ctd7r9A80dpHu
-         LY+bBgFQp/oLgLxdn/+2OmZvtpIqfedNfN+0RStOAhQ/0poW2rBNQSlx11755xv876Cw
-         +wug==
-X-Gm-Message-State: AOAM533JwXECzuhdncuSrPwsDEioS6hQIMn9jsqzoUtqEkQ1vY5kQlup
-        9WSBmzraOarAWu9RhrwPCxvn16LQKZa1/3qM2W3xMg==
-X-Google-Smtp-Source: ABdhPJzzuW9ljsYYvg62Bc4EVtQsy0MDdXnrP9JjQj14fiHarxB1DQyUyFTLx2JgD06teVbGPjK1cYlEJYt+THXpesU=
-X-Received: by 2002:a17:906:d973:: with SMTP id rp19mr25139408ejb.475.1592238513568;
- Mon, 15 Jun 2020 09:28:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=crjYBLmEThzX/ubrSU80z4HF6XsY3k0B4QYp27AbQnw=;
+        b=Gk/DtWMYkNTL5DibjSAiLnxVMaEb5urYGjMuVYNeJvJ3kxuzK0wfzNbDQkVoxpevro
+         EFQs9PYrCnKTe0I9z+llrO4WBRBsCqzBxfapP/yBC13WYPA3e7UBQA+aNnilVaVaenbS
+         EF+yt47yVdw0yE1NkEP0np0gFC3YGwj4+BOqJ17ew0pDoSYNiQsnhjeIGfS7YgDMxOZ3
+         NSfnanCE+lNDYA0Ny416UCm8jMvgWUmbwl9qAMFN8hge9TfGgqQNnXgwEz3rMH/VXZtz
+         ESUkkXgsMVnbjMjI4w9ux2hK+USPM6LiPSW8DyVl0PT7pYulSr6Qhhvz4QwKTApdDwNE
+         h6ew==
+X-Gm-Message-State: AOAM532Rs/B18opzPuDPkzYhmgvAB1yLWb8eqWnAB6FRfUvH83tMM4cJ
+        ywaNfEoCdSK5PYlEY7LIbEWJbKI=
+X-Google-Smtp-Source: ABdhPJxS6wJAJT/g0Pb1HsZ6yVGg+5gSqeG5fcUoDbi72yD1UIqBysfLFirFj8i3qjvTrW9lCBgTAw==
+X-Received: by 2002:a05:6638:54:: with SMTP id a20mr21791499jap.3.1592238537002;
+        Mon, 15 Jun 2020 09:28:57 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id k5sm8154372ili.80.2020.06.15.09.28.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:28:56 -0700 (PDT)
+Received: (nullmailer pid 1898612 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:28:55 -0000
+Date:   Mon, 15 Jun 2020 10:28:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Linux-imx@nxp.com, ulf.hansson@linaro.org, shawnguo@kernel.org,
+        robh+dt@kernel.org, kernel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        s.hauer@pengutronix.de, mpa@pengutronix.de, festevam@gmail.com
+Subject: Re: [PATCH V2 2/3] dt-bindings: mmc: Convert imx mmc to json-schema
+Message-ID: <20200615162855.GA1893084@bogus>
+References: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
+ <1591234886-15351-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <CAJ-EccOy4qDpbfrP5=KH40LSOx1F4-ciY2=hFv_c+goUHLJ6PQ@mail.gmail.com>
- <CAHk-=wiLXXR1+o4VAuw5MM3V1D8h6C6te3y8VMvW8iAJw6noJg@mail.gmail.com>
- <CAJ-EccPGQ62yMK1Nmvie4qWzproSqb4POwAD4_0Nt62KLbGhqg@mail.gmail.com>
- <CAHk-=whZz_E+Bu1L6YTxtDQu_piBjUBoULW7vkKxNux54kwFAA@mail.gmail.com>
- <CAJ-EccP-MW3MZ3n=u-CoPD1nL73paLUSP3v5dQu+iiQLAtaZfQ@mail.gmail.com> <CAHk-=wipG5Wpfydn7YUbahDV_G0GZqeUqEWax_mSLBuVeiT0yg@mail.gmail.com>
-In-Reply-To: <CAHk-=wipG5Wpfydn7YUbahDV_G0GZqeUqEWax_mSLBuVeiT0yg@mail.gmail.com>
-From:   Micah Morton <mortonm@chromium.org>
-Date:   Mon, 15 Jun 2020 09:28:22 -0700
-Message-ID: <CAJ-EccN3c73xOXXy+C3UEt0=jiNMaKb2Ps9Bv1ucZnXBeW28VA@mail.gmail.com>
-Subject: Re: [GIT PULL] SafeSetID LSM changes for v5.8
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591234886-15351-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 12:20 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sun, Jun 14, 2020 at 12:12 PM Micah Morton <mortonm@chromium.org> wrote:
-> >
-> > That said I'm a little fuzzy on where to draw the line for which kinds
-> > of changes really should be required to have bake time in -next. If
-> > you think this is one of those cases, we can hold off on this until we
-> > have some bake time for v5.9.
->
-> It's merged, but in general the rule for "bake in -next" should be
-> absolutely everything.
->
-> The only exception is just pure and plain fixes.
+On Thu, 04 Jun 2020 09:41:25 +0800, Anson Huang wrote:
+> Convert the i.MX MMC binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- add "unevaluatedProperties: false".
+> ---
+>  .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 23 ----------
+>  .../devicetree/bindings/mmc/fsl-imx-mmc.yaml       | 53 ++++++++++++++++++++++
+>  2 files changed, 53 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.yaml
+> 
 
-Sounds good, that makes it pretty clear.
-
-Thanks
-
->
-> This SafeSetID change should in fact have been there for two different
-> reasons: not only was it a new feature rather than a fix (in
-> linux-next just for testing), it was one that crossed subsystem
-> borders (should be in linux-next just for cross-subsystem testing). It
-> touched files that very much aren't touched by just you.
->
-> "Looks obvious" has nothing to do with avoiding linux-next.
->
-> I suspect most of the bugs we have tend to be in code that "looked
-> obvious" to somebody.
->
->                      Linus
+Applied, thanks!
