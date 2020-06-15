@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C00C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B827C20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52ED20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="I+w9WWkf"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dx9RMEyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730872AbgFOQQS (ORCPT
+        id S1730905AbgFOQQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:16:18 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51363 "EHLO
+        Mon, 15 Jun 2020 12:16:19 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1632 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729792AbgFOQQS (ORCPT
+        by vger.kernel.org with ESMTP id S1729949AbgFOQQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 12:16:18 -0400
 Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FGEqZj010821;
-        Mon, 15 Jun 2020 18:15:49 +0200
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FGF0sD011191;
+        Mon, 15 Jun 2020 18:15:54 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=iyFqkNB9Q+sojHOa8tnZLZLNwaN79m7slShmWmRnBrQ=;
- b=I+w9WWkfZBDHpHeV7F2RnFeiaMz8gKWi4Kn1mJrrBrzX/4kbcD91L4kt6Yo8FfNuoKdl
- lcqvCRqtwy1DmvFcQ5QQD8j0i8S7QlLFJbLiCP61cACO3QxOC06h1o6YRGd0zFTyU0EL
- MZQ6Ka3YNmD9u4dJhbHENfOcD/peq7PLnNoBqThI/9RRCd+0Rj7Sbdi3yMG6qCPHFA1j
- 6j29M+DJn8/LkNm0ca+6l1LyzVqFAvzgf+p3DJsSFXHKhUO+v7NDwIXZT2xG1xoD2ljA
- eauSE6YzZJLx3C314jyeHRxF9u4hmuDGbe9BPbh/cADi8iuGm0Q0g5zf1IRoGwIoRm9V gw== 
+ bh=Xkqzh+C6FWWTmU37LOuSdIhSb7PIonm3PgO/z5FgNvI=;
+ b=dx9RMEyVylmWbL5lXa3SYNQDq5f+d6Y9WE9r8Bt2mowHekYmFYSA8uDz97hu5nEjDJiR
+ xNot7L6wZ5Ri7nZHMz+6OhDs+KO4PoVouTv2UizzKPmHjKgLFAKC9JjIfkFadVf7hc3q
+ Kve2XkRskN3RCva7qEr7MhVVKpJP3ktxOJCRTTcqJ7WAQsDrJY1ZoZH1XfKb+uVEUD+/
+ FMfOwNkwUAoj2R06SqIEU4E7BPCkmW/p/yYOdTDBmmIAX3Sx+7ZNWnTA8QGCLUS1aZBm
+ ihdUgylbm28bGNvCrer0rFzpjhAPAoG04XkQJtHYSpKWu3mAW4poQGVToOJMG/FSYMRO jw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mmjvthhv-1
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvthje-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 18:15:49 +0200
+        Mon, 15 Jun 2020 18:15:54 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1D18F10002A;
-        Mon, 15 Jun 2020 18:15:48 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2178C10002A;
+        Mon, 15 Jun 2020 18:15:54 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 062AA2C5ADA;
-        Mon, 15 Jun 2020 18:15:48 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 18:15:47
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1374B2C5ADA;
+        Mon, 15 Jun 2020 18:15:54 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 18:15:53
  +0200
 From:   Amelie Delaunay <amelie.delaunay@st.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -61,16 +61,16 @@ CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Amelie Delaunay <amelie.delaunay@st.com>,
         Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/6] dt-bindings: connector: add power-opmode optional property to usb-connector
-Date:   Mon, 15 Jun 2020 18:15:07 +0200
-Message-ID: <20200615161512.19150-2-amelie.delaunay@st.com>
+Subject: [PATCH 6/6] ARM: multi_v7_defconfig: enable STUSB160X Type-C port controller support
+Date:   Mon, 15 Jun 2020 18:15:12 +0200
+Message-ID: <20200615161512.19150-7-amelie.delaunay@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200615161512.19150-1-amelie.delaunay@st.com>
 References: <20200615161512.19150-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-15_06:2020-06-15,2020-06-15 signatures=0
@@ -79,37 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Power operation mode may depends on hardware design, so, add the optional
-property power-opmode for usb-c connector to select the power operation
-mode capability.
+Enable support for the STMicroelectronics STUSB160X USB Type-C port
+controller driver by turning on CONFIG_TYPEC and CONFIG_TYPEC_STUSB160X as
+modules.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- .../devicetree/bindings/connector/usb-connector.yaml  | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-index 9bd52e63c935..cd7feb2d4984 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-@@ -88,6 +88,17 @@ properties:
-       - device
-       - dual
- 
-+  power-opmode:
-+    description: Determines the power operation mode that the Type C connector
-+      will support.
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/string
-+    enum:
-+      - default
-+      - 1.5A
-+      - 3.0A
-+      - usb_power_delivery
-+
-   # The following are optional properties for "usb-c-connector" with power
-   # delivery support.
-   source-pdos:
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 95543914d3c7..f85ee102c9a3 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -821,6 +821,8 @@ CONFIG_USB_CONFIGFS_F_HID=y
+ CONFIG_USB_CONFIGFS_F_UVC=y
+ CONFIG_USB_CONFIGFS_F_PRINTER=y
+ CONFIG_USB_ETH=m
++CONFIG_TYPEC=m
++CONFIG_TYPEC_STUSB160X=m
+ CONFIG_MMC=y
+ CONFIG_MMC_BLOCK_MINORS=16
+ CONFIG_MMC_ARMMMCI=y
 -- 
 2.17.1
 
