@@ -2,143 +2,153 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D787C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED89C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F324920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916AF20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PWTUPyRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgFOIyl convert rfc822-to-8bit (ORCPT
+        id S1729261AbgFOIzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:54:41 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42855 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729237AbgFOIyj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:54:39 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id DAB662000B;
-        Mon, 15 Jun 2020 08:54:35 +0000 (UTC)
-Date:   Mon, 15 Jun 2020 10:54:33 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
-Cc:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, richard@nod.at,
-        vigneshr@ti.com, jonas.gorski@gmail.com, linus.walleij@linaro.org,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v3] mtd: parsers: bcm63xx: simplify CFE detection
-Message-ID: <20200615105433.56fb5310@xps13>
-In-Reply-To: <20200612073549.1658336-1-noltari@gmail.com>
-References: <20200608160649.3717152-1-noltari@gmail.com>
-        <20200612073549.1658336-1-noltari@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 15 Jun 2020 04:55:37 -0400
+Received: from mail-dm6nam11on2066.outbound.protection.outlook.com ([40.107.223.66]:1249
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728526AbgFOIzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:55:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k0teWHyDYueGlf0t0mFdTjuzHoGJ81lJo8ham9LGEd4lrhG/WhsIWl/BNokeTkqS+HdEvoiDTkCfUYlhu4js14E0AjN/flKXcGZ93vGI2YQ+/EqWNZq2HX58xcG+dDM/VgpPCDFv5IIo1ILUrsIle3hWjeaTvlAyz5EAJFKKCv5j76fAg6dljALG2HCifapT1Y0rjE8bE+2Y7HE7Styabvj/b338GKPM0UuI7cyIDAjBhOtddfk8KAUZleWOd+t9qzEIHrGM0Tdi44nm2i3XUzxZ7noXR2J4LAGkyxy0fRrxVyaj6sBiAVOB2a+hzAFj0N52Sgn0ThuWmGeT/nBQ2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=caso4/0QK0RPuLPY5+h88j14LzivqNpQK+t8n+09m0M=;
+ b=hSVyUyCzJazkYwWOGfNtcZl4lYGsqUUPmcp310vJhDNFlqd9zFwbkpDn8NA/WWEOAOifUtjY8Hbp0g/15noDVwXhIAZHPQrVCcIgiEk69siSsTu/ebYgLMQOH8/9x4nFlznW0qw8JG73IjUlyN3ky2agZ2kkhbYq1r6bzHT1WW/UvfkywVCd/VKQtScPVAW5oOcGQ19n0xH5oOXb+LMNFkhWuPj6EXP+nyldDOxVBWdzKluNHYzcW2A6Dk3t1QaPag767wTgaeG1VFk9lZwKdEZBC8QPZiLiMpEAXDcpIWHfkFx0EZhp/ymC6U5B8ivUDKzKj+x79gzvkRahkefq6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=caso4/0QK0RPuLPY5+h88j14LzivqNpQK+t8n+09m0M=;
+ b=PWTUPyRS2AMrkUdYzFVuPCP3BsiPCcsMALJ1hLTd2Dr12EZ3lzLhHvMyrMXXOknoWdEpVDhHMmt93kfYu0eifosIGuTLXM9WpzcK0PZ1xX9ZcitTj39i0lGV+debw89bz+mvym2c6EYkZZJ6x+6vDDMzqvcyfHcwXjuXGX5ZxWg=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
+ by DM6PR12MB3785.namprd12.prod.outlook.com (2603:10b6:5:1cd::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Mon, 15 Jun
+ 2020 08:55:33 +0000
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
+ 08:55:33 +0000
+Subject: Re: [PATCH] drm/ttm: Fix dma_fence refcnt leak when adding move fence
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>, Huang Rui <ray.huang@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
+        Xin Tan <tanxin.ctf@gmail.com>
+References: <1592051425-94019-1-git-send-email-xiyuyang19@fudan.edu.cn>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <a494dbe2-7f6e-20d2-cd3c-1ef247349053@amd.com>
+Date:   Mon, 15 Jun 2020 10:55:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <1592051425-94019-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM4PR0701CA0013.eurprd07.prod.outlook.com
+ (2603:10a6:200:42::23) To DM6PR12MB4401.namprd12.prod.outlook.com
+ (2603:10b6:5:2a9::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM4PR0701CA0013.eurprd07.prod.outlook.com (2603:10a6:200:42::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.10 via Frontend Transport; Mon, 15 Jun 2020 08:55:30 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 324310e7-c417-4957-6984-08d81109dcc7
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3785:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3785E9B358D312B2486F47F6839C0@DM6PR12MB3785.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 04359FAD81
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: einueZtfa2o2jawHASqsHuWa2SPlE8Q5HYxJ3e0BtS0E6gkP4Yy/R4V0d9jFVXSzrqARCDb7W0zeTXzj9OKOCx/dLZ88mehukY7KMgM0NmxeoHSLSSoT0oZzupaP+A0i6yFyw6Ai8H3bE/6lR5W/HhARvX/hRtswd8lmHsIQZO2Ty+nMgrkTqIkTdBOOOP5ViYGaqBR7X6G3TB6yh2bvsly1yRstZD+tCXe9DwQo6etd2HzsSmPBnHTcabLPntHg4xv6onkPVVEEZCtFqcoHsR6mKL68lI2Mt7jkoVmSd97TF+Q8+w730CyquceL4iwlFZX0CoA/IreJZA08xL5u4MuSDHPZWYLRc66q7fv06Cin/0dafoOUvBCPXwLmfykJ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(8676002)(83380400001)(7416002)(5660300002)(6666004)(110136005)(478600001)(8936002)(4326008)(186003)(16526019)(2906002)(316002)(36756003)(66946007)(66476007)(66556008)(86362001)(31686004)(52116002)(31696002)(2616005)(6486002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Kuk2JihSJPFEuigJ9nEnVm/GXtuSxJLzxLiY/Cl3fMYiwb8Dy8ZgfT1sAd43V9cF1r0ld5X3rDv9j2tyjm3t2kELn7lx2iAM75ScsSMNy3wSsbdF0vYseA1hxJhOc9kSniqq4y4XD4ECVguMWBURJWyq1jJNIRdTYp6BQm7pwmcGsLO9fCnmJ1PhAQ9O66t8nAgLxm5m79EKW+ejaF8AG916JFgF08ImdD+YLjyn6a/DElrsCkWlbaFObjCGwW0fsUcZpwYWv3B42oXGIowny6iI4pfCRHvul+fIOSTXfFnDdnIAB8qEwoGnkqTjF2yT9GHaj5SilEk2rJpxocRY8Lr6dfC83J00iHGVuMFxgousq6XWXWum/063t58QjPypKKWAywSOQq8kIa2TEnsJww/6NRqL846Xh4mhwXAVTk7JiHEy4JWi3eMTa83zMdSuNxaO9ZqDOLhzk7kJjdmxRYgEON4TJ8v5QQvF3qabbjHIteNjEIYQNIdUV4Fmu7O1D/FAP7R5X60yHUTNR6DDlxgx1EPdAjGpKWvrlSCTSoGuMuaPbIxbuuWIq0oOmEi/
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 324310e7-c417-4957-6984-08d81109dcc7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 08:55:33.1828
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bC/pRgeG32uym8YMMNDiDyexG8BJy5UTETC8bZXuIgTcYekST6FGxqH4uYcGDqq1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3785
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Álvaro,
+Am 13.06.20 um 14:30 schrieb Xiyu Yang:
+> ttm_bo_add_move_fence() invokes dma_fence_get(), which returns a
+> reference of the specified dma_fence object to "fence" with increased
+> refcnt.
+>
+> When ttm_bo_add_move_fence() returns, local variable "fence" becomes
+> invalid, so the refcount should be decreased to keep refcount balanced.
+>
+> The reference counting issue happens in one exception handling path of
+> ttm_bo_add_move_fence(). When no_wait_gpu flag is equals to true, the
+> function forgets to decrease the refcnt increased by dma_fence_get(),
+> causing a refcnt leak.
+>
+> Fix this issue by calling dma_fence_put() when no_wait_gpu flag is
+> equals to true.
+>
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 
-Álvaro Fernández Rojas <noltari@gmail.com> wrote on Fri, 12 Jun 2020
-09:35:49 +0200:
+Reviewed and pushed this one as well as the other ttm fix to drm-misc-fixes.
 
-> Instead of trying to parse CFE version string, which is customized by some
-> vendors, let's just check that "CFE1" was passed on argument 3.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+That should show up in Linus tree rather soon.
+
+Thanks for the help,
+Christian.
+
+PS: Are you working on some new automated scripts to catch that stuff or 
+how did you stumbled over it?
+
 > ---
->  v3: keep COMPILE_TEST compatibility by adding a new function that only checks
->      fw_arg3 when CONFIG_MIPS is defined.
->  v2: use CFE_EPTSEAL definition and avoid using an additional function.
-> 
->  drivers/mtd/parsers/bcm63xxpart.c | 34 +++++++++++--------------------
->  1 file changed, 12 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/mtd/parsers/bcm63xxpart.c b/drivers/mtd/parsers/bcm63xxpart.c
-> index 78f90c6c18fd..c514c04789af 100644
-> --- a/drivers/mtd/parsers/bcm63xxpart.c
-> +++ b/drivers/mtd/parsers/bcm63xxpart.c
-> @@ -22,6 +22,11 @@
->  #include <linux/mtd/partitions.h>
->  #include <linux/of.h>
->  
-> +#ifdef CONFIG_MIPS
-> +#include <asm/bootinfo.h>
-> +#include <asm/fw/cfe/cfe_api.h>
-> +#endif /* CONFIG_MIPS */
-> +
->  #define BCM963XX_CFE_BLOCK_SIZE		SZ_64K	/* always at least 64KiB */
->  
->  #define BCM963XX_CFE_MAGIC_OFFSET	0x4e0
-> @@ -32,28 +37,13 @@
->  #define STR_NULL_TERMINATE(x) \
->  	do { char *_str = (x); _str[sizeof(x) - 1] = 0; } while (0)
->  
-> -static int bcm63xx_detect_cfe(struct mtd_info *master)
-> +static inline int bcm63xx_detect_cfe(void)
->  {
-> -	char buf[9];
-> -	int ret;
-> -	size_t retlen;
-> -
-> -	ret = mtd_read(master, BCM963XX_CFE_VERSION_OFFSET, 5, &retlen,
-> -		       (void *)buf);
-> -	buf[retlen] = 0;
-> -
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (strncmp("cfe-v", buf, 5) == 0)
-> -		return 0;
-> -
-> -	/* very old CFE's do not have the cfe-v string, so check for magic */
-> -	ret = mtd_read(master, BCM963XX_CFE_MAGIC_OFFSET, 8, &retlen,
-> -		       (void *)buf);
-> -	buf[retlen] = 0;
-> -
-> -	return strncmp("CFE1CFE1", buf, 8);
-> +#ifdef CONFIG_MIPS
-> +	return (fw_arg3 == CFE_EPTSEAL);
-> +#else
-> +	return 0;
-> +#endif /* CONFIG_MIPS */
+>   drivers/gpu/drm/ttm/ttm_bo.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+> index f73b81c2576e..0f20e14a4cfd 100644
+> --- a/drivers/gpu/drm/ttm/ttm_bo.c
+> +++ b/drivers/gpu/drm/ttm/ttm_bo.c
+> @@ -883,8 +883,10 @@ static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
+>   	if (!fence)
+>   		return 0;
+>   
+> -	if (no_wait_gpu)
+> +	if (no_wait_gpu) {
+> +		dma_fence_put(fence);
+>   		return -EBUSY;
+> +	}
+>   
+>   	dma_resv_add_shared_fence(bo->base.resv, fence);
+>   
 
-What about:
-
-	ret = 0;
-
-#ifdef CONFIG_MIPS
-	ret = (fw_arg3 == CFE_EPTSEAL)
-#endif
-
-	return ret;
-
-This is for shortening the conditional part.
-
->  }
->  
->  static int bcm63xx_read_nvram(struct mtd_info *master,
-> @@ -138,7 +128,7 @@ static int bcm63xx_parse_cfe_partitions(struct mtd_info *master,
->  	struct bcm963xx_nvram *nvram = NULL;
->  	int ret;
->  
-> -	if (bcm63xx_detect_cfe(master))
-> +	if (!bcm63xx_detect_cfe())
->  		return -EINVAL;
->  
->  	nvram = vzalloc(sizeof(*nvram));
-
-Thanks,
-Miquèl
