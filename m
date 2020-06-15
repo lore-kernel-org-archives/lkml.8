@@ -2,63 +2,64 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DD8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9B3520679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3201B20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vGpLo03w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jDt7zqb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbgFOOQO (ORCPT
+        id S1730518AbgFOOQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35910 "EHLO
+        Mon, 15 Jun 2020 10:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgFOOQN (ORCPT
+        with ESMTP id S1728510AbgFOOQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:16:13 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0685FC061A0E;
-        Mon, 15 Jun 2020 07:16:12 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id mb16so17631617ejb.4;
-        Mon, 15 Jun 2020 07:16:12 -0700 (PDT)
+        Mon, 15 Jun 2020 10:16:15 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0AEC061A0E;
+        Mon, 15 Jun 2020 07:16:14 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id x1so17615379ejd.8;
+        Mon, 15 Jun 2020 07:16:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WC5bFIazCh8vFZr3dbJEpqc1xCdQ+Y0EsDw6h2APg/s=;
-        b=vGpLo03wEbecIwDZs6aLM5MifTH9cIaqISkQ2o8hV3akDsHB8L7PFAdBQYZlhcGMtA
-         TkrxZkXjVCEKb7U+79U16j9wr4Idqho4y+s8QngzmmDcwEtJUAiXW5oBDO/eA7GabpAd
-         cZrKTkKf86XAXvgxHcdsFjPPsYQGDPj7MT2sJ36NGA4pnP5x0ICjMUc73VfKvie0Y/WH
-         r+KoQnbycHx8PoW8PFK096V/HOnwDnFsBd2YV3PPDuZL4Y1lH9ZmiCFwhE1QdalvPgFT
-         3v+jvihcdujS8AVg55AJTK697VUH7/xbL1KNoTZR0eTUK3BgO8+dzBFH2Pbs7EGkwJNi
-         IT1A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ML9B0Vh3wW8QO968+wMjH81XlOEJmAiEuc6FkdL3Yek=;
+        b=jDt7zqb5E65vdo0XIc5HDqUXMviUtrQPxbDlrMbzPrKHhoU2IsYkqGs7JBN7CWEpNf
+         4BTryf0riVYFJKIulUWD/+dbj8/q2P4RSXDqgbHjJGy8cZjbCaO6UOnZYXoQpFTdxpOr
+         yCnBr5wZi+R0Q/93JbFOHM7zCd3l8KJs7W1EstZy1QWNe0uRmNkVcgSsHV0fOsxtfUM2
+         6zKJ2IetNOU4ZwWerpQYt8LEsTTAvrGBJp97Q3IBohka5uZuT72qn192B1vm2JNUBc6B
+         KnV7A9h4F6j63EkF+e8CGXBd20hPZG1ErUhTwVeOOnRhdlonMIL2+mmgk0x6BHSiw/lh
+         XS8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WC5bFIazCh8vFZr3dbJEpqc1xCdQ+Y0EsDw6h2APg/s=;
-        b=VPzvQgJN/SACjKdrFMmuOJIUwyCp4MA+G8wZfP6XV22kpGVgeAfLNo8Ex4gQ3FvCx8
-         bh/32z1iU32BtPSCvtbYn508fHP1y/fKgG/ZFLPD+rdT6hWV4BMKOrbwnclVketHo/8o
-         rLiVCm8CJIrxCIX5VCqEK7MEjn/f/7Xp/Ucv0mrkyLgAgCOQpiylnTz1d2Ede0TX0HHt
-         5fsgFmm3I2wG3tmvJI/TMEedIfVUOGyMhfibZrFgDFi31lv6U//ry2+ZaNhh4Yyy9yqw
-         SUo7dAkF1yYQb/b73tjqZnFgBqFHlVTcolhsT4J32Ylce/PGmINN94awcb6EJQTcwtcZ
-         PA+w==
-X-Gm-Message-State: AOAM532cDYiU5lGJHbXaAijS5XH2ukwffi/OWiQJZUkGiqfTP5kk3btE
-        3vkqRprbR09XoovXyDBRq8s=
-X-Google-Smtp-Source: ABdhPJxjOCr7M3aDqtDu1vsNHUEZH+2MiLrmJ8gWGmyUIpeeQ9Egc2sRH9S49Y4grpgwP83wTtCoKg==
-X-Received: by 2002:a17:906:1b1a:: with SMTP id o26mr25252560ejg.176.1592230571615;
-        Mon, 15 Jun 2020 07:16:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ML9B0Vh3wW8QO968+wMjH81XlOEJmAiEuc6FkdL3Yek=;
+        b=JI5un3JefwKhcY4KPmQ2ti003e//Rba76j9rG1h5kkjN3z9MT6xm7amZOjVNj5s9YQ
+         wVwI/g/sSo9VlOphuVZ4yuxTDioRALkCdKYlZAu3xyWkmiqR5u5ThW52/5KK0Q59ZSbT
+         XdLnx2ZNrljHS7gJlj/tCbVOGQaIGXB5jy7sBiCMF32ynXuToTfeB25asZBn+blOspEP
+         SvELMRwgu8SPJqlxmFUKn54eR1XF+6sR7fHnMVhHLq8qPgvcDLgSpUcwTPhKpF3MnDiX
+         LwPcIwAKHFspBsAuaK+xjsL2psx4QB6NhGY3eKXk1Zqh/dyegVUNkjDRRekEgUBSRWJN
+         u4eQ==
+X-Gm-Message-State: AOAM533wqVmeEPOkxjzi4IRPd6g8IFkLpZs6ohMOoZl75FRVfEA9CyaJ
+        Iqst9GfTS1JLOP8ddiweqQE=
+X-Google-Smtp-Source: ABdhPJxPFp9TIHzv29kuepbE6S/+HTXmDG3s0AIfE2enGrd2uFRNWwz3EU2k08951dQpBxbh4Sl8+g==
+X-Received: by 2002:a17:906:1b1b:: with SMTP id o27mr24110963ejg.264.1592230573617;
+        Mon, 15 Jun 2020 07:16:13 -0700 (PDT)
 Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id s5sm9042275eji.73.2020.06.15.07.16.10
+        by smtp.gmail.com with ESMTPSA id k23sm9124815ejo.120.2020.06.15.07.16.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 07:16:10 -0700 (PDT)
+        Mon, 15 Jun 2020 07:16:12 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
@@ -67,10 +68,12 @@ Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Guru Das Srinagesh <gurus@codeaurora.org>,
         linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] pwm: Miscellaneous fixes for 64-bit support
-Date:   Mon, 15 Jun 2020 16:16:04 +0200
-Message-Id: <20200615141606.2814208-1-thierry.reding@gmail.com>
+Subject: [PATCH 1/2] video: ssd1307fb: Print PWM period using 64-bit format specifier
+Date:   Mon, 15 Jun 2020 16:16:05 +0200
+Message-Id: <20200615141606.2814208-2-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200615141606.2814208-1-thierry.reding@gmail.com>
+References: <20200615141606.2814208-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,25 +81,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The PWM core will soon change the duty cycle and period of PWMs to 64
+bits to allow for a broader range of values. Use a 64-bit format
+specifier to avoid a warning when that change is made.
 
-this contains a couple of fixes for issues that I ran into after
-applying Guru's series to convert PWM period and duty-cycle to 64-bit.
-
-Bartlomiej, can you provide an Acked-by on the first patch so that I can
-take it through the PWM tree along with the rest of Guru's series?
-
-Thanks,
-Thierry
-
-Thierry Reding (2):
-  video: ssd1307fb: Print PWM period using 64-bit format specifier
-  pwm: iqs620a: Use 64-bit division
-
- drivers/pwm/pwm-iqs620a.c       | 7 ++++---
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+---
  drivers/video/fbdev/ssd1307fb.c | 2 +-
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 8e06ba912d60..09425ec317ba 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -312,7 +312,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+ 		/* Enable the PWM */
+ 		pwm_enable(par->pwm);
+ 
+-		dev_dbg(&par->client->dev, "Using PWM%d with a %dns period.\n",
++		dev_dbg(&par->client->dev, "Using PWM%d with a %lluns period.\n",
+ 			par->pwm->pwm, pwm_get_period(par->pwm));
+ 	}
+ 
 -- 
 2.24.1
 
