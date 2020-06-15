@@ -2,134 +2,173 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A731BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78960206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715982067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592215218;
-	bh=NclZlsh0JNDPCh7/tgM7lDu27PNeuUCqty414H60fo4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h+aySzkW5mvu3OogZ5H9R5GZtBrX6/Js+PrRP/nXVh2Zm/XPlPAa+wdhQ/7P2VrB5
-	 guN1yKJwaYNj6SdjeiOAgv5Yk0oCddBBajn+Id9iu7EBMc0zAEAT5D18tXSdvAyA3p
-	 zhCbiD+/sJyvwzWQ6tQN5VdqmkSGHGc4a+kcL2uI=
+	s=default; t=1592215228;
+	bh=00G+G40iLh/fz0ZoDfre7cPvPu8PXFNDupSAUY86Lvw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Wj4eP2uT/m3VFiBs26Jbn47yePIB316Ifui9OuVX+XNsMwnpj+2Vnjd6Jp0ZMYuEB
+	 u4LvOv93JEEJ/T+QcRd2oufWTPsefSfraMwFJpDJCH9j7sBB+TBs5VKs/vi3Be8+BB
+	 J9tBKengscM0RyACMe0RDKgyJguH2sdYFJWuOcak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbgFOKAQ (ORCPT
+        id S1729548AbgFOKAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:00:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50948 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 06:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbgFOKAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:00:13 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729017AbgFOKAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:00:21 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2A52068E;
-        Mon, 15 Jun 2020 10:00:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E0AD20714;
+        Mon, 15 Jun 2020 10:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592215213;
-        bh=NclZlsh0JNDPCh7/tgM7lDu27PNeuUCqty414H60fo4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j97I5KZbz9w21gUAN1DylupVwPgIjeFytHA4gPPAudiRlCwvnhaBcnTrzyVhV1D2Y
-         XFel1vN89smdSsfXFsHkK2Jjr5D/tIr/dag7doSecgYiiJJUiJMpUYaXWkpnCLEHlE
-         k+IVad79C8U9qrJvICVhkTlseaDwlnHZeXHbISeI=
-Date:   Mon, 15 Jun 2020 11:00:08 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] kconfig: unify cc-option and as-option
-Message-ID: <20200615100007.GD2477@willie-the-truck>
-References: <20200614144341.1077495-1-masahiroy@kernel.org>
- <20200614144341.1077495-2-masahiroy@kernel.org>
+        s=default; t=1592215221;
+        bh=00G+G40iLh/fz0ZoDfre7cPvPu8PXFNDupSAUY86Lvw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=15MPTThiFiuBGre6NKmQUmf7lBRfm5NBAyLEIkeijmEMZ2kWvGTAQVLZ4mTdSZ8TK
+         OIE7eU4azos03DmxpznByoh4CP/xnbp6jlqp4BKMO1d2d4tUECtI8NEs0arkc0j+G6
+         KfMZdv7ggoIWzQvzd+Zt3tiL2pxVQ5SaoXtqrmiw=
+Received: by mail-oi1-f169.google.com with SMTP id x202so15328039oix.11;
+        Mon, 15 Jun 2020 03:00:21 -0700 (PDT)
+X-Gm-Message-State: AOAM532mNQulw32ycf3foHJ3HOFc/80lhUffjPjq94xY6B8KQNDj6j/7
+        BejDowYLmTbRy/HgJz1K31c9REoMCKvns1X9ge8=
+X-Google-Smtp-Source: ABdhPJw3tdI8zwDBVzm2IE5Fc1IJYBRoBO9Vu7dfS8iQs1S3WvzDCbp3jBUnfOMao1V0VmclY1k4jJKLGRpqrW7v99o=
+X-Received: by 2002:aca:ba03:: with SMTP id k3mr1821642oif.33.1592215220452;
+ Mon, 15 Jun 2020 03:00:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200614144341.1077495-2-masahiroy@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200527171425.GA4053@embeddedor> <202005290131.4B104937C@keescook>
+ <20200529173722.GB10051@embeddedor>
+In-Reply-To: <20200529173722.GB10051@embeddedor>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 15 Jun 2020 12:00:09 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGargNLdbuy0AhLUJS4j1eANGuMnvBpzWBTeVmr-9=-1g@mail.gmail.com>
+Message-ID: <CAMj1kXGargNLdbuy0AhLUJS4j1eANGuMnvBpzWBTeVmr-9=-1g@mail.gmail.com>
+Subject: Re: [PATCH] efi: Replace zero-length array and use struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 11:43:41PM +0900, Masahiro Yamada wrote:
-> cc-option and as-option are almost the same; both pass the flag to
-> $(CC). The main difference is the cc-option stops before the assemble
-> stage (-S option) whereas as-option stops after it (-c option).
-> 
-> I chose -S because it is slightly faster, but $(cc-option,-gz=zlib)
-> returns a wrong result (https://lkml.org/lkml/2020/6/9/1529).
-> It has been fixed by a separate patch, but using -c is more robust.
-> 
-> However, you cannot simply replace -S with -c because the following
-> code would break:
-> 
->     depends on $(cc-option,-gsplit-dwarf)
-> 
-> The combination of -c and -gsplit-dwarf does not accept /dev/null as
-> output.
-> 
->   $ cat /dev/null | gcc -gsplit-dwarf -S -x c - -o /dev/null
->   $ echo $?
->   0
-> 
->   $ cat /dev/null | gcc -gsplit-dwarf -c -x c - -o /dev/null
->   objcopy: Warning: '/dev/null' is not an ordinary file
->   $ echo $?
->   1
-> 
->   $ cat /dev/null | gcc -gsplit-dwarf -c -x c - -o tmp.o
->   $ echo $?
->   0
-> 
-> There is another flag that creates an separate file based on the
-> object file path:
-> 
->   $ cat /dev/null | gcc -ftest-coverage -c -x c - -o /dev/null
->   <stdin>:1: error: cannot open /dev/null.gcno
-> 
-> So, we cannot use /dev/null to sink the output.
-> 
-> Align the cc-option implementation with scripts/Kbuild.include.
-> 
-> With -c option used in cc-option, as-option is unneeded.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  arch/arm64/Kconfig      | 2 +-
->  lib/Kconfig.debug       | 1 -
->  scripts/Kconfig.include | 8 +-------
->  3 files changed, 2 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 31380da53689..6eb18f45258e 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1564,7 +1564,7 @@ config CC_HAS_SIGN_RETURN_ADDRESS
->  	def_bool $(cc-option,-msign-return-address=all)
->  
->  config AS_HAS_PAC
-> -	def_bool $(as-option,-Wa$(comma)-march=armv8.3-a)
-> +	def_bool $(cc-option,-Wa$(comma)-march=armv8.3-a)
+On Fri, 29 May 2020 at 19:32, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
+>
+> On Fri, May 29, 2020 at 01:31:54AM -0700, Kees Cook wrote:
+> > On Wed, May 27, 2020 at 12:14:25PM -0500, Gustavo A. R. Silva wrote:
+> > > The current codebase makes use of the zero-length array language
+> > > extension to the C90 standard, but the preferred mechanism to declare
+> > > variable-length types such as these ones is a flexible array member[1][2],
+> > > introduced in C99:
+> > >
+> > > struct foo {
+> > >         int stuff;
+> > >         struct boo array[];
+> > > };
+> > >
+> > > By making use of the mechanism above, we will get a compiler warning
+> > > in case the flexible array does not occur last in the structure, which
+> > > will help us prevent some kind of undefined behavior bugs from being
+> > > inadvertently introduced[3] to the codebase from now on.
+> > >
+> > > Also, notice that, dynamic memory allocations won't be affected by
+> > > this change:
+> > >
+> > > "Flexible array members have incomplete type, and so the sizeof operator
+> > > may not be applied. As a quirk of the original implementation of
+> > > zero-length arrays, sizeof evaluates to zero."[1]
+> > >
+> > > sizeof(flexible-array-member) triggers a warning because flexible array
+> > > members have incomplete type[1]. There are some instances of code in
+> > > which the sizeof operator is being incorrectly/erroneously applied to
+> > > zero-length arrays and the result is zero. Such instances may be hiding
+> > > some bugs. So, this work (flexible-array member conversions) will also
+> > > help to get completely rid of those sorts of issues.
+> > >
+> > > Lastly, make use of the sizeof_field() helper instead of an open-coded
+> > > version.
+> > >
+> > > This issue was found with the help of Coccinelle and audited _manually_.
+> > >
+> > > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > > [2] https://github.com/KSPP/linux/issues/21
+> > > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> > >
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> >
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> >
+>
+> Thanks :)
+>
 
-For this arm64 part:
+Queued in efi/urgent, thanks
 
-Acked-by: Will Deacon <will@kernel.org>
 
-Will
+> Please, see more comments below...
+>
+> > > ---
+> > >  drivers/firmware/efi/efi.c | 3 ++-
+> > >  include/linux/efi.h        | 7 ++-----
+> > >  2 files changed, 4 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > > index 7f1657b6c30df..edc5d36caf54e 100644
+> > > --- a/drivers/firmware/efi/efi.c
+> > > +++ b/drivers/firmware/efi/efi.c
+> > > @@ -622,7 +622,8 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
+> > >                     rsv = (void *)(p + prsv % PAGE_SIZE);
+> > >
+> > >                     /* reserve the entry itself */
+> > > -                   memblock_reserve(prsv, EFI_MEMRESERVE_SIZE(rsv->size));
+> > > +                   memblock_reserve(prsv,
+> > > +                                    struct_size(rsv, entry, rsv->size));
+> > >
+> > >                     for (i = 0; i < atomic_read(&rsv->count); i++) {
+> > >                             memblock_reserve(rsv->entry[i].base,
+> > > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > > index c45ac969ea4eb..328cc52a5fd45 100644
+> > > --- a/include/linux/efi.h
+> > > +++ b/include/linux/efi.h
+> > > @@ -1234,14 +1234,11 @@ struct linux_efi_memreserve {
+> > >     struct {
+> > >             phys_addr_t     base;
+> > >             phys_addr_t     size;
+> > > -   } entry[0];
+> > > +   } entry[];
+> > >  };
+> > >
+> > > -#define EFI_MEMRESERVE_SIZE(count) (sizeof(struct linux_efi_memreserve) + \
+> > > -   (count) * sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+> > > -
+> > >  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+> > > -   / sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+> > > +   / sizeof_field(struct linux_efi_memreserve, entry[0]))
+> >
+> > Whoa. This is kind of a "reverse struct_size()". I wonder if any other
+> > places in the kernel do a similar calculation?
+> >
+>
+> So far this is the only intance of this I've run into.
+>
+> What I've found is that there are many instances of the open-coded
+> version of sizeof_field() and offsetof(). I'm addressing them on the
+> way.
+>
+> Thanks
+> --
+> Gustavo
