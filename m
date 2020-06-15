@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C213AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186002067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7A920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgFOHvg (ORCPT
+        id S1729211AbgFOHvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:51:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39986 "EHLO mx2.suse.de"
+        Mon, 15 Jun 2020 03:51:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39996 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728823AbgFOHtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:49:16 -0400
+        id S1728814AbgFOHtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:49:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D8288B019;
+        by mx2.suse.de (Postfix) with ESMTP id AF005B001;
         Mon, 15 Jun 2020 07:49:16 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 10/38] vt: move vc_translate to vt.c and rename it
-Date:   Mon, 15 Jun 2020 09:48:42 +0200
-Message-Id: <20200615074910.19267-10-jslaby@suse.cz>
+Subject: [PATCH 09/38] vt: get rid of VT10.ID macros
+Date:   Mon, 15 Jun 2020 09:48:41 +0200
+Message-Id: <20200615074910.19267-9-jslaby@suse.cz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615074910.19267-1-jslaby@suse.cz>
 References: <20200615074910.19267-1-jslaby@suse.cz>
@@ -41,72 +40,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vc_translate is used only in vt.c, so move the definition from a header
-there. Also, it used to be a macro, so be modern and make a static
-inline from it. This makes the code actually readable.
+VT100ID is unused, but defined twice. Kill it.
 
-And as a preparation for next patches, rename it to vc_translate_ascii.
-vc_translate will be a wrapper for both unicode and this one.
+VT102ID is used only in respond_ID. Define there a variable with proper
+type and use that instead. Then drop both defines of VT102ID too.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/vt/vt.c     | 14 +++++++++++++-
- include/linux/vt_kern.h |  3 ---
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ drivers/tty/vt/vt.c     | 11 ++++-------
+ include/linux/console.h |  6 ------
+ 2 files changed, 4 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 8d9e532f050a..b86639351dd2 100644
+index 49c9d1e4067c..8d9e532f050a 100644
 --- a/drivers/tty/vt/vt.c
 +++ b/drivers/tty/vt/vt.c
-@@ -2560,6 +2560,18 @@ static void con_flush(struct vc_data *vc, unsigned long draw_from,
- 	*draw_x = -1;
+@@ -1397,12 +1397,6 @@ enum { EPecma = 0, EPdec, EPeq, EPgt, EPlt};
+ #define kbdapplic	VC_APPLIC
+ #define lnm		VC_CRLF
+ 
+-/*
+- * this is what the terminal answers to a ESC-Z or csi0c query.
+- */
+-#define VT100ID "\033[?1;2c"
+-#define VT102ID "\033[?6c"
+-
+ const unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
+ 				       8,12,10,14, 9,13,11,15 };
+ 
+@@ -1835,7 +1829,10 @@ static inline void status_report(struct tty_struct *tty)
+ 
+ static inline void respond_ID(struct tty_struct *tty)
+ {
+-	respond_string(VT102ID, strlen(VT102ID), tty->port);
++	/* terminal answer to an ESC-Z or csi0c query. */
++	static const char vt102_id[] = "\033[?6c";
++
++	respond_string(vt102_id, strlen(vt102_id), tty->port);
  }
  
-+static inline int vc_translate_ascii(const struct vc_data *vc, int c)
-+{
-+	if (IS_ENABLED(CONFIG_CONSOLE_TRANSLATIONS)) {
-+		if (vc->vc_toggle_meta)
-+			c |= 0x80;
-+
-+		return vc->vc_translate[c];
-+	}
-+
-+	return c;
-+}
-+
- /* acquires console_lock */
- static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int count)
- {
-@@ -2687,7 +2699,7 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
- 			c = 0xfffd;
- 		    tc = c;
- 		} else {	/* no utf or alternate charset mode */
--		    tc = vc_translate(vc, c);
-+			tc = vc_translate_ascii(vc, c);
- 		}
+ void mouse_report(struct tty_struct *tty, int butt, int mrx, int mry)
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 964b67912b04..0670d3491e0e 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -24,12 +24,6 @@ struct module;
+ struct tty_struct;
+ struct notifier_block;
  
- 		param.c = tc;
-diff --git a/include/linux/vt_kern.h b/include/linux/vt_kern.h
-index abf5bccf906a..349e39c3ab60 100644
---- a/include/linux/vt_kern.h
-+++ b/include/linux/vt_kern.h
-@@ -74,8 +74,6 @@ int con_set_default_unimap(struct vc_data *vc);
- void con_free_unimap(struct vc_data *vc);
- int con_copy_unimap(struct vc_data *dst_vc, struct vc_data *src_vc);
- 
--#define vc_translate(vc, c) ((vc)->vc_translate[(c) |			\
--					((vc)->vc_toggle_meta ? 0x80 : 0)])
- #else
- static inline int con_set_trans_old(unsigned char __user *table)
- {
-@@ -124,7 +122,6 @@ int con_copy_unimap(struct vc_data *dst_vc, struct vc_data *src_vc)
- 	return 0;
- }
- 
--#define vc_translate(vc, c) (c)
- #endif
- 
- /* vt.c */
+-/*
+- * this is what the terminal answers to a ESC-Z or csi0c query.
+- */
+-#define VT100ID "\033[?1;2c"
+-#define VT102ID "\033[?6c"
+-
+ enum con_scroll {
+ 	SM_UP,
+ 	SM_DOWN,
 -- 
 2.27.0
 
