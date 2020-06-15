@@ -2,187 +2,106 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58310C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD07C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358642063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592233363;
-	bh=cLE/KDQ7zi8CXnleskZoZ1Ql9hp/DpDm7B2xPgtp8Pc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dS9MArv8PbS2KKo40mj6SKo74e0re/CABWFMSvsQBQ/y9R0/skF74h+rpl6PE+wO4
-	 XUdMxWFhkV2Ktr/tuBXSeUm3Jg8uvEFIFTlxe0O+6AdLxTwkfSQFb+ZvFn2ztkVtde
-	 /PunDeqQFobgql9jOAQtIta/V1MTUHNJ8SOUNdAc=
+	by mail.kernel.org (Postfix) with ESMTP id 144332063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:04:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SFsU/76c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbgFOPCm (ORCPT
+        id S1730846AbgFOPEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730777AbgFOPCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:02:41 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05B542078A;
-        Mon, 15 Jun 2020 15:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592233360;
-        bh=cLE/KDQ7zi8CXnleskZoZ1Ql9hp/DpDm7B2xPgtp8Pc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y/Z6obKYdtRw3N7G0dSci0N/ySSHnfwI0VNvmTCeY5dHarhRxKChHbUr6Buy9daJP
-         D4GTJuhsL/S5ZeAsl+9VS3pxK89gzUu2/ZqmiHMO2Yj5hAnMlh0RuCyELdAW2JFx3u
-         wr/1hQxPWYOL9irTK4WJNpAqnTDfHvZBVpb+ZVVs=
-Received: by mail-ot1-f42.google.com with SMTP id n5so2708691otj.1;
-        Mon, 15 Jun 2020 08:02:39 -0700 (PDT)
-X-Gm-Message-State: AOAM532EM5j/AyvpSbbWi9j5UQinstFVaQwmlaCAq06tbrAIz0M03qz2
-        Bo4HU11cnwS+FjD5wPaNSzFjkcmbzs6dSCGc+Q==
-X-Google-Smtp-Source: ABdhPJzjxGO9DWEIsfipS4yrm2PPJNlfjEILXBJsHkZzS1HbqK8iCTqz315EJs5dkJCwXWaRJRWjBuWpAO9+qSTHPZY=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr22220499ots.192.1592233359274;
- Mon, 15 Jun 2020 08:02:39 -0700 (PDT)
+        Mon, 15 Jun 2020 11:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730213AbgFOPEI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 11:04:08 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656E8C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jNEVxB8K8qkb0jxDWu2/VVQDIry1tExCa9xuuvd1cs0=; b=SFsU/76cAf/cYf4hUgNJOHfJ0j
+        17FLfyK9bUDLjXvy8yoEhllceLlOwr5/xLuPtgYVvX8et5ZvjBknrKLgWQYlpWwJbQHnziNy95SkH
+        Eda6lq/FS29jNdz2WwNMn7T1xN6qaodxPcHwMsMbrahnZ4+j3kWGSNEalil6t5+HMFgaeunDXA+gm
+        pxY22UgG/Id/MONFk3WJIm6TNH7hkCp6KsEto04/zJSefFe18iO0flvl0vQAN//ibFOH+gxVtIsbf
+        8AmoCohlPKw67hKDBq0kdY/8CAOctuvOU3MmYeQf29nE0sWm1kPJmyW8S8CoCiHgh3ybrZX6KCrKy
+        eajqibMg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkqe1-0007MO-Lu; Mon, 15 Jun 2020 15:03:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D85B83003E1;
+        Mon, 15 Jun 2020 17:03:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BDCF2203C3763; Mon, 15 Jun 2020 17:03:27 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 17:03:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
+ noinstr-compatible
+Message-ID: <20200615150327.GW2531@hirez.programming.kicks-ass.net>
+References: <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
+ <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
+ <20200608110108.GB2497@hirez.programming.kicks-ass.net>
+ <20200611215538.GE4496@worktop.programming.kicks-ass.net>
+ <CACT4Y+aKVKEp1yoBYSH0ebJxeqKj8TPR9MVtHC1Mh=jgX0ZvLw@mail.gmail.com>
+ <20200612114900.GA187027@google.com>
+ <CACT4Y+bBtCbEk2tg60gn5bgfBjARQFBgtqkQg8VnLLg5JwyL5g@mail.gmail.com>
+ <CANpmjNM+Tcn40MsfFKvKxNTtev-TXDsosN+z9ATL8hVJdK1yug@mail.gmail.com>
+ <20200615142949.GT2531@hirez.programming.kicks-ass.net>
+ <20200615145336.GA220132@google.com>
 MIME-Version: 1.0
-References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
- <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
- <20200612221003.GA3901624@bogus> <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
-In-Reply-To: <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 15 Jun 2020 09:02:28 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+o6Hwz6vN2mgYGnZF4wX5nFoaXRMweQr8euep-9OmBiA@mail.gmail.com>
-Message-ID: <CAL_Jsq+o6Hwz6vN2mgYGnZF4wX5nFoaXRMweQr8euep-9OmBiA@mail.gmail.com>
-Subject: Re: [PATCH v10 1/4] dt-bindings: media: i2c: Add bindings for Maxim
- Integrated MAX9286
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        devicetree@vger.kernel.org,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615145336.GA220132@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 6:28 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
->
-> Hi Rob,
->
-> On Fri, Jun 12, 2020 at 04:10:03PM -0600, Rob Herring wrote:
-> > On Fri, 12 Jun 2020 15:47:10 +0100, Kieran Bingham wrote:
-> > > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > >
-> > > The MAX9286 deserializes video data received on up to 4 Gigabit
-> > > Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using=
- up
-> > > to 4 data lanes.
-> > >
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboar=
-d.com>
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.co=
-m>
-> > > Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
-h.se>
-> > > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnat=
-ech.se>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > >
-> > > ---
-> > >
-> > > v7:
-> > >  - Collect Rob's RB tag
-> > >  - Remove redundant maxItems from remote-endpoints
-> > >  - Fix SPDX licence tag
-> > >
-> > > v10:
-> > > [Jacopo]
-> > >  - Fix dt-validation
-> > >  - Fix dt-binding examples with 2 reg entries
-> > >
-> > > [Kieran]
-> > >  - Correctly match the hex camera node reg
-> > >  - Add (required) GPIO controller support
-> > >
-> > >  .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++=
-++
-> > >  1 file changed, 366 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim=
-,max9286.yaml
-> > >
-> >
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/me=
-dia/i2c/maxim,max9286.example.dt.yaml: example-0: i2c@e66d8000:reg:0: [0, 3=
-865935872, 0, 64] is too long
-> >
-> >
-> > See https://patchwork.ozlabs.org/patch/1308280
-> >
-> > If you already ran 'make dt_binding_check' and didn't see the above
-> > error(s), then make sure dt-schema is up to date:
-> >
-> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master=
- --upgrade
-> >
->
-> I have updated my dt-schema installation to the latest github master
-> -------------------------------------------------------------------------=
-------
-> Successfully installed dtschema-2020.6.dev8+g4d2d86c
->
-> https://github.com/devicetree-org/dt-schema/commit/4d2d86c5cd65cd3944ce0a=
-aa400866bc36727bea
->
-> $ /usr/bin/dt-validate -V
-> 2020.6.dev8+g4d2d86c
-> -------------------------------------------------------------------------=
-------
->
-> But I still cannot reproduce the error.
->
-> However, I see this commit in your next branch
-> https://github.com/devicetree-org/dt-schema/commit/b72500282cfd2eba6f9df4=
-d7553f696544b40ee6
-> "schemas: Add a schema to check 'reg' sizes "
->
-> Which sounds very likely related to the above reported error.
-> Was this intentional ?
+On Mon, Jun 15, 2020 at 04:53:36PM +0200, Marco Elver wrote:
+> On Mon, 15 Jun 2020, Peter Zijlstra wrote:
+> 
+> > On Mon, Jun 15, 2020 at 09:53:06AM +0200, Marco Elver wrote:
+> > > 
+> > > Disabling KCOV for smp_processor_id now moves the crash elsewhere. In
+> > > the case of KASAN into its 'memcpy' wrapper, called after
+> > > __this_cpu_read in fixup_bad_iret. This is making me suspicious,
+> > > because it shouldn't be called from the noinstr functions.
+> > 
+> > With your .config, objtool complains about exactly that though:
+> > 
+> > vmlinux.o: warning: objtool: fixup_bad_iret()+0x8e: call to memcpy() leaves .noinstr.text section
+> > 
+> > The utterly gruesome thing below 'cures' that.
+> 
+> Is __memcpy() generally available? I think that bypasses KASAN and
+> whatever else.
 
-Yes, I can't add the new checks to master until all the in tree schema
-are fixed yet I want to check submissions with pending checks, so I
-created the 'next' branch.
-
-> I'm not sure how I should handle this. The error reports the i2c node
-> parents should have both address-cells and size-cells properties set
-> to 2, but in the example there is not i2c node parent at all :)
-> Should I add a parent node for the i2c in the example snippet ?
-
-The examples have default sizes of 1 cell. If you need something
-different, the example has to define a parent node to specify it. In
-your case, I'd just change 'reg' to use 1 cell each.
-
-Rob
+Yes, I think so. x86_64 needs lib/memcpy_64.S in .noinstr.text then. For
+i386 it's an __always_inline inline-asm thing.
