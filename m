@@ -2,206 +2,109 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFECC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E8F20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DayEcq2q"
+	by mail.kernel.org (Postfix) with ESMTP id 3B88C20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgFOMNw (ORCPT
+        id S1729992AbgFOMOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:13:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30231 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729962AbgFOMNq (ORCPT
+        Mon, 15 Jun 2020 08:14:10 -0400
+Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:52605 "EHLO
+        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729981AbgFOMOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:13:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592223224;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=VF/bKvZ3DQHEsMfrPd1x4vxGKYtMws61vYLWQVeHqIA=;
-        b=DayEcq2qVRhvg34fUEudaiIOj5y2actc3b7tw2aXredHnSsQh1BgPPlH/p46IjNwCDm3xD
-        itny6fjGpMMSXyqlIaj0Cv8MYL6zmlXJPYGhEgQaPkmgHGU3MKGlHw83Ui/ly/UM32BpVV
-        0lkDF0Kjf4F9IY/mF2K3wiahtzEnMyI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-yHHbBN9xOa6F1x-56JI5Aw-1; Mon, 15 Jun 2020 08:13:39 -0400
-X-MC-Unique: yHHbBN9xOa6F1x-56JI5Aw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5932108BD0F;
-        Mon, 15 Jun 2020 12:13:37 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 949BE60C47;
-        Mon, 15 Jun 2020 12:13:35 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: async_pf: change kvm_setup_async_pf()/kvm_arch_setup_async_pf() return type to bool
-Date:   Mon, 15 Jun 2020 14:13:34 +0200
-Message-Id: <20200615121334.91300-1-vkuznets@redhat.com>
+        Mon, 15 Jun 2020 08:14:04 -0400
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id 99F0B1C35E4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 13:14:00 +0100 (IST)
+Received: (qmail 24394 invoked from network); 15 Jun 2020 12:14:00 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 15 Jun 2020 12:14:00 -0000
+Date:   Mon, 15 Jun 2020 13:13:58 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] fs: Do not check if there is a fsnotify watcher on pseudo
+ inodes
+Message-ID: <20200615121358.GF3183@techsingularity.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike normal 'int' functions returning '0' on success, kvm_setup_async_pf()/
-kvm_arch_setup_async_pf() return '1' when a job to handle page fault
-asynchronously was scheduled and '0' otherwise. To avoid the confusion
-change return type to 'bool'.
+Changelog since v1
+o Updated changelog
 
-No functional change intended.
+The kernel uses internal mounts created by kern_mount() and populated
+with files with no lookup path by alloc_file_pseudo for a variety of
+reasons. An example of such a mount is for anonymous pipes. For pipes,
+every vfs_write regardless of filesystem, fsnotify_modify() is called to
+notify of any changes which incurs a small amount of overhead in fsnotify
+even when there are no watchers. It can also trigger for reads and readv
+and writev, it was simply vfs_write() that was noticed first.
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+A patch is pending that reduces, but does not eliminte, the overhead of
+fsnotify but for files that cannot be looked up via a path, even that
+small overhead is unnecessary. The user API for fanotify is based on
+the pathname and a dirfd and proc entries appear to be the only visible
+representation of the files. Proc does not have the same pathname as the
+internal entry and the proc inode is not the same as the internal inode
+so even if fanotify is used on a file under /proc/XX/fd, no useful events
+are notified.
+
+This patch changes alloc_file_pseudo() to always opt out of fsnotify by
+setting FMODE_NONOTIFY flag so that no check is made for fsnotify watchers
+on pseudo files. This should be safe as the underlying helper for the
+dentry is d_alloc_pseudo which explicitly states that no lookups are ever
+performed meaning that fanotify should have nothing useful to attach to.
+
+The test motivating this was "perf bench sched messaging --pipe". On
+a single-socket machine using threads the difference of the patch was
+as follows.
+
+                              5.7.0                  5.7.0
+                            vanilla        nofsnotify-v1r1
+Amean     1       1.3837 (   0.00%)      1.3547 (   2.10%)
+Amean     3       3.7360 (   0.00%)      3.6543 (   2.19%)
+Amean     5       5.8130 (   0.00%)      5.7233 *   1.54%*
+Amean     7       8.1490 (   0.00%)      7.9730 *   2.16%*
+Amean     12     14.6843 (   0.00%)     14.1820 (   3.42%)
+Amean     18     21.8840 (   0.00%)     21.7460 (   0.63%)
+Amean     24     28.8697 (   0.00%)     29.1680 (  -1.03%)
+Amean     30     36.0787 (   0.00%)     35.2640 *   2.26%*
+Amean     32     38.0527 (   0.00%)     38.1223 (  -0.18%)
+
+The difference is small but in some cases it's outside the noise so
+while marginal, there is still some small benefit to ignoring fsnotify
+for files allocated via alloc_file_pseudo in some cases.
+
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 ---
- arch/s390/kvm/kvm-s390.c | 20 +++++++++-----------
- arch/x86/kvm/mmu/mmu.c   |  4 ++--
- include/linux/kvm_host.h |  4 ++--
- virt/kvm/async_pf.c      | 16 ++++++++++------
- 4 files changed, 23 insertions(+), 21 deletions(-)
+ fs/file_table.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index d47c19718615..7fd4fdb165fc 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3954,33 +3954,31 @@ bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu)
- 	return true;
- }
- 
--static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu)
-+static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu)
- {
- 	hva_t hva;
- 	struct kvm_arch_async_pf arch;
--	int rc;
- 
- 	if (vcpu->arch.pfault_token == KVM_S390_PFAULT_TOKEN_INVALID)
--		return 0;
-+		return false;
- 	if ((vcpu->arch.sie_block->gpsw.mask & vcpu->arch.pfault_select) !=
- 	    vcpu->arch.pfault_compare)
--		return 0;
-+		return false;
- 	if (psw_extint_disabled(vcpu))
--		return 0;
-+		return false;
- 	if (kvm_s390_vcpu_has_irq(vcpu, 0))
--		return 0;
-+		return false;
- 	if (!(vcpu->arch.sie_block->gcr[0] & CR0_SERVICE_SIGNAL_SUBMASK))
--		return 0;
-+		return false;
- 	if (!vcpu->arch.gmap->pfault_enabled)
--		return 0;
-+		return false;
- 
- 	hva = gfn_to_hva(vcpu->kvm, gpa_to_gfn(current->thread.gmap_addr));
- 	hva += current->thread.gmap_addr & ~PAGE_MASK;
- 	if (read_guest_real(vcpu, vcpu->arch.pfault_token, &arch.pfault_token, 8))
--		return 0;
-+		return false;
- 
--	rc = kvm_setup_async_pf(vcpu, current->thread.gmap_addr, hva, &arch);
--	return rc;
-+	return kvm_setup_async_pf(vcpu, current->thread.gmap_addr, hva, &arch);
- }
- 
- static int vcpu_pre_run(struct kvm_vcpu *vcpu)
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 979a7e1c263d..3dd0af7e7515 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4045,8 +4045,8 @@ static void shadow_page_table_clear_flood(struct kvm_vcpu *vcpu, gva_t addr)
- 	walk_shadow_page_lockless_end(vcpu);
- }
- 
--static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--				   gfn_t gfn)
-+static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-+				    gfn_t gfn)
- {
- 	struct kvm_arch_async_pf arch;
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 62ec926c78a0..9edc6fc71a89 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -211,8 +211,8 @@ struct kvm_async_pf {
- 
- void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu);
- void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu);
--int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--		       unsigned long hva, struct kvm_arch_async_pf *arch);
-+bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-+			unsigned long hva, struct kvm_arch_async_pf *arch);
- int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
- #endif
- 
-diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-index 45799606bb3e..390f758d5a27 100644
---- a/virt/kvm/async_pf.c
-+++ b/virt/kvm/async_pf.c
-@@ -156,17 +156,21 @@ void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu)
- 	}
- }
- 
--int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--		       unsigned long hva, struct kvm_arch_async_pf *arch)
-+/*
-+ * Try to schedule a job to handle page fault asynchronously. Returns 'true' on
-+ * success, 'false' on failure (page fault has to be handled synchronously).
-+ */
-+bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-+			unsigned long hva, struct kvm_arch_async_pf *arch)
- {
- 	struct kvm_async_pf *work;
- 
- 	if (vcpu->async_pf.queued >= ASYNC_PF_PER_VCPU)
--		return 0;
-+		return false;
- 
- 	/* Arch specific code should not do async PF in this case */
- 	if (unlikely(kvm_is_error_hva(hva)))
--		return 0;
-+		return false;
- 
- 	/*
- 	 * do alloc nowait since if we are going to sleep anyway we
-@@ -174,7 +178,7 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	 */
- 	work = kmem_cache_zalloc(async_pf_cache, GFP_NOWAIT | __GFP_NOWARN);
- 	if (!work)
--		return 0;
-+		return false;
- 
- 	work->wakeup_all = false;
- 	work->vcpu = vcpu;
-@@ -193,7 +197,7 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 
- 	schedule_work(&work->work);
- 
--	return 1;
-+	return true;
- }
- 
- int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu)
--- 
-2.25.4
-
+diff --git a/fs/file_table.c b/fs/file_table.c
+index 30d55c9a1744..0076ccf67a7d 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -229,7 +229,7 @@ struct file *alloc_file_pseudo(struct inode *inode, struct vfsmount *mnt,
+ 		d_set_d_op(path.dentry, &anon_ops);
+ 	path.mnt = mntget(mnt);
+ 	d_instantiate(path.dentry, inode);
+-	file = alloc_file(&path, flags, fops);
++	file = alloc_file(&path, flags | FMODE_NONOTIFY, fops);
+ 	if (IS_ERR(file)) {
+ 		ihold(inode);
+ 		path_put(&path);
