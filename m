@@ -2,52 +2,55 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A20DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B01E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9292076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5792076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eHfpexpJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MeNEW3aT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbgFOMxo (ORCPT
+        id S1730131AbgFOMxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
+        Mon, 15 Jun 2020 08:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729643AbgFOMxb (ORCPT
+        with ESMTP id S1729976AbgFOMxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:53:31 -0400
+        Mon, 15 Jun 2020 08:53:33 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F2BC05BD43;
-        Mon, 15 Jun 2020 05:53:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2EDC061A0E;
+        Mon, 15 Jun 2020 05:53:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=BbLzIVFa4A6zUaNf1L0nDn8DbczZnfgkEyA73ztXvCw=; b=eHfpexpJTLJHg1CM2SZriyfffr
-        qH+XQnvHEPvo2L2p3Nn+0V0EaaIwExHSpbbphZW3JHBWMFhCv5EUgC7DnMn2qRvVrRoKyIOmAgbGe
-        t6M6WhcCqMRYYCyUrfRRC3RUYTatpj1SKtOszQLRmzMy+FPk/laJymS71GfYVKBDWI1wz4vr2xJID
-        MwI58dESnvKWx9BvhFlBTZT4ncZl4GSfTDWWmLNbQKJ+gvpRy50tlp5cBrVL6g3u3mtt9loUkRE2l
-        Y0rHbnO0vZxxQso6tuxh1Ym7McZADkKv+ALZsbv9f3rFYCyzTEaTgJ1IqhDqHhIghLeHjbHPwjsjW
-        WnL7oGMg==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=u54wP20heItSjBrM1g0XnPlyWiu/NX2hd7IIPwg/waE=; b=MeNEW3aTJXMYp1LOpYpUUbdKeK
+        0+Xe+1Jo/pYG0hmbG5G2reKrgPB9re5eUMkMLMP3FBCv33ECN3WHhVgpn+NOLvVm0y6NT0gGkmYLR
+        CbCYNmtMNZ+Pohj9IIv7gOUxyElQmSf7sTqs44KFdg58CxoX/tUrxf/OpnlwwvDPd8cxfWCVq4IXh
+        T5E6h4GiLHBzvwRJH50x/xcGl65GSITsM2UYUJrdozJZeadJFlZogQgT5aj0S7zl2PJFOJcoxkRBn
+        lU0B++FMZegh1IRWLqonRsp1l2/Qd7wpPk/l6uma8aiw/pSbQSbCASJnE9qVta3JANFkGyBHU96Ds
+        D6tfP4Hw==;
 Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkoc9-0000hi-OW; Mon, 15 Jun 2020 12:53:26 +0000
+        id 1jkocG-0000oN-VO; Mon, 15 Jun 2020 12:53:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: decruft the early init / initrd / initramfs code
-Date:   Mon, 15 Jun 2020 14:53:07 +0200
-Message-Id: <20200615125323.930983-1-hch@lst.de>
+Subject: [PATCH 03/16] md: replace the RAID_AUTORUN ioctl with a direct function call
+Date:   Mon, 15 Jun 2020 14:53:10 +0200
+Message-Id: <20200615125323.930983-4-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615125323.930983-1-hch@lst.de>
+References: <20200615125323.930983-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -56,9 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Instead of using a spcial RAID_AUTORUN ioctl that only exists for
+non-modular builds and is only called from the early init code, just
+call the actual function directly.
 
-this series starts to move the early init code away from requiring
-KERNEL_DS to be implicitly set during early startup.  It does so by
-first removing legacy unused cruft, and the switches away the code
-from struct file based APIs to our more usual in-kernel APIs.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/md/md-autodetect.c | 10 ++--------
+ drivers/md/md.c            | 14 +-------------
+ drivers/md/md.h            |  3 +++
+ 3 files changed, 6 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/md/md-autodetect.c b/drivers/md/md-autodetect.c
+index fe806f7b9759a1..0eb746211ed53c 100644
+--- a/drivers/md/md-autodetect.c
++++ b/drivers/md/md-autodetect.c
+@@ -9,6 +9,7 @@
+ #include <linux/raid/detect.h>
+ #include <linux/raid/md_u.h>
+ #include <linux/raid/md_p.h>
++#include "md.h"
+ 
+ /*
+  * When md (and any require personalities) are compiled into the kernel
+@@ -285,8 +286,6 @@ __setup("md=", md_setup);
+ 
+ static void __init autodetect_raid(void)
+ {
+-	int fd;
+-
+ 	/*
+ 	 * Since we don't want to detect and use half a raid array, we need to
+ 	 * wait for the known devices to complete their probing
+@@ -295,12 +294,7 @@ static void __init autodetect_raid(void)
+ 	printk(KERN_INFO "md: If you don't use raid, use raid=noautodetect\n");
+ 
+ 	wait_for_device_probe();
+-
+-	fd = ksys_open("/dev/md0", 0, 0);
+-	if (fd >= 0) {
+-		ksys_ioctl(fd, RAID_AUTORUN, raid_autopart);
+-		ksys_close(fd);
+-	}
++	md_autostart_arrays(raid_autopart);
+ }
+ 
+ void __init md_run_setup(void)
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index f567f536b529bd..6e9a48da474848 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -68,10 +68,6 @@
+ #include "md-bitmap.h"
+ #include "md-cluster.h"
+ 
+-#ifndef MODULE
+-static void autostart_arrays(int part);
+-#endif
+-
+ /* pers_list is a list of registered personalities protected
+  * by pers_lock.
+  * pers_lock does extra service to protect accesses to
+@@ -7421,7 +7417,6 @@ static inline bool md_ioctl_valid(unsigned int cmd)
+ 	case GET_DISK_INFO:
+ 	case HOT_ADD_DISK:
+ 	case HOT_REMOVE_DISK:
+-	case RAID_AUTORUN:
+ 	case RAID_VERSION:
+ 	case RESTART_ARRAY_RW:
+ 	case RUN_ARRAY:
+@@ -7467,13 +7462,6 @@ static int md_ioctl(struct block_device *bdev, fmode_t mode,
+ 	case RAID_VERSION:
+ 		err = get_version(argp);
+ 		goto out;
+-
+-#ifndef MODULE
+-	case RAID_AUTORUN:
+-		err = 0;
+-		autostart_arrays(arg);
+-		goto out;
+-#endif
+ 	default:;
+ 	}
+ 
+@@ -9721,7 +9709,7 @@ void md_autodetect_dev(dev_t dev)
+ 	}
+ }
+ 
+-static void autostart_arrays(int part)
++void md_autostart_arrays(int part)
+ {
+ 	struct md_rdev *rdev;
+ 	struct detected_devices_node *node_detected_dev;
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 612814d07d35ab..37315a3f28e97d 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -800,4 +800,7 @@ static inline void mddev_check_write_zeroes(struct mddev *mddev, struct bio *bio
+ 	    !bio->bi_disk->queue->limits.max_write_zeroes_sectors)
+ 		mddev->queue->limits.max_write_zeroes_sectors = 0;
+ }
++
++void md_autostart_arrays(int part);
++
+ #endif /* _MD_MD_H */
+-- 
+2.26.2
+
