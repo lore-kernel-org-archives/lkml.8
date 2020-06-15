@@ -2,121 +2,174 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B784C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7100D20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:48:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UYLm0d99"
+	by mail.kernel.org (Postfix) with ESMTP id 0C5EE20810
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592243333;
+	bh=re2k6orV5gMuJ1pAo7uM+A/UuzHEsVckHe7VfIeBl0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W7y7rZgtiJKQ4DRdOd1soRceUhpKAd7wXyE3jVpUTEmCqmjNMrw8w3YCsg+3i8ARm
+	 sV/TxYly9H+COUmEKWc6meTRoWe4IBeeNe6SR3CUdOfC3+KZ8smLl2QbwxmtKH324M
+	 J9Zh4KWcoGQbyPMgKy6O6da40NMBziLGneyE33kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbgFORsl (ORCPT
+        id S1731289AbgFORsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:48:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40150 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFORsk (ORCPT
+        Mon, 15 Jun 2020 13:48:51 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:32789 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFORsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:48:40 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FHleik178201;
-        Mon, 15 Jun 2020 17:48:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=8/GvKgnXyWMqWG4x04LszNrZLOvvW4SLPdr9wifArpI=;
- b=UYLm0d99pVRGz58KNwBO6kwXK5xvC7/oZKu4Ga8N5ovM+yKoJI6S4MLKgsLioIDG3Rux
- ITwnG65Lcm5yJFg41TeTO1K2KPd6gVj1LZb2U/J7woNHPDDKC6ZZgFpkyhhdEyIZKAMv
- kFAq14NhDnxrYVPlR9K9byaU9OgQW/wjkPAI3EsfwnLq/YEkXrVpxg8Mzi1oSaLjjIoB
- TVH7BlYsVio9DWXVtbqBrI/Z9Jf8nd+XlAaNGc/4Ds4FyfnPiiDDTys0qI/e3qo/2XiF
- zOsUCAdorEVKgQRIwNVEmepbX390xaexjxcqcbvPn1jbEDh4OIXpzh4bXv9nCdfqMcAA kg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 31p6s229je-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 15 Jun 2020 17:48:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FHm5YV147592;
-        Mon, 15 Jun 2020 17:48:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 31p6s5sj6d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 17:48:17 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05FHmDcM028323;
-        Mon, 15 Jun 2020 17:48:13 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jun 2020 10:48:13 -0700
-Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
- hugetlbfs files
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        Amir Goldstein <amir73il@gmail.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Colin Walters <walters@verbum.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <20200612004644.255692-1-mike.kravetz@oracle.com>
- <20200612015842.GC23230@ZenIV.linux.org.uk>
- <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
- <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
- <CAJfpegv28Z2aECcb+Yfqum54zfwV=k1G1n_o3o6O-QTWOy3T4Q@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <33cbc2b6-a37a-8bd1-d896-f4318a61b8ca@oracle.com>
-Date:   Mon, 15 Jun 2020 10:48:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 13:48:50 -0400
+Received: by mail-il1-f193.google.com with SMTP id z2so16133450ilq.0;
+        Mon, 15 Jun 2020 10:48:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7kn635n+A3EnYes4BFXu6QF7YNnmuVI9peNToiemopE=;
+        b=jzmCUB8gPiBXXg9Z+5ah+r/Gx3tI1u8/I3HTamCaM4GjS/MspRzVxABJWH3XBZj8dK
+         vuc7125g8kmjAi48zTc0ROdSR5bkzvDnCobiG/2Lbna2rl3WI1WMt/Zfhlke2t/tga4x
+         a4d/PsrWoLUMm+S3ZXW7LYYnUTGX47KNXm9C/8sxz+bZKVCLYbsYAYAg0F0yFUFOAmWt
+         6njmt7mbpY4NyD1Zjw604m/D+KrHAvQi8bGxb7aY7pSEX7Hn16xGYu+yfEp8pR/wXx9o
+         f1/mFTcGVmPqa6MHmhVZpJbiI0bAh6cVa2OoyPYiYNqky7DF4sQ4eopx+AAmSKA18Ok5
+         vDeA==
+X-Gm-Message-State: AOAM531zCMRioVhzWelZ2NwslpVRLnE5Cj7JkBph0qH9wnzZkkIn7qAx
+        YasmaZprMxEiCmPha7VFjA==
+X-Google-Smtp-Source: ABdhPJxw8ZUBrSdNoZ0KM84tqgOSaSJTSDg0ljmVjphSbOR1nFj9HkbHbjM55RFjiGVS/wkHkSpA7A==
+X-Received: by 2002:a92:c6cd:: with SMTP id v13mr26329867ilm.150.1592243329646;
+        Mon, 15 Jun 2020 10:48:49 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id b13sm8297409ilq.20.2020.06.15.10.48.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 10:48:49 -0700 (PDT)
+Received: (nullmailer pid 2028876 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:48:48 -0000
+Date:   Mon, 15 Jun 2020 11:48:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 03/12] dt-bindings: PCI: Add bindings for more Brcmstb
+ chips
+Message-ID: <20200615174848.GA2023599@bogus>
+References: <20200605212706.7361-1-james.quinlan@broadcom.com>
+ <20200605212706.7361-4-james.quinlan@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJfpegv28Z2aECcb+Yfqum54zfwV=k1G1n_o3o6O-QTWOy3T4Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxlogscore=919 adultscore=0 phishscore=0 bulkscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006150132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- clxscore=1015 mlxscore=0 mlxlogscore=933 priorityscore=1501 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 cotscore=-2147483648 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006150132
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605212706.7361-4-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 1:24 AM, Miklos Szeredi wrote:
-> On Sat, Jun 13, 2020 at 8:53 AM Amir Goldstein <amir73il@gmail.com> wrote:
+On Fri, Jun 05, 2020 at 05:26:43PM -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
 > 
->>> I also looked at normal filesystem lower and hugetlbfs upper.  Yes, overlayfs
->>> allows this.  This is somewhat 'interesting' as write() is not supported in
->>> hugetlbfs.  Writing to files in the overlay actually ended up writing to
->>> files in the lower filesystem.  That seems wrong, but overlayfs is new to me.
+> - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+>   7211 (STB version of RPi4).
+> - add new property 'brcm,scb-sizes'
+> - add new property 'resets'
+> - add new property 'reset-names' for 7216 only
+> - allow 'ranges' and 'dma-ranges' to have more than one item and update
+>   the example to show this.
 > 
-> Yes, this very definitely should not happen.
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> ---
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 58 ++++++++++++++++---
+>  1 file changed, 51 insertions(+), 7 deletions(-)
 > 
->> I am not sure how that happened, but I think that ovl_open_realfile()
->> needs to fixup f_mode flags FMODE_CAN_WRITE | FMODE_CAN_READ
->> after open_with_fake_path().
-> 
-> Okay, but how did the write actually get to the lower layer?
-> 
-> I failed to reproduce this.  Mike, how did you trigger this?
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 8680a0f86c5a..4a012d77513f 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
+>  maintainers:
+>    - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>  
+> -allOf:
+> -  - $ref: /schemas/pci/pci-bus.yaml#
+> -
+>  properties:
+>    compatible:
+> -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +    items:
+> +      - enum:
+> +          - brcm,bcm2711-pcie # The Raspberry Pi 4
+> +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+> +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+>  
+>    reg:
+>      maxItems: 1
+> @@ -34,10 +37,12 @@ properties:
+>        - const: msi
+>  
+>    ranges:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 4
+>  
+>    dma-ranges:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 6
+>  
+>    clocks:
+>      maxItems: 1
+> @@ -58,8 +63,33 @@ properties:
+>  
+>    aspm-no-l0s: true
+>  
+> +  resets:
+> +    description: for "brcm,bcm7216-pcie", must be a valid reset
+> +      phandle pointing to the RESCAL reset controller provider node.
+> +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> +
+> +  reset-names:
+> +    items:
+> +      - const: rescal
+> +
+> +  brcm,scb-sizes:
+> +    description: u64 giving the 64bit PCIe memory
+> +      viewport size of a memory controller.  There may be up to
+> +      three controllers, and each size must be a power of two
+> +      with a size greater or equal to the amount of memory the
+> +      controller supports.  Note that each memory controller
+> +      may have two component regions -- base and extended -- so
+> +      this information cannot be deduced from the dma-ranges.
+> +
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint64-array
+> +      - items:
+> +          minItems: 1
+> +          maxItems: 3
 
-My apologies!!!
+This can be (dropping 'allOf'):
 
-I reviewed my testing and found that it was incorrectly writing to the
-lower filesystem.  Writing to any file in the union will fail.
--- 
-Mike Kravetz
+$ref: /schemas/types.yaml#/definitions/uint64-array
+minItems: 1
+maxItems: 3
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
