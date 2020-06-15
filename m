@@ -2,66 +2,62 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5373C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD1C2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90452067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgFOLlU (ORCPT
+        id S1729709AbgFOLmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:41:20 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:49154 "EHLO fornost.hmeau.com"
+        Mon, 15 Jun 2020 07:42:01 -0400
+Received: from mga06.intel.com ([134.134.136.31]:2605 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbgFOLlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:41:20 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jknTi-0007GD-FX; Mon, 15 Jun 2020 21:40:39 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 15 Jun 2020 21:40:38 +1000
-Date:   Mon, 15 Jun 2020 21:40:38 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     kernel test robot <lkp@intel.com>, linux-sparse@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kbuild-all@lists.01.org
-Subject: Re: [PATCH] printk: Make linux/printk.h self-contained
-Message-ID: <20200615114038.GA20708@gondor.apana.org.au>
-References: <20200611125144.GA2506@gondor.apana.org.au>
- <20200613122834.GA23739@xsang-OptiPlex-9020>
- <20200613130949.GA22005@gondor.apana.org.au>
- <20200613142901.65xieioomt6bbqa6@ltop.local>
+        id S1728510AbgFOLmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 07:42:00 -0400
+IronPort-SDR: 91Q3xAoMaLvBjDoge7JYh6gouNrfZooBs5XohVYlkz7xJp0+0/c7DZYUuyx7nYUiWRdQaqZs3U
+ rwUsMVt7nFHA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 04:42:00 -0700
+IronPort-SDR: edMYpNGcbYtkZJpX8hceBY+pUt+jSPsVgX+MAeesOE6QOWngMRTEXaq71faVUlSR10JODscGB0
+ 8aPpzV2Kk3NQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
+   d="scan'208";a="382521026"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 15 Jun 2020 04:41:56 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 15 Jun 2020 14:41:56 +0300
+Date:   Mon, 15 Jun 2020 14:41:56 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thunderbolt: Improve USB4 config symbol help text
+Message-ID: <20200615114156.GE247495@lahna.fi.intel.com>
+References: <20200602122815.32111-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200613142901.65xieioomt6bbqa6@ltop.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200602122815.32111-1-geert+renesas@glider.be>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 04:29:01PM +0200, Luc Van Oostenryck wrote:
->
-> while there is no such problem with the previous commit.
-> I think the problem is that:
-> * ratelimit.h needs raw_spinlock_t
-> * spinlock_types.h needs lockdep.h
-> * lockdep.h needs ratelimit.h
+On Tue, Jun 02, 2020 at 02:28:15PM +0200, Geert Uytterhoeven wrote:
+> Fix the spelling of "specification", and add a missing "the" article.
+> 
+> Fixes: 690ac0d20d4022bb ("thunderbolt: Update Kconfig entries to USB4")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks for investigating.  I now realise that this was sent against
-my first patch which did have this problem, which was fixed in my
-second patch.  Sorry for the false alarm.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Applied to thunderbolt.git/next, thanks!
