@@ -2,85 +2,64 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D90C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35B0A206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3A3206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgFOBID (ORCPT
+        id S1728102AbgFOBLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 21:08:03 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:59834 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728039AbgFOBID (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 21:08:03 -0400
-X-Greylist: delayed 387 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Jun 2020 21:08:02 EDT
-Received: from localhost (unknown [192.168.167.70])
-        by lucky1.263xmail.com (Postfix) with ESMTP id AFC8AC4066;
-        Mon, 15 Jun 2020 09:01:26 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P7894T140607611721472S1592182885179202_;
-        Mon, 15 Jun 2020 09:01:26 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <6e5d4ca0e9834636d81f3592b3db92c0>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: akpm@linux-foundation.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH] mm/cma: fix NULL pointer dereference when cma could not be activated
-Date:   Mon, 15 Jun 2020 09:01:23 +0800
-Message-Id: <20200615010123.15596-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 14 Jun 2020 21:11:36 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33612 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728039AbgFOBLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 21:11:35 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 08F5E6F1C9214CAB1357;
+        Mon, 15 Jun 2020 09:11:32 +0800 (CST)
+Received: from [10.166.213.22] (10.166.213.22) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 15 Jun
+ 2020 09:11:28 +0800
+Subject: Re: [PATCH] cgroup: Refactor two assignments in
+ css_task_iter_next_css_set()
+To:     <zzuedu2000@163.com>, <James.Bottomley@HansenPartnership.com>
+CC:     <tj@kernel.org>, <hannes@cmpxchg.org>, <cgroups@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <Markus.Elfring@web.de>,
+        <songmuchun@bytedance.com>, <buddy.zhang@aliyun.com>
+References: <1592158208.5303.27.camel@HansenPartnership.com>
+ <20200614232224.1804-1-zzuedu2000@163.com>
+From:   Zefan Li <lizefan@huawei.com>
+Message-ID: <4d6a3864-b4b4-9b32-1349-c40b11e28a8f@huawei.com>
+Date:   Mon, 15 Jun 2020 09:11:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200614232224.1804-1-zzuedu2000@163.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.213.22]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some case the cma area could not be activated, but the cma_alloc be
-used under this case, then the kernel will crash caused by NULL pointer
-dereference.
+On 2020/6/15 7:22, zzuedu2000@163.com wrote:
+> On Sun, 2020-06-14 at 18:10 +0800, James.Bottomley@xxxxxxx wrote:
+> 
+>> it's arguable that having two statements instead of one makes the code
+>> marginally more readable.
+> 
+> Above the function there is a similar line of code:
+> l = it->tcset_pos->next;
+> One line of code makes the code style consistent and more readable
+> 
 
-Add bitmap valid check in cma_alloc to avoid this issue.
-
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- mm/cma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/cma.c b/mm/cma.c
-index 0463ad2ce06b..488496fa2972 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -425,7 +425,7 @@ struct page *cma_alloc(struct cma *cma, size_t count, unsigned int align,
- 	struct page *page = NULL;
- 	int ret = -ENOMEM;
- 
--	if (!cma || !cma->count)
-+	if (!cma || !cma->count || !cma->bitmap)
- 		return NULL;
- 
- 	pr_debug("%s(cma %p, count %zu, align %d)\n", __func__, (void *)cma,
--- 
-2.17.1
-
-
-
+It would be much better if you are fixing a bug or developing a new feature
+and while at it you do this cleanup conveniently, but this patch alone has
+little value. 
