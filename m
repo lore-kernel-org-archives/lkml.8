@@ -2,145 +2,123 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC627C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA516C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5ED720756
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D69E20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QBeg3rvb"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="O0zD/ign"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbgFOTcz (ORCPT
+        id S1729949AbgFOTlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56728 "EHLO
+        Mon, 15 Jun 2020 15:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbgFOTcw (ORCPT
+        with ESMTP id S1728571AbgFOTlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:32:52 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A90C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:32:51 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh7so7201971plb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:32:51 -0700 (PDT)
+        Mon, 15 Jun 2020 15:41:02 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B54C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:41:01 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id p18so12390287eds.7
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZjAXfZy5BudfnO86h+8mAf1S7F89/y7Ht34uQW17/+U=;
-        b=QBeg3rvb86U6Tj0IyJR5u6BBRDaGksrhbixbVGEFMNAmYYAm2vi8ezn7Pzjsx+8Y/N
-         0spIQQjXlTeZa6JYxyI0WQLYZewE/IOrv1eu80kZOYOGkcIsaJYdoUbYKY8F56IoVrW7
-         todjyiaALbdigpVH6qkq1a3bhohRwm98ntcpI=
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4s29RXI4DZmoz7Uu9spIoKDjM10KzT1NJ7eoQ6iGuKQ=;
+        b=O0zD/ignX49ZyEfuD6nUnsJTM4Z2o6FY8NMNsDmSNfe6aQVWNrOXTRTPjuGCOQ7uCB
+         k9fwQ/N07Of5R++0Wqywf7IkNDOTgpQYrKqFq25Z4tEh9kpSx0iQG8sB0skjvtknQbe8
+         LAlKIYFmc59bA3kzhgA6+V+U1gaq//XY0YNfP9M1mcKrtpnepdygD4ppBX7FT2nrwDnH
+         SQHjoOUEzTNzr7VSEmdqRr8gky5IcYTdj1QWaJduNkBbFQDElcSFHxEf5PNUM5ITYStm
+         7DRJEHhlCSLXRKelwGOwYMezexaBwP1VefdC3djrn0BKXNFFcPnyNgUmAm3/YL88FCYy
+         QPOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZjAXfZy5BudfnO86h+8mAf1S7F89/y7Ht34uQW17/+U=;
-        b=XxscxqYVxsnPJZSSGmWdDBjGqmTFYSb/XPIJYFM2JgctBCUYEcQ+/09uSj4Q4lC/AF
-         msKGNwogfb0SIg0ib8u+cJ0dLU2FsRCYXi2dG+vxQeGQ7nw81W9VxjpCWxapjBBFTL+o
-         rqDcLM8tTHSD+VTYwMZ45YmPSFfHhp/SUP75ncadOyMb1kuloy13bI6Uks01jW1lcAC9
-         P8VnilVFk16+PWZPVnqmOZ/ZNgQfoYXsSpff4B63V79ZdL+TpSJsvo7KSMFMVz/1CrFJ
-         KCytScl3tiZln/wotVFiTUZ+nI1sA+ZXBSYi2OXsx5aIvzJ/z+Q7aKInC07JQgnfnR/W
-         kaZg==
-X-Gm-Message-State: AOAM531YqqmgD4p7fAiXjqpMnMPDKJF+B5Tmi09TT+RtGRD0x1dtJcyG
-        d4fR97CaIXbN8cYadmhszRtMhA==
-X-Google-Smtp-Source: ABdhPJxugszkh+55zcQ6ID8nCD+Y2mp2lHGMEtD9VsXD4kV92TrXKjIOZPR9BYw/ID9xL1GXxiQnCg==
-X-Received: by 2002:a17:90b:23d2:: with SMTP id md18mr774459pjb.179.1592249571413;
-        Mon, 15 Jun 2020 12:32:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n189sm14973604pfn.108.2020.06.15.12.32.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 12:32:50 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 12:32:49 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH 05/10] ide: Remove uninitialized_var() usage
-Message-ID: <202006151231.74D2315450@keescook>
-References: <20200603233203.1695403-1-keescook@chromium.org>
- <20200603233203.1695403-6-keescook@chromium.org>
- <CAKwvOdm5zDide5RuppY_jG=r46=UMdVJBrkBqD5x=dOMTG9cZg@mail.gmail.com>
- <202006041318.B0EA9059C7@keescook>
- <CAKwvOdk3Wc1gC0UMsFZsZqQ8n_bkPjNAJo5u3nfcyXcBaZCMHw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4s29RXI4DZmoz7Uu9spIoKDjM10KzT1NJ7eoQ6iGuKQ=;
+        b=YGLTLccEvXf1uxSPbt8BX9ao2VLIL/19spN+e1ZrgdTiIveynjcg9bbRJ/HzE8E6lV
+         IAs9bJQi/cWj1Tm5bD8XbFxPIKxQw65LmzMsH73VaM/L1yqUqwFCko8lAhzWNCPYO+yB
+         V8cuXmpu2y+gd6FhWbHlptAAPRrPchIyVMExAZ9X+7j5/3J8IqY1a+2ylYjE8staZKuk
+         ZsMcReKJxagQyuH3Sh4cvIQq+wYjgXTFdwv7xwjSCZsdDWrk0y6aCHITcmubAm4Rm1M3
+         Ft5RAuyY05tQMQjiLT+Ip9HLrMjUO1cBv2R0WwRKjmnF/9mkaWow1HTY4FPV97XDWd3u
+         JuCQ==
+X-Gm-Message-State: AOAM530a4MxgwVXZzyScu2Spf9MqKAFBme6RI64xj3xxgO9m8znlpKBi
+        Cj6ruvp2sYlsB0HCcEW6+PUy+hTYAnU7sVM+SuLBJg==
+X-Google-Smtp-Source: ABdhPJw7gZGRCrEp8Uckb0OtIxiFQkW6W0bIFXefK59EdVk9QlmbMAZVSR15quYWqkF3RICuTtvR0uovNicOGRMtPBI=
+X-Received: by 2002:a50:c359:: with SMTP id q25mr26045616edb.123.1592250060573;
+ Mon, 15 Jun 2020 12:41:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdk3Wc1gC0UMsFZsZqQ8n_bkPjNAJo5u3nfcyXcBaZCMHw@mail.gmail.com>
+References: <20200615124407.32596-1-vaibhav@linux.ibm.com> <20200615124407.32596-3-vaibhav@linux.ibm.com>
+ <20200615125552.GI14668@zn.tnic>
+In-Reply-To: <20200615125552.GI14668@zn.tnic>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 15 Jun 2020 12:40:49 -0700
+Message-ID: <CAPcyv4gmAk=mRCVQCgdSEN9JQ9b+C_u0xug-knZpQmGNL_ywxA@mail.gmail.com>
+Subject: Re: [PATCH v13 2/6] seq_buf: Export seq_buf_printf
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 01:29:44PM -0700, Nick Desaulniers wrote:
-> On Thu, Jun 4, 2020 at 1:20 PM Kees Cook <keescook@chromium.org> wrote:
+On Mon, Jun 15, 2020 at 5:56 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Jun 15, 2020 at 06:14:03PM +0530, Vaibhav Jain wrote:
+> > 'seq_buf' provides a very useful abstraction for writing to a string
+> > buffer without needing to worry about it over-flowing. However even
+> > though the API has been stable for couple of years now its still not
+> > exported to kernel loadable modules limiting its usage.
 > >
-> > On Thu, Jun 04, 2020 at 12:29:17PM -0700, Nick Desaulniers wrote:
-> > > On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > > > (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> > > > "unused variable"). If the compiler thinks it is uninitialized, either
-> > > > simply initialize the variable or make compiler changes. As a precursor
-> > > > to removing[2] this[3] macro[4], just remove this variable since it was
-> > > > actually unused:
-> > > >
-> > > > drivers/ide/ide-taskfile.c:232:34: warning: unused variable 'flags' [-Wunused-variable]
-> > > >         unsigned long uninitialized_var(flags);
-> > > >                                         ^
-> > > >
-> > > > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> > > > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> > > > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> > > > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
-> > > >
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > >
-> > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Hence this patch proposes update to 'seq_buf.c' to mark
+> > seq_buf_printf() which is part of the seq_buf API to be exported to
+> > kernel loadable GPL modules. This symbol will be used in later parts
+> > of this patch-set to simplify content creation for a sysfs attribute.
 > >
-> > Thanks for the reviews!
+> > Cc: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
+> > Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+> > Cc: Christoph Hellwig <hch@infradead.org>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+> > ---
+> > Changelog:
 > >
-> > > Fixes ce1e518190ea ("ide: don't disable interrupts during kmap_atomic()")
+> > v12..v13:
+> > * None
 > >
-> > I originally avoided adding Fixes tags because I didn't want these
-> > changes backported into a -stable without -Wmaybe-uninitialized
-> > disabled, but in these cases (variable removal), that actually does make
-> > sense. Thanks!
-> 
-> Saravana showed me a cool trick for quickly finding commits that
-> removed a particular identifier that I find faster than `git blame` or
-> vim-fugitive for the purpose of Fixes tags:
-> $ git log -S <string> <file>
+> > v11..v12:
+> > * None
+>
+> Can you please resend your patchset once a week like everyone else and
+> not flood inboxes with it?
 
-Ah yes, I always have to look up "-S". Good reminder!
+Hi Boris,
 
-> I've added it to our wiki:
-> https://github.com/ClangBuiltLinux/linux/wiki/Command-line-tips-and-tricks#for-finding-which-commit-may-have-removed-a-string-try.
-> I should update the first tip; what was your suggestion for
-> constraining the search to the current remote?
-
-Ah cool. I've updated it now. It was really to narrow to a "known set of
-tags", and Linus's tree's tags always start with "v".
-
--- 
-Kees Cook
+I gave Vaibhav some long shot hope that his series could be included
+in my libnvdimm pull request for -rc1. Save for a last minute clang
+report that I misread as a gcc warning, I likely would have included.
+This spin is looking to address the last of the comments I had and
+something I would consider for -rc2. So, in this case the resends were
+requested by me and I'll take the grumbles on Vaibhav's behalf.
