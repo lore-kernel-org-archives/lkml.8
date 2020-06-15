@@ -2,113 +2,131 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99502C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A49206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70370206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:02:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IH5rGn9P"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="AXJhM/hK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730418AbgFONCF (ORCPT
+        id S1730422AbgFONCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
+        Mon, 15 Jun 2020 09:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730357AbgFONAx (ORCPT
+        with ESMTP id S1730353AbgFONBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:00:53 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEC7C061A0E;
-        Mon, 15 Jun 2020 06:00:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=SM2vwUzS1lS5JPIE11hnWuY4020BCObQGWMmPP5iv+U=; b=IH5rGn9PdguQ/MJmSQeWa39CS5
-        xYhYsW2KOhQ7JARWxoLOcrAASLH7Mg9nT9bOWMT2QsLkXgR1PiM53SOGyGhcJ/pOT2uQ2oAoMYCea
-        FMpsAX3009azgrIIbJwwa4ZNiutR+PuL4iA9/LrosE5OcMBEFLoo9a/4A5MCyCVQaW8T31HswmFa0
-        E+juO8zuJ7Y80JJqixESrR+bfEJ20AqTuLGcZIjJ8Ej5wzqh4V67dC0vKsf1bGZNzGSX+tMr9bm2o
-        d3vFWAelmSJD0mv1AatU2ckIMAIiODHoH1OoVQriwq0EsCjoMCtY8lbWHO55db++0T6OOrImMQcPW
-        J59ZlUjA==;
-Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkojC-0007sl-3K; Mon, 15 Jun 2020 13:00:42 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] exec: cleanup the count() function
-Date:   Mon, 15 Jun 2020 15:00:29 +0200
-Message-Id: <20200615130032.931285-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615130032.931285-1-hch@lst.de>
-References: <20200615130032.931285-1-hch@lst.de>
+        Mon, 15 Jun 2020 09:01:50 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE9CC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:01:50 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id x93so11438781ede.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:01:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AvCe0HbqQ4BzGml+0DuV0nSjSHUXH/a7GtKAihE8SRE=;
+        b=AXJhM/hKmiZBel7yqZsPLh+qR48DiuSWw+gN6NwcjxGonGBBT4xZNIhnQoUZBfpJfH
+         1NZAFJQspIVoZmiDPMW/zVKEpYy92CPJhP1ryw7noohJnifYPJFtPAPipclcRU51LyVJ
+         aFmGcX6C+7O0dfinR4r59frhdDr+6ymq5ln90=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AvCe0HbqQ4BzGml+0DuV0nSjSHUXH/a7GtKAihE8SRE=;
+        b=p3jsDYrr2XdlXXD30YW/XKeT8DtbCaJyA1VRfPBOhWltrlbnWUkPWyBWrLmor962ks
+         o0jZX0LU6/na1tw2pNM5ZeKAIVdsbcH+Y/Aej7eQ6KrJ2fPHcq3Jsx/jrzLsdEnlRh9z
+         xBQn4HbHyQvaOAsKpnUc5boYtuaIkS1s4rvSiuzQE+uqCekDWvDsDZZ5biZje1xZcgI1
+         cOVGVSI0W2IhHNKQAtwDfAZSKZdWZ5bWbxnTO6EkcVEGGnGbC1tYi6T8Ub3mpd/F6U1Y
+         jIlOVpdAJqaNloXFEXM6fYFDv7qBr9pJMaM51Nol6tYYLyivuswoKmsPwCOUc2YpCs9d
+         rslg==
+X-Gm-Message-State: AOAM531cx1ltITz+UnhdTnwvy2KVQQnoZ+zPV3O6JiswpA3igk1f++W0
+        xSP2ZSMt4J69fe2ubKDf6gBjX26cBGa+7tezI8cbeQ==
+X-Google-Smtp-Source: ABdhPJw5bS2bqPFdNiYWV2UphtcYunDkac05QqFEUWlRJ3HITjBAcbh0ivLoUAsUyrpP21XvFyU3Zn5XsOsK+kRq7j8=
+X-Received: by 2002:aa7:d9d3:: with SMTP id v19mr22985359eds.364.1592226108717;
+ Mon, 15 Jun 2020 06:01:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200612004644.255692-1-mike.kravetz@oracle.com>
+ <20200612015842.GC23230@ZenIV.linux.org.uk> <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
+ <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
+ <6e8924b0-bfc4-eaf5-1775-54f506cdf623@oracle.com> <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
+ <CAOQ4uxgA+_4_UtVz17_eJL6m0CsDEVuiriBj1ZOkho+Ub1yuSA@mail.gmail.com>
+In-Reply-To: <CAOQ4uxgA+_4_UtVz17_eJL6m0CsDEVuiriBj1ZOkho+Ub1yuSA@mail.gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Mon, 15 Jun 2020 15:01:37 +0200
+Message-ID: <CAJfpegs-Ch5ua658UD5s4u6ynKGpMzdiY31G-c4Fdu_=ZCV_uA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
+ hugetlbfs files
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Colin Walters <walters@verbum.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the max argument as it is hard wired to MAX_ARG_STRINGS, and
-give the function a slightly less generic name.
+On Mon, Jun 15, 2020 at 12:05 PM Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> On Mon, Jun 15, 2020 at 10:53 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >
+> > On Sat, Jun 13, 2020 at 9:12 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> > >
+> > > On 6/12/20 11:53 PM, Amir Goldstein wrote:
+> >
+> > > As a hugetlbfs developer, I do not know of a use case for interoperability
+> > > with overlayfs.  So yes, I am not too interested in making them work well
+> > > together.  However, if there was an actual use case I would be more than
+> > > happy to consider doing the work.  Just hate to put effort into fixing up
+> > > two 'special' filesystems for functionality that may not be used.
+> > >
+> > > I can't speak for overlayfs developers.
+> >
+> > As I said, I only know of tmpfs being upper layer as a valid use case.
+> >    Does that work with hugepages?  How would I go about testing that?
+>
+> Simple, after enabling CONFIG_HUGETLBFS:
+>
+> diff --git a/mount_union.py b/mount_union.py
+> index fae8899..4070c70 100644
+> --- a/mount_union.py
+> +++ b/mount_union.py
+> @@ -15,7 +15,7 @@ def mount_union(ctx):
+>          snapshot_mntroot = cfg.snapshot_mntroot()
+>          if cfg.should_mount_upper():
+>              system("mount " + upper_mntroot + " 2>/dev/null"
+> -                    " || mount -t tmpfs upper_layer " + upper_mntroot)
+> +                    " || mount -t hugetlbfs upper_layer " + upper_mntroot)
+>          layer_mntroot = upper_mntroot + "/" + ctx.curr_layer()
+>          upperdir = layer_mntroot + "/u"
+>          workdir = layer_mntroot + "/w"
+>
+> It fails colossally, because hugetlbfs, does not have write_iter().
+> It is only meant as an interface to create named maps of huge pages.
+> So I don't really see the use case for using it as upper.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/exec.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Right.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 94107eceda8a67..6e4d9d1ffa35fa 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -411,9 +411,9 @@ get_user_arg_ptr(const char __user *const __user *argv, int nr)
- }
- 
- /*
-- * count() counts the number of strings in array ARGV.
-+ * count_strings() counts the number of strings in array ARGV.
-  */
--static int count(const char __user *const __user *argv, int max)
-+static int count_strings(const char __user *const __user *argv)
- {
- 	int i = 0;
- 
-@@ -427,7 +427,7 @@ static int count(const char __user *const __user *argv, int max)
- 			if (IS_ERR(p))
- 				return -EFAULT;
- 
--			if (i >= max)
-+			if (i >= MAX_ARG_STRINGS)
- 				return -E2BIG;
- 			++i;
- 
-@@ -445,11 +445,11 @@ static int prepare_arg_pages(struct linux_binprm *bprm,
- {
- 	unsigned long limit, ptr_size;
- 
--	bprm->argc = count(argv, MAX_ARG_STRINGS);
-+	bprm->argc = count_strings(argv);
- 	if (bprm->argc < 0)
- 		return bprm->argc;
- 
--	bprm->envc = count(envp, MAX_ARG_STRINGS);
-+	bprm->envc = count_strings(envp);
- 	if (bprm->envc < 0)
- 		return bprm->envc;
- 
--- 
-2.26.2
+I was actually asking about the tmpfs+hugepages, not the hugetlbfs case.
 
+In the tmpfs case it looks like the lack of ->get_unmapped_area() in
+overlayfs could still be an issue.   But I'm not sure how to trigger
+that.
+
+Thanks,
+Miklos
