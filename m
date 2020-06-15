@@ -2,98 +2,167 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8930C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3975C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1DB5206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC98E2068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="v9yU02AT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbgFOJ5e (ORCPT
+        id S1729312AbgFOJ56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:57:34 -0400
-Received: from mga06.intel.com ([134.134.136.31]:59474 "EHLO mga06.intel.com"
+        Mon, 15 Jun 2020 05:57:58 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22915 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgFOJ5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:57:31 -0400
-IronPort-SDR: DQ4VVTd9bpJfXh0sMYOy2FFxK9NCU9kqPx74jx+P9zt7zMq0m2RE/Ofhwd7J/wlM2tabdjq8Lv
- 10pRocL3Wdbw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 02:57:30 -0700
-IronPort-SDR: RjkgDfsWSWEoQvV9dUX30JYTzaTHqYboGDi5Dc8vaZeBgcgY0/Z2yMTiS5MnCxFLYvvFzHnml0
- hw7NcqkTJBiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="290640218"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 15 Jun 2020 02:57:28 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jklru-00DXZQ-8o; Mon, 15 Jun 2020 12:57:30 +0300
-Date:   Mon, 15 Jun 2020 12:57:30 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] serial: 8250_port: Fix imprecise external abort for
- mctrl if inactive
-Message-ID: <20200615095730.GT2428291@smile.fi.intel.com>
-References: <20200602001813.30459-1-tony@atomide.com>
- <20200602080811.GI19480@localhost>
- <CAHp75Vfi5nDgwT10J_EKYn90vGuiL1hyfre+t_w_OFREFY-Tqg@mail.gmail.com>
- <20200602133659.GD37466@atomide.com>
- <20200602185515.GF37466@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602185515.GF37466@atomide.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1728369AbgFOJ56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 05:57:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592215077; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=x4pbcEfTHQQiuFcc3iK26RbpCmgWr/+nQ32We6j78BY=; b=v9yU02ATy0OU8HwregNCUzz1g15wYolwOw0Sq8f3Swm2+FH/Bsox9iRCZFU0no+t5CgGu7TP
+ 0vFCSIoxRmgh3ccQNJZX/6LIjrKAer4XS5NS+XLMq5rWzd4mrVjVv40+TWAved9abGkej1lp
+ fOoshIMM0GfuZoUSpLrUtEwlejY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5ee7460da3d8a44743f9532d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 09:57:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4BD4DC433CB; Mon, 15 Jun 2020 09:57:32 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 40C02C433CA;
+        Mon, 15 Jun 2020 09:57:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 40C02C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Satya Tangirala <satyat@google.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] f2fs: fix use-after-free when accessing bio->bi_crypt_context
+Date:   Mon, 15 Jun 2020 15:27:15 +0530
+Message-Id: <1592215035-27365-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 11:55:15AM -0700, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [200602 13:38]:
-> > * Andy Shevchenko <andy.shevchenko@gmail.com> [200602 08:33]:
-> > Now that we can detach and reattach the kernel serial console,
-> > there should not be any need for pm_runtime_irq_safe() anymore :)
-> 
-> Below is a hastily tested RFC patch to remove pm_runtime_irq_safe()
-> for 8250_omap.c that seems to work for idle use case :)
-> 
-> > And the UART wake-up from deeper idle states can only happen with
-> > help of external hardware like GPIO controller or pinctrl controller.
-> 
-> It does not yet include the check for configured wakeirq though.
-> And omap-serial.c needs a similar patch or maybe we can attempt
-> to just drop it this time as 8250_omap.c should be used nowadays.
-> Or just drop PM from omap-serial.c if it can't be dropped.
-> 
-> Andy, is the change below the only remaining blocker now for
-> your serial PM runtime changes?
+There could be a potential race between these two paths below,
+leading to use-after-free when accessing  bio->bi_crypt_context.
 
-In private chat we have got more or less working solution. We both will going
-to give more tests and then I will share (at least as a branch on some public
-Git service) the set.
+f2fs_write_cache_pages
+->f2fs_do_write_data_page on page#1
+  ->f2fs_inplace_write_data
+    ->f2fs_merge_page_bio
+      ->add_bio_entry
+->f2fs_do_write_data_page on page#2
+  ->f2fs_inplace_write_data
+    ->f2fs_merge_page_bio
+      ->f2fs_crypt_mergeable_bio
+        ->fscrypt_mergeable_bio
+  				       f2fs_write_begin on page#1
+				       ->f2fs_wait_on_page_writeback
+				         ->f2fs_submit_merged_ipu_write
+					   ->__submit_bio
+					The bio gets completed, calling
+					bio_endio
+					->bio_uninit
+					  ->bio_crypt_free_ctx
+	  ->use-after-free issue
 
+Fix this by moving f2fs_crypt_mergeable_bio() check within
+add_ipu_page() so that it's done under bio_list_lock to prevent
+the above race.
+
+Fixes: 15e76ad23e72 ("f2fs: add inline encryption support")
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+v2:
+  - simplify the logic as per Eric's suggestion to submit the bio in
+    add_ipu_page() itself instead of using f2fs_submit_merged_ipu_write()
+
+ fs/f2fs/data.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 0dfa8d3..9710555 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -762,9 +762,10 @@ static void del_bio_entry(struct bio_entry *be)
+ 	kmem_cache_free(bio_entry_slab, be);
+ }
+ 
+-static int add_ipu_page(struct f2fs_sb_info *sbi, struct bio **bio,
++static int add_ipu_page(struct f2fs_io_info *fio, struct bio **bio,
+ 							struct page *page)
+ {
++	struct f2fs_sb_info *sbi = fio->sbi;
+ 	enum temp_type temp;
+ 	bool found = false;
+ 	int ret = -EAGAIN;
+@@ -780,6 +781,16 @@ static int add_ipu_page(struct f2fs_sb_info *sbi, struct bio **bio,
+ 				continue;
+ 
+ 			found = true;
++			if (page_is_mergeable(sbi, *bio, *fio->last_block,
++						fio->new_blkaddr) &&
++			    f2fs_crypt_mergeable_bio(*bio,
++						    fio->page->mapping->host,
++						    fio->page->index, fio) &&
++			    bio_add_page(*bio, page, PAGE_SIZE, 0) ==
++					    PAGE_SIZE) {
++				ret = 0;
++				break;
++			}
+ 
+ 			if (bio_add_page(*bio, page, PAGE_SIZE, 0) ==
+ 							PAGE_SIZE) {
+@@ -787,7 +798,7 @@ static int add_ipu_page(struct f2fs_sb_info *sbi, struct bio **bio,
+ 				break;
+ 			}
+ 
+-			/* bio is full */
++			/* page can't be merged into bio; submit the bio */
+ 			del_bio_entry(be);
+ 			__submit_bio(sbi, *bio, DATA);
+ 			break;
+@@ -872,11 +883,6 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+ 	trace_f2fs_submit_page_bio(page, fio);
+ 	f2fs_trace_ios(fio, 0);
+ 
+-	if (bio && (!page_is_mergeable(fio->sbi, bio, *fio->last_block,
+-				       fio->new_blkaddr) ||
+-		    !f2fs_crypt_mergeable_bio(bio, fio->page->mapping->host,
+-					      fio->page->index, fio)))
+-		f2fs_submit_merged_ipu_write(fio->sbi, &bio, NULL);
+ alloc_new:
+ 	if (!bio) {
+ 		bio = __bio_alloc(fio, BIO_MAX_PAGES);
+@@ -886,7 +892,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+ 
+ 		add_bio_entry(fio->sbi, bio, page, fio->temp);
+ 	} else {
+-		if (add_ipu_page(fio->sbi, &bio, page))
++		if (add_ipu_page(fio, &bio, page))
+ 			goto alloc_new;
+ 	}
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
