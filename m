@@ -2,108 +2,133 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADD0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A490207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592255619;
-	bh=9hmhNMnytDn/12vZ0JJhYVVPOEacvK3Su5cLBW/296g=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=p5qOgPffTw9ny/dGcf6ugX+oI9ACn7Xf6yL0OUQBk0jQHnVbUVP3GN2T/1N+71AS0
-	 /lf3QWU+sF5/1GtfuvQKCPWvXSA+v90bOSmcaMMhjHy7LLG78+AH4E7QwcQr3hZOFV
-	 jgt5olhBO0TefnIRK7BP6gMHxafmL1NK2U8CKh2Q=
+	by mail.kernel.org (Postfix) with ESMTP id 9603D207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731491AbgFOVNi (ORCPT
+        id S1731551AbgFOVNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 17:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39038 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 17:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgFOVNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 17:13:37 -0400
-Received: from embeddedor (unknown [189.207.59.248])
+        id S1726207AbgFOVNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 17:13:40 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A86A2078E;
-        Mon, 15 Jun 2020 21:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592255617;
-        bh=9hmhNMnytDn/12vZ0JJhYVVPOEacvK3Su5cLBW/296g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=zwkav/Taf2V3vmB29SJyATCj765103/cMPGXfIToXae2+m2mXInGF22eQvWXPRdHH
-         xtdIDonAq3ni7NC9c5GdTbeoFyhamfX56YCA2yac1hu/pYVkBVGN5qqT2yS6JhLNIi
-         IwvUH1xZfl6IrCPI8OliPOn2ZUXy9gNcD935czzo=
-Date:   Mon, 15 Jun 2020 16:18:55 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] liquidio: Replace vmalloc_node + memset with vzalloc_node
- and use array_size
-Message-ID: <20200615211855.GA32663@embeddedor>
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B2B207DD;
+        Mon, 15 Jun 2020 21:13:39 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 17:13:37 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Subject: Re: [PATCH] tracing/probe: fix memleak in fetch_op_data operations
+Message-ID: <20200615171337.6525cefa@oasis.local.home>
+In-Reply-To: <20200615143034.GA1734@cosmos>
+References: <20200615143034.GA1734@cosmos>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use vzalloc/vzalloc_node instead of the vmalloc/vzalloc_node and memset.
 
-Also, notice that vzalloc_node() function has no 2-factor argument form
-to calculate the size for the allocation, so multiplication factors need
-to be wrapped in array_size().
+Masami or Srikar would you like to look at this patch.
 
-This issue was found with the help of Coccinelle and, audited and fixed
-manually.
+And wondering why you were not on the Cc to this patch in the first
+place, please take a look at the patch I want to add at the bottom ;-)
 
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/cavium/liquidio/request_manager.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/request_manager.c b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-index 6dd65f9b347c..8e59c2825533 100644
---- a/drivers/net/ethernet/cavium/liquidio/request_manager.c
-+++ b/drivers/net/ethernet/cavium/liquidio/request_manager.c
-@@ -95,12 +95,10 @@ int octeon_init_instr_queue(struct octeon_device *oct,
- 	/* Initialize a list to holds requests that have been posted to Octeon
- 	 * but has yet to be fetched by octeon
- 	 */
--	iq->request_list = vmalloc_node((sizeof(*iq->request_list) * num_descs),
--					       numa_node);
-+	iq->request_list = vzalloc_node(array_size(num_descs, sizeof(*iq->request_list)),
-+					numa_node);
- 	if (!iq->request_list)
--		iq->request_list =
--			vmalloc(array_size(num_descs,
--					   sizeof(*iq->request_list)));
-+		iq->request_list = vzalloc(array_size(num_descs, sizeof(*iq->request_list)));
- 	if (!iq->request_list) {
- 		lio_dma_free(oct, q_size, iq->base_addr, iq->base_addr_dma);
- 		dev_err(&oct->pci_dev->dev, "Alloc failed for IQ[%d] nr free list\n",
-@@ -108,8 +106,6 @@ int octeon_init_instr_queue(struct octeon_device *oct,
- 		return 1;
- 	}
+On Mon, 15 Jun 2020 20:00:38 +0530
+Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com> wrote:
+
+> kmemleak report:
+>     [<57dcc2ca>] __kmalloc_track_caller+0x139/0x2b0
+>     [<f1c45d0f>] kstrndup+0x37/0x80
+>     [<f9761eb0>] parse_probe_arg.isra.7+0x3cc/0x630
+>     [<055bf2ba>] traceprobe_parse_probe_arg+0x2f5/0x810
+>     [<655a7766>] trace_kprobe_create+0x2ca/0x950
+>     [<4fc6a02a>] create_or_delete_trace_kprobe+0xf/0x30
+>     [<6d1c8a52>] trace_run_command+0x67/0x80
+>     [<be812cc0>] trace_parse_run_command+0xa7/0x140
+>     [<aecfe401>] probes_write+0x10/0x20
+>     [<2027641c>] __vfs_write+0x30/0x1e0
+>     [<6a4aeee1>] vfs_write+0x96/0x1b0
+>     [<3517fb7d>] ksys_write+0x53/0xc0
+>     [<dad91db7>] __ia32_sys_write+0x15/0x20
+>     [<da347f64>] do_syscall_32_irqs_on+0x3d/0x260
+>     [<fd0b7e7d>] do_fast_syscall_32+0x39/0xb0
+>     [<ea5ae810>] entry_SYSENTER_32+0xaf/0x102
+> 
+> Post parse_probe_arg(), the FETCH_OP_DATA operation type is overwritten
+> to FETCH_OP_ST_STRING, as a result memory is never freed since
+> traceprobe_free_probe_arg() iterates only over SYMBOL and DATA op types
+> 
+> Setup fetch string operation correctly after fetch_op_data operation.
+> 
+> Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+> ---
+>  kernel/trace/trace_probe.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index b8a928e..d2867cc 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -639,8 +639,8 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
+>  			ret = -EINVAL;
+>  			goto fail;
+>  		}
+> -		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM) ||
+> -		     parg->count) {
+> +		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM ||
+> +		     code->op == FETCH_OP_DATA) || parg->count) {
+>  			/*
+>  			 * IMM, DATA and COMM is pointing actual address, those
+>  			 * must be kept, and if parg->count != 0, this is an
+
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 47873f2e6696..116e5cc7ef95 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9229,6 +9229,8 @@ F:	Documentation/kprobes.txt
+ F:	include/linux/kprobes.h
+ F:	include/asm-generic/kprobes.h
+ F:	kernel/kprobes.c
++F:	kernel/trace/trace_kprobe.c
++F:	kernel/trace/trace_probe.c
  
--	memset(iq->request_list, 0, sizeof(*iq->request_list) * num_descs);
--
- 	dev_dbg(&oct->pci_dev->dev, "IQ[%d]: base: %p basedma: %pad count: %d\n",
- 		iq_no, iq->base_addr, &iq->base_addr_dma, iq->max_count);
+ KS0108 LCD CONTROLLER DRIVER
+ M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
+@@ -16996,6 +16998,16 @@ F:	drivers/mtd/ubi/
+ F:	include/linux/mtd/ubi.h
+ F:	include/uapi/mtd/ubi-user.h
  
--- 
-2.27.0
++UPROBES
++M:	Srikar Dronamraju <srikar@linux.vnet.ibm.com>
++S:	Maintained
++F:	Documentation/trace/uprobetracer.rst
++F:	Documentation/features/debug/uprobes
++F:	include/linux/uprobes.h
++F:	kernel/events/uprobes.c
++F:	kernel/trace/trace_uprobe.c
++F:	kernel/trace/trace_probe.c
++
+ USB "USBNET" DRIVER FRAMEWORK
+ M:	Oliver Neukum <oneukum@suse.com>
+ L:	netdev@vger.kernel.org
 
+
+-- Steve
