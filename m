@@ -2,117 +2,149 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C04EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ED4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6700020739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15972207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GXZh6+9p"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WOb6emmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbgFONer (ORCPT
+        id S1730378AbgFONfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730213AbgFONek (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:34:40 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6C95C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=27u+aslpGbbxT2/ao8LzkoAS94gMgtGGpixmRkO16yw=; b=GXZh6+9ppaEZPvsgVPReJkP861
-        N2AoVKj7lQsfyO3QFcYsq5FFIIKI5ME6bm+OLfj8ebaleQ89yX7wTLy4PWCJH/fVuZcjj5nMqoJLO
-        3B92qb6xhSlelPwMssdoZ7loUMyct0lO8yq5DHIYR2H91+/pfmhrpfyJwUoBArqnmigpJ04pqWMY9
-        q7FDdDXJMfgx/3amEidcTJOhk4Jao8VT05Wax01QPrfMX3WsCCOIhW+jsozdYC9xb18+xkUQe83Up
-        4jcaMGoi8Cp0+pK+HbYQIWOxOmYFzRf7twCOZTQDc9Iikmi1kkHCPEIr5M4c4vuYyAq8Q8q9X2bA9
-        +r2B+kzw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkpFb-0004qF-8H; Mon, 15 Jun 2020 13:34:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ECDF73060FD;
-        Mon, 15 Jun 2020 15:34:09 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CF9652392E715; Mon, 15 Jun 2020 15:34:09 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 15:34:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        paulmck@kernel.org, frederic@kernel.org
-Subject: Re: [PATCH 1/6] sched: Fix ttwu_queue_cond()
-Message-ID: <20200615133409.GS2531@hirez.programming.kicks-ass.net>
-References: <20200615125654.678940605@infradead.org>
- <20200615131143.130326165@infradead.org>
+        Mon, 15 Jun 2020 09:35:08 -0400
+Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:15296
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730490AbgFONfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:35:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=btYbpBOn9RYDCLGiyQJv9neVXbLu/xWAEaNK2RObXCWiWsHLIG59Dp14BnlGeviZt6mDEuzzgtCL2Ju8Cgvb76InDBNrGCF2GMoS9SjmXN/DzEPRqvDyphjGpTEqYJhr0XYa9gt0cjVEOKybS5/GeZfqU7m2lOMKv7cpNOvQzCh2mTUJeSU6ZfVmxfTDZzURgN1A/S3ARpy5AOlgsn2QyzqmAZXG8K0CRoCulQiR+gafsUExFhbwik/rub3JsgztqUxBkQ7BESKnj4f5kNIEnybZ3goSco2ufGkw9/xzTixm6UsIN3m5DHt/oTXqevcK3TR9cFIQ3vlSBg0rINVIvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5nGCEcqJRcBYeC3PON1CTCnfwSlFO1eboQaPMttrG5o=;
+ b=V/IOzC/s8/eLs2/iVDG+OdAg3nY2hqOfqffvy0vnc5pfriI2ALvJUu88hmJSoQkmKS90Rqy55ii5a5JdR4/HM9r4L85TOBZw/Q+UBbSmT3PN8ZWPs0xgZG6vHDtN7IE+1IrlZdzso3e414w3S+QCPM5mkthbFuvxq9cbMGGXK4px/HWq12fqHwRK3zJHxo50j2wZCZNjePiO5bC0Tz994a4hcMS8UHtJ7eilINysNJg9E0AuNIteVo/EX88g/6dOO8B84O4MAilRB0PTG0tf+jOPoHv0dyV8QOwWNNW0lonqTYQT/hRZ3cpAT91BfGOuJR49e/6DKobxuqVqsm+E1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5nGCEcqJRcBYeC3PON1CTCnfwSlFO1eboQaPMttrG5o=;
+ b=WOb6emmmtW0S96eI2llbX3TPjjfy5w5uWSE2PzOTNbpKr4KZPCaEThlqlEOwU9vl6KQUHWesvR8WWhqHr4Zm29kd0G/qObCee6+VGwKmIjcoXhgOmb9ubGgGOL9Uwz1sdqqpM0+k2zDEPslBwtJwB/hMRwxeo3vtIxMAwwE6PbM=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6414.eurprd04.prod.outlook.com (2603:10a6:803:11e::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Mon, 15 Jun
+ 2020 13:35:02 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3088.028; Mon, 15 Jun 2020
+ 13:35:01 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Thread-Topic: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Thread-Index: AQHWP6z7CX2etPvPnk+oddH8JEW5FKjTbHIAgADDYUCAAJUwgIAACjoQgAA5dICAAOmA8IADsXmAgAANH1A=
+Date:   Mon, 15 Jun 2020 13:35:01 +0000
+Message-ID: <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
+ <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
+ <20200611134042.GG4671@sirena.org.uk>
+ <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612101357.GA5396@sirena.org.uk>
+ <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612141611.GI5396@sirena.org.uk>
+ <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615123553.GP4447@sirena.org.uk>
+In-Reply-To: <20200615123553.GP4447@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.235.111]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 80fee015-6f3e-4caf-122c-08d81130e7d0
+x-ms-traffictypediagnostic: VE1PR04MB6414:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6414409F3E6FF2532A64C98D899C0@VE1PR04MB6414.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04359FAD81
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YPMAwfrSm1znnsbDTAZp6m2ZJ53c00c4+LnsTyG+o/vsVjtPU7LWbiVd7h/xWIO6qfq7So35HA8bXR6xWY0YtPLM/zuSc39mNx+Efmh6QlslYS1BDNCJH3+PWUEsfELImBkMj23n6iHWCQhjfaWtdLgy2GDOKqZVNqGfIHlpYzV8959khf7TC/ohR72jyKML5O+hGusid9ghSPHZ7lVGbF1QAVGkkXFOa5tEnq8bpSwW29/lL8WwSbhNkbiIzyVg7dA109uI+IaMlVBFKjMyrjq53B6wTZwYeTK9n8w75UVHI5SMeJO8339ZJ+JVPmcXsv7UaVkIMZ8Etw1rPs3P2Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(66946007)(66476007)(66556008)(64756008)(66446008)(54906003)(2906002)(7416002)(316002)(8936002)(478600001)(186003)(76116006)(53546011)(55016002)(9686003)(6506007)(7696005)(4326008)(26005)(86362001)(33656002)(71200400001)(6916009)(8676002)(52536014)(5660300002)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: aLiQmfAwnz4WspcB5pNNXHY3OHrjmFuwd5Yr1EjcEdUxT4lLP/t2X8JxB/NVhCFXbCS/zfZAX52Gs4K+0WVbeo2mMKsL4WzgAkj+EpmGp/mvz8VuEUf/WtrqXHVT3D6ZUmohHg1f6GJC8eo/CYXoAciHndNa+F3dR1H0QuRc6D6Rjo0sGYuV2HuBH6nR6ArvwDSZmWNN7AUMkccVgT+5dgAmX8J4fSQX+UdpICuN52LtmG4ssmRe3hkmiEaKR9vpAb7Ks5QI/tX6d088+6mmjetlWfCOWQOwJYvsTC/h3JSkL/3s9i2RIlgIku1aY/gESduQ3OgAmlnSOxKPM5LnpSzjPhhw7iwp9MJ+Q41blgwq4TaiZLO8RBMgZZXZfCeF0P/qNfNwN87maKEVn5Z3OOJGdbGk2/p0pyOLV/n9MgPQ9r3x87ljFQXMtmzbs8YFdtzb5siSRzEcA4KKhwqeiDDnv8kdVeFyPeoZhNktS2HsxGGPi/uVO/dsgvqpYEng
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615131143.130326165@infradead.org>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80fee015-6f3e-4caf-122c-08d81130e7d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 13:35:01.7101
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pFL5Z2ppt1g4Ee6ztxwRpUtoJCH3NkVNa3rX5jhn6KW9jH4H7zQf9kTPe8Q1HFd/zCEzc5cjW/tVV0lPEJtM6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6414
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 02:56:55PM +0200, Peter Zijlstra wrote:
-> Where the condition:
-> 
->   !cpus_share_cache(smp_processor_id(), cpu)
-> 
-> already implies 'cpu != smp_processor_id()', because a CPU always
-> shares cache with itself, the secondary condition added in commit:
-> 
->   2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
-> 
-> voids that implication, resulting in attempting to do local wake-ups
-> through the queue mechanism.
-> 
-> Fixes: 2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
-> Reported-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Tested-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  kernel/sched/core.c |   13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -2356,11 +2356,22 @@ bool cpus_share_cache(int this_cpu, int
->  
->  static inline bool ttwu_queue_cond(int cpu, int wake_flags)
->  {
-> +	int this_cpu = smp_processor_id();
-> +
-> +	/*
-> +	 * Only ever queue for remote wakeups. The on_cpu case can only ever
-> +	 * happen remotely, and for the normal case it makes no sense to
+On 2020/06/15 20:36 Mark Brown <broonie@kernel.org> wrote:=20
+> On Sun, Jun 14, 2020 at 01:04:57PM +0000, Robin Gong wrote:
+>=20
+> Please delete unneeded context from mails when replying.  Doing this make=
+s
+> it much easier to find your reply in the message, helping ensure it won't=
+ be
+> missed by people scrolling through the irrelevant quoted material.
+Okay, thanks Mark.
+>=20
+> > > No, I mean that the reason the DMA transfer fails may be something
+> > > that happens after we've started putting things on the bus - the bit
+> > > about FIFOs is just a random example of an error that could happen.
+>=20
+> > Sorry Mark for that I can't get your point... The bus error such as
+> > data corrupt seems not the spi core's business since it can only be
+> > caught in spi controller driver or upper level such as mtd driver
+> > (spi-nor) which know what's the failure happen at spi bus HW level or
+> > what's the correct data/message. In other words, spi core can't detect =
+such
+> error by transfer_one().
+>=20
+> If we see an error in transfer_one() it could be from anything, we've no =
+idea
+> what happened on the bus - the controller may have got part way through t=
+he
+> transfer before failing.
+Then how about choosing specific error code for such dma not ready case whe=
+re
+nothing went out on the bus neither?=20
 
-The 'funny' thing here is, that this must be false for this patch to
-make any difference.. I just cannot see how.
-
-Also, if this is false, and p->on_cpu == 1 and p->cpu == this_cpu, then
-p _should_ be current, in which case we should never get here either,
-due to the 'p == current' special case in try_to_wake_up().
-
-The only other option is that 'p == next', but then we'd be doing
-wakeups from the middle of __schedule() and seems 'unlikely' too, esp.
-so since none of the actual stack-traces we have shows that.
-
-So colour me terribly confused.
-
-> +	 * involve IPIs here, and would be broken, as many architectures cannot
-> +	 * trivially IPI self in any case.
-> +	 */
-> +	if (cpu == this_cpu)
-> +		return false;
+>=20
+> > But despite of that case, do you think this patch is valid for
+> > transfer_one() failue in dma and fallback to pio?
+>=20
+> No, not unless we know that nothing went out on the bus.
