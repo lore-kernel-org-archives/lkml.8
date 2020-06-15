@@ -2,212 +2,223 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E38C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD0F2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t4MVnbvl"
+	by mail.kernel.org (Postfix) with ESMTP id B26B62067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgFOMoB (ORCPT
+        id S1729982AbgFOMpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:44:01 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:24525 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729845AbgFOMn7 (ORCPT
+        Mon, 15 Jun 2020 08:45:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53268 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729666AbgFOMpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:43:59 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200615124356epoutp02389c4eaff9754ea60e6aa3363b873ef6~YuDwOHxxz2538025380epoutp02T
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:43:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200615124356epoutp02389c4eaff9754ea60e6aa3363b873ef6~YuDwOHxxz2538025380epoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592225036;
-        bh=X+mJpzMlxdE7ZBj3ejmV7W+NEmHNprZxCkt0S5Vmxm4=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=t4MVnbvl0ow71SUaTHnp4AbZlx0dLBzEibvL7N3VX+Un3bFHh7azkS6s6kYwUlzrF
-         guy0cMl2BIs7Qjg8wtsoNPt9eAshMJfHITcYcFXHmxxsWqaycFnG6pYsfGo2M6LQRt
-         Hx43bzCDZoJfp13wRsF8M97jpFcXzwEY5rEM61CI=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200615124355epcas5p31d26dc0e2a9bd211112387a5cd43a232~YuDvwjbtA1927719277epcas5p3_;
-        Mon, 15 Jun 2020 12:43:55 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2A.0F.09703.B0D67EE5; Mon, 15 Jun 2020 21:43:55 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43~YuDvVndXZ1389313893epcas5p4X;
-        Mon, 15 Jun 2020 12:43:55 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200615124355epsmtrp1e4ac9ac3fc838b011890444db6bfbbd1~YuDvU5Poq0526805268epsmtrp1O;
-        Mon, 15 Jun 2020 12:43:55 +0000 (GMT)
-X-AuditID: b6c32a4a-4cbff700000025e7-9b-5ee76d0b40bd
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2D.3A.08303.B0D67EE5; Mon, 15 Jun 2020 21:43:55 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200615124353epsmtip1ca0f8bf414b0ce435983625f89302b92~YuDt2V8kg0491304913epsmtip1d;
-        Mon, 15 Jun 2020 12:43:53 +0000 (GMT)
-From:   Tamseel Shams <m.shams@samsung.com>
-To:     kgene@kernel.org, krzk@kernel.org, gregkh@linuxfoundation.org,
-        jslaby@suse.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com,
-        Tamseel Shams <m.shams@samsung.com>
-Subject: [RFC PATCH] serial: samsung: Re-factors UART IRQ resource for
- various Samsung SoC
-Date:   Mon, 15 Jun 2020 17:56:09 +0530
-Message-Id: <20200615122609.71884-1-m.shams@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRmVeSWpSXmKPExsWy7bCmhi537vM4gy2vtS0ezNvGZtG8eD2b
-        xZQNH5gs+h+/ZrY4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72S3uti5md+Dy2LSqk81j/9w1
-        7B6bl9R79G1ZxeixfstVFo/Pm+QC2KK4bFJSczLLUov07RK4Mt6v2MdW0CtTsfjubJYGxnVi
-        XYycHBICJhLb58xj6WLk4hAS2M0osff6FkYI5xOjxOR/Z9lAqoQEPjNKtE+uh+mYcP4GO0TR
-        LkaJ6z9esEE4LUwSV0+1MHcxcnCwCWhKHD/PDdIgIhAi8e4sxFRmgZNAKzY3sIAkhAViJKac
-        OcwIYrMIqEo82jcdbBuvgIXExCVnWCC2yUus3nCAGaRZQuAcu8TrS8/YIBIuEq8b2lghbGGJ
-        V8e3sEPYUhIv+9ug7HyJ+fNWMUPYFRIrL7yBsu0lDlyZwwJyKDPQoet36YOEmQX4JHp/P2EC
-        CUsI8Ep0tAlBVCtK/N/dDzVRXOLdiilQWz0k2i9NZYUEUKzEsgWXmSYwysxCGLqAkXEVo2Rq
-        QXFuemqxaYFRXmq5XnFibnFpXrpecn7uJkZwEtDy2sH48MEHvUOMTByMhxglOJiVRHgPyT+P
-        E+JNSaysSi3Kjy8qzUktPsQozcGiJM6r9ONMnJBAemJJanZqakFqEUyWiYNTqoHJZNtV5i8t
-        UiuKAt9H/5p4pWH1s435Z9ZWMEbm3t+2IUDuqstK1pVL39l6TF2jOtGj7ANLpMyXP1fSgq8x
-        PDl8znXTRuM61UPtIsU9kss2Pf3Tzv/r31l7Dqn3vhem2ixdv22JiP7VWpfNiYtV913dvczy
-        fWtzel2eTHeXphPvGymlzSxfucLYkrLmvL57KVajbJ/RbLergimyeXz7jKJ5NjSuqH4kzBW9
-        JzFltaDK55CEwjM9m+79sFRLlvI1rpjDun3eTF3ROd6xjovYjMNFcj0Wbo7l2CRfof3yq3ao
-        9XkXLtl8M6/LzRNq5FQL6nTs3s5lc9mUoyOe+blme5TPrCdez/SLbrULOU47M02JpTgj0VCL
-        uag4EQDKgmYtcQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprILMWRmVeSWpSXmKPExsWy7bCSnC537vM4g+5eEYsH87axWTQvXs9m
-        MWXDByaL/sevmS3On9/AbrHp8TVWi8u75rBZzDi/j8nizOJedou7rYvZHbg8Nq3qZPPYP3cN
-        u8fmJfUefVtWMXqs33KVxePzJrkAtigum5TUnMyy1CJ9uwSujPcr9rEV9MpULL47m6WBcZ1Y
-        FyMnh4SAicSE8zfYuxi5OIQEdjBKnNu0kRkiIS4x7dd+RghbWGLlv+dQRU1MEm9/nGDpYuTg
-        YBPQlDh+nhvEFBGIkJj5sQakhFngPKPEzuOrmUB6hQWiJGbOmccKYrMIqEo82jedDcTmFbCQ
-        mLjkDAvEfHmJ1RsOME9g5FnAyLCKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0L10vOT93EyM41LS0
-        djDuWfVB7xAjEwfjIUYJDmYlEd5D8s/jhHhTEiurUovy44tKc1KLDzFKc7AoifN+nbUwTkgg
-        PbEkNTs1tSC1CCbLxMEp1cDkoqihsEEiKGJBkvPD76tuiyY1HLfU8+2556CaXf5TJ/ra7Z1y
-        M74yT2KSZbqts+UZq7lXe+6zWJm9jasvl7xvcDE28N81a1e59jwVW+cNXK+MKpk8HSynb1WM
-        Njn78MG0lLZrfszP7C9POjT10NMH+uf4V6tn7nLsq8tI5+DLeaWfMIln+cGDFo+VeT202lpe
-        OalFJ9cpswdYn3KI/ch95H0MI8N6J92WSd9+my/1z20S2Hp2mgDD9XxWdbFyod2pJ56+vVy0
-        yevHicMdn8yX8hdaRXyeE3xya9LuJRkXv8zm2/vx2fluldB/x3lfP52pfHnfjPkWWVMlC9Sc
-        nsUkyX4rEyrX4I4IVKmd7qfEUpyRaKjFXFScCACHjvcVpAIAAA==
-X-CMS-MailID: 20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43
-References: <CGME20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43@epcas5p4.samsung.com>
+        Mon, 15 Jun 2020 08:45:03 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FCHXpC030709;
+        Mon, 15 Jun 2020 08:44:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31p8v5rr8e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:44:26 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FCXJFP075107;
+        Mon, 15 Jun 2020 08:44:25 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31p8v5rr7n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:44:25 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FCfbbw015382;
+        Mon, 15 Jun 2020 12:44:24 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7uk1r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 12:44:23 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FCh4Gh66060756
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 12:43:04 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19B3C42041;
+        Mon, 15 Jun 2020 12:44:21 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF0A342045;
+        Mon, 15 Jun 2020 12:44:17 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.96.47])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 15 Jun 2020 12:44:17 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 15 Jun 2020 18:14:16 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v13 0/6] powerpc/papr_scm: Add support for reporting nvdimm health
+Date:   Mon, 15 Jun 2020 18:14:01 +0530
+Message-Id: <20200615124407.32596-1-vaibhav@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0 adultscore=0
+ clxscore=1015 mlxlogscore=999 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006150098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In few older Samsung SoCs like s3c2410, s3c2412
-and s3c2440, UART IP is having 2 interrupt lines.
-However, in other SoCs like s3c6400, s5pv210,
-exynos5433, and exynos4210 UART is having only 1
-interrupt line. Due to this, "platform_get_irq(platdev, 1)"
-call in the driver gives the following warning:
-"IRQ index 1 not found" on recent platforms.
-
-This patch re-factors the IRQ resources handling for
-each platform and hence fixing the above warnings seen
-on some platforms.
-
-Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+Changes since v12 [1]:
+* Fixed the clang warning regarding variable length object' being not at
+  the end of the 'struct nd_pdsm_cmd_pkg' by introducing a new layout.
+* Removed instance of 'struct nd_cmd_pkg hdr' from 'struct
+  nd_pdsm_cmd_pkg' and renamed the struct to 'struct nd_pkg_pdsm' to
+  match the libndctl naming convention.
+* Introduced 'union nd_pdsm_payload' thats a maximal union of all
+  possible payload structs and use it instead of having flexible
+  'payload' member 'struct nd_pdsm_cmd_pkg'.
+* Introduce pdsm descriptor 'struct pdsm_cmd_desc' and its array
+  __pdsm_cmd_descriptors[] that holds a payload 'size_[in|out]' and
+  service function for each pdsm. This is analogues to
+  '__nd_cmd_dimm_descs[]'
+* Introduce function 'pdsm_cmd_desc()' to fetch the corresponding pdsm
+  descriptor for each valid pdsm.
+* Updated papr_scm_service_pdsm() to use 'pdsm_cmd_desc()' and apply
+  checks on 'nd_cmd_pkg' payload based on psdm descriptor members and
+  finally service the pdsm using the 'service' member of the
+  descriptor.
+* Updated Patch-5 that to use the updated 'struct nd_pkg_pdsm'
+  definition.
+  
+[1] https://lore.kernel.org/linux-nvdimm/20200608211026.67573-1-vaibhav@linux.ibm.com
 ---
- drivers/tty/serial/samsung_tty.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index 6ef614d8648c..078dcb3e316f 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -60,6 +60,7 @@ struct s3c24xx_uart_info {
- 	char			*name;
- 	unsigned int		type;
- 	unsigned int		fifosize;
-+	unsigned int		irq_cnt;
- 	unsigned long		rx_fifomask;
- 	unsigned long		rx_fifoshift;
- 	unsigned long		rx_fifofull;
-@@ -1908,12 +1909,17 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
- 	else {
- 		port->irq = ret;
- 		ourport->rx_irq = ret;
--		ourport->tx_irq = ret + 1;
-+		if (ourport->info->irq_cnt == 1)
-+			ourport->tx_irq = ret;
-+		else
-+			ourport->tx_irq = ret + 1;
- 	}
- 
--	ret = platform_get_irq(platdev, 1);
--	if (ret > 0)
--		ourport->tx_irq = ret;
-+	if (ourport->info->irq_cnt != 1) {
-+		ret = platform_get_irq(platdev, 1);
-+		if (ret > 0)
-+			ourport->tx_irq = ret;
-+	}
- 	/*
- 	 * DMA is currently supported only on DT platforms, if DMA properties
- 	 * are specified.
-@@ -2387,6 +2393,7 @@ static struct s3c24xx_serial_drv_data s3c2410_serial_drv_data = {
- 		.name		= "Samsung S3C2410 UART",
- 		.type		= PORT_S3C2410,
- 		.fifosize	= 16,
-+		.irq_cnt	= 2,
- 		.rx_fifomask	= S3C2410_UFSTAT_RXMASK,
- 		.rx_fifoshift	= S3C2410_UFSTAT_RXSHIFT,
- 		.rx_fifofull	= S3C2410_UFSTAT_RXFULL,
-@@ -2414,6 +2421,7 @@ static struct s3c24xx_serial_drv_data s3c2412_serial_drv_data = {
- 		.name		= "Samsung S3C2412 UART",
- 		.type		= PORT_S3C2412,
- 		.fifosize	= 64,
-+		.irq_cnt	= 2,
- 		.has_divslot	= 1,
- 		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
- 		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
-@@ -2443,6 +2451,7 @@ static struct s3c24xx_serial_drv_data s3c2440_serial_drv_data = {
- 		.name		= "Samsung S3C2440 UART",
- 		.type		= PORT_S3C2440,
- 		.fifosize	= 64,
-+		.irq_cnt	= 2,
- 		.has_divslot	= 1,
- 		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
- 		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
-@@ -2471,6 +2480,7 @@ static struct s3c24xx_serial_drv_data s3c6400_serial_drv_data = {
- 		.name		= "Samsung S3C6400 UART",
- 		.type		= PORT_S3C6400,
- 		.fifosize	= 64,
-+		.irq_cnt	= 1,
- 		.has_divslot	= 1,
- 		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
- 		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
-@@ -2498,6 +2508,7 @@ static struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
- 	.info = &(struct s3c24xx_uart_info) {
- 		.name		= "Samsung S5PV210 UART",
- 		.type		= PORT_S3C6400,
-+		.irq_cnt	= 1,
- 		.has_divslot	= 1,
- 		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,
- 		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,
-@@ -2526,6 +2537,7 @@ static struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
- 	.info = &(struct s3c24xx_uart_info) {			\
- 		.name		= "Samsung Exynos UART",	\
- 		.type		= PORT_S3C6400,			\
-+		.irq_cnt	= 1,				\
- 		.has_divslot	= 1,				\
- 		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,	\
- 		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,	\
+The PAPR standard[2][4] provides mechanisms to query the health and
+performance stats of an NVDIMM via various hcalls as described in
+Ref[3].  Until now these stats were never available nor exposed to the
+user-space tools like 'ndctl'. This is partly due to PAPR platform not
+having support for ACPI and NFIT. Hence 'ndctl' is unable to query and
+report the dimm health status and a user had no way to determine the
+current health status of a NDVIMM.
+
+To overcome this limitation, this patch-set updates papr_scm kernel
+module to query and fetch NVDIMM health stats using hcalls described
+in Ref[3].  This health and performance stats are then exposed to
+userspace via sysfs and PAPR-NVDIMM-Specific-Methods(PDSM) issued by
+libndctl.
+
+These changes coupled with proposed ndtcl changes located at Ref[5]
+should provide a way for the user to retrieve NVDIMM health status
+using ndtcl.
+
+Below is a sample output using proposed kernel + ndctl for PAPR NVDIMM
+in a emulation environment:
+
+ # ndctl list -DH
+[
+  {
+    "dev":"nmem0",
+    "health":{
+      "health_state":"fatal",
+      "shutdown_state":"dirty"
+    }
+  }
+]
+
+Dimm health report output on a pseries guest lpar with vPMEM or HMS
+based NVDIMMs that are in perfectly healthy conditions:
+
+ # ndctl list -d nmem0 -H
+[
+  {
+    "dev":"nmem0",
+    "health":{
+      "health_state":"ok",
+      "shutdown_state":"clean"
+    }
+  }
+]
+
+PAPR NVDIMM-Specific-Methods(PDSM)
+==================================
+
+PDSM requests are issued by vendor specific code in libndctl to
+execute certain operations or fetch information from NVDIMMS. PDSMs
+requests can be sent to papr_scm module via libndctl(userspace) and
+libnvdimm (kernel) using the ND_CMD_CALL ioctl command which can be
+handled in the dimm control function papr_scm_ndctl(). Current
+patchset proposes a single PDSM to retrieve NVDIMM health, defined in
+the newly introduced uapi header named 'papr_pdsm.h'. Support for
+more PDSMs will be added in future.
+
+Structure of the patch-set
+==========================
+
+The patch-set starts with a doc patch documenting details of hcall
+H_SCM_HEALTH. Second patch exports kernel symbol seq_buf_printf()
+thats used in subsequent patches to generate sysfs attribute content.
+
+Third patch implements support for fetching NVDIMM health information
+from PHYP and partially exposing it to user-space via a NVDIMM sysfs
+flag.
+
+Fourth patch updates papr_scm_ndctl() to handle a possible error case
+and also improve debug logging.
+
+Fifth patch deals with implementing support for servicing PDSM
+commands in papr_scm module.
+
+Finally the last patch implements support for servicing PDSM
+'PAPR_PDSM_HEALTH' that returns the NVDIMM health information to
+libndctl.
+
+References:
+[2] "Power Architecture Platform Reference"
+      https://en.wikipedia.org/wiki/Power_Architecture_Platform_Reference
+[3] commit 58b278f568f0
+     ("powerpc: Provide initial documentation for PAPR hcalls")
+[4] "Linux on Power Architecture Platform Reference"
+     https://members.openpowerfoundation.org/document/dl/469
+[5] https://github.com/vaibhav92/ndctl/tree/papr_scm_health_v13
+
+---
+
+
+Vaibhav Jain (6):
+  powerpc: Document details on H_SCM_HEALTH hcall
+  seq_buf: Export seq_buf_printf
+  powerpc/papr_scm: Fetch nvdimm health information from PHYP
+  powerpc/papr_scm: Improve error logging and handling papr_scm_ndctl()
+  ndctl/papr_scm,uapi: Add support for PAPR nvdimm specific methods
+  powerpc/papr_scm: Implement support for PAPR_PDSM_HEALTH
+
+ Documentation/ABI/testing/sysfs-bus-papr-pmem |  27 ++
+ Documentation/powerpc/papr_hcalls.rst         |  46 +-
+ arch/powerpc/include/uapi/asm/papr_pdsm.h     | 132 ++++++
+ arch/powerpc/platforms/pseries/papr_scm.c     | 420 +++++++++++++++++-
+ include/uapi/linux/ndctl.h                    |   1 +
+ lib/seq_buf.c                                 |   1 +
+ 6 files changed, 616 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-papr-pmem
+ create mode 100644 arch/powerpc/include/uapi/asm/papr_pdsm.h
+
 -- 
-2.17.1
+2.26.2
 
