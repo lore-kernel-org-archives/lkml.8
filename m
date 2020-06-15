@@ -2,104 +2,128 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C79C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6999C206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592213455;
-	bh=ROu/9A1axX9GEPhRJpf8iMxAJYgP7mA8F8aPJ1XsqXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j422ZmoUFMRMOVeVFYVRlYusIeOq8EeEba4jVpcbpMJLCDVq6uZQNk0LBzMaU0oC8
-	 q7cMkXiQSz5iT9jQA+Ki3kgavKnSsuQ8aqi06iwTHgf7B0NrRoLm7ezUJ4OyHtvYpz
-	 4ofyHbbnswx80hwIvKzzbfYEkYEKfwty+nA/B3v0=
+	by mail.kernel.org (Postfix) with ESMTP id 7F5E0206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgFOJay (ORCPT
+        id S1729423AbgFOJcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:30:54 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:44194 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgFOJax (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:30:53 -0400
-Received: by mail-ej1-f66.google.com with SMTP id gl26so16627458ejb.11;
-        Mon, 15 Jun 2020 02:30:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h/M83iD3faCNV0o/Y7FN4nAygVEAlSlnzSZwyREl0qc=;
-        b=ESRVGfFM+5FRbNUwN8JsxZeCu+CapM95kuzSgkyeEpV3T3dtx4QXbeRn+5/vfxYPqB
-         MlAAF/LPJHCd627hfc7wC5r7+/Tt9rXk/DuWGqhunkpOX6uFGbbNbhl4ppzDmLK77sgN
-         B8YZ0UuXwEnLi0E+aBoe8axeiemCFBcxIQ2NG46jf1N4b5pAt+z+pMeUPaDAgbVFs0fW
-         ThaAAIouAx6Kaa0kqTq1gAoiNzVtRDH29notNW5Bfc3+7ixi6Y33eXTVbv4VoUfc6MHn
-         s9AOsEgpBeOwluImapflAYb/P0FKxdv6cK5zx4ffVDifF3K+GLP4Ej7lyQLxdkUcwz42
-         s8jA==
-X-Gm-Message-State: AOAM532DaveKD9lvRc8gRNzx3e1HrDfPSUu8Ln9WGgage4fdSLQtj9q1
-        CS/FtUBD7En55IZlcAMntgDsXI5b
-X-Google-Smtp-Source: ABdhPJzj4fF0KjiTqoA2MyuBdX99hOHf6yiRkEUdkWHf10sT0uT2w/tHmSsHPNGfhKgKePOHINaHYw==
-X-Received: by 2002:a17:906:b28e:: with SMTP id q14mr12088035ejz.484.1592213451621;
-        Mon, 15 Jun 2020 02:30:51 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id m2sm8652597ejg.7.2020.06.15.02.30.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jun 2020 02:30:50 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 11:30:48 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] spi: spi-fsl-dspi: Initialize completion before
- possible interrupt
-Message-ID: <20200615093048.GA26906@kozik-lap>
-References: <1592132154-20175-1-git-send-email-krzk@kernel.org>
- <1592132154-20175-2-git-send-email-krzk@kernel.org>
- <CA+h21ho_pa0H2MG-aAmUCFj37aYW4es-2V75P4KL-Zjq7qtfRQ@mail.gmail.com>
- <20200614111829.GA9694@kozik-lap>
- <CA+h21hqE3RbD2XTBbcRsMhsO2OaZ65tAaevFOr00p9ezu8O+iA@mail.gmail.com>
- <CA+h21hoVjJkGyxTEnh2Bixjoqxb12k-KK37U4Xy-27ntZz8aTw@mail.gmail.com>
- <20200614151247.GA2494@kozik-lap>
- <CA+h21hotvdXUgUzMaVfb_6EM-9kcoHvvnT4r+EHx7m6z4R0pxg@mail.gmail.com>
- <20200615070858.GA20941@kozik-lap>
- <CA+h21hoLq59R2p=+f4jZFmd5OSQ3590FeRB+oHBKLKDHq5knRg@mail.gmail.com>
+        Mon, 15 Jun 2020 05:32:47 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:41519 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729285AbgFOJcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 05:32:46 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49lmMb4rPNz9vBKc;
+        Mon, 15 Jun 2020 11:32:43 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id bMRFmJQeXFz6; Mon, 15 Jun 2020 11:32:43 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49lmMb29yWz9vBKb;
+        Mon, 15 Jun 2020 11:32:43 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DAE318B786;
+        Mon, 15 Jun 2020 11:32:41 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ykKpLC_cKaHk; Mon, 15 Jun 2020 11:32:41 +0200 (CEST)
+Received: from [172.25.101.66] (po15451.idsi0.si.c-s.fr [172.25.101.66])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AA3248B75F;
+        Mon, 15 Jun 2020 11:32:41 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/8xx: use pmd_off() to access a PMD entry in
+ pte_update()
+To:     Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+References: <20200615092229.23142-1-rppt@kernel.org>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <717cb7ae-1859-8a97-281a-a6ecb68fccd0@csgroup.eu>
+Date:   Mon, 15 Jun 2020 11:32:42 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+h21hoLq59R2p=+f4jZFmd5OSQ3590FeRB+oHBKLKDHq5knRg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200615092229.23142-1-rppt@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 12:26:37PM +0300, Vladimir Oltean wrote:
- > Let's rephrase it: you think therefore that completion should be
-> > initialzed *after* requesting shared interrupts? You think that exactly
-> > that order shall be used in the source code?
-> >
-> > Best regards,
-> > Krzysztof
-> >
-> >
+
+
+Le 15/06/2020 à 11:22, Mike Rapoport a écrit :
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> I think that completion should be initialized before it is used, just
-> like any other variable. So far you have not proven any code path
-> through which it can be used uninitialized, therefore I don't see why
-> this should be accepted as a bug fix. Cleanup, cosmetic refactoring,
-> design patterns, whatever, sure.
+> The pte_update() implementation for PPC_8xx unfolds page table from the PGD
+> level to access a PMD entry. Since 8xx has only 2-level page table this can
+> be simplified with pmd_off() shortcut.
+> 
+> Replace explicit unfolding with pmd_off() and drop defines of pgd_index()
+> and pgd_offset() that are no longer needed.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 
-Sure, let it call then cleanup, cosmetic refactoring.
+Nice. When I implemented this function, I was not able to use pmd_ptr()
+due to some circular header inclusion (See comment in commit log). Looks
+like since the replacement of pmd_ptr() by pmd_off(), it works.
 
-Best regards,
-Krzysztof
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
+Christophe
+
+> ---
+> 
+> I think it's powerpc material, but I won't mind if Andrew picks it up :)
+> 
+> 
+>   arch/powerpc/include/asm/nohash/32/pgtable.h | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
+> index b56f14160ae5..5a590ceaec14 100644
+> --- a/arch/powerpc/include/asm/nohash/32/pgtable.h
+> +++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+> @@ -205,10 +205,6 @@ static inline void pmd_clear(pmd_t *pmdp)
+>   	*pmdp = __pmd(0);
+>   }
+>   
+> -/* to find an entry in a page-table-directory */
+> -#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
+> -#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
+> -
+>   /*
+>    * PTE updates. This function is called whenever an existing
+>    * valid PTE is updated. This does -not- include set_pte_at()
+> @@ -230,6 +226,8 @@ static inline void pmd_clear(pmd_t *pmdp)
+>    * For other page sizes, we have a single entry in the table.
+>    */
+>   #ifdef CONFIG_PPC_8xx
+> +static pmd_t *pmd_off(struct mm_struct *mm, unsigned long addr);
+> +
+>   static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, pte_t *p,
+>   				     unsigned long clr, unsigned long set, int huge)
+>   {
+> @@ -237,7 +235,7 @@ static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, p
+>   	pte_basic_t old = pte_val(*p);
+>   	pte_basic_t new = (old & ~(pte_basic_t)clr) | set;
+>   	int num, i;
+> -	pmd_t *pmd = pmd_offset(pud_offset(p4d_offset(pgd_offset(mm, addr), addr), addr), addr);
+> +	pmd_t *pmd = pmd_off(mm, addr);
+>   
+>   	if (!huge)
+>   		num = PAGE_SIZE / SZ_4K;
+> 
