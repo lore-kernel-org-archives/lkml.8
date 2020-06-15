@@ -2,128 +2,118 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 815CF2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872C72078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aUYzJCzF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJNnBVNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbgFOQpu (ORCPT
+        id S1731036AbgFOQqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:45:50 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55090 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFOQpt (ORCPT
+        Mon, 15 Jun 2020 12:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFOQqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:45:49 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A5BB520B4780;
-        Mon, 15 Jun 2020 09:45:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A5BB520B4780
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1592239548;
-        bh=XWqIoID6oSJi5sFAyDXKdR658vGMUI/XhOZPL0DsKnA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=aUYzJCzFeQs+E1ArnYzFlomMA/IssGZNCua/12Ubl8cVtJJPgf1aW8IEd6Hb54Zuv
-         6iWDu3Nyl7+Q6Nu4kCWvt/q8Yq6G05vX28voSp3QubdOutU2hmwJ6pOurhIk+bCe0D
-         ScAH/mqlpvnydpdE9sHA5BOsIkhYeyDjbuQ/DqpY=
-Subject: Re: [PATCH 4/5] LSM: Define SELinux function to measure security
- state
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Stephen Smalley <stephen.smalley@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200613024130.3356-1-nramas@linux.microsoft.com>
- <20200613024130.3356-5-nramas@linux.microsoft.com>
- <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <a9a20aa5-963e-5f49-9391-0673fdda378e@linux.microsoft.com>
-Date:   Mon, 15 Jun 2020 09:45:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 12:46:09 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51490C061A0E;
+        Mon, 15 Jun 2020 09:46:09 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b5so15948022iln.5;
+        Mon, 15 Jun 2020 09:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k22YkrargwJPaS8/mNJZ89+4ClDb+tPOx9dTghtqjUw=;
+        b=KJNnBVNnv9TaqVpNYYPmu9/RPpFY9JRUnu304GQ5sIXX0pQTGk8V8FPCOpIVnKNqc1
+         XQZCuODtOuiK+wZdgCy4eMyQ/+16X1tcfQEViRwPNvk25SVOcD66rvKBNyNciR3OIHRh
+         yESiYcUSxlbIhKf/8x4KJq5L7Vwnclczpqpa3NL8NAbJuJztW1W7PSDJQNMnefNd4GcM
+         9eEU/OhoQaw7oZRepCoCYPxAxEy+8GFKOJA60GuspfKof1qkc7+zFcmXd6li5scjL86b
+         nIekirqUYyjkt5RQ/MszxMlcqVhnUF7lbd890D0co9L7XhXOflP0TZhS1C6/B/Vvr32M
+         895Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k22YkrargwJPaS8/mNJZ89+4ClDb+tPOx9dTghtqjUw=;
+        b=ssX39uJjp4SShuUvr+FkfdBy4uolG+MjpSM4iCwBOw99y6cX7f9yZkSMVZXm532D/W
+         naTip1/SGErsZI64XRnwIFykoEBcZK02QYKBHA5EZqNGHQVmN6SO9lKN2PBX6AZepLW0
+         GjAXfZ9kRthwg6ZRFhRSShArTEMtcO8ocJcH2CFGUoaA6mhUs4JmoPtfPmv2JNWFXisX
+         5Wqzmt8SC3V3m28efjAgBiQBwEKp/jVDcIifOyouiDEu/TxEzooMllyCpOvHWJQ4zfBz
+         DXDFWQ8hDyTIpzAFbJekNE+bnF0xJLeIZc2HLuidNXUfZ2j0DJ6JTOj4/LuPYqWDz5qQ
+         qCFw==
+X-Gm-Message-State: AOAM532ls+rL1Ix5mtdMcPeXI96NNURhMyssf/C2gNwhvpaBTzFqr0Ob
+        HTX4/wh//X7n5XmlJmbrrezF6B2R2CJ+h9q/enKveiyM
+X-Google-Smtp-Source: ABdhPJxVph+Fy/dXvind+PF1wbE545q3wtZp2SGbYL3STvGlhHw+edqYspZuYjibXZlp6BBO6Mum83mcN+5appTwpII=
+X-Received: by 2002:a92:5856:: with SMTP id m83mr27520452ilb.72.1592239568696;
+ Mon, 15 Jun 2020 09:46:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200615155645.32939-1-her0gyugyu@gmail.com>
+In-Reply-To: <20200615155645.32939-1-her0gyugyu@gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 15 Jun 2020 19:45:57 +0300
+Message-ID: <CAOQ4uxgj9L4oiPtnBArmy_VpvRwJ2OoO+7hxDpD=07xxxA+Mow@mail.gmail.com>
+Subject: Re: [PATCH] ovl: inode reference leak in "ovl_is_inuse" true case.
+To:     youngjun <her0gyugyu@gmail.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 4:57 AM, Stephen Smalley wrote:
+On Mon, Jun 15, 2020 at 6:57 PM youngjun <her0gyugyu@gmail.com> wrote:
+>
+> When "ovl_is_inuse" true case, trap inode reference not put.
+>
+> Signed-off-by: youngjun <her0gyugyu@gmail.com>
 
-Hi Stephen,
+Fixes: 0be0bfd2de9d ("ovl: fix regression caused by overlapping layers
+detection")
+Cc: <stable@vger.kernel.org> # v4.19+
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-Thanks for reviewing the patches.
 
->> +void security_state_change(char *lsm_name, void *state, int state_len)
->> +{
->> +       ima_lsm_state(lsm_name, state, state_len);
->> +}
->> +
-> 
-> What's the benefit of this trivial function instead of just calling
-> ima_lsm_state() directly?
+> ---
+>  fs/overlayfs/super.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+> index 91476bc422f9..8837fc1ec3be 100644
+> --- a/fs/overlayfs/super.c
+> +++ b/fs/overlayfs/super.c
+> @@ -1499,8 +1499,10 @@ static int ovl_get_layers(struct super_block *sb, struct ovl_fs *ofs,
+>
+>                 if (ovl_is_inuse(stack[i].dentry)) {
+>                         err = ovl_report_in_use(ofs, "lowerdir");
+> -                       if (err)
+> +                       if (err) {
+> +                               iput(trap);
+>                                 goto out;
+> +                       }
+>                 }
+>
 
-One of the feedback Casey Schaufler had given earlier was that calling 
-an IMA function directly from SELinux (or, any of the Security Modules) 
-would be a layering violation.
+Urgh! I moved this ovl_is_inuse() after ovl_setup_trap() for a reason, but I did
+not explain why. While we are fixing the bug, it would be nice to add a comment
+above ovl_setup_trap():
 
-LSM framework (security/security.c) already calls IMA functions now (for 
-example, ima_bprm_check() is called from security_bprm_check()). I 
-followed the same pattern for measuring LSM data as well.
+/*
+ * Check if lower root conflicts with this overlay layers before checking
+ * if it is in-use as upperdir/workdir of "another" mount, because we do
+ * not bother to check in ovl_is_inuse() if the upperdir/workdir is in fact
+ * in-use by our upperdir/workdir.
+ */
 
-Please let me know if I misunderstood Casey's comment.
-
->> +static int selinux_security_state(char **lsm_name, void **state,
->> +                                 int *state_len)
->> +{
->> +       int rc = 0;
->> +       char *new_state;
->> +       static char *security_state_string = "enabled=%d;enforcing=%d";
->> +
->> +       *lsm_name = kstrdup("selinux", GFP_KERNEL);
->> +       if (!*lsm_name)
->> +               return -ENOMEM;
->> +
->> +       new_state = kzalloc(strlen(security_state_string) + 1, GFP_KERNEL);
->> +       if (!new_state) {
->> +               kfree(*lsm_name);
->> +               *lsm_name = NULL;
->> +               rc = -ENOMEM;
->> +               goto out;
->> +       }
->> +
->> +       *state_len = sprintf(new_state, security_state_string,
->> +                            !selinux_disabled(&selinux_state),
->> +                            enforcing_enabled(&selinux_state));
-> 
-> I think I mentioned this on a previous version of these patches, but I
-> would recommend including more than just the enabled and enforcing
-> states in your measurement.  Other low-hanging fruit would be the
-> other selinux_state booleans (checkreqprot, initialized,
-> policycap[0..__POLICYDB_CAPABILITY_MAX]).  Going a bit further one
-> could take a hash of the loaded policy by using security_read_policy()
-> and then computing a hash using whatever hash ima prefers over the
-> returned data,len pair.  You likely also need to think about how to
-> allow future extensibility of the state in a backward-compatible
-> manner, so that future additions do not immediately break systems
-> relying on older measurements.
-> 
-
-Sure - I will address this one in the next update.
-
-thanks,
-  -lakshmi
+Thanks,
+Amir.
