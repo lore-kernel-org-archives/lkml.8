@@ -2,511 +2,255 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEAAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85062C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0ADE206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DFD20747
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/YxUfxv"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="RFXWwBpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgFOBTP (ORCPT
+        id S1728111AbgFOBWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 21:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbgFOBTP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 21:19:15 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE007C061A0E;
-        Sun, 14 Jun 2020 18:19:14 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id er17so7032511qvb.8;
-        Sun, 14 Jun 2020 18:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LHskQ8f2Dmk0xpDNDHCGI6zB+LcQzd4CszN17YA72hY=;
-        b=n/YxUfxvvJxXpzKcG86jLlw8TlsmqMIOxHbW6z8WZNai475DlJEtz12clxlqDVKYDu
-         3LHwGk43kkQir8OCXkBcNBMxDQ5sLMzUL+YSiYB3KAwVWsiKoSfNow+3Re5Vl5lUc8Fo
-         xgP4RcDuktQKaVWuqVOB68OEvgc1/xyXcu3b5A8fa5mL1ZJWtu/qxWTlmZ0vmS44jfd3
-         /57JkyOWmMI7JOon+FUVZ15vIkJg4FCAzQcmzxtk6sYEJVvZwJ6XSBf7hdLe4EYAhP5F
-         vvL2RGugBp2Ox+M2vEptS+LU/RylzKsvnjt98HvYr6TreYYdTLU7x7ZkvDQAnGAj4KI6
-         Xftw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LHskQ8f2Dmk0xpDNDHCGI6zB+LcQzd4CszN17YA72hY=;
-        b=SHdXAljfk2y5L8LyWhNodp2Hb1WwP/fzFVsC3dnDBX2qA7ogzO7Lz+SK0wa+g0tO+O
-         CDl6Jbm1k6XS7dYgeLZtRP7ZhSyzBTDkstRNNvDM9kW91/osb02juDwDdlr2wMRtmNsY
-         tKjWzD9ttMdU0sfXVbJKNVkhOEfhKRD/xiVlUrqyGDrpiCZSThJjxsMquAxQ3zEq6WHB
-         7aR5EM7txW/1IQPc3MqOOhKyrfNCPqU3uzaVgX6WI7kcxVVbAKLZ+0j2anoD0LjHoAwK
-         GZNFZ7jO76+hTBBggZTsVqdONGdjWoLkXsv5SHrkLnlc8zIxfUTq5DCu5lSHG9RkIbMY
-         e1QQ==
-X-Gm-Message-State: AOAM530M85CdjBsHKzUIFQaH903PMlzF+/36GKbLHqsNi4pMfNOEYxRO
-        5B6H1lzCxiRAH+8WOnwSs1c=
-X-Google-Smtp-Source: ABdhPJw/xRgeMEzo8Mq6tZJ8JtGVxQMqMSEP7dS5xLV6b7UxttcieO2g3RiF2q15DuPVBN07XRJtnQ==
-X-Received: by 2002:a05:6214:594:: with SMTP id bx20mr22490987qvb.131.1592183953831;
-        Sun, 14 Jun 2020 18:19:13 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a82sm10561443qkb.29.2020.06.14.18.19.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jun 2020 18:19:13 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>, andy.shevchenko@gmail.com,
-        michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        linux@roeck-us.net, andriy.shevchenko@linux.intel.com,
-        robin.murphy@arm.com, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
-Date:   Sun, 14 Jun 2020 20:19:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200611191002.2256570-1-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8
+        Sun, 14 Jun 2020 21:22:42 -0400
+Received: from mga03.intel.com ([134.134.136.65]:45600 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727969AbgFOBWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 21:22:42 -0400
+IronPort-SDR: 6qfZuJGJpE72WU/QbS0ciV4N66sdg+FkOLsZRl+TMbKpLn2yuvOGaaNFVTC9GWcnj4JqSjoqxo
+ nVs0b/FndYNA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2020 18:22:39 -0700
+IronPort-SDR: bFlKrqjbPMpRTl7bvdE6TFGkjs8imNNvfsOsuuOQvMxGcAZ6cYDakfQcWnf2Gmf82iUtPPNQjY
+ pYaISxKME4WA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,513,1583222400"; 
+   d="scan'208";a="475752402"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Jun 2020 18:22:38 -0700
+Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 14 Jun 2020 18:22:38 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX121.amr.corp.intel.com (10.22.225.226) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 14 Jun 2020 18:22:38 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
+ edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Sun, 14 Jun 2020 18:22:38 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q/CE2G6MPmGIYqCdfwS09WivnRtDhtgWMa2ek8Zf2/4n/MoRRxYEkyuqnyPXNYs8YOVxgqpTpsf8dEeYGZAMGQyuf5noj9soBVFJynxyFwyDm7NtLOIpVQQdzozajgRb6CXkmFYpDi5mX+m2n7/TwBq0N4v6HxFpz1wydFiRdPq9ViaLwoiXgfwzjyenjR998Ra1kEoqJwySXcaib0/Hz+hfXmwNX+DE6rVXToLoQP9GEgj/w9/VCXfMsa7G7jFCZui0q1coZrfSKycL0urQUP69cHvcffFsQWy3Cil5xr7w9DitO1JAok76U06CENVth01zr0nr67dpfYda7LCJVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DDqVpS3Nj6/ifapz+1rwuenn3o19rtH5Qa9qqmcSSVE=;
+ b=oK4tfaASJf0LHJxdvAcxX2OBs2VPkDfXJHX4D6RfEk3ue1fyjeMzV1KwSQKNMf0kYkwm2UZuF1JSNa1UVI4eTj0AGWX6Y5eTPy9HUwVIpu/G4Ks1cSeuZiRdnxOejCPvPUdv6GMqgwqN2ee9FC20sCFnPng0QG5EsvTLgc6uS4AFjXyMqrHZnj5mFf4DBCECloRc9bPh0+44uzb9KLIXbjOKQRdCrFmXBcyV4kqGSx8q3LzYh9tKFvreZRRvTCwaeB0Wek+FQHvKKEygoyWmPuXOVG/T43Z9iIlj4Pm95t/UbcuMF/O0CKmUsLmaCXcWWmq3qngBuHG8cZVrF0Ee7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DDqVpS3Nj6/ifapz+1rwuenn3o19rtH5Qa9qqmcSSVE=;
+ b=RFXWwBpMdEqeIq7ZRawMkEme80MdObwxcJpNKk+wxzTTVDJuiPIW+lt8BIQfnhqfP21KrJPpRpG8snMkY8vix7rP3YvV8cW+0jGys4KPZUI5x93nFyDF8Xdf4uaqermKsapheRMoDtFpo9j25MN1N9x+Dwnsgycr4UgrEG29YWs=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB0014.namprd11.prod.outlook.com (2603:10b6:301:64::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Mon, 15 Jun
+ 2020 01:22:37 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb%5]) with mapi id 15.20.3088.028; Mon, 15 Jun 2020
+ 01:22:37 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 02/15] iommu: Report domain nesting info
+Thread-Topic: [PATCH v2 02/15] iommu: Report domain nesting info
+Thread-Index: AQHWP+lAh6LCFwZsRk6rW47Mu2S6h6jTzaSAgADjv4CABDOwQA==
+Date:   Mon, 15 Jun 2020 01:22:37 +0000
+Message-ID: <MWHPR11MB1645A7EBC706AC8A075EA83D8C9C0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
+        <1591877734-66527-3-git-send-email-yi.l.liu@intel.com>
+ <20200611133015.1418097f@x1.home>
+ <DM5PR11MB143571773B05359FA2F46FB6C3810@DM5PR11MB1435.namprd11.prod.outlook.com>
+In-Reply-To: <DM5PR11MB143571773B05359FA2F46FB6C3810@DM5PR11MB1435.namprd11.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.55.52.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 82000480-8ea1-4b14-7ead-08d810ca96c4
+x-ms-traffictypediagnostic: MWHPR11MB0014:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB00144B4FF1CE823424E1F1488C9C0@MWHPR11MB0014.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04359FAD81
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0LUNhG/PL3pbutkPYb2kPwV6+0JuP2vA5vK3v9KRM7VmtGOg4GxlUsRVOoruuIzrqN4UZ0AKkXe3kVXaDInhAqhXlkCdck4tWNV5onYK7iW1376aqpwORCffy0759xVoLFf2Zc/7D02tP03hSA0zAUWbmUC+XgV5Y2XN1ElPoFivwkMFEFi1HKgZpXZcjxcx5dY0/rs1lPla2jkvfig75oaTDgU+wWAgEJ9Afr5hlTDW/SV9gYMV35sqQbRMy66dGgPIsGArKy7CM7LQN/ArEbNtnJ4H9Agz+HqAIJ+vr2jFCubaj8ozBUl37leZsSI3VShGnDj5ielE/9gGIYggsw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(366004)(39860400002)(376002)(346002)(66946007)(33656002)(71200400001)(66556008)(64756008)(52536014)(66476007)(66446008)(76116006)(6506007)(8676002)(86362001)(478600001)(7696005)(186003)(8936002)(5660300002)(110136005)(54906003)(316002)(2906002)(26005)(9686003)(4326008)(7416002)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: dLqypIN2zn3cmuK9rT1twCa5/InKnha1h+vnNBAIgUpDh9vxXENcwQUVYon27rdipjl4AyzowoiOexqtjRmf9+V/xVdpyoAsuQQryGQGF1+GGtTW+E/aG2AClTOj+Rdnxgg25iIfI207+Ey4d1VxKJ595Fuqerzkp5BR/tNvvxwF06BS2/xhO2PIv8ysGDT796wcn4qbDUyB+aIXAaFyabJcK3kHVXR5fWDU5z57pqwEx2GDNVhVEt36zPaF/MRTOEUvtX2KKiueU7RatgTItebG/y1Qyh07fn6L+C8jHzAeh0a4h+o7gc0g6cTWvvY+kTmzy0xa/Y3DDxQBgiSPPekv1PjdxGBtlQonNYQcoPyKeJ7LRhW5kzBWxhf76m/kRLenQXoIb5Lnw2YuBMFQWrmYLwCeC0s1LaOI9jLm5Dd9Et9UCfqCTjCtXLp5U1pvX5CDQZ9kjVrv5CeDTiwkOR/MqN1ZvpIAb+THfobuJ5U=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82000480-8ea1-4b14-7ead-08d810ca96c4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 01:22:37.0483
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vFMDjdpZxwijQ/eSzCgnOc2VgXwMjxBFo3L7Ftczk7pjF20NSCqRiYU64w/kykTWENk4okRSHgIxKspqQgMczA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0014
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+> From: Liu, Yi L <yi.l.liu@intel.com>
+> Sent: Friday, June 12, 2020 5:05 PM
+>=20
+> Hi Alex,
+>=20
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Friday, June 12, 2020 3:30 AM
+> >
+> > On Thu, 11 Jun 2020 05:15:21 -0700
+> > Liu Yi L <yi.l.liu@intel.com> wrote:
+> >
+> > > IOMMUs that support nesting translation needs report the capability
+> > > info to userspace, e.g. the format of first level/stage paging struct=
+ures.
+> > >
+> > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > Cc: Eric Auger <eric.auger@redhat.com>
+> > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > Cc: Joerg Roedel <joro@8bytes.org>
+> > > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > ---
+> > > @Jean, Eric: as nesting was introduced for ARM, but looks like no
+> > > actual user of it. right? So I'm wondering if we can reuse
+> > > DOMAIN_ATTR_NESTING to retrieve nesting info? how about your
+> opinions?
+> > >
+> > >  include/linux/iommu.h      |  1 +
+> > >  include/uapi/linux/iommu.h | 34
+> ++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 35 insertions(+)
+> > >
+> > > diff --git a/include/linux/iommu.h b/include/linux/iommu.h index
+> > > 78a26ae..f6e4b49 100644
+> > > --- a/include/linux/iommu.h
+> > > +++ b/include/linux/iommu.h
+> > > @@ -126,6 +126,7 @@ enum iommu_attr {
+> > >  	DOMAIN_ATTR_FSL_PAMUV1,
+> > >  	DOMAIN_ATTR_NESTING,	/* two stages of translation */
+> > >  	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+> > > +	DOMAIN_ATTR_NESTING_INFO,
+> > >  	DOMAIN_ATTR_MAX,
+> > >  };
+> > >
+> > > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> > > index 303f148..02eac73 100644
+> > > --- a/include/uapi/linux/iommu.h
+> > > +++ b/include/uapi/linux/iommu.h
+> > > @@ -332,4 +332,38 @@ struct iommu_gpasid_bind_data {
+> > >  	};
+> > >  };
+> > >
+> > > +struct iommu_nesting_info {
+> > > +	__u32	size;
+> > > +	__u32	format;
+> > > +	__u32	features;
+> > > +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
+> > > +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
+> > > +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
+> > > +	__u32	flags;
+> > > +	__u8	data[];
+> > > +};
+> > > +
+> > > +/*
+> > > + * @flags:	VT-d specific flags. Currently reserved for future
+> > > + *		extension.
+> > > + * @addr_width:	The output addr width of first level/stage translati=
+on
+> > > + * @pasid_bits:	Maximum supported PASID bits, 0 represents no
+> PASID
+> > > + *		support.
+> > > + * @cap_reg:	Describe basic capabilities as defined in VT-d
+> capability
+> > > + *		register.
+> > > + * @cap_mask:	Mark valid capability bits in @cap_reg.
+> > > + * @ecap_reg:	Describe the extended capabilities as defined in VT-d
+> > > + *		extended capability register.
+> > > + * @ecap_mask:	Mark the valid capability bits in @ecap_reg.
+> >
+> > Please explain this a little further, why do we need to tell userspace =
+about
+> > cap/ecap register bits that aren't valid through this interface?
+> > Thanks,
+>=20
+> we only want to tell userspace about the bits marked in the cap/ecap_mask=
+.
+> cap/ecap_mask is kind of white-list of the cap/ecap register. userspace
+> should
+> only care about the bits in the white-list, for other bits, it should ign=
+ore.
+>=20
+> Regards,
+> Yi Liu
 
-I'm looking at 5.8-rc1.
+For invalid bits if kernel just clears them then do we still need additiona=
+l
+mask bits to explicitly mark them out? I guess this might be the point that=
+=20
+Alex asked...
 
-The only use of OF_MFD_CELL() where the same compatible is specified
-for multiple elements of a struct mfd_cell array is for compatible
-"stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
-
-        OF_MFD_CELL("ab8500-pwm",
-                    NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
-        OF_MFD_CELL("ab8500-pwm",
-                    NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
-        OF_MFD_CELL("ab8500-pwm",
-                    NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
-
-The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
-are:
-
-   arch/arm/boot/dts/ste-ab8500.dtsi
-   arch/arm/boot/dts/ste-ab8505.dtsi
-
-These two .dtsi files only have a single node with this compatible.
-Chasing back to .dts and .dtsi files that include these two .dtsi
-files, I see no case where there are multiple nodes with this
-compatible.
-
-So it looks to me like there is no .dts in mainline that is providing
-the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
-is expecting.  No case that there are multiple mfd child nodes where
-mfd_add_device() would assign the first of n child nodes with the
-same compatible to multiple devices.
-
-So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
-Am I missing something here?
-
-If I am correct, then either drivers/mfd/ab8500-core.c or
-ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
-
-Moving forward, your proposed OF_MFD_CELL_REG() method seems a good
-approach (I have not completely read the actual code in the patch yet
-though).
-
-
-On 2020-06-11 14:10, Lee Jones wrote:
-> Currently, when a child platform device (sometimes referred to as a
-> sub-device) is registered via the Multi-Functional Device (MFD) API,
-> the framework attempts to match the newly registered platform device
-> with its associated Device Tree (OF) node.  Until now, the device has
-> been allocated the first node found with an identical OF compatible
-> string.  Unfortunately, if there are, say for example '3' devices
-> which are to be handled by the same driver and therefore have the same
-> compatible string, each of them will be allocated a pointer to the
-> *first* node.
-> 
-> An example Device Tree entry might look like this:
-> 
->   mfd_of_test {
->           compatible = "mfd,of-test-parent";
->           #address-cells = <0x02>;
->           #size-cells = <0x02>;
-> 
->           child@aaaaaaaaaaaaaaaa {
->                   compatible = "mfd,of-test-child";
->                   reg = <0xaaaaaaaa 0xaaaaaaaa 0 0x11>,
->                         <0xbbbbbbbb 0xbbbbbbbb 0 0x22>;
->           };
-> 
->           child@cccccccc {
->                   compatible = "mfd,of-test-child";
->                   reg = <0x00000000 0xcccccccc 0 0x33>;
->           };
-> 
->           child@dddddddd00000000 {
->                   compatible = "mfd,of-test-child";
->                   reg = <0xdddddddd 0x00000000 0 0x44>;
->           };
->   };
-> 
-> When used with example sub-device registration like this:
-> 
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 0, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child"),
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child")
->   };
-> 
-> ... the current implementation will result in all devices being allocated
-> the first OF node found containing a matching compatible string:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@aaaaaaaaaaaaaaaa
-> 
-> After this patch each device will be allocated a unique OF node:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@cccccccc
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@dddddddd00000000
-> 
-> Which is fine if all OF nodes are identical.  However if we wish to
-> apply an attribute to particular device, we really need to ensure the
-> correct OF node will be associated with the device containing the
-> correct address.  We accomplish this by matching the device's address
-> expressed in DT with one provided during sub-device registration.
-> Like this:
-> 
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child", 0xdddddddd00000000),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child", 0xaaaaaaaaaaaaaaaa),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 3, "mfd,of-test-child", 0x00000000cccccccc)
->   };
-> 
-> This will ensure a specific device (designated here using the
-> platform_ids; 1, 2 and 3) is matched with a particular OF node:
-> 
->   [0.712511] mfd-of-test-child mfd-of-test-child.0: Probing platform device: 0
->   [0.712710] mfd-of-test-child mfd-of-test-child.0: Using OF node: child@dddddddd00000000
->   [0.713033] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.713381] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.713691] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.713889] mfd-of-test-child mfd-of-test-child.2: Using OF node: child@cccccccc
-> 
-> This implementation is still not infallible, hence the mention of
-> "best effort" in the commit subject.  Since we have not *insisted* on
-> the existence of 'reg' properties (in some scenarios they just do not
-> make sense) and no device currently uses the new 'of_reg' attribute,
-> we have to make an on-the-fly judgement call whether to associate the
-> OF node anyway.  Which we do in cases where parent drivers haven't
-> specified a particular OF node to match to.  So there is a *slight*
-> possibility of the following result (note: the implementation here is
-> convoluted, but it shows you one means by which this process can
-> still break):
-> 
->   /*
->    * First entry will match to the first OF node with matching compatible
->    * Second will fail, since the first took its OF node and is no longer available
->    * Third will succeed
->    */
-
-The following mfd_of_test_cell[] looks like a bug to me.  For a given
-compatible value, either reg is required or is not allowed.
-
-One could add validation code to mfd_add_devices(), which would scan the
-parameter "cells", checking for multiple array elements with the same
-compatible value where one of the elements does not have .use_of_reg
-set.  This seems to be a pain to program and not needed, because the
-validation process, using the binding definition, would detect the
-problem in the .dts source file, because either the required reg
-property would be missing or the not to be specified reg property exists.
-Whether reg is required or not allowed is based on the compatible value.
-
-
->   static const struct mfd_cell mfd_of_test_cell[] = {
->         OF_MFD_CELL("mfd-of-test-child", NULL, NULL, 0, 1, "mfd,of-test-child"),
-> 	OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 2, "mfd,of-test-child", 0xaaaaaaaaaaaaaaaa),
->         OF_MFD_CELL_REG("mfd-of-test-child", NULL, NULL, 0, 3, "mfd,of-test-child", 0x00000000cccccccc)
->   };
-> 
-> The result:
-> 
->   [0.753869] mfd-of-test-parent mfd_of_test: Registering 3 devices
->   [0.756597] mfd-of-test-child: Failed to locate of_node [id: 2]
->   [0.759999] mfd-of-test-child mfd-of-test-child.1: Probing platform device: 1
->   [0.760314] mfd-of-test-child mfd-of-test-child.1: Using OF node: child@aaaaaaaaaaaaaaaa
->   [0.760908] mfd-of-test-child mfd-of-test-child.2: Probing platform device: 2
->   [0.761183] mfd-of-test-child mfd-of-test-child.2: No OF node associated with this device
->   [0.761621] mfd-of-test-child mfd-of-test-child.3: Probing platform device: 3
->   [0.761899] mfd-of-test-child mfd-of-test-child.3: Using OF node: child@cccccccc
-> 
-> We could code around this with some pre-parsing semantics, but the
-> added complexity required to cover each and every corner-case is not
-
-So this should problem should not occur.
-
-
-> justified.  Merely patching the current failing (via this patch) is
-> already working with some pretty small corner-cases.  Other issues
-
-If there are existing corner cases, I did not search the source tree
-sufficiently.  What are the current corner cases?
-
--Frank
-
-> should be patched in the parent drivers which can be achieved simply
-> by implementing OF_MFD_CELL_REG().
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> 
-> Changelog:
-> 
-> v1 => v2:
->   * Simply return -EAGAIN if node is already in use
->   * Allow for valid of_reg=0 by introducing use_of_reg boolean flag
->   * Split helpers out into separate patch
-> 
-> drivers/mfd/mfd-core.c   | 99 +++++++++++++++++++++++++++++++++++-----
->  include/linux/mfd/core.h | 10 ++++
->  2 files changed, 97 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index e831e733b38cf..120803717b828 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -10,6 +10,7 @@
->  #include <linux/kernel.h>
->  #include <linux/platform_device.h>
->  #include <linux/acpi.h>
-> +#include <linux/list.h>
->  #include <linux/property.h>
->  #include <linux/mfd/core.h>
->  #include <linux/pm_runtime.h>
-> @@ -17,8 +18,17 @@
->  #include <linux/module.h>
->  #include <linux/irqdomain.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/regulator/consumer.h>
->  
-> +static LIST_HEAD(mfd_of_node_list);
-> +
-> +struct mfd_of_node_entry {
-> +	struct list_head list;
-> +	struct device *dev;
-> +	struct device_node *np;
-> +};
-> +
->  static struct device_type mfd_dev_type = {
->  	.name	= "mfd_device",
->  };
-> @@ -107,6 +117,54 @@ static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
->  }
->  #endif
->  
-> +static int mfd_match_of_node_to_dev(struct platform_device *pdev,
-> +				    struct device_node *np,
-> +				    const struct mfd_cell *cell)
-> +{
-> +	struct mfd_of_node_entry *of_entry;
-> +	const __be32 *reg;
-> +	u64 of_node_addr;
-> +
-> +	/* Skip devices 'disabled' by Device Tree */
-> +	if (!of_device_is_available(np))
-> +		return -ENODEV;
-> +
-> +	/* Skip if OF node has previously been allocated to a device */
-> +	list_for_each_entry(of_entry, &mfd_of_node_list, list)
-> +		if (of_entry->np == np)
-> +			return -EAGAIN;
-> +
-> +	if (!cell->use_of_reg)
-> +		/* No of_reg defined - allocate first free compatible match */
-> +		goto allocate_of_node;
-> +
-> +	/* We only care about each node's first defined address */
-> +	reg = of_get_address(np, 0, NULL, NULL);
-> +	if (!reg)
-> +		/* OF node does not contatin a 'reg' property to match to */
-> +		return -EAGAIN;
-> +
-> +	of_node_addr = of_read_number(reg, of_n_addr_cells(np));
-> +
-> +	if (cell->of_reg != of_node_addr)
-> +		/* No match */
-> +		return -EAGAIN;
-> +
-> +allocate_of_node:
-> +	of_entry = kzalloc(sizeof(*of_entry), GFP_KERNEL);
-> +	if (!of_entry)
-> +		return -ENOMEM;
-> +
-> +	of_entry->dev = &pdev->dev;
-> +	of_entry->np = np;
-> +	list_add_tail(&of_entry->list, &mfd_of_node_list);
-> +
-> +	pdev->dev.of_node = np;
-> +	pdev->dev.fwnode = &np->fwnode;
-> +
-> +	return 0;
-> +}
-> +
->  static int mfd_add_device(struct device *parent, int id,
->  			  const struct mfd_cell *cell,
->  			  struct resource *mem_base,
-> @@ -115,6 +173,7 @@ static int mfd_add_device(struct device *parent, int id,
->  	struct resource *res;
->  	struct platform_device *pdev;
->  	struct device_node *np = NULL;
-> +	struct mfd_of_node_entry *of_entry, *tmp;
->  	int ret = -ENOMEM;
->  	int platform_id;
->  	int r;
-> @@ -149,19 +208,22 @@ static int mfd_add_device(struct device *parent, int id,
->  	if (ret < 0)
->  		goto fail_res;
->  
-> -	if (parent->of_node && cell->of_compatible) {
-> +	if (IS_ENABLED(CONFIG_OF) && parent->of_node && cell->of_compatible) {
->  		for_each_child_of_node(parent->of_node, np) {
->  			if (of_device_is_compatible(np, cell->of_compatible)) {
-> -				if (!of_device_is_available(np)) {
-> -					/* Ignore disabled devices error free */
-> -					ret = 0;
-> +				ret = mfd_match_of_node_to_dev(pdev, np, cell);
-> +				if (ret == -EAGAIN)
-> +					continue;
-> +				if (ret)
->  					goto fail_alias;
-> -				}
-> -				pdev->dev.of_node = np;
-> -				pdev->dev.fwnode = &np->fwnode;
-> +
->  				break;
->  			}
->  		}
-> +
-> +		if (!pdev->dev.of_node)
-> +			pr_warn("%s: Failed to locate of_node [id: %d]\n",
-> +				cell->name, platform_id);
->  	}
->  
->  	mfd_acpi_add_device(cell, pdev);
-> @@ -170,13 +232,13 @@ static int mfd_add_device(struct device *parent, int id,
->  		ret = platform_device_add_data(pdev,
->  					cell->platform_data, cell->pdata_size);
->  		if (ret)
-> -			goto fail_alias;
-> +			goto fail_of_entry;
->  	}
->  
->  	if (cell->properties) {
->  		ret = platform_device_add_properties(pdev, cell->properties);
->  		if (ret)
-> -			goto fail_alias;
-> +			goto fail_of_entry;
->  	}
->  
->  	for (r = 0; r < cell->num_resources; r++) {
-> @@ -213,18 +275,18 @@ static int mfd_add_device(struct device *parent, int id,
->  			if (has_acpi_companion(&pdev->dev)) {
->  				ret = acpi_check_resource_conflict(&res[r]);
->  				if (ret)
-> -					goto fail_alias;
-> +					goto fail_of_entry;
->  			}
->  		}
->  	}
->  
->  	ret = platform_device_add_resources(pdev, res, cell->num_resources);
->  	if (ret)
-> -		goto fail_alias;
-> +		goto fail_of_entry;
->  
->  	ret = platform_device_add(pdev);
->  	if (ret)
-> -		goto fail_alias;
-> +		goto fail_of_entry;
->  
->  	if (cell->pm_runtime_no_callbacks)
->  		pm_runtime_no_callbacks(&pdev->dev);
-> @@ -233,6 +295,12 @@ static int mfd_add_device(struct device *parent, int id,
->  
->  	return 0;
->  
-> +fail_of_entry:
-> +	list_for_each_entry_safe(of_entry, tmp, &mfd_of_node_list, list)
-> +		if (of_entry->dev == &pdev->dev) {
-> +			list_del(&of_entry->list);
-> +			kfree(of_entry);
-> +		}
->  fail_alias:
->  	regulator_bulk_unregister_supply_alias(&pdev->dev,
->  					       cell->parent_supplies,
-> @@ -287,6 +355,7 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
->  {
->  	struct platform_device *pdev;
->  	const struct mfd_cell *cell;
-> +	struct mfd_of_node_entry *of_entry, *tmp;
->  
->  	if (dev->type != &mfd_dev_type)
->  		return 0;
-> @@ -297,6 +366,12 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
->  	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
->  					       cell->num_parent_supplies);
->  
-> +	list_for_each_entry_safe(of_entry, tmp, &mfd_of_node_list, list)
-> +		if (of_entry->dev == dev) {
-> +			list_del(&of_entry->list);
-> +			kfree(of_entry);
-> +		}
-> +
->  	kfree(cell);
->  
->  	platform_device_unregister(pdev);
-> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> index d01d1299e49dc..a148b907bb7f1 100644
-> --- a/include/linux/mfd/core.h
-> +++ b/include/linux/mfd/core.h
-> @@ -78,6 +78,16 @@ struct mfd_cell {
->  	 */
->  	const char		*of_compatible;
->  
-> +	/*
-> +	 * Address as defined in Device Tree.  Used to compement 'of_compatible'
-> +	 * (above) when matching OF nodes with devices that have identical
-> +	 * compatible strings
-> +	 */
-> +	const u64 of_reg;
-> +
-> +	/* Set to 'true' to use 'of_reg' (above) - allows for of_reg=0 */
-> +	bool use_of_reg;
-> +
->  	/* Matches ACPI */
->  	const struct mfd_cell_acpi_match	*acpi_match;
->  
-> 
+>=20
+> > Alex
+> >
+> >
+> > > + */
+> > > +struct iommu_nesting_info_vtd {
+> > > +	__u32	flags;
+> > > +	__u16	addr_width;
+> > > +	__u16	pasid_bits;
+> > > +	__u64	cap_reg;
+> > > +	__u64	cap_mask;
+> > > +	__u64	ecap_reg;
+> > > +	__u64	ecap_mask;
+> > > +};
+> > > +
+> > >  #endif /* _UAPI_IOMMU_H */
 
