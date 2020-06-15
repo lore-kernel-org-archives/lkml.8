@@ -2,99 +2,148 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E08C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8782A2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F541207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203811;
-	bh=MVFgK3yeWPZ+i6DSCvto+y8Jl33RI6uJ7L+1TA3EfUY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CvZVZ9Aee8j6ytwoOngJrQtyn1f46I3juN/Axm7NmzPgYxC6fIrAuEDI9LALy7FSM
-	 pO6fgZmJf8LZum6neIJDvxbo6zWyy4c3qS3OhtV2hrRyWIdh2vD9mfY16V6Yi/sI5d
-	 a85xGl+dM0cLnuz4tDVBxsDpYCCEnabU/sblG07k=
+	s=default; t=1592203836;
+	bh=Zjrj5OZPyOvO/jdeTX5ow9onQ7aySUfQ8A2G+IxyPwg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ufg9JZ11H6gqXsG6h30WWikXSWbw+JVHQQGVU/bNWRsQ6n69kkn+Bbwirqn951+L0
+	 HVhXo7n2XzpZm9BNa1gAkx87FRlqgIy0pzIMrdWH5LRndbpJCkFpwnfcoAuXTwzoXm
+	 0ZtgOmq/bB2KwAnaEhMFcz+QRagH64k8E5CM0FS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgFOGuI (ORCPT
+        id S1728594AbgFOGue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:50:08 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46555 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728486AbgFOGuF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:50:05 -0400
-Received: by mail-ed1-f67.google.com with SMTP id m21so10634074eds.13;
-        Sun, 14 Jun 2020 23:50:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vKJpOmM9DH/2UhmBwmYAEHUF6KlZyjtAnBjFXv+lhg8=;
-        b=dmMil4HxQdMjiwap0oj02lDOttOFmdYfxNdo6qimXZEJey9PaW4lt7dchzUKNZnNm+
-         z7mwgequY2fF4TjR7H2qFZ9i+DAnwm9ZNf8JsTq0rkLJlx5C9r/F5mHA84fm0K9uvp4Z
-         QR5GzFU7Nw6DL9Y1P/u9oNz4pHRzEnPdICuO+Y2/Zx3LDejSbrmDw6h9IQAeggeSf7Xo
-         mtyu0FSpwJ1C8AIFyFA+mfNkOj4yEZC9DzYvqBF1pfUpEQhjH9aucjbxM/b8W6cZTIU2
-         dun0FIbro9YNICwlnKzNb6/A7/hkDP+0W3nNVp0HNligaZKrxijhIq/vOavAHlo5DHlb
-         e/1A==
-X-Gm-Message-State: AOAM531A240ThJkVfk3YXzN+m+IJ6UCL+iSVgoU5Ih1vEWbwVsGYYBjg
-        J26T67fqZ5C536bed+1FEyI=
-X-Google-Smtp-Source: ABdhPJxD5/50BDSpXBl1ldUdAkvys7Ip8mS9MB2im+cSgFQh8Vj0lNC/SZV7F9XvmjbinVMlk37bfQ==
-X-Received: by 2002:aa7:d388:: with SMTP id x8mr23084385edq.380.1592203803200;
-        Sun, 14 Jun 2020 23:50:03 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id q14sm7801859edj.47.2020.06.14.23.50.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 14 Jun 2020 23:50:02 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 08:50:00 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] i2c: imx: Fix PM runtime inbalance in probe error
- path
-Message-ID: <20200615065000.GA7728@kozik-lap>
-References: <1592130544-19759-1-git-send-email-krzk@kernel.org>
+        Mon, 15 Jun 2020 02:50:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728163AbgFOGuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:50:32 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D13642068E;
+        Mon, 15 Jun 2020 06:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592203832;
+        bh=Zjrj5OZPyOvO/jdeTX5ow9onQ7aySUfQ8A2G+IxyPwg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Z6qPHiEJvDFO3m03Z3MykURm1pxCjKqA7BRudV0z0cClR3Gj0Haead/QHgYsEuRsZ
+         9cKmmhifM2c5Fjgg9fvqLnGjr59D95Wb58DRWpOTLG+J9P/6wo+8EDOoj9WpHkjMUb
+         EB1eHrBt2YkupNXURpl6HKyoKz+JJ22wnuqLeTm8=
+Received: from mchehab by mail.kernel.org with local (Exim 4.93)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jkiwv-009o5W-RI; Mon, 15 Jun 2020 08:50:29 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH 02/22] docs: thermal: convert cpu-idle-cooling.rst to ReST
+Date:   Mon, 15 Jun 2020 08:50:07 +0200
+Message-Id: <7640755514809a7b5fe2756f3702613865877dcb.1592203650.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1592203650.git.mchehab+huawei@kernel.org>
+References: <cover.1592203650.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1592130544-19759-1-git-send-email-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 12:29:03PM +0200, Krzysztof Kozlowski wrote:
-> When pm_runtime_get_sync() fails in probe(), the error path should not
-> call pm_runtime_put_noidle().  This would lead to inbalance in
-> usage_count.
-> 
-> Fixes: 588eb93ea49f ("i2c: imx: add runtime pm support to improve the performance")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. New patch
+Despite being named with .rst extension, this file doesn't
+match the ReST standard. It actually causes a crash at
+Sphinx:
 
-This patch is not correct because the runtime usage counter is increased
-always, also on failures.
+	Sphinx parallel build error:
+	docutils.utils.SystemMessage: /devel/v4l/docs/Documentation/driver-api/thermal/cpu-idle-cooling.rst:69: (SEVERE/4) Unexpected section title.
 
-It can be dropped.
+Add needed markups for it to be properly parsed.
 
-Best regards,
-Krzysztof
+While here, add it to the thermal index.rst.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../driver-api/thermal/cpu-idle-cooling.rst        | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+index b9f34ceb2a38..c2a7ca676853 100644
+--- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
++++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+@@ -1,3 +1,5 @@
++.. SPDX-License-Identifier: GPL-2.0
++
+ ================
+ CPU Idle Cooling
+ ================
+@@ -48,7 +50,7 @@ idle state target residency, we lead to dropping the static and the
+ dynamic leakage for this period (modulo the energy needed to enter
+ this state). So the sustainable power with idle cycles has a linear
+ relation with the OPP’s sustainable power and can be computed with a
+-coefficient similar to:
++coefficient similar to::
+ 
+ 	    Power(IdleCycle) = Coef x Power(OPP)
+ 
+@@ -139,7 +141,7 @@ Power considerations
+ --------------------
+ 
+ When we reach the thermal trip point, we have to sustain a specified
+-power for a specific temperature but at this time we consume:
++power for a specific temperature but at this time we consume::
+ 
+  Power = Capacitance x Voltage^2 x Frequency x Utilisation
+ 
+@@ -148,7 +150,7 @@ wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
+ fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
+ because we don’t want to change the OPP. We can group the
+ ‘Capacitance’ and the ‘Utilisation’ into a single term which is the
+-‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
++‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have::
+ 
+  Pdyn = Cdyn x Voltage^2 x Frequency
+ 
+@@ -157,7 +159,7 @@ in order to target the sustainable power defined in the device
+ tree. So with the idle injection mechanism, we want an average power
+ (Ptarget) resulting in an amount of time running at full power on a
+ specific OPP and idle another amount of time. That could be put in a
+-equation:
++equation::
+ 
+  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
+ 			(Trunning + Tidle)
+@@ -168,7 +170,7 @@ equation:
+ 
+ At this point if we know the running period for the CPU, that gives us
+ the idle injection we need. Alternatively if we have the idle
+-injection duration, we can compute the running duration with:
++injection duration, we can compute the running duration with::
+ 
+  Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
+ 
+@@ -191,7 +193,7 @@ However, in this demonstration we ignore three aspects:
+    target residency, otherwise we end up consuming more energy and
+    potentially invert the mitigation effect
+ 
+-So the final equation is:
++So the final equation is::
+ 
+  Trunning = (Tidle - Twakeup ) x
+ 		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
+-- 
+2.26.2
+
