@@ -2,232 +2,396 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CEAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 192C72074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tMGDs1fB"
+	by mail.kernel.org (Postfix) with ESMTP id 9C5602078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592229824;
+	bh=QEvRkG6/IQtHFGsvkTsm4YyDyhotVNl1laaGrtZ+NeQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xe2GRtUz4HPt+UJKao01RQbkyVXsuJa/bB1t8QBmvdwIEfsOS/gwC36twxqmxTad0
+	 rlsrY5ao/H7V8RWd/W2QTFh6P3YDdYlrEcNxEJdZG9MmIOV31U7T4SYzO+14YXltpi
+	 W1dTPG/FWYPeKESA0P8Mu5NQ+CHrpenSMzMfoEYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgFOOBe (ORCPT
+        id S1730150AbgFOODn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730135AbgFOOBd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:01:33 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AD5EC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:01:32 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k6so1892468pll.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=8ES2NVshIOgfEMCf72wvYUExToe999LpTEELFEYgbIc=;
-        b=tMGDs1fBAbWOpekLNkbLGeRxaer/gDzJk4z0CLytkTCxnH5P9sYGrEzQe8zC3xJb7I
-         f12rYbaNdXcEz0Lxpu06vzpOtKQFoI7YtEOiG0pyEoIzbcGa9e4mNicHkkMH0IojaqrZ
-         Doohf/eYCV/vrunU+4iTVvd8YAI35NsWd8mSPzoQw0x08IfabLoijEVUYnd8wbeth3+r
-         zFrS5Hl8YylmZDVE4KhdtobyJAhlPB32+hknqzvYxrQg5OirgwjX4rdt6huIFO1T8+Mi
-         0Utq3wiKizi4n/MJwPtY1csN+yvR9G+9ealXuHkxo2w1TZK0bF11/NQlUMpFcW8aMY+M
-         XQFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=8ES2NVshIOgfEMCf72wvYUExToe999LpTEELFEYgbIc=;
-        b=GjOK5AFfDytc+2O5lWDxeOfykEp+Quprljx3H0/LI2ZnHTQ1vnQd7if3qdQzixR/Gw
-         2UvXxXxc5dnz26rgzEFSrby3PMRjoiXXRHxM63fi/hlLyKKW1tpj8zKti8G15OcGUh9l
-         Hk209AmMG6rT00dC0TNAKrDugnYzTtw74DxBDDgJZ7M5nNEz0O9VCLOb1z4V8m1G3EMU
-         ry+jNH/pwHcROk3wN+U/g605Jo9c87rRddQu1Ihx9Yis4iqroQ6ufD1quGt2dRnfKjx7
-         GIVGtlMx3yB1t21JgKO9cidnK5OuNUspjXK9tqxQwBCFy3K4kTHqEJtLBoAProtnB3O4
-         K/7Q==
-X-Gm-Message-State: AOAM531E/YPww9V4VEeRf32HyCDQ/7lmy2PhM3dA8SxKDSOeCh4SebOQ
-        hhMfty5s5eLaVho8UtofuUE4
-X-Google-Smtp-Source: ABdhPJxvPO0BNiqVGlonkLfh0wYJeKkGOFIFSFn0SFRbCZK2iFCaXihPRZlZWxzbRuCq1qQpSAMZUg==
-X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr11644235pjq.14.1592229691691;
-        Mon, 15 Jun 2020 07:01:31 -0700 (PDT)
-Received: from ?IPv6:2409:4072:6e9c:5ed9:4574:ef47:f924:dba6? ([2409:4072:6e9c:5ed9:4574:ef47:f924:dba6])
-        by smtp.gmail.com with ESMTPSA id c9sm14246360pfp.100.2020.06.15.07.01.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 07:01:30 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 19:31:21 +0530
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200612135355.30286-11-andrey.konovalov@linaro.org>
-References: <20200612135355.30286-1-andrey.konovalov@linaro.org> <20200612135355.30286-11-andrey.konovalov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 10/10] media: i2c: imx290: set bus_type before calling v4l2_fwnode_endpoint_alloc_parse()
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>, mchehab@kernel.org,
-        sakari.ailus@iki.fi
-CC:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Message-ID: <69487D0C-D5CE-4B41-9593-A1AF7D205681@linaro.org>
+        Mon, 15 Jun 2020 10:03:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729962AbgFOODl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:03:41 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8A74206D7;
+        Mon, 15 Jun 2020 14:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592229820;
+        bh=QEvRkG6/IQtHFGsvkTsm4YyDyhotVNl1laaGrtZ+NeQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wEBXL+mN8JwNilGhnF9YC/ChIJA1act+6qnG+N761Rdj3khVIiJG88UKSq5zlN6ZT
+         Y3u4Ff3gJMnFVpgMkw0ZES+NSOnBMvpJU8F5VUyj03wcDygwZQsKERel+hVEriP+uZ
+         4fo12pXVhSf9AYFZNxgjpcnVtDzx073+bh/+sBfs=
+Date:   Mon, 15 Jun 2020 23:03:34 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-remoteproc@vger.kernel.org, tee-dev@lists.linaro.org
+Subject: Re: [PATCH 20/22] docs: move remaining stuff under
+ Documentation/*.txt to Documentation/staging
+Message-Id: <20200615230334.a6183feacc5b8ea6c3d2e9de@kernel.org>
+In-Reply-To: <11bd0d75e65a874f7c276a0aeab0fe13f3376f5f.1592203650.git.mchehab+huawei@kernel.org>
+References: <cover.1592203650.git.mchehab+huawei@kernel.org>
+        <11bd0d75e65a874f7c276a0aeab0fe13f3376f5f.1592203650.git.mchehab+huawei@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mauro,
+
+If you have any chance to update this series, could you move
+kprobes.rst under trace/ directly? I think Naveen's idea is better.
+
+Thank you,
+
+On Mon, 15 Jun 2020 08:50:25 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+
+> There are several files that I was unable to find a proper place
+> for them, and 3 ones that are still in plain old text format.
+> 
+> Let's place those stuff behind the carpet, as we'd like to keep the
+> root directory clean.
+> 
+> We can later discuss and move those into better places.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/index.rst                       | 13 ++++++++
+>  .../{crc32.txt => staging/crc32.rst}          |  0
+>  Documentation/staging/index.rst               | 32 +++++++++++++++++++
+>  .../{kprobes.txt => staging/kprobes.rst}      |  0
+>  Documentation/{lzo.txt => staging/lzo.rst}    |  0
+>  .../remoteproc.rst}                           |  2 +-
+>  .../{rpmsg.txt => staging/rpmsg.rst}          |  0
+>  .../speculation.rst}                          |  8 +++--
+>  .../static-keys.rst}                          |  0
+>  Documentation/{tee.txt => staging/tee.rst}    |  1 +
+>  Documentation/{xz.txt => staging/xz.rst}      |  0
+>  Documentation/trace/kprobetrace.rst           |  2 +-
+>  MAINTAINERS                                   |  8 ++---
+>  include/linux/jump_label.h                    |  2 +-
+>  lib/crc32.c                                   |  2 +-
+>  lib/lzo/lzo1x_decompress_safe.c               |  2 +-
+>  lib/xz/Kconfig                                |  2 +-
+>  samples/kprobes/kprobe_example.c              |  2 +-
+>  samples/kprobes/kretprobe_example.c           |  2 +-
+>  19 files changed, 63 insertions(+), 15 deletions(-)
+>  rename Documentation/{crc32.txt => staging/crc32.rst} (100%)
+>  create mode 100644 Documentation/staging/index.rst
+>  rename Documentation/{kprobes.txt => staging/kprobes.rst} (100%)
+>  rename Documentation/{lzo.txt => staging/lzo.rst} (100%)
+>  rename Documentation/{remoteproc.txt => staging/remoteproc.rst} (99%)
+>  rename Documentation/{rpmsg.txt => staging/rpmsg.rst} (100%)
+>  rename Documentation/{speculation.txt => staging/speculation.rst} (97%)
+>  rename Documentation/{static-keys.txt => staging/static-keys.rst} (100%)
+>  rename Documentation/{tee.txt => staging/tee.rst} (99%)
+>  rename Documentation/{xz.txt => staging/xz.rst} (100%)
+> 
+> diff --git a/Documentation/index.rst b/Documentation/index.rst
+> index 71eca3171574..3b491af0122d 100644
+> --- a/Documentation/index.rst
+> +++ b/Documentation/index.rst
+> @@ -182,6 +182,19 @@ subprojects.
+>  
+>     filesystems/ext4/index
+>  
+> +Other documentation
+> +-------------------
+> +
+> +There are several unsorted documents that don't seem to fit on other parts
+> +of the documentation body, or may require some adjustments and/or conversion
+> +to ReStructured Text format, or are simply too old.
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   staging/index
+> +
+> +
+>  Translations
+>  ------------
+>  
+> diff --git a/Documentation/crc32.txt b/Documentation/staging/crc32.rst
+> similarity index 100%
+> rename from Documentation/crc32.txt
+> rename to Documentation/staging/crc32.rst
+> diff --git a/Documentation/staging/index.rst b/Documentation/staging/index.rst
+> new file mode 100644
+> index 000000000000..8e98517675ca
+> --- /dev/null
+> +++ b/Documentation/staging/index.rst
+> @@ -0,0 +1,32 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +Unsorted Documentation
+> +======================
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   crc32
+> +   kprobes
+> +   lzo
+> +   remoteproc
+> +   rpmsg
+> +   speculation
+> +   static-keys
+> +   tee
+> +   xz
+> +
+> +Atomic Types
+> +============
+> +
+> +.. literalinclude:: ../atomic_t.txt
+> +
+> +Atomic bitops
+> +=============
+> +
+> +.. literalinclude:: ../atomic_bitops.txt
+> +
+> +Memory Barriers
+> +===============
+> +
+> +.. literalinclude:: ../memory-barriers.txt
+> diff --git a/Documentation/kprobes.txt b/Documentation/staging/kprobes.rst
+> similarity index 100%
+> rename from Documentation/kprobes.txt
+> rename to Documentation/staging/kprobes.rst
+> diff --git a/Documentation/lzo.txt b/Documentation/staging/lzo.rst
+> similarity index 100%
+> rename from Documentation/lzo.txt
+> rename to Documentation/staging/lzo.rst
+> diff --git a/Documentation/remoteproc.txt b/Documentation/staging/remoteproc.rst
+> similarity index 99%
+> rename from Documentation/remoteproc.txt
+> rename to Documentation/staging/remoteproc.rst
+> index 2be1147256e0..9cccd3dd6a4b 100644
+> --- a/Documentation/remoteproc.txt
+> +++ b/Documentation/staging/remoteproc.rst
+> @@ -22,7 +22,7 @@ for remote processors that supports this kind of communication. This way,
+>  platform-specific remoteproc drivers only need to provide a few low-level
+>  handlers, and then all rpmsg drivers will then just work
+>  (for more information about the virtio-based rpmsg bus and its drivers,
+> -please read Documentation/rpmsg.txt).
+> +please read Documentation/staging/rpmsg.rst).
+>  Registration of other types of virtio devices is now also possible. Firmwares
+>  just need to publish what kind of virtio devices do they support, and then
+>  remoteproc will add those devices. This makes it possible to reuse the
+> diff --git a/Documentation/rpmsg.txt b/Documentation/staging/rpmsg.rst
+> similarity index 100%
+> rename from Documentation/rpmsg.txt
+> rename to Documentation/staging/rpmsg.rst
+> diff --git a/Documentation/speculation.txt b/Documentation/staging/speculation.rst
+> similarity index 97%
+> rename from Documentation/speculation.txt
+> rename to Documentation/staging/speculation.rst
+> index 50d7ea857cff..8045d99bcf12 100644
+> --- a/Documentation/speculation.txt
+> +++ b/Documentation/staging/speculation.rst
+> @@ -1,9 +1,11 @@
+> +===========
+> +Speculation
+> +===========
+> +
+>  This document explains potential effects of speculation, and how undesirable
+>  effects can be mitigated portably using common APIs.
+>  
+> -===========
+> -Speculation
+> -===========
+> +------------------------------------------------------------------------------
+>  
+>  To improve performance and minimize average latencies, many contemporary CPUs
+>  employ speculative execution techniques such as branch prediction, performing
+> diff --git a/Documentation/static-keys.txt b/Documentation/staging/static-keys.rst
+> similarity index 100%
+> rename from Documentation/static-keys.txt
+> rename to Documentation/staging/static-keys.rst
+> diff --git a/Documentation/tee.txt b/Documentation/staging/tee.rst
+> similarity index 99%
+> rename from Documentation/tee.txt
+> rename to Documentation/staging/tee.rst
+> index c8fad81c4563..324604a15d17 100644
+> --- a/Documentation/tee.txt
+> +++ b/Documentation/staging/tee.rst
+> @@ -162,6 +162,7 @@ The AMD-TEE driver packages the command buffer payload for processing in TEE.
+>  The command buffer format for the different TEE commands can be found in [7].
+>  
+>  The TEE commands supported by AMD-TEE Trusted OS are:
+> +
+>  * TEE_CMD_ID_LOAD_TA          - loads a Trusted Application (TA) binary into
+>                                  TEE environment.
+>  * TEE_CMD_ID_UNLOAD_TA        - unloads TA binary from TEE environment.
+> diff --git a/Documentation/xz.txt b/Documentation/staging/xz.rst
+> similarity index 100%
+> rename from Documentation/xz.txt
+> rename to Documentation/staging/xz.rst
+> diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+> index cc4c5fc313df..c1709165c553 100644
+> --- a/Documentation/trace/kprobetrace.rst
+> +++ b/Documentation/trace/kprobetrace.rst
+> @@ -40,7 +40,7 @@ Synopsis of kprobe_events
+>   MEMADDR	: Address where the probe is inserted.
+>   MAXACTIVE	: Maximum number of instances of the specified function that
+>  		  can be probed simultaneously, or 0 for the default value
+> -		  as defined in Documentation/kprobes.txt section 1.3.1.
+> +		  as defined in Documentation/staging/kprobes.rst section 1.3.1.
+>  
+>   FETCHARGS	: Arguments. Each probe can have up to 128 args.
+>    %REG		: Fetch register REG
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 805309399939..4c9814ee2fdb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9597,7 +9597,7 @@ M:	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+>  M:	"David S. Miller" <davem@davemloft.net>
+>  M:	Masami Hiramatsu <mhiramat@kernel.org>
+>  S:	Maintained
+> -F:	Documentation/kprobes.txt
+> +F:	Documentation/staging/kprobes.rst
+>  F:	include/asm-generic/kprobes.h
+>  F:	include/linux/kprobes.h
+>  F:	kernel/kprobes.c
+> @@ -14500,7 +14500,7 @@ S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git rproc-next
+>  F:	Documentation/ABI/testing/sysfs-class-remoteproc
+>  F:	Documentation/devicetree/bindings/remoteproc/
+> -F:	Documentation/remoteproc.txt
+> +F:	Documentation/staging/remoteproc.rst
+>  F:	drivers/remoteproc/
+>  F:	include/linux/remoteproc.h
+>  F:	include/linux/remoteproc/
+> @@ -14512,7 +14512,7 @@ L:	linux-remoteproc@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git rpmsg-next
+>  F:	Documentation/ABI/testing/sysfs-bus-rpmsg
+> -F:	Documentation/rpmsg.txt
+> +F:	Documentation/staging/rpmsg.rst
+>  F:	drivers/rpmsg/
+>  F:	include/linux/rpmsg.h
+>  F:	include/linux/rpmsg/
+> @@ -16761,7 +16761,7 @@ TEE SUBSYSTEM
+>  M:	Jens Wiklander <jens.wiklander@linaro.org>
+>  L:	tee-dev@lists.linaro.org
+>  S:	Maintained
+> -F:	Documentation/tee.txt
+> +F:	Documentation/staging/tee.rst
+>  F:	drivers/tee/
+>  F:	include/linux/tee_drv.h
+>  F:	include/uapi/linux/tee.h
+> diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
+> index 3526c0aee954..32809624d422 100644
+> --- a/include/linux/jump_label.h
+> +++ b/include/linux/jump_label.h
+> @@ -68,7 +68,7 @@
+>   * Lacking toolchain and or architecture support, static keys fall back to a
+>   * simple conditional branch.
+>   *
+> - * Additional babbling in: Documentation/static-keys.txt
+> + * Additional babbling in: Documentation/staging/static-keys.rst
+>   */
+>  
+>  #ifndef __ASSEMBLY__
+> diff --git a/lib/crc32.c b/lib/crc32.c
+> index 4a20455d1f61..35a03d03f973 100644
+> --- a/lib/crc32.c
+> +++ b/lib/crc32.c
+> @@ -24,7 +24,7 @@
+>   * Version 2.  See the file COPYING for more details.
+>   */
+>  
+> -/* see: Documentation/crc32.txt for a description of algorithms */
+> +/* see: Documentation/staging/crc32.rst for a description of algorithms */
+>  
+>  #include <linux/crc32.h>
+>  #include <linux/crc32poly.h>
+> diff --git a/lib/lzo/lzo1x_decompress_safe.c b/lib/lzo/lzo1x_decompress_safe.c
+> index 2717c7963acd..7892a40cf765 100644
+> --- a/lib/lzo/lzo1x_decompress_safe.c
+> +++ b/lib/lzo/lzo1x_decompress_safe.c
+> @@ -32,7 +32,7 @@
+>   * depending on the base count. Since the base count is taken from a u8
+>   * and a few bits, it is safe to assume that it will always be lower than
+>   * or equal to 2*255, thus we can always prevent any overflow by accepting
+> - * two less 255 steps. See Documentation/lzo.txt for more information.
+> + * two less 255 steps. See Documentation/staging/lzo.rst for more information.
+>   */
+>  #define MAX_255_COUNT      ((((size_t)~0) / 255) - 2)
+>  
+> diff --git a/lib/xz/Kconfig b/lib/xz/Kconfig
+> index 22528743d4ce..5cb50245a878 100644
+> --- a/lib/xz/Kconfig
+> +++ b/lib/xz/Kconfig
+> @@ -5,7 +5,7 @@ config XZ_DEC
+>  	help
+>  	  LZMA2 compression algorithm and BCJ filters are supported using
+>  	  the .xz file format as the container. For integrity checking,
+> -	  CRC32 is supported. See Documentation/xz.txt for more information.
+> +	  CRC32 is supported. See Documentation/staging/xz.rst for more information.
+>  
+>  if XZ_DEC
+>  
+> diff --git a/samples/kprobes/kprobe_example.c b/samples/kprobes/kprobe_example.c
+> index 501911d1b327..240f2435ce6f 100644
+> --- a/samples/kprobes/kprobe_example.c
+> +++ b/samples/kprobes/kprobe_example.c
+> @@ -5,7 +5,7 @@
+>   * stack trace and selected registers when _do_fork() is called.
+>   *
+>   * For more information on theory of operation of kprobes, see
+> - * Documentation/kprobes.txt
+> + * Documentation/staging/kprobes.rst
+>   *
+>   * You will see the trace data in /var/log/messages and on the console
+>   * whenever _do_fork() is invoked to create a new process.
+> diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
+> index 013e8e6ebae9..78a2da6fb3cd 100644
+> --- a/samples/kprobes/kretprobe_example.c
+> +++ b/samples/kprobes/kretprobe_example.c
+> @@ -11,7 +11,7 @@
+>   * If no func_name is specified, _do_fork is instrumented
+>   *
+>   * For more information on theory of operation of kretprobes, see
+> - * Documentation/kprobes.txt
+> + * Documentation/staging/kprobes.rst
+>   *
+>   * Build and insert the kernel module as done in the kprobe example.
+>   * You will see the trace data in /var/log/messages and on the console
+> -- 
+> 2.26.2
+> 
 
 
-On 12 June 2020 7:23:55 PM IST, Andrey Konovalov <andrey=2Ekonovalov@linar=
-o=2Eorg> wrote:
->The bus_type field of v4l2_fwnode_endpoint structure passed as the
->argument
->to v4l2_fwnode_endpoint_alloc_parse() function must be initiaized=2E
->Set it to V4L2_MBUS_CSI2_DPHY, and check for -ENXIO which is returned
->when the requested media bus type doesn't match the fwnode=2E
->
->Also remove v4l2_fwnode_endpoint field from struct imx290 as it is only
->needed in the probe function: use the local variable for this purpose=2E
->
->Signed-off-by: Andrey Konovalov <andrey=2Ekonovalov@linaro=2Eorg>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan=2Esadhasivam@linaro=2Eorg>
-
-Wondering if we need to tag fixes for this patch!
-
-Thanks,=20
-Mani
-
->---
-> drivers/media/i2c/imx290=2Ec | 38 +++++++++++++++++++-------------------
-> 1 file changed, 19 insertions(+), 19 deletions(-)
->
->diff --git a/drivers/media/i2c/imx290=2Ec b/drivers/media/i2c/imx290=2Ec
->index 02001c1b0dfc=2E=2E9c97830164e9 100644
->--- a/drivers/media/i2c/imx290=2Ec
->+++ b/drivers/media/i2c/imx290=2Ec
->@@ -70,7 +70,6 @@ struct imx290 {
-> 	u8 bpp;
->=20
-> 	struct v4l2_subdev sd;
->-	struct v4l2_fwnode_endpoint ep;
-> 	struct media_pad pad;
-> 	struct v4l2_mbus_framefmt current_format;
-> 	const struct imx290_mode *current_mode;
->@@ -914,17 +913,18 @@ static const struct media_entity_operations
->imx290_subdev_entity_ops =3D {
->* of MIPI data lanes are mentioned in the device tree, or the value of
->the
->  * first missing frequency otherwise=2E
->  */
->-static s64 imx290_check_link_freqs(const struct imx290 *imx290)
->+static s64 imx290_check_link_freqs(const struct imx290 *imx290,
->+				   const struct v4l2_fwnode_endpoint *ep)
-> {
-> 	int i, j;
-> 	const s64 *freqs =3D imx290_link_freqs_ptr(imx290);
-> 	int freqs_count =3D imx290_link_freqs_num(imx290);
->=20
-> 	for (i =3D 0; i < freqs_count; i++) {
->-		for (j =3D 0; j < imx290->ep=2Enr_of_link_frequencies; j++)
->-			if (freqs[i] =3D=3D imx290->ep=2Elink_frequencies[j])
->+		for (j =3D 0; j < ep->nr_of_link_frequencies; j++)
->+			if (freqs[i] =3D=3D ep->link_frequencies[j])
-> 				break;
->-		if (j =3D=3D imx290->ep=2Enr_of_link_frequencies)
->+		if (j =3D=3D ep->nr_of_link_frequencies)
-> 			return freqs[i];
-> 	}
-> 	return 0;
->@@ -934,6 +934,10 @@ static int imx290_probe(struct i2c_client *client)
-> {
-> 	struct device *dev =3D &client->dev;
-> 	struct fwnode_handle *endpoint;
->+	/* Only CSI2 is supported for now: */
->+	struct v4l2_fwnode_endpoint ep =3D {
->+		=2Ebus_type =3D V4L2_MBUS_CSI2_DPHY
->+	};
-> 	struct imx290 *imx290;
-> 	u32 xclk_freq;
-> 	s64 fq;
->@@ -956,15 +960,18 @@ static int imx290_probe(struct i2c_client
->*client)
-> 		return -EINVAL;
-> 	}
->=20
->-	ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, &imx290->ep);
->+	ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
-> 	fwnode_handle_put(endpoint);
->-	if (ret) {
->+	if (ret =3D=3D -ENXIO) {
->+		dev_err(dev, "Unsupported bus type, should be CSI2\n");
->+		goto free_err;
->+	} else if (ret) {
-> 		dev_err(dev, "Parsing endpoint node failed\n");
-> 		goto free_err;
-> 	}
->=20
-> 	/* Get number of data lanes */
->-	imx290->nlanes =3D imx290->ep=2Ebus=2Emipi_csi2=2Enum_data_lanes;
->+	imx290->nlanes =3D ep=2Ebus=2Emipi_csi2=2Enum_data_lanes;
-> 	if (imx290->nlanes !=3D 2 && imx290->nlanes !=3D 4) {
-> 		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
-> 		ret =3D -EINVAL;
->@@ -973,27 +980,20 @@ static int imx290_probe(struct i2c_client
->*client)
->=20
-> 	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
->=20
->-	if (!imx290->ep=2Enr_of_link_frequencies) {
->+	if (!ep=2Enr_of_link_frequencies) {
-> 		dev_err(dev, "link-frequency property not found in DT\n");
-> 		ret =3D -EINVAL;
-> 		goto free_err;
-> 	}
->=20
-> 	/* Check that link frequences for all the modes are in device tree */
->-	fq =3D imx290_check_link_freqs(imx290);
->+	fq =3D imx290_check_link_freqs(imx290, &ep);
-> 	if (fq) {
-> 		dev_err(dev, "Link frequency of %lld is not supported\n", fq);
-> 		ret =3D -EINVAL;
-> 		goto free_err;
-> 	}
->=20
->-	/* Only CSI2 is supported for now */
->-	if (imx290->ep=2Ebus_type !=3D V4L2_MBUS_CSI2_DPHY) {
->-		dev_err(dev, "Unsupported bus type, should be CSI2\n");
->-		ret =3D -EINVAL;
->-		goto free_err;
->-	}
->-
-> 	/* get system clock (xclk) */
-> 	imx290->xclk =3D devm_clk_get(dev, "xclk");
-> 	if (IS_ERR(imx290->xclk)) {
->@@ -1108,7 +1108,7 @@ static int imx290_probe(struct i2c_client
->*client)
-> 	pm_runtime_enable(dev);
-> 	pm_runtime_idle(dev);
->=20
->-	v4l2_fwnode_endpoint_free(&imx290->ep);
->+	v4l2_fwnode_endpoint_free(&ep);
->=20
-> 	return 0;
->=20
->@@ -1118,7 +1118,7 @@ static int imx290_probe(struct i2c_client
->*client)
-> 	v4l2_ctrl_handler_free(&imx290->ctrls);
-> 	mutex_destroy(&imx290->lock);
-> free_err:
->-	v4l2_fwnode_endpoint_free(&imx290->ep);
->+	v4l2_fwnode_endpoint_free(&ep);
->=20
-> 	return ret;
-> }
-
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
