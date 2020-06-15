@@ -2,100 +2,99 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE015C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15CA2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02A920663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v1P4IOim"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iv/YrP4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731604AbgFOUcB (ORCPT
+        id S1731621AbgFOUcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:32:01 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53732 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbgFOUbX (ORCPT
+        Mon, 15 Jun 2020 16:32:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731026AbgFOUcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:31:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05FKVIrP098992;
-        Mon, 15 Jun 2020 15:31:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592253078;
-        bh=O7jkcz4ZeSjHhyhXjefbDQx00ANrTeDJE4DwrKvT2cQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=v1P4IOimcJS9ym8uO9nJDeATWPXCLwcEB5NkKzWWrjIJHv8KfPM7TvsgKhQQGasKO
-         aZjDtjf7S9zuRjIqrfDcsTKqTY2d5X6OQHUZ96dm4s7UCFXydzs1krFE1Sfqwq6r03
-         2m5X30U/4NfmeqZa49YRk4soAzXIsHyJK74VHaBc=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FKVIt5068327;
-        Mon, 15 Jun 2020 15:31:18 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
- Jun 2020 15:31:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 15 Jun 2020 15:31:18 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FKVIfr021151;
-        Mon, 15 Jun 2020 15:31:18 -0500
-Subject: Re: [RESEND PATCH v27 00/15] Multicolor Framework v27
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200615201522.19677-1-dmurphy@ti.com>
- <20200615202731.GA18028@duo.ucw.cz>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <55a4f116-30fd-b1b1-3ba3-188e1833c4e4@ti.com>
-Date:   Mon, 15 Jun 2020 15:31:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 16:32:10 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1BFCC061A0E;
+        Mon, 15 Jun 2020 13:32:10 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id d67so17120235oig.6;
+        Mon, 15 Jun 2020 13:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KLVfcRpFW5Aj6KKAQq0GdGr+kv8j/Al0S7eZSYFMCko=;
+        b=Iv/YrP4AHCQnhLjL010QvvMb7F5ILf7ZlURh1XuurOztBybIWm7+vT4F1FCdp5YGJw
+         LoUvT3tFzO39ulQWYgPzAjV7ifE9IPTxG/VCBz5nFu0whlpYUX363uFx4dfT3kxWhY3R
+         bmvxY1qArH9Ds8G9cly1KSeQrbxujb3gPr1w97BO3N+OkwuwtiMcp1hTV5fLt+YVd6N7
+         NMRRkvVHUM20EJmfMQ8KopEgT6yu3nWKOO9pdnT3h9L8qoGGEBckbpmmPRyofPJzPNfq
+         f2KCVsnTVn0aPG21HaiTQbk3tDeK37oH9w03FxtpBWkfrOq14AmxHIGd3uwvZGAb+wI1
+         kH3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KLVfcRpFW5Aj6KKAQq0GdGr+kv8j/Al0S7eZSYFMCko=;
+        b=N0GtXjpbkK4AHPXgUzAv9CytdlSRDhVg6K1s8oRyfRs+u7vG8NMOfBZSdTiwYepQC7
+         Y3N3PtXWew3pQsiSviZiH0xj6HEMnafaOluedBN7FMUMLwc0pm1XpqxUmvB4NW5LhJI3
+         3Zm2DBiJvhdEsaiGorOGOkFdXOFeOHF8Rj12wX4hDctmfPGT+b0izjv5ICJgRVh21ZKq
+         BsBy/JvszRM5s1XwG5bQ939yUPYMGND90GLgwGHFew3HbSp+QDiSkiSNJBjxIHe7eLAr
+         60Jj7UsuXOFgnbfyU9UiifHlz+W0vT7H3JJMi2+uoS1ECGfLAGOgQJE/y9Kc+7Ohnfzb
+         pn0A==
+X-Gm-Message-State: AOAM530JuzH2bGfhI+74PMgd78Axn6n6xD2HLLpRPQaVe3dxtjMRd9yO
+        87mp9YR8pKGkdtDy/IHCgitZuHcEZ7iPqJ4lYXU=
+X-Google-Smtp-Source: ABdhPJz6ExPhgMpFvKG9huRF6CgiiBVYhjKG3knTw0lTw9MHxqKR5uKJizKcQnMpxo+QKMaO+HwKyVnBA/rD/sJlHAU=
+X-Received: by 2002:aca:3283:: with SMTP id y125mr955658oiy.140.1592253130159;
+ Mon, 15 Jun 2020 13:32:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200615202731.GA18028@duo.ucw.cz>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200613024130.3356-1-nramas@linux.microsoft.com>
+ <20200613024130.3356-5-nramas@linux.microsoft.com> <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
+ <a9a20aa5-963e-5f49-9391-0673fdda378e@linux.microsoft.com>
+In-Reply-To: <a9a20aa5-963e-5f49-9391-0673fdda378e@linux.microsoft.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Mon, 15 Jun 2020 16:31:59 -0400
+Message-ID: <CAEjxPJ4nD-3cNQHp8wjdL=_k3opjyU+zc9xCPZkOjkTxDN6g9A@mail.gmail.com>
+Subject: Re: [PATCH 4/5] LSM: Define SELinux function to measure security state
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Stephen Smalley <stephen.smalley@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
-
-On 6/15/20 3:27 PM, Pavel Machek wrote:
-> Hi!
+On Mon, Jun 15, 2020 at 12:45 PM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
 >
->> This is the multi color LED framework.   This framework presents clustered
->> colored LEDs into an array and allows the user space to adjust the brightness
->> of the cluster using a single file write.  The individual colored LEDs
->> intensities are controlled via a single file that is an array of
->> LEDs
-> Please don't do this. Pinging whoever you think is blocking the merge
-> is okay, but resending big series just because people are busy over
-> the merge window is not cool.
-
-Actually that is not the case.  I missed adding Rob H to the series so I 
-resent the patches to add Rob in.
-
-There was no intent to resend because I thought it was blocked.
-
-I know we are in a merge window and thoroughly understand that ppl are busy.
-
-If I thought it was blocked I would have just bumped the first patch.
-
-Dan
-
-
-> Thanks,
+> On 6/15/20 4:57 AM, Stephen Smalley wrote:
+> > I think I mentioned this on a previous version of these patches, but I
+> > would recommend including more than just the enabled and enforcing
+> > states in your measurement.  Other low-hanging fruit would be the
+> > other selinux_state booleans (checkreqprot, initialized,
+> > policycap[0..__POLICYDB_CAPABILITY_MAX]).  Going a bit further one
+> > could take a hash of the loaded policy by using security_read_policy()
+> > and then computing a hash using whatever hash ima prefers over the
+> > returned data,len pair.  You likely also need to think about how to
+> > allow future extensibility of the state in a backward-compatible
+> > manner, so that future additions do not immediately break systems
+> > relying on older measurements.
+> >
 >
-> 								Pavel
+> Sure - I will address this one in the next update.
+
+Please add selinux list to the cc for future versions too.
