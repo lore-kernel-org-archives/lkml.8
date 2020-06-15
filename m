@@ -2,381 +2,280 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7586DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4522C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF24208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="W91GZSvf"
+	by mail.kernel.org (Postfix) with ESMTP id 877692071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731579AbgFOUbu (ORCPT
+        id S1731593AbgFOUcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:31:50 -0400
-Received: from mout.gmx.net ([212.227.15.15]:52125 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731537AbgFOUbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:31:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592253078;
-        bh=pkbuJEMyxK0hT38PdmlLkMNuQuNuLkOuhmyZRWTYLyc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=W91GZSvf8RZlamkDbb5BQvkEF6CFQYAb1RWVuj2ONy9oAa0IMiaZb3WDCjSXHYKq/
-         z54cr47u2Z4FFvAKIuEopgQsZrchTnH8nj4fXUWhFJI+s7GDZIZ5MTFwNyINMclewv
-         2YbALC2M641mNjK4ivFc/JvsCQNIP1bUbNEH7jps=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.20.60] ([92.116.132.153]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mf0BM-1jHcHk0LPu-00gW0m; Mon, 15
- Jun 2020 22:31:18 +0200
-Subject: Re: [PATCH 26/38] vt: use newly defined CUR_* macros
-To:     Jiri Slaby <jslaby@suse.cz>, gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Winischhofer <thomas@winischhofer.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-parisc@vger.kernel.org
-References: <20200615074910.19267-1-jslaby@suse.cz>
- <20200615074910.19267-26-jslaby@suse.cz>
-From:   Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- mQINBF3Ia3MBEAD3nmWzMgQByYAWnb9cNqspnkb2GLVKzhoH2QD4eRpyDLA/3smlClbeKkWT
- HLnjgkbPFDmcmCz5V0Wv1mKYRClAHPCIBIJgyICqqUZo2qGmKstUx3pFAiztlXBANpRECgwJ
- r+8w6mkccOM9GhoPU0vMaD/UVJcJQzvrxVHO8EHS36aUkjKd6cOpdVbCt3qx8cEhCmaFEO6u
- CL+k5AZQoABbFQEBocZE1/lSYzaHkcHrjn4cQjc3CffXnUVYwlo8EYOtAHgMDC39s9a7S90L
- 69l6G73lYBD/Br5lnDPlG6dKfGFZZpQ1h8/x+Qz366Ojfq9MuuRJg7ZQpe6foiOtqwKym/zV
- dVvSdOOc5sHSpfwu5+BVAAyBd6hw4NddlAQUjHSRs3zJ9OfrEx2d3mIfXZ7+pMhZ7qX0Axlq
- Lq+B5cfLpzkPAgKn11tfXFxP+hcPHIts0bnDz4EEp+HraW+oRCH2m57Y9zhcJTOJaLw4YpTY
- GRUlF076vZ2Hz/xMEvIJddRGId7UXZgH9a32NDf+BUjWEZvFt1wFSW1r7zb7oGCwZMy2LI/G
- aHQv/N0NeFMd28z+deyxd0k1CGefHJuJcOJDVtcE1rGQ43aDhWSpXvXKDj42vFD2We6uIo9D
- 1VNre2+uAxFzqqf026H6cH8hin9Vnx7p3uq3Dka/Y/qmRFnKVQARAQABtBxIZWxnZSBEZWxs
- ZXIgPGRlbGxlckBnbXguZGU+iQJRBBMBCAA7AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheA
- FiEERUSCKCzZENvvPSX4Pl89BKeiRgMFAl3J1zsCGQEACgkQPl89BKeiRgNK7xAAg6kJTPje
- uBm9PJTUxXaoaLJFXbYdSPfXhqX/BI9Xi2VzhwC2nSmizdFbeobQBTtRIz5LPhjk95t11q0s
- uP5htzNISPpwxiYZGKrNnXfcPlziI2bUtlz4ke34cLK6MIl1kbS0/kJBxhiXyvyTWk2JmkMi
- REjR84lCMAoJd1OM9XGFOg94BT5aLlEKFcld9qj7B4UFpma8RbRUpUWdo0omAEgrnhaKJwV8
- qt0ULaF/kyP5qbI8iA2PAvIjq73dA4LNKdMFPG7Rw8yITQ1Vi0DlDgDT2RLvKxEQC0o3C6O4
- iQq7qamsThLK0JSDRdLDnq6Phv+Yahd7sDMYuk3gIdoyczRkXzncWAYq7XTWl7nZYBVXG1D8
- gkdclsnHzEKpTQIzn/rGyZshsjL4pxVUIpw/vdfx8oNRLKj7iduf11g2kFP71e9v2PP94ik3
- Xi9oszP+fP770J0B8QM8w745BrcQm41SsILjArK+5mMHrYhM4ZFN7aipK3UXDNs3vjN+t0zi
- qErzlrxXtsX4J6nqjs/mF9frVkpv7OTAzj7pjFHv0Bu8pRm4AyW6Y5/H6jOup6nkJdP/AFDu
- 5ImdlA0jhr3iLk9s9WnjBUHyMYu+HD7qR3yhX6uWxg2oB2FWVMRLXbPEt2hRGq09rVQS7DBy
- dbZgPwou7pD8MTfQhGmDJFKm2ju5Ag0EXchrcwEQAOsDQjdtPeaRt8EP2pc8tG+g9eiiX9Sh
- rX87SLSeKF6uHpEJ3VbhafIU6A7hy7RcIJnQz0hEUdXjH774B8YD3JKnAtfAyuIU2/rOGa/v
- UN4BY6U6TVIOv9piVQByBthGQh4YHhePSKtPzK9Pv/6rd8H3IWnJK/dXiUDQllkedrENXrZp
- eLUjhyp94ooo9XqRl44YqlsrSUh+BzW7wqwfmu26UjmAzIZYVCPCq5IjD96QrhLf6naY6En3
- ++tqCAWPkqKvWfRdXPOz4GK08uhcBp3jZHTVkcbo5qahVpv8Y8mzOvSIAxnIjb+cklVxjyY9
- dVlrhfKiK5L+zA2fWUreVBqLs1SjfHm5OGuQ2qqzVcMYJGH/uisJn22VXB1c48yYyGv2HUN5
- lC1JHQUV9734I5cczA2Gfo27nTHy3zANj4hy+s/q1adzvn7hMokU7OehwKrNXafFfwWVK3OG
- 1dSjWtgIv5KJi1XZk5TV6JlPZSqj4D8pUwIx3KSp0cD7xTEZATRfc47Yc+cyKcXG034tNEAc
- xZNTR1kMi9njdxc1wzM9T6pspTtA0vuD3ee94Dg+nDrH1As24uwfFLguiILPzpl0kLaPYYgB
- wumlL2nGcB6RVRRFMiAS5uOTEk+sJ/tRiQwO3K8vmaECaNJRfJC7weH+jww1Dzo0f1TP6rUa
- fTBRABEBAAGJAjYEGAEIACAWIQRFRIIoLNkQ2+89Jfg+Xz0Ep6JGAwUCXchrcwIbDAAKCRA+
- Xz0Ep6JGAxtdEAC54NQMBwjUNqBNCMsh6WrwQwbg9tkJw718QHPw43gKFSxFIYzdBzD/YMPH
- l+2fFiefvmI4uNDjlyCITGSM+T6b8cA7YAKvZhzJyJSS7pRzsIKGjhk7zADL1+PJei9p9idy
- RbmFKo0dAL+ac0t/EZULHGPuIiavWLgwYLVoUEBwz86ZtEtVmDmEsj8ryWw75ZIarNDhV74s
- BdM2ffUJk3+vWe25BPcJiaZkTuFt+xt2CdbvpZv3IPrEkp9GAKof2hHdFCRKMtgxBo8Kao6p
- Ws/Vv68FusAi94ySuZT3fp1xGWWf5+1jX4ylC//w0Rj85QihTpA2MylORUNFvH0MRJx4mlFk
- XN6G+5jIIJhG46LUucQ28+VyEDNcGL3tarnkw8ngEhAbnvMJ2RTx8vGh7PssKaGzAUmNNZiG
- MB4mPKqvDZ02j1wp7vthQcOEg08z1+XHXb8ZZKST7yTVa5P89JymGE8CBGdQaAXnqYK3/yWf
- FwRDcGV6nxanxZGKEkSHHOm8jHwvQWvPP73pvuPBEPtKGLzbgd7OOcGZWtq2hNC6cRtsRdDx
- 4TAGMCz4j238m+2mdbdhRh3iBnWT5yPFfnv/2IjFAk+sdix1Mrr+LIDF++kiekeq0yUpDdc4
- ExBy2xf6dd+tuFFBp3/VDN4U0UfG4QJ2fg19zE5Z8dS4jGIbLrgzBF3IbakWCSsGAQQB2kcP
- AQEHQNdEF2C6q5MwiI+3akqcRJWo5mN24V3vb3guRJHo8xbFiQKtBBgBCAAgFiEERUSCKCzZ
- ENvvPSX4Pl89BKeiRgMFAl3IbakCGwIAgQkQPl89BKeiRgN2IAQZFggAHRYhBLzpEj4a0p8H
- wEm73vcStRCiOg9fBQJdyG2pAAoJEPcStRCiOg9fto8A/3cti96iIyCLswnSntdzdYl72SjJ
- HnsUYypLPeKEXwCqAQDB69QCjXHPmQ/340v6jONRMH6eLuGOdIBx8D+oBp8+BGLiD/9qu5H/
- eGe0rrmE5lLFRlnm5QqKKi4gKt2WHMEdGi7fXggOTZbuKJA9+DzPxcf9ShuQMJRQDkgzv/VD
- V1fvOdaIMlM1EjMxIS2fyyI+9KZD7WwFYK3VIOsC7PtjOLYHSr7o7vDHNqTle7JYGEPlxuE6
- hjMU7Ew2Ni4SBio8PILVXE+dL/BELp5JzOcMPnOnVsQtNbllIYvXRyX0qkTD6XM2Jbh+xI9P
- xajC+ojJ/cqPYBEALVfgdh6MbA8rx3EOCYj/n8cZ/xfo+wR/zSQ+m9wIhjxI4XfbNz8oGECm
- xeg1uqcyxfHx+N/pdg5Rvw9g+rtlfmTCj8JhNksNr0NcsNXTkaOy++4Wb9lKDAUcRma7TgMk
- Yq21O5RINec5Jo3xeEUfApVwbueBWCtq4bljeXG93iOWMk4cYqsRVsWsDxsplHQfh5xHk2Zf
- GAUYbm/rX36cdDBbaX2+rgvcHDTx9fOXozugEqFQv9oNg3UnXDWyEeiDLTC/0Gei/Jd/YL1p
- XzCscCr+pggvqX7kI33AQsxo1DT19sNYLU5dJ5Qxz1+zdNkB9kK9CcTVFXMYehKueBkk5MaU
- ou0ZH9LCDjtnOKxPuUWstxTXWzsinSpLDIpkP//4fN6asmPo2cSXMXE0iA5WsWAXcK8uZ4jD
- c2TFWAS8k6RLkk41ZUU8ENX8+qZx/Q==
-Message-ID: <51bd492b-52aa-0875-cdaa-bd40b1e2e89c@gmx.de>
-Date:   Mon, 15 Jun 2020 22:31:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 15 Jun 2020 16:32:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37108 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731473AbgFOUbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 16:31:23 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 0D1F22A2CFD
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>
+Cc:     matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        laurent.pinchart@ideasonboard.com, Sam Ravnborg <sam@ravnborg.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [RESEND PATCH v4 4/7] drm/mediatek: mtk_dsi: Convert to bridge driver
+Date:   Mon, 15 Jun 2020 22:31:05 +0200
+Message-Id: <20200615203108.786083-5-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200615203108.786083-1-enric.balletbo@collabora.com>
+References: <20200615203108.786083-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200615074910.19267-26-jslaby@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5OK7wuzshnZaZzPVGxsx0o95XxvIF60NvJtmXV/lLvRgalZWKhZ
- tX3xsd2fqrsH58E0/M3rjwZ3V0MfM9Uuc+djcLCBz/jHgdgSb0JyjwwO01TXW31KCB0DluR
- PQvhQGo0xA1l1/c8UJogikw91mwvgwnQZjKpHBdZNfn+jFrYu7cD3nMJRK5d9r9NITLt7nk
- tGOtbu4vhLEPUwhU64rnw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LOPNjWFBcVA=:KRxsnpQpS5u1aXBDunUfYZ
- 6aD/6qC5xdQ2y92DGbAMcNMKgVSsHvaWhVPykKd3IozNi8WI8oF8bkgctxsIE66pSlXl9h9Us
- dxREV8jIKyTeiHYRPc2AHilmRjVPVxAs1XQluoNYk+GKNpUsKb42/YsIKrYkTT2/mCpgbEk8+
- eel2nXUpOcYhZC8zXS4+Mj6E5Zagw6gwmPEjVnRtCgmxPNn7R7WPermSkLocSt2g97IK0o7QW
- iIJgHnKBKujH3353FpVR9xfbLsNP2poRyrNpAbUf5dnx6+fDioitN0/H+0kGEWYWQbTLvCmNB
- W+0nvwcqCjKMaB7jT1itSXr+Iy86q7IxBcXdJNdPmIPLr+PNFXnnunZMS+4L29AMqBLZ9HZDM
- VCPMQHbaiA57ZYI6mI1Nl0NqnUx9ZdD+lOvWrbKC3cuRxb1o8rXqCjyrgyRZ05XQolDLmF+yo
- YuyiCQF7eEv4dVVACMnb9m+G4/FMAw9jRpUT8Pkwk/p8R/fbPn0zQMm8eeyLIpJOz2AbnA59s
- f0+QUvOKEBdwmB7/kcKypuIKSd80OLL5hEWjouyIDnjpDMFpnX56QtjNqdE9luSYSus8x3NdN
- 8zmxHKqRSqacVkMJJRQMI/h4Vzti3fZzrsq4C/qfk9GeyEAIbVeRyWQJcZq/HwD7HbjUF8Uex
- lQ5YeYUyEIe28gAOzRUZMTThWllCBtfnWcWY123Fab6ZskaKpBp/Y15EUxoQS9SnW/Cs1ME3B
- +H3/Otox+UCysKKLXzD90KvHo3WmWMSHaSs8ODztfIhmlYEq+O1q7cWc1oe+1xc6fQjmnj7JA
- fyVTRDoUIbE0802jCpoCkIoyUzWEkISKUQyfvZCZ9K+LP75vxzos1TXokp31BgVyNfCtw7l0Y
- 8o9QoWkDjxeS5LFnq6SmLSR4nfGCxgc1N4jJCpFA6Kk4EnupKbGVG8zD5mw8rDasVt447K6Y0
- BrxD3w0G5x//5Mr0g3bbK3fo6x3IUmcZK2Of8smA5PKjtXVB1M4DyNVTTbENJTe7LxfXukmAh
- IDVlRx3rn0+vCCMyrJOKoCfgIkc1GrVCu95LRAgOcrLgdv3jXPNpfW4pCD+whDXNJgaseeMAE
- COlXK01YrnsLE6Vq9smcVyVTwUspcsXOP0KuKE4essYjfsxjrbgtI9o2k3b1rbO5zwFjWU6oC
- +ar8UaP0P6C1WKRS+E74bywfCfeD4L039PLJqPKYIPct+mmP9YGsddGbfaKfynuxLDJM4yz1U
- pYDg0aaEeo0T+UOHt
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.06.20 09:48, Jiri Slaby wrote:
-> We defined macros for all the magic constants in the previous patch. So
-> let us use the macro in the code now.
->
-> No functional change intended.
->
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Thomas Winischhofer <thomas@winischhofer.net>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: linux-usb@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-parisc@vger.kernel.org
+Convert mtk_dsi to a bridge driver with built-in encoder support for
+compatibility with existing component drivers.
 
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+---
 
-Acked-by: Helge Deller <deller@gmx.de>
+Changes in v4:
+- Remove double call to drm_encoder_init(). (Chun-Kuang Hu)
+- Cleanup the encoder in mtk_dsi_unbind(). (Chun-Kuang Hu)
 
-Thanks!
-Helge
+Changes in v3:
+- Add the bridge.type. (Laurent Pinchart)
 
-> ---
->  drivers/tty/vt/vt.c                     | 22 +++++++++++++---------
->  drivers/usb/misc/sisusbvga/sisusb_con.c |  2 +-
->  drivers/video/console/mdacon.c          |  2 +-
->  drivers/video/console/sticon.c          |  2 +-
->  drivers/video/console/vgacon.c          |  2 +-
->  drivers/video/fbdev/core/bitblit.c      |  2 +-
->  drivers/video/fbdev/core/fbcon.c        |  2 +-
->  drivers/video/fbdev/core/fbcon_ccw.c    |  2 +-
->  drivers/video/fbdev/core/fbcon_cw.c     |  2 +-
->  drivers/video/fbdev/core/fbcon_ud.c     |  2 +-
->  drivers/video/fbdev/core/tileblit.c     |  2 +-
->  11 files changed, 23 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index af1ef717f416..2b9fc628f05b 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -866,17 +866,18 @@ static void add_softcursor(struct vc_data *vc)
->  	int i =3D scr_readw((u16 *) vc->vc_pos);
->  	u32 type =3D vc->vc_cursor_type;
->
-> -	if (!(type & 0x10))
-> +	if (!(type & CUR_SW))
->  		return;
->  	if (softcursor_original !=3D -1)
->  		return;
->  	softcursor_original =3D i;
-> -	i |=3D (type >> 8) & 0xff00;
-> -	i ^=3D type & 0xff00;
-> -	if ((type & 0x20) && (softcursor_original & 0x7000) =3D=3D (i & 0x7000=
-))
-> -		i ^=3D 0x7000;
-> -	if ((type & 0x40) && (i & 0x700) =3D=3D ((i & 0x7000) >> 4))
-> -		i ^=3D 0x0700;
-> +	i |=3D CUR_SET(type);
-> +	i ^=3D CUR_CHANGE(type);
-> +	if ((type & CUR_ALWAYS_BG) &&
-> +			(softcursor_original & CUR_BG) =3D=3D (i & CUR_BG))
-> +		i ^=3D CUR_BG;
-> +	if ((type & CUR_INVERT_FG_BG) && (i & CUR_FG) =3D=3D ((i & CUR_BG) >> =
-4))
-> +		i ^=3D CUR_FG;
->  	scr_writew(i, (u16 *)vc->vc_pos);
->  	if (con_should_update(vc))
->  		vc->vc_sw->con_putc(vc, i, vc->state.y, vc->state.x);
-> @@ -910,7 +911,7 @@ static void set_cursor(struct vc_data *vc)
->  		if (vc_is_sel(vc))
->  			clear_selection();
->  		add_softcursor(vc);
-> -		if ((vc->vc_cursor_type & 0x0f) !=3D 1)
-> +		if (CUR_SIZE(vc->vc_cursor_type) !=3D CUR_NONE)
->  			vc->vc_sw->con_cursor(vc, CM_DRAW);
->  	} else
->  		hide_cursor(vc);
-> @@ -2322,7 +2323,10 @@ static void do_con_trol(struct tty_struct *tty, s=
-truct vc_data *vc, int c)
->  		case 'c':
->  			if (vc->vc_priv =3D=3D EPdec) {
->  				if (vc->vc_par[0])
-> -					vc->vc_cursor_type =3D vc->vc_par[0] | (vc->vc_par[1] << 8) | (vc-=
->vc_par[2] << 16);
-> +					vc->vc_cursor_type =3D
-> +						CUR_MAKE(vc->vc_par[0],
-> +							 vc->vc_par[1],
-> +							 vc->vc_par[2]);
->  				else
->  					vc->vc_cursor_type =3D cur_default;
->  				return;
-> diff --git a/drivers/usb/misc/sisusbvga/sisusb_con.c b/drivers/usb/misc/=
-sisusbvga/sisusb_con.c
-> index 80657c49310a..1058eaba3084 100644
-> --- a/drivers/usb/misc/sisusbvga/sisusb_con.c
-> +++ b/drivers/usb/misc/sisusbvga/sisusb_con.c
-> @@ -727,7 +727,7 @@ sisusbcon_cursor(struct vc_data *c, int mode)
->
->  	baseline =3D c->vc_font.height - (c->vc_font.height < 10 ? 1 : 2);
->
-> -	switch (c->vc_cursor_type & 0x0f) {
-> +	switch (CUR_SIZE(c->vc_cursor_type)) {
->  		case CUR_BLOCK:		from =3D 1;
->  					to   =3D c->vc_font.height;
->  					break;
-> diff --git a/drivers/video/console/mdacon.c b/drivers/video/console/mdac=
-on.c
-> index 00cb6245fbef..ef29b321967f 100644
-> --- a/drivers/video/console/mdacon.c
-> +++ b/drivers/video/console/mdacon.c
-> @@ -492,7 +492,7 @@ static void mdacon_cursor(struct vc_data *c, int mod=
-e)
->
->  	mda_set_cursor(c->state.y * mda_num_columns * 2 + c->state.x * 2);
->
-> -	switch (c->vc_cursor_type & 0x0f) {
-> +	switch (CUR_SIZE(c->vc_cursor_type)) {
->
->  		case CUR_LOWER_THIRD:	mda_set_cursor_size(10, 13); break;
->  		case CUR_LOWER_HALF:	mda_set_cursor_size(7,  13); break;
-> diff --git a/drivers/video/console/sticon.c b/drivers/video/console/stic=
-on.c
-> index bbcdfd312c36..21a5c280c8c9 100644
-> --- a/drivers/video/console/sticon.c
-> +++ b/drivers/video/console/sticon.c
-> @@ -139,7 +139,7 @@ static void sticon_cursor(struct vc_data *conp, int =
-mode)
->  	break;
->      case CM_MOVE:
->      case CM_DRAW:
-> -	switch (conp->vc_cursor_type & 0x0f) {
-> +	switch (CUR_SIZE(conp->vc_cursor_type)) {
->  	case CUR_UNDERLINE:
->  	case CUR_LOWER_THIRD:
->  	case CUR_LOWER_HALF:
-> diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgac=
-on.c
-> index c1c4ce28ac5e..f0f3d573f848 100644
-> --- a/drivers/video/console/vgacon.c
-> +++ b/drivers/video/console/vgacon.c
-> @@ -728,7 +728,7 @@ static void vgacon_cursor(struct vc_data *c, int mod=
-e)
->  	case CM_MOVE:
->  	case CM_DRAW:
->  		write_vga(14, (c->vc_pos - vga_vram_base) / 2);
-> -		switch (c->vc_cursor_type & 0x0f) {
-> +		switch (CUR_SIZE(c->vc_cursor_type)) {
->  		case CUR_UNDERLINE:
->  			vgacon_set_cursor_size(c->state.x,
->  					       c->vc_font.height -
-> diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/co=
-re/bitblit.c
-> index 3b002b365a5a..dde8004d8610 100644
-> --- a/drivers/video/fbdev/core/bitblit.c
-> +++ b/drivers/video/fbdev/core/bitblit.c
-> @@ -241,7 +241,7 @@ static void bit_cursor(struct vc_data *vc, struct fb=
-_info *info, int mode,
->  	unsigned short charmask =3D vc->vc_hi_font_mask ? 0x1ff : 0xff;
->  	int w =3D DIV_ROUND_UP(vc->vc_font.width, 8), c;
->  	int y =3D real_y(ops->p, vc->state.y);
-> -	int attribute, use_sw =3D (vc->vc_cursor_type & 0x10);
-> +	int attribute, use_sw =3D vc->vc_cursor_type & CUR_SW;
->  	int err =3D 1;
->  	char *src;
->
-> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core=
-/fbcon.c
-> index 38d2a00b0ccf..86fe41b1deb8 100644
-> --- a/drivers/video/fbdev/core/fbcon.c
-> +++ b/drivers/video/fbdev/core/fbcon.c
-> @@ -1393,7 +1393,7 @@ static void fbcon_cursor(struct vc_data *vc, int m=
-ode)
->  	if (fbcon_is_inactive(vc, info) || vc->vc_deccm !=3D 1)
->  		return;
->
-> -	if (vc->vc_cursor_type & 0x10)
-> +	if (vc->vc_cursor_type & CUR_SW)
->  		fbcon_del_cursor_timer(info);
->  	else
->  		fbcon_add_cursor_timer(info);
-> diff --git a/drivers/video/fbdev/core/fbcon_ccw.c b/drivers/video/fbdev/=
-core/fbcon_ccw.c
-> index 5b67bcebe34c..b5dd8317086d 100644
-> --- a/drivers/video/fbdev/core/fbcon_ccw.c
-> +++ b/drivers/video/fbdev/core/fbcon_ccw.c
-> @@ -226,7 +226,7 @@ static void ccw_cursor(struct vc_data *vc, struct fb=
-_info *info, int mode,
->  	unsigned short charmask =3D vc->vc_hi_font_mask ? 0x1ff : 0xff;
->  	int w =3D (vc->vc_font.height + 7) >> 3, c;
->  	int y =3D real_y(ops->p, vc->state.y);
-> -	int attribute, use_sw =3D (vc->vc_cursor_type & 0x10);
-> +	int attribute, use_sw =3D vc->vc_cursor_type & CUR_SW;
->  	int err =3D 1, dx, dy;
->  	char *src;
->  	u32 vyres =3D GETVYRES(ops->p->scrollmode, info);
-> diff --git a/drivers/video/fbdev/core/fbcon_cw.c b/drivers/video/fbdev/c=
-ore/fbcon_cw.c
-> index f1aab3ae3bc9..dbb5dbf3dd01 100644
-> --- a/drivers/video/fbdev/core/fbcon_cw.c
-> +++ b/drivers/video/fbdev/core/fbcon_cw.c
-> @@ -209,7 +209,7 @@ static void cw_cursor(struct vc_data *vc, struct fb_=
-info *info, int mode,
->  	unsigned short charmask =3D vc->vc_hi_font_mask ? 0x1ff : 0xff;
->  	int w =3D (vc->vc_font.height + 7) >> 3, c;
->  	int y =3D real_y(ops->p, vc->state.y);
-> -	int attribute, use_sw =3D (vc->vc_cursor_type & 0x10);
-> +	int attribute, use_sw =3D vc->vc_cursor_type & CUR_SW;
->  	int err =3D 1, dx, dy;
->  	char *src;
->  	u32 vxres =3D GETVXRES(ops->p->scrollmode, info);
-> diff --git a/drivers/video/fbdev/core/fbcon_ud.c b/drivers/video/fbdev/c=
-ore/fbcon_ud.c
-> index 81ed6f6bed67..b2c9cdbcc9e4 100644
-> --- a/drivers/video/fbdev/core/fbcon_ud.c
-> +++ b/drivers/video/fbdev/core/fbcon_ud.c
-> @@ -256,7 +256,7 @@ static void ud_cursor(struct vc_data *vc, struct fb_=
-info *info, int mode,
->  	unsigned short charmask =3D vc->vc_hi_font_mask ? 0x1ff : 0xff;
->  	int w =3D (vc->vc_font.width + 7) >> 3, c;
->  	int y =3D real_y(ops->p, vc->state.y);
-> -	int attribute, use_sw =3D (vc->vc_cursor_type & 0x10);
-> +	int attribute, use_sw =3D vc->vc_cursor_type & CUR_SW;
->  	int err =3D 1, dx, dy;
->  	char *src;
->  	u32 vyres =3D GETVYRES(ops->p->scrollmode, info);
-> diff --git a/drivers/video/fbdev/core/tileblit.c b/drivers/video/fbdev/c=
-ore/tileblit.c
-> index ac51425687e4..1dfaff0881fb 100644
-> --- a/drivers/video/fbdev/core/tileblit.c
-> +++ b/drivers/video/fbdev/core/tileblit.c
-> @@ -83,7 +83,7 @@ static void tile_cursor(struct vc_data *vc, struct fb_=
-info *info, int mode,
->  			int softback_lines, int fg, int bg)
->  {
->  	struct fb_tilecursor cursor;
-> -	int use_sw =3D (vc->vc_cursor_type & 0x10);
-> +	int use_sw =3D vc->vc_cursor_type & CUR_SW;
->
->  	cursor.sx =3D vc->state.x;
->  	cursor.sy =3D vc->state.y;
->
+Changes in v2: None
+
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 117 +++++++++++++++++++----------
+ 1 file changed, 79 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 208f49bf14a01..759a5b37fb4d2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -181,6 +181,7 @@ struct mtk_dsi {
+ 	struct device *dev;
+ 	struct mipi_dsi_host host;
+ 	struct drm_encoder encoder;
++	struct drm_bridge bridge;
+ 	struct drm_connector conn;
+ 	struct drm_panel *panel;
+ 	struct drm_bridge *next_bridge;
+@@ -206,9 +207,9 @@ struct mtk_dsi {
+ 	const struct mtk_dsi_driver_data *driver_data;
+ };
+ 
+-static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
++static inline struct mtk_dsi *bridge_to_dsi(struct drm_bridge *b)
+ {
+-	return container_of(e, struct mtk_dsi, encoder);
++	return container_of(b, struct mtk_dsi, bridge);
+ }
+ 
+ static inline struct mtk_dsi *connector_to_dsi(struct drm_connector *c)
+@@ -788,32 +789,52 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+ 	dsi->enabled = false;
+ }
+ 
+-static bool mtk_dsi_encoder_mode_fixup(struct drm_encoder *encoder,
+-				       const struct drm_display_mode *mode,
+-				       struct drm_display_mode *adjusted_mode)
++static void mtk_dsi_encoder_destroy(struct drm_encoder *encoder)
+ {
+-	return true;
++	drm_encoder_cleanup(encoder);
+ }
+ 
+-static void mtk_dsi_encoder_mode_set(struct drm_encoder *encoder,
+-				     struct drm_display_mode *mode,
+-				     struct drm_display_mode *adjusted)
++static const struct drm_encoder_funcs mtk_dsi_encoder_funcs = {
++	.destroy = mtk_dsi_encoder_destroy,
++};
++
++static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_dsi *dsi);
++static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi);
++
++static int mtk_dsi_bridge_attach(struct drm_bridge *bridge,
++				 enum drm_bridge_attach_flags flags)
++{
++	struct mtk_dsi *dsi = bridge_to_dsi(bridge);
++
++	return mtk_dsi_create_conn_enc(bridge->dev, dsi);
++}
++
++static void mtk_dsi_bridge_detach(struct drm_bridge *bridge)
+ {
+-	struct mtk_dsi *dsi = encoder_to_dsi(encoder);
++	struct mtk_dsi *dsi = bridge_to_dsi(bridge);
++
++	mtk_dsi_destroy_conn_enc(dsi);
++}
++
++static void mtk_dsi_bridge_mode_set(struct drm_bridge *bridge,
++				    const struct drm_display_mode *mode,
++				    const struct drm_display_mode *adjusted)
++{
++	struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+ 
+ 	drm_display_mode_to_videomode(adjusted, &dsi->vm);
+ }
+ 
+-static void mtk_dsi_encoder_disable(struct drm_encoder *encoder)
++static void mtk_dsi_bridge_disable(struct drm_bridge *bridge)
+ {
+-	struct mtk_dsi *dsi = encoder_to_dsi(encoder);
++	struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+ 
+ 	mtk_output_dsi_disable(dsi);
+ }
+ 
+-static void mtk_dsi_encoder_enable(struct drm_encoder *encoder)
++static void mtk_dsi_bridge_enable(struct drm_bridge *bridge)
+ {
+-	struct mtk_dsi *dsi = encoder_to_dsi(encoder);
++	struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+ 
+ 	mtk_output_dsi_enable(dsi);
+ }
+@@ -825,11 +846,12 @@ static int mtk_dsi_connector_get_modes(struct drm_connector *connector)
+ 	return drm_panel_get_modes(dsi->panel, connector);
+ }
+ 
+-static const struct drm_encoder_helper_funcs mtk_dsi_encoder_helper_funcs = {
+-	.mode_fixup = mtk_dsi_encoder_mode_fixup,
+-	.mode_set = mtk_dsi_encoder_mode_set,
+-	.disable = mtk_dsi_encoder_disable,
+-	.enable = mtk_dsi_encoder_enable,
++static const struct drm_bridge_funcs mtk_dsi_bridge_funcs = {
++	.attach = mtk_dsi_bridge_attach,
++	.detach = mtk_dsi_bridge_detach,
++	.disable = mtk_dsi_bridge_disable,
++	.enable = mtk_dsi_bridge_enable,
++	.mode_set = mtk_dsi_bridge_mode_set,
+ };
+ 
+ static const struct drm_connector_funcs mtk_dsi_connector_funcs = {
+@@ -880,20 +902,6 @@ static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_dsi *dsi)
+ {
+ 	int ret;
+ 
+-	ret = drm_simple_encoder_init(drm, &dsi->encoder,
+-				      DRM_MODE_ENCODER_DSI);
+-	if (ret) {
+-		DRM_ERROR("Failed to encoder init to drm\n");
+-		return ret;
+-	}
+-	drm_encoder_helper_add(&dsi->encoder, &mtk_dsi_encoder_helper_funcs);
+-
+-	/*
+-	 * Currently display data paths are statically assigned to a crtc each.
+-	 * crtc 0 is OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0
+-	 */
+-	dsi->encoder.possible_crtcs = 1;
+-
+ 	/* If there's a next bridge, attach to it and let it create the connector */
+ 	if (dsi->next_bridge) {
+ 		ret = drm_bridge_attach(&dsi->encoder, dsi->next_bridge, NULL,
+@@ -1115,6 +1123,34 @@ static const struct mipi_dsi_host_ops mtk_dsi_ops = {
+ 	.transfer = mtk_dsi_host_transfer,
+ };
+ 
++static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
++{
++	int ret;
++
++	ret = drm_encoder_init(drm, &dsi->encoder, &mtk_dsi_encoder_funcs,
++			       DRM_MODE_ENCODER_DSI, NULL);
++	if (ret) {
++		DRM_ERROR("Failed to encoder init to drm\n");
++		return ret;
++	}
++
++	/*
++	 * Currently display data paths are statically assigned to a crtc each.
++	 * crtc 0 is OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0
++	 */
++	dsi->encoder.possible_crtcs = 1;
++
++	ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
++	if (ret)
++		goto err_cleanup_encoder;
++
++	return 0;
++
++err_cleanup_encoder:
++	drm_encoder_cleanup(&dsi->encoder);
++	return ret;
++}
++
+ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+ {
+ 	int ret;
+@@ -1128,11 +1164,9 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+ 		return ret;
+ 	}
+ 
+-	ret = mtk_dsi_create_conn_enc(drm, dsi);
+-	if (ret) {
+-		DRM_ERROR("Encoder create failed with %d\n", ret);
++	ret = mtk_dsi_encoder_init(drm, dsi);
++	if (ret)
+ 		goto err_unregister;
+-	}
+ 
+ 	return 0;
+ 
+@@ -1147,7 +1181,7 @@ static void mtk_dsi_unbind(struct device *dev, struct device *master,
+ 	struct drm_device *drm = data;
+ 	struct mtk_dsi *dsi = dev_get_drvdata(dev);
+ 
+-	mtk_dsi_destroy_conn_enc(dsi);
++	drm_encoder_cleanup(&dsi->encoder);
+ 	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
+ }
+ 
+@@ -1257,6 +1291,12 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, dsi);
+ 
++	dsi->bridge.funcs = &mtk_dsi_bridge_funcs;
++	dsi->bridge.of_node = dev->of_node;
++	dsi->bridge.type = DRM_MODE_CONNECTOR_DSI;
++
++	drm_bridge_add(&dsi->bridge);
++
+ 	ret = component_add(&pdev->dev, &mtk_dsi_component_ops);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to add component: %d\n", ret);
+@@ -1275,6 +1315,7 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+ 	struct mtk_dsi *dsi = platform_get_drvdata(pdev);
+ 
+ 	mtk_output_dsi_disable(dsi);
++	drm_bridge_remove(&dsi->bridge);
+ 	component_del(&pdev->dev, &mtk_dsi_component_ops);
+ 	mipi_dsi_host_unregister(&dsi->host);
+ 
+-- 
+2.27.0
 
