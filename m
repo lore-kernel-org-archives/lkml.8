@@ -2,245 +2,104 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1424C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E9820679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B22620679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRVo8Ts9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dt0mlxnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbgFOOfn (ORCPT
+        id S1730642AbgFOOf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38938 "EHLO
+        Mon, 15 Jun 2020 10:35:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbgFOOfm (ORCPT
+        with ESMTP id S1728326AbgFOOf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:35:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4FF8C061A0E;
-        Mon, 15 Jun 2020 07:35:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id h95so7238770pje.4;
-        Mon, 15 Jun 2020 07:35:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=1ZlRIXdBSvQHhi5bZmtFn3RECL0gCLJpVvAo6R/4ZhM=;
-        b=cRVo8Ts90LpXrwKk8ehREP9WWD2Rc+h7+JoQj1LNOx90vQQ2hPymmegNbzVIETCehk
-         voiqXVRAJCSRfjOjzXVRL4LlxS1DyyithB+Hw2OpHSTWldQY7L6xhGp5+/S9v9NXkSgs
-         CkQ8hJCnP9mRmstgBKXL8jlEAHz18OcemUToDwnPfNwyjE4x57pq782Rfwv62HS3/Lbr
-         OXo9lXeDz6gk40KGbuapGR3Cbvnf8OCPLqkzeEk2VtylJGz2oUP4J/OO7a/4AeWgkz7x
-         mrXaaV8D27jnw8TMOdQReO88pTOvHe+IsSQLZBKKggBwv/Z8Wzn71yMGQtyT1T7m409U
-         BSgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=1ZlRIXdBSvQHhi5bZmtFn3RECL0gCLJpVvAo6R/4ZhM=;
-        b=Pbx2xxAlssVTUZnJNyTWkdNfuMmeN63OAakixRNi+WLNQSQuNUL0PG2+AvDsuT4lus
-         1rD6g3LXo/CHmyHgy2KCGkfDW7vHP7tCGzHg8jJ0Ly5SH6oRKSJISxiCB+5zsoi1Sh8r
-         91JqtGpPZkMfdyZv1kXtaNt9ooteIhy/gmzGboZfmXYWJwG+/7DRfdefwHshOhW2RAJe
-         gDTPcih/Pw+h7HiP25tqRU3vcOLbdr9vOt+xcFEftwQo9k/OigIbSppc+34d2sJlZKq6
-         REZtkF+BbZmS+7B9zIuPL22xy5SBBwsutqbm+ig8MeFwet5LEEMrQbhVrNGFnjXUn5Yn
-         mpFA==
-X-Gm-Message-State: AOAM532HI5qABiTaJ3wjc6QWd2zh20QkbyPK6jsjkHoJ2a+VptYnlcLl
-        Wj/v23sOhY0+55Vjzb0Qgqo=
-X-Google-Smtp-Source: ABdhPJwsHEEfz17B326jy8sfEZ2X+YTMXfKRQhUakr7FVMJ4NGpO7Stgh4x3Mp26HCwrUcHYwLQ7Mg==
-X-Received: by 2002:a17:90a:3749:: with SMTP id u67mr12008879pjb.129.1592231742224;
-        Mon, 15 Jun 2020 07:35:42 -0700 (PDT)
-Received: from VM_111_229_centos ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id h3sm13955697pje.28.2020.06.15.07.35.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 07:35:41 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 22:35:33 +0800
-From:   YangYuxi <yx.atom1@gmail.com>
-To:     wensong@linux-vs.org, horms@verge.net.au, ja@ssi.bg,
-        pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org, yx.atom1@gmail.com
-Subject: [PATCH] ipvs: avoid drop first packet by reusing conntrack
-Message-ID: <20200615143533.GA26989@VM_111_229_centos>
+        Mon, 15 Jun 2020 10:35:56 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DABC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=CNJqcR8O2MGARUu3ztkILAgDD+9fnJBIlgO1t0ryM7s=; b=dt0mlxnY4n62j+Mv9nWzG0NHIt
+        GW7jHe0cvEGK/PGx78zFjelxRFOSgYF5DPbekiklRes1pvymE1cukvtIujxjGquOjJYgNBVZfafIx
+        SZwLnDJJErabrmLdwmjEuwUKtM9N1snlkOJIoybprJuBLmDW282HTQ0e1xh2F5d4yLIyc12v+kzNO
+        Br3OxdwBD6qUwEuewPhVY8U/3pKyTbpE8t4G48RnSjrv0xoGAaqGOQR0cKJivsY2+8Xg7F9GwvShn
+        dYNt0KeTJSYaUyVgm/1pHhcYzxlFljQwsvsszM9L+1ysfiiL2QUtMYErSYTJAzzXVdn1D0a5GyBON
+        6olVAOfQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkqCr-0006Q2-GC; Mon, 15 Jun 2020 14:35:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E119C301A32;
+        Mon, 15 Jun 2020 16:35:23 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C7117203B8172; Mon, 15 Jun 2020 16:35:23 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 16:35:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
+ noinstr-compatible
+Message-ID: <20200615143523.GE2554@hirez.programming.kicks-ass.net>
+References: <CACT4Y+Zwm47qs8yco0nNoD_hFzHccoGyPznLHkBjAeg9REZ3gA@mail.gmail.com>
+ <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
+ <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
+ <20200608110108.GB2497@hirez.programming.kicks-ass.net>
+ <20200611215538.GE4496@worktop.programming.kicks-ass.net>
+ <CACT4Y+aKVKEp1yoBYSH0ebJxeqKj8TPR9MVtHC1Mh=jgX0ZvLw@mail.gmail.com>
+ <20200612114900.GA187027@google.com>
+ <CACT4Y+bBtCbEk2tg60gn5bgfBjARQFBgtqkQg8VnLLg5JwyL5g@mail.gmail.com>
+ <CANpmjNM+Tcn40MsfFKvKxNTtev-TXDsosN+z9ATL8hVJdK1yug@mail.gmail.com>
+ <20200615142949.GT2531@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200615142949.GT2531@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 'commit f719e3754ee2 ("ipvs: drop first packet to
-redirect conntrack")', when a new TCP connection meet
-the conditions that need reschedule, the first syn packet
-is dropped, this cause one second latency for the new
-connection, more discussion about this problem can easy
-search from google, such as:
+On Mon, Jun 15, 2020 at 04:29:50PM +0200, Peter Zijlstra wrote:
+> Let me go look at your KCSAN thing now...
 
-1)One second connection delay in masque
-https://marc.info/?t=151683118100004&r=1&w=2
+vmlinux.o: warning: objtool: idtentry_enter_cond_rcu()+0x16: call to is_idle_task() leaves .noinstr.text section
 
-2)IPVS low throughput #70747
-https://github.com/kubernetes/kubernetes/issues/70747
-
-3)Apache Bench can fill up ipvs service proxy in seconds #544
-https://github.com/cloudnativelabs/kube-router/issues/544
-
-4)Additional 1s latency in `host -> service IP -> pod`
-https://github.com/kubernetes/kubernetes/issues/90854
-
-5)kube-proxy ipvs conn_reuse_mode setting causes errors
-with high load from single client
-https://github.com/kubernetes/kubernetes/issues/81775
-
-The root cause is when the old session is expired, the
-conntrack related to the session is dropped by
-ip_vs_conn_drop_conntrack. The code is as follows:
-```
-static void ip_vs_conn_expire(struct timer_list *t)
-{
-...
-
-     if ((cp->flags & IP_VS_CONN_F_NFCT) &&
-         !(cp->flags & IP_VS_CONN_F_ONE_PACKET)) {
-             /* Do not access conntracks during subsys cleanup
-              * because nf_conntrack_find_get can not be used after
-              * conntrack cleanup for the net.
-              */
-             smp_rmb();
-             if (ipvs->enable)
-                     ip_vs_conn_drop_conntrack(cp);
-     }
-...
-}
-```
-As shown in the code, only when condition (cp->flags & IP_VS_CONN_F_NFCT)
-is true, the function ip_vs_conn_drop_conntrack will be called.
-
-So we optimize this by following steps (Administrators
-can choose the following optimization by setting
-net.ipv4.vs.conn_reuse_old_conntrack=1):
-1) erase the IP_VS_CONN_F_NFCT flag (it is safely because
-   no packets will use the old session)
-2) call ip_vs_conn_expire_now to release the old session,
-   then the related conntrack will not be dropped
-3) then ipvs unnecessary to drop the first syn packet, it
-   just continue to pass the syn packet to the next process,
-   create a new ipvs session, and the new session will related
-   to the old conntrack(which is reopened by conntrack as a new
-   one), the next whole things is just as normal as that the old
-   session isn't used to exist.
-
-The above processing has no problems except for passive FTP and
-connmarks (state matching (-m state)). So, ipvs should give
-users the right to choose，when FTP or connmarks is not used,
-they can choose a high performance one processing logical by
-setting net.ipv4.vs.conn_reuse_old_conntrack=1. It is necessary
-because most business scenarios (such as kubernetes) are not
-used FTP and connmark, but these services are very sensitive
-to TCP short connection latency.
-
-This patch has been verified on our thousands of kubernets
-node servers on Tencent Inc.
-
-Signed-off-by: YangYuxi <yx.atom1@gmail.com>
 ---
- include/net/ip_vs.h             | 11 +++++++++++
- net/netfilter/ipvs/ip_vs_core.c | 10 ++++++++--
- net/netfilter/ipvs/ip_vs_ctl.c  |  2 ++
- 3 files changed, 21 insertions(+), 2 deletions(-)
-
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 83be2d93b407..052fa87d2a44 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -928,6 +928,7 @@ struct netns_ipvs {
- 	int			sysctl_pmtu_disc;
- 	int			sysctl_backup_only;
- 	int			sysctl_conn_reuse_mode;
-+	int			sysctl_conn_reuse_old_conntrack;
- 	int			sysctl_schedule_icmp;
- 	int			sysctl_ignore_tunneled;
- 
-@@ -1049,6 +1050,11 @@ static inline int sysctl_conn_reuse_mode(struct netns_ipvs *ipvs)
- 	return ipvs->sysctl_conn_reuse_mode;
- }
- 
-+static inline int sysctl_conn_reuse_old_conntrack(struct netns_ipvs *ipvs)
-+{
-+	return ipvs->sysctl_conn_reuse_old_conntrack;
-+}
-+
- static inline int sysctl_schedule_icmp(struct netns_ipvs *ipvs)
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index b62e6aaf28f03..a7abc18a7d0ad 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1663,7 +1663,7 @@ extern struct task_struct *idle_task(int cpu);
+  *
+  * Return: 1 if @p is an idle task. 0 otherwise.
+  */
+-static inline bool is_idle_task(const struct task_struct *p)
++static __always_inline bool is_idle_task(const struct task_struct *p)
  {
- 	return ipvs->sysctl_schedule_icmp;
-@@ -1136,6 +1142,11 @@ static inline int sysctl_conn_reuse_mode(struct netns_ipvs *ipvs)
- 	return 1;
+ 	return !!(p->flags & PF_IDLE);
  }
- 
-+static inline int sysctl_conn_reuse_old_conntrack(struct netns_ipvs *ipvs)
-+{
-+	return 1;
-+}
-+
- static inline int sysctl_schedule_icmp(struct netns_ipvs *ipvs)
- {
- 	return 0;
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index aa6a603a2425..0b89c872ea46 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -2066,7 +2066,7 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
- 
- 	conn_reuse_mode = sysctl_conn_reuse_mode(ipvs);
- 	if (conn_reuse_mode && !iph.fragoffs && is_new_conn(skb, &iph) && cp) {
--		bool uses_ct = false, resched = false;
-+		bool uses_ct = false, resched = false, drop = false;
- 
- 		if (unlikely(sysctl_expire_nodest_conn(ipvs)) && cp->dest &&
- 		    unlikely(!atomic_read(&cp->dest->weight))) {
-@@ -2086,10 +2086,16 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
- 		}
- 
- 		if (resched) {
-+			if (uses_ct) {
-+				if (likely(sysctl_conn_reuse_old_conntrack(ipvs)))
-+					cp->flags &= ~IP_VS_CONN_F_NFCT;
-+				else
-+					drop = true;
-+			}
- 			if (!atomic_read(&cp->n_control))
- 				ip_vs_conn_expire_now(cp);
- 			__ip_vs_conn_put(cp);
--			if (uses_ct)
-+			if (drop)
- 				return NF_DROP;
- 			cp = NULL;
- 		}
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 412656c34f20..eeb87994c21f 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -4049,7 +4049,9 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
- 	tbl[idx++].data = &ipvs->sysctl_pmtu_disc;
- 	tbl[idx++].data = &ipvs->sysctl_backup_only;
- 	ipvs->sysctl_conn_reuse_mode = 1;
-+	ipvs->sysctl_conn_reuse_old_conntrack = 1;
- 	tbl[idx++].data = &ipvs->sysctl_conn_reuse_mode;
-+	tbl[idx++].data = &ipvs->sysctl_conn_reuse_old_conntrack;
- 	tbl[idx++].data = &ipvs->sysctl_schedule_icmp;
- 	tbl[idx++].data = &ipvs->sysctl_ignore_tunneled;
- 
--- 
-1.8.3.1
-
