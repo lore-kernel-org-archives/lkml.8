@@ -2,136 +2,152 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D94C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ECCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610352071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FDF92071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bwm6eR+s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LSD5JPxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgFOVyN (ORCPT
+        id S1726416AbgFOVyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 17:54:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50430 "EHLO
+        Mon, 15 Jun 2020 17:54:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgFOVyM (ORCPT
+        with ESMTP id S1726044AbgFOVyW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 17:54:12 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CD6C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 14:54:12 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id u17so10288672vsu.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 14:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BrYyEhrRR6A5rIUcHiiWKnKi36VydppgntucqfFstLE=;
-        b=bwm6eR+s1orKJ3oyZ9Evd8YxotI8L3vP/Xg/h+t06qh76qO5Lb51v1SB9upmRYjV2f
-         cG2cX/p+DjUzsyOcbhFkET9YLFuu6WWZUAKAu+xZ5n/O8eWl48D258TMWnh/L1FDxiee
-         Qjju8cTjw4FT0zGUpcc+hyctWFGLmL6TpQ5dnV79SQBAidhMFi9bb6B+L2yksoC0jFo/
-         Ot8lzg/2tgTyb8JZuPn5BYqIdpFxwxB2Mj4MNliPscaXm0T4nnncQ2i/0q0VJ7ZgWIBI
-         mNpuNpDqdhsl3XVgzxSlWXAXUaEUui5mGUSwvHV7UuyK18mFMu0c2noUSGL5vvED4t3L
-         UhSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BrYyEhrRR6A5rIUcHiiWKnKi36VydppgntucqfFstLE=;
-        b=tFJ3SwMOyZ+JXLtBJurquz5+Lr2OlH+NflQRTgZKRYt/lCTIBQufVmQpm/gsDMJZBJ
-         PU28FnaU48uC6kR5U80IxHlctQciyp5IXSn3YaGh88L1H4gAyqKM/V/9fyXuiG/Jn95j
-         uIdN9TlT8NVvp0T+qzU5yfQAJBHXcosc1Fme8Omh5jzYRdPuniL1TYzuqVk8MOrJiMbD
-         Pp88gqFWDMrE7VLFU9ZX+F4fwJZd2aOXvTeQOmejP5CL3I6KpahnHe805tpyXG+Uq9TS
-         xkM0mALyuLMZIbO7wfTwn3S6QL1GEdSSQWZVUO4N9TwP/ViHOkxndDCsO2+V6F1HK+LI
-         OQiA==
-X-Gm-Message-State: AOAM533B5NEps4xBp7NMRW2c8pWt5xMpywEMEAnmh/HE5zxCassOhlyG
-        2fXJrW4Ik5yLJJfCmNfmqNHFONDth8dmoufcUK8=
-X-Google-Smtp-Source: ABdhPJy7D3emZODXkL1/U8Y2sm3fS3ljMw96Eg6vvLxmwafjbNp6R4+BfIc0eGrhlDtmI027Mj7tNOKRixSNT5HOXcA=
-X-Received: by 2002:a67:f918:: with SMTP id t24mr21149749vsq.18.1592258051538;
- Mon, 15 Jun 2020 14:54:11 -0700 (PDT)
+        Mon, 15 Jun 2020 17:54:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D11C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 14:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UqgtxJyXNkDi+0YvkljyuVgWArZfOIPs0r0FfUbx9gk=; b=LSD5JPxkLs9AcgxjDG0aMNn4Jw
+        ezfvCVV68rnipIJFxD+zL54W/CRA6wrZNbxCvhOd6Mz7U+W2zW4wsDHPxzgoKaFhBJD/n3Zjy7JMH
+        6um/p8pHUjP0zSfu0a9ckO4OA4+X/O4P3ODIkp052EI+ae0Ov9jbkACGWf3ReTnI7WWUn/tC+xmZu
+        8eVWcz2CKDjEdXIdRpMjJ2J6ThhGnBBtRaM5AQ9Suas4+u33Wd8ORKSREHPhi7o4HYYJe3r11ww+v
+        4P0e1eL/oZSJ5XVvmaCITCLoQ0QQtgLOV5+U/+4qVP+6DsaxaqIHRyoONo5PFTrbUO1kt2FFz1wcK
+        NP6xRd8w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkx3F-0001qx-4m; Mon, 15 Jun 2020 21:53:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7C474301A32;
+        Mon, 15 Jun 2020 23:53:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6897E2BDC14F9; Mon, 15 Jun 2020 23:53:53 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 23:53:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        amd-gfx <amd-gfx@lists.freedesktop.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
+Message-ID: <20200615215353.GH2514@hirez.programming.kicks-ass.net>
+References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+ <1592008893-9388-13-git-send-email-fenghua.yu@intel.com>
+ <20200615075649.GK2497@hirez.programming.kicks-ass.net>
+ <20200615154854.GB13792@romley-ivt3.sc.intel.com>
+ <20200615160357.GA2531@hirez.programming.kicks-ass.net>
+ <20200615181259.GC13792@romley-ivt3.sc.intel.com>
+ <20200615183116.GD2531@hirez.programming.kicks-ass.net>
+ <20200615185529.GD13792@romley-ivt3.sc.intel.com>
+ <20200615190928.GJ2531@hirez.programming.kicks-ass.net>
+ <20200615201735.GE13792@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-8-jim.cromie@gmail.com> <20200615132028.GE31238@alley>
-In-Reply-To: <20200615132028.GE31238@alley>
-From:   jim.cromie@gmail.com
-Date:   Mon, 15 Jun 2020 15:53:45 -0600
-Message-ID: <CAJfuBxxdoZ1T9nLi-X2g=zk8poLX-CtRAA=0A-i1KPq2_RhX9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 07/24] dyndbg: fix a BUG_ON in ddebug_describe_flags
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615201735.GE13792@romley-ivt3.sc.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 7:20 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Sat 2020-06-13 09:57:21, Jim Cromie wrote:
+On Mon, Jun 15, 2020 at 01:17:35PM -0700, Fenghua Yu wrote:
+> Hi, Peter,
+> 
+> On Mon, Jun 15, 2020 at 09:09:28PM +0200, Peter Zijlstra wrote:
+> > On Mon, Jun 15, 2020 at 11:55:29AM -0700, Fenghua Yu wrote:
+> > 
+> > > Or do you suggest to add a random new flag in struct thread_info instead
+> > > of a TIF flag?
+> > 
+> > Why thread_info? What's wrong with something simple like the below. It
+> > takes a bit from the 'strictly current' flags word.
+> > 
+> > 
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index b62e6aaf28f0..fca830b97055 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -801,6 +801,9 @@ struct task_struct {
+> >  	/* Stalled due to lack of memory */
+> >  	unsigned			in_memstall:1;
+> >  #endif
+> > +#ifdef CONFIG_PCI_PASID
+> > +	unsigned			has_valid_pasid:1;
+> > +#endif
+> >  
+> >  	unsigned long			atomic_flags; /* Flags requiring atomic access. */
+> >  
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 142b23645d82..10b3891be99e 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -955,6 +955,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+> >  	tsk->use_memdelay = 0;
+> >  #endif
+> >  
+> > +#ifdef CONFIG_PCI_PASID
+> > +	tsk->has_valid_pasid = 0;
+> > +#endif
+> > +
+> >  #ifdef CONFIG_MEMCG
+> >  	tsk->active_memcg = NULL;
+> >  #endif
+> 
+> The PASID MSR is x86 specific although PASID is PCIe concept and per-mm.
+> Checking if the MSR has valid PASID (bit31=1) is an x86 specifc work.
+> The flag should be cleared in cloned()/forked() and is only set and
+> read in fixup() in x86 #GP for heuristic. It's not used anywhere outside
+> of x86.
+> 
+> That's why we think the flag should be in x86 struct thread_info instead
+> of in generice struct task_struct.
 
-> In all patches is missing:
->
-> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+I don't think anybody really cares, it's just one bit, we have plenty
+left.
 
-right, I missed the -s invoking format-patch, v3 will have them
+On x86_64 there's a u32 sized alignment hole in thread_info, also we
+don't use the upper 32bit of thread_info::flags, however using those
+would still mean you have to use atomic ops, which you really don't
+need.
 
 
->
-> > ---
-> >  lib/dynamic_debug.c | 31 +++++++++++++++----------------
-> >  1 file changed, 15 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> > index 9b2445507988..aaace13d7536 100644
-> > --- a/lib/dynamic_debug.c
-> > +++ b/lib/dynamic_debug.c
-> > @@ -87,22 +87,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
-> >       { _DPRINTK_FLAGS_NONE, '_' },
-> >  };
-> >
-> > +struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
->
-> This looks too complicated. What about?
->
->         typedef char flags_buf[ARRAY_SIZE(opt_array) + 1];
->     used as
->         flags_buf fb;
->
-
-I used the struct to give type safety.
-old code passed a pointer to a string, and hoped it was big enough.
-then used a BUG_ON to insist.
-passing (the address of the) struct means the contained string is
-known big enough.
-and the addy is also that of the string itself (member offset 0), no overhead.
-
->
->         #define FLAGS_BUF_SIZE (ARRAY_SIZE(opt_array) + 1)
->     used as
->         char flags_buf[FLAGS_BUF_SIZE];
->
-
-I never needed that constant, cuz the string is filled once,
-in the function just below the struct def, using the same expression (sans +1)
-
-I would/will update the 1-line comment on ddebug_describe_flags
-and add another on the struct itself, once I figure out how to say
-all of this succinctly and clearly enough.
-Im open to suggestions.
-
-thanks
-jimc
-
->
-> Best Regards,
-> Petr
