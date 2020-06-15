@@ -2,199 +2,129 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDAD620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D701720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yFjJXa0X"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iL/tiCXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgFOKol (ORCPT
+        id S1729562AbgFOKrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729614AbgFOKoj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:44:39 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E5D1C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:44:38 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q25so14328950wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ApfEnyPC+yVUUFu3a6QZVNs6AfaJLADlLRYk8AqGh+Y=;
-        b=yFjJXa0XP2kTJy4rtuzLf41qneTqL3ch5gdthCplaIGzDZHPqZ4+5smInUQcgy8xBN
-         grtZ3Z/LJz4HAwCABRB2LFtwqcQO7Ep3zwDNBWeSNKgWG2dEPM4IQ6zWozHkALjQDW3Z
-         cxJMZdeYdnK4kIEWHpLT+XIWiISrbOq0j1Urrp2HkRwKySdj6ZidLrtb0Kmsp1yAmVKs
-         l4th8DtWv1p3Q2k15vyjVAoBBisHETTlBShPBdW37/S78N0buqf9xxVz33ERkJXfgnsC
-         RBEXzHbh/8kpEGhbiGwNnHmzDYyqUsOzbkiseMcJ7atIwUX8FsTsmz1G00fQjIdAYlnL
-         B8YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ApfEnyPC+yVUUFu3a6QZVNs6AfaJLADlLRYk8AqGh+Y=;
-        b=U6/CrgBZE7Gn+f9OdpAY8Tlz6684DB9mr9PFvo9l1nX4OmVN5KOKkpiCo6PKhCFECS
-         emEjZlgV5Un21F7Qb7MMmuAR3x5a0nfjMW9ThwOOrk0UaPCeqBRaZvb+vPUAcHQVQ1y8
-         UzVsQ43/P/JjKEvr7gC2zPSMJNJiAEGMhTfue9VS98MGnCQPnBghQ4tLF55CTMEBXQgn
-         LCfEooPplXiU6oAz0WR4pmA/5oict0LsaHrDImxDJWXtKucUGN0D+GanxIEVdBtZ4RnJ
-         lW11ni6EUGU0NNGtoY819QllWANhxmLCPQjUBXSNMvoPzju7Knp2Jfi6RtJKuvCyAMdU
-         ZoQw==
-X-Gm-Message-State: AOAM530rlx/cqVmBdbAANHHjpOJtcGlxAR1AuDL0cCYbnWOcI71uqtKd
-        +Be/5yzPbmn/PHhoDqnwvgveEg==
-X-Google-Smtp-Source: ABdhPJzQnjpq8TS/e6IeJqcJYo8oRb2zA9TKCNTNtpiyrWYgci+zXDR6fQkvawBZzGzwJ+vbVCUSVQ==
-X-Received: by 2002:a1c:6a13:: with SMTP id f19mr12907814wmc.142.1592217877264;
-        Mon, 15 Jun 2020 03:44:37 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id c143sm32767994wmd.1.2020.06.15.03.44.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 03:44:36 -0700 (PDT)
-Subject: Re: [RFC v2 2/3] drivers: nvmem: Add QTI qfprom-efuse support
-To:     Doug Anderson <dianders@chromium.org>,
-        Ravi Kumar Bokka <rbokka@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
- <1591868882-16553-3-git-send-email-rbokka@codeaurora.org>
- <CAD=FV=XSfMPehyCLB25hct+GE8JtU=5J=04KyU4AoHfg9cs50A@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <472dc7d7-2e23-0f1a-8e1a-839c4c9c1f7a@linaro.org>
-Date:   Mon, 15 Jun 2020 11:44:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 15 Jun 2020 06:47:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33814 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728815AbgFOKrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:47:21 -0400
+Received: from zn.tnic (p200300ec2f063c00a9ba54d750d72537.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:3c00:a9ba:54d7:50d7:2537])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3ADD41EC035B;
+        Mon, 15 Jun 2020 12:47:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592218040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=MHpggwvr0BvKUJlLLSPpdNMqETzjB0UWRAJLzGCSE/s=;
+        b=iL/tiCXidPNan8giRcIyigGQx5uElNnFHtoi8CPJqgTD1GDpCflOrn0nAU3x/BFR1MKsr9
+        /FbVAxLKXMjzZ9eB8hrm/0c/bc8xDsoB5bbHqdA5bOB1ooC7cz3ft3Luc/KTbs/VQQOdaw
+        5J1XrRalyY763xRL08Jx9Q9rnTD72K4=
+Date:   Mon, 15 Jun 2020 12:47:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Johansen <john.johansen@canonical.com>,
+        Steve Beattie <sbeattie@ubuntu.com>
+Subject: Re: [PATCH] x86/speculation/srbds: do not try to turn mitigation off
+ when not supported
+Message-ID: <20200615104713.GE14668@zn.tnic>
+References: <20200609174313.2600320-1-cascardo@canonical.com>
+ <20200615082858.GC14668@zn.tnic>
+ <20200615102738.GZ4342@mussarela>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=XSfMPehyCLB25hct+GE8JtU=5J=04KyU4AoHfg9cs50A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200615102738.GZ4342@mussarela>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 15, 2020 at 07:27:38AM -0300, Thadeu Lima de Souza Cascardo wrote:
+> It was booted without the microcode update. There was microcode available, but
+> systems may be booted without it, thus causing warnings due to the MSR
+> read/write.
 
+Right.
 
-On 13/06/2020 21:33, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Jun 11, 2020 at 2:49 AM Ravi Kumar Bokka <rbokka@codeaurora.org> wrote:
->>
->> This patch adds support for QTI qfprom-efuse controller. This driver can
->> access the raw qfprom regions for fuse blowing.
->>
->> The current existed qfprom driver is only supports for cpufreq, thermal sensors
->> drivers by read out calibration data, speed bins..etc which is stored
->> by qfprom efuses.
->>
->> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
->> ---
-> 
-> It makes all your code reviewers much happier (and much more likely to
-> take the time to review your patches) if you include a changelog with
-> what changed from one version to the next.  If you would like some
-> help maintaining such a thing, might I suggest "patman":
-> 
-> https://gitlab.denx.de/u-boot/u-boot/-/blob/master/tools/patman/README
-> 
-> ...pay no mind that it's hosted in the U-Boot repo--it's really quite
-> a great tool.
-> 
-> 
->>   drivers/nvmem/Kconfig  |   1 +
->>   drivers/nvmem/qfprom.c | 405 ++++++++++++++++++++++++++++++++++++++++++++++---
->>   2 files changed, 385 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
->> index d7b7f6d..623d59e 100644
->> --- a/drivers/nvmem/Kconfig
->> +++ b/drivers/nvmem/Kconfig
->> @@ -117,6 +117,7 @@ config QCOM_QFPROM
->>          help
->>            Say y here to enable QFPROM support. The QFPROM provides access
->>            functions for QFPROM data to rest of the drivers via nvmem interface.
->> +         And this driver provides access QTI qfprom efuse via nvmem interface.
-> 
-> I'm not sure it was necessary to add that line, but I won't object if
-> you/others really like it.
-> 
+> That's exactly the fix in the patch I sent, right? Do you want me to resend
+> with a comment, then?
 
-NAK from my side!
+Your patch replaced
 
-> 
->>            This driver can also be built as a module. If so, the module
->>            will be called nvmem_qfprom.
->> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
->> index 8a91717..312318c 100644
->> --- a/drivers/nvmem/qfprom.c
->> +++ b/drivers/nvmem/qfprom.c
-> 
-> You've still mostly not addressed most of the review feedback I've now
-> given you 3 times.  Rather than repeating comments, I have simply
-> provided a patch that makes the driver into a state that I'm happy
-> with:
-> 
-> https://crrev.com/c/2244932
-> 
-> Rough summary:
-> 
-> * There should be no reason to provide "reset" values for things.  For
-> anything that you change for fuse blowing, just save and restore
-> after.
-> 
-> * Use the major/minor version read from 0x6000 to pick the parameters
-> to use.  Please double-check that I got this right.
-> 
-> * Reading should still read "corrected", not "raw".  Added a sysfs
-> knob to allow you to read "raw", though.
+-       if (srbds_mitigation == SRBDS_MITIGATION_UCODE_NEEDED)
 
-We could create an additional nvmem read-only provider in future if 
-required to read raw!.
+Thinking about this more, I think the proper thing to do is this:
 
-> 
-> * Simplified the SoC data structure.
-> 
-> * No need for quite so many levels of abstraction for setting clocks /
-> regulator.
-> 
-> * Don't set regulator voltage.  Rely on device tree to make sure it's right.
-> 
-> * Properly undo things in the case of failure.
-> 
-> * Don't just keep enabling the regulator over and over again.
-> 
-> * Enable / disable the clock each time; now we don't need a .remove
-> function and yet we still don't leave the clock enabled/prepared.
-> 
-> * Polling every 100 us but timing out in 10 us didn't make sense.
-> Swap those.  Also no reason for 100 us to be SoC specific.
-> 
-> * No need for reg-names.
-> 
-> * We shouldn't be creating two separate nvmem devices.
-> 
-> 
-> In general I'm happy to post my series to the list myself to get
-> review feedback.  For now I'm expecting that you can squash my changes
-> in and send the next version.
-> 
-> 
-> -Doug
-> 
+---
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 0b71970d2d3d..ce2931563f8f 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -432,14 +432,14 @@ void update_srbds_msr(void)
+ 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+ 		return;
+ 
+-	if (srbds_mitigation == SRBDS_MITIGATION_UCODE_NEEDED)
++	if (srbds_mitigation == SRBDS_MITIGATION_UCODE_NEEDED ||
++	    srbds_mitigation == SRBDS_MITIGATION_TSX_OFF)
+ 		return;
+ 
+ 	rdmsrl(MSR_IA32_MCU_OPT_CTRL, mcu_ctrl);
+ 
+ 	switch (srbds_mitigation) {
+ 	case SRBDS_MITIGATION_OFF:
+-	case SRBDS_MITIGATION_TSX_OFF:
+ 		mcu_ctrl |= RNGDS_MITG_DIS;
+ 		break;
+ 	case SRBDS_MITIGATION_FULL:
+---
+
+because looking at:
+
+  7e5b3c267d25 ("x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation")
+
+it says:
+
+    While it is present on all affected CPU models, the microcode mitigation
+    is not needed on models that enumerate ARCH_CAPABILITIES[MDS_NO] in the
+    cases where TSX is not supported or has been disabled with TSX_CTRL.
+
+which could be also understood as "there won't be microcode for those
+CPUs and thus MSR_IA32_MCU_OPT_CTRL won't be there."
+
+Because if that is the case, then SRBDS_MITIGATION_TSX_OFF means the MSR
+is not there and therefore we should not touch it.
+
+And you've actually shown that without the microcode loaded, you
+can have a system which is MDS_NO and which hasn't generated
+MSR_IA32_MCU_OPT_CTRL (because the microcode is not loaded) and thus
+can't touch said MSR.
+
+Mark?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
