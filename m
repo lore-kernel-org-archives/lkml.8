@@ -5,74 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7481BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B35D20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FC120739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RLUlysi/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzLa+9/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgFOWQo (ORCPT
+        id S1726647AbgFOWQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:16:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24563 "EHLO
+        Mon, 15 Jun 2020 18:16:47 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58490 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726614AbgFOWQl (ORCPT
+        by vger.kernel.org with ESMTP id S1726601AbgFOWQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:16:41 -0400
+        Mon, 15 Jun 2020 18:16:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592259399;
+        s=mimecast20190719; t=1592259401;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RqJKKw8a1NKRln+8zArdPqt59N0jqlX/yu/HW/s9kC4=;
-        b=RLUlysi/KLIyFM757BgJM53Q5bDKA8+90Yvf13v87FqQTRF0g0URn8h5J1usqIGUdjMVLz
-        kCQ2zhk7k3hl9CmDyrkqMoXj6LlwwenkpFMpQVY+LL1RjvWwzPO6vQ8plqW9WZzztH0Bx5
-        Qzivv+P+ilF13TCINXMWyEDJom6RPPw=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-fB5hmzITPTiN6_JNcxjuSw-1; Mon, 15 Jun 2020 18:16:38 -0400
-X-MC-Unique: fB5hmzITPTiN6_JNcxjuSw-1
-Received: by mail-qv1-f69.google.com with SMTP id t20so14068489qvy.16
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:16:38 -0700 (PDT)
+        bh=D1JGrcb4VtJwhM/mfk1pWvCfErRPSyrjF6khDNDw6Ls=;
+        b=PzLa+9/dtf9zLCfLhIQq1KCkiBUJ5GtEBcGth+thT/ItsO7uljB1wW8dWrwiPkEEnmYDmT
+        qeoswXVs4CPPftH21Sih54IM0iu69JC5oBMIgPmb3p+7Az5nXZwbfW4R/gF5e+NTv8gsYR
+        k6qxJm4oO8uPRF0GgqfvEr4eGVHcB8w=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-LS_Tr3mTOuuHXb6o8_lNOw-1; Mon, 15 Jun 2020 18:16:39 -0400
+X-MC-Unique: LS_Tr3mTOuuHXb6o8_lNOw-1
+Received: by mail-qk1-f197.google.com with SMTP id h18so15410278qkj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:16:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RqJKKw8a1NKRln+8zArdPqt59N0jqlX/yu/HW/s9kC4=;
-        b=DIKySVuAih00xH6ZBII8XowkiOCfB1Z5KyRza15Sg267N9gk/N6hpi8dutpVsf9T4K
-         VSQg760Ls8q9ZYwPJHGwN+SXbQKadmemR8jZy6jQ0Rkj8aqgYviupVoT5O+OgPbRVb/v
-         ImVkirBp70fOwWsf0bAm5WRiCC6o6TU0zSqsmKOus+zFw3APPkTgJVUxY3/yhtgRMesJ
-         TBzGroXyTp1oWAsuyFrYOg7DHdXEBcZ0Lt9iPdCHPLEqoKxZ1wEtq4q2jQN3n9mwqJrP
-         2xHEejW/imTgWebWuXcMSklAadHOZzWCOGhj/GvcuJzqKcvFsVIOhu6Btp16n/6WnOqa
-         qfAg==
-X-Gm-Message-State: AOAM531oNzyANVo4zh3bSRCI7G1O9q9ixS4p3Jm1EfQVCCOiNmucMzAp
-        jolD4hsZgpIkwLMkVW6T2IBqrrVlAVgEkXXCQcpEqByCoH6mzD8P4g/RoQjCMfIsRMMI9BrXyMG
-        crkYoRLfoM7RI1MfzIBF5a9B7
-X-Received: by 2002:ac8:2b98:: with SMTP id m24mr18160589qtm.7.1592259397576;
-        Mon, 15 Jun 2020 15:16:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJym0dTv1jCtl4PPadaK3FtEqrEEdDfUimjvunbZFPifhmsxPtnWv/2yi5DBIOU+dU1tzU/YzA==
-X-Received: by 2002:ac8:2b98:: with SMTP id m24mr18160561qtm.7.1592259397379;
-        Mon, 15 Jun 2020 15:16:37 -0700 (PDT)
+        bh=D1JGrcb4VtJwhM/mfk1pWvCfErRPSyrjF6khDNDw6Ls=;
+        b=i578vlGPv1IC4S1CwlgvhV8p/sFWLD3Jf0V3sDoLVrjjD50y3v5RXPFlEX3dXDNVKN
+         SJh9nPYygq1R9j+KAYtP6gZCzLzVdUNL3KYeHU7wM71DVIsHWx6ArfirCxuyVuwTXbmX
+         GenYuSrdyZdzDM/YAeKytTURvVJDwL2EfO9a9+fh2QNAzcOXQjj5R8boNLZ0YWc6juas
+         USc1NF1APSGxqGiupmN2G2h6fzO/kx3foEMniLoFvVZc2o3IdGttqrb6EY1FayJdbB8Q
+         mkie6fV7uYdoCBgAtyLoAPCz+VHnq+TP7B2jo3MEt7jgAcLhsbB2m7VyvPQCw6ZQLSl5
+         vaQA==
+X-Gm-Message-State: AOAM533jJM3C4dxvtvb4OqTaOQEzM6UmQ4e88+W/SvRXv61k8jRJJdaC
+        wmwYMnfGxJYeotGTQFSQzRymlxibeyquHpLI+WqDoWh8rBFYQX86vvme8NK4A3W59Pig8+qs0pd
+        R5ChS02odxAXCkpXSffsiyajA
+X-Received: by 2002:ac8:4742:: with SMTP id k2mr18393742qtp.304.1592259399126;
+        Mon, 15 Jun 2020 15:16:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwis4xPglPp7o+FOHT5OI+c4AKHHUO1bfH47AyrkUm4D6BUmGSmwgXfC3cp9GJLELgwIXDa2g==
+X-Received: by 2002:ac8:4742:: with SMTP id k2mr18393717qtp.304.1592259398932;
+        Mon, 15 Jun 2020 15:16:38 -0700 (PDT)
 Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id w13sm12351509qkb.91.2020.06.15.15.16.35
+        by smtp.gmail.com with ESMTPSA id w13sm12351509qkb.91.2020.06.15.15.16.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 15:16:36 -0700 (PDT)
+        Mon, 15 Jun 2020 15:16:38 -0700 (PDT)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Andrea Arcangeli <aarcange@redhat.com>,
-        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
-Subject: [PATCH 16/25] mm/parisc: Use mm_fault_accounting()
-Date:   Mon, 15 Jun 2020 18:15:58 -0400
-Message-Id: <20200615221607.7764-17-peterx@redhat.com>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 17/25] mm/powerpc: Use mm_fault_accounting()
+Date:   Mon, 15 Jun 2020 18:15:59 -0400
+Message-Id: <20200615221607.7764-18-peterx@redhat.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200615221607.7764-1-peterx@redhat.com>
 References: <20200615221607.7764-1-peterx@redhat.com>
@@ -85,58 +87,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Use the new mm_fault_accounting() helper for page fault accounting.
 
-Avoid doing page fault accounting multiple times if the page fault is retried.
-Also, the perf events for page faults will be accounted too when the config has
-CONFIG_PERF_EVENTS defined.
+cmo_account_page_fault() is special.  Keep that.
 
-CC: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
-CC: Helge Deller <deller@gmx.de>
-CC: linux-parisc@vger.kernel.org
+CC: Michael Ellerman <mpe@ellerman.id.au>
+CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+CC: Paul Mackerras <paulus@samba.org>
+CC: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/parisc/mm/fault.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/powerpc/mm/fault.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/arch/parisc/mm/fault.c b/arch/parisc/mm/fault.c
-index 86e8c848f3d7..eab1ee8d18c6 100644
---- a/arch/parisc/mm/fault.c
-+++ b/arch/parisc/mm/fault.c
-@@ -263,7 +263,7 @@ void do_page_fault(struct pt_regs *regs, unsigned long code,
- 	struct task_struct *tsk;
- 	struct mm_struct *mm;
- 	unsigned long acc_type;
--	vm_fault_t fault = 0;
-+	vm_fault_t fault = 0, major = 0;
- 	unsigned int flags;
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 84af6c8eecf7..6043b639ae42 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -481,8 +481,6 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	if (!arch_irq_disabled_regs(regs))
+ 		local_irq_enable();
  
- 	if (faulthandler_disabled())
-@@ -303,6 +303,7 @@ void do_page_fault(struct pt_regs *regs, unsigned long code,
+-	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+-
+ 	if (error_code & DSISR_KEYFAULT)
+ 		return bad_key_fault_exception(regs, address,
+ 					       get_mm_addr_key(mm, address));
+@@ -604,14 +602,11 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	/*
+ 	 * Major/minor page fault accounting.
  	 */
- 
- 	fault = handle_mm_fault(vma, address, flags);
-+	major |= fault & VM_FAULT_MAJOR;
- 
- 	if (fault_signal_pending(fault, regs))
- 		return;
-@@ -323,10 +324,6 @@ void do_page_fault(struct pt_regs *regs, unsigned long code,
- 		BUG();
- 	}
- 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
--		if (fault & VM_FAULT_MAJOR)
--			current->maj_flt++;
--		else
--			current->min_flt++;
- 		if (fault & VM_FAULT_RETRY) {
- 			/*
- 			 * No need to up_read(&mm->mmap_sem) as we would
-@@ -338,6 +335,7 @@ void do_page_fault(struct pt_regs *regs, unsigned long code,
- 		}
- 	}
- 	up_read(&mm->mmap_sem);
+-	if (major) {
+-		current->maj_flt++;
+-		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs, address);
++	if (major)
+ 		cmo_account_page_fault();
+-	} else {
+-		current->min_flt++;
+-		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+-	}
++
 +	mm_fault_accounting(current, regs, address, major);
- 	return;
- 
- check_expansion:
++
+ 	return 0;
+ }
+ NOKPROBE_SYMBOL(__do_page_fault);
 -- 
 2.26.2
 
