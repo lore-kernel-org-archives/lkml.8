@@ -2,191 +2,129 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AB9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74EA520739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:44:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uBOxov/3"
+	by mail.kernel.org (Postfix) with ESMTP id 9E28920739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgFORoJ (ORCPT
+        id S1731187AbgFORor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFORoI (ORCPT
+        Mon, 15 Jun 2020 13:44:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728585AbgFORoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:44:08 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6CAC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:44:08 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id i4so165849pjd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wgm7Ev6xOl2QQEot2mfMM1wpkg4lvJ2QLEiwDn/B3jI=;
-        b=uBOxov/32G6M+WzbbeeKoJJRPHqhIqhI72gZIkbTttHOpwKq/GjzubnKAFIoRFNjjO
-         NIGrAoRhEVOwI32t+Aa8mdf6esTVi2AMqe0Xfv3M3qPr2k/jZw2hXRsbHjh0dpg0IVhD
-         RqyAGi5/lwH9zc9F3WDF8bWyJGXEzUSOigA7Zj1buqVJDBPhQmOvAI5PE8hMjvC3syn6
-         cItyXXxz+MiVmp5/9ATbddtf7EOCc1gwHEwtWEgPJOM0fAnaCr6Cem1OrYICAKrhBXOy
-         dFxPlS+kCN5+cAGZufkvOHq8S28HQcU7IUmduqNw/SjajG5/RccDQBCcddpAkhrlsS9o
-         3MVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wgm7Ev6xOl2QQEot2mfMM1wpkg4lvJ2QLEiwDn/B3jI=;
-        b=kLdSYA/1pSr1hEEG/ArdhRwSEVQY/n7WXlbJb5HRIqm9pxFmUVrVDUNY7zvFSHFwOW
-         QeCAzHbX0oFxyNZloWCbpkWNysZdADwq4VGKCwmlZ66gl+Kv4crVlj5PU/zaYSSYZaA8
-         Lo1remnxRnWpRnVigDssAdL2LmJPMEzcVavVSf6C7RFyn423DW34FTVi2HwEhQqJjXYP
-         6nRna49WrUMt+4TN9a3W4VvRoteg742Degxouc6ehm1gtg2cHOZCieFK/m+s5HWSBFjV
-         Fnd+34TyPftOO8gkEkTvZBuo1zO3jAmoftu2PgdDT7fBeNARXm0iji9DhUzFWKl0TLkE
-         1KPg==
-X-Gm-Message-State: AOAM532SpXIxScQ8ZlZocOMBg4MFkCD3y3QTWdxlVLImFjyo6UiJj2hy
-        D+c5LHFTEzAKwPRJMre69sFiblmBhV91hHBNAjK6YQ==
-X-Google-Smtp-Source: ABdhPJxKx2HsQOIrpuCT7RS7IzMjTGDuXnl7gxqU+7RJWT8N0ZfcpVdmJ3KVWmKcg9dsjwwH10xrTU+mUtyP82Vnm3o=
-X-Received: by 2002:a17:902:fe8b:: with SMTP id x11mr23019349plm.179.1592243047470;
- Mon, 15 Jun 2020 10:44:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200615062520.GK12456@shao2-debian> <CANn89i+s=oFTq6KFhT0z1CReQPZCGoEPShEFHVvXAmC9sUDH7g@mail.gmail.com>
-In-Reply-To: <CANn89i+s=oFTq6KFhT0z1CReQPZCGoEPShEFHVvXAmC9sUDH7g@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 15 Jun 2020 10:43:56 -0700
-Message-ID: <CAKwvOdkv=L=QKQc7HtOi5ZNdao35m18PMr7ep+4sKv5iogVDLg@mail.gmail.com>
-Subject: Re: net/sched/sch_fq.c:966:12: warning: stack frame size of 1400
- bytes in function 'fq_dump'
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        Mon, 15 Jun 2020 13:44:46 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FHfUGt010936;
+        Mon, 15 Jun 2020 13:44:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31np7brx08-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 13:44:39 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FHfrn1013137;
+        Mon, 15 Jun 2020 13:44:39 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31np7brwyk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 13:44:39 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FHeKHU030081;
+        Mon, 15 Jun 2020 17:44:37 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 31mpe840c8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 17:44:37 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FHiZMp59047984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 17:44:35 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F20B742045;
+        Mon, 15 Jun 2020 17:44:34 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D126842042;
+        Mon, 15 Jun 2020 17:44:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.184.11])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 17:44:33 +0000 (GMT)
+Message-ID: <1592243068.11061.155.camel@linux.ibm.com>
+Subject: Re: [PATCH 4/5] LSM: Define SELinux function to measure security
+ state
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        John Johansen <john.johansen@canonical.com>
+Cc:     Stephen Smalley <stephen.smalley@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 15 Jun 2020 13:44:28 -0400
+In-Reply-To: <2df1bc4f-675d-7868-de5b-1256346f982e@schaufler-ca.com>
+References: <20200613024130.3356-1-nramas@linux.microsoft.com>
+         <20200613024130.3356-5-nramas@linux.microsoft.com>
+         <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
+         <a9a20aa5-963e-5f49-9391-0673fdda378e@linux.microsoft.com>
+         <2df1bc4f-675d-7868-de5b-1256346f982e@schaufler-ca.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_07:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 priorityscore=1501 impostorscore=0 clxscore=1015
+ cotscore=-2147483648 mlxscore=0 lowpriorityscore=0 phishscore=0
+ suspectscore=0 spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006150130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 9:17 AM 'Eric Dumazet' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> On Sun, Jun 14, 2020 at 11:26 PM kernel test robot <lkp@intel.com> wrote:
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   96144c58abe7ff767e754b5b80995f7b8846d49b
-> > commit: 39d010504e6b4485d7ceee167743620dd33f4417 net_sched: sch_fq: add horizon attribute
-> > date:   6 weeks ago
-> > :::::: branch date: 3 hours ago
-> > :::::: commit date: 6 weeks ago
-> > config: arm-randconfig-r006-20200614 (attached as .config)
-> > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project c669a1ed6386d57a75a602b53266466dae1e1d84)
-> > reproduce (this is a W=1 build):
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # install arm cross compiling tool for clang build
-> >         # apt-get install binutils-arm-linux-gnueabi
-> >         git checkout 39d010504e6b4485d7ceee167743620dd33f4417
-> >         # save the attached .config to linux build tree
-> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm
-> >
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> >
-> > >> net/sched/sch_fq.c:966:12: warning: stack frame size of 1400 bytes in function 'fq_dump' [-Wframe-larger-than=]
-> > static int fq_dump(struct Qdisc *sch, struct sk_buff *skb)
-> > ^
->
->
-> This looks like a bug in CLANG on ARM, there is no way fq_dump() could
-> consume so much stack space.
+(Cc'ing John)
 
-You can use
-https://github.com/ClangBuiltLinux/frame-larger-than
-to help debug these.  You might be surprised who's doing larger stack
-allocations than expected.
+On Mon, 2020-06-15 at 10:33 -0700, Casey Schaufler wrote:
+> On 6/15/2020 9:45 AM, Lakshmi Ramasubramanian wrote:
+> > On 6/15/20 4:57 AM, Stephen Smalley wrote:
+> >
+> > Hi Stephen,
+> >
+> > Thanks for reviewing the patches.
+> >
+> >>> +void security_state_change(char *lsm_name, void *state, int state_len)
+> >>> +{
+> >>> +       ima_lsm_state(lsm_name, state, state_len);
+> >>> +}
+> >>> +
+> >>
+> >> What's the benefit of this trivial function instead of just calling
+> >> ima_lsm_state() directly?
+> >
+> > One of the feedback Casey Schaufler had given earlier was that calling an IMA function directly from SELinux (or, any of the Security Modules) would be a layering violation.
+> 
+> Hiding the ima_lsm_state() call doesn't address the layering.
+> The point is that SELinux code being called from IMA (or the
+> other way around) breaks the subsystem isolation. Unfortunately,
+> it isn't obvious to me how you would go about what you're doing
+> without integrating the subsystems.
 
->
->
->
-> > 1 warning generated.
-> >
-> > # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39d010504e6b4485d7ceee167743620dd33f4417
-> > git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > git remote update linus
-> > git checkout 39d010504e6b4485d7ceee167743620dd33f4417
-> > vim +/fq_dump +966 net/sched/sch_fq.c
-> >
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   965
-> > afe4fd062416b1 Eric Dumazet   2013-08-29  @966  static int fq_dump(struct Qdisc *sch, struct sk_buff *skb)
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   967  {
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   968          struct fq_sched_data *q = qdisc_priv(sch);
-> > 48872c11b77271 Eric Dumazet   2018-11-11   969          u64 ce_threshold = q->ce_threshold;
-> > 39d010504e6b44 Eric Dumazet   2020-05-01   970          u64 horizon = q->horizon;
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   971          struct nlattr *opts;
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   972
-> > ae0be8de9a53cd Michal Kubecek 2019-04-26   973          opts = nla_nest_start_noflag(skb, TCA_OPTIONS);
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   974          if (opts == NULL)
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   975                  goto nla_put_failure;
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   976
-> > 65c5189a2b57b9 Eric Dumazet   2013-11-15   977          /* TCA_FQ_FLOW_DEFAULT_RATE is not used anymore */
-> > 65c5189a2b57b9 Eric Dumazet   2013-11-15   978
-> > 48872c11b77271 Eric Dumazet   2018-11-11   979          do_div(ce_threshold, NSEC_PER_USEC);
-> > 39d010504e6b44 Eric Dumazet   2020-05-01   980          do_div(horizon, NSEC_PER_USEC);
-> > 48872c11b77271 Eric Dumazet   2018-11-11   981
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   982          if (nla_put_u32(skb, TCA_FQ_PLIMIT, sch->limit) ||
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   983              nla_put_u32(skb, TCA_FQ_FLOW_PLIMIT, q->flow_plimit) ||
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   984              nla_put_u32(skb, TCA_FQ_QUANTUM, q->quantum) ||
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   985              nla_put_u32(skb, TCA_FQ_INITIAL_QUANTUM, q->initial_quantum) ||
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   986              nla_put_u32(skb, TCA_FQ_RATE_ENABLE, q->rate_enable) ||
-> > 76a9ebe811fb3d Eric Dumazet   2018-10-15   987              nla_put_u32(skb, TCA_FQ_FLOW_MAX_RATE,
-> > 76a9ebe811fb3d Eric Dumazet   2018-10-15   988                          min_t(unsigned long, q->flow_max_rate, ~0U)) ||
-> > f52ed89971adbe Eric Dumazet   2013-11-15   989              nla_put_u32(skb, TCA_FQ_FLOW_REFILL_DELAY,
-> > f52ed89971adbe Eric Dumazet   2013-11-15   990                          jiffies_to_usecs(q->flow_refill_delay)) ||
-> > 06eb395fa9856b Eric Dumazet   2015-02-04   991              nla_put_u32(skb, TCA_FQ_ORPHAN_MASK, q->orphan_mask) ||
-> > 77879147a3481b Eric Dumazet   2016-09-19   992              nla_put_u32(skb, TCA_FQ_LOW_RATE_THRESHOLD,
-> > 77879147a3481b Eric Dumazet   2016-09-19   993                          q->low_rate_threshold) ||
-> > 48872c11b77271 Eric Dumazet   2018-11-11   994              nla_put_u32(skb, TCA_FQ_CE_THRESHOLD, (u32)ce_threshold) ||
-> > 583396f4ca4d6e Eric Dumazet   2020-03-16   995              nla_put_u32(skb, TCA_FQ_BUCKETS_LOG, q->fq_trees_log) ||
-> > 39d010504e6b44 Eric Dumazet   2020-05-01   996              nla_put_u32(skb, TCA_FQ_TIMER_SLACK, q->timer_slack) ||
-> > 39d010504e6b44 Eric Dumazet   2020-05-01   997              nla_put_u32(skb, TCA_FQ_HORIZON, (u32)horizon) ||
-> > 39d010504e6b44 Eric Dumazet   2020-05-01   998              nla_put_u8(skb, TCA_FQ_HORIZON_DROP, q->horizon_drop))
-> > afe4fd062416b1 Eric Dumazet   2013-08-29   999                  goto nla_put_failure;
-> > afe4fd062416b1 Eric Dumazet   2013-08-29  1000
-> > d59b7d8059ddc4 Yang Yingliang 2014-03-12  1001          return nla_nest_end(skb, opts);
-> > afe4fd062416b1 Eric Dumazet   2013-08-29  1002
-> > afe4fd062416b1 Eric Dumazet   2013-08-29  1003  nla_put_failure:
-> > afe4fd062416b1 Eric Dumazet   2013-08-29  1004          return -1;
-> > afe4fd062416b1 Eric Dumazet   2013-08-29  1005  }
-> > afe4fd062416b1 Eric Dumazet   2013-08-29  1006
-> >
-> > :::::: The code at line 966 was first introduced by commit
-> > :::::: afe4fd062416b158a8a8538b23adc1930a9b88dc pkt_sched: fq: Fair Queue packet scheduler
-> >
-> > :::::: TO: Eric Dumazet <edumazet@google.com>
-> > :::::: CC: David S. Miller <davem@davemloft.net>
-> >
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> > _______________________________________________
-> > kbuild mailing list -- kbuild@lists.01.org
-> > To unsubscribe send an email to kbuild-leave@lists.01.org
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CANn89i%2Bs%3DoFTq6KFhT0z1CReQPZCGoEPShEFHVvXAmC9sUDH7g%40mail.gmail.com.
+Casey, I'm not sure why you think there is a layering issue here.
+ There were multiple iterations of IMA before it was upstreamed.  One
+iteration had separate integrity hooks(LIM).  Only when the IMA calls
+and the security hooks are co-located, are they combined, as requested
+by Linus.
 
+There was some AppArmour discussion about calling IMA directly, but I
+haven't heard about it in a while or seen the patch.
 
-
--- 
-Thanks,
-~Nick Desaulniers
+Mimi
