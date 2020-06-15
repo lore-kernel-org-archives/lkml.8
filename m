@@ -2,111 +2,85 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C317FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99BC32068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:12:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p2TtdrCt"
+	by mail.kernel.org (Postfix) with ESMTP id 0A43A2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:13:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592262791;
+	bh=HGJzoC5XExSt4wsgEPUS6ZDs+czaXfcrRPmazD8rgiE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=rn9IkE0VDWZahNtUPAil8Q0Gx13XA0cMyCm9wnRejGmhuImBpd0zEbS+XyHClS+Ww
+	 cGeBnMGhM2BCnZvzr1+EaUlucJGdASHdCdZHeyt0pjJRMUDm6PusN7j6B723Smq6Sn
+	 pyrgJjP251kSPwTRZjWdZORK5+rSxPeNGavGMv78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgFOXM1 (ORCPT
+        id S1726769AbgFOXNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:12:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgFOXM1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:12:27 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31104C061A0E;
-        Mon, 15 Jun 2020 16:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=LtcgqswidDAh1TGx28PEvhiX42PmovYfIp8aD84tuVI=; b=p2TtdrCtmKF8Prq8BRAYMRM8H1
-        rVEvD7B5NsOnv1OtZL3XSB1CFq5x/VPY5ElUsicHyz7npUdIRk3awMp3Mc92QCzi6E9vUQU2GRxVj
-        75uEC4niNvcTTqLOGSQtZTBq12nm4JuLUsrffbS+jsLp/Hbsyh0ViIgHJ27MA62epFLDgo5zyIiJu
-        ViIpl6d4oCPG7BNV9OBdVi2HbpM/o6/lxeWN4MyJIYPxNpypE37UgOnuhuL+eoF4tozUYV1xKp645
-        3Uu6fGz50h9nbleDhfNMoeceSmBQJy82XHK5CwCmsujUhrG815hxb3FGOxq6AReqyBz8kxw5+MYcF
-        yGLEhzTg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkyH7-0007Nh-U6; Mon, 15 Jun 2020 23:12:21 +0000
-Subject: Re: [PATCH 1/4] proc/bootconfig: Fix to use correct quotes for value
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>, stable@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <159197538852.80267.10091816844311950396.stgit@devnote2>
- <159197539793.80267.10836787284189465765.stgit@devnote2>
- <20200615151139.5cc223fc@oasis.local.home>
- <7abefbc81fc6aaefed6bbd2117e7bc97b90babe9.camel@perches.com>
- <20200615172123.1fe77f3c@oasis.local.home>
- <ddb4adb9-bf01-abd4-38dd-d6d064569d6e@infradead.org>
- <20200615184218.752a17fa@oasis.local.home>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a3cbc2cf-7371-3e2b-e794-4fbfc52aaad9@infradead.org>
-Date:   Mon, 15 Jun 2020 16:12:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 19:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725960AbgFOXNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:13:08 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD8D2068E;
+        Mon, 15 Jun 2020 23:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592262788;
+        bh=HGJzoC5XExSt4wsgEPUS6ZDs+czaXfcrRPmazD8rgiE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TSVprE2cHcnj3VQS/DYhJcGT/tVAu1KwGLoLZG0+K6bFoqo5kxrPn2ZR0CtyC1ZG1
+         VwEEJLiIfovpjuTT/DXSnK1hdpgl0YFErq/nrn8qaVNarJjqrMdhIb7mIgaZ9Dnhzx
+         KBk9ABBgvakiwxpgZBObfI+bmaBcHHYwNryUiudw=
+Date:   Mon, 15 Jun 2020 18:18:27 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Thomas Winischhofer <thomas@winischhofer.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] usb: sisusb_con: Use array_size() helper in memcpy()
+Message-ID: <20200615231827.GA21348@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200615184218.752a17fa@oasis.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 3:42 PM, Steven Rostedt wrote:
-> On Mon, 15 Jun 2020 15:30:41 -0700
-> Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
->>>> Please don't infect kernel sources with that style oddity.  
->>>
->>> What do you mean? It's already "infected" all over the kernel, (has
->>> been for years!) and I kinda like it. It makes reading variables much
->>> easier on the eyes, and as I get older, that means a lot more ;-)  
->>
->> Yeah, there is some infection, more in some places than others,
->> but I agree with Joe -- it's not needed or wanted by some of us.
-> 
-> We all have preferences. But for code that I need to review, I prefer
-> it.
-> 
-> Why would you be bothered by it? Which is easier on the eyes to read
-> variables?
+Use array_size() helper instead of the open-coded version in memcpy().
+These sorts of multiplication factors need to be wrapped in array_size().
 
-"to read variables"?  I mostly read code, not variables.
+This issue was found with the help of Coccinelle and, audited and fixed
+manually.
 
->  	struct xbc_node *leaf, *vnode;
->  	const char *val;
-> 	char q;
->  	char *key, *end = dst + size;
->  	int ret = 0;
-> 
-> or
-> 
->  	struct xbc_node *leaf, *vnode;
->  	char *key, *end = dst + size;
->  	const char *val;
-> 	char q;
->  	int ret = 0;
-> 
-> ?
+Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/usb/misc/sisusbvga/sisusb_con.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But yes, we all have preferences. For data declaration, mine is more like
-order of use or some grouping having to do with locality.
-
-cheers.
-
+diff --git a/drivers/usb/misc/sisusbvga/sisusb_con.c b/drivers/usb/misc/sisusbvga/sisusb_con.c
+index cd0155310fea..586d6b01c3c4 100644
+--- a/drivers/usb/misc/sisusbvga/sisusb_con.c
++++ b/drivers/usb/misc/sisusbvga/sisusb_con.c
+@@ -1226,7 +1226,7 @@ sisusbcon_font_set(struct vc_data *c, struct console_font *font,
+ 		sisusb->font_backup = vmalloc(array_size(charcount, 32));
+ 
+ 	if (sisusb->font_backup) {
+-		memcpy(sisusb->font_backup, font->data, charcount * 32);
++		memcpy(sisusb->font_backup, font->data, array_size(charcount, 32));
+ 		sisusb->font_backup_size = charcount;
+ 		sisusb->font_backup_height = font->height;
+ 		sisusb->font_backup_512 = (charcount == 512) ? 1 : 0;
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.27.0
+
