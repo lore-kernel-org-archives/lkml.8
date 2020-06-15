@@ -2,82 +2,150 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A87BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E55B207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A08E20810
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592243884;
-	bh=sNn6POHHZDQ9IACdImpskz4O92eeG7vzTpa1ghfyuIA=;
+	s=default; t=1592243931;
+	bh=elUSy4l9tA6PO/SR7s4RYiLNLDYp6VS0PuvfO3KR6Xg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=amNGZO2CKGTJoAMfrovBoivHkM+zRXKtA1cgb27J6D2h01c6/eAPgAHEj6hiYkOOO
-	 NBkG/P0yTGFReQTzbZKXMIypYi5+iuiKQsTfm3c8v1RuNhnCN4mIIOnTu4lrS9XNP3
-	 Ty5zbl8q+hkx+olkRY2uKSqO8eZ5WbeGFkfL+ZV4=
+	b=TVq9K/f7y/vsSiPOdlHyDbYF/BQZ5Egl+ncek4BsK0xv3/0WVJnxx9hdtdHu6WH3d
+	 Y+e7GgnMtKau1amH7RjIfrsFSFIKYZeYl8azo0F2zKklGqjEtxa0j3kblouPI9+xV8
+	 eIYpDUcZEhubt1JpILcPo/WKS6lwyftz1GLtjWQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgFOR6C (ORCPT
+        id S1731223AbgFOR6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgFOR6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:58:01 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70F16206F1;
-        Mon, 15 Jun 2020 17:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592243881;
-        bh=sNn6POHHZDQ9IACdImpskz4O92eeG7vzTpa1ghfyuIA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vBF2Zxx90O2zggkzdqrAvirH4V7LShHUF+GDy3ptW5L7oxSbyT8KVN/EdksTccAvq
-         uehEHRNxZHyTfjZ9B8RFvonWNW/QM+E0eGz2XLZ8mOvann9+NoXAHxcX/HlQLvQocE
-         7gstnuq2N80VfOQLZgPpIUx6uS69D+ihemIeoGcI=
-Date:   Mon, 15 Jun 2020 10:58:00 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Denis Efremov <efremov@linux.com>, Chao Yu <yuchao0@huawei.com>,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH v3] f2fs: use kfree() instead of kvfree() to free
- superblock data
-Message-ID: <20200615175800.GA117170@google.com>
-References: <20200605181533.73113-1-efremov@linux.com>
- <20200609221446.24537-1-efremov@linux.com>
- <20200609222546.GA24766@sol.localdomain>
+        Mon, 15 Jun 2020 13:58:49 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36971 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFOR6s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 13:58:48 -0400
+Received: by mail-io1-f68.google.com with SMTP id r2so402376ioo.4;
+        Mon, 15 Jun 2020 10:58:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/74HbfroHB61O/mrzbKJJjBB8AZlHWxP2oBPibXkxY8=;
+        b=mEgiCputIv51F50IjHmQC8XZwZ8fj4Q4luzIMPsv+iK089LhJSYdoghMjWXQg7KqZl
+         gEMoWfTz4B4gF46PkYZFNGllU06G60VstN65se6rcSusM1nekabIDKh3lcb4yJ2wHyOD
+         nnZhjCd8K0J6XVf5BexXdYdvgZGRssAxUnqqBZ2Kk6leOQf43KcPkKlJNfbSQS4/q0b8
+         b3tgECBbErdrc2vAu6Tc4kZsnFuOa5Rlxdcv7uatiZUUStYjeqV8YwkNgjmhUPDr6tHD
+         wJBlNEweoGSakYc54I6hda3g7BaqLJi6qPegNgDlXEvyhKy4Y96bDIEGLqJ1Ld+gD7en
+         HxSg==
+X-Gm-Message-State: AOAM533U0kTQYx5U3qIspnDcxM5Gh19nTC93Ayntkspnp61qTyty5w5U
+        0HsgJoBKXBxdaHCZjSmFsA==
+X-Google-Smtp-Source: ABdhPJzHHZp4+2D2CPnREtsOrP4HU0FKnjC7ZBKz9hcq/Ll5x38zJ+ihu5f8fyhIDgmwsspw8rJWgw==
+X-Received: by 2002:a6b:91d4:: with SMTP id t203mr28373543iod.149.1592243927188;
+        Mon, 15 Jun 2020 10:58:47 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id p9sm8303940ile.87.2020.06.15.10.58.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 10:58:46 -0700 (PDT)
+Received: (nullmailer pid 2044691 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:58:44 -0000
+Date:   Mon, 15 Jun 2020 11:58:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCHv2 3/6] power: supply: gpio-charger: add
+ charge-current-limit feature
+Message-ID: <20200615175844.GA2032047@bogus>
+References: <20200605224403.181015-1-sebastian.reichel@collabora.com>
+ <20200605224403.181015-4-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609222546.GA24766@sol.localdomain>
+In-Reply-To: <20200605224403.181015-4-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/09, Eric Biggers wrote:
-> On Wed, Jun 10, 2020 at 01:14:46AM +0300, Denis Efremov wrote:
-> > Use kfree() instead of kvfree() to free super in read_raw_super_block()
-> > because the memory is allocated with kzalloc() in the function.
-> > Use kfree() instead of kvfree() to free sbi, raw_super in
-> > f2fs_fill_super() and f2fs_put_super() because the memory is allocated
-> > with kzalloc().
-> > 
-> > Fixes: 5222595d093e ("f2fs: use kvmalloc, if kmalloc is failed")
-> > Signed-off-by: Denis Efremov <efremov@linux.com>
+On Sat, Jun 06, 2020 at 12:44:00AM +0200, Sebastian Reichel wrote:
+> Add new charge-current-limit feature to gpio-charger.
 > 
-> I don't think "Fixes" is appropriate here.
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/power/supply/gpio-charger.yaml   |  31 ++++
+>  drivers/power/supply/gpio-charger.c           | 140 ++++++++++++++++++
+>  2 files changed, 171 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+> index 30eabbb14ef3..e11cfdc68a51 100644
+> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+> @@ -39,6 +39,25 @@ properties:
+>      maxItems: 1
+>      description: GPIO indicating the charging status
+>  
+> +  charge-current-limit-gpios:
+> +    minItems: 1
+> +    maxItems: 32
+> +    description: GPIOs used for current limiting
+> +
+> +  charge-current-limit-mapping:
+> +    description: List of touples with current in uA and a GPIO bitmap (in
 
-Agreed. I queued this Cl without it. :)
-Thanks,
+s/touples/tuples/
 
-> 
-> kvfree() still works on kmalloc'ed memory; it's just not preferred.
-> 
-> So this is more a cleanup than a fix.
-> 
-> - Eric
+> +      this order). The touples must be provided in descending order of the
+
+and here.
+
+> +      current limit.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    items:
+> +      items:
+> +        - description:
+> +            Current limit in uA
+> +        - description:
+> +            Encoded GPIO setting. Bit 0 represents last GPIO from the
+> +            charge-current-limit-gpios property. Bit 1 second to last
+> +            GPIO and so on.
+
+Seems a bit odd that bit N doesn't represent index N of the gpios.
+
+> +
+>  required:
+>    - compatible
+>  
+> @@ -47,6 +66,12 @@ anyOf:
+>      - gpios
+>    - required:
+>      - charge-status-gpios
+> +  - required:
+> +    - charge-current-limit-gpios
+> +
+> +dependencies:
+> +  charge-current-limit-gpios: [ charge-current-limit-mapping ]
+> +  charge-current-limit-mapping: [ charge-current-limit-gpios ]
+>  
+>  additionalProperties: false
+>  
+> @@ -60,4 +85,10 @@ examples:
+>  
+>        gpios = <&gpd 28 GPIO_ACTIVE_LOW>;
+>        charge-status-gpios = <&gpc 27 GPIO_ACTIVE_LOW>;
+> +
+> +      charge-current-limit-gpios = <&gpioA 11 GPIO_ACTIVE_HIGH>,
+> +                                   <&gpioA 12 GPIO_ACTIVE_HIGH>;
+> +      charge-current-limit-mapping = <2500000 0x00>, // 2.5 A => both GPIOs low
+> +                                     <700000 0x01>, // 700 mA => GPIO A.12 high
+> +                                     <0 0x02>; // 0 mA => GPIO A.11 high
+>      };
