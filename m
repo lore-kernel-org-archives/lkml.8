@@ -2,124 +2,115 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F82C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D3F20810
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2CC207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:38:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gE6dp8cQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbgFONiA (ORCPT
+        id S1730555AbgFONiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:38:00 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45888 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730167AbgFONh7 (ORCPT
+        Mon, 15 Jun 2020 09:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730167AbgFONiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:37:59 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d8so6818491plo.12;
-        Mon, 15 Jun 2020 06:37:58 -0700 (PDT)
+        Mon, 15 Jun 2020 09:38:05 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FF7C061A0E;
+        Mon, 15 Jun 2020 06:38:05 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r7so17191581wro.1;
+        Mon, 15 Jun 2020 06:38:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6A2VRUPxBUIMLQR9yYCehptCwpY51GrOQNgUB87WIm4=;
+        b=gE6dp8cQ114eWfj2kjRIbj5tceBVc+ddyVxx54uO/6zDzDK9YjgMuf9mGISUMMmKDz
+         fu+5m0PpBabL8WYRkngmmCum6nrpGYSuxALrrtXiAVRdBOVvUnkNQn0NRD3CdEDIF3jS
+         w5jipOUxN2wV2Ko7q533g+QGFJ4g5/6tuS5otbH6QT8g7IAedCWqnWcDMHHv6dfJWIN0
+         wb+V5d4YYrJrPUrpaK49Ot8UHBa4rSSc9kKQKk9jO+0AzQUq+QfbwPIibJeF7m9iBhUu
+         lFb5vQdQTW0ApesBHtIhRTtTyDsDT/RDv4tHA8mEvYG7XXobi0v5i/iO4RFeH2n79NjT
+         1bZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=wpyxJv/PM1wE2X/LCvdaNR8aTZBt1o2wUTKPmTumIZU=;
-        b=CSsXKd73Eu0wUabrIH+cLvboO+tmwivYcj1kgyWxe9rm8bqcfjaCIeCXJC35lTqBH6
-         WSVQiWXSsjjlrfcyapo1Vv7biiw12vJ0VPlfijiITfjG2ilAqvKrxYjEJ4KxPauiS/CJ
-         uP6v096yyHIazQafmIhsjylYBMQb7OFMKX8Y/nNxIoBj+6SaOsAVaiKlGEbsgeVYwENJ
-         qN/9BZV3b95KHTGCKw/FuOoqcrCSb1XXvPFHfZVR62LXfC+tJGpw2F6QaTxO+FA+uDhL
-         A3vC2LJwIK9BBihD2OWxnFAB6Ru1tIp+SOXg+pF14YxsAGQdZvTTrHIjR3ofnHN51vUf
-         tLow==
-X-Gm-Message-State: AOAM531MZuy3vCDbiOzBgsMXXtucnr32BJSDknEOzu3YXwjcoDZRRB3s
-        WDopc4e1dOR7vQkCMjH5kIc8XTZf
-X-Google-Smtp-Source: ABdhPJyr/l0oRGL6uU3APS2OcIqbEqYfER6YeVxPtUFty159+MQPg+GUVoGGRpPJ2VVLgigRmJJ6VQ==
-X-Received: by 2002:a17:902:eed4:: with SMTP id h20mr922321plb.134.1592228277890;
-        Mon, 15 Jun 2020 06:37:57 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id e12sm14177046pfj.137.2020.06.15.06.37.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 06:37:57 -0700 (PDT)
-Subject: Re: [PATCH] IB/srpt: Fix a potential null pointer dereference
-To:     Jing Xiangfeng <jingxiangfeng@huawei.com>, dledford@redhat.com,
-        jgg@ziepe.ca
-Cc:     linux-rdma@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20200615091220.6439-1-jingxiangfeng@huawei.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <7366b608-4474-cfaa-c465-957fd2d2366d@acm.org>
-Date:   Mon, 15 Jun 2020 06:37:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6A2VRUPxBUIMLQR9yYCehptCwpY51GrOQNgUB87WIm4=;
+        b=tsbSD15l4EHzEDLie56OieG9D5x9cje1eDckSvfPcIRslYivniyWlRYUGzbeyOcerH
+         KPXjK9Z0FzbumJ9NOkg8/qfk0LuFbNq5cKDBjD87B7cAqGOTmKcIhtkbMjYbRm6iV+0k
+         Fq/tRhhQt4dHsQ+ol8VIxLswUTiedronhYl7SvLM/MuvZKa/SVLvzoCPpgtjlrSLVjx4
+         LagZaCYGTjsN0bagFSW45NGxtvyJ4PjzkC/+DfxbsWruEqkRY+6EtaDNlkm33BfOgxoZ
+         QFxChEYsK+xR+o+/hHh12T4MLDMRm7YETpkBJ3qR9HCEEKVAUmVauDUQVuIVfXYq0SxO
+         CLIw==
+X-Gm-Message-State: AOAM532aGa03LNJ9ISAhcDOA5RQiOlb7/Cv8XPiCDg2jeY1gb/HJs6n3
+        McY6OFo3qwrJcdO3IY52T/0JE7dv
+X-Google-Smtp-Source: ABdhPJwOPEjXrfC2UmSbyWXvtITfiYi+xA2OUdX1KJUrfG5SKbcABWv2Ir0Hu9wU13+Bgv8VyEhuiw==
+X-Received: by 2002:a05:6000:10c3:: with SMTP id b3mr30697121wrx.53.1592228283249;
+        Mon, 15 Jun 2020 06:38:03 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.151])
+        by smtp.gmail.com with ESMTPSA id u4sm22839520wmb.48.2020.06.15.06.38.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 06:38:02 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     jiufei.xue@linux.alibaba.com
+Subject: [PATCH 1/1] io_uring: fix lazy work init
+Date:   Mon, 15 Jun 2020 16:36:30 +0300
+Message-Id: <a75c1537cc655cb766e8e2517e18f74e13d60f1b.1592228129.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200615091220.6439-1-jingxiangfeng@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-15 02:12, Jing Xiangfeng wrote:
-> In srpt_cm_req_recv(), it is possible that sdev is NULL,
-> so we should test sdev before using it.
-> 
-> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-> ---
->  drivers/infiniband/ulp/srpt/ib_srpt.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-> index 98552749d71c..72053254bf84 100644
-> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-> @@ -2143,7 +2143,7 @@ static int srpt_cm_req_recv(struct srpt_device *const sdev,
->  			    const struct srp_login_req *req,
->  			    const char *src_addr)
->  {
-> -	struct srpt_port *sport = &sdev->port[port_num - 1];
-> +	struct srpt_port *sport;
->  	struct srpt_nexus *nexus;
->  	struct srp_login_rsp *rsp = NULL;
->  	struct srp_login_rej *rej = NULL;
-> @@ -2162,6 +2162,7 @@ static int srpt_cm_req_recv(struct srpt_device *const sdev,
->  	if (WARN_ON(!sdev || !req))
->  		return -EINVAL;
->  
-> +	sport = &sdev->port[port_num - 1];
->  	it_iu_len = be32_to_cpu(req->req_it_iu_len);
->  
+Don't leave garbage in req.work before punting async on -EAGAIN
+in io_iopoll_queue().
 
-Please remove the (!sdev || !req) check instead of making the above
-change. It's easy to show that both pointers are always valid.
+[  140.922099] general protection fault, probably for non-canonical
+     address 0xdead000000000100: 0000 [#1] PREEMPT SMP PTI
+...
+[  140.922105] RIP: 0010:io_worker_handle_work+0x1db/0x480
+...
+[  140.922114] Call Trace:
+[  140.922118]  ? __next_timer_interrupt+0xe0/0xe0
+[  140.922119]  io_wqe_worker+0x2a9/0x360
+[  140.922121]  ? _raw_spin_unlock_irqrestore+0x24/0x40
+[  140.922124]  kthread+0x12c/0x170
+[  140.922125]  ? io_worker_handle_work+0x480/0x480
+[  140.922126]  ? kthread_park+0x90/0x90
+[  140.922127]  ret_from_fork+0x22/0x30
 
-Thanks,
+Fixes: 7cdaf587de7c ("io_uring: avoid whole io_wq_work copy for requests
+completed inline")
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Bart.
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 54addaba742d..410b2df16c71 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1105,6 +1105,7 @@ static inline void io_prep_async_work(struct io_kiocb *req,
+ 			req->work.flags |= IO_WQ_WORK_UNBOUND;
+ 	}
+ 
++	io_req_init_async(req);
+ 	io_req_work_grab_env(req, def);
+ 
+ 	*link = io_prep_linked_timeout(req);
+-- 
+2.24.0
+
