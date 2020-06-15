@@ -2,300 +2,146 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A44BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02F002078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592238290;
-	bh=NvZ4xROZpS01Xr+qnNQUx1FmKHE5zI1O4pPdowqV0+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y3bLypNHOiOjlVe+BgpolKmlo4V17nBl8yUe1xAqVt20xxF1aKzlPs5gaqYttC8BJ
-	 CfxIZg0m2r10kASpbAxCWKW/kZAH22vcJ/yAzeHJ1+VDv2pwMmdra3iQDLODgFWYxv
-	 H2MYXxI1mnBb3v8kNE+IkAWKcAl5j12HfzYcsgk8=
+	by mail.kernel.org (Postfix) with ESMTP id 249462078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:26:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijbkIRJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbgFOQYt (ORCPT
+        id S1730764AbgFOQ0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:24:49 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43328 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730837AbgFOQYs (ORCPT
+        Mon, 15 Jun 2020 12:26:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729637AbgFOQ0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:24:48 -0400
-Received: by mail-io1-f67.google.com with SMTP id u13so949543iol.10;
-        Mon, 15 Jun 2020 09:24:47 -0700 (PDT)
+        Mon, 15 Jun 2020 12:26:12 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F74C061A0E;
+        Mon, 15 Jun 2020 09:26:12 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id w20so7811194pga.6;
+        Mon, 15 Jun 2020 09:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=TYrNTlrmIzbmT7MQbSQ47vQPQ5UxVm04h6DXBVDeZMk=;
+        b=ijbkIRJfR21AwWxSRpF2fPyfu+JgSXoqpg7BmQmxgvoM7zti3LiBimpS4AEwtdyY55
+         xypmr1+arzjntgNcn8BifWdwyNGBolrcWxrgri+Rq3uLYBvCwiZfGeA7+BLSnb/fy2be
+         GTHrhW0REwqwYg2xZhm7tf3St94Z2t5+1nE7yf66eNuKEuRPA+lGIQ+kHd4pa4nAwmP6
+         tahDicEruLVheNLCyh3SG6p2ZAP7NxAyKeHCptEw8W6ObQeSi7m5ONbTExjsZh2FWfwE
+         W6rpshIrvSPAgtcqJfEDcNsYiYEdQvpDn/ery5vt5EaEd3JTtfuU5rOPVvEk+Q0ypBnx
+         4vAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YdqlCPeMy6mhxxUsYFBiIEErVyP/IfOhgQot6haL/bk=;
-        b=I5e2QY3eZQrqlGn4yblkXnJhtih4rj+nydKLgcMIQvoGLgVSQVLnXotzdc2Wr7evNl
-         uoSm/mu6TDDorwxO6x1iSt64gnQrV+WZKhN6YeElA8VcAdDCwFUxbMtmta+J7Sf+8jI8
-         Rz5+MqAh1Hc8fXpnqzE/fnK21YRhpZYxEjsLjJYa4IyFw0b6R+DAATT4F5YdYpUeTWfU
-         ExOk7pMg+/AGXrNGiF5wQCITGF7neycb41uBfF+Qhr76dMfw2fcBhiisdvVYJUY5j9Ab
-         Gy/VSF2b0rhKlgvRfVtTHoY8k8GnlFGC0hULG1VoCLexTWAa1i9ixUS/kTGIu81cS1bf
-         6rjQ==
-X-Gm-Message-State: AOAM530054BYeytVx8yAWG361wHbEDKDFD6nn4iIOjDbnddBS3Ve9dtx
-        R92rr7oPr4D1xWuYP6gFfQ==
-X-Google-Smtp-Source: ABdhPJw9jyd07OqpB3eUqIEGtPzpWwPUI8yPAdfXF+9S621Y7f0IepBuQ20G4JgHvwQeMt9CPRwfrA==
-X-Received: by 2002:a5e:dc03:: with SMTP id b3mr29058506iok.27.1592238286532;
-        Mon, 15 Jun 2020 09:24:46 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id g64sm8166922iof.5.2020.06.15.09.24.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 09:24:46 -0700 (PDT)
-Received: (nullmailer pid 1891953 invoked by uid 1000);
-        Mon, 15 Jun 2020 16:24:45 -0000
-Date:   Mon, 15 Jun 2020 10:24:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     ulf.hansson@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        mpa@pengutronix.de, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/3] dt-bindings: mmc: Convert imx esdhc to json-schema
-Message-ID: <20200615162445.GA1885779@bogus>
-References: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
- <1591234886-15351-2-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TYrNTlrmIzbmT7MQbSQ47vQPQ5UxVm04h6DXBVDeZMk=;
+        b=hXsWVLcIjxlgJDJAscz1FQlPIhOGGzMZeiZV7WElUrRovZBemMphRuoDMtP2Ml9sD1
+         Ym15RjEHq6+WoOi6EApsmKg2ooEChbWX6LorSQv1l40dTYhxFMkG8iUCMTpN+TcfjW1a
+         jD6Ks/qrv7F/EuedA0DZYlJLXoROFws8pfFzWK0Nc6NLafuzARTOAGmRTlHscGS35YNB
+         vduoX/Ek5HlBRbWfy3ImeKQr+Iz1+YD5yLz4aDYW3r4Gp+RmtOA0V/PYGcOzgj9+742c
+         Ea1x+RHHek58gsZRv64T6L0eYsJpBp52eGEOZKiwMwDEB0FPwZeSGRDe1owGAAMc/9ZN
+         3HNQ==
+X-Gm-Message-State: AOAM532fdxBTpse374AIMQO296XbY2JDBYym3pyFJLOPmZNlUU8QDpzP
+        DjdrQdUUpVVYeeH3+6ePMDS85GdV
+X-Google-Smtp-Source: ABdhPJwptr8oelZoC62cLr/hOohunZtdiJ/EY2r0Xvs0/j/PYTVVxj2vditwJiciJRH6Y1Gf/EzpLw==
+X-Received: by 2002:a63:d54b:: with SMTP id v11mr21330284pgi.198.1592238371811;
+        Mon, 15 Jun 2020 09:26:11 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g21sm14232286pfh.134.2020.06.15.09.26.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 09:26:10 -0700 (PDT)
+Subject: Re: [PATCH v2 1/4] spi: bcm63xx-spi: add reset support
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        broonie@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200615080309.2897694-1-noltari@gmail.com>
+ <20200615090943.2936839-1-noltari@gmail.com>
+ <20200615090943.2936839-2-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <16650d01-7c5a-21be-35a8-c74ad0a47b45@gmail.com>
+Date:   Mon, 15 Jun 2020 09:26:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591234886-15351-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200615090943.2936839-2-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:41:24AM +0800, Anson Huang wrote:
-> Convert the i.MX ESDHC binding to DT schema format using json-schema
+
+
+On 6/15/2020 2:09 AM, Álvaro Fernández Rojas wrote:
+> bcm63xx arch resets the SPI controller at early boot. However, bmips arch
+> needs to perform a reset when probing the driver.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
-> Changes since V1:
-> 	- add "unevaluatedProperties: false".
-> ---
->  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |  67 -----------
->  .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     | 124 +++++++++++++++++++++
->  2 files changed, 124 insertions(+), 67 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+>  v2: use devm_reset_control_get_exclusive
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> deleted file mode 100644
-> index de1b8bd..0000000
-> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
-> +++ /dev/null
-> @@ -1,67 +0,0 @@
-> -* Freescale Enhanced Secure Digital Host Controller (eSDHC) for i.MX
-> -
-> -The Enhanced Secure Digital Host Controller on Freescale i.MX family
-> -provides an interface for MMC, SD, and SDIO types of memory cards.
-> -
-> -This file documents differences between the core properties described
-> -by mmc.txt and the properties used by the sdhci-esdhc-imx driver.
-> -
-> -Required properties:
-> -- compatible : Should be "fsl,<chip>-esdhc", the supported chips include
-> -	       "fsl,imx25-esdhc"
-> -	       "fsl,imx35-esdhc"
-> -	       "fsl,imx51-esdhc"
-> -	       "fsl,imx53-esdhc"
-> -	       "fsl,imx6q-usdhc"
-> -	       "fsl,imx6sl-usdhc"
-> -	       "fsl,imx6sx-usdhc"
-> -	       "fsl,imx6ull-usdhc"
-> -	       "fsl,imx7d-usdhc"
-> -	       "fsl,imx7ulp-usdhc"
-> -	       "fsl,imx8mq-usdhc"
-> -	       "fsl,imx8mm-usdhc"
-> -	       "fsl,imx8mn-usdhc"
-> -	       "fsl,imx8mp-usdhc"
-> -	       "fsl,imx8qm-usdhc"
-> -	       "fsl,imx8qxp-usdhc"
-> -
-> -Optional properties:
-> -- fsl,wp-controller : Indicate to use controller internal write protection
-> -- fsl,delay-line : Specify the number of delay cells for override mode.
-> -  This is used to set the clock delay for DLL(Delay Line) on override mode
-> -  to select a proper data sampling window in case the clock quality is not good
-> -  due to signal path is too long on the board. Please refer to eSDHC/uSDHC
-> -  chapter, DLL (Delay Line) section in RM for details.
-> -- voltage-ranges : Specify the voltage range in case there are software
-> -  transparent level shifters on the outputs of the controller. Two cells are
-> -  required, first cell specifies minimum slot voltage (mV), second cell
-> -  specifies maximum slot voltage (mV). Several ranges could be specified.
-> -- fsl,tuning-start-tap: Specify the start dealy cell point when send first CMD19
-> -  in tuning procedure.
-> -- fsl,tuning-step: Specify the increasing delay cell steps in tuning procedure.
-> -  The uSDHC use one delay cell as default increasing step to do tuning process.
-> -  This property allows user to change the tuning step to more than one delay
-> -  cells which is useful for some special boards or cards when the default
-> -  tuning step can't find the proper delay window within limited tuning retries.
-> -- fsl,strobe-dll-delay-target: Specify the strobe dll control slave delay target.
-> -  This delay target programming host controller loopback read clock, and this
-> -  property allows user to change the delay target for the strobe input read clock.
-> -  If not use this property, driver default set the delay target to value 7.
-> -  Only eMMC HS400 mode need to take care of this property.
-> -
-> -Examples:
-> -
-> -esdhc@70004000 {
-> -	compatible = "fsl,imx51-esdhc";
-> -	reg = <0x70004000 0x4000>;
-> -	interrupts = <1>;
-> -	fsl,wp-controller;
-> -};
-> -
-> -esdhc@70008000 {
-> -	compatible = "fsl,imx51-esdhc";
-> -	reg = <0x70008000 0x4000>;
-> -	interrupts = <2>;
-> -	cd-gpios = <&gpio1 6 0>; /* GPIO1_6 */
-> -	wp-gpios = <&gpio1 5 0>; /* GPIO1_5 */
-> -};
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> new file mode 100644
-> index 0000000..74db24aa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> @@ -0,0 +1,124 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/fsl-imx-esdhc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Enhanced Secure Digital Host Controller (eSDHC) for i.MX
-> +
-> +maintainers:
-> +  - Shawn Guo <shawn.guo@linaro.org>
-> +
-> +allOf:
-> +  - $ref: "mmc-controller.yaml"
-> +
-> +description: |
-> +  The Enhanced Secure Digital Host Controller on Freescale i.MX family
-> +  provides an interface for MMC, SD, and SDIO types of memory cards.
-> +
-> +  This file documents differences between the core properties described
-> +  by mmc.txt and the properties used by the sdhci-esdhc-imx driver.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx25-esdhc
-> +      - fsl,imx35-esdhc
-> +      - fsl,imx51-esdhc
-> +      - fsl,imx53-esdhc
-> +      - fsl,imx6q-usdhc
-> +      - fsl,imx6sl-usdhc
-> +      - fsl,imx6sx-usdhc
-> +      - fsl,imx6ull-usdhc
-> +      - fsl,imx7d-usdhc
-> +      - fsl,imx7ulp-usdhc
-> +      - fsl,imx8mq-usdhc
-> +      - fsl,imx8mm-usdhc
-> +      - fsl,imx8mn-usdhc
-> +      - fsl,imx8mp-usdhc
-> +      - fsl,imx8qm-usdhc
-> +      - fsl,imx8qxp-usdhc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  fsl,wp-controller:
-> +    description: |
-> +      boolean, if present, indicate to use controller internal write protection.
-> +    type: boolean
-> +
-> +  fsl,delay-line:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Specify the number of delay cells for override mode.
-> +      This is used to set the clock delay for DLL(Delay Line) on override mode
-> +      to select a proper data sampling window in case the clock quality is not good
-> +      due to signal path is too long on the board. Please refer to eSDHC/uSDHC
-> +      chapter, DLL (Delay Line) section in RM for details.
-> +    default: 0
-> +
-> +  voltage-ranges:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32-matrix'
-> +    description: |
-> +      Specify the voltage range in case there are software
-> +      transparent level shifters on the outputs of the controller. Two cells are
-> +      required, first cell specifies minimum slot voltage (mV), second cell
-> +      specifies maximum slot voltage (mV). Several ranges could be specified.
-> +    items:
-> +      items:
-> +        - description: value for minimum slot voltage
-> +        - description: value for maximum slot voltage
-> +    maxItems: 1
-
-This contradicts 'Several ranges could be specified.'
-
-> +
-> +  fsl,tuning-start-tap:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Specify the start dealy cell point when send first CMD19 in tuning procedure.
-
-typo: delay
-
-> +    default: 0
-> +
-> +  fsl,tuning-step:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Specify the increasing delay cell steps in tuning procedure.
-> +      The uSDHC use one delay cell as default increasing step to do tuning process.
-> +      This property allows user to change the tuning step to more than one delay
-> +      cells which is useful for some special boards or cards when the default
-> +      tuning step can't find the proper delay window within limited tuning retries.
-> +    default: 0
-> +
-> +  fsl,strobe-dll-delay-target:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Specify the strobe dll control slave delay target.
-> +      This delay target programming host controller loopback read clock, and this
-> +      property allows user to change the delay target for the strobe input read clock.
-> +      If not use this property, driver default set the delay target to value 7.
-> +      Only eMMC HS400 mode need to take care of this property.
-> +    default: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    mmc@70004000 {
-> +        compatible = "fsl,imx51-esdhc";
-> +        reg = <0x70004000 0x4000>;
-> +        interrupts = <1>;
-> +        fsl,wp-controller;
-> +    };
-> +
-> +    mmc@70008000 {
-> +        compatible = "fsl,imx51-esdhc";
-> +        reg = <0x70008000 0x4000>;
-> +        interrupts = <2>;
-> +        cd-gpios = <&gpio1 6 0>; /* GPIO1_6 */
-> +        wp-gpios = <&gpio1 5 0>; /* GPIO1_5 */
-> +    };
-> -- 
-> 2.7.4
+>  drivers/spi/spi-bcm63xx.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
+> diff --git a/drivers/spi/spi-bcm63xx.c b/drivers/spi/spi-bcm63xx.c
+> index 0f1b10a4ef0c..8ab04affaf7b 100644
+> --- a/drivers/spi/spi-bcm63xx.c
+> +++ b/drivers/spi/spi-bcm63xx.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/err.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/of.h>
+> +#include <linux/reset.h>
+>  
+>  /* BCM 6338/6348 SPI core */
+>  #define SPI_6348_RSET_SIZE		64
+> @@ -493,6 +494,7 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
+>  	struct bcm63xx_spi *bs;
+>  	int ret;
+>  	u32 num_cs = BCM63XX_SPI_MAX_CS;
+> +	struct reset_control *reset;
+>  
+>  	if (dev->of_node) {
+>  		const struct of_device_id *match;
+> @@ -529,6 +531,15 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
+>  		return PTR_ERR(clk);
+>  	}
+>  
+> +	reset = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(reset)) {
+> +		ret = PTR_ERR(reset);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev,
+> +				"failed to get reset controller: %d\n", ret);
+> +		return ret;
+> +	}
+
+This should be devm_reset_control_get_exclusive_optional() for a number
+of reasons the first one being the most important as it reflects reality
+of the HW:
+
+- not all BCM63xx platforms have a dedicated reset line for the SPI
+controller (like the ARM-based SoCs)
+
+- until you also update all Device Tree sources to have a 'resets'
+property in their SPI controller node, this is likely going to be failing
+
+This also applies to patch 3.
+-- 
+Florian
