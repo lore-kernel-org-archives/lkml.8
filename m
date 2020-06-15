@@ -2,103 +2,114 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1115BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAB620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E993020707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbgFOVZC (ORCPT
+        id S1731644AbgFOV1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 17:25:02 -0400
-Received: from mga01.intel.com ([192.55.52.88]:13608 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgFOVZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 17:25:01 -0400
-IronPort-SDR: lP4cxVejspE5QZq7h2ZgrPICGrM3xiQhVaS2mMKEwNPuu81tYYxAQaZDQi0zJrIQMqg6nVXryp
- 95bFB818LBcA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 14:25:01 -0700
-IronPort-SDR: DPbSSKkl15RGLXjpYQfnrBQzsDrL2NKVfrTHzComI5JPwOJAfj8xqnwP2YPVXomnmdcjFehp/x
- VNCrnqd1nQ2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,516,1583222400"; 
-   d="scan'208";a="262830374"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Jun 2020 14:25:00 -0700
-Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 15 Jun 2020 14:25:00 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.56]) by
- ORSMSX159.amr.corp.intel.com ([169.254.11.6]) with mapi id 14.03.0439.000;
- Mon, 15 Jun 2020 14:24:59 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-CC:     "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        "Andrew Donnellan" <ajd@linux.ibm.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
-Thread-Topic: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
-Thread-Index: AQHWQRt0fMmHYsE9aUKb3rSjyAIL46jZyC2AgACD5gCAAAQ1gIAAJA2AgAAFHACAAAbEgIAAA+gAgAATCICAAAmFgP//iy/ggAB8XID//4sJsA==
-Date:   Mon, 15 Jun 2020 21:24:59 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F66C93C@ORSMSX115.amr.corp.intel.com>
-References: <3908561D78D1C84285E8C5FCA982C28F7F66C849@ORSMSX115.amr.corp.intel.com>
- <E39A5DE2-5615-41FF-9953-4F4C4E8499D8@amacapital.net>
-In-Reply-To: <E39A5DE2-5615-41FF-9953-4F4C4E8499D8@amacapital.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 15 Jun 2020 17:27:11 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36157 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgFOV1K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 17:27:10 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 97so14325280otg.3;
+        Mon, 15 Jun 2020 14:27:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JKk9UUE7zWHt2Qbqb1KWLAlQZOdKvtSR2tBzDwT+0k8=;
+        b=aqNOM0mQKzPDbG0gAokGukOEjNluXdCD2AzvFKWZXXV2WkoNmCEvFIxC+5C01MLyjy
+         aI5RVlLcAdS8s7nxM/l4EP2Yuc1BYQw3P5u+OEvZY4TKtCYEBGmruyovDvSb5bvTg+fB
+         +BWyUI2clit9xI+rerpDZuQ3rcAagbObrifxXdXH2g4InvJ1cl+xA3O52gOqPphQvbRK
+         nrtX3oV3XIpdxX6HO961GqT4n1EIuncJF+DWCC5sV8Y5X7ivuTwrQT/DwQnFMvd9VRcf
+         QpCb7wKy6nz2vh+WduREoBdaQHtuPRDU+Bl+Ph4ubdTSKmrBtnFGn5Ej2I0ZHBcwW3cY
+         Ay8g==
+X-Gm-Message-State: AOAM533ow5y7gMy0k4hNcJCDnupHB8OKcUA1ZTW3rsXoqGyTKwlqD0Zn
+        LtCYGS5eBIRjqkx6rUlbENpph+KzHMHsfnY08hS0TA==
+X-Google-Smtp-Source: ABdhPJwKxe804YeQ//bJYzoHJeWs8CG/0trTL80DIjWDkyez4zqA0qZwYwo00/BGcss3dh2WBXmGGTuL56+epTo47PI=
+X-Received: by 2002:a9d:c29:: with SMTP id 38mr21760685otr.107.1592256429423;
+ Mon, 15 Jun 2020 14:27:09 -0700 (PDT)
 MIME-Version: 1.0
+References: <CGME20200504232908eucas1p296927bc7c736ad924cefaea9a546459d@eucas1p2.samsung.com>
+ <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com>
+ <839133dd-8ed4-5fec-c311-ce9f8abf3d5f@samsung.com> <CACvgo50HieMRRb1kK3X0XWXtNmgidYi_OWW9DGCrxT+1q14RWQ@mail.gmail.com>
+In-Reply-To: <CACvgo50HieMRRb1kK3X0XWXtNmgidYi_OWW9DGCrxT+1q14RWQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 15 Jun 2020 23:26:58 +0200
+Message-ID: <CAMuHMdVpT1oCg0LuQXHdoZg-nQTFfk7ZUs=qm+S2oARaPb5DTw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] video: fbdev: amifb: remove dead APUS support
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev <linux-fbdev@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTbyB3aGF04oCZcyB0aGUgUkRNU1IgZm9yPyAgU3VyZWx5IHlvdQ0KPiBoYXZlIHNvbWUgc3Rh
-dGUgc29tZXdoZXJlIHRoYXQgc2F5cyDigJx0aGlzIHRhc2sgaGFzIGEgUEFTSUQu4oCdDQo+IENh
-buKAmXQgeW91IGp1c3QgbWFrZSBzdXJlIHRoYXQgc3RheXMgaW4gc3luYyB3aXRoIHRoZSBNU1I/
-ICBUaGVuLCBvbiAjR1AsIGlmIHRoZSB0YXNrIGFscmVhZHkgaGFzIGEgUEFTSUQsIHlvdSBrbm93
-IHRoZSBNU1IgaXMgc2V0Lg0KDQpXZSBoYXZlIHN0YXRlIHRoYXQgc2F5cyB0aGUgcHJvY2VzcyAo
-Im1tIikgaGFzIGJlZW4gYWxsb2NhdGVkIGEgUEFTSUQuIEJ1dCBub3QgZm9yIGVhY2ggdGFzay4N
-Cg0KRS5nLiBhIHByb2Nlc3MgbWF5IGNsb25lIGEgYnVuY2ggb2YgdGFza3MsIHRoZW4gb25lIG9m
-IHRoZW0gb3BlbnMgYSBkZXZpY2UgdGhhdCBuZWVkcw0KYSBQQVNJRC4gICBXZSBkaWQgaW50ZXJu
-YWxseSBoYXZlIHBhdGNoZXMgdG8gZ28gaHVudCBkb3duIGFsbCB0aG9zZSBvdGhlciB0YXNrcyBh
-bmQNCmZvcmNlIGEgUEFTSUQgb250byBlYWNoLiBCdXQgdGhlIGNvZGUgd2FzIGJpZyBhbmQgdWds
-eS4gQWxzbyBtYXliZSB0aGUgd3JvbmcgdGhpbmcNCnRvIGRvIGlmIHRob3NlIHRocmVhZHMgZGlk
-bid0IGV2ZXIgbmVlZCB0byBhY2Nlc3MgdGhlIGRldmljZS4NCg0KUGV0ZXJaIHN1Z2dlc3RlZCB0
-aGF0IHdlIGNhbiBhZGQgYSBiaXQgdG8gdGhlIHRhc2sgc3RydWN0dXJlIGZvciB0aGlzIHB1cnBv
-c2UuDQoNCkZlbmdodWEgaXMgaGVzaXRhbnQgYWJvdXQgYWRkaW5nIGFuIHg4NiBvbmx5IGJpdCB0
-aGVyZS4NCg0KLVRvbnkNCg==
+Hi Emil,
+
+On Mon, Jun 15, 2020 at 10:38 PM Emil Velikov <emil.l.velikov@gmail.com> wrote:
+> On Tue, 2 Jun 2020 at 11:37, Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+> > On 5/14/20 10:21 PM, Geert Uytterhoeven wrote:
+> > > These #ifdefs are relics from APUS (Amiga Power-Up System), which
+> > > added a PPC board.  APUS support was killed off a long time ago,
+> > > when arch/ppc/ was still king, but these #ifdefs were missed, because
+> > > they didn't test for CONFIG_APUS.
+> >
+> > Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > ---
+> >  drivers/video/fbdev/amifb.c |   63 --------------------------------------------
+> >  1 file changed, 63 deletions(-)
+> >
+> A quick look through my checkout (drm-misc/next aka 5.8 ish), shows
+> multiple other places which check for the define.
+> And a single place where it's being set - the Makefile below.
+>
+> Should those be addressed as well? Or perhaps they are and I've got an old tree.
+
+Only the above apply to APUS support.
+All other below are probably legitimate.
+
+> $ git grep -c __mc68000__
+> arch/m68k/Makefile:1
+> drivers/block/floppy.c:2
+> drivers/ide/ide-probe.c:2
+> drivers/input/misc/hp_sdc_rtc.c:1
+> drivers/input/serio/hp_sdc.c:3
+> drivers/input/serio/hp_sdc_mlc.c:1
+> drivers/net/ethernet/i825xx/82596.c:8
+> drivers/tty/vt/keyboard.c:1
+> drivers/video/fbdev/amifb.c:11
+> include/linux/a.out.h:1
+> include/linux/hp_sdc.h:1
+> include/uapi/linux/a.out.h:1
+> lib/fonts/fonts.c:2
+> lib/mpi/longlong.h:1
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
