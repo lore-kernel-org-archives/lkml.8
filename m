@@ -2,116 +2,105 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD208C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F539C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87206207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592228350;
-	bh=3qgnu+0GrnrqQvzQvAd3xvt44NOkgslNZc7hnvZJ0ds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aQGs1xyy3OMeScLJchNjNR5n1cJ4+PTFQ4SslcE7A69xo1pVxjpbaGH9ztRThitN8
-	 pdpsDQM/d6bhotu+lyR4rDqdwU7M8BlJRc6YO65S4YSrFvYw7YBvU+BG7+coyFK3ZV
-	 hLR34KoLxa0qVKl/Gj6ZdS3gwPZINhJLFaJ5l7PE=
+	by mail.kernel.org (Postfix) with ESMTP id 4DEEF20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:39:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRyoxTnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730527AbgFONjJ (ORCPT
+        id S1730572AbgFONjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:39:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730167AbgFONjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:39:07 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7E5B20739;
-        Mon, 15 Jun 2020 13:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592228347;
-        bh=3qgnu+0GrnrqQvzQvAd3xvt44NOkgslNZc7hnvZJ0ds=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UaQFo1mjO1ynSgYz/iXeLbPZFVmLmsMORfTDaLAo59EvK2SGMTpYWGtTGpBJAgiYx
-         5XVY6lBn7uGKdzbq6jizZLVR/t9EWPYZ4x1PZbWNbGNNfty1ph2HrUg3747QwTE+sK
-         g/1RBnsV1QdoNPH/2NVOLxR0LwMgSe6/WlMuVcHk=
-Date:   Mon, 15 Jun 2020 14:39:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Message-ID: <20200615133905.GV4447@sirena.org.uk>
-References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
- <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
- <20200611134042.GG4671@sirena.org.uk>
- <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612101357.GA5396@sirena.org.uk>
- <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612141611.GI5396@sirena.org.uk>
- <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615123553.GP4447@sirena.org.uk>
- <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        Mon, 15 Jun 2020 09:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730553AbgFONjU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:39:20 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71C0C061A0E;
+        Mon, 15 Jun 2020 06:39:20 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id g12so6819473pll.10;
+        Mon, 15 Jun 2020 06:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ah0UfBo3/l6OYZWIRiXA6j4YsIUsHqux+pOpb5M0AY0=;
+        b=sRyoxTnYJw2jFmNQCcAlCZCtb0wgrwD6mfvXsnk5zIU7TxEzSW0kSqswa/6u2er8te
+         ewa8n2nGw0nhdCdQilNylI6vN5qEF80C/CyBZPuIOX5FN/BH/9cDHbOFjhxFgMNVIVYL
+         SWx8xsGbtyARU2UFqXdqcf2DJGTUPrBdErgsapVFGfiIgSRtHAPOHhz5uQV9H/em8yfe
+         8FO3dQjIzhHcjl0OlAfu22FZCxRNqg7L1XjS2DGhCo2iFZiggmiE4zSQScxoZqVVgxu0
+         cJ1v4jYii0Gy6rwACTsfd6uSbLFB4qiStpRMyA+PVZAjSRPNEieKm1qBbHOt/t7Nfwqv
+         AfvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ah0UfBo3/l6OYZWIRiXA6j4YsIUsHqux+pOpb5M0AY0=;
+        b=ineuRsCAM7PtqT+vwROJkFtlmtmlPZ0cK4pIu1AxSr+yxayy9CKESZph07QvAfbh38
+         jT2v7LVQsLLSMw00teaKQEMZm2ryNtYKKOERxTSLYkMZzkwPqD4qZJymy6pZLdTTQpbJ
+         tsmPdpil2cxgExcGktbKe3cXkwu20z/k2oyD+np0PXL1tEG3gbavUowG4PyZoDrX3YVR
+         sMO4egiA69WUj4MUzyNYdJLGsJ6EkjyArlbfvH+Dj2xFjfnfI8H2Ve5jwey0BwXWRl8X
+         0+oPdzIqG5gIcB1q+YYNvX5Tze0aVbmK1TNQxPmluFTEHlAkmKAR9gGzb4Ui52ZLpSFc
+         t79Q==
+X-Gm-Message-State: AOAM531HtGO8fnQHhLBKwuqSMsNUFFTxO44LQ09eim9qb3E+T+Ha/qfK
+        sh2eswKGA6CzLQGmLl9zTVYkjNzuOFDRadvBXauNlIts1B8=
+X-Google-Smtp-Source: ABdhPJwe1BbP2x4NoKm3Y3Nenvcs1PIHbm8BsXJg3nxaVSU8wov2jEBcJw5uT1/kfK1ZnyZI4sMlWjPhNaziBXc760k=
+X-Received: by 2002:a17:902:b206:: with SMTP id t6mr21713377plr.262.1592228360257;
+ Mon, 15 Jun 2020 06:39:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="v7CWsE/Dy737oYst"
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1592227348.git.jan.kiszka@siemens.com>
+In-Reply-To: <cover.1592227348.git.jan.kiszka@siemens.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 15 Jun 2020 16:39:07 +0300
+Message-ID: <CAHp75VeudX2M0Fo5=m3UA874mighn6dEMaQkF5TOZ6rqGrvDSw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] gpio: Add support for the PCAL9535
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 15, 2020 at 4:22 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+>
+> Changes in v3:
+>  - extend also I2C table
+>  - tag "Datasheet:" in commit log
 
---v7CWsE/Dy737oYst
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks!
 
-On Mon, Jun 15, 2020 at 01:35:01PM +0000, Robin Gong wrote:
-> On 2020/06/15 20:36 Mark Brown <broonie@kernel.org> wrote:=20
+>
+> Changes in v2:
+>  - add dt binding update
+>
+> Jan
+>
+> Jan Kiszka (2):
+>   dt-bindings: gpio: pca953x: add nxp,pcal9535
+>   gpio: pca953x: Add support for the PCAL9535
+>
+>  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
+>  drivers/gpio/gpio-pca953x.c                             | 2 ++
+>  2 files changed, 3 insertions(+)
+>
+> --
+> 2.26.2
+>
 
-> > If we see an error in transfer_one() it could be from anything, we've n=
-o idea
-> > what happened on the bus - the controller may have got part way through=
- the
-> > transfer before failing.
 
-> Then how about choosing specific error code for such dma not ready case w=
-here
-> nothing went out on the bus neither?=20
-
-Yes, that's what I suggested.
-
---v7CWsE/Dy737oYst
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nefgACgkQJNaLcl1U
-h9DWzwgAgNLfdSBegzo4C8SrkVYTpfvlAgdjrdeptqUR28cvfXCkLWGWKP746yJu
-xryCPDQEAA8Yn2LAl8V7oYvPaj+oBAZIzcwv4xcxNZK1h9rLUqmLJkbWkttPHUVx
-IcbbLwXlRrlx3orkN3wCIqvzRyRnVQ2/5VDV0Ve2tk/s09hbttNZB/XGX+ZjYXnY
-pM/PW4VOskZZ8SG5UU9roeIPPQOsKbTjFOO9A5PZnc6hGszNIS3GTrFwZ1b3X1Mg
-ksihianoVYK7jBAPJU/CBNuPj3LOp8EQJzpeGMnnFt4ZQQHssKxA0YbQdETcu7ZS
-d9yRgl1CHN1yTDEutwavhC7CgG9rsw==
-=0EvL
------END PGP SIGNATURE-----
-
---v7CWsE/Dy737oYst--
+-- 
+With Best Regards,
+Andy Shevchenko
