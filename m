@@ -2,136 +2,148 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90153C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 694F72076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204AB2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="wyFY2lG6"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FNZgppN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbgFOMd1 (ORCPT
+        id S1729901AbgFOMeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:33:27 -0400
-Received: from mail-eopbgr140077.outbound.protection.outlook.com ([40.107.14.77]:59461
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729642AbgFOMd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:33:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fq+6LR+nmb3A6/W1lDgVjRhawSQMcUnN1tUYuYiRvZcCenKd7UKqCbS88lhDPS+Jc4aO/llkm4GUiGYF9uws1zG+dQLNRLHbP3hgztHflY+bcBAPFICuYmvCGXuyXlu20sSsQ/O/Mmo10+d2ec9/DvVGDTVSLbKOlfu6p/4Fyk3Vq7z+M31PNDE8QU97XCiQ49t7h7UpcNC/ilZs73XKaQBDgjF4y3oJKphQsHQemgxaCl2DWOUMcnQ03v3q9CIDBNX2bd1JgqYOPED4lCxhIgw612ia0CbVWkjRc+aUiEJto8z2PZ66tDaeNWQJ1sjMhsPfCjDdsfBnCrGimAegfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vl2o6Au9c7d9mdMKv87uvwJw1Gn5H4DRQObBRiRrTpA=;
- b=RQq8XWaO/ZOrW7wbwa9TXyaMHbAtW59MXX2nbz7SmyMmylbNHQtnZO2jUasKUMCOh9iCG5EblSzlGJ+VR9MTGvc27v7IBnhilivZvSCxrTe+awNwQLQzQEVEZPe2IQK+eXWoh5NolWWC7MUF4yfa63aN1TZWa99yLOogEYCPlLuhQbztH1gb5uWlAWZQdOmlVA22R/bh/PLSZtZYQh33YL69TRZo5+PXEKdp6SmI/LJ1XRm3mDVvbjbLy4eLfM7qrTbTIqtyRsh2c07sgN9Ustu2HQuOJx42bLd8kTSVMoyb/gHzcVrUBx11J1ppNJ/YImeIG5rHRyDRs86TA19fVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vl2o6Au9c7d9mdMKv87uvwJw1Gn5H4DRQObBRiRrTpA=;
- b=wyFY2lG6KeDWwsdmZ9sHI/BjmuvKpaaHkD0fj2QNdZ2p6H7mJM29XZzwAHrICLEl3UN8vDDWVgEirGydYc4VG5mr2ajSGSiigaEYqtv4TflzEhjVT4b3V8QTCtbnecR1/Uz7ZRn3F+pGCh/mAw+UldG+qk/PAM2zW7B1+3Y2W1c=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:52::13)
- by AM6PR10MB2967.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:ed::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Mon, 15 Jun
- 2020 12:33:23 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::6d54:9ddd:f235:d379]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::6d54:9ddd:f235:d379%5]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
- 12:33:23 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: RE: [PATCH v3 0/2] Resolve revision handling and add support for DA
- silicon
-Thread-Topic: [PATCH v3 0/2] Resolve revision handling and add support for DA
- silicon
-Thread-Index: AQHWFKbAxolLPFA1QUK2S7dHIqCGEKjZ+NMw
-Date:   Mon, 15 Jun 2020 12:33:23 +0000
-Message-ID: <AM6PR10MB22634185776E32DDE236CB0C809C0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <cover.1587120185.git.Adam.Thomson.Opensource@diasemi.com>
-In-Reply-To: <cover.1587120185.git.Adam.Thomson.Opensource@diasemi.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: diasemi.com; dkim=none (message not signed)
- header.d=none;diasemi.com; dmarc=none action=none header.from=diasemi.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [146.199.34.209]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8951b1bf-1d71-4d19-1897-08d811284b8e
-x-ms-traffictypediagnostic: AM6PR10MB2967:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB2967CAB248C415AEEAA8785FA79C0@AM6PR10MB2967.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 04359FAD81
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ifHfN0nuDkqJnsUypGuVEXutmFd6ah2karXA1BqeTYQP5uI/mJobem/u2dm1Y0gWIJkCabngpwRqLUnKyeobl+D+blq9fOj/XUZlnkZZTbkKPeVFJlCmF9pjipDDVvMuRROR9FQ04RNxuqWJQQKY6NwtSFpuwYYRmRxnw7nD+ZWRWot7ldPgnf7l0EYf1hv1izmrRtWoOZiw+yaA+OmXvM/UjQ+tfQ8Be0ipAd6iFx1uCRJ15Bo9IPZ649/GK79Gm7kcr+e/K4VYy0KAbxcWBxD8RsB6a7i+5lNCxeXE5PX8P5cZq6fd0rquutTjffDl
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(39850400004)(136003)(26005)(33656002)(83380400001)(4326008)(8676002)(316002)(2906002)(9686003)(110136005)(478600001)(7696005)(55016002)(54906003)(8936002)(76116006)(5660300002)(86362001)(52536014)(66446008)(71200400001)(64756008)(6506007)(66556008)(53546011)(4744005)(107886003)(66476007)(66946007)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: N0h5fGtCymwZaAGd4F+erJ2aedLSL0eoMGx9IeLShevjD/HmgytpeOHejkrHotyhM9XbnxW4aVHe5H0docUgW/DT+ooLqSWElnXOW6R9hWLLEUJV4xKLFCUKQm3oBui7GNFZgQanH2Ba/W+m2yGd/K+GlvHR5fSjn/AgxpvwjVdSRfqccW+3VJ6uimW4g8Zwc/rtfkyzZbFej/RKgNwo3RAi4zAVtaeOOuOQsKI0jr0RzCvlaDjzskhW41t6NuIQoFBATB1wVEcEUoxQ8ad1K/09o+4XfskNeQGDWNfUaf9EfXuK/9KBmeo+BS8cc/TedDeG8dLNliaf77R22vfBcXxF0Z71FtW5UYxg4EBHqN5vFQMtdQunZDTMMkTGP/PFpe46TJIeDQQlcK9/AKjnfYy1JGp8m1iFMyDsL6PR2FJybeCHUEdTM8UVdQxG0IHMqZnoZcviyCg4a6Hf+D2tYW4UHuMhR1P4Baah4B/Hb9G2jLCddkDWmme8JmkB/Q5M
-Content-Type: text/plain; charset="us-ascii"
+        Mon, 15 Jun 2020 08:34:18 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51412 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbgFOMeQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:34:16 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FCGm58071550;
+        Mon, 15 Jun 2020 12:33:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=VfB/lu0AO11ypagGnxWqguiuvq46jiw7VSNH802i9v0=;
+ b=FNZgppN31eRIYqIWCPvoie+HIghJzA0839ih/4QuvBoyjpDs9AztSyNaSrH9kJmSo4R3
+ mDsBK7H8K84zCpQvrWgZrRW1aTE7+uqqrwALHiY9SZiq70CmcvKFbnL10rZ0DmZI9maG
+ LupyZj159TRdmeYlch79GK6N0Dp4hPSCn6Altpb6A3U9FAAiZf2vdl9bMnIgbPN55Q1j
+ VcvHLuQWiucK0HKNaq6kAOr+9Vs5kyBM9a6oibgKhDp/8bAf1sIQq4Q4t7DBpH9V4JCR
+ mXPQT2RcLo+mY7/F+BHnxzDrnfyzsX1Nf3QxC+gNz5HiHigDEIBUFs51JDrx3k0cgxlZ zQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31p6e7rs53-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 15 Jun 2020 12:33:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FCIuI0188381;
+        Mon, 15 Jun 2020 12:33:52 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31p6dd6164-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 12:33:51 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05FCXfcc027358;
+        Mon, 15 Jun 2020 12:33:42 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Jun 2020 05:33:41 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: [PATCH v2] SUNRPC: Add missing definition of
+ ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <9e9882a2fb57b6f9d98a0a5d8b6bf9cff9fcbd93.1592202173.git.christophe.leroy@csgroup.eu>
+Date:   Mon, 15 Jun 2020 08:33:40 -0400
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8951b1bf-1d71-4d19-1897-08d811284b8e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 12:33:23.6453
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kSHoBAehURV9wv2BNQazt/rgCD7hVAxfjyCegHhhEZXT+o+ZieifnHd+BpP8qgcQ3WHrj9jN5wmMDu40zc6OaaMPc/i7GE8YtFozzmagH3U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2967
+Message-Id: <733E4CAF-A9E5-491F-B0C7-69CA84E5DFA5@oracle.com>
+References: <9e9882a2fb57b6f9d98a0a5d8b6bf9cff9fcbd93.1592202173.git.christophe.leroy@csgroup.eu>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.14)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9652 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150100
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9652 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
+ impostorscore=0 bulkscore=0 clxscore=1015 malwarescore=0 suspectscore=0
+ mlxscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
+ cotscore=-2147483648 priorityscore=1501 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17 April 2020 11:56, Adam Thomson wrote:
 
-> This patch set fixes the currently broken revision handling in the driver=
-'s
-> i2c_probe() function and then adds DA support to existing permitted revis=
-ions.
 
-Do I need to resend this patch, or will you still pick up the original mail
-submission from April, Lee?
+> On Jun 15, 2020, at 2:25 AM, Christophe Leroy =
+<christophe.leroy@csgroup.eu> wrote:
+>=20
+> Even if that's only a warning, not including asm/cacheflush.h
+> leads to svc_flush_bvec() being empty allthough powerpc defines
+> ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE.
+>=20
+>  CC      net/sunrpc/svcsock.o
+> net/sunrpc/svcsock.c:227:5: warning: =
+"ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]
+> #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+>     ^
+>=20
+> Include linux/highmem.h so that asm/cacheflush.h will be included.
+>=20
+> Reported-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Fixes: ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()")
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
+LGTM.
+
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
+
+
+> ---
+> v2: Use linux/highmem.h instead of asm/cacheflush.sh
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+> net/sunrpc/svcsock.c | 1 +
+> 1 file changed, 1 insertion(+)
 >=20
-> v3:
->  - Replaced magic numbers around I2C paged access code with enums and
-> defines
->  - Small style tidy ups as requested by Lee Jones
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index 5c4ec9386f81..c537272f9c7e 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -44,6 +44,7 @@
+> #include <net/tcp.h>
+> #include <net/tcp_states.h>
+> #include <linux/uaccess.h>
+> +#include <linux/highmem.h>
+> #include <asm/ioctls.h>
 >=20
-> v2:
->  - Use raw I2C read access instead of a temporary regmap to interrogate c=
-hip and
->    variant id registers
+> #include <linux/sunrpc/types.h>
+> --=20
+> 2.25.0
 >=20
-> Adam Thomson (2):
->   mfd: da9063: Fix revision handling to correctly select reg tables
->   mfd: da9063: Add support for latest DA silicon revision
->=20
->  drivers/mfd/da9063-core.c            |  31 ----
->  drivers/mfd/da9063-i2c.c             | 271 +++++++++++++++++++++++++++++=
-++---
-> -
->  include/linux/mfd/da9063/core.h      |   1 +
->  include/linux/mfd/da9063/registers.h |  15 +-
->  4 files changed, 257 insertions(+), 61 deletions(-)
->=20
-> --
-> 1.9.1
+
+--
+Chuck Lever
+
+
 
