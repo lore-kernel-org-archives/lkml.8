@@ -8,48 +8,48 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3944A2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B032078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kjgcxNYf"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fR9YHZOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730558AbgFOPsZ (ORCPT
+        id S1730577AbgFOPsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:48:25 -0400
-Received: from m12-14.163.com ([220.181.12.14]:47924 "EHLO m12-14.163.com"
+        Mon, 15 Jun 2020 11:48:54 -0400
+Received: from m12-14.163.com ([220.181.12.14]:48866 "EHLO m12-14.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbgFOPsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:48:23 -0400
+        id S1730321AbgFOPsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 11:48:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=YMUhu
-        63e9pG6IJUwXtaIbBjPPSnxaWDr22aF9kaPBTQ=; b=kjgcxNYfJQJ9GtQTXO/3q
-        aRADLRQQCd96rQN54qUAumLOWHSJmjGeWVkLr4giTxKNy58ITdfeKaBEmMZ3fXrO
-        2gLZ7afuTIL0/PS2H/zlYkl6/zRBpNF2waMo8OqqGapbGKohT8VgbviTO3qvaan0
-        A0h1uo5pwrVAiHYRtUOAw4=
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=VbFE9
+        pBPE0+LUCXWNZbyiaEtK5o14VIgrm4p2bj0358=; b=fR9YHZOSBBeX8zC2lB2j+
+        GfPrLsSfN4B9sjzsjYVnjo40chU7XCxlhCkC5wNpB30Rm33ZRpRpwtyRBN9iAD8z
+        0sQvIl7jzVmp+G4H++Lzw6O0wbxqPdL7crDyoi8+HlZbXCmpOn2zUae/Md6sc0eC
+        Me0akYvuw5sY2h4JXHno8Q=
 Received: from SZA191027643-PM.china.huawei.com (unknown [223.74.115.177])
-        by smtp10 (Coremail) with SMTP id DsCowACXn9s7jOdepjg4Gw--.52954S5;
-        Mon, 15 Jun 2020 22:57:02 +0800 (CST)
+        by smtp10 (Coremail) with SMTP id DsCowACXn9s7jOdepjg4Gw--.52954S3;
+        Mon, 15 Jun 2020 22:57:00 +0800 (CST)
 From:   yunaixin03610@163.com
 To:     linux-kernel@vger.kernel.org
 Cc:     yunaixin <yunaixin@huawei.com>
-Subject: [PATCH 3/5] Huawei BMA: Adding Huawei BMA driver: host_veth_drv
-Date:   Mon, 15 Jun 2020 22:56:56 +0800
-Message-Id: <20200615145658.956-4-yunaixin03610@163.com>
+Subject: [PATCH 1/5] Huawei BMA: Adding Huawei BMA driver: host_edma_drv
+Date:   Mon, 15 Jun 2020 22:56:54 +0800
+Message-Id: <20200615145658.956-2-yunaixin03610@163.com>
 X-Mailer: git-send-email 2.26.2.windows.1
 In-Reply-To: <20200615145658.956-1-yunaixin03610@163.com>
 References: <20200615145658.956-1-yunaixin03610@163.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DsCowACXn9s7jOdepjg4Gw--.52954S5
-X-Coremail-Antispam: 1Uf129KBjvAXoWkJr1xCF43KF4UWw13Cr1rZwb_yoW3tr43Ao
-        ZIqrsakrn3Gw17ArZ8Gan3Kr17Z34DGayDZr4YkrZ5X3Z5Zw4jqrWDGry3Jr1Fgw4Iqa48
-        WFsFqr4SqayUZw1rn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-        AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUac_-DUUUU
+X-CM-TRANSID: DsCowACXn9s7jOdepjg4Gw--.52954S3
+X-Coremail-Antispam: 1Uf129KBjvAXoWkGr4kWw4kCFyDXFyxXr1rXrb_yoWDJr4UJo
+        WfX3ZxXr4rJw17Aw18Cr17WFyUuFy8Za98Jr4SkFWqv3WkJw15JrWUKFWxZr13Xr4rKF4U
+        C3ySvws3XrW8Xr93n29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+        AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU7F1vDUUUU
 X-Originating-IP: [223.74.115.177]
-X-CM-SenderInfo: 51xqtxx0lqijqwrqqiywtou0bp/1tbiDh5E5lXlwspKSQAAsJ
+X-CM-SenderInfo: 51xqtxx0lqijqwrqqiywtou0bp/1tbiVB1E5lUMNSUcagAAsU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,51 +59,83 @@ From: yunaixin <yunaixin@huawei.com>
 
 The BMA software is a system management software offered by Huawei. It supports the status monitoring, performance monitoring, and event monitoring of various components, including server CPUs, memory, hard disks, NICs, IB cards, PCIe cards, RAID controller cards, and optical modules.
 
-This host_veth_drv driver is one of the communication drivers used by BMA software. It depends on the host_edma_drv driver. The host_veth_drv driver will create a virtual net device "veth" once loaded. BMA software will use it to send/receive RESTful messages to/from BMC software.
+This host_edma_drv driver is a PCIe driver used by Huawei BMA software. The main function of it is to control the PCIe bus between BMA software and Huawei 1711 chip. The chip will then process the data and display to users. This host_edma_drv driver offers API to send/receive data for other BMA drivers which want to use the PCIe channel in different ways(eg. host_cdev_drv, host_veth_drv).
 
 Signed-off-by: yunaixin <yunaixin@huawei.com>
 ---
- drivers/net/ethernet/huawei/bma/Kconfig       |    3 +-
- drivers/net/ethernet/huawei/bma/Makefile      |    3 +-
- .../net/ethernet/huawei/bma/veth_drv/Kconfig  |   11 +
- .../net/ethernet/huawei/bma/veth_drv/Makefile |    2 +
- .../ethernet/huawei/bma/veth_drv/veth_hb.c    | 2508 +++++++++++++++++
- .../ethernet/huawei/bma/veth_drv/veth_hb.h    |  442 +++
- 6 files changed, 2967 insertions(+), 2 deletions(-)
- create mode 100644 drivers/net/ethernet/huawei/bma/veth_drv/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/veth_drv/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.c
- create mode 100644 drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.h
+ drivers/net/ethernet/huawei/Kconfig           |    1 +
+ drivers/net/ethernet/huawei/Makefile          |    1 +
+ drivers/net/ethernet/huawei/bma/Kconfig       |    1 +
+ drivers/net/ethernet/huawei/bma/Makefile      |    5 +
+ .../net/ethernet/huawei/bma/edma_drv/Kconfig  |   11 +
+ .../net/ethernet/huawei/bma/edma_drv/Makefile |    2 +
+ .../huawei/bma/edma_drv/bma_devintf.c         |  597 +++++++
+ .../huawei/bma/edma_drv/bma_devintf.h         |   40 +
+ .../huawei/bma/edma_drv/bma_include.h         |  118 ++
+ .../ethernet/huawei/bma/edma_drv/bma_pci.c    |  533 ++++++
+ .../ethernet/huawei/bma/edma_drv/bma_pci.h    |   94 ++
+ .../ethernet/huawei/bma/edma_drv/edma_host.c  | 1462 +++++++++++++++++
+ .../ethernet/huawei/bma/edma_drv/edma_host.h  |  351 ++++
+ .../huawei/bma/include/bma_ker_intf.h         |   91 +
+ 14 files changed, 3307 insertions(+)
+ create mode 100644 drivers/net/ethernet/huawei/bma/Kconfig
+ create mode 100644 drivers/net/ethernet/huawei/bma/Makefile
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/Makefile
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c
+ create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h
+ create mode 100644 drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h
 
+diff --git a/drivers/net/ethernet/huawei/Kconfig b/drivers/net/ethernet/huawei/Kconfig
+index bdcbface62d7..83ebaee13229 100644
+--- a/drivers/net/ethernet/huawei/Kconfig
++++ b/drivers/net/ethernet/huawei/Kconfig
+@@ -16,5 +16,6 @@ config NET_VENDOR_HUAWEI
+ if NET_VENDOR_HUAWEI
+ 
+ source "drivers/net/ethernet/huawei/hinic/Kconfig"
++source "drivers/net/ethernet/huawei/bma/Kconfig"
+ 
+ endif # NET_VENDOR_HUAWEI
+diff --git a/drivers/net/ethernet/huawei/Makefile b/drivers/net/ethernet/huawei/Makefile
+index 2549ad5afe6d..555aeee2003c 100644
+--- a/drivers/net/ethernet/huawei/Makefile
++++ b/drivers/net/ethernet/huawei/Makefile
+@@ -4,3 +4,4 @@
+ #
+ 
+ obj-$(CONFIG_HINIC) += hinic/
++obj-$(CONFIG_HINIC) += bma/
 diff --git a/drivers/net/ethernet/huawei/bma/Kconfig b/drivers/net/ethernet/huawei/bma/Kconfig
-index 12979128fa9d..21e9f7ee5be6 100644
---- a/drivers/net/ethernet/huawei/bma/Kconfig
+new file mode 100644
+index 000000000000..1a92c1dd83f3
+--- /dev/null
 +++ b/drivers/net/ethernet/huawei/bma/Kconfig
-@@ -1,2 +1,3 @@
- source "drivers/net/ethernet/huawei/bma/edma_drv/Kconfig"
--source "drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig"
-\ No newline at end of file
-+source "drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig"
-+source "drivers/net/ethernet/huawei/bma/veth_drv/Kconfig"
+@@ -0,0 +1 @@
++source "drivers/net/ethernet/huawei/bma/edma_drv/Kconfig"
 \ No newline at end of file
 diff --git a/drivers/net/ethernet/huawei/bma/Makefile b/drivers/net/ethernet/huawei/bma/Makefile
-index c9bbcbf2a388..6ff24d31c650 100644
---- a/drivers/net/ethernet/huawei/bma/Makefile
+new file mode 100644
+index 000000000000..8f589f7986d6
+--- /dev/null
 +++ b/drivers/net/ethernet/huawei/bma/Makefile
-@@ -3,4 +3,5 @@
- # 
- 
- obj-$(CONFIG_BMA) += edma_drv/
--obj-$(CONFIG_BMA) += cdev_drv/
+@@ -0,0 +1,5 @@
++# 
++# Makefile for BMA software driver
++# 
++
++obj-$(CONFIG_BMA) += edma_drv/
 \ No newline at end of file
-+obj-$(CONFIG_BMA) += cdev_drv/
-+obj-$(CONFIG_BMA) += veth_drv/
-\ No newline at end of file
-diff --git a/drivers/net/ethernet/huawei/bma/veth_drv/Kconfig b/drivers/net/ethernet/huawei/bma/veth_drv/Kconfig
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig b/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
 new file mode 100644
 index 000000000000..97829c5487c2
 --- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/veth_drv/Kconfig
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
 @@ -0,0 +1,11 @@
 +#
 +# Huawei BMA software driver configuration
@@ -116,21 +148,20 @@ index 000000000000..97829c5487c2
 +	  This driver supports Huawei BMA Software. It is used 
 +	  to communication between Huawei BMA and BMC software.
 +
-diff --git a/drivers/net/ethernet/huawei/bma/veth_drv/Makefile b/drivers/net/ethernet/huawei/bma/veth_drv/Makefile
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/Makefile b/drivers/net/ethernet/huawei/bma/edma_drv/Makefile
 new file mode 100644
-index 000000000000..c9ab07371ef4
+index 000000000000..46cc51275a71
 --- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/veth_drv/Makefile
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/Makefile
 @@ -0,0 +1,2 @@
-+obj-$(CONFIG_BMA) += host_veth_drv.o
-+host_veth_drv-y := veth_hb.o
-\ No newline at end of file
-diff --git a/drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.c b/drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.c
++obj-$(CONFIG_BMA) += host_edma_drv.o
++host_edma_drv-y := bma_pci.o bma_devintf.o edma_host.o
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c b/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c
 new file mode 100644
-index 000000000000..9471b285ecff
+index 000000000000..7817f58f8635
 --- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.c
-@@ -0,0 +1,2508 @@
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c
+@@ -0,0 +1,597 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/* Huawei iBMA driver.
 + * Copyright (c) 2017, Huawei Technologies Co., Ltd.
@@ -146,2946 +177,3318 @@ index 000000000000..9471b285ecff
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/types.h>
-+#include <linux/kernel.h>
++#include <linux/fs.h>
 +#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/device.h>
-+#include <linux/kthread.h>
-+
-+#include <linux/ethtool.h>
-+#include <linux/netdevice.h>
-+#include <linux/etherdevice.h>
-+#include <linux/skbuff.h>
-+
-+#include <linux/vmalloc.h>
-+#include <linux/atomic.h>
++#include <linux/miscdevice.h>
++#include <asm/ioctls.h>
++#include <linux/slab.h>
++#include <linux/poll.h>
 +#include <linux/proc_fs.h>
-+#include <linux/mm.h>
-+#include <linux/gfp.h>
-+#include <asm/page.h>
++#include <linux/notifier.h>
++#include "../include/bma_ker_intf.h"
++#include "bma_include.h"
++#include "bma_devintf.h"
++#include "bma_pci.h"
++#include "edma_host.h"
 +
-+#include <linux/ip.h>
++static struct bma_dev_s *g_bma_dev;
 +
-+#include "veth_hb.h"
++static ATOMIC_NOTIFIER_HEAD(bma_int_notify_list);
 +
-+#define GET_QUEUE_STAT(node, stat) \
-+	((node) ? ((char *)(node) + (stat)->stat_offset) : NULL)
-+
-+#define GET_SHM_QUEUE_STAT(node, stat) \
-+	(((node) && (node)->pshmqhd_v) ? \
-+	 ((char *)(node)->pshmqhd_v + (stat)->stat_offset) : NULL)
-+
-+#define GET_STATS_VALUE(ptr, pstat) \
-+	((ptr) ? (((pstat)->sizeof_stat == sizeof(u64)) ? \
-+			(*(u64 *)(ptr)) : (*(u32 *)(ptr))) : 0)
-+
-+#define GET_DMA_DIRECTION(type) \
-+	(((type) == BSPVETH_RX) ? BMC_TO_HOST : HOST_TO_BMC)
-+
-+#define CHECK_DMA_QUEUE_EMPTY(type, queue) \
-+	(((type) == BSPVETH_RX && \
-+	  (queue)->pshmqhd_v->head == (queue)->pshmqhd_v->tail) || \
-+	 ((type) != BSPVETH_RX && (queue)->head == (queue)->tail))
-+
-+#define CHECK_DMA_RXQ_FAULT(queue, type, cnt) \
-+	((queue)->dmal_cnt > 1 && (cnt) < ((queue)->work_limit / 2) && \
-+	 (type) == BSPVETH_RX)
-+
-+static u32 veth_ethtool_get_link(struct net_device *dev);
-+
-+int debug;			/* debug switch*/
-+module_param_call(debug, &edma_param_set_debug, &param_get_int, &debug, 0644);
-+
-+MODULE_PARM_DESC(debug, "Debug switch (0=close debug, 1=open debug)");
-+
-+#define VETH_LOG(lv, fmt, args...)    \
-+do {	\
-+	if (debug < (lv))	\
-+		continue;	\
-+	if (lv == DLOG_DEBUG)	\
-+		netdev_dbg(g_bspveth_dev.pnetdev, "%s(), %d, " \
-+		fmt, __func__, __LINE__, ## args);	\
-+	else if (lv == DLOG_ERROR)	\
-+		netdev_err(g_bspveth_dev.pnetdev, "%s(), %d, " \
-+		fmt, __func__, __LINE__, ## args);	\
-+} while (0)
-+
-+#ifdef __UT_TEST
-+u32 g_testdma;
-+
-+u32 g_testlbk;
-+
-+#endif
-+
-+struct bspveth_device g_bspveth_dev = {};
-+
-+static int veth_int_handler(struct notifier_block *pthis, unsigned long ev,
-+			    void *unuse);
-+
-+static struct notifier_block g_veth_int_nb = {
-+	.notifier_call = veth_int_handler,
-+};
-+
-+static const struct veth_stats veth_gstrings_stats[] = {
-+	{"rx_packets", NET_STATS, VETH_STAT_SIZE(stats.rx_packets),
-+	 VETH_STAT_OFFSET(stats.rx_packets)},
-+	{"rx_bytes", NET_STATS, VETH_STAT_SIZE(stats.rx_bytes),
-+	 VETH_STAT_OFFSET(stats.rx_bytes)},
-+	{"rx_dropped", NET_STATS, VETH_STAT_SIZE(stats.rx_dropped),
-+	 VETH_STAT_OFFSET(stats.rx_dropped)},
-+	{"rx_head", QUEUE_RX_STATS, QUEUE_TXRX_STAT_SIZE(head),
-+	 QUEUE_TXRX_STAT_OFFSET(head)},
-+	{"rx_tail", QUEUE_RX_STATS, QUEUE_TXRX_STAT_SIZE(tail),
-+	 QUEUE_TXRX_STAT_OFFSET(tail)},
-+	{"rx_next_to_fill", QUEUE_RX_STATS,
-+	 QUEUE_TXRX_STAT_SIZE(next_to_fill),
-+	 QUEUE_TXRX_STAT_OFFSET(next_to_fill)},
-+	{"rx_shmq_head", SHMQ_RX_STATS, SHMQ_TXRX_STAT_SIZE(head),
-+	 SHMQ_TXRX_STAT_OFFSET(head)},
-+	{"rx_shmq_tail", SHMQ_RX_STATS, SHMQ_TXRX_STAT_SIZE(tail),
-+	 SHMQ_TXRX_STAT_OFFSET(tail)},
-+	{"rx_shmq_next_to_free", SHMQ_RX_STATS,
-+	 SHMQ_TXRX_STAT_SIZE(next_to_free),
-+	 SHMQ_TXRX_STAT_OFFSET(next_to_free)},
-+	{"rx_queue_full", QUEUE_RX_STATS,
-+	 QUEUE_TXRX_STAT_SIZE(s.q_full),
-+	 QUEUE_TXRX_STAT_OFFSET(s.q_full)},
-+	{"rx_dma_busy", QUEUE_RX_STATS,
-+	 QUEUE_TXRX_STAT_SIZE(s.dma_busy),
-+	 QUEUE_TXRX_STAT_OFFSET(s.dma_busy)},
-+	{"rx_dma_failed", QUEUE_RX_STATS,
-+	 QUEUE_TXRX_STAT_SIZE(s.dma_failed),
-+	 QUEUE_TXRX_STAT_OFFSET(s.dma_failed)},
-+
-+	{"tx_packets", NET_STATS, VETH_STAT_SIZE(stats.tx_packets),
-+	 VETH_STAT_OFFSET(stats.tx_packets)},
-+	{"tx_bytes", NET_STATS, VETH_STAT_SIZE(stats.tx_bytes),
-+	 VETH_STAT_OFFSET(stats.tx_bytes)},
-+	{"tx_dropped", NET_STATS, VETH_STAT_SIZE(stats.tx_dropped),
-+	 VETH_STAT_OFFSET(stats.tx_dropped)},
-+
-+	{"tx_head", QUEUE_TX_STATS, QUEUE_TXRX_STAT_SIZE(head),
-+	 QUEUE_TXRX_STAT_OFFSET(head)},
-+	{"tx_tail", QUEUE_TX_STATS, QUEUE_TXRX_STAT_SIZE(tail),
-+	 QUEUE_TXRX_STAT_OFFSET(tail)},
-+	{"tx_next_to_free", QUEUE_TX_STATS,
-+	 QUEUE_TXRX_STAT_SIZE(next_to_free),
-+	 QUEUE_TXRX_STAT_OFFSET(next_to_free)},
-+	{"tx_shmq_head", SHMQ_TX_STATS, SHMQ_TXRX_STAT_SIZE(head),
-+	 SHMQ_TXRX_STAT_OFFSET(head)},
-+	{"tx_shmq_tail", SHMQ_TX_STATS, SHMQ_TXRX_STAT_SIZE(tail),
-+	 SHMQ_TXRX_STAT_OFFSET(tail)},
-+	{"tx_shmq_next_to_free", SHMQ_TX_STATS,
-+	 SHMQ_TXRX_STAT_SIZE(next_to_free),
-+	 SHMQ_TXRX_STAT_OFFSET(next_to_free)},
-+
-+	{"tx_queue_full", QUEUE_TX_STATS,
-+	 QUEUE_TXRX_STAT_SIZE(s.q_full),
-+	 QUEUE_TXRX_STAT_OFFSET(s.q_full)},
-+	{"tx_dma_busy", QUEUE_TX_STATS,
-+	 QUEUE_TXRX_STAT_SIZE(s.dma_busy),
-+	 QUEUE_TXRX_STAT_OFFSET(s.dma_busy)},
-+	{"tx_dma_failed", QUEUE_TX_STATS,
-+	 QUEUE_TXRX_STAT_SIZE(s.dma_failed),
-+	 QUEUE_TXRX_STAT_OFFSET(s.dma_failed)},
-+
-+	{"recv_int", VETH_STATS, VETH_STAT_SIZE(recv_int),
-+	 VETH_STAT_OFFSET(recv_int)},
-+	{"tobmc_int", VETH_STATS, VETH_STAT_SIZE(tobmc_int),
-+	 VETH_STAT_OFFSET(tobmc_int)},
-+};
-+
-+#define VETH_GLOBAL_STATS_LEN	\
-+		(sizeof(veth_gstrings_stats) / sizeof(struct veth_stats))
-+
-+static int veth_param_get_statics(char *buf, const struct kernel_param *kp)
++static int bma_priv_insert_priv_list(struct bma_priv_data_s *priv, u32 type,
++				     u32 sub_type)
 +{
-+	int len = 0;
-+	int i = 0, j = 0, type = 0;
-+	struct bspveth_rxtx_q *pqueue = NULL;
-+	__kernel_time_t running_time = 0;
++	unsigned long flags = 0;
++	int ret = 0;
++	struct edma_user_inft_s *user_inft = NULL;
 +
-+	if (!buf)
-+		return 0;
++	if (type >= TYPE_MAX || !priv)
++		return -EFAULT;
 +
-+	GET_SYS_SECONDS(running_time);
++	user_inft = edma_host_get_user_inft(type);
 +
-+	running_time -= g_bspveth_dev.init_time;
-+
-+	len += sprintf(buf + len,
-+			"================VETH INFO=============\r\n");
-+	len += sprintf(buf + len, "[version     ]:" VETH_VERSION "\n");
-+	len += sprintf(buf + len, "[link state  ]:%d\n",
-+			veth_ethtool_get_link(g_bspveth_dev.pnetdev));
-+	len += sprintf(buf + len, "[running_time]:%luD %02lu:%02lu:%02lu\n",
-+			running_time / (SECONDS_PER_DAY),
-+			running_time % (SECONDS_PER_DAY) / SECONDS_PER_HOUR,
-+			running_time % SECONDS_PER_HOUR / SECONDS_PER_MINUTE,
-+			running_time % SECONDS_PER_MINUTE);
-+	len += sprintf(buf + len,
-+			"[bspveth_dev ]:MAX_QUEUE_NUM :0x%-16x	",
-+			MAX_QUEUE_NUM);
-+	len += sprintf(buf + len,
-+			"MAX_QUEUE_BDNUM :0x%-16x\r\n", MAX_QUEUE_BDNUM);
-+	len += sprintf(buf + len,
-+			"[bspveth_dev ]:pnetdev	  :0x%-16p	",
-+			g_bspveth_dev.pnetdev);
-+	len += sprintf(buf + len,
-+			"ppcidev		 :0x%-16p\r\n",
-+			g_bspveth_dev.ppcidev);
-+	len += sprintf(buf + len,
-+			"[bspveth_dev ]:pshmpool_p:0x%-16p	",
-+			g_bspveth_dev.pshmpool_p);
-+	len += sprintf(buf + len,
-+			"pshmpool_v	  :0x%-16p\r\n",
-+			g_bspveth_dev.pshmpool_v);
-+	len += sprintf(buf + len,
-+			"[bspveth_dev ]:shmpoolsize:0x%-16x	",
-+			g_bspveth_dev.shmpoolsize);
-+	len += sprintf(buf + len,
-+			"g_veth_dbg_lv		:0x%-16x\r\n", debug);
-+
-+	for (i = 0; i < MAX_QUEUE_NUM; i++) {
-+		for (j = 0, type = BSPVETH_RX; j < 2; j++, type++) {
-+			if (type == BSPVETH_RX) {
-+				pqueue = g_bspveth_dev.prx_queue[i];
-+				len += sprintf(buf + len,
-+				"=============RXQUEUE STATIS============\r\n");
-+			} else {
-+				pqueue = g_bspveth_dev.ptx_queue[i];
-+				len += sprintf(buf + len,
-+				"=============TXQUEUE STATIS============\r\n");
-+			}
-+
-+			if (!pqueue) {
-+				len += sprintf(buf + len, "NULL\r\n");
-+				continue;
-+			}
-+
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[pkt	] :%lld\r\n", i,
-+					pqueue->s.pkt);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[pktbyte	] :%lld\r\n", i,
-+					pqueue->s.pktbyte);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[refill	] :%lld\r\n", i,
-+					pqueue->s.refill);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[freetx	] :%lld\r\n", i,
-+					pqueue->s.freetx);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[dmapkt	] :%lld\r\n", i,
-+					pqueue->s.dmapkt);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[dmapktbyte	] :%lld\r\n", i,
-+					pqueue->s.dmapktbyte);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[next_to_fill ] :%d\r\n", i,
-+					pqueue->next_to_fill);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[next_to_free ] :%d\r\n", i,
-+					pqueue->next_to_free);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[head	] :%d\r\n", i,
-+					pqueue->head);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[tail	] :%d\r\n", i,
-+					pqueue->tail);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[work_limit	] :%d\r\n", i,
-+					pqueue->work_limit);
-+			len += sprintf(buf + len,
-+			"=================SHARE=================\r\n");
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[next_to_fill] :%d\r\n", i,
-+					pqueue->pshmqhd_v->next_to_fill);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[next_to_free] :%d\r\n", i,
-+					pqueue->pshmqhd_v->next_to_free);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[head	] :%d\r\n", i,
-+					pqueue->pshmqhd_v->head);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[tail	] :%d\r\n", i,
-+					pqueue->pshmqhd_v->tail);
-+			len += sprintf(buf + len,
-+			"=======================================\r\n");
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[dropped_pkt] :%d\r\n", i,
-+					pqueue->s.dropped_pkt);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[netifrx_err] :%d\r\n", i,
-+					pqueue->s.netifrx_err);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[null_point	] :%d\r\n", i,
-+					pqueue->s.null_point);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[retry_err	] :%d\r\n", i,
-+					pqueue->s.retry_err);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[allocskb_err  ] :%d\r\n",
-+					i, pqueue->s.allocskb_err);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[q_full	] :%d\r\n", i,
-+					pqueue->s.q_full);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[q_emp	] :%d\r\n", i,
-+					pqueue->s.q_emp);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[need_fill	] :%d\r\n", i,
-+					pqueue->s.need_fill);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[need_free	] :%d\r\n", i,
-+					pqueue->s.need_free);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[type_err	] :%d\r\n", i,
-+					pqueue->s.type_err);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[shm_full	] :%d\r\n", i,
-+					pqueue->s.shm_full);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[shm_emp	] :%d\r\n", i,
-+					pqueue->s.shm_emp);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[shmretry_err ] :%d\r\n", i,
-+					pqueue->s.shmretry_err);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[shmqueue_noinit] :%d\r\n",
-+					i, pqueue->s.shmqueue_noinit);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[dma_busy	] :%d\r\n", i,
-+					pqueue->s.dma_busy);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[dma_mapping_err] :%d\r\n",
-+					i, pqueue->s.dma_mapping_err);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[dma_failed	] :%d\r\n", i,
-+					pqueue->s.dma_failed);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[dma_burst	] :%d\r\n", i,
-+					pqueue->s.dma_burst);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[lbk_cnt	] :%d\r\n", i,
-+					pqueue->s.lbk_cnt);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[dma_need_offset] :%d\r\n",
-+					i, pqueue->s.dma_need_offset);
-+			len += sprintf(buf + len,
-+					"QUEUE[%d]--[lbk_txerr	] :%d\r\n", i,
-+					pqueue->s.lbk_txerr);
++	if (user_inft && user_inft->user_register) {
++		ret = user_inft->user_register(priv);
++		if (ret) {
++			BMA_LOG(DLOG_ERROR, "register failed\n");
++			return -EFAULT;
 +		}
-+	}
++	} else {
++		if (!g_bma_dev)
++			return -ENXIO;
 +
-+	len += sprintf(buf + len, "=============BSPVETH STATIS===========\r\n");
-+	len += sprintf(buf + len,
-+				"[bspveth_dev]:run_dma_rx_task:0x%-8x(%d)\r\n",
-+				g_bspveth_dev.run_dma_rx_task,
-+				g_bspveth_dev.run_dma_rx_task);
-+	len += sprintf(buf + len,
-+				"[bspveth_dev]:run_dma_tx_task:0x%-8x(%d)\r\n",
-+				g_bspveth_dev.run_dma_tx_task,
-+				g_bspveth_dev.run_dma_tx_task);
-+	len += sprintf(buf + len,
-+				"[bspveth_dev]:run_skb_rx_task:0x%-8x(%d)\r\n",
-+				g_bspveth_dev.run_skb_rx_task,
-+				g_bspveth_dev.run_skb_rx_task);
-+	len += sprintf(buf + len,
-+				"[bspveth_dev]:run_skb_fr_task:0x%-8x(%d)\r\n",
-+				g_bspveth_dev.run_skb_fr_task,
-+				g_bspveth_dev.run_skb_fr_task);
-+	len += sprintf(buf + len,
-+				"[bspveth_dev]:recv_int	     :0x%-8x(%d)\r\n",
-+				g_bspveth_dev.recv_int, g_bspveth_dev.recv_int);
-+	len += sprintf(buf + len,
-+				"[bspveth_dev]:tobmc_int      :0x%-8x(%d)\r\n",
-+				g_bspveth_dev.tobmc_int,
-+				g_bspveth_dev.tobmc_int);
-+	len += sprintf(buf + len,
-+				"[bspveth_dev]:shutdown_cnt   :0x%-8x(%d)\r\n",
-+				g_bspveth_dev.shutdown_cnt,
-+				g_bspveth_dev.shutdown_cnt);
-+
-+	return len;
-+}
-+
-+module_param_call(statistics, NULL, veth_param_get_statics, &debug, 0444);
-+
-+MODULE_PARM_DESC(statistics, "Statistics info of veth driver,readonly");
-+
-+static void veth_reset_dma(int type)
-+{
-+	if (type == BSPVETH_RX)
-+		bma_intf_reset_dma(BMC_TO_HOST);
-+	else if (type == BSPVETH_TX)
-+		bma_intf_reset_dma(HOST_TO_BMC);
-+	else
-+		return;
-+}
-+
-+s32 bspveth_setup_tx_resources(struct bspveth_device *pvethdev,
-+			       struct bspveth_rxtx_q *ptx_queue)
-+{
-+	unsigned int size;
-+
-+	if (!pvethdev || !ptx_queue)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	ptx_queue->count = MAX_QUEUE_BDNUM;
-+
-+	size = sizeof(struct bspveth_bd_info) * ptx_queue->count;
-+	ptx_queue->pbdinfobase_v = vmalloc(size);
-+	if (!ptx_queue->pbdinfobase_v)
-+		goto alloc_failed;
-+
-+	memset(ptx_queue->pbdinfobase_v, 0, size);
-+
-+	/* round up to nearest 4K */
-+	ptx_queue->size = ptx_queue->count * sizeof(struct bspveth_bd_info);
-+	ptx_queue->size = ALIGN(ptx_queue->size, 4096);
-+
-+	/* prepare  4096 send buffer */
-+	ptx_queue->pbdbase_v = kmalloc(ptx_queue->size, GFP_KERNEL);
-+	if (!ptx_queue->pbdbase_v) {
-+		VETH_LOG(DLOG_ERROR,
-+			 "Unable to kmalloc for the receive descriptor ring\n");
-+
-+		vfree(ptx_queue->pbdinfobase_v);
-+		ptx_queue->pbdinfobase_v = NULL;
-+
-+		goto alloc_failed;
-+	}
-+
-+	ptx_queue->pbdbase_p = (u8 *)(__pa((BSP_VETH_T)(ptx_queue->pbdbase_v)));
-+
-+	ptx_queue->next_to_fill = 0;
-+	ptx_queue->next_to_free = 0;
-+	ptx_queue->head = 0;
-+	ptx_queue->tail = 0;
-+	ptx_queue->work_limit = BSPVETH_WORK_LIMIT;
-+
-+	memset(&ptx_queue->s, 0, sizeof(struct bspveth_rxtx_statis));
-+
-+	return 0;
-+
-+alloc_failed:
-+	return -ENOMEM;
-+}
-+
-+void bspveth_free_tx_resources(struct bspveth_device *pvethdev,
-+			       struct bspveth_rxtx_q *ptx_queue)
-+{
-+	unsigned int i;
-+	unsigned long size;
-+	struct bspveth_bd_info *pbdinfobase_v = NULL;
-+	struct sk_buff *skb = NULL;
-+
-+	if (!ptx_queue || !pvethdev)
-+		return;
-+
-+	pbdinfobase_v = ptx_queue->pbdinfobase_v;
-+	if (!pbdinfobase_v)
-+		return;
-+
-+	for (i = 0; i < ptx_queue->count; i++) {
-+		skb = pbdinfobase_v[i].pdma_v;
-+		if (skb)
-+			dev_kfree_skb_any(skb);
-+
-+		pbdinfobase_v[i].pdma_v = NULL;
-+	}
-+
-+	size = sizeof(struct bspveth_bd_info) * ptx_queue->count;
-+	memset(ptx_queue->pbdinfobase_v, 0, size);
-+	memset(ptx_queue->pbdbase_v, 0, ptx_queue->size);
-+
-+	ptx_queue->next_to_fill = 0;
-+	ptx_queue->next_to_free = 0;
-+	ptx_queue->head = 0;
-+	ptx_queue->tail = 0;
-+
-+	vfree(ptx_queue->pbdinfobase_v);
-+	ptx_queue->pbdinfobase_v = NULL;
-+
-+	kfree(ptx_queue->pbdbase_v);
-+	ptx_queue->pbdbase_v = NULL;
-+
-+	VETH_LOG(DLOG_DEBUG, "bspveth free tx resources ok, count=%d\n",
-+		 ptx_queue->count);
-+}
-+
-+s32 bspveth_setup_all_tx_resources(struct bspveth_device *pvethdev)
-+{
-+	int qid = 0;
-+	int i = 0;
-+	int err = 0;
-+	u8 *shmq_head_p = NULL;
-+	struct bspveth_shmq_hd *shmq_head = NULL;
-+
-+	if (!pvethdev)
-+		return BSP_ERR_NULL_POINTER;
-+	for (qid = 0; qid < MAX_QUEUE_NUM; qid++) {
-+		pvethdev->ptx_queue[qid] =
-+			kmalloc(sizeof(*pvethdev->ptx_queue[qid]),
-+				GFP_KERNEL);
-+		if (!pvethdev->ptx_queue[qid]) {
-+			VETH_LOG(DLOG_ERROR,
-+				 "kmalloc failed for ptx_queue[%d]\n", qid);
-+			err = -1;
-+			goto failed;
++		if (atomic_dec_and_test(&g_bma_dev->au_count[type]) == 0) {
++			BMA_LOG(DLOG_ERROR,
++				"busy, init_dev_type.type = %d, au_count = %d\n",
++				type,
++				atomic_read(&g_bma_dev->au_count[type]));
++			atomic_inc(&g_bma_dev->au_count[type]);
++			return -EBUSY;	/* already register */
 +		}
-+		memset(pvethdev->ptx_queue[qid],
-+		       0, sizeof(struct bspveth_rxtx_q));
-+		shmq_head = (struct bspveth_shmq_hd *)(pvethdev->pshmpool_v +
-+					 MAX_SHAREQUEUE_SIZE * (qid));
-+		pvethdev->ptx_queue[qid]->pshmqhd_v = shmq_head;
-+		shmq_head_p = pvethdev->pshmpool_p + MAX_SHAREQUEUE_SIZE * qid;
-+		pvethdev->ptx_queue[qid]->pshmqhd_p = shmq_head_p;
 +
-+		pvethdev->ptx_queue[qid]->pshmbdbase_v =
-+			(struct bspveth_dma_shmbd *)((BSP_VETH_T)(shmq_head)
-+			+ BSPVETH_SHMBDBASE_OFFSET);
-+		pvethdev->ptx_queue[qid]->pshmbdbase_p =
-+			(u8 *)((BSP_VETH_T)(shmq_head_p)
-+			+ BSPVETH_SHMBDBASE_OFFSET);
-+		pvethdev->ptx_queue[qid]->pdmalbase_v =
-+			(struct bspveth_dmal *)((BSP_VETH_T)(shmq_head)
-+			+ SHMDMAL_OFFSET);
-+		pvethdev->ptx_queue[qid]->pdmalbase_p =
-+			(u8 *)(u64)(VETH_SHAREPOOL_BASE_INBMC +
-+			MAX_SHAREQUEUE_SIZE * qid +
-+			SHMDMAL_OFFSET);
++		priv->user.type = type;
++		priv->user.sub_type = sub_type;
++		priv->user.user_id = 0;
 +
-+		memset(pvethdev->ptx_queue[qid]->pdmalbase_v,
-+		       0, MAX_SHMDMAL_SIZE);
++		spin_lock_irqsave(&g_bma_dev->priv_list_lock, flags);
 +
-+		err = bspveth_setup_tx_resources(pvethdev,
-+						 pvethdev->ptx_queue[qid]);
-+		if (err) {
-+			pvethdev->ptx_queue[qid]->pshmqhd_v = NULL;
-+			kfree(pvethdev->ptx_queue[qid]);
-+			pvethdev->ptx_queue[i] = NULL;
-+			VETH_LOG(DLOG_ERROR,
-+				 "Allocation for Tx Queue %u failed\n", qid);
++		list_add_rcu(&priv->user.link, &g_bma_dev->priv_list);
 +
-+			goto failed;
-+		}
++		spin_unlock_irqrestore(&g_bma_dev->priv_list_lock, flags);
 +	}
 +
 +	return 0;
-+failed:
-+	for (i = 0; i < MAX_QUEUE_NUM; i++) {
-+		bspveth_free_tx_resources(pvethdev, pvethdev->ptx_queue[i]);
-+		kfree(pvethdev->ptx_queue[i]);
-+		pvethdev->ptx_queue[i] = NULL;
-+	}
-+
-+	return err;
 +}
 +
-+void bspveth_free_all_tx_resources(struct bspveth_device *pvethdev)
++static int bma_priv_delete_priv_list(struct bma_priv_data_s *priv)
 +{
-+	int i;
++	unsigned long flags = 0;
++	struct edma_user_inft_s *user_inft = NULL;
 +
-+	if (!pvethdev)
-+		return;
-+
-+	for (i = 0; i < MAX_QUEUE_NUM; i++) {
-+		if (pvethdev->ptx_queue[i])
-+			bspveth_free_tx_resources(pvethdev,
-+						  pvethdev->ptx_queue[i]);
-+
-+		kfree(pvethdev->ptx_queue[i]);
-+		pvethdev->ptx_queue[i] = NULL;
++	if (!priv || priv->user.type >= TYPE_MAX)
++		return -EFAULT;
++	user_inft = edma_host_get_user_inft(priv->user.type);
++	if (user_inft && user_inft->user_register) {
++		user_inft->user_unregister(priv);
++	} else {
++		if (!g_bma_dev)
++			return -ENXIO;
++		spin_lock_irqsave(&g_bma_dev->priv_list_lock, flags);
++		list_del_rcu(&priv->user.link);
++		spin_unlock_irqrestore(&g_bma_dev->priv_list_lock, flags);
++		/* release the type */
++		atomic_inc(&g_bma_dev->au_count[priv->user.type]);
 +	}
++	return 0;
 +}
 +
-+s32 veth_alloc_one_rx_skb(struct bspveth_rxtx_q *prx_queue, int idx)
++static int bma_priv_init(struct bma_priv_data_s **bma_priv)
 +{
-+	dma_addr_t dma = 0;
-+	struct sk_buff *skb;
-+	struct bspveth_bd_info *pbdinfobase_v = NULL;
-+	struct bspveth_dma_bd *pbdbase_v = NULL;
++	struct bma_priv_data_s *priv = NULL;
 +
-+	pbdinfobase_v = prx_queue->pbdinfobase_v;
-+	pbdbase_v = prx_queue->pbdbase_v;
++	if (!bma_priv)
++		return -EFAULT;
 +
-+	skb = netdev_alloc_skb(g_bspveth_dev.pnetdev,
-+			       BSPVETH_SKB_SIZE + BSPVETH_CACHELINE_SIZE);
-+	if (!skb) {
-+		VETH_LOG(DLOG_ERROR, "netdev_alloc_skb failed\n");
++	priv = kmalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv) {
++		BMA_LOG(DLOG_ERROR, "malloc priv failed\n");
 +		return -ENOMEM;
 +	}
 +
-+	/* advance the data pointer to the next cache line */
-+	skb_reserve(skb, PTR_ALIGN(skb->data,
-+				   BSPVETH_CACHELINE_SIZE) - skb->data);
++	memset(priv, 0, sizeof(struct bma_priv_data_s));
 +
-+	dma = dma_map_single(&g_bspveth_dev.ppcidev->dev,
-+			     skb->data, BSPVETH_SKB_SIZE, DMA_FROM_DEVICE);
-+	if (DMA_MAPPING_ERROR(&g_bspveth_dev.ppcidev->dev, dma)) {
-+		VETH_LOG(DLOG_ERROR, "dma_mapping_error failed\n");
-+		dev_kfree_skb_any(skb);
-+		return -EFAULT;
-+	}
++	spin_lock_init(&priv->recv_msg_lock);
++	INIT_LIST_HEAD(&priv->recv_msgs);
++	init_waitqueue_head(&priv->wait);
 +
-+#ifdef __UT_TEST
-+	if (g_testdma)
-+		VETH_LOG(DLOG_ERROR,
-+			 "[refill]:dma=0x%llx,skb=%p,skb->len=%d\r\n",
-+			 dma, skb, skb->len);
-+#endif
++	priv->user.type = TYPE_UNKNOWN;
++	priv->user.sub_type = 0;
++	priv->user.dma_transfer = 0;
++	priv->user.seq = 0;
++	priv->user.cur_recvmsg_nums = 0;
++	priv->user.max_recvmsg_nums = DEFAULT_MAX_RECV_MSG_NUMS;
 +
-+	pbdinfobase_v[idx].pdma_v = skb;
-+	pbdinfobase_v[idx].len = BSPVETH_SKB_SIZE;
-+
-+	pbdbase_v[idx].dma_p = dma;
-+	pbdbase_v[idx].len = BSPVETH_SKB_SIZE;
++	*bma_priv = priv;
 +
 +	return 0;
 +}
 +
-+s32 veth_refill_rxskb(struct bspveth_rxtx_q *prx_queue, int queue)
-+{
-+	int i, work_limit;
-+	unsigned int next_to_fill, tail;
-+	int ret = BSP_OK;
-+
-+	if (!prx_queue)
-+		return BSP_ERR_AGAIN;
-+
-+	work_limit = prx_queue->work_limit;
-+	next_to_fill = prx_queue->next_to_fill;
-+	tail = prx_queue->tail;
-+
-+	for (i = 0; i < work_limit; i++) {
-+		if (!JUDGE_RX_QUEUE_SPACE(next_to_fill, tail, 1))
-+			break;
-+
-+		ret = veth_alloc_one_rx_skb(prx_queue, next_to_fill);
-+		if (ret)
-+			break;
-+
-+		g_bspveth_dev.prx_queue[queue]->s.refill++;
-+		next_to_fill = (next_to_fill + 1) & BSPVETH_POINT_MASK;
-+	}
-+
-+	prx_queue->next_to_fill = next_to_fill;
-+
-+	tail = prx_queue->tail;
-+	if (JUDGE_RX_QUEUE_SPACE(next_to_fill, tail, 1)) {
-+		VETH_LOG(DLOG_DEBUG, "next_to_fill(%d) != tail(%d)\n",
-+			 next_to_fill, tail);
-+
-+		return BSP_ERR_AGAIN;
-+	}
-+
-+	return 0;
-+}
-+
-+s32 bspveth_setup_rx_skb(struct bspveth_device *pvethdev,
-+			 struct bspveth_rxtx_q *prx_queue)
-+{
-+	u32 idx;
-+	int ret = 0;
-+
-+	if (!pvethdev || !prx_queue)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	VETH_LOG(DLOG_DEBUG, "waite setup rx skb ,count=%d\n",
-+		 prx_queue->count);
-+
-+	for (idx = 0; idx < prx_queue->count - 1; idx++) {
-+		ret = veth_alloc_one_rx_skb(prx_queue, idx);
-+		if (ret)
-+			break;
-+	}
-+
-+	if (!idx)	/* Can't alloc even one packets */
-+		return -EFAULT;
-+
-+	prx_queue->next_to_fill = idx;
-+
-+	VETH_LOG(DLOG_DEBUG, "prx_queue->next_to_fill=%d\n",
-+		 prx_queue->next_to_fill);
-+
-+	VETH_LOG(DLOG_DEBUG, "setup rx skb ok, count=%d\n", prx_queue->count);
-+
-+	return BSP_OK;
-+}
-+
-+void bspveth_free_rx_skb(struct bspveth_device *pvethdev,
-+			 struct bspveth_rxtx_q *prx_queue)
-+{
-+	u32 i = 0;
-+	struct bspveth_bd_info *pbdinfobase_v = NULL;
-+	struct bspveth_dma_bd *pbdbase_v = NULL;
-+	struct sk_buff *skb = NULL;
-+
-+	if (!pvethdev || !prx_queue)
-+		return;
-+
-+	pbdinfobase_v = prx_queue->pbdinfobase_v;
-+	pbdbase_v = prx_queue->pbdbase_v;
-+	if (!pbdinfobase_v || !pbdbase_v)
-+		return;
-+
-+	/* Free all the Rx ring pages */
-+	for (i = 0; i < prx_queue->count; i++) {
-+		skb = pbdinfobase_v[i].pdma_v;
-+		if (!skb)
-+			continue;
-+
-+		dma_unmap_single(&g_bspveth_dev.ppcidev->dev,
-+				 pbdbase_v[i].dma_p, BSPVETH_SKB_SIZE,
-+				 DMA_FROM_DEVICE);
-+		dev_kfree_skb_any(skb);
-+
-+		pbdinfobase_v[i].pdma_v = NULL;
-+	}
-+
-+	prx_queue->next_to_fill = 0;
-+}
-+
-+s32 bspveth_setup_all_rx_skb(struct bspveth_device *pvethdev)
-+{
-+	int qid, i, err = BSP_OK;
-+
-+	if (!pvethdev)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	for (qid = 0; qid < MAX_QUEUE_NUM; qid++) {
-+		err = bspveth_setup_rx_skb(pvethdev, pvethdev->prx_queue[qid]);
-+		if (err) {
-+			VETH_LOG(DLOG_ERROR, "queue[%d]setup RX skb failed\n",
-+				 qid);
-+			goto failed;
-+		}
-+
-+		VETH_LOG(DLOG_DEBUG, "queue[%d] bspveth_setup_rx_skb ok\n",
-+			 qid);
-+	}
-+
-+	return 0;
-+
-+failed:
-+	for (i = 0; i < MAX_QUEUE_NUM; i++)
-+		bspveth_free_rx_skb(pvethdev, pvethdev->prx_queue[i]);
-+
-+	return err;
-+}
-+
-+void bspveth_free_all_rx_skb(struct bspveth_device *pvethdev)
-+{
-+	int qid;
-+
-+	if (!pvethdev)
-+		return;
-+
-+	/* Free all the Rx ring pages */
-+	for (qid = 0; qid < MAX_QUEUE_NUM; qid++)
-+		bspveth_free_rx_skb(pvethdev, pvethdev->prx_queue[qid]);
-+}
-+
-+s32 bspveth_setup_rx_resources(struct bspveth_device *pvethdev,
-+			       struct bspveth_rxtx_q *prx_queue)
-+{
-+	int size;
-+
-+	if (!pvethdev || !prx_queue)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	prx_queue->count = MAX_QUEUE_BDNUM;
-+	size = sizeof(*prx_queue->pbdinfobase_v) * prx_queue->count;
-+	prx_queue->pbdinfobase_v = vmalloc(size);
-+	if (!prx_queue->pbdinfobase_v) {
-+		VETH_LOG(DLOG_ERROR,
-+			 "Unable to vmalloc for the receive descriptor ring\n");
-+
-+		goto alloc_failed;
-+	}
-+
-+	memset(prx_queue->pbdinfobase_v, 0, size);
-+
-+	/* Round up to nearest 4K */
-+	prx_queue->size = prx_queue->count * sizeof(*prx_queue->pbdbase_v);
-+	prx_queue->size = ALIGN(prx_queue->size, 4096);
-+	prx_queue->pbdbase_v = kmalloc(prx_queue->size, GFP_ATOMIC);
-+	if (!prx_queue->pbdbase_v) {
-+		VETH_LOG(DLOG_ERROR,
-+			 "Unable to kmalloc for the receive descriptor ring\n");
-+
-+		vfree(prx_queue->pbdinfobase_v);
-+		prx_queue->pbdinfobase_v = NULL;
-+
-+		goto alloc_failed;
-+	}
-+
-+	prx_queue->pbdbase_p = (u8 *)__pa((BSP_VETH_T) (prx_queue->pbdbase_v));
-+
-+	prx_queue->next_to_fill = 0;
-+	prx_queue->next_to_free = 0;
-+	prx_queue->head = 0;
-+	prx_queue->tail = 0;
-+
-+	prx_queue->work_limit = BSPVETH_WORK_LIMIT;
-+
-+	memset(&prx_queue->s, 0, sizeof(struct bspveth_rxtx_statis));
-+
-+	return 0;
-+
-+alloc_failed:
-+	return -ENOMEM;
-+}
-+
-+void bspveth_free_rx_resources(struct bspveth_device *pvethdev,
-+			       struct bspveth_rxtx_q *prx_queue)
-+{
-+	unsigned long size;
-+	struct bspveth_bd_info *pbdinfobase_v = NULL;
-+
-+	if (!pvethdev || !prx_queue)
-+		return;
-+
-+	pbdinfobase_v = prx_queue->pbdinfobase_v;
-+	if (!pbdinfobase_v)
-+		return;
-+
-+	if (!prx_queue->pbdbase_v)
-+		return;
-+
-+	size = sizeof(struct bspveth_bd_info) * prx_queue->count;
-+	memset(prx_queue->pbdinfobase_v, 0, size);
-+
-+	/* Zero out the descriptor ring */
-+	memset(prx_queue->pbdbase_v, 0, prx_queue->size);
-+
-+	vfree(prx_queue->pbdinfobase_v);
-+	prx_queue->pbdinfobase_v = NULL;
-+
-+	kfree(prx_queue->pbdbase_v);
-+	prx_queue->pbdbase_v = NULL;
-+
-+	VETH_LOG(DLOG_DEBUG, "bspveth free rx resources ok!!count=%d\n",
-+		 prx_queue->count);
-+}
-+
-+s32 bspveth_setup_all_rx_resources(struct bspveth_device *pvethdev)
-+{
-+	int qid, i, err = 0;
-+	struct bspveth_shmq_hd *shmq_head = NULL;
-+	u8 *shmq_head_p = NULL;
-+
-+	if (!pvethdev)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	for (qid = 0; qid < MAX_QUEUE_NUM; qid++) {
-+		pvethdev->prx_queue[qid] =
-+			kmalloc(sizeof(*pvethdev->prx_queue[qid]), GFP_KERNEL);
-+		if (!pvethdev->prx_queue[qid]) {
-+			VETH_LOG(DLOG_ERROR,
-+				 "kmalloc failed for prx_queue[%d]\n", qid);
-+
-+			goto failed;
-+		}
-+
-+		memset(pvethdev->prx_queue[qid], 0,
-+		       sizeof(struct bspveth_rxtx_q));
-+
-+		shmq_head = (struct bspveth_shmq_hd *)(pvethdev->pshmpool_v +
-+			     MAX_SHAREQUEUE_SIZE * (qid + 1));
-+
-+		pvethdev->prx_queue[qid]->pshmqhd_v = shmq_head;
-+		shmq_head_p =
-+			pvethdev->pshmpool_p + MAX_SHAREQUEUE_SIZE * (qid + 1);
-+		pvethdev->prx_queue[qid]->pshmqhd_p = shmq_head_p;
-+		pvethdev->prx_queue[qid]->pshmbdbase_v =
-+			(struct bspveth_dma_shmbd *)((BSP_VETH_T)(shmq_head)
-+			+ BSPVETH_SHMBDBASE_OFFSET);
-+		pvethdev->prx_queue[qid]->pshmbdbase_p =
-+			(u8 *)((BSP_VETH_T)(shmq_head_p)
-+			+ BSPVETH_SHMBDBASE_OFFSET);
-+		pvethdev->prx_queue[qid]->pdmalbase_v =
-+			(struct bspveth_dmal *)((BSP_VETH_T)(shmq_head)
-+			+ SHMDMAL_OFFSET);
-+		pvethdev->prx_queue[qid]->pdmalbase_p =
-+			(u8 *)(u64)(VETH_SHAREPOOL_BASE_INBMC
-+			+ MAX_SHAREQUEUE_SIZE * (qid + 1)
-+			+ SHMDMAL_OFFSET);
-+		memset(pvethdev->prx_queue[qid]->pdmalbase_v, 0,
-+		       MAX_SHMDMAL_SIZE);
-+
-+		err = bspveth_setup_rx_resources(pvethdev,
-+						 pvethdev->prx_queue[qid]);
-+		if (err) {
-+			kfree(pvethdev->prx_queue[qid]);
-+			pvethdev->prx_queue[qid] = NULL;
-+			VETH_LOG(DLOG_ERROR,
-+				 "Allocation for Rx Queue %u failed\n", qid);
-+
-+			goto failed;
-+		}
-+	}
-+
-+	return 0;
-+failed:
-+	for (i = 0; i < MAX_QUEUE_NUM; i++) {
-+		bspveth_free_rx_resources(pvethdev, pvethdev->prx_queue[i]);
-+		kfree(pvethdev->prx_queue[i]);
-+		pvethdev->prx_queue[i] = NULL;
-+	}
-+	return err;
-+}
-+
-+void bspveth_free_all_rx_resources(struct bspveth_device *pvethdev)
-+{
-+	int i;
-+
-+	if (!pvethdev)
-+		return;
-+
-+	for (i = 0; i < MAX_QUEUE_NUM; i++) {
-+		if (pvethdev->prx_queue[i]) {
-+			bspveth_free_rx_resources(pvethdev,
-+						  pvethdev->prx_queue[i]);
-+		}
-+
-+		kfree(pvethdev->prx_queue[i]);
-+		pvethdev->prx_queue[i] = NULL;
-+	}
-+}
-+
-+s32 bspveth_dev_install(void)
-+{
-+	int err;
-+
-+	err = bspveth_setup_all_rx_resources(&g_bspveth_dev);
-+	if (err != BSP_OK) {
-+		err = -1;
-+		goto err_setup_rx;
-+	}
-+
-+	err = bspveth_setup_all_tx_resources(&g_bspveth_dev);
-+	if (err != BSP_OK) {
-+		err = -1;
-+		goto err_setup_tx;
-+	}
-+
-+	err = bspveth_setup_all_rx_skb(&g_bspveth_dev);
-+	if (err != BSP_OK) {
-+		err = -1;
-+		goto err_setup_rx_skb;
-+	}
-+
-+	return BSP_OK;
-+
-+err_setup_rx_skb:
-+	bspveth_free_all_tx_resources(&g_bspveth_dev);
-+
-+err_setup_tx:
-+	bspveth_free_all_rx_resources(&g_bspveth_dev);
-+
-+err_setup_rx:
-+
-+	return err;
-+}
-+
-+s32 bspveth_dev_uninstall(void)
-+{
-+	int err = BSP_OK;
-+
-+	/* Free all the Rx ring pages */
-+	bspveth_free_all_rx_skb(&g_bspveth_dev);
-+
-+	bspveth_free_all_tx_resources(&g_bspveth_dev);
-+
-+	VETH_LOG(DLOG_DEBUG, "bspveth_free_all_tx_resources ok\n");
-+
-+	bspveth_free_all_rx_resources(&g_bspveth_dev);
-+
-+	VETH_LOG(DLOG_DEBUG, "bspveth_free_all_rx_resources ok\n");
-+
-+	return err;
-+}
-+
-+s32 veth_open(struct net_device *pstr_dev)
-+{
-+	s32 ret = BSP_OK;
-+
-+	if (!pstr_dev)
-+		return -1;
-+
-+	if (!g_bspveth_dev.pnetdev)
-+		g_bspveth_dev.pnetdev = pstr_dev;
-+
-+	ret = bspveth_dev_install();
-+	if (ret != BSP_OK) {
-+		ret = -1;
-+		goto failed1;
-+	}
-+
-+	veth_skbtimer_init();
-+
-+	veth_dmatimer_init_H();
-+
-+	ret = bma_intf_register_int_notifier(&g_veth_int_nb);
-+	if (ret != BSP_OK) {
-+		ret = -1;
-+		goto failed2;
-+	}
-+
-+	bma_intf_set_open_status(g_bspveth_dev.bma_priv, DEV_OPEN);
-+
-+	g_bspveth_dev.prx_queue[0]->pshmqhd_v->tail =
-+				g_bspveth_dev.prx_queue[0]->pshmqhd_v->head;
-+
-+	bma_intf_int_to_bmc(g_bspveth_dev.bma_priv);
-+
-+	netif_start_queue(g_bspveth_dev.pnetdev);
-+	netif_carrier_on(pstr_dev);
-+
-+	return BSP_OK;
-+
-+failed2:
-+	veth_dmatimer_close_H();
-+
-+	veth_skbtimer_close();
-+
-+	(void)bspveth_dev_uninstall();
-+
-+failed1:
-+	return ret;
-+}
-+
-+s32 veth_close(struct net_device *pstr_dev)
-+{
-+	(void)bma_intf_unregister_int_notifier(&g_veth_int_nb);
-+
-+	netif_carrier_off(pstr_dev);
-+
-+	bma_intf_set_open_status(g_bspveth_dev.bma_priv, DEV_CLOSE);
-+
-+	netif_stop_queue(g_bspveth_dev.pnetdev);
-+
-+	(void)veth_dmatimer_close_H();
-+	(void)veth_skbtimer_close();
-+
-+	(void)bspveth_dev_uninstall();
-+
-+	return BSP_OK;
-+}
-+
-+s32 veth_config(struct net_device *pstr_dev, struct ifmap *pstr_map)
-+{
-+	if (!pstr_dev || !pstr_map)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	/* can't act on a running interface */
-+	if (pstr_dev->flags & IFF_UP)
-+		return -EBUSY;
-+
-+	/* Don't allow changing the I/O address */
-+	if (pstr_map->base_addr != pstr_dev->base_addr)
-+		return -EOPNOTSUPP;
-+
-+	/* ignore other fields */
-+	return BSP_OK;
-+}
-+
-+void bspveth_initstatis(void)
-+{
-+	int i;
-+	struct bspveth_rxtx_q *prx_queue = NULL;
-+	struct bspveth_rxtx_q *ptx_queue = NULL;
-+
-+	for (i = 0; i < MAX_QUEUE_NUM; i++) {
-+		prx_queue = g_bspveth_dev.prx_queue[i];
-+		ptx_queue = g_bspveth_dev.ptx_queue[i];
-+
-+		if (prx_queue && ptx_queue) {
-+			memset(&prx_queue->s,
-+			       0, sizeof(struct bspveth_rxtx_statis));
-+
-+			memset(&ptx_queue->s,
-+			       0, sizeof(struct bspveth_rxtx_statis));
-+		} else {
-+			VETH_LOG(DLOG_ERROR,
-+				 "prx_queue OR ptx_queue is NULL\n");
-+		}
-+	}
-+
-+	VETH_LOG(DLOG_DEBUG, "bspveth initstatis ok\n");
-+}
-+
-+s32 veth_ioctl(struct net_device *pstr_dev, struct ifreq *pifr, s32 l_cmd)
-+{
-+	return -EFAULT;
-+}
-+
-+struct net_device_stats *veth_stats(struct net_device *pstr_dev)
-+{
-+	return &g_bspveth_dev.stats;
-+}
-+
-+s32 veth_mac_set(struct net_device *pstr_dev, void *p_mac)
-+{
-+	struct sockaddr *str_addr = NULL;
-+	u8 *puc_mac = NULL;
-+
-+	if (!pstr_dev || !p_mac)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	str_addr = (struct sockaddr *)p_mac;
-+	puc_mac = (u8 *)str_addr->sa_data;
-+
-+	pstr_dev->dev_addr[0] = puc_mac[0];
-+	pstr_dev->dev_addr[1] = puc_mac[1];
-+	pstr_dev->dev_addr[2] = puc_mac[2];
-+	pstr_dev->dev_addr[3] = puc_mac[3];
-+	pstr_dev->dev_addr[4] = puc_mac[4];
-+	pstr_dev->dev_addr[5] = puc_mac[5];
-+
-+	return BSP_OK;
-+}
-+
-+void veth_tx_timeout(struct net_device *pstr_dev)
-+{
-+	VETH_LOG(DLOG_ERROR, "enter.\n");
-+}
-+
-+static u32 veth_ethtool_get_link(struct net_device *dev)
-+{
-+	if (!bma_intf_is_link_ok() || !netif_running(g_bspveth_dev.pnetdev))
-+		return 0;
-+
-+	if (g_bspveth_dev.ptx_queue[0] &&
-+	    g_bspveth_dev.ptx_queue[0]->pshmqhd_v)
-+		return (u32)((BSPVETH_SHMQUEUE_INITOK ==
-+			     g_bspveth_dev.ptx_queue[0]->pshmqhd_v->init) &&
-+			     netif_carrier_ok(dev));
-+
-+	return 0;
-+}
-+
-+static void veth_ethtool_get_drvinfo(struct net_device *dev,
-+				     struct ethtool_drvinfo *info)
-+{
-+	strlcpy(info->driver, MODULE_NAME, sizeof(info->driver));
-+	strlcpy(info->version, VETH_VERSION, sizeof(info->version));
-+
-+	info->n_stats = VETH_GLOBAL_STATS_LEN;
-+}
-+
-+static void veth_ethtool_get_stats(struct net_device *netdev,
-+				   struct ethtool_stats *tool_stats, u64 *data)
-+{
-+	unsigned int i = 0;
-+	char *p = NULL;
-+	const struct veth_stats *p_stat = veth_gstrings_stats;
-+	struct bspveth_rxtx_q *ptx_node = g_bspveth_dev.ptx_queue[0];
-+	struct bspveth_rxtx_q *prx_node = g_bspveth_dev.prx_queue[0];
-+	char * const pstat_map[] = {
-+		/* QUEUE TX STATS*/
-+		GET_QUEUE_STAT(ptx_node, p_stat),
-+		/* QUEUE RX STATS*/
-+		GET_QUEUE_STAT(prx_node, p_stat),
-+		/* VETH STATS */
-+		(char *)&g_bspveth_dev + p_stat->stat_offset,
-+		/* SHMQ TX STATS */
-+		GET_SHM_QUEUE_STAT(ptx_node, p_stat),
-+		/* SHMQ RX STATS */
-+		GET_SHM_QUEUE_STAT(prx_node, p_stat),
-+		/* NET STATS */
-+		(char *)&g_bspveth_dev + p_stat->stat_offset
-+	};
-+
-+	if (!data || !netdev || !tool_stats)
-+		return;
-+
-+	for (i = 0; i < VETH_GLOBAL_STATS_LEN; i++) {
-+		p = NULL;
-+
-+		if (p_stat->type > NET_STATS)
-+			break;
-+
-+		p = pstat_map[p_stat->type];
-+
-+		data[i] = GET_STATS_VALUE(p, p_stat);
-+
-+		p_stat++;
-+	}
-+}
-+
-+static void veth_get_strings(struct net_device *netdev, u32 stringset, u8 *data)
-+{
-+	u8 *p = data;
-+	unsigned int i;
-+
-+	if (!p)
-+		return;
-+
-+	switch (stringset) {
-+	case ETH_SS_STATS:
-+		for (i = 0; i < VETH_GLOBAL_STATS_LEN; i++) {
-+			memcpy(p, veth_gstrings_stats[i].stat_string,
-+			       ETH_GSTRING_LEN);
-+
-+			p += ETH_GSTRING_LEN;
-+		}
-+
-+		break;
-+	}
-+}
-+
-+static int veth_get_sset_count(struct net_device *netdev, int sset)
-+{
-+	switch (sset) {
-+	case ETH_SS_STATS:
-+		return VETH_GLOBAL_STATS_LEN;
-+
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+const struct ethtool_ops veth_ethtool_ops = {
-+	.get_drvinfo = veth_ethtool_get_drvinfo,
-+	.get_link = veth_ethtool_get_link,
-+
-+	.get_ethtool_stats = veth_ethtool_get_stats,
-+	.get_strings = veth_get_strings,
-+	.get_sset_count = veth_get_sset_count,
-+
-+};
-+
-+static const struct net_device_ops veth_ops = {
-+	.ndo_open = veth_open,
-+	.ndo_stop = veth_close,
-+	.ndo_set_config = veth_config,
-+	.ndo_start_xmit = veth_tx,
-+	.ndo_do_ioctl = veth_ioctl,
-+	.ndo_get_stats = veth_stats,
-+	.ndo_set_mac_address = veth_mac_set,
-+	.ndo_tx_timeout = veth_tx_timeout,
-+};
-+
-+void veth_netdev_func_init(struct net_device *dev)
-+{
-+	struct tag_pcie_comm_priv *priv =
-+				(struct tag_pcie_comm_priv *)netdev_priv(dev);
-+
-+	VETH_LOG(DLOG_DEBUG, "eth init start\n");
-+
-+	ether_setup(dev);
-+
-+	dev->netdev_ops = &veth_ops;
-+
-+	dev->watchdog_timeo = BSPVETH_NET_TIMEOUT;
-+	dev->mtu = BSPVETH_MTU_MAX;
-+	dev->flags = IFF_BROADCAST;
-+	dev->tx_queue_len = BSPVETH_MAX_QUE_DEEP;
-+	dev->ethtool_ops = &veth_ethtool_ops;
-+
-+	/* Then, initialize the priv field. This encloses the statistics
-+	 * and a few private fields.
-+	 */
-+	memset(priv, 0, sizeof(struct tag_pcie_comm_priv));
-+	strncpy(priv->net_type, MODULE_NAME, NET_TYPE_LEN);
-+
-+	/*9C:7D:A3:28:6F:F9*/
-+	dev->dev_addr[0] = 0x9c;
-+	dev->dev_addr[1] = 0x7d;
-+	dev->dev_addr[2] = 0xa3;
-+	dev->dev_addr[3] = 0x28;
-+	dev->dev_addr[4] = 0x6f;
-+	dev->dev_addr[5] = 0xf9;
-+
-+	VETH_LOG(DLOG_DEBUG, "set veth MAC addr OK\n");
-+}
-+
-+s32 veth_send_one_pkt(struct sk_buff *skb, int queue)
-+{
-+	u32 head, next_to_free;
-+	dma_addr_t dma = 0;
-+	u32 off = 0;
-+	int ret = 0;
-+	int type = BSPVETH_TX;
-+	struct bspveth_bd_info *pbdinfo_v = NULL;
-+	struct bspveth_dma_bd *pbd_v = NULL;
-+	struct bspveth_rxtx_q *ptx_queue = g_bspveth_dev.ptx_queue[queue];
-+
-+	if (!skb || !ptx_queue || !ptx_queue->pbdinfobase_v ||
-+	    !ptx_queue->pbdbase_v) {
-+		INC_STATIS_RXTX(queue, null_point, 1, type);
-+		return BSP_ERR_NULL_POINTER;
-+	}
-+
-+	if (!bma_intf_is_link_ok() ||
-+	    ptx_queue->pshmqhd_v->init != BSPVETH_SHMQUEUE_INITOK)
-+		return -1;
-+
-+	head = ptx_queue->head;
-+	next_to_free = ptx_queue->next_to_free;
-+
-+	/* stop to send pkt when queue is going to full */
-+	if (!JUDGE_TX_QUEUE_SPACE(head, next_to_free, 3)) {
-+		netif_stop_subqueue(g_bspveth_dev.pnetdev, queue);
-+		VETH_LOG(DLOG_DEBUG,
-+			 "going to full, head: %d, nex to free: %d\n",
-+				head, next_to_free);
-+	}
-+
-+	if (!JUDGE_TX_QUEUE_SPACE(head, next_to_free, 1))
-+		return BSP_NETDEV_TX_BUSY;
-+
-+	if (skb_shinfo(skb)->nr_frags) {
-+		/* We don't support frags */
-+		ret = skb_linearize(skb);
-+		if (ret)
-+			return -ENOMEM;
-+	}
-+
-+	dma = dma_map_single(&g_bspveth_dev.ppcidev->dev, skb->data, skb->len,
-+			     DMA_TO_DEVICE);
-+
-+	ret = DMA_MAPPING_ERROR(&g_bspveth_dev.ppcidev->dev, dma);
-+	if (ret != BSP_OK) {
-+		ret = BSP_ERR_DMA_ERR;
-+		g_bspveth_dev.ptx_queue[queue]->s.dma_mapping_err++;
-+		goto failed;
-+	}
-+
-+	off = dma & 0x3;
-+	if (off)
-+		g_bspveth_dev.ptx_queue[queue]->s.dma_need_offset++;
-+
-+	pbdinfo_v = &ptx_queue->pbdinfobase_v[head];
-+	pbdinfo_v->pdma_v = skb;
-+	pbd_v = &ptx_queue->pbdbase_v[head];
-+	pbd_v->dma_p = dma & (~((u64)0x3));
-+	pbd_v->off = off;
-+	pbd_v->len = skb->len;
-+
-+	head = (head + 1) & BSPVETH_POINT_MASK;
-+	ptx_queue->head = head;
-+
-+	VETH_LOG(DLOG_DEBUG,
-+		 "[send]:oridma=0x%llx,skb=%p,skb->data=%p,skb->len=%d,",
-+		 (u64)dma, skb, skb->data, skb->len);
-+	VETH_LOG(DLOG_DEBUG, "head=%d,off=%d, alidma0x%llx\n", head, off,
-+		 (u64)(dma & (~((u64)0x3))));
-+
-+	return BSP_OK;
-+
-+failed:
-+	return ret;
-+}
-+
-+int veth_tx(struct sk_buff *skb, struct net_device *pstr_dev)
-+{
-+	u32 ul_ret = 0;
-+	int queue = 0;
-+
-+	VETH_LOG(DLOG_DEBUG, "===============enter==================\n");
-+
-+	if (!skb || !pstr_dev) {
-+		g_bspveth_dev.ptx_queue[queue]->s.null_point++;
-+		return NETDEV_TX_OK;
-+	}
-+
-+	VETH_LOG(DLOG_DEBUG, "skb->data=%p\n", skb->data);
-+	VETH_LOG(DLOG_DEBUG, "skb->len=%d\n", skb->len);
-+
-+	ul_ret = veth_send_one_pkt(skb, queue);
-+
-+	if (ul_ret == BSP_OK) {
-+		g_bspveth_dev.ptx_queue[queue]->s.pkt++;
-+		g_bspveth_dev.stats.tx_packets++;
-+		g_bspveth_dev.ptx_queue[queue]->s.pktbyte += skb->len;
-+		g_bspveth_dev.stats.tx_bytes += skb->len;
-+
-+#ifndef USE_TASKLET
-+		(void)mod_timer(&g_bspveth_dev.dmatimer, jiffies_64);
-+#else
-+		tasklet_hi_schedule(&g_bspveth_dev.dma_task);
-+#endif
-+
-+	} else {
-+		VETH_LOG(DLOG_DEBUG, "=======exit ret = %d=======\n", ul_ret);
-+		g_bspveth_dev.ptx_queue[queue]->s.dropped_pkt++;
-+		g_bspveth_dev.stats.tx_dropped++;
-+		dev_kfree_skb_any(skb);
-+	}
-+
-+	return NETDEV_TX_OK;
-+}
-+
-+s32 veth_free_txskb(struct bspveth_rxtx_q *ptx_queue, int queue)
-+{
-+	int i, work_limit;
-+	unsigned int tail, next_to_free;
-+	struct bspveth_bd_info *ptx_bdinfo_v = NULL;
-+	struct sk_buff *skb = NULL;
-+	struct bspveth_dma_bd *pbd_v = NULL;
-+
-+	if (!ptx_queue)
-+		return BSP_ERR_AGAIN;
-+
-+	work_limit = ptx_queue->work_limit;
-+	tail = ptx_queue->tail;
-+	next_to_free = ptx_queue->next_to_free;
-+
-+	for (i = 0; i < work_limit; i++) {
-+		if (next_to_free == tail)
-+			break;
-+
-+		ptx_bdinfo_v = &ptx_queue->pbdinfobase_v[next_to_free];
-+
-+		pbd_v = &ptx_queue->pbdbase_v[next_to_free];
-+
-+		skb = ptx_bdinfo_v->pdma_v;
-+
-+		dma_unmap_single(&g_bspveth_dev.ppcidev->dev,
-+				 pbd_v->dma_p | pbd_v->off,
-+				 pbd_v->len, DMA_TO_DEVICE);
-+
-+		if (skb)
-+			dev_kfree_skb_any(skb);
-+		else
-+			VETH_LOG(DLOG_ERROR,
-+				 "skb is NULL,tail=%d next_to_free=%d\n",
-+				 tail, next_to_free);
-+
-+		ptx_bdinfo_v->pdma_v = NULL;
-+		g_bspveth_dev.ptx_queue[queue]->s.freetx++;
-+
-+		next_to_free = (next_to_free + 1) & BSPVETH_POINT_MASK;
-+	}
-+
-+	ptx_queue->next_to_free = next_to_free;
-+	tail = ptx_queue->tail;
-+
-+	if (next_to_free != tail) {
-+		VETH_LOG(DLOG_DEBUG, "next_to_free(%d) != tail(%d)\n",
-+			 next_to_free, tail);
-+
-+		return BSP_ERR_AGAIN;
-+	}
-+
-+	return BSP_OK;
-+}
-+
-+s32 veth_recv_pkt(struct bspveth_rxtx_q *prx_queue, int queue)
-+{
-+	int ret = BSP_OK, i, work_limit;
-+	u32 tail, head;
-+	struct bspveth_bd_info *prx_bdinfo_v = NULL;
-+	struct bspveth_dma_bd *pbd_v = NULL;
-+	struct sk_buff *skb = NULL;
-+	dma_addr_t dma_map = 0;
-+	u32 off = 0;
-+
-+	if (!prx_queue)
-+		return BSP_ERR_AGAIN;
-+
-+	work_limit = prx_queue->work_limit;
-+	tail = prx_queue->tail;
-+
-+	for (i = 0; i < work_limit; i++) {
-+		head = prx_queue->head;
-+		if (tail == head)
-+			break;
-+
-+		prx_bdinfo_v = &prx_queue->pbdinfobase_v[tail];
-+
-+		skb = prx_bdinfo_v->pdma_v;
-+		if (!skb) {
-+			tail = (tail + 1) & BSPVETH_POINT_MASK;
-+			continue;
-+		}
-+
-+		prx_bdinfo_v->pdma_v = NULL;
-+		pbd_v = &prx_queue->pbdbase_v[tail];
-+
-+		off = pbd_v->off;
-+		if (off)
-+			skb_reserve(skb, off);
-+
-+		dma_unmap_single(&g_bspveth_dev.ppcidev->dev, pbd_v->dma_p,
-+				 BSPVETH_SKB_SIZE, DMA_FROM_DEVICE);
-+
-+		tail = (tail + 1) & BSPVETH_POINT_MASK;
-+
-+		skb_put(skb, pbd_v->len);
-+
-+		skb->protocol = eth_type_trans(skb, g_bspveth_dev.pnetdev);
-+		skb->ip_summed = CHECKSUM_NONE;
-+
-+		VETH_LOG(DLOG_DEBUG,
-+			 "skb->len=%d,skb->protocol=%d\n",
-+			 skb->len, skb->protocol);
-+
-+		VETH_LOG(DLOG_DEBUG,
-+			 "dma_p=0x%llx,dma_map=0x%llx,",
-+			 pbd_v->dma_p, dma_map);
-+
-+		VETH_LOG(DLOG_DEBUG,
-+			 "skb=%p,skb->data=%p,skb->len=%d,tail=%d,shm_off=%d\n",
-+			 skb, skb->data, skb->len, tail, off);
-+
-+		VETH_LOG(DLOG_DEBUG,
-+			 "skb_transport_header=%p skb_mac_header=%p ",
-+			 skb_transport_header(skb), skb_mac_header(skb));
-+
-+		VETH_LOG(DLOG_DEBUG,
-+			 "skb_network_header=%p\n", skb_network_header(skb));
-+
-+		VETH_LOG(DLOG_DEBUG,
-+			 "skb->data=0x%p skb->tail=%08x skb->len=%08x\n",
-+			  skb->data,
-+			  (unsigned int)skb->tail,
-+			  (unsigned int)skb->len);
-+
-+		g_bspveth_dev.prx_queue[queue]->s.pkt++;
-+		g_bspveth_dev.stats.rx_packets++;
-+		g_bspveth_dev.prx_queue[queue]->s.pktbyte += skb->len;
-+		g_bspveth_dev.stats.rx_bytes += skb->len;
-+
-+		ret = netif_rx(skb);
-+		if (ret == NET_RX_DROP) {
-+			g_bspveth_dev.prx_queue[queue]->s.netifrx_err++;
-+			g_bspveth_dev.stats.rx_errors++;
-+
-+			VETH_LOG(DLOG_DEBUG, "netif_rx failed\n");
-+		}
-+	}
-+
-+	prx_queue->tail = tail;
-+	head = prx_queue->head;
-+
-+	ret = veth_refill_rxskb(prx_queue, queue);
-+	if (ret != BSP_OK)
-+		VETH_LOG(DLOG_DEBUG, "veth_refill_rxskb failed\n");
-+
-+	if (tail != head) {
-+		VETH_LOG(DLOG_DEBUG, "tail(%d) != head(%d)\n", tail, head);
-+
-+		return BSP_ERR_AGAIN;
-+	}
-+
-+	return BSP_OK;
-+}
-+
-+#if !defined(USE_TASKLET) && defined(HAVE_TIMER_SETUP)
-+void veth_skbtrtimer_do(struct timer_list *t)
-+#else
-+void veth_skbtrtimer_do(unsigned long data)
-+#endif
++static void bma_priv_clean_up(struct bma_priv_data_s *bma_priv)
 +{
 +	int ret = 0;
-+
-+	ret = veth_skb_tr_task();
-+	if (ret == BSP_ERR_AGAIN) {
-+#ifndef USE_TASKLET
-+		(void)mod_timer(&g_bspveth_dev.skbtrtimer, jiffies_64);
-+#else
-+		tasklet_hi_schedule(&g_bspveth_dev.skb_task);
-+#endif
-+	}
-+}
-+
-+s32 veth_skbtimer_close(void)
-+{
-+#ifndef USE_TASKLET
-+	(void)del_timer_sync(&g_bspveth_dev.skbtrtimer);
-+#else
-+	tasklet_kill(&g_bspveth_dev.skb_task);
-+#endif
-+
-+	VETH_LOG(DLOG_DEBUG, "veth skbtimer close ok\n");
-+
-+	return 0;
-+}
-+
-+void veth_skbtimer_init(void)
-+{
-+#ifndef USE_TASKLET
-+#ifdef HAVE_TIMER_SETUP
-+	timer_setup(&g_bspveth_dev.skbtrtimer, veth_skbtrtimer_do, 0);
-+#else
-+	setup_timer(&g_bspveth_dev.skbtrtimer, veth_skbtrtimer_do,
-+		    (unsigned long)&g_bspveth_dev);
-+#endif
-+	(void)mod_timer(&g_bspveth_dev.skbtrtimer,
-+			jiffies_64 + BSPVETH_SKBTIMER_INTERVAL);
-+#else
-+	tasklet_init(&g_bspveth_dev.skb_task, veth_skbtrtimer_do,
-+		     (unsigned long)&g_bspveth_dev);
-+#endif
-+
-+	VETH_LOG(DLOG_DEBUG, "veth skbtimer init OK\n");
-+}
-+
-+void veth_netdev_exit(void)
-+{
-+	if (g_bspveth_dev.pnetdev) {
-+		netif_stop_queue(g_bspveth_dev.pnetdev);
-+		unregister_netdev(g_bspveth_dev.pnetdev);
-+		free_netdev(g_bspveth_dev.pnetdev);
-+
-+		VETH_LOG(DLOG_DEBUG, "veth netdev exit OK.\n");
-+	} else {
-+		VETH_LOG(DLOG_DEBUG, "veth_dev.pnetdev NULL.\n");
-+	}
-+}
-+
-+static void veth_shutdown_task(struct work_struct *work)
-+{
-+	struct net_device *netdev = g_bspveth_dev.pnetdev;
-+
-+	VETH_LOG(DLOG_ERROR, "veth is going down, please restart it manual\n");
-+
-+	g_bspveth_dev.shutdown_cnt++;
-+
-+	if (netif_carrier_ok(netdev)) {
-+		(void)bma_intf_unregister_int_notifier(&g_veth_int_nb);
-+
-+		netif_carrier_off(netdev);
-+
-+		bma_intf_set_open_status(g_bspveth_dev.bma_priv, DEV_CLOSE);
-+
-+		/* can't transmit any more */
-+		netif_stop_queue(g_bspveth_dev.pnetdev);
-+
-+		(void)veth_skbtimer_close();
-+
-+		(void)veth_dmatimer_close_H();
-+	}
-+}
-+
-+s32 veth_netdev_init(void)
-+{
-+	s32 l_ret = 0;
-+	struct net_device *netdev = NULL;
-+
-+	netdev = alloc_netdev_mq(sizeof(struct tag_pcie_comm_priv),
-+				 BSPVETH_DEV_NAME, NET_NAME_UNKNOWN,
-+				 veth_netdev_func_init, 1);
-+
-+	/* register netdev */
-+	l_ret = register_netdev(netdev);
-+	if (l_ret < 0) {
-+		VETH_LOG(DLOG_ERROR, "register_netdev failed!ret=%d\n", l_ret);
-+
-+		return -ENODEV;
-+	}
-+
-+	g_bspveth_dev.pnetdev = netdev;
-+
-+	VETH_LOG(DLOG_DEBUG, "veth netdev init OK\n");
-+
-+	INIT_WORK(&g_bspveth_dev.shutdown_task, veth_shutdown_task);
-+
-+	netif_carrier_off(netdev);
-+
-+	return BSP_OK;
-+}
-+
-+int veth_skb_tr_task(void)
-+{
-+	int rett = BSP_OK;
-+	int retr = BSP_OK;
 +	int i = 0;
-+	int task_state = BSP_OK;
-+	struct bspveth_rxtx_q *ptx_queue = NULL;
-+	struct bspveth_rxtx_q *prx_queue = NULL;
++	struct bma_priv_data_s *priv = bma_priv;
++	struct edma_recv_msg_s *msg = NULL;
 +
-+	for (i = 0; i < MAX_QUEUE_NUM; i++) {
-+		prx_queue = g_bspveth_dev.prx_queue[i];
-+		if (prx_queue) {
-+			g_bspveth_dev.run_skb_rx_task++;
-+			retr = veth_recv_pkt(prx_queue, i);
++	if (!priv)
++		return;
++
++	if (priv->user.type == TYPE_UNKNOWN) {
++		BMA_LOG(DLOG_ERROR, "already unknown type\n");
++		return;
++	}
++
++	for (i = 0; i < priv->user.max_recvmsg_nums; i++) {
++		ret = edma_host_recv_msg(&g_bma_dev->edma_host, priv, &msg);
++		if (ret)
++			break;
++
++		kfree(msg);
++	}
++
++	priv->user.type = TYPE_UNKNOWN;
++	priv->user.sub_type = 0;
++	priv->user.dma_transfer = 0;
++	priv->user.seq = 0;
++	priv->user.cur_recvmsg_nums = 0;
++	priv->user.max_recvmsg_nums = DEFAULT_MAX_RECV_MSG_NUMS;
++	kfree(priv);
++}
++
++static irqreturn_t bma_irq_handle(int irq, void *data)
++{
++	struct bma_dev_s *bma_dev = (struct bma_dev_s *)data;
++
++	if (!bma_dev)
++		return IRQ_HANDLED;
++
++	bma_dev->edma_host.statistics.b2h_int++;
++
++	if (!is_edma_b2h_int(&bma_dev->edma_host))
++		return edma_host_irq_handle(&bma_dev->edma_host);
++
++	return (irqreturn_t)atomic_notifier_call_chain(&bma_int_notify_list, 0,
++						       data);
++}
++
++int bma_devinft_init(struct bma_pci_dev_s *bma_pci_dev)
++{
++	int ret = 0;
++	int i = 0;
++	struct bma_dev_s *bma_dev = NULL;
++
++	if (!bma_pci_dev)
++		return -EFAULT;
++
++	bma_dev = kmalloc(sizeof(*bma_dev), (int)GFP_KERNEL);
++	if (!bma_dev)
++		return -ENOMEM;
++
++	memset(bma_dev, 0, sizeof(struct bma_dev_s));
++
++	bma_dev->bma_pci_dev = bma_pci_dev;
++	bma_pci_dev->bma_dev = bma_dev;
++
++	INIT_LIST_HEAD(&bma_dev->priv_list);
++	spin_lock_init(&bma_dev->priv_list_lock);
++
++	for (i = 0; i < TYPE_MAX; i++)
++		atomic_set(&bma_dev->au_count[i], 1);
++
++	ret = edma_host_init(&bma_dev->edma_host);
++	if (ret) {
++		BMA_LOG(DLOG_ERROR, "init edma host failed!err = %d\n", ret);
++		goto err_free_bma_dev;
++	}
++
++	BMA_LOG(DLOG_DEBUG, "irq = %d\n", bma_pci_dev->pdev->irq);
++
++	ret = request_irq(bma_pci_dev->pdev->irq, bma_irq_handle, IRQF_SHARED,
++			  "EDMA_IRQ", (void *)bma_dev);
++	if (ret) {
++		BMA_LOG(DLOG_ERROR, "request_irq failed!err = %d\n", ret);
++		goto err_edma_host_exit;
++	}
++
++	g_bma_dev = bma_dev;
++	BMA_LOG(DLOG_DEBUG, "ok\n");
++
++	return 0;
++
++err_edma_host_exit:
++	edma_host_cleanup(&bma_dev->edma_host);
++
++err_free_bma_dev:
++	kfree(bma_dev);
++	bma_pci_dev->bma_dev = NULL;
++
++	return ret;
++}
++
++void bma_devinft_cleanup(struct bma_pci_dev_s *bma_pci_dev)
++{
++	if (g_bma_dev) {
++		if ((bma_pci_dev) && bma_pci_dev->pdev &&
++		    bma_pci_dev->pdev->irq) {
++			BMA_LOG(DLOG_DEBUG, "irq = %d\n",
++				bma_pci_dev->pdev->irq);
++			free_irq(bma_pci_dev->pdev->irq,
++				 (void *)bma_pci_dev->bma_dev);
 +		}
 +
-+		ptx_queue = g_bspveth_dev.ptx_queue[i];
-+		if (ptx_queue) {
-+			g_bspveth_dev.run_skb_fr_task++;
-+			rett = veth_free_txskb(ptx_queue, i);
-+			if (__netif_subqueue_stopped
-+				(g_bspveth_dev.pnetdev, i) &&
-+				JUDGE_TX_QUEUE_SPACE
-+					(ptx_queue->head,
-+					 ptx_queue->next_to_free, 5)) {
-+				netif_wake_subqueue(g_bspveth_dev.pnetdev, i);
-+				VETH_LOG(DLOG_DEBUG, "queue is free, ");
-+				VETH_LOG(DLOG_DEBUG,
-+					 "head: %d, next to free: %d\n",
-+					 ptx_queue->head,
-+					 ptx_queue->next_to_free);
++		edma_host_cleanup(&g_bma_dev->edma_host);
++
++		if ((bma_pci_dev) && bma_pci_dev->bma_dev) {
++			kfree(bma_pci_dev->bma_dev);
++			bma_pci_dev->bma_dev = NULL;
++		}
++
++		g_bma_dev = NULL;
++	}
++}
++
++int bma_intf_register_int_notifier(struct notifier_block *nb)
++{
++	if (!nb)
++		return -1;
++
++	return atomic_notifier_chain_register(&bma_int_notify_list, nb);
++}
++EXPORT_SYMBOL_GPL(bma_intf_register_int_notifier);
++
++void bma_intf_unregister_int_notifier(struct notifier_block *nb)
++{
++	if (!nb)
++		return;
++
++	atomic_notifier_chain_unregister(&bma_int_notify_list, nb);
++}
++EXPORT_SYMBOL_GPL(bma_intf_unregister_int_notifier);
++
++int bma_intf_register_type(u32 type, u32 sub_type, enum intr_mod support_int,
++			   void **handle)
++{
++	int ret = 0;
++	struct bma_priv_data_s *priv = NULL;
++
++	if (!handle)
++		return -EFAULT;
++
++	ret = bma_priv_init(&priv);
++	if (ret) {
++		BMA_LOG(DLOG_ERROR, "bma_priv_init failed! ret = %d\n", ret);
++		return ret;
++	}
++
++	ret = bma_priv_insert_priv_list(priv, type, sub_type);
++	if (ret) {
++		bma_priv_clean_up(priv);
++		BMA_LOG(DLOG_ERROR,
++			"bma_priv_insert_priv_list failed! ret = %d\n", ret);
++		return ret;
++	}
++
++	if (support_int)
++		priv->user.support_int = INTR_ENABLE;
++
++	if (type == TYPE_VETH) {
++		priv->specific.veth.pdev = g_bma_dev->bma_pci_dev->pdev;
++
++		priv->specific.veth.veth_swap_phy_addr =
++		    g_bma_dev->bma_pci_dev->veth_swap_phy_addr;
++		priv->specific.veth.veth_swap_addr =
++		    g_bma_dev->bma_pci_dev->veth_swap_addr;
++		priv->specific.veth.veth_swap_len =
++		    g_bma_dev->bma_pci_dev->veth_swap_len;
++	}
++
++	*handle = priv;
++
++	return 0;
++}
++EXPORT_SYMBOL(bma_intf_register_type);
++
++int bma_intf_unregister_type(void **handle)
++{
++	struct bma_priv_data_s *priv = NULL;
++
++	if (!handle) {
++		BMA_LOG(DLOG_ERROR, "edna_priv is NULL\n");
++		return -EFAULT;
++	}
++
++	priv = (struct bma_priv_data_s *)*handle;
++	*handle = NULL;
++
++	priv->user.cur_recvmsg_nums++;
++	wake_up_interruptible(&priv->wait);
++
++	msleep(500);
++
++	bma_priv_delete_priv_list(priv);
++
++	bma_priv_clean_up(priv);
++
++	return 0;
++}
++EXPORT_SYMBOL(bma_intf_unregister_type);
++
++int bma_intf_check_edma_supported(void)
++{
++	return !(!g_bma_dev);
++}
++EXPORT_SYMBOL(bma_intf_check_edma_supported);
++
++int bma_intf_check_dma_status(enum dma_direction_e dir)
++{
++	return edma_host_check_dma_status(dir);
++}
++EXPORT_SYMBOL(bma_intf_check_dma_status);
++
++void bma_intf_reset_dma(enum dma_direction_e dir)
++{
++	edma_host_reset_dma(&g_bma_dev->edma_host, dir);
++}
++EXPORT_SYMBOL(bma_intf_reset_dma);
++
++void bma_intf_clear_dma_int(enum dma_direction_e dir)
++{
++	if (dir == BMC_TO_HOST)
++		clear_int_dmab2h(&g_bma_dev->edma_host);
++	else if (dir == HOST_TO_BMC)
++		clear_int_dmah2b(&g_bma_dev->edma_host);
++	else
++		return;
++}
++EXPORT_SYMBOL(bma_intf_clear_dma_int);
++
++int bma_intf_start_dma(void *handle, struct bma_dma_transfer_s *dma_transfer)
++{
++	int ret = 0;
++	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
++
++	if (!handle || !dma_transfer)
++		return -EFAULT;
++
++	ret = edma_host_dma_start(&g_bma_dev->edma_host, priv);
++	if (ret) {
++		BMA_LOG(DLOG_ERROR,
++			"edma_host_dma_start failed! result = %d\n", ret);
++		return ret;
++	}
++
++	ret = edma_host_dma_transfer(&g_bma_dev->edma_host, priv, dma_transfer);
++	if (ret)
++		BMA_LOG(DLOG_ERROR,
++			"edma_host_dma_transfer failed! ret = %d\n", ret);
++
++	ret = edma_host_dma_stop(&g_bma_dev->edma_host, priv);
++	if (ret) {
++		BMA_LOG(DLOG_ERROR,
++			"edma_host_dma_stop failed! result = %d\n", ret);
++		return ret;
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL(bma_intf_start_dma);
++
++int bma_intf_int_to_bmc(void *handle)
++{
++	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
++
++	if (!handle)
++		return -EFAULT;
++
++	if (priv->user.support_int == 0) {
++		BMA_LOG(DLOG_ERROR, "not support int to bmc.\n");
++		return -EFAULT;
++	}
++
++	edma_int_to_bmc(&g_bma_dev->edma_host);
++
++	return 0;
++}
++EXPORT_SYMBOL(bma_intf_int_to_bmc);
++
++int bma_intf_is_link_ok(void)
++{
++	return (g_bma_dev->edma_host.statistics.remote_status ==
++		REGISTERED) ? 1 : 0;
++}
++EXPORT_SYMBOL(bma_intf_is_link_ok);
++
++int bma_cdev_recv_msg(void *handle, char __user *data, size_t count)
++{
++	struct bma_priv_data_s *priv = NULL;
++	struct edma_recv_msg_s *msg = NULL;
++	int result = 0;
++	int len = 0;
++
++	if (!handle || !data || count == 0) {
++		BMA_LOG(DLOG_DEBUG, "input NULL point!\n");
++		return -EFAULT;
++	}
++
++	priv = (struct bma_priv_data_s *)handle;
++
++	result = edma_host_recv_msg(&g_bma_dev->edma_host, priv, &msg);
++	if (result != 0)
++		return -ENODATA;
++
++	if (msg->msg_len > count) {
++		kfree(msg);
++		return -EFAULT;
++	}
++
++	if (copy_to_user(data, (void *)msg->msg_data, msg->msg_len)) {
++		kfree(msg);
++		return -EFAULT;
++	}
++
++	len = msg->msg_len;
++
++	kfree(msg);
++
++	return len;
++}
++EXPORT_SYMBOL_GPL(bma_cdev_recv_msg);
++
++int bma_cdev_add_msg(void *handle, const char __user *msg, size_t msg_len)
++{
++	struct bma_priv_data_s *priv = NULL;
++	struct edma_msg_hdr_s *hdr = NULL;
++	unsigned long flags = 0;
++	int total_len = 0;
++	int ret = 0;
++	struct edma_host_s *phost = &g_bma_dev->edma_host;
++
++	if (!handle || !msg || msg_len == 0) {
++		BMA_LOG(DLOG_DEBUG, "input NULL point!\n");
++		return -EFAULT;
++	}
++
++	if (msg_len > CDEV_MAX_WRITE_LEN) {
++		BMA_LOG(DLOG_DEBUG, "input data is overlen!\n");
++		return -EINVAL;
++	}
++
++	priv = (struct bma_priv_data_s *)handle;
++
++	if (priv->user.type >= TYPE_MAX) {
++		BMA_LOG(DLOG_DEBUG, "error type = %d\n", priv->user.type);
++		return -EFAULT;
++	}
++	total_len = SIZE_OF_MSG_HDR + msg_len;
++
++	spin_lock_irqsave(&phost->send_msg_lock, flags);
++
++	if (phost->msg_send_write + total_len <=
++	    HOST_MAX_SEND_MBX_LEN - SIZE_OF_MBX_HDR) {
++		hdr = (struct edma_msg_hdr_s *)(phost->msg_send_buf +
++						phost->msg_send_write);
++		hdr->type = priv->user.type;
++		hdr->sub_type = priv->user.sub_type;
++		hdr->user_id = priv->user.user_id;
++		hdr->datalen = msg_len;
++		BMA_LOG(DLOG_DEBUG, "msg_len is %ld\n", msg_len);
++
++		if (copy_from_user(hdr->data, msg, msg_len)) {
++			BMA_LOG(DLOG_ERROR, "copy_from_user error\n");
++		ret = -EFAULT;
++		goto end;
++		}
++
++		phost->msg_send_write += total_len;
++		phost->statistics.send_bytes += total_len;
++		phost->statistics.send_pkgs++;
++#ifdef EDMA_TIMER
++		(void)mod_timer(&phost->timer, jiffies_64);
++#endif
++		BMA_LOG(DLOG_DEBUG, "msg_send_write = %d\n",
++			phost->msg_send_write);
++
++		ret = msg_len;
++		goto end;
++	} else {
++		BMA_LOG(DLOG_DEBUG,
++			"msg lost,msg_send_write: %d,msg_len:%d,max_len: %d\n",
++			phost->msg_send_write, total_len,
++			HOST_MAX_SEND_MBX_LEN);
++		ret = -ENOSPC;
++		goto end;
++	}
++
++end:
++	spin_unlock_irqrestore(&g_bma_dev->edma_host.send_msg_lock, flags);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(bma_cdev_add_msg);
++
++unsigned int bma_cdev_check_recv(void *handle)
++{
++	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
++	unsigned long flags = 0;
++	unsigned int result = 0;
++
++	if (priv) {
++		spin_lock_irqsave(&priv->recv_msg_lock, flags);
++
++		if (!list_empty(&priv->recv_msgs))
++			result = 1;
++
++		spin_unlock_irqrestore(&priv->recv_msg_lock, flags);
++	}
++
++	return result;
++}
++EXPORT_SYMBOL_GPL(bma_cdev_check_recv);
++
++void *bma_cdev_get_wait_queue(void *handle)
++{
++	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
++
++	return priv ? ((void *)&priv->wait) : NULL;
++}
++EXPORT_SYMBOL_GPL(bma_cdev_get_wait_queue);
++
++void bma_intf_set_open_status(void *handle, int s)
++{
++	struct bma_priv_data_s *priv = (struct bma_priv_data_s *)handle;
++	int i = 0;
++	int ret = 0;
++	unsigned long flags = 0;
++	char drv_msg[3] = { 0 };
++	struct edma_recv_msg_s *tmp_msg = NULL;
++
++	if (!priv || priv->user.type >= TYPE_MAX)
++		return;
++
++	drv_msg[0] = 1;
++	drv_msg[1] = priv->user.type;
++	drv_msg[2] = s;
++
++	(void)edma_host_send_driver_msg((void *)drv_msg, sizeof(drv_msg),
++						DEV_OPEN_STATUS_ANS);
++
++		spin_lock_irqsave(&priv->recv_msg_lock, flags);
++		g_bma_dev->edma_host.local_open_status[priv->user.type] = s;
++
++		if (s == DEV_CLOSE && priv->user.cur_recvmsg_nums > 0) {
++			for (i = 0; i < priv->user.max_recvmsg_nums; i++) {
++				ret = edma_host_recv_msg(&g_bma_dev->edma_host,
++							 priv, &tmp_msg);
++				if (ret < 0)
++					break;
++
++				kfree(tmp_msg);
++				tmp_msg = NULL;
 +			}
 +		}
 +
-+		if (rett == BSP_ERR_AGAIN || retr == BSP_ERR_AGAIN)
-+			task_state = BSP_ERR_AGAIN;
-+	}
-+
-+	return task_state;
++		spin_unlock_irqrestore(&priv->recv_msg_lock, flags);
 +}
++EXPORT_SYMBOL_GPL(bma_intf_set_open_status);
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h b/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h
+new file mode 100644
+index 000000000000..138d1e278479
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Huawei iBMA driver.
++ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+static int veth_int_handler(struct notifier_block *pthis, unsigned long ev,
-+			    void *unuse)
-+{
-+	g_bspveth_dev.recv_int++;
++#ifndef _BMA_DEVINTF_H_
++#define _BMA_DEVINTF_H_
 +
-+	if (netif_running(g_bspveth_dev.pnetdev)) {
-+#ifndef USE_TASKLET
-+		(void)mod_timer(&g_bspveth_dev.dmatimer, jiffies_64);
-+#else
-+		tasklet_schedule(&g_bspveth_dev.dma_task);
++#include <linux/mutex.h>
++#include "bma_pci.h"
++#include "edma_host.h"
++
++struct bma_dev_s {
++	/* proc */
++	struct proc_dir_entry *proc_bma_root;
++
++	atomic_t au_count[TYPE_MAX];
++
++	struct list_head priv_list;
++	/* spinlock for priv list */
++	spinlock_t priv_list_lock;
++
++	struct bma_pci_dev_s *bma_pci_dev;
++	struct edma_host_s edma_host;
++};
++
++int bma_devinft_init(struct bma_pci_dev_s *bma_pci_dev);
++void bma_devinft_cleanup(struct bma_pci_dev_s *bma_pci_dev);
 +
 +#endif
-+	} else {
-+		VETH_LOG(DLOG_DEBUG, "netif is not running\n");
-+	}
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h b/drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h
+new file mode 100644
+index 000000000000..469d2095e00e
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h
+@@ -0,0 +1,118 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Huawei iBMA driver.
++ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+	return IRQ_HANDLED;
-+}
++#ifndef _BMA_INCLUDE_H_
++#define _BMA_INCLUDE_H_
 +
-+#if !defined(USE_TASKLET) && defined(HAVE_TIMER_SETUP)
-+void veth_dma_tx_timer_do_H(struct timer_list *t)
-+#else
-+void veth_dma_tx_timer_do_H(unsigned long data)
++#include <linux/slab.h>
++#include <asm/ioctls.h>
++#include <linux/capability.h>
++#include <linux/uaccess.h>	/* copy_*_user */
++#include <linux/delay.h>	/* udelay */
++#include <linux/mm.h>
++#include <linux/types.h>
++#include <linux/pci.h>
++#include <linux/mutex.h>
++#include <linux/interrupt.h>	/*tasklet */
++#include <linux/version.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/version.h>
++#include <linux/semaphore.h>
++#include <linux/sched.h>
++
++#define UNUSED(x) (x = x)
++#define KBOX_FALSE (-1)
++#define KBOX_TRUE 0
++
++#define KBOX_IOC_MAGIC (0xB2)
++
++#define DEFAULT_MAX_RECV_MSG_NUMS   32
++#define MAX_RECV_MSG_NUMS 1024
++
++#define STRFICATION(R) #R
++#define MICRO_TO_STR(R) STRFICATION(R)
++
++enum {
++	DLOG_ERROR = 0,
++	DLOG_DEBUG = 1,
++};
++
++enum {
++	DEV_CLOSE = 0,
++	DEV_OPEN = 1,
++	DEV_OPEN_STATUS_REQ = 0xf0,
++	DEV_OPEN_STATUS_ANS
++};
++
++#define BAD_FUNC_ADDR(x) ((x) == 0xFFFFFFFF || ((x) == 0))
++
++struct bma_user_s {
++	struct list_head link;
++
++	u32 type;
++	u32 sub_type;
++	u8 user_id;
++
++	u8 dma_transfer:1, support_int:1;
++
++	u8 reserve1[2];
++	u32 seq;
++	u16 cur_recvmsg_nums;
++	u16 max_recvmsg_nums;
++};
++
++struct bma_priv_data_veth_s {
++	struct pci_dev *pdev;
++
++	unsigned long veth_swap_phy_addr;
++	void __iomem *veth_swap_addr;
++	unsigned long veth_swap_len;
++};
++
++struct bma_priv_data_s {
++	struct bma_user_s user;
++	/* spinlock for recv msg list */
++	spinlock_t recv_msg_lock;
++	struct list_head recv_msgs;
++	struct file *file;
++	wait_queue_head_t wait;
++
++	union {
++		struct bma_priv_data_veth_s veth;
++	} specific;
++};
++
++#if defined(timer_setup) && defined(from_timer)
++#define HAVE_TIMER_SETUP
 +#endif
-+{
-+	int txret, rxret;
 +
-+	txret = veth_dma_task_H(BSPVETH_TX);
++void __iomem *kbox_get_base_addr(void);
++unsigned long kbox_get_io_len(void);
++unsigned long kbox_get_base_phy_addr(void);
++int edma_param_set_debug(const char *buf, const struct kernel_param *kp);
 +
-+	rxret = veth_dma_task_H(BSPVETH_RX);
++#define GET_SYS_SECONDS(t) do \
++	{\
++		struct timespec uptime;\
++		get_monotonic_boottime(&uptime);\
++		t = uptime.tv_sec;\
++	} while (0)
 +
-+	if (txret == BSP_ERR_AGAIN || rxret == BSP_ERR_AGAIN) {
-+#ifndef USE_TASKLET
-+		(void)mod_timer(&g_bspveth_dev.dmatimer, jiffies_64);
-+#else
-+		tasklet_hi_schedule(&g_bspveth_dev.dma_task);
++#define SECONDS_PER_DAY (24 * 3600)
++#define SECONDS_PER_HOUR (3600)
++#define SECONDS_PER_MINUTE (60)
++
 +#endif
-+	}
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c b/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c
+new file mode 100644
+index 000000000000..577acaedb0e2
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c
+@@ -0,0 +1,533 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Huawei iBMA driver.
++ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/pci.h>
++#include <linux/version.h>
++#include <linux/module.h>
++
++#include "bma_include.h"
++#include "bma_devintf.h"
++#include "bma_pci.h"
++
++#define PCI_KBOX_MODULE_NAME		"edma_drv"
++#define PCI_VENDOR_ID_HUAWEI_FPGA	0x19aa
++#define PCI_DEVICE_ID_KBOX_0		0xe004
++
++#define PCI_VENDOR_ID_HUAWEI_PME	0x19e5
++#define PCI_DEVICE_ID_KBOX_0_PME	0x1710
++#define PCI_PME_USEABLE_SPACE		(4 * 1024 * 1024)
++#define PME_DEV_CHECK(device, vendor) ((device) == PCI_DEVICE_ID_KBOX_0_PME && \
++				       (vendor) == PCI_VENDOR_ID_HUAWEI_PME)
++
++#define PCI_BAR0_PME_1710		0x85800000
++#define PCI_BAR0			0
++#define PCI_BAR1			1
++#define PCI_USING_DAC_DEFAULT 0
++
++#define GET_HIGH_ADDR(address)	((sizeof(unsigned long) == 8) ? \
++				 ((u64)(address) >> 32) : 0)
++
++/* The value of the expression is true
++ * only when dma_set_mask and dma_set_coherent_mask failed.
++ */
++#define SET_DMA_MASK(p_dev) \
++	(dma_set_mask((p_dev), DMA_BIT_MASK(64)) && \
++	 dma_set_coherent_mask((p_dev), DMA_BIT_MASK(64)))
++
++int pci_using_dac = PCI_USING_DAC_DEFAULT;
++int debug = DLOG_ERROR;
++MODULE_PARM_DESC(debug, "Debug switch (0=close debug, 1=open debug)");
++
++static struct bma_pci_dev_s *g_bma_pci_dev;
++
++static int bma_pci_suspend(struct pci_dev *pdev, pm_message_t state);
++static int bma_pci_resume(struct pci_dev *pdev);
++static int bma_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent);
++static void bma_pci_remove(struct pci_dev *pdev);
++
++static const struct pci_device_id bma_pci_tbl[] = {
++	{PCI_DEVICE(PCI_VENDOR_ID_HUAWEI_FPGA, PCI_DEVICE_ID_KBOX_0)},
++	{PCI_DEVICE(PCI_VENDOR_ID_HUAWEI_PME, PCI_DEVICE_ID_KBOX_0_PME)},
++	{}
++};
++MODULE_DEVICE_TABLE(pci, bma_pci_tbl);
++
++int edma_param_get_statics(char *buf, const struct kernel_param *kp)
++{
++	if (!buf)
++		return 0;
++
++	return edmainfo_show(buf);
 +}
 +
-+s32 veth_dmatimer_close_H(void)
++module_param_call(statistics, NULL, edma_param_get_statics, &debug, 0444);
++MODULE_PARM_DESC(statistics, "Statistics info of edma driver,readonly");
++
++int edma_param_set_debug(const char *buf, const struct kernel_param *kp)
 +{
-+#ifndef USE_TASKLET
-+	(void)del_timer_sync(&g_bspveth_dev.dmatimer);
-+#else
-+	tasklet_kill(&g_bspveth_dev.dma_task);
-+#endif
++	unsigned long val = 0;
++	int ret = 0;
 +
-+	VETH_LOG(DLOG_DEBUG, "bspveth_dmatimer_close RXTX TIMER ok\n");
++	if (!buf)
++		return -EINVAL;
 +
-+	return 0;
-+}
++	ret = kstrtoul(buf, 0, &val);
 +
-+void veth_dmatimer_init_H(void)
-+{
-+#ifndef USE_TASKLET
-+#ifdef HAVE_TIMER_SETUP
-+	timer_setup(&g_bspveth_dev.dmatimer, veth_dma_tx_timer_do_H, 0);
-+#else
-+	setup_timer(&g_bspveth_dev.dmatimer, veth_dma_tx_timer_do_H,
-+		    (unsigned long)&g_bspveth_dev);
-+#endif
-+	(void)mod_timer(&g_bspveth_dev.dmatimer,
-+			jiffies_64 + BSPVETH_DMATIMER_INTERVAL);
-+#else
-+	tasklet_init(&g_bspveth_dev.dma_task, veth_dma_tx_timer_do_H,
-+		     (unsigned long)&g_bspveth_dev);
-+#endif
-+
-+	VETH_LOG(DLOG_DEBUG, "bspveth_dmatimer_init RXTX TIMER OK\n");
-+}
-+
-+s32 dmacmp_err_deal(struct bspveth_rxtx_q *prxtx_queue, u32 queue,
-+		    u32 type)
-+{
-+	prxtx_queue->dmacmperr = 0;
-+	prxtx_queue->start_dma = 0;
-+
-+	(void)veth_reset_dma(type);
-+
-+	if (type == BSPVETH_RX) {
-+		VETH_LOG(DLOG_DEBUG,
-+			 "bmc->host dma time out,dma count:%d,work_limit:%d\n",
-+			 prxtx_queue->dmal_cnt,
-+			 prxtx_queue->work_limit);
-+
-+		g_bspveth_dev.prx_queue[queue]->s.dma_failed++;
-+	} else {
-+		VETH_LOG(DLOG_DEBUG,
-+			 "host->bmc dma time out,dma count:%d,work_limit:%d\n",
-+			 prxtx_queue->dmal_cnt,
-+			 prxtx_queue->work_limit);
-+
-+		g_bspveth_dev.ptx_queue[queue]->s.dma_failed++;
-+	}
-+
-+	if (prxtx_queue->dmal_cnt > 1)
-+		prxtx_queue->work_limit = (prxtx_queue->dmal_cnt >> 1);
-+
-+	prxtx_queue->dma_overtime++;
-+	if (prxtx_queue->dma_overtime > BSPVETH_MAX_QUE_DEEP) {
-+		schedule_work(&g_bspveth_dev.shutdown_task);
-+
-+		return -EFAULT;
-+	}
-+
-+	return BSP_OK;
-+}
-+
-+s32 veth_check_dma_status(struct bspveth_rxtx_q *prxtx_queue,
-+			  u32 queue, u32 type)
-+{
-+	int i = 0;
-+	enum dma_direction_e dir;
-+
-+	dir = GET_DMA_DIRECTION(type);
-+
-+	for (i = 0; i < BSPVETH_CHECK_DMA_STATUS_TIMES; i++) {
-+		if (bma_intf_check_dma_status(dir) == BSPVETH_DMA_OK)
-+			break;
-+
-+		cpu_relax();
-+
-+		if (i > 20)
-+			udelay(5);
-+	}
-+
-+	if (i >= BSPVETH_CHECK_DMA_STATUS_TIMES) {
-+		INC_STATIS_RXTX(queue, dma_busy, 1, type);
-+		prxtx_queue->dmacmperr++;
-+
-+		return -EFAULT;
-+	}
-+
-+	return BSP_OK;
-+}
-+
-+s32 __check_dmacmp_H(struct bspveth_rxtx_q *prxtx_queue, u32 queue,
-+		     u32 type)
-+{
-+	u16 start_dma = 0;
-+	u16 dmacmperr = 0;
-+	u32 cnt = 0;
-+	u32 len = 0;
-+	u32 host_head = 0;
-+	u32 host_tail = 0;
-+	u32 shm_head = 0;
-+	u32 shm_tail = 0;
-+	s32 ret = 0;
-+	struct bspveth_shmq_hd *pshmq_head = NULL;
-+
-+	if (!prxtx_queue || !prxtx_queue->pshmqhd_v)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	pshmq_head = prxtx_queue->pshmqhd_v;
-+	dmacmperr = prxtx_queue->dmacmperr;
-+	start_dma = prxtx_queue->start_dma;
-+	if (!start_dma)
-+		return BSP_OK;
-+
-+	if (dmacmperr > BSPVETH_WORK_LIMIT / 4)
-+		return dmacmp_err_deal(prxtx_queue, queue, type);
-+
-+	ret = veth_check_dma_status(prxtx_queue, queue, type);
-+	if (ret != BSP_OK)
++	if (ret)
 +		return ret;
 +
-+	prxtx_queue->start_dma = 0;
-+	prxtx_queue->dma_overtime = 0;
++	if (val > 1)
++		return -EINVAL;
 +
-+	if (type == BSPVETH_RX) {
-+		cnt = prxtx_queue->dmal_cnt;
-+		len = prxtx_queue->dmal_byte;
-+
-+		host_head = prxtx_queue->head;
-+		shm_tail = pshmq_head->tail;
-+
-+		pshmq_head->tail = (shm_tail + cnt) & BSPVETH_POINT_MASK;
-+		prxtx_queue->head = (host_head + cnt) & BSPVETH_POINT_MASK;
-+
-+		g_bspveth_dev.prx_queue[queue]->s.dmapkt += cnt;
-+		g_bspveth_dev.prx_queue[queue]->s.dmapktbyte += len;
-+	} else {
-+		cnt = prxtx_queue->dmal_cnt;
-+		len = prxtx_queue->dmal_byte;
-+
-+		host_tail = prxtx_queue->tail;
-+		shm_head = pshmq_head->head;
-+
-+		prxtx_queue->tail = (host_tail + cnt) & BSPVETH_POINT_MASK;
-+		pshmq_head->head = (shm_head + cnt) & BSPVETH_POINT_MASK;
-+
-+		g_bspveth_dev.ptx_queue[queue]->s.dmapkt += cnt;
-+		g_bspveth_dev.ptx_queue[queue]->s.dmapktbyte += len;
-+	}
-+
-+#ifndef USE_TASKLET
-+	(void)mod_timer(&g_bspveth_dev.skbtrtimer, jiffies_64);
-+#else
-+	tasklet_hi_schedule(&g_bspveth_dev.skb_task);
-+#endif
-+
-+	(void)bma_intf_int_to_bmc(g_bspveth_dev.bma_priv);
-+
-+	g_bspveth_dev.tobmc_int++;
-+
-+	return BSP_OK;
++	return param_set_int(buf, kp);
 +}
++EXPORT_SYMBOL_GPL(edma_param_set_debug);
 +
-+s32 __checkspace_H(struct bspveth_rxtx_q *prxtx_queue, u32 queue,
-+		   u32 type, u32 *pcnt)
++module_param_call(debug, &edma_param_set_debug, &param_get_int, &debug, 0644);
++
++void __iomem *kbox_get_base_addr(void)
 +{
-+	int ret = BSP_OK;
-+	u32 host_head, host_tail, host_nextfill;
-+	u32 shm_head, shm_tail, shm_nextfill;
-+	u32 shm_cnt, host_cnt, cnt_tmp, cnt;
-+	struct bspveth_shmq_hd *pshmq_head = NULL;
-+
-+	if (!prxtx_queue || !prxtx_queue->pshmqhd_v)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	pshmq_head = prxtx_queue->pshmqhd_v;
-+	host_head = prxtx_queue->head;
-+	host_tail = prxtx_queue->tail;
-+	host_nextfill = prxtx_queue->next_to_fill;
-+	shm_head = pshmq_head->head;
-+	shm_tail = pshmq_head->tail;
-+	shm_nextfill = pshmq_head->next_to_fill;
-+
-+	switch (type) {
-+	case BSPVETH_RX:
-+		if (shm_tail == shm_head) {
-+			INC_STATIS_RXTX(queue, shm_emp, 1, type);
-+			ret = BSP_ERR_NOT_TO_HANDLE;
-+			goto failed;
-+		}
-+
-+		if (!JUDGE_RX_QUEUE_SPACE(host_head, host_nextfill, 1))
-+			return -EFAULT;
-+
-+		shm_cnt = (shm_head - shm_tail) & BSPVETH_POINT_MASK;
-+		cnt_tmp = min(shm_cnt, prxtx_queue->work_limit);
-+
-+		host_cnt = (host_nextfill - host_head) & BSPVETH_POINT_MASK;
-+		cnt = min(cnt_tmp, host_cnt);
-+
-+		break;
-+
-+	case BSPVETH_TX:
-+		if (host_tail == host_head) {
-+			INC_STATIS_RXTX(queue, q_emp, 1, type);
-+			ret = BSP_ERR_NOT_TO_HANDLE;
-+			goto failed;
-+		}
-+
-+		if (!JUDGE_TX_QUEUE_SPACE(shm_head, shm_nextfill, 1))
-+			return -EFAULT;
-+
-+		host_cnt = (host_head - host_tail) & BSPVETH_POINT_MASK;
-+		cnt_tmp = min(host_cnt, prxtx_queue->work_limit);
-+		shm_cnt = (shm_nextfill - (shm_head + 1)) & BSPVETH_POINT_MASK;
-+		cnt = min(cnt_tmp, shm_cnt);
-+
-+		break;
-+
-+	default:
-+		INC_STATIS_RXTX(queue, type_err, 1, type);
-+		ret = -EFAULT;
-+		goto failed;
++	if (!g_bma_pci_dev || (!(g_bma_pci_dev->kbox_base_addr))) {
++		BMA_LOG(DLOG_ERROR, "kbox_base_addr NULL point\n");
++		return NULL;
 +	}
 +
-+	if (cnt > (BSPVETH_DMABURST_MAX * 7 / 8))
-+		INC_STATIS_RXTX(queue, dma_burst, 1, type);
-+
-+#ifdef __UT_TEST
-+	if (g_testdma) {
-+		VETH_LOG(DLOG_ERROR,
-+			 "[type %d],host_cnt=%d cnt_tmp=%d shm_cnt=%d cnt=%d\n",
-+			 type, host_cnt, cnt_tmp, shm_cnt, cnt);
-+	}
-+#endif
-+
-+	*pcnt = cnt;
-+
-+	return BSP_OK;
-+
-+failed:
-+	return ret;
++	return g_bma_pci_dev->kbox_base_addr;
 +}
++EXPORT_SYMBOL_GPL(kbox_get_base_addr);
 +
-+int __make_dmalistbd_h2b_H(struct bspveth_rxtx_q *prxtx_queue,
-+			   u32 cnt, u32 type)
++unsigned long kbox_get_io_len(void)
 +{
-+	u32 i = 0;
-+	u32 len = 0;
-+	u32 host_tail = 0;
-+	u32 shm_head = 0;
-+	u32 off = 0;
-+	struct bspveth_dmal *pdmalbase_v = NULL;
-+	struct bspveth_shmq_hd *pshmq_head = NULL;
-+	struct bspveth_bd_info *pbdinfobase_v = NULL;
-+	struct bspveth_dma_bd *pbdbase_v = NULL;
-+	struct bspveth_dma_shmbd *pshmbdbase_v = NULL;
-+
-+	if (!prxtx_queue)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	pdmalbase_v = prxtx_queue->pdmalbase_v;
-+	pshmq_head = prxtx_queue->pshmqhd_v;
-+	pbdinfobase_v = prxtx_queue->pbdinfobase_v;
-+	pbdbase_v = prxtx_queue->pbdbase_v;
-+	pshmbdbase_v = prxtx_queue->pshmbdbase_v;
-+	if (!pdmalbase_v || !pshmq_head || !pbdinfobase_v ||
-+	    !pbdbase_v || !pshmbdbase_v)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	host_tail = prxtx_queue->tail;
-+	shm_head = pshmq_head->head;
-+
-+	for (i = 0; i < cnt; i++) {
-+		off = pbdbase_v[QUEUE_MASK(host_tail + i)].off;
-+
-+		if (i == (cnt - 1))
-+			pdmalbase_v[i].chl = 0x9;
-+		else
-+			pdmalbase_v[i].chl = 0x0000001;
-+		pdmalbase_v[i].len =
-+		    (pbdinfobase_v[QUEUE_MASK(host_tail + i)].pdma_v)->len;
-+		pdmalbase_v[i].slow =
-+		    lower_32_bits(pbdbase_v[QUEUE_MASK(host_tail + i)].dma_p);
-+		pdmalbase_v[i].shi =
-+		    upper_32_bits(pbdbase_v[QUEUE_MASK(host_tail + i)].dma_p);
-+		pdmalbase_v[i].dlow =
-+		    lower_32_bits(pshmbdbase_v[QUEUE_MASK(shm_head + i)].dma_p);
-+		pdmalbase_v[i].dhi = 0;
-+
-+		pshmbdbase_v[QUEUE_MASK(shm_head + i)].len = pdmalbase_v[i].len;
-+
-+		pdmalbase_v[i].len += off;
-+
-+		pshmbdbase_v[QUEUE_MASK(shm_head + i)].off = off;
-+
-+		len += pdmalbase_v[i].len;
-+
-+#ifdef __UT_TEST
-+		if (g_testdma) {
-+			struct sk_buff *skb =
-+				pbdinfobase_v[QUEUE_MASK(host_tail + i)].pdma_v;
-+
-+			VETH_LOG(DLOG_ERROR,
-+				 "[%d][makebd-H2B]:chl=0x%x,len=%d,slow=0x%x,",
-+				 i, pdmalbase_v[i].chl, pdmalbase_v[i].len,
-+				 pdmalbase_v[i].slow);
-+			VETH_LOG(DLOG_ERROR,
-+				 "shi=0x%x,dlow=0x%x,dhi=0x%x,skb=%p,",
-+				 pdmalbase_v[i].shi, pdmalbase_v[i].dlow,
-+				 pdmalbase_v[i].dhi, skb);
-+			VETH_LOG(DLOG_ERROR,
-+				 "skb->data=%p,skb->len=%d,host_tail+i=%d,",
-+				 skb->data, skb->len,
-+				 QUEUE_MASK(host_tail + i));
-+			VETH_LOG(DLOG_ERROR,
-+				 "shm_head+i=%d,off=%d\n",
-+				 QUEUE_MASK(shm_head + i), off);
-+		}
-+#endif
++	if (!g_bma_pci_dev) {
++		BMA_LOG(DLOG_ERROR, "kbox_io_len is error,can not get it\n");
++		return 0;
 +	}
 +
-+	pdmalbase_v[i].chl = 0x7;
-+	pdmalbase_v[i].len = 0x0;
-+	pdmalbase_v[i].slow = lower_32_bits((u64)prxtx_queue->pdmalbase_p);
-+	pdmalbase_v[i].shi = upper_32_bits((u64)prxtx_queue->pdmalbase_p);
-+	pdmalbase_v[i].dlow = 0;
-+	pdmalbase_v[i].dhi = 0;
-+
-+	prxtx_queue->dmal_cnt = cnt;
-+	prxtx_queue->dmal_byte = len;
-+
-+#ifdef __UT_TEST
-+	if (g_testdma) {
-+		VETH_LOG(DLOG_ERROR,
-+			 "[END][makebd-H2B]:chl=0x%x,len=%d,slow=0x%x,",
-+			 pdmalbase_v[i].chl, pdmalbase_v[i].len,
-+			 pdmalbase_v[i].slow);
-+		VETH_LOG(DLOG_ERROR,
-+			 "shi=0x%x,dmal_cnt=%d,dmal_dir=%d,dmal_byte=%d,",
-+			 pdmalbase_v[i].shi, cnt, type, len);
-+		VETH_LOG(DLOG_ERROR, "pdmalbase_v=%p\n", pdmalbase_v);
-+	}
-+#endif
-+
-+	return 0;
++	return g_bma_pci_dev->kbox_base_len;
 +}
++EXPORT_SYMBOL_GPL(kbox_get_io_len);
 +
-+int __make_dmalistbd_b2h_H(struct bspveth_rxtx_q *prxtx_queue, u32 cnt,
-+			   u32 type)
++unsigned long kbox_get_base_phy_addr(void)
 +{
-+	u32 i, len = 0, host_head, shm_tail, off;
-+	struct bspveth_dmal *pdmalbase_v = NULL;
-+	struct bspveth_shmq_hd *pshmq_head = NULL;
-+	struct bspveth_bd_info *pbdinfobase_v = NULL;
-+	struct bspveth_dma_bd *pbdbase_v = NULL;
-+	struct bspveth_dma_shmbd *pshmbdbase_v = NULL;
-+
-+	if (!prxtx_queue) {
-+		VETH_LOG(DLOG_ERROR,
-+			 "[END][makebd-B2H]:prxtx_queue NULL!!!\n");
-+		return BSP_ERR_NULL_POINTER;
++	if (!g_bma_pci_dev || !g_bma_pci_dev->kbox_base_phy_addr) {
++		BMA_LOG(DLOG_ERROR, "kbox_base_phy_addr NULL point\n");
++		return 0;
 +	}
 +
-+	pdmalbase_v = prxtx_queue->pdmalbase_v;
-+	pshmq_head = prxtx_queue->pshmqhd_v;
-+	pbdinfobase_v = prxtx_queue->pbdinfobase_v;
-+	pbdbase_v = prxtx_queue->pbdbase_v;
-+	pshmbdbase_v = prxtx_queue->pshmbdbase_v;
-+	if (!pdmalbase_v || !pshmq_head || !pbdinfobase_v ||
-+	    !pbdbase_v || !pshmbdbase_v) {
-+		VETH_LOG(DLOG_ERROR,
-+			 "[END][makebd-B2H]:pdmalbase_v NULL!!!\n");
-+		return BSP_ERR_NULL_POINTER;
-+	}
-+
-+	host_head = prxtx_queue->head;
-+	shm_tail = pshmq_head->tail;
-+
-+	for (i = 0; i < cnt; i++) {
-+		off = pshmbdbase_v[QUEUE_MASK(shm_tail + i)].off;
-+		if (i == (cnt - 1))
-+			pdmalbase_v[i].chl = 0x9;
-+		else
-+			pdmalbase_v[i].chl = 0x0000001;
-+		pdmalbase_v[i].len = pshmbdbase_v[QUEUE_MASK(shm_tail + i)].len;
-+		pdmalbase_v[i].slow =
-+		    lower_32_bits(pshmbdbase_v[QUEUE_MASK(shm_tail + i)].dma_p);
-+		pdmalbase_v[i].shi = 0;
-+		pdmalbase_v[i].dlow =
-+		    lower_32_bits(pbdbase_v[QUEUE_MASK(host_head + i)].dma_p);
-+		pdmalbase_v[i].dhi =
-+		    upper_32_bits(pbdbase_v[QUEUE_MASK(host_head + i)].dma_p);
-+		pdmalbase_v[i].len += off;
-+
-+		pbdbase_v[QUEUE_MASK(host_head + i)].off = off;
-+		pbdbase_v[QUEUE_MASK(host_head + i)].len = pdmalbase_v[i].len;
-+
-+		len += pdmalbase_v[i].len;
-+
-+#ifdef __UT_TEST
-+		if (g_testdma) {
-+			struct sk_buff *skb =
-+				pbdinfobase_v[QUEUE_MASK(host_head + i)].pdma_v;
-+
-+			VETH_LOG(DLOG_ERROR,
-+				 "[%d][makebd-B2H]:chl=0x%x,len=%d,slow=0x%x,",
-+				 i, pdmalbase_v[i].chl, pdmalbase_v[i].len,
-+				 pdmalbase_v[i].slow);
-+			VETH_LOG(DLOG_ERROR,
-+				 "shi=0x%x,dlow=0x%x,dhi=0x%x,skb=%p,",
-+				 pdmalbase_v[i].shi, pdmalbase_v[i].dlow,
-+				 pdmalbase_v[i].dhi, skb);
-+			VETH_LOG(DLOG_ERROR,
-+				 "skb->data=%p,skb->len=%d,shm_tail+i=%d,",
-+				 skb->data, skb->len,
-+				 QUEUE_MASK(shm_tail + i));
-+			VETH_LOG(DLOG_ERROR,
-+				 "host_head+i=%d,off=%d\n",
-+				 QUEUE_MASK(host_head + i), off);
-+		}
-+#endif
-+	}
-+
-+	pdmalbase_v[i].chl = 0x0000007;
-+	pdmalbase_v[i].len = 0x0;
-+	pdmalbase_v[i].slow = lower_32_bits((u64)prxtx_queue->pdmalbase_p);
-+	pdmalbase_v[i].shi = upper_32_bits((u64)prxtx_queue->pdmalbase_p);
-+	pdmalbase_v[i].dlow = 0;
-+	pdmalbase_v[i].dhi = 0;
-+
-+	prxtx_queue->dmal_cnt = cnt;
-+	prxtx_queue->dmal_byte = len;
-+
-+#ifdef __UT_TEST
-+	if (g_testdma) {
-+		VETH_LOG(DLOG_ERROR,
-+			 "[END][makebd-B2H]:chl=0x%x,len=%d,slow=0x%x,",
-+			 pdmalbase_v[i].chl, pdmalbase_v[i].len,
-+			 pdmalbase_v[i].slow);
-+		VETH_LOG(DLOG_ERROR,
-+			 "shi=0x%x,dmal_cnt=%d,dmal_dir=%d,dmal_byte=%d ",
-+			 pdmalbase_v[i].shi, cnt, type, len);
-+		VETH_LOG(DLOG_ERROR, "pdmalbase_v=%p\n", pdmalbase_v);
-+	}
-+
-+#endif
-+
-+	return 0;
++	return g_bma_pci_dev->kbox_base_phy_addr;
 +}
++EXPORT_SYMBOL_GPL(kbox_get_base_phy_addr);
 +
-+s32 __start_dmalist_H(struct bspveth_rxtx_q *prxtx_queue, u32 cnt, u32 type)
-+{
-+	int ret = BSP_OK;
-+	struct bma_dma_transfer_s dma_transfer = { 0 };
-+
-+	if (!prxtx_queue)
-+		return -1;
-+
-+	switch (type) {
-+	case BSPVETH_RX:
-+		ret = __make_dmalistbd_b2h_H(prxtx_queue, cnt, type);
-+		if (ret)
-+			goto failed;
-+		dma_transfer.dir = BMC_TO_HOST;
-+
-+		break;
-+
-+	case BSPVETH_TX:
-+		ret = __make_dmalistbd_h2b_H(prxtx_queue, cnt, type);
-+		if (ret)
-+			goto failed;
-+		dma_transfer.dir = HOST_TO_BMC;
-+
-+		break;
-+
-+	default:
-+		ret = -1;
-+		goto failed;
-+	}
-+
-+	dma_transfer.type = DMA_LIST;
-+	dma_transfer.transfer.list.dma_addr =
-+		(dma_addr_t)prxtx_queue->pdmalbase_p;
-+
-+	ret = bma_intf_start_dma(g_bspveth_dev.bma_priv, &dma_transfer);
-+	if (ret < 0)
-+		goto failed;
-+
-+	prxtx_queue->start_dma = 1;
-+
-+	return BSP_OK;
-+
-+failed:
-+	return ret;
-+}
-+
-+int check_dma_queue_fault(struct bspveth_rxtx_q *prxtx_queue,
-+			  u32 queue, u32 type, u32 *pcnt)
-+{
-+	int ret = BSP_OK;
-+	u32 cnt = 0;
-+
-+	if (prxtx_queue->dma_overtime > BSPVETH_MAX_QUE_DEEP)
-+		return -EFAULT;
-+
-+	ret = __check_dmacmp_H(prxtx_queue, queue, type);
-+	if (ret != BSP_OK)
-+		return -EFAULT;
-+
-+	ret = __checkspace_H(prxtx_queue, queue, type, &cnt);
-+	if (ret != BSP_OK)
-+		return -EFAULT;
-+
-+	if (CHECK_DMA_RXQ_FAULT(prxtx_queue, type, cnt)) {
-+		udelay(50);
-+		prxtx_queue->dmal_cnt--;
-+
-+		return -EFAULT;
-+	}
-+
-+	*pcnt = cnt;
-+
-+	return BSP_OK;
-+}
-+
-+s32 __dma_rxtx_H(struct bspveth_rxtx_q *prxtx_queue, u32 queue, u32 type)
-+{
-+	int ret = BSP_OK;
-+	u32 cnt = 0;
-+	u32 shm_init;
-+	struct bspveth_shmq_hd *pshmq_head = NULL;
-+
-+	if (!prxtx_queue || !prxtx_queue->pshmqhd_v)
-+		return BSP_ERR_NULL_POINTER;
-+
-+	pshmq_head = prxtx_queue->pshmqhd_v;
-+	shm_init = pshmq_head->init;
-+	if (shm_init != BSPVETH_SHMQUEUE_INITOK) {
-+		INC_STATIS_RXTX(queue, shmqueue_noinit, 1, type);
-+		return -EFAULT;
-+	}
-+
-+	if (CHECK_DMA_QUEUE_EMPTY(type, prxtx_queue))
-+		return BSP_OK;
-+
-+	ret = check_dma_queue_fault(prxtx_queue, queue, type, &cnt);
-+	if (ret != BSP_OK)
-+		return -EFAULT;
-+
-+	ret = __start_dmalist_H(prxtx_queue, cnt, type);
-+	if (ret != BSP_OK)
-+		return -EFAULT;
-+
-+	if (cnt <= 16) {
-+		ret = __check_dmacmp_H(prxtx_queue, queue, type);
-+		if (ret != BSP_OK)
-+			return -EFAULT;
-+	}
-+
-+	return BSP_OK;
-+}
-+
-+int veth_dma_task_H(u32 type)
-+{
-+	int i;
-+	struct bspveth_rxtx_q *prxtx_queue = NULL;
-+
-+	for (i = 0; i < MAX_QUEUE_NUM; i++) {
-+		if (type == BSPVETH_RX) {
-+			g_bspveth_dev.run_dma_rx_task++;
-+			prxtx_queue = g_bspveth_dev.prx_queue[i];
-+		} else {
-+			g_bspveth_dev.run_dma_tx_task++;
-+			prxtx_queue = g_bspveth_dev.ptx_queue[i];
-+		}
-+
-+		if (prxtx_queue) {
-+			struct bspveth_shmq_hd *pshmq_head =
-+				prxtx_queue->pshmqhd_v;
-+			(void)__dma_rxtx_H(prxtx_queue, i, type);
-+			if ((type == BSPVETH_RX &&
-+			     pshmq_head->head != pshmq_head->tail) ||
-+				(type == BSPVETH_TX &&
-+				prxtx_queue->head != prxtx_queue->tail))
-+				return BSP_ERR_AGAIN;
-+		}
-+	}
-+
-+	return BSP_OK;
-+}
-+
-+#ifdef __UT_TEST
++static struct pci_driver bma_driver = {
++	.name = PCI_KBOX_MODULE_NAME,
++	.id_table = bma_pci_tbl,
++	.probe = bma_pci_probe,
++	.remove = bma_pci_remove,
++	.suspend = bma_pci_suspend,
++	.resume = bma_pci_resume,
++};
 +
 +s32 __atu_config_H(struct pci_dev *pdev, unsigned int region,
 +		   unsigned int hostaddr_h, unsigned int hostaddr_l,
 +		   unsigned int bmcaddr_h, unsigned int bmcaddr_l,
 +		   unsigned int len)
 +{
-+	(void)pci_write_config_dword(pdev, 0x900,
-+					 0x80000000 + (region & 0x00000007));
-+	(void)pci_write_config_dword(pdev, 0x90c, hostaddr_l);
-+	(void)pci_write_config_dword(pdev, 0x910, hostaddr_h);
-+	(void)pci_write_config_dword(pdev, 0x914, hostaddr_l + len - 1);
-+	(void)pci_write_config_dword(pdev, 0x918, bmcaddr_l);
-+	(void)pci_write_config_dword(pdev, 0x91c, bmcaddr_h);
-+	/*  atu ctrl1 reg	*/
-+	(void)pci_write_config_dword(pdev, 0x904, 0x00000000);
-+	/*  atu ctrl2 reg	*/
-+	(void)pci_write_config_dword(pdev, 0x908, 0x80000000);
++	/*  atu index reg,inbound and region*/
++	(void)pci_write_config_dword(pdev, ATU_VIEWPORT,
++		REGION_DIR_INPUT + (region & REGION_INDEX_MASK));
++	(void)pci_write_config_dword(pdev, ATU_BASE_LOW, hostaddr_l);
++	(void)pci_write_config_dword(pdev, ATU_BASE_HIGH, hostaddr_h);
++	(void)pci_write_config_dword(pdev, ATU_LIMIT, hostaddr_l + len - 1);
++	(void)pci_write_config_dword(pdev, ATU_TARGET_LOW, bmcaddr_l);
++	(void)pci_write_config_dword(pdev, ATU_TARGET_HIGH, bmcaddr_h);
++	/*  atu ctrl1 reg   */
++	(void)pci_write_config_dword(pdev, ATU_REGION_CTRL1, ATU_CTRL1_DEFAULT);
++	/*  atu ctrl2 reg   */
++	(void)pci_write_config_dword(pdev, ATU_REGION_CTRL2, REGION_ENABLE);
 +
 +	return 0;
 +}
 +
-+void bspveth_atu_config_H(void)
++static void iounmap_bar_mem(struct bma_pci_dev_s *bma_pci_dev)
 +{
-+	__atu_config_H(g_bspveth_dev.ppcidev,
-+		       REGION_HOST,
-+		       (sizeof(unsigned long) == SIZE_OF_UNSIGNED_LONG) ?
-+		       ((u64)(g_bspveth_dev.phostrtc_p) >> ADDR_H_SHIFT) : 0,
-+		       ((u64)(g_bspveth_dev.phostrtc_p) & 0xffffffff),
-+		       0, HOSTRTC_REG_BASE, HOSTRTC_REG_SIZE);
++	if (bma_pci_dev->kbox_base_addr) {
++		iounmap(bma_pci_dev->kbox_base_addr);
++		bma_pci_dev->kbox_base_addr = NULL;
++	}
 +
-+	__atu_config_H(g_bspveth_dev.ppcidev,
-+		       REGION_BMC,
-+		       (sizeof(unsigned long) == SIZE_OF_UNSIGNED_LONG) ?
-+		       ((u64)(g_bspveth_dev.pshmpool_p) >> ADDR_H_SHIFT) : 0,
-+		       ((u64)(g_bspveth_dev.pshmpool_p) & 0xffffffff),
-+		       0, VETH_SHAREPOOL_BASE_INBMC, VETH_SHAREPOOL_SIZE);
++	if (bma_pci_dev->bma_base_addr) {
++		iounmap(bma_pci_dev->bma_base_addr);
++		bma_pci_dev->bma_base_addr = NULL;
++		bma_pci_dev->edma_swap_addr = NULL;
++		bma_pci_dev->hostrtc_viraddr = NULL;
++	}
 +}
 +
-+void bspveth_pcie_free_H(void)
++static int ioremap_pme_bar1_mem(struct pci_dev *pdev,
++				struct bma_pci_dev_s *bma_pci_dev)
 +{
-+	struct pci_dev *pdev = g_bspveth_dev.ppcidev;
++	unsigned long bar1_resource_flag = 0;
++	u32 data = 0;
 +
-+	if (pdev)
++	bma_pci_dev->kbox_base_len = PCI_PME_USEABLE_SPACE;
++	BMA_LOG(DLOG_DEBUG, "1710\n");
++
++	bma_pci_dev->bma_base_phy_addr =
++	    pci_resource_start(pdev, PCI_BAR1);
++	bar1_resource_flag = pci_resource_flags(pdev, PCI_BAR1);
++
++	if (!(bar1_resource_flag & IORESOURCE_MEM)) {
++		BMA_LOG(DLOG_ERROR,
++			"Cannot find proper PCI device base address, aborting\n");
++		return -ENODEV;
++	}
++
++	bma_pci_dev->bma_base_len = pci_resource_len(pdev, PCI_BAR1);
++	bma_pci_dev->edma_swap_len = EDMA_SWAP_DATA_SIZE;
++	bma_pci_dev->veth_swap_len = VETH_SWAP_DATA_SIZE;
++
++	BMA_LOG(DLOG_DEBUG,
++		"bar1: bma_base_len = 0x%lx, edma_swap_len = %ld, veth_swap_len = %ld(0x%lx)\n",
++		bma_pci_dev->bma_base_len, bma_pci_dev->edma_swap_len,
++		bma_pci_dev->veth_swap_len, bma_pci_dev->veth_swap_len);
++
++	bma_pci_dev->hostrtc_phyaddr = bma_pci_dev->bma_base_phy_addr;
++	/* edma */
++	bma_pci_dev->edma_swap_phy_addr =
++		bma_pci_dev->bma_base_phy_addr + EDMA_SWAP_BASE_OFFSET;
++	/* veth */
++	bma_pci_dev->veth_swap_phy_addr =
++		bma_pci_dev->edma_swap_phy_addr + EDMA_SWAP_DATA_SIZE;
++
++	BMA_LOG(DLOG_DEBUG,
++		"bar1: hostrtc_phyaddr = 0x%lx, edma_swap_phy_addr = 0x%lx, veth_swap_phy_addr = 0x%lx\n",
++		bma_pci_dev->hostrtc_phyaddr,
++		bma_pci_dev->edma_swap_phy_addr,
++		bma_pci_dev->veth_swap_phy_addr);
++
++	__atu_config_H(pdev, 0,
++		       GET_HIGH_ADDR(bma_pci_dev->kbox_base_phy_addr),
++			(bma_pci_dev->kbox_base_phy_addr & 0xffffffff),
++		0, PCI_BAR0_PME_1710, PCI_PME_USEABLE_SPACE);
++
++	__atu_config_H(pdev, 1,
++		       GET_HIGH_ADDR(bma_pci_dev->hostrtc_phyaddr),
++			(bma_pci_dev->hostrtc_phyaddr & 0xffffffff),
++			0, HOSTRTC_REG_BASE, HOSTRTC_REG_SIZE);
++
++	__atu_config_H(pdev, 2,
++		       GET_HIGH_ADDR(bma_pci_dev->edma_swap_phy_addr),
++			(bma_pci_dev->edma_swap_phy_addr & 0xffffffff),
++			0, EDMA_SWAP_DATA_BASE, EDMA_SWAP_DATA_SIZE);
++
++	__atu_config_H(pdev, 3,
++		       GET_HIGH_ADDR(bma_pci_dev->veth_swap_phy_addr),
++			(bma_pci_dev->veth_swap_phy_addr & 0xffffffff),
++			0, VETH_SWAP_DATA_BASE, VETH_SWAP_DATA_SIZE);
++
++	if (bar1_resource_flag & IORESOURCE_CACHEABLE) {
++		bma_pci_dev->bma_base_addr =
++		    ioremap(bma_pci_dev->bma_base_phy_addr,
++			    bma_pci_dev->bma_base_len);
++	} else {
++		bma_pci_dev->bma_base_addr =
++		    IOREMAP(bma_pci_dev->bma_base_phy_addr,
++			    bma_pci_dev->bma_base_len);
++	}
++
++	if (!bma_pci_dev->bma_base_addr) {
++		BMA_LOG(DLOG_ERROR,
++			"Cannot map device registers, aborting\n");
++
++		return -ENODEV;
++	}
++
++	bma_pci_dev->hostrtc_viraddr = bma_pci_dev->bma_base_addr;
++	bma_pci_dev->edma_swap_addr =
++	    (unsigned char *)bma_pci_dev->bma_base_addr +
++	    EDMA_SWAP_BASE_OFFSET;
++	bma_pci_dev->veth_swap_addr =
++	    (unsigned char *)bma_pci_dev->edma_swap_addr +
++	    EDMA_SWAP_DATA_SIZE;
++
++	(void)pci_read_config_dword(pdev, 0x78, &data);
++	data = data & 0xfffffff0;
++	(void)pci_write_config_dword(pdev, 0x78, data);
++	(void)pci_read_config_dword(pdev, 0x78, &data);
++
++	return 0;
++}
++
++static int ioremap_bar_mem(struct pci_dev *pdev,
++			   struct bma_pci_dev_s *bma_pci_dev)
++{
++	int err = 0;
++	unsigned long bar0_resource_flag = 0;
++
++	bar0_resource_flag = pci_resource_flags(pdev, PCI_BAR0);
++
++	if (!(bar0_resource_flag & IORESOURCE_MEM)) {
++		BMA_LOG(DLOG_ERROR,
++			"Cannot find proper PCI device base address, aborting\n");
++		err = -ENODEV;
++		return err;
++	}
++
++	bma_pci_dev->kbox_base_phy_addr = pci_resource_start(pdev, PCI_BAR0);
++
++	bma_pci_dev->kbox_base_len = pci_resource_len(pdev, PCI_BAR0);
++
++	BMA_LOG(DLOG_DEBUG,
++		"bar0: kbox_base_phy_addr = 0x%lx, base_len = %ld(0x%lx)\n",
++		bma_pci_dev->kbox_base_phy_addr, bma_pci_dev->kbox_base_len,
++		bma_pci_dev->kbox_base_len);
++
++	if (PME_DEV_CHECK(pdev->device, pdev->vendor)) {
++		err = ioremap_pme_bar1_mem(pdev, bma_pci_dev);
++		if (err != 0)
++			return err;
++	}
++
++	BMA_LOG(DLOG_DEBUG, "remap BAR0 KBOX\n");
++
++	if (bar0_resource_flag & IORESOURCE_CACHEABLE) {
++		bma_pci_dev->kbox_base_addr =
++		    ioremap(bma_pci_dev->kbox_base_phy_addr,
++			    bma_pci_dev->kbox_base_len);
++	} else {
++		bma_pci_dev->kbox_base_addr =
++		    IOREMAP(bma_pci_dev->kbox_base_phy_addr,
++			    bma_pci_dev->kbox_base_len);
++	}
++
++	if (!bma_pci_dev->kbox_base_addr) {
++		BMA_LOG(DLOG_ERROR, "Cannot map device registers, aborting\n");
++
++		iounmap(bma_pci_dev->bma_base_addr);
++		bma_pci_dev->bma_base_addr = NULL;
++		bma_pci_dev->edma_swap_addr = NULL;
++		bma_pci_dev->hostrtc_viraddr = NULL;
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++int pme_pci_enable_msi(struct pci_dev *pdev)
++{
++	int err = 0;
++
++	pci_set_master(pdev);
++
++#ifdef CONFIG_PCI_MSI
++	if (pci_find_capability(pdev, PCI_CAP_ID_MSI) == 0) {
++		BMA_LOG(DLOG_ERROR, "not support msi\n");
 +		pci_disable_device(pdev);
-+	else
-+		VETH_LOG(DLOG_ERROR, "bspveth_dev.ppcidev  IS NULL\n");
++		return err;
++	}
 +
-+	VETH_LOG(DLOG_DEBUG, "bspveth_pcie_exit_H ok\n");
-+}
++	BMA_LOG(DLOG_DEBUG, "support msi\n");
 +
++	err = pci_enable_msi(pdev);
++	if (err) {
++		BMA_LOG(DLOG_ERROR, "pci_enable_msi failed\n");
++		pci_disable_device(pdev);
++		return err;
++	}
 +#endif
 +
-+void bspveth_host_exit_H(void)
++	return err;
++}
++
++int pci_device_init(struct pci_dev *pdev, struct bma_pci_dev_s *bma_pci_dev)
++{
++	int err = 0;
++
++	if (PME_DEV_CHECK(pdev->device, pdev->vendor)) {
++		err = bma_devinft_init(bma_pci_dev);
++		if (err) {
++			BMA_LOG(DLOG_ERROR, "bma_devinft_init failed\n");
++			bma_devinft_cleanup(bma_pci_dev);
++			iounmap_bar_mem(bma_pci_dev);
++			g_bma_pci_dev = NULL;
++			pci_release_regions(pdev);
++			kfree(bma_pci_dev);
++		#ifdef CONFIG_PCI_MSI
++			pci_disable_msi(pdev);
++		#endif
++			pci_disable_device(pdev);
++
++			return err;
++		}
++	} else {
++		BMA_LOG(DLOG_DEBUG, "edma is not supported on this pcie\n");
++	}
++
++	pci_set_drvdata(pdev, bma_pci_dev);
++
++	return 0;
++}
++
++int pci_device_config(struct pci_dev *pdev)
++{
++	int err = 0;
++	struct bma_pci_dev_s *bma_pci_dev = NULL;
++
++	bma_pci_dev = kmalloc(sizeof(*bma_pci_dev), GFP_KERNEL);
++	if (!bma_pci_dev) {
++		err = -ENOMEM;
++		goto err_out_disable_msi;
++	}
++	memset(bma_pci_dev, 0, sizeof(*bma_pci_dev));
++
++	bma_pci_dev->pdev = pdev;
++
++	err = pci_request_regions(pdev, PCI_KBOX_MODULE_NAME);
++	if (err) {
++		BMA_LOG(DLOG_ERROR, "Cannot obtain PCI resources, aborting\n");
++		goto err_out_free_dev;
++	}
++
++	err = ioremap_bar_mem(pdev, bma_pci_dev);
++	if (err) {
++		BMA_LOG(DLOG_ERROR, "ioremap_edma_io_mem failed\n");
++		goto err_out_release_regions;
++	}
++
++	g_bma_pci_dev = bma_pci_dev;
++
++	if (SET_DMA_MASK(&pdev->dev)) {
++		BMA_LOG(DLOG_ERROR,
++			"No usable DMA ,configuration, aborting,goto failed2!!!\n");
++		goto err_out_unmap_bar;
++	}
++
++	g_bma_pci_dev = bma_pci_dev;
++
++	return pci_device_init(pdev, bma_pci_dev);
++
++err_out_unmap_bar:
++	iounmap_bar_mem(bma_pci_dev);
++	g_bma_pci_dev = NULL;
++err_out_release_regions:
++	pci_release_regions(pdev);
++err_out_free_dev:
++	kfree(bma_pci_dev);
++	bma_pci_dev = NULL;
++err_out_disable_msi:
++#ifdef CONFIG_PCI_MSI
++	pci_disable_msi(pdev);
++#endif
++
++	pci_disable_device(pdev);
++
++	return err;
++}
++
++static int bma_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
++{
++	int err = 0;
++
++	UNUSED(ent);
++
++	if (g_bma_pci_dev)
++		return -EPERM;
++
++	err = pci_enable_device(pdev);
++	if (err) {
++		BMA_LOG(DLOG_ERROR, "Cannot enable PCI device,aborting\n");
++		return err;
++	}
++
++	if (PME_DEV_CHECK(pdev->device, pdev->vendor)) {
++		err = pme_pci_enable_msi(pdev);
++		if (err)
++			return err;
++	}
++
++	BMA_LOG(DLOG_DEBUG, "pdev->device = 0x%x\n", pdev->device);
++	BMA_LOG(DLOG_DEBUG, "pdev->vendor = 0x%x\n", pdev->vendor);
++
++	return pci_device_config(pdev);
++}
++
++static void bma_pci_remove(struct pci_dev *pdev)
++{
++	struct bma_pci_dev_s *bma_pci_dev =
++		(struct bma_pci_dev_s *)pci_get_drvdata(pdev);
++
++	g_bma_pci_dev = NULL;
++	(void)pci_set_drvdata(pdev, NULL);
++
++	if (bma_pci_dev) {
++		bma_devinft_cleanup(bma_pci_dev);
++
++		iounmap_bar_mem(bma_pci_dev);
++
++		kfree(bma_pci_dev);
++	}
++
++	pci_release_regions(pdev);
++
++#ifdef CONFIG_PCI_MSI
++	pci_disable_msi(pdev);
++#endif
++	pci_disable_device(pdev);
++}
++
++static int bma_pci_suspend(struct pci_dev *pdev, pm_message_t state)
++{
++	UNUSED(pdev);
++	UNUSED(state);
++
++	return 0;
++}
++
++static int bma_pci_resume(struct pci_dev *pdev)
++{
++	UNUSED(pdev);
++
++	return 0;
++}
++
++int __init bma_pci_init(void)
 +{
 +	int ret = 0;
 +
-+	ret = bma_intf_unregister_type((void **)&g_bspveth_dev.bma_priv);
-+	if (ret < 0) {
-+		VETH_LOG(DLOG_ERROR, "bma_intf_unregister_type failed\n");
++	BMA_LOG(DLOG_DEBUG, "\n");
 +
-+		return;
-+	}
-+
-+	VETH_LOG(DLOG_DEBUG, "bspveth host exit H OK\n");
-+}
-+
-+s32 bspveth_host_init_H(void)
-+{
-+	int ret = 0;
-+	struct bma_priv_data_s *bma_priv = NULL;
-+
-+	ret = bma_intf_register_type(TYPE_VETH, 0, INTR_ENABLE,
-+				     (void **)&bma_priv);
-+	if (ret) {
-+		ret = -1;
-+		goto failed;
-+	}
-+
-+	if (!bma_priv) {
-+		VETH_LOG(DLOG_ERROR, "bma_priv is NULL\n");
-+		return -1;
-+	}
-+
-+	VETH_LOG(DLOG_DEBUG,
-+		 "bma_intf_register_type pdev = %p, veth_swap_addr = %p, ",
-+		 bma_priv->specific.veth.pdev,
-+		 bma_priv->specific.veth.veth_swap_addr);
-+
-+	VETH_LOG(DLOG_DEBUG,
-+		 "veth_swap_len = 0x%lx, veth_swap_phy_addr = 0x%lx\n",
-+		 bma_priv->specific.veth.veth_swap_len,
-+		 bma_priv->specific.veth.veth_swap_phy_addr);
-+
-+	g_bspveth_dev.bma_priv = bma_priv;
-+	g_bspveth_dev.ppcidev = bma_priv->specific.veth.pdev;
-+
-+	/*bspveth_dev.phostrtc_p = (u8 *)bar1_base;*/
-+	/*bspveth_dev.phostrtc_v = (u8 *)bar1_remap;*/
-+	g_bspveth_dev.pshmpool_p =
-+			(u8 *)bma_priv->specific.veth.veth_swap_phy_addr;
-+	g_bspveth_dev.pshmpool_v =
-+			(u8 *)bma_priv->specific.veth.veth_swap_addr;
-+	g_bspveth_dev.shmpoolsize = bma_priv->specific.veth.veth_swap_len;
-+
-+	VETH_LOG(DLOG_DEBUG, "bspveth host init H OK\n");
-+
-+	return BSP_OK;
-+
-+failed:
-+	return ret;
-+}
-+
-+static int __init veth_init(void)
-+{
-+	int ret = BSP_OK;
-+	int buf_len = 0;
-+
-+	if (!bma_intf_check_edma_supported())
-+		return -ENXIO;
-+
-+	memset(&g_bspveth_dev, 0, sizeof(g_bspveth_dev));
-+
-+	buf_len = snprintf(g_bspveth_dev.name, NET_NAME_LEN,
-+			   "%s", BSPVETH_DEV_NAME);
-+	if (buf_len < 0 || ((u32)buf_len >= (NET_NAME_LEN))) {
-+		VETH_LOG(DLOG_ERROR, "BSP_SNPRINTF lRet =0x%x\n", buf_len);
-+		return BSP_ERR_INVALID_STR;
-+	}
-+
-+	ret = bspveth_host_init_H();
-+	if (ret != BSP_OK) {
-+		ret = -1;
-+		goto failed1;
-+	}
-+
-+	ret = veth_netdev_init();
-+	if (ret != BSP_OK) {
-+		ret = -1;
-+		goto failed2;
-+	}
-+
-+	GET_SYS_SECONDS(g_bspveth_dev.init_time);
-+
-+	return BSP_OK;
-+
-+failed2:
-+	bspveth_host_exit_H();
-+
-+failed1:
++	ret = pci_register_driver(&bma_driver);
++	if (ret)
++		BMA_LOG(DLOG_ERROR, "pci_register_driver failed\n");
 +
 +	return ret;
 +}
 +
-+static void __exit veth_exit(void)
++void __exit bma_pci_cleanup(void)
 +{
-+	veth_netdev_exit();
++	BMA_LOG(DLOG_DEBUG, "\n");
 +
-+	bspveth_host_exit_H();
++	pci_unregister_driver(&bma_driver);
 +}
 +
 +MODULE_AUTHOR("HUAWEI TECHNOLOGIES CO., LTD.");
-+MODULE_DESCRIPTION("HUAWEI VETH DRIVER");
++MODULE_DESCRIPTION("HUAWEI EDMA DRIVER");
 +MODULE_LICENSE("GPL");
-+MODULE_VERSION(VETH_VERSION);
++MODULE_VERSION(BMA_VERSION);
++#ifndef _lint
 +
-+module_init(veth_init);
-+module_exit(veth_exit);
-diff --git a/drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.h b/drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.h
++module_init(bma_pci_init);
++module_exit(bma_pci_cleanup);
++#endif
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h b/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h
 new file mode 100644
-index 000000000000..060f8766afd1
+index 000000000000..2851e583666a
 --- /dev/null
-+++ b/drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.h
-@@ -0,0 +1,442 @@
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h
+@@ -0,0 +1,94 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+/*Huawei iBMA driver.
-+ *Copyright (c) 2017, Huawei Technologies Co., Ltd.
++/* Huawei iBMA driver.
++ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
 + *
-+ *This program is free software; you can redistribute it and/or
-+ *modify it under the terms of the GNU General Public License
-+ *as published by the Free Software Foundation; either version 2
-+ *of the License, or (at your option) any later version.
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
 + *
-+ *This program is distributed in the hope that it will be useful,
-+ *but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *GNU General Public License for more details.
-+ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+#ifndef _VETH_HB_H_
-+#define _VETH_HB_H_
++#ifndef _BMA_PCI_H_
++#define _BMA_PCI_H_
 +
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
++#include "bma_devintf.h"
++#include "bma_include.h"
++#include <linux/netdevice.h>
 +
-+#include <linux/interrupt.h>
++#define EDMA_SWAP_BASE_OFFSET	0x10000
 +
-+#define DEP_BMA
++#define HOSTRTC_REG_BASE	0x2f000000
++#define HOSTRTC_REG_SIZE	EDMA_SWAP_BASE_OFFSET
 +
-+#include "../edma_drv/bma_include.h"
-+#include "../include/bma_ker_intf.h"
++#define EDMA_SWAP_DATA_BASE	0x84810000
++#define EDMA_SWAP_DATA_SIZE	65536
++
++#define VETH_SWAP_DATA_BASE	0x84820000
++#define VETH_SWAP_DATA_SIZE	0xdf000
++
++#define ATU_VIEWPORT		0x900
++#define	ATU_REGION_CTRL1	0x904
++#define ATU_REGION_CTRL2	0x908
++#define ATU_BASE_LOW		0x90C
++#define ATU_BASE_HIGH		0x910
++#define ATU_LIMIT		0x914
++#define	ATU_TARGET_LOW		0x918
++#define ATU_TARGET_HIGH		0x91C
++#define REGION_DIR_OUTPUT	(0x0 << 31)
++#define REGION_DIR_INPUT	(0x1 << 31)
++#define REGION_INDEX_MASK	0x7
++#define	REGION_ENABLE		(0x1 << 31)
++#define	ATU_CTRL1_DEFAULT	0x0
++struct bma_pci_dev_s {
++	unsigned long kbox_base_phy_addr;
++	void __iomem *kbox_base_addr;
++	unsigned long kbox_base_len;
++
++	unsigned long bma_base_phy_addr;
++	void __iomem *bma_base_addr;
++	unsigned long bma_base_len;
++
++	unsigned long hostrtc_phyaddr;
++	void __iomem *hostrtc_viraddr;
++
++	unsigned long edma_swap_phy_addr;
++	void __iomem *edma_swap_addr;
++	unsigned long edma_swap_len;
++
++	unsigned long veth_swap_phy_addr;
++	void __iomem *veth_swap_addr;
++	unsigned long veth_swap_len;
++
++	struct pci_dev *pdev;
++	struct bma_dev_s *bma_dev;
++};
 +
 +#ifdef DRV_VERSION
-+#define VETH_VERSION	MICRO_TO_STR(DRV_VERSION)
++#define BMA_VERSION MICRO_TO_STR(DRV_VERSION)
 +#else
-+#define VETH_VERSION	"0.3.4"
++#define BMA_VERSION "0.3.4"
 +#endif
 +
-+#define MODULE_NAME	"veth"
-+#define BSP_VETH_T	u64
-+
-+#define BSP_OK				(0)
-+#define BSP_ERR				(0xFFFFFFFF)
-+#define BSP_NETDEV_TX_BUSY		(1)
-+#define BSP_ERR_INIT_ERR		(BSP_NETDEV_TX_BUSY)
-+#define BSP_ETH_ERR_BASE		(0x0FFFF000)
-+#define BSP_ERR_OUT_OF_MEM		(BSP_ETH_ERR_BASE + 1)
-+#define BSP_ERR_NULL_POINTER		(BSP_ETH_ERR_BASE + 2)
-+#define BSP_ERR_INVALID_STR		(BSP_ETH_ERR_BASE + 3)
-+#define BSP_ERR_INVALID_PARAM		(BSP_ETH_ERR_BASE + 4)
-+#define BSP_ERR_INVALID_DATA		(BSP_ETH_ERR_BASE + 5)
-+#define BSP_ERR_OUT_OF_RANGE		(BSP_ETH_ERR_BASE + 6)
-+#define BSP_ERR_INVALID_CARD		(BSP_ETH_ERR_BASE + 7)
-+#define BSP_ERR_INVALID_GRP		(BSP_ETH_ERR_BASE + 8)
-+#define BSP_ERR_INVALID_ETH		(BSP_ETH_ERR_BASE + 9)
-+#define BSP_ERR_SEND_ERR		(BSP_ETH_ERR_BASE + 10)
-+#define BSP_ERR_DMA_ERR			(BSP_ETH_ERR_BASE + 11)
-+#define BSP_ERR_RECV_ERR		(BSP_ETH_ERR_BASE + 12)
-+#define BSP_ERR_SKB_ERR			(BSP_ETH_ERR_BASE + 13)
-+#define BSP_ERR_DMA_ADDR_ERR		(BSP_ETH_ERR_BASE + 14)
-+#define BSP_ERR_IOREMAP_ERR		(BSP_ETH_ERR_BASE + 15)
-+#define BSP_ERR_LEN_ERR			(BSP_ETH_ERR_BASE + 16)
-+#define BSP_ERR_STAT_ERR		(BSP_ETH_ERR_BASE + 17)
-+#define BSP_ERR_AGAIN			(BSP_ETH_ERR_BASE + 18)
-+#define BSP_ERR_NOT_TO_HANDLE		(BSP_ETH_ERR_BASE + 19)
-+
-+#define VETH_H2B_IRQ_NO			(113)
-+#define SYSCTL_REG_BASE			(0x20000000)
-+#define SYSCTL_REG_SIZE			(0x1000)
-+#define PCIE1_REG_BASE			(0x29000000)
-+#define PCIE1_REG_SIZE			(0x1000)
-+#define VETH_SHAREPOOL_BASE_INBMC	(0x84820000)
-+#define VETH_SHAREPOOL_SIZE		(0xdf000)
-+#define VETH_SHAREPOOL_OFFSET		(0x10000)
-+#define MAX_SHAREQUEUE_SIZE		(0x20000)
-+
-+#define BSPVETH_SHMBDBASE_OFFSET	(0x80)
-+#define SHMDMAL_OFFSET			(0x10000)
-+#define MAX_SHMDMAL_SIZE		(BSPVETH_DMABURST_MAX * 32)
-+
-+#define BSPVETH_DMABURST_MAX		64
-+#define BSPVETH_SKBTIMER_INTERVAL	(1)
-+#define BSPVETH_DMATIMER_INTERVAL	(1)
-+#define BSPVETH_CTLTIMER_INTERVAL	(10)
-+#define BSPVETH_HDCMD_CHKTIMER_INTERVAL	(10)
-+#define BSP_DMA_64BIT_MASK		(0xffffffffffffffffULL)
-+#define BSP_DMA_32BIT_MASK		(0x00000000ffffffffULL)
-+#define HOSTRTC_REG_BASE		(0x2f000000)
-+#define HOSTRTC_REG_SIZE		(0x10000)
-+#define REG_SYSCTL_HOSTINT_CLEAR	(0x44)
-+#define SHIFT_SYSCTL_HOSTINT_CLEAR	(22)
-+#define REG_SYSCTL_HOSTINT		(0xf4)
-+#define SHIFT_SYSCTL_HOSTINT		(26)
-+
-+#define NET_TYPE_LEN			(16)
-+
-+#define MAX_QUEUE_NUM			(1)
-+#define MAX_QUEUE_BDNUM			(128)
-+#define BSPVETH_MAX_QUE_DEEP		(MAX_QUEUE_BDNUM)
-+#define BSPVETH_POINT_MASK		(MAX_QUEUE_BDNUM - 1)
-+#define BSPVETH_WORK_LIMIT		(64)
-+#define BSPVETH_CHECK_DMA_STATUS_TIMES	(120)
-+
-+#define REG_PCIE1_DMAREAD_ENABLE	(0xa18)
-+#define SHIFT_PCIE1_DMAREAD_ENABLE	(0)
-+#define REG_PCIE1_DMAWRITE_ENABLE	(0x9c4)
-+#define SHIFT_PCIE1_DMAWRITE_ENABLE	(0)
-+#define REG_PCIE1_DMAREAD_STATUS	(0xa10)
-+#define SHIFT_PCIE1_DMAREAD_STATUS	(0)
-+#define REG_PCIE1_DMAREADINT_CLEAR	(0xa1c)
-+#define SHIFT_PCIE1_DMAREADINT_CLEAR	(0)
-+#define REG_PCIE1_DMAWRITE_STATUS	(0x9bc)
-+#define SHIFT_PCIE1_DMAWRITE_STATUS	(0)
-+#define REG_PCIE1_DMAWRITEINT_CLEAR	(0x9c8)
-+#define SHIFT_PCIE1_DMAWRITEINT_CLEAR	(0)
-+
-+#define BSPVETH_DMA_OK			(1)
-+#define BSPVETH_DMA_BUSY		(0)
-+#define BSPVETH_RX			(2)
-+#define BSPVETH_TX			(3)
-+#define HOSTRTC_INT_OFFSET		(0x10)
-+#define BSPVETH_DEV_NAME		(MODULE_NAME)
-+#define NET_NAME_LEN			(64)
-+
-+#ifdef PCI_VENDOR_ID_HUAWEI
-+#undef PCI_VENDOR_ID_HUAWEI
-+#endif
-+#define PCI_VENDOR_ID_HUAWEI		(0x19e5)
-+
-+#define PCI_DEVICE_ID_KBOX		(0x1710)
-+#define BSPVETH_MTU_MAX			(1500)
-+#define BSPVETH_MTU_MIN			(64)
-+#define BSPVETH_SKB_SIZE		(1536)
-+#define BSPVETH_NET_TIMEOUT		(5 * HZ)
-+#define BSPVETH_QUEUE_TIMEOUT_10MS	(100)
-+#define BSPVETH_SHMQUEUE_INITOK		(0x12)
-+#define BSPVETH_LBK_TYPE		(0x800)
-+
-+#ifndef VETH_BMC
-+#define BSPVETH_CACHELINE_SIZE		(64)
++#ifdef CONFIG_ARM64
++#define IOREMAP ioremap_wc
 +#else
-+#define BSPVETH_CACHELINE_SIZE		(32)
-+#endif
-+#define BSPVETH_HBCMD_WCMP		(0x44)
-+#define BSPVETH_HBCMD_CMP		(0x55)
-+#define BSPVETH_HBCMD_OK		(0x66)
-+#define BSPVETH_HEART_WACK		(0x99)
-+#define BSPVETH_HEART_ACK		(0xaa)
-+
-+#define BSPVETH_HBCMD_TIMEOUT		(1000)
-+
-+#define SIZE_OF_UNSIGNED_LONG 8
-+#define ADDR_H_SHIFT 32
-+#define REGION_HOST 1
-+#define REGION_BMC 2
-+
-+enum veth_hb_cmd {
-+	VETH_HBCMD_UNKNOWN = 0x0,
-+	VETH_HBCMD_SETIP,
-+
-+	VETH_HBCMD_MAX,
-+};
-+
-+#define USE_TASKLET
-+
-+#define BSPVETH_ETHTOOL_BASE		0x89F0
-+#define BSPVETH_ETHTOOL_TESTINT		(BSPVETH_ETHTOOL_BASE + 1)
-+#define BSPVETH_ETHTOOL_TESTSHAREMEM	(BSPVETH_ETHTOOL_BASE + 2)
-+#define BSPVETH_ETHTOOL_DUMPSHAREMEM	(BSPVETH_ETHTOOL_BASE + 3)
-+#define BSPVETH_ETHTOOL_TESTDMA		(BSPVETH_ETHTOOL_BASE + 4)
-+#define BSPVETH_ETHTOOL_RWPCIEREG	(BSPVETH_ETHTOOL_BASE + 5)
-+#define BSPVETH_ETHTOOL_TESTLBK		(BSPVETH_ETHTOOL_BASE + 6)
-+#define BSPVETH_ETHTOOL_INITSTATIS	(BSPVETH_ETHTOOL_BASE + 7)
-+#define BSPVETH_HBCMD			(BSPVETH_ETHTOOL_BASE + 8)
-+
-+struct bspveth_test {
-+	u32 intdirect;	/*0--H2B,1--B2H*/
-+	u32 rwshmcheck;	/*0--w,1--r and check*/
-+	u32 dshmbase;
-+	u32 dshmlen;
-+	u32 testdma;	/*0--disable,1---enable*/
-+	u32 pcierw;	/*0--w,1---r*/
-+	u32 reg;
-+	u32 data;
-+	u32 testlbk;	/*0--disable,1---enable*/
-+};
-+
-+struct bspveth_hdcmd {
-+	u32 cmd;
-+	u32 stat;
-+	u32 heart;
-+	u32 err;
-+	u32 sequence;
-+	u32 len;
-+	u8 data[256];
-+};
-+
-+struct bspveth_rxtx_statis {
-+	u64 pkt;
-+	u64 pktbyte;
-+	u64 refill;
-+	u64 freetx;
-+	u64 dmapkt;
-+	u64 dmapktbyte;
-+
-+	u32 dropped_pkt;
-+	u32 netifrx_err;
-+	u32 null_point;
-+	u32 retry_err;
-+	u32 dma_mapping_err;
-+	u32 allocskb_err;
-+	u32 q_full;
-+	u32 q_emp;
-+	u32 shm_full;
-+	u32 shm_emp;
-+	u32 dma_busy;
-+	u32 need_fill;
-+	u32 need_free;
-+	u32 dmacmp_err;
-+	u32 type_err;
-+	u32 shmqueue_noinit;
-+	u32 shmretry_err;
-+	u32 dma_earlyint;
-+	u32 clr_dma_earlyint;
-+	u32 clr_dma_int;
-+	u32 dmarx_shmaddr_unalign;
-+	u32 dmarx_hostaddr_unalign;
-+	u32 dmatx_shmaddr_unalign;
-+	u32 dmatx_hostaddr_unalign;
-+	u32 dma_need_offset;
-+	u32 lastdmadir_err;
-+	u32 dma_failed;
-+	u32 dma_burst;
-+	u32 lbk_cnt;
-+	u32 lbk_txerr;
-+};
-+
-+struct bspveth_bd_info {
-+	struct sk_buff *pdma_v;
-+	u32 len;
-+	unsigned long time_stamp;
-+};
-+
-+struct bspveth_dma_shmbd {
-+	u32 dma_p;
-+	u32 len;
-+	u32 off;
-+};
-+
-+struct bspveth_shmq_hd {
-+	u32 count;
-+	u32 size;	/*count x sizeof(dmaBD)*/
-+	u32 next_to_fill;
-+	u32 next_to_free;
-+	u32 head;
-+	u32 tail;
-+	u16 init;	/*  1--ok,0--nok*/
-+};
-+
-+struct bspveth_dma_bd {
-+	u64 dma_p;
-+	u32 len;
-+	u32 off;
-+};
-+
-+struct bspveth_dmal {
-+	u32 chl;
-+	u32 len;
-+	u32 slow;
-+	u32 shi;
-+	u32 dlow;
-+	u32 dhi;
-+};
-+
-+struct bspveth_rxtx_q {
-+#ifndef VETH_BMC
-+	struct bspveth_dma_bd *pbdbase_v;
-+	u8 *pbdbase_p;
++#define IOREMAP ioremap_nocache
 +#endif
 +
-+	struct bspveth_bd_info *pbdinfobase_v;
-+	struct bspveth_shmq_hd *pshmqhd_v;
-+	u8 *pshmqhd_p;
++extern int debug;
 +
-+	struct bspveth_dma_shmbd *pshmbdbase_v;
-+	u8 *pshmbdbase_p;
++#define BMA_LOG(level, fmt, args...) \
++	do { \
++		if (debug >= (level))\
++			netdev_alert(0, "edma: %s, %d, " fmt, \
++				__func__, __LINE__, ## args); \
++	} while (0)
 +
-+	struct bspveth_dmal *pdmalbase_v;
-+	u8 *pdmalbase_p;
++int edmainfo_show(char *buff);
 +
-+	u32 dmal_cnt;
-+	u32 dmal_byte;
-+
-+	u32 count;
-+	u32 size;
-+	u32 rx_buf_len;
-+
-+	u32 next_to_fill;
-+	u32 next_to_free;
-+	u32 head;
-+	u32 tail;
-+	u16 start_dma;
-+	u16 dmacmperr;
-+
-+	u16 dma_overtime;
-+
-+	u32 work_limit;
-+	struct bspveth_rxtx_statis s;
-+};
-+
-+struct bspveth_device {
-+	struct bspveth_rxtx_q *ptx_queue[MAX_QUEUE_NUM];
-+	struct bspveth_rxtx_q *prx_queue[MAX_QUEUE_NUM];
-+	struct net_device *pnetdev;
-+	char name[NET_NAME_LEN];
-+
-+	struct pci_dev *ppcidev;
-+	u8 *phostrtc_p;
-+	u8 *phostrtc_v;
-+
-+	u8 *psysctl_v;
-+	u8 *ppcie1_v;
-+
-+	u8 *pshmpool_p;
-+	u8 *pshmpool_v;
-+	u32 shmpoolsize;
-+
-+	u32 recv_int;
-+	u32 tobmc_int;
-+	u32 tohost_int;
-+	u32 run_dma_tx_task;
-+	u32 run_dma_rx_task;
-+	u32 run_skb_rx_task;
-+	u32 run_skb_fr_task;
-+	u32 shutdown_cnt;
-+	__kernel_time_t init_time;
-+
-+	/* spinlock for register */
-+	spinlock_t reg_lock;
-+#ifndef USE_TASKLET
-+	struct timer_list skbtrtimer;
-+	struct timer_list dmatimer;
-+#else
-+	struct tasklet_struct skb_task;
-+	struct tasklet_struct dma_task;
 +#endif
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c b/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c
+new file mode 100644
+index 000000000000..2d5f4ffd79d9
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c
+@@ -0,0 +1,1462 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Huawei iBMA driver.
++ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+	struct net_device_stats stats;
-+	struct work_struct shutdown_task;
-+#ifdef DEP_BMA
-+	struct bma_priv_data_s *bma_priv;
-+#else
-+	void *edma_priv;
-+#endif
-+};
++#include <linux/errno.h>
++#include <linux/kthread.h>
++#include <linux/mm.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
 +
-+struct tag_pcie_comm_priv {
-+	char net_type[NET_TYPE_LEN];
-+	struct net_device_stats stats;
-+	int status;
-+	int irq_enable;
-+	int pcie_comm_rx_flag;
-+	spinlock_t lock; /* spinlock for priv data */
-+};
++#include "bma_pci.h"
++#include "edma_host.h"
 +
-+#define QUEUE_MASK(p)		((p) & (BSPVETH_POINT_MASK))
++static struct edma_user_inft_s *g_user_func[TYPE_MAX] = { 0 };
 +
-+#define CHECK_ADDR_ALIGN(addr, statis)\
-+do {                         \
-+	if ((addr) & 0x3) \
-+		statis;\
-+} while (0)
++static struct bma_dev_s *g_bma_dev;
++static int edma_host_dma_interrupt(struct edma_host_s *edma_host);
 +
-+#define PROC_P_STATIS(name, statis)\
-+	PROC_DPRINTK("[%10s]:\t0x%llx", #name, statis)
++int edmainfo_show(char *buf)
++{
++	struct bma_user_s *user_ptr = NULL;
++	struct edma_host_s *host_ptr = NULL;
++	int len = 0;
++	__kernel_time_t running_time = 0;
++	static const char * const host_status[] = {
++		"deregistered",	"registered", "lost"};
 +
-+#define  INC_STATIS_RXTX(queue, name, count, type) \
-+do {                 \
-+	if (type == BSPVETH_RX)\
-+		g_bspveth_dev.prx_queue[queue]->s.name += count;\
-+	else\
-+		g_bspveth_dev.ptx_queue[queue]->s.name += count;\
-+} while (0)
++	if (!buf)
++		return 0;
 +
-+#define PROC_DPRINTK(fmt, args...) (len += sprintf(buf + len, fmt, ##args))
++	if (!g_bma_dev) {
++		len += sprintf(buf, "EDMA IS NOT SUPPORTED");
++		return len;
++	}
 +
-+#define JUDGE_TX_QUEUE_SPACE(head, tail, len) \
-+	(((BSPVETH_MAX_QUE_DEEP + (tail) - (head) - 1) \
-+	    & BSPVETH_POINT_MASK) >= (len))
++	host_ptr = &g_bma_dev->edma_host;
 +
-+#define JUDGE_RX_QUEUE_SPACE(head, tail, len) \
-+	(((BSPVETH_MAX_QUE_DEEP + (tail) - (head)) \
-+	    & BSPVETH_POINT_MASK) > (len))
++	GET_SYS_SECONDS(running_time);
++	running_time -= host_ptr->statistics.init_time;
++	len += sprintf(buf + len,
++		    "============================EDMA_DRIVER_INFO============================\n");
++	len += sprintf(buf + len, "version      :" BMA_VERSION "\n");
 +
-+#define DMA_MAPPING_ERROR(device, dma)	dma_mapping_error(device, dma)
++	len += sprintf(buf + len, "running_time :%luD %02lu:%02lu:%02lu\n",
++		    running_time / SECONDS_PER_DAY,
++		    running_time % SECONDS_PER_DAY / SECONDS_PER_HOUR,
++		    running_time % SECONDS_PER_HOUR / SECONDS_PER_MINUTE,
++		    running_time % SECONDS_PER_MINUTE);
 +
-+#ifndef VETH_BMC
-+#define BSPVETH_UNMAP_DMA(data, len) \
-+	dma_unmap_single(&g_bspveth_dev.ppcidev->dev, \
-+			 data, len, DMA_FROM_DEVICE)
-+#else
-+#define BSPVETH_UNMAP_DMA(data, len) \
-+	dma_unmap_single(NULL, data, len, DMA_FROM_DEVICE)
-+#endif
++	len += sprintf(buf + len, "remote_status:%s\n",
++		    host_status[host_ptr->statistics.remote_status]);
++	len += sprintf(buf + len, "lost_count   :%d\n",
++		    host_ptr->statistics.lost_count);
++	len += sprintf(buf + len, "b2h_int      :%d\n",
++		    host_ptr->statistics.b2h_int);
++	len += sprintf(buf + len, "h2b_int      :%d\n",
++		    host_ptr->statistics.h2b_int);
++	len += sprintf(buf + len, "dma_count    :%d\n",
++		    host_ptr->statistics.dma_count);
++	len += sprintf(buf + len, "recv_bytes   :%d\n",
++		    host_ptr->statistics.recv_bytes);
++	len += sprintf(buf + len, "send_bytes   :%d\n",
++		    host_ptr->statistics.send_bytes);
++	len += sprintf(buf + len, "recv_pkgs    :%d\n",
++		    host_ptr->statistics.recv_pkgs);
++	len += sprintf(buf + len, "send_pkgs    :%d\n",
++		    host_ptr->statistics.send_pkgs);
++	len += sprintf(buf + len, "drop_pkgs    :%d\n",
++		    host_ptr->statistics.drop_pkgs);
++	len += sprintf(buf + len, "fail_count   :%d\n",
++		    host_ptr->statistics.failed_count);
++	len += sprintf(buf + len, "debug        :%d\n", debug);
++	len += sprintf(buf + len,
++		    "================================USER_INFO===============================\n");
 +
-+int veth_tx(struct sk_buff *pstr_skb, struct net_device *pstr_dev);
-+int veth_dma_task_H(u32 type);
-+s32 veth_skbtimer_close(void);
-+void veth_skbtimer_init(void);
-+s32 veth_dmatimer_close_H(void);
-+void veth_dmatimer_init_H(void);
-+int veth_skb_tr_task(void);
++	list_for_each_entry_rcu(user_ptr, &g_bma_dev->priv_list, link) {
++		len += sprintf(buf + len,
++			    "type: %d\nsub type: %d\nopen:%d\nmax recvmsg nums: %d\ncur recvmsg nums: %d\n",
++			    user_ptr->type, user_ptr->sub_type,
++			    host_ptr->local_open_status[user_ptr->type],
++			    user_ptr->max_recvmsg_nums,
++			    user_ptr->cur_recvmsg_nums);
++		len += sprintf(buf + len,
++			    "========================================================================\n");
++	}
 +
-+s32 __dma_rxtx_H(struct bspveth_rxtx_q *prxtx_queue, u32 queue, u32 type);
-+s32 veth_recv_pkt(struct bspveth_rxtx_q *prx_queue, int queue);
-+s32 veth_free_txskb(struct bspveth_rxtx_q *ptx_queue, int queue);
++	return len;
++}
 +
-+enum {
-+	QUEUE_TX_STATS,
-+	QUEUE_RX_STATS,
-+	VETH_STATS,
-+	SHMQ_TX_STATS,
-+	SHMQ_RX_STATS,
-+	NET_STATS,
-+};
++int is_edma_b2h_int(struct edma_host_s *edma_host)
++{
++	struct notify_msg *pnm = NULL;
 +
-+struct veth_stats {
-+	char stat_string[ETH_GSTRING_LEN];
-+	int type;
-+	int sizeof_stat;
-+	int stat_offset;
-+};
++	if (!edma_host)
++		return -1;
 +
-+#define VETH_STAT_SIZE(m)	sizeof(((struct bspveth_device *)0)->m)
-+#define VETH_STAT_OFFSET(m)	offsetof(struct bspveth_device, m)
-+#define QUEUE_TXRX_STAT_SIZE(m)	sizeof(((struct bspveth_rxtx_q *)0)->m)
-+#define QUEUE_TXRX_STAT_OFFSET(m)	offsetof(struct bspveth_rxtx_q, m)
-+#define SHMQ_TXRX_STAT_SIZE(m)	sizeof(((struct bspveth_shmq_hd *)0)->m)
-+#define SHMQ_TXRX_STAT_OFFSET(m)	offsetof(struct bspveth_shmq_hd, m)
++	pnm = (struct notify_msg *)edma_host->edma_flag;
++	if (!pnm) {
++		BMA_LOG(DLOG_ERROR, "pnm is 0\n");
++		return -1;
++	}
 +
-+#ifdef __cplusplus
++	if (IS_EDMA_B2H_INT(pnm->int_flag)) {
++		CLEAR_EDMA_B2H_INT(pnm->int_flag);
++		return 0;
++	}
++
++	return -1;
++}
++
++void edma_int_to_bmc(struct edma_host_s *edma_host)
++{
++	unsigned int data = 0;
++
++	if (!edma_host)
++		return;
++
++	edma_host->statistics.h2b_int++;
++
++	data = *(unsigned int *)((char *)edma_host->hostrtc_viraddr +
++							 HOSTRTC_INT_OFFSET);
++
++	data |= 0x00000001;
++
++	*(unsigned int *)((char *)edma_host->hostrtc_viraddr +
++					  HOSTRTC_INT_OFFSET) = data;
++}
++
++static void edma_host_int_to_bmc(struct edma_host_s *edma_host)
++{
++	struct notify_msg *pnm = NULL;
++
++	if (!edma_host)
++		return;
++
++	pnm = (struct notify_msg *)edma_host->edma_flag;
++	if (pnm) {
++		SET_EDMA_H2B_INT(pnm->int_flag);
++		edma_int_to_bmc(edma_host);
++	}
++}
++
++static int check_status_dmah2b(struct edma_host_s *edma_host)
++{
++	unsigned int data = 0;
++	struct pci_dev *pdev = NULL;
++
++	if (!edma_host)
++		return 0;
++
++	pdev = edma_host->pdev;
++	if (!pdev)
++		return 0;
++
++	(void)pci_read_config_dword(pdev, REG_PCIE1_DMAREAD_STATUS,
++				    (u32 *)&data);
++
++	if (data & (1 << SHIFT_PCIE1_DMAREAD_STATUS))
++		return 1;	/* ok */
++	else
++		return 0;	/* busy */
++}
++
++static int check_status_dmab2h(struct edma_host_s *edma_host)
++{
++	unsigned int data = 0;
++	struct pci_dev *pdev = NULL;
++
++	if (!edma_host)
++		return 0;
++
++	pdev = edma_host->pdev;
++	if (!pdev)
++		return 0;
++
++	(void)pci_read_config_dword(pdev, REG_PCIE1_DMAWRITE_STATUS,
++				    (u32 *)&data);
++
++	if (data & (1 << SHIFT_PCIE1_DMAWRITE_STATUS))
++		return 1;	/* ok */
++	else
++		return 0;	/* busy */
++}
++
++void clear_int_dmah2b(struct edma_host_s *edma_host)
++{
++	unsigned int data = 0;
++	struct pci_dev *pdev = NULL;
++
++	if (!edma_host)
++		return;
++
++	pdev = edma_host->pdev;
++	if (!pdev)
++		return;
++
++	(void)pci_read_config_dword(pdev, REG_PCIE1_DMAREADINT_CLEAR,
++				    (u32 *)&data);
++	data = data & (~((1 << SHIFT_PCIE1_DMAREADINT_CLEAR)));
++	data = data | (1 << SHIFT_PCIE1_DMAREADINT_CLEAR);
++	(void)pci_write_config_dword(pdev, REG_PCIE1_DMAREADINT_CLEAR, data);
++}
++
++void clear_int_dmab2h(struct edma_host_s *edma_host)
++{
++	unsigned int data = 0;
++	struct pci_dev *pdev = NULL;
++
++	if (!edma_host)
++		return;
++
++	pdev = edma_host->pdev;
++	if (!pdev)
++		return;
++
++	(void)pci_read_config_dword(pdev, REG_PCIE1_DMAWRITEINT_CLEAR,
++				    (u32 *)&data);
++	data = data & (~((1 << SHIFT_PCIE1_DMAWRITEINT_CLEAR)));
++	data = data | (1 << SHIFT_PCIE1_DMAWRITEINT_CLEAR);
++	(void)pci_write_config_dword(pdev, REG_PCIE1_DMAWRITEINT_CLEAR, data);
++}
++
++int edma_host_check_dma_status(enum dma_direction_e dir)
++{
++	int ret = 0;
++
++	switch (dir) {
++	case BMC_TO_HOST:
++		ret = check_status_dmab2h(&g_bma_dev->edma_host);
++		if (ret == 1)
++			clear_int_dmab2h(&g_bma_dev->edma_host);
++
++		break;
++
++	case HOST_TO_BMC:
++		ret = check_status_dmah2b(&g_bma_dev->edma_host);
++		if (ret == 1)
++			clear_int_dmah2b(&g_bma_dev->edma_host);
++
++		break;
++
++	default:
++		BMA_LOG(DLOG_ERROR, "direction failed, dir = %d\n", dir);
++		ret = -EFAULT;
++		break;
++	}
++
++	return ret;
++}
++
++#ifdef USE_DMA
++
++static int start_transfer_h2b(struct edma_host_s *edma_host, unsigned int len,
++			      unsigned int src_h, unsigned int src_l,
++			      unsigned int dst_h, unsigned int dst_l)
++{
++	unsigned long flags = 0;
++	struct pci_dev *pdev = edma_host->pdev;
++
++	spin_lock_irqsave(&edma_host->reg_lock, flags);
++	/*  read engine enable    */
++	(void)pci_write_config_dword(pdev, 0x99c, 0x00000001);
++	/*  read ch,ch index 0   */
++	(void)pci_write_config_dword(pdev, 0xa6c, 0x80000000);
++	/*  ch ctrl,local int enable */
++	(void)pci_write_config_dword(pdev, 0xa70, 0x00000008);
++	/*  size    */
++	(void)pci_write_config_dword(pdev, 0xa78, len);
++	/*  src lower 32b    */
++	(void)pci_write_config_dword(pdev, 0xa7c, src_l);
++	/*  src upper 32b    */
++	(void)pci_write_config_dword(pdev, 0xa80, src_h);
++	/*  dst lower 32b    */
++	(void)pci_write_config_dword(pdev, 0xa84, dst_l);
++	/*  dst upper 32b    */
++	(void)pci_write_config_dword(pdev, 0xa88, dst_h);
++	/*  start read dma,ch 0   */
++	(void)pci_write_config_dword(pdev, 0x9a0, 0x00000000);
++	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
++	return 0;
++}
++
++static int start_transfer_b2h(struct edma_host_s *edma_host, unsigned int len,
++			      unsigned int src_h, unsigned int src_l,
++			      unsigned int dst_h, unsigned int dst_l)
++{
++	unsigned long flags = 0;
++	struct pci_dev *pdev = edma_host->pdev;
++
++	BMA_LOG(DLOG_DEBUG,
++		"len = 0x%8x,src_h = 0x%8x,src_l = 0x%8x,dst_h = 0x%8x,dst_l = 0x%8x\n",
++		len, src_h, src_l, dst_h, dst_l);
++
++	spin_lock_irqsave(&edma_host->reg_lock, flags);
++	/*  write engine enable    */
++	(void)pci_write_config_dword(pdev, 0x97c, 0x00000001);
++	/*  write ch,ch index 0   */
++	(void)pci_write_config_dword(pdev, 0xa6c, 0x00000000);
++	/*  ch ctrl,local int enable */
++	(void)pci_write_config_dword(pdev, 0xa70, 0x00000008);
++	/*  size    */
++	(void)pci_write_config_dword(pdev, 0xa78, len);
++	/*  src lower 32b    */
++	(void)pci_write_config_dword(pdev, 0xa7c, src_l);
++	/*  src upper 32b    */
++	(void)pci_write_config_dword(pdev, 0xa80, src_h);
++	/*  dst lower 32b    */
++	(void)pci_write_config_dword(pdev, 0xa84, dst_l);
++	/*  dst upper 32b    */
++	(void)pci_write_config_dword(pdev, 0xa88, dst_h);
++	/*  start write dma,ch 0   */
++	(void)pci_write_config_dword(pdev, 0x980, 0x00000000);
++	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
++
++	return 0;
 +}
 +#endif
++
++static void start_listtransfer_h2b(struct edma_host_s *edma_host,
++				   unsigned int list_h, unsigned int list_l)
++{
++	unsigned long flags = 0;
++	struct pci_dev *pdev = NULL;
++
++	if (!edma_host)
++		return;
++
++	pdev = edma_host->pdev;
++	if (!pdev)
++		return;
++
++	spin_lock_irqsave(&edma_host->reg_lock, flags);
++
++	/*  write engine enable    */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x29c, 0x00000001);
++	/*  write list err enable   */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x334, 0x00010000);
++	/*  write ch,ch index 0   */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x36c, 0x80000000);
++	/*  ch ctrl,local int enable */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x370, 0x00000300);
++	/*  list lower 32b    */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x38c, list_l);
++	/*  list upper 32b    */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x390, list_h);
++	/*  start write dma,ch 0   */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x2a0, 0x00000000);
++
++	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
++}
++
++static void start_listtransfer_b2h(struct edma_host_s *edma_host,
++				   unsigned int list_h, unsigned int list_l)
++{
++	unsigned long flags = 0;
++	struct pci_dev *pdev = NULL;
++
++	if (!edma_host)
++		return;
++
++	pdev = edma_host->pdev;
++	if (!pdev)
++		return;
++
++	spin_lock_irqsave(&edma_host->reg_lock, flags);
++
++	/*  write engine enable    */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x27c, 0x00000001);
++	/*  write list err enable   */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x300, 0x00000001);
++	/*  write ch,ch index 0   */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x36c, 0x00000000);
++	/*  ch ctrl,local int enable */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x370, 0x00000300);
++	/*  list lower 32b    */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x38c, list_l);
++	/*  list upper 32b    */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x390, list_h);
++	/*  start write dma,ch 0   */
++	(void)pci_write_config_dword(pdev, 0x700 + 0x280, 0x00000000);
++
++	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
++}
++
++int edma_host_dma_start(struct edma_host_s *edma_host,
++			struct bma_priv_data_s *priv)
++{
++	struct bma_user_s *puser = NULL;
++	struct bma_dev_s *bma_dev = NULL;
++	unsigned long flags = 0;
++
++	if (!edma_host || !priv)
++		return -EFAULT;
++
++	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
++
++	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
++
++	list_for_each_entry_rcu(puser, &bma_dev->priv_list, link) {
++		if (puser->dma_transfer) {
++			spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++			BMA_LOG(DLOG_ERROR, "type = %d dma is started\n",
++				puser->type);
++
++			return -EBUSY;
++		}
++	}
++
++	priv->user.dma_transfer = 1;
++
++	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++
++	return 0;
++}
++
++#ifdef USE_DMA
++
++static int edma_host_dma_h2b(struct edma_host_s *edma_host,
++			     struct bma_dma_addr_s *host_addr,
++			     struct bma_dma_addr_s *bmc_addr)
++{
++	int ret = 0;
++	struct notify_msg *pnm = (struct notify_msg *)edma_host->edma_flag;
++	unsigned long host_h2b_addr = 0;
++	unsigned long bmc_h2b_addr = 0;
++	unsigned int bmc_h2b_size = 0;
++	unsigned int src_h, src_l, dst_h, dst_l;
++
++	if (!host_addr) {
++		BMA_LOG(DLOG_ERROR, "host_addr is NULL\n");
++		return -EFAULT;
++	}
++
++	BMA_LOG(DLOG_DEBUG, "host_addr->dma_addr = 0x%llx\n",
++		host_addr->dma_addr);
++
++	if (host_addr->dma_addr)
++		host_h2b_addr = (unsigned long)(host_addr->dma_addr);
++	else
++		host_h2b_addr = edma_host->h2b_addr.dma_addr;
++
++	bmc_h2b_addr = pnm->h2b_addr;
++	bmc_h2b_size = pnm->h2b_size;
++
++	BMA_LOG(DLOG_DEBUG,
++		"host_h2b_addr = 0x%lx, dma_data_len = %d, bmc_h2b_addr = 0x%lx, bmc_h2b_size = %d\n",
++		host_h2b_addr, host_addr->dma_data_len, bmc_h2b_addr,
++		bmc_h2b_size);
++
++	if (host_addr->dma_data_len > EDMA_DMABUF_SIZE ||
++	    bmc_h2b_addr == 0 ||
++	    host_addr->dma_data_len > bmc_h2b_size) {
++		BMA_LOG(DLOG_ERROR,
++			"dma_data_len too large = %d, bmc_h2b_size = %d\n",
++			host_addr->dma_data_len, bmc_h2b_size);
++		return -EFAULT;
++	}
++
++	edma_host->h2b_state = H2BSTATE_WAITDMA;
++
++	src_h = (unsigned int)((sizeof(unsigned long) == 8) ?
++					(host_h2b_addr >> 32) : 0);
++	src_l = (unsigned int)(host_h2b_addr & 0xffffffff);
++	dst_h = (unsigned int)((sizeof(unsigned long) == 8) ?
++					(bmc_h2b_addr >> 32) : 0);
++	dst_l = (unsigned int)(bmc_h2b_addr & 0xffffffff);
++	(void)start_transfer_h2b(edma_host,
++		host_addr->dma_data_len, src_h,
++		src_l, dst_h, dst_l);
++
++	(void)mod_timer(&edma_host->dma_timer,
++			jiffies_64 + TIMER_INTERVAL_CHECK);
++
++	ret = wait_event_interruptible_timeout(edma_host->wq_dmah2b,
++					       (edma_host->h2b_state ==
++					      H2BSTATE_IDLE),
++					     EDMA_DMA_TRANSFER_WAIT_TIMEOUT);
++
++	if (ret == -ERESTARTSYS) {
++		BMA_LOG(DLOG_ERROR, "eintr 1\n");
++		ret = -EINTR;
++		goto end;
++	} else if (ret == 0) {
++		BMA_LOG(DLOG_ERROR, "timeout 2\n");
++		ret = -ETIMEDOUT;
++		goto end;
++	} else {
++		ret = 0;
++		BMA_LOG(DLOG_ERROR, "h2b dma successful\n");
++	}
++
++end:
++
++	return ret;
++}
++
++static int edma_host_dma_b2h(struct edma_host_s *edma_host,
++			     struct bma_dma_addr_s *host_addr,
++			     struct bma_dma_addr_s *bmc_addr)
++{
++	int ret = 0;
++	struct notify_msg *pnm = (struct notify_msg *)edma_host->edma_flag;
++	unsigned long bmc_b2h_addr = 0;
++	unsigned long host_b2h_addr = 0;
++	unsigned int src_h, src_l, dst_h, dst_l;
++
++	if (!bmc_addr)
++		return -EFAULT;
++
++	if (host_addr->dma_addr)
++		host_b2h_addr = (unsigned long)(host_addr->dma_addr);
++	else
++		host_b2h_addr = edma_host->b2h_addr.dma_addr;
++
++	if (bmc_addr->dma_addr)
++		bmc_b2h_addr = (unsigned long)(bmc_addr->dma_addr);
++	else
++		bmc_b2h_addr = pnm->b2h_addr;
++
++	BMA_LOG(DLOG_DEBUG,
++		"bmc_b2h_addr = 0x%lx, host_b2h_addr = 0x%lx, dma_data_len = %d\n",
++		bmc_b2h_addr, host_b2h_addr, bmc_addr->dma_data_len);
++
++	if (bmc_addr->dma_data_len > EDMA_DMABUF_SIZE ||
++	    bmc_addr->dma_data_len > edma_host->b2h_addr.len) {
++		BMA_LOG(DLOG_ERROR,
++			"dma_data_len too large = %d, b2h_addr = %d\n",
++			host_addr->dma_data_len, edma_host->b2h_addr.len);
++		return -EFAULT;
++	}
++
++	edma_host->b2h_state = B2HSTATE_WAITDMA;
++
++	src_h = (unsigned int)((sizeof(unsigned long) == 8) ?
++					(bmc_b2h_addr >> 32) : 0);
++	src_l = (unsigned int)(bmc_b2h_addr & 0xffffffff);
++	dst_h = (unsigned int)((sizeof(unsigned long) == 8) ?
++					(host_b2h_addr >> 32) : 0);
++	dst_l = (unsigned int)(host_b2h_addr & 0xffffffff);
++	(void)start_transfer_b2h(edma_host,
++		bmc_addr->dma_data_len, src_h,
++		src_l, dst_h, dst_l);
++
++	(void)mod_timer(&edma_host->dma_timer,
++			jiffies_64 + TIMER_INTERVAL_CHECK);
++
++	ret = wait_event_interruptible_timeout(edma_host->wq_dmab2h,
++					       (edma_host->b2h_state ==
++					      B2HSTATE_IDLE),
++					     EDMA_DMA_TRANSFER_WAIT_TIMEOUT);
++
++	if (ret == -ERESTARTSYS) {
++		BMA_LOG(DLOG_ERROR, "eintr 1\n");
++		ret = -EINTR;
++		goto end;
++	} else if (ret == 0) {
++		BMA_LOG(DLOG_ERROR, "timeout 2\n");
++		ret = -ETIMEDOUT;
++		goto end;
++	} else {
++		BMA_LOG(DLOG_DEBUG, "h2b dma successful\n");
++	}
++
++end:
++
++	return ret;
++}
++#endif
++
++void host_dma_transfer_without_list(struct edma_host_s *edma_host,
++				    struct bma_dma_transfer_s *dma_transfer,
++					int *return_code)
++{
++#ifdef USE_DMA
++	union transfer_u *transfer = &dma_transfer->transfer;
++
++	switch (dma_transfer->dir) {
++	case BMC_TO_HOST:
++		*return_code = edma_host_dma_b2h(edma_host,
++						 &transfer->nolist.host_addr,
++						 &transfer->nolist.bmc_addr);
++		break;
++	case HOST_TO_BMC:
++		*return_code = edma_host_dma_h2b(edma_host,
++						 &transfer->nolist.host_addr,
++						 &transfer->nolist.bmc_addr);
++		break;
++	default:
++		BMA_LOG(DLOG_ERROR, "direction failed, dir = %d\n",
++			dma_transfer->dir);
++		*return_code = -EFAULT;
++		break;
++	}
++#endif
++}
++
++void host_dma_transfer_withlist(struct edma_host_s *edma_host,
++				struct bma_dma_transfer_s *dma_transfer,
++					int *return_code)
++{
++	unsigned int list_h = 0;
++	unsigned int list_l = 0;
++	union transfer_u *transfer = &dma_transfer->transfer;
++
++	list_h = (unsigned int)((sizeof(unsigned long) == 8) ?
++			(transfer->list.dma_addr >> 32) : 0);
++	list_l = (unsigned int)(transfer->list.dma_addr
++				& 0xffffffff);
++
++	switch (dma_transfer->dir) {
++	case BMC_TO_HOST:
++		start_listtransfer_b2h(edma_host, list_h, list_l);
++		break;
++	case HOST_TO_BMC:
++		start_listtransfer_h2b(edma_host, list_h, list_l);
++		break;
++	default:
++		BMA_LOG(DLOG_ERROR, "direction failed, dir = %d\n\n",
++			dma_transfer->dir);
++		*return_code = -EFAULT;
++		break;
++	}
++}
++
++int edma_host_dma_transfer(struct edma_host_s *edma_host,
++			   struct bma_priv_data_s *priv,
++			   struct bma_dma_transfer_s *dma_transfer)
++{
++	int ret = 0;
++	unsigned long flags = 0;
++	struct bma_dev_s *bma_dev = NULL;
++
++	if (!edma_host || !priv || !dma_transfer)
++		return -EFAULT;
++
++	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
++
++	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
++
++	if (priv->user.dma_transfer == 0) {
++		spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++		BMA_LOG(DLOG_ERROR, "dma_transfer = %hhd\n",
++			priv->user.dma_transfer);
++		return -EFAULT;
++	}
++
++	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++
++	edma_host->statistics.dma_count++;
++
++	if (dma_transfer->type == DMA_NOT_LIST) {
++		host_dma_transfer_without_list(edma_host,
++					       dma_transfer, &ret);
++	} else if (dma_transfer->type == DMA_LIST) {
++		host_dma_transfer_withlist(edma_host, dma_transfer, &ret);
++	} else {
++		BMA_LOG(DLOG_ERROR, "type failed! type = %d\n",
++			dma_transfer->type);
++		return -EFAULT;
++	}
++
++	return ret;
++}
++
++void edma_host_reset_dma(struct edma_host_s *edma_host, int dir)
++{
++	u32 data = 0;
++	u32 reg_addr = 0;
++	unsigned long flags = 0;
++	int count = 0;
++	struct pci_dev *pdev = NULL;
++
++	if (!edma_host)
++		return;
++
++	pdev = edma_host->pdev;
++	if (!pdev)
++		return;
++
++	if (dir == BMC_TO_HOST)
++		reg_addr = REG_PCIE1_DMA_READ_ENGINE_ENABLE;
++	else if (dir == HOST_TO_BMC)
++		reg_addr = REG_PCIE1_DMA_WRITE_ENGINE_ENABLE;
++	else
++		return;
++
++	spin_lock_irqsave(&edma_host->reg_lock, flags);
++
++	(void)pci_read_config_dword(pdev, reg_addr, &data);
++	data &= ~(1 << SHIFT_PCIE1_DMA_ENGINE_ENABLE);
++	(void)pci_write_config_dword(pdev, reg_addr, data);
++
++	while (count++ < 10) {
++		(void)pci_read_config_dword(pdev, reg_addr, &data);
++
++		if (0 == (data & (1 << SHIFT_PCIE1_DMA_ENGINE_ENABLE))) {
++			BMA_LOG(DLOG_DEBUG, "reset dma succesfull\n");
++			break;
++		}
++
++		mdelay(100);
++	}
++
++	spin_unlock_irqrestore(&edma_host->reg_lock, flags);
++	BMA_LOG(DLOG_DEBUG, "reset dma reg_addr=0x%x count=%d data=0x%08x\n",
++		reg_addr, count, data);
++}
++
++int edma_host_dma_stop(struct edma_host_s *edma_host,
++		       struct bma_priv_data_s *priv)
++{
++	unsigned long flags = 0;
++	struct bma_dev_s *bma_dev = NULL;
++
++	if (!edma_host || !priv)
++		return -1;
++
++	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
++
++	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
++	priv->user.dma_transfer = 0;
++	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++
++	return 0;
++}
++
++static int edma_host_send_msg(struct edma_host_s *edma_host)
++{
++	void *vaddr = NULL;
++	unsigned long flags = 0;
++	struct edma_mbx_hdr_s *send_mbx_hdr = NULL;
++	static unsigned long last_timer_record;
++
++	if (!edma_host)
++		return 0;
++
++	send_mbx_hdr = (struct edma_mbx_hdr_s *)edma_host->edma_send_addr;
++
++	if (send_mbx_hdr->mbxlen > 0) {
++		if (send_mbx_hdr->mbxlen > HOST_MAX_SEND_MBX_LEN) {
++			/*share memory is disable */
++			send_mbx_hdr->mbxlen = 0;
++			BMA_LOG(DLOG_ERROR, "mbxlen is too long\n");
++			return -EFAULT;
++		}
++
++		if (time_after(jiffies, last_timer_record + 10 * HZ)) {
++			BMA_LOG(DLOG_ERROR, "no response in 10s,clean msg\n");
++			edma_host->statistics.failed_count++;
++			send_mbx_hdr->mbxlen = 0;
++			return -EFAULT;
++		}
++
++		BMA_LOG(DLOG_DEBUG,
++			"still have msg : mbxlen: %d, msg_send_write: %d\n",
++			send_mbx_hdr->mbxlen, edma_host->msg_send_write);
++
++		/*  resend door bell */
++		if (time_after(jiffies, last_timer_record + 5 * HZ))
++			edma_host_int_to_bmc(edma_host);
++
++		return -EFAULT;
++	}
++
++	vaddr =
++		(void *)((unsigned char *)edma_host->edma_send_addr +
++			 SIZE_OF_MBX_HDR);
++
++	last_timer_record = jiffies;
++
++	spin_lock_irqsave(&edma_host->send_msg_lock, flags);
++
++	if (edma_host->msg_send_write == 0) {
++		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
++		return 0;
++	}
++
++	if (edma_host->msg_send_write >
++	    HOST_MAX_SEND_MBX_LEN - SIZE_OF_MBX_HDR) {
++		BMA_LOG(DLOG_ERROR,
++			"Length of send message %u is larger than %lu\n",
++			edma_host->msg_send_write,
++			HOST_MAX_SEND_MBX_LEN - SIZE_OF_MBX_HDR);
++		edma_host->msg_send_write = 0;
++		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
++		return 0;
++	}
++
++	memcpy(vaddr, edma_host->msg_send_buf,
++	       edma_host->msg_send_write);
++
++	send_mbx_hdr->mbxlen = edma_host->msg_send_write;
++	edma_host->msg_send_write = 0;
++
++	spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
++
++	edma_host_int_to_bmc(edma_host);
++
++	BMA_LOG(DLOG_DEBUG,
++		"vaddr: %p, mbxlen : %d, msg_send_write: %d\n", vaddr,
++		send_mbx_hdr->mbxlen, edma_host->msg_send_write);
++
++	return -EAGAIN;
++}
++
++#ifdef EDMA_TIMER
++#ifdef HAVE_TIMER_SETUP
++static void edma_host_timeout(struct timer_list *t)
++{
++	struct edma_host_s *edma_host = from_timer(edma_host, t, timer);
++#else
++static void edma_host_timeout(unsigned long data)
++{
++	struct edma_host_s *edma_host = (struct edma_host_s *)data;
++#endif
++	int ret = 0;
++	unsigned long flags = 0;
++
++	ret = edma_host_send_msg(edma_host);
++	if (ret < 0) {
++		spin_lock_irqsave(&g_bma_dev->edma_host.send_msg_lock, flags);
++		(void)mod_timer(&edma_host->timer,
++				jiffies_64 + TIMER_INTERVAL_CHECK);
++		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
++	}
++}
++
++#ifdef HAVE_TIMER_SETUP
++static void edma_host_heartbeat_timer(struct timer_list *t)
++{
++	struct edma_host_s *edma_host = from_timer(edma_host, t,
++						    heartbeat_timer);
++#else
++static void edma_host_heartbeat_timer(unsigned long data)
++{
++	struct edma_host_s *edma_host = (struct edma_host_s *)data;
++#endif
++	struct edma_statistics_s *edma_stats = &edma_host->statistics;
++	unsigned int *remote_status = &edma_stats->remote_status;
++	static unsigned int bmc_heartbeat;
++	struct notify_msg *pnm = (struct notify_msg *)edma_host->edma_flag;
++
++	if (pnm) {
++		if (pnm->bmc_registered) {
++			if ((pnm->host_heartbeat & 7) == 0) {
++				if (bmc_heartbeat != pnm->bmc_heartbeat) {
++					if (*remote_status != REGISTERED) {
++						BMA_LOG(DLOG_DEBUG,
++							"bmc is registered\n");
++						*remote_status = REGISTERED;
++					}
++
++					bmc_heartbeat = pnm->bmc_heartbeat;
++				} else {
++					if (*remote_status == REGISTERED) {
++						*remote_status = LOST;
++						edma_stats->lost_count++;
++						BMA_LOG(DLOG_DEBUG,
++							"bmc is lost\n");
++					}
++				}
++			}
++		} else {
++			if (*remote_status == REGISTERED)
++				BMA_LOG(DLOG_DEBUG, "bmc is deregistered\n");
++
++			*remote_status = DEREGISTERED;
++		}
++
++		pnm->host_heartbeat++;
++	}
++
++	(void)mod_timer(&edma_host->heartbeat_timer,
++			jiffies_64 + HEARTBEAT_TIMER_INTERVAL_CHECK);
++}
++
++#ifdef USE_DMA
++#ifdef HAVE_TIMER_SETUP
++static void edma_host_dma_timeout(struct timer_list *t)
++{
++	struct edma_host_s *edma_host = from_timer(edma_host, t, dma_timer);
++#else
++static void edma_host_dma_timeout(unsigned long data)
++{
++	struct edma_host_s *edma_host = (struct edma_host_s *)data;
++#endif
++	int ret = 0;
++
++	ret = edma_host_dma_interrupt(edma_host);
++	if (ret < 0)
++		(void)mod_timer(&edma_host->dma_timer,
++				jiffies_64 + DMA_TIMER_INTERVAL_CHECK);
++}
++#endif
++#else
++
++static int edma_host_thread(void *arg)
++{
++	struct edma_host_s *edma_host = (struct edma_host_s *)arg;
++
++	BMA_LOG(DLOG_ERROR, "edma host thread\n");
++
++	while (!kthread_should_stop()) {
++		wait_for_completion_interruptible_timeout(&edma_host->msg_ready,
++							  1 * HZ);
++		edma_host_send_msg(edma_host);
++		(void)edma_host_dma_interrupt(edma_host);
++	}
++
++	BMA_LOG(DLOG_ERROR, "edma host thread exiting\n");
++
++	return 0;
++}
++
++#endif
++
++int edma_host_send_driver_msg(const void *msg, size_t msg_len, int subtype)
++{
++	int ret = 0;
++	unsigned long flags = 0;
++	struct edma_host_s *edma_host = NULL;
++	struct edma_msg_hdr_s *hdr = NULL;
++	int total_len = msg_len + SIZE_OF_MSG_HDR;
++
++	if (!msg || !g_bma_dev)
++		return -1;
++
++	edma_host = &g_bma_dev->edma_host;
++	if (!edma_host)
++		return -1;
++
++	spin_lock_irqsave(&edma_host->send_msg_lock, flags);
++
++	if (edma_host->msg_send_write + total_len <=
++	    (HOST_MAX_SEND_MBX_LEN - SIZE_OF_MBX_HDR)) {
++		hdr = (struct edma_msg_hdr_s *)(edma_host->msg_send_buf +
++					      edma_host->msg_send_write);
++		hdr->type = TYPE_EDMA_DRIVER;
++		hdr->sub_type = subtype;
++		hdr->datalen = msg_len;
++
++		memcpy(hdr->data, msg, msg_len);
++
++		edma_host->msg_send_write += total_len;
++
++		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
++
++		(void)mod_timer(&edma_host->timer, jiffies_64);
++		BMA_LOG(DLOG_DEBUG, "msg_send_write = %d\n",
++			edma_host->msg_send_write);
++	} else {
++		ret = -ENOSPC;
++		spin_unlock_irqrestore(&edma_host->send_msg_lock, flags);
++
++		BMA_LOG(DLOG_DEBUG,
++			"msg lost,msg_send_write: %d,msg_len:%d,max_len: %d\n",
++			edma_host->msg_send_write, total_len,
++			HOST_MAX_SEND_MBX_LEN);
++	}
++
++	return ret;
++}
++
++static int edma_host_insert_recv_msg(struct edma_host_s *edma_host,
++				     struct edma_msg_hdr_s *msg_header)
++{
++	unsigned long flags = 0, msg_flags = 0;
++	struct bma_dev_s *bma_dev = NULL;
++	struct bma_priv_data_s *priv = NULL;
++	struct bma_user_s *puser = NULL;
++	struct list_head *entry = NULL;
++	struct edma_recv_msg_s *msg_tmp = NULL;
++	struct bma_user_s usertmp = { };
++	struct edma_recv_msg_s *recv_msg = NULL;
++
++	if (!edma_host || !msg_header ||
++	    msg_header->datalen > CDEV_MAX_WRITE_LEN) {
++		return -EFAULT;
++	}
++
++	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
++
++	recv_msg = kmalloc(sizeof(*recv_msg) + msg_header->datalen, GFP_ATOMIC);
++	if (!recv_msg) {
++		BMA_LOG(DLOG_ERROR, "malloc recv_msg failed\n");
++		return -ENOMEM;
++	}
++
++	recv_msg->msg_len = msg_header->datalen;
++	memcpy(recv_msg->msg_data, msg_header->data,
++	       msg_header->datalen);
++
++	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
++	list_for_each_entry_rcu(puser, &bma_dev->priv_list, link) {
++		if (puser->type != msg_header->type ||
++		    puser->sub_type != msg_header->sub_type)
++			continue;
++
++		priv = list_entry(puser, struct bma_priv_data_s, user);
++
++		memcpy(&usertmp, puser,
++		       sizeof(struct bma_user_s));
++
++		spin_lock_irqsave(&priv->recv_msg_lock, msg_flags);
++
++		if (puser->cur_recvmsg_nums >= puser->max_recvmsg_nums ||
++		    puser->cur_recvmsg_nums >= MAX_RECV_MSG_NUMS) {
++			entry = priv->recv_msgs.next;
++			msg_tmp =
++			    list_entry(entry, struct edma_recv_msg_s,
++				       link);
++			list_del(entry);
++			puser->cur_recvmsg_nums--;
++			kfree(msg_tmp);
++		}
++
++		if (edma_host->local_open_status[puser->type]
++			== DEV_OPEN) {
++			list_add_tail(&recv_msg->link, &priv->recv_msgs);
++			puser->cur_recvmsg_nums++;
++			usertmp.cur_recvmsg_nums =
++			    puser->cur_recvmsg_nums;
++			spin_unlock_irqrestore(&priv->recv_msg_lock,
++					       msg_flags);
++
++		} else {
++			spin_unlock_irqrestore(&priv->recv_msg_lock,
++					       msg_flags);
++			break;
++		}
++
++		wake_up_interruptible(&priv->wait);
++		spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++
++		BMA_LOG(DLOG_DEBUG,
++			"find user, type = %d, sub_type = %d, user_id = %d, insert msg\n",
++			usertmp.type, usertmp.sub_type,
++			usertmp.user_id);
++		BMA_LOG(DLOG_DEBUG,
++			"msg_len = %d, cur_recvmsg_nums: %d, max_recvmsg_nums: %d\n",
++			recv_msg->msg_len, usertmp.cur_recvmsg_nums,
++			usertmp.max_recvmsg_nums);
++
++		return 0;
++	}
++
++	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++	kfree(recv_msg);
++	edma_host->statistics.drop_pkgs++;
++	BMA_LOG(DLOG_DEBUG,
++		"insert msg failed! not find user, type = %d, sub_type = %d\n",
++		msg_header->type, msg_header->sub_type);
++
++	return -EFAULT;
++}
++
++int edma_host_recv_msg(struct edma_host_s *edma_host,
++		       struct bma_priv_data_s *priv,
++		       struct edma_recv_msg_s **msg)
++{
++	unsigned long flags = 0;
++	struct list_head *entry = NULL;
++	struct edma_recv_msg_s *msg_tmp = NULL;
++	struct bma_dev_s *bma_dev = NULL;
++
++	if (!edma_host || !priv || !msg)
++		return -EAGAIN;
++
++	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
++
++	spin_lock_irqsave(&bma_dev->priv_list_lock, flags);
++
++	if (list_empty(&priv->recv_msgs)) {
++		priv->user.cur_recvmsg_nums = 0;
++		spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++		BMA_LOG(DLOG_DEBUG, "recv msgs empty\n");
++		return -EAGAIN;
++	}
++
++	entry = priv->recv_msgs.next;
++	msg_tmp = list_entry(entry, struct edma_recv_msg_s, link);
++	list_del(entry);
++
++	if (priv->user.cur_recvmsg_nums > 0)
++		priv->user.cur_recvmsg_nums--;
++
++	spin_unlock_irqrestore(&bma_dev->priv_list_lock, flags);
++
++	*msg = msg_tmp;
++
++	BMA_LOG(DLOG_DEBUG, "msg->msg_len = %d\n", (int)msg_tmp->msg_len);
++
++	return 0;
++}
++
++static int edma_host_msg_process(struct edma_host_s *edma_host,
++				 struct edma_msg_hdr_s *msg_header)
++{
++	struct bma_user_s *user_ptr = NULL;
++	char drv_msg[TYPE_MAX * 2 + 1] = { 0 };
++
++	if (!edma_host || !msg_header)
++		return 0;
++
++	if (msg_header->type != TYPE_EDMA_DRIVER)
++		return -1;
++
++	if (msg_header->sub_type != DEV_OPEN_STATUS_REQ)
++		return 0;
++
++	list_for_each_entry_rcu(user_ptr, &g_bma_dev->priv_list, link) {
++		drv_msg[drv_msg[0] * 2 + 1] = user_ptr->type;
++		drv_msg[drv_msg[0] * 2 + 2] =
++		    edma_host->local_open_status[user_ptr->type];
++		BMA_LOG(DLOG_DEBUG,
++			"send DEV_OPEN_STATUS_ANS index=%d type=%d status=%d\n",
++			drv_msg[0], drv_msg[drv_msg[0] * 2 + 1],
++			drv_msg[drv_msg[0] * 2 + 2]);
++		drv_msg[0]++;
++	}
++
++	if (drv_msg[0]) {
++		(void)edma_host_send_driver_msg((void *)drv_msg,
++						drv_msg[0] * 2 +
++						1,
++						DEV_OPEN_STATUS_ANS);
++		BMA_LOG(DLOG_DEBUG,
++			"send DEV_OPEN_STATUS_ANS %d\n",
++			drv_msg[0]);
++	}
++
++	return 0;
++}
++
++void edma_host_isr_tasklet(unsigned long data)
++{
++	int result = 0;
++	u16 len = 0;
++	u16 off = 0;
++	u16 msg_cnt = 0;
++	struct edma_mbx_hdr_s *recv_mbx_hdr = NULL;
++	struct edma_host_s *edma_host = (struct edma_host_s *)data;
++	struct edma_msg_hdr_s *msg_header = NULL;
++	unsigned char *ptr = NULL;
++
++	if (!edma_host)
++		return;
++
++	recv_mbx_hdr = (struct edma_mbx_hdr_s *)(edma_host->edma_recv_addr);
++	msg_header =
++		(struct edma_msg_hdr_s *)((char *)(edma_host->edma_recv_addr) +
++				SIZE_OF_MBX_HDR + recv_mbx_hdr->mbxoff);
++
++	off = readw((unsigned char *)edma_host->edma_recv_addr
++				+ EDMA_B2H_INT_FLAG);
++	len = readw((unsigned char *)edma_host->edma_recv_addr) - off;
++
++	BMA_LOG(DLOG_DEBUG,
++		" edma_host->edma_recv_addr = %p, len = %d, off = %d, mbxlen = %d\n",
++		edma_host->edma_recv_addr, len, off, recv_mbx_hdr->mbxlen);
++	edma_host->statistics.recv_bytes += (recv_mbx_hdr->mbxlen - off);
++
++	if (len == 0) {
++		writel(0, (void *)(edma_host->edma_recv_addr));
++		return;
++	}
++
++	while (recv_mbx_hdr->mbxlen - off) {
++		if (len == 0) {
++			BMA_LOG(DLOG_DEBUG, " receive done\n");
++			break;
++		}
++
++		if (len < (SIZE_OF_MSG_HDR + msg_header->datalen)) {
++			BMA_LOG(DLOG_ERROR, " len too less, is %d\n", len);
++			break;
++		}
++
++		edma_host->statistics.recv_pkgs++;
++
++		if (edma_host_msg_process(edma_host, msg_header) == -1) {
++			result = edma_host_insert_recv_msg(edma_host,
++							   msg_header);
++			if (result < 0)
++				BMA_LOG(DLOG_DEBUG,
++					"edma_host_insert_recv_msg failed\n");
++		}
++
++		BMA_LOG(DLOG_DEBUG, "len = %d\n", len);
++		BMA_LOG(DLOG_DEBUG, "off = %d\n", off);
++		len -= (msg_header->datalen + SIZE_OF_MSG_HDR);
++		BMA_LOG(DLOG_DEBUG,
++			"msg_header->datalen = %d, SIZE_OF_MSG_HDR=%d\n",
++			msg_header->datalen, (int)SIZE_OF_MSG_HDR);
++		off += (msg_header->datalen + SIZE_OF_MSG_HDR);
++
++		msg_cnt++;
++
++		ptr = (unsigned char *)msg_header;
++		msg_header = (struct edma_msg_hdr_s *)(ptr +
++					      (msg_header->datalen +
++					       SIZE_OF_MSG_HDR));
++
++		if (msg_cnt > 2) {
++			recv_mbx_hdr->mbxoff = off;
++			BMA_LOG(DLOG_DEBUG, "len = %d\n", len);
++			BMA_LOG(DLOG_DEBUG, "off = %d\n", off);
++			BMA_LOG(DLOG_DEBUG, "off works\n");
++
++			tasklet_hi_schedule(&edma_host->tasklet);
++
++			break;
++		}
++
++		if (!len) {
++			writel(0, (void *)(edma_host->edma_recv_addr));
++			recv_mbx_hdr->mbxoff = 0;
++		}
++	}
++}
++
++static int edma_host_dma_interrupt(struct edma_host_s *edma_host)
++{
++	if (!edma_host)
++		return 0;
++
++	if (check_status_dmah2b(edma_host)) {
++		clear_int_dmah2b(edma_host);
++
++		edma_host->h2b_state = H2BSTATE_IDLE;
++		wake_up_interruptible(&edma_host->wq_dmah2b);
++		return 0;
++	}
++
++	if (check_status_dmab2h(edma_host)) {
++		clear_int_dmab2h(edma_host);
++
++		edma_host->b2h_state = B2HSTATE_IDLE;
++		wake_up_interruptible(&edma_host->wq_dmab2h);
++
++		return 0;
++	}
++
++	return -EAGAIN;
++}
++
++irqreturn_t edma_host_irq_handle(struct edma_host_s *edma_host)
++{
++	if (edma_host) {
++		(void)edma_host_dma_interrupt(edma_host);
++
++		tasklet_hi_schedule(&edma_host->tasklet);
++	}
++
++	return IRQ_HANDLED;
++}
++
++struct edma_user_inft_s *edma_host_get_user_inft(u32 type)
++{
++	if (type >= TYPE_MAX) {
++		BMA_LOG(DLOG_ERROR, "type error %d\n", type);
++		return NULL;
++	}
++
++	return g_user_func[type];
++}
++
++int edma_host_user_register(u32 type, struct edma_user_inft_s *func)
++{
++	if (type >= TYPE_MAX) {
++		BMA_LOG(DLOG_ERROR, "type error %d\n", type);
++		return -EFAULT;
++	}
++
++	if (!func) {
++		BMA_LOG(DLOG_ERROR, "func is NULL\n");
++		return -EFAULT;
++	}
++
++	g_user_func[type] = func;
++
++	return 0;
++}
++
++int edma_host_user_unregister(u32 type)
++{
++	if (type >= TYPE_MAX) {
++		BMA_LOG(DLOG_ERROR, "type error %d\n", type);
++		return -EFAULT;
++	}
++
++	g_user_func[type] = NULL;
++
++	return 0;
++}
++
++int edma_host_init(struct edma_host_s *edma_host)
++{
++	int ret = 0;
++	struct bma_dev_s *bma_dev = NULL;
++	struct notify_msg *pnm = NULL;
++
++	if (!edma_host)
++		return -1;
++
++	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
++	g_bma_dev = bma_dev;
++
++	edma_host->pdev = bma_dev->bma_pci_dev->pdev;
++
++#ifdef EDMA_TIMER
++	#ifdef HAVE_TIMER_SETUP
++		timer_setup(&edma_host->timer, edma_host_timeout, 0);
++	#else
++		setup_timer(&edma_host->timer, edma_host_timeout,
++			    (unsigned long)edma_host);
++	#endif
++	(void)mod_timer(&edma_host->timer, jiffies_64 + TIMER_INTERVAL_CHECK);
++#ifdef USE_DMA
++	#ifdef HAVE_TIMER_SETUP
++		timer_setup(&edma_host->dma_timer, edma_host_dma_timeout, 0);
++
++	#else
++		setup_timer(&edma_host->dma_timer, edma_host_dma_timeout,
++			    (unsigned long)edma_host);
++	#endif
++	(void)mod_timer(&edma_host->dma_timer,
++			jiffies_64 + DMA_TIMER_INTERVAL_CHECK);
++#endif
++
++#else
++	init_completion(&edma_host->msg_ready);
++
++	edma_host->edma_thread =
++	    kthread_run(edma_host_thread, (void *)edma_host, "edma_host_msg");
++
++	if (IS_ERR(edma_host->edma_thread)) {
++		BMA_LOG(DLOG_ERROR, "kernel_run  edma_host_msg failed\n");
++		return PTR_ERR(edma_host->edma_thread);
++	}
++#endif
++
++	edma_host->msg_send_buf = kmalloc(HOST_MAX_SEND_MBX_LEN, GFP_KERNEL);
++	if (!edma_host->msg_send_buf) {
++		BMA_LOG(DLOG_ERROR, "malloc msg_send_buf failed!");
++		ret = -ENOMEM;
++		goto failed1;
++	}
++
++	edma_host->msg_send_write = 0;
++
++	spin_lock_init(&edma_host->send_msg_lock);
++
++	tasklet_init(&edma_host->tasklet,
++		     (void (*)(unsigned long))edma_host_isr_tasklet,
++		     (unsigned long)edma_host);
++
++	edma_host->edma_flag = bma_dev->bma_pci_dev->edma_swap_addr;
++
++	edma_host->edma_send_addr =
++	    (void *)((unsigned char *)bma_dev->bma_pci_dev->edma_swap_addr +
++		     HOST_DMA_FLAG_LEN);
++	memset(edma_host->edma_send_addr, 0, SIZE_OF_MBX_HDR);
++
++	edma_host->edma_recv_addr =
++	    (void *)((unsigned char *)edma_host->edma_send_addr +
++		     HOST_MAX_SEND_MBX_LEN);
++
++	BMA_LOG(DLOG_DEBUG,
++		"edma_flag = %p, edma_send_addr = %p, edma_recv_addr = %p\n",
++		edma_host->edma_flag, edma_host->edma_send_addr,
++		edma_host->edma_recv_addr);
++
++	edma_host->hostrtc_viraddr = bma_dev->bma_pci_dev->hostrtc_viraddr;
++
++	init_waitqueue_head(&edma_host->wq_dmah2b);
++	init_waitqueue_head(&edma_host->wq_dmab2h);
++
++	spin_lock_init(&edma_host->reg_lock);
++
++	edma_host->h2b_state = H2BSTATE_IDLE;
++	edma_host->b2h_state = B2HSTATE_IDLE;
++
++	#ifdef HAVE_TIMER_SETUP
++		timer_setup(&edma_host->heartbeat_timer,
++			    edma_host_heartbeat_timer, 0);
++	#else
++		setup_timer(&edma_host->heartbeat_timer,
++			    edma_host_heartbeat_timer,
++			    (unsigned long)edma_host);
++	#endif
++	(void)mod_timer(&edma_host->heartbeat_timer,
++			jiffies_64 + HEARTBEAT_TIMER_INTERVAL_CHECK);
++
++	pnm = (struct notify_msg *)edma_host->edma_flag;
++	if (pnm)
++		pnm->host_registered = REGISTERED;
++
++	GET_SYS_SECONDS(edma_host->statistics.init_time);
++
++#ifdef EDMA_TIMER
++	BMA_LOG(DLOG_DEBUG, "timer ok\n");
++#else
++	BMA_LOG(DLOG_ERROR, "thread ok\n");
++#endif
++	return 0;
++
++failed1:
++#ifdef EDMA_TIMER
++	(void)del_timer_sync(&edma_host->timer);
++#ifdef USE_DMA
++	(void)del_timer_sync(&edma_host->dma_timer);
++#endif
++#else
++	kthread_stop(edma_host->edma_thread);
++	complete(&edma_host->msg_ready);
++#endif
++	return ret;
++}
++
++void edma_host_cleanup(struct edma_host_s *edma_host)
++{
++	struct bma_dev_s *bma_dev = NULL;
++	struct notify_msg *pnm = NULL;
++
++	if (!edma_host)
++		return;
++
++	bma_dev = list_entry(edma_host, struct bma_dev_s, edma_host);
++	(void)del_timer_sync(&edma_host->heartbeat_timer);
++	pnm = (struct notify_msg *)edma_host->edma_flag;
++
++	if (pnm)
++		pnm->host_registered = DEREGISTERED;
++
++	tasklet_kill(&edma_host->tasklet);
++
++	kfree(edma_host->msg_send_buf);
++	edma_host->msg_send_buf = NULL;
++#ifdef EDMA_TIMER
++	(void)del_timer_sync(&edma_host->timer);
++#ifdef USE_DMA
++	(void)del_timer_sync(&edma_host->dma_timer);
++#endif
++
++#else
++	kthread_stop(edma_host->edma_thread);
++
++	complete(&edma_host->msg_ready);
++#endif
++}
+diff --git a/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h b/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h
+new file mode 100644
+index 000000000000..9d86b5b0fdd6
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h
+@@ -0,0 +1,351 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Huawei iBMA driver.
++ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _EDMA_HOST_H_
++#define _EDMA_HOST_H_
++
++#include "bma_include.h"
++#include "../include/bma_ker_intf.h"
++
++#define EDMA_TIMER
++
++#ifndef IN
++#define IN
++#endif
++
++#ifndef OUT
++#define OUT
++#endif
++
++#ifndef UNUSED
++#define UNUSED
++#endif
++
++/* vm_flags in vm_area_struct, see mm_types.h. */
++#define VM_NONE		0x00000000
++
++#define VM_READ		0x00000001	/* currently active flags */
++#define VM_WRITE	0x00000002
++#define VM_EXEC		0x00000004
++#define VM_SHARED	0x00000008
++
++#define VM_MAYREAD	0x00000010	/* limits for mprotect() etc */
++#define VM_MAYWRITE	0x00000020
++#define VM_MAYEXEC	0x00000040
++#define VM_MAYSHARE	0x00000080
++
++#define VM_GROWSDOWN	0x00000100	/* general info on the segment */
++/* Page-ranges managed without "struct page", just pure PFN */
++#define VM_PFNMAP	0x00000400
++#define VM_DENYWRITE	0x00000800	/* ETXTBSY on write attempts.. */
++
++#define VM_LOCKED	0x00002000
++#define VM_IO           0x00004000	/* Memory mapped I/O or similar */
++
++					/* Used by sys_madvise() */
++#define VM_SEQ_READ	0x00008000	/* App will access data sequentially */
++/* App will not benefit from clustered reads */
++#define VM_RAND_READ	0x00010000
++
++#define VM_DONTCOPY	0x00020000	/* Do not copy this vma on fork */
++#define VM_DONTEXPAND	0x00040000	/* Cannot expand with mremap() */
++#define VM_ACCOUNT	0x00100000	/* Is a VM accounted object */
++#define VM_NORESERVE	0x00200000	/* should the VM suppress accounting */
++#define VM_HUGETLB	0x00400000	/* Huge TLB Page VM */
++#define VM_NONLINEAR	0x00800000	/* Is non-linear (remap_file_pages) */
++#define VM_ARCH_1	0x01000000	/* Architecture-specific flag */
++#define VM_DONTDUMP	0x04000000	/* Do not include in the core dump */
++/* Can contain "struct page" and pure PFN pages */
++#define VM_MIXEDMAP	0x10000000
++
++#define VM_MERGEABLE	0x80000000	/* KSM may merge identical pages */
++
++#if defined(CONFIG_X86)
++/* PAT reserves whole VMA at once (x86) */
++#define VM_PAT		VM_ARCH_1
++#elif defined(CONFIG_PPC)
++#define VM_SAO		VM_ARCH_1	/* Strong Access Ordering (powerpc) */
++#elif defined(CONFIG_PARISC)
++#define VM_GROWSUP	VM_ARCH_1
++#elif defined(CONFIG_METAG)
++#define VM_GROWSUP	VM_ARCH_1
++#elif defined(CONFIG_IA64)
++#define VM_GROWSUP	VM_ARCH_1
++#elif !defined(CONFIG_MMU)
++#define VM_MAPPED_COPY	VM_ARCH_1 /* T if mapped copy of data (nommu mmap) */
++#endif
++
++#ifndef VM_GROWSUP
++#define VM_GROWSUP	VM_NONE
++#endif
++
++/* Bits set in the VMA until the stack is in its final location */
++#define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
++
++#ifndef VM_STACK_DEFAULT_FLAGS	/* arch can override this */
++#define VM_STACK_DEFAULT_FLAGS VM_DATA_DEFAULT_FLAGS
++#endif
++
++#define VM_READHINTMASK			(VM_SEQ_READ | VM_RAND_READ)
++#define VM_NORMAL_READ_HINT(v)		(!((v)->vm_flags & VM_READHINTMASK))
++#define VM_SEQUENTIAL_READ_HINT(v)	((v)->vm_flags & VM_SEQ_READ)
++#define VM_RANDOM_READ_HINT(v)		((v)->vm_flags & VM_RAND_READ)
++
++#define REG_PCIE1_DMAREAD_ENABLE	0xa18
++#define SHIFT_PCIE1_DMAREAD_ENABLE	0
++
++#define REG_PCIE1_DMAWRITE_ENABLE	0x9c4
++#define SHIFT_PCIE1_DMAWRITE_ENABLE	0
++
++#define REG_PCIE1_DMAREAD_STATUS	0xa10
++#define SHIFT_PCIE1_DMAREAD_STATUS	0
++#define REG_PCIE1_DMAREADINT_CLEAR	0xa1c
++#define SHIFT_PCIE1_DMAREADINT_CLEAR	0
++
++#define REG_PCIE1_DMAWRITE_STATUS	0x9bc
++#define SHIFT_PCIE1_DMAWRITE_STATUS	0
++#define REG_PCIE1_DMAWRITEINT_CLEAR	0x9c8
++#define SHIFT_PCIE1_DMAWRITEINT_CLEAR	0
++
++#define REG_PCIE1_DMA_READ_ENGINE_ENABLE	(0x99c)
++#define SHIFT_PCIE1_DMA_ENGINE_ENABLE		(0)
++#define REG_PCIE1_DMA_WRITE_ENGINE_ENABLE	(0x97C)
++
++#define HOSTRTC_INT_OFFSET		0x10
++
++#define H2BSTATE_IDLE			0
++#define H2BSTATE_WAITREADY		1
++#define H2BSTATE_WAITDMA		2
++#define H2BSTATE_WAITACK		3
++#define H2BSTATE_ERROR			4
++
++#define B2HSTATE_IDLE			0
++#define B2HSTATE_WAITREADY		1
++#define B2HSTATE_WAITRECV		2
++#define B2HSTATE_WAITDMA		3
++#define B2HSTATE_ERROR			4
++
++#define PAGE_ORDER			8
++#define EDMA_DMABUF_SIZE		(1 << (PAGE_SHIFT + PAGE_ORDER))
++
++#define EDMA_DMA_TRANSFER_WAIT_TIMEOUT	(10 * HZ)
++#define TIMEOUT_WAIT_NOSIGNAL		2
++
++#define TIMER_INTERVAL_CHECK		(HZ / 10)
++#define DMA_TIMER_INTERVAL_CHECK	50
++#define HEARTBEAT_TIMER_INTERVAL_CHECK	HZ
++
++#define EDMA_PCI_MSG_LEN		(56 * 1024)
++
++#define HOST_DMA_FLAG_LEN		(64)
++
++#define HOST_MAX_SEND_MBX_LEN		(40 * 1024)
++#define BMC_MAX_RCV_MBX_LEN		HOST_MAX_SEND_MBX_LEN
++
++#define HOST_MAX_RCV_MBX_LEN		(16 * 1024)
++#define BMC_MAX_SEND_MBX_LEN		HOST_MAX_RCV_MBX_LEN
++#define CDEV_MAX_WRITE_LEN		(4 * 1024)
++
++#define HOST_MAX_MSG_LENGTH		272
++
++#define EDMA_MMAP_H2B_DMABUF		0xf1000000
++
++#define EDMA_MMAP_B2H_DMABUF		0xf2000000
++
++#define EDMA_IOC_MAGIC			'e'
++
++#define EDMA_H_REGISTER_TYPE		_IOW(EDMA_IOC_MAGIC, 100, unsigned long)
++
++#define EDMA_H_UNREGISTER_TYPE		_IOW(EDMA_IOC_MAGIC, 101, unsigned long)
++
++#define EDMA_H_DMA_START		_IOW(EDMA_IOC_MAGIC, 102, unsigned long)
++
++#define EDMA_H_DMA_TRANSFER		_IOW(EDMA_IOC_MAGIC, 103, unsigned long)
++
++#define EDMA_H_DMA_STOP			_IOW(EDMA_IOC_MAGIC, 104, unsigned long)
++
++#define U64ADDR_H(addr)			((((u64)addr) >> 32) & 0xffffffff)
++#define U64ADDR_L(addr)			((addr) & 0xffffffff)
++
++struct bma_register_dev_type_s {
++	u32 type;
++	u32 sub_type;
++};
++
++struct edma_mbx_hdr_s {
++	u16 mbxlen;
++	u16 mbxoff;
++	u8 reserve[28];
++} __packed;
++
++#define SIZE_OF_MBX_HDR (sizeof(struct edma_mbx_hdr_s))
++
++struct edma_recv_msg_s {
++	struct list_head link;
++	u32 msg_len;
++	unsigned char msg_data[0];
++};
++
++struct edma_dma_addr_s {
++	void *kvaddr;
++	dma_addr_t dma_addr;
++	u32 len;
++};
++
++struct edma_msg_hdr_s {
++	u32 type;
++	u32 sub_type;
++	u8 user_id;
++	u8 dma_flag;
++	u8 reserve1[2];
++	u32 datalen;
++	u8 data[0];
++};
++
++#define SIZE_OF_MSG_HDR (sizeof(struct edma_msg_hdr_s))
++
++#pragma pack(1)
++
++#define IS_EDMA_B2H_INT(flag)		((flag) & 0x02)
++#define CLEAR_EDMA_B2H_INT(flag)	((flag) = (flag) & 0xfffffffd)
++#define SET_EDMA_H2B_INT(flag)		((flag) = (flag) | 0x01)
++#define EDMA_B2H_INT_FLAG                      0x02
++
++struct notify_msg {
++	unsigned int host_registered;
++	unsigned int host_heartbeat;
++	unsigned int bmc_registered;
++	unsigned int bmc_heartbeat;
++	unsigned int int_flag;
++
++	unsigned int reservrd5;
++	unsigned int h2b_addr;
++	unsigned int h2b_size;
++	unsigned int h2b_rsize;
++	unsigned int b2h_addr;
++	unsigned int b2h_size;
++	unsigned int b2h_rsize;
++};
++
++#pragma pack()
++
++struct edma_statistics_s {
++	unsigned int remote_status;
++	__kernel_time_t init_time;
++	unsigned int h2b_int;
++	unsigned int b2h_int;
++	unsigned int recv_bytes;
++	unsigned int send_bytes;
++	unsigned int send_pkgs;
++	unsigned int recv_pkgs;
++	unsigned int failed_count;
++	unsigned int drop_pkgs;
++	unsigned int dma_count;
++	unsigned int lost_count;
++};
++
++struct edma_host_s {
++	struct pci_dev *pdev;
++
++	struct tasklet_struct tasklet;
++
++	void __iomem *hostrtc_viraddr;
++
++	void __iomem *edma_flag;
++	void __iomem *edma_send_addr;
++	void __iomem *edma_recv_addr;
++#ifdef USE_DMA
++	struct timer_list dma_timer;
++#endif
++
++	struct timer_list heartbeat_timer;
++
++#ifdef EDMA_TIMER
++	struct timer_list timer;
++#else
++	struct completion msg_ready;	/* to sleep thread on      */
++	struct task_struct *edma_thread;
++#endif
++	/* spinlock for send msg buf */
++	spinlock_t send_msg_lock;
++	unsigned char *msg_send_buf;
++	unsigned int msg_send_write;
++
++	/* DMA */
++	wait_queue_head_t wq_dmah2b;
++	wait_queue_head_t wq_dmab2h;
++
++	/* spinlock for read pci register */
++	spinlock_t reg_lock;
++	int h2b_state;
++	int b2h_state;
++	struct edma_dma_addr_s h2b_addr;
++	struct edma_dma_addr_s b2h_addr;
++
++	struct proc_dir_entry *proc_edma_dir;
++
++	struct edma_statistics_s statistics;
++	unsigned char local_open_status[TYPE_MAX];
++	unsigned char remote_open_status[TYPE_MAX];
++};
++
++struct edma_user_inft_s {
++	/* register user */
++	int (*user_register)(struct bma_priv_data_s *priv);
++
++	/* unregister user */
++	void (*user_unregister)(struct bma_priv_data_s *priv);
++
++	/* add msg */
++	int (*add_msg)(void *msg, size_t msg_len);
++};
++
++int is_edma_b2h_int(struct edma_host_s *edma_host);
++void edma_int_to_bmc(struct edma_host_s *edma_host);
++int edma_host_mmap(struct edma_host_s *edma_hos, struct file *filp,
++		   struct vm_area_struct *vma);
++int edma_host_copy_msg(struct edma_host_s *edma_host, void *msg,
++		       size_t msg_len);
++int edma_host_add_msg(struct edma_host_s *edma_host,
++		      struct bma_priv_data_s *priv, void *msg, size_t msg_len);
++int edma_host_recv_msg(struct edma_host_s *edma_host,
++		       struct bma_priv_data_s *priv,
++		       struct edma_recv_msg_s **msg);
++void edma_host_isr_tasklet(unsigned long data);
++int edma_host_check_dma_status(enum dma_direction_e dir);
++int edma_host_dma_start(struct edma_host_s *edma_host,
++			struct bma_priv_data_s *priv);
++int edma_host_dma_transfer(struct edma_host_s *edma_host,
++			   struct bma_priv_data_s *priv,
++			   struct bma_dma_transfer_s *dma_transfer);
++int edma_host_dma_stop(struct edma_host_s *edma_host,
++		       struct bma_priv_data_s *priv);
++irqreturn_t edma_host_irq_handle(struct edma_host_s *edma_host);
++struct edma_user_inft_s *edma_host_get_user_inft(u32 type);
++int edma_host_user_register(u32 type, struct edma_user_inft_s *func);
++int edma_host_user_unregister(u32 type);
++int edma_host_init(struct edma_host_s *edma_host);
++void edma_host_cleanup(struct edma_host_s *edma_host);
++int edma_host_send_driver_msg(const void *msg, size_t msg_len, int subtype);
++void edma_host_reset_dma(struct edma_host_s *edma_host, int dir);
++void clear_int_dmah2b(struct edma_host_s *edma_host);
++void clear_int_dmab2h(struct edma_host_s *edma_host);
++
++enum EDMA_STATUS {
++	DEREGISTERED = 0,
++	REGISTERED = 1,
++	LOST,
++};
++#endif
+diff --git a/drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h b/drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h
+new file mode 100644
+index 000000000000..8617e7e8450e
+--- /dev/null
++++ b/drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h
+@@ -0,0 +1,91 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Huawei iBMA driver.
++ * Copyright (c) 2017, Huawei Technologies Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _BMA_KER_INTF_H_
++#define _BMA_KER_INTF_H_
++
++enum {
++	/* 0 -127 msg */
++	TYPE_LOGIC_PARTITION = 0,
++	TYPE_UPGRADE = 1,
++	TYPE_CDEV = 2,
++	TYPE_VETH = 0x40,
++	TYPE_MAX = 128,
++
++	TYPE_KBOX = 129,
++	TYPE_EDMA_DRIVER = 130,
++	TYPE_UNKNOWN = 0xff,
++};
++
++enum dma_direction_e {
++	BMC_TO_HOST = 0,
++	HOST_TO_BMC = 1,
++};
++
++enum dma_type_e {
++	DMA_NOT_LIST = 0,
++	DMA_LIST = 1,
++};
++
++enum intr_mod {
++	INTR_DISABLE = 0,
++	INTR_ENABLE = 1,
++};
++
++struct bma_dma_addr_s {
++	dma_addr_t dma_addr;
++	u32 dma_data_len;
++};
++
++struct dma_transfer_s {
++	struct bma_dma_addr_s host_addr;
++	struct bma_dma_addr_s bmc_addr;
++};
++
++struct dmalist_transfer_s {
++	dma_addr_t dma_addr;
++};
++
++union transfer_u {
++	struct dma_transfer_s nolist;
++	struct dmalist_transfer_s list;
++};
++
++struct bma_dma_transfer_s {
++	enum dma_type_e type;
++	enum dma_direction_e dir;
++	union transfer_u transfer;
++};
++
++int bma_intf_register_int_notifier(struct notifier_block *nb);
++void bma_intf_unregister_int_notifier(struct notifier_block *nb);
++int bma_intf_register_type(u32 type, u32 sub_type, enum intr_mod support_int,
++			   void **handle);
++int bma_intf_unregister_type(void **handle);
++int bma_intf_check_dma_status(enum dma_direction_e dir);
++int bma_intf_start_dma(void *handle, struct bma_dma_transfer_s *dma_transfer);
++int bma_intf_int_to_bmc(void *handle);
++void bma_intf_set_open_status(void *handle, int s);
++int bma_intf_is_link_ok(void);
++void bma_intf_reset_dma(enum dma_direction_e dir);
++void bma_intf_clear_dma_int(enum dma_direction_e dir);
++
++int bma_cdev_recv_msg(void *handle, char __user *data, size_t count);
++int bma_cdev_add_msg(void *handle, const char __user *msg, size_t msg_len);
++
++unsigned int bma_cdev_check_recv(void *handle);
++void *bma_cdev_get_wait_queue(void *handle);
++int bma_intf_check_edma_supported(void);
 +#endif
 -- 
 2.26.2.windows.1
