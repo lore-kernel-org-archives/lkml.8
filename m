@@ -2,189 +2,97 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0178020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592216821;
-	bh=hyUqHVvXrvWswYdtXPunHqjbBKKNx9PKUnYIGDXg85Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HMk3QUp044hrS7s85s96Pq2NgnwZWHFA42/5LxHaNyENvlQ6rCTXWfSx2nCp9uIed
-	 xV0Zyu2oH4tJgKjTkOwIbBT/yJl4fZHzNYZgcMM2afVmagApNyBZA4njUcyjk9wyVq
-	 XProZX/oQXAXiEB4FKbH7ScxcMH124mke4zrm5TA=
+	by mail.kernel.org (Postfix) with ESMTP id 0BE9D20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgFOK07 (ORCPT
+        id S1729339AbgFOK1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728885AbgFOK05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:26:57 -0400
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 362A620738;
-        Mon, 15 Jun 2020 10:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592216816;
-        bh=hyUqHVvXrvWswYdtXPunHqjbBKKNx9PKUnYIGDXg85Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dxZlvUL6DUxfzWe0YuM1i6dHK8Oh0IgZFJCsi2GQ4Ssj6mW4ylhE3CcvG9c4O4R28
-         G7iat2uLRwcFzd3HB+Ox/FcVDIe2VJvc17Z9iQ4j7MkZz3PGWUN77FQXRSUodFFKRq
-         rprI0FQQjr9e7YBnjXkN1Tt7qpKk7PwYAqY1jt8g=
-Received: by mail-oi1-f172.google.com with SMTP id a3so15439700oid.4;
-        Mon, 15 Jun 2020 03:26:56 -0700 (PDT)
-X-Gm-Message-State: AOAM5306J15G22zR/p+/mD2cmadymmvD1jb2myyLzQHrW0q/Tg+/uteB
-        EbfRo9BAhLnbKBweNRKV6me0CPInSxVg+JI6OAM=
-X-Google-Smtp-Source: ABdhPJwFl0io0Eq+GPpq4WFiP9Xu+DdILz72bZT1brO1yijkO5duX1PIP3h6EN4mfEuni4hlMgQnqxUejHextMUFkNo=
-X-Received: by 2002:aca:ba03:: with SMTP id k3mr1896542oif.33.1592216815522;
- Mon, 15 Jun 2020 03:26:55 -0700 (PDT)
+        Mon, 15 Jun 2020 06:27:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34781 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728369AbgFOK1r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:27:47 -0400
+Received: from 200-158-207-52.dsl.telesp.net.br ([200.158.207.52] helo=mussarela)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <cascardo@canonical.com>)
+        id 1jkmLA-0003OU-NJ; Mon, 15 Jun 2020 10:27:45 +0000
+Date:   Mon, 15 Jun 2020 07:27:38 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Johansen <john.johansen@canonical.com>,
+        Steve Beattie <sbeattie@ubuntu.com>
+Subject: Re: [PATCH] x86/speculation/srbds: do not try to turn mitigation off
+ when not supported
+Message-ID: <20200615102738.GZ4342@mussarela>
+References: <20200609174313.2600320-1-cascardo@canonical.com>
+ <20200615082858.GC14668@zn.tnic>
 MIME-Version: 1.0
-References: <20200604022031.164207-1-masahiroy@kernel.org> <20200604022031.164207-2-masahiroy@kernel.org>
-In-Reply-To: <20200604022031.164207-2-masahiroy@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 15 Jun 2020 12:26:43 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com>
-Message-ID: <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] efi/libstub: refactor Makefile to not use lib-y syntax
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Atish Patra <atish.patra@wdc.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615082858.GC14668@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 at 04:20, Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Documentation/kbuild/makefiles.rst says:
->
->   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
->
-> This is because lib-y is inteded to be hooked to KBUILD_VMLINUX_LIBS,
-> which is passed down to scripts/link-vmlinux.sh.
->
-> Besides, lib-y is not so interesting because objects from lib-y are
-> mostly linked in normal usecases. For example, lib-y only saves 364
-> bytes for x86_64_defconfig. You can see the details in commit
-> 7273ad2b08f8 ("kbuild: link lib-y objects to vmlinux forcibly when
-> CONFIG_MODULES=y").
->
-> I think we should consider to deprecate lib-y syntax at some point
-> because we should aim for better solution like dead code elimination
-> or LTO.
->
-> Other than lib/ and arch/*/lib, this Makefile is the only user of
-> lib-y. Replace lib-y with a custom rule.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+On Mon, Jun 15, 2020 at 10:28:58AM +0200, Borislav Petkov wrote:
+> On Tue, Jun 09, 2020 at 02:43:13PM -0300, Thadeu Lima de Souza Cascardo wrote:
+> > When SRBDS is mitigated by TSX OFF, update_srbds_msr will still read and
+> 
+> Are you talking about this case in srbds_select_mitigation():
+> 
+>         if ((ia32_cap & ARCH_CAP_MDS_NO) && !boot_cpu_has(X86_FEATURE_RTM))
+>                 srbds_mitigation = SRBDS_MITIGATION_TSX_OFF;
+> 
+> ?
+> 
 
-Series queued in efi/urgent.
+That's the case that it hits, correct.
 
-Thanks
+> and you have a system which:
+> 
+>          * Check to see if this is one of the MDS_NO systems supporting
+>          * TSX that are only exposed to SRBDS when TSX is enabled.
+> 
+> i.e., no SRBDS microcode for it and the fix is to disable TSX?
 
-> ---
->
-> Changes in v2:
->   - Add more description
->
->  drivers/firmware/efi/libstub/Makefile | 49 +++++++++++++++------------
->  1 file changed, 27 insertions(+), 22 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index cce4a7436052..7d81dc45cadf 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -44,7 +44,7 @@ OBJECT_FILES_NON_STANDARD     := y
->  # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
->  KCOV_INSTRUMENT                        := n
->
-> -lib-y                          := efi-stub-helper.o gop.o secureboot.o tpm.o \
-> +stub-obj-y                     := efi-stub-helper.o gop.o secureboot.o tpm.o \
->                                    file.o mem.o random.o randomalloc.o pci.o \
->                                    skip_spaces.o lib-cmdline.o lib-ctype.o \
->                                    alignedmem.o relocate.o vsprintf.o
-> @@ -55,15 +55,19 @@ efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
->  $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
->         $(call if_changed_rule,cc_o_c)
->
-> -lib-$(CONFIG_EFI_GENERIC_STUB) += efi-stub.o fdt.o string.o \
-> +stub-obj-$(CONFIG_EFI_GENERIC_STUB)    += efi-stub.o fdt.o string.o \
->                                    $(patsubst %.c,lib-%.o,$(efi-deps-y))
->
-> -lib-$(CONFIG_ARM)              += arm32-stub.o
-> -lib-$(CONFIG_ARM64)            += arm64-stub.o
-> -lib-$(CONFIG_X86)              += x86-stub.o
-> +stub-obj-$(CONFIG_ARM)         += arm32-stub.o
-> +stub-obj-$(CONFIG_ARM64)       += arm64-stub.o
-> +stub-obj-$(CONFIG_X86)         += x86-stub.o
->  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
->  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
->
-> +targets                                += $(stub-obj-y)
-> +stub-obj-y                     := $(patsubst %.o,%.stub.o, $(stub-obj-y))
-> +targets                                += $(stub-obj-y)
-> +
->  #
->  # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
->  # .bss section, so the .bss section of the EFI stub needs to be included in the
-> @@ -83,23 +87,6 @@ STUBCOPY_FLAGS-$(CONFIG_ARM) += --rename-section .data=.data.efistub \
->                                    --rename-section .bss=.bss.efistub,load,alloc
->  STUBCOPY_RELOC-$(CONFIG_ARM)   := R_ARM_ABS
->
-> -#
-> -# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
-> -# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
-> -# So let's apply the __init annotations at the section level, by prefixing
-> -# the section names directly. This will ensure that even all the inline string
-> -# literals are covered.
-> -# The fact that the stub and the kernel proper are essentially the same binary
-> -# also means that we need to be extra careful to make sure that the stub does
-> -# not rely on any absolute symbol references, considering that the virtual
-> -# kernel mapping that the linker uses is not active yet when the stub is
-> -# executing. So build all C dependencies of the EFI stub into libstub, and do
-> -# a verification pass to see if any absolute relocations exist in any of the
-> -# object files.
-> -#
-> -extra-y                                := $(lib-y)
-> -lib-y                          := $(patsubst %.o,%.stub.o,$(lib-y))
-> -
->  STUBCOPY_FLAGS-$(CONFIG_ARM64) += --prefix-alloc-sections=.init \
->                                    --prefix-symbols=__efistub_
->  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
-> @@ -121,3 +108,21 @@ quiet_cmd_stubcopy = STUBCPY $@
->                 /bin/false;                                             \
->         fi;                                                             \
->         $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
-> +
-> +# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
-> +# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
-> +# So let's apply the __init annotations at the section level, by prefixing
-> +# the section names directly. This will ensure that even all the inline string
-> +# literals are covered.
-> +# The fact that the stub and the kernel proper are essentially the same binary
-> +# also means that we need to be extra careful to make sure that the stub does
-> +# not rely on any absolute symbol references, considering that the virtual
-> +# kernel mapping that the linker uses is not active yet when the stub is
-> +# executing. So build all C dependencies of the EFI stub into libstub, and do
-> +# a verification pass to see if any absolute relocations exist in any of the
-> +# object files.
-> +#
-> +extra-y += lib.a
-> +
-> +$(obj)/lib.a: $(addprefix $(obj)/, $(stub-obj-y)) FORCE
-> +       $(call if_changed,ar)
-> --
-> 2.25.1
->
+It was booted without the microcode update. There was microcode available, but
+systems may be booted without it, thus causing warnings due to the MSR
+read/write.
+
+> 
+> If so, I think the right fix should be to do:
+> 
+> 	if (!boot_cpu_has(X86_FEATURE_SRBDS_CTRL))
+> 		return;
+> 
+> in update_srbds_msr() with a comment above it explaining why that check
+> is being done.
+
+That's exactly the fix in the patch I sent, right? Do you want me to resend
+with a comment, then?
+
+Thanks.
+Cascardo.
+
+> 
+> Hmmm.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
