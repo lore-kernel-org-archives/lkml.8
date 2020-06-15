@@ -2,105 +2,169 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD968C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A266C20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592221814;
-	bh=tVNfSk8UknCuC52YufB6zPC0kXSkpZxNzaaNWSG3PO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xkbZIqOUCOqGbY0GWpcmO4RLQC3gaWX3etBJEMzbNp3loMMHH/rQuqNMahFWBFKJz
-	 iLtPId5pbG5NF8K1cebVAJBGg0uZcAFuW/KUN3sYCJk0YYjWW4SaZcxkJ4NTa07hJ7
-	 kqsBAyEYq/rQjC5ospyDjU6NFBmeH0PEVZzzE7mg=
+	by mail.kernel.org (Postfix) with ESMTP id EAE7F20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729736AbgFOLuN (ORCPT
+        id S1729746AbgFOLvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:50:13 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40321 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729723AbgFOLuL (ORCPT
+        Mon, 15 Jun 2020 07:51:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39498 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729682AbgFOLvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:50:11 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p18so11265351eds.7;
-        Mon, 15 Jun 2020 04:50:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+yej3bVZL44K62xgZNububEbDVqfkX9q5JcG1+/l7Jc=;
-        b=mE4gMRUauiU6ALW5sFdo/PqYEExvUiUw37vuc8/yVyfCknZhqa0PXUhCMdfVWbybQI
-         Pt8NqGbVO+ldhnsZ4KSFD1CeUiqUxGDPe8tu4vdHGJHNlF2Soq6PJTrpQBVHqNoPs6ZR
-         uwL7uwyNoCsFdT3CCkGr/JubmO9dDn+46HffJGcqdayIA9oLoMi7N04IhaixJwVrZG66
-         0Q5XgXm/z9HwS7aCwDltz7JfzqyOieqZzjGfUE8IgtHg8VUMEK0QKPrJ6uujVGkpu/bJ
-         xO/cvch2XD03dB78jVAU8U8/YHCTDIciUcXaUs7pdCI/U/jYXcvTZM4UZGdlmWyFlh/p
-         DFCw==
-X-Gm-Message-State: AOAM533Iu2Jz/WDL2ZSQXL1KAbMzosNUf99Obq0vCAAY5ts+gy6KmJfw
-        ju8WX1JqREptlt5w789hvaj2U1KH
-X-Google-Smtp-Source: ABdhPJxTXOAUJWO+cQ1kN5xMafzmrUC0J7b1CqTCSIVBiaG/MZIqi3SY+cCxzo0reetQHnIS+CppLQ==
-X-Received: by 2002:a50:9ead:: with SMTP id a42mr22645629edf.129.1592221809349;
-        Mon, 15 Jun 2020 04:50:09 -0700 (PDT)
-Received: from localhost (ip-37-188-174-201.eurotel.cz. [37.188.174.201])
-        by smtp.gmail.com with ESMTPSA id o20sm8733405ejx.102.2020.06.15.04.50.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 04:50:08 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 13:50:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, guro@fb.com, cai@lca.pw,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: memcontrol: Fix do not put the css reference
-Message-ID: <20200615115007.GI25296@dhcp22.suse.cz>
-References: <20200614122653.98829-1-songmuchun@bytedance.com>
+        Mon, 15 Jun 2020 07:51:05 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FA2gg4102076;
+        Mon, 15 Jun 2020 07:51:03 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5erdtkt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 07:51:03 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FA3w3T107339;
+        Mon, 15 Jun 2020 07:51:02 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5erdtjd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 07:51:02 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FBjY22032443;
+        Mon, 15 Jun 2020 11:51:00 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7ufaf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 11:51:00 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FBovbF56033282
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 11:50:57 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8141AAE05A;
+        Mon, 15 Jun 2020 11:50:57 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 07EE8AE045;
+        Mon, 15 Jun 2020 11:50:57 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.1.141])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 11:50:56 +0000 (GMT)
+Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
+To:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
+ <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
+ <f7eb1154-0f52-0f12-129f-2b511f5a4685@linux.ibm.com>
+ <6356ba7f-afab-75e1-05ff-4a22b88c610e@linux.ibm.com>
+ <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <52cde80c-f33a-dbb7-d0b0-2733b3eb85c3@linux.ibm.com>
+Date:   Mon, 15 Jun 2020 13:50:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200614122653.98829-1-songmuchun@bytedance.com>
+In-Reply-To: <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 14-06-20 20:26:53, Muchun Song wrote:
-> We should put the css reference when memory allocation failed.
+
+
+On 2020-06-15 05:01, Jason Wang wrote:
 > 
-> Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-
-This looks like a stable tree material to me.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  mm/memcontrol.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> On 2020/6/12 下午7:38, Pierre Morel wrote:
+>>
+>>
+>> On 2020-06-12 11:21, Pierre Morel wrote:
+>>>
+>>>
+>>> On 2020-06-11 05:10, Jason Wang wrote:
+>>>>
+>>>> On 2020/6/10 下午9:11, Pierre Morel wrote:
+>>>>> Protected Virtualisation protects the memory of the guest and
+>>>>> do not allow a the host to access all of its memory.
+>>>>>
+>>>>> Let's refuse a VIRTIO device which does not use IOMMU
+>>>>> protected access.
+>>>>>
+>>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>>>> ---
+>>>>>   drivers/s390/virtio/virtio_ccw.c | 5 +++++
+>>>>>   1 file changed, 5 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/s390/virtio/virtio_ccw.c 
+>>>>> b/drivers/s390/virtio/virtio_ccw.c
+>>>>> index 5730572b52cd..06ffbc96587a 100644
+>>>>> --- a/drivers/s390/virtio/virtio_ccw.c
+>>>>> +++ b/drivers/s390/virtio/virtio_ccw.c
+>>>>> @@ -986,6 +986,11 @@ static void virtio_ccw_set_status(struct 
+>>>>> virtio_device *vdev, u8 status)
+>>>>>       if (!ccw)
+>>>>>           return;
+>>>>> +    /* Protected Virtualisation guest needs IOMMU */
+>>>>> +    if (is_prot_virt_guest() &&
+>>>>> +        !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
+>>>>> +            status &= ~VIRTIO_CONFIG_S_FEATURES_OK;
+>>>>> +
+>>>>>       /* Write the status to the host. */
+>>>>>       vcdev->dma_area->status = status;
+>>>>>       ccw->cmd_code = CCW_CMD_WRITE_STATUS;
+>>>>
+>>>>
+>>>> I wonder whether we need move it to virtio core instead of ccw.
+>>>>
+>>>> I think the other memory protection technologies may suffer from 
+>>>> this as well.
+>>>>
+>>>> Thanks
+>>>>
+>>>
+>>>
+>>> What would you think of the following, also taking into account 
+>>> Connie's comment on where the test should be done:
+>>>
+>>> - declare a weak function in virtio.c code, returning that memory 
+>>> protection is not in use.
+>>>
+>>> - overwrite the function in the arch code
+>>>
+>>> - call this function inside core virtio_finalize_features() and if 
+>>> required fail if the device don't have VIRTIO_F_IOMMU_PLATFORM.
 > 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 0b38b6ad547d..2323d811ee8e 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -2772,8 +2772,10 @@ static void memcg_schedule_kmem_cache_create(struct mem_cgroup *memcg,
->  		return;
->  
->  	cw = kmalloc(sizeof(*cw), GFP_NOWAIT | __GFP_NOWARN);
-> -	if (!cw)
-> +	if (!cw) {
-> +		css_put(&memcg->css);
->  		return;
-> +	}
->  
->  	cw->memcg = memcg;
->  	cw->cachep = cachep;
-> -- 
-> 2.11.0
+> 
+> I think this is fine.
+> 
+
+Thanks,
+I try this.
+
+Regards,
+Pierre
+
+
+
 
 -- 
-Michal Hocko
-SUSE Labs
+Pierre Morel
+IBM Lab Boeblingen
