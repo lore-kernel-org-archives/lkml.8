@@ -2,102 +2,97 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB66C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45AB620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2A2206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="NWCRR5jF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0He0pmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgFOH6d (ORCPT
+        id S1728669AbgFOIDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:58:33 -0400
-Received: from www.zeus03.de ([194.117.254.33]:49164 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728813AbgFOH6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:58:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=k1; bh=fF3lSMGhBbMaEw
-        4hJjPl3xbw8QAkMzTwyEaeb0Y2E18=; b=NWCRR5jFc5pHDpaf5EMWFAZjeY/Dpi
-        UZe1XMHxf7OASSyG0rHjOPg+uOYoMByMCzbgucAutMXB4sld05x0Qz4EqkGZvjD3
-        R4jTWe0JRh2NnVWFSB65hwiESmkKRLPvrF/nsta3Knp6z9SesgtOetvuyM3uAuIp
-        qo4UY+k9BXefA=
-Received: (qmail 989178 invoked from network); 15 Jun 2020 09:58:28 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 Jun 2020 09:58:28 +0200
-X-UD-Smtp-Session: l3s3148p1@X3PGyhqoCrYgAwDPXwRdAFnN6pRlEuNX
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] drm: encoder_slave: use new I2C API
-Date:   Mon, 15 Jun 2020 09:58:11 +0200
-Message-Id: <20200615075816.2848-3-wsa+renesas@sang-engineering.com>
+        Mon, 15 Jun 2020 04:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728162AbgFOIDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:03:12 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9702CC061A0E;
+        Mon, 15 Jun 2020 01:03:12 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id x13so16038657wrv.4;
+        Mon, 15 Jun 2020 01:03:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vDP7eI93BA6O8vNpenJlTbc7LwUcGedkrTzHRTDYCp0=;
+        b=R0He0pmvK3ON8oQZm76JHE8+ZBhJuGefP3ORNCcxg7vw1Cc/Tgq6pglgsYxeCHt4km
+         nCi7LtwAtxz06fouLKCayAojFytnvkIP/GGKF0FMAKcjz8nB99ImspWqyvM8f7mV4Jdt
+         wzX/m8qGoAFHXCtLfPyu1wYcsE0+NqIP3ehRgaVb3t4gTEm2yf8fBjJPfVdnEXTRBFwo
+         JODnCdBocXtxsMi05fcJl5jRkeCpHhODvaFsVD58GU4DBULfnExVvSkqj9akRFxKmYmj
+         +jqw4z0U96PVZ5MsR9RlG2fBce9aNwe92Eiyh3Y5lgdusl4ve2mB4L8FOJTCpkwtVdV6
+         MmXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vDP7eI93BA6O8vNpenJlTbc7LwUcGedkrTzHRTDYCp0=;
+        b=VmuulnSwy8cXu1i08PFQXxJxg8tfgMNhQEjVRKtajt4wzjjZvgmiEgERKq0bLoripM
+         cvd77IRZk5m3STxz+n2fUUQqoXV7n4CmhLkDw3hi+vK1WAxY2Y1Y9XmAPY3s9/bCKgNG
+         zd+3JUJjI3S1xrC+dssidkkyo1EN9QkUV7QxI8HfzfHQoVzqrKHo9uCP1Jq98l2YcfYJ
+         xEkWpovPTsG8FmZXaxxfwdPer93vOgrIj7TfRgsansMbFw9pnjuCyMV3h4trO9HNU2q0
+         IpSD+q+SHPceM1i844rBXN4a0whiNIW10/NMZ9cvly9ghbboV9F0GFQz+tfUDfCJNmzQ
+         vTIg==
+X-Gm-Message-State: AOAM532kbqg1ITGtdhYpbAqPgN1939+EVy0RI+7aT8CMH22roNjCoSqS
+        cCZnoUJDyYyE9a86oiyEsNg=
+X-Google-Smtp-Source: ABdhPJwFV/dnQvP+WYtbJ6DuX19B+uGzQznL4K8oB2ZPk+rsIlgW7MOxwp/PkedE2uCq2eCOa7q5sw==
+X-Received: by 2002:adf:97cb:: with SMTP id t11mr27410732wrb.314.1592208191230;
+        Mon, 15 Jun 2020 01:03:11 -0700 (PDT)
+Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
+        by smtp.gmail.com with ESMTPSA id d9sm23107054wre.28.2020.06.15.01.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 01:03:10 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     broonie@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH 0/4] spi: bcm63xx: add BMIPS support
+Date:   Mon, 15 Jun 2020 10:03:05 +0200
+Message-Id: <20200615080309.2897694-1-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
-References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2c_new_client() is deprecated, use the replacement
-i2c_new_client_device(). Also, we have a helper to check if a driver is
-bound. Use it to simplify the code. Note that this changes the errno for
-a failed device creation from ENOMEM to ENODEV. No callers currently
-interpret this errno, though, so we use this condensed error check.
+BCM63xx SPI and HSSPI controller are present on several BMIPS SoCs (BCM6318,
+BCM6328, BCM6358, BCM6362, BCM6368 and BCM63268).
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
----
+Álvaro Fernández Rojas (4):
+  spi: bcm63xx-spi: add reset support
+  spi: bcm63xx-spi: allow building for BMIPS
+  spi: bcm63xx-hsspi: add reset support
+  spi: bcm63xx-hsspi: allow building for BMIPS
 
-I'd like to push it via I2C for 5.8-rc2.
+ drivers/spi/Kconfig             |  4 ++--
+ drivers/spi/spi-bcm63xx-hsspi.c | 17 +++++++++++++++++
+ drivers/spi/spi-bcm63xx.c       | 17 +++++++++++++++++
+ 3 files changed, 36 insertions(+), 2 deletions(-)
 
- drivers/gpu/drm/drm_encoder_slave.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_encoder_slave.c b/drivers/gpu/drm/drm_encoder_slave.c
-index d50a7884e69e..e464429d32df 100644
---- a/drivers/gpu/drm/drm_encoder_slave.c
-+++ b/drivers/gpu/drm/drm_encoder_slave.c
-@@ -61,13 +61,8 @@ int drm_i2c_encoder_init(struct drm_device *dev,
- 
- 	request_module("%s%s", I2C_MODULE_PREFIX, info->type);
- 
--	client = i2c_new_device(adap, info);
--	if (!client) {
--		err = -ENOMEM;
--		goto fail;
--	}
--
--	if (!client->dev.driver) {
-+	client = i2c_new_client_device(adap, info);
-+	if (!i2c_client_has_driver(client)) {
- 		err = -ENODEV;
- 		goto fail_unregister;
- 	}
-@@ -96,7 +91,6 @@ int drm_i2c_encoder_init(struct drm_device *dev,
- 	module_put(module);
- fail_unregister:
- 	i2c_unregister_device(client);
--fail:
- 	return err;
- }
- EXPORT_SYMBOL(drm_i2c_encoder_init);
 -- 
 2.27.0
 
