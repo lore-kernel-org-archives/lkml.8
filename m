@@ -2,179 +2,124 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07454C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3519EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D775020707
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10706206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tyR8ebUH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GCF41UUU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgFOJX4 (ORCPT
+        id S1729035AbgFOJ0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:23:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgFOJXz (ORCPT
+        Mon, 15 Jun 2020 05:26:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23203 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728924AbgFOJ0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:23:55 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64888C061A0E;
-        Mon, 15 Jun 2020 02:23:54 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id f7so16647221ejq.6;
-        Mon, 15 Jun 2020 02:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oD8vjdJWazweOL92lTM1YOwIbiYENHOh132QMYgI8gE=;
-        b=tyR8ebUHS+1VVP7A7LjhtnhlBVQ5GmX8qVefEFv/ae6W4CkIKaf/9OuLkmxoqhNUeC
-         Lgs8gzXCn4xtwQe6afmBxVFYuafEvH3Sm/YXT6/UUN1KYrSqsoeDIMCVpiT5tQJXvG+l
-         LzEtgjejijmuSFSkT+8izEGZPKXuX+W4cI3bT3SI1CX2ebSxoEf/f8AqRzl4z4AQ9HYS
-         aqdWi5xUATJpdqoOliKptxQ/at2RjhL6Sj7Po6sDRiYmwxMK/y14SFBZ7PjVCZmXft6n
-         rXDsQQ+COBj/o1bjgpe0GRGYoRBTmm+W1oSqWE7yxKfZspuW5yfAUTfMF5y9+GqCcjWh
-         XB+A==
+        Mon, 15 Jun 2020 05:26:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592213179;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hZRUtaUJ932ZlCQQbbYzNzjvtVWhAHymSOYbwBdTnCE=;
+        b=GCF41UUUj5L8LC+phRyOd/CJ5TKqT0QpjlDliDuhwPrFtrVDntmWpVEoM7iaFKsrv6fAbb
+        QIkZTOr9sZvpsB0zDWWUaiv/ddKIFh2ym4l9uZ8a2+e8BBA7fE2yyFwObw7XK1pvTGT4bZ
+        uEqMJ6qK5sduNh5mn96Fv7jVZ3dM0U8=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-3Oc9P1HWNSKzqwL-zcLmlg-1; Mon, 15 Jun 2020 05:26:08 -0400
+X-MC-Unique: 3Oc9P1HWNSKzqwL-zcLmlg-1
+Received: by mail-wr1-f70.google.com with SMTP id s7so6820074wrm.16
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:26:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oD8vjdJWazweOL92lTM1YOwIbiYENHOh132QMYgI8gE=;
-        b=bLQCaIXI0nCHXvR8iDdHFxc+M7+1pzrxbEKMg/zywDKBodj1WfHh+4x5Smek1WvjFX
-         0MT9lMwrnBI3R2RWrbJCupb2r+/47TE27Mz0lDHWoG6UOW3FODCgMEuLwXQ1IMdWXgkR
-         TGzaHorQvzJUPzd4f3gYOnhkCxMweHZ1/lVoIfeq3mpeNU0ieBavRpgpyvn9NEusBq7Z
-         RnIfWq1C2QxyDwk1vQrEIqsJiQJdgG/Xj7dYeROoGPue0SHrfR4pMOVjbh2nfFcc+TZO
-         +oqIspGigSoerJhpm6SSw/1YYh1hI4etkNUZU/pDFw1+Z8Fh/qq/zs3hBkVjULXnyq9m
-         OD5w==
-X-Gm-Message-State: AOAM533uRIRf/u8Dx8Tm8YXfjvEtd+dkFpmOT+IfrT13xGhQJt9Tko6P
-        sdtygkdtpczyjI8CDg4/sN+nmPMUB0SKLKN0FWlQZQ==
-X-Google-Smtp-Source: ABdhPJz5ER0VVuyS+Mq5JcwSL5x7CKd6exvW28NFMSRb6aIyU+0LSu36ud3AH+OeLQ1BBC/Bk/TR1xqxOaLfcFSyDKs=
-X-Received: by 2002:a17:906:af84:: with SMTP id mj4mr23745547ejb.473.1592213032940;
- Mon, 15 Jun 2020 02:23:52 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hZRUtaUJ932ZlCQQbbYzNzjvtVWhAHymSOYbwBdTnCE=;
+        b=qF43nm7rOu4KIFgbwDd8kEAWh6u5UPC7uwmF3j0XpSNVRfwYA6EYFHTKDGNlLPFB2m
+         gMWB6dB7+fBSgyNdeoOYaDYO/7CrdXsnfDF9nTRp0NdgEO7a2IbmNU840zoPSmUrpf+/
+         VQOdu2BYFS56f48PiAtJkVH7XK4zX5EYNDPt1w/06fmkkt9BSAeyAEztRJN5WVVqkhSZ
+         gwL2Bwa7WxhhQLYVOaSIbtiL5sMzdsNGxHHJym2jIKKyCf9+0HLiTQKTVERlRHUA2ake
+         OGLmrG8PT8lkb0KwGAbsj8PTfTDliD4GhzLFlrQ76Xy2r/QtK4Jcced/90jdRTBjvF2Z
+         RWFg==
+X-Gm-Message-State: AOAM53005AEI5x62kw+0irzcMM3GzERBoPqHT1AbD94iTuiRttO2OhxZ
+        PG9eQVcJuFBHLAyKtRtOFGQ0C0xOMXtGW6MQtE/ty68Cvqg2gb+KyYo5BOioLLpHCyHh2WnwDHH
+        iSIB3vRh3PBlqi/ukwQ3UhWhC
+X-Received: by 2002:a5d:500d:: with SMTP id e13mr29684531wrt.150.1592213166873;
+        Mon, 15 Jun 2020 02:26:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzv8DVyRZi9qtb8K0ghXXPE5Md7jQA6TvmLQFzaSBYlaUpm2+z2htDOIiu8mMzNA9/r75JKzw==
+X-Received: by 2002:a5d:500d:: with SMTP id e13mr29684499wrt.150.1592213166643;
+        Mon, 15 Jun 2020 02:26:06 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id t8sm21120194wmi.46.2020.06.15.02.26.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 02:26:06 -0700 (PDT)
+Subject: Re: [PATCH] KVM: MIPS: fix spelling mistake "Exteneded" -> "Extended"
+To:     Colin King <colin.king@canonical.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200615082636.7004-1-colin.king@canonical.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8719ff21-8344-a4d0-112b-c7876f0b6f29@redhat.com>
+Date:   Mon, 15 Jun 2020 11:26:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <1592208439-17594-1-git-send-email-krzk@kernel.org> <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
-In-Reply-To: <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 15 Jun 2020 12:23:41 +0300
-Message-ID: <CA+h21hrxQ1fRahyQGFS42Xuop_Q2petE=No1dft4nVb-ijUu2g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on interrupt
- in exit paths
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200615082636.7004-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 at 11:18, Marc Kleine-Budde <mkl@pengutronix.de> wrote:
->
-> On 6/15/20 10:07 AM, Krzysztof Kozlowski wrote:
-> > If interrupt comes late, during probe error path or device remove (could
-> > be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
-> > dspi_interrupt() will access registers with the clock being disabled.  This
-> > leads to external abort on non-linefetch on Toradex Colibri VF50 module
-> > (with Vybrid VF5xx):
-> >
-> >     $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
-> >
-> >     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
-> >     Internal error: : 1008 [#1] ARM
-> >     CPU: 0 PID: 136 Comm: sh Not tainted 5.7.0-next-20200610-00009-g5c913fa0f9c5-dirty #74
-> >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
-> >       (regmap_mmio_read32le) from [<8061885c>] (regmap_mmio_read+0x48/0x68)
-> >       (regmap_mmio_read) from [<8060e3b8>] (_regmap_bus_reg_read+0x24/0x28)
-> >       (_regmap_bus_reg_read) from [<80611c50>] (_regmap_read+0x70/0x1c0)
-> >       (_regmap_read) from [<80611dec>] (regmap_read+0x4c/0x6c)
-> >       (regmap_read) from [<80678ca0>] (dspi_interrupt+0x3c/0xa8)
-> >       (dspi_interrupt) from [<8017acec>] (free_irq+0x26c/0x3cc)
-> >       (free_irq) from [<8017dcec>] (devm_irq_release+0x1c/0x20)
-> >       (devm_irq_release) from [<805f98ec>] (release_nodes+0x1e4/0x298)
-> >       (release_nodes) from [<805f9ac8>] (devres_release_all+0x40/0x60)
-> >       (devres_release_all) from [<805f5134>] (device_release_driver_internal+0x108/0x1ac)
-> >       (device_release_driver_internal) from [<805f521c>] (device_driver_detach+0x20/0x24)
-> >
-> > Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > This is an follow up of my other patch for I2C IMX driver [1]. Let's fix the
-> > issues consistently.
-> >
-> > [1] https://lore.kernel.org/lkml/1592130544-19759-2-git-send-email-krzk@kernel.org/T/#u
-> >
-> > Changes since v1:
-> > 1. Disable the IRQ instead of using non-devm interface.
-> > ---
-> >  drivers/spi/spi-fsl-dspi.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> > index 58190c94561f..023e05c53b85 100644
-> > --- a/drivers/spi/spi-fsl-dspi.c
-> > +++ b/drivers/spi/spi-fsl-dspi.c
-> > @@ -1400,7 +1400,7 @@ static int dspi_probe(struct platform_device *pdev)
-> >               ret = dspi_request_dma(dspi, res->start);
-> >               if (ret < 0) {
-> >                       dev_err(&pdev->dev, "can't get dma channels\n");
-> > -                     goto out_clk_put;
-> > +                     goto disable_irq;
-> >               }
-> >       }
-> >
-> > @@ -1415,11 +1415,14 @@ static int dspi_probe(struct platform_device *pdev)
-> >       ret = spi_register_controller(ctlr);
-> >       if (ret != 0) {
-> >               dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
-> > -             goto out_clk_put;
-> > +             goto disable_irq;
-> >       }
-> >
-> >       return ret;
-> >
-> > +disable_irq:
-> > +     if (dspi->irq > 0)
-> > +             disable_irq(dspi->irq);
-> >  out_clk_put:
-> >       clk_disable_unprepare(dspi->clk);
-> >  out_ctlr_put:
-> > @@ -1435,6 +1438,8 @@ static int dspi_remove(struct platform_device *pdev)
-> >
-> >       /* Disconnect from the SPI framework */
-> >       dspi_release_dma(dspi);
-> > +     if (dspi->irq > 0)
-> > +             disable_irq(dspi->irq);
->
-> What happens, if you re-bind the driver?
-> Is the IRQ still working?
-> Who is taking care of calling the enable_irq() again?
-> What happens, if you really have a shared IRQ line?
-> Is the IRQ disabled for all other devices on the same IRQ line?
->
+On 15/06/20 10:26, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a couple of kvm_err messages. Fix them.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  arch/mips/kvm/emulate.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/kvm/emulate.c b/arch/mips/kvm/emulate.c
+> index 5ae82d925197..d3d322f70fe0 100644
+> --- a/arch/mips/kvm/emulate.c
+> +++ b/arch/mips/kvm/emulate.c
+> @@ -1861,7 +1861,7 @@ enum emulation_result kvm_mips_emulate_store(union mips_instruction inst,
+>  				  vcpu->arch.gprs[rt], *(u64 *)data);
+>  			break;
+>  		default:
+> -			kvm_err("Godson Exteneded GS-Store not yet supported (inst=0x%08x)\n",
+> +			kvm_err("Godson Extended GS-Store not yet supported (inst=0x%08x)\n",
+>  				inst.word);
+>  			break;
+>  		}
+> @@ -2103,7 +2103,7 @@ enum emulation_result kvm_mips_emulate_load(union mips_instruction inst,
+>  			vcpu->mmio_needed = 30;	/* signed */
+>  			break;
+>  		default:
+> -			kvm_err("Godson Exteneded GS-Load for float not yet supported (inst=0x%08x)\n",
+> +			kvm_err("Godson Extended GS-Load for float not yet supported (inst=0x%08x)\n",
+>  				inst.word);
+>  			break;
+>  		}
+> 
 
-Yup, devm is completely broken for shared IRQs.
+Queued, thanks.
 
-> >       clk_disable_unprepare(dspi->clk);
-> >       spi_unregister_controller(dspi->ctlr);
-> >
-> >
-> Marc
->
-> --
-> Pengutronix e.K.                 | Marc Kleine-Budde           |
-> Embedded Linux                   | https://www.pengutronix.de  |
-> Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-> Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Paolo
+
