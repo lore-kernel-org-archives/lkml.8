@@ -2,110 +2,117 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103F1206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA78206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:32:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P3eOaK14"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LA7C8lBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730605AbgFOOcp (ORCPT
+        id S1730618AbgFOOcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:32:45 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:64785 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730591AbgFOOco (ORCPT
+        Mon, 15 Jun 2020 10:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730230AbgFOOcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:32:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592231564; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=NiCtl85ChNfUXhzwxk3UF9iEXH37Z4GqUz58aNsMDy0=;
- b=P3eOaK141XOuMFmuPCrnDx2A/fsb28VH1Sm3Zf+laIro/ejBNF4KFIGCURx2t9bg1mqwtf9e
- +//lvsxD7HdysvvDJmWB6/Zc8/HEHJFboI+7QE91Tq/Majougy0DwYDC7bpdEMcxvTQDW56w
- ki2zxjvLXTKa+JTKzsHnmPVWoag=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5ee78685e144dd5115a48e6b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 14:32:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 519F3C433C8; Mon, 15 Jun 2020 14:32:37 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F8D2C4339C;
-        Mon, 15 Jun 2020 14:32:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F8D2C4339C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Mon, 15 Jun 2020 10:32:52 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F2FBC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:32:52 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id k18so9083599ybm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mBHfWvG1RIV80Qm0vTG/TJJq/QXnEHlxY8x/LtZQxME=;
+        b=LA7C8lBEqsjQ76Nh70y54JiN/24onh1bYawDbjiH/G/EwIusxgbI0a0dOIWOlzLRB6
+         hwM+CQpIM1prkKYIi8vsGCpZIePsov3HDZyL5+SO5TSLqzFps/Hl1R6hEbrumk0UFAwc
+         fRVDxPFoxyxYpDwB7x6slFZMGg+UwqLMDdJqkCaFgdlklrvDBq2S12u5dxb+5O56QdE6
+         hQVCyCmlMd8spyhDzpDr9Hbdf85lCcweQKsScofiyB85ACDa+CWRonZLNaDC4bRVJw2H
+         uNfBIGqE9CmcqB0p1VBH5yPcev5QvWWmhWAFY4AlFStAH5N37vWrt7LVwfPF/xVMmrBQ
+         pigA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mBHfWvG1RIV80Qm0vTG/TJJq/QXnEHlxY8x/LtZQxME=;
+        b=j5zV9G4+NDgTAOw9LyWd8JEntQjsyy3E3WPmByxVxIHyi0RF3akG9ujS7Jfpfv87C7
+         Y0PDsKy9n7GW/5zhcWbEo3WPDETBrnAxNMl2ue8Qc1vWSLduKIK67JeHdVA6BQDqoond
+         tC7Qz1jwEPfWShJdED7Dsnh4UdxVsqHQAY2EWdYa4pyoL6MfdEt0uUYzuaQHOCsvSrDI
+         w6D3rCKKTsfFxO50vTgumhULY/o7h9Rnuune70El3Ym1EFDxvdpW6bB5U6P7m1XXqu3k
+         irD4qienWpTiD14IZoETecYxYu2qlV7qCp62DaSeSoqPap1z4nG641qZX9V+0SdrmQxM
+         gnlg==
+X-Gm-Message-State: AOAM533XMNPDuLWNmNRQAuys6z0mpDwyLBiJnlG4LdeX/a+RbFhrCNB1
+        U4WXqELmWhJv527Mg4DpJf3qzQN/NOOfwS4Nv9MDV1GajaM=
+X-Google-Smtp-Source: ABdhPJwGrXXWQd2EBc9axDU5/+8oIbuJL0wMB+/DzxWcoQO3VSHyYp1eMYpDhLUUD3J+xgtnBmXccm30c6WCmAKQZmk=
+X-Received: by 2002:a25:da96:: with SMTP id n144mr43789713ybf.291.1592231571611;
+ Mon, 15 Jun 2020 07:32:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath10k: Wait until copy complete is actually done before
- completing
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
-References: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     kuabhs@google.com, pillair@codeaurora.org,
-        saiprakash.ranjan@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200615143237.519F3C433C8@smtp.codeaurora.org>
-Date:   Mon, 15 Jun 2020 14:32:37 +0000 (UTC)
+References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+In-Reply-To: <20200604175851.758-1-maxim.uvarov@linaro.org>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Mon, 15 Jun 2020 17:32:40 +0300
+Message-ID: <CAD8XO3YTz=xN2k5h8HsrYsLUgmC6dD57XbBj63e+3_xFF1H0rw@mail.gmail.com>
+Subject: Re: [PATCHv8 0/3] optee: register drivers on optee bus
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Cc:     peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Douglas Anderson <dianders@chromium.org> wrote:
+ping.
+Patchset was reviewed and all comments are codeverd. Optee-os patches
+were merged. These kernel patches look like they are hanging
+somewhere...
 
-> On wcn3990 we have "per_ce_irq = true".  That makes the
-> ath10k_ce_interrupt_summary() function always return 0xfff. The
-> ath10k_ce_per_engine_service_any() function will see this and think
-> that _all_ copy engines have an interrupt.  Without checking, the
-> ath10k_ce_per_engine_service() assumes that if it's called that the
-> "copy complete" (cc) interrupt fired.  This combination seems bad.
-> 
-> Let's add a check to make sure that the "copy complete" interrupt
-> actually fired in ath10k_ce_per_engine_service().
-> 
-> This might fix a hard-to-reproduce failure where it appears that the
-> copy complete handlers run before the copy is really complete.
-> Specifically a symptom was that we were seeing this on a Qualcomm
-> sc7180 board:
->   arm-smmu 15000000.iommu: Unhandled context fault:
->   fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
-> 
-> Even on platforms that don't have wcn3990 this still seems like it
-> would be a sane thing to do.  Specifically the current IRQ handler
-> comments indicate that there might be other misc interrupt sources
-> firing that need to be cleared.  If one of those sources was the one
-> that caused the IRQ handler to be called it would also be important to
-> double-check that the interrupt we cared about actually fired.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Thanks,
+Maxim.
 
-ath10k firmwares work very differently, on what hardware and firmware did you
-test this? I'll add that information to the commit log.
-
--- 
-https://patchwork.kernel.org/patch/11595887/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+On Thu, 4 Jun 2020 at 20:58, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+>
+> v8: - fix v7 check.
+> v7: - check return value of dev_set_name() (Jarkko Sakkinen)
+> v6: - description, comments, patches reorder and destroy workqueue (Sumit Garg)
+> v5: - removed pr_err and fix typos in description (Jarkko Sakkinen)
+>     - added missed kfree in optee_open()
+> v4: - sysfs entry is optee-ta-uuid (Jerome Forissier, Sumit Garg)
+>     - added Documentation/ABI/testing/sysfs-bus-optee-devices (Greg Kroah-Hartman)
+> v3: - support tee-suppicant restart (Jens Wiklander)
+>     - description and comments (Jarkko Sakkinen)
+>     - do not name optee drivers by index in sysfs (Sumit Garg)
+> v2: - write TEE with capital letters.
+>     - declare __optee_enumerate_device() as static.
+>
+> Maxim Uvarov (3):
+>   optee: use uuid for sysfs driver entry
+>   optee: enable support for multi-stage bus enumeration
+>   tpm_ftpm_tee: register driver on TEE bus
+>
+>  .../ABI/testing/sysfs-bus-optee-devices       |  8 +++
+>  MAINTAINERS                                   |  1 +
+>  drivers/char/tpm/tpm_ftpm_tee.c               | 70 ++++++++++++++++---
+>  drivers/tee/optee/core.c                      | 27 ++++++-
+>  drivers/tee/optee/device.c                    | 38 +++++-----
+>  drivers/tee/optee/optee_private.h             | 10 ++-
+>  6 files changed, 119 insertions(+), 35 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+>
+> --
+> 2.17.1
+>
