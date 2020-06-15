@@ -6,102 +6,98 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD49207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E3C206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbgFOPnJ (ORCPT
+        id S1730566AbgFOPna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:43:09 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:59226
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727785AbgFOPnJ (ORCPT
+        Mon, 15 Jun 2020 11:43:30 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52276 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730533AbgFOPn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:43:09 -0400
-X-IronPort-AV: E=Sophos;i="5.73,515,1583190000"; 
-   d="scan'208";a="351660878"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 17:43:06 +0200
-Date:   Mon, 15 Jun 2020 17:43:06 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coccinelle: api: add device_attr_show script
-In-Reply-To: <1f028ee6-b014-c240-21d8-0c1950334fe6@web.de>
-Message-ID: <alpine.DEB.2.22.394.2006151742090.23306@hadrien>
-References: <1f028ee6-b014-c240-21d8-0c1950334fe6@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Mon, 15 Jun 2020 11:43:29 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id AEEA11C0BD2; Mon, 15 Jun 2020 17:43:27 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 17:43:27 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>, peterz@infradead.org,
+        mingo@redhat.com, will@kernel.org, jack@suse.com, tytso@mit.edu,
+        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org
+Subject: Re: 5.8-rc1: new warnings in ext4_mb_new_blocks?
+Message-ID: <20200615154327.GA12506@duo.ucw.cz>
+References: <20200615073712.GA4164@duo.ucw.cz>
+ <20200615112749.104AF52054@d06av21.portsmouth.uk.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-34029661-1592235787=:23306"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Disposition: inline
+In-Reply-To: <20200615112749.104AF52054@d06av21.portsmouth.uk.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-34029661-1592235787=:23306
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon 2020-06-15 16:57:48, Ritesh Harjani wrote:
+>=20
+>=20
+> On 6/15/20 1:07 PM, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > Booting 5.8-rc1 on x220, I get scary warnings:
+> >=20
+> > [    7.089941] EXT4-fs (sdb2): mounted filesystem with ordered data mod=
+e. Opts: errors=3Dremount-ro
+> > [    7.343231] BUG: using smp_processor_id() in preemptible [00000000] =
+code: systemd-tmpfile/2788
+> > [    7.344052] caller is debug_smp_processor_id+0x17/0x20
+> > [    7.344897] CPU: 3 PID: 2788 Comm: systemd-tmpfile Not tainted 5.8.0=
+-rc1+ #116
+> > [    7.345745] Hardware name: LENOVO 42872WU/42872WU, BIOS 8DET74WW (1.=
+44 ) 03/13/2018
+> > [    7.346561] Call Trace:
+> > [    7.347355]  dump_stack+0x60/0x7a
+> > [    7.348170]  check_preemption_disabled+0xb1/0xc0
+> > [    7.348951]  debug_smp_processor_id+0x17/0x20
+> > [    7.349728]  ext4_mb_new_blocks+0x1f2/0x13e0
+> >=20
+> > and they continue after boot.
+> >=20
+>=20
+> Below should fix this. I guess it couldn't make it to rc1.
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=
+=3Dext4-for-linus-5.8-rc1-2&id=3D811985365378df01386c3cfb7ff716e74ca376d5
+>=20
 
+Thanks for the pointer. That seems to do the job.
 
-On Mon, 15 Jun 2020, Markus Elfring wrote:
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> > +// Confidence: High
->
-> Would you like to add any suggestion for a possible patch message?
->
->
-> …
-> > +virtual report
-> > +virtual org
-> > +virtual context
-> > +virtual patch
->
-> +virtual report, org, context, patch
->
-> Is such a SmPL code variant more succinct?
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This doens't matter.
+-----BEGIN PGP SIGNATURE-----
 
->
->
-> …
-> > +ssize_t show(struct device *dev, struct device_attribute *attr, char *buf)
-> > +{
-> > +	<...
-> > +*	return snprintf@p(...);
-> > +	...>
-> > +}
->
-> I suggest to reconsider the selection of the SmPL nest construct.
-> https://github.com/coccinelle/coccinelle/blob/e06b9156dfa02a28cf3cbf0913a10513f3d163ab/docs/manual/cocci_syntax.tex#L783
->
-> Can the construct “<+... … ...+>” become relevant here?
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXueXHwAKCRAw5/Bqldv6
+8guiAKCi06OakO12Px5x13FW+0WfIKeW0gCgn13UqCbMIIm8oMZbcfkuE5GYl7k=
+=cZRe
+-----END PGP SIGNATURE-----
 
-<... ...> is fine if the only thing that will be used afterwards is what
-is inside the <... ...>
-
-julia
-
->
->
-> Would you like to consider any further software design consequences
-> around the safe application of the asterisk functionality in rules
-> for the semantic patch language?
->
-> Regards,
-> Markus
->
---8323329-34029661-1592235787=:23306--
+--d6Gm4EdcadzBjdND--
