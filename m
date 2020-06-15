@@ -2,104 +2,119 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1424C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA34C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B22620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:35:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dt0mlxnY"
+	by mail.kernel.org (Postfix) with ESMTP id 2E5DB20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592231787;
+	bh=ype2UwsEJQA9RCKVIpGpA9vIFkTyIQOQ4sKP1eAXFbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ik/dC2JB9iZFtgVVj8NahjJfWynrCUw69EhQsiFWJk2RwSsNc4Rn56TFZQMUudbyn
+	 Zpq3LTgPEyT30cLbHjipO2savaC5r2XAKTx2GTlBeGtHWNWgqhvyzvk3wBnyNxLs4T
+	 5aj/Fbl8Xt6i9rb6mKmTruDl4DbgfGBOzRykGqd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730642AbgFOOf5 (ORCPT
+        id S1730650AbgFOOgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:35:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbgFOOf4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:35:56 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DABC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:35:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CNJqcR8O2MGARUu3ztkILAgDD+9fnJBIlgO1t0ryM7s=; b=dt0mlxnY4n62j+Mv9nWzG0NHIt
-        GW7jHe0cvEGK/PGx78zFjelxRFOSgYF5DPbekiklRes1pvymE1cukvtIujxjGquOjJYgNBVZfafIx
-        SZwLnDJJErabrmLdwmjEuwUKtM9N1snlkOJIoybprJuBLmDW282HTQ0e1xh2F5d4yLIyc12v+kzNO
-        Br3OxdwBD6qUwEuewPhVY8U/3pKyTbpE8t4G48RnSjrv0xoGAaqGOQR0cKJivsY2+8Xg7F9GwvShn
-        dYNt0KeTJSYaUyVgm/1pHhcYzxlFljQwsvsszM9L+1ysfiiL2QUtMYErSYTJAzzXVdn1D0a5GyBON
-        6olVAOfQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkqCr-0006Q2-GC; Mon, 15 Jun 2020 14:35:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 15 Jun 2020 10:36:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728326AbgFOOgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:36:25 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E119C301A32;
-        Mon, 15 Jun 2020 16:35:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C7117203B8172; Mon, 15 Jun 2020 16:35:23 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 16:35:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
- noinstr-compatible
-Message-ID: <20200615143523.GE2554@hirez.programming.kicks-ass.net>
-References: <CACT4Y+Zwm47qs8yco0nNoD_hFzHccoGyPznLHkBjAeg9REZ3gA@mail.gmail.com>
- <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
- <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
- <20200608110108.GB2497@hirez.programming.kicks-ass.net>
- <20200611215538.GE4496@worktop.programming.kicks-ass.net>
- <CACT4Y+aKVKEp1yoBYSH0ebJxeqKj8TPR9MVtHC1Mh=jgX0ZvLw@mail.gmail.com>
- <20200612114900.GA187027@google.com>
- <CACT4Y+bBtCbEk2tg60gn5bgfBjARQFBgtqkQg8VnLLg5JwyL5g@mail.gmail.com>
- <CANpmjNM+Tcn40MsfFKvKxNTtev-TXDsosN+z9ATL8hVJdK1yug@mail.gmail.com>
- <20200615142949.GT2531@hirez.programming.kicks-ass.net>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C5FE206B7;
+        Mon, 15 Jun 2020 14:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592231784;
+        bh=ype2UwsEJQA9RCKVIpGpA9vIFkTyIQOQ4sKP1eAXFbM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sRnd9myuAlE2K1Nj2iURRl7w9qJ8EkYdNdH+K+1/phMf0kpQoAY1Pxp7TJ1JfE1Bv
+         IS0K9Zxia4mxtl4V1nzuqvNO6G2NXNI+bmmTQPTgW5XKEnO5J9uL2LHNVwhcwBS3Ik
+         ag3vadWejMFiNKgNM8XdbJeap+BU3716MyK6XAPQ=
+Date:   Mon, 15 Jun 2020 15:36:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Message-ID: <20200615143622.GX4447@sirena.org.uk>
+References: <20200611134042.GG4671@sirena.org.uk>
+ <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612101357.GA5396@sirena.org.uk>
+ <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612141611.GI5396@sirena.org.uk>
+ <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615123553.GP4447@sirena.org.uk>
+ <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615133905.GV4447@sirena.org.uk>
+ <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6yuPXOSZRpyw7iEV"
 Content-Disposition: inline
-In-Reply-To: <20200615142949.GT2531@hirez.programming.kicks-ass.net>
+In-Reply-To: <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 04:29:50PM +0200, Peter Zijlstra wrote:
-> Let me go look at your KCSAN thing now...
 
-vmlinux.o: warning: objtool: idtentry_enter_cond_rcu()+0x16: call to is_idle_task() leaves .noinstr.text section
+--6yuPXOSZRpyw7iEV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index b62e6aaf28f03..a7abc18a7d0ad 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1663,7 +1663,7 @@ extern struct task_struct *idle_task(int cpu);
-  *
-  * Return: 1 if @p is an idle task. 0 otherwise.
-  */
--static inline bool is_idle_task(const struct task_struct *p)
-+static __always_inline bool is_idle_task(const struct task_struct *p)
- {
- 	return !!(p->flags & PF_IDLE);
- }
+On Mon, Jun 15, 2020 at 02:18:54PM +0000, Robin Gong wrote:
+> On 2020/06/15 21:39 Mark Brown <broonie@kernel.org> wrote:
+> > On Mon, Jun 15, 2020 at 01:35:01PM +0000, Robin Gong wrote:
+
+> > > Then how about choosing specific error code for such dma not ready
+> > > case where nothing went out on the bus neither?
+
+> > Yes, that's what I suggested.
+
+> Seems not easy to find a suitable error value, how about EBADR which
+> sounds like no any available dma_async_tx_descriptor got by calling dmaen=
+gine_prep_slave_sg?=20
+
+> #define EBADR           53      /* Invalid request descriptor */
+
+We could also pass in a flag that could be set separately to the error
+code to indicate that nothing had happened to the hardware yet.
+
+--6yuPXOSZRpyw7iEV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nh2UACgkQJNaLcl1U
+h9CGngf9FJjxiiGTABi3SIsOJXFnGblWLqB3vln9SMDIbAPj/yGiDdpERP2vrY1W
+7k5dVCoCvMS3H85xHNvGXPWcWiAMdr2kvxYtHSOXafk/x18RNkFypSPrJGNH8aFa
+bJAFTdhXBNO1Tzkfyv8jEXenmexA8Zvr98tiCjY6y1KzVIxXUS76Z0m610y3t01m
+tBtsjAkAXoKe7N00fwx6mhZKwOlOmj7xXhETXAWGi7hMipmWTMlBDfijumFNivy0
+ZmZdGZkr7H8rmKS664LAce29F1vBAGJ1DDCR7uZPNz0Tv2hT7gOTadOvuionzbvw
+c1zT5i2KtlUGpSNfABZa0rmrPwY5dg==
+=DUZv
+-----END PGP SIGNATURE-----
+
+--6yuPXOSZRpyw7iEV--
