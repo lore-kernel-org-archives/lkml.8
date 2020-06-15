@@ -6,84 +6,77 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6125C207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8799A20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592264486;
-	bh=bqkgpEtV0AWOIPCPj9PiP6DShiunetgdC6n3vDohao0=;
+	s=default; t=1592264495;
+	bh=N1Ij/usB8zQH3UBOLC7sOuqSq5QNpKZThVTtUkokQlU=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=I+JaUfaivg4DDL69vkBiIF6r2RGynFf3yzy26pngcOi1PtK0U0MmFZdShbpmfV/lG
-	 TTZrnn/dvPRYG0Y3lRn0nhd1c5khHuQAS5ZIGveF2GRWQ4U76qxyTJ6gvhDk7vjZNO
-	 a9wzIF2xsaOIFX2dwppaFXNo0/6xdy0NGeFm/nfA=
+	b=Zmn1CON2CXw3bINfDaUKZEXlwcCnSXItxsOBNUegugWqau6uEzr5fPncbY9RRhdhJ
+	 fRPG2Lb3jqtqLPaItxPp57Tq2HVkcrnLnGp3ONOTlhDkdhNmQJ3YGC10lO1H5JBqLY
+	 Xe048MhzEFQ4BBru5WChD1yDvG8XpkIfV6HNYJjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgFOXlY (ORCPT
+        id S1727105AbgFOXle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:41:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54376 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 19:41:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgFOXlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:41:22 -0400
+        id S1726546AbgFOXld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:41:33 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9742520714;
-        Mon, 15 Jun 2020 23:41:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54BD52080D;
+        Mon, 15 Jun 2020 23:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592264482;
-        bh=bqkgpEtV0AWOIPCPj9PiP6DShiunetgdC6n3vDohao0=;
+        s=default; t=1592264492;
+        bh=N1Ij/usB8zQH3UBOLC7sOuqSq5QNpKZThVTtUkokQlU=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=WpSKBKw/jkVDxSpozeUjw+b5Q20jpDsbmG6j9QLYzHfE6QV6JGML3Y8Bu05o1H3fZ
-         E1fGGIqiyIzrSIhKYR9ASCLoVIZV8u26vGpDbe8amA9anugOS5kJS7RfrEuVaes0CI
-         Ozc/7F5Hb6zZLBaf1uIdc1CqPSe3RtQmxm6VeAYA=
-Date:   Tue, 16 Jun 2020 00:41:19 +0100
+        b=kvFwLRFSbEs5scz61K7kuHQL196g5fyYJPoHYLKA+b/8sSSzZW+z0JTFrUwPYQ1it
+         l3zXX3FSQv2cQ6/9Dep7/KG1wkUqiJU5uF4WKW7zYSwH//iofye5WkOtT7cxxx+D0J
+         NMiwC4OSbciUwPUuyr3j0oBN/0W+xSoNk9tlvl6c=
+Date:   Tue, 16 Jun 2020 00:41:30 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Yicheng Li <yichengli@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>
-In-Reply-To: <20200612040526.192878-1-pihsun@chromium.org>
-References: <20200612040526.192878-1-pihsun@chromium.org>
-Subject: Re: [PATCH v6 0/3] Add support for voltage regulator on ChromeOS EC.
-Message-Id: <159226447507.27673.12544473672334795721.b4-ty@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+In-Reply-To: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 0/2] Add MSIOF support for R8A7742 SOC
+Message-Id: <159226448569.27735.1827248945903303044.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jun 2020 12:05:17 +0800, Pi-Hsun Shih wrote:
-> Add support for controlling voltage regulator that is connected and
-> controlled by ChromeOS EC. Kernel controls these regulators through
-> newly added EC host commands.
+On Tue, 9 Jun 2020 21:54:12 +0100, Lad Prabhakar wrote:
+> This patch series adds support for MSIOF on R8A7742 SOC.
 > 
-> Changes from v5:
-> * Move new host command to a separate patch.
-> * Use devm_regulator_register.
-> * Address review comments.
+> Cheers,
+> Prabhakar
+> 
+> Lad Prabhakar (2):
+>   dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
+>   ARM: dts: r8a7742: Add MSIOF[0123] support
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/3] dt-bindings: regulator: Add DT binding for cros-ec-regulator
-      commit: 54bd53b9c11ed856abeedbf1ce92a19b546f56cf
-[2/3] platform/chrome: cros_ec: Add command for regulator control.
-      commit: dff08caf35ecef4f7647f8b1e40877a254852a2b
-[3/3] regulator: Add driver for cros-ec-regulator
-      commit: 8d9f8d57e023893bfa708d83e3a787e77766a378
+[1/1] spi: renesas,sh-msiof: Add r8a7742 support
+      commit: 6383b118efafff8cce8fc8fa5b7e893a523b698f
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
