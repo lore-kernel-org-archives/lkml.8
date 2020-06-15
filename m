@@ -2,150 +2,114 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8122CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA367C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC6420578
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="rf/sB6ar";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oM+16xZp"
+	by mail.kernel.org (Postfix) with ESMTP id A9AB72067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgFOInR (ORCPT
+        id S1729310AbgFOInZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:43:17 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33837 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728852AbgFOIlZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:41:25 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C6964580157;
-        Mon, 15 Jun 2020 04:41:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 15 Jun 2020 04:41:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=xWZqdsHt+6XnG
-        lVmmHecqtGqe51QGLTcTPJqY9E6BXQ=; b=rf/sB6arnc1rND9DFy0oopvGGDlOx
-        9R4Evuyf9zSzrEqCXE3gMPmarxr2ADeEy96zP9j6UF77BUF0xsuQCkJrM1t4gpMX
-        JutrSVIyn/spmcqkV4lNZvWWMou3ZvTc/HqqJilkelAgtnMkFuiiZo+ZXIUinj7x
-        wzv7BHWS4wFFrrNjSaeBq/LZvvtjzT62JoDgPQgEFT4pF7ghlELOwx+x/2IH6qpd
-        Kgdvfycq8sSy9s6pWrhO/gD89ygdS/G7eGXsM467Np4Kpw6TLgTheUgsxxgg7VDS
-        UJWV9pEJmQ0jP8xJCQYpF8cEhePnLOIfobnr7mxp5Q/gntKVf/DkX59RQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=xWZqdsHt+6XnGlVmmHecqtGqe51QGLTcTPJqY9E6BXQ=; b=oM+16xZp
-        T0R3Uk1tSSYAhpivxYh0eamwxEVhI2QDzAQkxt82csqPBPS2FuePDoxP3ksQpvVT
-        PJ34BidMOEJvTX/NW756o3VjrJsVh/UfhQOIK/SFuF3dF5szgzmdMxJuIFU4Nz9y
-        ui3epPrNL0ToRgQKuqIDv7oSS+gwjVte/aiytIiu8lQ02OLbXXrxVJm9qchxLouC
-        L1XFfpCncBpY+vMED9wRP+fEKHYnjrvjVbILRdpp34nZBhtx+hARHsz2O/iICOyL
-        xt5eU3ZimB3q2MQD6zpUPM8XQnS0x3tO2ph0LdZr1qb/uLKh2eDTw3KD1CvPe32c
-        YCSBU+UKBBiRrA==
-X-ME-Sender: <xms:MzTnXgdCc6IdKnIEaqKKL_i6S-e1sli8WddaLPbnTMk-yfKUfR2m6A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeikedgtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:MzTnXiODz_AwCfZteVWHNfhM5LcpCIWYh2vRnBn1E5NPomqYcLZaSQ>
-    <xmx:MzTnXhig0C0dMu5u5uC8U1_yYbCXq4JD9rqk4jZZTs7YUKyeVQPPAw>
-    <xmx:MzTnXl8mrZyaenU93X5IGKDYnGUOWk_XfLjB40OKo7cPhR19I6ARUw>
-    <xmx:MzTnXsF9Fp7jW6TKW7vQNi_nfGTLb_OTKoeeY7PfFHn_RLjyejVxkw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5C5253280063;
-        Mon, 15 Jun 2020 04:41:23 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v5 02/27] dt-bindings: clock: Add a binding for the RPi Firmware clocks
-Date:   Mon, 15 Jun 2020 10:40:42 +0200
-Message-Id: <f6105207e7ef5a5ea8d7a1774faf989d341a25f5.1592210452.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
-References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
+        Mon, 15 Jun 2020 04:43:25 -0400
+Received: from sym2.noone.org ([178.63.92.236]:60434 "EHLO sym2.noone.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728852AbgFOInW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:43:22 -0400
+Received: by sym2.noone.org (Postfix, from userid 1002)
+        id 49llGX11CLzvjc1; Mon, 15 Jun 2020 10:43:15 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 10:43:15 +0200
+From:   Tobias Klauser <tklauser@distanz.ch>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Mao Han <han_mao@c-sky.com>, linux-csky@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] csky: remove unusued thread_saved_pc and *_segments
+ functions/macros
+Message-ID: <20200615084314.rwabrkyy7wwgwdxc@distanz.ch>
+References: <20200610153935.13794-1-tklauser@distanz.ch>
+ <CAJF2gTRGVQcn5Hu+kaHfzhEpyXuMkQQYyfHkuxREYci4QJ0SoQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJF2gTRGVQcn5Hu+kaHfzhEpyXuMkQQYyfHkuxREYci4QJ0SoQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The firmware running on the RPi VideoCore can be used to discover and
-change the various clocks running in the BCM2711. Since devices will
-need to use them through the DT, let's add a pretty simple binding.
+On 2020-06-13 at 10:42:07 +0200, Guo Ren <guoren@kernel.org> wrote:
+> Acked-by: Guo Ren <guoren@kernel.org>
 
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Rob Herring <robh+dt@kernel.org>
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Thanks for the Ack. Are you taking this patch through your own tree or
+should I directly submit to someone else?
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-index cec540c052b6..b48ed875eb8e 100644
---- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-+++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-@@ -22,6 +22,25 @@ properties:
-       Phandle to the firmware device's Mailbox.
-       (See: ../mailbox/mailbox.txt for more information)
- 
-+  clocks:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: raspberrypi,firmware-clocks
-+
-+      "#clock-cells":
-+        const: 1
-+        description: >
-+          The argument is the ID of the clocks contained by the
-+          firmware messages.
-+
-+    required:
-+      - compatible
-+      - "#clock-cells"
-+
-+    additionalProperties: false
-+
- required:
-   - compatible
-   - mboxes
-@@ -31,5 +50,10 @@ examples:
-     firmware {
-         compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
-         mboxes = <&mailbox>;
-+
-+        firmware_clocks: clocks {
-+            compatible = "raspberrypi,firmware-clocks";
-+            #clock-cells = <1>;
-+        };
-     };
- ...
--- 
-git-series 0.9.1
+> On Wed, Jun 10, 2020 at 11:45 PM Tobias Klauser <tklauser@distanz.ch> wrote:
+> >
+> > These are used nowhere in the tree (except for some architectures which
+> > define them for their own use) and were already removed for other
+> > architectures in:
+> >
+> > commit 6474924e2b5d ("arch: remove unused macro/function thread_saved_pc()")
+> > commit c17c02040bf0 ("arch: remove unused *_segments() macros/functions")
+> >
+> > Remove them from arch/csky as well.
+> >
+> > Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+> > ---
+> >  arch/csky/include/asm/processor.h |  6 ------
+> >  arch/csky/kernel/process.c        | 10 ----------
+> >  2 files changed, 16 deletions(-)
+> >
+> > diff --git a/arch/csky/include/asm/processor.h b/arch/csky/include/asm/processor.h
+> > index 24442d8e86f9..4800f6563abb 100644
+> > --- a/arch/csky/include/asm/processor.h
+> > +++ b/arch/csky/include/asm/processor.h
+> > @@ -82,12 +82,6 @@ static inline void release_thread(struct task_struct *dead_task)
+> >
+> >  extern int kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
+> >
+> > -#define copy_segments(tsk, mm)         do { } while (0)
+> > -#define release_segments(mm)           do { } while (0)
+> > -#define forget_segments()              do { } while (0)
+> > -
+> > -extern unsigned long thread_saved_pc(struct task_struct *tsk);
+> > -
+> >  unsigned long get_wchan(struct task_struct *p);
+> >
+> >  #define KSTK_EIP(tsk)          (task_pt_regs(tsk)->pc)
+> > diff --git a/arch/csky/kernel/process.c b/arch/csky/kernel/process.c
+> > index 8b3fad062ab2..3da63cf0bfde 100644
+> > --- a/arch/csky/kernel/process.c
+> > +++ b/arch/csky/kernel/process.c
+> > @@ -30,16 +30,6 @@ asmlinkage void ret_from_kernel_thread(void);
+> >   */
+> >  void flush_thread(void){}
+> >
+> > -/*
+> > - * Return saved PC from a blocked thread
+> > - */
+> > -unsigned long thread_saved_pc(struct task_struct *tsk)
+> > -{
+> > -       struct switch_stack *sw = (struct switch_stack *)tsk->thread.sp;
+> > -
+> > -       return sw->r15;
+> > -}
+> > -
+> >  int copy_thread_tls(unsigned long clone_flags,
+> >                 unsigned long usp,
+> >                 unsigned long kthread_arg,
+> > --
+> > 2.27.0
+> >
+> 
+> 
+> -- 
+> Best Regards
+>  Guo Ren
+> 
+> ML: https://lore.kernel.org/linux-csky/
+> 
