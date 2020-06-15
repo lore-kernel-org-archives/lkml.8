@@ -6,91 +6,84 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9802EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE30C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8025920747
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9866D20747
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 02:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgFOCFg (ORCPT
+        id S1728053AbgFOCK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 22:05:36 -0400
-Received: from mga03.intel.com ([134.134.136.65]:48920 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728031AbgFOCFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 22:05:35 -0400
-IronPort-SDR: RyDhtZ9dO4cCG3PRLjKpZ/ntMumxTJDq0RMyZoUOfpLqqv9glN2kc4/fctjivzNzzotmZm8Nd0
- LahCq6ekm4TQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2020 19:05:35 -0700
-IronPort-SDR: +189MtdzvtZ99W0KxVKmGChEmpBlGO9RTUWC3+JsxiywTI0yoJ/Ffq1chTqceOZ0hBLG1auzwP
- VtnDgefeTtdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,513,1583222400"; 
-   d="scan'208";a="449119946"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.135]) ([10.239.161.135])
-  by orsmga005.jf.intel.com with ESMTP; 14 Jun 2020 19:05:30 -0700
-Subject: Re: [RFC PATCH 11/13] sched: migration changes for core scheduling
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Aubrey Li <aubrey.li@intel.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <279f7f6606ea18e14d64517840bcada56deb0ce3.1583332765.git.vpillai@digitalocean.com>
- <20200612132127.GA90012@google.com>
- <CANaguZDguzOCvNmO1u7CZQU2DSFW0+uPt7ZwL18w4bG=-_Xe3Q@mail.gmail.com>
- <20200613022530.GA110162@google.com>
- <CANaguZA2Ti1WfvZHO8NjuS==fzGXrni-qZw5OFZ-tmhcvXH+rA@mail.gmail.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <a16a80b1-efee-6997-4266-f6158ea86d49@linux.intel.com>
-Date:   Mon, 15 Jun 2020 10:05:29 +0800
+        Sun, 14 Jun 2020 22:10:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53110 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727995AbgFOCK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 22:10:27 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5C61414AF2B502BFE427;
+        Mon, 15 Jun 2020 10:10:19 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Mon, 15 Jun 2020
+ 10:10:09 +0800
+Subject: Re: [PATCH 0/3] Convert nsproxy, groups, and creds to refcount_t
+To:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>
+CC:     David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "Paul Moore" <paul@paul-moore.com>, <edumazet@google.com>,
+        <paulmck@kernel.org>, David Howells <dhowells@redhat.com>,
+        <shakeelb@google.com>, James Morris <jamorris@linux.microsoft.com>,
+        <alex.huangjianhui@huawei.com>, <dylix.dailei@huawei.com>,
+        <chenzefeng2@huawei.com>, <linux-kernel@vger.kernel.org>
+References: <20200612183450.4189588-1-keescook@chromium.org>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com>
+Date:   Mon, 15 Jun 2020 10:10:08 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <CANaguZA2Ti1WfvZHO8NjuS==fzGXrni-qZw5OFZ-tmhcvXH+rA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200612183450.4189588-1-keescook@chromium.org>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/14 2:59, Vineeth Remanan Pillai wrote:
-> On Fri, Jun 12, 2020 at 10:25 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->>
->> Ok, so I take it that you will make it so in v6 then, unless of course
->> someone else objects.
->>
-> Yes, just wanted to hear from Aubrey, Tim and others as well to see
-> if we have not missed anything obvious. Will have this in v6 if
-> there are no objections.
+On 2020/6/13 2:34, Kees Cook wrote:
+> This series was never applied[1], and was recently pointed out as
+> missing[2]. If someone has a tree for this, please take it. Otherwise,
+> please Ack and I'll send it to Linus.
 > 
-> Thanks for bringing this up!
+> Thanks!
 > 
-> ~Vineeth
+> -Kees
 > 
-Yes, this makes sense to me, no need to find idle core in select_idle_cpu().
-Thanks to catch this!
+> [1] https://lore.kernel.org/lkml/20190306110549.7628-1-elena.reshetova@intel.com/
+> [2] https://lore.kernel.org/lkml/1591957695-118312-1-git-send-email-nixiaoming@huawei.com/
+> 
+> Elena Reshetova (3):
+>    nsproxy: convert nsproxy.count to refcount_t
+>    groups: convert group_info.usage to refcount_t
+>    creds: convert cred.usage to refcount_t
+> 
+>   include/linux/cred.h    | 15 +++++++-------
+>   include/linux/nsproxy.h |  7 +++----
+>   kernel/cred.c           | 44 ++++++++++++++++++++---------------------
+>   kernel/groups.c         |  2 +-
+>   kernel/nsproxy.c        |  6 +++---
+>   net/sunrpc/auth.c       |  2 +-
+>   6 files changed, 38 insertions(+), 38 deletions(-)
+> 
 
-Thanks,
--Aubrey
+Should mm->mm_users also be replaced by refcount_t?
+
+In addition, is it better to change all variables that use 
+atomic_dec_and_test to control the release process to refconut_t?
+
+Thanks
+Xiaoming Ni
+
