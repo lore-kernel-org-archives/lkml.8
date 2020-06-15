@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D70C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8925C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F9920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECE72068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203889;
-	bh=kmMjy+w5RUzmyvsPQqO7Q52eLX6bKSLAj2uvYVPQ0hI=;
+	s=default; t=1592203893;
+	bh=3HZVImuqiXqfjC02jDt4DrSPoAAE7uX94mFIa3qNNSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UcSTWHiNmWNe1tpmgAWeMZOb8rJw0M/u2/ldt/dtS5GArVxCs1gxYKbKD6e5JLRlh
-	 UVyOYwUhs73C51YBs3XXvryTdK03b2RDsZa5MBgnBpHOzByFVU4LGdWWivRD1I4JUR
-	 WEwdu0TwI3CELEI4olnMXyKLj6hwKTen1EOXIftA=
+	b=p3YSdUhrvFQmqEfVHr+XrkJneNh68HCgEMyLSsnNIQauYkhrYXrv5Hpmm3nB067iU
+	 GxpPnms7oeQm1+7Y2L7HiukRa/I2H3oA9mgd5a6FMnJZrY3bMuqX2smcJGgB3DMDzC
+	 aZ8XPBbx8eTInxzcJz5470QIC5S1h45yyazGxVTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgFOGv2 (ORCPT
+        id S1728951AbgFOGvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:51:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36794 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:51:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728861AbgFOGuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728745AbgFOGuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 02:50:35 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFEB2212CC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 798BE20C09;
         Mon, 15 Jun 2020 06:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592203832;
-        bh=kmMjy+w5RUzmyvsPQqO7Q52eLX6bKSLAj2uvYVPQ0hI=;
+        bh=3HZVImuqiXqfjC02jDt4DrSPoAAE7uX94mFIa3qNNSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gc7Mk2zJyDF2jVFSAcgsTkzFqdLy9t+9l4gRMf+s92JbmUIhXJ6uTzHUtTi2uWM+h
-         eG/LupWaw/RLlXxpzqVRNX3t+bd+6IK8BnYc2up1vgRJuLI+RNxEGo48C2FQ5JwvZo
-         D7ZvjjR5edwgcZ0EpAEEziQeS+Mfn7nIZYCQtBVc=
+        b=LhJgdocKdOYOmKN2QIPNIaxFrGdrC/e7NFKuKCLrCHP6VNhaPofqtTv1Rqr3cocG0
+         lYrLvGcX+z4IG8c9qaMkPMRxOj5g5jOhpsZI5JitE4ccvUImPFIGyuHkQMoh3EbzbG
+         tQTHj5D3CPqXDxS3PjXYEUrBxSTtPeRUPawvG1P8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jkiww-009o6s-Mq; Mon, 15 Jun 2020 08:50:30 +0200
+        id 1jkiww-009o6Y-G9; Mon, 15 Jun 2020 08:50:30 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org
-Subject: [PATCH 19/22] docs: move other kAPI documents to core-api
-Date:   Mon, 15 Jun 2020 08:50:24 +0200
-Message-Id: <633998e4e7c3c3bb340f69d4a02f0ee9e7f9306f.1592203650.git.mchehab+huawei@kernel.org>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 15/22] docs: powerpc: convert vcpudispatch_stats.txt to ReST
+Date:   Mon, 15 Jun 2020 08:50:20 +0200
+Message-Id: <a88855cc8b3a97b9b918a33e78e9ad000cf64be1.1592203650.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592203650.git.mchehab+huawei@kernel.org>
 References: <cover.1592203650.git.mchehab+huawei@kernel.org>
@@ -66,157 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a number of random documents that seem to be
-describing some aspects of the core-api. Move them to such
-directory, adding them at the core-api/index.rst file.
+- Add a SPDX header;
+- Use standard markup for document title;
+- Adjust identation on lists and add blank lines where
+  needed;
+- Add it to the powerpc index.rst file.
 
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> # powerpc
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/admin-guide/sysctl/vm.rst                     | 2 +-
- Documentation/core-api/index.rst                            | 6 ++++++
- Documentation/{mailbox.txt => core-api/mailbox.rst}         | 0
- Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst}   | 0
- .../{this_cpu_ops.txt => core-api/this_cpu_ops.rst}         | 0
- .../{process => core-api}/unaligned-memory-access.rst       | 0
- Documentation/gpu/drm-mm.rst                                | 2 +-
- arch/Kconfig                                                | 2 +-
- init/Kconfig                                                | 2 +-
- mm/Kconfig                                                  | 2 +-
- mm/nommu.c                                                  | 2 +-
- 11 files changed, 12 insertions(+), 6 deletions(-)
- rename Documentation/{mailbox.txt => core-api/mailbox.rst} (100%)
- rename Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst} (100%)
- rename Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst} (100%)
- rename Documentation/{process => core-api}/unaligned-memory-access.rst (100%)
+ Documentation/powerpc/index.rst                 |  1 +
+ ...ispatch_stats.txt => vcpudispatch_stats.rst} | 17 ++++++++++++-----
+ 2 files changed, 13 insertions(+), 5 deletions(-)
+ rename Documentation/powerpc/{vcpudispatch_stats.txt => vcpudispatch_stats.rst} (94%)
 
-diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-index d46d5b7013c6..9f7fa2d37fa7 100644
---- a/Documentation/admin-guide/sysctl/vm.rst
-+++ b/Documentation/admin-guide/sysctl/vm.rst
-@@ -583,7 +583,7 @@ trimming of allocations is initiated.
+diff --git a/Documentation/powerpc/index.rst b/Documentation/powerpc/index.rst
+index afe2d5e54db6..748bf483b1c2 100644
+--- a/Documentation/powerpc/index.rst
++++ b/Documentation/powerpc/index.rst
+@@ -31,6 +31,7 @@ powerpc
+     transactional_memory
+     ultravisor
+     vas-api
++    vcpudispatch_stats
  
- The default value is 1.
+ .. only::  subproject and html
  
--See Documentation/nommu-mmap.txt for more information.
-+See Documentation/core-api/nommu-mmap.rst for more information.
- 
- 
- numa_zonelist_order
-diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-index 721e40a8c65b..2a364dd533de 100644
---- a/Documentation/core-api/index.rst
-+++ b/Documentation/core-api/index.rst
-@@ -38,11 +38,15 @@ Library functionality that is used throughout the kernel.
-    circular-buffers
-    rbtree
-    generic-radix-tree
-+   mailbox
-    packing
-+   rbtree
-+   this_cpu_ops
-    timekeeping
-    watch_queue
-    errseq
- 
+diff --git a/Documentation/powerpc/vcpudispatch_stats.txt b/Documentation/powerpc/vcpudispatch_stats.rst
+similarity index 94%
+rename from Documentation/powerpc/vcpudispatch_stats.txt
+rename to Documentation/powerpc/vcpudispatch_stats.rst
+index e21476bfd78c..5704657a5987 100644
+--- a/Documentation/powerpc/vcpudispatch_stats.txt
++++ b/Documentation/powerpc/vcpudispatch_stats.rst
+@@ -1,5 +1,8 @@
+-VCPU Dispatch Statistics:
+-=========================
++.. SPDX-License-Identifier: GPL-2.0
 +
- Concurrency primitives
- ======================
++========================
++VCPU Dispatch Statistics
++========================
  
-@@ -83,11 +87,13 @@ more memory-management documentation in :doc:`/vm/index`.
-    :maxdepth: 1
+ For Shared Processor LPARs, the POWER Hypervisor maintains a relatively
+ static mapping of the LPAR processors (vcpus) to physical processor
+@@ -20,25 +23,29 @@ The statistics themselves are available by reading the procfs file
+ a vcpu as represented by the first field, followed by 8 numbers.
  
-    memory-allocation
-+   unaligned-memory-access
-    dma-api
-    dma-api-howto
-    dma-attributes
-    dma-isa-lpc
-    bus-virt-phys-mapping
-+   nommu-mmap
-    mm-api
-    genalloc
-    pin_user_pages
-diff --git a/Documentation/mailbox.txt b/Documentation/core-api/mailbox.rst
-similarity index 100%
-rename from Documentation/mailbox.txt
-rename to Documentation/core-api/mailbox.rst
-diff --git a/Documentation/nommu-mmap.txt b/Documentation/core-api/nommu-mmap.rst
-similarity index 100%
-rename from Documentation/nommu-mmap.txt
-rename to Documentation/core-api/nommu-mmap.rst
-diff --git a/Documentation/this_cpu_ops.txt b/Documentation/core-api/this_cpu_ops.rst
-similarity index 100%
-rename from Documentation/this_cpu_ops.txt
-rename to Documentation/core-api/this_cpu_ops.rst
-diff --git a/Documentation/process/unaligned-memory-access.rst b/Documentation/core-api/unaligned-memory-access.rst
-similarity index 100%
-rename from Documentation/process/unaligned-memory-access.rst
-rename to Documentation/core-api/unaligned-memory-access.rst
-diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
-index 1839762044be..e0bbcbb6f512 100644
---- a/Documentation/gpu/drm-mm.rst
-+++ b/Documentation/gpu/drm-mm.rst
-@@ -314,7 +314,7 @@ To use drm_gem_cma_get_unmapped_area(), drivers must fill the struct
- a pointer on drm_gem_cma_get_unmapped_area().
+ The first number corresponds to:
++
+ 1. total vcpu dispatches since the beginning of statistics collection
  
- More detailed information about get_unmapped_area can be found in
--Documentation/nommu-mmap.txt
-+Documentation/core-api/nommu-mmap.rst
+ The next 4 numbers represent vcpu dispatch dispersions:
++
+ 2. number of times this vcpu was dispatched on the same processor as last
+    time
+ 3. number of times this vcpu was dispatched on a different processor core
+    as last time, but within the same chip
+ 4. number of times this vcpu was dispatched on a different chip
+ 5. number of times this vcpu was dispatches on a different socket/drawer
+-(next numa boundary)
++   (next numa boundary)
  
- Memory Coherency
- ----------------
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 8cc35dc556c7..2a439fb8069e 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -147,7 +147,7 @@ config HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	  problems with received packets if doing so would not help
- 	  much.
+ The final 3 numbers represent statistics in relation to the home node of
+ the vcpu:
++
+ 6. number of times this vcpu was dispatched in its home node (chip)
+ 7. number of times this vcpu was dispatched in a different node
+ 8. number of times this vcpu was dispatched in a node further away (numa
+-distance)
++   distance)
++
++An example output::
  
--	  See Documentation/unaligned-memory-access.txt for more
-+	  See Documentation/core-api/unaligned-memory-access.rst for more
- 	  information on the topic of unaligned memory accesses.
- 
- config ARCH_USE_BUILTIN_BSWAP
-diff --git a/init/Kconfig b/init/Kconfig
-index 3327f0eca1a3..4218a60f5f79 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1957,7 +1957,7 @@ config MMAP_ALLOW_UNINITIALIZED
- 	  userspace.  Since that isn't generally a problem on no-MMU systems,
- 	  it is normally safe to say Y here.
- 
--	  See Documentation/nommu-mmap.txt for more information.
-+	  See Documentation/core-api/nommu-mmap.rst for more information.
- 
- config SYSTEM_DATA_VERIFICATION
- 	def_bool n
-diff --git a/mm/Kconfig b/mm/Kconfig
-index f2104cc0d35c..6c6189724b75 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -387,7 +387,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
- 	  This option specifies the initial value of this option.  The default
- 	  of 1 says that all excess pages should be trimmed.
- 
--	  See Documentation/nommu-mmap.txt for more information.
-+	  See Documentation/core-api/nommu-mmap.rst for more information.
- 
- config TRANSPARENT_HUGEPAGE
- 	bool "Transparent Hugepage Support"
-diff --git a/mm/nommu.c b/mm/nommu.c
-index cdcad5d61dd1..8f2e502ad8a3 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -5,7 +5,7 @@
-  *  Replacement code for mm functions to support CPU's that don't
-  *  have any form of memory management unit (thus no virtual memory).
-  *
-- *  See Documentation/nommu-mmap.txt
-+ *  See Documentation/core-api/nommu-mmap.rst
-  *
-  *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
-  *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
+-An example output:
+     $ sudo cat /proc/powerpc/vcpudispatch_stats
+     cpu0 6839 4126 2683 30 0 6821 18 0
+     cpu1 2515 1274 1229 12 0 2509 6 0
 -- 
 2.26.2
 
