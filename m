@@ -2,250 +2,197 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1012067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hRp6vYCu"
+	by mail.kernel.org (Postfix) with ESMTP id 61AAA206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbgFOMpD (ORCPT
+        id S1730000AbgFOMpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:45:03 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41828 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729243AbgFOMpC (ORCPT
+        Mon, 15 Jun 2020 08:45:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7596 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729989AbgFOMpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:45:02 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FChqHm015449;
-        Mon, 15 Jun 2020 14:44:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=OeFeiQXSPoFz1zGDNRLnx/pg+w7M3JAqmjkNz+4d8C0=;
- b=hRp6vYCuTFSCYfa3cTf3Gg9rzRHJX8mWUpwsApmZlwiQ5uM915KS9jKUtZWK7R7MZT7Y
- saynVOqKkDnogwO5JhHsC+CgMpirImKgGFH2aDd2JIMAR0CWhPgFfRZxcZhgLqKZRrWA
- 1YNQNfqEP05rsNgC6WDgBwuklLdm5znfuEY5EVr496WIuhQie3HAKthhH6QiV61FRe2I
- YAK7CY9T+fN3n6LFir3foro/A62oD65IHf6C/gK8uIDCowP0HK9xgk8udeJlJRYyp4vv
- 0P6b+Pdp8T0p0fUwUqRwsc2L+F4Mnz10E+52r68+MeGIgMY/7MSqi4b8uRSiE9Y5PJKh 3g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mm91hqeg-1
+        Mon, 15 Jun 2020 08:45:08 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FC24xa100278;
+        Mon, 15 Jun 2020 08:44:35 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31n0mmgndd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 14:44:57 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 388EB10002A;
-        Mon, 15 Jun 2020 14:44:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2A8EA2B45D9;
-        Mon, 15 Jun 2020 14:44:57 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 14:44:56
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <alexandre.torgue@st.com>
-Subject: [PATCH] pinctrl: stm32: use the hwspin_lock_timeout_in_atomic() API
-Date:   Mon, 15 Jun 2020 14:44:56 +0200
-Message-ID: <20200615124456.27328-1-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 15 Jun 2020 08:44:34 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FC28UV100500;
+        Mon, 15 Jun 2020 08:44:34 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31n0mmgnb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:44:34 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FCfbbx015382;
+        Mon, 15 Jun 2020 12:44:28 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7uk1y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 12:44:28 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FCiPVc44630220
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 12:44:25 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B9E1DA4059;
+        Mon, 15 Jun 2020 12:44:25 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47EDDA4040;
+        Mon, 15 Jun 2020 12:44:22 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.96.47])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 15 Jun 2020 12:44:22 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 15 Jun 2020 18:14:21 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v13 1/6] powerpc: Document details on H_SCM_HEALTH hcall
+Date:   Mon, 15 Jun 2020 18:14:02 +0530
+Message-Id: <20200615124407.32596-2-vaibhav@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615124407.32596-1-vaibhav@linux.ibm.com>
+References: <20200615124407.32596-1-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
- (10.75.127.8)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ cotscore=-2147483648 suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006150098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabien Dessenne <fabien.dessenne@st.com>
+Add documentation to 'papr_hcalls.rst' describing the bitmap flags
+that are returned from H_SCM_HEALTH hcall as per the PAPR-SCM
+specification.
 
-Use the hwspin_lock_timeout_in_atomic() API which is the most appropriated
-here. Indeed:
-- hwspin_lock_() is called after spin_lock_irqsave()
-- the hwspin_lock_timeout() API relies on jiffies count which won't work
-  if IRQs are disabled which is the case here.
+Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+---
+Changelog:
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+v12..v13:
+* None
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index a657cd829ce6..1f7fff84aa9d 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -64,7 +64,7 @@
- #define gpio_range_to_bank(chip) \
- 		container_of(chip, struct stm32_gpio_bank, range)
+v11..v12:
+* None
+
+v10..v11:
+* None
+
+v9..v10:
+* Added ack from Ira.
+
+Resend:
+* None
+
+v8..v9:
+* s/SCM/PMEM device. [ Dan Williams, Aneesh ]
+
+v7..v8:
+* Added a clarification on bit-ordering of Health Bitmap
+
+Resend:
+* None
+
+v6..v7:
+* None
+
+v5..v6:
+* New patch in the series
+---
+ Documentation/powerpc/papr_hcalls.rst | 46 ++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/powerpc/papr_hcalls.rst b/Documentation/powerpc/papr_hcalls.rst
+index 3493631a60f8..48fcf1255a33 100644
+--- a/Documentation/powerpc/papr_hcalls.rst
++++ b/Documentation/powerpc/papr_hcalls.rst
+@@ -220,13 +220,51 @@ from the LPAR memory.
+ **H_SCM_HEALTH**
  
--#define HWSPINLOCK_TIMEOUT	5 /* msec */
-+#define HWSPNLCK_TIMEOUT	1000 /* usec */
+ | Input: drcIndex
+-| Out: *health-bitmap, health-bit-valid-bitmap*
++| Out: *health-bitmap (r4), health-bit-valid-bitmap (r5)*
+ | Return Value: *H_Success, H_Parameter, H_Hardware*
  
- static const char * const stm32_gpio_functions[] = {
- 	"gpio", "af0", "af1",
-@@ -420,12 +420,14 @@ static int stm32_gpio_domain_activate(struct irq_domain *d,
- 	 * to avoid overriding.
- 	 */
- 	spin_lock_irqsave(&pctl->irqmux_lock, flags);
--	if (pctl->hwlock)
--		ret = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
+ Given a DRC Index return the info on predictive failure and overall health of
+-the NVDIMM. The asserted bits in the health-bitmap indicate a single predictive
+-failure and health-bit-valid-bitmap indicate which bits in health-bitmap are
+-valid.
++the PMEM device. The asserted bits in the health-bitmap indicate one or more states
++(described in table below) of the PMEM device and health-bit-valid-bitmap indicate
++which bits in health-bitmap are valid. The bits are reported in
++reverse bit ordering for example a value of 0xC400000000000000
++indicates bits 0, 1, and 5 are valid.
++
++Health Bitmap Flags:
++
+++------+-----------------------------------------------------------------------+
++|  Bit |               Definition                                              |
+++======+=======================================================================+
++|  00  | PMEM device is unable to persist memory contents.                     |
++|      | If the system is powered down, nothing will be saved.                 |
+++------+-----------------------------------------------------------------------+
++|  01  | PMEM device failed to persist memory contents. Either contents were   |
++|      | not saved successfully on power down or were not restored properly on |
++|      | power up.                                                             |
+++------+-----------------------------------------------------------------------+
++|  02  | PMEM device contents are persisted from previous IPL. The data from   |
++|      | the last boot were successfully restored.                             |
+++------+-----------------------------------------------------------------------+
++|  03  | PMEM device contents are not persisted from previous IPL. There was no|
++|      | data to restore from the last boot.                                   |
+++------+-----------------------------------------------------------------------+
++|  04  | PMEM device memory life remaining is critically low                   |
+++------+-----------------------------------------------------------------------+
++|  05  | PMEM device will be garded off next IPL due to failure                |
+++------+-----------------------------------------------------------------------+
++|  06  | PMEM device contents cannot persist due to current platform health    |
++|      | status. A hardware failure may prevent data from being saved or       |
++|      | restored.                                                             |
+++------+-----------------------------------------------------------------------+
++|  07  | PMEM device is unable to persist memory contents in certain conditions|
+++------+-----------------------------------------------------------------------+
++|  08  | PMEM device is encrypted                                              |
+++------+-----------------------------------------------------------------------+
++|  09  | PMEM device has successfully completed a requested erase or secure    |
++|      | erase procedure.                                                      |
+++------+-----------------------------------------------------------------------+
++|10:63 | Reserved / Unused                                                     |
+++------+-----------------------------------------------------------------------+
  
--	if (ret) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		ret = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (ret) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	if (pctl->irqmux_map & BIT(irq_data->hwirq)) {
-@@ -433,7 +435,7 @@ static int stm32_gpio_domain_activate(struct irq_domain *d,
- 			irq_data->hwirq);
- 		ret = -EBUSY;
- 		if (pctl->hwlock)
--			hwspin_unlock(pctl->hwlock);
-+			hwspin_unlock_in_atomic(pctl->hwlock);
- 		goto unlock;
- 	} else {
- 		pctl->irqmux_map |= BIT(irq_data->hwirq);
-@@ -442,7 +444,7 @@ static int stm32_gpio_domain_activate(struct irq_domain *d,
- 	regmap_field_write(pctl->irqmux[irq_data->hwirq], bank->bank_ioport_nr);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- unlock:
- 	spin_unlock_irqrestore(&pctl->irqmux_lock, flags);
-@@ -750,12 +752,13 @@ static int stm32_pmx_set_mode(struct stm32_gpio_bank *bank,
- 	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
--	if (pctl->hwlock)
--		err = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
--
--	if (err) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	val = readl_relaxed(bank->base + alt_offset);
-@@ -769,7 +772,7 @@ static int stm32_pmx_set_mode(struct stm32_gpio_bank *bank,
- 	writel_relaxed(val, bank->base + STM32_GPIO_MODER);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- 	stm32_gpio_backup_mode(bank, pin, mode, alt);
- 
-@@ -869,12 +872,13 @@ static int stm32_pconf_set_driving(struct stm32_gpio_bank *bank,
- 	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
--	if (pctl->hwlock)
--		err = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
--
--	if (err) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_TYPER);
-@@ -883,7 +887,7 @@ static int stm32_pconf_set_driving(struct stm32_gpio_bank *bank,
- 	writel_relaxed(val, bank->base + STM32_GPIO_TYPER);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- 	stm32_gpio_backup_driving(bank, offset, drive);
- 
-@@ -923,12 +927,13 @@ static int stm32_pconf_set_speed(struct stm32_gpio_bank *bank,
- 	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
--	if (pctl->hwlock)
--		err = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
--
--	if (err) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_SPEEDR);
-@@ -937,7 +942,7 @@ static int stm32_pconf_set_speed(struct stm32_gpio_bank *bank,
- 	writel_relaxed(val, bank->base + STM32_GPIO_SPEEDR);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- 	stm32_gpio_backup_speed(bank, offset, speed);
- 
-@@ -977,12 +982,13 @@ static int stm32_pconf_set_bias(struct stm32_gpio_bank *bank,
- 	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
--	if (pctl->hwlock)
--		err = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
--
--	if (err) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_PUPDR);
-@@ -991,7 +997,7 @@ static int stm32_pconf_set_bias(struct stm32_gpio_bank *bank,
- 	writel_relaxed(val, bank->base + STM32_GPIO_PUPDR);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- 	stm32_gpio_backup_bias(bank, offset, bias);
+ **H_SCM_PERFORMANCE_STATS**
  
 -- 
-2.17.1
+2.26.2
 
