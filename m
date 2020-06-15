@@ -2,124 +2,199 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D043C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681E0206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570C2206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rm9uZHQ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0cRrsg3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbgFOKFW (ORCPT
+        id S1729559AbgFOKGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53504 "EHLO
+        Mon, 15 Jun 2020 06:06:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgFOKFU (ORCPT
+        with ESMTP id S1728773AbgFOKGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:05:20 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5820CC061A0E;
-        Mon, 15 Jun 2020 03:05:20 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id p20so17105775iop.11;
-        Mon, 15 Jun 2020 03:05:20 -0700 (PDT)
+        Mon, 15 Jun 2020 06:06:34 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05BE4C061A0E;
+        Mon, 15 Jun 2020 03:06:34 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id j19so10546585ilk.9;
+        Mon, 15 Jun 2020 03:06:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dfs5PllpQpG9QpYkVZTr5YGvpGpnNGmZTQiHA7UaSnw=;
-        b=Rm9uZHQ6qwXtdXIirn2i9Fii8ebIQCWolZpKBzlXT7okYU7u/azWvU+8b7sqW/YcUW
-         ueDgXdICoowFfocCx2+bP5cZxxiTGZtoFD3Rj8MxuHhfGVMxP7A/5vZklUxUQWT6aBk7
-         NHE4H4ZlKtqPC6AAfiJIFbn2Hu3ZCcHe509LrqUtQkVMKdzYbtP5q06WyV53SY4sM1Qb
-         JBGM/6CD86ycKuf94WO1HOtOjPs5KHWV4GLz3kfw3sSWOALL1SZWpfEKCo/5LnkgNRvw
-         yPJKX2c6g34XP6ZRPKLvPGsaYZiUQt7NoWsovDir5xdi39QJv9qax/GvJ2byOJbpoh1j
-         R9Dg==
+        bh=V4ilhIOGf08PxKYEnKjQV/fXI0rSU5dBatEgVzDPnAc=;
+        b=P0cRrsg3JH6SfJ4oLMqbykTLO/eOgi7Euj53OY7iTtxCNRxChA79rSj5NkQ2Edupqx
+         N7INsfzKBCOM3rgdAyGAIDdyshNxznnV8Xz3osw7SQF6gmzqOFC5uX9LoirJnCP6U6JC
+         O2AjzpCtuTlytgLZXF5kTpv3q+9IF2SrQFdsuMDSPP6G6GaDAaR7Jog8iCmO0u6hXKwp
+         Y1S4ZPY0aDWg/GcIFKpoe65TJRjHAvoSf2rduaUbd1v7PpynsqSrwAhMOGcl95m0oV+B
+         tgZwVsAsOQmTp2hnW18vdQXnCZ+ecuBp9aBzFXlJLNH7OG4L8xZkidwnaQBikC6pkoob
+         Q9FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dfs5PllpQpG9QpYkVZTr5YGvpGpnNGmZTQiHA7UaSnw=;
-        b=ZCG6wxvHKYa0FlJEsBekRj4kPd4tHv+NqTmh4PnFRGxvu7z7qpThI0chDLih0rrnTP
-         kDyf2GTQzCKDjICc6vG98Aw3uZQSoKrD33IKVanphAOu38QJNO5STKupfofE6sBq7qqk
-         mwDr0excSEMmd1LKOAaAf+rGTi6krek/wjq32Blkn0bGfdj+q067PeUMRfLSQO5CE1ge
-         8uhwFXFRdXMmpnWyZtfFhJjGwlHYWI8MYMWY+WxNP+bkMpjksKtIJXQRX6OPxijAgraZ
-         rM1XXYJ0bZ3DeUlLe/BdSW8QBwd6Cd2z6fFO2jaL7z7XC/evTdyzoc1PGLdzuADUlYiC
-         vuvA==
-X-Gm-Message-State: AOAM532IBfPHP9PCrYt/i6OCa7d38JaRrSBcFtJUGLZwdQTQuVfR3D2X
-        6r9saIUm7rBc6NOoT8XgqTE64iVq8b+HEDqDa5c=
-X-Google-Smtp-Source: ABdhPJw2ZNSatUBV5nkdNWJB5epCtTEMUWyTNWezAfi/r72JR+OKrJKz92f3vb55u1hjxnOO0jazboJ+w2X3EnzYQqk=
-X-Received: by 2002:a05:6638:d96:: with SMTP id l22mr21113713jaj.120.1592215519677;
- Mon, 15 Jun 2020 03:05:19 -0700 (PDT)
+        bh=V4ilhIOGf08PxKYEnKjQV/fXI0rSU5dBatEgVzDPnAc=;
+        b=EmJUct1JyPPIUVWtm6KTjPpy5k8eUmqmq15ibI4/xJ7/AzNFjeTGx9MVYvrroGMDYw
+         h3gCMzSUUPbfAOqmjb/b6dQGdFUZlMr88fLWY8MLI1T6D7PQeDQchN+HX6CGe/kQuF9d
+         D8LduT5pWKYZ73uEBbuXWisfSIcT2IMYZ+ZN3wEDN68O6VgoEj1cUVHZ1RLRHCEYuVSn
+         DabUKfFH0I1N2/fZsn1rKao90OQMHHQkFtSNkz6XQj+iGujz3GGa0YzhDD0j3uK7LmkI
+         DhdUh9jgHXchLPCjmt1+3ecX0s7lo0oGkl15nZkIbBFfzgLDDx+qgpJxEqkjgybkq3zY
+         U9Jg==
+X-Gm-Message-State: AOAM533ybE/JB3hMGfX06ZXrOF2vcxwukBUTQYvHJ1ZpSlGZ/a6Rthko
+        nER3loQSAsLze733TsbRxhvU3n82/4T5G4NH/6I=
+X-Google-Smtp-Source: ABdhPJy7MG4dIBMDcK+E97dM8L8Kkqqke6SfX/trPu5MYMPHvmU2jZK0syr68+bQImnrTKFXitAZyACYHc7TzBxR/TA=
+X-Received: by 2002:a92:5bd2:: with SMTP id c79mr23408564ilg.218.1592215593037;
+ Mon, 15 Jun 2020 03:06:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200612004644.255692-1-mike.kravetz@oracle.com>
- <20200612015842.GC23230@ZenIV.linux.org.uk> <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
- <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
- <6e8924b0-bfc4-eaf5-1775-54f506cdf623@oracle.com> <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
-In-Reply-To: <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 15 Jun 2020 13:05:08 +0300
-Message-ID: <CAOQ4uxgA+_4_UtVz17_eJL6m0CsDEVuiriBj1ZOkho+Ub1yuSA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
- hugetlbfs files
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Colin Walters <walters@verbum.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+ <1590564453-24499-3-git-send-email-dillon.minfei@gmail.com> <2273a168-7b14-9e28-5904-b9d2c2e2d9d3@st.com>
+In-Reply-To: <2273a168-7b14-9e28-5904-b9d2c2e2d9d3@st.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Mon, 15 Jun 2020 18:05:56 +0800
+Message-ID: <CAL9mu0LyFPjf+RLwet43zgcEnO9zhJJ=v1BsQqN8KxYta7Q=DQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/9] ARM: dts: stm32: Add pin map for ltdc & spi5 on
+ stm32f429-disco board
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Hua Dillon <dillonhua@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:53 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+On Mon, Jun 15, 2020 at 5:45 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
 >
-> On Sat, Jun 13, 2020 at 9:12 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> Hi Dillon
+>
+> On 5/27/20 9:27 AM, dillon.minfei@gmail.com wrote:
+> > From: dillon min <dillon.minfei@gmail.com>
 > >
-> > On 6/12/20 11:53 PM, Amir Goldstein wrote:
->
-> > As a hugetlbfs developer, I do not know of a use case for interoperability
-> > with overlayfs.  So yes, I am not too interested in making them work well
-> > together.  However, if there was an actual use case I would be more than
-> > happy to consider doing the work.  Just hate to put effort into fixing up
-> > two 'special' filesystems for functionality that may not be used.
+> > This patch adds the pin configuration for ltdc and spi5 controller
+> > on stm32f429-disco board.
 > >
-> > I can't speak for overlayfs developers.
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > ---
+> >   arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 67 ++++++++++++++++++++++++++++++++++
+> >   1 file changed, 67 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+> > index 392fa143ce07..0eb107f968cd 100644
+> > --- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+> > +++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+> > @@ -316,6 +316,73 @@
+> >                               };
+> >                       };
+> >
+> > +                     ltdc_pins_f429_disco: ltdc-1 {
 >
-> As I said, I only know of tmpfs being upper layer as a valid use case.
->    Does that work with hugepages?  How would I go about testing that?
+> Sorry I missed this issue during review. I changed ltdc_pins_f429_disco
+> by ltdc_pins_b when I applied your patch.
+Okay, thanks for reviewing.
 
-Simple, after enabling CONFIG_HUGETLBFS:
-
-diff --git a/mount_union.py b/mount_union.py
-index fae8899..4070c70 100644
---- a/mount_union.py
-+++ b/mount_union.py
-@@ -15,7 +15,7 @@ def mount_union(ctx):
-         snapshot_mntroot = cfg.snapshot_mntroot()
-         if cfg.should_mount_upper():
-             system("mount " + upper_mntroot + " 2>/dev/null"
--                    " || mount -t tmpfs upper_layer " + upper_mntroot)
-+                    " || mount -t hugetlbfs upper_layer " + upper_mntroot)
-         layer_mntroot = upper_mntroot + "/" + ctx.curr_layer()
-         upperdir = layer_mntroot + "/u"
-         workdir = layer_mntroot + "/w"
-
-It fails colossally, because hugetlbfs, does not have write_iter().
-It is only meant as an interface to create named maps of huge pages.
-So I don't really see the use case for using it as upper.
-
-Thanks,
-Amir.
+Regrades,
+Dillon,
+>
+>
+> Regards
+> alex
+>
+> > +                             pins {
+> > +                                     pinmux = <STM32_PINMUX('C', 6,  AF14)>,
+> > +                                             /* LCD_HSYNC */
+> > +                                              <STM32_PINMUX('A', 4,  AF14)>,
+> > +                                              /* LCD_VSYNC */
+> > +                                              <STM32_PINMUX('G', 7,  AF14)>,
+> > +                                              /* LCD_CLK */
+> > +                                              <STM32_PINMUX('C', 10, AF14)>,
+> > +                                              /* LCD_R2 */
+> > +                                              <STM32_PINMUX('B', 0,  AF9)>,
+> > +                                              /* LCD_R3 */
+> > +                                              <STM32_PINMUX('A', 11, AF14)>,
+> > +                                              /* LCD_R4 */
+> > +                                              <STM32_PINMUX('A', 12, AF14)>,
+> > +                                              /* LCD_R5 */
+> > +                                              <STM32_PINMUX('B', 1,  AF9)>,
+> > +                                              /* LCD_R6*/
+> > +                                              <STM32_PINMUX('G', 6,  AF14)>,
+> > +                                              /* LCD_R7 */
+> > +                                              <STM32_PINMUX('A', 6,  AF14)>,
+> > +                                              /* LCD_G2 */
+> > +                                              <STM32_PINMUX('G', 10, AF9)>,
+> > +                                              /* LCD_G3 */
+> > +                                              <STM32_PINMUX('B', 10, AF14)>,
+> > +                                              /* LCD_G4 */
+> > +                                              <STM32_PINMUX('D', 6,  AF14)>,
+> > +                                              /* LCD_B2 */
+> > +                                              <STM32_PINMUX('G', 11, AF14)>,
+> > +                                              /* LCD_B3*/
+> > +                                              <STM32_PINMUX('B', 11, AF14)>,
+> > +                                              /* LCD_G5 */
+> > +                                              <STM32_PINMUX('C', 7,  AF14)>,
+> > +                                              /* LCD_G6 */
+> > +                                              <STM32_PINMUX('D', 3,  AF14)>,
+> > +                                              /* LCD_G7 */
+> > +                                              <STM32_PINMUX('G', 12, AF9)>,
+> > +                                              /* LCD_B4 */
+> > +                                              <STM32_PINMUX('A', 3,  AF14)>,
+> > +                                              /* LCD_B5 */
+> > +                                              <STM32_PINMUX('B', 8,  AF14)>,
+> > +                                              /* LCD_B6 */
+> > +                                              <STM32_PINMUX('B', 9,  AF14)>,
+> > +                                              /* LCD_B7 */
+> > +                                              <STM32_PINMUX('F', 10, AF14)>;
+> > +                                              /* LCD_DE */
+> > +                                     slew-rate = <2>;
+> > +                             };
+> > +                     };
+> > +
+> > +                     spi5_pins: spi5-0 {
+> > +                             pins1 {
+> > +                                     pinmux = <STM32_PINMUX('F', 7, AF5)>,
+> > +                                             /* SPI5_CLK */
+> > +                                              <STM32_PINMUX('F', 9, AF5)>;
+> > +                                             /* SPI5_MOSI */
+> > +                                     bias-disable;
+> > +                                     drive-push-pull;
+> > +                                     slew-rate = <0>;
+> > +                             };
+> > +                             pins2 {
+> > +                                     pinmux = <STM32_PINMUX('F', 8, AF5)>;
+> > +                                             /* SPI5_MISO */
+> > +                                     bias-disable;
+> > +                             };
+> > +                     };
+> > +
+> >                       dcmi_pins: dcmi-0 {
+> >                               pins {
+> >                                       pinmux = <STM32_PINMUX('A', 4, AF13)>, /* DCMI_HSYNC */
+> >
