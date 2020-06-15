@@ -2,184 +2,185 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F32C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A07206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5741A206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:46:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nOlzI78S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgFOJpp (ORCPT
+        id S1729251AbgFOJqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:45:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17632 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728626AbgFOJpp (ORCPT
+        Mon, 15 Jun 2020 05:46:14 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7406 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728626AbgFOJqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:45:45 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F82gxE172958;
-        Mon, 15 Jun 2020 05:45:36 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31nrequ2ck-1
+        Mon, 15 Jun 2020 05:46:14 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F9YmAg015035;
+        Mon, 15 Jun 2020 11:45:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=HzRMy6iVCZcLIfFdNcJlFmRB2z9fKYZjPMelH03qdYY=;
+ b=nOlzI78SZ3BXZsTxqFqoExmXdRONkXi5UKuqpvBc92FLtDOUT9oj+HyLeFTjarNKmxwH
+ yO/6GjTPHN7RMfwgh0/kv5U1rUzXgEF2o3ZEJ68+kTo7R+HkRAqEGRAGvOT/p44c7azE
+ 8ZGDzljkTLZb8dokG1oa27eTNcQCzjEL9LCX9FjHPQMYBhPa0PdxQkYXyvYgzkUrVGI4
+ CXDJPCMmEMMQsah697bvJDTc1OsChq0OhJn4cAf/iMsje5syLv6nRGy8cd1SdFTBhA1Y
+ Vl6vgqwoLU1Aw8xGzNpiRgQn1uVKdFOCKIZIODsOkx94i2/l8/9eUFykiSzy6m3273J7 tw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvrwjd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 05:45:36 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05F9E7dc028852;
-        Mon, 15 Jun 2020 05:45:35 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31nrequ2bt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 05:45:35 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05F9fhkD016949;
-        Mon, 15 Jun 2020 09:45:33 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma01fra.de.ibm.com with ESMTP id 31mpe7haxd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 09:45:33 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05F9jU2V57213136
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 09:45:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80ACAA4057;
-        Mon, 15 Jun 2020 09:45:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1CC9A4055;
-        Mon, 15 Jun 2020 09:45:27 +0000 (GMT)
-Received: from [9.211.71.177] (unknown [9.211.71.177])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jun 2020 09:45:27 +0000 (GMT)
-Subject: Re: [RFC PATCH V5] GCOV: Add config to check the preqequisites
- situation
-To:     gengcixi@gmail.com, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        Cixi Geng <cixi.geng1@unisoc.com>
-References: <20200610021150.19233-1-gengcixi@gmail.com>
-From:   Peter Oberparleiter <oberpar@linux.ibm.com>
-Message-ID: <77484d44-966a-c3a8-cb81-a2c5776dcc23@linux.ibm.com>
-Date:   Mon, 15 Jun 2020 11:45:26 +0200
+        Mon, 15 Jun 2020 11:45:38 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1B0C710002A;
+        Mon, 15 Jun 2020 11:45:38 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E456E2C298D;
+        Mon, 15 Jun 2020 11:45:37 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
+ 2020 11:45:36 +0200
+Subject: Re: [PATCH v6 2/9] ARM: dts: stm32: Add pin map for ltdc & spi5 on
+ stm32f429-disco board
+To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
+        <p.zabel@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
+        <thierry.reding@gmail.com>, <sam@ravnborg.org>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <andy.shevchenko@gmail.com>, <noralf@tronnes.org>,
+        <linus.walleij@linaro.org>, <broonie@kernel.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-clk@vger.kernel.org>,
+        <dillonhua@gmail.com>
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+ <1590564453-24499-3-git-send-email-dillon.minfei@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <2273a168-7b14-9e28-5904-b9d2c2e2d9d3@st.com>
+Date:   Mon, 15 Jun 2020 11:45:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200610021150.19233-1-gengcixi@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1590564453-24499-3-git-send-email-dillon.minfei@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-15_01:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- mlxlogscore=999 suspectscore=1 phishscore=0 bulkscore=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 spamscore=0 cotscore=-2147483648
- malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006150066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.06.2020 04:11, gengcixi@gmail.com wrote:
-> From: Cixi Geng <cixi.geng1@unisoc.com>
+Hi Dillon
+
+On 5/27/20 9:27 AM, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
 > 
-> Introduce new configuration option GCOV_PROFILE_PREREQS that can be
-> used to check whether the prerequisites for enabling gcov profiling
-> for specific files and directories are met.
+> This patch adds the pin configuration for ltdc and spi5 controller
+> on stm32f429-disco board.
 > 
-> Only add SERIAL_GCOV for an example.
-> 
-> Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
 > ---
->  drivers/tty/serial/Kconfig  |  8 ++++++++
->  drivers/tty/serial/Makefile |  1 +
->  kernel/gcov/Kconfig         | 15 +++++++++++++++
->  3 files changed, 24 insertions(+)
+>   arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 67 ++++++++++++++++++++++++++++++++++
+>   1 file changed, 67 insertions(+)
 > 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index adf9e80e7dc9..3d7e811d90dc 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1566,3 +1566,11 @@ endmenu
->  
->  config SERIAL_MCTRL_GPIO
->  	tristate
+> diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+> index 392fa143ce07..0eb107f968cd 100644
+> --- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+> @@ -316,6 +316,73 @@
+>   				};
+>   			};
+>   
+> +			ltdc_pins_f429_disco: ltdc-1 {
+
+Sorry I missed this issue during review. I changed ltdc_pins_f429_disco 
+by ltdc_pins_b when I applied your patch.
+
+
+Regards
+alex
+
+> +				pins {
+> +					pinmux = <STM32_PINMUX('C', 6,  AF14)>,
+> +						/* LCD_HSYNC */
+> +						 <STM32_PINMUX('A', 4,  AF14)>,
+> +						 /* LCD_VSYNC */
+> +						 <STM32_PINMUX('G', 7,  AF14)>,
+> +						 /* LCD_CLK */
+> +						 <STM32_PINMUX('C', 10, AF14)>,
+> +						 /* LCD_R2 */
+> +						 <STM32_PINMUX('B', 0,  AF9)>,
+> +						 /* LCD_R3 */
+> +						 <STM32_PINMUX('A', 11, AF14)>,
+> +						 /* LCD_R4 */
+> +						 <STM32_PINMUX('A', 12, AF14)>,
+> +						 /* LCD_R5 */
+> +						 <STM32_PINMUX('B', 1,  AF9)>,
+> +						 /* LCD_R6*/
+> +						 <STM32_PINMUX('G', 6,  AF14)>,
+> +						 /* LCD_R7 */
+> +						 <STM32_PINMUX('A', 6,  AF14)>,
+> +						 /* LCD_G2 */
+> +						 <STM32_PINMUX('G', 10, AF9)>,
+> +						 /* LCD_G3 */
+> +						 <STM32_PINMUX('B', 10, AF14)>,
+> +						 /* LCD_G4 */
+> +						 <STM32_PINMUX('D', 6,  AF14)>,
+> +						 /* LCD_B2 */
+> +						 <STM32_PINMUX('G', 11, AF14)>,
+> +						 /* LCD_B3*/
+> +						 <STM32_PINMUX('B', 11, AF14)>,
+> +						 /* LCD_G5 */
+> +						 <STM32_PINMUX('C', 7,  AF14)>,
+> +						 /* LCD_G6 */
+> +						 <STM32_PINMUX('D', 3,  AF14)>,
+> +						 /* LCD_G7 */
+> +						 <STM32_PINMUX('G', 12, AF9)>,
+> +						 /* LCD_B4 */
+> +						 <STM32_PINMUX('A', 3,  AF14)>,
+> +						 /* LCD_B5 */
+> +						 <STM32_PINMUX('B', 8,  AF14)>,
+> +						 /* LCD_B6 */
+> +						 <STM32_PINMUX('B', 9,  AF14)>,
+> +						 /* LCD_B7 */
+> +						 <STM32_PINMUX('F', 10, AF14)>;
+> +						 /* LCD_DE */
+> +					slew-rate = <2>;
+> +				};
+> +			};
 > +
-> +config SERIAL_GCOV
-> +	bool "Enable profile gcov for serial directory"
-> +	depends on GCOV_PROFILE_PREREQS
-> +	default y if GCOV_PROFILE_PREREQS
-
-I think the choice to enable each specific profiling symbol should not
-be automated based on the PREREQS symbol. This should be a purely manual
-setting with a depends relation on the PREREQS.
-
-The logic should be:
-- if the requirements are met
-- then provide a way for users to manually enable each specific gcov
-  profiling site
-
-Otherwise you would be duplicating the meaning of CONFIG_GCOV_PROFILE_ALL.
-
-> +	help
-> +	  The SERIAL_GCOV will add Gcov profiling flags when kernel compiles.
-> +	  Say 'Y' here if you want the gcov data for the serial directory,
-> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-> index d056ee6cca33..17272733db95 100644
-> --- a/drivers/tty/serial/Makefile
-> +++ b/drivers/tty/serial/Makefile
-> @@ -3,6 +3,7 @@
->  # Makefile for the kernel serial device drivers.
->  #
->  
-> +GCOV_PROFILE := $(CONFIG_SERIAL_GCOV)
->  obj-$(CONFIG_SERIAL_CORE) += serial_core.o
->  
->  obj-$(CONFIG_SERIAL_EARLYCON) += earlycon.o
-> diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-> index 3941a9c48f83..35b839879553 100644
-> --- a/kernel/gcov/Kconfig
-> +++ b/kernel/gcov/Kconfig
-> @@ -51,6 +51,21 @@ config GCOV_PROFILE_ALL
->  	larger and run slower. Also be sure to exclude files from profiling
->  	which are not linked to the kernel image to prevent linker errors.
->  
-> +config GCOV_PROFILE_PREREQS
-> +	bool "Profile Kernel for prereqs"
-> +	depends on !COMPILE_TEST
-> +	depends on GCOV_KERNEL
-> +	depends on !COMPILE_PROFILE_ALL
-> +	default y if GCOV_KERNEL && !COMPILE_TEST
-
-This mix of depends and "default if" is confusing. As I mentioned in my
-previous e-mail, the "default if" should be sufficient for an automatic
-symbol, so the "depends" statements can be removed.
-
-> +	help
-> +	  This options activates profiling for the specified kernel modules.
+> +			spi5_pins: spi5-0 {
+> +				pins1 {
+> +					pinmux = <STM32_PINMUX('F', 7, AF5)>,
+> +						/* SPI5_CLK */
+> +						 <STM32_PINMUX('F', 9, AF5)>;
+> +						/* SPI5_MOSI */
+> +					bias-disable;
+> +					drive-push-pull;
+> +					slew-rate = <0>;
+> +				};
+> +				pins2 {
+> +					pinmux = <STM32_PINMUX('F', 8, AF5)>;
+> +						/* SPI5_MISO */
+> +					bias-disable;
+> +				};
+> +			};
 > +
-> +	  When some modules need Gcov data, enable this config, then configure
-> +	  with gcov on the corresponding modules,The directories or files of
-> +	  these modules will be added profiling flags after kernel compile.
-> +
-> +	  If unsure, say N.
-
-What reason is there for a user to manually set this to N? In my opinion
-the only use case where this symbol makes sense is as an automatic
-config symbol that can be used by other symbols that enable specific
-GCOV profiling sites via a "depends" relation. The PREREQ symbol
-indicates that is is ok to provide the manual choice of enabling such
-profiling.
-
-> +
->  choice
->  	prompt "Specify GCOV format"
->  	depends on GCOV_KERNEL
+>   			dcmi_pins: dcmi-0 {
+>   				pins {
+>   					pinmux = <STM32_PINMUX('A', 4, AF13)>, /* DCMI_HSYNC */
 > 
-
-
--- 
-Peter Oberparleiter
-Linux on Z Development - IBM Germany
