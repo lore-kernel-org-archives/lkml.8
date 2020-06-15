@@ -2,204 +2,171 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1150E2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C722067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:57:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gH17I2he"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgFOG5B (ORCPT
+        id S1728497AbgFOG5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:57:01 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:20425 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbgFOG5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:57:01 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49lhvY0lbZzB09ZN;
-        Mon, 15 Jun 2020 08:56:41 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cQs_S25EY5ey; Mon, 15 Jun 2020 08:56:41 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49lhvX6sWZzB09ZM;
-        Mon, 15 Jun 2020 08:56:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2862E8B77C;
-        Mon, 15 Jun 2020 08:56:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Mz-jSYSEVN6f; Mon, 15 Jun 2020 08:56:47 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D9E6E8B75F;
-        Mon, 15 Jun 2020 08:56:46 +0200 (CEST)
-Subject: Re: arch/powerpc/mm/pgtable_32.c:38:34: error: array is too large
- (34359672832 elements)
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-References: <20200615062259.GH12456@shao2-debian>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <118352b5-bf96-37ea-214e-b8a825ea89ac@csgroup.eu>
-Date:   Mon, 15 Jun 2020 06:56:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 15 Jun 2020 02:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbgFOG5b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:57:31 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F424C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:57:31 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id r2so16696190ioo.4
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=prTw8COlP0YawtaeVf0HJDCuQeY7haR6XjvMZVeDwlQ=;
+        b=gH17I2hedonyS691+W+6fep+3TY2IXaj+WglcDlC4uQCnGNqbuuK/7lyqoLAnsWn3g
+         x2Ah5LgH+8DHm7Pne9IQxpIpOXRgBdtuZ70LctwowboPEGiRtKl7X0CXO9/0c52j0t3z
+         AlhBaH7/hfN1Rluumj9XQNvR6H4dLCTgI8wN3t6LOXKmu6//ZWxLRGWsIQKybkGqEits
+         ymTOoXUd+zMG7KP80pm6qMiKu11Nz2Fqb7mTQ4c1eRj04F0IdpI7b4Pj4FDVjs8gDKEB
+         X1PQ4tyOMcC4e/C7KpZnTdCzqyf+EJRozJmNbrhCqN2SMCCejsQfW1l0r0kS94GVokzH
+         bLmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=prTw8COlP0YawtaeVf0HJDCuQeY7haR6XjvMZVeDwlQ=;
+        b=flvWR0Ub1S8ZG3bJoWzeMWgWgt2DyFy8PoW1Y3dBqZyYmrey285frP3dfO54ms2e9a
+         I00C9BXuQacE/LegnYOBr5AxPYtcQUm6l18D1GiICCRiVXGLlwh2oTuu+llSr89Z3Z/i
+         SKBfBEMRwFlB0YWBZoH0d4ZWe1l5tM0T0aFUwICkMq+DWxo+d8NF4Mja79XEY11FrGbf
+         EdE1lOzSPNReUqvE4JP+ZqAlGiVtrus6WAPalgUlDj9XhKWAFyWsvjOoXA3I1i+bn+r0
+         WsyFKULvUdOa6PzwjRg2nfBdI0C7IdvuiTBq9gVHszz/eFbJPjBQ11k/3mYwdH/SR7DC
+         TzmQ==
+X-Gm-Message-State: AOAM533/uXE0l5SB4Kon3u9eX7jSE5tVitFIafrA8ps3fGaWCm8OZo5D
+        4BJHUR9p4aTlpKQW0lmBY2N4WjEFFooSvqbx51f4Z4/CQts=
+X-Google-Smtp-Source: ABdhPJx+23o2l20XfKG7SyHZUNrf9US3cZjYRnOb+N5AUOux9SiMesGnHU/4N6bPSWQvtmT67O+1T8aFvEYB+jPDyas=
+X-Received: by 2002:a02:9a03:: with SMTP id b3mr19918046jal.76.1592204250795;
+ Sun, 14 Jun 2020 23:57:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200615062259.GH12456@shao2-debian>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1591609125-3761-1-git-send-email-gene.chen.richtek@gmail.com>
+ <20200608192829.GG4106@dell> <CAE+NS36mxw-FpQhJ4qV=_+r2CXVi_PaGaZo2m3jXAGFuOO252Q@mail.gmail.com>
+ <20200609125305.GL4106@dell> <CAE+NS36b8fV2JnSEJpky+0ES3KTYmQzC0MRTfRUf8yRsJh_bpQ@mail.gmail.com>
+ <20200612111717.GA2311694@dell>
+In-Reply-To: <20200612111717.GA2311694@dell>
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+Date:   Mon, 15 Jun 2020 14:57:19 +0800
+Message-ID: <CAE+NS34gf+my16b8dGCBWy0rXjT-5ObcvQiMVWHqsGehb_yR4Q@mail.gmail.com>
+Subject: Re: [PATCH] mfd: mt6360: Fix register driver NULL pointer by add
+ driver name
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B46=E6=9C=8812=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=887:17=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Fri, 12 Jun 2020, Gene Chen wrote:
+>
+> > Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B46=E6=9C=889=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=888:53=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > On Tue, 09 Jun 2020, Gene Chen wrote:
+> > >
+> > > > Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B46=E6=9C=889=
+=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:28=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > > > >
+> > > > > On Mon, 08 Jun 2020, Gene Chen wrote:
+> > > > >
+> > > > > > From: Gene Chen <gene_chen@richtek.com>
+> > > > > >
+> > > > > > accidentally remove driver name when
+> > > > > > replace probe by probe_new in add mt6360 mfd driver patch v4
+> > > > > >
+> > > > > > [  121.243012] EAX: c2a8bc64 EBX: 00000000 ECX: 00000000 EDX: 0=
+0000000
+> > > > > > [  121.243012] ESI: c2a8bc79 EDI: 00000000 EBP: e54bdea8 ESP: e=
+54bdea0
+> > > > > > [  121.243012] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFL=
+AGS: 00010286
+> > > > > > [  121.243012] CR0: 80050033 CR2: 00000000 CR3: 02ec3000 CR4: 0=
+00006b0
+> > > > > > [  121.243012] Call Trace:
+> > > > > > [  121.243012]  kset_find_obj+0x3d/0xc0
+> > > > > > [  121.243012]  driver_find+0x16/0x40
+> > > > > > [  121.243012]  driver_register+0x49/0x100
+> > > > > > [  121.243012]  ? i2c_for_each_dev+0x39/0x50
+> > > > > > [  121.243012]  ? __process_new_adapter+0x20/0x20
+> > > > > > [  121.243012]  ? cht_wc_driver_init+0x11/0x11
+> > > > > > [  121.243012]  i2c_register_driver+0x30/0x80
+> > > > > > [  121.243012]  ? intel_lpss_pci_driver_init+0x16/0x16
+> > > > > > [  121.243012]  mt6360_pmu_driver_init+0xf/0x11
+> > > > > > [  121.243012]  do_one_initcall+0x33/0x1a0
+> > > > > > [  121.243012]  ? parse_args+0x1eb/0x3d0
+> > > > > > [  121.243012]  ? __might_sleep+0x31/0x90
+> > > > > > [  121.243012]  ? kernel_init_freeable+0x10a/0x17f
+> > > > > > [  121.243012]  kernel_init_freeable+0x12c/0x17f
+> > > > > > [  121.243012]  ? rest_init+0x110/0x110
+> > > > > > [  121.243012]  kernel_init+0xb/0x100
+> > > > > > [  121.243012]  ? schedule_tail_wrapper+0x9/0xc
+> > > > > > [  121.243012]  ret_from_fork+0x19/0x24
+> > > > > > [  121.243012] Modules linked in:
+> > > > > > [  121.243012] CR2: 0000000000000000
+> > > > > > [  121.243012] random: get_random_bytes called from init_oops_i=
+d+0x3a/0x40 with crng_init=3D0
+> > > > > > [  121.243012] ---[ end trace 38a803400f1a2bee ]---
+> > > > > > [  121.243012] EIP: strcmp+0x11/0x30
+> > > > >
+> > > > > How did this driver ever work for you?
+> > > >
+> > > > i ask my coworker help me verify.
+> > > > i will check the patch myself, sincerely apologies for this.
+> > >
+> > > What does this mean?
+> > >
+> > > Are you saying that for all 10 versions of this patch submission, it
+> > > has never been tested?  And despite being authored by you and
+> > > submitted by you, you have never actually boot tested the driver
+> > > yourself?  Relying instead on your co-worker to conduct the testing,
+> > > who failed to do so.  Is that really correct?
+> > >
+> >
+> > On carefully reading to the document how to upstream, I find that I
+> > had full duty for verify patch i sent.
+> > The fault is entirely mine and I deeply regret that it should have occu=
+rred.
+> > I will always verify patch by meself before sending it.
+> > I have already verfied sub-device adc/led/regulator done in Mediatek
+> > phone and Hikey960 development board
+>
+> I'm not looking for someone to blame.  Instead, I would like to
+> ascertain how this happened.  How was this driver ever
+> tested/verified?  If you're not going to run/use it, does it even need
+> to exist?
+>
 
+There is difference between upstream and commerical driver.
+We will sync upstream version after upstream done, in order to become
+common driver everyone can easy to use
 
-On 06/15/2020 06:22 AM, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   08bf1a27c4c354b853fd81a79e953525bbcc8506
-> commit: 925ac141d106b55acbe112a9272f970631a3c082 powerpc/mm: Allocate static page tables for fixmap
-
-Guilty commit is b8e8efaa8639 ("powerpc: reserve fixmap entries for 
-early debug")
-
-
-> date:   3 weeks ago
-> :::::: branch date: 49 minutes ago
-> :::::: commit date: 3 weeks ago
-> config: powerpc64-randconfig-r011-20200614 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project c669a1ed6386d57a75a602b53266466dae1e1d84)
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # install powerpc64 cross compiling tool for clang build
->          # apt-get install binutils-powerpc64-linux-gnu
->          git checkout 925ac141d106b55acbe112a9272f970631a3c082
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=powerpc64
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All error/warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> In file included from arch/powerpc/mm/pgtable_32.c:20:
-
-gcc fails long before that, at:
-
-CC      arch/powerpc/kernel/asm-offsets.s
-
-Christophe
-
-> In file included from include/linux/mm.h:95:
-> In file included from arch/powerpc/include/asm/pgtable.h:20:
-> In file included from arch/powerpc/include/asm/nohash/pgtable.h:8:
-> In file included from arch/powerpc/include/asm/nohash/32/pgtable.h:77:
-> arch/powerpc/include/asm/fixmap.h:57:2: warning: overflow in enumeration value
-> FIX_KMAP_BEGIN, /* reserved pte's for temporary kernel mappings */
-> ^
-> In file included from arch/powerpc/mm/pgtable_32.c:20:
-> In file included from include/linux/mm.h:95:
-> In file included from arch/powerpc/include/asm/pgtable.h:20:
-> In file included from arch/powerpc/include/asm/nohash/pgtable.h:8:
-> In file included from arch/powerpc/include/asm/nohash/32/pgtable.h:77:
-> In file included from arch/powerpc/include/asm/fixmap.h:96:
-> include/asm-generic/fixmap.h:32:19: warning: result of comparison of constant '__end_of_fixed_addresses' (4294967376) with expression of type 'const unsigned int' is always false [-Wtautological-constant-out-of-range-compare]
-> BUILD_BUG_ON(idx >= __end_of_fixed_addresses);
-> ~~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/build_bug.h:50:19: note: expanded from macro 'BUILD_BUG_ON'
-> BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-> ^~~~~~~~~
-> include/linux/build_bug.h:39:58: note: expanded from macro 'BUILD_BUG_ON_MSG'
-> #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> ^~~~
-> include/linux/compiler.h:350:22: note: expanded from macro 'compiletime_assert'
-> _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> ^~~~~~~~~
-> include/linux/compiler.h:338:23: note: expanded from macro '_compiletime_assert'
-> __compiletime_assert(condition, msg, prefix, suffix)
-> ^~~~~~~~~
-> include/linux/compiler.h:330:9: note: expanded from macro '__compiletime_assert'
-> if (!(condition))                                                                ^~~~~~~~~
-> In file included from arch/powerpc/mm/pgtable_32.c:20:
-> In file included from include/linux/mm.h:95:
-> In file included from arch/powerpc/include/asm/pgtable.h:20:
-> In file included from arch/powerpc/include/asm/nohash/pgtable.h:8:
-> In file included from arch/powerpc/include/asm/nohash/32/pgtable.h:77:
-> In file included from arch/powerpc/include/asm/fixmap.h:96:
-> include/asm-generic/fixmap.h:38:39: warning: result of comparison of constant 18445618177942224896 with expression of type 'const unsigned long' is always true [-Wtautological-constant-out-of-range-compare]
-> BUG_ON(vaddr >= FIXADDR_TOP || vaddr < FIXADDR_START);
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
-> arch/powerpc/include/asm/bug.h:73:27: note: expanded from macro 'BUG_ON'
-> if (__builtin_constant_p(x)) {                                                              ^
-> In file included from arch/powerpc/mm/pgtable_32.c:20:
-> In file included from include/linux/mm.h:95:
-> In file included from arch/powerpc/include/asm/pgtable.h:20:
-> In file included from arch/powerpc/include/asm/nohash/pgtable.h:8:
-> In file included from arch/powerpc/include/asm/nohash/32/pgtable.h:77:
-> In file included from arch/powerpc/include/asm/fixmap.h:96:
-> include/asm-generic/fixmap.h:38:39: warning: result of comparison of constant 18445618177942224896 with expression of type 'const unsigned long' is always true [-Wtautological-constant-out-of-range-compare]
-> BUG_ON(vaddr >= FIXADDR_TOP || vaddr < FIXADDR_START);
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
-> arch/powerpc/include/asm/bug.h:74:7: note: expanded from macro 'BUG_ON'
-> if (x)                                                                 ^
->>> arch/powerpc/mm/pgtable_32.c:38:34: error: array is too large (34359672832 elements)
-> static u8 early_fixmap_pagetable[FIXMAP_PTE_SIZE] __page_aligned_data;
-> ^~~~~~~~~~~~~~~
-> arch/powerpc/include/asm/fixmap.h:91:25: note: expanded from macro 'FIXMAP_PTE_SIZE'
-> #define FIXMAP_PTE_SIZE (FIXMAP_ALIGNED_SIZE / PGDIR_SIZE * PTE_TABLE_SIZE)
-> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>> arch/powerpc/mm/pgtable_32.c:42:23: warning: implicit conversion from 'unsigned long long' to 'unsigned long' changes value from 18445618175950192640 to 2147483648 [-Wconstant-conversion]
-> unsigned long addr = ALIGN_DOWN(FIXADDR_START, PGDIR_SIZE);
-> ~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/kernel.h:34:26: note: expanded from macro 'ALIGN_DOWN'
-> #define ALIGN_DOWN(x, a)        __ALIGN_KERNEL((x) - ((a) - 1), (a))
-> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/uapi/linux/kernel.h:10:31: note: expanded from macro '__ALIGN_KERNEL'
-> #define __ALIGN_KERNEL(x, a)            __ALIGN_KERNEL_MASK(x, (typeof(x))(a) - 1)
-> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/uapi/linux/kernel.h:11:54: note: expanded from macro '__ALIGN_KERNEL_MASK'
-> #define __ALIGN_KERNEL_MASK(x, mask)    (((x) + (mask)) & ~(mask))
-> ~~~~~~~~~~~~~~~^~~~~~~~~
-> 5 warnings and 1 error generated.
-> 
-> # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=925ac141d106b55acbe112a9272f970631a3c082
-> git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> git remote update linus
-> git checkout 925ac141d106b55acbe112a9272f970631a3c082
-> vim +38 arch/powerpc/mm/pgtable_32.c
-> 
-> 14cf11af6cf608 arch/powerpc/mm/pgtable.c    Paul Mackerras   2005-09-26  37
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19 @38  static u8 early_fixmap_pagetable[FIXMAP_PTE_SIZE] __page_aligned_data;
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  39
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  40  notrace void __init early_ioremap_init(void)
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  41  {
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19 @42  	unsigned long addr = ALIGN_DOWN(FIXADDR_START, PGDIR_SIZE);
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  43  	pte_t *ptep = (pte_t *)early_fixmap_pagetable;
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  44  	pmd_t *pmdp = pmd_ptr_k(addr);
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  45
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  46  	for (; (s32)(FIXADDR_TOP - addr) > 0;
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  47  	     addr += PGDIR_SIZE, ptep += PTRS_PER_PTE, pmdp++)
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  48  		pmd_populate_kernel(&init_mm, pmdp, ptep);
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  49
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  50  	early_ioremap_setup();
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  51  }
-> 925ac141d106b5 arch/powerpc/mm/pgtable_32.c Christophe Leroy 2020-05-19  52
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> 
-> 
-> 
-> _______________________________________________
-> kbuild mailing list -- kbuild@lists.01.org
-> To unsubscribe send an email to kbuild-leave@lists.01.org
-> 
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Senior Technical Lead - Developer Services
+> Linaro.org =E2=94=82 Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
