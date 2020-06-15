@@ -2,285 +2,106 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C988CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F692080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:42:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UjRH/WD0"
+	by mail.kernel.org (Postfix) with ESMTP id 9E934208C7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgFOXmu (ORCPT
+        id S1726871AbgFOXno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:42:50 -0400
-Received: from mout.gmx.net ([212.227.15.19]:46999 "EHLO mout.gmx.net"
+        Mon, 15 Jun 2020 19:43:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:56734 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgFOXmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:42:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592264559;
-        bh=WT+TxHRnNU7lFrgyELSoJ33WMA/qduMem0JA8iUXVIA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=UjRH/WD0vg7CHMUrsHSo6fXTtzwMZ68LPCjkvSQKeKYk9ijLM1hD1gi6jsBz1gFSA
-         SRWIJxMNiQ6wRqi2zp+OhcBiYHJ+5J2pvpyWFnzU1wG/vv+dVPG7RRjbREXxalwrdd
-         1EH8hk8UcxoBsVYg5qNBvsDFTPIXW+bJ//7PhYrY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([109.41.66.174]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MbAcs-1j9jBW1oqm-00baxX; Tue, 16 Jun 2020 01:42:38 +0200
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] efi/libstub: descriptions for stub helper functions
-Date:   Tue, 16 Jun 2020 01:42:31 +0200
-Message-Id: <20200615234231.21059-1-xypron.glpk@gmx.de>
+        id S1726601AbgFOXnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:43:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E24671FB;
+        Mon, 15 Jun 2020 16:43:42 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E28253F73C;
+        Mon, 15 Jun 2020 16:43:41 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
+Subject: [PATCH v2 0/4] sched: Instrument sched domain flags
+Date:   Tue, 16 Jun 2020 00:41:50 +0100
+Message-Id: <20200615234154.23982-1-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pWme2yQtst5JtW7roXB8YmTxBbB4cwL3ZOTsMbvvNKEep+/Kxtq
- f5kMMbtOF7wbqIvvbImLvwjPZHmNk54YA8P2N3zOj9Aitps5vQQ6iYAX2Cbcft/eiIOr3XC
- 7OM5q49Eja1Vsf2CVF+sf8bEqOM07qFkcdAlnNFEYOBkhHzhpdOyB91V9SppUpM6psVFIhm
- icRT37CNMHob4KTKlloYA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+J8yanFVCDw=:aWxI6lNcTGx5lNp8Q+cMns
- n9EmdVS8WaROGL6L6wVUTPIJlOqqzGzLlY2M83MRv8FQNkAcReI3QYR1kCtx6DRqZCkTm8rqA
- ah73cGXb+7eu/hkR7yvGvI7MtbUwKCociSP9jPKqud0qn9gzMSokRbcGjFfPvUoMt1QK0IQrK
- i8OTBOBeMAQC4lAmcT68sLDaUHq1hq8K/QypapFelmJHKtYRHMDw3+M326Fxi+p5mID8ie2M5
- RF4TWcNFW/oOQR37OKGw56NmzCmE53uQSznl7dDzzmkxH8UBTaWM9VOefCUhBSe4B7YGIAnYf
- ffMBG6Qlj2VgQXYteA7JdKaRWPeHMTK4nFzzPp1BI4esZQ2EBIuPL+h/8qOPylhmMReiz/7iv
- n743y7u+MA+vDd/bhngqr56ARAvUzy99SoeX85YgojWeeu6Mj8iyxMbgE7cHkoaZ8ccQBmEXf
- JBPt3XOuUGQYMhSHC/TXfXpiNpfDPKzma+Au5oslx3Cg1TDlb1x22JGJBUKTAxcYWIdZeNSH6
- X/HA0EItJ4E8cwGcoaddendVS/O1dYWGE8CR6NSW4TUsqtOdtKKflTBxaKr/dLpozH4AwefV9
- Bmay/Yo0C6C0dSovydMaYmSSLIHTQTAevxyrZyzxSA6bf4mObExwY4lAsi8voGlxz+iszfmud
- Dgys+q2bIuY7u7dtf75p9XrlXx+7hSFgeGIUSurhGAqt+P4U/5WtmrGriBcxPidFX2y3wwzKQ
- ZtTmmpsl4fQ9+IrFeyuKcfNRArRXqO8u+hnR9/owA/gC8tNOFgBn4i3m+llCWw3XZVX+5ZKi5
- mGSL+1R0E77p9PPazafXrwkHOaEfj4O76/Pf9xknPdppnp5VPh9M2NUxjjqlYfoped81P+awm
- za1v6jkX0S/34dvv2SYchCwdeaPd0Vz7nrRYDLOws1wBLXK2oc3CmkCFvvkuTZqAbzIb3is/F
- HaTWVgOl/itqRVvYGLcv0zC0EzQ8qHlA9mgCHXMynVLy1W9GMxopifmXaphHBsQEYMHHAgnCm
- t6h9WrWq3tyM8IbXnc2cVTroljiEGWq3fbup60Cfmed5uSjHNAdTZZUr2ECOPNsgEOCtDn51D
- +YQgnMVr9OF89DpGB0/gSwErsvrO/1Tsj9lvuNWWlOD9zIgWNcnj5eMWnjdraSZRYHVEny0ll
- 3wWEmsUCwcDRMGF3X1Md/UsX0zQzGTJQxk94RZ9QylpJqg6HRIvXYu1a1+i9efB7oRJZFKHyo
- Qu82RIYWSAZryDuks
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide missing descriptions for EFI stub helper functions.
-Adjust formatting of existing descriptions to kernel style.
+Hi,
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- .../firmware/efi/libstub/efi-stub-helper.c    | 78 ++++++++++++++++---
- drivers/firmware/efi/libstub/efistub.h        | 10 ++-
- 2 files changed, 75 insertions(+), 13 deletions(-)
+I've repeatedly stared at an SD flag and asked myself "how should that be
+set up in the domain hierarchy anyway?". I figured that if we formalize our
+flags zoology a bit, we could also do some runtime assertions on them -
+this is what this series is all about.
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firm=
-ware/efi/libstub/efi-stub-helper.c
-index 89f075275300..d40fd68c6bb2 100644
-=2D-- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -32,6 +32,10 @@ bool __pure __efi_soft_reserve_enabled(void)
- 	return !efi_nosoftreserve;
- }
+Patches
+=======
 
-+/**
-+ * efi_char16_puts() - Write a UCS-2 encoded string to the console
-+ * @str:	UCS-2 encoded string
-+ */
- void efi_char16_puts(efi_char16_t *str)
- {
- 	efi_call_proto(efi_table_attr(efi_system_table, con_out),
-@@ -83,6 +87,10 @@ u32 utf8_to_utf32(const u8 **s8)
- 	return c32;
- }
+The idea is to associate the flags with a metatype that describes how they
+should be set in a sched domain hierarchy - details are in the comments and
+commit logs. For now it's just a simple parent/children relationship
+description ("if this SD has it, all its {parents, children} have it").
 
-+/**
-+ * efi_puts() - Write a UTF-8 encoded string to the console
-+ * @str:	UTF-8 encoded string
-+ */
- void efi_puts(const char *str)
- {
- 	efi_char16_t buf[128];
-@@ -113,6 +121,16 @@ void efi_puts(const char *str)
- 	}
- }
+The good thing is that this all goes away when CONFIG_SCHED_DEBUG isn't
+set. The bad thing is that replaces SD_* flags definitions with some
+unsavoury macros. This is mainly because I wanted to avoid having to
+duplicate work between declaring the flags and declaring their metatypes.
 
-+/**
-+ * efi_printk() - Print a kernel message
-+ * @fmt:	format string
-+ *
-+ * The first letter of the format string is used to determine the logging=
- level
-+ * of the message. If the level is less then the current EFI logging leve=
-l, the
-+ * message is suppressed. The message will be truncated to 255 bytes.
-+ *
-+ * Return:	number of printed characters
-+ */
- int efi_printk(const char *fmt, ...)
- {
- 	char printf_buf[256];
-@@ -154,13 +172,18 @@ int efi_printk(const char *fmt, ...)
- 	return printed;
- }
+There's also the removal of yet another SD flag (SD_SHARE_POWERDOMAIN).
 
--/*
-- * Parse the ASCII string 'cmdline' for EFI options, denoted by the efi=
-=3D
-+/**
-+ * efi_parse_options() - Parse EFI command line options
-+ * @cmdline:	kernel command line
-+ *
-+ * Parse the ASCII string @cmdline for EFI options, denoted by the efi=3D
-  * option, e.g. efi=3Dnochunk.
-  *
-  * It should be noted that efi=3D is parsed in two very different
-  * environments, first in the early boot environment of the EFI boot
-  * stub, and subsequently during the kernel boot.
-+ *
-+ * Return:	status code
-  */
- efi_status_t efi_parse_options(char const *cmdline)
- {
-@@ -286,13 +309,21 @@ char *efi_convert_cmdline(efi_loaded_image_t *image,=
- int *cmd_line_len)
- 	return (char *)cmdline_addr;
- }
+Some deltas
+===========
 
--/*
-+/**
-+ * efi_exit_boot_services() - Exit boot services
-+ * @handle:	handle of the exiting image
-+ * @map:	pointer to receive the memory map
-+ * @priv:	argument to be passed to @priv_func
-+ * @priv_func:	function to process the memory map before exiting boot ser=
-vices
-+ *
-  * Handle calling ExitBootServices according to the requirements set out =
-by the
-  * spec.  Obtains the current memory map, and returns that info after cal=
-ling
-  * ExitBootServices.  The client must specify a function to perform any
-  * processing of the memory map data prior to ExitBootServices.  A client
-  * specific structure may be passed to the function via priv.  The client
-  * function may be called multiple times.
-+ *
-+ * Return:	status code
-  */
- efi_status_t efi_exit_boot_services(void *handle,
- 				    struct efi_boot_memmap *map,
-@@ -361,6 +392,11 @@ efi_status_t efi_exit_boot_services(void *handle,
- 	return status;
- }
+This time around it's a slight size increase (w/o SCHED_DEBUG): 
 
-+/**
-+ * get_efi_config_table() - retrieve UEFI configuration table
-+ * @guid:	GUID of the configuration table to be retrieved
-+ * Return:	pointer to the configuration table or NULL
-+ */
- void *get_efi_config_table(efi_guid_t guid)
- {
- 	unsigned long tables =3D efi_table_attr(efi_system_table, tables);
-@@ -408,17 +444,18 @@ static const struct {
- };
+  $ compare.sh before after vmlinux.o
+  cpu_attach_domain                                         996       1000   +4
+  build_sched_domains                                      4716       4728   +12
 
- /**
-- * efi_load_initrd_dev_path - load the initrd from the Linux initrd devic=
-e path
-+ * efi_load_initrd_dev_path() - load the initrd from the Linux initrd dev=
-ice path
-  * @load_addr:	pointer to store the address where the initrd was loaded
-  * @load_size:	pointer to store the size of the loaded initrd
-  * @max:	upper limit for the initrd memory allocation
-- * @return:	%EFI_SUCCESS if the initrd was loaded successfully, in which
-- *		case @load_addr and @load_size are assigned accordingly
-- *		%EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd
-- *		device path
-- *		%EFI_INVALID_PARAMETER if load_addr =3D=3D NULL or load_size =3D=3D N=
-ULL
-- *		%EFI_OUT_OF_RESOURCES if memory allocation failed
-- *		%EFI_LOAD_ERROR in all other cases
-+ *
-+ * Return:
-+ * * %EFI_SUCCESS if the initrd was loaded successfully, in which
-+ *   case @load_addr and @load_size are assigned accordingly
-+ * * %EFI_NOT_FOUND if no LoadFile2 protocol exists on the initrd device =
-path
-+ * * %EFI_INVALID_PARAMETER if load_addr =3D=3D NULL or load_size =3D=3D =
-NULL
-+ * * %EFI_OUT_OF_RESOURCES if memory allocation failed
-+ * * %EFI_LOAD_ERROR in all other cases
-  */
- static
- efi_status_t efi_load_initrd_dev_path(unsigned long *load_addr,
-@@ -481,6 +518,16 @@ efi_status_t efi_load_initrd_cmdline(efi_loaded_image=
-_t *image,
- 				    load_addr, load_size);
- }
+Comparing the objdumps side by side, nothing obvious stands out to me.
 
-+/**
-+ * efi_load_initrd() - Load initial RAM disk
-+ * @image:	EFI loaded image protocol
-+ * @load_addr:	pointer to loaded initrd
-+ * @load_size:	size of loaded initrd
-+ * @soft_limit:	preferred size of allocated memory for loading the initrd
-+ * @hard_limit:	minimum size of allocated memory
-+ *
-+ * Return:	status code
-+ */
- efi_status_t efi_load_initrd(efi_loaded_image_t *image,
- 			     unsigned long *load_addr,
- 			     unsigned long *load_size,
-@@ -505,6 +552,15 @@ efi_status_t efi_load_initrd(efi_loaded_image_t *imag=
-e,
- 	return status;
- }
+Revisions
+=========
 
-+/**
-+ * efi_wait_for_key() - Wait for key stroke
-+ * @usec:	number of microseconds to wait for key stroke
-+ * @key:	key entered
-+ *
-+ * Wait for up to @usec microseconds for a key stroke.
-+ *
-+ * Return:	status code, EFI_SUCCESS if key received
-+ */
- efi_status_t efi_wait_for_key(unsigned long usec, efi_input_key_t *key)
- {
- 	efi_event_t events[2], timer;
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi=
-/libstub/efistub.h
-index bcd8c0a785f0..ac756f1fdb1a 100644
-=2D-- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -157,8 +157,14 @@ typedef void (__efiapi *efi_event_notify_t)(efi_event=
-_t, void *);
- #define EFI_EVT_NOTIFY_WAIT	0x00000100U
- #define EFI_EVT_NOTIFY_SIGNAL	0x00000200U
+RFC -> v2
+---------
 
--/*
-- * boottime->wait_for_event takes an array of events as input.
-+/**
-+ * efi_set_event_at() - add event to events array
-+ *
-+ * @events:	array of UEFI events
-+ * @ids:	index where to put the event in the array
-+ * @event:	event to add to the aray
-+ *
-+ * boottime->wait_for_event() takes an array of events as input.
-  * Provide a helper to set it up correctly for mixed mode.
-  */
- static inline
-=2D-
+RFC at: https://lkml.kernel.org/r/20200311183320.19186-1-valentin.schneider@arm.com
+
+o Rebased on top of tip/sched/core
+o Aligned wording of comments between flags
+o Rectified some flag descriptions (Morten)
+o Added removal of SD_SHARE_POWERDOMAIN (Morten)
+
+Cheers,
+Valentin
+
+Valentin Schneider (4):
+  sched/topology: Split out SD_* flags declaration to its own file
+  sched/topology: Define and assign sched_domain flag metadata
+  sched/topology: Verify SD_* flags setup when sched_debug is on
+  arm, sched/topology: Remove SD_SHARE_POWERDOMAIN
+
+ arch/arm/kernel/topology.c     |   2 +-
+ include/linux/sched/sd_flags.h | 133 +++++++++++++++++++++++++++++++++
+ include/linux/sched/topology.h |  29 +++----
+ kernel/sched/topology.c        |  27 +++++--
+ 4 files changed, 169 insertions(+), 22 deletions(-)
+ create mode 100644 include/linux/sched/sd_flags.h
+
+--
 2.27.0
 
