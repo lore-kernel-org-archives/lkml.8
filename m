@@ -2,194 +2,78 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57355C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314C320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FMvzbeB6"
+	by mail.kernel.org (Postfix) with ESMTP id 7201220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592237857;
+	bh=lL2YJfiOmDqqdjpqMZP8itENm3DNLdpBH9GrN9nbrLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PAdiXWR6IZ3eEmGkTncBXzJqSbSJGv8w4PTbUI9ToTqZLKj3a0Pa5XikX1S9Gpj5g
+	 a+59GKa1okUMIdxYdZLS8QhbW+rDBYmCZWAYWAbc/087hcBRBEeauJYPwBrokRGes7
+	 tZhySd+BXrUdjIYsqFZQCU7+lBrS+XvzUHWOCkbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgFOQQo (ORCPT
+        id S1730969AbgFOQRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:16:44 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:47560 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730969AbgFOQQj (ORCPT
+        Mon, 15 Jun 2020 12:17:36 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35912 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgFOQRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:16:39 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FGDwP4008012;
-        Mon, 15 Jun 2020 18:15:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=kcFl5IZcfC0YQFwTAT8Jn+gPeu/Bp4cT/yA7bI3bAQ0=;
- b=FMvzbeB64dOv4yvJhVvQPBuH4gZ0bMABJkmB0Up23PRaspEIFYxDD3XJbfoFG5OOGGsr
- Z1f5OVZQRxcYLZuKMt5AC1qwV7mLaoEvJdB3H0XifYyr+dSNyQqH1w3tlJN0XWllAJ/f
- MBdW/Kk9RxEdj2fC7UJJG35mWefxZ4EtENFmbwUuP18HI8l1hWCDnueNY/ah+POVrEzb
- QzpYLq0zbxxrbKE0z7Im3bxDiZOJvU4aD22Wr3CEWjGBGTKHMdwYB72FrrmX9tGmRCkb
- fUZZ7Exs1Yh63tttDHhWNcps2+7cfFkG0pDdrq8OUk0mCFpc8bcBGGkgr3AxOG1k3XIx eA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mnph2bea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 18:15:53 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 19D2510002A;
-        Mon, 15 Jun 2020 18:15:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0733B2C5AD8;
-        Mon, 15 Jun 2020 18:15:53 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 18:15:52
- +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 5/6] ARM: dts: stm32: add STUSB1600 Type-C using I2C4 on stm32mp15xx-dkx
-Date:   Mon, 15 Jun 2020 18:15:11 +0200
-Message-ID: <20200615161512.19150-6-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200615161512.19150-1-amelie.delaunay@st.com>
-References: <20200615161512.19150-1-amelie.delaunay@st.com>
+        Mon, 15 Jun 2020 12:17:36 -0400
+Received: by mail-io1-f67.google.com with SMTP id r77so18530103ior.3;
+        Mon, 15 Jun 2020 09:17:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6gGkie1VJgyejolWVwkstnKk4jWEjffhAsOsdBf85vU=;
+        b=pzhfpJHa0ofgSO67tNRjW60XahuIAkdogxM8FoFMlsHa3G3d/n+l4dqhnSxF5hILMy
+         YDpAGpCl6zgEnFdgGfPjr9Y3O0m6FZLhVBOsEyylZWfp9Xa7Q1Lzh07D0Taq94Hdhn/l
+         T/++bSCEYkDLNUWlTIKTFUhdgDuhpIPl/hJtIPiwRmQsUPNIh9/PuHEL69wbFOuKNOiY
+         bZpuZhTPz0CmPv8HuSK6JzTXKU09LzsMKyH/7SyIiZVy5AjyhQO9tUrgCNCyp5Xl5ih3
+         QIRpO9GMA5wI5IYOIHohP3dcxwuYIsFFdn+retCJ4F7Z1xFGKSi9k+im8WzbC6ySLH3m
+         t5ZQ==
+X-Gm-Message-State: AOAM53152smY+wV/sNKCwCSMQ195+VEVhOqHxHxZlZXvHmnRZ/cw1IS4
+        IpMvCwGEvLDogxHsKw6jaaVf2ms=
+X-Google-Smtp-Source: ABdhPJw/KDrnSwnnbddf4RcRgxXREh25qGZ48O6ynKO5qh7LxGxzK4wVJUt4len6bxDotbgeYXKrsA==
+X-Received: by 2002:a5e:dd45:: with SMTP id u5mr28250638iop.118.1592237855286;
+        Mon, 15 Jun 2020 09:17:35 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id n12sm8201702iog.25.2020.06.15.09.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:17:34 -0700 (PDT)
+Received: (nullmailer pid 1880059 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:17:33 -0000
+Date:   Mon, 15 Jun 2020 10:17:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RESEND PATCH] dt-bindings: property-units: Add picoseconds type
+Message-ID: <20200615161733.GA1879978@bogus>
+References: <20200602164219.3159-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_06:2020-06-15,2020-06-15 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602164219.3159-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for STUSB1600 USB Type-C port controller, used on
-I2C4 on stm32mp15xx-dkx.
-The default configuration on this board, on Type-C connector, is:
-- Dual Power Role (DRP), so set power-role to "dual";
-- Vbus limited to 500mA, so set power-opmode to "default" (it means 500mA
-  in USB 2.0).
-power-opmode is used to reconfigure the STUSB1600 advertising of current
-capability when its NVM is not in line with the board layout.
-On stm32mp15xx-dkx, Vbus power source of STUSB1600 is 5V_VIN (so add the
-vin fixed 5V regulator too). So power operation mode depends on the power
-supply used. To avoid any power issues, it is better to limit Vbus to 500mA
-on this board.
-ALERT# is the interrupt pin of STUSB1600. It needs an external pull-up, and
-signal is active low.
+On Tue, 02 Jun 2020 11:42:19 -0500, Dan Murphy wrote:
+> Add the '-ps' picosecond unit suffix for property names.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  Documentation/devicetree/bindings/property-units.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-USB OTG controller ID and Vbus signals are not connected on stm32mp15xx-dkx
-boards, so disconnection are not detected.
-If you unplug the USB cable from the Type-C port, you have to manually
-disconnect the USB gadget:
-echo disconnect > /sys/devices/platform/soc/49000000.usb-otg/udc/49000000.usb-otg/soft_connect
-Then you can plug the USB cable again in the Type-C port, and manually
-reconnect the USB gadget:
-echo connect > /sys/devices/platform/soc/49000000.usb-otg/udc/49000000.usb-otg/soft_connect
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi |  7 +++++
- arch/arm/boot/dts/stm32mp15xx-dkx.dtsi   | 38 ++++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 7eb858732d6d..55deaa52c3ee 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1574,6 +1574,13 @@
- 		};
- 	};
- 
-+	stusb1600_pins_a: stusb1600-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('I', 11, ANALOG)>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	usart2_pins_a: usart2-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
-diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-index 70db923a45f7..8d55f3fd06b3 100644
---- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-@@ -80,6 +80,14 @@
- 		dais = <&sai2a_port &sai2b_port &i2s2_port>;
- 		status = "okay";
- 	};
-+
-+	vin: vin {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vin";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
- };
- 
- &adc {
-@@ -230,6 +238,30 @@
- 	/delete-property/dmas;
- 	/delete-property/dma-names;
- 
-+	stusb1600@28 {
-+		compatible = "st,stusb1600";
-+		reg = <0x28>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-parent = <&gpioi>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&stusb1600_pins_a>;
-+		status = "okay";
-+		vdd-supply = <&vin>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			power-role = "dual";
-+			power-opmode = "default";
-+
-+			port {
-+				con_usbotg_hs_ep: endpoint {
-+					remote-endpoint = <&usbotg_hs_ep>;
-+				};
-+			};
-+		};
-+	};
-+
- 	pmic: stpmic@33 {
- 		compatible = "st,stpmic1";
- 		reg = <0x33>;
-@@ -599,6 +631,12 @@
- 	phys = <&usbphyc_port1 0>;
- 	phy-names = "usb2-phy";
- 	status = "okay";
-+
-+	port {
-+		usbotg_hs_ep: endpoint {
-+			remote-endpoint = <&con_usbotg_hs_ep>;
-+		};
-+	};
- };
- 
- &usbphyc {
--- 
-2.17.1
-
+Applied, thanks!
