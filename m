@@ -2,45 +2,50 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
+X-Spam-Status: No, score=-11.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E12C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F292074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C3F207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgFOWcA (ORCPT
+        id S1726663AbgFOWcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56246 "EHLO
+        Mon, 15 Jun 2020 18:32:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgFOWb4 (ORCPT
+        with ESMTP id S1726640AbgFOWcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:31:56 -0400
+        Mon, 15 Jun 2020 18:32:01 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CECCC061A0E;
-        Mon, 15 Jun 2020 15:31:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DA5C061A0E;
+        Mon, 15 Jun 2020 15:32:00 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jkxdq-0006y0-Mh; Tue, 16 Jun 2020 00:31:48 +0200
+        id 1jkxdq-0006xl-EZ; Tue, 16 Jun 2020 00:31:48 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A82221C06FE;
-        Tue, 16 Jun 2020 00:31:45 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 22:31:45 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DE4561C06DA;
+        Tue, 16 Jun 2020 00:31:44 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 22:31:44 -0000
+From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] kcsan: Remove __no_kcsan_or_inline
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: [tip: x86/entry] kasan: Bump required compiler version
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marco Elver <elver@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200602175859.GC2604@hirez.programming.kicks-ass.net>
+References: <20200602175859.GC2604@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Message-ID: <159226030540.16989.18200401419200684098.tip-bot2@tip-bot2>
+Message-ID: <159226030455.16989.7282639700613712324.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,55 +61,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     e79302ae8c8cceb51cf642d5ace9da02668cb7b4
-Gitweb:        https://git.kernel.org/tip/e79302ae8c8cceb51cf642d5ace9da02668cb7b4
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 02 Jun 2020 17:04:03 +02:00
+Commit-ID:     7b861a53e46b6b42ab8560b105af308cb72d7285
+Gitweb:        https://git.kernel.org/tip/7b861a53e46b6b42ab8560b105af308cb72d7285
+Author:        Marco Elver <elver@google.com>
+AuthorDate:    Thu, 04 Jun 2020 07:58:10 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:08 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:09 +02:00
 
-kcsan: Remove __no_kcsan_or_inline
+kasan: Bump required compiler version
 
-There are no more user of this function attribute, also, with us now
-actively supporting '__no_kcsan inline' it doesn't make sense to have
-in any case.
+Adds config variable CC_HAS_WORKING_NOSANITIZE_ADDRESS, which will be
+true if we have a compiler that does not fail builds due to
+no_sanitize_address functions. This does not yet mean they work as
+intended, but for automated build-tests, this is the minimum
+requirement.
 
+For example, we require that __always_inline functions used from
+no_sanitize_address functions do not generate instrumentation. On GCC <=
+7 this fails to build entirely, therefore we make the minimum version
+GCC 8.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Andrey Konovalov <andreyknvl@google.com>
+Link: https://lkml.kernel.org/r/20200602175859.GC2604@hirez.programming.kicks-ass.net
 ---
- Documentation/dev-tools/kcsan.rst | 6 ------
- include/linux/compiler_types.h    | 5 +----
- 2 files changed, 1 insertion(+), 10 deletions(-)
+ lib/Kconfig.kasan | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
-index ce4bbd9..b38379f 100644
---- a/Documentation/dev-tools/kcsan.rst
-+++ b/Documentation/dev-tools/kcsan.rst
-@@ -114,12 +114,6 @@ the below options are available:
-   To dynamically limit for which functions to generate reports, see the
-   `DebugFS interface`_ blacklist/whitelist feature.
+diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+index 81f5464..af0dd09 100644
+--- a/lib/Kconfig.kasan
++++ b/lib/Kconfig.kasan
+@@ -15,11 +15,15 @@ config CC_HAS_KASAN_GENERIC
+ config CC_HAS_KASAN_SW_TAGS
+ 	def_bool $(cc-option, -fsanitize=kernel-hwaddress)
  
--  For ``__always_inline`` functions, replace ``__always_inline`` with
--  ``__no_kcsan_or_inline`` (which implies ``__always_inline``)::
--
--    static __no_kcsan_or_inline void foo(void) {
--        ...
--
- * To disable data race detection for a particular compilation unit, add to the
-   ``Makefile``::
- 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 21aed09..9382498 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -193,10 +193,7 @@ struct ftrace_likely_data {
- 
- #define __no_kcsan __no_sanitize_thread
- #ifdef __SANITIZE_THREAD__
--# define __no_kcsan_or_inline __no_kcsan notrace __maybe_unused
--# define __no_sanitize_or_inline __no_kcsan_or_inline
--#else
--# define __no_kcsan_or_inline __always_inline
-+# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
- #endif
- 
- #ifndef __no_sanitize_or_inline
++config CC_HAS_WORKING_NOSANITIZE_ADDRESS
++	def_bool !CC_IS_GCC || GCC_VERSION >= 80000
++
+ config KASAN
+ 	bool "KASAN: runtime memory debugger"
+ 	depends on (HAVE_ARCH_KASAN && CC_HAS_KASAN_GENERIC) || \
+ 		   (HAVE_ARCH_KASAN_SW_TAGS && CC_HAS_KASAN_SW_TAGS)
+ 	depends on (SLUB && SYSFS) || (SLAB && !DEBUG_SLAB)
++	depends on CC_HAS_WORKING_NOSANITIZE_ADDRESS
+ 	help
+ 	  Enables KASAN (KernelAddressSANitizer) - runtime memory debugger,
+ 	  designed to find out-of-bounds accesses and use-after-free bugs.
