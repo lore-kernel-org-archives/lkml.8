@@ -2,87 +2,99 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10192C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F34C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED22320679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75975207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbgFOQC7 (ORCPT
+        id S1730661AbgFOQD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:02:59 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:55470 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgFOQC6 (ORCPT
+        Mon, 15 Jun 2020 12:03:28 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39775 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730426AbgFOQD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:02:58 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jkrZX-0000Jz-9p; Mon, 15 Jun 2020 10:02:55 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jkrZS-0006kj-Th; Mon, 15 Jun 2020 10:02:54 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <477ac099-e272-b873-fccf-c68c5b729fe9@infradead.org>
-Date:   Mon, 15 Jun 2020 10:58:38 -0500
-In-Reply-To: <477ac099-e272-b873-fccf-c68c5b729fe9@infradead.org> (Randy
-        Dunlap's message of "Sun, 14 Jun 2020 20:45:07 -0700")
-Message-ID: <87a714cocx.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 15 Jun 2020 12:03:26 -0400
+Received: by mail-pl1-f195.google.com with SMTP id v24so6974657plo.6;
+        Mon, 15 Jun 2020 09:03:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K9MJT+eXnXmz1ilMAGWESoX9j8zjIESdzer9fDMdlfI=;
+        b=cnvBOS58obQFCcH0svIWTkTF3n7duV49F099UQgUDNgD7wZeSotdeh3bsW2yfXux+/
+         n02GHFZsHFay4091P1FsVlwlTYExAnpbxu4jz6alQj3oI2HoftHue2Xjil0KlhBlMXuz
+         Ajl1IZ3UQTY1Sh0nHxrPSLilM1YLlysqDO3A7HLgroiEAv/ppGC4vfpL+DYyQWIDxpfF
+         I8bQLAsIhyjZ7Wx4VNM+2lxp8lYl2Q4T4mgPSZhxiqZeqb90C677J5vClEmVP8c4lmlj
+         j1qcyd41sZq8mokA/SxU+U8Azdv1wa+5j0ZkEaie4ZpvDnqd8fGRt9K5KigIb5rLgSPC
+         bFvQ==
+X-Gm-Message-State: AOAM533dva9vCocLrNSCLSKxezpnMoIOBwUGRW840oKdlVaEm6Wmv0BN
+        Bxli/1Iqfndmm77cZqjSjNo=
+X-Google-Smtp-Source: ABdhPJxRfiCHIUq/13ST4nV77vvKmMnLt0PEBynbU/VZoK99G+FIGqFisGJEiecnHS90xszsCOypcg==
+X-Received: by 2002:a17:90b:28d:: with SMTP id az13mr7410pjb.67.1592237005503;
+        Mon, 15 Jun 2020 09:03:25 -0700 (PDT)
+Received: from sultan-book.localdomain ([89.45.90.111])
+        by smtp.gmail.com with ESMTPSA id i22sm14181344pfo.92.2020.06.15.09.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:03:24 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 09:03:20 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Aaron Ma <aaron.ma@canonical.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        HungNien Chen <hn.chen@weidahitech.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Pavel Balan <admin@kryma.net>, Tin Huynh <tnhuynh@apm.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        You-Sheng Yang <vicamo.yang@canonical.com>
+Subject: Re: [PATCH 1/2] i2c: designware: Only check the first byte for SMBus
+ block read length
+Message-ID: <20200615160320.GA1949@sultan-book.localdomain>
+References: <20200614210255.4641-1-sultan@kerneltoast.com>
+ <20200614210255.4641-2-sultan@kerneltoast.com>
+ <20200615094019.GP2428291@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jkrZS-0006kj-Th;;;mid=<87a714cocx.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/yVMbGMInvS5dqSamTLx7OYsQlVCtOJTs=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] <linux/rculist.h>: fix kernel-doc notation & warning
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615094019.GP2428291@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy Dunlap <rdunlap@infradead.org> writes:
+On Mon, Jun 15, 2020 at 12:40:19PM +0300, Andy Shevchenko wrote:
+> On Sun, Jun 14, 2020 at 02:02:54PM -0700, Sultan Alsawaf wrote:
+> > From: Sultan Alsawaf <sultan@kerneltoast.com>
+> > 
+> > SMBus block reads can be broken because the read function will just skip
+> > over bytes it doesn't like until reaching a byte that conforms to the
+> > length restrictions for block reads. This is problematic when it isn't
+> > known if the incoming payload is indeed a conforming block read.
+> > 
+> > According to the SMBus specification, block reads will only send the
+> > payload length in the first byte, so we can fix this by only considering
+> > the first byte in a sequence for block read length purposes.
+> 
+> I'm wondering if this overlaps with [1]. AFAIU that one is also makes sure that
+> the length is not a garbage.
+> 
+> [1]: https://lore.kernel.org/linux-i2c/20200613104109.2989-1-mans@mansr.com/T/#u
 
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix a kernel-doc warning due to missing a beginning '*' on the
-> comment line.
->
-> ../include/linux/rculist.h:515: warning: bad line:                           [@right ][node2 ... ]
->
+No overlap. That looks like a similar bug for a different driver. In my case,
+the adapter provides native SMBus support, so emulation is never used. This is
+clear to see by looking at i2c_transfer_buffer_flags(), which only uses the
+master_xfer functions provided by the adapter; it doesn't call the emulation
+path at all.
 
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-> Fixes: 35fc0e3b0bd5 ("rculist: Add hlists_swap_heads_rcu")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: rcu@vger.kernel.org
-> ---
->  include/linux/rculist.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- lnx-58-rc1.orig/include/linux/rculist.h
-> +++ lnx-58-rc1/include/linux/rculist.h
-> @@ -512,7 +512,7 @@ static inline void hlist_replace_rcu(str
->   * @right: The hlist head on the right
->   *
->   * The lists start out as [@left  ][node1 ... ] and
-> -                          [@right ][node2 ... ]
-> + *                        [@right ][node2 ... ]
->   * The lists end up as    [@left  ][node2 ... ]
->   *                        [@right ][node1 ... ]
->   */
+Sultan
