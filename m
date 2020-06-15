@@ -1,273 +1,151 @@
 Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E136C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5287B206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49375206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="rWstHuc4"
+	dkim=pass (1024-bit key) header.d=necglobal.onmicrosoft.com header.i=@necglobal.onmicrosoft.com header.b="qmikKiQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgFOGS1 (ORCPT
+        id S1728381AbgFOGUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:18:27 -0400
-Received: from cmta19.telus.net ([209.171.16.92]:42025 "EHLO cmta19.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbgFOGS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:18:27 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id kiRkjsNrPFblkkiRljwT67; Mon, 15 Jun 2020 00:18:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1592201902; bh=zQNMuPsT4ll3hJNXvuLTaoTVr+UglTzfCusuV7uVOtg=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=rWstHuc4y3Ll7953LhvHxQUGpnq/MVtm9fE0768bWFtTY6zufmJ6yipsvwdJAaYrT
-         IgBeUrOj9ZLEcJPEJNADz3BsTOVTtpdjMmA8rBOhVQ36H6t/t0TERC3Te3+AtGfgkD
-         c0jcPcOAAqA4pqjzBZfCQwba3yycFc26s9XHUMAhOXfs0D4JuIYzPFtKJoGfbwqio7
-         4tPNCXO1GCF32a0Shst6p+BR8m8HzvBncRvDNbcb4lGJnrFi9vspjY7Nr3fF42Ea4b
-         7I7DMj0j7zbkEf8XlD0uiEWvLmOOkMicM8JEoE7C7HMF8t0+td6nIfAyOx5tnVNEAA
-         pFq8KOZKB5K8A==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=BNTNU2YG c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=QyXUC8HyAAAA:8
- a=gu6fZOg2AAAA:8 a=kYCofrKXt4MtsqnNrjUA:9 a=CjuIK1q_8ugA:10 a=-FEs8UIgK8oA:10
- a=NWVoK91CQyQA:10 a=2RSlZUUhi9gRBrsHwhhZ:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Len Brown'" <len.brown@intel.com>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>
-References: <3169564.ZRsPWhXyMD@kreacher>
-In-Reply-To: <3169564.ZRsPWhXyMD@kreacher>
-Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with HWP enabled
-Date:   Sun, 14 Jun 2020 23:18:16 -0700
-Message-ID: <002801d642dc$c5225c10$4f671430$@net>
+        Mon, 15 Jun 2020 02:20:00 -0400
+Received: from mail-eopbgr1310050.outbound.protection.outlook.com ([40.107.131.50]:22752
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728284AbgFOGT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:19:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JtTdGs0ALsQbo1uyQPWK6t1JVQI5nBjB+c8zHiN5elZxxFdig8WTH9cn0LxtDKYB439hPgHAEScT1OiAp9tX6/seqpagGM6wJKO8i78TwD5LAeKmuJeX4ekIa/cjkBduka16FS6VrexZsG04fqBVBigeP8BZFzu6gL7HFVReXyXtwU0fhG/t1t+yJ3R3sQ7Nbz2Ke5pC2taozvuShDiOr+UevCVvK450PwLkN5ZuVAnaR6rpAvDxUmCSS9Uy1k/eOU1HYwT/NwuI9xDERz/+r9M52EBv5jAPTpM0rU2uvpoaGvO8js1XIefG9jDa8oyJQ6RZ7Z86k50XDTYmlGgn+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b/tUcPZLrKBPnabwteb+So0P9wDf5r7ELPiCDViEq1o=;
+ b=Wty6GB0D0Rv7AsHRCxA/t2m4/eoFyVnkQtBRzegP/0a32UMcXMa90/y9XWPNQluWutjyt1QsphieV47ANxufCGNDBb6zW2ubFvyZv7TnackX871NGjtsc3irQm8mqP+QZ2DAP/MooWKforsJnjLvA/NzcQny0+uRjhWK7qKec9BHOmN+6YskcnQIkgAhxGZJcqGgRWL7SlizIPgkKAjPv01FmoQhFXIjL/suRAKntfsvUmTqsBG78de5JoVrONRAh884x4JBqlXvH0CX62I3Jxpt5FdPWUGNkGa7Vhm1WK7IOpXsRWFT5OT17k1cGvupSu7Eowa0PbT5WgtXlhhJcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=necglobal.onmicrosoft.com; s=selector1-necglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b/tUcPZLrKBPnabwteb+So0P9wDf5r7ELPiCDViEq1o=;
+ b=qmikKiQgS0tRMl8QNZUf+X/GzmeTBcoCKNnKgcf1C+RxkMZ+aCrPGJXG9hdKsxKJbsBqAxyejT1VWTKmawvrGhkNtun/TMXk2IT44ewVP6Aw1mbMLcc6hifa0sZYIiy99G7pDd5qACwBfGxvWhpGG+RE+IBfwlcc3zjpDJeucFc=
+Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com (2603:1096:404:74::14)
+ by TY2PR01MB2540.jpnprd01.prod.outlook.com (2603:1096:404:6e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19; Mon, 15 Jun
+ 2020 06:19:54 +0000
+Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com
+ ([fe80::3841:ec9f:5cdf:f58]) by TY2PR01MB3210.jpnprd01.prod.outlook.com
+ ([fe80::3841:ec9f:5cdf:f58%5]) with mapi id 15.20.3088.028; Mon, 15 Jun 2020
+ 06:19:54 +0000
+From:   =?iso-2022-jp?B?SE9SSUdVQ0hJIE5BT1lBKBskQktZOH0hIUQ+TGkbKEIp?= 
+        <naoya.horiguchi@nec.com>
+To:     Dmitry Yakunin <zeil@yandex-team.ru>
+CC:     "osalvador@suse.de" <osalvador@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "n-horiguchi@ah.jp.nec.com" <n-horiguchi@ah.jp.nec.com>,
+        "max7255@yandex-team.ru" <max7255@yandex-team.ru>
+Subject: Re: [RFC PATCH v2 00/16] Hwpoison rework {hard,soft}-offline
+Thread-Topic: [RFC PATCH v2 00/16] Hwpoison rework {hard,soft}-offline
+Thread-Index: AQHWQA+H5/eI9wztJka38makXyA1EqjZOdWA
+Date:   Mon, 15 Jun 2020 06:19:53 +0000
+Message-ID: <20200615061951.GA26108@hori.linux.bs1.fc.nec.co.jp>
+References: <20191017142123.24245-1-osalvador@suse.de>
+ <20200611164319.16860-1-zeil@yandex-team.ru>
+In-Reply-To: <20200611164319.16860-1-zeil@yandex-team.ru>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: yandex-team.ru; dkim=none (message not signed)
+ header.d=none;yandex-team.ru; dmarc=none action=none header.from=nec.com;
+x-originating-ip: [165.225.110.205]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0a8f3857-0fbf-44fd-aef2-08d810f41e5d
+x-ms-traffictypediagnostic: TY2PR01MB2540:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB25403ED2CAA111AE0F671CAFE79C0@TY2PR01MB2540.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04359FAD81
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HjFubihrXcgdpXkhuCJgXT2Oi4lAAi/VqfCrnFOM4+2IA/JQZ0fPMAWo9oADSoA7OJRfDtqhiP742ufgaXGREqJuPcI8DtM6A2CTvEA6OpQBO4Xge0X04A9SwoRCO1417Hkyjab5aXKVmLtyno+vkin6szFXazZQD1uV0jLCM8WB6M915UmhXmFOnRcQ835D4ZL8Ola/N+rnxSvMN02bV7eDcv1pCnnFTeGQHNx5OJKTHchy3ZXfTnXxQcc3n9Z/d49gj65BE0HanyRcSBYe9P6W4YkuNtkaMUtGFvCmBGvYQx64/lkl4grGG/ju8zKpQGsnNV1jY/Aullvax6ruHcQkrAYrl86kxCEqKCJC/+IabCgaRF8J+N9NHI29P0KQ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3210.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(2906002)(83380400001)(6916009)(33656002)(9686003)(6512007)(4326008)(5660300002)(1076003)(55236004)(6506007)(76116006)(66446008)(64756008)(186003)(316002)(8936002)(66476007)(66946007)(71200400001)(85182001)(478600001)(6486002)(8676002)(54906003)(86362001)(26005)(66556008)(142933001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: /erXWni+ELHMUPgFe0cH0JJBLk6J4K9/F4q0pfzuDg3DscbI4hbe75qz9JUFEVEnKY4pmH+i+PjFHVd3MNB5N+zaAMYKMJnxBoxygc49Kmd0WrrdLz+Xwnh13afGUkhjjkzbsa76V4+TRtAu6ndeBgR618FdtezkoUFk+tA/escjOM9pkWRRHa8uKLbU+y1EGDhajQFFErqVR09eBuvmlNX5x9NTWx1zt5H0JQCMnaFmtqIyYuFthgO7Z8a0B9hz4pE3cTlHMS+ZIM5SbfbP/hY7mFrKBVeECuC28bmK8hOnt9Vc/ObOtub/cY/XSGupKSDBAox9uKQDiDyF40qJwIUjtMOUf0rptUad74ZabBoVL3QBFttbBY0us2n4TFsL75IA8dvlhOOfxPvawRYLIvxv0+KsKfYsGrekXJXNvKpUAFTeVIAezlwWtUZtnGjduaUPPOFvbYvYA0wbFgVKnLdh1Vd7esMiqc3e9oRCiaYfh6EI0EFv3i74JgjmJVO+
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <2FE0E49E76F0E04699B62B358E37EF69@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Thread-Index: AdYvk3X5bnwqpX6hRwi7ciAthJfS0AR9+G4g
-Content-Language: en-ca
-X-CMAE-Envelope: MS4wfARU7e+z96JZosIKQHWrD1iLi45BoxdoG1MOAfXLxuHU6kbdsVkrwpUCxYTMUaVJK5hsiRoxeR8QTkEF7IxyYC9gS4tftUQXe6HwRT1eSYwrLvYGL5cc
- r/hPUHLRyByrgIHY0m/UQHd7hu9ocqLSt3Rt94yk/zQSf71u3hd2QRgAk2cGeMZvZUh7gS86JS6UIDIyKJtg7OBpXX6Xsbfk714mcvYFOLP6p6jVEkkfHDQM
- wy8PhjfGvrDyPLHWkJiT5/iPLqTKTEfvAk+oWibP1RFlY0HpUUN9pcWU24+I6N80/CuUfaGE7YdvMs39kmGosf9y3gU1Fu1WMG+K8z4BWdHw0RuHQpAJOP01
- 5w2dps6Ht5rRjuH3GMs0V6RX0V2jr0lCM8fjegbVX34fvO4Kof//Q3VcdRY71RF3dMx1YaWO
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a8f3857-0fbf-44fd-aef2-08d810f41e5d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 06:19:53.9606
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tRpXFBhW8W7MUt6bKwVTmFy+JBP3la7Hb6I5JOXfWqgXjq+Kc3s5OzaoS0cBMuH9UW5EgJTwO4t4LO1keX+aqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2540
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020.05.21 10:16 Rafael J. Wysocki wrote:
-> 
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Allow intel_pstate to work in the passive mode with HWP enabled and
-> make it translate the target frequency supplied by the cpufreq
-> governor in use into an EPP value to be written to the HWP request
-> MSR (high frequencies are mapped to low EPP values that mean more
-> performance-oriented HWP operation) as a hint for the HWP algorithm
-> in the processor, so as to prevent it and the CPU scheduler from
-> working against each other at least when the schedutil governor is
-> in use.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> This is a prototype not intended for production use (based on linux-next).
-> 
-> Please test it if you can (on HWP systems, of course) and let me know the
-> results.
-> 
-> The INTEL_CPUFREQ_TRANSITION_DELAY_HWP value has been guessed and it very well
-> may turn out to be either too high or too low for the general use, which is one
-> reason why getting as much testing coverage as possible is key here.
-> 
-> If you can play with different INTEL_CPUFREQ_TRANSITION_DELAY_HWP values,
-> please do so and let me know the conclusions.
-> 
-> Cheers,
-> Rafael
+Hi Dmitry,
 
-To anyone trying this patch:
+On Thu, Jun 11, 2020 at 07:43:19PM +0300, Dmitry Yakunin wrote:
+> Hello!
+>=20
+> We are faced with similar problems with hwpoisoned pages
+> on one of our production clusters after kernel update to stable 4.19.
+> Application that does a lot of memory allocations sometimes caught SIGBUS=
+ signal
+> with message in dmesg about hardware memory corruption fault.
+> In kernel and mce logs we saw messages about soft offlining pages with
+> correctable errors. Those events always had happened before application
+> was killed. This is not the behavior we expect. We want our application t=
+o
+> continue working on a smaller set of available pages in the system.
+>=20
+> This issue is difficult to reproduce, but we suppose that the reason for =
+such
+> behavior is that compaction does not check for page poisonness while proc=
+essing
+> free pages, so as a result valid userspace data gets migrated to bad page=
+s.
+> We wrote the simple test:
+>   - soft offline first 4 pages in every 64 continuous pages in ZONE_NORMA=
+L
+>     through writing pfn to /sys/devices/system/memory/soft_offline_page
+>   - force compaction by echo 1 >> /proc/sys/vm/compact_memory
+> Without this patch series after these steps bash became unusable
+> and every attempt to run any command leads to SIGBUS with message about
+> hardware memory corruption fault. And after applying this series to our k=
+ernel
+> tree we cannot reproduce such SIGBUSes by our test. On upstream kernel 5.=
+7
+> this behavior is still reproducible.
+>=20
+> So, we want to know, why this patchset wasn't merged to the upstream?
+> Is there any problems in such rework for {soft,hard}-offline handling?
 
-You will need to monitor EPP (Energy Performance Preference) carefully.
-It changes as a function of passive/active, and if you booted active
-or passive or no-hwp and changed later.
+No technical reason, it's just because I didn't have enough power to push
+this to be merged. Really sorry about that.
 
-Originally, I was not specifically monitoring EPP, or paths taken since boot
-towards driver, intel_pstate or intel_cpufreq, and governor, and will now have
-to set aside test results.
+> BTW, this patchset should be updated with upstream changes in mm.
 
-@Rafael: I am still having problems with my test computer and HWP. However, I can
-observe the energy saving potential of this "passive-yet-active HWP mode".
+I'm working this now and still need more testing to confirm, but I hope
+I'll update and post this for 5.9.
 
-At this point, I am actually trying to make my newer test computer
-simply behave and do what it is told with respect to CPU frequency scaling,
-because even acpi-cpufreq misbehaves for performance governor under
-some conditions [1].
-
-[1] https://marc.info/?l=linux-pm&m=159155067328641&w=2
-
-To my way of thinking:
-
-1.) it is imperative that we be able to decouple the governor servo
-from the processor servo. At a minimum this is needed for system testing,
-debugging and reference baselines. At a maximum users could, perhaps, decide
-for themselves. Myself, I would prefer "passive" to mean "do what you
-have been told", and that is now what I am testing.
-
-2.) I have always thought, indeed relied on, performance mode as being
-more than a hint. For my older i7-2600K it never disobeyed orders, except
-for the most minuscule of workloads.
-This newer i5-9600K seems to have a mind of its own which I would like
-to be able to turn off, yet still be able to use intel_pstate trace
-with schedutil.
-
-Recall last week I said
-
-> moving forward the typical CPU frequency scaling
-> configuration for my test system will be:
->
-> driver: intel-cpufreq, forced at boot.
-> governor: schedutil
-> hwp: forced off at boot.
-
-The problem is that baseline references are still needed
-and performance mode is unreliable. Maybe other stuff also,
-I simply don't know at this point.
-
-Example of EPP changing (no need to read on) (from fresh boot):
-
-Current EPP:
-
-root@s18:/home/doug# rdmsr --bitfield 31:24 -u -a 0x774
-128
-128
-128
-128
-128
-128
-root@s18:/home/doug# grep . /sys/devices/system/cpu/cpu3/cpufreq/*
-/sys/devices/system/cpu/cpu3/cpufreq/affected_cpus:3
-/sys/devices/system/cpu/cpu3/cpufreq/base_frequency:3700000
-/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_min_freq:800000
-/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_transition_latency:0
-/sys/devices/system/cpu/cpu3/cpufreq/energy_performance_available_preferences:default performance balance_performance balance_power
-power
-/sys/devices/system/cpu/cpu3/cpufreq/energy_performance_preference:balance_performance
-/sys/devices/system/cpu/cpu3/cpufreq/related_cpus:3
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_available_governors:performance powersave
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_cur_freq:800102
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_driver:intel_pstate
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_governor:powersave
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq:4600000
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq:800000
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_setspeed:<unsupported>
-
-Now, switch to passive mode:
-
-echo passive > /sys/devices/system/cpu/intel_pstate/status
-
-And observe EPP:
-
-root@s18:/home/doug# rdmsr --bitfield 31:24 -u -a 0x774
-255
-255
-255
-255
-255
-255
-root@s18:/home/doug# grep . /sys/devices/system/cpu/cpu3/cpufreq/*
-/sys/devices/system/cpu/cpu3/cpufreq/affected_cpus:3
-/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_min_freq:800000
-/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_transition_latency:20000
-/sys/devices/system/cpu/cpu3/cpufreq/related_cpus:3
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_available_governors:conservative ondemand userspace powersave performance schedutil
-
-Hey, where did the ability to adjust the energy_performance_preference setting go?
-
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_cur_freq:3400313
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_driver:intel_cpufreq
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_governor:performance
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq:4600000
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq:800000
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_setspeed:<unsupported>
-
-Kernel is 5.7 +plus this patch:
-
-root@s18:/home/doug# uname -a
-Linux s18 5.7.0-hwp10 #786 SMP PREEMPT Tue Jun 9 20:15:18 PDT 2020 x86_64 x86_64 x86_64 GNU/Linux
-
-223e5c33f927 (HEAD -> k57-doug-hwp) cpufreq: intel_pstate: Accept passive mode with HWP enabled
-5d890a14763d cpufreq: intel_pstate: Use passive mode by default without HWP
-3d77e6a8804a (tag: v5.7) Linux 5.7
-
-The below is on top of this patch, and is how I am attempting to move forward:
-
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 4ab8bc1476c9..6c28ec49b192 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -2331,33 +2331,32 @@ static void intel_cpufreq_update_hwp_request(struct cpudata *cpu, u32 min_perf)
-        value |= HWP_MIN_PERF(min_perf);
-
-        /*
--        * The entire MSR needs to be updated in order to update the HWP min
--        * field in it, so opportunistically update the max too if needed.
-+        * the max also...
-         */
-        value &= ~HWP_MAX_PERF(~0L);
--       value |= HWP_MAX_PERF(cpu->max_perf_ratio);
-+       value |= HWP_MAX_PERF(min_perf);
-
-        if (value != prev)
-                wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
- }
-
- /**
-- * intel_cpufreq_adjust_hwp - Adjust the HWP reuqest register.
-+ * intel_cpufreq_adjust_hwp - Adjust the HWP request register.
-  * @cpu: Target CPU.
-  * @target_pstate: P-state corresponding to the target frequency.
-  *
-- * Set the HWP minimum performance limit to 75% of @target_pstate taking the
-+ * Set the HWP minimum performance limit to @target_pstate taking the
-  * global min and max policy limits into account.
-  *
-- * The purpose of this is to avoid situations in which the kernel and the HWP
-- * algorithm work against each other by giving a hint about the expectations of
-- * the former to the latter.
-+ * The purpose of this is to force the slave (passive) servo to do what
-+ * it has been told, not what ever it wants.
-+ * This NOT a hint. EPP (responsiveness) is managed from elsewhere.
-  */
- static void intel_cpufreq_adjust_hwp(struct cpudata *cpu, u32 target_pstate)
- {
-        u32 min_perf;
-
--       min_perf = max_t(u32, (3 * target_pstate) / 4, cpu->min_perf_ratio);
-+       min_perf = max_t(u32, target_pstate, cpu->min_perf_ratio);
-        min_perf = min_t(u32, min_perf, cpu->max_perf_ratio);
-        if (min_perf != cpu->pstate.current_pstate) {
-                cpu->pstate.current_pstate = min_perf;
-
-... Doug
-
-... [deleted] ...
-
-
+Thanks,
+Naoya Horiguchi=
