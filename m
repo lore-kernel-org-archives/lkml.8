@@ -2,129 +2,75 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C906C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D289CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11C362071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9753E20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d52YDIB0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RpLFBYYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbgFOSca (ORCPT
+        id S1731359AbgFOSdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 14:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47380 "EHLO
+        Mon, 15 Jun 2020 14:33:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729354AbgFOSc3 (ORCPT
+        with ESMTP id S1729124AbgFOSdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 14:32:29 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BEFC061A0E;
-        Mon, 15 Jun 2020 11:32:29 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id g3so1013137ilq.10;
-        Mon, 15 Jun 2020 11:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3Ju2CK/5JT+Aa3sS8yMCiNxVZSpDlKEY0dOrTNPmcdo=;
-        b=d52YDIB0gnUumzeigaFjn3geebR0cj1uocUHfj2gyCSlvSV0+eCFCP2SyVHXJT44Q0
-         I69YuQ0LjIWuSzlvaBJADaeV9BbNHkEnc1iFf3FQozt6J5QmYVnm8wl+CnLTRdez2ueR
-         gzmcdHb7RXtewqd1OuNYrgGvA39EUCyLd8uliOF/+scxv3eqSZazLmeWzx0IqfzxJVDD
-         p6RvQipYBAMDlyfrIL39TQTFfrrqxBtyJl4NHdlxSC80fhloDayq1wdGWYLkQzicOh8U
-         jy+mqNVpG/qYyjXc2qDHV5JGNoQ9SgyTPPAs7g+UopJxHlw1fzkKcl1HrWfy1VH0AtO2
-         5fqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3Ju2CK/5JT+Aa3sS8yMCiNxVZSpDlKEY0dOrTNPmcdo=;
-        b=DM14MTfqiCZ/CxhfGiF6r8eQ0a3eoF3LxwPqqcG/Wty+lEr/nmyq+nNoXYsehO9Ujr
-         NCj2hYX0gagQO7ZScJLcrcpBz9evHRynQNpVjhIoaFmY5n9T9qKS0XR6VwJDU7Hjk8od
-         ZorVeAOvlIAqYQ0uIs/lGZ375/Jyry864Y3fNX2oPJ43GafU520YeN8GO0ctiZyi/kyy
-         NZ3atuNmswO/gSP9BWClRamQL+pNHtf8D6xNAFDv/dJCJuG+hnMvM/sawFhySGvSo0Y0
-         ovoz0/sWOxg+f78+I0aa9a3h3cFsxZnz1NItzO6AKeM6pRyNDbtpCtvJNt1PwZeBeInK
-         BWFw==
-X-Gm-Message-State: AOAM5328jgmgLkj38mQGs6etrFwcwIhz8p7hSzeMVDc9F8cnBzOOirSJ
-        6Rg7wsI29Ex0DM5RdXU/FJsIxIoWAERSM39qtTQ=
-X-Google-Smtp-Source: ABdhPJwCimuYm3Md2+QbZCpOZo5BVsQVZQ5O52qkXatdGcrNd13nnmHXATWjRg9wQjqfg7W9+9FTdnlojDp+9ReomjM=
-X-Received: by 2002:a92:c60b:: with SMTP id p11mr28860644ilm.137.1592245948442;
- Mon, 15 Jun 2020 11:32:28 -0700 (PDT)
+        Mon, 15 Jun 2020 14:33:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39078C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 11:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=9U2E2WaS+S1jCvMfX0bEl4HRXYMqK3fD1PXTOMCvK7c=; b=RpLFBYYHn3X5f7Y7ZqsnVDJzIp
+        PURE4HitpvPnNSpC12F4Nn3oddvfL56xMevVqbQ6d4IUimfIn5ftjqjuHnjrxoby+y+x5R6/urd98
+        vLSCTnKIwXjl/SVbV6ED6wD8G/YlzLVdUdTY7xDFJfOKu/i7b9QoAcM5l0ADvNvnKZDMHKny7oNR6
+        m54WvDGmvUmiIC1RRqmw8nFIJo2//hKH5QBWyM6UHxVVgGU9+bOcA3RNCMs4PGEa3SjAKZVQ8+KW0
+        PaaB27evNzfkNalnejdF68fjIxDs9iX9itVI8IVgu9Yy7YcYhh3rXj8Po6dfzwMbabUAbCQ2VhdPI
+        HPGlTxWA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jktvD-0005ER-Kk; Mon, 15 Jun 2020 18:33:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C42903010C8;
+        Mon, 15 Jun 2020 20:33:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AF8C8203B815D; Mon, 15 Jun 2020 20:33:25 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 20:33:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     tglx@linutronix.de, x86@kernel.org, elver@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        will@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com
+Subject: Re: [PATCH 2/9] rcu: Fixup noinstr warnings
+Message-ID: <20200615183325.GF2531@hirez.programming.kicks-ass.net>
+References: <20200603114014.152292216@infradead.org>
+ <20200603114051.896465666@infradead.org>
+ <20200615154905.GZ2531@hirez.programming.kicks-ass.net>
+ <20200615155513.GG2554@hirez.programming.kicks-ass.net>
+ <20200615162427.GI2554@hirez.programming.kicks-ass.net>
+ <20200615171404.GI2723@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200615121358.GF3183@techsingularity.net> <CAOQ4uxi0fqKFZ9=U-+DQ78233hR9TXEU44xRih4q=M556ynphA@mail.gmail.com>
- <20200615172545.GG3183@techsingularity.net>
-In-Reply-To: <20200615172545.GG3183@techsingularity.net>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 15 Jun 2020 21:32:16 +0300
-Message-ID: <CAOQ4uxikAD0FFZdnkd_aHfst0G3j0Gt1_oGDb75z8gHpaE3ERg@mail.gmail.com>
-Subject: Re: [PATCH v2] fs: Do not check if there is a fsnotify watcher on
- pseudo inodes
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615171404.GI2723@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 8:25 PM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Mon, Jun 15, 2020 at 07:26:38PM +0300, Amir Goldstein wrote:
-> > On Mon, Jun 15, 2020 at 3:14 PM Mel Gorman <mgorman@techsingularity.net> wrote:
-> > >
-> > > Changelog since v1
-> > > o Updated changelog
-> >
-> > Slipped to commit message
-> >
->
-> It's habit, it's the layout I generally use for mm even though others
-> prefer having it below ---. I wasn't sure of fsnotify's preferred format
-> for tracking major differences between versions.
->
-> > >
-> > > The kernel uses internal mounts created by kern_mount() and populated
-> > > with files with no lookup path by alloc_file_pseudo for a variety of
-> > > reasons. An example of such a mount is for anonymous pipes. For pipes,
-> > > every vfs_write regardless of filesystem, fsnotify_modify() is called to
-> > > notify of any changes which incurs a small amount of overhead in fsnotify
-> > > even when there are no watchers. It can also trigger for reads and readv
-> > > and writev, it was simply vfs_write() that was noticed first.
-> > >
-> > > A patch is pending that reduces, but does not eliminte, the overhead of
-> >
-> > typo: eliminte
-> >
->
-> Yes.
->
-> > > fsnotify but for files that cannot be looked up via a path, even that
-> > > small overhead is unnecessary. The user API for fanotify is based on
-> > > the pathname and a dirfd and proc entries appear to be the only visible
-> > > representation of the files. Proc does not have the same pathname as the
-> > > internal entry and the proc inode is not the same as the internal inode
-> > > so even if fanotify is used on a file under /proc/XX/fd, no useful events
-> > > are notified.
-> > >
-> >
-> > Note that fanotify is not the only uapi to add marks, but this is fine by me
-> > I suppose if Jan wants to he can make small corrections on commit.
-> >
->
-> True but I didn't think inotify was materially different as it also takes
-> a path. Is that wrong or are there others that matter and can attach to
-> a file that cannot be looked up via a path?
+On Mon, Jun 15, 2020 at 10:14:04AM -0700, Paul E. McKenney wrote:
 
-There are kernel/audit* and nfsd/filecache.c users, but as far as I could
-tell, there is no danger from there. I was just pointing out that the fanotify
-uapi argument alone is not a full proof.
+> This merge window has been quite the trainwreck, hasn't it?  :-/
 
-Thanks,
-Amir.
+Keeps life interesting I suppose..
