@@ -2,135 +2,106 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0625FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A69DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD1E9207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5A52071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:43:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WhWZYW2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbgFOSk7 (ORCPT
+        id S1731327AbgFOSnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 14:40:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40522 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731415AbgFOSk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 14:40:58 -0400
-IronPort-SDR: 3Ysw0mhLJdLs8W+RBzti/i7RT+Am/FjCBQA0lpZPt7Jo+CqUw9uLBDF/gYGiINu4GufSOZXhlt
- qPCuux4ciwng==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 11:40:57 -0700
-IronPort-SDR: S+6fT8Oicmw6ETedAOSMuRGjrbO84YI4y2V3zIkkPekNc8xHjILpUB+YkzTfG+768jBnMLkvPJ
- V5SxlQ4PFHvQ==
-X-IronPort-AV: E=Sophos;i="5.73,515,1583222400"; 
-   d="scan'208";a="308826233"
-Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 11:40:56 -0700
-From:   Tony Luck <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Youquan Song <youquan.song@intel.com>,
-        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/mce: Add Skylake quirk for patrol scrub reported errors
-Date:   Mon, 15 Jun 2020 11:40:56 -0700
-Message-Id: <20200615184056.26531-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.21.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 15 Jun 2020 14:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729842AbgFOSnQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 14:43:16 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA5AC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 11:43:15 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id s90so21893888ybi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 11:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=E5J9eW43iWDhM6NCP/M18PRrar5zm+KpAYsU8FhxzQc=;
+        b=WhWZYW2CdG1kpDcDysoN6KtDFTQIpIIflg2HZaEqMZQJrCAcLYbEl46vtnj35CXCC+
+         5ceSCsA/pn5dFPW/pr85Zam374lvbi7hfyYfNyI+lHDwUJtkgqwCA/1h36Gzq9bYfN4z
+         CoCvYVOEtkmFQ93AXjbKJWPv62SF6oonahpzjTUWrMSfDSPx/JgaDSY0ujweJsD4tEWP
+         2qnmGkbkrON3W8RUkhaMK/fdpTgSWDr5cwlDi1MYjJ3ui0DSXTtoHsTtu1g/MrL+S6iN
+         mZjTfqfTu/4NYt2FIHZeuPrtnarTcHt4ImiaIhyHuvbU0wFrcvAiFLjZqnVZRjiIv+k5
+         669w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=E5J9eW43iWDhM6NCP/M18PRrar5zm+KpAYsU8FhxzQc=;
+        b=Ner/Uwk8L+EIqdOgbI2U6Fcri4G88s0hJeixtR48h7xezmrczLlsWyAj2zGcPmOcxl
+         6/XurTbIiSo9gqUPDXo6t1Ju5XrdbD8f75n0JhA/nVkfthnnym4Bd/2RJGSDl0hQ27Kj
+         Pm9ShmsqCACY3K4BiadvT7RzkufYj1Kp+ye+q1j34qfpvndndbG4lEsU9bKXufpkcrWP
+         4yPHQOZ5ND6PRMfxQ9dZHLPNEo4gMp7vRJVbaI9jT7WdioskKBjEdUcIsKU2+dj6OHgm
+         wOu2wZdJI9F6+zSwUSSDajI6tqj8KDI8plFXxlFf7ngxpUhqxpiwsjXEYWWO/rmu6EUk
+         n2AA==
+X-Gm-Message-State: AOAM533IXBCMXFtudFO/mJsjW/G8fFkoAN7hKeCbeGbDYGoI4S7OoRvR
+        3igFDeVtBv+OjvkXwcHeZk/B9RBi1g==
+X-Google-Smtp-Source: ABdhPJyRxVOLLTWjGLjFIuGkIyj6kaIR1fRd19Wih9jzz6La/9185tm3DhACQJjrmwXu8rE0zaeNVO4W/g==
+X-Received: by 2002:a25:50cc:: with SMTP id e195mr48552837ybb.483.1592246594106;
+ Mon, 15 Jun 2020 11:43:14 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 20:43:02 +0200
+Message-Id: <20200615184302.7591-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+Subject: [PATCH] kcov: Unconditionally add -fno-stack-protector to compiler options
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, akpm@linux-foundation.org
+Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Youquan Song <youquan.song@intel.com>
+Unconditionally add -fno-stack-protector to KCOV's compiler options, as
+all supported compilers support the option. This saves a compiler
+invocation to determine if the option is supported.
 
-Skylake has a mode where the system administrator can use a BIOS setup
-option to request that the memory controller report uncorrected errors
-found by the patrol scrubber as corrected.  This results in them being
-signalled using CMCI, which is less disruptive than a machine check.
+Because Clang does not support -fno-conserve-stack, and
+-fno-stack-protector was wrapped in the same cc-option, we were missing
+-fno-stack-protector with Clang. Unconditionally adding this option
+fixes this for Clang.
 
-Add a quirk to detect that a "corrected" error is actually a downgraded
-uncorrected error with model specific checks for the "MSCOD" signature in
-MCi_STATUS and that the error was reported from a memory controller bank.
-
-Adjust the severity to MCE_AO_SEVERITY so that Linux will try to take
-the affected page offline.
-
-[Tony: Wordsmith commit comment]
-
-Signed-off-by: Youquan Song <youquan.song@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Marco Elver <elver@google.com>
 ---
- arch/x86/kernel/cpu/mce/core.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Split out from series:
+	https://lkml.kernel.org/r/20200605082839.226418-2-elver@google.com
+as there is no dependency on the preceding patch (which will be dropped).
+---
+ kernel/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index e9265e2f28c9..0dbd0a21a0bf 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -123,6 +123,8 @@ static struct irq_work mce_irq_work;
+diff --git a/kernel/Makefile b/kernel/Makefile
+index f3218bc5ec69..592cb549dcb8 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -35,7 +35,7 @@ KCOV_INSTRUMENT_stacktrace.o := n
+ KCOV_INSTRUMENT_kcov.o := n
+ KASAN_SANITIZE_kcov.o := n
+ KCSAN_SANITIZE_kcov.o := n
+-CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack) -fno-stack-protector
  
- static void (*quirk_no_way_out)(int bank, struct mce *m, struct pt_regs *regs);
- 
-+static void no_adjust_mce_log(struct mce *m) {};
-+static void (*adjust_mce_log)(struct mce *m) = no_adjust_mce_log;
- /*
-  * CPU/chipset specific EDAC code can register a notifier call here to print
-  * MCE errors in a human-readable form.
-@@ -772,6 +774,7 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
- 		if (mca_cfg.dont_log_ce && !mce_usable_address(&m))
- 			goto clear_it;
- 
-+		adjust_mce_log(&m);
- 		mce_log(&m);
- 
- clear_it:
-@@ -1640,6 +1643,30 @@ static void quirk_sandybridge_ifu(int bank, struct mce *m, struct pt_regs *regs)
- 	m->cs = regs->cs;
- }
- 
-+/*
-+ * Skylake family CPUs have a mode where the user can request that
-+ * the memory controller report uncorrected errors found by the patrol
-+ * scrubber as corrected (MCI_STATUS_UC == 0). This results in them being
-+ * signalled using CMCI, which is less disruptive that a machine check.
-+ * The following quirk detects such errors and adjusts the severity.
-+ */
-+
-+#define MSCOD_UCE_SCRUB	(0x0010 << 16) /* UnCorrected Patrol Scrub Error */
-+#define MSCOD_MASK	GENMASK_ULL(31, 16)
-+
-+/*
-+ * Check the error code to see if this is an uncorrected patrol
-+ * scrub error from one of the memory controller banks. If so,
-+ * then adjust the severity level to MCE_AO_SEVERITY
-+ */
-+static void quirk_skx_adjust_mce_log(struct mce *m)
-+{
-+	if (((m->status & MCACOD_SCRUBMSK) == MCACOD_SCRUB) &&
-+	    ((m->status & MSCOD_MASK) == MSCOD_UCE_SCRUB) &&
-+	    m->bank >= 13 && m->bank <= 18)
-+		m->severity = MCE_AO_SEVERITY;
-+}
-+
- /* Add per CPU specific workarounds here */
- static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
- {
-@@ -1714,6 +1741,9 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
- 
- 		if (c->x86 == 6 && c->x86_model == 45)
- 			quirk_no_way_out = quirk_sandybridge_ifu;
-+
-+		if (c->x86 == 6 && c->x86_model == INTEL_FAM6_SKYLAKE_X)
-+			adjust_mce_log = quirk_skx_adjust_mce_log;
- 	}
- 
- 	if (c->x86_vendor == X86_VENDOR_ZHAOXIN) {
+ # cond_syscall is currently not LTO compatible
+ CFLAGS_sys_ni.o = $(DISABLE_LTO)
 -- 
-2.21.1
+2.27.0.290.gba653c62da-goog
 
