@@ -2,203 +2,106 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB34C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5052AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D522620747
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D3420747
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="03XGX8VJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PZCBn1VC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgFOEGX (ORCPT
+        id S1727043AbgFOELL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 00:06:23 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50516 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgFOEGB (ORCPT
+        Mon, 15 Jun 2020 00:11:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgFOELK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 00:06:01 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F09D6891B3;
-        Mon, 15 Jun 2020 16:05:57 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1592193957;
-        bh=fmOPOWqFEjhICH/CJcBM1aMmTfbp2ullBYimtm2xGqo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=03XGX8VJM1bUCF8KCcqw8C79ZtdGD+vsEboW/rc9WTUmbFCf3npzpqFO0AIXyGfqA
-         8u2en2GIffS7WDYF3OUlw5PnAequqHf8t4NEZuyWr4afpcc3ugm/4KbMBYR2kAJVCY
-         hWx0UzrpJt4hSneHEI1B75df53C7saEA6232lc2qQ790256nSPjgwjIEW8e3Aw+UV1
-         1RUQJwoPcemOtG4Ta4NOo2SKUCa3fUqBmYwL5iCOMLLN6tduBArORoPzxrP2eSNtmT
-         mf4LkNJWQzYWXL6sU8o58gmFDX7jf86UKle0kFFPVu56tD9kfhtGpuHv7r+e3R0CV6
-         ezmQTHS5gyiuQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ee6f3a50005>; Mon, 15 Jun 2020 16:05:57 +1200
-Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id A4EEF13EF9B;
-        Mon, 15 Jun 2020 16:05:56 +1200 (NZST)
-Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 5845834125F; Mon, 15 Jun 2020 16:05:57 +1200 (NZST)
-From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-To:     broonie@kernel.org, kdasu.kdev@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH 4/5] spi: bcm-qspi: Make multiple data blocks interrupt-driven
-Date:   Mon, 15 Jun 2020 16:05:56 +1200
-Message-Id: <20200615040557.2011-5-mark.tomlinson@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200615040557.2011-1-mark.tomlinson@alliedtelesis.co.nz>
-References: <20200615040557.2011-1-mark.tomlinson@alliedtelesis.co.nz>
+        Mon, 15 Jun 2020 00:11:10 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82F6C061A0E;
+        Sun, 14 Jun 2020 21:11:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=010wDv/U5XhtaTaNAqWWuMgS5+UAVZXKJT9y0jGO0Zs=; b=PZCBn1VC8GnyvhTrIiq8CYD89U
+        rffLULe71O3ObsZ677IYZJhxyAw+hqAgiB7C8N0vgfYeGoESxBdmPk5KyRbqwAk9Zti2Cba8XfT3Q
+        HKb6hHV8JLokWLwKMC/K61uDgiqm0zFIAewTNRdCboKFmmRpgyH/90cVksGgG2nzh0pnU++9Zm6dK
+        wcSGv3HcuT0mj2NRRG1hNKjczMYOaREQy5YoDCoS5UlsO7Pi3TtKSWLcdQwOgrXZ7UJA3H3yOypBk
+        hgdapLJ/7otqo2fdoACvA4gCyOW9MJbC45+GZCZpngjgG+rDQum3tRpx9sStRsaGkI0SPUVEWGuPL
+        FMXqYo6Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkgSb-0004Ks-Vt; Mon, 15 Jun 2020 04:11:02 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] Documentation: fix sysctl/kernel.rst heading format warnings
+Message-ID: <8af1cb77-4b5a-64b9-da5d-f6a95e537f99@infradead.org>
+Date:   Sun, 14 Jun 2020 21:11:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When needing to send/receive data in small chunks, make this interrupt
-driven rather than waiting for a completion event for each small section
-of data.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Reviewed-by: Callum Sinclair <callum.sinclair@alliedtelesis.co.nz>
-Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Fix heading format warnings in admin-guide/sysctl/kernel.rst:
+
+Documentation/admin-guide/sysctl/kernel.rst:339: WARNING: Title underline too short.
+hung_task_all_cpu_backtrace:
+================
+
+Documentation/admin-guide/sysctl/kernel.rst:650: WARNING: Title underline too short.
+oops_all_cpu_backtrace:
+================
+
+Fixes: 0ec9dc9bcba0 ("kernel/hung_task.c: introduce sysctl to print all traces when a hung task is detected")
+Fixes: 60c958d8df9c ("panic: add sysctl to dump all CPUs backtraces on oops event")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- drivers/spi/spi-bcm-qspi.c | 44 ++++++++++++++++++++++++--------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+ Documentation/admin-guide/sysctl/kernel.rst |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index ce30ebf27f06..0cc51bcda300 100644
---- a/drivers/spi/spi-bcm-qspi.c
-+++ b/drivers/spi/spi-bcm-qspi.c
-@@ -200,12 +200,14 @@ struct bcm_qspi_dev_id {
- struct qspi_trans {
- 	struct spi_transfer *trans;
- 	int byte;
-+	int slots;
- 	bool mspi_last_trans;
- };
-=20
- struct bcm_qspi {
- 	struct platform_device *pdev;
- 	struct spi_master *master;
-+	struct spi_device *spi_dev;
- 	struct clk *clk;
- 	u32 base_clk;
- 	u32 max_speed_hz;
-@@ -731,12 +733,14 @@ static inline u16 read_rxram_slot_u16(struct bcm_qs=
-pi *qspi, int slot)
- 		((bcm_qspi_read(qspi, MSPI, msb_offset) & 0xff) << 8);
- }
-=20
--static void read_from_hw(struct bcm_qspi *qspi, int slots)
-+static void read_from_hw(struct bcm_qspi *qspi)
- {
- 	struct qspi_trans tp;
--	int slot;
-+	int slot, slots;
-=20
- 	bcm_qspi_disable_bspi(qspi);
-+	tp =3D qspi->trans_pos;
-+	slots =3D tp.slots;
-=20
- 	if (slots > MSPI_NUM_CDRAM) {
- 		/* should never happen */
-@@ -744,8 +748,6 @@ static void read_from_hw(struct bcm_qspi *qspi, int s=
-lots)
- 		return;
- 	}
-=20
--	tp =3D qspi->trans_pos;
--
- 	for (slot =3D 0; slot < slots; slot++) {
- 		if (tp.trans->rx_buf) {
- 			if (tp.trans->bits_per_word <=3D 8) {
-@@ -803,11 +805,12 @@ static inline void write_cdram_slot(struct bcm_qspi=
- *qspi, int slot, u32 val)
- }
-=20
- /* Return number of slots written */
--static int write_to_hw(struct bcm_qspi *qspi, struct spi_device *spi)
-+static int write_to_hw(struct bcm_qspi *qspi)
- {
- 	struct qspi_trans tp;
- 	int slot =3D 0, tstatus =3D 0;
- 	u32 mspi_cdram =3D 0;
-+	struct spi_device *spi =3D qspi->spi_dev;
-=20
- 	bcm_qspi_disable_bspi(qspi);
- 	tp =3D qspi->trans_pos;
-@@ -846,6 +849,9 @@ static int write_to_hw(struct bcm_qspi *qspi, struct =
-spi_device *spi)
- 		slot++;
- 	}
-=20
-+	/* save slot number for read_from_hw() */
-+	qspi->trans_pos.slots =3D slot;
-+
- 	if (!slot) {
- 		dev_err(&qspi->pdev->dev, "%s: no data to send?", __func__);
- 		goto done;
-@@ -960,24 +966,21 @@ static int bcm_qspi_transfer_one(struct spi_master =
-*master,
- 				 struct spi_transfer *trans)
- {
- 	struct bcm_qspi *qspi =3D spi_master_get_devdata(master);
--	int slots;
--	unsigned long timeo =3D msecs_to_jiffies(100);
-+	unsigned long timeo =3D msecs_to_jiffies(1000);
-=20
- 	if (!spi->cs_gpiod)
- 		bcm_qspi_chip_select(qspi, spi->chip_select);
- 	qspi->trans_pos.trans =3D trans;
- 	qspi->trans_pos.byte =3D 0;
-+	qspi->spi_dev =3D spi;
-=20
--	while (qspi->trans_pos.byte < trans->len) {
--		reinit_completion(&qspi->mspi_done);
-+	reinit_completion(&qspi->mspi_done);
-=20
--		slots =3D write_to_hw(qspi, spi);
--		if (!wait_for_completion_timeout(&qspi->mspi_done, timeo)) {
--			dev_err(&qspi->pdev->dev, "timeout waiting for MSPI\n");
--			return -ETIMEDOUT;
--		}
-+	write_to_hw(qspi);
-=20
--		read_from_hw(qspi, slots);
-+	if (!wait_for_completion_timeout(&qspi->mspi_done, timeo)) {
-+		dev_err(&qspi->pdev->dev, "timeout waiting for MSPI\n");
-+		return -ETIMEDOUT;
- 	}
- 	bcm_qspi_enable_bspi(qspi);
-=20
-@@ -1092,7 +1095,16 @@ static irqreturn_t bcm_qspi_mspi_l2_isr(int irq, v=
-oid *dev_id)
- 		bcm_qspi_write(qspi, MSPI, MSPI_MSPI_STATUS, status);
- 		if (qspi->soc_intc)
- 			soc_intc->bcm_qspi_int_ack(soc_intc, MSPI_DONE);
--		complete(&qspi->mspi_done);
-+
-+		read_from_hw(qspi);
-+
-+		if (qspi->trans_pos.trans) {
-+			write_to_hw(qspi);
-+		} else {
-+			complete(&qspi->mspi_done);
-+			spi_finalize_current_transfer(qspi->master);
-+		}
-+
- 		return IRQ_HANDLED;
- 	}
-=20
---=20
-2.27.0
+--- lnx-58-rc1.orig/Documentation/admin-guide/sysctl/kernel.rst
++++ lnx-58-rc1/Documentation/admin-guide/sysctl/kernel.rst
+@@ -335,8 +335,8 @@ Path for the hotplug policy agent.
+ Default value is "``/sbin/hotplug``".
+ 
+ 
+-hung_task_all_cpu_backtrace:
+-================
++hung_task_all_cpu_backtrace
++===========================
+ 
+ If this option is set, the kernel will send an NMI to all CPUs to dump
+ their backtraces when a hung task is detected. This file shows up if
+@@ -646,8 +646,8 @@ rate for each task.
+ scanned for a given scan.
+ 
+ 
+-oops_all_cpu_backtrace:
+-================
++oops_all_cpu_backtrace
++======================
+ 
+ If this option is set, the kernel will send an NMI to all CPUs to dump
+ their backtraces when an oops event occurs. It should be used as a last
 
