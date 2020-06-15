@@ -2,101 +2,212 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C25C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59CD620739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R3LMWQII"
+	by mail.kernel.org (Postfix) with ESMTP id 0662E208B3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592242922;
+	bh=HdnWgcJ03gAfD1VQ+kJO14dYsTkMlReWaMNpu69mPL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lKL7d1/uPZjSXyHK3XghcMGb/6GGNcQdOQa6GorSMsgHkf+LH21A8APpce+wVkHsy
+	 ErhTfywm7x1DRjKxDL+TdqVMreE0XmAypSODfhUs0LClxKAKDAeeL3Y5c8HIKqIJZT
+	 USlmPhUmRPXZV/tN6aTMOQxHyQ3Ux++8YkpfGZO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbgFORlt (ORCPT
+        id S1731244AbgFORmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729402AbgFORls (ORCPT
+        Mon, 15 Jun 2020 13:42:00 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46764 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729402AbgFORl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:41:48 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF848C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:41:47 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l17so405164wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oY7ZuVvlWCgY01/3kLGR+1QSYIg+ZjHtQqquGW90g1U=;
-        b=R3LMWQIId1cQohqf0X5bTssX/ck9Tat9HT9OWIJtTHwUY6SJ0BH8CtiQge02sxzDUq
-         D/468yONxMF7MsAlOugNzzC2YJRB8zxxor77YujZujBHqBzigCQA3qHyqsBqBv0L4hSO
-         heY6DqIyS4VDmZpZ/dfwO4K6juqvUhQdCcCRjn2P8EmeeiRY68CMIc1mplZLpSV32+Up
-         qnKCwRpwuXmELRT8UbaTONcw2qLfz5xjasSz/YKLBfBn26ttGQqeH2+xuaeqngeV8Kj5
-         7r1s7iTqSl7egrjPqVKAxy73xUc5TkC0MrMLtFUOCRvhujErEotYGvevMF+1/hS5ISAV
-         SOzQ==
+        Mon, 15 Jun 2020 13:41:59 -0400
+Received: by mail-io1-f65.google.com with SMTP id t9so18825452ioj.13;
+        Mon, 15 Jun 2020 10:41:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=oY7ZuVvlWCgY01/3kLGR+1QSYIg+ZjHtQqquGW90g1U=;
-        b=EQwEYtt855stdi6foc0r+bbxDbFCFmYosb6F1AKbSA/+rngnHSq7FsalfENzLD4zqr
-         5ePIEVxynOw71hrTuF2ewyaeiZ7Ozdblvv1mqKXOkSBajQQadMSZa8Lu1j/juke8VMkb
-         rWCk40AsjpCK9T2D7mvUi44p+nSFVE2nW47LAshuv4iLldH7FRlb91L+fgCN77JIyIak
-         G+0KTHS/8hLWBPk8jKqUy8oL+zAG499XfEJSyB7IuWH+eEVh0Eev+bAV3Ewu68luINgq
-         zUirUUbWTW4brF2ZWuMvKvRk5WGRNNTOX5AShfMUQnVIgR42lreAcsUoE2xKxWeL7VPW
-         OLVA==
-X-Gm-Message-State: AOAM533U7R9rwcJuFT5CvdvulwTgL4rfQKDEJViD0sUWkxxMftGq92bU
-        gmNCdcpdeXRY+S4FlbIRln61wg==
-X-Google-Smtp-Source: ABdhPJxZIkU/7mhMBRsRT52yrMQRtnq6d09FQMcwSh1k29JPx1ndKo/Cpw28q7Mi57mkncpvcG63yA==
-X-Received: by 2002:a1c:4857:: with SMTP id v84mr459057wma.96.1592242906131;
-        Mon, 15 Jun 2020 10:41:46 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id a16sm25199304wrx.8.2020.06.15.10.41.45
+        bh=qMpmhFEcqSXIab1ZqD47f2fH1FWApjPBtMrvK1o14Oo=;
+        b=qHIbs8BW6gr1Ii8LGWb6TAwskikDUASz/af2O3F6V5iXK7Hq7UQHmzWGumBPHSUZY0
+         O64KIHSXtU1JYYiOrx3af0NAestyy+FMBiYeSiKlvScC6NSlhXuhrbcJKHj5jg3/ooGH
+         cfS4FkaOl7WTckKsMQGPXP06QLbjbL9dY5Su5ddwX8TvK0L0OTphBQJA/XFs/ZPVt8S/
+         PpFCrOmpMloRUTht3Tokai2ZfAmb07w97MvHIBit2LLIrJ05WAza7S0JtPgUBEHUQKkn
+         DDJvBB2rauhQ5eMoiZQyXiUkYEs0JHN1H326zW+K/VuCKRPAhsnh4MWEwswLyuQxWNkS
+         aBrg==
+X-Gm-Message-State: AOAM530dUEN6sr4FUc4VKrLE4aVHNu6MbVRTI+02XMloO1XOfNPVgVq7
+        JTk3uRHYmO9JrLHWoXgrhw==
+X-Google-Smtp-Source: ABdhPJzbVJjmZIYFseBxe+B3y3UPFiRRE+yWGYRph4XvFAwYRcecAH80ZNK4RkoiE8qSCHQ5Rd+BYw==
+X-Received: by 2002:a05:6638:604:: with SMTP id g4mr23171216jar.80.1592242918695;
+        Mon, 15 Jun 2020 10:41:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t189sm8220707iod.16.2020.06.15.10.41.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:41:45 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 18:41:41 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     rjw@rjwysocki.net, rafael@kernel.org, viresh.kumar@linaro.org
-Cc:     arnd@arndb.de, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, kernel-team@android.com,
-        tkjos@google.com, adharmap@codeaurora.org
-Subject: Re: [PATCH 2/2] cpufreq: Specify default governor on command line
-Message-ID: <20200615174141.GA235811@google.com>
-References: <20200615165554.228063-1-qperret@google.com>
- <20200615165554.228063-3-qperret@google.com>
+        Mon, 15 Jun 2020 10:41:58 -0700 (PDT)
+Received: (nullmailer pid 2018089 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:41:56 -0000
+Date:   Mon, 15 Jun 2020 11:41:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     balbi@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: usb: ti,keystone-dwc3.yaml: Improve
+ schema
+Message-ID: <20200615174156.GA2008179@bogus>
+References: <20200602124055.1680-1-rogerq@ti.com>
+ <5f81187b-0558-3815-051b-e40685fd047a@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200615165554.228063-3-qperret@google.com>
+In-Reply-To: <5f81187b-0558-3815-051b-e40685fd047a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 15 Jun 2020 at 17:55:54 (+0100), Quentin Perret wrote:
->  static int cpufreq_init_governor(struct cpufreq_policy *policy)
->  {
->  	int ret;
-> @@ -2701,6 +2721,8 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
->  
->  	if (driver_data->setpolicy)
->  		driver_data->flags |= CPUFREQ_CONST_LOOPS;
-> +	else
-> +		cpufreq_get_default_governor();
+On Fri, Jun 05, 2020 at 10:52:15AM +0300, Roger Quadros wrote:
+> There were some review comments after the patch was integrated.
+> Address those.
+> 
+> Fixes: 1883a934e156 ("dt-bindings: usb: convert keystone-usb.txt to YAML")
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+> 
+> Changelog:
+> v2
+> - don't use quotes for enum/const string
+> - use phandle instead of phandle-array for phys
+> - add maxItems for phy-names
+> 
+>  .../bindings/usb/ti,keystone-dwc3.yaml        | 50 ++++++++++++++-----
+>  1 file changed, 37 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+> index f127535feb0b..394e47d2f5d7 100644
+> --- a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+> +++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
+> @@ -11,64 +11,88 @@ maintainers:
+>  properties:
+>    compatible:
+> -    oneOf:
+> -      - const: "ti,keystone-dwc3"
+> -      - const: "ti,am654-dwc3"
+> +    items:
+> +      - enum:
+> +        - ti,keystone-dwc3
+> +        - ti,am654-dwc3
+>    reg:
+>      maxItems: 1
+> -    description: Address and length of the register set for the USB subsystem on
+> -      the SOC.
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+> +
+> +  ranges: true
 
-Looking at this again, it appears that the comment above
-cpufreq_parse_governor() confused me a bit -- this needs doing
-unconditionally I think.
+blank line
 
-I'll fix it in v2.
+>    interrupts:
+>      maxItems: 1
+> -    description: The irq number of this device that is used to interrupt the MPU.
+> -
+>    clocks:
+> +    $ref: /schemas/types.yaml#definitions/phandle-array
 
-Thanks,
-Quentin
+Common property. It already has a type and doesn't need to be 
+redefined here.
+
+Just "maxItems: 1" if it is a single clock is enough, or an 'items' list 
+for each entry if more than 1.
+
+>      description: Clock ID for USB functional clock.
+
+Drop.
+
+> +  assigned-clocks:
+> +    $ref: /schemas/types.yaml#definitions/phandle-array
+
+
+> +
+> +  assigned-clock-parents:
+> +    $ref: /schemas/types.yaml#definitions/phandle-array
+> +
+>    power-domains:
+> +    $ref: /schemas/types.yaml#definitions/phandle-array
+
+Same as 'clocks'.
+
+>      description: Should contain a phandle to a PM domain provider node
+>        and an args specifier containing the USB device id
+>        value. This property is as per the binding,
+>        Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>    phys:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+
+Same as 'clocks'.
+
+>      description:
+>        PHY specifier for the USB3.0 PHY. Some SoCs need the USB3.0 PHY
+>        to be turned on before the controller.
+>        Documentation/devicetree/bindings/phy/phy-bindings.txt
+>    phy-names:
+> +    maxItems: 1
+>      items:
+> -      - const: "usb3-phy"
+> +      - const: usb3-phy
+
+Don't need maxItems as that's implied by the length of 'items'.
+
+> +
+> +  dma-coherent: true
+> -  dwc3:
+> +  dma-ranges: true
+> +
+> +patternProperties:
+> +  "usb@[a-f0-9]+$":
+> +    type: object
+>      description: This is the node representing the DWC3 controller instance
+>        Documentation/devicetree/bindings/usb/dwc3.txt
+>  required:
+>    - compatible
+>    - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+>    - interrupts
+> -  - clocks
+> +
+> +additionalProperties: false
+>  examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> -    usb: usb@2680000 {
+> +    dwc3@2680000 {
+>        compatible = "ti,keystone-dwc3";
+>        #address-cells = <1>;
+>        #size-cells = <1>;
+>        reg = <0x2680000 0x10000>;
+>        clocks = <&clkusb>;
+> -      clock-names = "usb";
+>        interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+>        ranges;
+> -      dwc3@2690000 {
+> +      usb@2690000 {
+>          compatible = "synopsys,dwc3";
+>          reg = <0x2690000 0x70000>;
+>          interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> 
