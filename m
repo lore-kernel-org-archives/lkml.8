@@ -2,137 +2,110 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF07C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 101DD206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592231558;
-	bh=oxFQsraJAlM4VsLwbEklHGK6FLGzuPOSbKJqHy/ovIM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WlHYRFREyj7+AKMr7gpZA961t5ZcYI9Fnvk987EODjuk2j37n11ys7M/5sMvNBGnE
-	 J5AAKnbKc5NxHeVuw/QVw6NHwG0gU+pDTSoB4i+WYAsjFZnsgZry9fZZQz+P/HYgXL
-	 3HdPbAFWC9DgCUBc8YngM/lAC5YOJXmexvbNf8tI=
+	by mail.kernel.org (Postfix) with ESMTP id 103F1206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:32:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P3eOaK14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbgFOOch (ORCPT
+        id S1730605AbgFOOcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:32:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbgFOOcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:32:36 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Mon, 15 Jun 2020 10:32:45 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:64785 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730591AbgFOOco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:32:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592231564; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=NiCtl85ChNfUXhzwxk3UF9iEXH37Z4GqUz58aNsMDy0=;
+ b=P3eOaK141XOuMFmuPCrnDx2A/fsb28VH1Sm3Zf+laIro/ejBNF4KFIGCURx2t9bg1mqwtf9e
+ +//lvsxD7HdysvvDJmWB6/Zc8/HEHJFboI+7QE91Tq/Majougy0DwYDC7bpdEMcxvTQDW56w
+ ki2zxjvLXTKa+JTKzsHnmPVWoag=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5ee78685e144dd5115a48e6b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 14:32:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 519F3C433C8; Mon, 15 Jun 2020 14:32:37 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 608AB20739;
-        Mon, 15 Jun 2020 14:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592231555;
-        bh=oxFQsraJAlM4VsLwbEklHGK6FLGzuPOSbKJqHy/ovIM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zz+DFcdzp2Qqpeb/LsXUG3XumXxI/N5Mxja/7jAL+He4QPO347KUFJLdimIo0MQlC
-         iOe/L5Y8LpyADDvWrYvzF61PEMRuar69mbBKPXppsOcs70ge5wrL7w0tRat3ntKNqc
-         amMVp7U5gCVzIX4eUs+/RfCh3F8o4XGm9H2d3v9Y=
-Date:   Mon, 15 Jun 2020 15:32:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Cc:     kdasu.kdev@gmail.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH 4/5] spi: bcm-qspi: Make multiple data blocks
- interrupt-driven
-Message-ID: <20200615143233.GW4447@sirena.org.uk>
-References: <20200615040557.2011-1-mark.tomlinson@alliedtelesis.co.nz>
- <20200615040557.2011-5-mark.tomlinson@alliedtelesis.co.nz>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F8D2C4339C;
+        Mon, 15 Jun 2020 14:32:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F8D2C4339C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f4arffV+Mc+T1KhS"
-Content-Disposition: inline
-In-Reply-To: <20200615040557.2011-5-mark.tomlinson@alliedtelesis.co.nz>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath10k: Wait until copy complete is actually done before
+ completing
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+References: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     kuabhs@google.com, pillair@codeaurora.org,
+        saiprakash.ranjan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200615143237.519F3C433C8@smtp.codeaurora.org>
+Date:   Mon, 15 Jun 2020 14:32:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Douglas Anderson <dianders@chromium.org> wrote:
 
---f4arffV+Mc+T1KhS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On wcn3990 we have "per_ce_irq = true".  That makes the
+> ath10k_ce_interrupt_summary() function always return 0xfff. The
+> ath10k_ce_per_engine_service_any() function will see this and think
+> that _all_ copy engines have an interrupt.  Without checking, the
+> ath10k_ce_per_engine_service() assumes that if it's called that the
+> "copy complete" (cc) interrupt fired.  This combination seems bad.
+> 
+> Let's add a check to make sure that the "copy complete" interrupt
+> actually fired in ath10k_ce_per_engine_service().
+> 
+> This might fix a hard-to-reproduce failure where it appears that the
+> copy complete handlers run before the copy is really complete.
+> Specifically a symptom was that we were seeing this on a Qualcomm
+> sc7180 board:
+>   arm-smmu 15000000.iommu: Unhandled context fault:
+>   fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
+> 
+> Even on platforms that don't have wcn3990 this still seems like it
+> would be a sane thing to do.  Specifically the current IRQ handler
+> comments indicate that there might be other misc interrupt sources
+> firing that need to be cleared.  If one of those sources was the one
+> that caused the IRQ handler to be called it would also be important to
+> double-check that the interrupt we cared about actually fired.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-On Mon, Jun 15, 2020 at 04:05:56PM +1200, Mark Tomlinson wrote:
+ath10k firmwares work very differently, on what hardware and firmware did you
+test this? I'll add that information to the commit log.
 
-> When needing to send/receive data in small chunks, make this interrupt
-> driven rather than waiting for a completion event for each small section
-> of data.
+-- 
+https://patchwork.kernel.org/patch/11595887/
 
-Again was this done for a reason and if so do we understand why doing
-this from interrupt context is safe - how long can the interrupts be
-when stuffing the FIFO from interrupt context?
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-> @@ -731,12 +733,14 @@ static inline u16 read_rxram_slot_u16(struct bcm_qs=
-pi *qspi, int slot)
->  		((bcm_qspi_read(qspi, MSPI, msb_offset) & 0xff) << 8);
->  }
-> =20
-> -static void read_from_hw(struct bcm_qspi *qspi, int slots)
-> +static void read_from_hw(struct bcm_qspi *qspi)
->  {
-
-Things might be clearer if this refactoring were split out into a
-separate patch.
-
-> @@ -960,24 +966,21 @@ static int bcm_qspi_transfer_one(struct spi_master =
-*master,
->  				 struct spi_transfer *trans)
->  {
->  	struct bcm_qspi *qspi =3D spi_master_get_devdata(master);
-> -	int slots;
-> -	unsigned long timeo =3D msecs_to_jiffies(100);
-> +	unsigned long timeo =3D msecs_to_jiffies(1000);
-
-That's a randomly chosen value - if we're now doing the entire transfer
-then we should be trying to estimate the length of time the transfer
-will take, for a very large transfer on a slow bus it's possible that
-even a second won't be enough.
-
-> -		complete(&qspi->mspi_done);
-> +
-> +		read_from_hw(qspi);
-> +
-> +		if (qspi->trans_pos.trans) {
-> +			write_to_hw(qspi);
-> +		} else {
-> +			complete(&qspi->mspi_done);
-> +			spi_finalize_current_transfer(qspi->master);
-> +		}
-> +
-
-This is adding a spi_finalize_current_transfer() which we didn't have
-before, and still leaving us doing cleanup work in the driver in another
-thread.  This is confused, the driver should only need to finalize the
-transfer explicitly if it returned a timeout from transfer_one() but
-nothing's changed there.
-
---f4arffV+Mc+T1KhS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nhoAACgkQJNaLcl1U
-h9BbTQf/S/rXBNb0g+HDHgihuanPriLK57T6YafzoPoTCnRC2N0NZow/KuAdCdY2
-eoCi4qBSJZqpyw0nkRk3R6IDDZkSIuqz8s9ISyHVLODrpPU1kxjj/51fVhvTKe8v
-9jwNktpZzSMZN/2HZt8+pso+qNngUmLtwoXJkiRJ3elklXzxrSWgJwugVAknQ/uQ
-b8vh6daQXIvFJ7X+pTJu77WwLCbrHAD5kkNSSTZ5teePPi6Ukeoqn56nj03uHR1d
-blo9vStJ/UoZeBhuzCHkjQTKTJUYk4CMLBeA7fLsdDEYjTiTqUPZpJoxZE85mwcS
-kw+PkAn8jCozIinMqp6GpA57lhIRdg==
-=Yyad
------END PGP SIGNATURE-----
-
---f4arffV+Mc+T1KhS--
