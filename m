@@ -2,156 +2,256 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D998AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9140CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 860E02068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CF32068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fqMer2uM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L07X6N0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgFOHXL (ORCPT
+        id S1728609AbgFOHXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:23:11 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:45059 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbgFOHXH (ORCPT
+        Mon, 15 Jun 2020 03:23:20 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60173 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728597AbgFOHXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:23:07 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200615072304epoutp04e09d3664ba27cfbc031179fa09729986~YprmMFc5w1819018190epoutp04r
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:23:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200615072304epoutp04e09d3664ba27cfbc031179fa09729986~YprmMFc5w1819018190epoutp04r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592205784;
-        bh=q16fNkxdF6WvQtIMVDHHO9Q+D9jqMqIJ4OFGZj0vF64=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=fqMer2uMlvslNlN7qPRnuKuqu8aTrUnXJqVyZcUXyaI3uEG7lrF2/DZwgQs/dyWtF
-         KxXirmXEciaxyKo4Q+WazOw4MA5/PKgpZc/U3hecPBCqsGAcC7m1cMUlspaRMiDBZN
-         zD+f/bh9xS+SCt2i9xgEGejH04ejPKyyC0Zqk1XM=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200615072303epcas1p398eaedd8598e3a37d391491f6943c55e~Yprlun-Rc1374213742epcas1p3C;
-        Mon, 15 Jun 2020 07:23:03 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [RFC PATCH v2 1/5] scsi: ufs: Add UFS feature related parameter
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <336371513.41592205783606.JavaMail.epsvc@epcpadp2>
-Date:   Mon, 15 Jun 2020 16:21:27 +0900
-X-CMS-MailID: 20200615072127epcms2p50292cefb5aa41ac033e29f6a9fad8681
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210
-References: <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
-        <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p5>
+        Mon, 15 Jun 2020 03:23:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592205797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DWSQ7TzFCPTxWe8HmQSmBV7hNMRZ/Fyl0silEj6pvAY=;
+        b=L07X6N0efN3OscpE/X9wIg0ITYpUCyeLn6R+nsTDnbaKUGabIjvYc5TJ1d0ZIpzx/QfcHf
+        fFqtI0j6BtBtuHrnBc7VC0WRr+uVYMBaRtbBmTF4TtfZTpY3k82kqp3FjWdg/yRzIQm2K0
+        4cxJHf4PPoX9Zl3I/GBbcMnQPmicsGQ=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-510-ecXJ71sHM66H_jmQIYvxrg-1; Mon, 15 Jun 2020 03:23:15 -0400
+X-MC-Unique: ecXJ71sHM66H_jmQIYvxrg-1
+Received: by mail-wm1-f71.google.com with SMTP id a18so4658054wmm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:23:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DWSQ7TzFCPTxWe8HmQSmBV7hNMRZ/Fyl0silEj6pvAY=;
+        b=JIKw2skAzM4bq5KV6hUrS3zX4GvZq0hMpj5vVOD25WnIgdQvfLCqAhNNvWVZoJdcAF
+         zQj/fXd8TiR3CPVHPJBsJQ20eJkUBPuo2/WoltHhmh9BQLJ3t6A96LUXWF35jfI+pOwQ
+         IWnrXgLBIy15pHSNa56oy3yHM0seuPdHi2S7t62fHFZNC5xzdg15Ve5swhNvw4mcWWmI
+         2Tf/ntpjXPVd/WKtbhYm58yCXJj+1RSRfLgyIKNXLMmbvIdv1Occpf8OB4eG3LPGNIgw
+         nVUE2x5VDLHp0oTeEWf0cL6sbVsZQw6qffwWqLFS54zL6EEX7P+r9CJqsUsndV3KT9Fc
+         93Yg==
+X-Gm-Message-State: AOAM531MpIcKo3aobLhgh6VnErychfbbITytMGTeI8FG+XCTphMrJuPi
+        j75wugM7LbmCS7rNz157tFCvi6yfqf+F5s6WI1O8dxHIYYkSiAw4XywHhPlDNOQXye+2pLg1DFD
+        gU5/jKX8xJ6qdgpxUbYrvyICV
+X-Received: by 2002:adf:f847:: with SMTP id d7mr26632558wrq.261.1592205794211;
+        Mon, 15 Jun 2020 00:23:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx4AzRkEmQ5p+prTmG2+DllWCywp5X3TfYTIV/yAdbItyMD18ixBFX0caqeDHHMcD/75TVyHg==
+X-Received: by 2002:adf:f847:: with SMTP id d7mr26632537wrq.261.1592205793927;
+        Mon, 15 Jun 2020 00:23:13 -0700 (PDT)
+Received: from steredhat ([5.180.207.22])
+        by smtp.gmail.com with ESMTPSA id a6sm22724347wrn.38.2020.06.15.00.23.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 00:23:13 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 09:23:10 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Jeff Moyer <jmoyer@redhat.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] io_uring: add restrictions to support untrusted
+ applications and guests
+Message-ID: <20200615072310.iymkgr4dqdwzafg3@steredhat>
+References: <20200609142406.upuwpfmgqjeji4lc@steredhat>
+ <f96beb0a-415c-92fb-96f4-3902b613e9e4@kernel.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f96beb0a-415c-92fb-96f4-3902b613e9e4@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch for parameters to be used for UFS features layer and HPB
-module.
+On Sun, Jun 14, 2020 at 09:52:30AM -0600, Jens Axboe wrote:
+> On 6/9/20 8:24 AM, Stefano Garzarella wrote:
+> > Hi Jens,
+> > Stefan and I have a proposal to share with io_uring community.
+> > Before implementing it we would like to discuss it to receive feedbacks and
+> > to see if it could be accepted:
+> > 
+> > Adding restrictions to io_uring
+> > =====================================
+> > The io_uring API provides submission and completion queues for performing
+> > asynchronous I/O operations. The queues are located in memory that is
+> > accessible to both the host userspace application and the kernel, making it
+> > possible to monitor for activity through polling instead of system calls. This
+> > design offers good performance and this makes exposing io_uring to guests an
+> > attractive idea for improving I/O performance in virtualization.
+> > 
+> > PoC and preliminary benchmarks
+> > ---------------------------
+> > We realized a PoC, using QEMU and virtio-blk device, to share io_uring
+> > CQ and SQ rings with the guest.
+> > QEMU initializes io_uring, registers the device (NVMe) fd through
+> > io_uring_register(2), and maps the rings in the guest memory.
+> > The virtio-blk driver uses these rings to send requests instead of using
+> > the standard virtqueues.
+> > 
+> > The PoC implements a pure polling solution where the application is polling
+> > (IOPOLL enabled) in the guest and the sqpoll_kthread is polling in the host
+> > (SQPOLL and IOPOLL enabled).
+> > 
+> > These are the encouraging results we obtained from this preliminary work;
+> > we used fio (rw=randread bs=4k) to measure the kIOPS on a NVMe device:
+> > 
+> > - bare-metal
+> >                                                        iodepth
+> >   | fio ioengine                              |  1  |  8  |  16 |  32 |
+> >   |-------------------------------------------|----:|----:|----:|----:|
+> >   | io_uring (SQPOLL + IOPOLL)                | 119 | 550 | 581 | 585 |
+> >   | io_uring (IOPOLL)                         | 122 | 502 | 519 | 538 |
+> > 
+> > - QEMU/KVM guest (aio=io_uring)
+> >                                                        iodepth
+> >   | virtio-blk            | fio ioengine      |  1  |  8  |  16 |  32 |
+> >   |-----------------------|-------------------|----:|----:|----:|----:|
+> >   | virtqueues            | io_uring (IOPOLL) |  27 | 144 | 209 | 266 |
+> >   | virtqueues + iothread | io_uring (IOPOLL) |  73 | 264 | 306 | 312 |
+> >   | io_uring passthrough  | io_uring (IOPOLL) | 104 | 532 | 577 | 585 |
+> > 
+> >   All guest experiments are using the QEMU io_uring backend with SQPOLL and
+> >   IOPOLL enabled. The virtio-blk driver is modified to support blovk io_poll
+> >   on both virtqueues and io_uring passthrough.
+> > 
+> > Before developing this proof-of-concept further we would like to discuss
+> > io_uring changes required to restrict rings since this mechanism is a
+> > prerequisite for real-world use cases where guests are untrusted.
+> > 
+> > Restrictions
+> > ------------
+> > This document proposes io_uring API changes that safely allow untrusted
+> > applications or guests to use io_uring. io_uring's existing security model is
+> > that of kernel system call handler code. It is designed to reject invalid
+> > inputs from host userspace applications. Supporting guests as io_uring API
+> > clients adds a new trust domain with access to even fewer resources than host
+> > userspace applications.
+> > 
+> > Guests do not have direct access to host userspace application file descriptors
+> > or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
+> > as QEMU, grants access to a subset of its file descriptors and memory. The
+> > allowed file descriptors are typically the disk image files belonging to the
+> > guest. The memory is typically the virtual machine's RAM that the VMM has
+> > allocated on behalf of the guest.
+> > 
+> > The following extensions to the io_uring API allow the host application to
+> > grant access to some of its file descriptors.
+> > 
+> > These extensions are designed to be applicable to other use cases besides
+> > untrusted guests and are not virtualization-specific. For example, the
+> > restrictions can be used to allow only a subset of sqe operations available to
+> > an application similar to seccomp syscall whitelisting.
+> > 
+> > An address translation and memory restriction mechanism would also be
+> > necessary, but we can discuss this later.
+> > 
+> > The IOURING_REGISTER_RESTRICTIONS opcode
+> > ----------------------------------------
+> > The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
+> > installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
+> > passed to untrusted code with the knowledge that only operations present in the
+> > whitelist can be executed.
+> > 
+> > The whitelist approach ensures that new features added to io_uring do not
+> > accidentally become available when an existing application is launched on a
+> > newer kernel version.
+> > 
+> > The IORING_REGISTER_RESTRICTIONS opcode takes an array of struct
+> > io_uring_restriction elements that describe whitelisted features:
+> > 
+> >   #define IORING_REGISTER_RESTRICTIONS 11
+> > 
+> >   /* struct io_uring_restriction::opcode values */
+> >   enum {
+> >       /* Allow an io_uring_register(2) opcode */
+> >       IORING_RESTRICTION_REGISTER_OP,
+> > 
+> >       /* Allow an sqe opcode */
+> >       IORING_RESTRICTION_SQE_OP,
+> > 
+> >       /* Only allow fixed files */
+> >       IORING_RESTRICTION_FIXED_FILES_ONLY,
+> > 
+> >       /* Only allow registered addresses and translate them */
+> >       IORING_RESTRICTION_BUFFER_CHECK
+> >   };
+> > 
+> >   struct io_uring_restriction {
+> >       __u16 opcode;
+> >       union {
+> >           __u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
+> >           __u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
+> >       };
+> >       __u8 resv;
+> >       __u32 resv2[3];
+> >   };
+> > 
+> > This call can only be made once. Afterwards it is not possible to change
+> > restrictions anymore. This prevents untrusted code from removing restrictions.
+> > 
+> > Limiting access to io_uring operations
+> > --------------------------------------
+> > The following example shows how to whitelist IORING_OP_READV, IORING_OP_WRITEV,
+> > and IORING_OP_FSYNC:
+> > 
+> >   struct io_uring_restriction restrictions[] = {
+> >       {
+> >           .opcode = IORING_RESTRICTION_SQE_OP,
+> >           .sqe_op = IORING_OP_READV,
+> >       },
+> >       {
+> >           .opcode = IORING_RESTRICTION_SQE_OP,
+> >           .sqe_op = IORING_OP_WRITEV,
+> >       },
+> >       {
+> >           .opcode = IORING_RESTRICTION_SQE_OP,
+> >           .sqe_op = IORING_OP_FSYNC,
+> >       },
+> >       ...
+> >   };
+> > 
+> >   io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
+> >                     restrictions, ARRAY_SIZE(restrictions));
+> > 
+> > Limiting access to file descriptors
+> > -----------------------------------
+> > The fixed files mechanism can be used to limit access to a set of file
+> > descriptors:
+> > 
+> >   struct io_uring_restriction restrictions[] = {
+> >       {
+> >           .opcode = IORING_RESTRICTION_FIXED_FILES_ONLY,
+> >       },
+> >       ...
+> >   };
+> > 
+> >   io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
+> >                     restrictions, ARRAY_SIZE(restrictions));
+> > 
+> > Only requests with the sqe->flags IOSQE_FIXED_FILE bit set will be allowed.
+> 
+> I don't think this sounds unreasonable, but I'd really like to see a
+> prototype hacked up before rendering any further opinions on it :-)
 
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- drivers/scsi/ufs/ufs.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Yeah :-) I'll be back with a prototype of this changes ASAP.
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index c70845d41449..f3efa3424fc0 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -146,6 +146,7 @@ enum flag_idn {
- 	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
-+	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
- };
- 
- /* Attribute idn for Query requests */
-@@ -229,6 +230,9 @@ enum unit_desc_param {
- 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
- 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
- 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-+	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
-+	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
-+	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
- 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
- };
- 
-@@ -269,6 +273,8 @@ enum device_desc_param {
- 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
- 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
- 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-+	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
-+	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
- 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
- 	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
- 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
-@@ -317,6 +323,10 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_HPB_REGION_SIZE		= 0x48,
-+	GEOMETRY_DESC_HPB_NUMBER_LU		= 0x49,
-+	GEOMETRY_DESC_HPB_SUBREGION_SIZE	= 0x4A,
-+	GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS	= 0x4B,
- 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
- 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
- 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
-@@ -361,6 +371,7 @@ enum {
- 
- /* Possible values for dExtendedUFSFeaturesSupport */
- enum {
-+	UFS_DEV_HPB_SUPPORT		= BIT(7),
- 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
- };
- 
-@@ -571,6 +582,7 @@ struct ufs_dev_info {
- 	u8 *model;
- 	u16 wspecversion;
- 	u32 clk_gating_wait_us;
-+	u8 b_ufs_feature_sup;
- 	u32 d_ext_ufs_feature_sup;
- 	u8 b_wb_buffer_type;
- 	u32 d_wb_alloc_units;
--- 
-2.17.1
+Thanks for you feedback,
+Stefano
 
