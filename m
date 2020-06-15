@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 779AA20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB53D2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203648;
-	bh=cgffz8BCASr3lXXPg+dVmBMMDIINa1Dm7Cv2WHYeuAo=;
+	s=default; t=1592203650;
+	bh=7Q6CZYyu5yNzedIqh5sJBgI5/YLkukvok0P9JrKqBOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tyReDwcOFy8LYhromah4MDnWSNp40U/D8MS0hjj+jc3OYRvG9Ek2PwJaQmcDXnM/S
-	 P/UcEiWqWRXNAMLb1NWIZld3HkK05dcmZIl/NkUQh5A5M/B7px9++cDO6iU46EvEVl
-	 kgI8NKo3fV0SqjQF5Ao4BZv0mLtBklgLpMXIfJNw=
+	b=uH+9JvnlDanIpVOuVMYuhiaFbS/uUgtdWOb1+SAifWema05PD6JDeUdfkPGfRN/X1
+	 Yai8BflqAGrsk1TnZgrYf0bgDV/pRB/DhqsjqbgGEEhoLlGONMsaDnwNxE5MhXjLvy
+	 wBYZ3FHEW1m902kAIjz3dhkv9p+Gsc4Iz2FapzZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgFOGrU (ORCPT
+        id S1728514AbgFOGrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59486 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728338AbgFOGrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728276AbgFOGrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 02:47:12 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CC292074D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 80BB520707;
         Mon, 15 Jun 2020 06:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592203631;
-        bh=cgffz8BCASr3lXXPg+dVmBMMDIINa1Dm7Cv2WHYeuAo=;
+        bh=7Q6CZYyu5yNzedIqh5sJBgI5/YLkukvok0P9JrKqBOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvsCIOTAy6KPORoE9K10V1AzqDl8nL0/ffavKIR05qckzucW9OW3WVR/XqBZzq4Ry
-         nIQhlRv4xqGTWG5wXGnlIkXRqF8Mjty12Gmy7JvHJ8OZmjxJZVbsi84Nbcf6bGCLTB
-         D6OwXYiUfROR9RkzABPA1CPwzvrx1eR4b4Wka/KM=
+        b=Timn/k2a8kskuaPhpAvq549OmLmEiCyRYr4NrxeeI7y3+mBdKafYyssRAolCcXAER
+         6gDuLwCtPCxR/KQRZTDb5BMrxehqO64T4uq41LKCGp0ihsTG6q7lzXZflW7Aj6wjVv
+         gu6QUjZRFARYeaID4FEuFmJHaDHD1HKXYKkT3xw8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jkith-009nmL-He; Mon, 15 Jun 2020 08:47:09 +0200
+        id 1jkith-009nm0-D8; Mon, 15 Jun 2020 08:47:09 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org
-Subject: [PATCH 06/29] scripts/kernel-doc: handle function pointer prototypes
-Date:   Mon, 15 Jun 2020 08:46:45 +0200
-Message-Id: <10af56c5dc04b3c454244a62a49f08414e5c7be8.1592203542.git.mchehab+huawei@kernel.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, linux-mm@kvack.org
+Subject: [PATCH 01/29] mm: vmalloc.c: remove a kernel-doc annotation from a removed parameter
+Date:   Mon, 15 Jun 2020 08:46:40 +0200
+Message-Id: <cf778850a32adce7b06831cc7973f98400fc0775.1592203542.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592203542.git.mchehab+huawei@kernel.org>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
@@ -60,36 +62,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some function pointer prototypes inside the net
-includes, like this one:
+The prot argument was removed. Drop it als from the kernel-doc
+markup.
 
-	int (*pcs_config)(struct phylink_config *config, unsigned int mode,
-			  phy_interface_t interface, const unsigned long *advertising);
-
-There's nothing wrong using it with kernel-doc, but we need to
-add a rule for it to parse such kind of prototype.
-
+Fixes: 3c8ce1be43d3 ("mm: remove the prot argument from vm_map_ram")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kernel-doc | 5 +++++
- 1 file changed, 5 insertions(+)
+ mm/vmalloc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index 43b8312363a5..e991d7f961e9 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -1771,6 +1771,11 @@ sub process_proto_function($$) {
- 	$prototype =~ s@/\*.*?\*/@@gos;	# strip comments.
- 	$prototype =~ s@[\r\n]+@ @gos; # strip newlines/cr's.
- 	$prototype =~ s@^\s+@@gos; # strip leading spaces
-+
-+	 # Handle prototypes for function pointers like:
-+	 # int (*pcs_config)(struct foo)
-+	$prototype =~ s@^(\S+\s+)\(\s*\*(\S+)\)@$1$2@gos;
-+
- 	if ($prototype =~ /SYSCALL_DEFINE/) {
- 		syscall_munge();
- 	}
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 3091c2ca60df..957a0be77270 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1862,7 +1862,6 @@ EXPORT_SYMBOL(vm_unmap_ram);
+  * @pages: an array of pointers to the pages to be mapped
+  * @count: number of pages
+  * @node: prefer to allocate data structures on this node
+- * @prot: memory protection to use. PAGE_KERNEL for regular RAM
+  *
+  * If you use this function for less than VMAP_MAX_ALLOC pages, it could be
+  * faster than vmap so it's good.  But if you mix long-life and short-life
 -- 
 2.26.2
 
