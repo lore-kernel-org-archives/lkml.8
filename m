@@ -2,103 +2,68 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19656C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3FCB207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:40:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JKnorHyq"
+	by mail.kernel.org (Postfix) with ESMTP id 81A862078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592253629;
+	bh=wjpybQKruHjtYD8Kk/8OLydua65XsNiYD/6c4clFLQ0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=TuuuW4Q2GdAKMAZnSUPIDs/TTFdvRThSBTfsl5DjSILEiiFRgNlYKxrkG8cK3B78T
+	 qgHd9+UxPcPPOkZZYB47SM/cpKJWc61heXWLnrT6r1xhT4Ksm8hye9HZfWwa7SOo/q
+	 SFFBn8OaCnnHkhMnyCGNuptihg9LSJZHiC2b6Vwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbgFOUkG (ORCPT
+        id S1731600AbgFOUk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:40:06 -0400
-Received: from mout.gmx.net ([212.227.17.22]:45953 "EHLO mout.gmx.net"
+        Mon, 15 Jun 2020 16:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731104AbgFOUkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:40:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592253598;
-        bh=O4SoFfD+P6gNu8VlZgxjAizLX6Qungt9AtyjgR3o4C4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=JKnorHyqLmL3v+tdQHXfY/GtJZMnLcEFOiuuIxJyUy8v2lNVHTdwsp3k0eMjWJ81z
-         b0UACGi8gpl+YQhp38uB3FrK1dOpwGmn5TqqDJd/QMbzDgYKrgzyN/IAFoOiT3Tw/T
-         dB7MIeqt6Qv6NrzFS+iXmXC4uS/18estCPf7WUUw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([109.41.128.22]) by mail.gmx.com
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MCbEp-1jbLWX0s9T-009jvX; Mon, 15 Jun 2020 22:39:58 +0200
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] efi/libstub: Add libstub/random.c to the documentation tree
-Date:   Mon, 15 Jun 2020 22:39:51 +0200
-Message-Id: <20200615203951.11705-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gPYfHgUrMkKb/FxqSXAi2Gfz0T8iLx4le47mxNqH8s6ZSLv05Ex
- NhU4JZmGsp2NAGF+DGlMpEAEXm29ceoFdoYwqZVi1jesRyUb0Z8B5m31rQ0/MGNeYa7Hgv1
- Nvhc9sHuUh7ikx4acQylOqH1awyc2yU2vNm9VgmtFL1x8UKnsCiVe1H9xXG8UURWwF3sTRh
- ixz6FCkmYM9oCFSXjlc9g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Mc1KcC3e8ZA=:KBnwWp0Nmx9HCbgBpVScDw
- ZRCj3XpUTL9YQyZt/MwixoDb03ZA2QgAqbKBpy0MKRsYETqLo9lMcv1RBAIk4aDFl3nM3uzmA
- gRNJUsPPLZ1B9utb763w21VT4fp5wMC2db+1VjEJ76BaPnGrMU5RukcvrI1hOVnT08/r+tBQr
- byITsny3ryWp9F1sx6USB2PAVIweAVr7A+kk8RWFj0pRboh13/gHqgsq9SSEi24d7gNbKS792
- j6rsQXxvX6rFkbCvAqb4POYtTOyQaSle8xGSk4R9dD6YbBBFUM66NLT7AHW4nVjYAtCZG57zq
- FzUCURdnSgsHEfABS5BVdO+v4aqYn5mVnx5HelpQ7c1T0Vy4TUu/6MAvoH8A1J1px0fOYeBgG
- 01HecLrZelP9ZTEQNXUbZstEUCt0YA9uoDm3Cjr+MyUPUSMTxejhKos3AGhN65jB1Kw6XELaa
- 92IQo218x3tVPtV9Fd3VCp3y8fQORau6Jd70ZlxZdv12ZuRk1loXM0j3NdYFm+rXY4N4b6qd5
- RqpGNwssPGS6ao9DUppIU09B+DtQff2DlDsbSM1/mDYPeC+/nm3iuN/4VUV8j9tj5WWW3rTL7
- pKyXN4V6T3xfAsEK4ZxJy/oHFSkM9x7I/TAu+WZ33w/iOfG3RxvC3TwWKWsi9A9LTXaz/heJw
- Sbimu8PX4aPnN8zE5KmdMJqJAB3ddobeet0kUJc8FcnVLAb6SdEOocuz+q2GsKpwL1y2I3Ws4
- bHtrQUJsI1IzCY+rG+hV2ldTqBEtsXF1DY8V8Ng604DIEMX2HlW0ewBQJqrUtP9usq3uoxvEu
- J5pxNiVoJZrayDew+gjrf5AU56iA0v1NxdHLtsqD8PceoM1IwqKpXDFXOkeJFsdgNlNiPGAlv
- 6XvfreRlh0tBTeEo+jn7g0aOf9S98EaJWjQdYvqe7aW7nJOdffDJjzKwQxdl0cSVWKa2LTuP/
- u+0FiqYvrF26R1GT602vo2RovnMjsptNyBcw6HFo6eQ/a7Z6s8ls6Lys9ASrpBLa0ZdzkGyiL
- 6GG/zcMvenfJ1ntJe1dY0K4vN2TVV0yRsgTGYBJhnzUNntItunD+cSl1MznTdKv/Wf8C45kxQ
- Yy6nk7V2re3UVEI4jVKJUAJCcSfgS82MzXmdYrCriRlJh7BDmlb0nNvJZ/Bs92Mv7qEaMT6wN
- /Yvz3NxSOXR74bgQknKuH+WA7t+dx0PRx9wEL62QjRO35OyK8jjbmristZ4UM6xkC2A69V1gb
- XwO19laLDw6QQKn8L
+        id S1729692AbgFOUk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 16:40:27 -0400
+Subject: Re: [GIT PULL] ext4 changes part 2 for 5.8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592253627;
+        bh=wjpybQKruHjtYD8Kk/8OLydua65XsNiYD/6c4clFLQ0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=sqij5dVg8ceQF1nueSpqqeQxwvq9uwwSsNy5g/pz9h0yGVCz+T+LjuHd2s5hY73u8
+         8j3zPjFA5gfPtcbF8iLxOtfkh50bLKV4nFduSeOrgsx5OoH/XxzPML9pes+jQCWB5S
+         c0CO8meT3D+bGzaqD130MImS1l3TV7pZ6xdopreY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200614200034.GA3294624@mit.edu>
+References: <20200614200034.GA3294624@mit.edu>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200614200034.GA3294624@mit.edu>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git
+ tags/ext4-for-linus-5.8-rc1-2
+X-PR-Tracked-Commit-Id: 7b97d868b7ab2448859668de9222b8af43f76e78
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3be20b6fc13abff843901fcd7cd9c7a3a7f95b90
+Message-Id: <159225362762.7348.13591738167025096808.pr-tracker-bot@kernel.org>
+Date:   Mon, 15 Jun 2020 20:40:27 +0000
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     torvalds@linux-foundation.org, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let the description of the efi/libstub/random.c functions appear in the
-kernel API documentation in the following chapters:
+The pull request you sent on Sun, 14 Jun 2020 16:00:34 -0400:
 
-    The Linux driver implementer=E2=80=99s API guide
-        Linux Firmware API
-            UEFI Support
-                UEFI stub library functions
+> git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4-for-linus-5.8-rc1-2
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- Documentation/driver-api/firmware/efi/index.rst | 4 ++++
- 1 file changed, 4 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3be20b6fc13abff843901fcd7cd9c7a3a7f95b90
 
-diff --git a/Documentation/driver-api/firmware/efi/index.rst b/Documentati=
-on/driver-api/firmware/efi/index.rst
-index 4fe8abba9fc6..08679962ae3b 100644
-=2D-- a/Documentation/driver-api/firmware/efi/index.rst
-+++ b/Documentation/driver-api/firmware/efi/index.rst
-@@ -9,3 +9,7 @@ UEFI stub library functions
+Thank you!
 
- .. kernel-doc:: drivers/firmware/efi/libstub/mem.c
-    :internal:
-+
-+.. kernel-doc:: drivers/firmware/efi/libstub/random.c
-+   :internal:
-+
-=2D-
-2.27.0
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
