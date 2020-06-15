@@ -2,131 +2,121 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1600CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70370206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="AXJhM/hK"
+	by mail.kernel.org (Postfix) with ESMTP id F3C7B206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbgFONCJ (ORCPT
+        id S1730293AbgFONCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730353AbgFONBu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:01:50 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE9CC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:01:50 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id x93so11438781ede.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AvCe0HbqQ4BzGml+0DuV0nSjSHUXH/a7GtKAihE8SRE=;
-        b=AXJhM/hKmiZBel7yqZsPLh+qR48DiuSWw+gN6NwcjxGonGBBT4xZNIhnQoUZBfpJfH
-         1NZAFJQspIVoZmiDPMW/zVKEpYy92CPJhP1ryw7noohJnifYPJFtPAPipclcRU51LyVJ
-         aFmGcX6C+7O0dfinR4r59frhdDr+6ymq5ln90=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AvCe0HbqQ4BzGml+0DuV0nSjSHUXH/a7GtKAihE8SRE=;
-        b=p3jsDYrr2XdlXXD30YW/XKeT8DtbCaJyA1VRfPBOhWltrlbnWUkPWyBWrLmor962ks
-         o0jZX0LU6/na1tw2pNM5ZeKAIVdsbcH+Y/Aej7eQ6KrJ2fPHcq3Jsx/jrzLsdEnlRh9z
-         xBQn4HbHyQvaOAsKpnUc5boYtuaIkS1s4rvSiuzQE+uqCekDWvDsDZZ5biZje1xZcgI1
-         cOVGVSI0W2IhHNKQAtwDfAZSKZdWZ5bWbxnTO6EkcVEGGnGbC1tYi6T8Ub3mpd/F6U1Y
-         jIlOVpdAJqaNloXFEXM6fYFDv7qBr9pJMaM51Nol6tYYLyivuswoKmsPwCOUc2YpCs9d
-         rslg==
-X-Gm-Message-State: AOAM531cx1ltITz+UnhdTnwvy2KVQQnoZ+zPV3O6JiswpA3igk1f++W0
-        xSP2ZSMt4J69fe2ubKDf6gBjX26cBGa+7tezI8cbeQ==
-X-Google-Smtp-Source: ABdhPJw5bS2bqPFdNiYWV2UphtcYunDkac05QqFEUWlRJ3HITjBAcbh0ivLoUAsUyrpP21XvFyU3Zn5XsOsK+kRq7j8=
-X-Received: by 2002:aa7:d9d3:: with SMTP id v19mr22985359eds.364.1592226108717;
- Mon, 15 Jun 2020 06:01:48 -0700 (PDT)
+        Mon, 15 Jun 2020 09:02:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730098AbgFONC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:02:28 -0400
+Received: from [10.44.0.192] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8F89206B7;
+        Mon, 15 Jun 2020 13:02:24 +0000 (UTC)
+Subject: Re: [PATCH 04/21] mm: free_area_init: use maximal zone PFNs rather
+ than zone sizes
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     akpm@linux-foundation.org, bhe@redhat.com, geert@linux-m68k.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mm@kvack.org, rppt@linux.ibm.com
+References: <20200412194859.12663-5-rppt@kernel.org>
+ <f53e68db-ed81-6ef6-5087-c7246d010ea2@linux-m68k.org>
+ <20200615062234.GA7882@kernel.org>
+ <24563231-ed19-6f4f-617e-4d6bfc7553e4@linux-m68k.org>
+ <20200615082937.GB7882@kernel.org>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <5cae945c-1d15-9857-f7a5-defa884f7b3c@linux-m68k.org>
+Date:   Mon, 15 Jun 2020 23:02:21 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200612004644.255692-1-mike.kravetz@oracle.com>
- <20200612015842.GC23230@ZenIV.linux.org.uk> <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
- <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
- <6e8924b0-bfc4-eaf5-1775-54f506cdf623@oracle.com> <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
- <CAOQ4uxgA+_4_UtVz17_eJL6m0CsDEVuiriBj1ZOkho+Ub1yuSA@mail.gmail.com>
-In-Reply-To: <CAOQ4uxgA+_4_UtVz17_eJL6m0CsDEVuiriBj1ZOkho+Ub1yuSA@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 15 Jun 2020 15:01:37 +0200
-Message-ID: <CAJfpegs-Ch5ua658UD5s4u6ynKGpMzdiY31G-c4Fdu_=ZCV_uA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
- hugetlbfs files
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Colin Walters <walters@verbum.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200615082937.GB7882@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 12:05 PM Amir Goldstein <amir73il@gmail.com> wrote:
->
-> On Mon, Jun 15, 2020 at 10:53 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
-> >
-> > On Sat, Jun 13, 2020 at 9:12 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> > >
-> > > On 6/12/20 11:53 PM, Amir Goldstein wrote:
-> >
-> > > As a hugetlbfs developer, I do not know of a use case for interoperability
-> > > with overlayfs.  So yes, I am not too interested in making them work well
-> > > together.  However, if there was an actual use case I would be more than
-> > > happy to consider doing the work.  Just hate to put effort into fixing up
-> > > two 'special' filesystems for functionality that may not be used.
-> > >
-> > > I can't speak for overlayfs developers.
-> >
-> > As I said, I only know of tmpfs being upper layer as a valid use case.
-> >    Does that work with hugepages?  How would I go about testing that?
->
-> Simple, after enabling CONFIG_HUGETLBFS:
->
-> diff --git a/mount_union.py b/mount_union.py
-> index fae8899..4070c70 100644
-> --- a/mount_union.py
-> +++ b/mount_union.py
-> @@ -15,7 +15,7 @@ def mount_union(ctx):
->          snapshot_mntroot = cfg.snapshot_mntroot()
->          if cfg.should_mount_upper():
->              system("mount " + upper_mntroot + " 2>/dev/null"
-> -                    " || mount -t tmpfs upper_layer " + upper_mntroot)
-> +                    " || mount -t hugetlbfs upper_layer " + upper_mntroot)
->          layer_mntroot = upper_mntroot + "/" + ctx.curr_layer()
->          upperdir = layer_mntroot + "/u"
->          workdir = layer_mntroot + "/w"
->
-> It fails colossally, because hugetlbfs, does not have write_iter().
-> It is only meant as an interface to create named maps of huge pages.
-> So I don't really see the use case for using it as upper.
+Hi Mike,
 
-Right.
+On 15/6/20 6:29 pm, Mike Rapoport wrote:
+> (reduced the spam list)
+> 
+> On Mon, Jun 15, 2020 at 05:17:28PM +1000, Greg Ungerer wrote:
+>> On 15/6/20 4:22 pm, Mike Rapoport wrote:
+>>> On Mon, Jun 15, 2020 at 01:53:42PM +1000, Greg Ungerer wrote:
+>>>> From: Mike Rapoport <rppt@linux.ibm.com>
+>>>>> Currently, architectures that use free_area_init() to initialize memory map
+>>>>> and node and zone structures need to calculate zone and hole sizes. We can
+>>>>> use free_area_init_nodes() instead and let it detect the zone boundaries
+>>>>> while the architectures will only have to supply the possible limits for
+>>>>> the zones.
+>>>>>
+>>>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>>>>
+>>>> This is causing some new warnings for me on boot on at least one non-MMU m68k target:
+>>>
+>>> There were a couple of changes that cause this. The free_area_init()
+>>> now relies on memblock data and architectural limits for zone sizes
+>>> rather than on explisit pfns calculated by the arch code. I've update
+>>> motorola variant and missed coldfire. Angelo sent a fix for mcfmmu.c
+>>> [1] and I've updated it to include nommu as well
+>>>
+>>> [1] https://lore.kernel.org/linux-m68k/20200614225119.777702-1-angelo.dureghello@timesys.com
+>>>
+>>>>  From 55b8523df2a5c4565b132c0691990f0821040fec Mon Sep 17 00:00:00 2001
+>>> From: Angelo Dureghello <angelo.dureghello@timesys.com>
+>>> Date: Mon, 15 Jun 2020 00:51:19 +0200
+>>> Subject: [PATCH] m68k: fix registration of memory regions with memblock
+>>>
+>>> Commit 3f08a302f533 ("mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP option")
+>>> introduced assumption that UMA systems have their memory at node 0 and
+>>> updated most of them, but it forgot nommu and coldfire variants of m68k.
+>>>
+>>> The later change in free area initialization in commit fa3354e4ea39 ("mm:
+>>> free_area_init: use maximal zone PFNs rather than zone sizes") exposed that
+>>> and caused a lot of "BUG: Bad page state in process swapper" reports.
+>>
+>> Even with this patch applied I am still seeing the same messages.
+> 
+> Argh, it was to early in the morning...
+> Can you please try the one below?
+> 
+> It seems that coldfire didn't register all its physical memory with
+> memblock and the pfn list was damaged because of that.
+> 
+> 
+> diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
+> index e779b19e0193..f66f4b1d062e 100644
+> --- a/arch/m68k/kernel/setup_no.c
+> +++ b/arch/m68k/kernel/setup_no.c
+> @@ -138,7 +138,8 @@ void __init setup_arch(char **cmdline_p)
+>   	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
+>   		 __bss_stop, memory_start, memory_start, memory_end);
+>   
+> -	memblock_add(memory_start, memory_end - memory_start);
+> +	memblock_add(_rambase, memory_end - _rambase);
+> +	memblock_reserve(_rambase, memory_start - _rambase);
+>   
+>   	/* Keep a copy of command line */
+>   	*cmdline_p = &command_line[0];
 
-I was actually asking about the tmpfs+hugepages, not the hugetlbfs case.
+Yep, thats got it. Boots clean again with this one.
 
-In the tmpfs case it looks like the lack of ->get_unmapped_area() in
-overlayfs could still be an issue.   But I'm not sure how to trigger
-that.
+Regards
+Greg
 
-Thanks,
-Miklos
+
