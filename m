@@ -2,114 +2,189 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C62C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFC59206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E65206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C5uGL7ef"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Yr1a3/ee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgFOPiO (ORCPT
+        id S1729973AbgFOPl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728477AbgFOPiO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:38:14 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C055AC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:38:12 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id r11so9609697vsj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:38:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+cN819TKXbJsjMcpNBjbeHjndh7AMERO5YzZiFBrqdI=;
-        b=C5uGL7efs5Y4Dh9sG4tceMzBG8eo5VK18lfcoCKmfZSDJLHVeAD1ZNAvPznZn40M4z
-         5Gw1MnJqHBuYKJklCbJTpQQLxLPcxMo01yyUjTuUQFtIUti9iMJCAfjjfnUz+9/ba0UF
-         Z9pHZMtq2l2Qy6aVzQZ2bYtrTyuORhiInhhFR74Lwp+Il+FWQ3zvFv4vO2EyQy7l45J7
-         BxdaeuK3QB2XXdiOI/EGz3G4eK9iHlC7H/XmV0Vl7NXFYyFIelHORmz+yvvTzGZAJ9Yo
-         0X59MonX94e2ZpZ+C4fBGya/D2kyMKpInDy023JYEB6+MPZyWuBHOppzAWmywIWneKXe
-         eTSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+cN819TKXbJsjMcpNBjbeHjndh7AMERO5YzZiFBrqdI=;
-        b=GhtllgLV+t8CMuCd1zCmt0ZZMcjcZ5fjCrmYGEXLiaS5PI7ztQZrSKcVjGmoAp6rM1
-         Vl5UBy1SW/El15CLY6+MewVcW/Ur1tpwiCKnjlj1lN9naCZSMeYI9gUc5zriactj8l/d
-         C63pHPfz+8lSJmsn5uAaPDaogSUDusfM5fmCMfoVBtwaLgX68uxZiMO89Xnqc5O2koBx
-         1SV45axztd9ZNtvl4qnhtism6yWXOKhqnn2ZsKGaEgJsdJIbC8o0u/I6i+FD3UC6BZj3
-         jcDvG8v81yR2wshgL+EY68X0UKnjeWU0Ge4o+q6hNQGtxwbR0FZ7jJPThonlcgZaDKZ+
-         2UKA==
-X-Gm-Message-State: AOAM533MV3GWqzwal1y/+osjk/z5gubNf9UsDaIQNXzsJzC2IDJ7zzar
-        2haVtQsLHD2TDkGYe1SGeI9wSri94+tFMJX4kjAywoEkdfQ=
-X-Google-Smtp-Source: ABdhPJyDIavu6hhB4fgxgimT5WGdX+NIHVgvMU+PwT8j9UqCKBb2mrab06rnwQSsh0hFRzzaCy/s4KaXu2a6/YQyCr4=
-X-Received: by 2002:a67:ee1b:: with SMTP id f27mr19549160vsp.34.1592235491930;
- Mon, 15 Jun 2020 08:38:11 -0700 (PDT)
+        Mon, 15 Jun 2020 11:41:26 -0400
+Received: from mout.gmx.net ([212.227.15.15]:47219 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727785AbgFOPlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 11:41:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1592235668;
+        bh=fHo5pNOwAc3R7Gu1OYjStGQg97puTIW4tt/Eb3clUGI=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=Yr1a3/eeaT6DCl6KVwlM2KQh8rr6sGrGNKgL74lzcPcSCu04msni5A6SbdJcDKBX6
+         uIwt4n+SLIX4+7EfOIc0eD8muuhcqF3sFleM/6Kq5oL6Q8KkBSqj6H9NOu0scxbuA1
+         TSPPShedYF/U7WhVpD0c4L4fi7Dd5mZ+2gWCpWoM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from strobe-jhalfs ([188.109.165.61]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDhlV-1jaA8B028l-00Ajng; Mon, 15
+ Jun 2020 17:41:08 +0200
+From:   Stephen Berman <stephen.berman@gmx.net>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+References: <87y2owwo2o.fsf@rub.de>
+        <20200609202339.cgy57twm2zdtjhje@linutronix.de>
+        <87tuzjcovq.fsf@gmx.net>
+        <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
+        <87imfyh6yx.fsf@gmx.net> <87wo4dligz.fsf@gmx.net>
+        <20200612110122.jossn5zrktcvpbpm@linutronix.de>
+        <87tuzdrgm5.fsf@gmx.net>
+        <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
+        <874krcsquv.fsf@gmx.net>
+        <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
+Date:   Mon, 15 Jun 2020 17:41:06 +0200
+In-Reply-To: <20200615145130.bcdidqkp6w23xb6c@linutronix.de> (Sebastian
+        Andrzej Siewior's message of "Mon, 15 Jun 2020 16:51:30 +0200")
+Message-ID: <87tuzcqqul.fsf@gmx.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-References: <20200528190610.179984-1-saravanak@google.com> <20200528190610.179984-3-saravanak@google.com>
- <20200529130012.GJ4610@sirena.org.uk> <CAGETcx9Y8VoPCjrVFdDwU=+m3_0OTZQgj9b5eSHSTgSqeCZrUQ@mail.gmail.com>
- <20200601172323.GE45647@sirena.org.uk> <CAGETcx-T=NstJDV2S8gKmqpOv1r2-fTRs1pwOtSQ6rJumhVGBg@mail.gmail.com>
- <20200609105115.GA4583@sirena.org.uk> <CAPDyKFohcYjSvBjjB01mg7bOFCJA8XukgRPsZJm48X44sFzeYA@mail.gmail.com>
- <20200615114933.GF4447@sirena.org.uk>
-In-Reply-To: <20200615114933.GF4447@sirena.org.uk>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 15 Jun 2020 17:37:35 +0200
-Message-ID: <CAPDyKFqZDhduLsmM6cgYXzYVFGg8=3thmZCVDsKHp5Udu7hE_A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] regulator: Add support for sync_state() callbacks
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:v18ZwHmkixYTPbvcHmh0GFPGw/VHii7vezbZKoQiQgH4+r7YXi4
+ YC32ogQK/W0nTuNVg9fvhe/AyrxlK7KpXN3HS3RRqA/1vYfEHuNi33pVoBCnn/14w2fUcEZ
+ w4zCCyUfCusjLLNBmh6A3uc1wY0PYoWEcs0rBaCuv2JpvCnzZu5U5Y1s31XP7jCsb56+bcz
+ SBCpmHM6+fQudzZVylk2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5zK1/ln5gwA=:5XC6Gv9nMRKgGhmzaaJ4lY
+ T+fHdZH3Snjvq/q1sisDpXKEwXvkf9aAe72tEJm4dcmDqkLXzSgcqHeXEg3kxhjChNlSnvYTN
+ E6+QUcpNDCLpIPIQhXAXknZKdyge/uTg2rGU51diQRCnsGZc4UwhwLWmJ2IJYFrbgaFf0m+Pa
+ N7twbz/1tikWLQ26Up2ZR6+rQNoc6YHz1xiCVioDmQ31E2wgKeFUqIC+gLB9qxL5689HboQQX
+ Y8b6qTrM/BoUFBTbgc/5RjQq58Vg0HuBepLFU4hrpGjkuC9D270BTRvllTjMe8RWP/qxPLtWz
+ 1STMivSHqN25ADLOGVsUewdGgVgU7odZNxNeWAzR0/U8lIOL83BZFe5N8rxmS2149+PpahMvn
+ kNk7NXlYJ+rrb4LIV8X1RpSF6e0FRoqJ0hlMsejsxqwWC396I0WgL0pyexaDZhHM6F0bZGKaQ
+ 55iv+UqOr11FsiOmK2TYr9CL/UaFodlnPGEZVVLDoFTKEVTdF2b6Swd9SOw7UnB6xQRNjRQYP
+ pxW/x2/OFXuXrtxfbmsotQROsqfDmo6mwaSiSaxsiZpooc5WsJJaLBkkb5w2ie1/wuCSHg9h8
+ HhaUJu9hWrZ0FY2pooz16egXR7Dj1aTrQT472y/iJG811qHTvIwl9PKTgxf7INrL/Pab0PGTl
+ AO79eg+fBZ6EyTRAWzA7X51hWHYGNxcShkip/bDNUzxA3XMa1RCV1LnUKL8oMf3zfcZQeBVC5
+ MlvNLnkyk8zd3jeEcEliULdIuKeZh8G58rswqaHLdUgYS7omwO8farQo4KoQuJ4psFlUpeQK+
+ IRdZ2EyHkcEw1YvlHSZFB8rssjpi/r+twtwozxgx5Ru2peK0tRcbhjPfLzTtEKfgooxTnKIfK
+ zj0NkeH09kgRvXhrdFu1ZsyGRf9osaEyrEAdUW1Dw/8oG4VB1AZHbdsXIAurgEx7dzmwrLQlB
+ SgX11M29cOtUyxzPAm+0GV+FQsucC5HteQYoSHpIyBtkGvkPJ1z58EUBNLXo46l6Sg+TLqBKi
+ 3NoP/jY4sSXi45heJ9//NPbsRYGsFyYMH+5qmVPs3PxeTi+vw2RcSMsEeESYUdsTAHIurPjMK
+ ZQlaaznxoi+FI/8kvD8TDvvQGGuDRsJCGThbjjkhj1OQ32/7XAgH6hF9eMQtfVrGTy3jRvPBI
+ 8lKeAymrz15rL4hZuQK7MvhXj/6jLBWUm8UGNWMICvE6cWMBi5tq0DmCrRNNPZEpRSuuuElXQ
+ iuE348482oB1ku88H
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 at 13:49, Mark Brown <broonie@kernel.org> wrote:
+On Mon, 15 Jun 2020 16:51:30 +0200 Sebastian Andrzej Siewior <bigeasy@linut=
+ronix.de> wrote:
+
+> On 2020-06-15 09:58:00 [+0200], Stephen Berman wrote:
+>> Ok, sorry, I had misunderstood, but now I've looked at the
+>> documentation.  I had in fact already done `echo t >
+>> /proc/sysrq-trigger' in an xterm (as root) and there was no output.
+>> Later, after booting kernel 5.1.0 because of the message flooding with
+>> 5.6.4, I did `echo t > /proc/sysrq-trigger' in a virtual tty (also as
+>> root) and the only output was: `[ <timestamp>] sysrq: Show State'.  Is
+>> this expected?  (In /proc/sys/kernel/sysrq there is `1'.)  I couldn't
+>> try it in a 5.6.4 virtual tty because of the message flooding (see
+>> below).
 >
-> On Mon, Jun 15, 2020 at 12:27:23PM +0200, Ulf Hansson wrote:
+> If you do this "t" then there should be a lot of output on your console.
+> If you do this from an xterm then you can see the output after typing
+> "dmesg". The output should appear also in your system log.
+
+Ah, ok, I do see it in the log, it looks basically the same as the call
+trace I posted upthread.  I wonder why there was no such output in the
+console, could there be some setting that suppresses it even though
+/proc/sys/kernel/sysrq has `1'?
+
+>> The kernel log shows 305 of these messages in the 4 minutes and 17
+>> seconds between the start of klogd and when I rebooted.
 >
-> > eMMC is not only about voltage levels, but also about enable/disable
-> > of the regulator(s).
+> Okay, this is a lot.
 >
-> > More precisely, one needs to follow the steps specified in the eMMC
-> > spec, when disabling the regulator(s).
+>> > The interesting part is to see if there is a acpi_os_execute() adding a
+>> > specific event multiple times which does not complete. Maybe at runtim=
+e,
+>> > maybe at shutdown time. If that is the case then ignoring this specific
+>> > event might fix the shutdown problem. With all this information so far,
+>> > I don't see a relation with this problem and the commit=E2=80=A6
+>>=20
+>> In those 3 minutes and 8 seconds there were 5 "Adding
+>> acpi_ev_asynch_enable_gpe" messages at the beginning, then 185 "Adding
+>> acpi_ev_notify_dispatch" messages, which kept coming until I rebooted.
 >
-> > In other words, the mmc host driver needs to be probed (consumer of
-> > the regulator), before the regulator(s) can be disabled.
+> 5 acpi_ev_asynch_enable_gpe() in three minutes since boot isn't much.
+> 185 of "Adding acpi_ev_notify_dispatch" is a lot.
 >
-> Right, though you can generally get away with it if you completely cut
-> the power.
+> But to be clear, only=20
+>   acpi_os_execute(1109) Adding acpi_ev_notify_dispatch" messages?
+> No
+>   "acpi_os_execute_deferred_notify() Start/End acpi_ev_notify_dispatch"?=
+=20
+>
+> The syslog should have captured the log on disk.
 
-Well, there are two regulators.
+There were in fact 99 "Start .* acpi_ev_notify_dispatch" messages and 98
+"End .* acpi_ev_notify_dispatch" messages.  Here's the last of them
+before I rebooted:
 
-One is the VCC (vmmc) the other is VCCQ (vqmmc). If you can cut both,
-yes, then you are right. However, quite often VCCQ (the rail for the
-I/O voltage) is an always-on regulator.
+Jun 15 08:58:25 strobe-jhalfs kernel: [  193.315014] acpi_os_execute(1109) =
+Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a66e0 <ffff8d7aabb38480>
+Jun 15 08:58:25 strobe-jhalfs kernel: [  193.319929] acpi_os_execute_deferr=
+ed_notify(853) End   ffff8d7aa8758d00 acpi_ev_notify_dispatch+0x0/0x55(ffff=
+8d7aa84e7eb0)
+Jun 15 08:58:25 strobe-jhalfs kernel: [  193.321242] acpi_os_execute_deferr=
+ed_notify(851) Start ffff8d7aa8758a80 acpi_ev_notify_dispatch+0x0/0x55(ffff=
+8d7aa84e70a0)
+Jun 15 08:58:26 strobe-jhalfs kernel: [  194.339017] acpi_os_execute(1109) =
+Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a6730 <ffff8d7aabb384c0>
+Jun 15 08:58:27 strobe-jhalfs kernel: [  195.363005] acpi_os_execute(1109) =
+Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a6780 <ffff8d7aabb38500>
+Jun 15 08:58:27 strobe-jhalfs kernel: [  195.367978] acpi_os_execute_deferr=
+ed_notify(853) End   ffff8d7aa8758a80 acpi_ev_notify_dispatch+0x0/0x55(ffff=
+8d7aa84e70a0)
+Jun 15 08:58:27 strobe-jhalfs kernel: [  195.369234] acpi_os_execute_deferr=
+ed_notify(851) Start ffff8d7aa8758240 acpi_ev_notify_dispatch+0x0/0x55(ffff=
+8d7aa84e7a00)
+Jun 15 08:58:28 strobe-jhalfs kernel: [  196.387017] acpi_os_execute(1109) =
+Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a68c0 <ffff8d7aabb38540>
+Jun 15 08:58:28 strobe-jhalfs kernel: [  196.388508] acpi_os_execute_deferr=
+ed_notify(853) End   ffff8d7aa8758240 acpi_ev_notify_dispatch+0x0/0x55(ffff=
+8d7aa84e7a00)
+Jun 15 08:58:28 strobe-jhalfs kernel: [  196.390128] acpi_os_execute_deferr=
+ed_notify(851) Start ffff8d7aa8758b80 acpi_ev_notify_dispatch+0x0/0x55(ffff=
+8d7aa84e7460)
+Jun 15 08:58:29 strobe-jhalfs kernel: [  197.208714] wlan1: deauthenticatin=
+g from 7c:ff:4d:08:df:22 by local choice (Reason: 3=3DDEAUTH_LEAVING)
+Jun 15 08:58:29 strobe-jhalfs kernel: [  197.232214] ip (4614) used greates=
+t stack depth: 11272 bytes left
+Jun 15 08:58:29 strobe-jhalfs kernel: Kernel logging (proc) stopped.
+Jun 15 08:58:29 strobe-jhalfs kernel: Kernel log daemon terminating.
 
-Moreover, even if you can cut both regulators, I wouldn't do that,
-unless really necessary. It's always better with a graceful power-off
-sequence of a storage device, as otherwise flash corruption and other
-bad things can more easily happen.
+> I attached a modified acpi_dbg.patch. Please enable:
+> - CONFIG_ACPI_DEBUG=3Dy
+>
+> Looking at your 5.1 you have tracing enabled (hope it still is).
+>
+> The attached patch will dump the date into the tracing buffer, so you
+> console should remain "clean". Once it records 300 of those "requests
+> for acpi_ev_notify_dispatch" it will stop recording.
+> After 4-5 minutes please do
+> 	cat /sys/kernel/debug/tracing/trace > file.txt
+>
+> compress it and send it.
 
-> The big thing is that as part of this we need to actually do
-> the things at the time the driver asks for them to be done rather than
-> some other time.
+Will do as soon as I can, hopefully later today or tomorrow.  Thanks.
 
-Right.
-
-Kind regards
-Uffe
+Steve Berman
