@@ -2,176 +2,150 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B315720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABA520656
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYSgKqK1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AElHnJZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbgFOLIG (ORCPT
+        id S1729626AbgFOLIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:08:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgFOLID (ORCPT
+        Mon, 15 Jun 2020 07:08:40 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56706 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728304AbgFOLIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:08:03 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B289C061A0E;
-        Mon, 15 Jun 2020 04:08:01 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id h3so14824944ilh.13;
-        Mon, 15 Jun 2020 04:08:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1GSlgnChKZMK7jaTTe5He0DByIYqID5vbplEZNg5lVs=;
-        b=bYSgKqK1+jvdbtcWrn1GIPSxztncneIRXXAjtE/WsFPpjsE279NYPG+cCaLPmWAclV
-         ce45cMTTYcysPt1GMwjWIBLANu27bbz7LIhCGatpd1M3g4mb/ESNa60S1x/ni78QAz28
-         8VxaNteqKXHmEGnKYLZEPd/3UC0bBMKkA4Th+Msmb5vjQ5vEWISEpeM6UU5YSADqbF0c
-         H8I5ckZRpxA+mfjqRlLs2X1N4sx73DCD5yRqBdIExNTeoho8kXFaltT5wqjKXen+1NYY
-         2ScibA5y2/cOap52yitnML8wEHILzaIjkKmtVBYT07JTYg9tunrFqrX0fVrUyNxOzBy5
-         7tpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1GSlgnChKZMK7jaTTe5He0DByIYqID5vbplEZNg5lVs=;
-        b=l/ycIsqMMb0LvHJcLzV8tQGq/t1WhWUSd+cjf4p6eW5f8nBRhDSaH3U/P/8U/fF6Du
-         eH9HwqBO/rGr53NfmpIF51aUVv7Wea/Rtboe62V2rA9oi8MS9xxzuV9WV5vZKb6T0HSv
-         7RKLpZwPPra523poQGLV6HixWMfeYWblSjVG7KkEuEm0z2C3DBdp3PC5OBvM4cs+wLj9
-         h8M/PMAjYXpJRF4o/7CfyTmt4oxXqfPZDTNgpBwC8ZyQA2SZphj8+9YxPNuVQ3SkVjAM
-         lgvs2GlsoQKkVRPGrE8/dXoXwHHng9XbOemP/dEO1u0OEToKEneJTS02oMmvf3GZPvp1
-         Po+g==
-X-Gm-Message-State: AOAM5323+WyVoK3nIoHKhTemoIR7vFEZ16s0/0+ltxIUL1+yUfoNMEP/
-        TkeRubfljMFn14UXoiRFAMQvTAy28mBHSlUvAh0=
-X-Google-Smtp-Source: ABdhPJwXwfqTvm2WMwbYGFkCNXVbcd70mrOxIv+h9XKC3PchOMLd+Jcgc7tNQu3V5UzfsEu8IVsAUaRbsWBPt6V3kU8=
-X-Received: by 2002:a92:c9ce:: with SMTP id k14mr25596963ilq.250.1592219279152;
- Mon, 15 Jun 2020 04:07:59 -0700 (PDT)
+        Mon, 15 Jun 2020 07:08:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592219318;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SfFOpFNBb9aBzYgBSswuvFwjcvoni55lhtrClZ7fEug=;
+        b=AElHnJZVfbQDDC9XZqpDr8/jm4mVVm6r5cwr31urD0gAA/IELKw9gwoU95diS80N7Fulz0
+        oGrwfptjNnjoUK3IEF+BQNlozPS7DIV3LWk+tbfwpETRcTe4CZ3NB/UFJYYxwmVguuhj6I
+        4enMpGeypu9iEyGvG6R022bS6qANoaQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-62_Mr1v7PgesK8Si7NzmxQ-1; Mon, 15 Jun 2020 07:08:34 -0400
+X-MC-Unique: 62_Mr1v7PgesK8Si7NzmxQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E76581009441;
+        Mon, 15 Jun 2020 11:08:31 +0000 (UTC)
+Received: from localhost (unknown [10.36.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD8FD70915;
+        Mon, 15 Jun 2020 11:08:29 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 13:08:25 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] bitmap: Add test for bitmap_cut()
+Message-ID: <20200615130825.60283f1b@redhat.com>
+In-Reply-To: <20200615094616.GS2428291@smile.fi.intel.com>
+References: <cover.1592155364.git.sbrivio@redhat.com>
+        <5fc45e6bbd4fa837cd9577f8a0c1d639df90a4ce.1592155364.git.sbrivio@redhat.com>
+        <20200615094155.GQ2428291@smile.fi.intel.com>
+        <20200615094616.GS2428291@smile.fi.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20200612092603.GB3183@techsingularity.net> <CAOQ4uxikbJ19npQFWzGm6xnqXm0W8pV3NOWE0ZxS9p_G2A39Aw@mail.gmail.com>
- <20200612131854.GD3183@techsingularity.net> <CAOQ4uxghy5zOT6i=shZfFHsXOgPrd7-4iPkJBDcsHU6bUSFUFg@mail.gmail.com>
- <CAOQ4uxhm+afWpnb4RFw8LkZ+ZJtnFxqR5HB8Uyj-c44CU9SSJg@mail.gmail.com> <20200615081202.GE9449@quack2.suse.cz>
-In-Reply-To: <20200615081202.GE9449@quack2.suse.cz>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 15 Jun 2020 14:07:46 +0300
-Message-ID: <CAOQ4uxibBL7W0DR4RhC5ZP7Y68ob5Xj6VncWjepgOj=RB8jrGQ@mail.gmail.com>
-Subject: Re: [PATCH] fs: Do not check if there is a fsnotify watcher on pseudo inodes
-To:     Jan Kara <jack@suse.cz>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 11:12 AM Jan Kara <jack@suse.cz> wrote:
->
-> On Fri 12-06-20 23:34:16, Amir Goldstein wrote:
-> > > > > So maybe it would be better to list all users of alloc_file_pseudo()
-> > > > > and say that they all should be opted out of fsnotify, without mentioning
-> > > > > "internal mount"?
-> > > > >
-> > > >
-> > > > The users are DMA buffers, CXL, aio, anon inodes, hugetlbfs, anonymous
-> > > > pipes, shmem and sockets although not all of them necessary end up using
-> > > > a VFS operation that triggers fsnotify.  Either way, I don't think it
-> > > > makes sense (or even possible) to watch any of those with fanotify so
-> > > > setting the flag seems reasonable.
-> > > >
-> > >
-> > > I also think this seems reasonable, but the more accurate reason IMO
-> > > is found in the comment for d_alloc_pseudo():
-> > > "allocate a dentry (for lookup-less filesystems)..."
-> > >
-> > > > I updated the changelog and maybe this is clearer.
-> > >
-> > > I still find the use of "internal mount" terminology too vague.
-> > > "lookup-less filesystems" would have been more accurate,
-> >
-> > Only it is not really accurate for shmfs anf hugetlbfs, which are
-> > not lookup-less, they just hand out un-lookable inodes.
->
-> OK, but I still think we are safe setting FMODE_NONOTIFY in
-> alloc_file_pseudo() and that covers all the cases we care about. Or did I
-> misunderstand something in the discussion? I can see e.g.
-> __shmem_file_setup() uses alloc_file_pseudo() but again that seems to be
-> used only for inodes without a path and the comment before d_alloc_pseudo()
-> pretty clearly states this should be the case.
->
-> So is the dispute here really only about how to call files using
-> d_alloc_pseudo()?
->
+On Mon, 15 Jun 2020 12:46:16 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Yes, semantics, no technical dispute on the patch.
+> On Mon, Jun 15, 2020 at 12:41:55PM +0300, Andy Shevchenko wrote:
+> > On Sun, Jun 14, 2020 at 07:40:54PM +0200, Stefano Brivio wrote:  
+> > > Inspired by an original patch from Yury Norov: introduce a test for
+> > > bitmap_cut() that also makes sure functionality is as described for
+> > > partially overlapping src and dst.  
+> > 
+> > Taking into account recent fixes for BE 64-bit, do we have test cases for a such?  
+> 
+> It might be enough to have only these, but perhaps s390 guys can help?
 
-> > > because as you correctly point out, the user API to set a watch
-> > > requires that the marked object is looked up in the filesystem.
-> > >
-> > > There are also some kernel internal users that set watches
-> > > like audit and nfsd, but I think they are also only interested in
-> > > inodes that have a path at the time that the mark is setup.
-> > >
-> >
-> > FWIW I verified that watches can be set on anonymous pipes
-> > via /proc/XX/fd, so if we are going to apply this patch, I think it
-> > should be accompanied with a complimentary patch that forbids
-> > setting up a mark on these sort of inodes. If someone out there
-> > is doing this, at least they would get a loud message that something
-> > has changed instead of silently dropping fsnotify events.
-> >
-> > So now the question is how do we identify/classify "these sort of
-> > inodes"? If they are no common well defining characteristics, we
-> > may need to blacklist pipes sockets and anon inodes explicitly
-> > with S_NONOTIFY.
->
-> We already do have FS_DISALLOW_NOTIFY_PERM in file_system_type->fs_flags so
-> adding FS_DISALLOW_NOTIFY would be natural if there is a need for this.
+There's no behaviour difference due to endianness in this test itself --
+just word size was a topic, hence that BITS_PER_LONG usage with
+redundant values (checked on i686).
 
-Yes, it is possible, but for the specified use case, it is probably easier
-to classify by inode type (and maybe IS_ROOT()) than by filesystem type.
-Also, in the case of shmem, the same file_system_type is used for user
-mountable tmpfs and the kernel internal shm_mnt instance - only the
-latter is used for handing out anonymous shmem files.
+That is, if you have:
+	{ 0x0000ffffUL, 0x5a5a5a5aUL, 0x5a5a5a5aUL, 0x5a5a5a5aUL },
 
->
-> I don't think using fsnotify on pipe inodes is sane in any way. You'd
-> possibly only get the MODIFY or ACCESS events and even those would not be
-> quite reliable because with pipes stuff like splicing etc. is much more
-> common and that currently completely bypasses fsnotify subsystem. So
-> overall I'm fine with completely ignoring fsnotify on such inodes.
->
+then 1 as array subscript always denotes the second item (from the left)
+there, it doesn't matter how and where different architectures store it.
 
-Agreed for MODIFY ACCESS. Not so sure about other events.
-I see that nfsd filecache backend only marks regular files, so that's fine.
-I *think* audit only marks directories and exe files, but completely unsure.
+Indeed, if bitmap_cut() directly addressed single bytes within the
+words, I would need to pay special attention there. The values I picked
+for these tests are also meant to show any issue in that sense.
 
-Maybe there is no need to optimize out special inodes from all events
-and only exclude them from MODIFY/ACCESS, which are the only
-events where performance may be a concern?
-Or maybe you did not mean to skip events on special inodes in general?
+> Alexander, can you apply this patch (w/o the first one, which is suppose to
+> fix) and confirm that you have test case failure, followed by applying first
+> one and confirm a fix?
 
-I am not sure how important OPEN events are on special inodes, but
-it is scary to stop sending OPEN_PERM events.
+I did that already on s390x (of course, I thought :)), I can confirm
+that. Without patch 1/2 the test also fails there:
 
-Do you agree that we should also actively disallow setting a mark
-on special disconnected inodes? instead of silently dropping events
-that current kernel does deliver?
+[   20.917848] test_bitmap: [lib/test_bitmap.c:666] bitmaps contents differ: expected "0-16,18-19,21,24,26-27,29", got "1,3-4,6,9,11-12,14,16,18-19,21,24,26-27,29"
 
-We could disallow setting a mark on a disconnected inode
-(one that user is trying to configure by using a /proc/$pid/fd/X path).
-We can enforce this restriction for all backends in the common helper
-fsnotify_add_mark_locked().
+If Alexander wants to test this on a z14 or z15, sure, it won't harm.
 
-Thanks,
-Amir.
+By the way, tests for 'parse', 'parse_user' and 'parselist' report
+issues:
+
+[   20.390401] test_bitmap: loaded.
+[   20.394839] test_bitmap: parse: 4: input is 1, result is 0x100000000, expected 0x1
+[   20.395011] test_bitmap: parse: 5: input is deadbeef, result is 0xdeadbeef00000000, expected 0xdeadbeef
+[   20.395059] test_bitmap: parse: 6: input is 1,0, result is 0x1, expected 0x100000000
+[   20.395099] test_bitmap: parse: 7: input is deadbeef,
+               ,0,1, result is 0x1, expected 0xdeadbeef
+[   20.396696] test_bitmap: parse: 8: input is deadbeef,1,0, result is 0x1, expected 0x100000000
+[   20.396735] test_bitmap: parse: 9: input is baadf00d,deadbeef,1,0, result is 0x1, expected 0x100000000
+[   20.396835] test_bitmap: parse: 10: input is badf00d,deadbeef,1,0, errno is -75, expected 0
+[   20.396878] test_bitmap: parse: 11: input is badf00d,deadbeef,1,0, errno is -75, expected 0
+[   20.396913] test_bitmap: parse: 12: input is   badf00d,deadbeef,1,0  , errno is -75, expected 0
+[   20.396957] test_bitmap: parse: 13: input is  , badf00d,deadbeef,1,0 , , errno is -75, expected 0
+[   20.396983] test_bitmap: parse: 14: input is  , badf00d, ,, ,,deadbeef,1,0 , , errno is -75, expected 0
+[   20.397052] test_bitmap: parse: 16: input is 3,0, errno is 0, expected -75
+[   20.397712] test_bitmap: parse_user: 4: input is 1, result is 0x100000000, expected 0x1
+[   20.397832] test_bitmap: parse_user: 5: input is deadbeef, result is 0xdeadbeef00000000, expected 0xdeadbeef
+[   20.397928] test_bitmap: parse_user: 6: input is 1,0, result is 0x1, expected 0x100000000
+[   20.398022] test_bitmap: parse_user: 7: input is deadbeef,
+               ,0,1, result is 0x1, expected 0xdeadbeef
+[   20.398116] test_bitmap: parse_user: 8: input is deadbeef,1,0, result is 0x1, expected 0x100000000
+[   20.398209] test_bitmap: parse_user: 9: input is baadf00d,deadbeef,1,0, result is 0x1, expected 0x100000000
+[   20.398301] test_bitmap: parse_user: 10: input is badf00d,deadbeef,1,0, errno is -75, expected 0
+[   20.398393] test_bitmap: parse_user: 11: input is badf00d,deadbeef,1,0, errno is -75, expected 0
+[   20.398484] test_bitmap: parse_user: 12: input is   badf00d,deadbeef,1,0  , errno is -75, expected 0
+[   20.398574] test_bitmap: parse_user: 13: input is  , badf00d,deadbeef,1,0 , , errno is -75, expected 0
+[   20.398666] test_bitmap: parse_user: 14: input is  , badf00d, ,, ,,deadbeef,1,0 , , errno is -75, expected 0
+[   20.398794] test_bitmap: parse_user: 16: input is 3,0, errno is 0, expected -75
+[   20.399906] test_bitmap: parselist: 14: input is '0-2047:128/256' OK, Time: 2641
+[   20.400914] test_bitmap: parselist_user: 14: input is '0-2047:128/256' OK, Time: 19961
+[   20.421406] test_bitmap: all 1679 tests passed
+
+and at a glance those *seem* to be bugs in the tests themselves, not in
+the actual functions they test. Sure, they should be fixed, but I can't
+take care of that right now.
+
+-- 
+Stefano
+
