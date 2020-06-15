@@ -2,80 +2,109 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD014C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5DCC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52B92078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:36:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592224614;
-	bh=MLaz9Lh1fa6o0lqJXRQNSErh5KCNk+V5uBZbIEvmyBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A3tIg8rDVXmqVVgi7I/th9UL2K+qHBGIxX9OxJ5L1ufa9qLhZVQFTU8s6v9nSlYMj
-	 ST4BMALysRG48qAn+pzdq0CKn/ocP8SwqsGUivqCau/HDnEHsz0Ad13azivm5XdCrf
-	 kLT2vQByNHo535EFZP2AReybw1Ph49n20+skJi2Q=
+	by mail.kernel.org (Postfix) with ESMTP id D53CB206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgFOMgx (ORCPT
+        id S1729876AbgFOMjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbgFOMgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:36:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E323B206D7;
-        Mon, 15 Jun 2020 12:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592224612;
-        bh=MLaz9Lh1fa6o0lqJXRQNSErh5KCNk+V5uBZbIEvmyBA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f5wM4r/qTZh2Gd/MrVZAAxieeBAcKNrUg01uSmxjMC3u5RYWnyavygGbZTl2XKqaA
-         e1/gA37Wvyg0cZw1jS5WU7VPSXJaVsvVe65KEHAyGQSs9Xk1CNBM5PBNL6wO/fcT2Y
-         XP5kUxvdiMdB0Iqkmm5M5/BRDNTGHrz5i2N4kJwo=
-Date:   Mon, 15 Jun 2020 14:36:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ricardo Ferreira <rikajff@gmail.com>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        devel@driverdev.osuosl.org,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        linux-kernel@vger.kernel.org,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v2] Staging: rtl8712: Addressed checkpatch.pl issues
- related to macro parameter wrapping in parentheses.
-Message-ID: <20200615123639.GC943330@kroah.com>
-References: <20200614173146.28292-1-rikajff@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200614173146.28292-1-rikajff@gmail.com>
+        Mon, 15 Jun 2020 08:39:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19200 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728285AbgFOMje (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:39:34 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FC2Xqe072927;
+        Mon, 15 Jun 2020 08:39:32 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5erfdgt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:39:32 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FCSObI014393;
+        Mon, 15 Jun 2020 08:39:31 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5erfdfs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:39:31 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FCM10e001370;
+        Mon, 15 Jun 2020 12:39:29 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma02fra.de.ibm.com with ESMTP id 31mpe89esx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 12:39:29 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FCdQAK24182972
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 12:39:26 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82107A405C;
+        Mon, 15 Jun 2020 12:39:26 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C53DA405B;
+        Mon, 15 Jun 2020 12:39:26 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.1.141])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 12:39:25 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v2 0/1] s390: virtio: let's arch choose to accept devices without IOMMU feature
+Date:   Mon, 15 Jun 2020 14:39:23 +0200
+Message-Id: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ mlxlogscore=605 adultscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 suspectscore=1 clxscore=1015
+ priorityscore=1501 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 06:31:46PM +0100, Ricardo Ferreira wrote:
-> Attempting to wet my feet in kernel patch submission by submitting a checkstyle
-> fix for the rtl8712 driver.
-> 
-> Signed-off-by: Ricardo Ferreira <rikajff@gmail.com>
-> ---
+An architecture protecting the guest memory against unauthorized host
+access may want to enforce VIRTIO I/O device protection through the
+use of VIRTIO_F_IOMMU_PLATFORM.
 
-What changed from v1?
+Let's give a chance to the architecture to accept or not devices
+without VIRTIO_F_IOMMU_PLATFORM.
 
-Always put that below the --- line, so please fix this up and do a v3.
+Pierre Morel (1):
+  s390: virtio: let arch accept devices without IOMMU feature
 
-Also, your changelog text is very odd, do you see other commits in the
-kernel for these files that say things that way?  Please try to follow
-how others do things.  Also read the documentation for how to make a
-good changelog text, that will help out a lot.
+ arch/s390/mm/init.c     | 6 ++++++
+ drivers/virtio/virtio.c | 9 +++++++++
+ include/linux/virtio.h  | 2 ++
+ 3 files changed, 17 insertions(+)
 
-thanks,
+-- 
+2.25.1
 
-greg k-h
+Changelog to v2:
+
+- put the test in virtio_finalize_features()
+  (Connie)
+
+- put the test inside VIRTIO core
+  (Jason)
+
+- pass a virtio device as parameter
+  (Halil)
+
+
