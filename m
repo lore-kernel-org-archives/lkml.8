@@ -2,86 +2,109 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14537C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C00C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE55420663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A261220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbgFOUaT (ORCPT
+        id S1731437AbgFOUbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbgFOUaS (ORCPT
+        Mon, 15 Jun 2020 16:31:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37060 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbgFOUbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:30:18 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF18EC061A0E;
-        Mon, 15 Jun 2020 13:30:18 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0D07A120ED49A;
-        Mon, 15 Jun 2020 13:30:17 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 13:30:17 -0700 (PDT)
-Message-Id: <20200615.133017.143361546049495568.davem@davemloft.net>
-To:     wanghai38@huawei.com
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        liuhangbin@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] mld: fix memory leak in ipv6_mc_destroy_dev()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200611075750.18545-1-wanghai38@huawei.com>
-References: <20200611075750.18545-1-wanghai38@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jun 2020 13:30:18 -0700 (PDT)
+        Mon, 15 Jun 2020 16:31:19 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 48A632A2CF6
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>
+Cc:     matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        laurent.pinchart@ideasonboard.com,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [RESEND PATCH v4 0/7] Convert mtk-dsi to drm_bridge API and get EDID for ps8640 bridge
+Date:   Mon, 15 Jun 2020 22:31:01 +0200
+Message-Id: <20200615203108.786083-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
-Date: Thu, 11 Jun 2020 15:57:50 +0800
+(This resend is to fix some trivial conflicts due the merge window)
 
-> Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
-> the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
-> which mca_sources are leaked after ma_put().
-> 
-> Using ip6_mc_clear_src() to take care of the missing free.
-> 
-> BUG: memory leak
-> unreferenced object 0xffff8881113d3180 (size 64):
->   comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
->     [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
->     [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
->     [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
->     [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
->     [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
->     [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
->     [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
->     [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
->     [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
->     [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
->     [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
->     [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
->     [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> 
-> Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+The PS8640 dsi-to-eDP bridge driver is using the panel bridge API,
+however, not all the components in the chain have been ported to the
+drm_bridge API. Actually, when a panel is attached the default panel's mode
+is used, but in some cases we can't get display up if mode getting from
+eDP control EDID is not chosen.
 
-Applied and queued up for -stable, thank you.
+This series address that problem, first implements the .get_edid()
+callback in the PS8640 driver (which is not used until the conversion is
+done) and then, converts the Mediatek DSI driver to use the drm_bridge
+API.
+
+As far as I know, we're the only users of the mediatek dsi driver in
+mainline, so should be safe to switch to the new chain of drm_bridge API
+unconditionally.
+
+The patches has been tested on a Acer Chromebook R13 (Elm) running a
+Chrome OS userspace and checking that the valid EDID mode reported by
+the bridge is selected.
+
+Changes in v4:
+- Remove double call to drm_encoder_init(). (Chun-Kuang Hu)
+- Cleanup the encoder in mtk_dsi_unbind(). (Chun-Kuang Hu)
+
+Changes in v3:
+- Replace s/bridge/next bridge/ for comment. (Laurent Pinchart)
+- Add the bridge.type. (Laurent Pinchart)
+- Use next_bridge field to store the panel bridge. (Laurent Pinchart)
+- Add the bridge.type field. (Laurent Pinchart)
+- This patch requires https://lkml.org/lkml/2020/4/16/2080 to work
+  properly.
+- Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
+
+Changes in v2:
+- Do not set connector_type for panel here. (Sam Ravnborg)
+
+Enric Balletbo i Serra (7):
+  drm/bridge: ps8640: Get the EDID from eDP control
+  drm/bridge_connector: Set default status connected for eDP connectors
+  drm/mediatek: mtk_dsi: Rename bridge to next_bridge
+  drm/mediatek: mtk_dsi: Convert to bridge driver
+  drm/mediatek: mtk_dsi: Use simple encoder
+  drm/mediatek: mtk_dsi: Use the drm_panel_bridge API
+  drm/mediatek: mtk_dsi: Create connector for bridges
+
+ drivers/gpu/drm/bridge/parade-ps8640.c |  12 ++
+ drivers/gpu/drm/drm_bridge_connector.c |   1 +
+ drivers/gpu/drm/mediatek/mtk_dsi.c     | 269 ++++++++-----------------
+ 3 files changed, 97 insertions(+), 185 deletions(-)
+
+-- 
+2.27.0
+
