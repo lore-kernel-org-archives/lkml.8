@@ -2,99 +2,105 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB43C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 274922078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA3720644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:54:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ld/kDXe/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbgFOOxu (ORCPT
+        id S1730812AbgFOOx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:53:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:56331 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730794AbgFOOxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:53:47 -0400
-IronPort-SDR: KRkTTQpRPRnNfosc8UQgW3KrfRvn/lBBmEVSTkTKhBeNeg4uxmvomxGXylLzZEisvgSisEAJ3H
- 8dWEsIe+MxPg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 07:53:46 -0700
-IronPort-SDR: hBkuUtQL8+lhTWXLYi651EBCBrGOEnQVfzIuldPKgK9Hg1HqC5sQmkx3kq2cejv4s2HjL2N4xD
- LCQ6U6PgIXpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="382567032"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2020 07:53:46 -0700
-Date:   Mon, 15 Jun 2020 07:53:46 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
-        amd-gfx <amd-gfx@lists.freedesktop.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 00/12] x86: tag application address space for devices
-Message-ID: <20200615145345.GA13792@romley-ivt3.sc.intel.com>
-References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
- <20200615075202.GI2497@hirez.programming.kicks-ass.net>
+        Mon, 15 Jun 2020 10:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730794AbgFOOx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:53:57 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396D9C061A0E;
+        Mon, 15 Jun 2020 07:53:57 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id a13so15564707ilh.3;
+        Mon, 15 Jun 2020 07:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PzLODeo5kCBuBydptAl9EG85c2S9uCUTIghPM7WGHrI=;
+        b=Ld/kDXe/GpaOFiwtcPx04ygASOETtYrA2o7jL1tqRZmD02Rszwfk78yBwHIGyPftAF
+         /x1LkdoGCVJ2a2iks3DpaKuST/3QYPihF9qGtNyeZEH7qg/4UnGrpYSnEqbu3gn6YfBh
+         EPCxfWT1NPwQk3GVQTgOeCwLFHb0X9709E4gfvAVcUy4UzZl0RfAdi/9xNXPLnMmYWaJ
+         uGfmwYGmpvTF7tgJTaixqi63agth6chOM+RG2WvwfW7GYVtFkUPkQ/xgKrZrl8mwcelk
+         ZI/hqvWInRrgIVhAXP/x9wn9jNvkSyoEg0eGpt8QGtAemevfP0uCqKG/i/bWeKH/JhXe
+         Ubcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PzLODeo5kCBuBydptAl9EG85c2S9uCUTIghPM7WGHrI=;
+        b=en2AA18ZFN01v1G7hEaulFVS8vsSipCmkFxigeEPahYdAbav/qXQPbC5fjlS/8s/Bw
+         gXYexFhD5VMnQEywZi6WgwK7hai1xleufrw3VtboZPTAh0KKHawcTmDe4ivpL1o8gDfj
+         XrtsscEiJ3p55sgFLYFfd5M3yiljsvsBbTf+SGkNIJSUQ8xwduLJgAmJC9+HpwJSBQim
+         ESMNsKxQNj9pbtGdYrzoufJJdU4EIbHR5zDg7Nao0S98ZVfaKoQsiOJ5K1Sqorp0hg2x
+         g12Rsk4u20zHYmiZBWXA639SQGyLzoNPNw5Uvo9POawvlvT3WdShzqjdZgu38pwcNR/F
+         rgTg==
+X-Gm-Message-State: AOAM531ZBOtuCzZh2Gx4gqRE4WYPth36MsNl8WxMCqXreACZOsYb/XBH
+        cMXr7ogbnSQgyPR1+PumaOriUykMud465nEjqola2Ejh
+X-Google-Smtp-Source: ABdhPJzHYsDv+aGOgSm4eVW9wFZEo9ZhievD2Gjn5An/GBjaq0kMq0f58qU903Mcxewu90XlQPTNbnHCmjRFI21BRqc=
+X-Received: by 2002:a92:77c1:: with SMTP id s184mr27102625ilc.196.1592232836396;
+ Mon, 15 Jun 2020 07:53:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615075202.GI2497@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200615131934.12440-1-aford173@gmail.com> <CAOMZO5Bw5qSDirAKBTRcu4_nDafDcfDGpuNRDyuLZs9Zc=HsQA@mail.gmail.com>
+In-Reply-To: <CAOMZO5Bw5qSDirAKBTRcu4_nDafDcfDGpuNRDyuLZs9Zc=HsQA@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 15 Jun 2020 09:53:45 -0500
+Message-ID: <CAHCN7x+=xjFTy6J4Ej61U2jXTez2rLrt=KtEOzbvV7Tzq6XoPQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/panel-simple: fix connector type for LogicPD Type28 Display
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     DRI mailing list <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        stable <stable@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Peter,
-On Mon, Jun 15, 2020 at 09:52:02AM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 12, 2020 at 05:41:21PM -0700, Fenghua Yu wrote:
-> 
-> > This series only provides simple and basic support for ENQCMD and the MSR:
-> > 1. Clean up type definitions (patch 1-3). These patches can be in a
-> >    separate series.
-> >    - Define "pasid" as "unsigned int" consistently (patch 1 and 2).
-> >    - Define "flags" as "unsigned int"
-> > 2. Explain different various technical terms used in the series (patch 4).
-> > 3. Enumerate support for ENQCMD in the processor (patch 5).
-> > 4. Handle FPU PASID state and the MSR during context switch (patches 6-7).
-> > 5. Define "pasid" in mm_struct (patch 8).
-> > 5. Clear PASID state for new mm and forked and cloned thread (patch 9-10).
-> > 6. Allocate and free PASID for a process (patch 11).
-> > 7. Fix up the PASID MSR in #GP handler when one thread in a process
-> >    executes ENQCMD for the first time (patches 12).
-> 
-> If this is per mm, should not switch_mm() update the MSR ? I'm not
-> seeing that, nor do I see it explained why not.
+On Mon, Jun 15, 2020 at 9:46 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> On Mon, Jun 15, 2020 at 10:19 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > The LogicPD Type28 display used by several Logic PD products has not
+> > worked since v5.5.
+>
+> Maybe you could tell which commit exactly and then put a Fixes tag?
 
-PASID value is per mm and all threads in a process have the same PASID
-value in the MSR. However, the MSR is per thread and is context switched
-by XSAVES/XRSTROS in patches 6-7.
+I honestly don't know.  I reached out to the omap mailing list,
+because I noted this issue. Tomi V from TI responded with a link that
+he posted which fixes this for another display.
 
-Thanks.
+https://www.mail-archive.com/dri-devel@lists.freedesktop.org/msg312208.html
 
--Fenghua
+I tested that patch and it worked for a different LCD, so I did the
+same thing to the Logic PD Type 28 display as well.
+
+My patch and commit message were modeled after his, and his commit
+CC's stable with a note about being required for v5.5+
+
+I added him to the CC list, so maybe he knows which hash needs to be
+referenced from a fixes tag.  I was hoping to not have to go back and
+bisect if it's not required, but I will if necessary.
+
+
+adam
