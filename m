@@ -2,144 +2,266 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34440C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1517720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PKzDttg0"
+	by mail.kernel.org (Postfix) with ESMTP id 0F85C20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592241287;
+	bh=paQABkpq5ck42pvrmFPvYEob/i6ZpRVVHGgk9a/lNAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZoEtBEbwJn5tlst38QhLcCQDhrB8V+q59tD/bDylHJLV9GkaxWraENtxCbwbBRJoe
+	 tiMo/ej8dYDG5RPXQkyGWiM8VjMt/MZ3isihlYV/WBB59o7XgGzr5cH3db/2nfe/QX
+	 /AbPLiIdSfgrNqxy9b+Yw1fhgFur5I1dYkoAtz00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731235AbgFORON (ORCPT
+        id S1731237AbgFOROq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:14:13 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36867 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729354AbgFOROI (ORCPT
+        Mon, 15 Jun 2020 13:14:46 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45940 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729354AbgFOROp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:14:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592241246;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=laujHXtNzuWRWuumln1La0bpzgZIGk/wirXDlUO/7Ek=;
-        b=PKzDttg0lA9FLiqQMChpJlGa7om0/4/IAb3nUb3sX6K+/U3YWZTRBhMuEhXqgu0mW4GJ7U
-        7wJZSDiBqfJj6/ABldlWXCe4ezQZpQOEPqmEf7OGgUhD39Ktpn0WWrbGe0qHisX1z5WyYk
-        WDyKP1el+XVSbi4j7r0Wb0+gyfM/9IA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-0ataK8GQPYKHIOZZVTHhuQ-1; Mon, 15 Jun 2020 13:14:02 -0400
-X-MC-Unique: 0ataK8GQPYKHIOZZVTHhuQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FF6418585A7;
-        Mon, 15 Jun 2020 17:13:58 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-41.rdu2.redhat.com [10.10.117.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 34B6A5C1D6;
-        Mon, 15 Jun 2020 17:13:52 +0000 (UTC)
-Subject: Re: possible deadlock in send_sigio
-To:     Matthew Wilcox <willy@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
-        areber@redhat.com, aubrey.li@linux.intel.com,
-        Andrei Vagin <avagin@gmail.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, sargun@sargun.me,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <000000000000760d0705a270ad0c@google.com>
- <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
- <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
- <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
- <20200611142214.GI2531@hirez.programming.kicks-ass.net>
- <b405aca6-a3b2-cf11-a482-2b4af1e548bd@redhat.com>
- <20200611235526.GC94665@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200612070101.GA879624@tardis>
- <20200615164902.GV8681@bombadil.infradead.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <0c854a69-9b89-9e45-f2c1-e60e2a9d3f1c@redhat.com>
-Date:   Mon, 15 Jun 2020 13:13:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 15 Jun 2020 13:14:45 -0400
+Received: by mail-io1-f65.google.com with SMTP id y5so18680975iob.12;
+        Mon, 15 Jun 2020 10:14:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hiOijoD53LX37YRMIwEiw00dAjUSx8soGvrpBh7UCNk=;
+        b=Qp9t/KukYyFxOiVzLy05euwvk2eHpu3iUN54O56gdnqMdhs2oFTtUmSgr4OIRQjalN
+         jXMkicbQ4ftOaaksx7gMLuIc3GhsFBoXB2aZGezpjzQeKaMSlrMz73L31/4eiPwL5tBz
+         /5YHxy7eu6z22XXhs8l7pTRL0G/QBzRJaMUTpiYtNBCM4XI/uVysscsjv0GjSS5R5eLn
+         X/G8UJjcxLdni/NPuaRrZiHgM9EgvKETQe+VQgxCHc1MDSJtI8yS//l3Eox9bZwEk8bt
+         ilYdm1Fq0tW4DduMvS+ERjovuHRWvAGo2WCsz2aMvM8+2ng1nj+GEMPmAzwpQpuySFn9
+         R3FA==
+X-Gm-Message-State: AOAM530pGKBUdNU2LvGx9W34hCV31XdZccl4eENEIq0xY1ixgBBSdL3w
+        nb9zQ1tGiSkmPgchUoKczQ==
+X-Google-Smtp-Source: ABdhPJzMt4RbwBhE8d8aXJ1Kn/OXGkG36uamUKf5TRxX+ttPOWrLxY6THuuBLi6cS0RFohMBITK0UQ==
+X-Received: by 2002:a02:7f4d:: with SMTP id r74mr21951710jac.51.1592241283969;
+        Mon, 15 Jun 2020 10:14:43 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id v11sm8354642ile.61.2020.06.15.10.14.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 10:14:43 -0700 (PDT)
+Received: (nullmailer pid 1974668 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:14:41 -0000
+Date:   Mon, 15 Jun 2020 11:14:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, marex@denx.de,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 2/3] dt-bindings: spi: Convert imx cspi to json-schema
+Message-ID: <20200615171441.GA1971091@bogus>
+References: <1591235731-15673-1-git-send-email-Anson.Huang@nxp.com>
+ <1591235731-15673-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200615164902.GV8681@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591235731-15673-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 12:49 PM, Matthew Wilcox wrote:
-> On Fri, Jun 12, 2020 at 03:01:01PM +0800, Boqun Feng wrote:
->> On the archs using QUEUED_RWLOCKS, read_lock() is not always a recursive
->> read lock, actually it's only recursive if in_interrupt() is true. So
->> change the annotation accordingly to catch more deadlocks.
-> [...]
->
->> +#ifdef CONFIG_LOCKDEP
->> +/*
->> + * read_lock() is recursive if:
->> + * 1. We force lockdep think this way in selftests or
->> + * 2. The implementation is not queued read/write lock or
->> + * 3. The locker is at an in_interrupt() context.
->> + */
->> +static inline bool read_lock_is_recursive(void)
->> +{
->> +	return force_read_lock_recursive ||
->> +	       !IS_ENABLED(CONFIG_QUEUED_RWLOCKS) ||
->> +	       in_interrupt();
->> +}
-> I'm a bit uncomfortable with having the _lockdep_ definition of whether
-> a read lock is recursive depend on what the _implementation_ is.
-> The locking semantics should be the same, no matter which architecture
-> you're running on.  If we rely on read locks being recursive in common
-> code then we have a locking bug on architectures which don't use queued
-> rwlocks.
->
-> I don't know whether we should just tell the people who aren't using
-> queued rwlocks that they have a new requirement or whether we should
-> say that read locks are never recursive, but having this inconsistency
-> is not a good idea!
+On Thu, Jun 04, 2020 at 09:55:30AM +0800, Anson Huang wrote:
+> Convert the i.MX CSPI binding to DT schema format using json-schema,
+> update compatible, remove obsolete properties "fsl,spi-num-chipselects"
+> and update the example based on latest DT file.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- add "unevaluatedProperties: false".
+> ---
+>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       | 56 ------------
+>  .../devicetree/bindings/spi/fsl-imx-cspi.yaml      | 99 ++++++++++++++++++++++
+>  2 files changed, 99 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> deleted file mode 100644
+> index 33bc58f..0000000
+> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> +++ /dev/null
+> @@ -1,56 +0,0 @@
+> -* Freescale (Enhanced) Configurable Serial Peripheral Interface
+> -  (CSPI/eCSPI) for i.MX
+> -
+> -Required properties:
+> -- compatible :
+> -  - "fsl,imx1-cspi" for SPI compatible with the one integrated on i.MX1
+> -  - "fsl,imx21-cspi" for SPI compatible with the one integrated on i.MX21
+> -  - "fsl,imx27-cspi" for SPI compatible with the one integrated on i.MX27
+> -  - "fsl,imx31-cspi" for SPI compatible with the one integrated on i.MX31
+> -  - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
+> -  - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+> -  - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
+> -  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
+> -  - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
+> -  - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
+> -  - "fsl,imx8mp-ecspi" for SPI compatible with the one integrated on i.MX8MP
+> -- reg : Offset and length of the register set for the device
+> -- interrupts : Should contain CSPI/eCSPI interrupt
+> -- clocks : Clock specifiers for both ipg and per clocks.
+> -- clock-names : Clock names should include both "ipg" and "per"
+> -See the clock consumer binding,
+> -	Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -
+> -Recommended properties:
+> -- cs-gpios : GPIOs to use as chip selects, see spi-bus.txt.  While the native chip
+> -select lines can be used, they appear to always generate a pulse between each
+> -word of a transfer.  Most use cases will require GPIO based chip selects to
+> -generate a valid transaction.
+> -
+> -Optional properties:
+> -- num-cs :  Number of total chip selects, see spi-bus.txt.
+> -- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+> -Documentation/devicetree/bindings/dma/dma.txt.
+> -- dma-names: DMA request names, if present, should include "tx" and "rx".
+> -- fsl,spi-rdy-drctl: Integer, representing the value of DRCTL, the register
+> -controlling the SPI_READY handling. Note that to enable the DRCTL consideration,
+> -the SPI_READY mode-flag needs to be set too.
+> -Valid values are: 0 (disabled), 1 (edge-triggered burst) and 2 (level-triggered burst).
+> -
+> -Obsolete properties:
+> -- fsl,spi-num-chipselects : Contains the number of the chipselect
+> -
+> -Example:
+> -
+> -ecspi@70010000 {
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -	compatible = "fsl,imx51-ecspi";
+> -	reg = <0x70010000 0x4000>;
+> -	interrupts = <36>;
+> -	cs-gpios = <&gpio3 24 0>, /* GPIO3_24 */
+> -		   <&gpio3 25 0>; /* GPIO3_25 */
+> -	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
+> -	dma-names = "rx", "tx";
+> -	fsl,spi-rdy-drctl = <1>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
+> new file mode 100644
+> index 0000000..606af7d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
+> @@ -0,0 +1,99 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/fsl-imx-cspi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale (Enhanced) Configurable Serial Peripheral Interface (CSPI/eCSPI) for i.MX
+> +
+> +maintainers:
+> +  - Shawn Guo <shawn.guo@linaro.org>
+> +
+> +allOf:
+> +  - $ref: "/schemas/spi/spi-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: fsl,imx1-cspi
+> +      - const: fsl,imx21-cspi
+> +      - const: fsl,imx27-cspi
+> +      - const: fsl,imx31-cspi
+> +      - const: fsl,imx35-cspi
+> +      - const: fsl,imx51-ecspi
+> +      - const: fsl,imx53-ecspi
+> +      - items:
+> +        - enum:
+> +          - fsl,imx50-ecspi
+> +          - fsl,imx6q-ecspi
+> +          - fsl,imx6sx-ecspi
+> +          - fsl,imx6sl-ecspi
+> +          - fsl,imx6sll-ecspi
+> +          - fsl,imx6ul-ecspi
+> +          - fsl,imx7d-ecspi
+> +          - fsl,imx8mq-ecspi
+> +          - fsl,imx8mm-ecspi
+> +          - fsl,imx8mn-ecspi
+> +          - fsl,imx8mp-ecspi
+> +        - const: fsl,imx51-ecspi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: SoC SPI ipg clock
+> +      - description: SoC SPI per clock
+> +    maxItems: 2
 
-Actually, qrwlock is more restrictive. It is possible that systems with 
-qrwlock may hit deadlock which doesn't happens in other systems that use 
-recursive rwlock. However, the current lockdep code doesn't detect those 
-cases.
+Can drop 'maxItems', it is redundant here.
 
-Changing lockdep to only use qrwlock semantics can be problematic as the 
-code hunk in locking selftest is due to the fact that it assumes 
-recursive lock. So we need to change that. Anyway, this patch can allow 
-us to see if current qrwlock semantics may have potential deadlock 
-problem in the current code. I actually have bug report about deadlock 
-due to qrwlock semantics in RHEL7. So I would certainly like to see if 
-the current upstream code may have also this kind of problem.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ipg
+> +      - const: per
+> +    maxItems: 2
 
-Cheers,
-Longman
+And here.
 
+> +
+> +  dmas:
+> +    items:
+> +      - description: DMA controller phandle and request line for RX
+> +      - description: DMA controller phandle and request line for TX
+> +
+> +  dma-names:
+> +    items:
+> +      - const: rx
+> +      - const: tx
+> +
+> +  fsl,spi-rdy-drctl:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Integer, representing the value of DRCTL, the register controlling
+> +      the SPI_READY handling. Note that to enable the DRCTL consideration,
+> +      the SPI_READY mode-flag needs to be set too.
+> +      Valid values are: 0 (disabled), 1 (edge-triggered burst) and 2 (level-triggered burst).
+> +    enum: [0, 1, 2]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx5-clock.h>
+> +
+> +    spi@70010000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "fsl,imx51-ecspi";
+> +        reg = <0x70010000 0x4000>;
+> +        interrupts = <36>;
+> +        clocks = <&clks IMX5_CLK_ECSPI1_IPG_GATE>,
+> +                 <&clks IMX5_CLK_ECSPI1_PER_GATE>;
+> +        clock-names = "ipg", "per";
+> +    };
+> -- 
+> 2.7.4
+> 
