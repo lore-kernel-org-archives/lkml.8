@@ -2,165 +2,117 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EB1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7039AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00BD720768
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B37E2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lMnXpMZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbgFOTBq (ORCPT
+        id S1731409AbgFOTE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:01:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47868 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729844AbgFOTBo (ORCPT
+        Mon, 15 Jun 2020 15:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731249AbgFOTE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:01:44 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FIiBmH104307;
-        Mon, 15 Jun 2020 15:01:42 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31n42kg02r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 15:01:42 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FIKmit024443;
-        Mon, 15 Jun 2020 19:01:41 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma04dal.us.ibm.com with ESMTP id 31mpe90tsr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 19:01:41 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FJ1dCK15335892
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 19:01:39 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F7A6BE054;
-        Mon, 15 Jun 2020 19:01:39 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E2C9BE058;
-        Mon, 15 Jun 2020 19:01:38 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.114.224.51])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jun 2020 19:01:38 +0000 (GMT)
-From:   David Christensen <drc@linux.vnet.ibm.com>
-To:     netdev@vger.kernel.org,
-        Siva Reddy Kallam <siva.kallam@broadcom.com>,
-        Prashant Sreedharan <prashant@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>
-Cc:     linux-kernel@vger.kernel.org,
-        David Christensen <drc@linux.vnet.ibm.com>
-Subject: [PATCH] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
-Date:   Mon, 15 Jun 2020 12:01:19 -0700
-Message-Id: <20200615190119.382589-1-drc@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.18.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_03:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 suspectscore=0
- cotscore=-2147483648 adultscore=0 impostorscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150111
+        Mon, 15 Jun 2020 15:04:26 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CD5C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:04:25 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id i4so262585pjd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9aW2TqrBLH8LeFdcz9gJFpsSwBcZN5ImxsbMz/APSqI=;
+        b=lMnXpMZZ28eB1AUnoYs0tMCcfdx9eomDMjAwwW3tQo1QWecVxMGf4Z9oaZqZ0DSC9J
+         2kdu8TS9YCnn3/TZaRoxoLXK308sh0TkEM2S9r1iOsf5XFgv1gHIODJ2b1KSLoDQU2gr
+         2GkTorHfQSznZssJuKgKDyKM2FHoLNgGsjtxAaSGs39xQuzdBO8oFjHZRCA1vzJmkHuE
+         FrP7hVmxLNMjj55B8KoaF5Zzn5gLiy03derdrZFzbR+UtzN3f/tpmNXR7KuPoQQBbFB2
+         zD6DWqxILh+69QkSkIQYbHTSGhmqUbWK5DPPtTDnPrfIO6PmhLpzTNAl2BoKwml1HovC
+         CzTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9aW2TqrBLH8LeFdcz9gJFpsSwBcZN5ImxsbMz/APSqI=;
+        b=YLsTz7OnjXL+/vF42BKFwlxXP58N0X75Za4xGMPdnRene/GiJeaVWBhs0DOnqQpWKB
+         dhBNlko+WgsBx/Hj7fOCtwyt1Tn4yXhv10/0mL3UkaTHbcjg1aENnm63lup2fnOWaUoa
+         EU+KRp8yLaOc1FBBay8ulfXNEu4XJvq7mcLknh52QhK1MWPrTDSWI1fW9zq1FNzEJyCg
+         bTugk9Er8E53cpaxoD6HE0s3VICeMFEHZ40xxf5uC69UDsmwF7FbcGBq/jxhkEBOJAra
+         WbK9u5zNu9mroYRJu90xQlpnkmLZpRA0fg7R9op4xV7FeOakrzYRAo6x1X44tLJyPhCg
+         pDeg==
+X-Gm-Message-State: AOAM530Aj6fiNSMNpzB6qbHNZlN2tqSX2ipk7TReFG6EmoBJZfGsAl9k
+        mSEXmLIcvELTMNr1F6ISz3j1U+RkGiJ53XOibe4Si530EHQ=
+X-Google-Smtp-Source: ABdhPJylLhumge3iLMOwdrqKasfZc2kbu7Zpnn7izPXUiTo/OOS+izBX7wRfEj0QlmWA813ZcGQ3QUzhmD/VSOhu3wk=
+X-Received: by 2002:a17:90b:1244:: with SMTP id gx4mr707505pjb.136.1592247864399;
+ Mon, 15 Jun 2020 12:04:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200615184302.7591-1-elver@google.com>
+In-Reply-To: <20200615184302.7591-1-elver@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 15 Jun 2020 21:04:13 +0200
+Message-ID: <CAAeHK+zdNpMhpaHRYHxc9a5ghp4MBR3ecxxWem8-yrNFLYTFEg@mail.gmail.com>
+Subject: Re: [PATCH] kcov: Unconditionally add -fno-stack-protector to
+ compiler options
+To:     Marco Elver <elver@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver function tg3_io_error_detected() calls napi_disable twice,
-without an intervening napi_enable, when the number of EEH errors exceeds
-eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
+On Mon, Jun 15, 2020 at 8:43 PM Marco Elver <elver@google.com> wrote:
+>
+> Unconditionally add -fno-stack-protector to KCOV's compiler options, as
+> all supported compilers support the option. This saves a compiler
+> invocation to determine if the option is supported.
+>
+> Because Clang does not support -fno-conserve-stack, and
+> -fno-stack-protector was wrapped in the same cc-option, we were missing
+> -fno-stack-protector with Clang. Unconditionally adding this option
+> fixes this for Clang.
+>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+> Split out from series:
+>         https://lkml.kernel.org/r/20200605082839.226418-2-elver@google.com
+> as there is no dependency on the preceding patch (which will be dropped).
+> ---
+>  kernel/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/Makefile b/kernel/Makefile
+> index f3218bc5ec69..592cb549dcb8 100644
+> --- a/kernel/Makefile
+> +++ b/kernel/Makefile
+> @@ -35,7 +35,7 @@ KCOV_INSTRUMENT_stacktrace.o := n
+>  KCOV_INSTRUMENT_kcov.o := n
+>  KASAN_SANITIZE_kcov.o := n
+>  KCSAN_SANITIZE_kcov.o := n
+> -CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+> +CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack) -fno-stack-protector
+>
+>  # cond_syscall is currently not LTO compatible
+>  CFLAGS_sys_ni.o = $(DISABLE_LTO)
+> --
+> 2.27.0.290.gba653c62da-goog
+>
 
-The function is called once with the PCI state pci_channel_io_frozen and
-then called again with the state pci_channel_io_perm_failure when the
-number of EEH failures in an hour exceeds eeh_max_freezes.
-
-Protecting the calls to napi_enable/napi_disable with a new state
-variable prevents the long sleep.
-
-Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
----
- drivers/net/ethernet/broadcom/tg3.c | 18 +++++++++++++++---
- drivers/net/ethernet/broadcom/tg3.h |  1 +
- 2 files changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index 7a3b22b35238..953f535e0ceb 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -7373,22 +7373,34 @@ static void tg3_napi_disable(struct tg3 *tp)
- {
- 	int i;
- 
-+	if (!tp->napi_enabled)
-+		return;
-+
- 	for (i = tp->irq_cnt - 1; i >= 0; i--)
- 		napi_disable(&tp->napi[i].napi);
-+
-+	tp->napi_enabled = false;
- }
- 
- static void tg3_napi_enable(struct tg3 *tp)
- {
- 	int i;
- 
-+	if (tp->napi_enabled)
-+		return;
-+
- 	for (i = 0; i < tp->irq_cnt; i++)
- 		napi_enable(&tp->napi[i].napi);
-+
-+	tp->napi_enabled = true;
- }
- 
- static void tg3_napi_init(struct tg3 *tp)
- {
- 	int i;
- 
-+	tp->napi_enabled = false;
-+
- 	netif_napi_add(tp->dev, &tp->napi[0].napi, tg3_poll, 64);
- 	for (i = 1; i < tp->irq_cnt; i++)
- 		netif_napi_add(tp->dev, &tp->napi[i].napi, tg3_poll_msix, 64);
-@@ -7400,6 +7412,8 @@ static void tg3_napi_fini(struct tg3 *tp)
- 
- 	for (i = 0; i < tp->irq_cnt; i++)
- 		netif_napi_del(&tp->napi[i].napi);
-+
-+	tp->napi_enabled = false;
- }
- 
- static inline void tg3_netif_stop(struct tg3 *tp)
-@@ -18194,10 +18208,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
- 
- done:
- 	if (state == pci_channel_io_perm_failure) {
--		if (netdev) {
--			tg3_napi_enable(tp);
-+		if (netdev)
- 			dev_close(netdev);
--		}
- 		err = PCI_ERS_RESULT_DISCONNECT;
- 	} else {
- 		pci_disable_device(pdev);
-diff --git a/drivers/net/ethernet/broadcom/tg3.h b/drivers/net/ethernet/broadcom/tg3.h
-index 6953d0546acb..0681f4b9ec79 100644
---- a/drivers/net/ethernet/broadcom/tg3.h
-+++ b/drivers/net/ethernet/broadcom/tg3.h
-@@ -3430,6 +3430,7 @@ struct tg3 {
- 	u32                             ape_hb;
- 	unsigned long                   ape_hb_interval;
- 	unsigned long                   ape_hb_jiffies;
-+	bool				napi_enabled;
- };
- 
- /* Accessor macros for chip and asic attributes
--- 
-2.18.2
-
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
