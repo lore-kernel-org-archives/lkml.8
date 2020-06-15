@@ -2,145 +2,110 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29632C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07C2F207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:07:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="GCccnrQQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3904F207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbgFOOHj (ORCPT
+        id S1730129AbgFOOKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgFOOHh (ORCPT
+        Mon, 15 Jun 2020 10:10:47 -0400
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:57262
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbgFOOKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:07:37 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D16C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:07:37 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id u17so12670709qtq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=STVn3sZd24uT+6Abwx3hGrjt3KiHGonv7dCNXNNdXc8=;
-        b=GCccnrQQ+F14prS1VzHQOSHnlhzYUWa/2xFrs2CsD2SO70HA6PTmJTScI0KFtJeBOc
-         qmo/pwzQ42F5oj3P0MQl2aKylMW9BPqXthu5sim3japhSFdTQVi5qd9c3vRqO8284pNE
-         anskV2Y91HtgHpNQkW+Qijlori0G/w9Do6FKTQ6CG1epkWn4iisZN7Fs78d7lxRLJp96
-         FntORj5A661/Ztro6W9JpfAn5tp63iJV/Q2qAqGBWTfP5sXEzQMKSwCeNcs1na2ncJeE
-         qtcb7eewI3tvvRmv9KRr+kWaKsgg0FxTlz3tX7YOi3HxT3sxNbGcceazGEQ2OZBCWuKb
-         9Bfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=STVn3sZd24uT+6Abwx3hGrjt3KiHGonv7dCNXNNdXc8=;
-        b=Qks7xQPf2XVK0M8mObC2sNYUiJOMts08xTAHWMffNafprRhveO+JZL4HSu37zk1d7Q
-         qLa2BWEteAeirthwyc9Bw86TrIntEHjBLm69Jv+br6wlVkrKZYpBYGKqWQ/rS60ELr/D
-         J92B0P2iZmQ5TgT3H1o0LEk15RP1Nk26UsA/BjJqJ612HdnUOZl8B6UcRfu/NsWWXYKH
-         ckKzR+ZXXi2lwSCQqaPChvvNB/s/rxHS76hYDgiGm91dWbDC9fFu/rGNvuG9HEx2/D/N
-         toCMw5tSzVtTDFxFD/jOWeNKJt9V1cT5fzgrFyq9de1h4WwvdRtLco9G1zYAN0du9Di1
-         awRQ==
-X-Gm-Message-State: AOAM530Gg7kDDkmZ3wVNOQu9kvVAhpkmJYHNB5dzdYr3UGKzJhTs11p8
-        /bj2m9gnkc8MA1pUijkA8L9P8A==
-X-Google-Smtp-Source: ABdhPJxFqBJgLwdN8IHNXFvxCzqBbX4KT88lV6RW+axueoCkAN7sfbOvB2co5bFTrGyLo5vjzmPHvg==
-X-Received: by 2002:ac8:6f79:: with SMTP id u25mr16186587qtv.183.1592230056852;
-        Mon, 15 Jun 2020 07:07:36 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id p44sm12789120qta.12.2020.06.15.07.07.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 07:07:36 -0700 (PDT)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH] mm: memcontrol: handle div0 crash race condition in memory.low
-Date:   Mon, 15 Jun 2020 10:06:58 -0400
-Message-Id: <20200615140658.601684-1-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.26.2
+        Mon, 15 Jun 2020 10:10:47 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id 4A65D43A8BF;
+        Mon, 15 Jun 2020 22:10:46 +0800 (+08)
 MIME-Version: 1.0
+Date:   Mon, 15 Jun 2020 22:10:46 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming.com
+Subject: [15 Jun 2020 Mon] Orchard Road Walking Exercises: 5140 steps or 3.92
+ km in one hour
+Message-ID: <4bece67e16888f10c56d285ea149ca51@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tejun reports seeing rare div0 crashes in memory.low stress testing:
+Subject: [15 Jun 2020 Mon] Orchard Road Walking Exercises: 5140 steps or 
+3.92 km in one hour
 
-[37228.504582] RIP: 0010:mem_cgroup_calculate_protection+0xed/0x150
-[37228.505059] Code: 0f 46 d1 4c 39 d8 72 57 f6 05 16 d6 42 01 40 74 1f 4c 39 d8 76 1a 4c 39 d1 76 15 4c 29 d1 4c 29 d8 4d 29 d9 31 d2 48 0f af c1 <49> f7 f1 49 01 c2 4c 89 96 38 01 00 00 5d c3 48 0f af c7 31 d2 49
-[37228.506254] RSP: 0018:ffffa14e01d6fcd0 EFLAGS: 00010246
-[37228.506769] RAX: 000000000243e384 RBX: 0000000000000000 RCX: 0000000000008f4b
-[37228.507319] RDX: 0000000000000000 RSI: ffff8b89bee84000 RDI: 0000000000000000
-[37228.507869] RBP: ffffa14e01d6fcd0 R08: ffff8b89ca7d40f8 R09: 0000000000000000
-[37228.508376] R10: 0000000000000000 R11: 00000000006422f7 R12: 0000000000000000
-[37228.508881] R13: ffff8b89d9617000 R14: ffff8b89bee84000 R15: ffffa14e01d6fdb8
-[37228.509397] FS:  0000000000000000(0000) GS:ffff8b8a1f1c0000(0000) knlGS:0000000000000000
-[37228.509917] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[37228.510442] CR2: 00007f93b1fc175b CR3: 000000016100a000 CR4: 0000000000340ea0
-[37228.511076] Call Trace:
-[37228.511561]  shrink_node+0x1e5/0x6c0
-[37228.512044]  balance_pgdat+0x32d/0x5f0
-[37228.512521]  kswapd+0x1d7/0x3d0
-[37228.513346]  ? wait_woken+0x80/0x80
-[37228.514170]  kthread+0x11c/0x160
-[37228.514983]  ? balance_pgdat+0x5f0/0x5f0
-[37228.515797]  ? kthread_park+0x90/0x90
-[37228.516593]  ret_from_fork+0x1f/0x30
+On 15 June 2020 Monday, I, Mr. Turritopsis Dohrnii Teo En Ming, have 
+walked 5140 steps or 3.92 km from Orchard Road MRT Station (Singapore) 
+to The Cathay shopping center (Singapore) and from The Cathay shopping 
+center back to Orchard Road MRT Station in one hour (55 minutes to be 
+exact).
 
-This happens when parent_usage == siblings_protected. We check that
-usage is bigger than protected, which should imply parent_usage being
-bigger than siblings_protected. However, we don't read (or even
-update) these values atomically, and they can be out of sync as the
-memory state changes under us. A bit of fluctuation around the target
-protection isn't a big deal, but we need to handle the div0 case.
+My fasting blood glucose readings after the walking exercise are 6.1 
+mmol/L and 6.1 mmol/L (take 2 readings to confirm).
 
-Check the parent state explicitly to make sure we have a reasonable
-positive value for the divisor.
+My blood pressure readings after the walking exercise are 114/83 and 
+110/85 (take 2 readings to confirm).
 
-Fixes: 8a931f801340 ("mm: memcontrol: recursive memory.low protection")
-Reported-by: Tejun Heo <tj@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/memcontrol.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+I have been doing consistent walking exercises for a few years until 
+suspension on 13 April 2020. I resumed/restarted walking exercises on 2 
+June 2020.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 0b38b6ad547d..5de0a9035b5f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6360,11 +6360,16 @@ static unsigned long effective_protection(unsigned long usage,
- 	 * We're using unprotected memory for the weight so that if
- 	 * some cgroups DO claim explicit protection, we don't protect
- 	 * the same bytes twice.
-+	 *
-+	 * Check both usage and parent_usage against the respective
-+	 * protected values. One should imply the other, but they
-+	 * aren't read atomically - make sure the division is sane.
- 	 */
- 	if (!(cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT))
- 		return ep;
--
--	if (parent_effective > siblings_protected && usage > protected) {
-+	if (parent_effective > siblings_protected &&
-+	    parent_usage > siblings_protected &&
-+	    usage > protected) {
- 		unsigned long unclaimed;
- 
- 		unclaimed = parent_effective - siblings_protected;
--- 
-2.26.2
+I would like to continue doing walking exercises every day for at least 
+45 mins to one hour or more until I am 14 BILLION years old. I need to 
+have determination and perseverance in doing walking exercises every day 
+to keep fit and healthy until I am 14 BILLION years old. I want to live 
+until 14 BILLION years old.
 
+I cannot run or jog because of early onset of osteoarthritis (wear and 
+tear) of both knees at 40 years old. As of 15 June 2020, I am 42 years 
+old. I have the capability to walk up to 17 km in one day.
+
+YouTube video: Why You Should Start Walking Every Day
+
+Link: https://www.youtube.com/watch?v=lkgXUCgskz0
+
+YouTube video: [Chinese Song and Music Video] 我真的还想再活五百年 (Accurate 
+translation: I really wish to live for another 500 years) in "The Era of 
+Emperor Kangxi" TV drama.
+
+Link: https://www.youtube.com/watch?v=_rA9r7QHPig
+
+
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
