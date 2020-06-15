@@ -2,72 +2,83 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6897E20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604AB2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oHJ0ysAF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4pY9opf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731767AbgFOVGs (ORCPT
+        id S1731775AbgFOVGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 17:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43100 "EHLO
+        Mon, 15 Jun 2020 17:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731669AbgFOVGm (ORCPT
+        with ESMTP id S1731436AbgFOVGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 17:06:42 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF7FC08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 14:06:42 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id q69so4279307vkq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 14:06:42 -0700 (PDT)
+        Mon, 15 Jun 2020 17:06:45 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81864C08C5C5;
+        Mon, 15 Jun 2020 14:06:43 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q19so18972308eja.7;
+        Mon, 15 Jun 2020 14:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZLvWjCloxY3lhqt5Y/n4uc8TQYyU0FRxQJFsgkejp+0=;
-        b=oHJ0ysAF5smXaRh+kIKQMkrbriZOwor9F6OemiNx01/wXgAGLwhBlbIEEMKQo62y91
-         4LBerGtB5SmuUX4V2ewdAzu2N6Gwp6ppHZB0kEk/M7lOth5nWq3B583KxSorq0f4tqaK
-         bgHWuFAYGHgv2uGoMyEC6gCqFR0FXFav+ulME=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=q1JV3CXtWnCDf52pi6FDmUEpTUr0tLhuu541saxjHEI=;
+        b=Z4pY9opfhhvGea/MOsllxIaNmvyJGxZq48BRu+78lWmOHGt/CRLVSdJBc5pNAjpXHX
+         MTK1X+UC3oq+jADFPxMw3RFixQoVxqGxyEV2myuabTpGQusza9gKTzLR8GaYxtqpobJ/
+         N/Xn/fYAiIP3dh8FrcXpTxpkIYQ3apCrpRjDrpXdCMOjbj5fi5jzIhU7pLr+X2Au9JIX
+         w33lHhOY0nztFZ7cOZvH8xmY8SAvDWz+4j67n4D7xfRoY93MdZd1flfl0X+nCHtM4Hsi
+         0VELaneQkb88GPsN5ruEpfY1Q/3gBdsK4HG5HGXpsw2rf56C8rupaCLjvZMPyFQzVpeo
+         GyUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZLvWjCloxY3lhqt5Y/n4uc8TQYyU0FRxQJFsgkejp+0=;
-        b=GK+fsDeHjNSBd4qXDsgpNbi7utD5LetjbYJc5TxPfuXs/Rgxjx70tXpKFmmU1qcBWT
-         oiaiZqlAuFAogb89rZX+nMWcguCtinq1kpUZuYmYY1PN8/TxE1Kro9+GchgCkBs07W48
-         LEixixL267O5I45n76k+z210Xxz5qPTm7ztiJFWtuxINR2+eS+AiZJ5C1wxbvzxIOoUN
-         9sZ0LpKc8tDgQQbexTBwVS7XL8JWLEwW4cZrcSOQE5lM0doRh4U7hW7yBeTU7Mgij8a6
-         4Topr5mOXxWjaWT+5tWl3qoYx7gac3TOdKF+JhOz0xef3hRoghCk+pd6oBEQ+pwaNkeV
-         klxA==
-X-Gm-Message-State: AOAM533bjGWSGVVuF7KOja2jKuLwh1jP/4liVTLtT95WJ0rhRnlDBSYl
-        MRpx8ByWDEQW5LLmmXkLNQNrCQ==
-X-Google-Smtp-Source: ABdhPJzjezht/+Uj1VbmlPsJCoJsHI9A++v/BYMYgyek0uRnOZTj2+CK/NUWfHuYenZe3qyJwG8UhQ==
-X-Received: by 2002:a05:6122:33a:: with SMTP id d26mr20565530vko.30.1592255201576;
-        Mon, 15 Jun 2020 14:06:41 -0700 (PDT)
-Received: from alain.c.googlers.com.com (252.177.243.35.bc.googleusercontent.com. [35.243.177.252])
-        by smtp.gmail.com with ESMTPSA id g22sm27554vso.8.2020.06.15.14.06.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=q1JV3CXtWnCDf52pi6FDmUEpTUr0tLhuu541saxjHEI=;
+        b=ucNswi4DtA+0UrdGlBckvTGLZoXptfumHeCCs2lXQZhFO22KmFhJR3IBv/425G9tjO
+         0xDhq2Wmzno19TLvoM+2YbZdkXfatoYKAnEFnHR7a0uVzW+5IlGRHqBTj1VjmssOpQUm
+         JePHlfqBZtBSbh8WXH28BPuGxXTNq9dU6abfFoWD+3EWM0xXXHk+PmUNuO8qsSBk5zXA
+         aft++8/DcyU45IXAsec9drTCmxOR8s5P6rU67raZFzeHT3PyVyIwJA3fBliOa+C9/tIs
+         hKe3YNN8oDBHG4EqcCZvToVF+EzffQlYuoNEGVTJhD22QmmU5Ly7jSmDXy9cmrcRvzHc
+         CuEQ==
+X-Gm-Message-State: AOAM530TUrHR9DwMIx3lED/lAmc8YVrfMuAayLYQHbz0qFAUBACMOJ+P
+        J0/SKYelXq0QjjcnOskHSWE=
+X-Google-Smtp-Source: ABdhPJxlXYUjd15RFk8CBG6UIc9d/yo7kuVUtZIdTWjh+B9ECG73/qaJPjEYy/EXD89DLyDCtK6blQ==
+X-Received: by 2002:a17:906:1184:: with SMTP id n4mr5224874eja.115.1592255202187;
+        Mon, 15 Jun 2020 14:06:42 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-95-238-254-39.retail.telecomitalia.it. [95.238.254.39])
+        by smtp.googlemail.com with ESMTPSA id d5sm9662226ejr.78.2020.06.15.14.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 14:06:40 -0700 (PDT)
-From:   Alain Michaud <alainm@chromium.org>
-To:     linux-bluetooth@vger.kernel.org
-Cc:     Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v2] bluetooth: Adding a configurable autoconnect timeout
-Date:   Mon, 15 Jun 2020 21:06:38 +0000
-Message-Id: <20200615210638.132889-1-alainm@chromium.org>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+        Mon, 15 Jun 2020 14:06:41 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 12/12] PCI: qcom: Replace define with standard value
+Date:   Mon, 15 Jun 2020 23:06:08 +0200
+Message-Id: <20200615210608.21469-13-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0.rc0
+In-Reply-To: <20200615210608.21469-1-ansuelsmth@gmail.com>
+References: <20200615210608.21469-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,118 +86,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a configurable LE autoconnect timeout.
+Lots of define are actually already defined in pci_regs.h, directly use
+the standard defines.
 
-Signed-off-by: Alain Michaud <alainm@chromium.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
+ drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-Changes in v1:
-Fixing longer than 80 char line.
-
- include/net/bluetooth/hci_core.h |  1 +
- net/bluetooth/hci_core.c         |  1 +
- net/bluetooth/hci_event.c        |  2 +-
- net/bluetooth/hci_request.c      |  4 ++--
- net/bluetooth/mgmt_config.c      | 13 +++++++++++++
- 5 files changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 0d5dbb6cb5a0..f8e800479608 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -340,6 +340,7 @@ struct hci_dev {
- 	__u16		def_br_lsto;
- 	__u16		def_page_timeout;
- 	__u16		def_multi_adv_rotation_duration;
-+	__u16		def_le_autoconnect_timeout;
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index c40921589122..a23d3d886479 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -40,11 +40,6 @@
+ #define L23_CLK_RMV_DIS				BIT(2)
+ #define L1_CLK_RMV_DIS				BIT(1)
  
- 	__u16		pkt_type;
- 	__u16		esco_type;
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 4f1052a7c488..73fb0843fb89 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -3422,6 +3422,7 @@ struct hci_dev *hci_alloc_dev(void)
- 	hdev->le_rx_def_phys = HCI_LE_SET_PHY_1M;
- 	hdev->le_num_of_adv_sets = HCI_MAX_ADV_INSTANCES;
- 	hdev->def_multi_adv_rotation_duration = HCI_DEFAULT_ADV_DURATION;
-+	hdev->def_le_autoconnect_timeout = HCI_LE_AUTOCONN_TIMEOUT;
+-#define PCIE20_COMMAND_STATUS			0x04
+-#define CMD_BME_VAL				0x4
+-#define PCIE20_DEVICE_CONTROL2_STATUS2		0x98
+-#define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+-
+ #define PCIE20_PARF_PHY_CTRL			0x40
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+@@ -73,8 +68,8 @@
+ #define CFG_BRIDGE_SB_INIT			BIT(0)
  
- 	hdev->rpa_timeout = HCI_DEFAULT_RPA_TIMEOUT;
- 	hdev->discov_interleaved_timeout = DISCOV_INTERLEAVED_TIMEOUT;
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index cfeaee347db3..beb9bb1da0ba 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5319,7 +5319,7 @@ static struct hci_conn *check_pending_le_conn(struct hci_dev *hdev,
- 	}
+ #define PCIE20_CAP				0x70
+-#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + 0xC)
+-#define PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT	(BIT(10) | BIT(11))
++#define PCIE20_DEVICE_CONTROL2_STATUS2		(PCIE20_CAP + PCI_EXP_DEVCTL2)
++#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + PCI_EXP_LNKCAP)
+ #define PCIE20_CAP_LINK_1			(PCIE20_CAP + 0x14)
+ #define PCIE_CAP_LINK1_VAL			0x2FD7F
  
- 	conn = hci_connect_le(hdev, addr, addr_type, BT_SECURITY_LOW,
--			      HCI_LE_AUTOCONN_TIMEOUT, HCI_ROLE_MASTER,
-+			      hdev->def_le_autoconnect_timeout, HCI_ROLE_MASTER,
- 			      direct_rpa);
- 	if (!IS_ERR(conn)) {
- 		/* If HCI_AUTO_CONN_EXPLICIT is set, conn is already owned
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index 04f846958ad6..9b011c539281 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -2791,8 +2791,8 @@ static void start_discovery(struct hci_dev *hdev, u8 *status)
- 			 * to do BR/EDR inquiry.
- 			 */
- 			hci_req_sync(hdev, interleaved_discov,
--				     hdev->le_scan_int_discovery * 2, HCI_CMD_TIMEOUT,
--				     status);
-+				     hdev->le_scan_int_discovery * 2,
-+				     HCI_CMD_TIMEOUT, status);
- 			break;
- 		}
+@@ -1095,15 +1090,15 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+ 		pcie->parf + PCIE20_PARF_SYS_CTRL);
+ 	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
  
-diff --git a/net/bluetooth/mgmt_config.c b/net/bluetooth/mgmt_config.c
-index f6dfbe93542c..0ff77ef05fc5 100644
---- a/net/bluetooth/mgmt_config.c
-+++ b/net/bluetooth/mgmt_config.c
-@@ -17,6 +17,12 @@
- 	{ cpu_to_le16(hdev->_param_name_) } \
- }
+-	writel(CMD_BME_VAL, pci->dbi_base + PCIE20_COMMAND_STATUS);
++	writel(PCI_COMMAND_MASTER, pci->dbi_base + PCI_COMMAND);
+ 	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
+ 	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + PCIE20_CAP_LINK_1);
  
-+#define HDEV_PARAM_U16_JIFFIES_TO_MSECS(_param_code_, _param_name_) \
-+{ \
-+	{ cpu_to_le16(_param_code_), sizeof(__u16) }, \
-+	{ cpu_to_le16(jiffies_to_msecs(hdev->_param_name_)) } \
-+}
-+
- int read_def_system_config(struct sock *sk, struct hci_dev *hdev, void *data,
- 			   u16 data_len)
- {
-@@ -59,6 +65,8 @@ int read_def_system_config(struct sock *sk, struct hci_dev *hdev, void *data,
- 		HDEV_PARAM_U16(0x0018, le_conn_max_interval),
- 		HDEV_PARAM_U16(0x0019, le_conn_latency),
- 		HDEV_PARAM_U16(0x001a, le_supv_timeout),
-+		HDEV_PARAM_U16_JIFFIES_TO_MSECS(0x001b,
-+						def_le_autoconnect_timeout),
- 	};
- 	struct mgmt_rp_read_def_system_config *rp = (void *)params;
+ 	val = readl(pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
+-	val &= ~PCIE20_CAP_ACTIVE_STATE_LINK_PM_SUPPORT;
++	val &= ~PCI_EXP_LNKCAP_ASPMS;
+ 	writel(val, pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
  
-@@ -129,6 +137,7 @@ int set_def_system_config(struct sock *sk, struct hci_dev *hdev, void *data,
- 		case 0x0018:
- 		case 0x0019:
- 		case 0x001a:
-+		case 0x001b:
- 			if (len != sizeof(u16)) {
- 				bt_dev_warn(hdev, "invalid length %d, exp %zu for type %d",
- 					    len, sizeof(u16), type);
-@@ -238,6 +247,10 @@ int set_def_system_config(struct sock *sk, struct hci_dev *hdev, void *data,
- 		case 0x0001a:
- 			hdev->le_supv_timeout = TLV_GET_LE16(buffer);
- 			break;
-+		case 0x0001b:
-+			hdev->def_le_autoconnect_timeout =
-+					msecs_to_jiffies(TLV_GET_LE16(buffer));
-+			break;
- 		default:
- 			bt_dev_warn(hdev, "unsupported parameter %u", type);
- 			break;
+-	writel(PCIE_CAP_CPL_TIMEOUT_DISABLE, pci->dbi_base +
++	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base +
+ 		PCIE20_DEVICE_CONTROL2_STATUS2);
+ 
+ 	return 0;
 -- 
-2.27.0.290.gba653c62da-goog
+2.27.0.rc0
 
