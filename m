@@ -2,106 +2,109 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB26C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEAE207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="RV8Mm7oD"
+	by mail.kernel.org (Postfix) with ESMTP id 854E5207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592229284;
+	bh=ohYD5YEEUkwR1cjJIWDxCNuJ78W5DcalNKlGQB+JmV8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=evh3O909wTc28gHaHh2f3bYqc3jFY8T0coxeYNQwylMpabVsTezR4HPJT42Gkumo5
+	 7p6QY/dL64oXWo4SVBDr21xMjYxHrTlbVoObV6I8Ut0pmPa/iL5NzjjBXOs0VqnlxC
+	 HF7+9Q8zbCxB3bVzmqZ+2HywLOIYWEv+RBSneJLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbgFONxv (ORCPT
+        id S1730225AbgFONyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:53:51 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:16872 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728326AbgFONxd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:53:33 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FDpRMj016230;
-        Mon, 15 Jun 2020 08:53:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=jxTvSA1dvZM5FSGl8XPFgwjEr63mRuVc1zw13o0z7RQ=;
- b=RV8Mm7oD6nVoZf9g45dEHDHgCl1VFD5qjH7p7OvnnaphIH3KrYsz3cgI87xisI0V8SB9
- 9PH7EoowEvaIqBnCiy2lrvVJx8tPMLvodVfDpHvHRevEu2tTWYZFcw2ABkBlMtQChcxC
- RgGCPilvn8jti3wXD5YxmF/WjIQ71TRYKkfQpcJZkfaJfSOVqCx7t8B+R/vhd/bNqpqG
- CiepjhmyKJ+WoObmNOujZkhqOBfyjtJtlJINrJEuaCKvrR8HMI/QxE0UGf2iUbsfBLad
- c+S4NFzd1Zq6Tqc1cQkTigOqM72GSlRPuSkB3+A+T/dbOFIC8d4GCO/qMaGwCFvuF8wq cQ== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 31mu7p2q6e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 15 Jun 2020 08:53:25 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 15 Jun
- 2020 14:53:24 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Mon, 15 Jun 2020 14:53:24 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 25A9A2C5;
-        Mon, 15 Jun 2020 13:53:24 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <lee.jones@linaro.org>
-CC:     <s.nawrocki@samsung.com>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH v2 3/4] mfd: madera: Remove unused forward declaration of madera_codec_pdata
-Date:   Mon, 15 Jun 2020 14:53:22 +0100
-Message-ID: <20200615135323.15215-3-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200615135323.15215-1-ckeepax@opensource.cirrus.com>
-References: <20200615135323.15215-1-ckeepax@opensource.cirrus.com>
+        Mon, 15 Jun 2020 09:54:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729875AbgFONym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:54:42 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27470207DA;
+        Mon, 15 Jun 2020 13:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592229281;
+        bh=ohYD5YEEUkwR1cjJIWDxCNuJ78W5DcalNKlGQB+JmV8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Kv9C5jdlKXSmD9WL1j8JU5xrxwcuwUIlrqLeAgGClD2OunfhRm+4EiYtIIZu2TBKq
+         y3GNAn3oP8me1vqanDbKOyJhCn5W30OoOmOPl9+O9QbhQsTZQ0DH7+OQ7zrXJaHzaA
+         vgDrC4PCXafIDloESuFcpjaQQRXugHdSZCOZWUTM=
+Date:   Mon, 15 Jun 2020 15:54:37 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Daniel Kiss <daniel.kiss@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH] Documentation: fix malformed table in
+ filesystems/proc.rst
+Message-ID: <20200615155437.619facac@coco.lan>
+In-Reply-To: <20200615072217.0e59ea63@lwn.net>
+References: <016e5a38-5289-9111-05bb-7d0aa0cce5a5@infradead.org>
+        <20200615085305.275a7b24@coco.lan>
+        <a9634ff3-fc33-0d2b-959b-bd3dd79600bf@infradead.org>
+        <20200615072217.0e59ea63@lwn.net>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 phishscore=0
- impostorscore=0 adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
- suspectscore=1 priorityscore=1501 bulkscore=0 mlxlogscore=876
- malwarescore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006150112
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This forward declaration is redundant since the header including the
-full data structure is included.
+Em Mon, 15 Jun 2020 07:22:17 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+> On Sun, 14 Jun 2020 23:54:26 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+> > On 6/14/20 11:53 PM, Mauro Carvalho Chehab wrote:  
+> > > Em Sun, 14 Jun 2020 20:33:22 -0700
+> > > Randy Dunlap <rdunlap@infradead.org> escreveu:
+> > >     
+> > >> From: Randy Dunlap <rdunlap@infradead.org>
+> > >>
+> > >> Fix malformed table in "proc.rst" by dropping a needless hyphen ('-').
+> > >>
+> > >> Documentation/filesystems/proc.rst:548: WARNING: Malformed table.
+> > >> Text in column margin in table line 29.
+> > >>
+> > >> Fixes: 424037b77519 ("mm: smaps: Report arm64 guarded pages in smaps")
+> > >> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > >> Cc: Daniel Kiss <daniel.kiss@arm.com>
+> > >> Cc: Mark Brown <broonie@kernel.org>
+> > >> Cc: Catalin Marinas <catalin.marinas@arm.com>    
+> > > 
+> > > I submitted an identical patch on Jan, 3.     
+> > 
+> > OK. Well, that's disappointing IMHO.  
+> 
+> Sorry if I have caused disappointment.
+> 
+> In any case, that's *June*, not January,
 
-New since v1 of the series.
+Sorry for the typo! Yeah, I meant *June*. 
+
+> In any case, that's *June*, not January, that the patch was submitted.  I
+> didn't apply it because, since the problem didn't come through docs-next,
+> it didn't apply there.  Now that docs-next is caught up with 5.8-rc1 I can
+> apply such things again...
+
+Yeah, those malformed table are very likely due to merge conflicts on 
+patches for v5.8.
 
 Thanks,
-Charles
-
- include/linux/mfd/madera/pdata.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/linux/mfd/madera/pdata.h b/include/linux/mfd/madera/pdata.h
-index fa9595dd42ba5..601cbbc10370c 100644
---- a/include/linux/mfd/madera/pdata.h
-+++ b/include/linux/mfd/madera/pdata.h
-@@ -21,7 +21,6 @@
- 
- struct gpio_desc;
- struct pinctrl_map;
--struct madera_codec_pdata;
- 
- /**
-  * struct madera_pdata - Configuration data for Madera devices
--- 
-2.11.0
-
+Mauro
