@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ADFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4412068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4A22068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgFOHt0 (ORCPT
+        id S1728533AbgFOHtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:49:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40054 "EHLO mx2.suse.de"
+        Mon, 15 Jun 2020 03:49:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40068 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbgFOHtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:49:18 -0400
+        id S1728903AbgFOHtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:49:23 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 49ACAB021;
-        Mon, 15 Jun 2020 07:49:17 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 03BEEB0EA;
+        Mon, 15 Jun 2020 07:49:22 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 12/38] vt: separate unicode handling into vc_translate_unicode
-Date:   Mon, 15 Jun 2020 09:48:44 +0200
-Message-Id: <20200615074910.19267-12-jslaby@suse.cz>
+Subject: [PATCH 38/38] vt_ioctl: move perm checks level up
+Date:   Mon, 15 Jun 2020 09:49:10 +0200
+Message-Id: <20200615074910.19267-38-jslaby@suse.cz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615074910.19267-1-jslaby@suse.cz>
 References: <20200615074910.19267-1-jslaby@suse.cz>
@@ -41,186 +41,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_con_write is complicated enough. Extract unicode handling to a
-separate function. For do_con_write, 249 LOCs lowered to 183 lines.
-
-Use diff -w -b to see the difference is neligible -- mostly whitespace
-and use of 'return's instead of 'continue's.
+Synchronize with others and check perm directly in vt_k_ioctl.
+We do not need to pass perm to do_fontx_ioctl and do_unimap_ioctl then.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/vt/vt.c | 149 ++++++++++++++++++++++++--------------------
- 1 file changed, 81 insertions(+), 68 deletions(-)
+ drivers/tty/vt/vt_ioctl.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index a9e4924fa675..caaad820413a 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -2572,6 +2572,85 @@ static inline int vc_translate_ascii(const struct vc_data *vc, int c)
- 	return c;
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index 224f2a564e13..91c301775047 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -486,7 +486,7 @@ static int vt_k_ioctl(struct tty_struct *tty, unsigned int cmd,
  }
  
-+/**
-+ * vc_translate_unicode -- Combine UTF-8 into Unicode in @vc_utf_char
-+ *
-+ * @vc_utf_char is the being-constructed unicode character.
-+ * @vc_utf_count is the number of continuation bytes still expected to arrive.
-+ * @vc_npar is the number of continuation bytes arrived so far.
-+ */
-+static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
-+{
-+	static const u32 utf8_length_changes[] = {
-+		0x0000007f, 0x000007ff, 0x0000ffff,
-+		0x001fffff, 0x03ffffff, 0x7fffffff
-+	};
-+
-+	if ((c & 0xc0) == 0x80) {
-+		/* Continuation byte received */
-+		if (vc->vc_utf_count) {
-+			vc->vc_utf_char = (vc->vc_utf_char << 6) | (c & 0x3f);
-+			vc->vc_npar++;
-+			if (--vc->vc_utf_count) {
-+				/* Still need some bytes */
-+				return -1;
-+			}
-+			/* Got a whole character */
-+			c = vc->vc_utf_char;
-+			/* Reject overlong sequences */
-+			if (c <= utf8_length_changes[vc->vc_npar - 1] ||
-+					c > utf8_length_changes[vc->vc_npar])
-+				return 0xfffd;
-+		} else {
-+			/* Unexpected continuation byte */
-+			vc->vc_utf_count = 0;
-+			return 0xfffd;
-+		}
-+	} else {
-+		/* Single ASCII byte or first byte of a sequence received */
-+		if (vc->vc_utf_count) {
-+			/* Continuation byte expected */
-+			*rescan = true;
-+			vc->vc_utf_count = 0;
-+			return 0xfffd;
-+		} else if (c > 0x7f) {
-+			/* First byte of a multibyte sequence received */
-+			vc->vc_npar = 0;
-+			if ((c & 0xe0) == 0xc0) {
-+				vc->vc_utf_count = 1;
-+				vc->vc_utf_char = (c & 0x1f);
-+			} else if ((c & 0xf0) == 0xe0) {
-+				vc->vc_utf_count = 2;
-+				vc->vc_utf_char = (c & 0x0f);
-+			} else if ((c & 0xf8) == 0xf0) {
-+				vc->vc_utf_count = 3;
-+				vc->vc_utf_char = (c & 0x07);
-+			} else if ((c & 0xfc) == 0xf8) {
-+				vc->vc_utf_count = 4;
-+				vc->vc_utf_char = (c & 0x03);
-+			} else if ((c & 0xfe) == 0xfc) {
-+				vc->vc_utf_count = 5;
-+				vc->vc_utf_char = (c & 0x01);
-+			} else {
-+				/* 254 and 255 are invalid */
-+				return 0xfffd;
-+			}
-+			if (vc->vc_utf_count) {
-+				/* Still need some bytes */
-+				return -1;
-+			}
-+		}
-+		/* Nothing to do if an ASCII byte was received */
-+	}
-+	/* End of UTF-8 decoding. */
-+	/* c is the received character, or U+FFFD for invalid sequences. */
-+	/* Replace invalid Unicode code points with U+FFFD too */
-+	if ((c >= 0xd800 && c <= 0xdfff) || c == 0xfffe || c == 0xffff)
-+		return 0xfffd;
-+
-+	return c;
-+}
-+
- /* acquires console_lock */
- static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int count)
+ static inline int do_fontx_ioctl(int cmd,
+-		struct consolefontdesc __user *user_cfd, int perm,
++		struct consolefontdesc __user *user_cfd,
+ 		struct console_font_op *op)
  {
-@@ -2628,76 +2707,10 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
- 		if (vc->vc_state != ESnormal) {
- 			tc = c;
- 		} else if (vc->vc_utf && !vc->vc_disp_ctrl) {
--		    /* Combine UTF-8 into Unicode in vc_utf_char.
--		     * vc_utf_count is the number of continuation bytes still
--		     * expected to arrive.
--		     * vc_npar is the number of continuation bytes arrived so
--		     * far
--		     */
- rescan_last_byte:
--		    if ((c & 0xc0) == 0x80) {
--			/* Continuation byte received */
--			static const uint32_t utf8_length_changes[] = { 0x0000007f, 0x000007ff, 0x0000ffff, 0x001fffff, 0x03ffffff, 0x7fffffff };
--			if (vc->vc_utf_count) {
--			    vc->vc_utf_char = (vc->vc_utf_char << 6) | (c & 0x3f);
--			    vc->vc_npar++;
--			    if (--vc->vc_utf_count) {
--				/* Still need some bytes */
--				continue;
--			    }
--			    /* Got a whole character */
--			    c = vc->vc_utf_char;
--			    /* Reject overlong sequences */
--			    if (c <= utf8_length_changes[vc->vc_npar - 1] ||
--					c > utf8_length_changes[vc->vc_npar])
--				c = 0xfffd;
--			} else {
--			    /* Unexpected continuation byte */
--			    vc->vc_utf_count = 0;
--			    c = 0xfffd;
--			}
--		    } else {
--			/* Single ASCII byte or first byte of a sequence received */
--			if (vc->vc_utf_count) {
--			    /* Continuation byte expected */
--			    rescan = true;
--			    vc->vc_utf_count = 0;
--			    c = 0xfffd;
--			} else if (c > 0x7f) {
--			    /* First byte of a multibyte sequence received */
--			    vc->vc_npar = 0;
--			    if ((c & 0xe0) == 0xc0) {
--				vc->vc_utf_count = 1;
--				vc->vc_utf_char = (c & 0x1f);
--			    } else if ((c & 0xf0) == 0xe0) {
--				vc->vc_utf_count = 2;
--				vc->vc_utf_char = (c & 0x0f);
--			    } else if ((c & 0xf8) == 0xf0) {
--				vc->vc_utf_count = 3;
--				vc->vc_utf_char = (c & 0x07);
--			    } else if ((c & 0xfc) == 0xf8) {
--				vc->vc_utf_count = 4;
--				vc->vc_utf_char = (c & 0x03);
--			    } else if ((c & 0xfe) == 0xfc) {
--				vc->vc_utf_count = 5;
--				vc->vc_utf_char = (c & 0x01);
--			    } else {
--				/* 254 and 255 are invalid */
--				c = 0xfffd;
--			    }
--			    if (vc->vc_utf_count) {
--				/* Still need some bytes */
-+			tc = c = vc_translate_unicode(vc, c, &rescan);
-+			if (tc == -1)
- 				continue;
--			    }
--			}
--			/* Nothing to do if an ASCII byte was received */
--		    }
--		    /* End of UTF-8 decoding. */
--		    /* c is the received character, or U+FFFD for invalid sequences. */
--		    /* Replace invalid Unicode code points with U+FFFD too */
--		    if ((c >= 0xd800 && c <= 0xdfff) || c == 0xfffe || c == 0xffff)
--			c = 0xfffd;
--		    tc = c;
- 		} else {	/* no utf or alternate charset mode */
- 			tc = vc_translate_ascii(vc, c);
- 		}
+ 	struct consolefontdesc cfdarg;
+@@ -497,8 +497,6 @@ static inline int do_fontx_ioctl(int cmd,
+ 
+ 	switch (cmd) {
+ 	case PIO_FONTX:
+-		if (!perm)
+-			return -EPERM;
+ 		op->op = KD_FONT_OP_SET;
+ 		op->flags = KD_FONT_FLAG_OLD;
+ 		op->width = 8;
+@@ -552,7 +550,7 @@ static int vt_io_fontreset(struct console_font_op *op)
+ }
+ 
+ static inline int do_unimap_ioctl(int cmd, struct unimapdesc __user *user_ud,
+-		int perm, struct vc_data *vc)
++		struct vc_data *vc)
+ {
+ 	struct unimapdesc tmp;
+ 
+@@ -560,11 +558,9 @@ static inline int do_unimap_ioctl(int cmd, struct unimapdesc __user *user_ud,
+ 		return -EFAULT;
+ 	switch (cmd) {
+ 	case PIO_UNIMAP:
+-		if (!perm)
+-			return -EPERM;
+ 		return con_set_unimap(vc, tmp.entry_ct, tmp.entries);
+ 	case GIO_UNIMAP:
+-		if (!perm && fg_console != vc->vc_num)
++		if (fg_console != vc->vc_num)
+ 			return -EPERM;
+ 		return con_get_unimap(vc, tmp.entry_ct, &(user_ud->entry_ct),
+ 				tmp.entries);
+@@ -607,8 +603,12 @@ static int vt_io_ioctl(struct vc_data *vc, unsigned int cmd, void __user *up,
+                 return con_get_cmap(up);
+ 
+ 	case PIO_FONTX:
++		if (!perm)
++			return -EPERM;
++
++		fallthrough;
+ 	case GIO_FONTX:
+-		return do_fontx_ioctl(cmd, up, perm, &op);
++		return do_fontx_ioctl(cmd, up, &op);
+ 
+ 	case PIO_FONTRESET:
+ 		if (!perm)
+@@ -640,7 +640,10 @@ static int vt_io_ioctl(struct vc_data *vc, unsigned int cmd, void __user *up,
+ 
+ 	case PIO_UNIMAP:
+ 	case GIO_UNIMAP:
+-		return do_unimap_ioctl(cmd, up, perm, vc);
++		if (!perm)
++			return -EPERM;
++
++		return do_unimap_ioctl(cmd, up, vc);
+ 
+ 	default:
+ 		return -ENOIOCTLCMD;
 -- 
 2.27.0
 
