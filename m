@@ -2,244 +2,145 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9229EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29632C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 643FA207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C2F207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:07:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="GCccnrQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgFOOGA (ORCPT
+        id S1730113AbgFOOHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:06:00 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37018 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgFOOF7 (ORCPT
+        Mon, 15 Jun 2020 10:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbgFOOHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:05:59 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CC4281C0BD2; Mon, 15 Jun 2020 16:05:57 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 16:05:57 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
-        martin_rysavy@centrum.cz, linux-pm@vger.kernel.org
-Subject: [RFC] Limiting charge current on Droid 4 (and N900)
-Message-ID: <20200615140557.GA22781@duo.ucw.cz>
+        Mon, 15 Jun 2020 10:07:37 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D16C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:07:37 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id u17so12670709qtq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:07:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=STVn3sZd24uT+6Abwx3hGrjt3KiHGonv7dCNXNNdXc8=;
+        b=GCccnrQQ+F14prS1VzHQOSHnlhzYUWa/2xFrs2CsD2SO70HA6PTmJTScI0KFtJeBOc
+         qmo/pwzQ42F5oj3P0MQl2aKylMW9BPqXthu5sim3japhSFdTQVi5qd9c3vRqO8284pNE
+         anskV2Y91HtgHpNQkW+Qijlori0G/w9Do6FKTQ6CG1epkWn4iisZN7Fs78d7lxRLJp96
+         FntORj5A661/Ztro6W9JpfAn5tp63iJV/Q2qAqGBWTfP5sXEzQMKSwCeNcs1na2ncJeE
+         qtcb7eewI3tvvRmv9KRr+kWaKsgg0FxTlz3tX7YOi3HxT3sxNbGcceazGEQ2OZBCWuKb
+         9Bfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=STVn3sZd24uT+6Abwx3hGrjt3KiHGonv7dCNXNNdXc8=;
+        b=Qks7xQPf2XVK0M8mObC2sNYUiJOMts08xTAHWMffNafprRhveO+JZL4HSu37zk1d7Q
+         qLa2BWEteAeirthwyc9Bw86TrIntEHjBLm69Jv+br6wlVkrKZYpBYGKqWQ/rS60ELr/D
+         J92B0P2iZmQ5TgT3H1o0LEk15RP1Nk26UsA/BjJqJ612HdnUOZl8B6UcRfu/NsWWXYKH
+         ckKzR+ZXXi2lwSCQqaPChvvNB/s/rxHS76hYDgiGm91dWbDC9fFu/rGNvuG9HEx2/D/N
+         toCMw5tSzVtTDFxFD/jOWeNKJt9V1cT5fzgrFyq9de1h4WwvdRtLco9G1zYAN0du9Di1
+         awRQ==
+X-Gm-Message-State: AOAM530Gg7kDDkmZ3wVNOQu9kvVAhpkmJYHNB5dzdYr3UGKzJhTs11p8
+        /bj2m9gnkc8MA1pUijkA8L9P8A==
+X-Google-Smtp-Source: ABdhPJxFqBJgLwdN8IHNXFvxCzqBbX4KT88lV6RW+axueoCkAN7sfbOvB2co5bFTrGyLo5vjzmPHvg==
+X-Received: by 2002:ac8:6f79:: with SMTP id u25mr16186587qtv.183.1592230056852;
+        Mon, 15 Jun 2020 07:07:36 -0700 (PDT)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id p44sm12789120qta.12.2020.06.15.07.07.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 07:07:36 -0700 (PDT)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH] mm: memcontrol: handle div0 crash race condition in memory.low
+Date:   Mon, 15 Jun 2020 10:06:58 -0400
+Message-Id: <20200615140658.601684-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tejun reports seeing rare div0 crashes in memory.low stress testing:
 
---17pEHd4RhPHOinZp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[37228.504582] RIP: 0010:mem_cgroup_calculate_protection+0xed/0x150
+[37228.505059] Code: 0f 46 d1 4c 39 d8 72 57 f6 05 16 d6 42 01 40 74 1f 4c 39 d8 76 1a 4c 39 d1 76 15 4c 29 d1 4c 29 d8 4d 29 d9 31 d2 48 0f af c1 <49> f7 f1 49 01 c2 4c 89 96 38 01 00 00 5d c3 48 0f af c7 31 d2 49
+[37228.506254] RSP: 0018:ffffa14e01d6fcd0 EFLAGS: 00010246
+[37228.506769] RAX: 000000000243e384 RBX: 0000000000000000 RCX: 0000000000008f4b
+[37228.507319] RDX: 0000000000000000 RSI: ffff8b89bee84000 RDI: 0000000000000000
+[37228.507869] RBP: ffffa14e01d6fcd0 R08: ffff8b89ca7d40f8 R09: 0000000000000000
+[37228.508376] R10: 0000000000000000 R11: 00000000006422f7 R12: 0000000000000000
+[37228.508881] R13: ffff8b89d9617000 R14: ffff8b89bee84000 R15: ffffa14e01d6fdb8
+[37228.509397] FS:  0000000000000000(0000) GS:ffff8b8a1f1c0000(0000) knlGS:0000000000000000
+[37228.509917] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[37228.510442] CR2: 00007f93b1fc175b CR3: 000000016100a000 CR4: 0000000000340ea0
+[37228.511076] Call Trace:
+[37228.511561]  shrink_node+0x1e5/0x6c0
+[37228.512044]  balance_pgdat+0x32d/0x5f0
+[37228.512521]  kswapd+0x1d7/0x3d0
+[37228.513346]  ? wait_woken+0x80/0x80
+[37228.514170]  kthread+0x11c/0x160
+[37228.514983]  ? balance_pgdat+0x5f0/0x5f0
+[37228.515797]  ? kthread_park+0x90/0x90
+[37228.516593]  ret_from_fork+0x1f/0x30
 
-Hi!
+This happens when parent_usage == siblings_protected. We check that
+usage is bigger than protected, which should imply parent_usage being
+bigger than siblings_protected. However, we don't read (or even
+update) these values atomically, and they can be out of sync as the
+memory state changes under us. A bit of fluctuation around the target
+protection isn't a big deal, but we need to handle the div0 case.
 
-Droid 4 has same problem as N900: it is often neccessary to manually
-tweak current draw from USB, for example when using thin charging cable.
+Check the parent state explicitly to make sure we have a reasonable
+positive value for the divisor.
 
-N900 creates unique attribute by hand, but I believe
-POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT looks suitable. (Should N900 be
-converted?)
+Fixes: 8a931f801340 ("mm: memcontrol: recursive memory.low protection")
+Reported-by: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/memcontrol.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Comments? Would the patch be acceptable after fixing whitespace?
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 0b38b6ad547d..5de0a9035b5f 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6360,11 +6360,16 @@ static unsigned long effective_protection(unsigned long usage,
+ 	 * We're using unprotected memory for the weight so that if
+ 	 * some cgroups DO claim explicit protection, we don't protect
+ 	 * the same bytes twice.
++	 *
++	 * Check both usage and parent_usage against the respective
++	 * protected values. One should imply the other, but they
++	 * aren't read atomically - make sure the division is sane.
+ 	 */
+ 	if (!(cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT))
+ 		return ep;
+-
+-	if (parent_effective > siblings_protected && usage > protected) {
++	if (parent_effective > siblings_protected &&
++	    parent_usage > siblings_protected &&
++	    usage > protected) {
+ 		unsigned long unclaimed;
+ 
+ 		unclaimed = parent_effective - siblings_protected;
+-- 
+2.26.2
 
-Best regards,
-									Pavel
-
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-
-diff --git a/drivers/power/supply/cpcap-battery.c b/drivers/power/supply/cp=
-cap-battery.c
-index b16848cfb58c..39a00716372f 100644
---- a/drivers/power/supply/cpcap-battery.c
-+++ b/drivers/power/supply/cpcap-battery.c
-@@ -3,7 +3,7 @@
-  *
-  * Copyright (C) 2017 Tony Lindgren <tony@atomide.com>
-  *
-- * Some parts of the code based on earlie Motorola mapphone Linux kernel
-+ * Some parts of the code based on earlier Motorola mapphone Linux kernel
-  * drivers:
-  *
-  * Copyright (C) 2009-2010 Motorola, Inc.
-diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/supply/cp=
-cap-charger.c
-index cf1e05b511d9..292d7a31c663 100644
---- a/drivers/power/supply/cpcap-charger.c
-+++ b/drivers/power/supply/cpcap-charger.c
-@@ -89,6 +89,8 @@
-  * CPCAP_REG_CRM charge currents. These seem to match MC13783UG.pdf
-  * values in "Table 8-3. Charge Path Regulator Current Limit
-  * Characteristics" for the nominal values.
-+ *
-+ * Except 70mA and 1.596A and unlimited, these are simply 88.7mA / step.
-  */
- #define CPCAP_REG_CRM_ICHRG(val)	(((val) & 0xf) << 0)
- #define CPCAP_REG_CRM_ICHRG_0A000	CPCAP_REG_CRM_ICHRG(0x0)
-@@ -147,6 +149,8 @@ struct cpcap_charger_ddata {
- 	int status;
- 	int state;
- 	int voltage;
-+	int limit_current;
-+
- 	int last_current;
- 	int last_current_retries;
- };
-@@ -175,6 +179,7 @@ static enum power_supply_property cpcap_charger_props[]=
- =3D {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_ONLINE,
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
- 	POWER_SUPPLY_PROP_CURRENT_NOW,
- };
-@@ -238,6 +243,9 @@ static int cpcap_charger_get_property(struct power_supp=
-ly *psy,
- 	case POWER_SUPPLY_PROP_STATUS:
- 		val->intval =3D ddata->status;
- 		break;
-+  	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		val->intval =3D ddata->limit_current;
-+		break;
- 	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
- 		val->intval =3D ddata->voltage;
- 		break;
-@@ -308,6 +316,25 @@ cpcap_charger_get_bat_const_charge_voltage(struct cpca=
-p_charger_ddata *ddata)
- 	return voltage;
- }
-=20
-+static int cpcap_charger_current_to_regval(int microamp)
-+{
-+	int miliamp =3D microamp/1000;
-+	int res;
-+	if (miliamp < 0)
-+		return -EINVAL;
-+	if (miliamp < 70)
-+		return CPCAP_REG_CRM_ICHRG(0x0);
-+	if (miliamp < 177)
-+		return CPCAP_REG_CRM_ICHRG(0x1);
-+	if (miliamp > 1596)
-+		return CPCAP_REG_CRM_ICHRG(0xe);
-+
-+	res =3D microamp / 88666;
-+	if (res > 0xd)
-+		res =3D 0xd;
-+	return CPCAP_REG_CRM_ICHRG(res);
-+}
-+
- static int cpcap_charger_set_property(struct power_supply *psy,
- 				      enum power_supply_property psp,
- 				      const union power_supply_propval *val)
-@@ -316,6 +343,12 @@ static int cpcap_charger_set_property(struct power_sup=
-ply *psy,
- 	int voltage, batvolt;
-=20
- 	switch (psp) {
-+  	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		if (cpcap_charger_current_to_regval(val->intval) < 0)
-+			return -EINVAL;
-+		ddata->limit_current =3D val->intval;
-+		schedule_delayed_work(&ddata->detect_work, 0);
-+		break;
- 	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
- 		voltage =3D cpcap_charger_match_voltage(val->intval);
- 		batvolt =3D cpcap_charger_get_bat_const_charge_voltage(ddata);
-@@ -335,6 +368,7 @@ static int cpcap_charger_property_is_writeable(struct p=
-ower_supply *psy,
- 					       enum power_supply_property psp)
- {
- 	switch (psp) {
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
- 	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
- 		return 1;
- 	default:
-@@ -657,23 +691,21 @@ static void cpcap_usb_detect(struct work_struct *work)
-=20
- 	if (!ddata->feeding_vbus && cpcap_charger_vbus_valid(ddata) &&
- 	    s.chrgcurr1) {
--		int max_current;
--		int vchrg;
-+		int max_current =3D 532000;
-+		int vchrg, ichrg;
-=20
- 		if (cpcap_charger_battery_found(ddata))
--			max_current =3D CPCAP_REG_CRM_ICHRG_1A596;
--		else
--			max_current =3D CPCAP_REG_CRM_ICHRG_0A532;
-+			max_current =3D 1596000;
-=20
- 		switch (ddata->state) {
- 		case CPCAP_CHARGER_DETECTING:
- 			ddata->last_current_retries =3D 0;
- 			break;
- 		case CPCAP_CHARGER_DISCONNECTED:
--			if (ddata->last_current > CPCAP_REG_CRM_ICHRG_0A532) {
-+			if (ddata->last_current > 532000) {
- 				/* Attempt current 3 times before lowering */
- 				if (ddata->last_current_retries++ >=3D 3) {
--					ddata->last_current--;
-+					ddata->last_current -=3D 100000;
- 					ddata->last_current_retries =3D 0;
- 					/* Wait a bit for voltage to ramp up */
- 					usleep_range(40000, 50000);
-@@ -688,11 +720,16 @@ static void cpcap_usb_detect(struct work_struct *work)
- 			break;
- 		}
-=20
-+		if (max_current > ddata->limit_current)
-+			max_current =3D ddata->limit_current;
-+
- 		ddata->last_current =3D max_current;
-+
-+		ichrg =3D cpcap_charger_current_to_regval(max_current);
- 		vchrg =3D cpcap_charger_voltage_to_regval(ddata->voltage);
- 		error =3D cpcap_charger_set_state(ddata,
- 						CPCAP_REG_CRM_VCHRG(vchrg),
--						max_current, 0);
-+						ichrg, 0);
- 		if (error)
- 			goto out_err;
- 		cpcap_charger_update_state(ddata, CPCAP_CHARGER_CHARGING);
-@@ -864,6 +901,7 @@ static int cpcap_charger_probe(struct platform_device *=
-pdev)
-=20
- 	ddata->dev =3D &pdev->dev;
- 	ddata->voltage =3D 4200000;
-+	ddata->limit_current =3D 532000;
-=20
- 	ddata->reg =3D dev_get_regmap(ddata->dev->parent, NULL);
- 	if (!ddata->reg)
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---17pEHd4RhPHOinZp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXueARQAKCRAw5/Bqldv6
-8r/sAJ46iCoAwzi+b8D09i52j6yXo5rYVgCggxr+sue70dpus3LswQUr8Ki7lSM=
-=YnOL
------END PGP SIGNATURE-----
-
---17pEHd4RhPHOinZp--
