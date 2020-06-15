@@ -2,158 +2,291 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C08EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 05:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E60C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 262CA20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 05:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9E420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="t8UEl+WK"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="hXabXD+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgFOF7x (ORCPT
+        id S1728316AbgFOGEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 01:59:53 -0400
-Received: from mail-eopbgr140111.outbound.protection.outlook.com ([40.107.14.111]:3458
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726502AbgFOF7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 01:59:52 -0400
+        Mon, 15 Jun 2020 02:04:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:17341 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbgFOGEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:04:42 -0400
+IronPort-SDR: 3kuc4f59O6707Aza0Uei+irXH7wNKsUd1cs+CCMUIGoLSt0B52T2VSniu9WD48ILHooPzJTZ3g
+ YI+dTV1akjnQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2020 23:04:41 -0700
+IronPort-SDR: b1yFa1mgp+a2cCYnmKCdN5OQB8T2wgo4zTcXT5kaktXOXCxDbPbJ4J7ngCKzOLzia/9FRnZWkV
+ 9YZ3W/WKpPaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
+   d="scan'208";a="298403810"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jun 2020 23:04:39 -0700
+Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 14 Jun 2020 23:04:38 -0700
+Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
+ ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 14 Jun 2020 23:04:37 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sun, 14 Jun 2020 23:04:37 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.172)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 14 Jun 2020 23:04:34 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aahjmKUZ5r/FhQ46SNs1dcLQicwrT7gxcOOhB8v29bnzN9jGg5wjgNNI6CaCn8Uf9T0qx1hKGTGNi+o1h/L7GNKOIFUeI+KV5TOKmCXhONAjhpuSN0xneb+GA7YBq6yJUuHqRf8+unlk//rnLbDMs81BAcjJjkFl3fyJPz4zRmfIPPPizy4zcA4reF78+QE7lz7xt2RtYHBrs1x03ux6mEAbqF8Gqg4RPFlH+FmygguYSyaV3LlT5xER2coMAgpE0ppqsfrxxY0lZMMd7t8ZhbkJYITxuRP4ixvgqJeTDllHqShnY7s8GziIzSbLikOT/Lf7LRVmFqCIxU4J1dEDQA==
+ b=Nrrqb+6FaUqp2OAQKymyka3oluyWTEn/VS/zde86258dOzfO8KrzpbcQLBr82v5Foc7HTo06aOFVnV/5COgU842xEtrsjgbV/MVwKlMq1sMtJs91lWxZNsJ2yv0xkxRmWkEVdX3Et+yD/uWlDqj5TeObBP5wm0AwfUT2H29X2T52rqws5JCUXztDzjvySaPZhqe4qrxpMV+2+nDOQbVV5aLeRkzItnV8oSBc58oYCpDbPro3GafIcvGFDIQ+GG49pVh2h2C4tYEhnQ96LhGvOcYywNQ3Z8eaN4mXT8/oT7gbo+lcIU3ch+ZywgmTJNnPd6Ue4y1nr9HthKm98ZaZOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bmxAI0otxBUFzZzhTwz6Lj8Li5Q1uJuF3BWv48atEBk=;
- b=IRDk8fvK+hafjeuxdfPs+QM2CCNe25RAbvObTOTxvi9gpyFBKNQU5XR46pFMTZa7RUUxvjTl4a61oHVsmmMy8dYPaJUGg2K7z8Vj+tuDsyc89PcGGzHmIR/bcPZoRD8OysNmOWNcFMFtimq+NbPP3ceOkIzu3lAeAHssMMBLkCdmSi1hyykJR1LaxLoFcdEGkLQeuLLuOYuDWZ9YAO/bq1M5Zk56FXRtTS2/mPrCaTq67KgqoL5LeXLl5ICYXxSkuTU2dBAh6yOcNRFZ0L1Z2aNQ9O8xCK9VgkPlGYqjFqcqM8Shl6vtseVGExliw6os2Fah0JraCGIe0QhrKBvlIw==
+ bh=rwyu3v1JzHUfvrBiNW3tbWaOqiFaFxQDpE+alqdz4TU=;
+ b=l4HjtCRew+NyKjX+TkyFu5VMgn6Y0vAywEe+rf7usS8E8jSABbgZNH4TB0U5Iwko/39FtKLt8LdKjUufeQ69EX3BCyQjbctb1vfH+C0bzVGO07RxHbx5NBr7DOdCf7jC3RN6PIK+3F9WW3z3Qwc4eabJBcLLtfFAO9JC840kWP0S7cFUZRKYsZtfSvLoVV7tI9yXXbRUUBUlRrYBxPWjpQAMUgoB8o6xS4uLmWWnbO+2X32M0jqJ7C5EhXlWsl7ZtHxxK9Ed01VRle0l39Pt9WdTVxoc2K4pbvK9iAhJh1NVfuGxifTt7eGcS76jG35eOJThqyvrWFh03v6qYU/yjQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bmxAI0otxBUFzZzhTwz6Lj8Li5Q1uJuF3BWv48atEBk=;
- b=t8UEl+WKlSR3GjhRqoyObuC5LxJsbUYKc/xhySq4rXSZmVsKFbs/NjnGqrPtu07ZBQy6VTuw1Oo3c/emeA37ZBhSlFMYerQvBfVzm/kWvD9lc8N0uNdNFxRu6ByTeUhrJvwCiX7XdtLe/RwZlhC1YFIicge/TpO3wDZbHje2zic=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=virtuozzo.com;
-Received: from AM0PR08MB5140.eurprd08.prod.outlook.com (2603:10a6:208:162::17)
- by AM0PR08MB3843.eurprd08.prod.outlook.com (2603:10a6:208:fb::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Mon, 15 Jun
- 2020 05:59:49 +0000
-Received: from AM0PR08MB5140.eurprd08.prod.outlook.com
- ([fe80::189d:9569:dbb8:2783]) by AM0PR08MB5140.eurprd08.prod.outlook.com
- ([fe80::189d:9569:dbb8:2783%6]) with mapi id 15.20.3088.028; Mon, 15 Jun 2020
- 05:59:49 +0000
-Subject: Re: [fuse] 6b2fb79963: WARNING:at_fs/fuse/file.c:#tree_insert[fuse]
-To:     Miklos Szeredi <mszeredi@redhat.com>
-Cc:     Maxim Patlasov <maximvp@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200615005036.GU12456@shao2-debian>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <ea00a67e-5a61-2e70-215e-004e3dcc57c1@virtuozzo.com>
-Date:   Mon, 15 Jun 2020 08:59:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200615005036.GU12456@shao2-debian>
-Content-Type: text/plain; charset=utf-8
+ bh=rwyu3v1JzHUfvrBiNW3tbWaOqiFaFxQDpE+alqdz4TU=;
+ b=hXabXD+ncFu0XHRxVsgT1R2Yf7kt9OZmw/klJTtyPoiznrC5SPgBpX7JndsFDfPpsDAFtYhAXqE+QF8/pvnS1iLfLVj5S9U3GgPyaoCyl0qWQ+2Jxd7Uuw1z2yOY8azz/VSPxPoIfCe2GTbnJAxucDHjqvADUZnGWIEtkrAGxWI=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
+ DM6PR11MB3803.namprd11.prod.outlook.com (2603:10b6:5:141::30) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3088.18; Mon, 15 Jun 2020 06:04:32 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3088.028; Mon, 15 Jun 2020
+ 06:04:32 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 02/15] iommu: Report domain nesting info
+Thread-Topic: [PATCH v2 02/15] iommu: Report domain nesting info
+Thread-Index: AQHWP+lAvgybSaO2NECN4P16s7e2zKjTzaSAgADgFXCABDlcgIAARuNg
+Date:   Mon, 15 Jun 2020 06:04:32 +0000
+Message-ID: <DM5PR11MB1435EB4D10A6EF16BF95C811C39C0@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
+        <1591877734-66527-3-git-send-email-yi.l.liu@intel.com>
+ <20200611133015.1418097f@x1.home>
+ <DM5PR11MB143571773B05359FA2F46FB6C3810@DM5PR11MB1435.namprd11.prod.outlook.com>
+ <MWHPR11MB1645A7EBC706AC8A075EA83D8C9C0@MWHPR11MB1645.namprd11.prod.outlook.com>
+In-Reply-To: <MWHPR11MB1645A7EBC706AC8A075EA83D8C9C0@MWHPR11MB1645.namprd11.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR02CA0016.eurprd02.prod.outlook.com
- (2603:10a6:208:3e::29) To AM0PR08MB5140.eurprd08.prod.outlook.com
- (2603:10a6:208:162::17)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.55.52.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6f069fcc-a333-4440-85f8-08d810f1f900
+x-ms-traffictypediagnostic: DM6PR11MB3803:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB3803FEF562D787B40FB4085DC39C0@DM6PR11MB3803.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04359FAD81
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yZYVfKfgfGI3OpIoFITirdPU5jAJGsBAwrX+wN0kzM33LQgvcBreO28UA4B5CHUSclp9COfP+n0l7v4j60S9Siq3vVnTtp33cNF7bZVXBYnIetsbE1MAs67JVfsw+lS981VLsaxMipt6SsiWtMmcUSzyRNSkYYzb9mQTbaRt6YI2ePtcbd6XnmMSAUporG9Ry07PXa5sghLnYZ6v4Sw3FNb+OXeej82IH6HbhsYsurse890SDTAjKt2O0ZA1KW5QrGTX4W4434FEZGjxHuWU22wse6whBboVxKFyPWyWoD3gzVni1pSckVe0650AC8XKLNGQgZiNSle/qxeh8d4oUOJ7IPpMdDRrVDOjcLsCeF3Y3GXlyeJQjmk31CWxNlzZYUVGGdKw8xbAkfTkBeel4Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(366004)(376002)(39860400002)(346002)(8936002)(4326008)(26005)(6506007)(52536014)(9686003)(2906002)(7696005)(186003)(8676002)(33656002)(478600001)(55016002)(966005)(5660300002)(110136005)(66946007)(76116006)(66476007)(54906003)(64756008)(66446008)(66556008)(86362001)(7416002)(83380400001)(71200400001)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 6d0B8qek8eGnGDV6hSTQdBT6IuceHg5PvRHI/W7vq4j3dUYs8awpC9SIYiDxyyIBk0kj/gw5y149ovFmBbbFRyCFzkxY0K6OhvVg4ARQeH/Jbp21XTFBGF0WIvVhhqpc4vcD83N8OK0RYEbGVcHdahyOqXmNT4S9UHYO3xYAVvMH3QYwzcPmWG8tIwef3+UIqkWMC6uSaS7QHs9p7Qd2KyJLTX/vX4IKpZzwys3q9WXriI4KasjPVD77BF2VUTXHFbWrw8bLGva9JerG+pjDJ8/ySjCjWTThKxFM/4/7wsidrv3h1znsXwvUOp0ieFfDBuDSlwRUeMbza2y/DNdAi0VeWd69IMLKsQem4YxQJu07th2WuGEJQrWOiUMjzRslhTi5WIb53iqG4XKWBv8hqlpYYJlroS0F15vhr/eRTa9ym0kOV5yX68mE9UcGIIrYEDyweIpLWsw+DBhBBN/I2u9Q25su00du+60AgQXwSVA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.16.24.21] (185.231.240.5) by AM0PR02CA0016.eurprd02.prod.outlook.com (2603:10a6:208:3e::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21 via Frontend Transport; Mon, 15 Jun 2020 05:59:48 +0000
-X-Originating-IP: [185.231.240.5]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fafb634b-1ecf-4586-2804-08d810f14fff
-X-MS-TrafficTypeDiagnostic: AM0PR08MB3843:
-X-Microsoft-Antispam-PRVS: <AM0PR08MB3843755ABCC4C206C9CB2775AA9C0@AM0PR08MB3843.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:923;
-X-Forefront-PRVS: 04359FAD81
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0tvZiykqRA5rDjoKfFREqbdiJVnYOzXEN2wDenEIVONtljCNvByAejYum/euGBE6UhH4hUK52RSqNxZUYewXsiYKsHaJUrsw1LJcMz3D+BnqsX2uYMLNKcyn6yK3GpFo7g0by682B+pWPfOsIOzGnhcgz9S+lb34EkeWTAQCoizuS/041tHhPwTrZlnSq9qG5B+O9GpmjJjm7sVyw7cYuDNp+aKsAmlPdqLEezOz5s80gDemnDIvJ6CS06owIcEWhvXgmuF/I3g5w9hH39kiKxXY/TiNKgJ719YmDPFylMg25XGnKDhfpQ5Wcw+YwSQ8wmlKXqkr8AoxTZKm45QRKGCoL8BBquKBHkBHlL625UxtBTWdvH5ubUHjs3Dd1RxnAFNEVkP7RgK0SjijeEVXDzHolhcJP0FE/DwQ7+TP7O6Ve1RpY/FpCjivLtq8Ev3uyGzZ0XoJlseIoKDsyFT/FA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB5140.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39830400003)(396003)(136003)(376002)(366004)(346002)(31686004)(54906003)(52116002)(16576012)(6916009)(2616005)(5660300002)(956004)(316002)(36756003)(66946007)(53546011)(8676002)(66476007)(66556008)(4326008)(966005)(8936002)(31696002)(83380400001)(26005)(2906002)(6486002)(478600001)(186003)(86362001)(16526019)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: UIJSW6gzcSIjO+whWFTB1YcEcpjzrH7uTS2wD8dLOlJFhVNwlx6CHyyBa9hXhDE9oQeGHXyXxBZakPWiMh6Imy3/+rS8SWT9IzW64VhVgT02rmXt4ZaqdaAuHweCDNc/A77eIiLjGNDCBX1VLEgXihR9QxxusQDqflYHHnrxB278597lwk4TCXeuPvO4ZprLxBNq92aFxFIts16F60eTeTinZfuNsEejdzVRA4tHU91AaxJmdccoWjgpWD6apFAm/SotGhZf2Oe+D4+M7GDy7uYyaddrZVpg3sb9mtnlS35aKSBw8IuolzVQt1QR5b5a03nCPcYfRK2GgfkUG1RyQYwN5WIegNvTId1dmsIXEhQ/eaScevtoeCmsUbkH8sEVnqjZLpICS0kDop3DHa63cxOzWawnjwE0sAnU65QVrCkpzVllVHEd3W0fRLh5XK6/NXIU4xEa6B7nkQrgmW2fXD61MBx7djH+bOiZZhVNV+k=
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fafb634b-1ecf-4586-2804-08d810f14fff
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 05:59:48.9839
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f069fcc-a333-4440-85f8-08d810f1f900
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 06:04:32.2139
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e7RioFJs7hPhauk6kH7wnktGAwwSJfsr7+0aHl/i5MGp/UNh8UC1ZXEQqDUHQRVWUrAvbxlbRIXKK7/hCaeAjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3843
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: K2ySxnGNhqJI82xleBiQ17qT13yFhy+5r6kA1oG3LN3vRRwdo/hB+loDM5uZBNbhJgMOLP7LHkLZPqUbtaLUnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3803
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 3:50 AM, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-9):
-> 
-> commit: 6b2fb79963fbed7db3ef850926d913518fd5c62f ("fuse: optimize writepages search")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+Hi Kevin,
 
-> [ 1030.995703] ------------[ cut here ]------------
-> [ 1030.997563] WARNING: CPU: 1 PID: 17211 at fs/fuse/file.c:1728 tree_insert+0xab/0xc0 [fuse]
-> [ 1031.021943] RIP: 0010:tree_insert+0xab/0xc0 [fuse]
-> [ 1031.057802] Call Trace:
-> [ 1031.060015]  fuse_writepages_fill+0x5da/0x6a0 [fuse]
-> [ 1031.062536]  write_cache_pages+0x171/0x470
-> [ 1031.064933]  ? fuse_writepages+0x100/0x100 [fuse]
-> [ 1031.067419]  ? terminate_walk+0xd3/0xf0
-> [ 1031.069707]  ? _cond_resched+0x19/0x30
-> [ 1031.072140]  ? __kmalloc+0x274/0x280
-> [ 1031.074407]  fuse_writepages+0x8a/0x100 [fuse]
-> [ 1031.076599]  do_writepages+0x43/0xe0
+> From: Tian, Kevin <kevin.tian@intel.com>
+> Sent: Monday, June 15, 2020 9:23 AM
+>=20
+> > From: Liu, Yi L <yi.l.liu@intel.com>
+> > Sent: Friday, June 12, 2020 5:05 PM
+> >
+> > Hi Alex,
+> >
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Friday, June 12, 2020 3:30 AM
+> > >
+> > > On Thu, 11 Jun 2020 05:15:21 -0700
+> > > Liu Yi L <yi.l.liu@intel.com> wrote:
+> > >
+> > > > IOMMUs that support nesting translation needs report the
+> > > > capability info to userspace, e.g. the format of first level/stage =
+paging
+> structures.
+> > > >
+> > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > > Cc: Eric Auger <eric.auger@redhat.com>
+> > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > > Cc: Joerg Roedel <joro@8bytes.org>
+> > > > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > ---
+> > > > @Jean, Eric: as nesting was introduced for ARM, but looks like no
+> > > > actual user of it. right? So I'm wondering if we can reuse
+> > > > DOMAIN_ATTR_NESTING to retrieve nesting info? how about your
+> > opinions?
+> > > >
+> > > >  include/linux/iommu.h      |  1 +
+> > > >  include/uapi/linux/iommu.h | 34
+> > ++++++++++++++++++++++++++++++++++
+> > > >  2 files changed, 35 insertions(+)
+> > > >
+> > > > diff --git a/include/linux/iommu.h b/include/linux/iommu.h index
+> > > > 78a26ae..f6e4b49 100644
+> > > > --- a/include/linux/iommu.h
+> > > > +++ b/include/linux/iommu.h
+> > > > @@ -126,6 +126,7 @@ enum iommu_attr {
+> > > >  	DOMAIN_ATTR_FSL_PAMUV1,
+> > > >  	DOMAIN_ATTR_NESTING,	/* two stages of translation */
+> > > >  	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+> > > > +	DOMAIN_ATTR_NESTING_INFO,
+> > > >  	DOMAIN_ATTR_MAX,
+> > > >  };
+> > > >
+> > > > diff --git a/include/uapi/linux/iommu.h
+> > > > b/include/uapi/linux/iommu.h index 303f148..02eac73 100644
+> > > > --- a/include/uapi/linux/iommu.h
+> > > > +++ b/include/uapi/linux/iommu.h
+> > > > @@ -332,4 +332,38 @@ struct iommu_gpasid_bind_data {
+> > > >  	};
+> > > >  };
+> > > >
+> > > > +struct iommu_nesting_info {
+> > > > +	__u32	size;
+> > > > +	__u32	format;
+> > > > +	__u32	features;
+> > > > +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
+> > > > +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
+> > > > +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
+> > > > +	__u32	flags;
+> > > > +	__u8	data[];
+> > > > +};
+> > > > +
+> > > > +/*
+> > > > + * @flags:	VT-d specific flags. Currently reserved for future
+> > > > + *		extension.
+> > > > + * @addr_width:	The output addr width of first level/stage
+> translation
+> > > > + * @pasid_bits:	Maximum supported PASID bits, 0 represents no
+> > PASID
+> > > > + *		support.
+> > > > + * @cap_reg:	Describe basic capabilities as defined in VT-d
+> > capability
+> > > > + *		register.
+> > > > + * @cap_mask:	Mark valid capability bits in @cap_reg.
+> > > > + * @ecap_reg:	Describe the extended capabilities as defined in VT-=
+d
+> > > > + *		extended capability register.
+> > > > + * @ecap_mask:	Mark the valid capability bits in @ecap_reg.
+> > >
+> > > Please explain this a little further, why do we need to tell
+> > > userspace about cap/ecap register bits that aren't valid through this=
+ interface?
+> > > Thanks,
+> >
+> > we only want to tell userspace about the bits marked in the cap/ecap_ma=
+sk.
+> > cap/ecap_mask is kind of white-list of the cap/ecap register.
+> > userspace should only care about the bits in the white-list, for other
+> > bits, it should ignore.
+> >
+> > Regards,
+> > Yi Liu
+>=20
+> For invalid bits if kernel just clears them then do we still need additio=
+nal mask bits
+> to explicitly mark them out? I guess this might be the point that Alex as=
+ked...
 
-It is  WARN_ON(!wpa->ia.ap.num_pages);
-however tree_insert() was called from fuse_writepages_fill() with ap->num_pages = 0;
-In submitted PATCH RFC we have used 
+For invalid bits, kernel will clear them. But I think the mask bits is
+still necessary. The mask bits tells user space the bits related to
+nesting. Without it, user space may have no idea about it.
 
-+static int tree_insert(struct rb_root *root, struct fuse_req *ins_req)
-...
-+	pgoff_t idx_to   = idx_from + (ins_req->num_pages ?
-+				ins_req->num_pages - 1 : 0);
+Maybe talk about QEMU usage of the cap/ecap bits would help. QEMU vIOMMU
+decides cap/ecap bits according to QEMU cmdline. But not all of them are
+compatible with hardware support. Especially, vIOMMU built on nesting.
+So needs to sync the cap/ecap bits with host side. Based on the mask
+bits, QEMU can compare the cap/ecap bits configured by QEMU cmdline with
+the cap/ecap bits reported by this interface. This comparation is limited
+to the nesting related bits in cap/ecap, the other bits are not included
+and can use the configuration by QEMU cmdline.
 
-Though committed patch version have 
+The link below show the current Intel vIOMMU usage on the cap/ecap bits.
+For each assigned device, vIOMMU will compare the nesting related bits in
+cap/ecap and mask out the bits which hardware doesn't support. After the
+machine is intilized, the vIOMMU cap/ecap bits are determined. If user
+hot-plug devices to VM, vIOMMU will fail it if the hardware cap/ecap bits
+behind hot-plug device are not compatible with determined vIOMMU cap/ecap
+bits.
 
-+static void tree_insert(struct rb_root *root, struct fuse_writepage_args *wpa)
-...
-+       pgoff_t idx_to = idx_from + wpa->ia.ap.num_pages - 1;
-...
-+       WARN_ON(!wpa->ia.ap.num_pages);
+https://www.spinics.net/lists/kvm/msg218294.html
 
-Miklos,
-do you have any objections if I return to our initial proposal?
-Am I missed something and it is not allowed now?
+Regards,
+Yi Liu
 
-Thank you,
-	Vasily Averin
+> >
+> > > Alex
+> > >
+> > >
+> > > > + */
+> > > > +struct iommu_nesting_info_vtd {
+> > > > +	__u32	flags;
+> > > > +	__u16	addr_width;
+> > > > +	__u16	pasid_bits;
+> > > > +	__u64	cap_reg;
+> > > > +	__u64	cap_mask;
+> > > > +	__u64	ecap_reg;
+> > > > +	__u64	ecap_mask;
+> > > > +};
+> > > > +
+> > > >  #endif /* _UAPI_IOMMU_H */
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index e573b0c..b8c3ef4 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1677,11 +1677,11 @@ void fuse_flush_writepages(struct inode *inode)
- static void tree_insert(struct rb_root *root, struct fuse_writepage_args *wpa)
- {
-        pgoff_t idx_from = wpa->ia.write.in.offset >> PAGE_SHIFT;
--       pgoff_t idx_to = idx_from + wpa->ia.ap.num_pages - 1;
-+       pgoff_t idx_to = idx_from + (wpa->ia.ap.num_pages ?
-+                               wpa->ia.ap.num_pages - 1 : 0) ;
-        struct rb_node **p = &root->rb_node;
-        struct rb_node  *parent = NULL;
- 
--       WARN_ON(!wpa->ia.ap.num_pages);
-        while (*p) {
-                struct fuse_writepage_args *curr;
-                pgoff_t curr_index;
