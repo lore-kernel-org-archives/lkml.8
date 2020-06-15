@@ -2,166 +2,145 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E33C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661F92078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:01:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKZC52Ui"
+	by mail.kernel.org (Postfix) with ESMTP id 0E54C2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592233297;
+	bh=L8IZqOnP8hUd/A9XWaCziUtb1PHyKSN2DrU4rzDxPFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H887Q45cPtwbwo48M0jrADpTepNQXcWdl83lbaLzl2QEWBj2v/cSmRTLuJsf8rTn7
+	 FhL8q0E0H/jPz6oiYoUp1331vR7OHafUvy4XxuVOsvthsZmSlTnpfXmCEnIEfpSyik
+	 PZs9Exl+w0yHjr4d6c5WMsfbeENYJXRaD2r/Rltk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730908AbgFOPB0 (ORCPT
+        id S1730910AbgFOPBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:01:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730711AbgFOPBY (ORCPT
+        Mon, 15 Jun 2020 11:01:35 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:32962 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730701AbgFOPBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:01:24 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB153C061A0E;
-        Mon, 15 Jun 2020 08:01:24 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id jz3so6958836pjb.0;
-        Mon, 15 Jun 2020 08:01:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PIF5e8K3q0e7NGWwSzCLOMuB5EYjzZTGf/QhEJ+wTt0=;
-        b=OKZC52Ui/7+4r4w4WhEFNgl/jQeuvFXAADk0vtf9J7DJIKVztfzZGbG0wALTt4RQhA
-         gK44MhcxZqZb0/R0Syeq0y5EZQVfGzJ0dR6/VMo5pqY7wEPe+SDP+Uk4IKhAmEjgMs6F
-         K6eCTGvbM3YJYU314mCmC/Q/8CfSqbqmUaGBSQSN2WPSRSoOsZoi5gMYRp3mJXFXFVB1
-         H6KCRE/2kPUVdGOHjzjivDBVnN1IuWO/53v41IVkyQS6v899JV4sSK/02iwqF6XwTzmP
-         jeJS/bNlWyLIoEtFaYLgOwbundxZpGjefaKtoMmzKHwtglzYbpres+i9NLV9+dQrMaPU
-         324w==
+        Mon, 15 Jun 2020 11:01:34 -0400
+Received: by mail-wm1-f68.google.com with SMTP id j198so217256wmj.0;
+        Mon, 15 Jun 2020 08:01:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=PIF5e8K3q0e7NGWwSzCLOMuB5EYjzZTGf/QhEJ+wTt0=;
-        b=l1HgJ3ENNksh3nxXTw0WxHC43Ys3a85FUk+w2Hxx0/ezU2M9YwtNnsTEVtnxwfAXtF
-         V4sqpt0q60dUYENgkDZ0U7V1y1iKtWuts9t4zdbIINAGrnt9LahyaSb2NyNt1ol4YHYV
-         fI02myAn83fRDzP3RVw7CnT4GUmzFFKSiJ601Nfq08UxwcypT+oGSSHAMO7vRojCcNDR
-         XQaXzODhBSvGHj6Fbl/+FAIYbLUyDrx/ti8Psfhovd38Y5fanrpMdDAOG9FCoL7UkKKT
-         d+vTO2NO3ooeinWlJBrncNOwLyxHk2wMvo7zPfevTOQPMoxzaWKXVKWptKfCiVVySAAc
-         ydow==
-X-Gm-Message-State: AOAM533be/BmbjPEnfOb2mceEncT1qBMkEbGecn3xuwNqsYC17gRV6go
-        O/HJLRrXrQJ2OtFQ0FKS3ZniQnaA
-X-Google-Smtp-Source: ABdhPJwuAoJMmw1d1eAx382Qgrf0SyTxlzhfUhGXYj6pc4gbpdsUacnnSgQowdOaG1diyOGfe7UUhg==
-X-Received: by 2002:a17:90b:190e:: with SMTP id mp14mr12363004pjb.198.1592233283856;
-        Mon, 15 Jun 2020 08:01:23 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b5sm14346660pfg.191.2020.06.15.08.01.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 08:01:23 -0700 (PDT)
-Subject: Re: [PATCH 0/2] MCA and EDAC updates for AMD Family 17h, Model 60h
-To:     Borislav Petkov <bp@alien8.de>, Jacky Hu <hengqing.hu@gmail.com>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tony.luck@intel.com, x86@kernel.org,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        linux-hwmon@vger.kernel.org
-References: <20200607043709.48178-1-hengqing.hu@gmail.com>
- <20200615115950.GG14668@zn.tnic>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <a9d0cfc4-1aed-d6ed-c6f2-336b56d91f20@roeck-us.net>
-Date:   Mon, 15 Jun 2020 08:01:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b5qvOg57UADgLzf+akmZ9rdaUG21I31nx25QubBlwmU=;
+        b=GJQh/VJKFKAKo32UkCmm1AsUJKDfzKS8R5gkpAT7LGjZc+m+uLoNQdh38qtMOJBwhB
+         ltEUy99rwEB4nx1OBW1nLvh6f0yW9BfCM9hX28erFG3OwHcO0pC16kiazKWGo6lZfELd
+         OzvO/i1hG39hpjlvhoot6fNuW7gjSauZn8m0xRTGYbWw7/DX9k0/fZjCVVleF3p8qOeL
+         AHsMwCiasQRcLuSGCQ8Rg+6rHmjQjewi4rKgQli9/O8rO7Y1Rhzn/+VKrCOn7c7mdQuu
+         ImiJm0SYrc549bqgDGdGGULrNrUFXuV+Ek1jDKaWAwgn9R66KNa0vWaP8Cr9OVj1iTyz
+         FM4A==
+X-Gm-Message-State: AOAM530+E6W168TcMFq2xxdh9bkLNmuLzKEPpDqHXvc64slTkaJWNH1a
+        i3XVEGZ7DiVvCELzsZLgQKk=
+X-Google-Smtp-Source: ABdhPJy9VSpz3kEOLPJzTJYggxYQ0jplJOLKluJZv/AfUmoOv+0rtrfCSC4WAqGA4V1CHa6ojpRzKQ==
+X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr12771377wmm.108.1592233291158;
+        Mon, 15 Jun 2020 08:01:31 -0700 (PDT)
+Received: from localhost (ip-37-188-174-201.eurotel.cz. [37.188.174.201])
+        by smtp.gmail.com with ESMTPSA id d9sm24638967wre.28.2020.06.15.08.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 08:01:29 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 17:01:28 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm: memcontrol: handle div0 crash race condition in
+ memory.low
+Message-ID: <20200615150128.GL25296@dhcp22.suse.cz>
+References: <20200615140658.601684-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <20200615115950.GG14668@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615140658.601684-1-hannes@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 4:59 AM, Borislav Petkov wrote:
-> + Yazen and linux-hwmon.
+On Mon 15-06-20 10:06:58, Johannes Weiner wrote:
+> Tejun reports seeing rare div0 crashes in memory.low stress testing:
 > 
-> On Sun, Jun 07, 2020 at 12:37:07PM +0800, Jacky Hu wrote:
->> This patchset adds MCA and EDAC support for AMD Family 17h, Model 60h.
->>
->> Also k10temp works with 4800h
->>
->> k10temp-pci-00c3
->> Adapter: PCI adapter
->> Vcore:         1.55 V
->> Vsoc:          1.55 V
->> Tctl:         +49.6°C
->> Tdie:         +49.6°C
->> Icore:         0.00 A
->> Isoc:          0.00 A
->>
-
-Looks like we may have to black-list current measurements
-for that chip, though.
-
-Guenter
-
->> Jacky Hu (2):
->>   x86/amd_nb: Add Family 17h, Model 60h PCI IDs
->>   EDAC/amd64: Add family ops for Family 17h Models 60h-6Fh
->>
->>  arch/x86/kernel/amd_nb.c  |  5 +++++
->>  drivers/edac/amd64_edac.c | 14 ++++++++++++++
->>  drivers/edac/amd64_edac.h |  3 +++
->>  drivers/hwmon/k10temp.c   |  2 ++
->>  include/linux/pci_ids.h   |  1 +
->>  5 files changed, 25 insertions(+)
->>
->> -- 
->> 2.27.0
->>
+> [37228.504582] RIP: 0010:mem_cgroup_calculate_protection+0xed/0x150
+> [37228.505059] Code: 0f 46 d1 4c 39 d8 72 57 f6 05 16 d6 42 01 40 74 1f 4c 39 d8 76 1a 4c 39 d1 76 15 4c 29 d1 4c 29 d8 4d 29 d9 31 d2 48 0f af c1 <49> f7 f1 49 01 c2 4c 89 96 38 01 00 00 5d c3 48 0f af c7 31 d2 49
+> [37228.506254] RSP: 0018:ffffa14e01d6fcd0 EFLAGS: 00010246
+> [37228.506769] RAX: 000000000243e384 RBX: 0000000000000000 RCX: 0000000000008f4b
+> [37228.507319] RDX: 0000000000000000 RSI: ffff8b89bee84000 RDI: 0000000000000000
+> [37228.507869] RBP: ffffa14e01d6fcd0 R08: ffff8b89ca7d40f8 R09: 0000000000000000
+> [37228.508376] R10: 0000000000000000 R11: 00000000006422f7 R12: 0000000000000000
+> [37228.508881] R13: ffff8b89d9617000 R14: ffff8b89bee84000 R15: ffffa14e01d6fdb8
+> [37228.509397] FS:  0000000000000000(0000) GS:ffff8b8a1f1c0000(0000) knlGS:0000000000000000
+> [37228.509917] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [37228.510442] CR2: 00007f93b1fc175b CR3: 000000016100a000 CR4: 0000000000340ea0
+> [37228.511076] Call Trace:
+> [37228.511561]  shrink_node+0x1e5/0x6c0
+> [37228.512044]  balance_pgdat+0x32d/0x5f0
+> [37228.512521]  kswapd+0x1d7/0x3d0
+> [37228.513346]  ? wait_woken+0x80/0x80
+> [37228.514170]  kthread+0x11c/0x160
+> [37228.514983]  ? balance_pgdat+0x5f0/0x5f0
+> [37228.515797]  ? kthread_park+0x90/0x90
+> [37228.516593]  ret_from_fork+0x1f/0x30
 > 
+> This happens when parent_usage == siblings_protected. We check that
+> usage is bigger than protected, which should imply parent_usage being
+> bigger than siblings_protected. However, we don't read (or even
+> update) these values atomically, and they can be out of sync as the
+> memory state changes under us. A bit of fluctuation around the target
+> protection isn't a big deal, but we need to handle the div0 case.
+> 
+> Check the parent state explicitly to make sure we have a reasonable
+> positive value for the divisor.
+> 
+> Fixes: 8a931f801340 ("mm: memcontrol: recursive memory.low protection")
+> Reported-by: Tejun Heo <tj@kernel.org>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/memcontrol.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 0b38b6ad547d..5de0a9035b5f 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6360,11 +6360,16 @@ static unsigned long effective_protection(unsigned long usage,
+>  	 * We're using unprotected memory for the weight so that if
+>  	 * some cgroups DO claim explicit protection, we don't protect
+>  	 * the same bytes twice.
+> +	 *
+> +	 * Check both usage and parent_usage against the respective
+> +	 * protected values. One should imply the other, but they
+> +	 * aren't read atomically - make sure the division is sane.
+>  	 */
+>  	if (!(cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT))
+>  		return ep;
+> -
+> -	if (parent_effective > siblings_protected && usage > protected) {
+> +	if (parent_effective > siblings_protected &&
+> +	    parent_usage > siblings_protected &&
+> +	    usage > protected) {
+>  		unsigned long unclaimed;
+>  
+>  		unclaimed = parent_effective - siblings_protected;
+> -- 
+> 2.26.2
+
+-- 
+Michal Hocko
+SUSE Labs
