@@ -2,160 +2,108 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECDAA2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A490207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592255312;
-	bh=2uwrT3LndWuOmVFs7KNYrM0gYbf8YHkseGi77l6m1nA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UdKJoXBxO7zKpMUzuNdLdKgn0EZGcy/zoG0KmzMUOfN5HhNSnPb6l9Ac4AE4NQugE
-	 H3Btxhu6mZeYIdsCY56Wv5ssuN6f4iePRGzgJxAtq02bmDD/q1mMOgHc9/PSh7EcM5
-	 Epf7lOFj1oC0FGQXYqWh+JUG6dwfKwW528k5STRg=
+	s=default; t=1592255619;
+	bh=9hmhNMnytDn/12vZ0JJhYVVPOEacvK3Su5cLBW/296g=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=p5qOgPffTw9ny/dGcf6ugX+oI9ACn7Xf6yL0OUQBk0jQHnVbUVP3GN2T/1N+71AS0
+	 /lf3QWU+sF5/1GtfuvQKCPWvXSA+v90bOSmcaMMhjHy7LLG78+AH4E7QwcQr3hZOFV
+	 jgt5olhBO0TefnIRK7BP6gMHxafmL1NK2U8CKh2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbgFOVIa (ORCPT
+        id S1731491AbgFOVNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 17:08:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36822 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 17:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731451AbgFOVIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 17:08:30 -0400
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726207AbgFOVNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 17:13:37 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29D9B207E8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 21:08:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A86A2078E;
+        Mon, 15 Jun 2020 21:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592255309;
-        bh=2uwrT3LndWuOmVFs7KNYrM0gYbf8YHkseGi77l6m1nA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SwFe1XrVngm7lGTXR+6vv1E0vGwbBXS2LrKN04vBZe4ChL/Yx1XYcx2YDv3NuRWks
-         oaPgW46sENCNptuQZZ8gwtNI8mhdOtgfZ1nQV1IRIcBr7CP64JYvLCqDD9JZmDlnZz
-         i7E35/oiM6/+l5NE0Wqpha2y0YkEvubz/8CmSjhQ=
-Received: by mail-wm1-f49.google.com with SMTP id c71so907031wmd.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 14:08:29 -0700 (PDT)
-X-Gm-Message-State: AOAM533dEyCO+FgLzfmLWE6z7yfq7jCfzBbPQetuy1KAtBS3nZRLFfed
-        jtomaYE/qKTx6M6XAIp1OvWF3Z6asEbA9NFrAjgb4w==
-X-Google-Smtp-Source: ABdhPJyxEn4ZEFRrBcIP2yFeRdfXbYA/EdvnZ/NhZpeD3cwBJrDDqngPIQlMSjRWfaptXiQXlOJ2wY53olUTtd7wH3U=
-X-Received: by 2002:a05:600c:22da:: with SMTP id 26mr1175441wmg.176.1592255307605;
- Mon, 15 Jun 2020 14:08:27 -0700 (PDT)
+        s=default; t=1592255617;
+        bh=9hmhNMnytDn/12vZ0JJhYVVPOEacvK3Su5cLBW/296g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=zwkav/Taf2V3vmB29SJyATCj765103/cMPGXfIToXae2+m2mXInGF22eQvWXPRdHH
+         xtdIDonAq3ni7NC9c5GdTbeoFyhamfX56YCA2yac1hu/pYVkBVGN5qqT2yS6JhLNIi
+         IwvUH1xZfl6IrCPI8OliPOn2ZUXy9gNcD935czzo=
+Date:   Mon, 15 Jun 2020 16:18:55 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] liquidio: Replace vmalloc_node + memset with vzalloc_node
+ and use array_size
+Message-ID: <20200615211855.GA32663@embeddedor>
 MIME-Version: 1.0
-References: <f8fe40e0088749734b4435b554f73eee53dcf7a8.1591932307.git.luto@kernel.org>
- <159199140855.16989.18012912492179715507.tip-bot2@tip-bot2>
- <20200615145018.GU2531@hirez.programming.kicks-ass.net> <CALCETrWhbg_61CTo9_T6s1NDFvOgUx7ebSzhXj7O_m8htePwKA@mail.gmail.com>
- <20200615194458.GL2531@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200615194458.GL2531@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 15 Jun 2020 14:08:16 -0700
-X-Gmail-Original-Message-ID: <CALCETrUbwwoYTzyntr=bUjJU44iyt+S8bRS04OxmByP3aD4A9g@mail.gmail.com>
-Message-ID: <CALCETrUbwwoYTzyntr=bUjJU44iyt+S8bRS04OxmByP3aD4A9g@mail.gmail.com>
-Subject: Re: [tip: x86/entry] x86/entry: Treat BUG/WARN as NMI-like entries
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 15, 2020, at 12:45 PM, Peter Zijlstra <peterz@infradead.org> wrote=
-:
->
-> =EF=BB=BFOn Mon, Jun 15, 2020 at 10:06:20AM -0700, Andy Lutomirski wrote:
->>> On Mon, Jun 15, 2020 at 7:50 AM Peter Zijlstra <peterz@infradead.org> w=
-rote:
->>
->> Hmm.  IMO you're making two changes here, and this is fiddly enough
->> that it might be worth separating them for bisection purposes.
->
-> Sure, can do.
->
->>> ---
->>>
->>> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
->>> index af75109485c26..a47e74923c4c8 100644
->>> --- a/arch/x86/kernel/traps.c
->>> +++ b/arch/x86/kernel/traps.c
->>> @@ -218,21 +218,22 @@ static inline void handle_invalid_op(struct pt_re=
-gs *regs)
->>>
->>> DEFINE_IDTENTRY_RAW(exc_invalid_op)
->>> {
->>> -       bool rcu_exit;
->>> -
->>>        /*
->>>         * Handle BUG/WARN like NMIs instead of like normal idtentries:
->>>         * if we bugged/warned in a bad RCU context, for example, the la=
-st
->>>         * thing we want is to BUG/WARN again in the idtentry code, ad
->>>         * infinitum.
->>>         */
->>> -       if (!user_mode(regs) && is_valid_bugaddr(regs->ip)) {
->>> -               enum bug_trap_type type;
->>> +       if (!user_mode(regs)) {
->>> +               enum bug_trap_type type =3D BUG_TRAP_TYPE_NONE;
->>>
->>>                nmi_enter();
->>>                instrumentation_begin();
->>>                trace_hardirqs_off_finish();
->>> -               type =3D report_bug(regs->ip, regs);
->>> +
->>> +               if (is_valid_bugaddr(regs->ip))
->>> +                       type =3D report_bug(regs->ip, regs);
->>> +
->>
->> Sigh, this is indeed necessary.
->
-> :-)
->
->>>                if (regs->flags & X86_EFLAGS_IF)
->>>                        trace_hardirqs_on_prepare();
->>>                instrumentation_end();
->>> @@ -249,13 +250,16 @@ DEFINE_IDTENTRY_RAW(exc_invalid_op)
->>>                 * was just a normal #UD, we want to continue onward and
->>>                 * crash.
->>>                 */
->>> -       }
->>> +               handle_invalid_op(regs);
->>
->> But this is really a separate change.  This makes handle_invalid_op()
->> be NMI-like even for non-BUG/WARN kernel #UD entries.  One might argue
->> that this doesn't matter, and that's probably right, but I think it
->> should be its own change with its own justification.  With just my
->> patch, I intentionally call handle_invalid_op() via the normal
->> idtentry_enter_cond_rcu() path.
->
-> All !user exceptions really should be NMI-like. If you want to go
-> overboard, I suppose you can look at IF and have them behave interrupt
-> like when set, but why make things complicated.
+Use vzalloc/vzalloc_node instead of the vmalloc/vzalloc_node and memset.
 
-This entire rabbit hole opened because of #PF. So we at least need the
-set of exceptions that are permitted to schedule if they came from
-kernel mode to remain schedulable.
+Also, notice that vzalloc_node() function has no 2-factor argument form
+to calculate the size for the allocation, so multiplication factors need
+to be wrapped in array_size().
 
-Prior to the giant changes, all the non-IST *exceptions*, but not the
-interrupts, were schedulable from kernel mode, assuming the original
-context could schedule. Right now, interrupts can schedule, too, which
-is nice if we ever want to fully clean up the Xen abomination. I
-suppose we could make it so #PF opts in to special treatment again,
-but we should decide that the result is simpler or otherwise better
-before we do this.
+This issue was found with the help of Coccinelle and, audited and fixed
+manually.
 
-One possible justification would be that the schedulable entry variant
-is more complicated, and most kernel exceptions except the ones with
-fixups are bad news, and we want the oopses to succeed. But page
-faults are probably the most common source of oopses, so this is a bit
-weak, and we really want page faults to work even from nasty contexts.
+Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/ethernet/cavium/liquidio/request_manager.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
->
-> Anyway, let me to smaller and proper patches for this.
+diff --git a/drivers/net/ethernet/cavium/liquidio/request_manager.c b/drivers/net/ethernet/cavium/liquidio/request_manager.c
+index 6dd65f9b347c..8e59c2825533 100644
+--- a/drivers/net/ethernet/cavium/liquidio/request_manager.c
++++ b/drivers/net/ethernet/cavium/liquidio/request_manager.c
+@@ -95,12 +95,10 @@ int octeon_init_instr_queue(struct octeon_device *oct,
+ 	/* Initialize a list to holds requests that have been posted to Octeon
+ 	 * but has yet to be fetched by octeon
+ 	 */
+-	iq->request_list = vmalloc_node((sizeof(*iq->request_list) * num_descs),
+-					       numa_node);
++	iq->request_list = vzalloc_node(array_size(num_descs, sizeof(*iq->request_list)),
++					numa_node);
+ 	if (!iq->request_list)
+-		iq->request_list =
+-			vmalloc(array_size(num_descs,
+-					   sizeof(*iq->request_list)));
++		iq->request_list = vzalloc(array_size(num_descs, sizeof(*iq->request_list)));
+ 	if (!iq->request_list) {
+ 		lio_dma_free(oct, q_size, iq->base_addr, iq->base_addr_dma);
+ 		dev_err(&oct->pci_dev->dev, "Alloc failed for IQ[%d] nr free list\n",
+@@ -108,8 +106,6 @@ int octeon_init_instr_queue(struct octeon_device *oct,
+ 		return 1;
+ 	}
+ 
+-	memset(iq->request_list, 0, sizeof(*iq->request_list) * num_descs);
+-
+ 	dev_dbg(&oct->pci_dev->dev, "IQ[%d]: base: %p basedma: %pad count: %d\n",
+ 		iq_no, iq->base_addr, &iq->base_addr_dma, iq->max_count);
+ 
+-- 
+2.27.0
+
