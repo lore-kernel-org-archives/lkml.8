@@ -2,78 +2,122 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 436B82078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6072078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AKdMnBO7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3tMyfHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbgFOQGd (ORCPT
+        id S1730655AbgFOQH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:06:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53094 "EHLO
+        Mon, 15 Jun 2020 12:07:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729772AbgFOQGc (ORCPT
+        with ESMTP id S1729772AbgFOQHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:06:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78895C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:06:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qrKBJFe3yFlrMjIAOwsfJ20n17pd7jkHQNcwSDFSIXk=; b=AKdMnBO7xavRKuRYG0bo9E6z8j
-        QRkOn0k9wSipmqeTCWgHf4kLjI1n0i7+XyQA/muxYLNNS9WNUTBfRm0auJ+QG46HXdpfZI8dhwqGW
-        YvDDEVDloMxawm8lfW/3QySneq2ZMHYMnSU0ASIUM7SrUF+nKRO+u3dk5NWDIGqriuMaa/fugGOtf
-        jSY6AYf1GIXFL1RhnSlUekRBfevBGkjXa/o0Ko8ye0LMB+lUflzqtG0xGbau13vc5GQGWFG21IOxR
-        BGNit194HzhBaoCmaXdHTy8AroAjvSQlxJWGYwmVahaBODGTiQfo4/fn+KLqGGPwfbNACNDi/bgkm
-        qfV9kY0w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkrcy-0001cG-IV; Mon, 15 Jun 2020 16:06:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 15C6B30604B;
-        Mon, 15 Jun 2020 18:06:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F175221441C0D; Mon, 15 Jun 2020 18:06:26 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 18:06:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     tglx@linutronix.de, x86@kernel.org, elver@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        will@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com
-Subject: Re: [PATCH 2/9] rcu: Fixup noinstr warnings
-Message-ID: <20200615160626.GB2531@hirez.programming.kicks-ass.net>
-References: <20200603114014.152292216@infradead.org>
- <20200603114051.896465666@infradead.org>
- <20200603164600.GQ29598@paulmck-ThinkPad-P72>
- <20200615153052.GY2531@hirez.programming.kicks-ass.net>
- <20200615155220.GE2723@paulmck-ThinkPad-P72>
+        Mon, 15 Jun 2020 12:07:55 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07ADAC061A0E;
+        Mon, 15 Jun 2020 09:07:55 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s10so7803438pgm.0;
+        Mon, 15 Jun 2020 09:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vbAqJspBEy3qPmYLBAGhLz99Oyo1IaGAYVCtozwHP14=;
+        b=K3tMyfHDMU23lAAyeTy3R5+F+8tyV4F19bGC4jPgVkfFDReb++iNlqxZ4oV5dGt0II
+         FxvF5FxulOHAwY5RTyXjpLUS9imSH/JqLleM9vPsu4aJgd8D+oDXgMTSyOW5IdRpPfa9
+         d/PhvNOuS5DKM3chalq7BOKTVq/cwnseug70HAXC3DFOI3I+47mDmDfu0AOHHuvcjRFf
+         kg2EASmKr9fivAHe4QHbQODrHpiStZ088UaaFW7zSYJC98U5qyLGyPXAGRgiFrcD8Dxl
+         S2gqi7R0oliDmRVgRBeBYl2aQ73WaAdwaTbw1xyU9xAmj5UA/1cZWgdMPq3IFXuxmLw1
+         PJxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vbAqJspBEy3qPmYLBAGhLz99Oyo1IaGAYVCtozwHP14=;
+        b=fjYOf9wsnqNIBtkUxgJRpwyd4JkpVPqGytPjoj4UKkYGSpAr2B7/s9bMSjgkiBeZHJ
+         wQZ4cW4PJWgVYI+/2UMk7J0r4QIfIGzHtX5ySfX3+ryHfIm8pirCicz7qalpG/EKnuNQ
+         vu1ifMZYxrY80W94nxeKI7jjpZluP4EUbrm/xnkPq/21R/J8vj4vSzzihLHomQNpN1gW
+         QX3GZyweWhIM88/iZIDJ2ttDd1bu2rkEnU+6Ia4afOkhJoMUZQ9UBKxb2jULp+nq3T1M
+         oBntoe73J+ZQ5avA134CMZ7XgGlVw9FrFMozqHymNadTiyyu7Ts7eG7X9R28/8/NG/Fo
+         7QGA==
+X-Gm-Message-State: AOAM532PUsM2zx8eDHFikkm205bT0r+vaxlSC5UJmFhi1PxxD2t0S8c0
+        6ueOzHqMTv5l3CpBmZn5wCXJPtxNUEYI+477MCc=
+X-Google-Smtp-Source: ABdhPJxMa0K1+iV8tITENmtN1Fz5raSyajtdv9SEYFFAqnuM9mo09FrJFM8EqxRJU7zBb83nCsGxfk4xNnPoNPWu+lM=
+X-Received: by 2002:a63:305:: with SMTP id 5mr21153696pgd.74.1592237274446;
+ Mon, 15 Jun 2020 09:07:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615155220.GE2723@paulmck-ThinkPad-P72>
+References: <20200614210255.4641-1-sultan@kerneltoast.com> <20200614210255.4641-2-sultan@kerneltoast.com>
+ <20200615094019.GP2428291@smile.fi.intel.com> <20200615160320.GA1949@sultan-book.localdomain>
+In-Reply-To: <20200615160320.GA1949@sultan-book.localdomain>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 15 Jun 2020 19:07:42 +0300
+Message-ID: <CAHp75Ve1TgRrKF0_d-7dY6EZU36QszwQ1ezwE03RERKywCxGYg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] i2c: designware: Only check the first byte for SMBus
+ block read length
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        HungNien Chen <hn.chen@weidahitech.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Pavel Balan <admin@kryma.net>, Tin Huynh <tnhuynh@apm.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        You-Sheng Yang <vicamo.yang@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 08:52:20AM -0700, Paul E. McKenney wrote:
-> On Mon, Jun 15, 2020 at 05:30:52PM +0200, Peter Zijlstra wrote:
-> > What shall we do with this patch?
-> 
-> I plan to submit it to the v5.9 merge window.  Do you need it to get
-> to mainline earlier?
+On Mon, Jun 15, 2020 at 7:06 PM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
+> On Mon, Jun 15, 2020 at 12:40:19PM +0300, Andy Shevchenko wrote:
+> > On Sun, Jun 14, 2020 at 02:02:54PM -0700, Sultan Alsawaf wrote:
+> > > From: Sultan Alsawaf <sultan@kerneltoast.com>
+> > >
+> > > SMBus block reads can be broken because the read function will just skip
+> > > over bytes it doesn't like until reaching a byte that conforms to the
+> > > length restrictions for block reads. This is problematic when it isn't
+> > > known if the incoming payload is indeed a conforming block read.
+> > >
+> > > According to the SMBus specification, block reads will only send the
+> > > payload length in the first byte, so we can fix this by only considering
+> > > the first byte in a sequence for block read length purposes.
+> >
+> > I'm wondering if this overlaps with [1]. AFAIU that one is also makes sure that
+> > the length is not a garbage.
+> >
+> > [1]: https://lore.kernel.org/linux-i2c/20200613104109.2989-1-mans@mansr.com/T/#u
+>
+> No overlap.
 
-Yeah, we need it this round, to make KASAN/KCSAN work with the noinstr
-stuff that just landed.
+Thanks for clarifying.
+
+> That looks like a similar bug for a different driver. In my case,
+> the adapter provides native SMBus support, so emulation is never used. This is
+> clear to see by looking at i2c_transfer_buffer_flags(), which only uses the
+> master_xfer functions provided by the adapter; it doesn't call the emulation
+> path at all.
+
+But do we get an advantage if this can be done in the i2c core instead
+(once for all)?
+
+-- 
+With Best Regards,
+Andy Shevchenko
