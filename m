@@ -2,168 +2,93 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0923BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49412C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4E92078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cQH4q0xo"
+	by mail.kernel.org (Postfix) with ESMTP id 22A162078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592238214;
+	bh=XalKfGZb8n85Dlowgyhn+CM2djvVHZZnTX/8wIWHJ7w=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=oTE2LsoZfFaCqhWaxVq89p98IJwkG2mfrfeM0gFHt4/OnoKhKVLBSOqROJ5msVN17
+	 q71gYKC22rQ08YQK+OMiisLzFLyzjJvZaXWU9qkKAfD9uynaCDzbFaP1AXYaIkaaMZ
+	 tSGVxb+rsItFQa1zMBvk9yNEG79M09hVi+y6v3cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731070AbgFOQXQ (ORCPT
+        id S1731092AbgFOQXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:23:16 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57124 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731060AbgFOQXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:23:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592238190;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=lG9PxYF7wNWi6hdGvEHaNfAME07JvyZSXBUC+6tT7+4=;
-        b=cQH4q0xo1iYF+eFk3r0OKZI8qrEKWa7KtYVW2c81Tg80nwNp/vP9eJ/TJ94kq0R/QD01Ze
-        VENG+hUyWkiJzgY+zQ/6EuWFRICY5AyPSE47AO0fb6Kr6Mmr4F4r+lJGlSNO4/YADfpLxX
-        5D6qTZAU4r1y++NS8QNaJejbzCg/QjU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-443-I9L5YiNmPKe5OFPTIekO5w-1; Mon, 15 Jun 2020 12:22:58 -0400
-X-MC-Unique: I9L5YiNmPKe5OFPTIekO5w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 15 Jun 2020 12:23:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730764AbgFOQXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:23:31 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0CB11116B1EC;
-        Mon, 15 Jun 2020 16:09:26 +0000 (UTC)
-Received: from llong.com (ovpn-117-41.rdu2.redhat.com [10.10.117.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B722519C66;
-        Mon, 15 Jun 2020 16:09:24 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH 1/2] sched: Add PF_MEMALLOC_NOLOCKDEP flag
-Date:   Mon, 15 Jun 2020 12:08:29 -0400
-Message-Id: <20200615160830.8471-2-longman@redhat.com>
-In-Reply-To: <20200615160830.8471-1-longman@redhat.com>
-References: <20200615160830.8471-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        by mail.kernel.org (Postfix) with ESMTPSA id EE2D72078A;
+        Mon, 15 Jun 2020 16:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592238211;
+        bh=XalKfGZb8n85Dlowgyhn+CM2djvVHZZnTX/8wIWHJ7w=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=G80YnnLbQpmqujLdva4c9XxxuubAh89NU3DkHMzNo/CP4kG0h5Ml/XfwwnXIUBG5j
+         mA2zb2XW9oORXy/lSyUhYA2bHKe0TAgaLKYatuf8Id7nYFcP5c7Xo4LGQz38L23ENF
+         65vAefPlo9mavATRzrlriaLouZAAxHxSZ6Qs8SJ0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id CAECE3522EFD; Mon, 15 Jun 2020 09:23:30 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 09:23:30 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, frederic@kernel.org
+Subject: Re: [PATCH 0/6] sched: TTWU, IPI, and assorted stuff
+Message-ID: <20200615162330.GF2723@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200615125654.678940605@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615125654.678940605@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are cases where calling kmalloc() can lead to false positive
-lockdep splat. One notable example that can happen in the freezing of
-the xfs filesystem is as follows:
+On Mon, Jun 15, 2020 at 02:56:54PM +0200, Peter Zijlstra wrote:
+> Hi,
+> 
+> So Paul reported rcutorture hitting a NULL dereference, and patch #1 fixes it.
+> 
+> Now, patch #1 is obviously correct, but I can't explain how exactly it leads to
+> the observed NULL pointer dereference. The NULL pointer deref happens in
+> find_matching_se()'s last while() loop when is_same_group() fails even though
+> both parents are NULL.
 
- Possible unsafe locking scenario:
+My bisection of yet another bug sometimes hits the scheduler NULL pointer
+dereference on older commits.  I will try out patch #2.
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(sb_internal);
-                               lock(fs_reclaim);
-                               lock(sb_internal);
-  lock(fs_reclaim);
+Whether this is reassuring or depressing, I have no idea.  :-/
 
- *** DEADLOCK ***
+> The only explanation I have for that is that we just did an activate_task()
+> while: 'task_cpu(p) != cpu_of(rq)', because then 'p->se.cfs_rq' doesn't match.
+> However, I can't see how the lack of #1 would lead to that. Never-the-less,
+> patch #2 adds assertions to warn us of this case.
+> 
+> Patch #3 is a trivial rename that ought to eradicate some confusion.
+> 
+> The last 3 patches is what I ended up with for cleaning up the whole
+> smp_call_function/irq_work/ttwu thing more.
 
-This is a false positive as all the dirty pages are flushed out before
-the filesystem can be frozen. However, there is no easy way to modify
-lockdep to handle this situation properly.
+Would it be possible to allow a target CPU # on those instances of
+__call_single_data?  This is extremely helpful for debugging lost
+smp_call_function*() calls.
 
-One possible workaround is to disable lockdep by setting __GFP_NOLOCKDEP
-in the appropriate kmalloc() calls.  However, it will be cumbersome to
-locate all the right kmalloc() calls to insert __GFP_NOLOCKDEP and it
-is easy to miss some especially when the code is updated in the future.
-
-Another alternative is to have a per-process global state that indicates
-the equivalent of __GFP_NOLOCKDEP without the need to set the gfp_t flag
-individually. To allow the latter case, a new PF_MEMALLOC_NOLOCKDEP
-per-process flag is now added. After adding this new bit, there are
-still 2 free bits left.
-
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- include/linux/sched.h    |  7 +++++++
- include/linux/sched/mm.h | 15 ++++++++++-----
- 2 files changed, 17 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index b62e6aaf28f0..44247cbc9073 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1508,6 +1508,7 @@ extern struct pid *cad_pid;
- #define PF_MEMALLOC_NOIO	0x00080000	/* All allocation requests will inherit GFP_NOIO */
- #define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only against the bdi I write to,
- 						 * I am cleaning dirty pages from some other bdi. */
-+#define __PF_MEMALLOC_NOLOCKDEP	0x00100000	/* All allocation requests will inherit __GFP_NOLOCKDEP */
- #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
- #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
- #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
-@@ -1519,6 +1520,12 @@ extern struct pid *cad_pid;
- #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
- #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
- 
-+#ifdef CONFIG_LOCKDEP
-+#define PF_MEMALLOC_NOLOCKDEP	__PF_MEMALLOC_NOLOCKDEP
-+#else
-+#define PF_MEMALLOC_NOLOCKDEP	0
-+#endif
-+
- /*
-  * Only the _current_ task can read/write to tsk->flags, but other
-  * tasks can access tsk->flags in readonly mode for example
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index 480a4d1b7dd8..4a076a148568 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -177,22 +177,27 @@ static inline bool in_vfork(struct task_struct *tsk)
-  * Applies per-task gfp context to the given allocation flags.
-  * PF_MEMALLOC_NOIO implies GFP_NOIO
-  * PF_MEMALLOC_NOFS implies GFP_NOFS
-+ * PF_MEMALLOC_NOLOCKDEP implies __GFP_NOLOCKDEP
-  * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
-  */
- static inline gfp_t current_gfp_context(gfp_t flags)
- {
--	if (unlikely(current->flags &
--		     (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA))) {
-+	unsigned int pflags = current->flags;
-+
-+	if (unlikely(pflags & (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS |
-+			       PF_MEMALLOC_NOCMA | PF_MEMALLOC_NOLOCKDEP))) {
- 		/*
- 		 * NOIO implies both NOIO and NOFS and it is a weaker context
- 		 * so always make sure it makes precedence
- 		 */
--		if (current->flags & PF_MEMALLOC_NOIO)
-+		if (pflags & PF_MEMALLOC_NOIO)
- 			flags &= ~(__GFP_IO | __GFP_FS);
--		else if (current->flags & PF_MEMALLOC_NOFS)
-+		else if (pflags & PF_MEMALLOC_NOFS)
- 			flags &= ~__GFP_FS;
-+		if (pflags & PF_MEMALLOC_NOLOCKDEP)
-+			flags |= __GFP_NOLOCKDEP;
- #ifdef CONFIG_CMA
--		if (current->flags & PF_MEMALLOC_NOCMA)
-+		if (pflags & PF_MEMALLOC_NOCMA)
- 			flags &= ~__GFP_MOVABLE;
- #endif
- 	}
--- 
-2.18.1
-
+						Thanx, Paul
