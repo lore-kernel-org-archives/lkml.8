@@ -2,135 +2,113 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B62C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F662C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F33620768
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592261352;
-	bh=xBGoroK2H8hqzN5/4X4Uahd06hiNRj+zCe3PMuFRh+M=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=DTzkG2bvSkFQFUat1NXx4GOOMazMgD5IeZ7mBFfe4xDTSvwk5Ai1/mcl5JjVsMgCG
-	 EH5Y2Is0QozGy9rwz4I/JMjXjPmqqwSdRDAJGU1AI8I56gepDlZNXxNM1j7p5IDllm
-	 C02hCoywtdtsB13CXgJRNR3w/rhFQ6o+4kvYGJ5I=
+	by mail.kernel.org (Postfix) with ESMTP id 3002120739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:51:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="l/RMEuar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgFOWtK (ORCPT
+        id S1726568AbgFOWvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgFOWtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:49:10 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BA3D2074D;
-        Mon, 15 Jun 2020 22:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592261349;
-        bh=xBGoroK2H8hqzN5/4X4Uahd06hiNRj+zCe3PMuFRh+M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EdqLMWVVkfWhaDiXk9TWcjR84sGAV5boxxGLbuFkH8aRPLjY+KXkNilVvsF5Jb6Do
-         qFdST2NcU9xr2MujM2LUeavJ825gXsq25ndV6yhw2UlpZyir2DucCuwN6TqDstLgcA
-         SjOlTrrpFKcVS3AJmItqTWbVRAIVLO0lMRb/OZOQ=
-Date:   Mon, 15 Jun 2020 17:54:28 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Satish Kharat <satishkh@cisco.com>,
-        Sesidhar Baddela <sebaddel@cisco.com>,
-        Karan Tilak Kumar <kartilak@cisco.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] scsi: fnic: Replace vmalloc() + memset() with
- vzalloc() and use array_size()
-Message-ID: <20200615225428.GA14959@embeddedor>
+        Mon, 15 Jun 2020 18:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725960AbgFOWvf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 18:51:35 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD9CC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:51:35 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id dp18so1086954ejc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:51:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SGExwC1aIDo5/1NE6vpBPs1NX4b+lnmovMgwaKLnO7A=;
+        b=l/RMEuarijoX6QMHuCLRhoXP2m/8ECyX5qkJWulEPvmaBNqkJmtgVhU9oh9XxT0kD8
+         ZGdGOhP8t5yCqKriDN+RcugCjQOpY4mugGL+wCtKQY04mKd5xFALSrdTBbpZtZd1aM5O
+         XSPP/jC0I9loWrWofou4mTrW26jQzHcJr4ua6HmPieov8/I5Vx1/oM/LufaKhE8EzwsF
+         f1JGgeY5bwBqH+flT2PO4oS3DyKGffbP+DWivck0nKtIuk50QQruQ3NwPwjCdaBx+n+U
+         +jWlogpMo7eyj67zpKT42v8WoD8KM0ngA1qans4gH2lrDVCPm8SDXnTFVzkF04xuVGtO
+         nvhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SGExwC1aIDo5/1NE6vpBPs1NX4b+lnmovMgwaKLnO7A=;
+        b=uKDwcDiFX1t1vJaTTQWyz4eIS6L8awt3/aZ7pgkkYQ2IsTh1Ywe3LNB0P3yS+gIjSx
+         iHOoa4YL9f+jHht6pnsigYd4o6KxmUS0/2nnkvbQrY8raIZSdJr4hzLHKOfTuI7XHADf
+         akTPuutyBanv6dOgUKLHKN5cY5PaLr3NvwyIqTE18/7sK+qhE8IJg2hh1aQB/+Lur07D
+         JGnlkOc0GHcCRVeBYx4nQdkDcZjBw3HQa+g3NeiWILlRCvOlUXlFqwrSbq2wIV7LBWtH
+         WvnrtOxTAY8+irzQkamNLCHvXQuMQgHG6HsTEJHzouZdZv39LdCGWpHfdI7g+kGpKEQ2
+         59eA==
+X-Gm-Message-State: AOAM531LsSYznAhYJLvWExOVE9qJqJSnxqWk+wRxTm9/cNvLOT7pRPsV
+        ZCEEkjt00YbSNn9be4tbnptKnElXtcDyXCXnfAiLPKQ=
+X-Google-Smtp-Source: ABdhPJwx1DRTehCMO5F4dqY47teRIjLqnY3HxSm5d2M5fUhGXkw5h1uYR4YVOM7dFC5GGztogb3hEIyikdfe0ETfuBk=
+X-Received: by 2002:a17:906:2b81:: with SMTP id m1mr67681ejg.488.1592261493251;
+ Mon, 15 Jun 2020 15:51:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200613022633.3129-1-nramas@linux.microsoft.com>
+In-Reply-To: <20200613022633.3129-1-nramas@linux.microsoft.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 15 Jun 2020 18:51:22 -0400
+Message-ID: <CAHC9VhTmShh8ggdjLKf_ciL6fDt3ZH59BXaXMAgd8LFzqVj6rQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] integrity: Add result field in audit message
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, sgrubb@redhat.com, rgb@redhat.com,
+        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use vzalloc() instead of the vmalloc() and memset. Also, use array_size()
-instead of the open-coded version.
+On Fri, Jun 12, 2020 at 10:26 PM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
+> Result code is not included in the audit messages logged by
+> the integrity subsystem. Add "result" field in the audit messages
+> logged by the integrity subsystem and set the value to the result code
+> passed to integrity_audit_msg() in the "result" parameter.
+>
+> Sample audit message:
+>
+> [    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=add_boot_aggregate cause=alloc_entry comm="swapper/0" name="boot_aggregate" res=0 result=-12
+>
+> [    8.085456] audit: type=1802 audit(1592005947.297:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=policy_update cause=completed comm="systemd" res=1 result=0
+>
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> Suggested-by: Steve Grubb <sgrubb@redhat.com>
+> ---
+>  security/integrity/integrity_audit.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-This issue was found with the help of Coccinelle and, audited and fixed
-manually.
+If we can't use "res=" to carry more than 0/1 then this seems reasonable.
 
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/fnic/fnic_trace.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-diff --git a/drivers/scsi/fnic/fnic_trace.c b/drivers/scsi/fnic/fnic_trace.c
-index 9d52d83161ed..be266d1611bb 100644
---- a/drivers/scsi/fnic/fnic_trace.c
-+++ b/drivers/scsi/fnic/fnic_trace.c
-@@ -488,7 +488,7 @@ int fnic_trace_buf_init(void)
- 	}
- 
- 	fnic_trace_entries.page_offset =
--		vmalloc(array_size(fnic_max_trace_entries,
-+		vzalloc(array_size(fnic_max_trace_entries,
- 				   sizeof(unsigned long)));
- 	if (!fnic_trace_entries.page_offset) {
- 		printk(KERN_ERR PFX "Failed to allocate memory for"
-@@ -500,8 +500,6 @@ int fnic_trace_buf_init(void)
- 		err = -ENOMEM;
- 		goto err_fnic_trace_buf_init;
- 	}
--	memset((void *)fnic_trace_entries.page_offset, 0,
--		  (fnic_max_trace_entries * sizeof(unsigned long)));
- 	fnic_trace_entries.wr_idx = fnic_trace_entries.rd_idx = 0;
- 	fnic_buf_head = fnic_trace_buf_p;
- 
-@@ -559,10 +557,10 @@ int fnic_fc_trace_init(void)
- 	int err = 0;
- 	int i;
- 
--	fc_trace_max_entries = (fnic_fc_trace_max_pages * PAGE_SIZE)/
-+	fc_trace_max_entries = array_size(fnic_fc_trace_max_pages, PAGE_SIZE)/
- 				FC_TRC_SIZE_BYTES;
- 	fnic_fc_ctlr_trace_buf_p =
--		(unsigned long)vmalloc(array_size(PAGE_SIZE,
-+		(unsigned long)vzalloc(array_size(PAGE_SIZE,
- 						  fnic_fc_trace_max_pages));
- 	if (!fnic_fc_ctlr_trace_buf_p) {
- 		pr_err("fnic: Failed to allocate memory for "
-@@ -571,12 +569,9 @@ int fnic_fc_trace_init(void)
- 		goto err_fnic_fc_ctlr_trace_buf_init;
- 	}
- 
--	memset((void *)fnic_fc_ctlr_trace_buf_p, 0,
--			fnic_fc_trace_max_pages * PAGE_SIZE);
--
- 	/* Allocate memory for page offset */
- 	fc_trace_entries.page_offset =
--		vmalloc(array_size(fc_trace_max_entries,
-+		vzalloc(array_size(fc_trace_max_entries,
- 				   sizeof(unsigned long)));
- 	if (!fc_trace_entries.page_offset) {
- 		pr_err("fnic:Failed to allocate memory for page_offset\n");
-@@ -588,9 +583,6 @@ int fnic_fc_trace_init(void)
- 		err = -ENOMEM;
- 		goto err_fnic_fc_ctlr_trace_buf_init;
- 	}
--	memset((void *)fc_trace_entries.page_offset, 0,
--	       (fc_trace_max_entries * sizeof(unsigned long)));
--
- 	fc_trace_entries.rd_idx = fc_trace_entries.wr_idx = 0;
- 	fc_trace_buf_head = fnic_fc_ctlr_trace_buf_p;
- 
+> diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
+> index 5109173839cc..84002d3d5a95 100644
+> --- a/security/integrity/integrity_audit.c
+> +++ b/security/integrity/integrity_audit.c
+> @@ -53,6 +53,6 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
+>                 audit_log_untrustedstring(ab, inode->i_sb->s_id);
+>                 audit_log_format(ab, " ino=%lu", inode->i_ino);
+>         }
+> -       audit_log_format(ab, " res=%d", !result);
+> +       audit_log_format(ab, " res=%d result=%d", !result, result);
+>         audit_log_end(ab);
+>  }
+> --
+> 2.27.0
+
 -- 
-2.27.0
-
+paul moore
+www.paul-moore.com
