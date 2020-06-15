@@ -7,493 +7,195 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B151AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB879C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7803120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC8320739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203659;
-	bh=x9HwgOk8y9Ox/zkIemYG2drU3iFpIRxVqJjyvw3fnlk=;
+	s=default; t=1592203667;
+	bh=sOlCZeAIIdnJeZ75NMKYKIJfx785+zKJ7yu0YkJu2qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BxE9XFiBQLAozIfrG0VtNHa2S1r4qP23exqCEP2Z8pPuN4hH4Mx471xdiAPe0oxSM
-	 i0HtZcHvI4sBw8ZEn8rHD3fNeMgxYfHn7zI80UmaNCiFGJ098uF5K2nSMdycpiLVte
-	 zgBqbXQXQmN34yytkokf7GhclY7jwNqBsui/m/Ug=
+	b=QsooUnD/jCUqPB5qFKkwMRerf6ZQnYDDwTK2ugaYGEUmBvXyFwgFWGEaJM4se9si/
+	 l5vnAOEmw3Wmofm9PEnIYf5On+Ym3X5vwEHTkcDSo8obRikh9/GIxGloW0as+ZOfWz
+	 ZZy45FdZ/wDte+yGK4BCydz0lIkxki8pgqlzwV6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgFOGrh (ORCPT
+        id S1728575AbgFOGrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728487AbgFOGrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:47:16 -0400
+        id S1728485AbgFOGrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:47:15 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24E6C21508;
-        Mon, 15 Jun 2020 06:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 947E521556;
+        Mon, 15 Jun 2020 06:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592203633;
-        bh=x9HwgOk8y9Ox/zkIemYG2drU3iFpIRxVqJjyvw3fnlk=;
+        s=default; t=1592203632;
+        bh=sOlCZeAIIdnJeZ75NMKYKIJfx785+zKJ7yu0YkJu2qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1FlvD3W77IjIuvh4vTixoaWll4XRfrWETALu/1ypkSFwWlhClWvgmX7OZ6tZYqPl
-         haFXinmV3JU0e39iSI/+lGLXYdUr4crkqaUuxBBiID0X2nzVb3nPk6Bc8ERpGKbS80
-         EtWMKcOjQ1mRbgp782DDARGZw+AoJc3Eq5mRYtyw=
+        b=eYahEgyPPQXSmFAT7H9YIWLrUz7r9bYJ3sEmnpf2WjfEZkEfYSQL+dnCBid4wPO3T
+         Ff7Yc21Lokg1ydol9hQBG25i5Bwy/5e16o9e1ssMGQswWyQGV4Zw4FZ3rWBJGz9Iwd
+         tmb2mt5uOxRpXVgFNGkevjoXwvHrVow/kwT35a+w=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jkiti-009nnu-7Z; Mon, 15 Jun 2020 08:47:10 +0200
+        id 1jkith-009nmo-QD; Mon, 15 Jun 2020 08:47:09 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-parisc@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-media@vger.kernel.org
-Subject: [PATCH 26/29] docs: fix references for DMA*.txt files
-Date:   Mon, 15 Jun 2020 08:47:05 +0200
-Message-Id: <df99e29cef1e389f2acdff0eb1b92161f7be291b.1592203542.git.mchehab+huawei@kernel.org>
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
+Subject: [PATCH 13/29] dt: fix broken links due to txt->yaml renames
+Date:   Mon, 15 Jun 2020 08:46:52 +0200
+Message-Id: <0e4a7f0b7efcc8109c8a41a2e13c8adde4d9c6b9.1592203542.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592203542.git.mchehab+huawei@kernel.org>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we moved those files to core-api, fix references to point
-to their newer locations.
+There are some new broken doc links due to yaml renames
+at DT. Developers should really run:
+
+	./scripts/documentation-file-ref-check
+
+in order to solve those issues while submitting patches.
+This tool can even fix most of the issues with:
+
+	./scripts/documentation-file-ref-check --fix
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/PCI/pci.rst                          |  6 +++---
- Documentation/block/biodoc.rst                     |  2 +-
- Documentation/core-api/bus-virt-phys-mapping.rst   |  2 +-
- Documentation/core-api/dma-api.rst                 |  6 +++---
- Documentation/core-api/dma-isa-lpc.rst             |  2 +-
- Documentation/driver-api/usb/dma.rst               |  6 +++---
- Documentation/memory-barriers.txt                  |  6 +++---
- .../translations/ko_KR/memory-barriers.txt         |  6 +++---
- arch/ia64/hp/common/sba_iommu.c                    | 12 ++++++------
- arch/parisc/kernel/pci-dma.c                       |  2 +-
- arch/x86/include/asm/dma-mapping.h                 |  4 ++--
- arch/x86/kernel/amd_gart_64.c                      |  2 +-
- drivers/parisc/sba_iommu.c                         | 14 +++++++-------
- include/linux/dma-mapping.h                        |  2 +-
- include/media/videobuf-dma-sg.h                    |  2 +-
- kernel/dma/debug.c                                 |  2 +-
- 16 files changed, 38 insertions(+), 38 deletions(-)
+ Documentation/devicetree/bindings/display/bridge/sii902x.txt  | 2 +-
+ .../devicetree/bindings/display/rockchip/rockchip-drm.yaml    | 2 +-
+ Documentation/devicetree/bindings/net/mediatek-bluetooth.txt  | 2 +-
+ Documentation/devicetree/bindings/sound/audio-graph-card.txt  | 2 +-
+ Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt  | 2 +-
+ Documentation/mips/ingenic-tcu.rst                            | 2 +-
+ MAINTAINERS                                                   | 4 ++--
+ 7 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
-index 8c016d8c9862..d10d3fe604c5 100644
---- a/Documentation/PCI/pci.rst
-+++ b/Documentation/PCI/pci.rst
-@@ -265,7 +265,7 @@ Set the DMA mask size
- ---------------------
- .. note::
-    If anything below doesn't make sense, please refer to
--   Documentation/DMA-API.txt. This section is just a reminder that
-+   :doc:`/core-api/dma-api`. This section is just a reminder that
-    drivers need to indicate DMA capabilities of the device and is not
-    an authoritative source for DMA interfaces.
+diff --git a/Documentation/devicetree/bindings/display/bridge/sii902x.txt b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+index 6e14e087c0d0..0d1db3f9da84 100644
+--- a/Documentation/devicetree/bindings/display/bridge/sii902x.txt
++++ b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+@@ -37,7 +37,7 @@ Optional properties:
+ 	simple-card or audio-graph-card binding. See their binding
+ 	documents on how to describe the way the sii902x device is
+ 	connected to the rest of the audio system:
+-	Documentation/devicetree/bindings/sound/simple-card.txt
++	Documentation/devicetree/bindings/sound/simple-card.yaml
+ 	Documentation/devicetree/bindings/sound/audio-graph-card.txt
+ 	Note: In case of the audio-graph-card binding the used port
+ 	index should be 3.
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
+index ec8ae742d4da..7204da5eb4c5 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
+@@ -24,7 +24,7 @@ properties:
+     description: |
+       Should contain a list of phandles pointing to display interface port
+       of vop devices. vop definitions as defined in
+-      Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
++      Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
  
-@@ -291,7 +291,7 @@ Many 64-bit "PCI" devices (before PCI-X) and some PCI-X devices are
- Setup shared control data
- -------------------------
- Once the DMA masks are set, the driver can allocate "consistent" (a.k.a. shared)
--memory.  See Documentation/DMA-API.txt for a full description of
-+memory.  See :doc:`/core-api/dma-api` for a full description of
- the DMA APIs. This section is just a reminder that it needs to be done
- before enabling DMA on the device.
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+index 219bcbd0d344..9ef5bacda8c1 100644
+--- a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+@@ -3,7 +3,7 @@ MediaTek SoC built-in Bluetooth Devices
  
-@@ -421,7 +421,7 @@ owners if there is one.
+ This device is a serial attached device to BTIF device and thus it must be a
+ child node of the serial node with BTIF. The dt-bindings details for BTIF
+-device can be known via Documentation/devicetree/bindings/serial/8250.txt.
++device can be known via Documentation/devicetree/bindings/serial/8250.yaml.
  
- Then clean up "consistent" buffers which contain the control data.
+ Required properties:
  
--See Documentation/DMA-API.txt for details on unmapping interfaces.
-+See :doc:`/core-api/dma-api` for details on unmapping interfaces.
+diff --git a/Documentation/devicetree/bindings/sound/audio-graph-card.txt b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
+index 269682619a70..d5f6919a2d69 100644
+--- a/Documentation/devicetree/bindings/sound/audio-graph-card.txt
++++ b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
+@@ -5,7 +5,7 @@ It is based on common bindings for device graphs.
+ see ${LINUX}/Documentation/devicetree/bindings/graph.txt
  
+ Basically, Audio Graph Card property is same as Simple Card.
+-see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.txt
++see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.yaml
  
- Unregister from other subsystems
-diff --git a/Documentation/block/biodoc.rst b/Documentation/block/biodoc.rst
-index b964796ec9c7..ba7f45d0271c 100644
---- a/Documentation/block/biodoc.rst
-+++ b/Documentation/block/biodoc.rst
-@@ -196,7 +196,7 @@ a virtual address mapping (unlike the earlier scheme of virtual address
- do not have a corresponding kernel virtual address space mapping) and
- low-memory pages.
+ Below are same as Simple-Card.
  
--Note: Please refer to Documentation/DMA-API-HOWTO.txt for a discussion
-+Note: Please refer to :doc:`/core-api/dma-api-howto` for a discussion
- on PCI high mem DMA aspects and mapping of scatter gather lists, and support
- for 64 bit PCI.
+diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+index 4d51f3f5ea98..a6ffcdec6f6a 100644
+--- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
++++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
+@@ -5,7 +5,7 @@ codec or external codecs.
  
-diff --git a/Documentation/core-api/bus-virt-phys-mapping.rst b/Documentation/core-api/bus-virt-phys-mapping.rst
-index 4bb07c2f3e7d..c7bc99cd2e21 100644
---- a/Documentation/core-api/bus-virt-phys-mapping.rst
-+++ b/Documentation/core-api/bus-virt-phys-mapping.rst
-@@ -8,7 +8,7 @@ How to access I/O mapped memory from within device drivers
+ sti sound drivers allows to expose sti SoC audio interface through the
+ generic ASoC simple card. For details about sound card declaration please refer to
+-Documentation/devicetree/bindings/sound/simple-card.txt.
++Documentation/devicetree/bindings/sound/simple-card.yaml.
  
- 	The virt_to_bus() and bus_to_virt() functions have been
- 	superseded by the functionality provided by the PCI DMA interface
--	(see Documentation/DMA-API-HOWTO.txt).  They continue
-+	(see :doc:`/core-api/dma-api-howto`).  They continue
- 	to be documented below for historical purposes, but new code
- 	must not use them. --davidm 00/12/12
+ 1) sti-uniperiph-dai: audio dai device.
+ ---------------------------------------
+diff --git a/Documentation/mips/ingenic-tcu.rst b/Documentation/mips/ingenic-tcu.rst
+index c5a646b14450..2b75760619b4 100644
+--- a/Documentation/mips/ingenic-tcu.rst
++++ b/Documentation/mips/ingenic-tcu.rst
+@@ -68,4 +68,4 @@ and frameworks can be controlled from the same registers, all of these
+ drivers access their registers through the same regmap.
  
-diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
-index 2d8d2fed7317..63b4a2f20867 100644
---- a/Documentation/core-api/dma-api.rst
-+++ b/Documentation/core-api/dma-api.rst
-@@ -5,7 +5,7 @@ Dynamic DMA mapping using the generic device
- :Author: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+ For more information regarding the devicetree bindings of the TCU drivers,
+-have a look at Documentation/devicetree/bindings/timer/ingenic,tcu.txt.
++have a look at Documentation/devicetree/bindings/timer/ingenic,tcu.yaml.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..0617dd671c2d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3946,7 +3946,7 @@ L:	linux-crypto@vger.kernel.org
+ S:	Supported
+ F:	drivers/char/hw_random/cctrng.c
+ F:	drivers/char/hw_random/cctrng.h
+-F:	Documentation/devicetree/bindings/rng/arm-cctrng.txt
++F:	Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+ W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
  
- This document describes the DMA API.  For a more gentle introduction
--of the API (and actual examples), see Documentation/DMA-API-HOWTO.txt.
-+of the API (and actual examples), see :doc:`/core-api/dma-api-howto`.
+ CEC FRAMEWORK
+@@ -5490,7 +5490,7 @@ F:	include/uapi/drm/r128_drm.h
+ DRM DRIVER FOR RAYDIUM RM67191 PANELS
+ M:	Robert Chiras <robert.chiras@nxp.com>
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
++F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
+ F:	drivers/gpu/drm/panel/panel-raydium-rm67191.c
  
- This API is split into two pieces.  Part I describes the basic API.
- Part II describes extensions for supporting non-consistent memory
-@@ -471,7 +471,7 @@ without the _attrs suffixes, except that they pass an optional
- dma_attrs.
- 
- The interpretation of DMA attributes is architecture-specific, and
--each attribute should be documented in Documentation/DMA-attributes.txt.
-+each attribute should be documented in :doc:`/core-api/dma-attributes`.
- 
- If dma_attrs are 0, the semantics of each of these functions
- is identical to those of the corresponding function
-@@ -484,7 +484,7 @@ for DMA::
- 
- 	#include <linux/dma-mapping.h>
- 	/* DMA_ATTR_FOO should be defined in linux/dma-mapping.h and
--	* documented in Documentation/DMA-attributes.txt */
-+	* documented in Documentation/core-api/dma-attributes.rst */
- 	...
- 
- 		unsigned long attr;
-diff --git a/Documentation/core-api/dma-isa-lpc.rst b/Documentation/core-api/dma-isa-lpc.rst
-index b1ec7b16c21f..e59a3d35a93d 100644
---- a/Documentation/core-api/dma-isa-lpc.rst
-+++ b/Documentation/core-api/dma-isa-lpc.rst
-@@ -17,7 +17,7 @@ To do ISA style DMA you need to include two headers::
- 	#include <asm/dma.h>
- 
- The first is the generic DMA API used to convert virtual addresses to
--bus addresses (see Documentation/DMA-API.txt for details).
-+bus addresses (see :doc:`/core-api/dma-api` for details).
- 
- The second contains the routines specific to ISA DMA transfers. Since
- this is not present on all platforms make sure you construct your
-diff --git a/Documentation/driver-api/usb/dma.rst b/Documentation/driver-api/usb/dma.rst
-index 59d5aee89e37..2b3dbd3265b4 100644
---- a/Documentation/driver-api/usb/dma.rst
-+++ b/Documentation/driver-api/usb/dma.rst
-@@ -10,7 +10,7 @@ API overview
- 
- The big picture is that USB drivers can continue to ignore most DMA issues,
- though they still must provide DMA-ready buffers (see
--``Documentation/DMA-API-HOWTO.txt``).  That's how they've worked through
-+:doc:`/core-api/dma-api-howto`).  That's how they've worked through
- the 2.4 (and earlier) kernels, or they can now be DMA-aware.
- 
- DMA-aware usb drivers:
-@@ -60,7 +60,7 @@ and effects like cache-trashing can impose subtle penalties.
-   force a consistent memory access ordering by using memory barriers.  It's
-   not using a streaming DMA mapping, so it's good for small transfers on
-   systems where the I/O would otherwise thrash an IOMMU mapping.  (See
--  ``Documentation/DMA-API-HOWTO.txt`` for definitions of "coherent" and
-+  :doc:`/core-api/dma-api-howto` for definitions of "coherent" and
-   "streaming" DMA mappings.)
- 
-   Asking for 1/Nth of a page (as well as asking for N pages) is reasonably
-@@ -91,7 +91,7 @@ Working with existing buffers
- Existing buffers aren't usable for DMA without first being mapped into the
- DMA address space of the device.  However, most buffers passed to your
- driver can safely be used with such DMA mapping.  (See the first section
--of Documentation/DMA-API-HOWTO.txt, titled "What memory is DMA-able?")
-+of :doc:`/core-api/dma-api-howto`, titled "What memory is DMA-able?")
- 
- - When you're using scatterlists, you can map everything at once.  On some
-   systems, this kicks in an IOMMU and turns the scatterlists into single
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index eaabc3134294..0e4947a8282d 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -546,8 +546,8 @@ There are certain things that the Linux kernel memory barriers do not guarantee:
- 	[*] For information on bus mastering DMA and coherency please read:
- 
- 	    Documentation/driver-api/pci/pci.rst
--	    Documentation/DMA-API-HOWTO.txt
--	    Documentation/DMA-API.txt
-+	    Documentation/core-api/dma-api-howto.rst
-+	    Documentation/core-api/dma-api.rst
- 
- 
- DATA DEPENDENCY BARRIERS (HISTORICAL)
-@@ -1932,7 +1932,7 @@ There are some more advanced barrier functions:
-      here.
- 
-      See the subsection "Kernel I/O barrier effects" for more information on
--     relaxed I/O accessors and the Documentation/DMA-API.txt file for more
-+     relaxed I/O accessors and the Documentation/core-api/dma-api.rst file for more
-      information on consistent memory.
- 
- 
-diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
-index 34d041d68f78..604cee350e53 100644
---- a/Documentation/translations/ko_KR/memory-barriers.txt
-+++ b/Documentation/translations/ko_KR/memory-barriers.txt
-@@ -570,8 +570,8 @@ ACQUIRE 는 해당 오퍼레이션의 로드 부분에만 적용되고 RELEASE 
- 	[*] 버스 마스터링 DMA 와 일관성에 대해서는 다음을 참고하시기 바랍니다:
- 
- 	    Documentation/driver-api/pci/pci.rst
--	    Documentation/DMA-API-HOWTO.txt
--	    Documentation/DMA-API.txt
-+	    Documentation/core-api/dma-api-howto.rst
-+	    Documentation/core-api/dma-api.rst
- 
- 
- 데이터 의존성 배리어 (역사적)
-@@ -1907,7 +1907,7 @@ Mandatory 배리어들은 SMP 시스템에서도 UP 시스템에서도 SMP 효
- 
-      writel_relaxed() 와 같은 완화된 I/O 접근자들에 대한 자세한 내용을 위해서는
-      "커널 I/O 배리어의 효과" 섹션을, consistent memory 에 대한 자세한 내용을
--     위해선 Documentation/DMA-API.txt 문서를 참고하세요.
-+     위해선 Documentation/core-api/dma-api.rst 문서를 참고하세요.
- 
- 
- =========================
-diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
-index a806227c1fad..656a4888c300 100644
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@ -907,7 +907,7 @@ sba_mark_invalid(struct ioc *ioc, dma_addr_t iova, size_t byte_cnt)
-  * @dir: dma direction
-  * @attrs: optional dma attributes
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static dma_addr_t sba_map_page(struct device *dev, struct page *page,
- 			       unsigned long poff, size_t size,
-@@ -1028,7 +1028,7 @@ sba_mark_clean(struct ioc *ioc, dma_addr_t iova, size_t size)
-  * @dir:  R/W or both.
-  * @attrs: optional dma attributes
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static void sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
- 			   enum dma_data_direction dir, unsigned long attrs)
-@@ -1105,7 +1105,7 @@ static void sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
-  * @size:  number of bytes mapped in driver buffer.
-  * @dma_handle:  IOVA of new buffer.
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static void *
- sba_alloc_coherent(struct device *dev, size_t size, dma_addr_t *dma_handle,
-@@ -1162,7 +1162,7 @@ sba_alloc_coherent(struct device *dev, size_t size, dma_addr_t *dma_handle,
-  * @vaddr:  virtual address IOVA of "consistent" buffer.
-  * @dma_handler:  IO virtual address of "consistent" buffer.
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static void sba_free_coherent(struct device *dev, size_t size, void *vaddr,
- 			      dma_addr_t dma_handle, unsigned long attrs)
-@@ -1425,7 +1425,7 @@ static void sba_unmap_sg_attrs(struct device *dev, struct scatterlist *sglist,
-  * @dir:  R/W or both.
-  * @attrs: optional dma attributes
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static int sba_map_sg_attrs(struct device *dev, struct scatterlist *sglist,
- 			    int nents, enum dma_data_direction dir,
-@@ -1524,7 +1524,7 @@ static int sba_map_sg_attrs(struct device *dev, struct scatterlist *sglist,
-  * @dir:  R/W or both.
-  * @attrs: optional dma attributes
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static void sba_unmap_sg_attrs(struct device *dev, struct scatterlist *sglist,
- 			       int nents, enum dma_data_direction dir,
-diff --git a/arch/parisc/kernel/pci-dma.c b/arch/parisc/kernel/pci-dma.c
-index 70cd24bdcfec..4f1596bb1936 100644
---- a/arch/parisc/kernel/pci-dma.c
-+++ b/arch/parisc/kernel/pci-dma.c
-@@ -3,7 +3,7 @@
- ** PARISC 1.1 Dynamic DMA mapping support.
- ** This implementation is for PA-RISC platforms that do not support
- ** I/O TLBs (aka DMA address translation hardware).
--** See Documentation/DMA-API-HOWTO.txt for interface definitions.
-+** See Documentation/core-api/dma-api-howto.rst for interface definitions.
- **
- **      (c) Copyright 1999,2000 Hewlett-Packard Company
- **      (c) Copyright 2000 Grant Grundler
-diff --git a/arch/x86/include/asm/dma-mapping.h b/arch/x86/include/asm/dma-mapping.h
-index 6b15a24930e0..fed67eafcacc 100644
---- a/arch/x86/include/asm/dma-mapping.h
-+++ b/arch/x86/include/asm/dma-mapping.h
-@@ -3,8 +3,8 @@
- #define _ASM_X86_DMA_MAPPING_H
- 
- /*
-- * IOMMU interface. See Documentation/DMA-API-HOWTO.txt and
-- * Documentation/DMA-API.txt for documentation.
-+ * IOMMU interface. See Documentation/core-api/dma-api-howto.rst and
-+ * Documentation/core-api/dma-api.rst for documentation.
-  */
- 
- #include <linux/scatterlist.h>
-diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
-index 17cb5b933dcf..e89031e9c847 100644
---- a/arch/x86/kernel/amd_gart_64.c
-+++ b/arch/x86/kernel/amd_gart_64.c
-@@ -6,7 +6,7 @@
-  * This allows to use PCI devices that only support 32bit addresses on systems
-  * with more than 4GB.
-  *
-- * See Documentation/DMA-API-HOWTO.txt for the interface specification.
-+ * See Documentation/core-api/dma-api-howto.rst for the interface specification.
-  *
-  * Copyright 2002 Andi Kleen, SuSE Labs.
-  */
-diff --git a/drivers/parisc/sba_iommu.c b/drivers/parisc/sba_iommu.c
-index 7e112829d250..5368452eb5a6 100644
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -666,7 +666,7 @@ sba_mark_invalid(struct ioc *ioc, dma_addr_t iova, size_t byte_cnt)
-  * @dev: instance of PCI owned by the driver that's asking
-  * @mask:  number of address bits this PCI device can handle
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static int sba_dma_supported( struct device *dev, u64 mask)
- {
-@@ -698,7 +698,7 @@ static int sba_dma_supported( struct device *dev, u64 mask)
-  * @size:  number of bytes to map in driver buffer.
-  * @direction:  R/W or both.
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static dma_addr_t
- sba_map_single(struct device *dev, void *addr, size_t size,
-@@ -788,7 +788,7 @@ sba_map_page(struct device *dev, struct page *page, unsigned long offset,
-  * @size:  number of bytes mapped in driver buffer.
-  * @direction:  R/W or both.
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static void
- sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
-@@ -867,7 +867,7 @@ sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
-  * @size:  number of bytes mapped in driver buffer.
-  * @dma_handle:  IOVA of new buffer.
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static void *sba_alloc(struct device *hwdev, size_t size, dma_addr_t *dma_handle,
- 		gfp_t gfp, unsigned long attrs)
-@@ -898,7 +898,7 @@ static void *sba_alloc(struct device *hwdev, size_t size, dma_addr_t *dma_handle
-  * @vaddr:  virtual address IOVA of "consistent" buffer.
-  * @dma_handler:  IO virtual address of "consistent" buffer.
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static void
- sba_free(struct device *hwdev, size_t size, void *vaddr,
-@@ -933,7 +933,7 @@ int dump_run_sg = 0;
-  * @nents:  number of entries in list
-  * @direction:  R/W or both.
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static int
- sba_map_sg(struct device *dev, struct scatterlist *sglist, int nents,
-@@ -1017,7 +1017,7 @@ sba_map_sg(struct device *dev, struct scatterlist *sglist, int nents,
-  * @nents:  number of entries in list
-  * @direction:  R/W or both.
-  *
-- * See Documentation/DMA-API-HOWTO.txt
-+ * See Documentation/core-api/dma-api-howto.rst
-  */
- static void 
- sba_unmap_sg(struct device *dev, struct scatterlist *sglist, int nents,
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 78f677cf45ab..ef2b153ddbd9 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -14,7 +14,7 @@
- 
- /**
-  * List of possible attributes associated with a DMA mapping. The semantics
-- * of each attribute should be defined in Documentation/DMA-attributes.txt.
-+ * of each attribute should be defined in Documentation/core-api/dma-attributes.rst.
-  */
- 
- /*
-diff --git a/include/media/videobuf-dma-sg.h b/include/media/videobuf-dma-sg.h
-index b89d5e31f172..34450f7ad510 100644
---- a/include/media/videobuf-dma-sg.h
-+++ b/include/media/videobuf-dma-sg.h
-@@ -31,7 +31,7 @@
-  *	does memory allocation too using vmalloc_32().
-  *
-  * videobuf_dma_*()
-- *	see Documentation/DMA-API-HOWTO.txt, these functions to
-+ *	see Documentation/core-api/dma-api-howto.rst, these functions to
-  *	basically the same.  The map function does also build a
-  *	scatterlist for the buffer (and unmap frees it ...)
-  *
-diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-index 36c962a86bf2..f97f088ace7e 100644
---- a/kernel/dma/debug.c
-+++ b/kernel/dma/debug.c
-@@ -1071,7 +1071,7 @@ static void check_unmap(struct dma_debug_entry *ref)
- 	/*
- 	 * Drivers should use dma_mapping_error() to check the returned
- 	 * addresses of dma_map_single() and dma_map_page().
--	 * If not, print this warning message. See Documentation/DMA-API.txt.
-+	 * If not, print this warning message. See Documentation/core-api/dma-api.rst.
- 	 */
- 	if (entry->map_err_type == MAP_ERR_NOT_CHECKED) {
- 		err_printk(ref->dev, entry,
+ DRM DRIVER FOR ROCKTECH JH057N00900 PANELS
 -- 
 2.26.2
 
