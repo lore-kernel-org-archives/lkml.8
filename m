@@ -2,101 +2,175 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A263FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0710C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F4020810
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F97F20B80
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="MS7xahuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbgFORcE (ORCPT
+        id S1731271AbgFORcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:32:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:52812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgFORcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:32:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B79C1F1;
-        Mon, 15 Jun 2020 10:32:02 -0700 (PDT)
-Received: from [10.57.9.128] (unknown [10.57.9.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E3FC3F73C;
-        Mon, 15 Jun 2020 10:32:00 -0700 (PDT)
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     lukas@wunner.de,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
- <20200608112840.GC4593@sirena.org.uk>
- <bb9dbf11-9e33-df60-f5ae-f7fdfe8458b4@gmail.com>
- <20200615170031.GA4447@sirena.org.uk>
- <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <2f354ed0-9fb7-59ea-ddd1-78703d9c818e@arm.com>
-Date:   Mon, 15 Jun 2020 18:31:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 13:32:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFORcU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 13:32:20 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2995C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:32:20 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so7073225plt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 10:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=2ZLZlJpE9ABSNjpL4mZQFk3Irx9pVKzEY6qghcd2NoA=;
+        b=MS7xahuAXPifVMceikYAexMoBHjLCLpZjeeouIlKBwiHQU2ForT5LrpT8bdlC+hiLM
+         nfqrqMm0qxuFBOQWGWLd6rjKWFcznPu41dwIAd59oyAAJzcVv4K9fAfXm8F2rZDc6FR6
+         wqXJMcTzwuWLkc4BdkPdOvBxqYI1jxphDUpEIhVUhW5oh9PkI6OIplFam40MOaajTX7+
+         pibStgBiwqHp2+od5g3I8EdaL5bipPngqcQDNxcA1Ago9jVmaDc0oP+KPVmDbneSz2dn
+         NQh2ScecSde9JIZsUoOCkGl118dyauBVUcJFrBIOloPHFsr9UhcIXpm38az2hNCkHL3i
+         xA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2ZLZlJpE9ABSNjpL4mZQFk3Irx9pVKzEY6qghcd2NoA=;
+        b=N8sM8Jfgs7CHMW2KhOPZafmUmbfQeGp7AcB8iDPgpNGiA28jPiCfX2Z8Mqt81D/U3u
+         wmjIbCYgpXNE0bGd511r2mh508sJQouc6cSyMy6nhrBmll55LuZujpo6q3dIrBp9hKw3
+         DAumeonIullz4tMDdp0sjre1VMsJt3sRWD6TL3D0/6Wzg4LmizZULLqOSepmA+fmijt7
+         9LkuEsG2O43vnwC2usTT0aIJIyLm3DoqdkiKW5NXOdl42/d5Eb4NVbqYU8fnkLtnWGVY
+         B60lowi4Asol7abCnLktrK9JTEsINzsTerQ4uPseXW7zs2XnVcQmiE8Qx9CIqXu3abjM
+         /CMA==
+X-Gm-Message-State: AOAM532hWNZNmEJ4HNpZ0WWhZKR1X13H6wyT7rWjDuk5jCO5AZScWoHA
+        44miXpTHDW2l9bU9QSl4Xt4w1FfYLkmM0g==
+X-Google-Smtp-Source: ABdhPJxtfelaSLMp5jrGRan+wah8+XoWy+zmHLH8CZTl0rpzifd6eN00fbg0sQSkH7062uAAtsgb3w==
+X-Received: by 2002:a17:902:c404:: with SMTP id k4mr8373426plk.99.1592242340305;
+        Mon, 15 Jun 2020 10:32:20 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([2401:4900:4175:6d71:950c:f8ee:90bc:902a])
+        by smtp.gmail.com with ESMTPSA id s1sm139323pjp.14.2020.06.15.10.32.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jun 2020 10:32:19 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 23:01:54 +0530
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+Subject: [PATCH v3] media: tpg: Add function to return colors' order of test
+ image
+Message-ID: <20200615173153.GA2404@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-In-Reply-To: <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-15 18:04, Florian Fainelli wrote:
-> 
-> 
-> On 6/15/2020 10:00 AM, Mark Brown wrote:
->> On Mon, Jun 15, 2020 at 09:34:58AM -0700, Florian Fainelli wrote:
->>
->>> OK, so this has been dropped for spi/for-next right? How do we move from
->>> there?
->>
->> Well, I actually have it queued up for applying so unless I pull it
->> before my scripts get that far through the stuff I queued over the merge
->> window it'll go in (I dropped it due to it not being a bugfix).  If it
->> were me I'd go with the two instruction hit from checking the flag TBH
->> but otherwise I guess __always_inline should work for compilers that
->> misoptimize.  None of this is getting in the way of the framework so if
->> everyone involved in the driver is happy to spend time optimising it
->> and dealing with the fragility then it's fine by me.
-> 
-> OK, how about I send you an increment patch (would a fixup be okay?)
-> that adds __always_inline since we know from this thread that some
-> compilers may mis-optimize the function inlining?
+Currently there is no method to know the correct order of the colors for
+a test image generated by tpg. Write a function that returns a string of
+colors' order given a tpg. It returns a NULL pointer in case of test
+patterns which do not have a well defined colors' order. Hence add a
+NULL check for text in tpg_gen_text().
 
-Now that I've been inclined to go and look up the documentation, are we 
-sure this so-very-contentious check is even correct? From my reading of 
-things we're checking whether the RXR interrupt function is *enabled*, 
-which still says nothing about whether either condition for the 
-interrupt being *asserted* is true (RXR = 1 or DONE = 1). Thus if more 
-than one SPI instance is active at once we could still end up trying to 
-service an IRQ on a controller that didn't raise it.
+Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+---
 
-Robin.
+Changes since v2:
+	- Create a 'define' to prevent repetition of the common color
+	  sequence string.
+	- Use 'fallthrough' on case statement to prevent repetition of
+	  code.
+
+Changes since v1:
+	- Returned NULL for patterns whose color order cannot be
+          defined. (Reported-by: kernel test robot <lkp@intel.com>)
+        - Made separate switch cases for separate test patterns
+         (Reported-by: kernel test robot <lkp@intel.com>)
+
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 32 +++++++++++++++++--
+ include/media/tpg/v4l2-tpg.h                  |  1 +
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+index 50f1e0b28b25..c96204cef155 100644
+--- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
++++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+@@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+ 	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
+ 	unsigned div = step;
+ 	unsigned first = 0;
+-	unsigned len = strlen(text);
++	unsigned len;
+ 	unsigned p;
+ 
+-	if (font8x16 == NULL || basep == NULL)
++	if (font8x16 == NULL || basep == NULL || text == NULL)
+ 		return;
+ 
++	len = strlen(text);
++
+ 	/* Checks if it is possible to show string */
+ 	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
+ 		return;
+@@ -2006,6 +2008,32 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
+ }
+ EXPORT_SYMBOL_GPL(tpg_gen_text);
+ 
++char *tpg_g_color_order(const struct tpg_data *tpg)
++{
++	#define COLORBAR(order) #order "white, yellow, cyan, green, magenta, red, blue, black"
++
++	switch (tpg->pattern) {
++	case TPG_PAT_75_COLORBAR:
++	case TPG_PAT_100_COLORBAR:
++	case TPG_PAT_CSC_COLORBAR:
++		return COLORBAR("Left to right:");
++	case TPG_PAT_100_HCOLORBAR:
++		return COLORBAR("Top to bottom:");
++	case TPG_PAT_BLACK:
++		return "Black";
++	case TPG_PAT_WHITE:
++		return "White";
++	case TPG_PAT_RED:
++		return "Red";
++	case TPG_PAT_GREEN:
++		return "Green";
++	case TPG_PAT_BLUE:
++		return "Blue";
++	default:
++		return NULL;
++	}
++}
++
+ void tpg_update_mv_step(struct tpg_data *tpg)
+ {
+ 	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
+diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
+index eb191e85d363..4f79cac87b85 100644
+--- a/include/media/tpg/v4l2-tpg.h
++++ b/include/media/tpg/v4l2-tpg.h
+@@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
+ bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
+ void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
+ 		const struct v4l2_rect *compose);
++char *tpg_g_color_order(const struct tpg_data *tpg);
+ 
+ static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
+ {
+-- 
+2.17.1
+
