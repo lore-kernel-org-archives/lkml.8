@@ -2,119 +2,206 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF346206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E8F20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E+eWHfg8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DayEcq2q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgFOMNr (ORCPT
+        id S1729978AbgFOMNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729944AbgFOMNl (ORCPT
+        Mon, 15 Jun 2020 08:13:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30231 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729962AbgFOMNq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:13:41 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 829ACC061A0E;
-        Mon, 15 Jun 2020 05:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=PF4bzIK4C6pn8fyYVupIOSqczJ5WF2NO/8H9ENbmrME=; b=E+eWHfg8isJ5VnITgvQWL3PrTo
-        CDP0ntDNh+D+4Y08c8n8h6tHp2L9c9d/GgR/kYjjigllS6cMvUNBnKSyB2L7sPJdVG1xFLXFu9dyW
-        Iym0Uuru+rhilWJlPJB3/dGxZw7NdKubcyQyXGhIiznynOkFlDx+iuJOyFfHzOQnV4C1f47dLYPG4
-        ldy+u85fJelGMj9wn7XQ59dTHR3794/tzkjF4hErxrs3cls381N+ryJYL6Yg4AceK14tMkjB218eK
-        9jkbhkpcH8PUkqwWO5arDXrWC/D6KfxnRK3nmVcpvHozawoTwmEkslU3GmBNAy/5DsKsgM9KbJwoe
-        g9qLP+bQ==;
-Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jknze-00075s-L2; Mon, 15 Jun 2020 12:13:39 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: [PATCH 13/13] fs: don't change the address limit for ->read_iter in __kernel_read
-Date:   Mon, 15 Jun 2020 14:12:57 +0200
-Message-Id: <20200615121257.798894-14-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615121257.798894-1-hch@lst.de>
-References: <20200615121257.798894-1-hch@lst.de>
+        Mon, 15 Jun 2020 08:13:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592223224;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=VF/bKvZ3DQHEsMfrPd1x4vxGKYtMws61vYLWQVeHqIA=;
+        b=DayEcq2qVRhvg34fUEudaiIOj5y2actc3b7tw2aXredHnSsQh1BgPPlH/p46IjNwCDm3xD
+        itny6fjGpMMSXyqlIaj0Cv8MYL6zmlXJPYGhEgQaPkmgHGU3MKGlHw83Ui/ly/UM32BpVV
+        0lkDF0Kjf4F9IY/mF2K3wiahtzEnMyI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-yHHbBN9xOa6F1x-56JI5Aw-1; Mon, 15 Jun 2020 08:13:39 -0400
+X-MC-Unique: yHHbBN9xOa6F1x-56JI5Aw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5932108BD0F;
+        Mon, 15 Jun 2020 12:13:37 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 949BE60C47;
+        Mon, 15 Jun 2020 12:13:35 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: async_pf: change kvm_setup_async_pf()/kvm_arch_setup_async_pf() return type to bool
+Date:   Mon, 15 Jun 2020 14:13:34 +0200
+Message-Id: <20200615121334.91300-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we read to a file that implements ->read_iter there is no need
-to change the address limit if we send a kvec down.  Implement that
-case, and prefer it over using plain ->read with a changed address
-limit if available.
+Unlike normal 'int' functions returning '0' on success, kvm_setup_async_pf()/
+kvm_arch_setup_async_pf() return '1' when a job to handle page fault
+asynchronously was scheduled and '0' otherwise. To avoid the confusion
+change return type to 'bool'.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+No functional change intended.
+
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- fs/read_write.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ arch/s390/kvm/kvm-s390.c | 20 +++++++++-----------
+ arch/x86/kvm/mmu/mmu.c   |  4 ++--
+ include/linux/kvm_host.h |  4 ++--
+ virt/kvm/async_pf.c      | 16 ++++++++++------
+ 4 files changed, 23 insertions(+), 21 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 1d43da8554dc0d..3bde37aa63db6c 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -421,7 +421,6 @@ static ssize_t new_sync_read(struct file *filp, char __user *buf, size_t len, lo
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index d47c19718615..7fd4fdb165fc 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3954,33 +3954,31 @@ bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu)
+ 	return true;
+ }
  
- ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+-static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu)
++static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu)
  {
--	mm_segment_t old_fs = get_fs();
- 	ssize_t ret;
+ 	hva_t hva;
+ 	struct kvm_arch_async_pf arch;
+-	int rc;
  
- 	if (!(file->f_mode & FMODE_CAN_READ))
-@@ -429,14 +428,25 @@ ssize_t __kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+ 	if (vcpu->arch.pfault_token == KVM_S390_PFAULT_TOKEN_INVALID)
+-		return 0;
++		return false;
+ 	if ((vcpu->arch.sie_block->gpsw.mask & vcpu->arch.pfault_select) !=
+ 	    vcpu->arch.pfault_compare)
+-		return 0;
++		return false;
+ 	if (psw_extint_disabled(vcpu))
+-		return 0;
++		return false;
+ 	if (kvm_s390_vcpu_has_irq(vcpu, 0))
+-		return 0;
++		return false;
+ 	if (!(vcpu->arch.sie_block->gcr[0] & CR0_SERVICE_SIGNAL_SUBMASK))
+-		return 0;
++		return false;
+ 	if (!vcpu->arch.gmap->pfault_enabled)
+-		return 0;
++		return false;
  
- 	if (count > MAX_RW_COUNT)
- 		count =  MAX_RW_COUNT;
--	set_fs(KERNEL_DS);
--	if (file->f_op->read)
-+	if (file->f_op->read_iter) {
-+		struct kvec iov = { .iov_base = buf, .iov_len = count };
-+		struct kiocb kiocb;
-+		struct iov_iter iter;
-+
-+		init_sync_kiocb(&kiocb, file);
-+		kiocb.ki_pos = *pos;
-+		iov_iter_kvec(&iter, READ, &iov, 1, count);
-+		ret = file->f_op->read_iter(&kiocb, &iter);
-+		*pos = kiocb.ki_pos;
-+	} else if (file->f_op->read) {
-+		mm_segment_t old_fs = get_fs();
-+
-+		set_fs(KERNEL_DS);
- 		ret = file->f_op->read(file, (void __user *)buf, count, pos);
--	else if (file->f_op->read_iter)
--		ret = new_sync_read(file, (void __user *)buf, count, pos);
--	else
-+		set_fs(old_fs);
-+	} else {
- 		ret = -EINVAL;
--	set_fs(old_fs);
-+	}
- 	if (ret > 0) {
- 		fsnotify_access(file);
- 		add_rchar(current, ret);
+ 	hva = gfn_to_hva(vcpu->kvm, gpa_to_gfn(current->thread.gmap_addr));
+ 	hva += current->thread.gmap_addr & ~PAGE_MASK;
+ 	if (read_guest_real(vcpu, vcpu->arch.pfault_token, &arch.pfault_token, 8))
+-		return 0;
++		return false;
+ 
+-	rc = kvm_setup_async_pf(vcpu, current->thread.gmap_addr, hva, &arch);
+-	return rc;
++	return kvm_setup_async_pf(vcpu, current->thread.gmap_addr, hva, &arch);
+ }
+ 
+ static int vcpu_pre_run(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 979a7e1c263d..3dd0af7e7515 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4045,8 +4045,8 @@ static void shadow_page_table_clear_flood(struct kvm_vcpu *vcpu, gva_t addr)
+ 	walk_shadow_page_lockless_end(vcpu);
+ }
+ 
+-static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+-				   gfn_t gfn)
++static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
++				    gfn_t gfn)
+ {
+ 	struct kvm_arch_async_pf arch;
+ 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 62ec926c78a0..9edc6fc71a89 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -211,8 +211,8 @@ struct kvm_async_pf {
+ 
+ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu);
+ void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu);
+-int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+-		       unsigned long hva, struct kvm_arch_async_pf *arch);
++bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
++			unsigned long hva, struct kvm_arch_async_pf *arch);
+ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
+ #endif
+ 
+diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
+index 45799606bb3e..390f758d5a27 100644
+--- a/virt/kvm/async_pf.c
++++ b/virt/kvm/async_pf.c
+@@ -156,17 +156,21 @@ void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu)
+ 	}
+ }
+ 
+-int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+-		       unsigned long hva, struct kvm_arch_async_pf *arch)
++/*
++ * Try to schedule a job to handle page fault asynchronously. Returns 'true' on
++ * success, 'false' on failure (page fault has to be handled synchronously).
++ */
++bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
++			unsigned long hva, struct kvm_arch_async_pf *arch)
+ {
+ 	struct kvm_async_pf *work;
+ 
+ 	if (vcpu->async_pf.queued >= ASYNC_PF_PER_VCPU)
+-		return 0;
++		return false;
+ 
+ 	/* Arch specific code should not do async PF in this case */
+ 	if (unlikely(kvm_is_error_hva(hva)))
+-		return 0;
++		return false;
+ 
+ 	/*
+ 	 * do alloc nowait since if we are going to sleep anyway we
+@@ -174,7 +178,7 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 	 */
+ 	work = kmem_cache_zalloc(async_pf_cache, GFP_NOWAIT | __GFP_NOWARN);
+ 	if (!work)
+-		return 0;
++		return false;
+ 
+ 	work->wakeup_all = false;
+ 	work->vcpu = vcpu;
+@@ -193,7 +197,7 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 
+ 	schedule_work(&work->work);
+ 
+-	return 1;
++	return true;
+ }
+ 
+ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu)
 -- 
-2.26.2
+2.25.4
 
