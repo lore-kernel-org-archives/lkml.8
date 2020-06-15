@@ -2,102 +2,83 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45433C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 156572068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507392068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUjNEnxD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NkPiGT0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgFOIaW (ORCPT
+        id S1729089AbgFOIa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:30:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38834 "EHLO
+        Mon, 15 Jun 2020 04:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgFOIaV (ORCPT
+        with ESMTP id S1728180AbgFOIaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:30:21 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A234C061A0E;
-        Mon, 15 Jun 2020 01:30:21 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a127so7490343pfa.12;
-        Mon, 15 Jun 2020 01:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QrrUn5+Gf7HpeX6QtMRabVxvycCPLzCk0Kce3pATFQM=;
-        b=FUjNEnxDnyHI995KGCYFBk+iX6kOs8APyTJm9khR7xwE35B3wB5itDPk9BKGmdbhHP
-         CRL/ZRMgvXGTPHpJEmgubr2nMLj0xoKUGw7PDW60SxL4mGJcAtNZBIopUD8KmPBaV46b
-         orzTuoGDQ4iBOcRQrR0W/vl6C/EowxJuOmlIZph7Hpr7NA+tPXs1t2+2MvhMEF6/Hqji
-         A8cc2rDhDy5S1vVz9EK21TH4GdK2BAS+egCycaL9Kp1PXEMzgGhpiRLVSKSljX50Tgfy
-         ICWs2FBzFk5M8dlI2nI0GScQjblHxkDef3VSA3ZxlfPWPQu/HOMHQC+dsGhNvUUiHrQp
-         wbbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QrrUn5+Gf7HpeX6QtMRabVxvycCPLzCk0Kce3pATFQM=;
-        b=evBeXfpMuZkCKPVBUmub2LBgRT/YRPjkY3Ihj4ESEoRtgvG1VBm7QxG0iaE2sTodsP
-         coq1qRqlgbzoHWfhAb6iyuJZ2WUxBoUG1y4TkACd3z3Xs8HcmggDKOogf4kBOUj5xBiI
-         Nbxxm+1yvj7hd9C2PIZ8PBE9ozHhG5EQxkt0GAlvbD8De4lr0iY0MY4mhI1O9dx5nvzU
-         O9pxp9MS3eW811E8fm6xXFdiu0PxA70BnCBW47++sak7YuIeqqAQtTTN4aF2XNONf+fv
-         +3rA53QkF19WeswuF9D15zUuidS+S7K5A6mMpIoatw+4rWL59RpZ/DWeK7xdsZlTE6He
-         M13w==
-X-Gm-Message-State: AOAM532TVb5Y7rtG7VS/Yi5mNJphs1OgzutLYznBX2BuphLgywqtmevw
-        sZhGLmRDnDdPWrhRNyxEKT0=
-X-Google-Smtp-Source: ABdhPJw8nnWYSo+77SbvcAgaUOgZmUrJRdkwyX7atpEyIPUCpOge2I37z9l5wVx8pVXPB8nwCf31pg==
-X-Received: by 2002:a63:580c:: with SMTP id m12mr6763476pgb.446.1592209820561;
-        Mon, 15 Jun 2020 01:30:20 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id b19sm12927570pft.74.2020.06.15.01.30.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 01:30:19 -0700 (PDT)
-From:   Geliang Tang <geliangtang@gmail.com>
-To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2] mptcp: drop MPTCP_PM_MAX_ADDR
-Date:   Mon, 15 Jun 2020 16:28:03 +0800
-Message-Id: <8d8984e8f73e37c87e69459fdef12fe9bab80949.1592209282.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 15 Jun 2020 04:30:23 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3A4C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 01:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JxaUqA2i25qe67HPi/CGvDDCit7p13vGokAFsGjTlaw=; b=NkPiGT0mZMs3UyUxA7xRhOOm3B
+        YNj3XS7c7uAhEuuATUHMXN1/x/3y8QDnqBISuZN1jNHmmBcaEojq72njhJsjYduHOV4qVyC7Lbs+i
+        W5SGdiuBCis7ZZpzA0hhjar1SgeGSjkceazntgcEncFue3z012nJlGHTj7uKEWvwNfam50ald5mKj
+        n4xKwFxMNJFR23ndWVpHI2gIiNHU9GERdggpGg6iwxePO2lc0iLWly6CadxRy863IDY8cHSZdL4Qa
+        a+bgFqlwABYDMF3ZZaRKqkjU7LdE3Klo7PLBsI3HShBxZoo6hyPFP5pbv6X6+alwIbHidmVzinffv
+        LmJvow2Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkkV5-0006SQ-9C; Mon, 15 Jun 2020 08:29:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7FBEE301A32;
+        Mon, 15 Jun 2020 10:29:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4161621059C0A; Mon, 15 Jun 2020 10:29:49 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 10:29:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Subject: Re: BUG: kernel NULL pointer dereference from check_preempt_wakeup()
+Message-ID: <20200615082949.GL2497@hirez.programming.kicks-ass.net>
+References: <20200605141607.GB4455@paulmck-ThinkPad-P72>
+ <20200605184159.GA4062@paulmck-ThinkPad-P72>
+ <20200606005126.GA21507@paulmck-ThinkPad-P72>
+ <20200606172942.GA30594@paulmck-ThinkPad-P72>
+ <20200607185732.GA18906@paulmck-ThinkPad-P72>
+ <20200609154016.GA17196@paulmck-ThinkPad-P72>
+ <20200613024829.GA12958@paulmck-ThinkPad-P72>
+ <87ftazctov.fsf@nanos.tec.linutronix.de>
+ <20200613145719.GA2723@paulmck-ThinkPad-P72>
+ <20200613234030.GA25146@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613234030.GA25146@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have defined MPTCP_PM_ADDR_MAX in pm_netlink.c, so drop this duplicate macro.
+On Sat, Jun 13, 2020 at 04:40:30PM -0700, Paul E. McKenney wrote:
 
-Fixes: 1b1c7a0ef7f3 ("mptcp: Add path manager interface")
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- Changes in v2:
-  - change Subject from "mptcp: unify MPTCP_PM_MAX_ADDR and MPTCP_PM_ADDR_MAX"
----
- net/mptcp/protocol.h | 2 --
- 1 file changed, 2 deletions(-)
+> So Peter's patch is fully in the clear:
+> 
+> Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 809687d3f410..70ed698bd206 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -135,8 +135,6 @@ static inline __be32 mptcp_option(u8 subopt, u8 len, u8 nib, u8 field)
- 		     ((nib & 0xF) << 8) | field);
- }
- 
--#define MPTCP_PM_MAX_ADDR	4
--
- struct mptcp_addr_info {
- 	sa_family_t		family;
- 	__be16			port;
--- 
-2.17.1
+Awesome!, now I get to explain how the lack of that leads to the
+observed NULL pointer :-)
 
