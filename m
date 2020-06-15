@@ -2,166 +2,128 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A773EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C592071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701552071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbgFOSf2 (ORCPT
+        id S1731331AbgFOShv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 14:35:28 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43843 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbgFOSf1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 14:35:27 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n24so20367934lji.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 11:35:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=XYZnCuTnMeODEbt1oiAtKlVlzjooe69rwI+J7FRfpms=;
-        b=k75HTBRIsmufLbjetisfieCCNEYwoSEJ78PnS/wfOSudXxmVI+e6u7X3s0HisMchH6
-         9giOIvMQu4d526HF49i5FU75CfEpS12MWiTIkpunjnmG1wx6ksIWGBIs3NFrhn68N3KM
-         EZ9OAbxCC7B7xD975jFOcTy0fCa4de6MaWeI5keW++EAvHgi8PPOi6kgtR0MNw3yYfOm
-         wPzi94+AOMkLDh5tKHpuVjstJc8xRxrjcQdxPc+B1uqIvnVgtl8BvZMMNCccHI1KoraP
-         HSwGNOY69yQ/gxFLI5p4gJo/nA51rKO0Gspbu3kMtZfGMNrQiER3Hl8qiMNlLTaZ1eu1
-         C5FQ==
-X-Gm-Message-State: AOAM532swRUi+6kd280NgkNF2jSVBP3i9+iPNb+LJc866/1+UoTMuubw
-        kiIM+xo01qvcHISaX55Fb9yahjoTXto=
-X-Google-Smtp-Source: ABdhPJxRmYTtDovjnGO1j0MjpX/FkQV4NMGA/rWY9IsjWVU0PrxehgerpX9xU8BMZQA/yaNJYz9kpA==
-X-Received: by 2002:a2e:9b4a:: with SMTP id o10mr13616475ljj.278.1592246121876;
-        Mon, 15 Jun 2020 11:35:21 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id g22sm3358696lfb.43.2020.06.15.11.35.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 11:35:21 -0700 (PDT)
-Subject: Re: [PATCH] coccinelle: misc: add array_size_dup script to detect
- missed overlow checks
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Julia Lawall <Julia.Lawall@lip6.fr>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-References: <20200615102045.4558-1-efremov@linux.com>
- <202006151123.3C2CB7782@keescook>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Message-ID: <a28543e5-4f93-bf16-930b-42d7b24ab902@linux.com>
-Date:   Mon, 15 Jun 2020 21:35:20 +0300
+        Mon, 15 Jun 2020 14:37:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:1380 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729124AbgFOShu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 14:37:50 -0400
+IronPort-SDR: vsNeiFw5EOdrsK71jpM1ucKEpsc7ZGH175EtVkJnV3YGMR+bVN8KabW+Aq4Zhn1e94td5CQSoZ
+ 52xHpvQv37OQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 11:37:50 -0700
+IronPort-SDR: 0stjdy5yPoRi/iS6belusQAuPPz4i9J21CSwHEVzY/+OjK/6yXyiitG21VX6V4WHjHvOzdNPcU
+ 2eS0Fh+PVTKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,515,1583222400"; 
+   d="scan'208";a="276652625"
+Received: from rstaubx-mobl2.amr.corp.intel.com (HELO [10.255.3.230]) ([10.255.3.230])
+  by orsmga006.jf.intel.com with ESMTP; 15 Jun 2020 11:37:48 -0700
+Subject: Re: [RFC PATCH 1/3] Documentation/x86: Add documentation for
+ /proc/cpuinfo feature flags
+To:     "Luck, Tony" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        "Park, Kyung Min" <kyung.min.park@intel.com>
+Cc:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Neri, Ricardo" <ricardo.neri@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+References: <20200610200701.16757-1-kyung.min.park@intel.com>
+ <20200610200701.16757-2-kyung.min.park@intel.com>
+ <20200615181527.GM14668@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F66C552@ORSMSX115.amr.corp.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <8421be21-30ed-02fb-456c-bd3ee3b34f66@intel.com>
+Date:   Mon, 15 Jun 2020 11:37:48 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <202006151123.3C2CB7782@keescook>
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F66C552@ORSMSX115.amr.corp.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/15/20 9:23 PM, Kees Cook wrote:
-> On Mon, Jun 15, 2020 at 01:20:45PM +0300, Denis Efremov wrote:
->> Detect an opencoded expression that is used before or after
->> array_size()/array3_size()/struct_size() to compute the same size.
+On 6/15/20 11:31 AM, Luck, Tony wrote:
+>> In general, this should say something along the lines that /proc/cpuinfo
+>> shows features which the kernel supports.
 >>
->> Cc: Kees Cook <keescook@chromium.org>
->> Signed-off-by: Denis Efremov <efremov@linux.com>
+>> "For a full list of CPUID flags which the CPU supports, use
+>> tools/arch/x86/tools/cpuid/cpuid"
+>>
+>> :-)
+> Dave Hansen had suggested (offline) that we add a cpuid tool to the kernel sources.
 > 
-> Oh, very cool! How much does this find currently?
-> 
+> I think that's a lot of (duplicated) work for someone to maintain.  The version of this
+> tool at http://www.etallen.com/cpuid.html is close to 10K lines of code.
 
-opencoded expression before the function call:
-./drivers/net/ethernet/cavium/liquidio/request_manager.c:98:34-59: WARNING: array_size is used down the code (line 103) to compute the same size
-./drivers/media/test-drivers/vivid/vivid-core.c:1120:26-34: WARNING: array_size is used down the code (line 1122) to compute the same size
-./drivers/scsi/megaraid/megaraid_sas_fusion.c:5184:11-31: WARNING: array_size is used down the code (line 5191) to compute the same size
-./drivers/scsi/megaraid/megaraid_sas_fusion.c:5200:2-37: WARNING: array_size is used down the code (line 5207) to compute the same size
-./fs/cifs/misc.c:853:17-39: WARNING: array_size is used down the code (line 858) to compute the same size
-./fs/cifs/misc.c:863:17-38: WARNING: array_size is used down the code (line 868) to compute the same size
-./drivers/scsi/fnic/fnic_trace.c:562:25-48: WARNING: array_size is used down the code (line 566) to compute the same size
+Borislav suggested starting with something as simple as this:
 
-opencoded expression after the function call:
-./net/ethtool/ioctl.c:1976:55-66: WARNING: array_size is already used (line 1957) to compute the same size
-./net/ethtool/ioctl.c:1921:55-66: WARNING: array_size is already used (line 1909) to compute the same size
-./drivers/net/ethernet/cavium/liquidio/request_manager.c:111:29-54: WARNING: array_size is already used (line 103) to compute the same size
-./drivers/staging/rts5208/ms.c:2309:55-56: WARNING: array_size is already used (line 2305) to compute the same size
-./drivers/video/fbdev/core/fbcon.c:642:52-53: WARNING: array3_size is already used (line 638) to compute the same size
-./drivers/video/fbdev/core/fbcon.c:679:47-48: WARNING: array3_size is already used (line 638) to compute the same size
-./drivers/usb/misc/sisusbvga/sisusb_con.c:1229:54-56: WARNING: array_size is already used (line 1226) to compute the same size
-./fs/afs/cmservice.c:271:45-46: WARNING: array3_size is already used (line 267) to compute the same size
-./drivers/mtd/ftl.c:270:49-65: WARNING: array_size is already used (line 266) to compute the same size
-./drivers/scsi/qla2xxx/tcm_qla2xxx.c:1608:6-42: WARNING: array_size is already used (line 1605) to compute the same size
-./drivers/scsi/qla2xxx/tcm_qla2xxx.c:1613:8-44: WARNING: array_size is already used (line 1605) to compute the same size
-./drivers/net/ppp/bsd_comp.c:439:13-37: WARNING: array_size is already used (line 409) to compute the same size
-./drivers/net/wireless/ath/ath5k/debug.c:957:20-21: WARNING: array_size is already used (line 934) to compute the same size
-./drivers/scsi/fnic/fnic_trace.c:575:3-26: WARNING: array_size is already used (line 566) to compute the same size
-./drivers/scsi/fnic/fnic_trace.c:592:32-53: WARNING: array_size is already used (line 580) to compute the same size
-./drivers/scsi/fnic/fnic_trace.c:504:30-51: WARNING: array_size is already used (line 492) to compute the same size
-./drivers/staging/rts5208/rtsx_chip.c:1475:17-18: WARNING: array_size is already used (line 1458) to compute the same size
-./kernel/kexec_file.c:917:8-25: WARNING: array_size is already used (line 913) to compute the same size
-./drivers/rapidio/devices/rio_mport_cdev.c:984:8-25: WARNING: array_size is already used (line 978) to compute the same size
-./fs/reiserfs/bitmap.c:1463:22-37: WARNING: array_size is already used (line 1459) to compute the same size
+	http://sr71.net/~dave/intel/stupid-cpuid.c
 
-duplicate calls:
-./drivers/media/test-drivers/vivid/vivid-core.c:1125:59-60: WARNING: same array_size (line 1122)
-./drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:142:36-37: WARNING: same array_size (line 138)
-./drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:129:41-42: WARNING: same array3_size (line 123)
-./drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:146:40-41: WARNING: same array3_size (line 123)
-./drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:146:40-41: WARNING: same array3_size (line 129)
-./drivers/net/ethernet/cavium/liquidio/octeon_droq.c:289:27-28: WARNING: same array_size (line 284)
-./drivers/net/ethernet/intel/ixgbe/ixgbe_lib.c:857:59-60: WARNING: same struct_size (line 854)
-./fs/f2fs/super.c:3478:34-35: WARNING: same array_size (line 3478)
-./drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1637:45-46: WARNING: same struct_size (line 1634)
-./drivers/net/ethernet/netronome/nfp/flower/cmsg.c:221:49-50: WARNING: same struct_size (line 219)
-./drivers/staging/rts5208/rtsx_chip.c:1458:36-37: WARNING: same array_size (line 1454)
-./drivers/net/ethernet/neterion/vxge/vxge-config.c:2664:59-60: WARNING: same array_size (line 2654)
+That, plus code that consume the X86_FEATURE_* flag names and print out
+what's supported would be pretty handy and way smaller than 10k lines.
