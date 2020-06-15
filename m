@@ -2,81 +2,134 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B3EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A275EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D25692076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EzjEXnsQ"
+	by mail.kernel.org (Postfix) with ESMTP id 825DE2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592224558;
+	bh=bK7xnMNO32LjNVdhxquamLIt4CNPuSKX3tUtMf1VOH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1gcMq0bl+zMVmAFpshayGMhkeXvEpj7f4IznD2evlkQtObyA0qlIDgzH3yTauvYZa
+	 BiWAEAMGPo1ztYSK4DVYmtd4ILKq3izn1ii6hzmN+eRZhEndVKZyI5AsI2wXKvcKHH
+	 cZdV89CCpjHDPQb79Su7ZKLyofZRkkNBfDSK652U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgFOMe5 (ORCPT
+        id S1729947AbgFOMf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:34:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729955AbgFOMez (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:34:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60522C061A0E;
-        Mon, 15 Jun 2020 05:34:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=7PZDg4jCzPxW5YIwZz6jai72YNhUOSrV8NAAvOuS8uI=; b=EzjEXnsQNJmyEoGtItnWE3dbp8
-        O/Bso1kmXi5hV9UUaupbb5CH//hiui1DrLy5TxJ73AcaBq1m9m35Him7FyIZ3oifaXa6XLWOTjn9N
-        SdW38NDwmhYxG4WK7RTmzZlY4He+nh8/awLJoDa0ceCvBZMij51jN0zYfVgz4GjVVmqAhxd8JQMV4
-        pXsLBKiA6fy/GoolVDrkTUXTGRnqD9g8QFTyvfPvpFJXiRFKluo8YPGtdo0tPxFryq1txM6JkvjGq
-        0k+am2VfuJyRMYzaBQyOY551WtFuYvucjplW9PXYFf6u3qN10DMGJ7BhfDLStqyTfMUBsZcEpXaFx
-        i+5Y4bvQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkoJz-0003d6-Pq; Mon, 15 Jun 2020 12:34:39 +0000
-Date:   Mon, 15 Jun 2020 05:34:39 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH 05/13] fs: check FMODE_WRITE in __kernel_write
-Message-ID: <20200615123439.GT8681@bombadil.infradead.org>
-References: <20200615121257.798894-1-hch@lst.de>
- <20200615121257.798894-6-hch@lst.de>
+        Mon, 15 Jun 2020 08:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728326AbgFOMf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:35:56 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67AC6206D7;
+        Mon, 15 Jun 2020 12:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592224555;
+        bh=bK7xnMNO32LjNVdhxquamLIt4CNPuSKX3tUtMf1VOH0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RnslLA8y44+qEBt1UcgQpOlAoS8fYlwkJBrQqPZn/CI6GGftG9buwdzrJbOJ5EnV6
+         kkDadIVNUZkx2q1HkVr6dvQaX3OyUyGZDvUIKt5RJwzRE6jCYtR5dMfT2DDo7aHBSS
+         Dc6jNSlFc5IMjIVoR/DDJkYX7gUPB8I8NlA3HNmk=
+Date:   Mon, 15 Jun 2020 13:35:53 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Message-ID: <20200615123553.GP4447@sirena.org.uk>
+References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
+ <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
+ <20200611134042.GG4671@sirena.org.uk>
+ <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612101357.GA5396@sirena.org.uk>
+ <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612141611.GI5396@sirena.org.uk>
+ <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Zfao1/4IORAeFOVj"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615121257.798894-6-hch@lst.de>
+In-Reply-To: <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 02:12:49PM +0200, Christoph Hellwig wrote:
-> We still need to check if the fѕ is open write, even for the low-level
-> helper.
 
-Do we need the analogous check for FMODE_READ in the __kernel_read()
-patch?
+--Zfao1/4IORAeFOVj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> @@ -505,6 +505,8 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t
->  	const char __user *p;
->  	ssize_t ret;
->  
-> +	if (!(file->f_mode & FMODE_WRITE))
-> +		return -EBADF;
->  	if (!(file->f_mode & FMODE_CAN_WRITE))
->  		return -EINVAL;
->  
-> -- 
-> 2.26.2
-> 
+On Sun, Jun 14, 2020 at 01:04:57PM +0000, Robin Gong wrote:
+> On 2020/06/12 22:16 Mark Brown <broonie@kernel.org> wrote:=20
+> > On Fri, Jun 12, 2020 at 01:48:41PM +0000, Robin Gong wrote:
+> > > On 2020/06/12 18:14 Mark Brown <broonie@kernel.org> wrote:
+
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
+
+> > No, I mean that the reason the DMA transfer fails may be something that
+> > happens after we've started putting things on the bus - the bit about F=
+IFOs is
+> > just a random example of an error that could happen.
+
+> Sorry Mark for that I can't get your point... The bus error such as data =
+corrupt
+> seems not the spi core's business since it can only be caught in spi cont=
+roller
+> driver or upper level such as mtd driver (spi-nor) which know what's the =
+failure
+> happen at spi bus HW level or what's the correct data/message. In other w=
+ords,
+> spi core can't detect such error by transfer_one().
+
+If we see an error in transfer_one() it could be from anything, we've no
+idea what happened on the bus - the controller may have got part way
+through the transfer before failing.
+
+> But despite of that case, do you think this patch is valid for transfer_o=
+ne() failue
+> in dma and fallback to pio?
+
+No, not unless we know that nothing went out on the bus.
+
+--Zfao1/4IORAeFOVj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7naygACgkQJNaLcl1U
+h9AKiwf+K/TO3gWH9vQYkVSNuWGp+wzROetikqE2P9cbQxa+EuwVUJ5cU8EOCUJV
+jUiCbGsdl41kpqm98zYU5CZy2M5hvulcfdFOi19uGDGXn8VGNRYELhUG39RvKxSM
+w+toG6fA6tvkm2nDoiiKG3N9f7mH3DgLTRw5MX631cATsLhZ5jlZnxmZOx7RH1KG
+t3Cz7VEz/t4IK+HgEhk+s2Tr0fwioHjAuFuaor6s1CFkkxeRQ95bTqIJy/nLC8ws
+Y5B+i4ul0d3lL5HAx7kssr41wpo7Iy/gTaG8/EEecEtpXOt3bJjhOnwYYUJ4oD7t
+oKFeiaZtcsy2T2uo9sH/54P9RFN2KQ==
+=5gqF
+-----END PGP SIGNATURE-----
+
+--Zfao1/4IORAeFOVj--
