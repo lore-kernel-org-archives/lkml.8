@@ -2,432 +2,259 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC882C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C273D206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDE1206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgFOKSV (ORCPT
+        id S1729308AbgFOKSz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:18:21 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2309 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728368AbgFOKSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:18:13 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 7798277B223BB736DD51;
-        Mon, 15 Jun 2020 11:18:12 +0100 (IST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.26.179) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 15 Jun 2020 11:18:11 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <bp@alien8.de>, <james.morse@arm.com>, <lenb@kernel.org>,
-        <tony.luck@intel.com>, <dan.carpenter@oracle.com>,
-        <zhangliguang@linux.alibaba.com>,
-        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
-        <jroedel@suse.de>
-CC:     <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
-Date:   Mon, 15 Jun 2020 11:15:52 +0100
-Message-ID: <20200615101552.802-3-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        Mon, 15 Jun 2020 06:18:55 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:37549 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728852AbgFOKSw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:18:52 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B6BCCC000C;
+        Mon, 15 Jun 2020 10:18:44 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 12:18:41 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     =?UTF-8?B?6LW15Luq5bOw?= <yifeng.zhao@rock-chips.com>
+Cc:     "Johan Jonker" <jbx6244@gmail.com>, richard <richard@nod.at>,
+        vigneshr <vigneshr@ti.com>, robh+dt <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        =?UTF-8?B?SGVpa29TdMO8Ym5lcg==?= <heiko@sntech.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-rockchip <linux-rockchip@lists.infradead.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 2/8] mtd: rawnand: rockchip: NFC drivers for RK3308,
+ RK2928 and others
+Message-ID: <20200615121841.566b81f5@xps13>
+In-Reply-To: <2020061517300662418531@rock-chips.com>
+References: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
+        <20200609074020.23860-3-yifeng.zhao@rock-chips.com>
+        <7e4ce8b1-73c4-8b9a-5726-b121f53de8df@gmail.com>
+        <2020061517300662418531@rock-chips.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.26.179]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+Hi 赵仪峰,
 
-The HiSilicon HIP PCIe controller is capable of handling errors
-on root port and perform port reset separately at each root port.
+赵仪峰 <yifeng.zhao@rock-chips.com> wrote on Mon, 15 Jun 2020 17:34:14
++0800:
 
-Add error handling driver for HIP PCIe controller to log
-and report recoverable errors. Perform root port reset and restore
-link status after the recovery.
+> Hi Johan,
+> 
+> Johan Jonker <jbx6244@gmail.com> wrote on Sat, 13 Jun 2020 15:31:52
+> +0200:
+> >Hi Yifeng, Miquel,
+> >
+> >Some more comments about swap();
+> >
+> >On 6/9/20 9:40 AM, Yifeng Zhao wrote:
+> >
+> >[..]
+> >  
+> >> +static int rk_nfc_ooblayout_free(struct mtd_info *mtd, int section,
+> >> +	struct mtd_oob_region *oob_region)
+> >> +{
+> >> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> >> +  
+> >  
+> >> +	if (section >= chip->ecc.steps)
+> >> +	return -ERANGE;  
+> >
+> >Given:
+> >
+> >NFC_SYS_DATA_SIZE = 4
+> >chip->ecc.steps = 8
+> >section [0..7]
+> >
+> >Total free OOB size advertised to the MTD framework is:
+> >
+> >ecc.steps * NFC_SYS_DATA_SIZE - 1 BBM
+> >8 * 4 - 1 = 31 bytes
+> >
+> >With link address in OOB byte [0..3] this become:
+> >31 - 4 = 27 bytes
+> >
+> >Does that give data lost?
+> >Should we limit the number of free OOB bytes by 4 more to be save?
+> >Is my calculation correct?
+> >See further questions about this below.
+> >  
+> >> +
+> >> +	if (!section) {
+> >> +	/* The first byte is bad block mask flag. */
+> >> +	oob_region->length = NFC_SYS_DATA_SIZE - 1;
+> >> +	oob_region->offset = 1;
+> >> +	} else {
+> >> +	oob_region->length = NFC_SYS_DATA_SIZE;
+> >> +	oob_region->offset = section * NFC_SYS_DATA_SIZE;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rk_nfc_ooblayout_ecc(struct mtd_info *mtd, int section,
+> >> +	struct mtd_oob_region *oob_region)
+> >> +{
+> >> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> >> +  
+> >  
+> >> +	if (section)
+> >> +	return -ERANGE;  
+> >
+> >With the formule above a section > 0 does not alow ECC.
+> >
+> >Just a question about the MTD inner working for Miquel:
+> >
+> >With ooblayout_free using 8 steps and this just 1 does it still generate
+> >the correct ECC? Does it calculate ECC over 1024B or over 8*1024B ?
+> >
+> >Should we move the text that explains the layout closer to these
+> >functions and add a little more text to explain why we choose this
+> >particular layout?
+> >
+> >/*
+> > * NFC Page Data Layout:
+> > *	1024 Bytes Data + 4Bytes sys data + 28Bytes~124Bytes ecc +
+> > *	1024 Bytes Data + 4Bytes sys data + 28Bytes~124Bytes ecc +
+> > *	......
+> > * NAND Page Data Layout:
+> > *	1024 * n Data + m Bytes oob
+> > * Original Bad Block Mask Location:
+> > *	First byte of oob(spare).
+> > * nand_chip->oob_poi data layout:
+> > *	4Bytes sys data + .... + 4Bytes sys data + ecc data.
+> > */
+> >
+> >We expect now ECC data after n steps * 4 OOB bytes,
+> >but are we still using it with HW ECC or only for raw?
+> >  
+> >> +
+> >> +	oob_region->offset = NFC_SYS_DATA_SIZE * chip->ecc.steps;
+> >> +	oob_region->length = mtd->oobsize - oob_region->offset;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static const struct mtd_ooblayout_ops rk_nfc_ooblayout_ops = {
+> >> +	.free = rk_nfc_ooblayout_free,
+> >> +	.ecc = rk_nfc_ooblayout_ecc,
+> >> +};  
+> >
+> >[..]
+> >  
+> >> +static int rk_nfc_write_page(struct mtd_info *mtd, struct nand_chip *chip,
+> >> +	     const u8 *buf, int page, int raw)
+> >> +{
+> >> +	struct rk_nfc *nfc = nand_get_controller_data(chip);
+> >> +	struct rk_nfc_nand_chip *rk_nand = to_rk_nand(chip);
+> >> +	struct nand_ecc_ctrl *ecc = &chip->ecc;
+> >> +	int oob_step = (ecc->bytes > 60) ? NFC_MAX_OOB_PER_STEP :
+> >> +	NFC_MIN_OOB_PER_STEP;
+> >> +	int pages_per_blk = mtd->erasesize / mtd->writesize;
+> >> +	int ret = 0, i, boot_rom_mode = 0;
+> >> +	dma_addr_t dma_data, dma_oob;
+> >> +	u32 reg;
+> >> +	u8 *oob;
+> >> +
+> >> +	nand_prog_page_begin_op(chip, page, 0, NULL, 0);
+> >> +
+> >> +	if (!raw) {
+> >> +	memcpy(nfc->page_buf, buf, mtd->writesize);
+> >> +	memset(nfc->oob_buf, 0xff, oob_step * ecc->steps);
+> >> +
+> >> +	/*
+> >> +	* The first 8(some devices are 4 or 16) blocks in use by
+> >> +	* the boot ROM and the first 32 bits of oob need to link
+> >> +	* to the next page address in the same block.
+> >> +	* Config the ECC algorithm supported by the boot ROM.
+> >> +	*/
+> >> +	if (page < pages_per_blk * rk_nand->boot_blks &&
+> >> +	    chip->options & NAND_IS_BOOT_MEDIUM) {
+> >> +	boot_rom_mode = 1;
+> >> +	if (rk_nand->boot_ecc != ecc->strength)
+> >> +	rk_nfc_hw_ecc_setup(chip, ecc,
+> >> +	    rk_nand->boot_ecc);
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	* Swap the first oob with the seventh oob and bad block
+> >> +	* mask is saved at the seventh oob.
+> >> +	*/
+> >> +	swap(chip->oob_poi[0], chip->oob_poi[7]);  
+> >
+> >Add more info on why this is swapped.
+> >
+> >LA[0..3] is a link address that the BBM shouldn't over write.
+> >For Yifeng: Is there an other reason?  
+> 
+> No other reason，this swap ops only for the link address.
+> 
+> >Before swap:
+> >
+> >BBM  OOB1 OOB2 OOB3, OOB4 OOB5 OOB6 OOB7, OOB8 ....
+> >
+> >After swap:
+> >
+> >OOB7 OOB1 OOB2 OOB3, OOB4 OOB5 OOB6 BBM , OOB8 ....
+> >
+> >If (!i && boot_rom_mode):
+> >
+> >LA0  LA1  LA2  LA3 , OOB4 OOB5 OOB6 BBM , OOB8 ....
+> >
+> >Read back after swap again:
+> >
+> >BBM  LA1  LA2  LA3 , OOB4 OOB5 OOB6 LA0 , OOB8 ....
+> >
+> >Question:
+> >Are data OOB7 OOB1 OOB2 OOB3 lost now?
+> >Is this correct?  
+> 
+> Yes, the data OOB7 OOB1 OOB2 OOB3 will lost in the blocks which used for the boot ROM.
+> 
+> >#################################################
+> >Proposal:
+> >Should we reduce the free OOB size by 4
+> >and shift everything 4 bytes to recover all bytes?
+> >Replace the first 4 bytes with 0XFF or LA[0..3].
+> >
+> >Normal:
+> >0xFF 0XFF 0XFF 0xFF, BBM  OOB1 OOB2 OOB3, OOB4
+> >
+> >If (!i && boot_rom_mode):
+> >LA0  LA1  LA2  LA3 , BBM  OOB1 OOB2 OOB3, OOB4
+> >
+> >Question for Miquel and Yifeng:
+> >Does this work? Could you test?  
+> 
+> I want to modify the drivers in next version:
+> The data swap ops only done for the blocks which used for the boot ROM，In this way,
+> the specially processed code will not affect the rest blocks.
+> For Miquel and Yifeng:
+> Is this OK？
 
-Following are some of the PCIe controller's recoverable errors
-1. completion transmission timeout error.
-2. CRS retry counter over the threshold error.
-3. ECC 2 bit errors
-4. AXI bresponse/rresponse errors etc.
+So I guess this linking property is only for the BootROM? I am not sure
+what is best but I guess keeping the same layout everywhere is better.
+Johan proposal would be good to try.
 
-The driver placed in the drivers/pci/controller/ because the
-HIP PCIe controller does not use DWC ip.
-
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
---
-drivers/pci/controller/Kconfig           |   8 +
-drivers/pci/controller/Makefile          |   1 +
-drivers/pci/controller/pcie-hisi-error.c | 336 +++++++++++++++++++++++++++++++
-3 files changed, 345 insertions(+)
-create mode 100644 drivers/pci/controller/pcie-hisi-error.c
----
- drivers/pci/controller/Kconfig           |   8 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-hisi-error.c | 305 +++++++++++++++++++++++
- 3 files changed, 314 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-hisi-error.c
-
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 91bfdb784829..7ba4b94f8604 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -258,6 +258,14 @@ config PCI_HYPERV_INTERFACE
- 	  The Hyper-V PCI Interface is a helper driver allows other drivers to
- 	  have a common interface with the Hyper-V PCI frontend driver.
- 
-+config PCIE_HISI_ERR
-+	depends on ARM64 || COMPILE_TEST
-+	depends on ACPI
-+	bool "HiSilicon HIP PCIe controller error handling driver"
-+	help
-+	  Say Y here if you want error handling support
-+	  for the PCIe controller's errors on HiSilicon HIP SoCs
-+
- source "drivers/pci/controller/dwc/Kconfig"
- source "drivers/pci/controller/mobiveil/Kconfig"
- source "drivers/pci/controller/cadence/Kconfig"
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 158c59771824..ab3a528bf988 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
- obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
- obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
-+obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
- obj-y				+= mobiveil/
-diff --git a/drivers/pci/controller/pcie-hisi-error.c b/drivers/pci/controller/pcie-hisi-error.c
-new file mode 100644
-index 000000000000..cfcec3b1e173
---- /dev/null
-+++ b/drivers/pci/controller/pcie-hisi-error.c
-@@ -0,0 +1,305 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for handling the PCIe controller errors on
-+ * HiSilicon HIP SoCs.
-+ *
-+ * Copyright (c) 2018-2019 HiSilicon Limited.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <acpi/ghes.h>
-+#include <linux/delay.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/kfifo.h>
-+#include <linux/spinlock.h>
-+
-+/* HISI PCIe controller error definitions */
-+#define HISI_PCIE_ERR_MISC_REGS	33
-+
-+#define HISI_PCIE_SUB_MODULE_ID_AP	0
-+#define HISI_PCIE_SUB_MODULE_ID_TL	1
-+#define HISI_PCIE_SUB_MODULE_ID_MAC	2
-+#define HISI_PCIE_SUB_MODULE_ID_DL	3
-+#define HISI_PCIE_SUB_MODULE_ID_SDI	4
-+
-+#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
-+#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
-+#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
-+#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
-+#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
-+#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
-+#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
-+#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
-+#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
-+#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
-+
-+#define HISI_ERR_SEV_RECOVERABLE	0
-+#define HISI_ERR_SEV_FATAL		1
-+#define HISI_ERR_SEV_CORRECTED		2
-+#define HISI_ERR_SEV_NONE		3
-+
-+static guid_t hisi_pcie_sec_type = GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
-+			0xA8, 0x67, 0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
-+
-+#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
-+#define HISI_PCIE_PORT_ID(core, v)       (((v) >> 1) + ((core) << 3))
-+#define HISI_PCIE_CORE_PORT_ID(v)        (((v) % 8) << 1)
-+
-+struct hisi_pcie_error_data {
-+	u64	val_bits;
-+	u8	version;
-+	u8	soc_id;
-+	u8	socket_id;
-+	u8	nimbus_id;
-+	u8	sub_module_id;
-+	u8	core_id;
-+	u8	port_id;
-+	u8	err_severity;
-+	u16	err_type;
-+	u8	reserv[2];
-+	u32	err_misc[HISI_PCIE_ERR_MISC_REGS];
-+};
-+
-+struct hisi_pcie_error_private {
-+	struct notifier_block	nb;
-+	struct platform_device	*pdev;
-+};
-+
-+static char *hisi_pcie_sub_module_name(u8 id)
-+{
-+	switch (id) {
-+	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static char *hisi_pcie_error_severity(u8 err_sev)
-+{
-+	switch (err_sev) {
-+	case HISI_ERR_SEV_RECOVERABLE: return "recoverable";
-+	case HISI_ERR_SEV_FATAL: return "fatal";
-+	case HISI_ERR_SEV_CORRECTED: return "corrected";
-+	case HISI_ERR_SEV_NONE: return "none";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static int hisi_pcie_port_reset(struct platform_device *pdev,
-+				u32 chip_id, u32 port_id)
-+{
-+	struct device *dev = &pdev->dev;
-+	acpi_handle handle = ACPI_HANDLE(dev);
-+	union acpi_object arg[3];
-+	struct acpi_object_list arg_list;
-+	acpi_status s;
-+	unsigned long long data = 0;
-+
-+	arg[0].type = ACPI_TYPE_INTEGER;
-+	arg[0].integer.value = chip_id;
-+	arg[1].type = ACPI_TYPE_INTEGER;
-+	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
-+	arg[2].type = ACPI_TYPE_INTEGER;
-+	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
-+
-+	arg_list.count = 3;
-+	arg_list.pointer = arg;
-+
-+	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
-+	if (ACPI_FAILURE(s)) {
-+		dev_err(dev, "No RST method\n");
-+		return -EIO;
-+	}
-+
-+	if (data) {
-+		dev_err(dev, "Failed to Reset\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_port_do_recovery(struct platform_device *dev,
-+				      u32 chip_id, u32 port_id)
-+{
-+	acpi_status s;
-+	struct device *device = &dev->dev;
-+	acpi_handle root_handle = ACPI_HANDLE(device);
-+	struct acpi_pci_root *pci_root;
-+	struct pci_bus *root_bus;
-+	struct pci_dev *pdev;
-+	u32 domain, busnr, devfn;
-+
-+	s = acpi_get_parent(root_handle, &root_handle);
-+	if (ACPI_FAILURE(s))
-+		return -ENODEV;
-+	pci_root = acpi_pci_find_root(root_handle);
-+	if (!pci_root)
-+		return -ENODEV;
-+	root_bus = pci_root->bus;
-+	domain = pci_root->segment;
-+
-+	busnr = root_bus->number;
-+	devfn = PCI_DEVFN(port_id, 0);
-+	pdev = pci_get_domain_bus_and_slot(domain, busnr, devfn);
-+	if (!pdev) {
-+		dev_info(device, "Fail to get root port %04x:%02x:%02x.%d device\n",
-+			 domain, busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
-+		return -ENODEV;
-+	}
-+
-+	pci_stop_and_remove_bus_device_locked(pdev);
-+	pci_dev_put(pdev);
-+
-+	if (hisi_pcie_port_reset(dev, chip_id, port_id))
-+		return -EIO;
-+
-+	/*
-+	 * The initialization time of subordinate devices after
-+	 * hot reset is no more than 1s, which is required by
-+	 * the PCI spec v5.0 sec 6.6.1. The time will shorten
-+	 * if Readiness Notifications mechanisms are used. But
-+	 * wait 1s here to adapt any conditions.
-+	 */
-+	ssleep(1UL);
-+
-+	/* add root port and downstream devices */
-+	pci_lock_rescan_remove();
-+	pci_rescan_bus(root_bus);
-+	pci_unlock_rescan_remove();
-+
-+	return 0;
-+}
-+
-+static void hisi_pcie_handle_error(struct platform_device *pdev,
-+				   const struct hisi_pcie_error_data *edata)
-+{
-+	struct device *dev = &pdev->dev;
-+	u32 i;
-+	int rc;
-+
-+	if (edata->val_bits == 0) {
-+		dev_warn(dev, "%s: no valid error information\n", __func__);
-+		return;
-+	}
-+
-+	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
-+		dev_info(dev, "Table version = %d\n", edata->version);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
-+		dev_info(dev, "Socket ID = %d\n", edata->socket_id);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
-+		dev_info(dev, "Nimbus ID = %d\n", edata->nimbus_id);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
-+		dev_info(dev, "Sub Module = %s\n",
-+			 hisi_pcie_sub_module_name(edata->sub_module_id));
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
-+		dev_info(dev, "Core ID = core%d\n", edata->core_id);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
-+		dev_info(dev, "Port ID = port%d\n", edata->port_id);
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
-+		dev_info(dev, "Error severity = %s\n",
-+			 hisi_pcie_error_severity(edata->err_severity));
-+	if (edata->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
-+		dev_info(dev, "Error type = 0x%x\n", edata->err_type);
-+
-+	dev_info(dev, "Reg Dump:\n");
-+	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
-+		if (edata->val_bits &
-+				BIT_ULL(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-+			dev_info(dev,
-+				 "ERR_MISC_%d = 0x%x\n", i, edata->err_misc[i]);
-+	}
-+
-+	/* Recovery for the PCIe controller errors */
-+	if (edata->err_severity == HISI_ERR_SEV_RECOVERABLE) {
-+		/* try reset PCI port for the error recovery */
-+		rc = hisi_pcie_port_do_recovery(pdev, edata->socket_id,
-+			HISI_PCIE_PORT_ID(edata->core_id, edata->port_id));
-+		if (rc) {
-+			dev_info(dev, "fail to do hisi pcie port reset\n");
-+			return;
-+		}
-+	}
-+}
-+
-+static int hisi_pcie_notify_error(struct notifier_block *nb,
-+				  unsigned long event, void *data)
-+{
-+	struct acpi_hest_generic_data *gdata = data;
-+	const struct hisi_pcie_error_data *error_data =
-+				acpi_hest_get_payload(gdata);
-+	struct hisi_pcie_error_private *priv =
-+			container_of(nb, struct hisi_pcie_error_private, nb);
-+	struct platform_device *pdev = priv->pdev;
-+	struct device *dev = &pdev->dev;
-+	u8 socket;
-+
-+	if (device_property_read_u8(dev, "socket", &socket))
-+		return NOTIFY_DONE;
-+
-+	if (!guid_equal((guid_t *)gdata->section_type, &hisi_pcie_sec_type) ||
-+	    error_data->socket_id != socket)
-+		return NOTIFY_DONE;
-+
-+	hisi_pcie_handle_error(pdev, error_data);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int hisi_pcie_error_handler_probe(struct platform_device *pdev)
-+{
-+	struct hisi_pcie_error_private *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->nb.notifier_call = hisi_pcie_notify_error;
-+	priv->pdev = pdev;
-+	ret = ghes_register_event_notifier(&priv->nb);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s : ghes_register_event_notifier fail\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_error_handler_remove(struct platform_device *pdev)
-+{
-+	struct hisi_pcie_error_private *priv = platform_get_drvdata(pdev);
-+
-+	ghes_unregister_event_notifier(&priv->nb);
-+	kfree(priv);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id hisi_pcie_acpi_match[] = {
-+	{ "HISI0361", 0 },
-+	{ }
-+};
-+
-+static struct platform_driver hisi_pcie_error_handler_driver = {
-+	.driver = {
-+		.name	= "hisi-pcie-error-handler",
-+		.acpi_match_table = hisi_pcie_acpi_match,
-+	},
-+	.probe		= hisi_pcie_error_handler_probe,
-+	.remove		= hisi_pcie_error_handler_remove,
-+};
-+module_platform_driver(hisi_pcie_error_handler_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon HIP PCIe controller error handling driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
-
-
+Thanks,
+Miquèl
