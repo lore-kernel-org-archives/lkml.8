@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C213AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7A920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5932076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgFOHvn (ORCPT
+        id S1729217AbgFOHvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:51:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39996 "EHLO mx2.suse.de"
+        Mon, 15 Jun 2020 03:51:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39986 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728814AbgFOHtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728804AbgFOHtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 03:49:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AF005B001;
+        by mx2.suse.de (Postfix) with ESMTP id 4B2B1AFDF;
         Mon, 15 Jun 2020 07:49:16 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 09/38] vt: get rid of VT10.ID macros
-Date:   Mon, 15 Jun 2020 09:48:41 +0200
-Message-Id: <20200615074910.19267-9-jslaby@suse.cz>
+Subject: [PATCH 07/38] vt: remove 25 years stale comment
+Date:   Mon, 15 Jun 2020 09:48:39 +0200
+Message-Id: <20200615074910.19267-7-jslaby@suse.cz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615074910.19267-1-jslaby@suse.cz>
 References: <20200615074910.19267-1-jslaby@suse.cz>
@@ -40,63 +40,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VT100ID is unused, but defined twice. Kill it.
-
-VT102ID is used only in respond_ID. Define there a variable with proper
-type and use that instead. Then drop both defines of VT102ID too.
+vc_cons was made global (non-static) in 1.3.38, almost 25 years ago.
+Remove a comment which says that it would be a disadvantage to do so :P.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/vt/vt.c     | 11 ++++-------
- include/linux/console.h |  6 ------
- 2 files changed, 4 insertions(+), 13 deletions(-)
+ include/linux/console_struct.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 49c9d1e4067c..8d9e532f050a 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1397,12 +1397,6 @@ enum { EPecma = 0, EPdec, EPeq, EPgt, EPlt};
- #define kbdapplic	VC_APPLIC
- #define lnm		VC_CRLF
+diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
+index 81f7afcd061a..40ed52f67bc5 100644
+--- a/include/linux/console_struct.h
++++ b/include/linux/console_struct.h
+@@ -167,8 +167,7 @@ struct vc {
+ 	struct work_struct SAK_work;
  
--/*
-- * this is what the terminal answers to a ESC-Z or csi0c query.
-- */
--#define VT100ID "\033[?1;2c"
--#define VT102ID "\033[?6c"
--
- const unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
- 				       8,12,10,14, 9,13,11,15 };
+ 	/* might add  scrmem, kbd  at some time,
+-	   to have everything in one place - the disadvantage
+-	   would be that vc_cons etc can no longer be static */
++	   to have everything in one place */
+ };
  
-@@ -1835,7 +1829,10 @@ static inline void status_report(struct tty_struct *tty)
- 
- static inline void respond_ID(struct tty_struct *tty)
- {
--	respond_string(VT102ID, strlen(VT102ID), tty->port);
-+	/* terminal answer to an ESC-Z or csi0c query. */
-+	static const char vt102_id[] = "\033[?6c";
-+
-+	respond_string(vt102_id, strlen(vt102_id), tty->port);
- }
- 
- void mouse_report(struct tty_struct *tty, int butt, int mrx, int mry)
-diff --git a/include/linux/console.h b/include/linux/console.h
-index 964b67912b04..0670d3491e0e 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -24,12 +24,6 @@ struct module;
- struct tty_struct;
- struct notifier_block;
- 
--/*
-- * this is what the terminal answers to a ESC-Z or csi0c query.
-- */
--#define VT100ID "\033[?1;2c"
--#define VT102ID "\033[?6c"
--
- enum con_scroll {
- 	SM_UP,
- 	SM_DOWN,
+ extern struct vc vc_cons [MAX_NR_CONSOLES];
 -- 
 2.27.0
 
