@@ -2,166 +2,188 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA28C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9B92074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592265145;
-	bh=LAqX2guWt3SaWaTtIVptXEHktenJg7iaeDhOq75EGOc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jdXF+6mnmpQgX5wxOHry6wVld4zht3rwN9v5SbiddDt0XZfV4vcMZ9C6WOY3wcjUd
-	 TkU81gSa3YmTEOHQiYK9r0PsQf6Oe3x013tGuTcaWy7rtpWE374AYZe37AmTLe2r9u
-	 w/50xIL8foBc0nYwxDtaks11bT6PKebCoYx4tmbg=
+	by mail.kernel.org (Postfix) with ESMTP id ECD02206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:57:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="q34wYY50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgFOXwU (ORCPT
+        id S1726666AbgFOX5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgFOXwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:52:20 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6A7B2068E;
-        Mon, 15 Jun 2020 23:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592265139;
-        bh=LAqX2guWt3SaWaTtIVptXEHktenJg7iaeDhOq75EGOc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=g2QUd2ngXMfEz2LsTipBItohXSvpmTBaOTiRrZKoSwAIbpdN01pkaTau0u7EATsXD
-         1j1XCGLhCbt/rateSDFiTc7BcQViqtV3HMRlLm5J3nOOqe69N1HGAm870H7wKJjki0
-         S+aXFOYX7SF+nnBPJxZUEPmc9FAaD8Y6tEO8/hiU=
-Date:   Mon, 15 Jun 2020 18:52:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-Message-ID: <20200615235217.GA1921846@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Mon, 15 Jun 2020 19:57:43 -0400
+Received: from mail-dm6nam11on2073.outbound.protection.outlook.com ([40.107.223.73]:6082
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725960AbgFOX5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:57:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W0FzlObrMvPx5Yfe59cqeB4s5PBDwHAPm4oORECBLfvckF/JemopLMnzuU4tyaaDrpNjQlRu8OahNPD6W3DqYB6RbYjH8Yijr3e8Gt9+8RZiV+Lo9UJyCSaBJA28oEB/JmnrqyHR4vCSiDd+NS2cVY4BNJaWShJ/654Y3QxyRbUi0X9IYu6Ob20nd0GGfQpHUEx8YfobfzXW/GbFwGvc1jTc7vKge+4QnEeN7VWVBFZyPWNa1FSyzDMhxX0oSIiiUDLBoKA/yRZ6flz4jOllVHW8CQ7xzEMi6Pf3mFBq9UJ9KpkFB4U4Xi/ILyvYvB5oFXfT30dsgBqjG1uSUT6WvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hGRwWTggQ0JenzXESwFnQH6dFS/cDUfqaFEXscCU1lg=;
+ b=IGJ6ljUvS35rkfN+1onFftrEQjMHsxKjca9IcJXgUbX/76QPts/sK4gafEd2sUnfs54X81nAL5eTB7UPgo1mGyQ9ERdZbYdk8vWu+1XFJ97UrQFiAlAyGtrQ/inqNy+URVVpHUcLx0pPipGBiZB6pG+yueXJqD/SDsi6onvFnSoZ+vh5ZGPD2Q7KWg0QJ741U/7VCgoxk2sTSBVx1SyYUstzpx1419LYV0+l/y/zxKHDkj9GOCyuBEfy6mPzaTS5JvLCFmzHs9EhPm1QHOewQppBThDtwdE3iiGTbpmJCAAfM6lFNNbFvF66i6Q0rkEFjNSjrHcaF4+0P8x+JAe0wQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hGRwWTggQ0JenzXESwFnQH6dFS/cDUfqaFEXscCU1lg=;
+ b=q34wYY50ITrcmyKSzrn5nf7wMAM+m5Q8xJWbTW42dX8UIR/wCykmHBP9rJPk27Jiejva/ygilhCbebKTTTgXvpPxFeb8FKhRJ8FUEOwjAQ1OM8t8OwBJj213V56/30Z5R0A/crk4SPf64KzBhOQe3o8GzOuGDRlc9EHK+palCdk=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
+ by SN6PR12MB2766.namprd12.prod.outlook.com (2603:10b6:805:78::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Mon, 15 Jun
+ 2020 23:57:39 +0000
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::18d:97b:661f:9314]) by SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::18d:97b:661f:9314%7]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
+ 23:57:39 +0000
+Subject: Re: [PATCH] drm/amdkfd: Fix reference count leaks.
+To:     wu000273@umn.edu, kjlu@umn.edu
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200613193226.21531-1-wu000273@umn.edu>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+Message-ID: <349ff701-613e-7234-45ec-0f874e135712@amd.com>
+Date:   Mon, 15 Jun 2020 19:57:36 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+In-Reply-To: <20200613193226.21531-1-wu000273@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8f9f6a77-4a65-afeb-0af9-e4868b52d7ce@linaro.org>
+Content-Language: en-US
+X-ClientProxiedBy: YTOPR0101CA0015.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::28) To SN1PR12MB2414.namprd12.prod.outlook.com
+ (2603:10b6:802:2e::31)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.31.149.124] (165.204.55.211) by YTOPR0101CA0015.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Mon, 15 Jun 2020 23:57:38 +0000
+X-Originating-IP: [165.204.55.211]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 738983ea-0144-4371-63ce-08d81187e25c
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2766:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2766ED1B2714A6C580444A9A929C0@SN6PR12MB2766.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-Forefront-PRVS: 04359FAD81
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IhIWeAsmAUdBrj5JNEKVy5K1cfH+zxZgDiA65KrudyzmjPeO4noZTM+QAHsl4zq0TKmCSuVVOtmLpUWrh9UW815B9m/3A1zLD5YVrXvBe+NhC9MH53iWIOSSSu8a+Co3IadYMKzKWdiMiTL15mcrVrfh7oQNLbzLiZxdqh+FNEUGodDjWwc/q+2o4mpJCaPjOdjL2AeOnw1wloJqEbzVCtGqA+4utlBrN7tZo+oY3RbVfFabgNs8qqPT/t5XfnI3xlhRz14XUEqSi1oS6ZhD6rQmjMa74EatrXroxp4QZu8VT5HJvr34vGhwTJTvfGOkih3n68tZwzSLNVV78PXIj6bZN8/FLALfvJFBeU7wD0CeCV3P1jWCceRrxUsYqvOK
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(39860400002)(136003)(186003)(16526019)(4326008)(8676002)(66556008)(956004)(2906002)(2616005)(6486002)(44832011)(8936002)(66946007)(66476007)(86362001)(31696002)(36756003)(52116002)(31686004)(26005)(5660300002)(16576012)(83380400001)(478600001)(53546011)(316002)(54906003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: r4DnOhXjAc4fW3GdDSsVGeFgpdtmezcg5n00Km52427cDOatx+gxKVjKy3natk1Ps8N5+qS5B8sN0c6NT1kqbEdWNOM32aOSPvzC8P3eZhrVcB5oCZkEjF2OkENsCEEjI0RpYRX0DWPV+80z1y2PHAfVipl99CKiVvgD8XXHYA8yUnARfF59SWaq538tEBcFIXovdhfNvAfOZCSPB/XQMaFI4LiV7GcCpHfomfR3VsQJwlIn0iTI6atkdslNFjUDs0jfkLtWliMFWd2299w4PXtZ0J/sEHhqg0Fyb/Q9ZxO7tTo1+k70YdvLN/a7dtyGpcxRUYcxYE7t3DInt8oa1J8kVUNXFN1P5314Kg/4+flJQFBE34paqTQNE3CaVliz3XDp2sz7JIwnux8wr0ZR7qYymhh4veOhLGt1dUip/hufl03dhzGmPNMtYsll1s7aceFHyXiCnFrDYsgTHHqYJIZCqb+NvtWZZtDFHP7ufblBSrWBFqu9qFX5FDybjCMF
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 738983ea-0144-4371-63ce-08d81187e25c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 23:57:39.1546
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C2NeNXi6vGnnkQn5W4EDXVy52sAn/tQbHmk/sOZgCT5sdpoYRNvdrPyRlj7xku5yKLHDWJlJHAA4u8TLj7gB/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2766
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 10:30:56PM +0800, Zhangfei Gao wrote:
-> On 2020/6/11 下午9:44, Bjorn Helgaas wrote:
-> > +++ b/drivers/iommu/iommu.c
-> > > > > > > > > > @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
-> > > > > > > > > > fwnode_handle *iommu_fwnode,
-> > > > > > > > > >             fwspec->iommu_fwnode = iommu_fwnode;
-> > > > > > > > > >             fwspec->ops = ops;
-> > > > > > > > > >             dev_iommu_fwspec_set(dev, fwspec);
-> > > > > > > > > > +
-> > > > > > > > > > +       if (dev_is_pci(dev))
-> > > > > > > > > > +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
-> > > > > > > > > > +
-> > > > > > > > > > 
-> > > > > > > > > > Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
-> > > > > > > > > > Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
-> > > > > > > > > > Will send this when 5.8-rc1 is open.
-> > > > > > > > > Wait, this whole fixup approach seems wrong to me.  No matter how you
-> > > > > > > > > do the fixup, it's still a fixup, which means it requires ongoing
-> > > > > > > > > maintenance.  Surely we don't want to have to add the Vendor/Device ID
-> > > > > > > > > for every new AMBA device that comes along, do we?
-> > > > > > > > > 
-> > > > > > > > Here the fake pci device has standard PCI cfg space, but physical
-> > > > > > > > implementation is base on AMBA
-> > > > > > > > They can provide pasid feature.
-> > > > > > > > However,
-> > > > > > > > 1, does not support tlp since they are not real pci devices.
-> > > > > > > > 2. does not support pri, instead support stall (provided by smmu)
-> > > > > > > > And stall is not a pci feature, so it is not described in struct pci_dev,
-> > > > > > > > but in struct iommu_fwspec.
-> > > > > > > > So we use this fixup to tell pci system that the devices can support stall,
-> > > > > > > > and hereby support pasid.
-> > > > > > > This did not answer my question.  Are you proposing that we update a
-> > > > > > > quirk every time a new AMBA device is released?  I don't think that
-> > > > > > > would be a good model.
-> > > > > > Yes, you are right, but we do not have any better idea yet.
-> > > > > > Currently we have three fake pci devices, which support stall and pasid.
-> > > > > > We have to let pci system know the device can support pasid, because of
-> > > > > > stall feature, though not support pri.
-> > > > > > Do you have any other ideas?
-> > > > > It sounds like the best way would be to allocate a PCI capability for it, so
-> > > > > detection can be done through config space, at least in future devices,
-> > > > > or possibly after a firmware update if the config space in your system
-> > > > > is controlled by firmware somewhere.  Once there is a proper mechanism
-> > > > > to do this, using fixups to detect the early devices that don't use that
-> > > > > should be uncontroversial. I have no idea what the process or timeline
-> > > > > is to add new capabilities into the PCIe specification, or if this one
-> > > > > would be acceptable to the PCI SIG at all.
-> > > > That sounds like a possibility.  The spec already defines a
-> > > > Vendor-Specific Extended Capability (PCIe r5.0, sec 7.9.5) that might
-> > > > be a candidate.
-> > > Will investigate this, thanks Bjorn
-> > FWIW, there's also a Vendor-Specific Capability that can appear in the
-> > first 256 bytes of config space (the Vendor-Specific Extended
-> > Capability must appear in the "Extended Configuration Space" from
-> > 0x100-0xfff).
-> Unfortunately our silicon does not have either Vendor-Specific Capability or
-> Vendor-Specific Extended Capability.
-> 
-> Studied commit 8531e283bee66050734fb0e89d53e85fd5ce24a4
-> Looks this method requires adding member (like can_stall) to struct pci_dev,
-> looks difficult.
+On 2020-06-13 15:32, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
+>
+> kobject_init_and_add() takes reference even when it fails.
+> If this function returns an error, kobject_put() must be called to
+> properly clean up the memory associated with the object.
+>
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 
-The problem is that we don't want to add device IDs every time a new
-chip comes out.  Adding one or two device IDs for silicon that's
-already released is not a problem as long as you have a strategy for
-*future* devices so they don't require a quirk.
+Thank you. The patch is
 
-> > > > > If detection cannot be done through PCI config space, the next best
-> > > > > alternative is to pass auxiliary data through firmware. On DT based
-> > > > > machines, you can list non-hotpluggable PCIe devices and add custom
-> > > > > properties that could be read during device enumeration. I assume
-> > > > > ACPI has something similar, but I have not done that.
-> > > Yes, thanks Arnd
-> > > > ACPI has _DSM (ACPI v6.3, sec 9.1.1), which might be a candidate.  I
-> > > > like this better than a PCI capability because the property you need
-> > > > to expose is not a PCI property.
-> > > _DSM may not workable, since it is working in runtime.
-> > > We need stall information in init stage, neither too early (after allocation
-> > > of iommu_fwspec)
-> > > nor too late (before arm_smmu_add_device ).
-> > I'm not aware of a restriction on when _DSM can be evaluated.  I'm
-> > looking at ACPI v6.3, sec 9.1.1.  Are you seeing something different?
-> DSM method seems requires vendor specific guid, and code would be vendor
-> specific.
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
 
-_DSM indeed requires a vendor-specific UUID, precisely *because*
-vendors are free to define their own functionality without requiring
-changes to the ACPI spec.  From the spec (ACPI v6.3, sec 9.1.1):
+I'm applying the patch to our amd-staging-drm-next branch.
 
-  New UUIDs may also be created by OEMs and IHVs for custom devices
-  and other interface or device governing bodies (e.g. the PCI SIG),
-  as long as the UUID is different from other published UUIDs.
+Regards,
+   Felix
+
+
+> ---
+>   drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
+>   1 file changed, 15 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+> index bb77f7af2b6d..dc3c4149f860 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+> @@ -632,8 +632,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+>   
+>   	ret = kobject_init_and_add(dev->kobj_node, &node_type,
+>   			sys_props.kobj_nodes, "%d", id);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		kobject_put(dev->kobj_node);
+>   		return ret;
+> +	}
+>   
+>   	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
+>   	if (!dev->kobj_mem)
+> @@ -680,8 +682,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+>   			return -ENOMEM;
+>   		ret = kobject_init_and_add(mem->kobj, &mem_type,
+>   				dev->kobj_mem, "%d", i);
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			kobject_put(mem->kobj);
+>   			return ret;
+> +		}
+>   
+>   		mem->attr.name = "properties";
+>   		mem->attr.mode = KFD_SYSFS_FILE_MODE;
+> @@ -699,8 +703,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+>   			return -ENOMEM;
+>   		ret = kobject_init_and_add(cache->kobj, &cache_type,
+>   				dev->kobj_cache, "%d", i);
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			kobject_put(cache->kobj);
+>   			return ret;
+> +		}
+>   
+>   		cache->attr.name = "properties";
+>   		cache->attr.mode = KFD_SYSFS_FILE_MODE;
+> @@ -718,8 +724,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+>   			return -ENOMEM;
+>   		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
+>   				dev->kobj_iolink, "%d", i);
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			kobject_put(iolink->kobj);
+>   			return ret;
+> +		}
+>   
+>   		iolink->attr.name = "properties";
+>   		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
+> @@ -798,8 +806,10 @@ static int kfd_topology_update_sysfs(void)
+>   		ret = kobject_init_and_add(sys_props.kobj_topology,
+>   				&sysprops_type,  &kfd_device->kobj,
+>   				"topology");
+> -		if (ret < 0)
+> +		if (ret < 0) {
+> +			kobject_put(sys_props.kobj_topology);
+>   			return ret;
+> +		}
+>   
+>   		sys_props.kobj_nodes = kobject_create_and_add("nodes",
+>   				sys_props.kobj_topology);
