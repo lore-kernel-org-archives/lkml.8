@@ -2,76 +2,90 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9297220756
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE1E20756
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TkYfY1MZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgFOTYE (ORCPT
+        id S1729825AbgFOTYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:24:04 -0400
-Received: from smtprelay0035.hostedemail.com ([216.40.44.35]:44374 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728093AbgFOTYD (ORCPT
+        Mon, 15 Jun 2020 15:24:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729354AbgFOTYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:24:03 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id A63731818F1C1;
-        Mon, 15 Jun 2020 19:24:02 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: push89_210d4b126df8
-X-Filterd-Recvd-Size: 1648
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 15 Jun 2020 19:24:01 +0000 (UTC)
-Message-ID: <7abefbc81fc6aaefed6bbd2117e7bc97b90babe9.camel@perches.com>
-Subject: Re: [PATCH 1/4] proc/bootconfig: Fix to use correct quotes for value
-From:   Joe Perches <joe@perches.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Date:   Mon, 15 Jun 2020 12:24:00 -0700
-In-Reply-To: <20200615151139.5cc223fc@oasis.local.home>
-References: <159197538852.80267.10091816844311950396.stgit@devnote2>
-         <159197539793.80267.10836787284189465765.stgit@devnote2>
-         <20200615151139.5cc223fc@oasis.local.home>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Mon, 15 Jun 2020 15:24:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E678AC061A0E;
+        Mon, 15 Jun 2020 12:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=o/JsAlwy0uiPTZJbnxb3o/jI/kR8nbsjEu/EdGG2gWc=; b=TkYfY1MZo/dHb2UhJo+l3BaQ7c
+        vaFRZj1tB/FYkmWdEPCX86dDElEjgg5tk9m5mLEN8ALrYX1Ed6QtvS9z8kT5Uq09TuvUAK2Dx1ydt
+        hk6WkuurSOfi1TqSWEIpNlJm2lIR/YCK5WN8H8koOsM0o8MLaBk0CV4kI909BQoAq/XTxPwfKkxq8
+        lL98NcuKEGO9L/c93tY6oouMILZfuDXMbsSmmBjsihUdRlp7UO8+/S8VTL0PshAZdkRBiRaSZD2te
+        SjYuAoaFtk7gN6jr5gppjFDwrwzhMWZ+oy6H45tz8uDkFrgkgHtEUVYrg8ySIXwXbwiDLwUmElr9Z
+        cKjhYa/A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkuij-0004XU-8S; Mon, 15 Jun 2020 19:24:37 +0000
+To:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lukas Wunner <lukas@wunner.de>, Heiko Stuebner <heiko@sntech.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] tty/serial: fix serial_core.c kernel-doc warnings
+Message-ID: <e170db8e-5c8b-27ac-79a4-81b96ac0ca2d@infradead.org>
+Date:   Mon, 15 Jun 2020 12:24:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-15 at 15:11 -0400, Steven Rostedt wrote:
-> On Sat, 13 Jun 2020 00:23:18 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-[]
-> > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-[]
-> > @@ -27,6 +27,7 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> >  {
-> >  	struct xbc_node *leaf, *vnode;
-> >  	const char *val;
-> > +	char q;
-> >  	char *key, *end = dst + size;
-> >  	int ret = 0;
-> 
-> Hmm, shouldn't the above have the upside-down xmas tree format?
-> 
-> 	struct xbc_node *leaf, *vnode;
-> 	char *key, *end = dst + size;
-> 	const char *val;
-> 	char q;
-> 	int ret = 0;
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Please don't infect kernel sources with that style oddity.
+Fix kernel-doc warnings in serial_core.c:
 
+../drivers/tty/serial/serial_core.c:3300: warning: Function parameter or member 'port' not described in 'uart_get_rs485_mode'
+../drivers/tty/serial/serial_core.c:3300: warning: Excess function parameter 'dev' description in 'uart_get_rs485_mode'
+../drivers/tty/serial/serial_core.c:3300: warning: Excess function parameter 'rs485conf' description in 'uart_get_rs485_mode'
+
+Fixes: c150c0f362c1 ("serial: Allow uart_get_rs485_mode() to return errno")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org
+---
+ drivers/tty/serial/serial_core.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- linux-next-20200615.orig/drivers/tty/serial/serial_core.c
++++ linux-next-20200615/drivers/tty/serial/serial_core.c
+@@ -3289,8 +3289,7 @@ EXPORT_SYMBOL(uart_remove_one_port);
+ 
+ /**
+  * uart_get_rs485_mode() - retrieve rs485 properties for given uart
+- * @dev: uart device
+- * @rs485conf: output parameter
++ * @port: uart device's target port
+  *
+  * This function implements the device tree binding described in
+  * Documentation/devicetree/bindings/serial/rs485.txt.
 
