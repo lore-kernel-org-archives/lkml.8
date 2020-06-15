@@ -2,197 +2,151 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76389C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61AAA206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CEC20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="R5Vktszu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbgFOMpL (ORCPT
+        id S1730015AbgFOMpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:45:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7596 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729989AbgFOMpI (ORCPT
+        Mon, 15 Jun 2020 08:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729989AbgFOMpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:45:08 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FC24xa100278;
-        Mon, 15 Jun 2020 08:44:35 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31n0mmgndd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 08:44:34 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FC28UV100500;
-        Mon, 15 Jun 2020 08:44:34 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31n0mmgnb2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 08:44:34 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FCfbbx015382;
-        Mon, 15 Jun 2020 12:44:28 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7uk1y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 12:44:28 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FCiPVc44630220
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 12:44:25 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9E1DA4059;
-        Mon, 15 Jun 2020 12:44:25 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47EDDA4040;
-        Mon, 15 Jun 2020 12:44:22 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.96.47])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon, 15 Jun 2020 12:44:22 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 15 Jun 2020 18:14:21 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH v13 1/6] powerpc: Document details on H_SCM_HEALTH hcall
-Date:   Mon, 15 Jun 2020 18:14:02 +0530
-Message-Id: <20200615124407.32596-2-vaibhav@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615124407.32596-1-vaibhav@linux.ibm.com>
-References: <20200615124407.32596-1-vaibhav@linux.ibm.com>
+        Mon, 15 Jun 2020 08:45:11 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46ACFC05BD1E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 05:45:11 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so5061180wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 05:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5WfldrA7Ybz/CNtCQsbY2j9hmaVRS/lefK2C8B4/ydo=;
+        b=R5VktszuPwRyfKbFUb+M5pY4vbiXCrk4+CjaMUdUvbr7PL1EAycwk6hGg4WlqYqmSY
+         i46OfPU4CdegDGwNZ89JPs5mBGxAqhTNbEV7Eqxql4wv+MFbyHcmJURiBnibI5m9o+Mz
+         95M+LPZV7RdAvnGdDKofnOZsLb4NljOrjzxghwOXeVYOwW1P3B2O7lly8VxrGBEin/5M
+         634k7g8/GeaLN9NVEhvjgSLc/+Rv/LlOHfmPtwECdnW8JBSagOi3A4sT3GVVXvf0dhaf
+         8WyQqLaEYjxztW7LztMm4qjwAeRjtZoyLIeaw6Fi4uh8tljKNIEpNLRIzQDaD7qBNE/j
+         E3bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5WfldrA7Ybz/CNtCQsbY2j9hmaVRS/lefK2C8B4/ydo=;
+        b=mEOl77+234hjga+5gfbFr9FzxLLH+CYZm76pA0ljKFSnWZoSoqTlx1Bxd02VbGr/ag
+         zTd2TwBc6tVRKr9KmzKbMUNYUiXeQJ62HOdj2nU/Xj82roSC18R1Ke7iD21J+bWEtXuU
+         gDrn6GnuXcMVcqhfvBl7W+2yDvvYbpu8sJZgREldoc52DLIXX4hbu9hFJG1IQr8jAiUW
+         qFYaKDzz7u3JB3fyd6aBI36Wu+2g6o+O0lVkjFnRWdd/Ca+9WoFc0nEsHKmpxWCWxJDg
+         0gsYbntY9lTpgqFoGYMBNavlToGwKrDihv3A5Af1TaL6sJDLCeeS796vnANhrBYPS3gl
+         uw2g==
+X-Gm-Message-State: AOAM530NdLSkk9qQnpJptij5fXSh59Ya2jf3iaf/yB84tBkJdJbR2EjB
+        KfAI1EElBBhi7VTWhglGK41xyDhebReJPQ==
+X-Google-Smtp-Source: ABdhPJyOUgN6W95sji6BAD0z9Le4kY3qbFFlPrhTK7NksEopHHTFOHCgqndp2ELuG3T5LFhG8TYLWQ==
+X-Received: by 2002:a1c:188:: with SMTP id 130mr13072660wmb.93.1592225109747;
+        Mon, 15 Jun 2020 05:45:09 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id c16sm24705585wrx.4.2020.06.15.05.45.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 05:45:09 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 14:45:06 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH] ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
+Message-ID: <20200615124506.GA3833448@x1>
+References: <20200611220951.GA3355634@x1>
+ <10637da2-8751-3c6f-cf1e-f0a53cca292d@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- cotscore=-2147483648 suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
- malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006150098
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10637da2-8751-3c6f-cf1e-f0a53cca292d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation to 'papr_hcalls.rst' describing the bitmap flags
-that are returned from H_SCM_HEALTH hcall as per the PAPR-SCM
-specification.
+On Mon, Jun 15, 2020 at 12:34:57PM +0300, Grygorii Strashko wrote:
+> 
+> 
+> On 12/06/2020 01:09, Drew Fustini wrote:
+> > Since commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for
+> > RGMII mode") the networking is broken on the BeagleBone AI which has
+> > the AR8035 PHY for Gigabit Ethernet [0].  The fix is to switch from
+> > phy-mode = "rgmii" to phy-mode = "rgmii-rxid".
+> > 
+> > Note: Grygorii Strashko made a similar phy-mode fix in 820f8a870f65 for
+> > other AM5729 boards.
+> 
+> commit ref is incorrect
 
-Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Acked-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
----
-Changelog:
+Do you mean commit ref 820f8a870f65 ? 
+("ARM: dts: am57xx: fix networking on boards with ksz9031 phy")
 
-v12..v13:
-* None
+I thought it made sense to point to that commit as you seemed to be
+fixing a very similar issue, just for a different phy.
 
-v11..v12:
-* None
+Or did you mean commit ref cd28d1d6e52e ?
+("net: phy: at803x: Disable phy delay for RGMII mode")
 
-v10..v11:
-* None
+I believe this is the commit that made it necessary to change the
+phy-mode property for the AR8035 PHY.
 
-v9..v10:
-* Added ack from Ira.
+> > 
+> > [0] https://github.com/beagleboard/beaglebone-ai/blob/master/BeagleBone-AI_sch.pdf
+> > 
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+> > Fixes: cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
+> 
+> Pls change fixed tag to
+> 520557d4854b ARM: dts: am5729: beaglebone-ai: adding device tree
+> as this board DTB was merged only in 5.8.
 
-Resend:
-* None
+Ok, will do.
 
-v8..v9:
-* s/SCM/PMEM device. [ Dan Williams, Aneesh ]
+> 
+> > Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> > ---
+> >   arch/arm/boot/dts/am5729-beagleboneai.dts | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> > index 9877d7709d41..4c51c6b05e64 100644
+> > --- a/arch/arm/boot/dts/am5729-beagleboneai.dts
+> > +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> > @@ -505,7 +505,7 @@ &mac {
+> >   &cpsw_emac0 {
+> >   	phy-handle = <&phy0>;
+> > -	phy-mode = "rgmii";
+> > +	phy-mode = "rgmii-rxid";
+> >   };
+> >   &ocp {
+> > 
+> 
+> Thanks, pls fix above and you can add my
+> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> -- 
+> Best regards,
+> grygorii
 
-v7..v8:
-* Added a clarification on bit-ordering of Health Bitmap
+Thanks for taking the time to review.
 
-Resend:
-* None
-
-v6..v7:
-* None
-
-v5..v6:
-* New patch in the series
----
- Documentation/powerpc/papr_hcalls.rst | 46 ++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/powerpc/papr_hcalls.rst b/Documentation/powerpc/papr_hcalls.rst
-index 3493631a60f8..48fcf1255a33 100644
---- a/Documentation/powerpc/papr_hcalls.rst
-+++ b/Documentation/powerpc/papr_hcalls.rst
-@@ -220,13 +220,51 @@ from the LPAR memory.
- **H_SCM_HEALTH**
- 
- | Input: drcIndex
--| Out: *health-bitmap, health-bit-valid-bitmap*
-+| Out: *health-bitmap (r4), health-bit-valid-bitmap (r5)*
- | Return Value: *H_Success, H_Parameter, H_Hardware*
- 
- Given a DRC Index return the info on predictive failure and overall health of
--the NVDIMM. The asserted bits in the health-bitmap indicate a single predictive
--failure and health-bit-valid-bitmap indicate which bits in health-bitmap are
--valid.
-+the PMEM device. The asserted bits in the health-bitmap indicate one or more states
-+(described in table below) of the PMEM device and health-bit-valid-bitmap indicate
-+which bits in health-bitmap are valid. The bits are reported in
-+reverse bit ordering for example a value of 0xC400000000000000
-+indicates bits 0, 1, and 5 are valid.
-+
-+Health Bitmap Flags:
-+
-++------+-----------------------------------------------------------------------+
-+|  Bit |               Definition                                              |
-++======+=======================================================================+
-+|  00  | PMEM device is unable to persist memory contents.                     |
-+|      | If the system is powered down, nothing will be saved.                 |
-++------+-----------------------------------------------------------------------+
-+|  01  | PMEM device failed to persist memory contents. Either contents were   |
-+|      | not saved successfully on power down or were not restored properly on |
-+|      | power up.                                                             |
-++------+-----------------------------------------------------------------------+
-+|  02  | PMEM device contents are persisted from previous IPL. The data from   |
-+|      | the last boot were successfully restored.                             |
-++------+-----------------------------------------------------------------------+
-+|  03  | PMEM device contents are not persisted from previous IPL. There was no|
-+|      | data to restore from the last boot.                                   |
-++------+-----------------------------------------------------------------------+
-+|  04  | PMEM device memory life remaining is critically low                   |
-++------+-----------------------------------------------------------------------+
-+|  05  | PMEM device will be garded off next IPL due to failure                |
-++------+-----------------------------------------------------------------------+
-+|  06  | PMEM device contents cannot persist due to current platform health    |
-+|      | status. A hardware failure may prevent data from being saved or       |
-+|      | restored.                                                             |
-++------+-----------------------------------------------------------------------+
-+|  07  | PMEM device is unable to persist memory contents in certain conditions|
-++------+-----------------------------------------------------------------------+
-+|  08  | PMEM device is encrypted                                              |
-++------+-----------------------------------------------------------------------+
-+|  09  | PMEM device has successfully completed a requested erase or secure    |
-+|      | erase procedure.                                                      |
-++------+-----------------------------------------------------------------------+
-+|10:63 | Reserved / Unused                                                     |
-++------+-----------------------------------------------------------------------+
- 
- **H_SCM_PERFORMANCE_STATS**
- 
--- 
-2.26.2
-
+-Drew
