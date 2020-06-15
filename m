@@ -5,37 +5,36 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2695AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFEDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C03120768
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A818B2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgFOEBW (ORCPT
+        id S1728192AbgFOEBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 00:01:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44564 "EHLO huawei.com"
+        Mon, 15 Jun 2020 00:01:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5887 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725294AbgFOEBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 00:01:21 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 19F9550E8D3BCF69A728;
-        Mon, 15 Jun 2020 12:01:02 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 15 Jun 2020
- 12:00:53 +0800
+        id S1725294AbgFOEBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 00:01:30 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 331B8FD817FCBAC1C319;
+        Mon, 15 Jun 2020 12:01:27 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 15 Jun 2020
+ 12:01:20 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <jaegeuk@kernel.org>, <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
+To:     <axboe@kernel.dk>, <b.zolnierkie@samsung.com>,
+        <linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <kernel-hardening@lists.openwall.com>,
         Jason Yan <yanaijie@huawei.com>,
         Kees Cook <keescook@chromium.org>
-Subject: [PATCH] f2fs: Eliminate usage of uninitialized_var() macro
-Date:   Mon, 15 Jun 2020 12:02:12 +0800
-Message-ID: <20200615040212.3681503-1-yanaijie@huawei.com>
+Subject: [PATCH] ata: Eliminate usage of uninitialized_var() macro
+Date:   Mon, 15 Jun 2020 12:02:36 +0800
+Message-ID: <20200615040236.3720734-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -68,22 +67,22 @@ will not produce any warnnings even with "make W=1".
 Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- fs/f2fs/data.c | 2 +-
+ drivers/ata/libata-scsi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 326c63879ddc..e6ec61274d76 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2856,7 +2856,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 	};
- #endif
- 	int nr_pages;
--	pgoff_t uninitialized_var(writeback_index);
-+	pgoff_t writeback_index;
- 	pgoff_t index;
- 	pgoff_t end;		/* Inclusive */
- 	pgoff_t done_index;
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 435781a16875..fcb00f2825fe 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -93,7 +93,7 @@ static ssize_t ata_scsi_park_show(struct device *device,
+ 	struct ata_link *link;
+ 	struct ata_device *dev;
+ 	unsigned long now;
+-	unsigned int uninitialized_var(msecs);
++	unsigned int msecs;
+ 	int rc = 0;
+ 
+ 	ap = ata_shost_to_port(sdev->host);
 -- 
 2.25.4
 
