@@ -2,114 +2,106 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF626C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95FC0207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592249196;
-	bh=AvkDF1W+evs4ACyDeBmJZSphxtaBgYojELjru6qP34U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N8GvfG0gncLKr8jm5egHbWxr31lMp4XcymrGQPCZ8ltggKgk99c7tEXYfGBXlghms
-	 lZ6hciiTw1AMaytMYD6rCP0AMsGoafoBIZFhRcge1zXcvY6VL9tzOiLKZ4pc0NnHAb
-	 WmpmG3ODMn//3kqtd7CQD9EC3zSZAn6cUOr2sXQI=
+	by mail.kernel.org (Postfix) with ESMTP id C24CD20756
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rcWMKzQG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgFOT0f (ORCPT
+        id S1730096AbgFOT2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:26:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729854AbgFOT0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:26:33 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0B9420756;
-        Mon, 15 Jun 2020 19:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592249193;
-        bh=AvkDF1W+evs4ACyDeBmJZSphxtaBgYojELjru6qP34U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AL6Ge9s0gex0hxoxM3nzvCoe5DV/SPRIHO8CUoZbbay9M628GxRDagsRytBs1A9hF
-         IsifoHGmtCVGfPlnC3zKNzsG6zYkedW5VzfUXPM9n6gdKYZVYEA+h/q2CB3/L5Qk9H
-         XMKdQOOeOQeTwF6cws0Y/DjmJP/RimvZu81zBaXI=
-Date:   Mon, 15 Jun 2020 20:26:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, lukas@wunner.de,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200615192630.GC4447@sirena.org.uk>
-References: <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
- <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
- <a6f158e3-af51-01d9-331c-4bc8b6847abb@arm.com>
- <20200608112840.GC4593@sirena.org.uk>
- <bb9dbf11-9e33-df60-f5ae-f7fdfe8458b4@gmail.com>
- <20200615170031.GA4447@sirena.org.uk>
- <692bc94e-d574-e07a-d834-c0d569e87bba@gmail.com>
- <2f354ed0-9fb7-59ea-ddd1-78703d9c818e@arm.com>
+        Mon, 15 Jun 2020 15:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729647AbgFOT2I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 15:28:08 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88540C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=bxE5+wON8aWjefwp90f/TBXJRL9rZflW6Zz1LiSTctg=; b=rcWMKzQGHlNqR5M2sEeGUmyDoU
+        VswsHnC5ifQ16KXix+iGOqNqCN60tXZ4nvGwPwpPJ89w48hBUIBiAYjXB469YtsPH25Q31wWTEsEE
+        UYCXmF20TbUtEyuug+7hUNwrRAsUBvQOA6vHXEExfLu++14dcSFX1TOPtv4nBThGtK5IMtKTXRaD2
+        6KBs8VLwONVRHiDlT9MEfrybG2i8KtlxKvvWTSw0O7dsfxGadWu7KeVlofL9gixx9TFMkTYCim1vt
+        y4JzqujjHe9fWJxUD6OPLou/xPMOG2O2vxi0j0ikt4uinkhpUNtw6iHBdYGq8Fb5f31zTXnFRysAN
+        qZB6sNbw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkum6-0007P2-QJ; Mon, 15 Jun 2020 19:28:06 +0000
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Byungchul Park <byungchul.park@lge.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] kernel/rcu/tree.c: fix kernel-doc warnings
+Message-ID: <6b6af324-1c81-5b8d-bfc1-e800e9792172@infradead.org>
+Date:   Mon, 15 Jun 2020 12:28:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dOtxUVmLoGkyu1PA"
-Content-Disposition: inline
-In-Reply-To: <2f354ed0-9fb7-59ea-ddd1-78703d9c818e@arm.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Randy Dunlap <rdunlap@infradead.org>
 
---dOtxUVmLoGkyu1PA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fix kernel-doc warnings:
 
-On Mon, Jun 15, 2020 at 06:31:58PM +0100, Robin Murphy wrote:
+../kernel/rcu/tree.c:959: warning: Excess function parameter 'irq' description in 'rcu_nmi_enter'
+../kernel/rcu/tree.c:3006: warning: Function parameter or member 'count' not described in 'kfree_rcu_cpu'
 
-> Now that I've been inclined to go and look up the documentation, are we sure
-> this so-very-contentious check is even correct? From my reading of things
-> we're checking whether the RXR interrupt function is *enabled*, which still
-> says nothing about whether either condition for the interrupt being
-> *asserted* is true (RXR = 1 or DONE = 1). Thus if more than one SPI instance
-> is active at once we could still end up trying to service an IRQ on a
-> controller that didn't raise it.
+Fixes: cf7614e13c8f ("rcu: Refactor rcu_{nmi,irq}_{enter,exit}()")
+Fixes: 9154244c1ab6 ("rcu/tree: Add a shrinker to prevent OOM due to kfree_rcu() batching")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Byungchul Park <byungchul.park@lge.com>
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+---
+Note: The first Fixes: commit ID might be incorrect.
 
-OK, I've pulled the patch from the queue for now :/
+ kernel/rcu/tree.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---dOtxUVmLoGkyu1PA
-Content-Type: application/pgp-signature; name="signature.asc"
+--- linux-next-20200615.orig/kernel/rcu/tree.c
++++ linux-next-20200615/kernel/rcu/tree.c
+@@ -944,7 +944,6 @@ void __rcu_irq_enter_check_tick(void)
+ 
+ /**
+  * rcu_nmi_enter - inform RCU of entry to NMI context
+- * @irq: Is this call from rcu_irq_enter?
+  *
+  * If the CPU was idle from RCU's viewpoint, update rdp->dynticks and
+  * rdp->dynticks_nmi_nesting to let the RCU grace-period handling know
+@@ -2986,6 +2985,7 @@ struct kfree_rcu_cpu_work {
+  * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
+  * @monitor_todo: Tracks whether a @monitor_work delayed work is pending
+  * @initialized: The @lock and @rcu_work fields have been initialized
++ * @count: Number of objects for which GP not started
+  *
+  * This is a per-CPU structure.  The reason that it is not included in
+  * the rcu_data structure is to permit this code to be extracted from
+@@ -3001,7 +3001,6 @@ struct kfree_rcu_cpu {
+ 	struct delayed_work monitor_work;
+ 	bool monitor_todo;
+ 	bool initialized;
+-	// Number of objects for which GP not started
+ 	int count;
+ };
+ 
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ny2YACgkQJNaLcl1U
-h9Dlcwf/TI9wOgBtOFPjlWSb4Y2ZgnY4A2yEniFWHZl5+Z/hDkPg8DQB5gpHbOJB
-aq6nJ/zdl7Ls8/2fAZFBLoKdl1x02xn0g50XxakTsSSVgaumCRRjx/bZkpnWDRMi
-hOv3B7MZ/8QIJaoW4XW9h4Gr+FUmYL7OGkVcE0ZfPkN+raFcKBhRC6J3CZODGONN
-xa7O7JtoQu8TFEnp97ymMxfxpWdiyGRfkz0eCJMiFLjv+1CUcneJEMDJ+RRZzQbZ
-/KAoGLuKCfm0fFD5QlI9XwsSEVpPa0BHmSWbGa+cxxRZMqq0EnmYzL4TT9twKHXi
-QK/ulZP2pSHvw+ZBQfDln2Mm1nPbhQ==
-=3Gjc
------END PGP SIGNATURE-----
-
---dOtxUVmLoGkyu1PA--
