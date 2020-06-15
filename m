@@ -5,36 +5,37 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.7 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F94C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 03:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC3DE2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 03:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAF7207CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgFOD7w (ORCPT
+        id S1725941AbgFOEAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 23:59:52 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42882 "EHLO huawei.com"
+        Mon, 15 Jun 2020 00:00:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50400 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727971AbgFOD7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 23:59:51 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4D451C1DDD8136562A35;
-        Mon, 15 Jun 2020 11:59:41 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Mon, 15 Jun 2020
- 11:59:33 +0800
+        id S1725294AbgFOEAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 00:00:39 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BDD5E5499FB0A399A876;
+        Mon, 15 Jun 2020 12:00:36 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 15 Jun 2020
+ 12:00:28 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     <xiang@kernel.org>, <chao@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>
 CC:     <kernel-hardening@lists.openwall.com>,
         Jason Yan <yanaijie@huawei.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] ACPI: Eliminate usage of uninitialized_var() macro
-Date:   Mon, 15 Jun 2020 12:00:47 +0800
-Message-ID: <20200615040047.3535543-1-yanaijie@huawei.com>
+        Kees Cook <keescook@chromium.org>, Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] erofs: Eliminate usage of uninitialized_var() macro
+Date:   Mon, 15 Jun 2020 12:01:41 +0800
+Message-ID: <20200615040141.3627746-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -65,24 +66,48 @@ will not produce any warnnings even with "make W=1".
 [2] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
 
 Cc: Kees Cook <keescook@chromium.org>
+Cc: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/acpi/acpi_pad.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/erofs/data.c  | 4 ++--
+ fs/erofs/zdata.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
-index e7dc0133f817..6cc4c92d9ff9 100644
---- a/drivers/acpi/acpi_pad.c
-+++ b/drivers/acpi/acpi_pad.c
-@@ -88,7 +88,7 @@ static void round_robin_cpu(unsigned int tsk_index)
- 	cpumask_var_t tmp;
- 	int cpu;
- 	unsigned long min_weight = -1;
--	unsigned long uninitialized_var(preferred_cpu);
-+	unsigned long preferred_cpu;
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 64b56c7df023..d0542151e8c4 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -265,7 +265,7 @@ static inline struct bio *erofs_read_raw_page(struct bio *bio,
+  */
+ static int erofs_raw_access_readpage(struct file *file, struct page *page)
+ {
+-	erofs_off_t uninitialized_var(last_block);
++	erofs_off_t last_block;
+ 	struct bio *bio;
  
- 	if (!alloc_cpumask_var(&tmp, GFP_KERNEL))
- 		return;
+ 	trace_erofs_readpage(page, true);
+@@ -282,7 +282,7 @@ static int erofs_raw_access_readpage(struct file *file, struct page *page)
+ 
+ static void erofs_raw_access_readahead(struct readahead_control *rac)
+ {
+-	erofs_off_t uninitialized_var(last_block);
++	erofs_off_t last_block;
+ 	struct bio *bio = NULL;
+ 	struct page *page;
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index be50a4d9d273..24a26aaf847f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1161,7 +1161,7 @@ static void z_erofs_submit_queue(struct super_block *sb,
+ 	struct z_erofs_decompressqueue *q[NR_JOBQUEUES];
+ 	void *bi_private;
+ 	/* since bio will be NULL, no need to initialize last_index */
+-	pgoff_t uninitialized_var(last_index);
++	pgoff_t last_index;
+ 	unsigned int nr_bios = 0;
+ 	struct bio *bio = NULL;
+ 
 -- 
 2.25.4
 
