@@ -2,137 +2,98 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A02C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F3BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9D920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:15:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IUzfOVGo"
+	by mail.kernel.org (Postfix) with ESMTP id 8AACE2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592237765;
+	bh=IT4BlGCT6eoyLvkeFOKrpMjBvHu7rSRaCjKpWgyUA00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ACPdgYIdELycvhaURZ4tcltGgd4qpOj3L+JGkFEzmwbjH83l8LHF3yAb4m8lv6Wvh
+	 k9SZ9WRrZsZGnMF6hdGDsOcuILj7e9KWX194KMbgnt1yXPFqdmR+LWtLZk4bo1EHcP
+	 5WWJHkNeHa9hcYwWlZ+0YDN+p2iwg8SWLXCIdbhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgFOQPq (ORCPT
+        id S1730830AbgFOQQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:15:46 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:10006 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729949AbgFOQPp (ORCPT
+        Mon, 15 Jun 2020 12:16:04 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34750 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729949AbgFOQQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:15:45 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200615161541epoutp04fb39555f1bb8a1ae4e8195a44b4e4626~Yw8pIWABr0401004010epoutp04B
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 16:15:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200615161541epoutp04fb39555f1bb8a1ae4e8195a44b4e4626~Yw8pIWABr0401004010epoutp04B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592237741;
-        bh=yn3ZGD3Sx3u9Xx0Gs4zDm9kZr9Wmnca8BtW7gNrs0f8=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=IUzfOVGo6yNO6b1tEEYeyqjPNpsYXTtZdOY2FjFOZ1scE5bh3S29H5gNQrEW4RNu2
-         apyQ0IfM2BVOvh4ypvUsO8ZMDJLE7U8DXObmAAs0uz9B6wadfFt10VGrA8m4tUrcTq
-         ho0m4749DnkcCfXqtmVxO7jClZWSSPK8GLbfNphg=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20200615161540epcas5p1f284bbb11bcb5d84ed0d6753d9f957ef~Yw8oM0xY_2011020110epcas5p1f;
-        Mon, 15 Jun 2020 16:15:40 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EE.85.09475.CAE97EE5; Tue, 16 Jun 2020 01:15:40 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200615161539epcas5p26241107c8eaabfae1edafc35256091e0~Yw8nBstNa1810518105epcas5p28;
-        Mon, 15 Jun 2020 16:15:39 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200615161539epsmtrp26cfc9488f423cfe861fe655a0ca4588c~Yw8nA3U8o0928009280epsmtrp2R;
-        Mon, 15 Jun 2020 16:15:39 +0000 (GMT)
-X-AuditID: b6c32a4b-389ff70000002503-18-5ee79eacead8
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F9.B0.08303.BAE97EE5; Tue, 16 Jun 2020 01:15:39 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200615161536epsmtip1dffc161c3bdee0e92186109a3b7e45a6~Yw8kCavY91507915079epsmtip1I;
-        Mon, 15 Jun 2020 16:15:36 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
-Cc:     <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <avri.altman@wdc.com>,
-        <martin.petersen@oracle.com>, <kwmad.kim@samsung.com>,
-        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kishon@ti.com>
-In-Reply-To: <20200614110202.GA9009@kozik-lap>
-Subject: RE: [RESEND PATCH v10 10/10] arm64: dts: Add node for ufs exynos7
-Date:   Mon, 15 Jun 2020 21:45:34 +0530
-Message-ID: <000001d64330$35947020$a0bd5060$@samsung.com>
+        Mon, 15 Jun 2020 12:16:03 -0400
+Received: by mail-il1-f196.google.com with SMTP id x18so15870455ilp.1;
+        Mon, 15 Jun 2020 09:16:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LceDJi3HuuWFN2rUgpbq9GLOkPnvp0H8zJIFHXcribA=;
+        b=R8rWbmQQ1Ld2NioytF8AOE6s+UHsz3atLKm5HT9H5Fua52uJILAcgnM0R7v6gOgJ/7
+         Gi1tK+bikXadGd4FQld/WRA8ugGq5y8JERAr3p9mlXT+M7kj8xmdd5mjQi+B1pF4Z90p
+         nEgHFOQNkv9dMqUgSJemQWi6+2DU0eOHAbKJlSdrjbG5Tl02LSsV5uXVQa27O1Lwlxkw
+         lNfFJPJOE+yPr4S6gJX2MnKISJL8HQxPLOqWnmVBZk9NDwzdUsWR0h6BW9vA6a6o0Q/2
+         +7RY5zJnn219rlBr2XgI/ESjKSKVuroYE8k3fZYGfmUL21bdOslgXSPn1tyyMbkk6eMs
+         KvoA==
+X-Gm-Message-State: AOAM530PEcVF4AKFW/OQrNTeYnm+A9HZIVd4Mgw90KuDCEh2XHmHKkJu
+        rlE6ZSH9+7eo9pAt1HyW824Fgng=
+X-Google-Smtp-Source: ABdhPJyZayJnee33cEuYPLpvv8OyZZt5YkVa8FQA9aXv9nTs8vxc6i5A2MxwMGdecxLvtPyRUjxzAQ==
+X-Received: by 2002:a92:c6cb:: with SMTP id v11mr27435851ilm.206.1592237761673;
+        Mon, 15 Jun 2020 09:16:01 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id g15sm8158427ilr.5.2020.06.15.09.16.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:16:01 -0700 (PDT)
+Received: (nullmailer pid 1876770 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:15:59 -0000
+Date:   Mon, 15 Jun 2020 10:15:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     linux-kernel@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: remoteproc: k3-dsp: Update bindings
+ for C71x DSPs
+Message-ID: <20200615161559.GA1876521@bogus>
+References: <20200612225357.8251-1-s-anna@ti.com>
+ <20200612225357.8251-2-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQG4t7PjQZEdjsbMgiywO+bF2ZMTLwIE8gPVATQJid0Cb/nUPqjnqNbQ
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPKsWRmVeSWpSXmKPExsWy7bCmpu6aec/jDF590bN4+fMqm8Wn9ctY
-        LeYfOcdqceFpD5vF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
-        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1Zxehx/MZ2Jo/Pm+Q82g90MwVw
-        RnHZpKTmZJalFunbJXBl7N1zg7FgEnvFpcPrmBsYr7N1MXJySAiYSOxYeZ6xi5GLQ0hgN6PE
-        poc3GUESQgKfGCW6fjhAJD4zShzdcpcFpuP53XYmiKJdjBLzj5tBFL1hlJi4/irYWDYBXYkd
-        i9vAbBEge/ON5ewgRcwCt5gknl/5zAqS4BTQk7gy8QZYkbCAl8TiUxPBVrMIqEp8mHQZrIZX
-        wFLi4dPXULagxMmZT8CuYBbQlli28DUzxEUKEj+fLmOFWOYmMf3LPkaIGnGJoz97mEEWSwjc
-        4JDonrGNFaLBReLXsQdMELawxKvjW9ghbCmJz+/2Ah3EAWRnS/TsMoYI10gsnXcM6nt7iQNX
-        5rCAlDALaEqs36UPsYpPovf3EyaITl6JjjYhiGpVieZ3V6E6pSUmdndDHeAhcaB9H/sERsVZ
-        SB6bheSxWUgemIWwbAEjyypGydSC4tz01GLTAuO81HK94sTc4tK8dL3k/NxNjOA0p+W9g/HR
-        gw96hxiZOBgPMUpwMCuJ8B6Sfx4nxJuSWFmVWpQfX1Sak1p8iFGag0VJnFfpx5k4IYH0xJLU
-        7NTUgtQimCwTB6dUA5PPb4eG5lsJl+WeRRdM594+q2WdqM2bj7aG0hu3Llj7bmFHeovFuQId
-        ybu1epe+dYld0JD7fOpfz8rdH5uWZmSWrnlxLJO3zmzZwZbjIa7T+PzXnHu2LPlFp72rdOHK
-        B1n7tN9+CD7xJXHKM6a5yoG7hMp6CratvMp/cX7IE5+dzMo/75/Y3f8s3X1xnIy5T5TNoUMX
-        vnbfEiqWj4u6xfo+WsrCvfuOK9f2bdo62fEzOO98z+r47F0R+ttv1dTVHGLfu3U33dm+/vCT
-        2y/jFO5vkY17PSmEd/nJM6kZ+5LfhxooOH+Lush04883VhHv76d1hY8H3LLe61zw/Ia9sdDX
-        v836IVdNfh7fslPqXfgGJZbijERDLeai4kQALx9+vuIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsWy7bCSnO7qec/jDBZdlrR4+fMqm8Wn9ctY
-        LeYfOcdqceFpD5vF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
-        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1Zxehx/MZ2Jo/Pm+Q82g90MwVw
-        RnHZpKTmZJalFunbJXBlbFvXxFKwhbXizrNVLA2My1i6GDk5JARMJJ7fbWfqYuTiEBLYwShx
-        5m0LI0RCWuL6xgnsELawxMp/z9khil4xSizrbGUDSbAJ6ErsWNwGZosA2ZtvLAcrYhZ4xiSx
-        /tx/qI5HjBKXmqazglRxCuhJXJl4A6xDWMBLYvGpiWDrWARUJT5MugxWwytgKfHw6WsoW1Di
-        5MwnYLcyC2hLPL35FM5etvA1M8R5ChI/ny5jhbjCTWL6l32MEDXiEkd/9jBPYBSehWTULCSj
-        ZiEZNQtJywJGllWMkqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmbGMFRq6W1g3HPqg96hxiZ
-        OBgPMUpwMCuJ8B6Sfx4nxJuSWFmVWpQfX1Sak1p8iFGag0VJnPfrrIVxQgLpiSWp2ampBalF
-        MFkmDk6pBqYZyWntagy+f8tqF37x2fzmlJrYzOg9bV83LBMRtKxsW7l5ZkfKuamR/9YpTe7U
-        aw2c4JIkxr3iRhxD0adLn01+TOs9lVgVsNmpKOxM1LHF7Hf76779u+c71XW+vNZz6+A3WzXP
-        L/x6MO5mX9rXzVo9AimeqlNCRFOSGS75nl5+RuLe9GnWzx5abZP4OH9q6ZKruzTWu5Tfm5BY
-        anG2UH7/sYmxp7xSO/lefGfiWzCh86/nwngN2ZLJc3YHiBqbXRLu8Hw3/77Vllm7+QPOb59i
-        sVj5anCjsHDkkX1y8w83W7ZGc104wqd8/TbL1lVzVKYfiVcu60r7Z712bq6qep/ZZP5Yw+16
-        RzauSzc2OiKhxFKckWioxVxUnAgAVKBKmkkDAAA=
-X-CMS-MailID: 20200615161539epcas5p26241107c8eaabfae1edafc35256091e0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200613030458epcas5p3f9667bab202d99fb332d5bf5aad63c85
-References: <20200613024706.27975-1-alim.akhtar@samsung.com>
-        <CGME20200613030458epcas5p3f9667bab202d99fb332d5bf5aad63c85@epcas5p3.samsung.com>
-        <20200613024706.27975-11-alim.akhtar@samsung.com>
-        <20200614110202.GA9009@kozik-lap>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612225357.8251-2-s-anna@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 12 Jun 2020 17:53:56 -0500, Suman Anna wrote:
+> Some Texas Instruments K3 family of SoCs have one of more newer
+> generation TMS320C71x CorePac processor subsystem in addition to
+> the existing TMS320C66x CorePac processor subsystems. Update the
+> device tree bindings document for the C71x DSP devices.
+> 
+> The example is also updated to show the single C71 DSP present
+> on J721E SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+> v3:
+>  - Dropped Rob's previous Reviewed-by tag due to decent changes in the
+>    patch
+>  - Replaced the minItems and maxItems from reg with actual items list
+>  - Dropped C71 reserved memory nodes from example
+> v2: https://patchwork.kernel.org/patch/11563231/
+> 
+>  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 68 +++++++++++++++----
+>  1 file changed, 55 insertions(+), 13 deletions(-)
+> 
 
-> On Sat, Jun 13, 2020 at 08:17:06AM +0530, Alim Akhtar wrote:
-> > Adding dt node foe UFS and UFS-PHY for exynos7 SoC.
-> >
-> > Signed-off-by: Alim Akhtar <alim.akhtar=40samsung.com>
-> > Tested-by: Pawe=C5=82=20Chmiel=20<pawel.mikolaj.chmiel=40gmail.com>=0D=
-=0A>=20>=20---=0D=0A>=20>=20=20.../boot/dts/exynos/exynos7-espresso.dts=20=
-=20=20=20=20=20=7C=20=204=20++=0D=0A>=20>=20=20arch/arm64/boot/dts/exynos/e=
-xynos7.dtsi=20=20=20=20=20=20=20=7C=2043=20++++++++++++++++++-=0D=0A>=20>=
-=20=202=20files=20changed,=2045=20insertions(+),=202=20deletions(-)=0D=0A>=
-=20>=0D=0A>=20=0D=0A>=20This=20is=20already=20applied=20and=20in=20the=20li=
-nux-next.=20=20Don't=20resend=20applied=20patches.=0D=0A>=20=0D=0ASorry=20K=
-rzysztof,=20did=20not=20realized=20that=20this=20was=20already=20landed=20i=
-n=20Linux-next,=20=20your=20point=20taken.=0D=0A=0D=0A>=20Best=20regards,=
-=0D=0A>=20Krzysztof=0D=0A=0D=0A
+Reviewed-by: Rob Herring <robh@kernel.org>
