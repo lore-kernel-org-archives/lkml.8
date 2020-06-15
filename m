@@ -2,204 +2,156 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D296C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52F9D2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0672067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728586AbgFOHfi (ORCPT
+        id S1728544AbgFOHhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgFOHfh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:35:37 -0400
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E23EC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:35:36 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:2191:9276:807:82c1])
-        by laurent.telenet-ops.be with bizsmtp
-        id rKbZ2200d4zira501KbZg7; Mon, 15 Jun 2020 09:35:33 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jkjeX-0001HF-JH
-        for linux-kernel@vger.kernel.org; Mon, 15 Jun 2020 09:35:33 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jkjeX-0000Tv-H4
-        for linux-kernel@vger.kernel.org; Mon, 15 Jun 2020 09:35:33 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-kernel@vger.kernel.org
-Subject: Build regressions/improvements in v5.8-rc1
-Date:   Mon, 15 Jun 2020 09:35:33 +0200
-Message-Id: <20200615073533.1809-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 15 Jun 2020 03:37:10 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2305 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726299AbgFOHhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:37:10 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id E1E28B8BCAB5240EE08C;
+        Mon, 15 Jun 2020 08:37:08 +0100 (IST)
+Received: from [127.0.0.1] (10.210.172.237) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 15 Jun
+ 2020 08:37:06 +0100
+Subject: Re: arm64 iommu groups issue
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <maz@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        iommu <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Saravana Kannan <saravanak@google.com>, <robh@kernel.org>
+References: <9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com>
+ <4768c541-ebf4-61d5-0c5e-77dee83f8f94@arm.com>
+ <a18b7f26-9713-a5c7-507e-ed70e40bc007@huawei.com>
+ <ddc7eaff-c3f9-4304-9b4e-75eff2c66cd5@huawei.com>
+ <be464e2a-03d5-0b2e-24ee-96d0d14fd739@arm.com>
+ <35fc8d13-b1c1-6a9e-4242-284da7f00764@huawei.com>
+ <68643b18-c920-f997-a6d4-a5d9177c0f4e@arm.com>
+ <828ec7b3-27af-f0b9-b4a6-0886b0c24b5a@huawei.com>
+ <20200612143006.GA4905@red-moon.cambridge.arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <20fe20d8-8c2e-642f-019c-3b92e7dbd31c@huawei.com>
+Date:   Mon, 15 Jun 2020 08:35:45 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20200612143006.GA4905@red-moon.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.172.237]
+X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Below is the list of build error/warning regressions/improvements in
-v5.8-rc1[1] compared to v5.7[2].
+On 12/06/2020 15:30, Lorenzo Pieralisi wrote:
+> On Mon, Feb 17, 2020 at 12:08:48PM +0000, John Garry wrote:
+>>>>
+>>>> Right, and even worse is that it relies on the port driver even
+>>>> existing at all.
+>>>>
+>>>> All this iommu group assignment should be taken outside device
+>>>> driver probe paths.
+>>>>
+>>>> However we could still consider device links for sync'ing the SMMU
+>>>> and each device probing.
+>>>
+>>> Yes, we should get that for DT now thanks to the of_devlink stuff, but
+>>> cooking up some equivalent for IORT might be worthwhile.
+>>
+>> It doesn't solve this problem, but at least we could remove the iommu_ops
+>> check in iort_iommu_xlate().
+>>
+>> We would need to carve out a path from pci_device_add() or even device_add()
+>> to solve all cases.
+>>
+>>>
+>>>>> Another thought that crosses my mind is that when pci_device_group()
+>>>>> walks up to the point of ACS isolation and doesn't find an existing
+>>>>> group, it can still infer that everything it walked past *should* be put
+>>>>> in the same group it's then eventually going to return. Unfortunately I
+>>>>> can't see an obvious way for it to act on that knowledge, though, since
+>>>>> recursive iommu_probe_device() is unlikely to end well.
+>>>>
+>>
+>> [...]
+>>
+>>>> And this looks to be the reason for which current
+>>>> iommu_bus_init()->bus_for_each_device(..., add_iommu_group) fails
+>>>> also.
+>>>
+>>> Of course, just adding a 'correct' add_device replay without the
+>>> of_xlate process doesn't help at all. No wonder this looked suspiciously
+>>> simpler than where the first idea left off...
+>>>
+>>> (on reflection, the core of this idea seems to be recycling the existing
+>>> iommu_bus_init walk rather than building up a separate "waiting list",
+>>> while forgetting that that wasn't the difficult part of the original
+>>> idea anyway)
+>>
+>> We could still use a bus walk to add the group per iommu, but we would need
+>> an additional check to ensure the device is associated with the IOMMU.
+>>
+>>>
+>>>> On this current code mentioned, the principle of this seems wrong to
+>>>> me - we call bus_for_each_device(..., add_iommu_group) for the first
+>>>> SMMU in the system which probes, but we attempt to add_iommu_group()
+>>>> for all devices on the bus, even though the SMMU for that device may
+>>>> yet to have probed.
+>>>
+>>> Yes, iommu_bus_init() is one of the places still holding a
+>>> deeply-ingrained assumption that the ops go live for all IOMMU instances
+>>> at once, which is what warranted the further replay in
+>>> of_iommu_configure() originally. Moving that out of
+>>> of_platform_device_create() to support probe deferral is where the
+>>> trouble really started.
+>>
+>> I'm not too familiar with the history here, but could this be reverted now
+>> with the introduction of of_devlink stuff?
+> 
+> Hi John,
 
-Summarized:
-  - build errors: +4/-4
-  - build warnings: +66/-42
+Hi Lorenzo,
 
-Note that there may be false regressions, as some logs are incomplete.
-Still, they're build errors/warnings.
+> 
+> have we managed to reach a consensus on this thread on how to solve
+> the issue ? 
 
-Happy fixing! ;-)
+No, not really. So Robin and I tried a couple of quick things 
+previously, but they came did not come to much, as above.
 
-Thanks to the linux-next team for providing the build service.
+> Asking because this thread seems stalled - I am keen on
+> getting it fixed.
 
-[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/b3a9e3b9622ae10064826dccb4f7a52bd88c7407/ (192 out of 194 configs)
-[2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162/ (all 194 configs)
+I haven't spent more time on this. But from what I was hearing last 
+time, this issue was ticketed internally for arm, so I was waiting for 
+that to be picked up to re-engage.
 
-
-*** ERRORS ***
-
-4 error regressions:
-  + error: arch/sparc/kernel/head_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.init.text':  => (.head.text+0x5100), (.head.text+0x5040)
-  + error: arch/sparc/kernel/head_32.o: relocation truncated to fit: R_SPARC_WDISP22 against symbol `leon_smp_cpu_startup' defined in .text section in arch/sparc/kernel/trampoline_32.o:  => (.init.text+0xa4)
-  + error: arch/sparc/kernel/process_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x4), (.fixup+0xc)
-  + error: arch/sparc/kernel/signal_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x28), (.fixup+0x1c), (.fixup+0x4), (.fixup+0x10), (.fixup+0x34)
-
-4 error improvements:
-  - error: modpost: "devm_ioremap" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!: N/A => 
-  - error: modpost: "devm_ioremap_resource" [drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!: N/A => 
-  - error: modpost: "devm_ioremap_resource" [drivers/ptp/ptp_ines.ko] undefined!: N/A => 
-  - error: modpost: "devm_of_iomap" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!: N/A => 
-
-
-*** WARNINGS ***
-
-66 warning regressions:
-  + /kisskb/src/arch/sparc/include/asm/cacheflush_32.h: warning: 'struct page' declared inside parameter list:  => 38:37
-  + /kisskb/src/arch/sparc/include/asm/cacheflush_32.h: warning: its scope is only this definition or declaration, which is probably not what you want:  => 38:37
-  + /kisskb/src/block/genhd.c: warning: the frame size of 1160 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 1623:1
-  + /kisskb/src/drivers/gpu/drm/drm_managed.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]:  => 205:23
-  + /kisskb/src/drivers/gpu/drm/drm_managed.c: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]:  => 67:23
-  + /kisskb/src/drivers/infiniband/hw/mlx5/mlx5_ib.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 10 has type 'size_t {aka unsigned int}' [-Wformat=]:  => 56:31
-  + /kisskb/src/drivers/infiniband/hw/mlx5/mlx5_ib.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 10 has type 'size_t' {aka 'unsigned int'} [-Wformat=]:  => 56:31
-  + /kisskb/src/drivers/infiniband/hw/mlx5/mlx5_ib.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 7 has type 'size_t {aka unsigned int}' [-Wformat=]:  => 56:31
-  + /kisskb/src/drivers/infiniband/hw/mlx5/mlx5_ib.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 7 has type 'size_t' {aka 'unsigned int'} [-Wformat=]:  => 56:31
-  + /kisskb/src/drivers/infiniband/hw/mlx5/mlx5_ib.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 8 has type 'size_t {aka unsigned int}' [-Wformat=]:  => 56:31
-  + /kisskb/src/drivers/infiniband/hw/mlx5/mlx5_ib.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 8 has type 'size_t' {aka 'unsigned int'} [-Wformat=]:  => 56:31
-  + /kisskb/src/drivers/infiniband/hw/mlx5/mlx5_ib.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 9 has type 'size_t {aka unsigned int}' [-Wformat=]:  => 56:31
-  + /kisskb/src/drivers/infiniband/hw/mlx5/mlx5_ib.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 9 has type 'size_t' {aka 'unsigned int'} [-Wformat=]:  => 56:31
-  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_resume_noirq' defined but not used [-Wunused-function]:  => 611:12
-  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_runtime_resume' defined but not used [-Wunused-function]:  => 638:12
-  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_runtime_suspend' defined but not used [-Wunused-function]:  => 629:12
-  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_suspend_noirq' defined but not used [-Wunused-function]:  => 601:12
-  + /kisskb/src/drivers/net/ethernet/intel/e1000e/netdev.c: warning: 'e1000e_check_me' defined but not used [-Wunused-function]:  => 137:13
-  + /kisskb/src/drivers/net/ethernet/intel/ice/ice_flow.h: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]:  => 197:33
-  + /kisskb/src/drivers/net/ethernet/intel/ice/ice_flow.h: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]:  => 198:32
-  + /kisskb/src/drivers/scsi/dc395x.c: warning: value computed is not used [-Wunused-value]:  => 155:36
-  + /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.35' uses dynamic stack allocation:  => 498:1
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: 'struct address_space' declared inside parameter list will not be visible outside of this definition or declaration:  => 52:50, 58:52
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: 'struct address_space' declared inside parameter list:  => 58:52, 52:50
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: 'struct mm_struct' declared inside parameter list will not be visible outside of this definition or declaration:  => 16:42, 22:46
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: 'struct mm_struct' declared inside parameter list:  => 22:46, 16:42
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: 'struct page' declared inside parameter list will not be visible outside of this definition or declaration:  => 82:16, 75:17, 44:45
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: 'struct page' declared inside parameter list:  => 83:9, 75:17, 44:45
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: 'struct vm_area_struct' declared inside parameter list will not be visible outside of this definition or declaration:  => 36:44, 81:50, 74:45, 28:45
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: 'struct vm_area_struct' declared inside parameter list:  => 38:9, 30:10, 83:9, 75:17
-  + /kisskb/src/include/asm-generic/cacheflush.h: warning: its scope is only this definition or declaration, which is probably not what you want:  => 16:42
-  + /kisskb/src/include/linux/compiler_attributes.h: warning: statement will never be executed [-Wswitch-unreachable]:  => 200:41
-  + /kisskb/src/include/linux/jump_label.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 10 has type 'size_t' [-Wformat=]:  => 471:59
-  + /kisskb/src/include/linux/jump_label.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 7 has type 'size_t' [-Wformat=]:  => 471:59
-  + /kisskb/src/include/linux/jump_label.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 8 has type 'size_t' [-Wformat=]:  => 471:59
-  + /kisskb/src/include/linux/jump_label.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 9 has type 'size_t' [-Wformat=]:  => 471:59
-  + /kisskb/src/include/linux/kern_levels.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 2 has type 'unsigned int' [-Wformat=]:  => 5:18
-  + /kisskb/src/include/linux/kern_levels.h: warning: format '%zd' expects argument of type 'signed size_t', but argument 2 has type 'ssize_t {aka int}' [-Wformat=]:  => 5:18
-  + /kisskb/src/kernel/bpf/syscall.c: warning: 'bpf_prog_get_info_by_fd.isra.18' uses dynamic stack allocation:  => 3498:1
-  + /kisskb/src/kernel/rcu/rcuperf.c: warning: format '%lu' expects argument of type 'long unsigned int', but argument 2 has type 'unsigned int' [-Wformat=]:  => 726:65
-  + /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.45' uses dynamic stack allocation:  => 2230:1
-  + /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.44' uses dynamic stack allocation:  => 1929:1
-  + /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.43' uses dynamic stack allocation:  => 2298:1
-  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'add_llc.hd') [-Wmissing-braces]:  => 1145:9
-  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'del_llc.hd') [-Wmissing-braces]:  => 1178:9
-  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'delllc.hd') [-Wmissing-braces]:  => 1250:9
-  + /kisskb/src/net/smc/smc_llc.c: warning: missing braces around initializer [-Wmissing-braces]:  => 1250:9, 1178:9, 1145:9
-  + /kisskb/src/net/sunrpc/svcsock.c: warning: "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]:  => 226:5
-  + /kisskb/src/net/sunrpc/svcsock.c: warning: "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined, evaluates to 0 [-Wundef]:  => 226:5
-  + /kisskb/src/samples/seccomp/user-trap.c: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]:  => 83:2, 50:2
-  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_exit" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_try" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "___rw_write_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__ashldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__ashrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__copy_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__divdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__lshrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__muldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__ndelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "__udelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "bzero_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + modpost: WARNING: modpost: EXPORT symbol "empty_zero_page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
-  + warning: 136 bad relocations:  => N/A
-  + warning: 148 bad relocations:  => N/A
-
-42 warning improvements:
-  - /kisskb/src/arch/m68k/include/asm/amigahw.h: warning: this statement may fall through [-Wimplicit-fallthrough=]: 42:50 => 
-  - /kisskb/src/arch/um/os-Linux/signal.c: warning: the frame size of 2960 bytes is larger than 2048 bytes [-Wframe-larger-than=]: 95:1 => 
-  - /kisskb/src/arch/um/os-Linux/signal.c: warning: the frame size of 2976 bytes is larger than 2048 bytes [-Wframe-larger-than=]: 51:1 => 
-  - /kisskb/src/block/genhd.c: warning: the frame size of 1192 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 1617:1 => 
-  - /kisskb/src/drivers/android/binderfs.c: warning: (near initialization for 'device_info.name') [-Wmissing-braces]: 653:9 => 
-  - /kisskb/src/drivers/android/binderfs.c: warning: missing braces around initializer [-Wmissing-braces]: 653:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: (near initialization for 'encoder_control.header') [-Wmissing-braces]: 116:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: (near initialization for 'pixel_clock.header') [-Wmissing-braces]: 342:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: missing braces around initializer [-Wmissing-braces]: 342:9, 116:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c: warning: (near initialization for 'PLAT_54186_wa.header') [-Wmissing-braces]: 781:9 => 
-  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c: warning: missing braces around initializer [-Wmissing-braces]: 368:9, 781:9 => 368:9
-  - /kisskb/src/drivers/gpu/drm/bridge/tc358768.c: warning: the frame size of 2224 bytes is larger than 2048 bytes [-Wframe-larger-than=]: 840:1 => 
-  - /kisskb/src/drivers/gpu/drm/drm_dp_mst_topology.c: warning: (near initialization for 'desc.ident') [-Wmissing-braces]: 5502:9 => 
-  - /kisskb/src/drivers/gpu/drm/drm_dp_mst_topology.c: warning: missing braces around initializer [-Wmissing-braces]: 5502:9 => 
-  - /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.34' uses dynamic stack allocation: 498:1 => 
-  - /kisskb/src/kernel/bpf/syscall.c: warning: 'bpf_prog_get_info_by_fd.isra.23' uses dynamic stack allocation: 3269:1 => 
-  - /kisskb/src/lib/lz4/lz4hc_compress.c: warning: the frame size of 2144 bytes is larger than 2048 bytes [-Wframe-larger-than=]: 579:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.42' uses dynamic stack allocation: 2203:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.41' uses dynamic stack allocation: 1910:1 => 
-  - /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.40' uses dynamic stack allocation: 2271:1 => 
-  - /kisskb/src/security/integrity/ima/ima_crypto.c: warning: the frame size of 1032 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 510:1 => 
-  - modpost: WARNING: modpost: "clear_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [drivers/md/raid456.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [drivers/scsi/sd_mod.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/gfs2/gfs2.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/ntfs/ntfs.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "clear_page" [fs/ocfs2/dlm/ocfs2_dlm.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [drivers/block/drbd/drbd.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [fs/cachefiles/cachefiles.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: "copy_page" [fs/nilfs2/nilfs2.ko] has no CRC!: N/A => 
-  - modpost: WARNING: modpost: lib/test_bitmap.o(.text.unlikely+0x58): Section mismatch in reference from the function bitmap_equal() to the variable .init.rodata:clump_exp: N/A => 
-  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1a0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu(): N/A => 
-  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1ac): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu(): N/A => 
-  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2b0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu(): N/A => 
-  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2bc): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu(): N/A => 
-  - warning: 12 bad relocations: N/A => 
-  - warning: unmet direct dependencies detected for SND_SOC_WM9712: N/A => 
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Thanks,
+John
