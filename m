@@ -2,107 +2,79 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E841C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D85EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E122207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592227487;
-	bh=bqX1ozenFRae/r9wyA5J47at6vYcCkVYO8dbmr9c2P0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dFtZNL0MJrn3MwjMeqjL8NbP164pzpKBdQoIMG+675v5J+PykABlktQ4hLyq8vkCb
-	 sAx7cKDQ+Drm0CVdJQ7K5cMhVADJMJMEPpAupj2mgB2TTu/RG+eSuq+g3TUN5efEOc
-	 Xq77Mn34d9/IPJ9qykaBORdwxYCJPt29/Obc8gTU=
+	by mail.kernel.org (Postfix) with ESMTP id 2CDFE2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:26:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qGfsSHiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgFONYo (ORCPT
+        id S1730253AbgFON0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:24:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730043AbgFONYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:24:44 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10E802076A;
-        Mon, 15 Jun 2020 13:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592227483;
-        bh=bqX1ozenFRae/r9wyA5J47at6vYcCkVYO8dbmr9c2P0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t6MngLWC5aDomduESoTEtDrKX8VoWBqS3vmbPPajFduTYMnWH+uaEbWfuyPrzt2+A
-         NG5Tt0EW2x6gEMcFxWKu+8zhtdeFSDuU1J94sh37v074z0hcou0j7GB86SAUlDHr4D
-         oW31DO8iFj3n+sSP6ZMwTjFFEG+Afht9IyvINook=
-Date:   Mon, 15 Jun 2020 14:24:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on
- interrupt in exit paths
-Message-ID: <20200615132441.GS4447@sirena.org.uk>
-References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
- <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
- <20200615123052.GO4447@sirena.org.uk>
- <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com>
- <20200615131006.GR4447@sirena.org.uk>
- <CA+h21hpusy=zx8AuUqk_4zShtst8QeNJxCPT4dMGh0jhm5uZng@mail.gmail.com>
+        Mon, 15 Jun 2020 09:26:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730058AbgFON0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:26:34 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDEDC061A0E;
+        Mon, 15 Jun 2020 06:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ksyETq/TLH9AuQNxtfQV+6S3Mb7fK99JQIayoY8bWbY=; b=qGfsSHiNyPTDCAXdQglvTSpwTa
+        WvQvaz0qyd+Yy1bKZc5qzVtqRvghyALrT73YoNRo0ytUuCTwv933jNdC6IUJAnNxA3TVFvgE9/w/j
+        ifFRrmBV6w+lcrs8yIPRVE4F6CdvWjG38ZkkO0iAVq2gAtjChbTEQwq2DUIq5zf9kmQwAtqzuNPTP
+        Kl2KtSW7dhBp29DjA6RLF3ND4wZpHMMMGVX1vxhtEaz0DPGO7bITH7PL8MQq4hJv8pEeU1hkgtvV3
+        IsVm5AVysAYB3YfzFN4XAqQRahLYoFjhkego4zaAuMKydQwHcD84iA4eFIZEgg7uaF7Udw2JQfpyp
+        pCOD5wFw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkp8C-0001V3-21; Mon, 15 Jun 2020 13:26:32 +0000
+Date:   Mon, 15 Jun 2020 06:26:32 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     dsterba@suse.cz, Linus Torvalds <torvalds@linux-foundation.org>,
+        David Sterba <dsterba@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Btrfs updates for 5.8, part 2
+Message-ID: <20200615132632.GA27848@infradead.org>
+References: <cover.1592135316.git.dsterba@suse.com>
+ <CAHk-=whbO-6zmwfQaX2=cDfsq_sN1PZ6_CAbqLgw3DUptnFrPg@mail.gmail.com>
+ <20200615125701.GY27795@twin.jikos.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6pbY/KU4ayLo+qis"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+h21hpusy=zx8AuUqk_4zShtst8QeNJxCPT4dMGh0jhm5uZng@mail.gmail.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200615125701.GY27795@twin.jikos.cz>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 15, 2020 at 02:57:01PM +0200, David Sterba wrote:
+> On Sun, Jun 14, 2020 at 09:50:17AM -0700, Linus Torvalds wrote:
+> > On Sun, Jun 14, 2020 at 4:56 AM David Sterba <dsterba@suse.com> wrote:
+> > >
+> > > Reverts are not great, but under current circumstances I don't see
+> > > better options.
+> > 
+> > Pulled. Are people discussing how to make iomap work for everybody?
+> > It's a bit sad if we can't have the major filesystems move away from
+> > the old buffer head interfaces to a common more modern one..
+> 
+> Yes, it's fixable and we definitely want to move to iomap. The direct to
+> buffered fallback would fix one of the problems, but this would also
+> mean that xfs would start doing that. Such change should be treated more
+> like a feature development than a bugfix, imposed by another filesystem,
+> and xfs people rightfully complained.
 
---6pbY/KU4ayLo+qis
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jun 15, 2020 at 04:12:28PM +0300, Vladimir Oltean wrote:
-> On Mon, 15 Jun 2020 at 16:10, Mark Brown <broonie@kernel.org> wrote:
-
-> > It's a bit unusual to need to actually free the IRQ over suspend -
-> > what's driving that requirement here?
-
-> clk_disable_unprepare(dspi->clk); is driving the requirement - same as
-> in dspi_remove case, the module will fault when its registers are
-> accessed without a clock.
-
-I see - this could be fixed by having the interrupt handler bounce the
-clock on, there's a little overhead from that but hopefully not too
-much.  That should also help with the remove case I guess so long as the
-clock is registered before the interrupt is requested?
-
---6pbY/KU4ayLo+qis
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ndpgACgkQJNaLcl1U
-h9BUcgf/VzR+PRLWRTMg/gGQBftAw+yKEACOAdw8HxYwJw4eaK7326GSdVE6qWwo
-t/aZTKrRKSSid1YvuquFNG39qeEiWp3t8ZZSmd8EyYhvdFq6mwEdQ36uuPg5/27C
-Dff+yXcHU39inkRIPxF6uI655J+L+/6IC+0B3EX8FmjcFngDxcnDomnqldhnXQCX
-WaTRTKYrUHnvEQ7skEQJFzttM7sgs3tOPhYfLuz7eQSSAUqo02fNLseRZhP1VZY5
-f+HxXawJLRuf0/wD/IOTjvwEWEERjVte6OyT71Y/pbYPg+QnshDtYOsTF+14W8FF
-8XAQwxWofipni82ASNlssY48IXD9uA==
-=ouiV
------END PGP SIGNATURE-----
-
---6pbY/KU4ayLo+qis--
+We can trivially key that off a flag at least for 5.8.  I suspect the
+fallback actually is the right thing for XFS in the long run for that
+particular case.
