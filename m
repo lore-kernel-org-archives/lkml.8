@@ -2,83 +2,105 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8389C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9834C207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B9E207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:29:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGW7yeWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbgFON27 (ORCPT
+        id S1730413AbgFON3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:28:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60072 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730147AbgFON26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:28:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 65B3EACE1;
-        Mon, 15 Jun 2020 13:29:01 +0000 (UTC)
-Date:   Mon, 15 Jun 2020 15:28:56 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Jim Cromie <jim.cromie@gmail.com>
-Cc:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v2 09/24] dyndbg: add maybe(str,"") macro to reduce code
-Message-ID: <20200615132856.GF31238@alley>
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-10-jim.cromie@gmail.com>
+        Mon, 15 Jun 2020 09:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730135AbgFON33 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:29:29 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DD0C061A0E;
+        Mon, 15 Jun 2020 06:29:27 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id t21so11493262edr.12;
+        Mon, 15 Jun 2020 06:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3n3iifrtgR6E9IAv7YCfx/6Y4J2kmVU5EVk2pTsznw0=;
+        b=gGW7yeWtA8oMDUL1dzcL69tgz1l3edifBui14SpedebaZIcAGPx+SFoh7OX1cksZ11
+         ubxRPDvuQrJXxk3YE031pCtzOZRoOR+OfQXLLerGtsWvpyyUvBYyIuen90hFxseabdj3
+         9xM1bR45EWFZYe7ZHK5B1pDbP8KDo9uW138VBxujud/7LHhHyoooQD8bBXqiX4Mt2pUe
+         dDsENxfu8SDR9n/Tk3yF4IiD2exiHje1gGrEsmIkYS1SwT/wwHagec/Fw16OEWActooU
+         fVw6SBNRfRIcq7gDqyoCze3dow4gqh/OFxztDrankON9Ny/DvDaSjjvhYanAAAb5UIfl
+         Libw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3n3iifrtgR6E9IAv7YCfx/6Y4J2kmVU5EVk2pTsznw0=;
+        b=NuX9u4FxAPvEm5LvkQS760IAiWwjapPcfQ7h+YSBzi6oU2yh9FL0JuQQf93p2TBSqQ
+         YJ9dlF9enMKcqbY2me2xUHScvpSsco0diaAmlHXpSaNeXjezhRWVTgIVJsF7q5XSXNyf
+         /iB067Imc1UirAxF9EK4ZkwvzYi3GjJIGcKUUjpBxNNbp+C3d1iXRNQ/IKd0rLXbeXBC
+         AiBvMehpYcoDb/9QsLg5slxg/rnS8MjYQIsYPw3o0DSGeBiVi3Tc4DeFvGIj4j9qxdUZ
+         Zameuwg1pJhzH//IJiFicAZue8VEWlNdQPidYxLzd099R5xe40FfKdIyXsRJcB8apFkN
+         uf1A==
+X-Gm-Message-State: AOAM530htd1/7hfhS3dmLXYoj2pJLBF3pR3KdWrV/QD0fvG2ldVOUqB4
+        SJmRzmTeGKXba0AV1p5oi/86rvW+s///qrYnRjg=
+X-Google-Smtp-Source: ABdhPJyd7casDi9grXgRAm6JAKIQQwZzv5PkN5WMqxqDrwzxO2WpDIV71Sv0ygftsfST2NrDtBc35Qv01KBQVzh9oUI=
+X-Received: by 2002:a05:6402:362:: with SMTP id s2mr24158752edw.337.1592227766391;
+ Mon, 15 Jun 2020 06:29:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200613155738.2249399-10-jim.cromie@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+ <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de> <20200615123052.GO4447@sirena.org.uk>
+ <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com>
+ <20200615131006.GR4447@sirena.org.uk> <CA+h21hpusy=zx8AuUqk_4zShtst8QeNJxCPT4dMGh0jhm5uZng@mail.gmail.com>
+ <20200615132441.GS4447@sirena.org.uk>
+In-Reply-To: <20200615132441.GS4447@sirena.org.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 15 Jun 2020 16:29:15 +0300
+Message-ID: <CA+h21hpymKP5JGWZBNQTq4bZwJ6QZ3erACWV86nEaGsevZ++BA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on interrupt
+ in exit paths
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2020-06-13 09:57:23, Jim Cromie wrote:
-> reduce word count via macro, no actual object change.
-> 
-> OTOH, maybe() could be scrubbed if printk's default printing (iirc) of
-> "(null)" pointers is deemed appropriate for the log-msg.
-> ---
->  lib/dynamic_debug.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> index 31d3be30776e..20b712652ee4 100644
-> --- a/lib/dynamic_debug.c
-> +++ b/lib/dynamic_debug.c
-> @@ -114,6 +114,7 @@ do {								\
->  #define vpr_info(fmt, ...)	vnpr_info(1, fmt, ##__VA_ARGS__)
->  #define v2pr_info(fmt, ...)	vnpr_info(2, fmt, ##__VA_ARGS__)
->  
-> +#define maybe(str, empty)	( str ? str : empty )
->  static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
->  {
->  	/* trim any trailing newlines */
-> @@ -127,10 +128,10 @@ static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
->  
->  	vpr_info("%s: func=\"%s\" file=\"%s\" module=\"%s\" format=\"%.*s\" lineno=%u-%u\n",
->  		 msg,
-> -		 query->function ? query->function : "",
-> -		 query->filename ? query->filename : "",
-> -		 query->module ? query->module : "",
-> -		 fmtlen, query->format ? query->format : "",
-> +		 maybe(query->function, ""),
-> +		 maybe(query->filename, ""),
-> +		 maybe(query->module, ""),
-> +		 fmtlen, maybe(query->format, ""),
+On Mon, 15 Jun 2020 at 16:24, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Mon, Jun 15, 2020 at 04:12:28PM +0300, Vladimir Oltean wrote:
+> > On Mon, 15 Jun 2020 at 16:10, Mark Brown <broonie@kernel.org> wrote:
+>
+> > > It's a bit unusual to need to actually free the IRQ over suspend -
+> > > what's driving that requirement here?
+>
+> > clk_disable_unprepare(dspi->clk); is driving the requirement - same as
+> > in dspi_remove case, the module will fault when its registers are
+> > accessed without a clock.
+>
+> I see - this could be fixed by having the interrupt handler bounce the
+> clock on, there's a little overhead from that but hopefully not too
+> much.  That should also help with the remove case I guess so long as the
+> clock is registered before the interrupt is requested?
 
-From my POV this makes the code less readable. Open coding is much
-more clear than an ambiguous macro name.
-
-Best Regards,
-Petr
+Doesn't this mean that we risk leaving the clock enabled during suspend?
+Is there any function in the SPI core that quiesces any pending
+transactions, and then stops the controller? I would have expected
+spi_controller_suspend to do that, but I'm not sure (it doesn't look
+like it).
