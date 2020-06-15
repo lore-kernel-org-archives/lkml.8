@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB97BC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63E9C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B28207CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FC32078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="l0Gx52Ee"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="w+RKgGlS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgFOEGJ (ORCPT
+        id S1728255AbgFOEGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 00:06:09 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50534 "EHLO
+        Mon, 15 Jun 2020 00:06:11 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50530 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728177AbgFOEGH (ORCPT
+        with ESMTP id S1728144AbgFOEGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 00:06:07 -0400
+        Mon, 15 Jun 2020 00:06:06 -0400
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F168D891B4;
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id EDF1D891B2;
         Mon, 15 Jun 2020 16:05:57 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
         s=mail181024; t=1592193957;
-        bh=14TIDfQM4sjvxFhCbCg35NzSBMoiXfw8Vj4bejq5yIA=;
+        bh=aYu5nfgaWwoNizinGEq9qqfsv0a+/kTso+vvT11d+U8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=l0Gx52Eec/kBwQTSjVGM1xUEVTnOBPvth+mR/mmHeqzS2g0bsS7raeSlSODiYpT7V
-         W4ws/XLQ8vQ9ewAcH7jdo0ADllaXeioz1Q5nh3QQ1MttwRxS4n+NFMv+J4VluNhGT2
-         cLJWS9knrdkCjO6ggsZ18jzofmykcZT98rgm+ZtiY3B+qPrvEmq+SgQuj5+eGnwchT
-         +IRNrRDKwUO21kSMGf4KmfH5A5iFZxCIO6HY7Xj94lZKfP4mj62LWexSiHldtQCipY
-         dOXKrnJGjKTXg8dXnzZJQqTv8uS5TwQR7kOZmJFoO+qIxmt5zGilQ3kUM5NRb9sNma
-         74UeLuJR5tYXw==
+        b=w+RKgGlSdShLQkZZbeKBgGpX4s4d7ddCTiZTugf+0vXSgzIknKngcZcY2lHlrX0t+
+         6lGXdJN7xTavUK1H8py0tS3etkNRF2c0M5H3tIAjE9/rxk1CfOYcek2B3Fr4/LODTv
+         edqfFJA+IcOebXZaRgUDKe/nG4WUdxZVpKxBV37DV46G50hXdUSb+fVsCSlz0fA+NG
+         okDamSd2VdcugN0MX42gjqoHovX9reoYFoHVydhaHJNoOA68gmlCGh5V5fh2iL9OKb
+         a2kHatZvW9YxWtEnfkdQdzlyyW5rFUZT44I4bLSHsVr3MD3HMb93YTIsiJzQ60/WiA
+         5m3kYcRl3RdYQ==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ee6f3a50003>; Mon, 15 Jun 2020 16:05:57 +1200
+        id <B5ee6f3a50004>; Mon, 15 Jun 2020 16:05:57 +1200
 Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id AAFB113EDE4;
+        by smtp (Postfix) with ESMTP id A189F13EEBA;
         Mon, 15 Jun 2020 16:05:56 +1200 (NZST)
 Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 5B313341283; Mon, 15 Jun 2020 16:05:57 +1200 (NZST)
+        id 54E84341107; Mon, 15 Jun 2020 16:05:57 +1200 (NZST)
 From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 To:     broonie@kernel.org, kdasu.kdev@gmail.com
 Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH 5/5] spi: bcm-qspi: Improve interrupt handling
-Date:   Mon, 15 Jun 2020 16:05:57 +1200
-Message-Id: <20200615040557.2011-6-mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH 3/5] spi: bcm-qspi: Do not split transfers into small chunks
+Date:   Mon, 15 Jun 2020 16:05:55 +1200
+Message-Id: <20200615040557.2011-4-mark.tomlinson@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615040557.2011-1-mark.tomlinson@alliedtelesis.co.nz>
 References: <20200615040557.2011-1-mark.tomlinson@alliedtelesis.co.nz>
@@ -63,71 +63,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acknowledge interrupts correctly and add support for fifo-full
-interrupt, distinguishing it from the done interrupt.
+Instead of splitting transfers into smaller parts, just perform the
+operation that the higher level asked for.
 
 Reviewed-by: Callum Sinclair <callum.sinclair@alliedtelesis.co.nz>
 Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 ---
- drivers/spi/spi-bcm-qspi.c | 11 ++++++-----
- drivers/spi/spi-bcm-qspi.h |  5 ++++-
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ drivers/spi/spi-bcm-qspi.c | 69 +++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 42 deletions(-)
 
 diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index 0cc51bcda300..3753eff8a154 100644
+index 92e04d24359f..ce30ebf27f06 100644
 --- a/drivers/spi/spi-bcm-qspi.c
 +++ b/drivers/spi/spi-bcm-qspi.c
-@@ -1123,6 +1123,8 @@ static irqreturn_t bcm_qspi_bspi_lr_l2_isr(int irq,=
- void *dev_id)
- 		if (qspi->bspi_rf_op_len =3D=3D 0) {
- 			qspi->bspi_rf_op =3D NULL;
- 			if (qspi->soc_intc) {
-+				/* Ack BSPI done interrupt */
-+				soc_intc->bcm_qspi_int_ack(soc_intc, BSPI_DONE);
- 				/* disable soc BSPI interrupt */
- 				soc_intc->bcm_qspi_int_set(soc_intc, BSPI_DONE,
- 							   false);
-@@ -1134,11 +1136,10 @@ static irqreturn_t bcm_qspi_bspi_lr_l2_isr(int ir=
-q, void *dev_id)
- 				bcm_qspi_bspi_lr_clear(qspi);
- 			else
- 				bcm_qspi_bspi_flush_prefetch_buffers(qspi);
+@@ -78,8 +78,6 @@
+ #define BSPI_BPP_MODE_SELECT_MASK		BIT(8)
+ #define BSPI_BPP_ADDR_SELECT_MASK		BIT(16)
+=20
+-#define BSPI_READ_LENGTH			256
+-
+ /* MSPI register offsets */
+ #define MSPI_SPCR0_LSB				0x000
+ #define MSPI_SPCR0_MSB				0x004
+@@ -888,9 +886,9 @@ static int bcm_qspi_bspi_exec_mem_op(struct spi_devic=
+e *spi,
+ 				     const struct spi_mem_op *op)
+ {
+ 	struct bcm_qspi *qspi =3D spi_master_get_devdata(spi->master);
+-	u32 addr =3D 0, len, rdlen, len_words, from =3D 0;
++	u32 addr =3D 0, len, len_words, from =3D 0;
+ 	int ret =3D 0;
+-	unsigned long timeo =3D msecs_to_jiffies(100);
++	unsigned long timeo =3D msecs_to_jiffies(1500);
+ 	struct bcm_qspi_soc_intc *soc_intc =3D qspi->soc_intc;
+=20
+ 	if (bcm_qspi_bspi_ver_three(qspi))
+@@ -925,47 +923,34 @@ static int bcm_qspi_bspi_exec_mem_op(struct spi_dev=
+ice *spi,
+ 	 * into RAF buffer read lengths
+ 	 */
+ 	len =3D op->data.nbytes;
++	reinit_completion(&qspi->bspi_done);
++	bcm_qspi_enable_bspi(qspi);
++	len_words =3D (len + 3) >> 2;
++	qspi->bspi_rf_op =3D op;
++	qspi->bspi_rf_op_status =3D 0;
+ 	qspi->bspi_rf_op_idx =3D 0;
++	qspi->bspi_rf_op_len =3D len;
++	dev_dbg(&qspi->pdev->dev, "bspi xfr addr 0x%x len 0x%x", addr, len);
+=20
+-	do {
+-		if (len > BSPI_READ_LENGTH)
+-			rdlen =3D BSPI_READ_LENGTH;
+-		else
+-			rdlen =3D len;
+-
+-		reinit_completion(&qspi->bspi_done);
+-		bcm_qspi_enable_bspi(qspi);
+-		len_words =3D (rdlen + 3) >> 2;
+-		qspi->bspi_rf_op =3D op;
+-		qspi->bspi_rf_op_status =3D 0;
+-		qspi->bspi_rf_op_len =3D rdlen;
+-		dev_dbg(&qspi->pdev->dev,
+-			"bspi xfr addr 0x%x len 0x%x", addr, rdlen);
+-		bcm_qspi_write(qspi, BSPI, BSPI_RAF_START_ADDR, addr);
+-		bcm_qspi_write(qspi, BSPI, BSPI_RAF_NUM_WORDS, len_words);
+-		bcm_qspi_write(qspi, BSPI, BSPI_RAF_WATERMARK, 0);
+-		if (qspi->soc_intc) {
+-			/*
+-			 * clear soc MSPI and BSPI interrupts and enable
+-			 * BSPI interrupts.
+-			 */
+-			soc_intc->bcm_qspi_int_ack(soc_intc, MSPI_BSPI_DONE);
+-			soc_intc->bcm_qspi_int_set(soc_intc, BSPI_DONE, true);
 -		}
 -
--		if (qspi->soc_intc)
--			/* clear soc BSPI interrupt */
--			soc_intc->bcm_qspi_int_ack(soc_intc, BSPI_DONE);
-+		} else  if (qspi->soc_intc)
-+			/* Ack FIFO full interrupt */
-+			soc_intc->bcm_qspi_int_ack(soc_intc,
-+						   BSPI_FIFO_FULL);
- 	}
+-		/* Must flush previous writes before starting BSPI operation */
+-		mb();
+-		bcm_qspi_bspi_lr_start(qspi);
+-		if (!wait_for_completion_timeout(&qspi->bspi_done, timeo)) {
+-			dev_err(&qspi->pdev->dev, "timeout waiting for BSPI\n");
+-			ret =3D -ETIMEDOUT;
+-			break;
+-		}
++	bcm_qspi_write(qspi, BSPI, BSPI_RAF_START_ADDR, addr);
++	bcm_qspi_write(qspi, BSPI, BSPI_RAF_NUM_WORDS, len_words);
++	bcm_qspi_write(qspi, BSPI, BSPI_RAF_WATERMARK, 0);
++	if (qspi->soc_intc) {
++		/*
++		 * clear soc MSPI and BSPI interrupts and enable
++		 * BSPI interrupts.
++		 */
++		soc_intc->bcm_qspi_int_ack(soc_intc, MSPI_BSPI_DONE);
++		soc_intc->bcm_qspi_int_set(soc_intc, BSPI_DONE, true);
++	}
 =20
- 	status &=3D INTR_BSPI_LR_SESSION_DONE_MASK;
-diff --git a/drivers/spi/spi-bcm-qspi.h b/drivers/spi/spi-bcm-qspi.h
-index 01aec6460108..b68e275bc721 100644
---- a/drivers/spi/spi-bcm-qspi.h
-+++ b/drivers/spi/spi-bcm-qspi.h
-@@ -48,7 +48,8 @@ enum {
- 	MSPI_DONE =3D 0x1,
- 	BSPI_DONE =3D 0x2,
- 	BSPI_ERR =3D 0x4,
--	MSPI_BSPI_DONE =3D 0x7
-+	MSPI_BSPI_DONE =3D 0x7,
-+	BSPI_FIFO_FULL =3D 0x8
- };
+-		/* set msg return length */
+-		addr +=3D rdlen;
+-		len -=3D rdlen;
+-	} while (len);
++	/* Must flush previous writes before starting BSPI operation */
++	mb();
++	bcm_qspi_bspi_lr_start(qspi);
++	if (!wait_for_completion_timeout(&qspi->bspi_done, timeo)) {
++		dev_err(&qspi->pdev->dev, "timeout waiting for BSPI\n");
++		ret =3D -ETIMEDOUT;
++	}
 =20
- struct bcm_qspi_soc_intc {
-@@ -84,6 +85,8 @@ static inline u32 get_qspi_mask(int type)
- 		return INTR_MSPI_DONE_MASK;
- 	case BSPI_DONE:
- 		return BSPI_LR_INTERRUPTS_ALL;
-+	case BSPI_FIFO_FULL:
-+		return INTR_BSPI_LR_FULLNESS_REACHED_MASK;
- 	case MSPI_BSPI_DONE:
- 		return QSPI_INTERRUPTS_ALL;
- 	case BSPI_ERR:
+ 	return ret;
+ }
 --=20
 2.27.0
 
