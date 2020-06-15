@@ -2,139 +2,117 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C076C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7C920679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="HgSEGdz0"
+	by mail.kernel.org (Postfix) with ESMTP id E19CF20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592222491;
+	bh=bckLxMEKq0w5/9SzJe+n69vU2/hXF7ff/hu/a17+8+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DR7H+QF7ojJfDYI7ZqC3QEUFsLu/efH9/sXXR69NvStB4oWWKBLdbzChjlth7PI7J
+	 TTG9tklxGReuRumOM1yWQL59X3d85fSte5ucXWEvVGJwWXH1MElkVowWldYo4jyrBL
+	 9yMD8wPbDlYRIMBy5074haZkUHET+uZkvbI022Dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgFOMBL (ORCPT
+        id S1729830AbgFOMB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:01:11 -0400
-Received: from mail-eopbgr80054.outbound.protection.outlook.com ([40.107.8.54]:18182
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729787AbgFOMBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:01:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m7bxfFQ6mJOqEtFJcZTPFYgRxK1bpK7aIh8pWHx1TCbKE8vOo4MrWWoP9kXhjGOp9CUq5xV1UMEcJxltw8R7IxFEb8oFRWx0D0puw8MqxQ03KLPQl6WQv4qIFCfMCicxhIA39wB6RQk472bwgCrve7J5PL5DtBVIhNOfkVy9T4yuJuIKniw/rHP+5M9w2VIp9miytNC2auDvzPvJCGahMZz/xN65fyGGybGfNMGfWmZQ8hTUvkHr9RiSe8Tt3UafETapLqcN/Y/tWIx2xLPRjJffoOA5Bt9QMVIu2c4EXc7qnQFFUSAe5y7F1o8hJZA7GU90EBeoQUkBekSsnF2OhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F3Yf5utQw3QcyZtnfxkbrJv1MWgqFnzFMVoguWS9B6I=;
- b=YqgyRc75zbnpRTdbD3qeTBjtiIwdOoAOQkUWZ/Nc1PPvh9/un3JHD6OV3FjPopv45efUbFmQUQ6/FOXIPPFMm2LMHq64HfnVFmu0Mxs3vbhLDSVCYg+LrXeBaDiia9+74+6mMRNDYzGjKTiHW+CNL1YPqiPDkWEUu52uHQdkI2eudw3vsL+v2JW+UetQwLpAgwb3POZRcdnSXeEjeH9zhtsPTRX8dUPUSQhPDG8joN2UkB4lHGSuhaXcqDG01cKkW0m+sUUfw/rHVPJePaJhhYZ4vp/vCoMJ8AWb8Jo5XGATRkev6PdVIbWSpjH8rGlXP0OdjuApFvMD+naNFN5h5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 193.240.239.45) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=diasemi.com; dmarc=fail (p=none sp=none pct=100) action=none
- header.from=diasemi.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F3Yf5utQw3QcyZtnfxkbrJv1MWgqFnzFMVoguWS9B6I=;
- b=HgSEGdz0E5NZK3N1SGEc8vBtTxOX1Z1XHKKtfg53guQCNnYrdNgx/Rcy7gM4bqComW+69mugZqM+UnMmTVA15Pyj7XNHSLJQpDhmiEAABfMISB3D8U8OpQNg8VPBC1dbd1QHPSwlNKE420HgRa6Dm+YZe3rTLpROh/+Y7bVENZA=
-Received: from AM6PR0202CA0066.eurprd02.prod.outlook.com
- (2603:10a6:20b:3a::43) by AM0PR10MB2385.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:da::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.26; Mon, 15 Jun
- 2020 12:01:00 +0000
-Received: from HE1EUR02FT005.eop-EUR02.prod.protection.outlook.com
- (2603:10a6:20b:3a:cafe::9e) by AM6PR0202CA0066.outlook.office365.com
- (2603:10a6:20b:3a::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend
- Transport; Mon, 15 Jun 2020 12:01:00 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 193.240.239.45) smtp.mailfrom=diasemi.com; linuxfoundation.org; dkim=none
- (message not signed) header.d=none;linuxfoundation.org; dmarc=fail
- action=none header.from=diasemi.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- diasemi.com discourages use of 193.240.239.45 as permitted sender)
-Received: from mailrelay1.diasemi.com (193.240.239.45) by
- HE1EUR02FT005.mail.protection.outlook.com (10.152.10.99) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.3088.22 via Frontend Transport; Mon, 15 Jun 2020 12:01:00 +0000
-Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Mon, 15 Jun 2020 14:00:57 +0200
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 8C77C13F671; Mon, 15 Jun 2020 21:00:56 +0900 (KST)
-Message-ID: <cover.1592221223.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Mon, 15 Jun 2020 20:40:23 +0900
-Subject: [RESEND PATCH V13 0/3]  da7280: haptic driver submission
-To:     "David S. Miller" <davem@davemloft.net>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
+        Mon, 15 Jun 2020 08:01:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729815AbgFOMB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:01:28 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CB9B20679;
+        Mon, 15 Jun 2020 12:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592222487;
+        bh=bckLxMEKq0w5/9SzJe+n69vU2/hXF7ff/hu/a17+8+c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JYy9uvJD0PYRI2p3DwIotJOPqtgow49a6afHPJvsWcuBY0yjMd4cMirM6pN9r8hnW
+         bAuNvqGDTjO1PYNVybPD0JTt0QO17WOahY67f2Xbvv7ksMXm+vjQWpUNkhQeWo72XL
+         h9meg4DTVT4OxdC2+kMDmPK4hWvZvLhU3rIlMDWM=
+Date:   Mon, 15 Jun 2020 13:01:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Sandy Huang <hjc@rock-chips.com>,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH 13/29] dt: fix broken links due to txt->yaml renames
+Message-ID: <20200615120125.GJ4447@sirena.org.uk>
+References: <cover.1592203542.git.mchehab+huawei@kernel.org>
+ <0e4a7f0b7efcc8109c8a41a2e13c8adde4d9c6b9.1592203542.git.mchehab+huawei@kernel.org>
+ <20200615111927.GC4447@sirena.org.uk>
+ <20200615135739.798f4489@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(396003)(39850400004)(46966005)(478600001)(7416002)(186003)(26005)(4744005)(70206006)(70586007)(36756003)(2906002)(5660300002)(6666004)(42186006)(6266002)(4326008)(82740400003)(33310700002)(82310400002)(8936002)(356005)(110136005)(86362001)(2616005)(336012)(8676002)(36906005)(316002)(81166007)(426003)(54906003)(47076004)(83380400001)(921003);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 73616045-8eb1-461f-48fe-08d81123c564
-X-MS-TrafficTypeDiagnostic: AM0PR10MB2385:
-X-Microsoft-Antispam-PRVS: <AM0PR10MB238547CC1A0B557942651741A29C0@AM0PR10MB2385.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 04359FAD81
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: em725tbdaFM4KyEJ8UaVsDASnhGJBReiAvn0s0nE8Yg0jiv59LUo4zlyOIygO0x7bTdG1sBsL9e/A5oN8TcQ7HxB9nJju5qbY1FcDCiTdvJE4Vv2KBkNuRKfkXDMAZGPMcwp6RyQcmzpzT+zALKxWTBki/ZSJjYxqPMYHxWtghTfNOytMNRLt5Aag3iVNyGZfmRacDOTaxa1fSY4VjwxRo06p858CEfW5mqFFEW6Fy3iExSwFRifGnAu/7ax9aVnyx4m2b6E6R7ec3vJdqEwDfYJAq5b/CavnKzUT7+rm7iybYqpq6qGchQYdcMwVfSHJYmL6NEgicW4n6Iae9ArBJQECZtM23G9iiXDxyU+tJs3UP5RTS4yr4B+3+xlY0ow58Uxb4CRsTQCmqQXLnfBg0PyqYA9UpBfB47B3Zldm6hkB9zuQilbXTEm4y1ETlAi
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 12:01:00.3247
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73616045-8eb1-461f-48fe-08d81123c564
-X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2385
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="va4/JQ6j8/8uipEp"
+Content-Disposition: inline
+In-Reply-To: <20200615135739.798f4489@coco.lan>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-In this patch set the following is provided:
+--va4/JQ6j8/8uipEp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[PATCH V13 1/3] MAINTAINERS file update for DA7280
-[PATCH V13 2/3] DA7280 DT Binding
-[PATCH V13 3/3] DA7280 Driver
+On Mon, Jun 15, 2020 at 01:57:39PM +0200, Mauro Carvalho Chehab wrote:
+> Mark Brown <broonie@kernel.org> escreveu:
+> > On Mon, Jun 15, 2020 at 08:46:52AM +0200, Mauro Carvalho Chehab wrote:
+> > > There are some new broken doc links due to yaml renames
+> > > at DT. Developers should really run: =20
 
-This patch applies against linux-mainline and v5.7
+> > I also previously acked this one in 20200504100822.GA5491@sirena.org.uk.
+> > Has anything changed here to cause the ack to be dropped?
 
-Thank you,
-Roy Im, Dialog Semiconductor Ltd.
+> Both patches are the same. I forgot to add your acks on my tree.=20
 
-Roy Im (3):
-  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
-  dt-bindings: input: Add document bindings for DA7280
-  Input: new da7280 haptic driver
+> My bad!
 
- .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
- MAINTAINERS                                        |    2 +
- drivers/input/misc/Kconfig                         |   13 +
- drivers/input/misc/Makefile                        |    1 +
- drivers/input/misc/da7280.c                        | 1898 ++++++++++++++++++++
- 5 files changed, 2023 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
- create mode 100644 drivers/input/misc/da7280.c
+Ah, no worries - no wonder I couldn't spot the changes!
 
--- 
-end-of-patch for RESEND PATCH V13
+--va4/JQ6j8/8uipEp
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nYxUACgkQJNaLcl1U
+h9AlAAf8D93i17Pj7T800BmwJ3UUHzaiQeRYZFSyfjkXbmviTRnh3rTP+7Rx/Rqe
+83+UeFeMR/Rn18FzLvpCjXuZ1LTbEsOj7/3vkvecKW+LQy/oHwTsTr09Im4vI0h2
+9r3wxGGCXOU+EPu2c9ZT3j+Sp9yhWheTN0ym70YLHDtJuat1Bjw96kBQF8vpo1d9
+AGTB8NOjhstg/4Z+dZYlx5NhdbG4f5qV9zkkVGyZJ1xcdrgs60KfolFrCfTtUG2X
+qRm7RhGf/Rum0bhUG8lvkRaJGz9+Wh9eQA3JUHItfxFEvpM1scwlHJrBTxo7fP9y
+ytZ9j2PBRG+rP5iCMbibBf7cKbhhMg==
+=xi26
+-----END PGP SIGNATURE-----
+
+--va4/JQ6j8/8uipEp--
