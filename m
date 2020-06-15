@@ -2,194 +2,117 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A53920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UuQNu1Vk"
+	by mail.kernel.org (Postfix) with ESMTP id 4FDDB20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgFOMEH (ORCPT
+        id S1729787AbgFOMFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:04:07 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:28697 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729901AbgFOMEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:04:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592222644; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=QCrhzPNRagZPoPcvT0UlcO4juzReClh5S3OpNy2dFX8=; b=UuQNu1VkkHL5/Ie0WjpWQ9Squscpu18Nls0IktGeY/9i+ZdXG7ZNmZgJiIDH1QmypI2Qdie0
- kdFIt6Up3Ku9WwJEDLcU03puuWrjYFw70eqYdUu12VgYgsEw8iwrt3NuyrON5SkAxT+X9ARW
- DQhLU+7eR5cErW7pHX3E5+QqX/o=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5ee7638a8fe116ddd92fa8a8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 12:03:22
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E4AB8C433AD; Mon, 15 Jun 2020 12:03:21 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02551C433C8;
-        Mon, 15 Jun 2020 12:03:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02551C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org, robdclark@gmail.com,
-        robdclark@chromium.org, stanimir.varbanov@linaro.org
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org, mka@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org
-Subject: [PATCH v6 3/6] drm/msm/dpu: Use OPP API to set clk/perf state
-Date:   Mon, 15 Jun 2020 17:32:41 +0530
-Message-Id: <1592222564-13556-4-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+        Mon, 15 Jun 2020 08:05:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12264 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728510AbgFOMFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:05:03 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FB5Lut027139;
+        Mon, 15 Jun 2020 08:04:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31mua645xr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:04:57 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FBhtnf016311;
+        Mon, 15 Jun 2020 08:04:56 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31mua645wp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:04:56 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FC1aVK012672;
+        Mon, 15 Jun 2020 12:04:54 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7ufwe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 12:04:54 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FC4qoe56098948
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 12:04:52 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 187FC4C050;
+        Mon, 15 Jun 2020 12:04:52 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FAF94C052;
+        Mon, 15 Jun 2020 12:04:51 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.184.141])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 15 Jun 2020 12:04:51 +0000 (GMT)
+Date:   Mon, 15 Jun 2020 14:04:50 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Stefano Brivio <sbrivio@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] bitmap: Add test for bitmap_cut()
+Message-ID: <20200615120449.GA28317@oc3871087118.ibm.com>
+References: <cover.1592155364.git.sbrivio@redhat.com>
+ <5fc45e6bbd4fa837cd9577f8a0c1d639df90a4ce.1592155364.git.sbrivio@redhat.com>
+ <20200615094155.GQ2428291@smile.fi.intel.com>
+ <20200615094616.GS2428291@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615094616.GS2428291@smile.fi.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ spamscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ clxscore=1011 adultscore=0 mlxscore=0 suspectscore=0 phishscore=0
+ priorityscore=1501 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some qualcomm platforms DPU needs to express a performance state
-requirement on a power domain depending on the clock rates.
-Use OPP table from DT to register with OPP framework and use
-dev_pm_opp_set_rate() to set the clk/perf state.
+On Mon, Jun 15, 2020 at 12:46:16PM +0300, Andy Shevchenko wrote:
+> On Mon, Jun 15, 2020 at 12:41:55PM +0300, Andy Shevchenko wrote:
+> > On Sun, Jun 14, 2020 at 07:40:54PM +0200, Stefano Brivio wrote:
+> > > Inspired by an original patch from Yury Norov: introduce a test for
+> > > bitmap_cut() that also makes sure functionality is as described for
+> > > partially overlapping src and dst.
+> > 
+> > Taking into account recent fixes for BE 64-bit, do we have test cases for a such?
+> 
+> It might be enough to have only these, but perhaps s390 guys can help?
+> 
+> Alexander, can you apply this patch (w/o the first one, which is suppose to
+> fix) and confirm that you have test case failure, followed by applying first
+> one and confirm a fix?
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: dri-devel@lists.freedesktop.org
----
-No functional change in v6, rebased over 5.8-rc1
+This failure goes away when patch #1 is applied:
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 26 +++++++++++++++++++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++++
- 3 files changed, 31 insertions(+), 2 deletions(-)
+test_bitmap: [lib/test_bitmap.c:666] bitmaps contents differ: expected "0-16,18-19,21,24,26-27,29", got "1,3-4,6,9,11-12,14,16,18-19,21,24,26-27,29"
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-index 7c230f7..b36919d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-@@ -7,6 +7,7 @@
- #include <linux/debugfs.h>
- #include <linux/errno.h>
- #include <linux/mutex.h>
-+#include <linux/pm_opp.h>
- #include <linux/sort.h>
- #include <linux/clk.h>
- #include <linux/bitmap.h>
-@@ -218,7 +219,7 @@ static int _dpu_core_perf_set_core_clk_rate(struct dpu_kms *kms, u64 rate)
- 		rate = core_clk->max_rate;
- 
- 	core_clk->rate = rate;
--	return msm_dss_clk_set_rate(core_clk, 1);
-+	return dev_pm_opp_set_rate(&kms->pdev->dev, core_clk->rate);
- }
- 
- static u64 _dpu_core_perf_get_core_clk_rate(struct dpu_kms *kms)
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index b8615d4..0bc8ec4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -10,6 +10,7 @@
- #include <linux/debugfs.h>
- #include <linux/dma-buf.h>
- #include <linux/of_irq.h>
-+#include <linux/pm_opp.h>
- 
- #include <drm/drm_crtc.h>
- #include <drm/drm_file.h>
-@@ -1025,11 +1026,23 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
- 	if (!dpu_kms)
- 		return -ENOMEM;
- 
-+	dpu_kms->opp_table = dev_pm_opp_set_clkname(dev, "core");
-+	if (IS_ERR(dpu_kms->opp_table))
-+		return PTR_ERR(dpu_kms->opp_table);
-+	/* OPP table is optional */
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (!ret) {
-+		dpu_kms->has_opp_table = true;
-+	} else if (ret != -ENODEV) {
-+		dev_err(dev, "invalid OPP table in device tree\n");
-+		return ret;
-+	}
-+
- 	mp = &dpu_kms->mp;
- 	ret = msm_dss_parse_clock(pdev, mp);
- 	if (ret) {
- 		DPU_ERROR("failed to parse clocks, ret=%d\n", ret);
--		return ret;
-+		goto err;
- 	}
- 
- 	platform_set_drvdata(pdev, dpu_kms);
-@@ -1043,6 +1056,11 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
- 
- 	priv->kms = &dpu_kms->base;
- 	return ret;
-+err:
-+	if (dpu_kms->has_opp_table)
-+		dev_pm_opp_of_remove_table(dev);
-+	dev_pm_opp_put_clkname(dpu_kms->opp_table);
-+	return ret;
- }
- 
- static void dpu_unbind(struct device *dev, struct device *master, void *data)
-@@ -1057,6 +1075,10 @@ static void dpu_unbind(struct device *dev, struct device *master, void *data)
- 
- 	if (dpu_kms->rpm_enabled)
- 		pm_runtime_disable(&pdev->dev);
-+
-+	if (dpu_kms->has_opp_table)
-+		dev_pm_opp_of_remove_table(dev);
-+	dev_pm_opp_put_clkname(dpu_kms->opp_table);
- }
- 
- static const struct component_ops dpu_ops = {
-@@ -1082,6 +1104,8 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
- 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
- 	struct dss_module_power *mp = &dpu_kms->mp;
- 
-+	/* Drop the performance state vote */
-+	dev_pm_opp_set_rate(dev, 0);
- 	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
- 	if (rc)
- 		DPU_ERROR("clock disable failed rc:%d\n", rc);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-index a3b122b..7400cd7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-@@ -128,6 +128,10 @@ struct dpu_kms {
- 
- 	struct platform_device *pdev;
- 	bool rpm_enabled;
-+
-+	struct opp_table *opp_table;
-+	bool has_opp_table;
-+
- 	struct dss_module_power mp;
- 
- 	/* reference count bandwidth requests, so we know when we can
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thus, I confirm.
 
+[...]
+
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
