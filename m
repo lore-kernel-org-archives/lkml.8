@@ -2,119 +2,86 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC58C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 798822067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ERmnc3yE"
+	by mail.kernel.org (Postfix) with ESMTP id 025372067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592203638;
+	bh=7qmR8GAEeT/HyWInRqjOFODKX4hWvVvEZ3KnPLaLfu8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aFXRwi68Ewlxk8NwqYrMKMvGRKCBVuzC+1cGwD92TLHtkYhYFtMbEj9KKHkfsF5Nq
+	 uKMizoWfadPyjbJXmvLtbzQfT0p8wWF9PnMf8EKxgdoR5Ya0m8AuhkF0GSNGUstmAr
+	 LaqMALBVf9cjb0EABXa6fnKYRtjD+SFXRRsYqfQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgFOGq7 (ORCPT
+        id S1728498AbgFOGrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:46:59 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:61278 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgFOGq6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:46:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592203619; x=1623739619;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=n9xEj1S1zm4BAv1ix2dtneBn+lmgT67gEX3XKW8QTbY=;
-  b=ERmnc3yEwYl8tzzIYK8C7Ml+QTVP6m2OVPRXXEk4ClfuCCIi1h/l2c27
-   h2aH/sL0p0qcAmyL52UmzeuNb4Izk5zcA4k9K5ghzIoGlbKQ4B6imUohF
-   T0GMo8wPtC8CI1KUn0hmxSOHK9bsLWQOBdCflyxbHoy7OoZZLhJzeUEVV
-   Q=;
-IronPort-SDR: CKYfCodys5a2jbgE+Cga2MzmUs8G9bh61AkZVN7lNVFObrSjZNlvWjx0Mxh0En0ObCNn5Ps/xx
- S3PfG+xdyHCA==
-X-IronPort-AV: E=Sophos;i="5.73,514,1583193600"; 
-   d="scan'208";a="43948403"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 15 Jun 2020 06:46:56 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 63D97A1E5D;
-        Mon, 15 Jun 2020 06:46:55 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 15 Jun 2020 06:46:54 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.214) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 15 Jun 2020 06:46:49 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     Jiri Slaby <jslaby@suse.cz>, Michael Ellerman <mpe@ellerman.id.au>,
-        SeongJae Park <sjpark@amazon.com>,
-        Joe Perches <joe@perches.com>, <akpm@linux-foundation.org>,
-        <apw@canonical.com>, SeongJae Park <sjpark@amazon.de>,
-        <colin.king@canonical.com>, <sj38.park@gmail.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v4 0/2] Recommend denylist/allowlist instead of blacklist/whitelist
-Date:   Mon, 15 Jun 2020 08:46:31 +0200
-Message-ID: <20200615064631.18910-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200615061208.GA31489@amd> (raw)
+        Mon, 15 Jun 2020 02:47:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728210AbgFOGrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:47:12 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A628206E2;
+        Mon, 15 Jun 2020 06:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592203631;
+        bh=7qmR8GAEeT/HyWInRqjOFODKX4hWvVvEZ3KnPLaLfu8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YwhLzj2CBnvjvXd8yOqK6WSXkAS6EnviVDgsd6EdB1A/ItFFoagyKNAIclg5W5k/D
+         hE+yIm6T394yPh6WlWvd016bTy88UT2Zv5k1nME3SE3ahKCjZ8GlWQ5TrsMWL1jppF
+         nUZiWUsa9meKsvB5lCeHkVh6uc9h5hLtenyb0jEY=
+Received: from mchehab by mail.kernel.org with local (Exim 4.93)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jkith-009nm4-E1; Mon, 15 Jun 2020 08:47:09 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 02/29] net: dev: add a missing kernel-doc annotation
+Date:   Mon, 15 Jun 2020 08:46:41 +0200
+Message-Id: <bd7a3ba69612d73bb91b3602f486084b1f518145.1592203542.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1592203542.git.mchehab+huawei@kernel.org>
+References: <cover.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.214]
-X-ClientProxiedBy: EX13D10UWA001.ant.amazon.com (10.43.160.216) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 08:12:08 +0200 Pavel Machek <pavel@ucw.cz> wrote:
+The dev argument was not listed at kernel-doc markup:
 
-> 
-> [-- Attachment #1: Type: text/plain, Size: 1115 bytes --]
-> 
-> On Mon 2020-06-15 06:21:43, Jiri Slaby wrote:
-> > On 14. 06. 20, 23:29, Pavel Machek wrote:
-> 
-> > >> It's not like blacklist / whitelist are even good to begin with, it's
-> > >> not obvious which is which, you have to learn that black is bad and
-> > >> white is good.
-> > >>
-> > >> Blocklist (or denylist?) and allowlist are actually more descriptive and
-> > >> less likely to cause confusion.
-> > > 
-> > > You do not understand how word "blacklist" is used inside the kernel,
-> > > do you? Do a quick grep.
+	./net/core/dev.c:7878: warning: Function parameter or member 'dev' not described in 'netdev_get_xmit_slave'
 
-I of course did grep of the terms before making this patchset.  There are so
-many uses of the term, and therefore I thought it would be very hard and
-painful to replace the whole words.  Of course, I also found some miuse of the
-terms and therefore I thought automatic scripting for the replacement also
-wouldn't make sense.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ net/core/dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-That's why I made gives only warning to future patches.   What this patch aims
-to do is avoiding the further spread of the terms, and incremental replacements
-to better terms, rather than the one point buggy and risky replacement.
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 6bc2388141f6..972ce594dd47 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7898,6 +7898,7 @@ EXPORT_SYMBOL(netdev_bonding_info_change);
+ 
+ /**
+  * netdev_get_xmit_slave - Get the xmit slave of master device
++ * @dev: device
+  * @skb: The packet
+  * @all_slaves: assume all the slaves are active
+  *
+-- 
+2.26.2
 
-> > 
-> > And now, do the same for "blocklist".
-> > 
-> > And is "denylist" a proper word? As grep gives zarro results...
-> > 
-> > It's not that easy to find alternatives. OTOH, admittedly, "blacklist"
-> > is used improperly in some contexts. Some synonyms fit better.
-> 
-> Well, many of the uses is "list of hardware that needs particular
-> workaround" or "list of hardware that is broken in some
-> way"... Neither 'blocklist' nor 'denylist' fit that usage.
-
-Agreed, 'denylist' would also not fit in there.  That said, this patchset will
-warn even such case so that people can think once again and find better term.
-So, I agree this patch is imperfect for many cases, but better than nothing.
-
-
-Thanks,
-SeongJae Park
