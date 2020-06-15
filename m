@@ -2,148 +2,187 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86669C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65A7A2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D24420644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRxkgdzs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xy2S1HP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbgFOOsm (ORCPT
+        id S1730503AbgFOOuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
+        Mon, 15 Jun 2020 10:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730476AbgFOOsk (ORCPT
+        with ESMTP id S1728304AbgFOOui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:48:40 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69523C061A0E;
-        Mon, 15 Jun 2020 07:48:39 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id c8so18137913iob.6;
-        Mon, 15 Jun 2020 07:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CFYHq9QU1VF3rchooKVX3EvDkFFGgQYVgoX+nSdXTuc=;
-        b=PRxkgdzs6hj4NpKjLdU4+mZo+kiLgpl3v8qO3FUtkLItVntqN/v1UtTbvyh1fAkJDQ
-         /r/QUNFX0i3kNhar6p3HMQRIc0/hnPpxSyfCSOk/7QGhSriP8dugDYCbD3NVmr3r39T+
-         L0RU8h1FEoVzRUIqiHPXWetm4KkkvOZ8sZuPa8pJIZPJbfJz9/qmImf4Haoxykq/U+Wm
-         z0McY86vBdXb73lWVCJytm+tusWr8I6JfrKJ++433fcbFQ7IdZZfKn+gl9mRtO93JHfb
-         KS+ugwQDy31DiZDXPTjkRurzgAFvHZ4Gbe2s6FFN7LQGjbdA1Klosmt+SwHoidzFhQqC
-         XkJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CFYHq9QU1VF3rchooKVX3EvDkFFGgQYVgoX+nSdXTuc=;
-        b=gu9PBb2xVGRKsDeAvPl9dTwQsZgQo83ED5+xLkeqKLebPGrluehaGJyzD5Rog37869
-         LNj/HGqUyMaGNCUgXT9+XI9PEnVluj/BcfKm0wxHhbU/ioq3FO+/ZNrlkPKvcb/ya5yY
-         JsM93Nk4l4fGc5QIJft26rXR6n8qQamrRMInu3+WjuwcIKpfBeFbga9nuAHF2Qe0I90i
-         Ec0UT8XIXr5COHFwYhXQF74UzQm/MUxiNlFJIphd5FbuvrIbfU5pXTi3x4uu9LfQC4Zr
-         hQGVdXPJPsPJdcMxMR8tjNSFkOnVbTQvGpljZ1CIZ6pUew1wb1E7Ot8Erpy96GGBxyam
-         q5Gg==
-X-Gm-Message-State: AOAM5300G7d+CpmXZt7VC/rgKW4r+5pLQX89/wkvCN3fmcBqLrzWnYbP
-        TUFgxN7kWSNPd5Vw3QkzK3q0J/YecSriAkDCuE//
-X-Google-Smtp-Source: ABdhPJyd6RZmdZpxGVu6c3gRb+Y3l0bsTdnHuSOZYnX1P537cI9jfkNEPZLpydEoTLgL6kUKfHIZe+3b9Hy/JybhE4I=
-X-Received: by 2002:a02:3501:: with SMTP id k1mr6072971jaa.133.1592232518583;
- Mon, 15 Jun 2020 07:48:38 -0700 (PDT)
+        Mon, 15 Jun 2020 10:50:38 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BB4C061A0E;
+        Mon, 15 Jun 2020 07:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=F/uU9124WJoifhY4Z3glA8wwsDguMo5Cs74nr5r2OjQ=; b=Xy2S1HP53FrZsAIYTmdcWPuTkU
+        OUWmp0MzkvZbEbMZEVcLa+s7ukh3INOD8DDdNPNuYEFHMrSMmOxY22yZntiL8dZJzhweWcD5hv5yB
+        Y8FP8+vbiVE2JWfyOhZD4XJmjkBZyB+0Ce+yr+YLz2jZY1OGfUyjiZpVPHKD0ckOXRgUfhQ+qjW6T
+        8t7o3Nk03//hCmB5KgUUmAQvh73g+M2d/BieZZ8O/AlZENpEkbPKbkZDGPw8OE1FiWoReiKQUofmi
+        qCsa4t/1rDBnd3MLEb5vtVy6SFdmQvooLDGk2Zz3K9v5u7gsNX3wvHI65Joxu1cqp1oJGQvNp4Sn/
+        z0he5udA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkqRH-0006rj-N7; Mon, 15 Jun 2020 14:50:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8747D3010C8;
+        Mon, 15 Jun 2020 16:50:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6E317203D48BF; Mon, 15 Jun 2020 16:50:18 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 16:50:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
+Subject: Re: [tip: x86/entry] x86/entry: Treat BUG/WARN as NMI-like entries
+Message-ID: <20200615145018.GU2531@hirez.programming.kicks-ass.net>
+References: <f8fe40e0088749734b4435b554f73eee53dcf7a8.1591932307.git.luto@kernel.org>
+ <159199140855.16989.18012912492179715507.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-References: <20200615130032.931285-1-hch@lst.de> <20200615130032.931285-3-hch@lst.de>
- <CAK8P3a0bRD3RzE_X6Tjzu9Tj+OhHhP+S=k6+VYODBGko8oQhew@mail.gmail.com> <20200615141239.GA12951@lst.de>
-In-Reply-To: <20200615141239.GA12951@lst.de>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Mon, 15 Jun 2020 10:48:26 -0400
-Message-ID: <CAMzpN2heSzZzg16ws3yQkd7YZwmPPx_4RFCpb9JYfFWJ9gfPhA@mail.gmail.com>
-Subject: Re: [PATCH 2/6] exec: simplify the compat syscall handling
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159199140855.16989.18012912492179715507.tip-bot2@tip-bot2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:13 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Mon, Jun 15, 2020 at 03:31:35PM +0200, Arnd Bergmann wrote:
-> > >  #ifdef CONFIG_COMPAT
-> > > -       if (unlikely(argv.is_compat)) {
-> > > +       if (in_compat_syscall()) {
-> > > +               const compat_uptr_t __user *compat_argv =
-> > > +                       compat_ptr((unsigned long)argv);
-> > >                 compat_uptr_t compat;
-> > >
-> > > -               if (get_user(compat, argv.ptr.compat + nr))
-> > > +               if (get_user(compat, compat_argv + nr))
-> > >                         return ERR_PTR(-EFAULT);
-> > >
-> > >                 return compat_ptr(compat);
-> > >         }
-> > >  #endif
-> >
-> > I would expect that the "#ifdef CONFIG_COMPAT" can be removed
-> > now, since compat_ptr() and in_compat_syscall() are now defined
-> > unconditionally. I have not tried that though.
->
-> True, I'll give it a spin.
->
-> > > +/*
-> > > + * x32 syscalls are listed in the same table as x86_64 ones, so we need to
-> > > + * define compat syscalls that are exactly the same as the native version for
-> > > + * the syscall table machinery to work.  Sigh..
-> > > + */
-> > > +#ifdef CONFIG_X86_X32
-> > >  COMPAT_SYSCALL_DEFINE3(execve, const char __user *, filename,
-> > > -       const compat_uptr_t __user *, argv,
-> > > -       const compat_uptr_t __user *, envp)
-> > > +                      const char __user *const __user *, argv,
-> > > +                      const char __user *const __user *, envp)
-> > >  {
-> > > -       return do_compat_execve(AT_FDCWD, getname(filename), argv, envp, 0);
-> > > +       return do_execveat(AT_FDCWD, getname(filename), argv, envp, 0, NULL);
-> > >  }
-> >
-> > Maybe move it to arch/x86/kernel/process_64.c or arch/x86/entry/syscall_x32.c
-> > to keep it out of the common code if this is needed.
->
-> I'd rather keep it in common code as that allows all the low-level
-> exec stuff to be marked static, and avoid us growing new pointless
-> compat variants through copy and paste.
-> smart compiler to d
->
-> > I don't really understand
-> > the comment, why can't this just use this?
->
-> That errors out with:
->
-> ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1040): undefined reference to
-> `__x32_sys_execve'
-> ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1108): undefined reference to
-> `__x32_sys_execveat'
-> make: *** [Makefile:1139: vmlinux] Error 1
+On Fri, Jun 12, 2020 at 07:50:08PM -0000, tip-bot2 for Andy Lutomirski wrote:
+> +DEFINE_IDTENTRY_RAW(exc_invalid_op)
+>  {
+> +	bool rcu_exit;
+> +
+> +	/*
+> +	 * Handle BUG/WARN like NMIs instead of like normal idtentries:
+> +	 * if we bugged/warned in a bad RCU context, for example, the last
+> +	 * thing we want is to BUG/WARN again in the idtentry code, ad
+> +	 * infinitum.
+> +	 */
+> +	if (!user_mode(regs) && is_valid_bugaddr(regs->ip)) {
 
-I think I have a fix for this, by modifying the syscall wrappers to
-add an alias for the __x32 variant to the native __x64_sys_foo().
-I'll get back to you with a patch.
+vmlinux.o: warning: objtool: exc_invalid_op()+0x47: call to probe_kernel_read() leaves .noinstr.text section
 
---
-Brian Gerst
+> +		enum bug_trap_type type;
+> +
+> +		nmi_enter();
+> +		instrumentation_begin();
+> +		trace_hardirqs_off_finish();
+> +		type = report_bug(regs->ip, regs);
+> +		if (regs->flags & X86_EFLAGS_IF)
+> +			trace_hardirqs_on_prepare();
+> +		instrumentation_end();
+> +		nmi_exit();
+> +
+> +		if (type == BUG_TRAP_TYPE_WARN) {
+> +			/* Skip the ud2. */
+> +			regs->ip += LEN_UD2;
+> +			return;
+> +		}
+> +
+> +		/*
+> +		 * Else, if this was a BUG and report_bug returns or if this
+> +		 * was just a normal #UD, we want to continue onward and
+> +		 * crash.
+> +		 */
+> +	}
+> +
+> +	rcu_exit = idtentry_enter_cond_rcu(regs);
+> +	instrumentation_begin();
+>  	handle_invalid_op(regs);
+> +	instrumentation_end();
+> +	idtentry_exit_cond_rcu(regs, rcu_exit);
+>  }
+
+
+For now something like so will do, but we need a DEFINE_IDTENTRY_foo()
+for the whole:
+
+	if (user_mode()) {
+		rcu = idtentry_enter_cond_rcu()
+		foo_user()
+		idtentry_exit_cond_rcu(rcu);
+	} else {
+		nmi_enter();
+		foo_kernel()
+		nmi_exit()
+	}
+
+thing, we're repeating that far too often.
+
+
+---
+
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index af75109485c26..a47e74923c4c8 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -218,21 +218,22 @@ static inline void handle_invalid_op(struct pt_regs *regs)
+ 
+ DEFINE_IDTENTRY_RAW(exc_invalid_op)
+ {
+-	bool rcu_exit;
+-
+ 	/*
+ 	 * Handle BUG/WARN like NMIs instead of like normal idtentries:
+ 	 * if we bugged/warned in a bad RCU context, for example, the last
+ 	 * thing we want is to BUG/WARN again in the idtentry code, ad
+ 	 * infinitum.
+ 	 */
+-	if (!user_mode(regs) && is_valid_bugaddr(regs->ip)) {
+-		enum bug_trap_type type;
++	if (!user_mode(regs)) {
++		enum bug_trap_type type = BUG_TRAP_TYPE_NONE;
+ 
+ 		nmi_enter();
+ 		instrumentation_begin();
+ 		trace_hardirqs_off_finish();
+-		type = report_bug(regs->ip, regs);
++
++		if (is_valid_bugaddr(regs->ip))
++			type = report_bug(regs->ip, regs);
++
+ 		if (regs->flags & X86_EFLAGS_IF)
+ 			trace_hardirqs_on_prepare();
+ 		instrumentation_end();
+@@ -249,13 +250,16 @@ DEFINE_IDTENTRY_RAW(exc_invalid_op)
+ 		 * was just a normal #UD, we want to continue onward and
+ 		 * crash.
+ 		 */
+-	}
++		handle_invalid_op(regs);
++	} else {
++		bool rcu_exit;
+ 
+-	rcu_exit = idtentry_enter_cond_rcu(regs);
+-	instrumentation_begin();
+-	handle_invalid_op(regs);
+-	instrumentation_end();
+-	idtentry_exit_cond_rcu(regs, rcu_exit);
++		rcu_exit = idtentry_enter_cond_rcu(regs);
++		instrumentation_begin();
++		handle_invalid_op(regs);
++		instrumentation_end();
++		idtentry_exit_cond_rcu(regs, rcu_exit);
++	}
+ }
+ 
+ DEFINE_IDTENTRY(exc_coproc_segment_overrun)
+
+
