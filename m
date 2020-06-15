@@ -2,122 +2,120 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D7AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB282068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1103C206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="T0HTIX/I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hee7HZ6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbgFOJ4C (ORCPT
+        id S1729582AbgFOJ47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:56:02 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:15679 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729562AbgFOJz6 (ORCPT
+        Mon, 15 Jun 2020 05:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728369AbgFOJ47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:55:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592214958; x=1623750958;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=692fkDEuh1BmOmtP0c+bSMMGsuxUEiPJurUSSpS4uUw=;
-  b=T0HTIX/IsF43+IXO3T2hh9t9SO2bvYXEwHHl70lgPjBfuwPv5G+WnAe1
-   ks4zqFwCOFRjWmYsY1pdCU8yoMwWHQx4lzNWVIkKplfa/KOnoaArEs6KO
-   m14K4xE07F3FZlmwqeMnVXXsduc9uOBzGeslWeUomUxiOXkUJqopWQ3s0
-   zLGT73xYJjOiJrpQXvFJZiCWiWRrArgnkZz7yEtBF5RXEySKep7d/dWPC
-   LFjb3F6+vKNSlCXALZchIf4o6Fmpz0jvhq0OjETLbOk/ljKE9UCVFWV/H
-   JGt2Wf4ROU0tKDYlLjRwDMof069dueDZ0jj8mN79wtACufCjwPAbUxS0D
-   w==;
-IronPort-SDR: rLYBr+VslBxEOPYBjxUKEiYArqrXdl9kzqgrpURDyTHV2dKN/ngSX3uyqdBTUkBqCkl/1lr0xw
- BrLv8RVagFWn3O4YnP872q1Mh8APTyh86pbT858yl0HVl+FTLRdCiyCxL6Dsbqa2XDa9ruKkGN
- gN3PUdg8PZPxdyuXLzock7a4rHmjYn7p7zAflOPDYIXnlpe/MXcM3RrJ27RF8G0E9EPJfYIFvU
- /3f9df31Sd7y4Hb2IMxza02O8Be5Cc/J2f0v8eNdcezxJZ3Ktx/VszckxGyYgIaCjBXyFzkb6J
- 2eo=
-X-IronPort-AV: E=Sophos;i="5.73,514,1583218800"; 
-   d="scan'208";a="76588062"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jun 2020 02:55:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 15 Jun 2020 02:55:40 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 15 Jun 2020 02:55:40 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        <claudiu.beznea@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 3/3] Revert "ARM: at91/dt: sama5d2 Xplained: add pdmic node"
-Date:   Mon, 15 Jun 2020 12:55:25 +0300
-Message-ID: <20200615095525.43414-3-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
-References: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
+        Mon, 15 Jun 2020 05:56:59 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8E6C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:56:58 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id q25so14181597wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jsEUyoBTDZqiVYB9PCZ1vVhMpPe0f/z8iobsEEaUCw4=;
+        b=hee7HZ6p8is7oxi8Go4xvjyiDZzsY/Q+zce2fLd0aZKNQ4xq9xxZXaeTFvZyTHGx0u
+         We48FXH41ePPSmjgZtYxZYcJb0Uoa/nkYeRcJwhhzBMu/ML0l51V3qHJrUedtxhKHlys
+         107STx4b3Qbby2dqKQ7s734eMiKgDM8Z8rj5YjQBw6JEQtdpwkUCBsRq+MpToxj2hGS5
+         ZRBBucPpuY/Kf7Qps9hGJoxtK4BqnKR6bebmikQszNyf5LMJtRI3AW5e8Yeov2as/M87
+         m01CbnP9fo+lblePdhg+zIrzirypT1fqvxlRcTLiNoxzFTl4p/OkfyAZSC7k7NmGFEKI
+         jR0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jsEUyoBTDZqiVYB9PCZ1vVhMpPe0f/z8iobsEEaUCw4=;
+        b=bbRso443lbz+sKIX3Os5ubyrqYA51k5pWVftEeEQhXJNvYs8alZ3CVp3qo9jUmPPUa
+         X1PJ0UY1cldpgiDd7jRQfU92nWJ+l2K8fXcn78LjBly+tdH1Mo+g4Kb/VSkeTPVUk288
+         mAsscvTlg7UTwBeggdaju4ul8EuonixY63Ae7809N/9F6+ahk6B0yFJ82a32UUr3ib8W
+         vbYUHbK1S416B4sPbRRMhb9JPJ4NESrXyeI52jtEFBKG5+Aku5IfQlWvBrw4tMvvc9G3
+         UBPZ7Z+CtC9I5e6XfOWjx+dhhdm6dk+aAmlFTAxoL6NYIE3HCRFaqSl1Hx+2Qy/b50ti
+         Z+0g==
+X-Gm-Message-State: AOAM531j1es6B+sVfCUPdp0+sU+NzIimIm7hCrpYaKTkvkTlXmLQZYEg
+        VVf3un5YyPxH8aeqEQN1y2J/vg==
+X-Google-Smtp-Source: ABdhPJxZKKismQou/hvN0RyW10M0LOdtR9H7U0D3onGtbD82lRgrB1A+y0Judglrp+oKwjLU5BgKcw==
+X-Received: by 2002:a1c:4c12:: with SMTP id z18mr12843943wmf.155.1592215017188;
+        Mon, 15 Jun 2020 02:56:57 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id t7sm22347837wrq.41.2020.06.15.02.56.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 02:56:56 -0700 (PDT)
+Subject: Re: [RFC v2 2/3] drivers: nvmem: Add QTI qfprom-efuse support
+To:     Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org, saiprakash.ranjan@codeaurora.org,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org
+References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
+ <1591868882-16553-3-git-send-email-rbokka@codeaurora.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <39ad93ee-236d-0e5e-571a-28ef91173309@linaro.org>
+Date:   Mon, 15 Jun 2020 10:56:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <1591868882-16553-3-git-send-email-rbokka@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no PDM microphones on SAMA5D2 Xplained, to exercize the
-PDMIC.
 
-This reverts commit ca6349a8c51f2e3d6f2acdb36431e7d7328261f7.
+I think Doug already covered most of the comments and his fixes seems be 
+in right direction.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 16 ----------------
- 1 file changed, 16 deletions(-)
+On 11/06/2020 10:48, Ravi Kumar Bokka wrote:
+> +	qfpraw = platform_get_resource_byname(pdev, IORESOURCE_MEM, "raw");
+> +
+> +	priv->qfpraw = devm_ioremap_resource(dev, qfpraw);
+> +	if (IS_ERR(priv->qfpraw)) {
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 54d96649da77..c0a255bda477 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -109,16 +109,6 @@ timer1: timer@1 {
- 				};
- 			};
- 
--			pdmic@f8018000 {
--				pinctrl-names = "default";
--				pinctrl-0 = <&pinctrl_pdmic_default>;
--				atmel,model = "PDMIC @ sama5d2_xplained";
--				atmel,mic-min-freq = <1000000>;
--				atmel,mic-max-freq = <3246000>;
--				atmel,mic-offset = <0x0>;
--				status = "okay";
--			};
--
- 			uart1: serial@f8020000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_uart1_default>;
-@@ -533,12 +523,6 @@ pinctrl_macb0_phy_irq: macb0_phy_irq {
- 					bias-disable;
- 				};
- 
--				pinctrl_pdmic_default: pdmic_default {
--					pinmux = <PIN_PB26__PDMIC_DAT>,
--						<PIN_PB27__PDMIC_CLK>;
--					bias-disable;
--				};
--
- 				pinctrl_sdmmc0_default: sdmmc0_default {
- 					cmd_data {
- 						pinmux = <PIN_PA1__SDMMC0_CMD>,
--- 
-2.25.1
+General comment for up-streaming is that your patch should not break 
+whats in mainline, Your patch is totally ignoring!! Please be mindful 
+while doing changes to drivers which are used by other platforms.
 
+--srini
+> +		ret = PTR_ERR(priv->qfpraw);
+> +		goto err;
+> +	}
+> +
+> +	qfpconf = platform_get_resource_byname(pdev, IORESOURCE_MEM, "conf");
+> +
+> +	priv->qfpconf = devm_ioremap_resource(dev, qfpconf);
+> +	if (IS_ERR(priv->qfpconf)) {
+> +		ret = PTR_ERR(priv->qfpconf);
+> +		goto err;
+> +	}
+> +
+> +	qfpcorrected = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						    "corrected");
+> +
+> +	priv->qfpcorrected = devm_ioremap_resource(dev, qfpcorrected);
+> +	if (IS_ERR(priv->qfpcorrected)) {
+> +		ret = PTR_ERR(priv->qfpcorrected);
+> +		goto err;
+> +	}
