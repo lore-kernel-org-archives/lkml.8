@@ -2,127 +2,118 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5C812078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03732078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:47:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ed8Hh6W1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zw0j7ZxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgFONq6 (ORCPT
+        id S1730105AbgFONrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729666AbgFONqx (ORCPT
+        Mon, 15 Jun 2020 09:47:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59011 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728326AbgFONrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:46:53 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265ADC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:46:52 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id w1so15712280qkw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5fbwAPFhj/t9OUXsbkBLa2lLyWbmpKqf/KaN0uZtDRI=;
-        b=ed8Hh6W19/qv58dB6PJ+JDjl39VwebBT6j8EE97r3JHHDfwiJzt2hWVj16rCe6/VyG
-         TGS6SE6ptiPexO04eKRNwcc2SavSPpI4Y+CNvCCPSLOeqvoWAFB5eirFpEK6+oB0wHHn
-         YzrrGXXq34tALTQcvCQ5jV7jNVPV1gaoA7dxV+Ww8bCsTfAxqZWkLH2X+TRnp6v1UY/n
-         5HvDJCpObIPTLoiUUvWm+Bh/6YdsUHOii7rZ0rTYrZCnagGu2eBunuySbs4KjAKcsich
-         MHcryQhOUqxOkk25chIvq/NKjlr7ebKpn+uV5+YAUDcny6vx0EfBF5i2EahuqiwvnIGH
-         ZLNA==
+        Mon, 15 Jun 2020 09:47:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592228819;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=weheyMNu1Wo9nH5YiVxVjdHICGi6lkG7Hb/LLVN60N8=;
+        b=Zw0j7ZxWNF5lSzy/gI1kz1S3IJ/u/tbSx0SFBt7vS4p7LVgA8nx8W84udzj5l2uvmYNTMm
+        eRQdy03rUrUjfWe64M34CFwMxpMcjieqshHzUIcZ0/cjbcdx9lR0KmAjkn7+Q7QR1uCpH1
+        t2j76xX+k7y2PYn8rDW2TuagxWVQdMA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-119-hek48vVTNTK0XxJq1sFTWg-1; Mon, 15 Jun 2020 09:46:56 -0400
+X-MC-Unique: hek48vVTNTK0XxJq1sFTWg-1
+Received: by mail-wm1-f72.google.com with SMTP id 11so4955126wmj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:46:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5fbwAPFhj/t9OUXsbkBLa2lLyWbmpKqf/KaN0uZtDRI=;
-        b=rAjc3FwNUGj3KQU5m/NO0DW6f/z2PXXaj2no0caT5c1UAYzXukbPSqgTtVT98GBBy/
-         kib7ouFwbF92qO0w55qJlenTiVTP0N359hhQDVcgLSyco1boHJ+QFS8R4Ul4w+tAg+sD
-         pCvGzDH02yfgqbx2HeQhE7qXL1A78FQUBdGS5RuMt7AMXLpj1rwES3dVCCi0lmgmLhxM
-         6+U/4jg26I2L5LXiID/1uJoGrzCNwQSvNKqAKCE4EtbNCGscXVPp2IJLpNY2hTdXhQzC
-         IdD9MXXyho6ZcNAeErB8Gu32IabkfYbgGoaUNgx2CXSDFXiREbmuk9udsmKJDKh0eD4t
-         KvRA==
-X-Gm-Message-State: AOAM532yJKtScOx8xZTzvPDinZezvz8VEbrRTCz/Zf4+h2NddXTcdAyJ
-        max8rlsw64VHi4E/z+n3Te2eqg==
-X-Google-Smtp-Source: ABdhPJySxHjK9XxwDJnFQN4DvhgJhASkwz/NHGoO8h3oIBKNCRR+t8iWEXyH5O1Z018vigBdL2M9HQ==
-X-Received: by 2002:a37:bfc1:: with SMTP id p184mr15321144qkf.207.1592228811377;
-        Mon, 15 Jun 2020 06:46:51 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id 124sm10100237qkn.45.2020.06.15.06.46.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 06:46:50 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jkpRq-008aTM-EI; Mon, 15 Jun 2020 10:46:50 -0300
-Date:   Mon, 15 Jun 2020 10:46:50 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     refactormyself@gmail.com
-Cc:     helgaas@kernel.org, bjorn@helgaas.com, skhan@linuxfoundation.org,
-        linux-pci@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8 v2] PCI: Align return values of PCIe capability and
- PCI accessors
-Message-ID: <20200615134650.GA2030477@ziepe.ca>
-References: <20200615073225.24061-1-refactormyself@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=weheyMNu1Wo9nH5YiVxVjdHICGi6lkG7Hb/LLVN60N8=;
+        b=NciSR44f/MKNeu9u9gIlyiHda54AlTLIcIAhd62tLbwp9f29ZnR9MnBlO8CWFe33hO
+         fOJCs92GIzN0v9wcXwfx8bQmzAfrGTtjHRZmAjOuaO/q6bv1+HON0o0MpXW1Kf92QJJC
+         V32OEtwsFSltarfT0lJTSHVqeOEXq65+wh7i+O/GxhOTq5S06NJqjTSRMojQtNCm5y5K
+         2/sI3g3/1MK1bpZ0qlxQkCcHS12aFAhi1FcRG4Y4+WZyHafNYttn01uyUr3HUPvZpaf3
+         82R79QL8qRUJ/nTpJUXCIdNSAHAW/swhK4m413njCqFn81KyF2rfsL2P5AGyXvH/qyP8
+         shfQ==
+X-Gm-Message-State: AOAM531eyJiJXp7CrWEr6bXGjKG96w5x8BSy4/TumAMSh58JVx0czU+v
+        GcdXuUcZ5W1JTcVqGACKfelZiXW3GjiHqsBC0d2gyKYYgg4o7u1A6BzoDEASfnps4tPLeOoN1+1
+        VSezMBSxoBhduFg+ehCpAyZBm
+X-Received: by 2002:a5d:4488:: with SMTP id j8mr28281428wrq.242.1592228815044;
+        Mon, 15 Jun 2020 06:46:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz08cj7iJ9yvZ/uENIDqMPzdJxASRATbeR9Y8pLU9H+iaXbLfMqZsJsrO1NZQZnvvXuWuEUAw==
+X-Received: by 2002:a5d:4488:: with SMTP id j8mr28281411wrq.242.1592228814812;
+        Mon, 15 Jun 2020 06:46:54 -0700 (PDT)
+Received: from [192.168.178.58] ([151.48.99.33])
+        by smtp.gmail.com with ESMTPSA id w3sm24300473wmg.44.2020.06.15.06.46.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 06:46:54 -0700 (PDT)
+Subject: Re: [PATCH 3/3] KVM:SVM: Enable INVPCID feature on AMD
+To:     Jim Mattson <jmattson@google.com>, Babu Moger <babu.moger@amd.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>
+References: <159191202523.31436.11959784252237488867.stgit@bmoger-ubuntu>
+ <159191213022.31436.11150808867377936241.stgit@bmoger-ubuntu>
+ <CALMp9eSC-wwP50gtprpakKjPYeZ5LdDSFS6i__csVCJwUKmqjA@mail.gmail.com>
+ <d0b09992-eb87-651a-3b97-0787e07cc46d@amd.com>
+ <CALMp9eRZQXgJvt3MGreq47ApM5ObTU7YFQV_GcY5N+jozGK1Uw@mail.gmail.com>
+ <d0c38022-2d82-aacc-4829-02c557edddc0@amd.com>
+ <CALMp9eSn36W=YK5XtaVATJis-J--udGK4ZOESDhYyT0zJ4YZ9A@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4f5a7fca-02b3-4cd9-159c-59fcda3debd0@redhat.com>
+Date:   Mon, 15 Jun 2020 15:46:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615073225.24061-1-refactormyself@gmail.com>
+In-Reply-To: <CALMp9eSn36W=YK5XtaVATJis-J--udGK4ZOESDhYyT0zJ4YZ9A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 09:32:17AM +0200, refactormyself@gmail.com wrote:
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+On 13/06/20 02:04, Jim Mattson wrote:
+>> I think I have misunderstood this part. I was not inteding to change the
+>> #GP behaviour. I will remove this part. My intension of these series is to
+>> handle invpcid in shadow page mode. I have verified that part. Hope I did
+>> not miss anything else.
+> You don't really have to intercept INVPCID when tdp is in use, right?
+> There are certainly plenty of operations for which kvm does not
+> properly raise #UD when they aren't enumerated in the guest CPUID.
 > 
-> 
-> PATCH 1/8 to 7/8:
-> PCIBIOS_ error codes have positive values and they are passed down the
-> call heirarchy from accessors. For functions which are meant to return
-> only a negative value on failure, passing on this value is a bug.
-> To mitigate this, call pcibios_err_to_errno() before passing on return
-> value from PCIe capability accessors call heirarchy. This function
-> converts any positive PCIBIOS_ error codes to negative generic error
-> values.
-> 
-> PATCH 8/8:
-> The PCIe capability accessors can return 0, -EINVAL, or any PCIBIOS_ error
-> code. The pci accessor on the other hand can only return 0 or any PCIBIOS_
-> error code.This inconsistency among these accessor makes it harder for
-> callers to check for errors.
-> Return PCIBIOS_BAD_REGISTER_NUMBER instead of -EINVAL in all PCIe
-> capability accessors.
-> 
-> MERGING:
-> These may all be merged via the PCI tree, since it is a collection of
-> similar fixes. This way they all get merged at once.
 
-I prefer this not happen for active trees, it just risks needless
-merge conflicts.
+Indeed; for RDRAND and RDSEED it makes sense to do so because the
+instructions may introduce undesirable nondeterminism (or block all the
+packages in your core as they have been doing for a few weeks).
+Therefore on Intel we trap them and raise #UD; on AMD this is not
+possible because RDRAND has no intercept.
 
-I will take the hfi1 patches at least, let me know when they are
-reviewed
+In general however we do not try to hard to raise #UD and that is
+usually not even possible.
 
-Thanks,
-Jason
+Paolo
+
