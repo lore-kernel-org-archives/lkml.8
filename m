@@ -2,146 +2,267 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A976C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB50CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15D9120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592214701;
-	bh=VQSsnQX35sR5TfD+RN9LG5tzaQw22yankU/+xU93cY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nrYU+qV3BqohK3bZ5z1WmvbelPVuw5b2cO3qaoPPoBxHG+BZf+rSlBtLES0XU9Bcs
-	 UMwYTCyIYAtIYKxay7V0z9Rj0iW7/4FO80Od6j7/bMWns4o9j9FxCOW0jkwIBp/o10
-	 Fp9d292QQLQRSXUCCsx3udijKpXuv2eC+qjQvrTQ=
+	by mail.kernel.org (Postfix) with ESMTP id 80CF22068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:53:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xmKPwogw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgFOJvj (ORCPT
+        id S1729331AbgFOJxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46706 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 05:53:30 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:20318 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgFOJvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:51:39 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726111AbgFOJx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 05:53:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592214808; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=AcM6wYXYL7+z9tqZXnp+xr440BzLjC8GvmsSWxFeCMM=; b=xmKPwogwgR4H6LNS9kvPtlSCdZK2OOM1E8DzNP+WUoCcLS8B0OytcLv0rLw53kPbva97yPn3
+ 90VzutEC5I1VBFytMMWbJ7TVjVAhvtYbbfzII3e/0H3/l0lWkV/QshEHvO579yQZBfwn1/fA
+ L2f+aQlw9Qw6gOM2yEVmi0y3nW8=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5ee74514567385e8e71efe04 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 09:53:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76795C433CB; Mon, 15 Jun 2020 09:53:23 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 473972068E;
-        Mon, 15 Jun 2020 09:51:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592214698;
-        bh=VQSsnQX35sR5TfD+RN9LG5tzaQw22yankU/+xU93cY4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NQlHIN8i1uqF1tHVpoAL5v8g7CDhJAeOmA5A4ZAFG/9WAYr0bA3PhhvfkIL4Y7/Ou
-         f9FQVRO5Ig4MDP3DfzPHGzWExA+gt3xKXnkuw3xtrvsmBqYDns3yZXwM6Ccwytdxom
-         9D7nTIyyyknQuA1HM6+iRJOwaNtrKorByKA5bYhg=
-Date:   Mon, 15 Jun 2020 10:51:34 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Achin Gupta <achin.gupta@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, nd <nd@arm.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: Add ARM PSA FF binding for
- non-secure VM partitions
-Message-ID: <20200615095133.GA2477@willie-the-truck>
-References: <20200601094512.50509-1-sudeep.holla@arm.com>
- <20200601094512.50509-2-sudeep.holla@arm.com>
- <20200609223551.GA1620273@bogus>
- <20200610074346.GB15939@willie-the-truck>
- <5B3F18A4-5DA4-411E-9E26-7D25DEE3D414@arm.com>
- <20200611171222.GB7725@willie-the-truck>
- <20200615091639.GD46361@C02TC1ARHF1T>
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8076AC433CA;
+        Mon, 15 Jun 2020 09:53:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8076AC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Mon, 15 Jun 2020 15:23:16 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Satya Tangirala <satyat@google.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [PATCH] f2fs: fix use-after-free when accessing
+ bio->bi_crypt_context
+Message-ID: <20200615095316.GB2916@codeaurora.org>
+References: <1592193588-21701-1-git-send-email-stummala@codeaurora.org>
+ <20200615050019.GA3100@sol.localdomain>
+ <20200615061633.GA23467@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615091639.GD46361@C02TC1ARHF1T>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200615061633.GA23467@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:16:39AM +0100, Achin Gupta wrote:
-> On Thu, Jun 11, 2020 at 06:12:23PM +0100, Will Deacon wrote:
-> > On Thu, Jun 11, 2020 at 03:46:35PM +0000, Achin Gupta wrote:
-> > > > On 10 Jun 2020, at 08:43, Will Deacon <will@kernel.org> wrote:
-> > > > On Tue, Jun 09, 2020 at 04:35:51PM -0600, Rob Herring wrote:
-> > > >> On Mon, Jun 01, 2020 at 10:45:10AM +0100, Sudeep Holla wrote:
-> > > >>> Add devicetree bindings for a Arm PSA FF-A compliant non-secure partition
-> > > >>> at virtual interface(VMs).
-> > > >>>
-> > > >>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > > >>> ---
-> > > >>> .../devicetree/bindings/arm/arm,psa-ffa.txt   | 47 +++++++++++++++++++
-> > > >>> 1 file changed, 47 insertions(+)
-> > > >>> create mode 100644 Documentation/devicetree/bindings/arm/arm,psa-ffa.txt
-> > > >>
-> > > >> I'm hoping this goes away if the firmware is discoverable, but if not DT
-> > > >> bindings are DT schema now.
-> > > >
-> > > > We'll need the binding for the kvm host side, because there are plenty
-> > > > of partition properties that are not discoverable (e.g. number of vCPUs).
-> > >
-> > > Just trying to understand the req. a bit better…
-> > >
-> > > The FF-A driver in the host can use FFA_PARTITION_INFO_GET to determine
-> > > the count of partitions and their vCPUs.
-> > >
-> > > Is this about a guest being able to find out how many vCPUs it has?
-> >
-> > This is about KVM finding out the information it needs in order to spawn
-> > non-secure partitions. I don't see how it can do that with
-> > FFA_PARTITION_INFO_GET -- who would respond?
+Hi Satya,
+
+On Mon, Jun 15, 2020 at 06:16:33AM +0000, Satya Tangirala wrote:
+> On Sun, Jun 14, 2020 at 10:00:19PM -0700, Eric Biggers wrote:
+> > On Mon, Jun 15, 2020 at 09:29:48AM +0530, Sahitya Tummala wrote:
+> > > There could be a potential race between these two paths below,
+> > > leading to use-after-free when accessing bio->bi_crypt_context.
+> > > 
+> > > f2fs_write_cache_pages
+> > > ->f2fs_do_write_data_page on page#1
+> > >   ->f2fs_inplace_write_data
+> > >     ->f2fs_merge_page_bio
+> > >       ->add_bio_entry
+> > > ->f2fs_do_write_data_page on page#2
+> > >   ->f2fs_inplace_write_data
+> > >     ->f2fs_merge_page_bio
+> > >       ->f2fs_crypt_mergeable_bio
+> > >         ->fscrypt_mergeable_bio
+> > >   				       f2fs_write_begin on page#1
+> > > 				       ->f2fs_wait_on_page_writeback
+> > > 				         ->f2fs_submit_merged_ipu_write
+> > > 					   ->__submit_bio
+> > > 					The bio gets completed, calling
+> > > 					bio_endio
+> > > 					->bio_uninit
+> > > 					  ->bio_crypt_free_ctx
+> > > 	  ->use-after-free issue
+> > > 
+> > > Fix this by moving f2fs_crypt_mergeable_bio() check within
+> > > add_ipu_page() so that it's done under bio_list_lock to prevent
+> > > the above race.
+> > > 
+> > > Fixes: 15e76ad23e72 ("f2fs: add inline encryption support")
+> > > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> > > ---
+> > > This fix is rebased to the tip of fscrypt git -
+> > > https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git
+> > > branch - inline-encryption
+> > > 
+> > >  fs/f2fs/data.c | 26 ++++++++++++++++++--------
+> > >  1 file changed, 18 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> > > index 0dfa8d3..3b53554 100644
+> > > --- a/fs/f2fs/data.c
+> > > +++ b/fs/f2fs/data.c
+> > > @@ -762,9 +762,10 @@ static void del_bio_entry(struct bio_entry *be)
+> > >  	kmem_cache_free(bio_entry_slab, be);
+> > >  }
+> > >  
+> > > -static int add_ipu_page(struct f2fs_sb_info *sbi, struct bio **bio,
+> > > -							struct page *page)
+> > > +static int add_ipu_page(struct f2fs_io_info *fio, struct bio **bio,
+> > > +				struct page *page, int *bio_needs_submit)
+> > >  {
+> > > +	struct f2fs_sb_info *sbi = fio->sbi;
+> > >  	enum temp_type temp;
+> > >  	bool found = false;
+> > >  	int ret = -EAGAIN;
+> > > @@ -780,6 +781,15 @@ static int add_ipu_page(struct f2fs_sb_info *sbi, struct bio **bio,
+> > >  				continue;
+> > >  
+> > >  			found = true;
+> > > +			if (*bio && (!page_is_mergeable(sbi, *bio,
+> > > +					*fio->last_block, fio->new_blkaddr) ||
+> > > +				    !f2fs_crypt_mergeable_bio(*bio,
+> > > +					  fio->page->mapping->host,
+> > > +					  fio->page->index, fio))) {
+> > > +				ret = 0;
+> > > +				*bio_needs_submit = 1;
+> > > +				break;
+> > > +			}
+> > >  
+> > >  			if (bio_add_page(*bio, page, PAGE_SIZE, 0) ==
+> > >  							PAGE_SIZE) {
+> > > @@ -864,6 +874,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+> > >  	struct bio *bio = *fio->bio;
+> > >  	struct page *page = fio->encrypted_page ?
+> > >  			fio->encrypted_page : fio->page;
+> > > +	int bio_needs_submit = 0;
+> > >  
+> > >  	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
+> > >  			__is_meta_io(fio) ? META_GENERIC : DATA_GENERIC))
+> > > @@ -872,11 +883,6 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+> > >  	trace_f2fs_submit_page_bio(page, fio);
+> > >  	f2fs_trace_ios(fio, 0);
+> > >  
+> > > -	if (bio && (!page_is_mergeable(fio->sbi, bio, *fio->last_block,
+> > > -				       fio->new_blkaddr) ||
+> > > -		    !f2fs_crypt_mergeable_bio(bio, fio->page->mapping->host,
+> > > -					      fio->page->index, fio)))
+> > > -		f2fs_submit_merged_ipu_write(fio->sbi, &bio, NULL);
+> > >  alloc_new:
+> > >  	if (!bio) {
+> > >  		bio = __bio_alloc(fio, BIO_MAX_PAGES);
+> > > @@ -886,8 +892,12 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+> > >  
+> > >  		add_bio_entry(fio->sbi, bio, page, fio->temp);
+> > >  	} else {
+> > > -		if (add_ipu_page(fio->sbi, &bio, page))
+> > > +		if (add_ipu_page(fio, &bio, page, &bio_needs_submit))
+> > > +			goto alloc_new;
+> > > +		if (bio_needs_submit) {
+> > > +			f2fs_submit_merged_ipu_write(fio->sbi, &bio, NULL);
+> > >  			goto alloc_new;
+> > > +		}
+> > >  	}
+> > >  
+> > >  	if (fio->io_wbc)
+> > 
+> > Thanks, I'm still trying to understand this part of the code, but it's looking
+> > like this is a real bug.  Do you also have a reproducer that produces a KASAN
+> > report, or did you find this another way?
+> > 
+> > One comment: add_ipu_page() already submits the bio if it's full.  Wouldn't it
+> > be better to use that instead of f2fs_submit_merged_ipu_write()?  I.e.:
+> > 
+> > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> > index e9dcda80e599..d7a51dbe208b 100644
+> > --- a/fs/f2fs/data.c
+> > +++ b/fs/f2fs/data.c
+> > @@ -762,9 +762,10 @@ static void del_bio_entry(struct bio_entry *be)
+> >  	kmem_cache_free(bio_entry_slab, be);
+> >  }
+> >  
+> > -static int add_ipu_page(struct f2fs_sb_info *sbi, struct bio **bio,
+> > +static int add_ipu_page(struct f2fs_io_info *fio, struct bio **bio,
+> >  							struct page *page)
+> >  {
+> > +	struct f2fs_sb_info *sbi = fio->sbi;
+> >  	enum temp_type temp;
+> >  	bool found = false;
+> >  	int ret = -EAGAIN;
+> > @@ -780,14 +781,18 @@ static int add_ipu_page(struct f2fs_sb_info *sbi, struct bio **bio,
+> >  				continue;
+> >  
+> >  			found = true;
+> > -
+> > -			if (bio_add_page(*bio, page, PAGE_SIZE, 0) ==
+> > -							PAGE_SIZE) {
+> > +			if (page_is_mergeable(sbi, *bio, *fio->last_block,
+> > +					      fio->new_blkaddr) &&
+> > +			    f2fs_crypt_mergeable_bio(*bio,
+> > +						      fio->page->mapping->host,
+> > +						      fio->page->index, fio) &&
+> > +			    bio_add_page(*bio, page,
+> > +					 PAGE_SIZE, 0) == PAGE_SIZE) {
+> >  				ret = 0;
+> >  				break;
+> >  			}
+> >  
+> > -			/* bio is full */
+> > +			/* page can't be merged into bio; submit the bio */
+> >  			del_bio_entry(be);
+> >  			__submit_bio(sbi, *bio, DATA);
+> >  			break;
+> > @@ -872,11 +877,6 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+> >  	trace_f2fs_submit_page_bio(page, fio);
+> >  	f2fs_trace_ios(fio, 0);
+> >  
+> > -	if (bio && (!page_is_mergeable(fio->sbi, bio, *fio->last_block,
+> > -				       fio->new_blkaddr) ||
+> > -		    !f2fs_crypt_mergeable_bio(bio, fio->page->mapping->host,
+> > -					      fio->page->index, fio)))
+> > -		f2fs_submit_merged_ipu_write(fio->sbi, &bio, NULL);
+> >  alloc_new:
+> >  	if (!bio) {
+> >  		bio = __bio_alloc(fio, BIO_MAX_PAGES);
+> > @@ -886,7 +886,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+> >  
+> >  		add_bio_entry(fio->sbi, bio, page, fio->temp);
+> >  	} else {
+> > -		if (add_ipu_page(fio->sbi, &bio, page))
+> > +		if (add_ipu_page(fio, &bio, page))
+> >  			goto alloc_new;
+> >  	}
+> >  
+> Thanks a lot for looking into this Sahitya! After reading the ipu code,
+> I do think it's a bug. Regarding the patch itself, I was going to type
+> out basically the same suggestion as Eric, so I definitely second his
+> proposal :).
 > 
-> Right! FFA_PARTITION_INFO_GET is meant to help the FF-A driver in the kernel to
-> determine partition properties. It assumes that EL2 SW has already read each
-> partition's manifest and will reply to this ABI.
-> 
-> IIUC, with protected KVM, this information will have to be a part of the
-> manifest that the KVM host consumes.
+> Should I fold this change into the original patch? Or keep it as a
+> separate patch when I send out the fscrypt/f2fs inline encryption
+> patches?
 
-The host does not consume the manifest directly -- instead, the bootloader
-will use the manifest to populate these DT nodes. Again, these are *only*
-for non-secure virtual partitions which are to be managed by KVM.
+It may be good to keep it seperate as we already have the base FBE patches in
+several downstream kernels, so this fix can be applied easily. But I will
+leave it up to you to take a call on this.
 
-> But then, can this be made discoverable (use a SMC for discovery) at all as Rob
-> had originally suggested. Firmware (Secure world) has no clue and the bootloader
-> is long gone.
+Thanks,
 
-Make what discoverable?
-
-> Separate topic, protected KVM does not get dibs on the manifest and it relies on
-> the KVM host to specify the address ranges for each partition? Does this not
-> mean that the KVM host can control the physical address space each partition
-> sees. This seems contrary to the isolation guarantees that protected KVM must
-> provide?
-
-The host is trusted during early boot, and gives up this trust after
-initialising EL2 fully. So roughly speaking, we:
-
-	* Boot at EL2 and install a shim
-	* Drop down to EL2 and start the host kernel
-	* Before some initialisation (DT parsing, SMP bringup, etc)
-	* Init KVM by calling back up to EL2 to install the full hypervisor
-
-At that point, the EL1 host is no longer trusted and the last call
-effectively "locks it out" from EL2.
-
-> > But you're right that number of vCPUs was a bad example. We also need
-> > information such as the entry point.
-> 
-> Yes. From a spec perspective this should be specified in the partition manifest
-> unless the base address of the loaded image can be assummed to be the entry
-> point.
-
-Right, but the format of the manifest isn't defined by the spec so I really
-don't think it's something that Linux should be dealing with directly.
-
-Will
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
