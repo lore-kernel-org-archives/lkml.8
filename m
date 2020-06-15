@@ -4,111 +4,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099232065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A07206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgFOJmk (ORCPT
+        id S1728912AbgFOJpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:42:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6942 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728781AbgFOJmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:42:38 -0400
-IronPort-SDR: offu+noN/EwC/fQxuogZJLdlOO1OufjZXxh1p0bgzF+ignXowEcyNErSMb1pmyB1Ebc8aVzF6T
- 80vABSUKY48w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 02:42:38 -0700
-IronPort-SDR: M3NQ27sl+1uzBgjc/0gwl/4D5/lK1lE8ZEDfL9tPW7X8ZCAJIdDSY3J3fkfKQv59xc63JTaRnr
- QTqD6CN/EBvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="475956346"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Jun 2020 02:42:36 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jkldW-00DXOY-VP; Mon, 15 Jun 2020 12:42:38 +0300
-Date:   Mon, 15 Jun 2020 12:42:38 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Stefano Brivio <sbrivio@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] bitmap: Fix bitmap_cut() for partial overlapping case
-Message-ID: <20200615094238.GR2428291@smile.fi.intel.com>
-References: <cover.1592155364.git.sbrivio@redhat.com>
- <003e38d4428cd6091ef00b5b03354f1bd7d9091e.1592155364.git.sbrivio@redhat.com>
+        Mon, 15 Jun 2020 05:45:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17632 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728626AbgFOJpp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 05:45:45 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F82gxE172958;
+        Mon, 15 Jun 2020 05:45:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31nrequ2ck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 05:45:36 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05F9E7dc028852;
+        Mon, 15 Jun 2020 05:45:35 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31nrequ2bt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 05:45:35 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05F9fhkD016949;
+        Mon, 15 Jun 2020 09:45:33 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 31mpe7haxd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 09:45:33 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05F9jU2V57213136
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 09:45:30 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80ACAA4057;
+        Mon, 15 Jun 2020 09:45:30 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1CC9A4055;
+        Mon, 15 Jun 2020 09:45:27 +0000 (GMT)
+Received: from [9.211.71.177] (unknown [9.211.71.177])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 09:45:27 +0000 (GMT)
+Subject: Re: [RFC PATCH V5] GCOV: Add config to check the preqequisites
+ situation
+To:     gengcixi@gmail.com, gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        Cixi Geng <cixi.geng1@unisoc.com>
+References: <20200610021150.19233-1-gengcixi@gmail.com>
+From:   Peter Oberparleiter <oberpar@linux.ibm.com>
+Message-ID: <77484d44-966a-c3a8-cb81-a2c5776dcc23@linux.ibm.com>
+Date:   Mon, 15 Jun 2020 11:45:26 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <003e38d4428cd6091ef00b5b03354f1bd7d9091e.1592155364.git.sbrivio@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200610021150.19233-1-gengcixi@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_01:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ mlxlogscore=999 suspectscore=1 phishscore=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 cotscore=-2147483648
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006150066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 07:40:53PM +0200, Stefano Brivio wrote:
-> Yury Norov reports that bitmap_cut() will not produce the right outcome
-> if src and dst partially overlap, with src pointing at some location
-> after dst, because the memmove() affects src before we store the bits
-> that we need to keep, that is, the bits preceding the cut -- as long as
-> we the beginning of the cut is not aligned to a long.
+On 10.06.2020 04:11, gengcixi@gmail.com wrote:
+> From: Cixi Geng <cixi.geng1@unisoc.com>
 > 
-> Fix this by storing those bits before the memmove().
+> Introduce new configuration option GCOV_PROFILE_PREREQS that can be
+> used to check whether the prerequisites for enabling gcov profiling
+> for specific files and directories are met.
 > 
-> Note that this is just a theoretical concern so far, as the only user
-> of this function, pipapo_drop() from the nftables set back-end
-> implemented in net/netfilter/nft_set_pipapo.c, always supplies entirely
-> overlapping src and dst.
-
-LGTM as long as test cases are passed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Reported-by: Yury Norov <yury.norov@gmail.com>
-> Fixes: 2092767168f0 ("bitmap: Introduce bitmap_cut(): cut bits and shift remaining")
-> Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+> Only add SERIAL_GCOV for an example.
+> 
+> Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
 > ---
-> v2: No changes
+>  drivers/tty/serial/Kconfig  |  8 ++++++++
+>  drivers/tty/serial/Makefile |  1 +
+>  kernel/gcov/Kconfig         | 15 +++++++++++++++
+>  3 files changed, 24 insertions(+)
 > 
->  lib/bitmap.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/bitmap.c b/lib/bitmap.c
-> index 89260aa342d6..c5712e8f4c38 100644
-> --- a/lib/bitmap.c
-> +++ b/lib/bitmap.c
-> @@ -211,13 +211,13 @@ void bitmap_cut(unsigned long *dst, const unsigned long *src,
->  	unsigned long keep = 0, carry;
->  	int i;
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index adf9e80e7dc9..3d7e811d90dc 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1566,3 +1566,11 @@ endmenu
 >  
-> -	memmove(dst, src, len * sizeof(*dst));
-> -
->  	if (first % BITS_PER_LONG) {
->  		keep = src[first / BITS_PER_LONG] &
->  		       (~0UL >> (BITS_PER_LONG - first % BITS_PER_LONG));
->  	}
->  
-> +	memmove(dst, src, len * sizeof(*dst));
+>  config SERIAL_MCTRL_GPIO
+>  	tristate
 > +
->  	while (cut--) {
->  		for (i = first / BITS_PER_LONG; i < len; i++) {
->  			if (i < len - 1)
-> -- 
-> 2.27.0
+> +config SERIAL_GCOV
+> +	bool "Enable profile gcov for serial directory"
+> +	depends on GCOV_PROFILE_PREREQS
+> +	default y if GCOV_PROFILE_PREREQS
+
+I think the choice to enable each specific profiling symbol should not
+be automated based on the PREREQS symbol. This should be a purely manual
+setting with a depends relation on the PREREQS.
+
+The logic should be:
+- if the requirements are met
+- then provide a way for users to manually enable each specific gcov
+  profiling site
+
+Otherwise you would be duplicating the meaning of CONFIG_GCOV_PROFILE_ALL.
+
+> +	help
+> +	  The SERIAL_GCOV will add Gcov profiling flags when kernel compiles.
+> +	  Say 'Y' here if you want the gcov data for the serial directory,
+> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+> index d056ee6cca33..17272733db95 100644
+> --- a/drivers/tty/serial/Makefile
+> +++ b/drivers/tty/serial/Makefile
+> @@ -3,6 +3,7 @@
+>  # Makefile for the kernel serial device drivers.
+>  #
+>  
+> +GCOV_PROFILE := $(CONFIG_SERIAL_GCOV)
+>  obj-$(CONFIG_SERIAL_CORE) += serial_core.o
+>  
+>  obj-$(CONFIG_SERIAL_EARLYCON) += earlycon.o
+> diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
+> index 3941a9c48f83..35b839879553 100644
+> --- a/kernel/gcov/Kconfig
+> +++ b/kernel/gcov/Kconfig
+> @@ -51,6 +51,21 @@ config GCOV_PROFILE_ALL
+>  	larger and run slower. Also be sure to exclude files from profiling
+>  	which are not linked to the kernel image to prevent linker errors.
+>  
+> +config GCOV_PROFILE_PREREQS
+> +	bool "Profile Kernel for prereqs"
+> +	depends on !COMPILE_TEST
+> +	depends on GCOV_KERNEL
+> +	depends on !COMPILE_PROFILE_ALL
+> +	default y if GCOV_KERNEL && !COMPILE_TEST
+
+This mix of depends and "default if" is confusing. As I mentioned in my
+previous e-mail, the "default if" should be sufficient for an automatic
+symbol, so the "depends" statements can be removed.
+
+> +	help
+> +	  This options activates profiling for the specified kernel modules.
+> +
+> +	  When some modules need Gcov data, enable this config, then configure
+> +	  with gcov on the corresponding modules,The directories or files of
+> +	  these modules will be added profiling flags after kernel compile.
+> +
+> +	  If unsure, say N.
+
+What reason is there for a user to manually set this to N? In my opinion
+the only use case where this symbol makes sense is as an automatic
+config symbol that can be used by other symbols that enable specific
+GCOV profiling sites via a "depends" relation. The PREREQ symbol
+indicates that is is ok to provide the manual choice of enabling such
+profiling.
+
+> +
+>  choice
+>  	prompt "Specify GCOV format"
+>  	depends on GCOV_KERNEL
 > 
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Peter Oberparleiter
+Linux on Z Development - IBM Germany
