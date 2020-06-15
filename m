@@ -2,92 +2,109 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24419C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F925C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 016C12068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592220416;
-	bh=AlmSpOqWFZ3eVUddo28omMXWg5/pX1RtU4kaDdyET7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EtsBaCtvAnZW4VEMOqP7+z/MUR6P64/rfjOcrSQNTQvsvzP1mt8IWe3Zpkyc+HxpM
-	 RBa/vdEjCD7VcNmidtLpXj2iucWompgEjUfRr6xLJQ06WIPIMKEsYFfrUESDlUbBAv
-	 qM0YGUCRCKmj+R7zY7w3AGnTv8PaY+r0XRWw4I1o=
+	by mail.kernel.org (Postfix) with ESMTP id 472BC20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgFOL0z (ORCPT
+        id S1729677AbgFOL2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgFOL0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:26:54 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E56320663;
-        Mon, 15 Jun 2020 11:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592220413;
-        bh=AlmSpOqWFZ3eVUddo28omMXWg5/pX1RtU4kaDdyET7g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rCqYlNq36hQrO/FMlpkCvgwlh5vXvjqZmEbE+RmhD4GDkiacwgI6qnxCNO+ChR0yD
-         8y9gNq2ola39ObDpUAzuvs1E/xeV3XjBje5IB5bHBO2mOYvXQPJZ9Ovlc+0s5cI9NQ
-         lRrCF3mSJxnx74/2uzMOLmVQioCHQPAPK6vut+lk=
-Date:   Mon, 15 Jun 2020 12:26:51 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        p.zabel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/4] spi: bcm63xx: add BMIPS support
-Message-ID: <20200615112651.GD4447@sirena.org.uk>
-References: <20200615080309.2897694-1-noltari@gmail.com>
- <20200615090943.2936839-1-noltari@gmail.com>
+        Mon, 15 Jun 2020 07:28:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4868 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728510AbgFOL2J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 07:28:09 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FA3pFj068854;
+        Mon, 15 Jun 2020 07:27:55 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31n0j7nvds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 07:27:55 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FA4PE5071077;
+        Mon, 15 Jun 2020 07:27:54 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31n0j7nvd2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 07:27:54 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FBPYpe016585;
+        Mon, 15 Jun 2020 11:27:53 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7uech-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 11:27:52 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FBRoJ564291194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 11:27:50 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B9A645204E;
+        Mon, 15 Jun 2020 11:27:50 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.37.25])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 104AF52054;
+        Mon, 15 Jun 2020 11:27:48 +0000 (GMT)
+Subject: Re: 5.8-rc1: new warnings in ext4_mb_new_blocks?
+To:     Pavel Machek <pavel@ucw.cz>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        jack@suse.com, tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org
+References: <20200615073712.GA4164@duo.ucw.cz>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Mon, 15 Jun 2020 16:57:48 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2iBwrppp/7QCDedR"
-Content-Disposition: inline
-In-Reply-To: <20200615090943.2936839-1-noltari@gmail.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200615073712.GA4164@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200615112749.104AF52054@d06av21.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 malwarescore=0 cotscore=-2147483648
+ clxscore=1011 adultscore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
+ mlxscore=0 impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006150082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---2iBwrppp/7QCDedR
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 15, 2020 at 11:09:39AM +0200, =C1lvaro Fern=E1ndez Rojas wrote:
-> BCM63xx SPI and HSSPI controller are present on several BMIPS SoCs (BCM63=
-18,
-> BCM6328, BCM6358, BCM6362, BCM6368 and BCM63268).
+On 6/15/20 1:07 PM, Pavel Machek wrote:
+> Hi!
+> 
+> Booting 5.8-rc1 on x220, I get scary warnings:
+> 
+> [    7.089941] EXT4-fs (sdb2): mounted filesystem with ordered data mode. Opts: errors=remount-ro
+> [    7.343231] BUG: using smp_processor_id() in preemptible [00000000] code: systemd-tmpfile/2788
+> [    7.344052] caller is debug_smp_processor_id+0x17/0x20
+> [    7.344897] CPU: 3 PID: 2788 Comm: systemd-tmpfile Not tainted 5.8.0-rc1+ #116
+> [    7.345745] Hardware name: LENOVO 42872WU/42872WU, BIOS 8DET74WW (1.44 ) 03/13/2018
+> [    7.346561] Call Trace:
+> [    7.347355]  dump_stack+0x60/0x7a
+> [    7.348170]  check_preemption_disabled+0xb1/0xc0
+> [    7.348951]  debug_smp_processor_id+0x17/0x20
+> [    7.349728]  ext4_mb_new_blocks+0x1f2/0x13e0
+> 
+> and they continue after boot.
+> 
 
-Please don't send new versions of patches in reply to old ones, it makes
-it hard to keep track of what's going on and can bury things back in a
-mailbox.
+Below should fix this. I guess it couldn't make it to rc1.
 
---2iBwrppp/7QCDedR
-Content-Type: application/pgp-signature; name="signature.asc"
+https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git/commit/?h=ext4-for-linus-5.8-rc1-2&id=811985365378df01386c3cfb7ff716e74ca376d5
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nWvoACgkQJNaLcl1U
-h9DEdgf/WbsEopffAeHd8Ul9GNjtjCukqiVk2fBTROY4nGzZkGXiw2hSGXwOWTFL
-7ZIYDNMkuLm+VnGjGIYFD9j1b53xYWzG4kC+DrPUzHKAwP2vbsWkG58s9Ey4olxn
-e7bKMD9bpVxmHfQ+/3qwlWeqru+h4qk9s6CwIABjck8TyhjSgEIG4Vz9O/ciECvP
-oFaZ2rH8wiB4K/B+V67gaTcRVG/dw2ZOzIQTZR9e4lX267ICY+vgy/B+x68XdxsX
-vJPd6Kj0OJxtYkv5LObTkn7omVdFOtYUEVjMeENapQ/fQGJX6HEBjV1KyoxE0Vj2
-F2CcPwiKa2XIJ7gAgzfo/V5zzJI5NQ==
-=KHrG
------END PGP SIGNATURE-----
-
---2iBwrppp/7QCDedR--
+-ritesh
