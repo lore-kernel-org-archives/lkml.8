@@ -1,113 +1,111 @@
-Return-Path: <SRS0=Atmy=73=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA379C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98057C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0EC206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 14 Jun 2020 23:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFE420747
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 00:00:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhvRKudN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgFNXem (ORCPT
+        id S1728094AbgFOAA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 19:34:42 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:60206 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbgFNXel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 19:34:41 -0400
-X-Greylist: delayed 13996 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Jun 2020 19:34:40 EDT
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id D5E8B1B599B;
-        Sun, 14 Jun 2020 23:34:34 +0000 (UTC)
-Subject: Re: Good idea to rename files in include/uapi/ ?
-To:     Jan Engelhardt <jengelh@inai.de>,
-        David Howells <dhowells@redhat.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <9feded75-4b45-2821-287b-af00ec5f910f@al2klimov.de>
- <174102.1592165965@warthog.procyon.org.uk>
- <nycvar.YFH.7.77.849.2006142244200.30230@n3.vanv.qr>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <ab88e504-c139-231a-0294-953ffd1a9442@al2klimov.de>
-Date:   Mon, 15 Jun 2020 01:34:33 +0200
+        Sun, 14 Jun 2020 20:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728077AbgFOAA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 20:00:26 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373E6C05BD43;
+        Sun, 14 Jun 2020 17:00:26 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id y13so15527234eju.2;
+        Sun, 14 Jun 2020 17:00:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cSWUfCMQddejc1c7RRGpjS3rAmuSxlqtUFvza+MSr1g=;
+        b=mhvRKudNMLFCDQx9Bzw0xTPRcKsOGzRgJxmQVtOE/VziN0o5i3SHQdXiMYYbVG1yGE
+         Z9EaouRzlS65nGTsI/K7iq743o+UEfdbkDP1I9et3wYAbJ0B9lRoS8wwmlKO7PaClBIJ
+         8QcWkRspcU65WSyrNsYzD09CfqKI8RgPsM7W9EENrnedL29B4SBAB6n8JDS17Tu/HxNU
+         82BSuwpqcg0wQdh3oIEU2PepD7UD0YvwXDJxpE3T9QtrRmP2FXH6catU6qmEvC0Sn3km
+         LWBmx7S16vSpXhKd19CO7hHSSpGToEMaYNr1feYf6oerc0YopJuLgXWrC6PQg0pFDnz8
+         leeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cSWUfCMQddejc1c7RRGpjS3rAmuSxlqtUFvza+MSr1g=;
+        b=A1aGiBwS/yVoz/KE06V6i6s5HhaghrPIaW9k7N4K2gHyKSdbctiBOG3W3EafOejRff
+         DRAAU/Vq32fPwPNGSL5YDBK2n8+LBWAxxDnp+KZQxiK5n8OlTnWKMyUaCpfnNZp/NJXA
+         OY0/adRNuzkEn7WIqPhl4HEkAwZuvBtukbI7FsSgbv8ByP1GA9z6vJUSZASfU82jM2+a
+         fHnWLPp4qsVxsHSXzQmpsnr/SieI7EvX4HVee/qelZm4Pv8F8Ps1Tk122q74r79UvggS
+         rYeblUrz+CInNW1UK6ldE7Urpt24EO+w3+RboCf1E9mVHwzqECj5K4GzwCv7WAu0VuRh
+         baRw==
+X-Gm-Message-State: AOAM533wWmVlvGWbQ1tyyJBjdybQbt3BR+SPN3UbpdACRM2tLDNihBkf
+        uTO5HlJ2qc4AIYVqo91Jv7Y=
+X-Google-Smtp-Source: ABdhPJywGZTxzuIxI8ihSelPF+55JKwRh2GgpBxACZapKckPFlRs7+S7PDx+CcSttHbbWPBujf5ZWQ==
+X-Received: by 2002:a17:906:9381:: with SMTP id l1mr23895119ejx.380.1592179224942;
+        Sun, 14 Jun 2020 17:00:24 -0700 (PDT)
+Received: from localhost.localdomain ([188.24.129.96])
+        by smtp.gmail.com with ESMTPSA id g22sm7825504ejp.0.2020.06.14.17.00.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jun 2020 17:00:23 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] Add initial support for RoseapplePi SBC
+Date:   Mon, 15 Jun 2020 03:00:17 +0300
+Message-Id: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <nycvar.YFH.7.77.849.2006142244200.30230@n3.vanv.qr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset enables basic support for RoseapplePi, relying exclusively
+on the existing infrastructure for the Actions Semi Sxx SoCs (thank you
+Andreas and Manni for making this possible).
 
+The SBC is powered by the Actions Semi S500 SoC and comes with 2GB RAM,
+uSD slot and optional eMMC storage. For more details, please check:
+http://roseapplepi.org/index.php/spec/
 
-Am 14.06.20 um 23:08 schrieb Jan Engelhardt:
-> 
-> On Sunday 2020-06-14 22:19, David Howells wrote:
->> Alexander A. Klimov <grandmaster@al2klimov.de> wrote:
->>
->>> *Is it a good idea to rename files in include/uapi/ ?*
->>
->> Very likely not.  If programs out there are going to be built on a
->> case-sensitive filesystem (which happens all the time), they're going to break
->> if you rename the headers.  We're kind of stuck with them.
-> 
-> Netfilter has precedent for removing old headers, e.g.
-> 7200135bc1e61f1437dc326ae2ef2f310c50b4eb's ipt_ULOG.h.
-> 
-> Even if kernels would not remove such headers, the iptables userspace
-> code wants to be buildable with all kinds of kernels, including past
-> releases, which do not have modern headers like xt_l2tp.h.
-> 
-> The mantra for userspace programs is therefore "copy the headers" —
-> because you never know what /usr/include/linux you get. iptables and
-> iproute2 are two example codebases that employ this. And when headers
-> do get copied, header removals from the kernel side are no longer a
-Absolutely correct, "*when* headers do get copied ..."
+The upcoming patches will improve this initial support by adding the
+missing bits and pieces to the S500 clock management unit, which is a
+prerequisite for providing an S500 pinctrl and gpio driver, in order to
+eventually enable access to additional functionality like I2C and MMC.
 
-> big deal either.
-> 
-> A header file rename is no problem. We even have dummy headers
-Hmm.. if I understand all of you correctly, David, Stefano, Pablo and Al 
-say like no, not a good idea, but only you, Jan, say like should be no 
-problem.
+Thanks and regards,
+Cristian Ciocaltea
 
-Jan, do you have anything like commit messages in mainline or public 
-emails from maintainers confirming your opinion?
-What exactly makes you sure that Torvalds, the #1 protector of the 
-userspace, would tolerate a such patch from me?
-Yes, it would break the A*P*I, and not the A*B*I, but who knows..
+Cristian Ciocaltea (4):
+  arm: dts: owl-s500: Fix incorrect PPI interrupt specifiers
+  dt-bindings: Add vendor prefix for RoseapplePi.org
+  dt-bindings: arm: actions: Document RoseapplePi
+  arm: dts: owl-s500: Add RoseapplePi
 
-> already because of this... or related changes. Just look at
-> xt_MARK.h, all it does is include xt_mark.h. Cf.
-> 28b949885f80efb87d7cebdcf879c99db12c37bd .
-> 
-> The boilerplate for xt_*h is quite high thanks to the miniscule
-> splitting of headers. Does not feel right in this day and age.
-> 
+ .../devicetree/bindings/arm/actions.yaml      |  1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ arch/arm/boot/dts/Makefile                    |  1 +
+ arch/arm/boot/dts/owl-s500-roseapplepi.dts    | 47 +++++++++++++++++++
+ arch/arm/boot/dts/owl-s500.dtsi               |  6 +--
+ 5 files changed, 54 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/owl-s500-roseapplepi.dts
+
+-- 
+2.27.0
+
