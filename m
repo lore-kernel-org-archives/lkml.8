@@ -2,220 +2,207 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2869FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5879AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A443206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315BD206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVl5ljYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbgFOMsx (ORCPT
+        id S1730072AbgFOMut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:48:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52584 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729243AbgFOMsw (ORCPT
+        Mon, 15 Jun 2020 08:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729990AbgFOMu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:48:52 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FC28Lf100516;
-        Mon, 15 Jun 2020 08:48:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31n0mmgrym-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 08:48:17 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FCliTc140971;
-        Mon, 15 Jun 2020 08:48:17 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31n0mmgrxk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 08:48:17 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FCjjwU027102;
-        Mon, 15 Jun 2020 12:48:14 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma01fra.de.ibm.com with ESMTP id 31mpe7hf4m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 12:48:14 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FCmCpK459024
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 12:48:12 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3DC23A4059;
-        Mon, 15 Jun 2020 12:48:12 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD867A4040;
-        Mon, 15 Jun 2020 12:48:08 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.96.47])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon, 15 Jun 2020 12:48:08 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 15 Jun 2020 18:18:07 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v12 0/6] powerpc/papr_scm: Add support for reporting nvdimm health
-In-Reply-To: <20200615122644.31887-1-vaibhav@linux.ibm.com>
-References: <20200615122644.31887-1-vaibhav@linux.ibm.com>
-Date:   Mon, 15 Jun 2020 18:18:07 +0530
-Message-ID: <87bllkh4vs.fsf@linux.ibm.com>
+        Mon, 15 Jun 2020 08:50:28 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0948C05BD1E;
+        Mon, 15 Jun 2020 05:50:28 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ne5so6783058pjb.5;
+        Mon, 15 Jun 2020 05:50:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=CW8sVg3Ki8BPXWoXTIsvDk7MK1hG8/08VLgL06LyYi4=;
+        b=LVl5ljYLSgTAVwIntKBSWNOIq+59AJGhYsMRCv7FgizVBCV9zxPwAYBxWxQZ6xADRy
+         d9ARo/Ao8Gq4lHGuhuUQO634dCgBnH7O+BDc22OpAW3UiD+TtPiC6zskCXfep1rrEYFT
+         waJkS+LySZyNniytxVp83g7ILVl6wK8EoOEcSOxJ+VC7TDDNAAF71YT1XzolXC2RFUVu
+         LZQYzfPELSxdi3bYcBbnOTRwwBahB87UlvBevC6JI3MSIGOIXrzIrjIel1BAB4uE4fKg
+         e+U8RC8uU+ZDLPLRB4jmqk78v6AlRiDMRT48brZ8tM+aC9R3L+1pd4FpP8xtXJBESok/
+         OsMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=CW8sVg3Ki8BPXWoXTIsvDk7MK1hG8/08VLgL06LyYi4=;
+        b=A7UXD/5SSV9Jlo0WwDQ/ku+247uaK3f+v8yPNxQftpSm1Uo2IHtjrnJHCJtfGgPJZG
+         c8bJgjt7HJ+1XU6DYHhep2rjjU2blPoP6Ggidsmu7q4oEuzsZnOexEPhAnth37YGqdxY
+         a4Tpje4TYf4BDyRz0xFObPM/HPaZngztqJWqceyzkrOLND4wJ3TEfhmUaW/lsmSS4Lnr
+         zlV5tl/13VeazlsUFedRmd8RH7/wkrZ8QtA9FDvczXHYe9MZklBw7ktk+dftt70XPM+9
+         2ylReCf7dSdIElt23theiSWIv/JXp7Fxd48CkeKX5u4xmX/On43rMDC8OOvznaoL+33X
+         oB4A==
+X-Gm-Message-State: AOAM530dSnNdsafKotpUmOWsAHG3DqCJXWCxaSOL4V8t2daWtkCv4RYq
+        UJhB6bsEFkuN0G75kFJuC+U=
+X-Google-Smtp-Source: ABdhPJwc22e39iJAlXB5y6rgPIfIw/oKijE5P33N2iVQp4Hj73fH1PvftHb5a+uVHJ1TwJ241w7Udw==
+X-Received: by 2002:a17:902:8e82:: with SMTP id bg2mr22711436plb.198.1592225428192;
+        Mon, 15 Jun 2020 05:50:28 -0700 (PDT)
+Received: from syed ([106.198.128.180])
+        by smtp.gmail.com with ESMTPSA id a10sm12010155pgv.72.2020.06.15.05.50.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 05:50:27 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 18:20:05 +0530
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+To:     linus.walleij@linaro.org, akpm@linux-foundation.org
+Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
+        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        yamada.masahiro@socionext.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v8 0/4] Introduce the for_each_set_clump macro
+Message-ID: <cover.1592224128.git.syednwaris@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- cotscore=-2147483648 suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
- malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006150098
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This accidently got reposted. Please ignore.
+Hello Linus,
 
-v13 version of the patch series located at
-https://lore.kernel.org/linux-nvdimm/20200615124407.32596-1-vaibhav@linux.ibm.com
+Since this patchset primarily affects GPIO drivers, would you like
+to pick it up through your GPIO tree?
+
+This patchset introduces a new generic version of for_each_set_clump. 
+The previous version of for_each_set_clump8 used a fixed size 8-bit
+clump, but the new generic version can work with clump of any size but
+less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
+in several GPIO drivers.
+
+The earlier 8-bit for_each_set_clump8 facilitated a
+for-loop syntax that iterates over a memory region entire groups of set
+bits at a time.
+
+For example, suppose you would like to iterate over a 32-bit integer 8
+bits at a time, skipping over 8-bit groups with no set bit, where
+XXXXXXXX represents the current 8-bit group:
+
+    Example:        10111110 00000000 11111111 00110011
+    First loop:     10111110 00000000 11111111 XXXXXXXX
+    Second loop:    10111110 00000000 XXXXXXXX 00110011
+    Third loop:     XXXXXXXX 00000000 11111111 00110011
+
+Each iteration of the loop returns the next 8-bit group that has at
+least one set bit.
+
+But with the new for_each_set_clump the clump size can be different from 8 bits.
+Moreover, the clump can be split at word boundary in situations where word 
+size is not multiple of clump size. Following are examples showing the working 
+of new macro for clump sizes of 24 bits and 6 bits.
+
+Example 1:
+clump size: 24 bits, Number of clumps (or ports): 10
+bitmap stores the bit information from where successive clumps are retrieved.
+
+     /* bitmap memory region */
+        0x00aa0000ff000000;  /* Most significant bits */
+        0xaaaaaa0000ff0000;
+        0x000000aa000000aa;
+        0xbbbbabcdeffedcba;  /* Least significant bits */
+
+Different iterations of for_each_set_clump:-
+'offset' is the bit position and 'clump' is the 24 bit clump from the
+above bitmap.
+Iteration first:        offset: 0 clump: 0xfedcba
+Iteration second:       offset: 24 clump: 0xabcdef
+Iteration third:        offset: 48 clump: 0xaabbbb
+Iteration fourth:       offset: 96 clump: 0xaa
+Iteration fifth:        offset: 144 clump: 0xff
+Iteration sixth:        offset: 168 clump: 0xaaaaaa
+Iteration seventh:      offset: 216 clump: 0xff
+Loop breaks because in the end the remaining bits (0x00aa) size was less
+than clump size of 24 bits.
+
+In above example it can be seen that in iteration third, the 24 bit clump
+that was retrieved was split between bitmap[0] and bitmap[1]. This example 
+also shows that 24 bit zeroes if present in between, were skipped (preserving
+the previous for_each_set_macro8 behaviour). 
+
+Example 2:
+clump size = 6 bits, Number of clumps (or ports) = 3.
+
+     /* bitmap memory region */
+        0x00aa0000ff000000;  /* Most significant bits */
+        0xaaaaaa0000ff0000;
+        0x0f00000000000000;
+        0x0000000000000ac0;  /* Least significant bits */
+
+Different iterations of for_each_set_clump:
+'offset' is the bit position and 'clump' is the 6 bit clump from the
+above bitmap.
+Iteration first:        offset: 6 clump: 0x2b
+Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
+Here 6 * 3 is clump size * no. of clumps.
+
+Changes in v8:
+ - [Patch 2/4]: Minor change: Use '__initdata' for correct section mismatch
+   in 'clump_test_data' array.
+
+Changes in v7:
+ - [Patch 2/4]: Minor changes: Use macro 'DECLARE_BITMAP()' and split 'struct'
+   definition and test data.
+
+Changes in v6:
+ - [Patch 2/4]: Make 'for loop' inside test_for_each_set_clump more
+   succinct.
+
+Changes in v5:
+ - [Patch 4/4]: Minor change: Hardcode value for better code readability.
+
+Changes in v4:
+ - [Patch 2/4]: Use 'for' loop in test function of for_each_set_clump.
+ - [Patch 3/4]: Minor change: Inline value for better code readability.
+ - [Patch 4/4]: Minor change: Inline value for better code readability.
+
+Changes in v3:
+ - [Patch 3/4]: Change datatype of some variables from u64 to unsigned long
+   in function thunderx_gpio_set_multiple.
+
+CHanges in v2:
+ - [Patch 2/4]: Unify different tests for 'for_each_set_clump'. Pass test data as
+   function parameters.
+ - [Patch 2/4]: Remove unnecessary bitmap_zero calls.
+
+Syed Nayyar Waris (4):
+  bitops: Introduce the for_each_set_clump macro
+  lib/test_bitmap.c: Add for_each_set_clump test cases
+  gpio: thunderx: Utilize for_each_set_clump macro
+  gpio: xilinx: Utilize for_each_set_clump macro
+
+ drivers/gpio/gpio-thunderx.c      |  11 ++-
+ drivers/gpio/gpio-xilinx.c        |  62 ++++++-------
+ include/asm-generic/bitops/find.h |  19 ++++
+ include/linux/bitmap.h            |  61 +++++++++++++
+ include/linux/bitops.h            |  13 +++
+ lib/find_bit.c                    |  14 +++
+ lib/test_bitmap.c                 | 145 ++++++++++++++++++++++++++++++
+ 7 files changed, 291 insertions(+), 34 deletions(-)
 
 
-Vaibhav Jain <vaibhav@linux.ibm.com> writes:
-
-> Changes since v11 [1]:
-> * Minor update to 'papr_pdsm.h' fixing a misleading comment about
->   'possible' padding being added by GCC which doesn't apply in case
->   structs are marked as __packed.
-> * Fix the order of initialization of 'struct nd_papr_pdsm_health' in
->   papr_pdsm_health().
-> * Added acks from Ira for various patches.
->
-> [1] https://lore.kernel.org/linux-nvdimm/20200607131339.476036-1-vaibhav@linux.ibm.com
-> ---
->
-> The PAPR standard[2][4] provides mechanisms to query the health and
-> performance stats of an NVDIMM via various hcalls as described in
-> Ref[3].  Until now these stats were never available nor exposed to the
-> user-space tools like 'ndctl'. This is partly due to PAPR platform not
-> having support for ACPI and NFIT. Hence 'ndctl' is unable to query and
-> report the dimm health status and a user had no way to determine the
-> current health status of a NDVIMM.
->
-> To overcome this limitation, this patch-set updates papr_scm kernel
-> module to query and fetch NVDIMM health stats using hcalls described
-> in Ref[3].  This health and performance stats are then exposed to
-> userspace via sysfs and PAPR-NVDIMM-Specific-Methods(PDSM) issued by
-> libndctl.
->
-> These changes coupled with proposed ndtcl changes located at Ref[5]
-> should provide a way for the user to retrieve NVDIMM health status
-> using ndtcl.
->
-> Below is a sample output using proposed kernel + ndctl for PAPR NVDIMM
-> in a emulation environment:
->
->  # ndctl list -DH
-> [
->   {
->     "dev":"nmem0",
->     "health":{
->       "health_state":"fatal",
->       "shutdown_state":"dirty"
->     }
->   }
-> ]
->
-> Dimm health report output on a pseries guest lpar with vPMEM or HMS
-> based NVDIMMs that are in perfectly healthy conditions:
->
->  # ndctl list -d nmem0 -H
-> [
->   {
->     "dev":"nmem0",
->     "health":{
->       "health_state":"ok",
->       "shutdown_state":"clean"
->     }
->   }
-> ]
->
-> PAPR NVDIMM-Specific-Methods(PDSM)
-> ==================================
->
-> PDSM requests are issued by vendor specific code in libndctl to
-> execute certain operations or fetch information from NVDIMMS. PDSMs
-> requests can be sent to papr_scm module via libndctl(userspace) and
-> libnvdimm (kernel) using the ND_CMD_CALL ioctl command which can be
-> handled in the dimm control function papr_scm_ndctl(). Current
-> patchset proposes a single PDSM to retrieve NVDIMM health, defined in
-> the newly introduced uapi header named 'papr_pdsm.h'. Support for
-> more PDSMs will be added in future.
->
-> Structure of the patch-set
-> ==========================
->
-> The patch-set starts with a doc patch documenting details of hcall
-> H_SCM_HEALTH. Second patch exports kernel symbol seq_buf_printf()
-> thats used in subsequent patches to generate sysfs attribute content.
->
-> Third patch implements support for fetching NVDIMM health information
-> from PHYP and partially exposing it to user-space via a NVDIMM sysfs
-> flag.
->
-> Fourth patch updates papr_scm_ndctl() to handle a possible error case
-> and also improve debug logging.
->
-> Fifth patch deals with implementing support for servicing PDSM
-> commands in papr_scm module.
->
-> Finally the last patch implements support for servicing PDSM
-> 'PAPR_PDSM_HEALTH' that returns the NVDIMM health information to
-> libndctl.
->
-> References:
-> [2] "Power Architecture Platform Reference"
->       https://en.wikipedia.org/wiki/Power_Architecture_Platform_Reference
-> [3] commit 58b278f568f0
->      ("powerpc: Provide initial documentation for PAPR hcalls")
-> [4] "Linux on Power Architecture Platform Reference"
->      https://members.openpowerfoundation.org/document/dl/469
-> [5] https://github.com/vaibhav92/ndctl/tree/papr_scm_health_v12
->
-> ---
->
-> Vaibhav Jain (6):
->   powerpc: Document details on H_SCM_HEALTH hcall
->   seq_buf: Export seq_buf_printf
->   powerpc/papr_scm: Fetch nvdimm health information from PHYP
->   powerpc/papr_scm: Improve error logging and handling papr_scm_ndctl()
->   ndctl/papr_scm,uapi: Add support for PAPR nvdimm specific methods
->   powerpc/papr_scm: Implement support for PAPR_PDSM_HEALTH
->
->  Documentation/ABI/testing/sysfs-bus-papr-pmem |  27 ++
->  Documentation/powerpc/papr_hcalls.rst         |  46 ++-
->  arch/powerpc/include/uapi/asm/papr_pdsm.h     | 125 ++++++
->  arch/powerpc/platforms/pseries/papr_scm.c     | 373 +++++++++++++++++-
->  include/uapi/linux/ndctl.h                    |   1 +
->  lib/seq_buf.c                                 |   1 +
->  6 files changed, 562 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-papr-pmem
->  create mode 100644 arch/powerpc/include/uapi/asm/papr_pdsm.h
->
-> -- 
-> 2.26.2
->
-
+base-commit: 444fc5cde64330661bf59944c43844e7d4c2ccd8
 -- 
-Cheers
-~ Vaibhav
+2.26.2
+
