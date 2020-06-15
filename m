@@ -2,162 +2,104 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89131C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ECEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A692067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73922067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLGeR2Fg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgFOIg1 (ORCPT
+        id S1729080AbgFOIgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:36:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40946 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbgFOIg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:36:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4536DAA7C;
-        Mon, 15 Jun 2020 08:36:28 +0000 (UTC)
-Subject: Re: [PATCH v2] nvdimm: Avoid race between probe and reading device
- attributes
-To:     Richard Palethorpe <rpalethorpe@suse.com>,
-        linux-nvdimm@lists.01.org
-Cc:     linux-kernel@vger.kernel.org, Coly Li <colyli@suse.com>
-References: <20200615074723.12163-1-rpalethorpe@suse.com>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <f59b5b3f-0de8-0ca1-6b39-9e93c57b2903@suse.de>
-Date:   Mon, 15 Jun 2020 16:36:17 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200615074723.12163-1-rpalethorpe@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 15 Jun 2020 04:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728895AbgFOIgo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:36:44 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0DCC061A0E;
+        Mon, 15 Jun 2020 01:36:44 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x22so7516035pfn.3;
+        Mon, 15 Jun 2020 01:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AjIM9F1YD0eAghWW7pMVSiUA+YlC9IghbUbcMANQW/0=;
+        b=CLGeR2FghoElL6R9Z2Bi2Yc5VrXUneQKgPEEdLL5cd2SYNibiDR7XLtCr186JA5PZa
+         SJAD8dGgN62hOWYcXD3CqmrwNovDbLGKM4RqTpf6fgq1WtLuuPSV8BRxAaURmKp8h59g
+         MM8Eisp5mkQXQBpjuRJYC9jhL1LxU9pA8DByK43F0zYuaZnccWbHeaPjqtYcq4rzmG6W
+         5i+oMlGV7Ck25vjXEFF0WlG7ytL3KJyviRZnmj3oxZlTkpaBr778OcE0sEvSgwRw8O97
+         C0gnF1Y2gQwPfmEWs452TBVzA2j3kGYzKqi4vgUQhBxu+Fi+E87lyDWVEU7/bRoxHEM2
+         2gaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AjIM9F1YD0eAghWW7pMVSiUA+YlC9IghbUbcMANQW/0=;
+        b=BLwa2hwpjuYfYn5fdTg7II5bPNwLUFpQdPO45AbTwfMGoaiTVB4XWZmjxkDhUW3q08
+         1QYgqD6X+/Nmg6+otGiB54yz94qBwl6HC6mXPYeD/EMYullWucmmF/PN8S8UHyXvI4jR
+         TyQNQQh1VvUG/mUuFBsj+eHljz6hiboqmO+dMMdFjOPEceemr+S5A729tWTZpO/we0ym
+         z752c1kT6xky6Efw0ChaDgIqINl/cIHnNeYRDHuSGRnNzPrc9+F3gGFLP9xsbbdWi+pK
+         dgrNQcfudfPgjGSvdYizcV7hR0oRvKin7i1l5PJPspdvAnckXPWM0/R+lzdz57qf3850
+         yu5g==
+X-Gm-Message-State: AOAM533ZurEFVS6XcCgM3GFSJG6I2vnFb44hmMKXNTEe6wjPtIhjQO/9
+        AAeMwPAN2sIfglRqY39DdHI=
+X-Google-Smtp-Source: ABdhPJzLH7mZO6kEiWcWMGU6S/x10QPmiLfRXXFbYPCqwGr9bT15E1iyvq1yTuxedDzoprcOo9IRXA==
+X-Received: by 2002:a63:8f17:: with SMTP id n23mr14889002pgd.40.1592210203981;
+        Mon, 15 Jun 2020 01:36:43 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id x1sm11954844pju.3.2020.06.15.01.36.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 01:36:43 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2] mptcp: use list_first_entry_or_null
+Date:   Mon, 15 Jun 2020 16:34:28 +0800
+Message-Id: <6cf9b609f1d77b389165448b9a9b38f6bee48f87.1592209896.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/15 15:47, Richard Palethorpe wrote:
-> It is possible to cause a division error and use-after-free by querying the
-> nmem device before the driver data is fully initialised in nvdimm_probe. E.g
-> by doing
-> 
-> (while true; do
->      cat /sys/bus/nd/devices/nmem*/available_slots 2>&1 > /dev/null
->  done) &
-> 
-> while true; do
->      for i in $(seq 0 4); do
-> 	 echo nmem$i > /sys/bus/nd/drivers/nvdimm/bind
->      done
->      for i in $(seq 0 4); do
-> 	 echo nmem$i > /sys/bus/nd/drivers/nvdimm/unbind
->      done
->  done
-> 
-> On 5.7-rc3 this causes:
+Use list_first_entry_or_null to simplify the code.
 
-[snipped]
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ Changes in v2:
+  - Add "net-next" tag in Subject.
+---
+ net/mptcp/protocol.h | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-> 
-> This can be prevented by setting the driver data after initialisation is
-> complete.
-> 
-> Fixes: 4d88a97aa9e8 ("libnvdimm, nvdimm: dimm driver and base libnvdimm device-driver infrastructure")
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: linux-nvdimm@lists.01.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Coly Li <colyli@suse.com>
-> Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-
-
-Reviewed-by: Coly Li <colyli@suse.de>
-
-Thanks.
-
-Coly Li
-
-> ---
-> 
-> V2:
-> + Reviewed by Coly and removed unecessary lock
-> 
->  drivers/nvdimm/dimm.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
-> index 7d4ddc4d9322..3d3988e1d9a0 100644
-> --- a/drivers/nvdimm/dimm.c
-> +++ b/drivers/nvdimm/dimm.c
-> @@ -43,7 +43,6 @@ static int nvdimm_probe(struct device *dev)
->  	if (!ndd)
->  		return -ENOMEM;
->  
-> -	dev_set_drvdata(dev, ndd);
->  	ndd->dpa.name = dev_name(dev);
->  	ndd->ns_current = -1;
->  	ndd->ns_next = -1;
-> @@ -106,6 +105,8 @@ static int nvdimm_probe(struct device *dev)
->  	if (rc)
->  		goto err;
->  
-> +	dev_set_drvdata(dev, ndd);
-> +
->  	return 0;
->  
->   err:
-> 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 70ed698bd206..db56535dfc29 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -232,10 +232,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 
+-	if (list_empty(&msk->rtx_queue))
+-		return NULL;
+-
+-	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
++	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
+ }
+ 
+ struct mptcp_subflow_request_sock {
+-- 
+2.17.1
 
