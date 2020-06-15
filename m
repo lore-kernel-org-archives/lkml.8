@@ -2,108 +2,193 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8575EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8687CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A69E20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6505E20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592241135;
+	bh=xZw3wFFs3EiOb5XtW46JuclA2MCo7BVAfYAO895nV6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GkhyPvaPDKzsphO1VwnYNHYexVgWzxHWXAv3jAI15DoGNC3oYfxOXaBREshrGnR/l
+	 i72A3Eif6XP5D/lxj4XzKRsgtRflEb1Yi2PJzUQ8S/iisTeYS3phK/3WYF7i1MPhB9
+	 98b7InrxS57YjO8D8YhfpXAoshDgp6AsovINEycQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbgFORLF convert rfc822-to-8bit (ORCPT
+        id S1731199AbgFORMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:11:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16214 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgFORLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:11:04 -0400
-IronPort-SDR: 0qn1lHL521TMRPY7Qzi0cyXpzweXZ/rsDFt8UH+tV1tzfiuA6T77evzGkLyRVUOilaX62ewbCE
- LvWSnnenG4Dg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 10:11:04 -0700
-IronPort-SDR: RVNXESVvO6FWtMErjyjWNKs0+yP0qEGVpzaS46AsbhzCxBJ4pgFxBRHP0UsFn0BSa/WFZhIvwg
- gS0bY/MY5b0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,515,1583222400"; 
-   d="scan'208";a="449468052"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by orsmga005.jf.intel.com with ESMTP; 15 Jun 2020 10:11:03 -0700
-Received: from orsmsx125.amr.corp.intel.com (10.22.240.125) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 15 Jun 2020 10:11:03 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.56]) by
- ORSMSX125.amr.corp.intel.com ([169.254.3.61]) with mapi id 14.03.0439.000;
- Mon, 15 Jun 2020 10:11:03 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
-Thread-Topic: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
-Thread-Index: AQHWQRt0fMmHYsE9aUKb3rSjyAIL46jZyC2AgACD5gCAAAQ1gP//m/aA
-Date:   Mon, 15 Jun 2020 17:11:02 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F66C290@ORSMSX115.amr.corp.intel.com>
-References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
- <1592008893-9388-13-git-send-email-fenghua.yu@intel.com>
- <20200615075649.GK2497@hirez.programming.kicks-ass.net>
- <20200615154854.GB13792@romley-ivt3.sc.intel.com>
- <20200615160357.GA2531@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200615160357.GA2531@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 15 Jun 2020 13:12:14 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39766 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFORMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 13:12:14 -0400
+Received: by mail-il1-f194.google.com with SMTP id p5so16032953ile.6;
+        Mon, 15 Jun 2020 10:12:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G5WGUPUAIcBwza0/xjtURoDyzwjIEB/Wr5gpuV9swD0=;
+        b=Fb5sDDB6HAlXnpW72K2SysMhHR6ikH+Ykhhe5p25LfdPbgbZU3KCUlvWMsslFZELKp
+         DtMBAItYor6zb9jFTUl8fiKIltN9olwQPiklKgmBTECXNSA6PWQjru2vIiSfDztDKfbF
+         Y+QguN10MtEVyGpCcOBLn9ujYjjq0Oj79fZsf9UFvcrv8pXQ9wJGOCIx9UJoNEc4ItOI
+         ufeDI7+VN8iBt+daO3PbA61Ga14YuqBxrbCJOC2FMIvY7u8BK0ng8vr7b2vIQPZsYqX8
+         r9MiFXVYWHZci//6BEZjOKiSXf64/K2vxYbFCWNV6M3xqmW9y4oyqg7K9gNOsmJaRCKO
+         k48A==
+X-Gm-Message-State: AOAM5335ITTZVqkEzSbq6JNhbwhasnj8HijusyMyXJ9ePCDn7QDuhB5E
+        wBDsjGBN60FQFUvhUqjLmg==
+X-Google-Smtp-Source: ABdhPJxkSrEaxMErK0l1AP6V19vUpDxfZBbTo5MTNzsZPQNLZcHrexQ20OfNYIzpl4S1RoaRPH6/Mg==
+X-Received: by 2002:a92:d845:: with SMTP id h5mr27854230ilq.4.1592241131756;
+        Mon, 15 Jun 2020 10:12:11 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id d71sm8551428ill.9.2020.06.15.10.12.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 10:12:11 -0700 (PDT)
+Received: (nullmailer pid 1970644 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:12:09 -0000
+Date:   Mon, 15 Jun 2020 11:12:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, marex@denx.de,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/3] dt-bindings: spi: Convert mxs spi to json-schema
+Message-ID: <20200615171209.GA1968084@bogus>
+References: <1591235731-15673-1-git-send-email-Anson.Huang@nxp.com>
+ <1591235731-15673-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591235731-15673-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> The heuristic always initializes the MSR with the per mm PASID IIF the
->> mm has a valid PASID but the MSR doesn't have one. This heuristic usually
->> happens only once on the first #GP in a thread.
->
-> But it doesn't guarantee the PASID is the right one. Suppose both the mm
-> has a PASID and the MSR has a VALID one, but the MSR isn't the mm one.
-> Then we NO-OP. So if the exception was due to us having the wrong PASID,
-> we stuck.
+On Thu, Jun 04, 2020 at 09:55:29AM +0800, Anson Huang wrote:
+> Convert the MXS SPI binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- add "unevaluatedProperties: false".
+> ---
+>  Documentation/devicetree/bindings/spi/mxs-spi.txt  | 26 ----------
+>  Documentation/devicetree/bindings/spi/mxs-spi.yaml | 57 ++++++++++++++++++++++
+>  2 files changed, 57 insertions(+), 26 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/mxs-spi.txt b/Documentation/devicetree/bindings/spi/mxs-spi.txt
+> deleted file mode 100644
+> index 3499b73..0000000
+> --- a/Documentation/devicetree/bindings/spi/mxs-spi.txt
+> +++ /dev/null
+> @@ -1,26 +0,0 @@
+> -* Freescale MX233/MX28 SSP/SPI
+> -
+> -Required properties:
+> -- compatible: Should be "fsl,<soc>-spi", where soc is "imx23" or "imx28"
+> -- reg: Offset and length of the register set for the device
+> -- interrupts: Should contain SSP ERROR interrupt
+> -- dmas: DMA specifier, consisting of a phandle to DMA controller node
+> -  and SSP DMA channel ID.
+> -  Refer to dma.txt and fsl-mxs-dma.txt for details.
+> -- dma-names: Must be "rx-tx".
+> -
+> -Optional properties:
+> -- clock-frequency : Input clock frequency to the SPI block in Hz.
+> -		    Default is 160000000 Hz.
+> -
+> -Example:
+> -
+> -ssp0: ssp@80010000 {
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -	compatible = "fsl,imx28-spi";
+> -	reg = <0x80010000 0x2000>;
+> -	interrupts = <96>;
+> -	dmas = <&dma_apbh 0>;
+> -	dma-names = "rx-tx";
+> -};
+> diff --git a/Documentation/devicetree/bindings/spi/mxs-spi.yaml b/Documentation/devicetree/bindings/spi/mxs-spi.yaml
+> new file mode 100644
+> index 0000000..68c5d6d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/mxs-spi.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/mxs-spi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale MX233/MX28 SSP/SPI
+> +
+> +maintainers:
+> +  - Marek Vasut <marex@denx.de>
+> +
+> +allOf:
+> +  - $ref: "/schemas/spi/spi-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,imx23-spi
+> +      - fsl,imx28-spi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    maxItems: 1
+> +
+> +  dma-names:
+> +    const: rx-tx
+> +
+> +  clock-frequency:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-ENQCMD only checks the 'valid' bit of the IA32_PASID MSR to decide whether
-to #GP or not.  H/W has no concept of the "right" pasid value.
+Already has a type, drop.
 
-If IA32_PASID is valid with the wrong value ... then the system is about to
-see some major corruption because the operations in the accelerator are
-not going to translate to the physical addresses for pages owned by the process
-that issued the ENQCMD.
+With that,
 
--Tony
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +    description: input clock frequency to the SPI block in Hz.
+> +    default: 160000000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - dmas
+> +  - dma-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    spi@80010000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        compatible = "fsl,imx28-spi";
+> +        reg = <0x80010000 0x2000>;
+> +        interrupts = <96>;
+> +        dmas = <&dma_apbh 0>;
+> +        dma-names = "rx-tx";
+> +    };
+> -- 
+> 2.7.4
+> 
