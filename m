@@ -2,124 +2,97 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F10EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46583C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D08F2068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nlDElXol"
+	by mail.kernel.org (Postfix) with ESMTP id 2EA902068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgFOXPi (ORCPT
+        id S1726706AbgFOXQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725960AbgFOXPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:15:37 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52C5CC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 16:15:37 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l17so1161128wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 16:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dWQlCnE7maS8wm7a3DA3gd5Zr0pgvg11Rme0nYpS72w=;
-        b=nlDElXolMQF8tXJOD0uxKuE1mPso8DMpdpV2oym5fGxBkk35MkYCldHcamozMR75pb
-         u2xkyoEgjrJGs9hYA89AN0b5jKs1G0womn8MEpHwByAlLUTjn0u/NVJWj9B/AlcHSiEx
-         LzTQTFdIkPZkeDBXKWUksYUcnmASn54pw3nDQkudpMsvUy3+KZaLuNtu1cjvmE01vzw9
-         Mx7ozS8t8sUDNPETsDZMfsfBtW3Gld+zUif5PNoHNgxNG/ZI8h6cE4gFqEkZ5qusR4vy
-         +aN/sfXEEue7d9GyiCWKKiyrNvVoCuKaZM57CxJFLHEbEP2K4yL0+xJqQLSOPkREU10O
-         2+uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dWQlCnE7maS8wm7a3DA3gd5Zr0pgvg11Rme0nYpS72w=;
-        b=l/brbN/Awiz/gPhHkSnaQ70EAPnr7Do+/UHTb3v1udM9qBywl6YlCydOoy6Z91hbTi
-         gTu2OalNK8ORu6Djy7TLQ7Oe15ThdJaljOzMuklEkqr6RttZdsu5zCgNifuuFUv57MH9
-         jgyCAeYULlA5iM8y3zAYDltQkFEFJnh8kVNpX1+RqnmgDnHun+ZVGCWX4qFbdoCl6ra7
-         VCyVCmrmLUJRHkIf9DhhlrdZxsbH8qIXNCAy9hcTIEO18rfhYc3puG8t0i7mUb6aF0bt
-         OGTqV80uVHXsTRDHV4ssJYUV5Vj2G1q8EhB0Y8s88fcTsr4NyOUcQtHwmfhvg5Gweaxw
-         T0QQ==
-X-Gm-Message-State: AOAM5302WMjn/8JpjylWOXpe0rU0Dao13yVZZ7JVoxBWt+m+BoAou2+p
-        PIHetClCBMiNOHOgQFUAnPVYsg==
-X-Google-Smtp-Source: ABdhPJxa2HdiOKvNpxpmH/vjOg0PanAxBXKq9qTbpxpPhWU5yOqitFvSxoq0K3iIsQw03ndoXM7L0g==
-X-Received: by 2002:a1c:b443:: with SMTP id d64mr150530wmf.157.1592262935863;
-        Mon, 15 Jun 2020 16:15:35 -0700 (PDT)
-Received: from google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id r12sm27826004wrc.22.2020.06.15.16.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 16:15:35 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 01:15:29 +0200
-From:   Marco Elver <elver@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] compiler_attributes.h: Support no_sanitize_undefined check
- with GCC 4
-Message-ID: <20200615231529.GA119644@google.com>
-References: <202006160328.6MfJNuqX%lkp@intel.com>
+        Mon, 15 Jun 2020 19:16:21 -0400
+Received: from mga06.intel.com ([134.134.136.31]:63198 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726665AbgFOXQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:16:20 -0400
+IronPort-SDR: DVz5hht7e1vI0ac277T7KZNH7J1cTQ4CnOcClXZHcXjQ773AHXmnQcZ21btyQRI5bVsyS6nUdO
+ OCTH52hQxobw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 16:16:19 -0700
+IronPort-SDR: T6ZjbELIrapPoUUC8t/yjki9aqCic7a2OCwmjZ4mzrjLS+BziTN1GdCLNAuNKeyY7ttZANoaUg
+ /GtVSFW3HOXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,516,1583222400"; 
+   d="scan'208";a="290863836"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga002.jf.intel.com with ESMTP; 15 Jun 2020 16:16:19 -0700
+Date:   Mon, 15 Jun 2020 16:16:18 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        amd-gfx <amd-gfx@lists.freedesktop.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 04/12] docs: x86: Add documentation for SVA (Shared
+ Virtual Addressing)
+Message-ID: <20200615231618.GF13792@romley-ivt3.sc.intel.com>
+References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+ <1592008893-9388-5-git-send-email-fenghua.yu@intel.com>
+ <9d1bd13c-0e0d-bead-f9a8-9422996a33f8@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202006160328.6MfJNuqX%lkp@intel.com>
-User-Agent: Mutt/1.13.2 (2019-12-18)
+In-Reply-To: <9d1bd13c-0e0d-bead-f9a8-9422996a33f8@linux.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UBSAN is supported since GCC 4.9, which unfortunately did not yet have
-__has_attribute(). To work around, the __GCC4_has_attribute workaround
-requires defining which compiler version supports the given attribute.
+Hi, Baolu,
 
-In the case of no_sanitize_undefined, it is the first version that
-supports UBSAN, which is GCC 4.9.
+On Sat, Jun 13, 2020 at 08:17:40PM +0800, Lu Baolu wrote:
+> Hi Fenghua,
+> 
+> On 2020/6/13 8:41, Fenghua Yu wrote:
+> >+implement implement fairness or ensure forward progress can be made.
+> 
+> Repeated "implement".
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Marco Elver <elver@google.com>
----
+Will fix this.
 
-Doing a 'make W=1' with GCC 4.9 and the provided config fixes the build
-robot's report.
+> >+For example, the Intel Data Streaming Accelerator (DSA) uses
+> >+intel_svm_bind_mm(), which will do the following.
+> 
+> The Intel SVM APIs have been deprecated. Drivers should use
+> iommu_sva_bind_device() instead. Please also update other places in
+> this document.
 
-Peter: Feel free to either squash this patch into the one adding
-__no_sanitize_undefined or apply on top.
+Will fix this.
 
-Although at this point we don't have any users of
-__no_sanitize_undefined anymore since objtool resolved the noinstr
-problem for UBSAN differently. We should probably keep the attribute
-around because eventually somebody will need it.
+Thanks.
 
-Thanks,
--- Marco
+-Fenghua
 
----
- include/linux/compiler_attributes.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index cdf016596659..c8f03d2969df 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -40,6 +40,7 @@
- # define __GCC4_has_attribute___noclone__             1
- # define __GCC4_has_attribute___nonstring__           0
- # define __GCC4_has_attribute___no_sanitize_address__ (__GNUC_MINOR__ >= 8)
-+# define __GCC4_has_attribute___no_sanitize_undefined__ (__GNUC_MINOR__ >= 9)
- # define __GCC4_has_attribute___fallthrough__         0
- #endif
- 
--- 
-2.27.0.290.gba653c62da-goog
