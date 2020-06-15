@@ -2,87 +2,113 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B236C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09135C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50DC420768
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592246448;
-	bh=wYKSzzrOtt+X56zSeQ03eBE8TXYYdvcqWroESoJynwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xUwOfWRHw/fyN7rYkcK1Yj28+FnYHD/antdWsHhj83+6wZttx8F+0lPq19KIzHAPc
-	 dL0UyJNPrYU8atbJ8640tM8FIqePJtXV2C7RiNGDwWp71RGZYFlY0Y/BB9Xzu6h+Pw
-	 HRErDjSslqZ5rF+b0cwJwCOmhVQoJDoOrryqLkPQ=
+	by mail.kernel.org (Postfix) with ESMTP id D6FC920768
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:40:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IDDUm1JD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731405AbgFOSkr (ORCPT
+        id S1731413AbgFOSks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 14:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731396AbgFOSkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 14:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731279AbgFOSkp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 14:40:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81E9C061A0E;
+        Mon, 15 Jun 2020 11:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zN/Nv/pr9vVaSfZ2zDdo/huhxeODkyXQIX0vAvnL4ec=; b=IDDUm1JDiDC43AnkAetdgjEzKd
+        Ayvpow2HB0p5VOLLx1Kv1Yc4iHD+J8HRUFy3d+wL13OMzmdTa+bkkdU+pWwM7PwB39hZuuY8qJCdE
+        xh4jT4KFsNmlGK3RPC6E1rasSWhSn3Oy5A0B9AkkmUe5Nlq+FBk5gQrVhbDKsc1Nu2GC8lV2ErIiO
+        FKrKjtSHfOn0oywBlXdtMO5hr1q4SeA4GWxy2s3X1zNIv3fv53gZ3Hu9Pgfapcr9N1j5kd9du+T7a
+        o5XWdld6a0L5Q4KB+l/jybedI35DwVe/k3yxr+zoXbamDjmcOgM3CmPoiOZfbPcV4KT8XtX63AqFh
+        0StLd1ig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jku2F-0002py-HS; Mon, 15 Jun 2020 18:40:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E512720756;
-        Mon, 15 Jun 2020 18:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592246445;
-        bh=wYKSzzrOtt+X56zSeQ03eBE8TXYYdvcqWroESoJynwQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AlbC55WjaV4nWjXst3bO4kQANNHVW3FGiuCtr8vFlGcnmBmTIfSmQIdfqtWf9eBUK
-         cIN+7izIRzNmFLxWid1bL5vtlZHL+Rmo5IF+CB3GwKRQEXag5ljpRfAwfyXz5DKRDn
-         DLrujyfyBpBB29ranjrdCSpWM2Susi+UFnuTceTc=
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D1654306089;
+        Mon, 15 Jun 2020 20:40:41 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BC6F4201CB85A; Mon, 15 Jun 2020 20:40:41 +0200 (CEST)
 Date:   Mon, 15 Jun 2020 20:40:41 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        "Park, Kyung Min" <kyung.min.park@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Neri, Ricardo" <ricardo.neri@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Subject: Re: [RFC PATCH 1/3] Documentation/x86: Add documentation for
- /proc/cpuinfo feature flags
-Message-ID: <20200615184041.GA177504@kroah.com>
-References: <20200610200701.16757-1-kyung.min.park@intel.com>
- <20200610200701.16757-2-kyung.min.park@intel.com>
- <20200615181527.GM14668@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F66C552@ORSMSX115.amr.corp.intel.com>
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][RFC] PM / s2idle: Clear _TIF_POLLING_NRFLAG before
+ suspend to idle
+Message-ID: <20200615184041.GG2531@hirez.programming.kicks-ass.net>
+References: <20200615173611.15349-1-yu.c.chen@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F66C552@ORSMSX115.amr.corp.intel.com>
+In-Reply-To: <20200615173611.15349-1-yu.c.chen@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:31:50PM +0000, Luck, Tony wrote:
-> > In general, this should say something along the lines that /proc/cpuinfo
-> > shows features which the kernel supports.
-> >
-> > "For a full list of CPUID flags which the CPU supports, use
-> > tools/arch/x86/tools/cpuid/cpuid"
-> >
-> > :-)
+On Tue, Jun 16, 2020 at 01:36:11AM +0800, Chen Yu wrote:
+> Suspend to idle was found to not work on Goldmont CPU recently.
+> And the issue was triggered due to:
 > 
-> Dave Hansen had suggested (offline) that we add a cpuid tool to the kernel sources.
-> 
-> I think that's a lot of (duplicated) work for someone to maintain.  The version of this
-> tool at http://www.etallen.com/cpuid.html is close to 10K lines of code.
+> 1. On Goldmont the CPU in idle can only be woken up via IPIs,
+>    not POLL mode:
+>    Commit 08e237fa56a1 ("x86/cpu: Add workaround for MONITOR
+>    instruction erratum on Goldmont based CPUs")
+> 2. When the CPU is entering suspend to idle process, the
+>   _TIF_POLLING_NRFLAG is kept on.
+> 3. Commit b2a02fc43a1f ("smp: Optimize send_call_function_single_ipi()")
+>    makes use of _TIF_POLLING_NRFLAG to avoid sending IPIs to
+>    idle CPUs.
+> 4. As a result, some IPIs related functions might not work
+>    well during suspend to idle on Goldmont. For example, one
+>    suspected victim:
+>    tick_unfreeze() -> timekeeping_resume() -> hrtimers_resume()
+>    -> clock_was_set() -> on_each_cpu() might wait forever,
+>    because the IPIs will not be sent to the CPUs which are
+>    sleeping with _TIF_POLLING_NRFLAG set, and Goldmont CPU
+>    could not be woken up by only setting _TIF_NEED_RESCHED
+>    on the monitor address.
 
-10k is nothing, have you looked at tools/perf/ ?  :)
+*sigh*... just what we need.
 
-greg k-h
+
+> @@ -186,8 +187,10 @@ int cpuidle_enter_s2idle(struct cpuidle_driver *drv, struct cpuidle_device *dev)
+>  	 * be frozen safely.
+>  	 */
+>  	index = find_deepest_state(drv, dev, U64_MAX, 0, true);
+> -	if (index > 0)
+> +	if (index > 0) {
+> +		__current_clr_polling();
+>  		enter_s2idle_proper(drv, dev, index);
+> +	}
+>  
+>  	return index;
+>  }
+
+So how is that commit 08e237fa56a1 not suffient? That makes
+mwait_idle_with_hints() DTRT for this 'functionally challenged' piece of
+hardware.
+
+AFAICT intel_enter_s2idle() uses mwait_idle_with_hints().
+
+What am I missing?
