@@ -2,114 +2,73 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1DDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B613C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8E4E20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HjclWTng"
+	by mail.kernel.org (Postfix) with ESMTP id 381D720739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgFOX2J (ORCPT
+        id S1726797AbgFOX2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:28:09 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:45588 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725960AbgFOX2J (ORCPT
+        Mon, 15 Jun 2020 19:28:16 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:58420 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725960AbgFOX2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:28:09 -0400
-Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 657B920B4780;
-        Mon, 15 Jun 2020 16:28:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 657B920B4780
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1592263688;
-        bh=24da9vv8AG04i92vfIYdv7Ik8ZBjVgmLxlUf5hhLH44=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HjclWTngt51xsAal4zzyK0uAtUedBu2Y7q/XWrKVuhbLSJpCqw2ExCH4kxcbRu1vB
-         yhsc7vwUXpblnhoxrZPvfUb5+brRVxSvwxZLh5+XAOgbcnwms1xrZL4a9VQJaCQIcB
-         uDPfW+rzO5f5KFUPMJ93ceQ3foH3VSXtI/YOjNSM=
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] tpm: Require that all digests are present in TCG_PCR_EVENT2 structures
-Date:   Mon, 15 Jun 2020 18:25:04 -0500
-Message-Id: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 15 Jun 2020 19:28:16 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 9782C5AA8C5;
+        Tue, 16 Jun 2020 09:28:06 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jkyWI-00019L-ER; Tue, 16 Jun 2020 09:28:02 +1000
+Date:   Tue, 16 Jun 2020 09:28:02 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/2] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
+Message-ID: <20200615232802.GX2040@dread.disaster.area>
+References: <20200615160830.8471-1-longman@redhat.com>
+ <20200615160830.8471-3-longman@redhat.com>
+ <20200615164351.GF11255@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615164351.GF11255@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
+        a=d-5gr-WEPLwAlw7X_sIA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-TCG_PCClientPCREvent event log header. Also require that
-TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+On Mon, Jun 15, 2020 at 09:43:51AM -0700, Darrick J. Wong wrote:
+> Also: Why not set PF_MEMALLOC_NOFS at the start of the freeze call
+> chain?
 
-The TCG PC Client Platform Firmware Profile Specification section 9.1
-(Family "2.0", Level 00 Revision 1.04) states:
+Because there's no guarantee that we are always going to do this
+final work in the freeze syscall context? i.e. the state is specific
+to the context in which we are running the transaction, not the
+task context it is running in...
 
- For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
- there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
- Note: This includes EV_NO_ACTION events which do not extend the PCR.
+Cheers,
 
-Section 9.4.5.1 provides this description of
-TCG_EfiSpecIdEvent.numberOfAlgorithms:
-
- The number of Hash algorithms in the digestSizes field. This field MUST
- be set to a value of 0x01 or greater.
-
-Enforce these restrictions, as required by the above specification, in
-order to better identify and ignore invalid sequences of bytes at the
-end of an otherwise valid TPM2 event log. Firmware doesn't always have
-the means necessary to inform the kernel of the actual event log size so
-the kernel's event log parsing code should be stringent when parsing the
-event log for resiliency against firmware bugs. This is true, for
-example, when firmware passes the event log to the kernel via a reserved
-memory region described in device tree.
-
-Prior to this patch, a single bit set in the offset corresponding to
-either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
-after the last valid event log entry, could confuse the parser into
-thinking that an additional entry is present in the event log. This
-patch raises the bar on how difficult it is for stale memory to confuse
-the kernel's event log parser but there's still a reliance on firmware
-to properly initialize the remainder of the memory region reserved for
-the event log as the parser cannot be expected to detect a stale but
-otherwise properly formatted firmware event log entry.
-
-Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
----
- include/linux/tpm_eventlog.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 4f8c90c93c29..d83eb9fd5614 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -201,7 +201,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
- 
- 	/* Check if event is malformed. */
--	if (count > efispecid->num_algs) {
-+	if (!efispecid->num_algs || count != efispecid->num_algs) {
- 		size = 0;
- 		goto out;
- 	}
+Dave.
 -- 
-2.25.1
-
+Dave Chinner
+david@fromorbit.com
