@@ -2,94 +2,156 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D32C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D335C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF3F2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70ADB2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVr/Sb7M"
+	dkim=pass (1024-bit key) header.d=notmuch.email header.i=@notmuch.email header.b="R8p8tQbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbgFOM6r (ORCPT
+        id S1730122AbgFOM7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730071AbgFOM6q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:58:46 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448C0C061A0E;
-        Mon, 15 Jun 2020 05:58:46 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m7so6782517plt.5;
-        Mon, 15 Jun 2020 05:58:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XitcCGm+N2xk+i04pt3A4f+pfim66XLwLBHkrjOHPeA=;
-        b=ZVr/Sb7MOhagf/RGhel4f7RhEI8nQ3l15ir4uqZwbq0/IUw01U7/hK4l9O6mmhpaQe
-         TH2PvZZczVErnPhIU4XubP9XEwIYH2ymLXfgTeP7G6KctMqFiJ6sdsKv2PuyNRbQTJgk
-         tLsUoZ8oj3NvigYd0YXBG+4zd+Esjx5kSTNVNapIuqBF4MlKSdnw/iNqb92Dwki7/8lQ
-         EYWHyEuqfGDqxAA1HKxN/Gct2whmlDSnPNCENYujxpSWEHQhKazOeoTeXCOtrx2gO19v
-         PuwpM6occwi3z8U1+cXSEccQSqJkzO4ASQSmx/BeL+BrCZF/AI5AUD0yFhc3KkJ/KwCW
-         K5pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XitcCGm+N2xk+i04pt3A4f+pfim66XLwLBHkrjOHPeA=;
-        b=oDyFk/5kCdpvGvhe6Il5gXrGhTvEPwbD1vQrW1GWVxWVw8Rp/kJ12pXMw+EiFQ2llN
-         1JWJDn1BbwQ4CzixBi31S430el6zB6W2/NVA4rl6Br2wSR28/Znath1Frrw2Cfp01p4b
-         kvfgLtF6IIqEbFBqe55llEVxeyH0dIIpIeDNJh86++DajgfjOm5rV+Ds1FtQq9yA8zyr
-         RSDVtbAQtmaGUNt3Ewer9VU3NwQ+czWiAFTAYDguPq2KqkkQ/6gUSW8Tb+Q1GWOFEt8S
-         jci6cT3/dJ/f+sYcHg/PKElvuP59zfcjsUP8aU24G5d1ihMSgbtmLbiqId15jaRqeMcG
-         XpuQ==
-X-Gm-Message-State: AOAM532fjSM6Ti19Zphl4WFryLIYtWSRmaRnL3vLKrvrwkUHV2SwsTXj
-        OFzShTf6UhOl9c6Nm4BLLlU=
-X-Google-Smtp-Source: ABdhPJwfxJvN6VGMc2O3Y02pnnTEat36EFoaAi15AnQE+izYbp/GXj23cVtK4kjHmr1rj/U2FhWHcQ==
-X-Received: by 2002:a17:90a:ed8f:: with SMTP id k15mr10829721pjy.63.1592225925722;
-        Mon, 15 Jun 2020 05:58:45 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id q129sm14496133pfc.60.2020.06.15.05.58.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 05:58:45 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 05:58:43 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vinicius.gomes@intel.com
-Subject: Re: [PATCH net] net: dsa: sja1105: fix PTP timestamping with large
- tc-taprio cycles
-Message-ID: <20200615125843.GC16362@localhost>
-References: <20200614205409.1580736-1-olteanv@gmail.com>
+        Mon, 15 Jun 2020 08:59:47 -0400
+Received: from mx.h4ck.space ([159.69.146.50]:51238 "EHLO mx.h4ck.space"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730070AbgFOM7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:59:46 -0400
+Date:   Mon, 15 Jun 2020 14:59:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=notmuch.email;
+        s=mail; t=1592225982;
+        bh=xEaHOZrOGFdQ2ZrwzvdfXydcdbqmR2TMLyGFVx8L8Mw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=R8p8tQbJcszCLNq0puYi9G3zOC1OTfFpmli4OCFJxHtmYkHIyy1VoyYW9i8fZT7oB
+         GuyGEBGJ1lHJVDTzSHjBnP/vOu3/w9QX3Ddy4INc43vtpkHiKbLyJLbd3QCbcViqs6
+         nr6kMJE2Ii23XuYntAEzjkkZ4adGqMwytc6hnejE=
+From:   andi@notmuch.email
+To:     Brendan Shanks <bshanks@codeweavers.com>
+Cc:     linux-kernel@vger.kernel.org,
+        ricardo.neri-calderon@linux.intel.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        ebiederm@xmission.com, Babu.Moger@amd.com
+Subject: Re: [PATCH v4] x86/umip: Add emulation/spoofing for SLDT and STR
+ instructions
+Message-ID: <20200615125930.qydseozyrzjjz42e@wrt>
+References: <20200609175423.31568-1-bshanks@codeweavers.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200614205409.1580736-1-olteanv@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200609175423.31568-1-bshanks@codeweavers.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 11:54:09PM +0300, Vladimir Oltean wrote:
-> So fix this case of premature optimization by simply reordering the
-> sja1105_ptpegr_ts_poll and the sja1105_ptpclkval_read function calls. It
-> turns out that in practice, the 135 ms hard deadline for PTP timestamp
-> wraparound is not so hard, since even the most bandwidth-intensive PTP
-> profiles, such as 802.1AS-2011, have a sync frame interval of 125 ms.
-> So if we couldn't deliver a timestamp in 135 ms (which we can), we're
-> toast and have much bigger problems anyway.
+On 10:54 09.06.20, Brendan Shanks wrote:
+> Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
+> processes.
 > 
-> Fixes: 47ed985e97f5 ("net: dsa: sja1105: Add logic for TX timestamping")
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> Wine users have found a small number of Windows apps using SLDT that
+> were crashing when run on UMIP-enabled systems.
+> 
+> Reported-by: Andreas Rammhold <andi@notmuch.email>
+> Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
 > ---
+> 
+> v4: Use braces for every clause of the conditional. I tried a switch(),
+> but it takes more lines and looks more cluttered (especially with the
+> #ifdef).
+> Also replace out-of-date comment at top of file.
+> 
+>  arch/x86/kernel/umip.c | 38 ++++++++++++++++++++++++++------------
+>  1 file changed, 26 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+> index 8d5cbe1bbb3b..62f4f0afb979 100644
+> --- a/arch/x86/kernel/umip.c
+> +++ b/arch/x86/kernel/umip.c
+> @@ -45,11 +45,12 @@
+>   * value that, lies close to the top of the kernel memory. The limit for the GDT
+>   * and the IDT are set to zero.
+>   *
+> - * Given that SLDT and STR are not commonly used in programs that run on WineHQ
+> - * or DOSEMU2, they are not emulated.
+> - *
+>   * The instruction smsw is emulated to return the value that the register CR0
+>   * has at boot time as set in the head_32.
+> + * sldt and str are emulated to return the values that the kernel programmatically
+> + * assigns:
+> + * - sldt returns (GDT_ENTRY_LDT * 8) if an LDT has been set, 0 if not.
+> + * - str returns (GDT_ENTRY_TSS * 8).
+>   *
+>   * Emulation is provided for both 32-bit and 64-bit processes.
+>   *
+> @@ -244,16 +245,34 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
+>  		*data_size += UMIP_GDT_IDT_LIMIT_SIZE;
+>  		memcpy(data, &dummy_limit, UMIP_GDT_IDT_LIMIT_SIZE);
+>  
+> -	} else if (umip_inst == UMIP_INST_SMSW) {
+> -		unsigned long dummy_value = CR0_STATE;
+> +	} else if (umip_inst == UMIP_INST_SMSW || umip_inst == UMIP_INST_SLDT ||
+> +		   umip_inst == UMIP_INST_STR) {
+> +		unsigned long dummy_value;
+> +
+> +		if (umip_inst == UMIP_INST_SMSW) {
+> +			dummy_value = CR0_STATE;
+> +		} else if (umip_inst == UMIP_INST_STR) {
+> +			dummy_value = GDT_ENTRY_TSS * 8;
+> +		} else if (umip_inst == UMIP_INST_SLDT) {
+> +#ifdef CONFIG_MODIFY_LDT_SYSCALL
+> +			down_read(&current->mm->context.ldt_usr_sem);
+> +			if (current->mm->context.ldt)
+> +				dummy_value = GDT_ENTRY_LDT * 8;
+> +			else
+> +				dummy_value = 0;
+> +			up_read(&current->mm->context.ldt_usr_sem);
+> +#else
+> +			dummy_value = 0;
+> +#endif
+> +		}
+>  
+>  		/*
+> -		 * Even though the CR0 register has 4 bytes, the number
+> +		 * For these 3 instructions, the number
+>  		 * of bytes to be copied in the result buffer is determined
+>  		 * by whether the operand is a register or a memory location.
+>  		 * If operand is a register, return as many bytes as the operand
+>  		 * size. If operand is memory, return only the two least
+> -		 * siginificant bytes of CR0.
+> +		 * siginificant bytes.
+>  		 */
+>  		if (X86_MODRM_MOD(insn->modrm.value) == 3)
+>  			*data_size = insn->opnd_bytes;
+> @@ -261,7 +280,6 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
+>  			*data_size = 2;
+>  
+>  		memcpy(data, &dummy_value, *data_size);
+> -	/* STR and SLDT  are not emulated */
+>  	} else {
+>  		return -EINVAL;
+>  	}
+> @@ -383,10 +401,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
+>  	umip_pr_warn(regs, "%s instruction cannot be used by applications.\n",
+>  			umip_insns[umip_inst]);
+>  
+> -	/* Do not emulate (spoof) SLDT or STR. */
+> -	if (umip_inst == UMIP_INST_STR || umip_inst == UMIP_INST_SLDT)
+> -		return false;
+> -
+>  	umip_pr_warn(regs, "For now, expensive software emulation returns the result.\n");
+>  
+>  	if (emulate_umip_insn(&insn, umip_inst, dummy_data, &dummy_data_size,
+> -- 
+> 2.26.2
+> 
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+A bit late but I was able to test my workload with the above patch
+applied on 5.7.2.
+
+Tested-by: Andreas Rammhold <andi@notmuch.email>
