@@ -2,63 +2,70 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FEEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5264C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCC220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BCF2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592219874;
-	bh=vGp30WGjqpi6hQnqDxaA4BomUK/DJXnaGz4+haXr+vg=;
+	s=default; t=1592219909;
+	bh=Kc5Uu2zfW16GC/jLDwOItAJ1ZCbBOhlBnC7jl4IzQzw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zhQnstvuINdTrPEK02bDIrQCnab6XqzXbaQKREQmWynLfz+dktBkA6v5sR3VkpHPm
-	 S1fT8WQrmtwt5a2dliB8sIr2Noo5rlbI+bjKCMwaEUY7eC5DjqkgKmfjs1a8ADrNmh
-	 1WZKLv6Amqi9lMw4H/ZSGB2PGv9csjSRN9a/tQlU=
+	b=LnqRiOlmXW7a+467TvMplEmShDYO8yBrqEwJz44EwZMXxGzJfa+/lrGyakO4BWazQ
+	 PgnPUm1T8e9FcvbMj7HAkWa3mSZNqcx2f4jE0qhAgNb44X58nPJ90BEMq+MSDW26Bj
+	 4qsHPaFFem+V656ldTv0N08/ZRJJSppz8J35MFJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgFOLRx (ORCPT
+        id S1729658AbgFOLS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40102 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 07:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgFOLRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:17:52 -0400
+        id S1728285AbgFOLS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 07:18:27 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 896B52067B;
-        Mon, 15 Jun 2020 11:17:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9183620679;
+        Mon, 15 Jun 2020 11:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592219872;
-        bh=vGp30WGjqpi6hQnqDxaA4BomUK/DJXnaGz4+haXr+vg=;
+        s=default; t=1592219907;
+        bh=Kc5Uu2zfW16GC/jLDwOItAJ1ZCbBOhlBnC7jl4IzQzw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NPcfwXsIfB0tpAjRRF/lIoOIITmNm46a2Esg1C2o2xVcNAMeA8uRLemu5FfJW+psU
-         b00Wi33bQiR8+d3wq2W190ShBwgzl62ErdbC3hkH1wET61vVpjtJE9aHG+ry7upsUl
-         7fFnnHtRDdiKxw7MVU1j/ounFW6mL3dHaLnaJ5oo=
-Date:   Mon, 15 Jun 2020 12:17:49 +0100
+        b=CLqA0Otm5iTchqOJNuF5+TEvlduYM9+uHf6vsS1atI8wMe7S/kxYzvwUUWFsse4+8
+         sH1eDw9PbEF9rDtnc2aheYGa9DNhyAWCXgR4cJnGEviEeGugPmWRca0LUDu2E4mP8M
+         PRkjztkO40hmW00EQKRvCSNgeGSBOeUs/BCxQ00k=
+Date:   Mon, 15 Jun 2020 12:18:24 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Daniel Kiss <daniel.kiss@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 28/29] docs: fs: proc.rst: fix a warning due to a merge
- conflict
-Message-ID: <20200615111749.GA4447@sirena.org.uk>
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 14/29] dt: Fix broken references to renamed docs
+Message-ID: <20200615111824.GB4447@sirena.org.uk>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
- <7d46aec2cb7a5328d260c7c815b9be9737b43ee1.1592203542.git.mchehab+huawei@kernel.org>
+ <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
+        protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
 Content-Disposition: inline
-In-Reply-To: <7d46aec2cb7a5328d260c7c815b9be9737b43ee1.1592203542.git.mchehab+huawei@kernel.org>
+In-Reply-To: <6866c0d6d10ce36bb151c2d3752a20eb5122c532.1592203542.git.mchehab+huawei@kernel.org>
 X-Cookie: Offer may end without notice.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,39 +74,31 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---J/dobhs11T7y2rNN
+--eAbsdosE1cNLO4uF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 15, 2020 at 08:47:07AM +0200, Mauro Carvalho Chehab wrote:
-> 	...
-> 	bt  - arm64 BTI guarded page
-> 	=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+On Mon, Jun 15, 2020 at 08:46:53AM +0200, Mauro Carvalho Chehab wrote:
+> Some files got renamed. Those were all fixed automatically by
 >=20
-> Fixes: 424037b77519 ("mm: smaps: Report arm64 guarded pages in smaps")
-> Fixes: c33e97efa9d9 ("docs: filesystems: convert proc.txt to ReST")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
+> 	./scripts/documentation-file-ref-check --fix
 
-I acked this when you sent it previously but you've dropped my ack - I'm
-not clear what's changed?  The prior ack was in
-20200603095428.GA5327@sirena.org.uk.
+Acked-by: Mark Brown <broonie@kernel.org>
 
---J/dobhs11T7y2rNN
+--eAbsdosE1cNLO4uF
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nWNwACgkQJNaLcl1U
-h9D6Cgf/S+rl9IwipzkJkMBWWgPo961oXqYZmsADl/6GLjjgaohqh5Ayl1p4KDnk
-cRzkI8+FgIk5FJ+84PxKHem4MSquTyU1blEiNccPDQ63ZXT1TjgR+GI/D28JhHNR
-5TUbUOYjfutIK3wx/bum0DgindQuQTJf+cnMy+TEkCc1WQTcRGj2RVrHkKXnpbjg
-wu/J/xttoFBgPIoutP1nJG2ZLIP/uwo1DoWzNdDjvgKUh/7TmsXxWUv6TX8zzeXw
-xQDZQQQDYifmqsXCdvbwab3NLYFp0kjFIwxXiNAG0bWK6/hjnkxBhal1sJ5WP/Hs
-0M+m9WltBHxZ3AZOBDaFJ/QYGmugMA==
-=InTp
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nWQAACgkQJNaLcl1U
+h9CxiAgAhDSjkVNSd4C3SSNbhfInIakuxFRySdIdhdj0LEFFiDgpuSzr3Lod/jYy
+mKamyUcBQ6F3CafOHN8nf4MlH9u3CSElXbDvLZlah833W1ak+AWXqFDdqi3XM9Wg
+5enzsfi4JHeKxu/NGAt7YUqXKG2WxM4RL0iC1H/CsGsLII4ixSPSNHJ8BsGs2Ehx
+Dv2I9zYutWdH+3O8bk4vHtJHpZidjuobydynnmMgcHpeDXVSLPZx22W/LXsUAlfE
+HFaK+IberJIeSTebqFLV0fkB5+x9yri0Jg8SLWubAGmqiS/XEvVLx1tF0uU/ukk4
+dBx3qCxD+Vtqo7ZF4IYCIM1u5B64lg==
+=HhUo
 -----END PGP SIGNATURE-----
 
---J/dobhs11T7y2rNN--
+--eAbsdosE1cNLO4uF--
