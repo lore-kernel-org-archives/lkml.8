@@ -2,94 +2,148 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86669C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADC2C2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A7A2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QaoxgXDr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRxkgdzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbgFOOsP (ORCPT
+        id S1730791AbgFOOsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:48:15 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:24386 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730353AbgFOOsN (ORCPT
+        Mon, 15 Jun 2020 10:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730476AbgFOOsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:48:13 -0400
-X-UUID: 0c4e5100b1c744faa74deee3bcffb86d-20200615
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=9Jrxg+K/KEKim/cVYfaklTsm5g5BtXdZJCkdT9NVb7Y=;
-        b=QaoxgXDrbPxiv114paz3+Qxoy8lZADTKf6A+w9sShjDSX8lGpPvZoTs6crJ8qhrrwygSRKBBHrs2pX01Q4Wxjt7bZJ/J1HPUvmBM6OfX1IB/6FxP/pCrgxZYswNkjOuvyNKiJ+2B7hkWKzjgryMQFznjORlroOBDSN5qXg+5XN4=;
-X-UUID: 0c4e5100b1c744faa74deee3bcffb86d-20200615
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1823175320; Mon, 15 Jun 2020 22:48:08 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 15 Jun 2020 22:48:04 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 15 Jun 2020 22:48:03 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
-        <chaotian.jing@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v2 3/3] scsi: ufs-mediatek: Print host information for failed supsend and resume
-Date:   Mon, 15 Jun 2020 22:48:05 +0800
-Message-ID: <20200615144805.6921-4-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200615144805.6921-1-stanley.chu@mediatek.com>
-References: <20200615144805.6921-1-stanley.chu@mediatek.com>
+        Mon, 15 Jun 2020 10:48:40 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69523C061A0E;
+        Mon, 15 Jun 2020 07:48:39 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id c8so18137913iob.6;
+        Mon, 15 Jun 2020 07:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CFYHq9QU1VF3rchooKVX3EvDkFFGgQYVgoX+nSdXTuc=;
+        b=PRxkgdzs6hj4NpKjLdU4+mZo+kiLgpl3v8qO3FUtkLItVntqN/v1UtTbvyh1fAkJDQ
+         /r/QUNFX0i3kNhar6p3HMQRIc0/hnPpxSyfCSOk/7QGhSriP8dugDYCbD3NVmr3r39T+
+         L0RU8h1FEoVzRUIqiHPXWetm4KkkvOZ8sZuPa8pJIZPJbfJz9/qmImf4Haoxykq/U+Wm
+         z0McY86vBdXb73lWVCJytm+tusWr8I6JfrKJ++433fcbFQ7IdZZfKn+gl9mRtO93JHfb
+         KS+ugwQDy31DiZDXPTjkRurzgAFvHZ4Gbe2s6FFN7LQGjbdA1Klosmt+SwHoidzFhQqC
+         XkJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CFYHq9QU1VF3rchooKVX3EvDkFFGgQYVgoX+nSdXTuc=;
+        b=gu9PBb2xVGRKsDeAvPl9dTwQsZgQo83ED5+xLkeqKLebPGrluehaGJyzD5Rog37869
+         LNj/HGqUyMaGNCUgXT9+XI9PEnVluj/BcfKm0wxHhbU/ioq3FO+/ZNrlkPKvcb/ya5yY
+         JsM93Nk4l4fGc5QIJft26rXR6n8qQamrRMInu3+WjuwcIKpfBeFbga9nuAHF2Qe0I90i
+         Ec0UT8XIXr5COHFwYhXQF74UzQm/MUxiNlFJIphd5FbuvrIbfU5pXTi3x4uu9LfQC4Zr
+         hQGVdXPJPsPJdcMxMR8tjNSFkOnVbTQvGpljZ1CIZ6pUew1wb1E7Ot8Erpy96GGBxyam
+         q5Gg==
+X-Gm-Message-State: AOAM5300G7d+CpmXZt7VC/rgKW4r+5pLQX89/wkvCN3fmcBqLrzWnYbP
+        TUFgxN7kWSNPd5Vw3QkzK3q0J/YecSriAkDCuE//
+X-Google-Smtp-Source: ABdhPJyd6RZmdZpxGVu6c3gRb+Y3l0bsTdnHuSOZYnX1P537cI9jfkNEPZLpydEoTLgL6kUKfHIZe+3b9Hy/JybhE4I=
+X-Received: by 2002:a02:3501:: with SMTP id k1mr6072971jaa.133.1592232518583;
+ Mon, 15 Jun 2020 07:48:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200615130032.931285-1-hch@lst.de> <20200615130032.931285-3-hch@lst.de>
+ <CAK8P3a0bRD3RzE_X6Tjzu9Tj+OhHhP+S=k6+VYODBGko8oQhew@mail.gmail.com> <20200615141239.GA12951@lst.de>
+In-Reply-To: <20200615141239.GA12951@lst.de>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Mon, 15 Jun 2020 10:48:26 -0400
+Message-ID: <CAMzpN2heSzZzg16ws3yQkd7YZwmPPx_4RFCpb9JYfFWJ9gfPhA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] exec: simplify the compat syscall handling
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UHJpbnQgaG9zdCBzdGF0ZSBhbmQgcmVnaXN0ZXIgZHVtcHMgd2hpbGUgc3VzcGVuZCBvciByZXN1
-bWUgZmxvdw0KaXMgZmFpbGVkLg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3Rhbmxl
-eS5jaHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsu
-YyB8IDE2ICsrKysrKysrKystLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygr
-KSwgNiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1l
-ZGlhdGVrLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jDQppbmRleCBkNTZjZThk
-OTdkNGUuLjBiYjdlZDg0MTgwOSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1l
-ZGlhdGVrLmMNCisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMNCkBAIC00Njks
-MjMgKzQ2OSwyNCBAQCBzdGF0aWMgaW50IHVmc19tdGtfbGlua19zZXRfaHBtKHN0cnVjdCB1ZnNf
-aGJhICpoYmEpDQogDQogCWVyciA9IHVmc2hjZF9oYmFfZW5hYmxlKGhiYSk7DQogCWlmIChlcnIp
-DQotCQlyZXR1cm4gZXJyOw0KKwkJZ290byBvdXQ7DQogDQogCWVyciA9IHVmc19tdGtfdW5pcHJv
-X3NldF9wbShoYmEsIDApOw0KIAlpZiAoZXJyKQ0KLQkJcmV0dXJuIGVycjsNCisJCWdvdG8gb3V0
-Ow0KIA0KIAllcnIgPSB1ZnNoY2RfdWljX2hpYmVybjhfZXhpdChoYmEpOw0KIAlpZiAoIWVycikN
-CiAJCXVmc2hjZF9zZXRfbGlua19hY3RpdmUoaGJhKTsNCiAJZWxzZQ0KLQkJcmV0dXJuIGVycjsN
-CisJCWdvdG8gb3V0Ow0KIA0KIAllcnIgPSB1ZnNoY2RfbWFrZV9oYmFfb3BlcmF0aW9uYWwoaGJh
-KTsNCitvdXQ6DQogCWlmIChlcnIpDQotCQlyZXR1cm4gZXJyOw0KLQ0KLQlyZXR1cm4gMDsNCisJ
-CXVmc2hjZF9wcmludF9pbmZvKGhiYSwgVUZTX0lORk9fSE9TVF9TVEFURSB8DQorCQkJCSAgVUZT
-X0lORk9fSE9TVF9SRUdTIHwgVUZTX0lORk9fUFdSKTsNCisJcmV0dXJuIGVycjsNCiB9DQogDQog
-c3RhdGljIGludCB1ZnNfbXRrX2xpbmtfc2V0X2xwbShzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KQEAg
-LTQ5NCw2ICs0OTUsOSBAQCBzdGF0aWMgaW50IHVmc19tdGtfbGlua19zZXRfbHBtKHN0cnVjdCB1
-ZnNfaGJhICpoYmEpDQogDQogCWVyciA9IHVmc19tdGtfdW5pcHJvX3NldF9wbShoYmEsIDEpOw0K
-IAlpZiAoZXJyKSB7DQorCQl1ZnNoY2RfcHJpbnRfaW5mbyhoYmEsIFVGU19JTkZPX0hPU1RfU1RB
-VEUgfA0KKwkJCQkgIFVGU19JTkZPX0hPU1RfUkVHUyB8IFVGU19JTkZPX1BXUik7DQorDQogCQkv
-KiBSZXN1bWUgVW5pUHJvIHN0YXRlIGZvciBmb2xsb3dpbmcgZXJyb3IgcmVjb3ZlcnkgKi8NCiAJ
-CXVmc19tdGtfdW5pcHJvX3NldF9wbShoYmEsIDApOw0KIAkJcmV0dXJuIGVycjsNCi0tIA0KMi4x
-OC4wDQo=
+On Mon, Jun 15, 2020 at 10:13 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Mon, Jun 15, 2020 at 03:31:35PM +0200, Arnd Bergmann wrote:
+> > >  #ifdef CONFIG_COMPAT
+> > > -       if (unlikely(argv.is_compat)) {
+> > > +       if (in_compat_syscall()) {
+> > > +               const compat_uptr_t __user *compat_argv =
+> > > +                       compat_ptr((unsigned long)argv);
+> > >                 compat_uptr_t compat;
+> > >
+> > > -               if (get_user(compat, argv.ptr.compat + nr))
+> > > +               if (get_user(compat, compat_argv + nr))
+> > >                         return ERR_PTR(-EFAULT);
+> > >
+> > >                 return compat_ptr(compat);
+> > >         }
+> > >  #endif
+> >
+> > I would expect that the "#ifdef CONFIG_COMPAT" can be removed
+> > now, since compat_ptr() and in_compat_syscall() are now defined
+> > unconditionally. I have not tried that though.
+>
+> True, I'll give it a spin.
+>
+> > > +/*
+> > > + * x32 syscalls are listed in the same table as x86_64 ones, so we need to
+> > > + * define compat syscalls that are exactly the same as the native version for
+> > > + * the syscall table machinery to work.  Sigh..
+> > > + */
+> > > +#ifdef CONFIG_X86_X32
+> > >  COMPAT_SYSCALL_DEFINE3(execve, const char __user *, filename,
+> > > -       const compat_uptr_t __user *, argv,
+> > > -       const compat_uptr_t __user *, envp)
+> > > +                      const char __user *const __user *, argv,
+> > > +                      const char __user *const __user *, envp)
+> > >  {
+> > > -       return do_compat_execve(AT_FDCWD, getname(filename), argv, envp, 0);
+> > > +       return do_execveat(AT_FDCWD, getname(filename), argv, envp, 0, NULL);
+> > >  }
+> >
+> > Maybe move it to arch/x86/kernel/process_64.c or arch/x86/entry/syscall_x32.c
+> > to keep it out of the common code if this is needed.
+>
+> I'd rather keep it in common code as that allows all the low-level
+> exec stuff to be marked static, and avoid us growing new pointless
+> compat variants through copy and paste.
+> smart compiler to d
+>
+> > I don't really understand
+> > the comment, why can't this just use this?
+>
+> That errors out with:
+>
+> ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1040): undefined reference to
+> `__x32_sys_execve'
+> ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1108): undefined reference to
+> `__x32_sys_execveat'
+> make: *** [Makefile:1139: vmlinux] Error 1
 
+I think I have a fix for this, by modifying the syscall wrappers to
+add an alias for the __x32 variant to the native __x64_sys_foo().
+I'll get back to you with a patch.
+
+--
+Brian Gerst
