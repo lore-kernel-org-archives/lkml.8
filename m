@@ -2,92 +2,172 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64086C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F63C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 325E12074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:15:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhYAievL"
+	by mail.kernel.org (Postfix) with ESMTP id EB1DB206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgFOGPl (ORCPT
+        id S1728356AbgFOGRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:15:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbgFOGPk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:15:40 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39740C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:15:40 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id q8so14683838qkm.12
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:15:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Pq8wSoIwYToPYyYMgXetLZRme7ou0tgoOwDcqdnlKHE=;
-        b=YhYAievLTb+s1aYwoEae3p1JzZ8ET8WqfcyarhCMhIGjmFW2VuSv56qtK0iTXYAOJK
-         FxW7ggnTNvKInUW/vfv9UtPmG7tFHvy2paKRofuftyaDFLjAyrCMSJ3Occs4TzSmNiL1
-         +PLfC8COBKhE03g2EZeGMzANYHNxIgo4U3/pYEDsusGE3TZzIb9S+/N/euRHah/dUSoD
-         NkXs3wEDD/qErfLaT1UUhe6OyD/uUVWe6U0GBAunp9czEivTVXw0CTOxd/JDr1k5fQyC
-         1OQUVn+/VpGR8XOY4P6eiKzicVZ2zF5UM7xL/lHifQegmlu0ThYcdOsWYeqsjxQk3GJU
-         UPXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Pq8wSoIwYToPYyYMgXetLZRme7ou0tgoOwDcqdnlKHE=;
-        b=WA7rCiFRxRhtoIWZUl/PfVlF4PN+N3qg756OAIyAGnZA2WY+ycl8/B0p2PjUFoaC7P
-         CnlGOOM2L6NEpuhqffxLs+nJ2D+RcI6rfBQ1ZREXRmXPIQUoNC4+yG8cMIDktVFfaCRM
-         LG9YXAh8m1JU5+ar44QHDpk1doW7IkiYN1Mh9SYcMlsgfjsynvh/kL+74HKJt5dfJZPL
-         V/zfGbZZS4bk32KL3GhurSkblDs2UZGUkesLTc1TUCgLlcbew0xcuth9L6JgLK0B3ddj
-         iOESXib9751Oh8gfyM8DsNL46iHyN42izDv9wJfm3BnY9eo6Nbpp8XaVLPA6xBDuCTQL
-         dE+A==
-X-Gm-Message-State: AOAM530T3MSKc789+eiY9omfsQR3F6LbuSXPehG7g8x4bvImhrFBt0+Z
-        qiylYcBSHx8KcrqUIoqrUL9DfekptbJb0ceFuIk=
-X-Google-Smtp-Source: ABdhPJwE9J+eJGLQhM9cvcRVG6bRyMsop11pz6QRuQPdJvXk05CFa//kxOLWGMIJPV9VNYj91tLpzDE60uTUbAk0KG0=
-X-Received: by 2002:a05:620a:a4a:: with SMTP id j10mr13337550qka.272.1592201739302;
- Sun, 14 Jun 2020 23:15:39 -0700 (PDT)
+        Mon, 15 Jun 2020 02:17:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:14111 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbgFOGRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:17:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49lh1m3ggJzB09ZG;
+        Mon, 15 Jun 2020 08:17:00 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id us_QWEWQjgUN; Mon, 15 Jun 2020 08:17:00 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49lh1m2qF8zB09ZD;
+        Mon, 15 Jun 2020 08:17:00 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 767258B782;
+        Mon, 15 Jun 2020 08:17:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Js7BPOCxpUQT; Mon, 15 Jun 2020 08:17:06 +0200 (CEST)
+Received: from [172.25.230.104] (unknown [172.25.230.104])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3BB0B8B77C;
+        Mon, 15 Jun 2020 08:17:06 +0200 (CEST)
+Subject: Re: [PATCH] SUNRPC: Add missing asm/cacheflush.h
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        netdev@vger.kernel.org
+References: <a356625c9aa1b5d711e320c39779e0c713f204cb.1592154127.git.christophe.leroy@csgroup.eu>
+ <854D2842-6940-42BA-A48C-AE9DB48E6071@oracle.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <35ca33b7-4b9d-d70f-efcc-c1eb72483b2b@csgroup.eu>
+Date:   Mon, 15 Jun 2020 08:16:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200614123923.99189-1-songmuchun@bytedance.com> <20200614123923.99189-3-songmuchun@bytedance.com>
-In-Reply-To: <20200614123923.99189-3-songmuchun@bytedance.com>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 15 Jun 2020 15:15:28 +0900
-Message-ID: <CAAmzW4N6ycsp+W_hGA03W-QVCxE6Jqo0mvjajK9ZuY1M596wSg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mm/slub: Use node_nr_slabs() instead of slabs_node()
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <854D2842-6940-42BA-A48C-AE9DB48E6071@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 14=EC=9D=BC (=EC=9D=BC) =EC=98=A4=ED=9B=84 9:39, M=
-uchun Song <songmuchun@bytedance.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> In the some code, we already get the kmem_cache_node, so we can
-> use node_nr_slabs() directly instead of slabs_node(). Check the
-> condition of n->nr_partial can also be removed because we can get
-> the correct result via node_nr_slabs().
->
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 
-If appying this patch, there is no reference to slabs_node(). Please remove=
- it.
 
-Thanks.
+Le 14/06/2020 à 20:57, Chuck Lever a écrit :
+> Hi Christophe -
+> 
+>> On Jun 14, 2020, at 1:07 PM, Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+>>
+>> Even if that's only a warning, not including asm/cacheflush.h
+>> leads to svc_flush_bvec() being empty allthough powerpc defines
+>> ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE.
+>>
+>>   CC      net/sunrpc/svcsock.o
+>> net/sunrpc/svcsock.c:227:5: warning: "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]
+>> #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+>>      ^
+>>
+>> Fixes: ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()")
+>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+>> ---
+>> I detected this on linux-next on June 4th and warned Chuck. Seems like it went into mainline anyway.
+> 
+> Thanks for your patch. I've searched my mailbox. It appears I never
+> received your June 4th e-mail.
+
+It is there: 
+https://lore.kernel.org/linuxppc-dev/868915eb-8fed-0600-ea5d-31ae874457b1@csgroup.eu/
+
+> 
+> Does your patch also address:
+> 
+>     https://marc.info/?l=linux-kernel&m=159194369128024&w=2 ?
+
+I guess it does, yes.
+
+> 
+> If so, then
+> 
+>     Reported-by: kernel test robot <lkp@intel.com>
+> 
+> should be added to the patch description.
+> 
+> Ideally, compilation on x86_64 should have thrown the same warning,
+> but it didn't. Why would the x86_64 build behave differently than
+> ppc64 or i386?
+
+I think it depends whether you have selected CONFIG_BLOCK or not.
+In my embedded config, CONFIG_BLOCK isn't selected.
+
+When CONFIG_BLOCK is selected, there is the following inclusion chain:
+
+   CC      net/sunrpc/svcsock.o
+In file included from ./include/linux/highmem.h:12:0,
+                  from ./include/linux/pagemap.h:11,
+                  from ./include/linux/blkdev.h:16,
+                  from ./include/linux/blk-cgroup.h:23,
+                  from ./include/linux/writeback.h:14,
+                  from ./include/linux/memcontrol.h:22,
+                  from ./include/net/sock.h:53,
+                  from ./include/net/inet_sock.h:22,
+                  from ./include/linux/udp.h:16,
+                  from net/sunrpc/svcsock.c:31:
+./arch/powerpc/include/asm/cacheflush.h:26:2: warning: #warning Coucous 
+[-Wcpp]
+  #warning test
+
+But linux/blkdev.h includes linux/pagemap.h only when CONFIG_BLOCK is 
+defined.
+
+> 
+> 
+>> net/sunrpc/svcsock.c | 1 +
+>> 1 file changed, 1 insertion(+)
+>>
+>> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+>> index 5c4ec9386f81..d9e99cb09aab 100644
+>> --- a/net/sunrpc/svcsock.c
+>> +++ b/net/sunrpc/svcsock.c
+>> @@ -45,6 +45,7 @@
+>> #include <net/tcp_states.h>
+>> #include <linux/uaccess.h>
+>> #include <asm/ioctls.h>
+>> +#include <asm/cacheflush.h>
+> 
+> Nit: Let's include <linux/highmem.h> in net/sunrpc/svcsock.h instead
+> of <asm/cacheflush.h> directly.
+
+Ok, I'll post v2.
+
+> 
+> 
+>> #include <linux/sunrpc/types.h>
+>> #include <linux/sunrpc/clnt.h>
+>> -- 
+>> 2.25.0
+>>
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
+
+Christophe
