@@ -2,135 +2,103 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89873C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F79BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 728E42068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205022068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:55:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bH52eZn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgFOJzb (ORCPT
+        id S1729421AbgFOJzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:55:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2306 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726111AbgFOJza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:55:30 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 8056736B118F31A0D9D4;
-        Mon, 15 Jun 2020 10:55:28 +0100 (IST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.26.179) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 15 Jun 2020 10:55:27 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <bp@alien8.de>, <james.morse@arm.com>, <lenb@kernel.org>,
-        <tony.luck@intel.com>, <dan.carpenter@oracle.com>,
-        <zhangliguang@linux.alibaba.com>,
-        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
-        <jroedel@suse.de>
-CC:     <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>
-Subject: [PATCH v9 0/2] ACPI / APEI: Add support to notify the vendor specific HW errors
-Date:   Mon, 15 Jun 2020 10:53:10 +0100
-Message-ID: <20200615095312.398-1-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        Mon, 15 Jun 2020 05:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgFOJzd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 05:55:33 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067B7C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:55:32 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id mb16so16748747ejb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=F2y9Crm4EpXrgojd+CYn/r/xzpbyjoctnZnKUBxxPGw=;
+        b=bH52eZn08gxvWDKX63J+WIukX0j2P3n7HyPqonmets/vbXsOXhi81yedn4gWFeKKgc
+         Nd97MdUX3wiXsdSQY3wQdUIPnAluBFWXhcBZ8BAQwlpAWUjchBVrXbGAlWp20KVUVUXY
+         R/uBSQemQsvtwxH9SOV1pTp2yySw61Y07GninWtBfjDu5VIqdDzmfqe2jAhgIzT2Bz1B
+         NRLp3I+nPXlIzSfhf1A1+gXtK0CLD4Q5Z4U/oY6RpQ2lyQkkt0yCU7eU1FiFl5kwZpMC
+         zfXaocuA8lqIJ+rdIQpyAevnwQQC3rmI1YX9RyC/i/QgJ/IyrqlSl9gZkH4Fx+RfDPXN
+         begA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=F2y9Crm4EpXrgojd+CYn/r/xzpbyjoctnZnKUBxxPGw=;
+        b=S8hGE/Xx2J5hrrIE1BKuT74B0Dnqe8x04UZOtsJhg2wyZGpZLi6mVOIiMakw+Mi1IX
+         HqfqUcn13QAVWn8yeGgoNYtg1byi7hpqoJ4oW9U3SYtEzBFuBLV2SHCEMI40SeuRteht
+         xxmFTYfXv4PaTK8utVVHwJK2+B0zx2pkgiXszJs731S/XMoKLrqgICTiE3ysX3EMmqxb
+         5jiz97lr/AoTOqwPWQecQGCtZYnSmCSpZXi8eBsEB6Ay/xCyMuwhYDmLELzl7+OcO17r
+         KoC2JRiFzYXiiLP9KpJmp38S+5p2mG7qCtR23f/13g4hkb0tBmgjPa5y/DifAnjGLgO+
+         1rlg==
+X-Gm-Message-State: AOAM530O10ns2ZoU8M+IwpqjL+v3HdQTcbsREm/F2RrqRCvfgIiVNuac
+        dN2O6K/yA4La+P4KjGeT03xwF0UWvgutFw==
+X-Google-Smtp-Source: ABdhPJz6cNXf6sv5+78+bDzU/EfsCLMtxsclb4N1u2KcEBfpSY9J/kaEdBCn6renQCfjvKPO06pKAA==
+X-Received: by 2002:a17:906:d78a:: with SMTP id pj10mr25691244ejb.50.1592214931572;
+        Mon, 15 Jun 2020 02:55:31 -0700 (PDT)
+Received: from [192.168.1.3] (212-5-158-38.ip.btc-net.bg. [212.5.158.38])
+        by smtp.googlemail.com with ESMTPSA id lx26sm8665063ejb.112.2020.06.15.02.55.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 02:55:30 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] venus: Make debug infrastructure more flexible
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20200613223919.7038-1-stanimir.varbanov@linaro.org>
+ <20200613223919.7038-3-stanimir.varbanov@linaro.org>
+ <20200614063710.GB2611869@kroah.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <c54a12a2-7f92-105c-a01c-8e85730f36bb@linaro.org>
+Date:   Mon, 15 Jun 2020 12:55:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.26.179]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200614063710.GB2611869@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Presently the vendor drivers are unable to do the recovery for the
-vendor specific recoverable HW errors because APEI driver does not
-support reporting the error to the vendor drivers.
+Hi Greg,
 
-patch set
-1. add new interface to the APEI driver for reporting the 
-   vendor specific non-fatal HW errors to the drivers.
+On 6/14/20 9:37 AM, Greg KH wrote:
+> On Sun, Jun 14, 2020 at 01:39:18AM +0300, Stanimir Varbanov wrote:
+>>  	if (slot == -1) {
+>> -		dev_dbg(inst->core->dev, "%s: no free slot\n", __func__);
+>> +		VDBGH("no free slot for timestamp\n");
+> 
+> Again, no, you just lost a lot of valuable information by changing to a
+> different format (like driver, specific device, etc.).  Please don't do
+> this, it just makes the information less than before.
 
-2. add driver to handle HiSilicon hip PCIe controller's errors.
+OK, one of the reasons to use pr_debug inside VDBGH macro is to avoid
+having struct device *dev variable in every function with dev_dbg even
+when the function doesn't use it.
 
-V9:
-1. Fixed 2 improvements suggested by the kbuild test robot. 
-1.1 Change ghes_gdata_pool_init() as static function.
-1.2. Removed using buffer to store the error data for
-     logging in the hisi_pcie_handle_error()
-
-V8:
-1. Removed reporting the standard errors through the interface
-   because of the conflict with the recent patches in the
-   memory error handling path.
-2. Fix comments by Dan Carpenter.
-   
-V7:
-1. Add changes in the APEI driver suggested by Borislav Petkov, for
-   queuing up all the non-fatal HW errors to the work queue and
-   notify the registered kernel drivers from the bottom half using
-   blocking notifier, common interface for both standard and
-   vendor-spcific errors.
-2. Fix for further feedbacks in v5 HIP PCIe error handler driver
-   by Bjorn Helgaas.
-
-V6:
-1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
-
-V5:
-1. Fix comments from James Morse.
-1.1 Changed the notification method to use the atomic_notifier_chain.
-1.2 Add the error handled status for the user space.  
-
-V4:
-1. Fix for the following smatch warning in the PCIe error driver,
-   reported by kbuild test robot<lkp@intel.com>:
-   warn: should '((((1))) << (9 + i))' be a 64 bit type?
-   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
-
-V3:
-1. Fix the comments from Bjorn Helgaas.
-
-V2:
-1. Changes in the HiSilicon PCIe controller's error handling driver
-   for the comments from Bjorn Helgaas.
-   
-2. Changes in the APEI interface to support reporting the vendor error
-   for module with multiple devices, but use the same section type.
-   In the error handler will use socket id/sub module id etc to distinguish
-   the device.
-
-V1:  
-1. Fix comments from James Morse.
-
-2. add driver to handle HiSilicon hip08 PCIe controller's errors,
-   which is an application of the above interface.
-
-Shiju Jose (1):
-  ACPI / APEI: Add support to notify the vendor specific HW errors
-
-Yicong Yang (1):
-  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
-
- drivers/acpi/apei/ghes.c                 | 130 +++++++++-
- drivers/pci/controller/Kconfig           |   8 +
- drivers/pci/controller/Makefile          |   1 +
- drivers/pci/controller/pcie-hisi-error.c | 305 +++++++++++++++++++++++
- include/acpi/ghes.h                      |  28 +++
- 5 files changed, 471 insertions(+), 1 deletion(-)
- create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+Are you fine with s/pr_debug/dev_dbg in VDBGX macros?
 
 -- 
-2.17.1
-
-
+regards,
+Stan
