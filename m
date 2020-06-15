@@ -2,259 +2,74 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC39C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E791A20707
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:26:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyzK30N5"
+	by mail.kernel.org (Postfix) with ESMTP id CBA1220707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgFOH0H (ORCPT
+        id S1728801AbgFOH0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:26:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728669AbgFOHZk (ORCPT
+        Mon, 15 Jun 2020 03:26:16 -0400
+Received: from mail-177142.yeah.net ([123.58.177.142]:57487 "EHLO
+        mail-177142.yeah.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728589AbgFOH0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:25:40 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26EBC061A0E;
-        Mon, 15 Jun 2020 00:25:39 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f185so13677519wmf.3;
-        Mon, 15 Jun 2020 00:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=hCmcJTHOD+I9y8zMPEKQfZ4lr4Baar/k/CqSQtJkni8=;
-        b=gyzK30N5LjAUZYspjnP1rYi5vhZxhf7uwbaem5wYIxZT+/da7prQXz1LASs30qhxiH
-         liFx8D82k8q6bupfg6u7laF4aoCR8VTNxIQOVHkKUVIt/mLASflxpUrAbpEgOJkqn2vq
-         plJ315HAcnmREEebbs2ALEmY3mzzcE0Ugme0IvV3O/a+55h/cHwrHTUqE1j1UddrzamB
-         lvGlWvcfhVdo/R0HDy3ehFNif17o7AskwMWUXv2whtAwCptewCbh2mTElVB9y5NpUDPY
-         VUQGMTtKr+sZ32njVUEDx2ODBOr1VcSAC3v96LX/OrtWHWOPQIaZe8HAsRxZrs+15/uH
-         gGRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hCmcJTHOD+I9y8zMPEKQfZ4lr4Baar/k/CqSQtJkni8=;
-        b=cK+oam8r7riQNw/4Niw90MOxRp0KsHVW0GENNaTx7KzlK2hnxnBXLvGhEQ4pD7VsBV
-         zhnOu9A8PssEVWDTLuDO22iDtq9gKIsl2aqaLtNeoiDD4xyJtOZtpowZfA5ARx+9ljQR
-         j2ynyh8H5pxTEvhLhgFqD/9Uibb81LIW9Dayuhxci3cBsyILSw3934tZ7rhBY/MwRbnu
-         mdLgvIIo/jJit3jaluBC/ZSW2MkdOy3/5a5Nyls0Z6if2pxMEYU7aIXPnHrp6woNLrqx
-         JBuWcoyEt/c1sxluIJxFJeGI6inAFQsHaDR5x2igeP2UKUmNRMDWJIKaKzVhzCLdXmrE
-         pYTQ==
-X-Gm-Message-State: AOAM531Z92u3tlGU1rVbK5boL51aaT40kkJG1nFanczkec2fVX4XzL5i
-        ndTRDM/xTONCskcfE1J7bqsYFhjT
-X-Google-Smtp-Source: ABdhPJxQ12xchLyd+KF6I38bMdcp3Ai3PVBmxfWll1791kAy4og8dnlQ/kEUHgV62mnpn5EV2DB5iA==
-X-Received: by 2002:a7b:ca47:: with SMTP id m7mr11234380wml.173.1592205938464;
-        Mon, 15 Jun 2020 00:25:38 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id b187sm21897402wmd.26.2020.06.15.00.25.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 00:25:38 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] io-wq: add an option to cancel all matched reqs
-Date:   Mon, 15 Jun 2020 10:24:03 +0300
-Message-Id: <6943d97038cf2588a9ccfa8e92193349ebf373f7.1592205754.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1592205754.git.asml.silence@gmail.com>
-References: <cover.1592205754.git.asml.silence@gmail.com>
+        Mon, 15 Jun 2020 03:26:16 -0400
+X-Greylist: delayed 463 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Jun 2020 03:26:15 EDT
+Received: from vivo.com (localhost [127.0.0.1])
+        by mail-177142.yeah.net (Hmail) with ESMTP id C84A06445C6;
+        Mon, 15 Jun 2020 15:18:29 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AMQAhwC7CIPskkflFGpmIqrA.3.1592205509810.Hmail.wangqing@vivo.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gZHJpdmVyc1xibG9jazogVXNlIGtvYmpfdG9fZGV2KCkgQVBJ?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.124
+In-Reply-To: <20200612102651-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from wangqing@vivo.com( [157.0.31.124) ] by ajax-webmail ( [127.0.0.1] ) ; Mon, 15 Jun 2020 15:18:29 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5pOO?= <wangqing@vivo.com>
+Date:   Mon, 15 Jun 2020 15:18:29 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZHU9DTR8fSh4aHUIeVkpOQklJS05OS0JDTkpVEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKTFVKS0tZBg++
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhDSUNPTUxKTENLN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6Nio6Eww4TDgyKwgQEB0XPTwLFjIKCTpVSFVKTkJJSUtOTkpLSUtNVTMWGhIXVQwaFRwKEhUc
+        Ow0SDRRVGBQWRVlXWRILWUFZSk5MVUtVSEpVSklPWVdZCAFZQUhISkw3Bg++
+X-HM-Tid: 0a72b6d804be6473kursc84a06445c6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for cancelling all io-wq works matching a predicate.
-It isn't used yet, so no change in observable behaviour.
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io-wq.c    | 60 +++++++++++++++++++++++++++++----------------------
- fs/io-wq.h    |  2 +-
- fs/io_uring.c |  2 +-
- 3 files changed, 36 insertions(+), 28 deletions(-)
-
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 9e7d277de248..3b0bd956e539 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -908,13 +908,15 @@ void io_wq_cancel_all(struct io_wq *wq)
- struct io_cb_cancel_data {
- 	work_cancel_fn *fn;
- 	void *data;
-+	int nr_running;
-+	int nr_pending;
-+	bool cancel_all;
- };
- 
- static bool io_wq_worker_cancel(struct io_worker *worker, void *data)
- {
- 	struct io_cb_cancel_data *match = data;
- 	unsigned long flags;
--	bool ret = false;
- 
- 	/*
- 	 * Hold the lock to avoid ->cur_work going out of scope, caller
-@@ -925,55 +927,55 @@ static bool io_wq_worker_cancel(struct io_worker *worker, void *data)
- 	    !(worker->cur_work->flags & IO_WQ_WORK_NO_CANCEL) &&
- 	    match->fn(worker->cur_work, match->data)) {
- 		send_sig(SIGINT, worker->task, 1);
--		ret = true;
-+		match->nr_running++;
- 	}
- 	spin_unlock_irqrestore(&worker->lock, flags);
- 
--	return ret;
-+	return match->nr_running && !match->cancel_all;
- }
- 
--static bool io_wqe_cancel_pending_work(struct io_wqe *wqe,
-+static void io_wqe_cancel_pending_work(struct io_wqe *wqe,
- 				       struct io_cb_cancel_data *match)
- {
- 	struct io_wq_work_node *node, *prev;
- 	struct io_wq_work *work;
- 	unsigned long flags;
--	bool found = false;
- 
-+retry:
- 	spin_lock_irqsave(&wqe->lock, flags);
- 	wq_list_for_each(node, prev, &wqe->work_list) {
- 		work = container_of(node, struct io_wq_work, list);
-+		if (!match->fn(work, match->data))
-+			continue;
- 
--		if (match->fn(work, match->data)) {
--			wq_list_del(&wqe->work_list, node, prev);
--			found = true;
--			break;
--		}
-+		wq_list_del(&wqe->work_list, node, prev);
-+		spin_unlock_irqrestore(&wqe->lock, flags);
-+		io_run_cancel(work, wqe);
-+		match->nr_pending++;
-+		if (!match->cancel_all)
-+			return;
-+
-+		/* not safe to continue after unlock */
-+		goto retry;
- 	}
- 	spin_unlock_irqrestore(&wqe->lock, flags);
--
--	if (found)
--		io_run_cancel(work, wqe);
--	return found;
- }
- 
--static bool io_wqe_cancel_running_work(struct io_wqe *wqe,
-+static void io_wqe_cancel_running_work(struct io_wqe *wqe,
- 				       struct io_cb_cancel_data *match)
- {
--	bool found;
--
- 	rcu_read_lock();
--	found = io_wq_for_each_worker(wqe, io_wq_worker_cancel, match);
-+	io_wq_for_each_worker(wqe, io_wq_worker_cancel, match);
- 	rcu_read_unlock();
--	return found;
- }
- 
- enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
--				  void *data)
-+				  void *data, bool cancel_all)
- {
- 	struct io_cb_cancel_data match = {
--		.fn	= cancel,
--		.data	= data,
-+		.fn		= cancel,
-+		.data		= data,
-+		.cancel_all	= cancel_all,
- 	};
- 	int node;
- 
-@@ -985,7 +987,8 @@ enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
- 	for_each_node(node) {
- 		struct io_wqe *wqe = wq->wqes[node];
- 
--		if (io_wqe_cancel_pending_work(wqe, &match))
-+		io_wqe_cancel_pending_work(wqe, &match);
-+		if (match.nr_pending && !match.cancel_all)
- 			return IO_WQ_CANCEL_OK;
- 	}
- 
-@@ -998,10 +1001,15 @@ enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
- 	for_each_node(node) {
- 		struct io_wqe *wqe = wq->wqes[node];
- 
--		if (io_wqe_cancel_running_work(wqe, &match))
-+		io_wqe_cancel_running_work(wqe, &match);
-+		if (match.nr_running && !match.cancel_all)
- 			return IO_WQ_CANCEL_RUNNING;
- 	}
- 
-+	if (match.nr_running)
-+		return IO_WQ_CANCEL_RUNNING;
-+	if (match.nr_pending)
-+		return IO_WQ_CANCEL_OK;
- 	return IO_WQ_CANCEL_NOTFOUND;
- }
- 
-@@ -1012,7 +1020,7 @@ static bool io_wq_io_cb_cancel_data(struct io_wq_work *work, void *data)
- 
- enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork)
- {
--	return io_wq_cancel_cb(wq, io_wq_io_cb_cancel_data, (void *)cwork);
-+	return io_wq_cancel_cb(wq, io_wq_io_cb_cancel_data, (void *)cwork, false);
- }
- 
- static bool io_wq_pid_match(struct io_wq_work *work, void *data)
-@@ -1026,7 +1034,7 @@ enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid)
- {
- 	void *data = (void *) (unsigned long) pid;
- 
--	return io_wq_cancel_cb(wq, io_wq_pid_match, data);
-+	return io_wq_cancel_cb(wq, io_wq_pid_match, data, false);
- }
- 
- struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
-diff --git a/fs/io-wq.h b/fs/io-wq.h
-index 8e138fa88b9f..7d5bd431c5e3 100644
---- a/fs/io-wq.h
-+++ b/fs/io-wq.h
-@@ -130,7 +130,7 @@ enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid);
- typedef bool (work_cancel_fn)(struct io_wq_work *, void *);
- 
- enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
--					void *data);
-+					void *data, bool cancel_all);
- 
- struct task_struct *io_wq_get_task(struct io_wq *wq);
- 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 5b0249140ff5..7f18c29388d6 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4773,7 +4773,7 @@ static int io_async_cancel_one(struct io_ring_ctx *ctx, void *sqe_addr)
- 	enum io_wq_cancel cancel_ret;
- 	int ret = 0;
- 
--	cancel_ret = io_wq_cancel_cb(ctx->io_wq, io_cancel_cb, sqe_addr);
-+	cancel_ret = io_wq_cancel_cb(ctx->io_wq, io_cancel_cb, sqe_addr, false);
- 	switch (cancel_ret) {
- 	case IO_WQ_CANCEL_OK:
- 		ret = 0;
--- 
-2.24.0
-
+ClN1YmplY3Q6IFJlOiBbUEFUQ0hdIGRyaXZlcnNcYmxvY2s6IFVzZSBrb2JqX3RvX2RldigpIEFQ
+ST5PbiBGcmksIEp1biAxMiwgMjAyMCBhdCAwMzoxMDo1NlBNICswODAwLCBXYW5nIFFpbmcgd3Jv
+dGU6Cj4+IFVzZSBrb2JqX3RvX2RldigpIEFQSSBpbnN0ZWFkIG9mIGNvbnRhaW5lcl9vZigpLgo+
+PiAKPj4gU2lnbmVkLW9mZi1ieTogV2FuZyBRaW5nIDx3YW5ncWluZ0B2aXZvLmNvbT4KPj4gLS0t
+Cj4+ICBkcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYyB8IDIgKy0KPj4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+PiAgbW9kZSBjaGFuZ2UgMTAwNjQ0ID0+
+IDEwMDc1NSBkcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYwo+Cj4KPlN1YmplY3Qgc2hvdWxkIHBy
+b2JhYmx5IHVzZSAiLyIuIEJlc2lkZXMgdGhhdCAtIHRyaXZpYWwgdHJlZT8KU29ycnksIEkgd2ls
+bCBtb2RpZnkgc3ViamVjdCB1c2luZyAiLyIuIEJ1dCB3aGF0IGRvIHlvdSBtZWFuIGFib3V0IHRy
+aXZpYWwgdHJlZT8KPgo+PiAKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmxvY2svdmlydGlvX2Js
+ay5jIGIvZHJpdmVycy9ibG9jay92aXJ0aW9fYmxrLmMKPj4gaW5kZXggOWQyMWJmMC4uYzgwODQw
+NQo+PiAtLS0gYS9kcml2ZXJzL2Jsb2NrL3ZpcnRpb19ibGsuYwo+PiArKysgYi9kcml2ZXJzL2Js
+b2NrL3ZpcnRpb19ibGsuYwo+PiBAQCAtNjMwLDcgKzYzMCw3IEBAIHN0YXRpYyBzdHJ1Y3QgYXR0
+cmlidXRlICp2aXJ0YmxrX2F0dHJzW10gPSB7Cj4+ICBzdGF0aWMgdW1vZGVfdCB2aXJ0YmxrX2F0
+dHJzX2FyZV92aXNpYmxlKHN0cnVjdCBrb2JqZWN0ICprb2JqLAo+PiAgCQlzdHJ1Y3QgYXR0cmli
+dXRlICphLCBpbnQgbikKPj4gIHsKPj4gLQlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBjb250YWluZXJf
+b2Yoa29iaiwgc3RydWN0IGRldmljZSwga29iaik7Cj4+ICsJc3RydWN0IGRldmljZSAqZGV2ID0g
+a29ial90b19kZXYoa29iaik7Cj4+ICAJc3RydWN0IGdlbmRpc2sgKmRpc2sgPSBkZXZfdG9fZGlz
+ayhkZXYpOwo+PiAgCXN0cnVjdCB2aXJ0aW9fYmxrICp2YmxrID0gZGlzay0+cHJpdmF0ZV9kYXRh
+Owo+PiAgCXN0cnVjdCB2aXJ0aW9fZGV2aWNlICp2ZGV2ID0gdmJsay0+dmRldjsKPj4gLS0gCj4+
+IDIuNy40Cj4KDQoNCg==
