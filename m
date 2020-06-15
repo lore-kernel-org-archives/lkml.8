@@ -2,159 +2,76 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43643C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB32F20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168B3206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmmzQQ/G"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DP9hF01k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgFOHZt (ORCPT
+        id S1728759AbgFOHZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:25:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57130 "EHLO
+        Mon, 15 Jun 2020 03:25:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728465AbgFOHZm (ORCPT
+        with ESMTP id S1728568AbgFOHZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:25:42 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10057C05BD1E;
-        Mon, 15 Jun 2020 00:25:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id t18so15927266wru.6;
-        Mon, 15 Jun 2020 00:25:40 -0700 (PDT)
+        Mon, 15 Jun 2020 03:25:49 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236E0C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:25:49 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id i3so13348145ljg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:25:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=nb16NTER+xpaHsVhWoWJPF4ib0zB+sCmpD4uKPsQK90=;
-        b=bmmzQQ/GjlL2wJU6lF6sbg5E28rEUR1tyA0WHuN5wVeFKIeEl6N/tltEu8U8uORn2r
-         TBgQdbVhPpknpuUOER9QYdPJtaH8QxFlt7qh9CCdVo9DejN9s0bv8MQAdXntK0XYbxvP
-         0oDCbBGWp9pxOawH0oSCOqiHGA+oGwcrHNg3ekpvGSO2SnqB7lVKG2uP39qKB3fdo3jS
-         CaP/58DkjQzLdLzVKtydVWsceDQr5FWMmXO4HLC1M/q9htw7zMnz6GvPJesYGZVin690
-         N2rIJ0JlAK6xlrLwkcdaVyw2UxMAJ0lVWlIWjF0564BLMiS21gwUW45BvgJHrF3TNZ+i
-         x6lA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0SoSPRx0KWtA6g8DOeO4fbOiBJz8HrEKhF1kXWLBN7w=;
+        b=DP9hF01kqgES9xL3k2lhw4H2l39p/FA2fzB0Zwg8QVob9Qe8bJMJJw2no2a8+oeR7b
+         I3g3EZNVTj0oFuLgT1Mb7r9nrM0g9IkPaOSfK5FRgcJoPNY+vQqHV57aeDZFyxRCF9kx
+         GP7Enm1ZfIopI06LA/cNTs4NPGflEEjy2VqFrQivdlhUhKaLe98TMFzWkOZbqNry3h61
+         a1ggzFRgAYWD2g6Pjhpky61raMvXQwhbcpE7SnOHcfzkeCtRIihEYXFFrytZwlY0wW5s
+         fyNJIFLOnkkflV/7aFDCVoGXrv68K2fSniL/v/osMpUlAfYaQ1b+4T9eNJ/C//vV0+rS
+         xH2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nb16NTER+xpaHsVhWoWJPF4ib0zB+sCmpD4uKPsQK90=;
-        b=cVgLF98NOxw1eVrVci9oHNq+XxMYUo9BDPOc9CUGUETaBDaiCQnL48Yc4QWUrFkuSs
-         S3R0yIrAnQjj1FBRJ7r+Hdcfr2x0uMg3pAMxr/v4+zvzGjg4GISTtaXIji+6mk9nLDwa
-         etogHsmDXp+lz3tEpAbqufE0OJrM9iwThuloohL8V0I3MlIK8CeUFTZywD06WaIA0j95
-         +I3MSWePSQrmEXMSNjjl45KGVHoLzTB9wQsjv6WxF1iUu1a71LuBe0Y7o8c7EThZjUvP
-         2UMyyOz0+lObeZSYlzPyjKRAJj0wjorZ5zzV7w/oZ/tBLYOCydAmj+gDi9abPoeFw80E
-         kECQ==
-X-Gm-Message-State: AOAM531evOLHBVN9kn3TRyYoRSLI0Bv2xR+hCsxiGaRSZ4+4D1Xe0cCZ
-        5gLDaMk36EarDs/5xjrQvRXxRvNH
-X-Google-Smtp-Source: ABdhPJye24RWgWJOgiZeU4B2GS5O9/UD8w/lbkYYMMsJKl9O2KsFaKRS02bo9zC1imfhULIKKambsw==
-X-Received: by 2002:a5d:6550:: with SMTP id z16mr29326696wrv.392.1592205939801;
-        Mon, 15 Jun 2020 00:25:39 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id b187sm21897402wmd.26.2020.06.15.00.25.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 00:25:39 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] io_uring: cancel all task's requests on exit
-Date:   Mon, 15 Jun 2020 10:24:04 +0300
-Message-Id: <c587cf1bfa2e842a207efd50abdbc7d81e033463.1592205754.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1592205754.git.asml.silence@gmail.com>
-References: <cover.1592205754.git.asml.silence@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0SoSPRx0KWtA6g8DOeO4fbOiBJz8HrEKhF1kXWLBN7w=;
+        b=rE5/f59hHVFlTtOkaLCqHWaIr3b1Ka2NoBOr1/zcFG+tzWNS9KcZCf2omQ8Wnbhziq
+         b/je+ouMXdSdsFX0ZX+BTWLh5nmTGn4u0f35oK62nwXY+6sjU8dqPefQnCmk8vhP+QsB
+         5tC8dHi+OHp9PI/0ifBPxwlSF79Lb+trGYVuj8Q2Fb6kgCypatNLJYPVtSHklW3j7dMS
+         YCGEjq0EFi4gOg40LVsHbnj7X6yl9G940Lcuz6FKdWtV1eqVdcS6OTG6dAJl3sysiNu7
+         pi0HYwytJfL/5UWWuqRldIoY+s/HFD8b2CvcFgtdj2mghoIqHJAk9jwYQqTv26zvaZ2y
+         zVTw==
+X-Gm-Message-State: AOAM5312sSb+dUBcMlI8WVZrTEbyY3yxOz3tqmcrsbzUeRlps+wm+MhO
+        aih6Ip/qiGQjtgoK2g5YDdAKXJlAdRRXvw2DZAWu
+X-Google-Smtp-Source: ABdhPJwuVQNAuu6XqKxf+UWLMrl+UfwiMiHdojHlbYQ1yU51SXmHVFfBBmpWTBEGizOzKvwYFr4LHmq6j0Ikdc7ldkM=
+X-Received: by 2002:a2e:8ed3:: with SMTP id e19mr13195530ljl.72.1592205947327;
+ Mon, 15 Jun 2020 00:25:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <159169282952.17951.3529693809120577424.tip-bot2@tip-bot2>
+ <20200611140951.GD30352@zn.tnic> <CAN_oZf16odNhpY6_LqkVY2wpy90jKM9-vgKo4LE8OJ-QTDCKiw@mail.gmail.com>
+ <20200611154356.GE30352@zn.tnic> <20200615065806.GB14668@zn.tnic>
+In-Reply-To: <20200615065806.GB14668@zn.tnic>
+From:   Anthony Steinhauser <asteinhauser@google.com>
+Date:   Mon, 15 Jun 2020 00:25:36 -0700
+Message-ID: <CAN_oZf3exijOHJmY7UqDVwWma_fMqiXhen6gSsSSBnxRSeFtPQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/speculation: Merge one test in spectre_v2_user_select_mitigation()
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-tip-commits@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a process is going away, io_uring_flush() will cancel only 1
-request with a matching pid. Cancel all of them
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io-wq.c    | 14 --------------
- fs/io-wq.h    |  1 -
- fs/io_uring.c | 14 ++++++++++++--
- 3 files changed, 12 insertions(+), 17 deletions(-)
-
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 3b0bd956e539..a44ad3b98886 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -1023,20 +1023,6 @@ enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork)
- 	return io_wq_cancel_cb(wq, io_wq_io_cb_cancel_data, (void *)cwork, false);
- }
- 
--static bool io_wq_pid_match(struct io_wq_work *work, void *data)
--{
--	pid_t pid = (pid_t) (unsigned long) data;
--
--	return work->task_pid == pid;
--}
--
--enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid)
--{
--	void *data = (void *) (unsigned long) pid;
--
--	return io_wq_cancel_cb(wq, io_wq_pid_match, data, false);
--}
--
- struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
- {
- 	int ret = -ENOMEM, node;
-diff --git a/fs/io-wq.h b/fs/io-wq.h
-index 7d5bd431c5e3..b72538fe5afd 100644
---- a/fs/io-wq.h
-+++ b/fs/io-wq.h
-@@ -125,7 +125,6 @@ static inline bool io_wq_is_hashed(struct io_wq_work *work)
- 
- void io_wq_cancel_all(struct io_wq *wq);
- enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork);
--enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid);
- 
- typedef bool (work_cancel_fn)(struct io_wq_work *, void *);
- 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 7f18c29388d6..8bde42775693 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7428,6 +7428,13 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 	}
- }
- 
-+static bool io_cancel_pid_cb(struct io_wq_work *work, void *data)
-+{
-+	pid_t pid = (pid_t) (unsigned long) data;
-+
-+	return work->task_pid == pid;
-+}
-+
- static int io_uring_flush(struct file *file, void *data)
- {
- 	struct io_ring_ctx *ctx = file->private_data;
-@@ -7437,8 +7444,11 @@ static int io_uring_flush(struct file *file, void *data)
- 	/*
- 	 * If the task is going away, cancel work it may have pending
- 	 */
--	if (fatal_signal_pending(current) || (current->flags & PF_EXITING))
--		io_wq_cancel_pid(ctx->io_wq, task_pid_vnr(current));
-+	if (fatal_signal_pending(current) || (current->flags & PF_EXITING)) {
-+		void *data = (void *) (unsigned long)task_pid_vnr(current);
-+
-+		io_wq_cancel_cb(ctx->io_wq, io_cancel_pid_cb, data, true);
-+	}
- 
- 	return 0;
- }
--- 
-2.24.0
-
+Thanks, Borislav.
