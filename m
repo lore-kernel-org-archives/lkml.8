@@ -2,62 +2,72 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C79C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD57C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5E0206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3AB1206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="StdSSRTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgFOJcr (ORCPT
+        id S1729257AbgFOJfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:32:47 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:41519 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729285AbgFOJcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:32:46 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49lmMb4rPNz9vBKc;
-        Mon, 15 Jun 2020 11:32:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id bMRFmJQeXFz6; Mon, 15 Jun 2020 11:32:43 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49lmMb29yWz9vBKb;
-        Mon, 15 Jun 2020 11:32:43 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DAE318B786;
-        Mon, 15 Jun 2020 11:32:41 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ykKpLC_cKaHk; Mon, 15 Jun 2020 11:32:41 +0200 (CEST)
-Received: from [172.25.101.66] (po15451.idsi0.si.c-s.fr [172.25.101.66])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AA3248B75F;
-        Mon, 15 Jun 2020 11:32:41 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/8xx: use pmd_off() to access a PMD entry in
- pte_update()
-To:     Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-References: <20200615092229.23142-1-rppt@kernel.org>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <717cb7ae-1859-8a97-281a-a6ecb68fccd0@csgroup.eu>
-Date:   Mon, 15 Jun 2020 11:32:42 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 05:35:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47812 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728411AbgFOJfF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 05:35:05 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Z1JB028757;
+        Mon, 15 Jun 2020 04:35:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592213701;
+        bh=Hh5bDu46FKnWsaHiQaJZRC4oLqQ1UDQANlpuKX2a/5o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=StdSSRTQz4BpTRXgzU8AeSab+0iKkdFFbbdwTa5XiImeXTp7uWuE7tUOqkVdFZH8B
+         6Ga35UtBnaLk4JaqHaueBXkbYN+qC9CP90lapVHSV4I2zf/B7ERPLXrJJgb7KYZa0S
+         5ubthkLEBqywCtj5a1+DS8Bu/qTnkrbw/WmGqXdE=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Z1To027648;
+        Mon, 15 Jun 2020 04:35:01 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
+ Jun 2020 04:35:01 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 15 Jun 2020 04:35:01 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05F9Yw9p130834;
+        Mon, 15 Jun 2020 04:34:59 -0500
+Subject: Re: [PATCH] ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
+To:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+References: <20200611220951.GA3355634@x1>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <10637da2-8751-3c6f-cf1e-f0a53cca292d@ti.com>
+Date:   Mon, 15 Jun 2020 12:34:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200615092229.23142-1-rppt@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200611220951.GA3355634@x1>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,65 +75,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 15/06/2020 à 11:22, Mike Rapoport a écrit :
-> From: Mike Rapoport <rppt@linux.ibm.com>
+On 12/06/2020 01:09, Drew Fustini wrote:
+> Since commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for
+> RGMII mode") the networking is broken on the BeagleBone AI which has
+> the AR8035 PHY for Gigabit Ethernet [0].  The fix is to switch from
+> phy-mode = "rgmii" to phy-mode = "rgmii-rxid".
 > 
-> The pte_update() implementation for PPC_8xx unfolds page table from the PGD
-> level to access a PMD entry. Since 8xx has only 2-level page table this can
-> be simplified with pmd_off() shortcut.
+> Note: Grygorii Strashko made a similar phy-mode fix in 820f8a870f65 for
+> other AM5729 boards.
+
+commit ref is incorrect
 > 
-> Replace explicit unfolding with pmd_off() and drop defines of pgd_index()
-> and pgd_offset() that are no longer needed.
+> [0] https://github.com/beagleboard/beaglebone-ai/blob/master/BeagleBone-AI_sch.pdf
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+> Fixes: cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
 
-Nice. When I implemented this function, I was not able to use pmd_ptr()
-due to some circular header inclusion (See comment in commit log). Looks
-like since the replacement of pmd_ptr() by pmd_off(), it works.
+Pls change fixed tag to
+520557d4854b ARM: dts: am5729: beaglebone-ai: adding device tree
+as this board DTB was merged only in 5.8.
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-Christophe
-
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
 > ---
+>   arch/arm/boot/dts/am5729-beagleboneai.dts | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I think it's powerpc material, but I won't mind if Andrew picks it up :)
-> 
-> 
->   arch/powerpc/include/asm/nohash/32/pgtable.h | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-> index b56f14160ae5..5a590ceaec14 100644
-> --- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-> +++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-> @@ -205,10 +205,6 @@ static inline void pmd_clear(pmd_t *pmdp)
->   	*pmdp = __pmd(0);
->   }
+> diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> index 9877d7709d41..4c51c6b05e64 100644
+> --- a/arch/arm/boot/dts/am5729-beagleboneai.dts
+> +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
+> @@ -505,7 +505,7 @@ &mac {
 >   
-> -/* to find an entry in a page-table-directory */
-> -#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
-> -#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
-> -
->   /*
->    * PTE updates. This function is called whenever an existing
->    * valid PTE is updated. This does -not- include set_pte_at()
-> @@ -230,6 +226,8 @@ static inline void pmd_clear(pmd_t *pmdp)
->    * For other page sizes, we have a single entry in the table.
->    */
->   #ifdef CONFIG_PPC_8xx
-> +static pmd_t *pmd_off(struct mm_struct *mm, unsigned long addr);
-> +
->   static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, pte_t *p,
->   				     unsigned long clr, unsigned long set, int huge)
->   {
-> @@ -237,7 +235,7 @@ static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, p
->   	pte_basic_t old = pte_val(*p);
->   	pte_basic_t new = (old & ~(pte_basic_t)clr) | set;
->   	int num, i;
-> -	pmd_t *pmd = pmd_offset(pud_offset(p4d_offset(pgd_offset(mm, addr), addr), addr), addr);
-> +	pmd_t *pmd = pmd_off(mm, addr);
+>   &cpsw_emac0 {
+>   	phy-handle = <&phy0>;
+> -	phy-mode = "rgmii";
+> +	phy-mode = "rgmii-rxid";
+>   };
 >   
->   	if (!huge)
->   		num = PAGE_SIZE / SZ_4K;
+>   &ocp {
 > 
+
+Thanks, pls fix above and you can add my
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+-- 
+Best regards,
+grygorii
