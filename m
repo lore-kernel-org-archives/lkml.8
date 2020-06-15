@@ -2,148 +2,101 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 204AB2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FNZgppN3"
+	by mail.kernel.org (Postfix) with ESMTP id 7A23C2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592224494;
+	bh=pNOetLVtZRG2fbCc3C2vy0lTqxav4Zkaq+VhJKAi9xs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kOzmElWOWOgXgKHigwL2AQF21Gaa/JDnuerqtLdeYIm7nSQo1ga39goJs21qQVYxk
+	 W/jwuMA+qEinV+66dc+RljYHO0GFP8gZLHG4LD/u3+0dzxQL9cJih1sNihAslMfZEB
+	 GRLTpRO0yV3dEVJByhKp6ZglGAwQLQfIyrG42LNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgFOMeS (ORCPT
+        id S1729934AbgFOMex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:34:18 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51412 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgFOMeQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:34:16 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FCGm58071550;
-        Mon, 15 Jun 2020 12:33:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=VfB/lu0AO11ypagGnxWqguiuvq46jiw7VSNH802i9v0=;
- b=FNZgppN31eRIYqIWCPvoie+HIghJzA0839ih/4QuvBoyjpDs9AztSyNaSrH9kJmSo4R3
- mDsBK7H8K84zCpQvrWgZrRW1aTE7+uqqrwALHiY9SZiq70CmcvKFbnL10rZ0DmZI9maG
- LupyZj159TRdmeYlch79GK6N0Dp4hPSCn6Altpb6A3U9FAAiZf2vdl9bMnIgbPN55Q1j
- VcvHLuQWiucK0HKNaq6kAOr+9Vs5kyBM9a6oibgKhDp/8bAf1sIQq4Q4t7DBpH9V4JCR
- mXPQT2RcLo+mY7/F+BHnxzDrnfyzsX1Nf3QxC+gNz5HiHigDEIBUFs51JDrx3k0cgxlZ zQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31p6e7rs53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 15 Jun 2020 12:33:52 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05FCIuI0188381;
-        Mon, 15 Jun 2020 12:33:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31p6dd6164-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 12:33:51 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05FCXfcc027358;
-        Mon, 15 Jun 2020 12:33:42 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Jun 2020 05:33:41 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH v2] SUNRPC: Add missing definition of
- ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <9e9882a2fb57b6f9d98a0a5d8b6bf9cff9fcbd93.1592202173.git.christophe.leroy@csgroup.eu>
-Date:   Mon, 15 Jun 2020 08:33:40 -0400
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <733E4CAF-A9E5-491F-B0C7-69CA84E5DFA5@oracle.com>
-References: <9e9882a2fb57b6f9d98a0a5d8b6bf9cff9fcbd93.1592202173.git.christophe.leroy@csgroup.eu>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.14)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9652 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150100
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9652 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
- impostorscore=0 bulkscore=0 clxscore=1015 malwarescore=0 suspectscore=0
- mlxscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- cotscore=-2147483648 priorityscore=1501 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150100
+        Mon, 15 Jun 2020 08:34:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728326AbgFOMew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:34:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A97A02076A;
+        Mon, 15 Jun 2020 12:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592224492;
+        bh=pNOetLVtZRG2fbCc3C2vy0lTqxav4Zkaq+VhJKAi9xs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bYQoNejN7Wl6z1zgAQEittcbfoy14EFCmsV9ZNIch7IpLkTEorON1IXETisNTSpbJ
+         /46VDugqsbns3ihaOeFhTIp7Hd5u91327GzSjt/ysVzrtnvA3VuUhyR1wYnmo2ogaK
+         qUTn21WrXp9UzkJC1xE7ZZKqkvsGGGAipgCioVCs=
+Date:   Mon, 15 Jun 2020 14:34:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ricardo Ferreira <rikajff@gmail.com>
+Cc:     devel@driverdev.osuosl.org,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: [PATCH] Staging: rtl8712: Addressed checkpatch.pl issues related
+ to macro parameter wrapping in parentheses.
+Message-ID: <20200615123439.GB943330@kroah.com>
+References: <20200614135125.19502-1-rikajff@gmail.com>
+ <20200614140531.GA2661398@kroah.com>
+ <CACtES-qmpRJ2mk+1vhsJm55G6j6U1+rLB1t2izHwJ1u4_eUKHw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACtES-qmpRJ2mk+1vhsJm55G6j6U1+rLB1t2izHwJ1u4_eUKHw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 15, 2020 at 10:28:51AM +0100, Ricardo Ferreira wrote:
+> On Sun, 14 Jun 2020 at 15:05, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sun, Jun 14, 2020 at 02:51:25PM +0100, Ricardo Ferreira wrote:
+> > >  #define init_h2fwcmd_w_parm_no_rsp(pcmd, pparm, code) \
+> > >  do {\
+> > > -     INIT_LIST_HEAD(&pcmd->list);\
+> > > -     pcmd->cmdcode = code;\
+> > > -     pcmd->parmbuf = (u8 *)(pparm);\
+> > > -     pcmd->cmdsz = sizeof(*pparm);\
+> > > -     pcmd->rsp = NULL;\
+> > > -     pcmd->rspsz = 0;\
+> > > +     INIT_LIST_HEAD(&(pcmd)->list);\
+> > > +     (pcmd)->cmdcode = code;\
+> > > +     (pcmd)->parmbuf = (u8 *)((pparm));\
+> > > +     (pcmd)->cmdsz = sizeof(*(pparm));\
+> > > +     (pcmd)->rsp = NULL;\
+> > > +     (pcmd)->rspsz = 0;\
+> > >  } while (0)
+> >
+> > Does that change really make any sense?  checkpatch is a nice hint,
+> > sometimes it is not correct...
+> 
+> (Replying again since I mistakenly sent my comments only to Greg...)
+> 
+> Yeah I was over-eager and applied some of checkpatche's patches
+> without thinking twice... I guess the parenthesis wrapping only makes
+> sense when you have an operator (either binary or unary). I've
+> rechecked each macro identified by checkpatch to see if there is a
+> need for parenthesis wrapping in their current usage.
 
+Yes, please do that, and also test-build your patches.  Sending patches
+that break the build are a sure way to make maintainers grumpy :)
 
-> On Jun 15, 2020, at 2:25 AM, Christophe Leroy =
-<christophe.leroy@csgroup.eu> wrote:
->=20
-> Even if that's only a warning, not including asm/cacheflush.h
-> leads to svc_flush_bvec() being empty allthough powerpc defines
-> ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE.
->=20
->  CC      net/sunrpc/svcsock.o
-> net/sunrpc/svcsock.c:227:5: warning: =
-"ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]
-> #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
->     ^
->=20
-> Include linux/highmem.h so that asm/cacheflush.h will be included.
->=20
-> Reported-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Fixes: ca07eda33e01 ("SUNRPC: Refactor svc_recvfrom()")
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+thanks,
 
-LGTM.
-
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-
-
-> ---
-> v2: Use linux/highmem.h instead of asm/cacheflush.sh
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
-> net/sunrpc/svcsock.c | 1 +
-> 1 file changed, 1 insertion(+)
->=20
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 5c4ec9386f81..c537272f9c7e 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -44,6 +44,7 @@
-> #include <net/tcp.h>
-> #include <net/tcp_states.h>
-> #include <linux/uaccess.h>
-> +#include <linux/highmem.h>
-> #include <asm/ioctls.h>
->=20
-> #include <linux/sunrpc/types.h>
-> --=20
-> 2.25.0
->=20
-
---
-Chuck Lever
-
-
-
+greg k-h
