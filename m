@@ -2,132 +2,134 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B4DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7863C2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sjA6pS3a"
+	by mail.kernel.org (Postfix) with ESMTP id 565AB207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731598AbgFOURK (ORCPT
+        id S1731606AbgFOURi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:17:10 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51584 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731549AbgFOURJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:17:09 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05FKH5Eh094652;
-        Mon, 15 Jun 2020 15:17:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592252225;
-        bh=4Fus+1STo6fJcdmND8htjDFw0u7LkR/zKPWh9+ob2Js=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=sjA6pS3aFIjWIyJV1PSR5bsU912ZWZ+ZCvAGwZCxvg5TDAvTDwDrZzma6qvN6lC+T
-         w/3bJEFYMiGzsHVeQzbcG+Nwhd3yKzjW21s3jJpziX7REZVXEbFEbO+3YFOLGld0Ti
-         mfItwtN69qYfFsr5thgW5+2I0nQ2WqGI2HH/eb/Q=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05FKH5KS072465
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 15 Jun 2020 15:17:05 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
- Jun 2020 15:17:04 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 15 Jun 2020 15:17:04 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FKH46Z016154;
-        Mon, 15 Jun 2020 15:17:04 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [RESEND PATCH v27 15/15] leds: lp5523: Fix various formatting issues in the code
-Date:   Mon, 15 Jun 2020 15:15:22 -0500
-Message-ID: <20200615201522.19677-16-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615201522.19677-1-dmurphy@ti.com>
-References: <20200615201522.19677-1-dmurphy@ti.com>
+        Mon, 15 Jun 2020 16:17:38 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10830 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731106AbgFOURh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 16:17:37 -0400
+IronPort-SDR: uwNPJe8/Z67Ss4B/NnzO7MxyFXppBkMO4JErzQvFIMsoHgddoKROjZuM1MHeQ28bz0TRAn5YlA
+ RcjReoUGF/Yw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 13:17:36 -0700
+IronPort-SDR: bBvH2ZJYn5YJMJRfAqP3otKSEI1MNvgA+6c1UKYREDg7BecOd1t0qIyR3pPh+HR14Zjkx/e/PR
+ UvvQUKw6T4WA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,516,1583222400"; 
+   d="scan'208";a="351478020"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga001.jf.intel.com with ESMTP; 15 Jun 2020 13:17:35 -0700
+Date:   Mon, 15 Jun 2020 13:17:35 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        amd-gfx <amd-gfx@lists.freedesktop.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
+Message-ID: <20200615201735.GE13792@romley-ivt3.sc.intel.com>
+References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+ <1592008893-9388-13-git-send-email-fenghua.yu@intel.com>
+ <20200615075649.GK2497@hirez.programming.kicks-ass.net>
+ <20200615154854.GB13792@romley-ivt3.sc.intel.com>
+ <20200615160357.GA2531@hirez.programming.kicks-ass.net>
+ <20200615181259.GC13792@romley-ivt3.sc.intel.com>
+ <20200615183116.GD2531@hirez.programming.kicks-ass.net>
+ <20200615185529.GD13792@romley-ivt3.sc.intel.com>
+ <20200615190928.GJ2531@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615190928.GJ2531@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch errors and warnings for the LP5523.c device
-driver.
+Hi, Peter,
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/leds/leds-lp5523.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+On Mon, Jun 15, 2020 at 09:09:28PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 15, 2020 at 11:55:29AM -0700, Fenghua Yu wrote:
+> 
+> > Or do you suggest to add a random new flag in struct thread_info instead
+> > of a TIF flag?
+> 
+> Why thread_info? What's wrong with something simple like the below. It
+> takes a bit from the 'strictly current' flags word.
+> 
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index b62e6aaf28f0..fca830b97055 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -801,6 +801,9 @@ struct task_struct {
+>  	/* Stalled due to lack of memory */
+>  	unsigned			in_memstall:1;
+>  #endif
+> +#ifdef CONFIG_PCI_PASID
+> +	unsigned			has_valid_pasid:1;
+> +#endif
+>  
+>  	unsigned long			atomic_flags; /* Flags requiring atomic access. */
+>  
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 142b23645d82..10b3891be99e 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -955,6 +955,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+>  	tsk->use_memdelay = 0;
+>  #endif
+>  
+> +#ifdef CONFIG_PCI_PASID
+> +	tsk->has_valid_pasid = 0;
+> +#endif
+> +
+>  #ifdef CONFIG_MEMCG
+>  	tsk->active_memcg = NULL;
+>  #endif
 
-diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index 9776dc72a764..f55d97258d5e 100644
---- a/drivers/leds/leds-lp5523.c
-+++ b/drivers/leds/leds-lp5523.c
-@@ -23,13 +23,13 @@
- 
- #define LP5523_PROGRAM_LENGTH		32	/* bytes */
- /* Memory is used like this:
--   0x00 engine 1 program
--   0x10 engine 2 program
--   0x20 engine 3 program
--   0x30 engine 1 muxing info
--   0x40 engine 2 muxing info
--   0x50 engine 3 muxing info
--*/
-+ * 0x00 engine 1 program
-+ * 0x10 engine 2 program
-+ * 0x20 engine 3 program
-+ * 0x30 engine 1 muxing info
-+ * 0x40 engine 2 muxing info
-+ * 0x50 engine 3 muxing info
-+ */
- #define LP5523_MAX_LEDS			9
- 
- /* Registers */
-@@ -326,7 +326,7 @@ static int lp5523_update_program_memory(struct lp55xx_chip *chip,
- 					const u8 *data, size_t size)
- {
- 	u8 pattern[LP5523_PROGRAM_LENGTH] = {0};
--	unsigned cmd;
-+	unsigned int cmd;
- 	char c[3];
- 	int nrchars;
- 	int ret;
-@@ -468,6 +468,7 @@ static int lp5523_mux_parse(const char *buf, u16 *mux, size_t len)
- static void lp5523_mux_to_array(u16 led_mux, char *array)
- {
- 	int i, pos = 0;
-+
- 	for (i = 0; i < LP5523_MAX_LEDS; i++)
- 		pos += sprintf(array + pos, "%x", LED_ACTIVE(led_mux, i));
- 
-@@ -506,7 +507,7 @@ static int lp5523_load_mux(struct lp55xx_chip *chip, u16 mux, int nr)
- 	if (ret)
- 		return ret;
- 
--	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM , (u8)(mux >> 8));
-+	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM, (u8)(mux >> 8));
- 	if (ret)
- 		return ret;
- 
--- 
-2.26.2
+The PASID MSR is x86 specific although PASID is PCIe concept and per-mm.
+Checking if the MSR has valid PASID (bit31=1) is an x86 specifc work.
+The flag should be cleared in cloned()/forked() and is only set and
+read in fixup() in x86 #GP for heuristic. It's not used anywhere outside
+of x86.
 
+That's why we think the flag should be in x86 struct thread_info instead
+of in generice struct task_struct.
+
+Please advice.
+
+Thanks.
+
+-Fenghua
