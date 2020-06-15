@@ -5,73 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA05C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 221472076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C4B2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LROVgM3U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/ldJLhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgFOIcs (ORCPT
+        id S1729186AbgFOIcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39210 "EHLO
+        Mon, 15 Jun 2020 04:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729158AbgFOIcn (ORCPT
+        with ESMTP id S1728773AbgFOIcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:32:43 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6324C061A0E;
-        Mon, 15 Jun 2020 01:32:42 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l17so13725481wmj.0;
-        Mon, 15 Jun 2020 01:32:42 -0700 (PDT)
+        Mon, 15 Jun 2020 04:32:45 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E687C05BD43;
+        Mon, 15 Jun 2020 01:32:45 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so4266571wmh.4;
+        Mon, 15 Jun 2020 01:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LITx0hRUIi2s0zyE1t9RreKX12TROzF0jbPsYEw7a6g=;
-        b=LROVgM3UbJsunBVTDQc6YnuCBFFfAkZvrZXlxcwnUE8Y5GVCb7hTTl/WDNhOZy+6Xu
-         EaGowoNKFFiyujkvYmfaAGxdQPKziOwvy+LQzF3eBQb9l96HzHbmpfaVgHHnPADSWE2H
-         I6Cet/NvMy8f/JfrVkwqIR5JbuOgl4gJBb48gK/f/Tgn/4rImbWs36a2vJtRYiuQ5S4C
-         hj9jr1We9pK/qchTQGJYh/Y7VJKlyohhmh3H1wobfz8Pa80zCSQppsxmZdoatZCQSPMX
-         1HLURZqPWoo+gKsZ6+ptU30rJmOO6mBKLhB7E8fSt7K5HOMQ+cddKgmHu8dtWVYLduFz
-         3x5g==
+        bh=5N7OiTkpW2bbIsUq9FnRk9cirBO+6YwRec/YN067b5E=;
+        b=W/ldJLhCdUJj5d05mtV4pK65pjgE+/YRWMSLx9Ubvv++oDnBBIL5FwSU4I1vbGgwuG
+         S19kPYUbfK+bbLud6LxLvZOc0qwk3cInUEb4d9luu0OT5Yo1sinR3yBNWJ03r3oP/IgL
+         e+KCcuHvL8OqUgoioVPrwkT/CMV3p9DkA+8Nd12c7OI/ntMDv0QsL8hPJnyLTTYfR0Cr
+         ZrTtT/JhkbNzcrB4rt+M5vguZV0YJ6NManuAQmbeZHMQXLPFltrw8ilsv/t46Go6sg+Q
+         3mUSGrAahLu1bsuV4x8nlY8jsYO7zJtvYxSvk7PXWVqVbgKDgpUb74sxtkeaIxDqkQLH
+         pLZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LITx0hRUIi2s0zyE1t9RreKX12TROzF0jbPsYEw7a6g=;
-        b=SCDnVygK4+H0ycjzcuEbQ+JUbUNsBi8PucWPYgYTbk1JBLqNTIXwB5/bR95FZLpvXA
-         JDlOG2HFX1L1JODtdndnYI1+IgRVVH1gql645+NXUbuOWyWKhWwswr8sDH9UNORB5BYJ
-         0oHlbATS2TwkETfyBTZmRN3lkg0SjtJPiak76r0Kmy3noMdoA7NyHYt8QVAjgWmw9dKK
-         RsevCVyPfxVRLggmD+IEGbOn9AU7CP6l48M7WUH7EEZckpWdb5C43OG+KIRERlevOIb2
-         4iPKQt/0GN3+aRT6K0nJp2RStzeL6GUXhSzvVX10wL/lnABLWLDmBIU680O9thaxp9ps
-         SoDg==
-X-Gm-Message-State: AOAM532mYYM3zQP/7J9koXZuH7Cu8odRPOOFJfciF3SHdl+SwZpwuty9
-        UfESXpxgxPombrT0/h5xXlY=
-X-Google-Smtp-Source: ABdhPJw04FZmglvBQAYa1v3ByqfYKXiOGDZXpDs1UTQSt8C8BmZt7jyni4XR4+j0NGd7DZy+4KCTMw==
-X-Received: by 2002:a1c:678a:: with SMTP id b132mr11656022wmc.122.1592209961579;
-        Mon, 15 Jun 2020 01:32:41 -0700 (PDT)
+        bh=5N7OiTkpW2bbIsUq9FnRk9cirBO+6YwRec/YN067b5E=;
+        b=i6Q5Xqbtw6L+iKokRrNMG+pvCo3/Yzr9pav1twJyWesHD0A3pz+g9ou2m1EeF5hCCV
+         r0mFRg/eg93yi0gEwlN88jObL7b8kBA6XPYkrpjFdudkTvWj6nbT88yJ8rSIvoD80bA+
+         35Vg7H2KVxxFbocUnm5lh7jC9KtaAi4A1La5qSKs4/QfKWO73T73Ly6Bx44O6NfRJORX
+         8tm8TQShYN6yTe8bMm4zX0EybBUeyvztdfwYlylXuXVsorKe3/qt5MNbLz06AdVPreU0
+         Udrh9qcVb8MflrO1xigc8OEFKB8m6G3RRl5zSreCmgeADsyfGFxSjf40LdeGrKyUHjet
+         6fXA==
+X-Gm-Message-State: AOAM531tXF/eLOmLILduEheR2JVYkVN5vMsT0ntKEt5XEMFDtzcs/rwq
+        eC5KotDRylnsbvm6hItiSXg=
+X-Google-Smtp-Source: ABdhPJyDOmxsWcHptOCXrlz2DfdRs3ToWlKFmU7sWKf2RWgc6Jg6hrJsDIU8bNUTt2KgGgbCPx8bcA==
+X-Received: by 2002:a7b:c76a:: with SMTP id x10mr12117201wmk.16.1592209964155;
+        Mon, 15 Jun 2020 01:32:44 -0700 (PDT)
 Received: from net.saheed (54006BB0.dsl.pool.telekom.hu. [84.0.107.176])
-        by smtp.gmail.com with ESMTPSA id z206sm21954745wmg.30.2020.06.15.01.32.40
+        by smtp.gmail.com with ESMTPSA id z206sm21954745wmg.30.2020.06.15.01.32.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 01:32:41 -0700 (PDT)
+        Mon, 15 Jun 2020 01:32:43 -0700 (PDT)
 From:   refactormyself@gmail.com
 To:     helgaas@kernel.org
 Cc:     Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
         bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org, Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
+        skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/8] PCI/AER: Convert PCIBIOS_* errors to generic -E* errors
-Date:   Mon, 15 Jun 2020 09:32:23 +0200
-Message-Id: <20200615073225.24061-7-refactormyself@gmail.com>
+Subject: [PATCH v2 8/8] PCI: Align return values of PCIe capability and PCI accessors
+Date:   Mon, 15 Jun 2020 09:32:25 +0200
+Message-Id: <20200615073225.24061-9-refactormyself@gmail.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200615073225.24061-1-refactormyself@gmail.com>
 References: <20200615073225.24061-1-refactormyself@gmail.com>
@@ -82,45 +79,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-pci_enable_pcie_error_reporting() return PCIBIOS_ error codes which were
-passed on down the call heirarchy from PCIe capability accessors.
+The PCIe capability accessors can return 0, -EINVAL, or any PCIBIOS_ error
+code. PCIBIOS_ error codes have positive values. The PCI accessor on the
+other hand can only return 0 or any PCIBIOS_ error code. This
+inconsistency among these accessor makes it harder for callers to check 
+for errors.
 
-PCIBIOS_ error codes have positive values. Passing on these values is
-inconsistent with functions which return only a negative value on failure.
-
-Before passing on the return value of PCIe capability accessors, call
-pcibios_err_to_errno() to convert any positive PCIBIOS_ error codes to
-negative generic error values.
+Return PCIBIOS_BAD_REGISTER_NUMBER instead of -EINVAL in all PCIe
+capability accessors.
 
 Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
 Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 ---
- drivers/pci/pcie/aer.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pci/access.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index f4274d301235..95d480a52078 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -349,13 +349,17 @@ bool aer_acpi_firmware_first(void)
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 79c4a2ef269a..cbb3804903a0 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -409,7 +409,7 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val)
  
- int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+ 	*val = 0;
+ 	if (pos & 1)
+-		return -EINVAL;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
+ 
+ 	if (pcie_capability_reg_implemented(dev, pos)) {
+ 		ret = pci_read_config_word(dev, pci_pcie_cap(dev) + pos, val);
+@@ -444,7 +444,7 @@ int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val)
+ 
+ 	*val = 0;
+ 	if (pos & 3)
+-		return -EINVAL;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
+ 
+ 	if (pcie_capability_reg_implemented(dev, pos)) {
+ 		ret = pci_read_config_dword(dev, pci_pcie_cap(dev) + pos, val);
+@@ -469,7 +469,7 @@ EXPORT_SYMBOL(pcie_capability_read_dword);
+ int pcie_capability_write_word(struct pci_dev *dev, int pos, u16 val)
  {
-+	int rc;
-+
- 	if (pcie_aer_get_firmware_first(dev))
- 		return -EIO;
+ 	if (pos & 1)
+-		return -EINVAL;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
  
- 	if (!dev->aer_cap)
- 		return -EIO;
+ 	if (!pcie_capability_reg_implemented(dev, pos))
+ 		return 0;
+@@ -481,7 +481,7 @@ EXPORT_SYMBOL(pcie_capability_write_word);
+ int pcie_capability_write_dword(struct pci_dev *dev, int pos, u32 val)
+ {
+ 	if (pos & 3)
+-		return -EINVAL;
++		return PCIBIOS_BAD_REGISTER_NUMBER;
  
--	return pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-+	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-+
-+	return pcibios_err_to_errno(rc);
- }
- EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
- 
+ 	if (!pcie_capability_reg_implemented(dev, pos))
+ 		return 0;
 -- 
 2.18.2
 
