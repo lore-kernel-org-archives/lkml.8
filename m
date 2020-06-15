@@ -4,35 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B10C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55FEA2068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B992068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgFOHui (ORCPT
+        id S1729121AbgFOHuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:50:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39986 "EHLO mx2.suse.de"
+        Mon, 15 Jun 2020 03:50:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40070 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbgFOHtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:49:20 -0400
+        id S1728846AbgFOHtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:49:18 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 270B2AFBC;
-        Mon, 15 Jun 2020 07:49:20 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 3CAB4B02E;
+        Mon, 15 Jun 2020 07:49:18 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH 25/38] vt: redefine world of cursor macros
-Date:   Mon, 15 Jun 2020 09:48:57 +0200
-Message-Id: <20200615074910.19267-25-jslaby@suse.cz>
+        Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 17/38] vc: introduce struct vc_draw_region
+Date:   Mon, 15 Jun 2020 09:48:49 +0200
+Message-Id: <20200615074910.19267-17-jslaby@suse.cz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615074910.19267-1-jslaby@suse.cz>
 References: <20200615074910.19267-1-jslaby@suse.cz>
@@ -43,136 +40,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cursor code used to use magic constants, ANDs, ORs, and some macros.
-Redefine all this to make some sense.
-
-In particular:
-* Drop CUR_DEFAULT, which is CUR_UNDERLINE. CUR_DEFAULT was used only
-  for cur_default variable initialization, so use CUR_UNDERLINE there to
-  make obvious what's the default.
-* Drop CUR_HWMASK. Instead, define CUR_SIZE() which explains it more.
-  And use it all over the places.
-* Define few more masks and bits which will be used in next patches
-  instead of magic constants.
-* Define CUR_MAKE to build up cursor value.
+For passing of draw area among functions. This makes next patches
+simpler.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
 ---
- drivers/tty/vt/vt.c                  |  2 +-
- drivers/video/fbdev/core/bitblit.c   |  2 +-
- drivers/video/fbdev/core/fbcon_ccw.c |  2 +-
- drivers/video/fbdev/core/fbcon_cw.c  |  2 +-
- drivers/video/fbdev/core/fbcon_ud.c  |  2 +-
- include/linux/console_struct.h       | 28 +++++++++++++++++-----------
- 6 files changed, 22 insertions(+), 16 deletions(-)
+ drivers/tty/vt/vt.c | 44 +++++++++++++++++++++++++-------------------
+ 1 file changed, 25 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index f7d5a3c3845f..af1ef717f416 100644
+index 0f61dc360067..0c663054ab79 100644
 --- a/drivers/tty/vt/vt.c
 +++ b/drivers/tty/vt/vt.c
-@@ -163,7 +163,7 @@ module_param(default_utf8, int, S_IRUGO | S_IWUSR);
- int global_cursor_default = -1;
- module_param(global_cursor_default, int, S_IRUGO | S_IWUSR);
+@@ -2549,15 +2549,20 @@ static int is_double_width(uint32_t ucs)
+ 			sizeof(struct interval), ucs_cmp) != NULL;
+ }
  
--static int cur_default = CUR_DEFAULT;
-+static int cur_default = CUR_UNDERLINE;
- module_param(cur_default, int, S_IRUGO | S_IWUSR);
+-static void con_flush(struct vc_data *vc, unsigned long draw_from,
+-		unsigned long draw_to, int *draw_x)
++struct vc_draw_region {
++	unsigned long from, to;
++	int x;
++};
++
++static void con_flush(struct vc_data *vc, struct vc_draw_region *draw)
+ {
+-	if (*draw_x < 0)
++	if (draw->x < 0)
+ 		return;
  
- /*
-diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
-index c750470a31ec..3b002b365a5a 100644
---- a/drivers/video/fbdev/core/bitblit.c
-+++ b/drivers/video/fbdev/core/bitblit.c
-@@ -325,7 +325,7 @@ static void bit_cursor(struct vc_data *vc, struct fb_info *info, int mode,
- 		ops->p->cursor_shape = vc->vc_cursor_type;
- 		cursor.set |= FB_CUR_SETSHAPE;
+-	vc->vc_sw->con_putcs(vc, (u16 *)draw_from,
+-			(u16 *)draw_to - (u16 *)draw_from, vc->state.y, *draw_x);
+-	*draw_x = -1;
++	vc->vc_sw->con_putcs(vc, (u16 *)draw->from,
++			(u16 *)draw->to - (u16 *)draw->from, vc->state.y,
++			draw->x);
++	draw->x = -1;
+ }
  
--		switch (ops->p->cursor_shape & CUR_HWMASK) {
-+		switch (CUR_SIZE(ops->p->cursor_shape)) {
- 		case CUR_NONE:
- 			cur_height = 0;
- 			break;
-diff --git a/drivers/video/fbdev/core/fbcon_ccw.c b/drivers/video/fbdev/core/fbcon_ccw.c
-index 9d06446a1a3b..5b67bcebe34c 100644
---- a/drivers/video/fbdev/core/fbcon_ccw.c
-+++ b/drivers/video/fbdev/core/fbcon_ccw.c
-@@ -325,7 +325,7 @@ static void ccw_cursor(struct vc_data *vc, struct fb_info *info, int mode,
- 		ops->p->cursor_shape = vc->vc_cursor_type;
- 		cursor.set |= FB_CUR_SETSHAPE;
+ static inline int vc_translate_ascii(const struct vc_data *vc, int c)
+@@ -2689,9 +2694,11 @@ static inline unsigned char vc_invert_attr(const struct vc_data *vc)
+ /* acquires console_lock */
+ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int count)
+ {
+-	int c, next_c, tc, ok, n = 0, draw_x = -1;
++	struct vc_draw_region draw = {
++		.x = -1,
++	};
++	int c, next_c, tc, ok, n = 0;
+ 	unsigned int currcons;
+-	unsigned long draw_from = 0, draw_to = 0;
+ 	struct vc_data *vc;
+ 	unsigned char vc_attr;
+ 	struct vt_notifier_param param;
+@@ -2798,14 +2805,13 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
+ 				vc_attr = vc->vc_attr;
+ 			} else {
+ 				vc_attr = vc_invert_attr(vc);
+-				con_flush(vc, draw_from, draw_to, &draw_x);
++				con_flush(vc, &draw);
+ 			}
  
--		switch (ops->p->cursor_shape & CUR_HWMASK) {
-+		switch (CUR_SIZE(ops->p->cursor_shape)) {
- 		case CUR_NONE:
- 			cur_height = 0;
- 			break;
-diff --git a/drivers/video/fbdev/core/fbcon_cw.c b/drivers/video/fbdev/core/fbcon_cw.c
-index 4b5f76bb01e5..f1aab3ae3bc9 100644
---- a/drivers/video/fbdev/core/fbcon_cw.c
-+++ b/drivers/video/fbdev/core/fbcon_cw.c
-@@ -308,7 +308,7 @@ static void cw_cursor(struct vc_data *vc, struct fb_info *info, int mode,
- 		ops->p->cursor_shape = vc->vc_cursor_type;
- 		cursor.set |= FB_CUR_SETSHAPE;
+ 			next_c = c;
+ 			while (1) {
+ 				if (vc->vc_need_wrap || vc->vc_decim)
+-					con_flush(vc, draw_from, draw_to,
+-							&draw_x);
++					con_flush(vc, &draw);
+ 				if (vc->vc_need_wrap) {
+ 					cr(vc);
+ 					lf(vc);
+@@ -2817,16 +2823,16 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
+ 					     ((vc_attr << 8) & ~himask) + ((tc & 0x100) ? himask : 0) + (tc & 0xff) :
+ 					     (vc_attr << 8) + tc,
+ 					   (u16 *) vc->vc_pos);
+-				if (con_should_update(vc) && draw_x < 0) {
+-					draw_x = vc->state.x;
+-					draw_from = vc->vc_pos;
++				if (con_should_update(vc) && draw.x < 0) {
++					draw.x = vc->state.x;
++					draw.from = vc->vc_pos;
+ 				}
+ 				if (vc->state.x == vc->vc_cols - 1) {
+ 					vc->vc_need_wrap = vc->vc_decawm;
+-					draw_to = vc->vc_pos + 2;
++					draw.to = vc->vc_pos + 2;
+ 				} else {
+ 					vc->state.x++;
+-					draw_to = (vc->vc_pos += 2);
++					draw.to = (vc->vc_pos += 2);
+ 				}
  
--		switch (ops->p->cursor_shape & CUR_HWMASK) {
-+		switch (CUR_SIZE(ops->p->cursor_shape)) {
- 		case CUR_NONE:
- 			cur_height = 0;
- 			break;
-diff --git a/drivers/video/fbdev/core/fbcon_ud.c b/drivers/video/fbdev/core/fbcon_ud.c
-index 7e0ae3549dc7..81ed6f6bed67 100644
---- a/drivers/video/fbdev/core/fbcon_ud.c
-+++ b/drivers/video/fbdev/core/fbcon_ud.c
-@@ -348,7 +348,7 @@ static void ud_cursor(struct vc_data *vc, struct fb_info *info, int mode,
- 		ops->p->cursor_shape = vc->vc_cursor_type;
- 		cursor.set |= FB_CUR_SETSHAPE;
+ 				if (!--width) break;
+@@ -2838,17 +2844,17 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
+ 			notify_write(vc, c);
  
--		switch (ops->p->cursor_shape & CUR_HWMASK) {
-+		switch (CUR_SIZE(ops->p->cursor_shape)) {
- 		case CUR_NONE:
- 			cur_height = 0;
- 			break;
-diff --git a/include/linux/console_struct.h b/include/linux/console_struct.h
-index 40ed52f67bc5..153734816b49 100644
---- a/include/linux/console_struct.h
-+++ b/include/linux/console_struct.h
-@@ -173,17 +173,23 @@ struct vc {
- extern struct vc vc_cons [MAX_NR_CONSOLES];
- extern void vc_SAK(struct work_struct *work);
+ 			if (inverse)
+-				con_flush(vc, draw_from, draw_to, &draw_x);
++				con_flush(vc, &draw);
  
--#define CUR_DEF		0
--#define CUR_NONE	1
--#define CUR_UNDERLINE	2
--#define CUR_LOWER_THIRD	3
--#define CUR_LOWER_HALF	4
--#define CUR_TWO_THIRDS	5
--#define CUR_BLOCK	6
--#define CUR_HWMASK	0x0f
--#define CUR_SWMASK	0xfff0
--
--#define CUR_DEFAULT CUR_UNDERLINE
-+#define CUR_MAKE(size, change, set)	((size) | ((change) << 8) |	\
-+		((set) << 16))
-+#define CUR_SIZE(c)		 ((c) & 0x00000f)
-+# define CUR_DEF			       0
-+# define CUR_NONE			       1
-+# define CUR_UNDERLINE			       2
-+# define CUR_LOWER_THIRD		       3
-+# define CUR_LOWER_HALF			       4
-+# define CUR_TWO_THIRDS			       5
-+# define CUR_BLOCK			       6
-+#define CUR_SW				0x000010
-+#define CUR_ALWAYS_BG			0x000020
-+#define CUR_INVERT_FG_BG		0x000040
-+#define CUR_FG				0x000700
-+#define CUR_BG				0x007000
-+#define CUR_CHANGE(c)		 ((c) & 0x00ff00)
-+#define CUR_SET(c)		(((c) & 0xff0000) >> 8)
+ 			if (rescan)
+ 				goto rescan_last_byte;
  
- bool con_is_visible(const struct vc_data *vc);
- 
+ 			continue;
+ 		}
+-		con_flush(vc, draw_from, draw_to, &draw_x);
++		con_flush(vc, &draw);
+ 		do_con_trol(tty, vc, orig);
+ 	}
+-	con_flush(vc, draw_from, draw_to, &draw_x);
++	con_flush(vc, &draw);
+ 	vc_uniscr_debug_check(vc);
+ 	console_conditional_schedule();
+ 	notify_update(vc);
 -- 
 2.27.0
 
