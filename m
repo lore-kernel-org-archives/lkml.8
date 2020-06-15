@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D41C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB63AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B90F62076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB83E2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DORPIwZ4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ll1ZB3ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbgFOMyw (ORCPT
+        id S1730273AbgFOMzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51284 "EHLO
+        Mon, 15 Jun 2020 08:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730147AbgFOMxy (ORCPT
+        with ESMTP id S1730136AbgFOMxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:53:54 -0400
+        Mon, 15 Jun 2020 08:53:52 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4673CC05BD43;
-        Mon, 15 Jun 2020 05:53:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE37C061A0E;
+        Mon, 15 Jun 2020 05:53:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=yk3OCOpM9ERuS6a7MWF8GpDAoj/9WQHMyiD2P3ZZBTM=; b=DORPIwZ4pxAzbWNekeX4NpVqD6
-        5vreyh7ssVzIaBGUxUs1gWnQ77tIyIbRjU4bJj7tsABikZwKQdazCT61K4vaD7pc9HWKcX/oFvhIw
-        N6jg0rDdNHrh483CrbV+/YSUkMJe0fEhSZnz33uausGMSKErc8yBF3lWiSR15D4avN0uXid+acj0P
-        PjgteRwcXZytXz8HVCciPH9+cnEot3o/fRE0ImlApFNOLRKDfkeIrCT035sVajkuThuCN+wxoIIM+
-        5TVXHg9ncXD5UzOqD/itkvzou3EXKU/p4+fSUEzAjeTtxECwX6XEmZqqb/w0ddneoIkqX0J9G5XZ7
-        ighIujvA==;
+        bh=loyJfIjr6uG+JtT8Ae3i8+buKjp1+Mq9QHCSFksTz0I=; b=Ll1ZB3ezBG5HX+2+L4cbQx89gY
+        S7s9OLwoFx7bIS2crWC1J0+aXP7IX61oJ/cZFlFT6XelwFpjzLp56uGlbXma3zwHKEZQXap6b8Uwh
+        F3sdF9hd23oP+xkKs+kcxotgjlYhOYQ7TWJ+op260Y/WIXG73U2howHUK0DZH+/+ralE4LREQkQUS
+        ipbtwOYSbGkEx8Zt6qGMqRoSLgx+QEsz6NGxsxq7R+0bAnXk24HU1XL9KK34tCGEBCTlAYxvZhlO9
+        5jVOsIyX7cz9CyMVQrM6B+dIL61WB9aNIEmKm79j9aPjDhoq8WoSb6ZuB5n8qswEV4uNdSTBOGBMI
+        6178qU8g==;
 Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkocb-0000uh-Ps; Mon, 15 Jun 2020 12:53:54 +0000
+        id 1jkocZ-0000tz-Fo; Mon, 15 Jun 2020 12:53:51 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 12/16] initramfs: remove the populate_initrd_image and clean_rootfs stubs
-Date:   Mon, 15 Jun 2020 14:53:19 +0200
-Message-Id: <20200615125323.930983-13-hch@lst.de>
+Subject: [PATCH 11/16] initrd: mark init_linuxrc as __init
+Date:   Mon, 15 Jun 2020 14:53:18 +0200
+Message-Id: <20200615125323.930983-12-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200615125323.930983-1-hch@lst.de>
 References: <20200615125323.930983-1-hch@lst.de>
@@ -59,57 +59,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If initrd support is not enable just print the warning directly instead
-of hiding the fact that we just failed behind two stub functions.
-
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- init/initramfs.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ init/do_mounts_initrd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/init/initramfs.c b/init/initramfs.c
-index 7a38012e1af742..d10404625c31f0 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -618,13 +618,7 @@ static void __init clean_rootfs(void)
- 	ksys_close(fd);
- 	kfree(buf);
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index e4f88e9e1c0839..57ad5b2da8f5f5 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -56,7 +56,7 @@ static int __init early_initrd(char *p)
  }
--#else
--static inline void clean_rootfs(void)
--{
--}
--#endif /* CONFIG_BLK_DEV_RAM */
+ early_param("initrd", early_initrd);
  
--#ifdef CONFIG_BLK_DEV_RAM
- static void __init populate_initrd_image(char *err)
+-static int init_linuxrc(struct subprocess_info *info, struct cred *new)
++static int __init init_linuxrc(struct subprocess_info *info, struct cred *new)
  {
- 	ssize_t written;
-@@ -644,11 +638,6 @@ static void __init populate_initrd_image(char *err)
- 		       written, initrd_end - initrd_start);
- 	ksys_close(fd);
- }
--#else
--static void __init populate_initrd_image(char *err)
--{
--	printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
--}
- #endif /* CONFIG_BLK_DEV_RAM */
- 
- static int __init populate_rootfs(void)
-@@ -668,8 +657,12 @@ static int __init populate_rootfs(void)
- 
- 	err = unpack_to_rootfs((char *)initrd_start, initrd_end - initrd_start);
- 	if (err) {
-+#ifdef CONFIG_BLK_DEV_RAM
- 		clean_rootfs();
- 		populate_initrd_image(err);
-+#else
-+		printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
-+#endif
- 	}
- 
- done:
+ 	ksys_unshare(CLONE_FS | CLONE_FILES);
+ 	console_on_rootfs();
 -- 
 2.26.2
 
