@@ -2,148 +2,173 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E66FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 504D62074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kynetics-com.20150623.gappssmtp.com header.i=@kynetics-com.20150623.gappssmtp.com header.b="Yz1AY4Xm"
+	by mail.kernel.org (Postfix) with ESMTP id 262002074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592226515;
+	bh=uY1VUnpu37Gjl4c6oDNwu+0WIMAmjz48bEqToLKoq0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZoGGeYbB8K+A44TrnFaaBceeY599ud62BQLYCtLFgrm4hzsKhobsZ2fQnknYed98+
+	 rJwlS+d9r8GIPH4DPph8ZCjZFBZxlVbNRXIaGhxtFHU6BkJoeW/Fns/9Jc93Ip6BPy
+	 zaQCw52xvG3E1/IACTmnJIfSiiEUy0bxtj0O28CE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbgFONFA (ORCPT
+        id S1730127AbgFONId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730227AbgFONE6 (ORCPT
+        Mon, 15 Jun 2020 09:08:33 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:40785 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729875AbgFONIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:04:58 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B41C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:04:56 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id q11so17069691wrp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kynetics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xGnsrUoVOZBXJ5xWuUjcUkSKUeGXoNVTCOwqDvT4FJM=;
-        b=Yz1AY4Xm2PX4fmylnCSynNbDi5nrFVCSdQsIH2aiqiDYSkgiZnecyZpZwQNZpksdV2
-         c7VBDnDUAteERJ7oS6HTSrHQ2GYtuDYSPprHk0TkMEHCkEPid0EUk36Py9M38A1g/SWd
-         9Aj4d62t2zAtaiVvKqWef28MHtUF3BNC7Mk/fFXRezJ3WBiriFz6+YPH5E54D5CXzJa+
-         DVFXVBmy+swiz9FwBEtPz3ZT3ZpZMysJ5X46nLC2y/ChxSHt8s8FN82Zfms0T0A9yF2T
-         a4b/CKxLv+OtVwNo9RUIqbIZg4jWxP6gLlyv+gdU6a/QH2CZFtQgpchIk+fv36QUJV3X
-         38NA==
+        Mon, 15 Jun 2020 09:08:31 -0400
+Received: by mail-ej1-f67.google.com with SMTP id q19so17356132eja.7;
+        Mon, 15 Jun 2020 06:08:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xGnsrUoVOZBXJ5xWuUjcUkSKUeGXoNVTCOwqDvT4FJM=;
-        b=VGAuVhB7Hc3qMpIAOOeHbIlU6C26f+x37M/p/svOg5OC8lidpILRcNq0dKKETCeena
-         2osK0y0CZl4glwTiruCbZ40Pj+RI44jha6NU/eQy2h5pHDQ99/AQV2HdAS4Peb+J6MDj
-         naLilr88T+Qr1kAKJPt8zK8t72Mp8XT5crocDYapQfecnpZI2qwHGtGIURqK7kTyY/bL
-         bzFrqIDvA8BtOyzhiROQ+pY7rkhhFl4xIHnYnlByRXh1oaSWwvAP3gT75thZIp69onvt
-         TSUPZYq53afe4W49s2Fq9wvh9HF0+kfeJwR/fZj0sM6Lcpw+HDCBjFIJETR7Lbmx2OpB
-         ALAA==
-X-Gm-Message-State: AOAM532pvbH0qGOdMt2si9gh7/J/1PTIxIh6q8pOEGG/482VkIV2bNCD
-        j7P5sdlYcKn5entS/piLKuIfVw==
-X-Google-Smtp-Source: ABdhPJyCbA4P7k40uO6mt2bOu07HU/fYBKq+e7S7CG+VE5FlaW3M581dKgwaQOXyEbfX2cDE+gWybA==
-X-Received: by 2002:a5d:6305:: with SMTP id i5mr28032503wru.268.1592226294967;
-        Mon, 15 Jun 2020 06:04:54 -0700 (PDT)
-Received: from localhost.lan (mob-37-176-61-186.net.vodafone.it. [37.176.61.186])
-        by smtp.gmail.com with ESMTPSA id s132sm23900345wmf.12.2020.06.15.06.04.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 06:04:54 -0700 (PDT)
-From:   Diego Rondini <diego.rondini@kynetics.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Diego Rondini <diego.rondini@kynetics.com>
-Subject: [PATCH v2 2/2] ARM: dts: orange-pi-zero-plus2: add leds configuration
-Date:   Mon, 15 Jun 2020 15:02:25 +0200
-Message-Id: <20200615130223.34464-2-diego.rondini@kynetics.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615130223.34464-1-diego.rondini@kynetics.com>
-References: <20200615130223.34464-1-diego.rondini@kynetics.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uEfo8b2oGA/RF5D4h01gUn0rBAtABIlUd1JHMHMPDcU=;
+        b=rqV8Xm5+hLpKh53e47+AF1JuxUWpy37KePWHVmyvuC0cCAHGnuONGLfaf0iTEiB+LM
+         rTckWNaiVQhK9Y9gBZO1idEgjC7eCDtMj+cHILreMfi13pU2xMBD3vFAnvmMDVAnQZRf
+         dhvH8OVfVdsrhwHqreGgEfJCqJm3YF9X3YTRvo4z7+QCPCkJobs8lCmbkwSbqLxp/pvz
+         lIiYvIzILPSO0do7Ic5BUcFWHRFACuZxEggaK/m4irARcYZT5Dt4d0xCSGLBqt1Yu3MB
+         fHyuswWw82RhZmwkHtStA+hr8kWcF5yfPurlOeME8PF/rtJ1oScbafJsPhyazHUpiJy8
+         NbPg==
+X-Gm-Message-State: AOAM530HDatIIzOX822HAl11ZcAG6nYRA6R/sJSDV2amvLsjP6+wNRPQ
+        h/PNMCwJw9O/DK5jY7U/tCA=
+X-Google-Smtp-Source: ABdhPJzTsLPoy+Tdwxd9Pi2RDK6DJe+eZn5/8FejwDeKXrZIhvmHMNsnUFZD5BSrPyGX8Jr78E+e3A==
+X-Received: by 2002:a17:906:5602:: with SMTP id f2mr24770617ejq.381.1592226508183;
+        Mon, 15 Jun 2020 06:08:28 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id ew9sm9043561ejb.121.2020.06.15.06.08.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jun 2020 06:08:27 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 15:08:25 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on
+ interrupt in exit paths
+Message-ID: <20200615130825.GA2634@kozik-lap>
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+ <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
+ <CA+h21hrxQ1fRahyQGFS42Xuop_Q2petE=No1dft4nVb-ijUu2g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+h21hrxQ1fRahyQGFS42Xuop_Q2petE=No1dft4nVb-ijUu2g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pwr and status leds configuration and turn on pwr led by default for Orange
-Pi Zero Plus 2 (both H3 and H5 variants).
+On Mon, Jun 15, 2020 at 12:23:41PM +0300, Vladimir Oltean wrote:
+> On Mon, 15 Jun 2020 at 11:18, Marc Kleine-Budde <mkl@pengutronix.de> wrote:
+> >
+> > On 6/15/20 10:07 AM, Krzysztof Kozlowski wrote:
+> > > If interrupt comes late, during probe error path or device remove (could
+> > > be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
+> > > dspi_interrupt() will access registers with the clock being disabled.  This
+> > > leads to external abort on non-linefetch on Toradex Colibri VF50 module
+> > > (with Vybrid VF5xx):
+> > >
+> > >     $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
+> > >
+> > >     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
+> > >     Internal error: : 1008 [#1] ARM
+> > >     CPU: 0 PID: 136 Comm: sh Not tainted 5.7.0-next-20200610-00009-g5c913fa0f9c5-dirty #74
+> > >     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+> > >       (regmap_mmio_read32le) from [<8061885c>] (regmap_mmio_read+0x48/0x68)
+> > >       (regmap_mmio_read) from [<8060e3b8>] (_regmap_bus_reg_read+0x24/0x28)
+> > >       (_regmap_bus_reg_read) from [<80611c50>] (_regmap_read+0x70/0x1c0)
+> > >       (_regmap_read) from [<80611dec>] (regmap_read+0x4c/0x6c)
+> > >       (regmap_read) from [<80678ca0>] (dspi_interrupt+0x3c/0xa8)
+> > >       (dspi_interrupt) from [<8017acec>] (free_irq+0x26c/0x3cc)
+> > >       (free_irq) from [<8017dcec>] (devm_irq_release+0x1c/0x20)
+> > >       (devm_irq_release) from [<805f98ec>] (release_nodes+0x1e4/0x298)
+> > >       (release_nodes) from [<805f9ac8>] (devres_release_all+0x40/0x60)
+> > >       (devres_release_all) from [<805f5134>] (device_release_driver_internal+0x108/0x1ac)
+> > >       (device_release_driver_internal) from [<805f521c>] (device_driver_detach+0x20/0x24)
+> > >
+> > > Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+> > > Cc: <stable@vger.kernel.org>
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > >
+> > > ---
+> > >
+> > > This is an follow up of my other patch for I2C IMX driver [1]. Let's fix the
+> > > issues consistently.
+> > >
+> > > [1] https://lore.kernel.org/lkml/1592130544-19759-2-git-send-email-krzk@kernel.org/T/#u
+> > >
+> > > Changes since v1:
+> > > 1. Disable the IRQ instead of using non-devm interface.
+> > > ---
+> > >  drivers/spi/spi-fsl-dspi.c | 9 +++++++--
+> > >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> > > index 58190c94561f..023e05c53b85 100644
+> > > --- a/drivers/spi/spi-fsl-dspi.c
+> > > +++ b/drivers/spi/spi-fsl-dspi.c
+> > > @@ -1400,7 +1400,7 @@ static int dspi_probe(struct platform_device *pdev)
+> > >               ret = dspi_request_dma(dspi, res->start);
+> > >               if (ret < 0) {
+> > >                       dev_err(&pdev->dev, "can't get dma channels\n");
+> > > -                     goto out_clk_put;
+> > > +                     goto disable_irq;
+> > >               }
+> > >       }
+> > >
+> > > @@ -1415,11 +1415,14 @@ static int dspi_probe(struct platform_device *pdev)
+> > >       ret = spi_register_controller(ctlr);
+> > >       if (ret != 0) {
+> > >               dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
+> > > -             goto out_clk_put;
+> > > +             goto disable_irq;
+> > >       }
+> > >
+> > >       return ret;
+> > >
+> > > +disable_irq:
+> > > +     if (dspi->irq > 0)
+> > > +             disable_irq(dspi->irq);
+> > >  out_clk_put:
+> > >       clk_disable_unprepare(dspi->clk);
+> > >  out_ctlr_put:
+> > > @@ -1435,6 +1438,8 @@ static int dspi_remove(struct platform_device *pdev)
+> > >
+> > >       /* Disconnect from the SPI framework */
+> > >       dspi_release_dma(dspi);
+> > > +     if (dspi->irq > 0)
+> > > +             disable_irq(dspi->irq);
+> >
+> > What happens, if you re-bind the driver?
+> > Is the IRQ still working?
+> > Who is taking care of calling the enable_irq() again?
+> > What happens, if you really have a shared IRQ line?
+> > Is the IRQ disabled for all other devices on the same IRQ line?
+> >
+> 
+> Yup, devm is completely broken for shared IRQs.
 
-Signed-off-by: Diego Rondini <diego.rondini@kynetics.com>
----
-v2:
-- sorted node alphabetically
-- fixed underscore in led names
-- removed extra empty line
----
- .../arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts | 15 +++++++++++++++
- .../allwinner/sun50i-h5-orangepi-zero-plus2.dts   | 15 +++++++++++++++
- 2 files changed, 30 insertions(+)
+Then we're back to this massive rework of using non-devm interface.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
-index cbe32b975c5fe..251bbab7d7073 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
-@@ -70,6 +70,21 @@ hdmi_con_in: endpoint {
- 		};
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		pwr {
-+			label = "orangepi:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		status {
-+			label = "orangepi:red:status";
-+			gpios = <&pio 0 17 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
- 	reg_vcc3v3: vcc3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3";
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-index e67733d133bb4..de19e68eb84e0 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-@@ -30,6 +30,21 @@ hdmi_con_in: endpoint {
- 		};
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		pwr {
-+			label = "orangepi:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		status {
-+			label = "orangepi:red:status";
-+			gpios = <&pio 0 17 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
- 	reg_vcc3v3: vcc3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3";
--- 
-2.26.2
+Best regards,
+Krzysztof
 
