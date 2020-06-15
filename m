@@ -2,409 +2,156 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA76EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C10C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE92207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28E22078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pw9OHAeb"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="m/39FMsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730538AbgFOQS2 (ORCPT
+        id S1730861AbgFOQSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:18:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730742AbgFOQS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:18:26 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171CDC05BD1E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:18:26 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id i1so15802732ils.11
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XKH1pFFT8fVLLE8wJVLgNv5/MLMQFH17bRtZ3CycmS4=;
-        b=Pw9OHAebA1N0FvHpjJwmZEwQvxIUVPKUU46IDt0hXJBY5QGYnIRmaZXNQdh14cvYtM
-         PbUzXwyKGkLQwALMlBo2ejTbAD7NzCGmtOkNt3sH4MiHnvlEOvqRBIXtmgUpvkD7OING
-         DmN12sARsa40E7oSbxgo/i1RwyEHEg7mBpFxIBVpMzmlU54s9uhEWhHsT81ToRuHpNBh
-         XTBq//VsSUTt/SuKnbJ3ujsN3pEC1W26a+yRSdC7Y8wXDyuF2ct7UahPiQu14eALmWDs
-         1RFce1GYqEfg8gUoaHO8OBoRCsqXlJgf/fHdYKNBhGMKuePsx/H/mLCOQRuJ3B3SZSUn
-         slag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XKH1pFFT8fVLLE8wJVLgNv5/MLMQFH17bRtZ3CycmS4=;
-        b=R2LOKl5DzgZfELSxx576OCRAPtlb0Hng2piOy4fExwuHPMSxLPdBmkQXA8knfrRO9o
-         h+A3vBHPocna+K69vBy4XQNhP8F5JCDnRndF2VyI0NE4FqUgz7It0ssgGypLL9le93am
-         Ow+OcFVZvfEKVqaK+Jp4cjDQVSptX0K1E1RQwb6eOzxy0GTi+3mcuNAOio73sVwUqeQ0
-         rWQdDSX1I3g7qbULT/6DMvfkVa5slNABpaqM5rFlYHqUn+Ce9S/JZd9E/SRMUfBzgqBc
-         f2CQSsfBa9g66vbFu2yc+jOfr3Dxa2K3Uhc4mRxS1ZtjJ+l/okI4yLfiGfzMtAxadtqK
-         HURQ==
-X-Gm-Message-State: AOAM532X7q7ldG55Kw5GBqnMZpz/UlP57SWIuDfuw9b8uzbNp6GrPHwu
-        kk19VP0lWb8OaW7l+OZ2D0C2/VZHSR+XRGuzcyIGZA==
-X-Google-Smtp-Source: ABdhPJyXMBGatSHTzrYK8/qvM6Z4jlzZSMib+6mon2WmMLWv63Czwyscsai5qRgsUgx0tSdIE+ac9RWUMq0HFut88qc=
-X-Received: by 2002:a92:5856:: with SMTP id m83mr27403174ilb.72.1592237905055;
- Mon, 15 Jun 2020 09:18:25 -0700 (PDT)
+        Mon, 15 Jun 2020 12:18:48 -0400
+Received: from mout.web.de ([217.72.192.78]:33635 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729949AbgFOQSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:18:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592237917;
+        bh=BBSWKa1BT4odTyFowADUxBXtGZDSq9RZr94SarqThJU=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=m/39FMsP8Msj4ar+AMgsGdlmZthUWHjaxpX3Aa6qINWWs7LuGYSCftAGuuRcCXDdC
+         OYwXqLpPxvbB2tArrrFV4kLNMhB+xAdbWpxU5PzowXiwwhvlx8H9HZNIpzQNeB1r9W
+         GCLLm2uzX56Ztb3n9jjrDdvTy2kJqDC4jAPAiAgA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.107.236]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N1d3a-1inQc11lXs-011wMh; Mon, 15
+ Jun 2020 18:18:37 +0200
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-input@vger.kernel.org
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <mccamant@cs.umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH v2] Input: bma150: fix ref count leak in bma150_open
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <3639cbd1-1ddc-2207-b119-b6a45723be04@web.de>
+Date:   Mon, 15 Jun 2020 18:18:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <cover.1592203650.git.mchehab+huawei@kernel.org> <11bd0d75e65a874f7c276a0aeab0fe13f3376f5f.1592203650.git.mchehab+huawei@kernel.org>
-In-Reply-To: <11bd0d75e65a874f7c276a0aeab0fe13f3376f5f.1592203650.git.mchehab+huawei@kernel.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 15 Jun 2020 10:18:14 -0600
-Message-ID: <CANLsYkyGUL3uZEQJ9HuHgvuoGtq7kjELT_H=YGq6U_tUqz-kAQ@mail.gmail.com>
-Subject: Re: [PATCH 20/22] docs: move remaining stuff under
- Documentation/*.txt to Documentation/staging
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        tee-dev@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VTqywmnqXhh1sFuWcRuMfoHDKipBL+RB+3+uSyworcNC9emE5aP
+ EzURLgEhfzfhzG4NhBnAiRkOkPrAjdv3aIucrvzZxOH2X2IFWhfGFXfQELmhPGpxEBDWv/8
+ DdEajUU3xxPzmRvJUbFStF5kRD20PjP/328646z5CCiebcwuDtf/Gnqf1STuMq/tahCO+hw
+ vOdX8WlVtQt8Mb8o/mRnA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9Ptve2kG4dI=:DRAlfciNSwFpgAsznRzTnW
+ i6arelAbDfkawyOrllVyB2ol0g59Yk+l748P89l2wO3/pvZauS5a6n9qcBu3u7sU3ocN3uoKp
+ EhsedEeLYymje87vz6cXrPAf+LTGllMoFi/w6mlAnlMMexAviWEikKM4SMomVkq7UoDdPC98z
+ QMr9kAw2Btz0eTamV2zswYyxMgPXjbmNn1HpxUEAG9HzqW622jJwt/ZGJ9h3MbJhdNukPeuYC
+ EkS3G1e/4OvkUH11+0AKbtakwex1tZKIznKlsDKWZlsxAByzFsmMOJ4+lFJYobHa9QtCSl5Ny
+ V6Wb6aq3wggqCHejfhnNwjsscoQrb85tOfkkuMdsuNA5F93GpQVkNMLaFo8wL0tKk90B62xTg
+ 7KdII6ypdG8POCjRCGe3y6y78MR7uRwsi8ddD8d9dn9pQ8BUWcJ/sSnAW4W4vynPYDkBsvimj
+ GeXlrM0PxSFdX4l7Bph9uubI//tzoFwv5Tr3yJBAbD9Bo1vFU+t4ymPdkbuRrxSDHHZ2mfvyt
+ E6atto23K0XqpnBPR6Jjgdxc9vVnqozgpYY/UWWhsp0aIXY7Yf+mL/4qSVcq0lvaF2RcAekn9
+ MU9ufcy2LthrhuTIXslbnXkKXkz4Wu8PLaMkM6EYg//TYbHEOcCDlJ4uNDLIgR/eyJ2KX9qyv
+ K/jXOk38n12Oc2GXFcpQb2IqwGsWCDVfdC7/jOfWUsP/L6sCh2y3dFLO7CQOH1NFuL+PJ3JzQ
+ H9AgDGJVqdlOokG0I4tAKRMjmXBCgPDRltXNfWKSihN9mOOQsA5sdi1tbPrN2n6PE3OVMy8XG
+ L9fO4WwnYYrn4ViziQhW4dos5oSEp742fdyUnPJn2H96ONPAL2llSRFkKs/YjcKbNGMAUN0BG
+ 6gF9eJ7hSrex5akBERscKJtGgMshS9DzPEh1PpfQTUj0zQts6zvSqXk7vDq6VkM4RIfqy1/oD
+ BnZIieqYoGcXeaa2br+haPCrrEWSs8QDt6zmYb+AGX8mPOUOzurFvoFNJMQwQdUwoMazIor3e
+ T1hJtbLjEwzmRAnZS/r2m5LegM6Pas5j0W8/JdDDvEeQhLl9ufOjwEG9MHeDEpa/LSSy7WAhk
+ LyzEQ/lYmgoTLp0+gVwujRAChhUWox88Dt88GUJjutwcNUpmHtVZAAsAzYsdnrK1fkO1JG3Xg
+ yBm88pfjfdrJ8hslc0yDuKzfduPSkX8y6RblF/d/JDN+gPb6hDlB+mgiYn4o4alGfzlgIPHVo
+ nNLBTNLplUH3FOfyB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+> in bma150_open, =E2=80=A6
 
-On Mon, 15 Jun 2020 at 00:51, Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> There are several files that I was unable to find a proper place
-> for them, and 3 ones that are still in plain old text format.
->
-> Let's place those stuff behind the carpet, as we'd like to keep the
-> root directory clean.
->
-> We can later discuss and move those into better places.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/index.rst                       | 13 ++++++++
->  .../{crc32.txt => staging/crc32.rst}          |  0
->  Documentation/staging/index.rst               | 32 +++++++++++++++++++
->  .../{kprobes.txt => staging/kprobes.rst}      |  0
->  Documentation/{lzo.txt => staging/lzo.rst}    |  0
->  .../remoteproc.rst}                           |  2 +-
->  .../{rpmsg.txt => staging/rpmsg.rst}          |  0
+* Can the term =E2=80=9Creference count=E2=80=9D become relevant also for =
+this commit message
+  besides other possible adjustments?
 
-For remoteproc.rst and rpmsg.rst, I suggest moving them under a new
-"remoteproc" directory.
+* Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
 
-Thanks,
-Mathieu
 
->  .../speculation.rst}                          |  8 +++--
->  .../static-keys.rst}                          |  0
->  Documentation/{tee.txt => staging/tee.rst}    |  1 +
->  Documentation/{xz.txt => staging/xz.rst}      |  0
->  Documentation/trace/kprobetrace.rst           |  2 +-
->  MAINTAINERS                                   |  8 ++---
->  include/linux/jump_label.h                    |  2 +-
->  lib/crc32.c                                   |  2 +-
->  lib/lzo/lzo1x_decompress_safe.c               |  2 +-
->  lib/xz/Kconfig                                |  2 +-
->  samples/kprobes/kprobe_example.c              |  2 +-
->  samples/kprobes/kretprobe_example.c           |  2 +-
->  19 files changed, 63 insertions(+), 15 deletions(-)
->  rename Documentation/{crc32.txt => staging/crc32.rst} (100%)
->  create mode 100644 Documentation/staging/index.rst
->  rename Documentation/{kprobes.txt => staging/kprobes.rst} (100%)
->  rename Documentation/{lzo.txt => staging/lzo.rst} (100%)
->  rename Documentation/{remoteproc.txt => staging/remoteproc.rst} (99%)
->  rename Documentation/{rpmsg.txt => staging/rpmsg.rst} (100%)
->  rename Documentation/{speculation.txt => staging/speculation.rst} (97%)
->  rename Documentation/{static-keys.txt => staging/static-keys.rst} (100%)
->  rename Documentation/{tee.txt => staging/tee.rst} (99%)
->  rename Documentation/{xz.txt => staging/xz.rst} (100%)
+=E2=80=A6
+> +++ b/drivers/input/misc/bma150.c
+=E2=80=A6
+> @@ -357,10 +357,13 @@  static int bma150_open(struct input_dev *input)
+>  	if (bma150->mode !=3D BMA150_MODE_NORMAL) {
+>  		error =3D bma150_set_mode(bma150, BMA150_MODE_NORMAL);
+>  		if (error)
+> -			return error;
+> +			goto out;
+>  	}
 >
-> diff --git a/Documentation/index.rst b/Documentation/index.rst
-> index 71eca3171574..3b491af0122d 100644
-> --- a/Documentation/index.rst
-> +++ b/Documentation/index.rst
-> @@ -182,6 +182,19 @@ subprojects.
->
->     filesystems/ext4/index
->
-> +Other documentation
-> +-------------------
-> +
-> +There are several unsorted documents that don't seem to fit on other parts
-> +of the documentation body, or may require some adjustments and/or conversion
-> +to ReStructured Text format, or are simply too old.
-> +
-> +.. toctree::
-> +   :maxdepth: 2
-> +
-> +   staging/index
-> +
-> +
->  Translations
->  ------------
->
-> diff --git a/Documentation/crc32.txt b/Documentation/staging/crc32.rst
-> similarity index 100%
-> rename from Documentation/crc32.txt
-> rename to Documentation/staging/crc32.rst
-> diff --git a/Documentation/staging/index.rst b/Documentation/staging/index.rst
-> new file mode 100644
-> index 000000000000..8e98517675ca
-> --- /dev/null
-> +++ b/Documentation/staging/index.rst
-> @@ -0,0 +1,32 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Unsorted Documentation
-> +======================
-> +
-> +.. toctree::
-> +   :maxdepth: 2
-> +
-> +   crc32
-> +   kprobes
-> +   lzo
-> +   remoteproc
-> +   rpmsg
-> +   speculation
-> +   static-keys
-> +   tee
-> +   xz
-> +
-> +Atomic Types
-> +============
-> +
-> +.. literalinclude:: ../atomic_t.txt
-> +
-> +Atomic bitops
-> +=============
-> +
-> +.. literalinclude:: ../atomic_bitops.txt
-> +
-> +Memory Barriers
-> +===============
-> +
-> +.. literalinclude:: ../memory-barriers.txt
-> diff --git a/Documentation/kprobes.txt b/Documentation/staging/kprobes.rst
-> similarity index 100%
-> rename from Documentation/kprobes.txt
-> rename to Documentation/staging/kprobes.rst
-> diff --git a/Documentation/lzo.txt b/Documentation/staging/lzo.rst
-> similarity index 100%
-> rename from Documentation/lzo.txt
-> rename to Documentation/staging/lzo.rst
-> diff --git a/Documentation/remoteproc.txt b/Documentation/staging/remoteproc.rst
-> similarity index 99%
-> rename from Documentation/remoteproc.txt
-> rename to Documentation/staging/remoteproc.rst
-> index 2be1147256e0..9cccd3dd6a4b 100644
-> --- a/Documentation/remoteproc.txt
-> +++ b/Documentation/staging/remoteproc.rst
-> @@ -22,7 +22,7 @@ for remote processors that supports this kind of communication. This way,
->  platform-specific remoteproc drivers only need to provide a few low-level
->  handlers, and then all rpmsg drivers will then just work
->  (for more information about the virtio-based rpmsg bus and its drivers,
-> -please read Documentation/rpmsg.txt).
-> +please read Documentation/staging/rpmsg.rst).
->  Registration of other types of virtio devices is now also possible. Firmwares
->  just need to publish what kind of virtio devices do they support, and then
->  remoteproc will add those devices. This makes it possible to reuse the
-> diff --git a/Documentation/rpmsg.txt b/Documentation/staging/rpmsg.rst
-> similarity index 100%
-> rename from Documentation/rpmsg.txt
-> rename to Documentation/staging/rpmsg.rst
-> diff --git a/Documentation/speculation.txt b/Documentation/staging/speculation.rst
-> similarity index 97%
-> rename from Documentation/speculation.txt
-> rename to Documentation/staging/speculation.rst
-> index 50d7ea857cff..8045d99bcf12 100644
-> --- a/Documentation/speculation.txt
-> +++ b/Documentation/staging/speculation.rst
-> @@ -1,9 +1,11 @@
-> +===========
-> +Speculation
-> +===========
-> +
->  This document explains potential effects of speculation, and how undesirable
->  effects can be mitigated portably using common APIs.
->
-> -===========
-> -Speculation
-> -===========
-> +------------------------------------------------------------------------------
->
->  To improve performance and minimize average latencies, many contemporary CPUs
->  employ speculative execution techniques such as branch prediction, performing
-> diff --git a/Documentation/static-keys.txt b/Documentation/staging/static-keys.rst
-> similarity index 100%
-> rename from Documentation/static-keys.txt
-> rename to Documentation/staging/static-keys.rst
-> diff --git a/Documentation/tee.txt b/Documentation/staging/tee.rst
-> similarity index 99%
-> rename from Documentation/tee.txt
-> rename to Documentation/staging/tee.rst
-> index c8fad81c4563..324604a15d17 100644
-> --- a/Documentation/tee.txt
-> +++ b/Documentation/staging/tee.rst
-> @@ -162,6 +162,7 @@ The AMD-TEE driver packages the command buffer payload for processing in TEE.
->  The command buffer format for the different TEE commands can be found in [7].
->
->  The TEE commands supported by AMD-TEE Trusted OS are:
-> +
->  * TEE_CMD_ID_LOAD_TA          - loads a Trusted Application (TA) binary into
->                                  TEE environment.
->  * TEE_CMD_ID_UNLOAD_TA        - unloads TA binary from TEE environment.
-> diff --git a/Documentation/xz.txt b/Documentation/staging/xz.rst
-> similarity index 100%
-> rename from Documentation/xz.txt
-> rename to Documentation/staging/xz.rst
-> diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-> index cc4c5fc313df..c1709165c553 100644
-> --- a/Documentation/trace/kprobetrace.rst
-> +++ b/Documentation/trace/kprobetrace.rst
-> @@ -40,7 +40,7 @@ Synopsis of kprobe_events
->   MEMADDR       : Address where the probe is inserted.
->   MAXACTIVE     : Maximum number of instances of the specified function that
->                   can be probed simultaneously, or 0 for the default value
-> -                 as defined in Documentation/kprobes.txt section 1.3.1.
-> +                 as defined in Documentation/staging/kprobes.rst section 1.3.1.
->
->   FETCHARGS     : Arguments. Each probe can have up to 128 args.
->    %REG         : Fetch register REG
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 805309399939..4c9814ee2fdb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9597,7 +9597,7 @@ M:        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
->  M:     "David S. Miller" <davem@davemloft.net>
->  M:     Masami Hiramatsu <mhiramat@kernel.org>
->  S:     Maintained
-> -F:     Documentation/kprobes.txt
-> +F:     Documentation/staging/kprobes.rst
->  F:     include/asm-generic/kprobes.h
->  F:     include/linux/kprobes.h
->  F:     kernel/kprobes.c
-> @@ -14500,7 +14500,7 @@ S:      Maintained
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git rproc-next
->  F:     Documentation/ABI/testing/sysfs-class-remoteproc
->  F:     Documentation/devicetree/bindings/remoteproc/
-> -F:     Documentation/remoteproc.txt
-> +F:     Documentation/staging/remoteproc.rst
->  F:     drivers/remoteproc/
->  F:     include/linux/remoteproc.h
->  F:     include/linux/remoteproc/
-> @@ -14512,7 +14512,7 @@ L:      linux-remoteproc@vger.kernel.org
->  S:     Maintained
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git rpmsg-next
->  F:     Documentation/ABI/testing/sysfs-bus-rpmsg
-> -F:     Documentation/rpmsg.txt
-> +F:     Documentation/staging/rpmsg.rst
->  F:     drivers/rpmsg/
->  F:     include/linux/rpmsg.h
->  F:     include/linux/rpmsg/
-> @@ -16761,7 +16761,7 @@ TEE SUBSYSTEM
->  M:     Jens Wiklander <jens.wiklander@linaro.org>
->  L:     tee-dev@lists.linaro.org
->  S:     Maintained
-> -F:     Documentation/tee.txt
-> +F:     Documentation/staging/tee.rst
->  F:     drivers/tee/
->  F:     include/linux/tee_drv.h
->  F:     include/uapi/linux/tee.h
-> diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-> index 3526c0aee954..32809624d422 100644
-> --- a/include/linux/jump_label.h
-> +++ b/include/linux/jump_label.h
-> @@ -68,7 +68,7 @@
->   * Lacking toolchain and or architecture support, static keys fall back to a
->   * simple conditional branch.
->   *
-> - * Additional babbling in: Documentation/static-keys.txt
-> + * Additional babbling in: Documentation/staging/static-keys.rst
->   */
->
->  #ifndef __ASSEMBLY__
-> diff --git a/lib/crc32.c b/lib/crc32.c
-> index 4a20455d1f61..35a03d03f973 100644
-> --- a/lib/crc32.c
-> +++ b/lib/crc32.c
-> @@ -24,7 +24,7 @@
->   * Version 2.  See the file COPYING for more details.
->   */
->
-> -/* see: Documentation/crc32.txt for a description of algorithms */
-> +/* see: Documentation/staging/crc32.rst for a description of algorithms */
->
->  #include <linux/crc32.h>
->  #include <linux/crc32poly.h>
-> diff --git a/lib/lzo/lzo1x_decompress_safe.c b/lib/lzo/lzo1x_decompress_safe.c
-> index 2717c7963acd..7892a40cf765 100644
-> --- a/lib/lzo/lzo1x_decompress_safe.c
-> +++ b/lib/lzo/lzo1x_decompress_safe.c
-> @@ -32,7 +32,7 @@
->   * depending on the base count. Since the base count is taken from a u8
->   * and a few bits, it is safe to assume that it will always be lower than
->   * or equal to 2*255, thus we can always prevent any overflow by accepting
-> - * two less 255 steps. See Documentation/lzo.txt for more information.
-> + * two less 255 steps. See Documentation/staging/lzo.rst for more information.
->   */
->  #define MAX_255_COUNT      ((((size_t)~0) / 255) - 2)
->
-> diff --git a/lib/xz/Kconfig b/lib/xz/Kconfig
-> index 22528743d4ce..5cb50245a878 100644
-> --- a/lib/xz/Kconfig
-> +++ b/lib/xz/Kconfig
-> @@ -5,7 +5,7 @@ config XZ_DEC
->         help
->           LZMA2 compression algorithm and BCJ filters are supported using
->           the .xz file format as the container. For integrity checking,
-> -         CRC32 is supported. See Documentation/xz.txt for more information.
-> +         CRC32 is supported. See Documentation/staging/xz.rst for more information.
->
->  if XZ_DEC
->
-> diff --git a/samples/kprobes/kprobe_example.c b/samples/kprobes/kprobe_example.c
-> index 501911d1b327..240f2435ce6f 100644
-> --- a/samples/kprobes/kprobe_example.c
-> +++ b/samples/kprobes/kprobe_example.c
-> @@ -5,7 +5,7 @@
->   * stack trace and selected registers when _do_fork() is called.
->   *
->   * For more information on theory of operation of kprobes, see
-> - * Documentation/kprobes.txt
-> + * Documentation/staging/kprobes.rst
->   *
->   * You will see the trace data in /var/log/messages and on the console
->   * whenever _do_fork() is invoked to create a new process.
-> diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
-> index 013e8e6ebae9..78a2da6fb3cd 100644
-> --- a/samples/kprobes/kretprobe_example.c
-> +++ b/samples/kprobes/kretprobe_example.c
-> @@ -11,7 +11,7 @@
->   * If no func_name is specified, _do_fork is instrumented
->   *
->   * For more information on theory of operation of kretprobes, see
-> - * Documentation/kprobes.txt
-> + * Documentation/staging/kprobes.rst
->   *
->   * Build and insert the kernel module as done in the kprobe example.
->   * You will see the trace data in /var/log/messages and on the console
-> --
-> 2.26.2
->
+>  	return 0;
+> +out:
+> +	pm_runtime_put_noidle(&bma150->client->dev);
+> +	return error;
+>  }
+=E2=80=A6
+
+Perhaps use the label =E2=80=9Cput_runtime=E2=80=9D instead?
+
+Regards,
+Markus
