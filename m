@@ -2,123 +2,350 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD79C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9362C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC372076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9422076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JmVIt0c2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ApO+QWVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbgFOMyk (ORCPT
+        id S1730156AbgFOMx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:54:40 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:39371 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730221AbgFOMy0 (ORCPT
+        Mon, 15 Jun 2020 08:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730117AbgFOMxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:54:26 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FCqnb8011050;
-        Mon, 15 Jun 2020 14:54:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=bXos72rf0lg0iLm1zdmI8TWdbgoRub9K+Cl/CRJ6gjQ=;
- b=JmVIt0c2JGG9uc+PwWibzxVu6zQt6ygLyh7T4qihAFz+Rv3fOo1p/B4DHmvF/tozifkT
- 7hmV5v9/hgm5c38E7qzIKMOcLmaTMrrOFsVLI9jCAZNrOzjD2ixwfppqUqF1ySK8xPY/
- o93ArBWaUymS/BP8LsiAIYzbrLjG9ouuxKM1eHqzc1l2Z84qcb8ptZaHF8PRe1eqjEe4
- 20wRmOfY/erASbEVRlzZNfXjlhRTZl+AcNLeTF9kbvVv8sMH/OgKvBkXiEuNfyoNzb6J
- tNoJF/z+6qSb3uEDDHirsV1jYfb5H4cABCSdvHIj0Tjp6zXG61JkyJdut8a1wU9OIiCq QQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mmjvspcu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 14:54:23 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 01069100034;
-        Mon, 15 Jun 2020 14:54:23 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA9812B35E0;
-        Mon, 15 Jun 2020 14:54:22 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 14:54:22
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <alexandre.torgue@st.com>
-Subject: [PATCH 2/2] pinctrl: stm32: defer probe if reset resource is not yet ready
-Date:   Mon, 15 Jun 2020 14:54:07 +0200
-Message-ID: <20200615125407.27632-3-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200615125407.27632-1-alexandre.torgue@st.com>
-References: <20200615125407.27632-1-alexandre.torgue@st.com>
+        Mon, 15 Jun 2020 08:53:45 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E7EC05BD1E;
+        Mon, 15 Jun 2020 05:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=DJZ925lCffNrvvt2J0iUL7aj+wlObhzuylSyf0HcAGg=; b=ApO+QWVCFegFRmEJjE5R8Gwm4q
+        B1s1DJh2gpLxSdhqH14smF+hwZtY3zXFa+rfyfZwEmu+/CH8x6i6bMGO+iVQQ1bvpIlZNC2k8BzE1
+        7mSjipDzJN2zrOEMM2e33JFBLrZ+HShzRBWCPYzAWHkSNhtg3MTG40XcUxaY8U+JLdOdrKypOt6Gf
+        vacIBfjM+GfpUvUP38wyr2ODT2P2TIXa12I279U3LbiiJriZp7fgPm/vjHgyXH8zyAQbREECQw0f+
+        j+3KBouy1lZEi8/KlrnqQo7qBKyIc4J+7KLsU0HS1YQUYBioagFmro164nuFpJmASqbQQpZT0VKm1
+        6kHWS38g==;
+Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkocS-0000sj-H6; Mon, 15 Jun 2020 12:53:44 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 08/16] initrd: remove support for multiple floppies
+Date:   Mon, 15 Jun 2020 14:53:15 +0200
+Message-Id: <20200615125323.930983-9-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615125323.930983-1-hch@lst.de>
+References: <20200615125323.930983-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
+Remove the special handling for multiple floppies in the initrd code.
+No one should be using floppies for booting these days. (famous last
+words..)
 
-Defer probe when pin controller reset is defined in the system resources
-but not yet probed.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/arm/kernel/atags_parse.c |  2 -
+ arch/sh/kernel/setup.c        |  2 -
+ arch/sparc/kernel/setup_32.c  |  2 -
+ arch/sparc/kernel/setup_64.c  |  2 -
+ arch/x86/kernel/setup.c       |  2 -
+ include/linux/initrd.h        |  6 ---
+ init/do_mounts.c              | 69 ++++-------------------------------
+ init/do_mounts.h              |  1 -
+ init/do_mounts_rd.c           | 20 +++-------
+ 9 files changed, 12 insertions(+), 94 deletions(-)
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index c15460ef2307..162535e7c94d 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -84,6 +84,7 @@ struct stm32_pinctrl_group {
- struct stm32_gpio_bank {
- 	void __iomem *base;
- 	struct clk *clk;
-+	struct reset_control *rstc;
- 	spinlock_t lock;
- 	struct gpio_chip gpio_chip;
- 	struct pinctrl_gpio_range range;
-@@ -1202,13 +1203,11 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
- 	struct of_phandle_args args;
- 	struct device *dev = pctl->dev;
- 	struct resource res;
--	struct reset_control *rstc;
- 	int npins = STM32_GPIO_PINS_PER_BANK;
- 	int bank_nr, err;
+diff --git a/arch/arm/kernel/atags_parse.c b/arch/arm/kernel/atags_parse.c
+index ce02f92f4ab262..6c12d9fe694e3e 100644
+--- a/arch/arm/kernel/atags_parse.c
++++ b/arch/arm/kernel/atags_parse.c
+@@ -91,8 +91,6 @@ __tagtable(ATAG_VIDEOTEXT, parse_tag_videotext);
+ static int __init parse_tag_ramdisk(const struct tag *tag)
+ {
+ 	rd_image_start = tag->u.ramdisk.start;
+-	rd_doload = (tag->u.ramdisk.flags & 1) == 0;
+-	rd_prompt = (tag->u.ramdisk.flags & 2) == 0;
  
--	rstc = of_reset_control_get_exclusive(np, NULL);
--	if (!IS_ERR(rstc))
--		reset_control_deassert(rstc);
-+	if (!IS_ERR(bank->rstc))
-+		reset_control_deassert(bank->rstc);
+ 	if (tag->u.ramdisk.size)
+ 		rd_size = tag->u.ramdisk.size;
+diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
+index 67f5a3b44c2eff..4144be650d4106 100644
+--- a/arch/sh/kernel/setup.c
++++ b/arch/sh/kernel/setup.c
+@@ -290,8 +290,6 @@ void __init setup_arch(char **cmdline_p)
  
- 	if (of_address_to_resource(np, 0, &res))
- 		return -ENODEV;
-@@ -1516,6 +1515,11 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 		struct stm32_gpio_bank *bank = &pctl->banks[i];
+ #ifdef CONFIG_BLK_DEV_RAM
+ 	rd_image_start = RAMDISK_FLAGS & RAMDISK_IMAGE_START_MASK;
+-	rd_prompt = ((RAMDISK_FLAGS & RAMDISK_PROMPT_FLAG) != 0);
+-	rd_doload = ((RAMDISK_FLAGS & RAMDISK_LOAD_FLAG) != 0);
+ #endif
  
- 		if (of_property_read_bool(child, "gpio-controller")) {
-+			bank->rstc = of_reset_control_get_exclusive(child,
-+								    NULL);
-+			if (PTR_ERR(bank->rstc) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+
- 			bank->clk = of_clk_get_by_name(child, NULL);
- 			if (IS_ERR(bank->clk)) {
- 				if (PTR_ERR(bank->clk) != -EPROBE_DEFER)
+ 	if (!MOUNT_ROOT_RDONLY)
+diff --git a/arch/sparc/kernel/setup_32.c b/arch/sparc/kernel/setup_32.c
+index 6d07b85b9e2470..eea43a1aef1b9a 100644
+--- a/arch/sparc/kernel/setup_32.c
++++ b/arch/sparc/kernel/setup_32.c
+@@ -353,8 +353,6 @@ void __init setup_arch(char **cmdline_p)
+ 	ROOT_DEV = old_decode_dev(root_dev);
+ #ifdef CONFIG_BLK_DEV_RAM
+ 	rd_image_start = ram_flags & RAMDISK_IMAGE_START_MASK;
+-	rd_prompt = ((ram_flags & RAMDISK_PROMPT_FLAG) != 0);
+-	rd_doload = ((ram_flags & RAMDISK_LOAD_FLAG) != 0);	
+ #endif
+ 
+ 	prom_setsync(prom_sync_me);
+diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
+index f765fda871eb61..d87244197d5cbb 100644
+--- a/arch/sparc/kernel/setup_64.c
++++ b/arch/sparc/kernel/setup_64.c
+@@ -659,8 +659,6 @@ void __init setup_arch(char **cmdline_p)
+ 	ROOT_DEV = old_decode_dev(root_dev);
+ #ifdef CONFIG_BLK_DEV_RAM
+ 	rd_image_start = ram_flags & RAMDISK_IMAGE_START_MASK;
+-	rd_prompt = ((ram_flags & RAMDISK_PROMPT_FLAG) != 0);
+-	rd_doload = ((ram_flags & RAMDISK_LOAD_FLAG) != 0);
+ #endif
+ 
+ 	task_thread_info(&init_task)->kregs = &fake_swapper_regs;
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index a3767e74c758c0..b9a68d8e06d8d1 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -870,8 +870,6 @@ void __init setup_arch(char **cmdline_p)
+ 
+ #ifdef CONFIG_BLK_DEV_RAM
+ 	rd_image_start = boot_params.hdr.ram_size & RAMDISK_IMAGE_START_MASK;
+-	rd_prompt = ((boot_params.hdr.ram_size & RAMDISK_PROMPT_FLAG) != 0);
+-	rd_doload = ((boot_params.hdr.ram_size & RAMDISK_LOAD_FLAG) != 0);
+ #endif
+ #ifdef CONFIG_EFI
+ 	if (!strncmp((char *)&boot_params.efi_info.efi_loader_signature,
+diff --git a/include/linux/initrd.h b/include/linux/initrd.h
+index aa591435572868..8db6f8c8030b68 100644
+--- a/include/linux/initrd.h
++++ b/include/linux/initrd.h
+@@ -2,12 +2,6 @@
+ 
+ #define INITRD_MINOR 250 /* shouldn't collide with /dev/ram* too soon ... */
+ 
+-/* 1 = load ramdisk, 0 = don't load */
+-extern int rd_doload;
+-
+-/* 1 = prompt for ramdisk, 0 = don't prompt */
+-extern int rd_prompt;
+-
+ /* starting block # of image */
+ extern int rd_image_start;
+ 
+diff --git a/init/do_mounts.c b/init/do_mounts.c
+index 1a4dfa17fb2899..4f4ceb35805503 100644
+--- a/init/do_mounts.c
++++ b/init/do_mounts.c
+@@ -28,8 +28,6 @@
+ 
+ #include "do_mounts.h"
+ 
+-int __initdata rd_doload;	/* 1 = load RAM disk, 0 = don't load */
+-
+ int root_mountflags = MS_RDONLY | MS_SILENT;
+ static char * __initdata root_device_name;
+ static char __initdata saved_root_name[64];
+@@ -39,7 +37,7 @@ dev_t ROOT_DEV;
+ 
+ static int __init load_ramdisk(char *str)
+ {
+-	rd_doload = simple_strtol(str,NULL,0) & 3;
++	pr_warn("ignoring the depreated load_ramdisk= option\n");
+ 	return 1;
+ }
+ __setup("load_ramdisk=", load_ramdisk);
+@@ -553,66 +551,20 @@ static int __init mount_cifs_root(void)
+ }
+ #endif
+ 
+-#if defined(CONFIG_BLK_DEV_RAM) || defined(CONFIG_BLK_DEV_FD)
+-void __init change_floppy(char *fmt, ...)
+-{
+-	struct termios termios;
+-	char buf[80];
+-	char c;
+-	int fd;
+-	va_list args;
+-	va_start(args, fmt);
+-	vsprintf(buf, fmt, args);
+-	va_end(args);
+-	fd = ksys_open("/dev/root", O_RDWR | O_NDELAY, 0);
+-	if (fd >= 0) {
+-		ksys_ioctl(fd, FDEJECT, 0);
+-		ksys_close(fd);
+-	}
+-	printk(KERN_NOTICE "VFS: Insert %s and press ENTER\n", buf);
+-	fd = ksys_open("/dev/console", O_RDWR, 0);
+-	if (fd >= 0) {
+-		ksys_ioctl(fd, TCGETS, (long)&termios);
+-		termios.c_lflag &= ~ICANON;
+-		ksys_ioctl(fd, TCSETSF, (long)&termios);
+-		ksys_read(fd, &c, 1);
+-		termios.c_lflag |= ICANON;
+-		ksys_ioctl(fd, TCSETSF, (long)&termios);
+-		ksys_close(fd);
+-	}
+-}
+-#endif
+-
+ void __init mount_root(void)
+ {
+ #ifdef CONFIG_ROOT_NFS
+ 	if (ROOT_DEV == Root_NFS) {
+-		if (mount_nfs_root())
+-			return;
+-
+-		printk(KERN_ERR "VFS: Unable to mount root fs via NFS, trying floppy.\n");
+-		ROOT_DEV = Root_FD0;
++		if (!mount_nfs_root())
++			printk(KERN_ERR "VFS: Unable to mount root fs via NFS.\n");
++		return;
+ 	}
+ #endif
+ #ifdef CONFIG_CIFS_ROOT
+ 	if (ROOT_DEV == Root_CIFS) {
+-		if (mount_cifs_root())
+-			return;
+-
+-		printk(KERN_ERR "VFS: Unable to mount root fs via SMB, trying floppy.\n");
+-		ROOT_DEV = Root_FD0;
+-	}
+-#endif
+-#ifdef CONFIG_BLK_DEV_FD
+-	if (MAJOR(ROOT_DEV) == FLOPPY_MAJOR) {
+-		/* rd_doload is 2 for a dual initrd/ramload setup */
+-		if (rd_doload==2) {
+-			if (rd_load_disk(1)) {
+-				ROOT_DEV = Root_RAM1;
+-				root_device_name = NULL;
+-			}
+-		} else
+-			change_floppy("root floppy");
++		if (!mount_cifs_root())
++			printk(KERN_ERR "VFS: Unable to mount root fs via SMB.\n");
++		return;
+ 	}
+ #endif
+ #ifdef CONFIG_BLOCK
+@@ -631,8 +583,6 @@ void __init mount_root(void)
+  */
+ void __init prepare_namespace(void)
+ {
+-	int is_floppy;
+-
+ 	if (root_delay) {
+ 		printk(KERN_INFO "Waiting %d sec before mounting root device...\n",
+ 		       root_delay);
+@@ -675,11 +625,6 @@ void __init prepare_namespace(void)
+ 		async_synchronize_full();
+ 	}
+ 
+-	is_floppy = MAJOR(ROOT_DEV) == FLOPPY_MAJOR;
+-
+-	if (is_floppy && rd_doload && rd_load_disk(0))
+-		ROOT_DEV = Root_RAM0;
+-
+ 	mount_root();
+ out:
+ 	devtmpfs_mount();
+diff --git a/init/do_mounts.h b/init/do_mounts.h
+index 50d6c8941e15a1..c855b3f0e06d19 100644
+--- a/init/do_mounts.h
++++ b/init/do_mounts.h
+@@ -9,7 +9,6 @@
+ #include <linux/major.h>
+ #include <linux/root_dev.h>
+ 
+-void  change_floppy(char *fmt, ...);
+ void  mount_block_root(char *name, int flags);
+ void  mount_root(void);
+ extern int root_mountflags;
+diff --git a/init/do_mounts_rd.c b/init/do_mounts_rd.c
+index 32fb049d18f9b4..27b1bccf6f12a8 100644
+--- a/init/do_mounts_rd.c
++++ b/init/do_mounts_rd.c
+@@ -15,11 +15,9 @@
+ #include <linux/decompress/generic.h>
+ 
+ 
+-int __initdata rd_prompt = 1;/* 1 = prompt for RAM disk, 0 = don't prompt */
+-
+ static int __init prompt_ramdisk(char *str)
+ {
+-	rd_prompt = simple_strtol(str,NULL,0) & 1;
++	pr_warn("ignoring the depreated prompt_ramdisk= option\n");
+ 	return 1;
+ }
+ __setup("prompt_ramdisk=", prompt_ramdisk);
+@@ -178,7 +176,7 @@ int __init rd_load_image(char *from)
+ 	int res = 0;
+ 	int in_fd, out_fd;
+ 	unsigned long rd_blocks, devblocks;
+-	int nblocks, i, disk;
++	int nblocks, i;
+ 	char *buf = NULL;
+ 	unsigned short rotate = 0;
+ 	decompress_fn decompressor = NULL;
+@@ -243,21 +241,15 @@ int __init rd_load_image(char *from)
+ 
+ 	printk(KERN_NOTICE "RAMDISK: Loading %dKiB [%ld disk%s] into ram disk... ",
+ 		nblocks, ((nblocks-1)/devblocks)+1, nblocks>devblocks ? "s" : "");
+-	for (i = 0, disk = 1; i < nblocks; i++) {
++	for (i = 0; i < nblocks; i++) {
+ 		if (i && (i % devblocks == 0)) {
+-			pr_cont("done disk #%d.\n", disk++);
++			pr_cont("done disk #1.\n");
+ 			rotate = 0;
+ 			if (ksys_close(in_fd)) {
+ 				printk("Error closing the disk.\n");
+ 				goto noclose_input;
+ 			}
+-			change_floppy("disk #%d", disk);
+-			in_fd = ksys_open(from, O_RDONLY, 0);
+-			if (in_fd < 0)  {
+-				printk("Error opening disk.\n");
+-				goto noclose_input;
+-			}
+-			printk("Loading disk #%d... ", disk);
++			break;
+ 		}
+ 		ksys_read(in_fd, buf, BLOCK_SIZE);
+ 		ksys_write(out_fd, buf, BLOCK_SIZE);
+@@ -284,8 +276,6 @@ int __init rd_load_image(char *from)
+ 
+ int __init rd_load_disk(int n)
+ {
+-	if (rd_prompt)
+-		change_floppy("root floppy disk to be loaded into RAM disk");
+ 	create_dev("/dev/root", ROOT_DEV);
+ 	create_dev("/dev/ram", MKDEV(RAMDISK_MAJOR, n));
+ 	return rd_load_image("/dev/root");
 -- 
-2.17.1
+2.26.2
 
