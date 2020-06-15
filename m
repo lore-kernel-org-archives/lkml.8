@@ -2,123 +2,138 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A253BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA6C20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C3B20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0kZKh1Sb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfGKyzEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgFOIuj (ORCPT
+        id S1729238AbgFOIvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:50:39 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37884 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728496AbgFOIuj (ORCPT
+        Mon, 15 Jun 2020 04:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbgFOIvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:50:39 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F8lwYA021890;
-        Mon, 15 Jun 2020 10:49:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=VJv/B5BqqCzIrb2NhvcIyxQJgblrWvMESlW9XtRoNEA=;
- b=0kZKh1SbuXWQB7p9qxsFxBRqM5mfwfpwfQppSZHbAi7aGlAxJMn6HF+ePByVUQeWhP5n
- KHEOUmeg4EKm8z+vwmjt3IOBgkxpIr2YfeCVj8ChuRaXXCTBuIspiTs1/dAn8wURSGv3
- Y6blL4F1iGve6mV/JSA2Pyx58BOe+zFpXoYwH56D9UtIt/jTmZ8DZ9aR36vl+fmDipKB
- R2v0LPU2N1A8tx4U+bnCxdr1YQs9SwTSs/TW9vbPuAGsUovU8eMdffUak45+mjdEPJwW
- S7cPK9U9RSfiHWTSauFsD/Mg20ZYaYQu+bkEKaSI52QL+y3Vo08SpxeK1fP9HowPDr67 wQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mnph0ecj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 10:49:53 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 76ACA10002A;
-        Mon, 15 Jun 2020 10:49:45 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4485B2BE225;
-        Mon, 15 Jun 2020 10:49:45 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
- 2020 10:49:44 +0200
-Subject: Re: [PATCH v6 0/9] Enable ili9341 and l3gd20 on stm32f429-disco
-To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
-        <p.zabel@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
-        <thierry.reding@gmail.com>, <sam@ravnborg.org>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <andy.shevchenko@gmail.com>, <noralf@tronnes.org>,
-        <linus.walleij@linaro.org>, <broonie@kernel.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-clk@vger.kernel.org>,
-        <dillonhua@gmail.com>
-References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <bfb78ded-11bf-e9e3-4211-5fa86c6e0f0f@st.com>
-Date:   Mon, 15 Jun 2020 10:49:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 04:51:09 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A56AC061A0E;
+        Mon, 15 Jun 2020 01:51:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r18so7318028pgk.11;
+        Mon, 15 Jun 2020 01:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sjNYNYB2PAqYsekC8o7YkscXKB6lDVKLys43kVcoOyw=;
+        b=MfGKyzEsW7VC3DPvSItwZ3BVWqoTwlo4UIX2/khNf38eXAOW+JSrQk1vUsv6Img/xE
+         LQTKx52rR9V/RXvrb1t9GY3yf47p4HArkMQS9wdLWWxLuXDHnmNdxbv61/PJNH1uLI+f
+         QeMJGSo9ILr9xekl/ffPEHfOwolZgRcY+4r/2mbeo2HLulsnc/b+gbiUsEPoQ37PKTOU
+         ctdBAOE9SDCLmvB2UJ5l71KPyuXK+laLZLeMgFFtdIK+NcJIVitEk21pk/mfb+rX7vvI
+         Upsa0u2g6NmC/rmzZ0rmt5Fgnwbr1mfH4cImC5TLBRxIouGx4zNPOpSU7fC61BYQUusj
+         CQAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sjNYNYB2PAqYsekC8o7YkscXKB6lDVKLys43kVcoOyw=;
+        b=b04j0VVFIgCAft32Rk2Q4O3DCISnGI8LumBIL0teSxaWiIez4CynpqXXE2/YM1xKbv
+         3t95dfYdq5Mvc7clNi76BAflrXwjedssGVIpXI8fd9qU30LIYBO0D1Yk36KDQp45hRm5
+         8702xEUinGuDETpe5n2So3vHKQVfC1NcfUbgSQHPRocHI/1oSjGJIpBs38AAkgXkS+BO
+         oAfjlND39F2MqhOA/O3zSP+/2tREInAusvTmUo5ON+DeMojOcNkJd7PoDQF3wSSeignU
+         6XbBlQRPm+LIbv/QaMvFo3zoGV/Qat2agJHOYanwhMWicUL6ygTrpixs9ZYnrjZJ/HCK
+         bQ5Q==
+X-Gm-Message-State: AOAM531xCRKSDx3N4sOM/wxP60G2F+1qpakwjwcaBZ2qrzkPxrTQP7rN
+        JzsnXtj7kfXZ9Acw8pXE984=
+X-Google-Smtp-Source: ABdhPJxKUl31bIVb8tdHx+D3dY3Nl8RmRodAViGpikCEs6HDQ2ODhR2hUBl1THwHLDuUQ+Cxdfa3Eg==
+X-Received: by 2002:a63:1310:: with SMTP id i16mr20123019pgl.351.1592211068094;
+        Mon, 15 Jun 2020 01:51:08 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id e78sm13199951pfh.50.2020.06.15.01.51.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 01:51:07 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 16:48:55 +0800
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>
+Cc:     Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Peter Krystad <peter.krystad@linux.intel.com>,
+        netdev@vger.kernel.org, mptcp@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mptcp: use list_first_entry_or_null
+Message-ID: <20200615084855.GB29964@OptiPlex>
+References: <9958d3f15d2d181eb9d48ffe5bf3251ec900f27a.1591941826.git.geliangtang@gmail.com>
+ <alpine.OSX.2.22.394.2006121114030.74555@mjmartin-mac01.local>
 MIME-Version: 1.0
-In-Reply-To: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_01:2020-06-15,2020-06-15 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.OSX.2.22.394.2006121114030.74555@mjmartin-mac01.local>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dillon,
-
-On 5/27/20 9:27 AM, dillon.minfei@gmail.com wrote:
-> From: dillon min <dillon.minfei@gmail.com>
-
-...
-
-> dillon min (9):
->    ARM: dts: stm32: Add dma config for spi5
->    ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
->    ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
->      stm32429-disco board
->    dt-bindings: display: panel: Add ilitek ili9341 panel bindings
->    clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate
->    clk: stm32: Fix ltdc's clock turn off by clk_disable_unused() after
->      kernel     startup
->    drm/panel: Add ilitek ili9341 panel driver
->    spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
->    spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
->      be     coexit with 'SPI_3WIRE' mode
+On Fri, Jun 12, 2020 at 11:22:31AM -0700, Mat Martineau wrote:
 > 
->   .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
->   arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
->   arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
->   arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
->   drivers/clk/clk-stm32f4.c                          |    7 +-
->   drivers/gpu/drm/panel/Kconfig                      |   12 +
->   drivers/gpu/drm/panel/Makefile                     |    1 +
->   drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1288 ++++++++++++++++++++
->   drivers/spi/spi-stm32.c                            |   19 +-
->   drivers/spi/spi.c                                  |    3 +-
->   10 files changed, 1508 insertions(+), 9 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
->   create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> Hello Geliang,
 > 
+> On Fri, 12 Jun 2020, Geliang Tang wrote:
+> 
+> > Use list_first_entry_or_null to simplify the code.
+> > 
+> > Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> > ---
+> > net/mptcp/protocol.h | 5 +----
+> > 1 file changed, 1 insertion(+), 4 deletions(-)
+> > 
+> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> > index 86d265500cf6..55c65abcad64 100644
+> > --- a/net/mptcp/protocol.h
+> > +++ b/net/mptcp/protocol.h
+> > @@ -234,10 +234,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
+> > {
+> > 	struct mptcp_sock *msk = mptcp_sk(sk);
+> > 
+> > -	if (list_empty(&msk->rtx_queue))
+> > -		return NULL;
+> > -
+> > -	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
+> > +	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
+> > }
+> > 
+> > struct mptcp_subflow_request_sock {
+> > -- 
+> > 2.17.1
+> 
+> As Matthieu mentioned on your earlier patch, please submit patches to netdev
+> with either a [PATCH net] or [PATCH net-next] tag. In this case, these are
+> non-critical bug fixes so they should be targeted at net-next.
+> 
+> Note that net-next branch is currently closed to submissions due to the v5.8
+> merge window. Please resubmit both MPTCP patches for net-next when David
+> announces that it is open again. The change does look ok but will not be
+> merged now.
+> 
+> Thanks for your patch,
+> 
+> --
+> Mat Martineau
+> Intel
 
-DT patches (patch 1 to 3) applied on stm32-next. I assume that binding 
-one will go with drm/panel driver patch.
+Hi Mat,
 
-Thanks
-Alex
+Thanks for your reply.
+I have already resend patch v2 to you.
+
+-Geliang
