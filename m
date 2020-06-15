@@ -2,140 +2,124 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D043C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C52C720707
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681E0206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:05:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rm9uZHQ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbgFOKDs (ORCPT
+        id S1729551AbgFOKFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:03:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53266 "EHLO
+        Mon, 15 Jun 2020 06:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbgFOKDr (ORCPT
+        with ESMTP id S1726111AbgFOKFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:03:47 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0595C061A0E;
-        Mon, 15 Jun 2020 03:03:47 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jklxt-0006Uf-6S; Mon, 15 Jun 2020 12:03:41 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B40231C00ED;
-        Mon, 15 Jun 2020 12:03:40 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 10:03:40 -0000
-From:   "tip-bot2 for Herbert Xu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/microcode] x86/microcode: Do not select FW_LOADER
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200610042911.GA20058@gondor.apana.org.au>
-References: <20200610042911.GA20058@gondor.apana.org.au>
+        Mon, 15 Jun 2020 06:05:20 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5820CC061A0E;
+        Mon, 15 Jun 2020 03:05:20 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id p20so17105775iop.11;
+        Mon, 15 Jun 2020 03:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dfs5PllpQpG9QpYkVZTr5YGvpGpnNGmZTQiHA7UaSnw=;
+        b=Rm9uZHQ6qwXtdXIirn2i9Fii8ebIQCWolZpKBzlXT7okYU7u/azWvU+8b7sqW/YcUW
+         ueDgXdICoowFfocCx2+bP5cZxxiTGZtoFD3Rj8MxuHhfGVMxP7A/5vZklUxUQWT6aBk7
+         NHE4H4ZlKtqPC6AAfiJIFbn2Hu3ZCcHe509LrqUtQkVMKdzYbtP5q06WyV53SY4sM1Qb
+         JBGM/6CD86ycKuf94WO1HOtOjPs5KHWV4GLz3kfw3sSWOALL1SZWpfEKCo/5LnkgNRvw
+         yPJKX2c6g34XP6ZRPKLvPGsaYZiUQt7NoWsovDir5xdi39QJv9qax/GvJ2byOJbpoh1j
+         R9Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dfs5PllpQpG9QpYkVZTr5YGvpGpnNGmZTQiHA7UaSnw=;
+        b=ZCG6wxvHKYa0FlJEsBekRj4kPd4tHv+NqTmh4PnFRGxvu7z7qpThI0chDLih0rrnTP
+         kDyf2GTQzCKDjICc6vG98Aw3uZQSoKrD33IKVanphAOu38QJNO5STKupfofE6sBq7qqk
+         mwDr0excSEMmd1LKOAaAf+rGTi6krek/wjq32Blkn0bGfdj+q067PeUMRfLSQO5CE1ge
+         8uhwFXFRdXMmpnWyZtfFhJjGwlHYWI8MYMWY+WxNP+bkMpjksKtIJXQRX6OPxijAgraZ
+         rM1XXYJ0bZ3DeUlLe/BdSW8QBwd6Cd2z6fFO2jaL7z7XC/evTdyzoc1PGLdzuADUlYiC
+         vuvA==
+X-Gm-Message-State: AOAM532IBfPHP9PCrYt/i6OCa7d38JaRrSBcFtJUGLZwdQTQuVfR3D2X
+        6r9saIUm7rBc6NOoT8XgqTE64iVq8b+HEDqDa5c=
+X-Google-Smtp-Source: ABdhPJw2ZNSatUBV5nkdNWJB5epCtTEMUWyTNWezAfi/r72JR+OKrJKz92f3vb55u1hjxnOO0jazboJ+w2X3EnzYQqk=
+X-Received: by 2002:a05:6638:d96:: with SMTP id l22mr21113713jaj.120.1592215519677;
+ Mon, 15 Jun 2020 03:05:19 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159221542045.16989.5680100825839047126.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200612004644.255692-1-mike.kravetz@oracle.com>
+ <20200612015842.GC23230@ZenIV.linux.org.uk> <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
+ <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
+ <6e8924b0-bfc4-eaf5-1775-54f506cdf623@oracle.com> <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
+In-Reply-To: <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 15 Jun 2020 13:05:08 +0300
+Message-ID: <CAOQ4uxgA+_4_UtVz17_eJL6m0CsDEVuiriBj1ZOkho+Ub1yuSA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
+ hugetlbfs files
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Colin Walters <walters@verbum.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/microcode branch of tip:
+On Mon, Jun 15, 2020 at 10:53 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> On Sat, Jun 13, 2020 at 9:12 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >
+> > On 6/12/20 11:53 PM, Amir Goldstein wrote:
+>
+> > As a hugetlbfs developer, I do not know of a use case for interoperability
+> > with overlayfs.  So yes, I am not too interested in making them work well
+> > together.  However, if there was an actual use case I would be more than
+> > happy to consider doing the work.  Just hate to put effort into fixing up
+> > two 'special' filesystems for functionality that may not be used.
+> >
+> > I can't speak for overlayfs developers.
+>
+> As I said, I only know of tmpfs being upper layer as a valid use case.
+>    Does that work with hugepages?  How would I go about testing that?
 
-Commit-ID:     c8a59a4d8e3c9e609fa915e39c3628c6dd08aeea
-Gitweb:        https://git.kernel.org/tip/c8a59a4d8e3c9e609fa915e39c3628c6dd08aeea
-Author:        Herbert Xu <herbert@gondor.apana.org.au>
-AuthorDate:    Wed, 10 Jun 2020 21:05:13 +10:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 15 Jun 2020 11:59:19 +02:00
+Simple, after enabling CONFIG_HUGETLBFS:
 
-x86/microcode: Do not select FW_LOADER
+diff --git a/mount_union.py b/mount_union.py
+index fae8899..4070c70 100644
+--- a/mount_union.py
++++ b/mount_union.py
+@@ -15,7 +15,7 @@ def mount_union(ctx):
+         snapshot_mntroot = cfg.snapshot_mntroot()
+         if cfg.should_mount_upper():
+             system("mount " + upper_mntroot + " 2>/dev/null"
+-                    " || mount -t tmpfs upper_layer " + upper_mntroot)
++                    " || mount -t hugetlbfs upper_layer " + upper_mntroot)
+         layer_mntroot = upper_mntroot + "/" + ctx.curr_layer()
+         upperdir = layer_mntroot + "/u"
+         workdir = layer_mntroot + "/w"
 
-The x86 microcode support works just fine without FW_LOADER. In fact,
-these days most people load microcode early during boot so FW_LOADER
-never gets into the picture anyway.
+It fails colossally, because hugetlbfs, does not have write_iter().
+It is only meant as an interface to create named maps of huge pages.
+So I don't really see the use case for using it as upper.
 
-As almost everyone on x86 needs to enable MICROCODE, this by extension
-means that FW_LOADER is always built into the kernel even if nothing
-uses it. The FW_LOADER system is about two thousand lines long and
-contains user-space facing interfaces that could potentially provide an
-entry point into the kernel (or beyond).
-
-Remove the unnecessary select of FW_LOADER by MICROCODE. People who need
-the FW_LOADER capability can still enable it.
-
- [ bp: Massage a bit. ]
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200610042911.GA20058@gondor.apana.org.au
----
- arch/x86/Kconfig                     | 3 ---
- arch/x86/kernel/cpu/microcode/core.c | 2 --
- 2 files changed, 5 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 6a0cc52..5c44eac 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1292,7 +1292,6 @@ config MICROCODE
- 	bool "CPU microcode loading support"
- 	default y
- 	depends on CPU_SUP_AMD || CPU_SUP_INTEL
--	select FW_LOADER
- 	help
- 	  If you say Y here, you will be able to update the microcode on
- 	  Intel and AMD processors. The Intel support is for the IA32 family,
-@@ -1314,7 +1313,6 @@ config MICROCODE_INTEL
- 	bool "Intel microcode loading support"
- 	depends on MICROCODE
- 	default MICROCODE
--	select FW_LOADER
- 	help
- 	  This options enables microcode patch loading support for Intel
- 	  processors.
-@@ -1326,7 +1324,6 @@ config MICROCODE_INTEL
- config MICROCODE_AMD
- 	bool "AMD microcode loading support"
- 	depends on MICROCODE
--	select FW_LOADER
- 	help
- 	  If you select this option, microcode patch loading support for AMD
- 	  processors will be enabled.
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index baec68b..ec6f041 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -145,7 +145,6 @@ extern struct builtin_fw __end_builtin_fw[];
- 
- bool get_builtin_firmware(struct cpio_data *cd, const char *name)
- {
--#ifdef CONFIG_FW_LOADER
- 	struct builtin_fw *b_fw;
- 
- 	for (b_fw = __start_builtin_fw; b_fw != __end_builtin_fw; b_fw++) {
-@@ -155,7 +154,6 @@ bool get_builtin_firmware(struct cpio_data *cd, const char *name)
- 			return true;
- 		}
- 	}
--#endif
- 	return false;
- }
- 
+Thanks,
+Amir.
