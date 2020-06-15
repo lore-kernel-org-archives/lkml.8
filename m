@@ -2,122 +2,164 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E208C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17348C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E9F20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B9A2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HTtoM1Ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgFOWVT (ORCPT
+        id S1726505AbgFOWXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:21:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36166 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725843AbgFOWVS (ORCPT
+        Mon, 15 Jun 2020 18:23:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30050 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725843AbgFOWXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:21:18 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FM2NMR163141;
-        Mon, 15 Jun 2020 18:21:16 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31msf012w2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 18:21:16 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FMFk22026375;
-        Mon, 15 Jun 2020 22:21:15 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02wdc.us.ibm.com with ESMTP id 31pey48r1m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 22:21:15 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FMLDr520185518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 22:21:13 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD0CEC605F;
-        Mon, 15 Jun 2020 22:21:14 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80295C605A;
-        Mon, 15 Jun 2020 22:21:14 +0000 (GMT)
-Received: from Davids-MBP.randomparity.org (unknown [9.211.152.140])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jun 2020 22:21:14 +0000 (GMT)
-Subject: Re: [PATCH] tg3: driver sleeps indefinitely when EEH errors exceed
- eeh_max_freezes
-To:     Michael Chan <michael.chan@broadcom.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        Siva Reddy Kallam <siva.kallam@broadcom.com>,
-        Prashant Sreedharan <prashant@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200615190119.382589-1-drc@linux.vnet.ibm.com>
- <CACKFLimd0a=Y8WyvqCt4BD7SU_Cg1vQ=baKs6-uPv0dZuCm=mw@mail.gmail.com>
-From:   David Christensen <drc@linux.vnet.ibm.com>
-Message-ID: <95bf20c6-a812-32ad-fd38-45cba7e10491@linux.vnet.ibm.com>
-Date:   Mon, 15 Jun 2020 15:21:14 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Mon, 15 Jun 2020 18:23:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592259787;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6iJ7T2WCuS9j4a5Opdda9lcC0DUIC1agfdOIfVBRkmk=;
+        b=HTtoM1KeSswjw8jBzcTNyOQEECAhgrN/bGmpfGzzNQwEQBTByWUeYp+KDQufmrVK3vLOsc
+        eE0uxPxgJdKXDDVp8oeBjB3oTOBeEuXsdUUNVMthE1NI27lHyah4OabzLtXJCFPEVEthtk
+        ssBac/Cz4V8PsAcnqeywfo99zgLluec=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-zROIL_wiMVekPfGvajAInA-1; Mon, 15 Jun 2020 18:23:05 -0400
+X-MC-Unique: zROIL_wiMVekPfGvajAInA-1
+Received: by mail-qv1-f70.google.com with SMTP id ba13so14113948qvb.15
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:23:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6iJ7T2WCuS9j4a5Opdda9lcC0DUIC1agfdOIfVBRkmk=;
+        b=S0bEUjRY7jMYi1i4G6PL6Y/tAPzsHlDGpgg80DIFF4MqtQjVti3vHI+RZWZNqGGsti
+         smto0Ye5o8OPAr7/ZpwG8u6F6olWEhfXkTeJ5cnMYsK8MEATCtyqvUsF1sMmaK6JOvzK
+         3y/Tu/w5aJp5Y/nNF4zXqQYmdOYnbypF2OOvvw+p1/BC7kGGXaCvv0xHix5eKV6IpqdJ
+         3fmI4cTh4qOuL6HihZg+AQSEJB2VWJ1uoZ67JBuPym8j+8fiiVar25PxtgSMaOq6oecx
+         QonVlRCHnzxHaj3ft/ThzAxNU/wdzSTF3V1k4nQ05WL1MblU9jJNNZ2gBo/PPHJNhV03
+         Zm1g==
+X-Gm-Message-State: AOAM531K0Xi4lxGmwl7NaOO7Kh1jph2mS/9gy9wUVBnAOFUhZdbmv1Ju
+        u9AqmPqQTBiVmwAsv3J1LbjUWwAG5E+dSP09Yo3dyFXzSGX0bDVWqcsWNr5shevtj5UWaCwAP51
+        zN0ZYLkiD2oIQY2RWe6Qc1MCR
+X-Received: by 2002:ac8:4f46:: with SMTP id i6mr17839223qtw.317.1592259784901;
+        Mon, 15 Jun 2020 15:23:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwsVEBhvqnlL41B27HM9K7iSgiXjn7WNVAulmZ9FZltbdlG0mU9CjIqjx17dmiutbX9UExfzg==
+X-Received: by 2002:ac8:4f46:: with SMTP id i6mr17839209qtw.317.1592259784704;
+        Mon, 15 Jun 2020 15:23:04 -0700 (PDT)
+Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id d17sm12237625qke.101.2020.06.15.15.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 15:23:04 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Xu <peterx@redhat.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
+Date:   Mon, 15 Jun 2020 18:23:02 -0400
+Message-Id: <20200615222302.8452-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615221607.7764-1-peterx@redhat.com>
+References: <20200615221607.7764-1-peterx@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CACKFLimd0a=Y8WyvqCt4BD7SU_Cg1vQ=baKs6-uPv0dZuCm=mw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_09:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 priorityscore=1501 adultscore=0
- suspectscore=0 malwarescore=0 mlxscore=0 clxscore=1011
- cotscore=-2147483648 phishscore=0 spamscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150154
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 1:45 PM, Michael Chan wrote:
-> On Mon, Jun 15, 2020 at 12:01 PM David Christensen
-> <drc@linux.vnet.ibm.com> wrote:
->>
->> The driver function tg3_io_error_detected() calls napi_disable twice,
->> without an intervening napi_enable, when the number of EEH errors exceeds
->> eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
->>
->> The function is called once with the PCI state pci_channel_io_frozen and
->> then called again with the state pci_channel_io_perm_failure when the
->> number of EEH failures in an hour exceeds eeh_max_freezes.
->>
->> Protecting the calls to napi_enable/napi_disable with a new state
->> variable prevents the long sleep.
-> 
-> This works, but I think a simpler fix is to check tp->pcierr_recovery
-> in tg3_io_error_detected() and skip most of the tg3 calls (including
-> the one that disables NAPI) if the flag is true.
+Use the new mm_fault_accounting() helper for page fault accounting.
 
-This might be the smallest change that would work.  Does it make sense 
-to the reader?
+Avoid doing page fault accounting multiple times if the page fault is retried.
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c 
-b/drivers/net/ethernet/broadcom/tg3.c
-index 7a3b22b35238..1f37c69d213d 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -18168,8 +18168,8 @@ static pci_ers_result_t 
-tg3_io_error_detected(struct pci_dev *pdev,
+CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+CC: Vasily Gorbik <gor@linux.ibm.com>
+CC: Christian Borntraeger <borntraeger@de.ibm.com>
+CC: linux-s390@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/s390/mm/fault.c | 21 +++++----------------
+ 1 file changed, 5 insertions(+), 16 deletions(-)
 
-         rtnl_lock();
-
--       /* We probably don't have netdev yet */
--       if (!netdev || !netif_running(netdev))
-+       /* May be second call or maybe we don't have netdev yet */
-+       if (tp->pcierr_recovery || !netdev || !netif_running(netdev))
-                 goto done;
-
-         /* We needn't recover from permanent error */
+diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+index dedc28be27ab..8ca207635b59 100644
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -392,7 +392,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	unsigned long trans_exc_code;
+ 	unsigned long address;
+ 	unsigned int flags;
+-	vm_fault_t fault;
++	vm_fault_t fault, major = 0;
+ 
+ 	tsk = current;
+ 	/*
+@@ -428,7 +428,6 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	}
+ 
+ 	address = trans_exc_code & __FAIL_ADDR_MASK;
+-	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+ 	flags = FAULT_FLAG_DEFAULT;
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
+@@ -480,6 +479,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	 * the fault.
+ 	 */
+ 	fault = handle_mm_fault(vma, address, flags);
++	major |= fault & VM_FAULT_MAJOR;
+ 	if (fault_signal_pending(fault, regs)) {
+ 		fault = VM_FAULT_SIGNAL;
+ 		if (flags & FAULT_FLAG_RETRY_NOWAIT)
+@@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	if (unlikely(fault & VM_FAULT_ERROR))
+ 		goto out_up;
+ 
+-	/*
+-	 * Major/minor page fault accounting is only done on the
+-	 * initial attempt. If we go through a retry, it is extremely
+-	 * likely that the page will be found in page cache at that point.
+-	 */
+ 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+-		if (fault & VM_FAULT_MAJOR) {
+-			tsk->maj_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+-				      regs, address);
+-		} else {
+-			tsk->min_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+-				      regs, address);
+-		}
+ 		if (fault & VM_FAULT_RETRY) {
+ 			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
+ 			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
+@@ -519,6 +505,9 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 			goto retry;
+ 		}
+ 	}
++
++	mm_fault_accounting(tsk, regs, address, major);
++
+ 	if (IS_ENABLED(CONFIG_PGSTE) && gmap) {
+ 		address =  __gmap_link(gmap, current->thread.gmap_addr,
+ 				       address);
+-- 
+2.26.2
 
