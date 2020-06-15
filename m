@@ -2,142 +2,197 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C472FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D66C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A06206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3402067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oNbUMBgR"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aKNNV9gW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgFOH6K (ORCPT
+        id S1728735AbgFOH6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:58:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbgFOH6J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:58:09 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946DFC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:58:08 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z9so17971135ljh.13
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7hVbRT7TgTLZcT9uy08YM3oSIG8xHokXhK2qUcnQytI=;
-        b=oNbUMBgRNwpIv6it8WW2Vx5mFSLI5cEsLOShg4rOp3GsRvhjR+x9Dimf9Y+lMiTftB
-         e6FzU6QG+yE0GKxEKS717djWKSJhETPvW2SLf1hvRaYY1XNJYv61v7gSSHeJYFq9MVe8
-         V8RibhMmb2H086li9LJwOZnuqNwjys16aDwvxBAskCzP5h2S33FGU7m8Cpy6G5hevDTM
-         pcbmIkrVNlxJpVdR5HLOPEc8PyWZ3UJhedS3/J3RJmSfk3M+/yKgSyhEBZ4KxgrdUWKs
-         4MDW9GX8E6HN96+GZaHdpZoFVlEE73N/kEhjM/N8pwuG/o8BHCya8tCH8hk9w/syHB+a
-         9gaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7hVbRT7TgTLZcT9uy08YM3oSIG8xHokXhK2qUcnQytI=;
-        b=TCS0aN+3lBexTtC/xSbwxlOvjN6IWgSE0tfKCpFhMWhUE0UolkWBZxHiaJlDTmXgZr
-         YBNcUfwc2+G5eamwOtLVx3N/2bwz3mej+B/uj6wrq54OcRUXGW2icGpWGfR+NoGfaYe+
-         Fpb1Dk4aOLz7/SkHpbYgih+iebIBAzeB8Asb7OpeEQosv3nWHm4iSN2rLjrtlNDlf6sB
-         BNCmEBJcQi53eD5hNn9XaWFS1nDGtvL58LP0fnkDcSYFtAiUGY1X4/GI1V4c1WYbShcw
-         jD6OOP6cW+v5y9eqs7EidWxnMhDplA51Meq+QD35liBlkcXOfcWGqfw9ZQ8PBsoVMupZ
-         QW/Q==
-X-Gm-Message-State: AOAM530NmKzsm6c/hHhNNQKz9KgGaSmtWljnBEfOCBSzh21+HN0pmC1s
-        aN6VayPmd7k/Y4jWHPicZKnpz8AkGXSpD3rQ5MTgFQ==
-X-Google-Smtp-Source: ABdhPJxg+uL8DnJW2k+EfREUi/iNpKVntD0qR8X7I2bKWY8MzYqsUUgrAaDH/eS0aX+JF1i+Oqmz10WfaEB3mj7RxQM=
-X-Received: by 2002:a2e:541e:: with SMTP id i30mr11261848ljb.156.1592207886700;
- Mon, 15 Jun 2020 00:58:06 -0700 (PDT)
+        Mon, 15 Jun 2020 03:58:17 -0400
+Received: from mout.gmx.net ([212.227.17.22]:59861 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728260AbgFOH6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:58:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1592207882;
+        bh=U8IPqJVxL9sihunBAz/g/f+mmoRQ44LPopwZv+2y8OY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date;
+        b=aKNNV9gW89LG+xNJ3s7dOo1YAdXwBTxt7CeGlGQZxs9aFAZL/yJRTuk71qkweU6Fs
+         pt0hBBiPXIn2lTcwzq7nYgADbZ5gvfXBvcm+q62waGk3WiXEo0tzvuUKRb3lzVc9/s
+         Bgs2rdjUke+ZX+kZZWciGk7Iv3hiHZ0cyct1TsUg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from strobe-jhalfs ([188.109.165.61]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MfYPY-1jII0g0Xw8-00g0yF; Mon, 15
+ Jun 2020 09:58:02 +0200
+From:   Stephen Berman <stephen.berman@gmx.net>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+References: <87mu6aurfn.fsf@gmx.net>
+        <20200522164012.ynyvrjompv42jtmx@linutronix.de>
+        <87y2owwo2o.fsf@rub.de>
+        <20200609202339.cgy57twm2zdtjhje@linutronix.de>
+        <87tuzjcovq.fsf@gmx.net>
+        <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
+        <87imfyh6yx.fsf@gmx.net> <87wo4dligz.fsf@gmx.net>
+        <20200612110122.jossn5zrktcvpbpm@linutronix.de>
+        <87tuzdrgm5.fsf@gmx.net>
+        <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
+Date:   Mon, 15 Jun 2020 09:58:00 +0200
+Message-ID: <874krcsquv.fsf@gmx.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-References: <000000000000ff323f05a053100c@google.com> <CAG48ez02bt7V4+n68MNK3bmHpXxDnNmLZn8LpZ8r2w63ZhrkiQ@mail.gmail.com>
- <CACT4Y+YokrJkh0ew-86=zsLLTr9Qnaom5gJeUX9TSMW7tDj=Eg@mail.gmail.com>
- <20200310061525.GA30283@ubuntu-m2-xlarge-x86> <CACT4Y+bx9w+Q5yJxykTbe8JDUt5ChLFRh5zGn78hHM8gqVZx7g@mail.gmail.com>
- <CACT4Y+Ym3Pc-UO3X33AhFE1rbdmr1gHcEmzJjtX7YZaBb2qexg@mail.gmail.com>
-In-Reply-To: <CACT4Y+Ym3Pc-UO3X33AhFE1rbdmr1gHcEmzJjtX7YZaBb2qexg@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 15 Jun 2020 09:57:40 +0200
-Message-ID: <CAG48ez3Qk6VEr2KwqZPZWA8N=JOJ5te+xKb4vUi-wh+hZhe_qg@mail.gmail.com>
-Subject: Re: general protection fault in syscall_return_slowpath
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        syzbot <syzbot+cd66e43794b178bb5cd6@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+odMrTtZ2fTVQjvQB8+YNCxbfgXDqZyiMSFFeoPDbjahRl/8cC6
+ CvRCyumWQP5hIaD4iKplD/I9DNwgVGD/qeV7qeUeKQBRrr2D45R9dG4e+2a+3M7wv/NpaoB
+ lHqwu8Xz5b5L1k+V6cDsRDyQZpqDlsPTjVerNR8iMIPijsdImWOBDVGanyYAChhi5cEC3XQ
+ Th0CwJQNDeE83wZnETyPQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wZ4++9cPohs=:9LFRibNLA4Lv0PfSTQZdgZ
+ 2rahvvgBALQWIC0QpdTdqVnznpJfvLVfahC2HhdtD8C2CvtJkwcLgp/otzkEIic0kd02Lgus6
+ AhtFvpFYStO+2LtVM44ZlsMXvPbC5PFR6QBGVId3jdmJr61uDstwrpxrPof5IjJCKw9/t5PnJ
+ 8A5AEBHcUFjuCgHHK5FWPZYEDnMzU8JcegE262C3tW/H69nXpX6nVcBwcRIAQrufEXe9gadTU
+ R/e53MXGJ+2txoQRzWLIfChNNYiivjN4SDMCEd6GUwDGKTsG/UxdKFL90J6D4XV9BKTcbGphE
+ TBvkQFtjLghEP9fQq5KtNsdDu3AM0ZwoIQ0p8RrmC/GyShb25l//F15mr24ZUiyXQNJcrp0c+
+ yHTg4SQWhxN80xf4RuWZm6jqnTDkznEAKl2HNZ7vm4vIEkS/iilZop2T87CsqxivFXw0LkCwD
+ gz88qmiMldFu8HdcZPGhL5XYpk+UYjsv65Gw0jLBLEu5F4EhKGHhlqPJiqTS7Fhrn+bH5UrDb
+ iWe0pUTYS+d++XCtFOtH/AMMv90Ot8JTp8ziJNMzohcDAAH6FcQpA1FN2dxPkw2tlyfBHsoVq
+ zI3hIcLVHCQ5okIL3q8pKi3XKcpGKh4OY+48Pv+HZIxXeZiNyj5bteDyutrCn2BnMlSLW6reR
+ qUehP6bfJWeNHRt5XCUlMudmOD9l7uTHEIBIl48ViUqWCUCnulaQJoIGZtIELDTrLGv7rk1KR
+ Q0JeMTfXqclLZ2aQrSbdv2thnY8ozME8C+DNhUHYRBi5Xt2ArnnlEoNaF8OPTGGzBzXfat2RO
+ mjHEVkoRVQh3UbiOTfYjd0wBSarU4xQXewb0XjtJ3HtyjdmZgFQ1mO5l+Jlw1jIQ5rX+JI2QG
+ J5QAFVUTY/MtmuLQ+UyLUUCfh+SWPAmh6++6SEffJJFram7wxvp1/95DrvBFoy1dwfbRLvKSn
+ rKmlwBg6pBMk6OyBmP/ssR4lNT9XtrWMGEJzqyUJzdin3lwOg0tnyakBsDC/Asg6sBQtXZxrT
+ h0FhdHldtVOLMrkSfhoA6jhNNaH9UJCOj6wTzlcDbeHj8P41iP0nM1vJ1HHfXtGVGD94qG6zt
+ /cc5fD6JrH7GzwTf671vuAlul/LSrRlN0vBO5bsbo7OSU/9+eznHuh8lrFnb+Rk6ROGLAVjxd
+ mqOT6QuFIu0yH8RUnfudaWdtlWEZ4VaXNYJ+hyCNiG5bkQKhJpXrQCC/g7kzW8Rlmokjga44H
+ KtR3LYgAkrvGCgtCl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 10:03 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> On Tue, Mar 10, 2020 at 9:10 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > On Tue, Mar 10, 2020 at 7:15 AM Nathan Chancellor
-> > <natechancellor@gmail.com> wrote:
-> > >
-> > > On Mon, Mar 09, 2020 at 09:20:58AM +0100, Dmitry Vyukov wrote:
-> > > > On Sun, Mar 8, 2020 at 7:35 PM 'Jann Horn' via syzkaller-bugs
-> > > > <syzkaller-bugs@googlegroups.com> wrote:
-> > > > > Ugh, why does it build with -Werror...
-> > >
-> > > There are certain warnings that are specifically treated like errors:
-> > >
-> > > In the main Makefile:
-> > >
-> > > KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
-> > >
-> > > > Now I am realizing I don't know what's the proper way to turn off
-> > > > warnings entirely...
-> > > >
-> > > > We turn off this CONFIG_ERROR_ON_WARNING historically:
-> > > > https://github.com/google/syzkaller/blob/2e9971bbbfb4df6ba0118353163a7703f3dbd6ec/dashboard/config/bits-syzbot.config#L17
-> > > > and I thought that's enough. But now I realize it's not even a thing.
-> > > > I see it referenced in some ChromeOS threads and there are some
-> > > > discussions re upstreaming, but apparently it never existed upstream.
-> > > >
-> > > > make has W=n, but it seems that it can only be used to produce more
-> > > > warnings. We don't pass W=3 specifically and there is no W=0.
-> > > >
-> > > > Should we always build with CFLAGS=-w? Is it guaranteed to work? Or is
-> > > > there a better way?
-> > >
-> > > Would passing -Wno-werror via KCFLAGS work? Otherwise, passing
-> > > -Wno-error=<specific warning> should work.
-> > >
-> > > Cheers,
-> > > Nathan
-> >
-> > Filed https://github.com/google/syzkaller/issues/1635 so that this is not lost.
->
-> Jann,
->
-> Getting back to this.
-> Are you sure building without warning will be better?
->
-> Currently make enables these warnings as errors only:
->
-> -Werror=strict-prototypes
-> -Werror=implicit-function-declaration
-> -Werror=implicit-int
-> -Werror=date-time
-> -Werror=incompatible-pointer-types
-> -Werror=designated-init
->
-> So most warnings won't cause build failure.
-> And, say, converting T* to Y* implicitly may be an actual bug in the patch.
+On Sun, 14 Jun 2020 19:10:05 +0200 Sebastian Andrzej Siewior <bigeasy@linut=
+ronix.de> wrote:
 
-Ah, I guess you have a point there.
+> On 2020-06-14 14:12:18 [+0200], Stephen Berman wrote:
+[...]
+>> What am I supposed to do after "echo t > /proc/sysrq-trigger"?  Both
+>> before and after doing that I get an error trying to open the file:
+>>=20
+>> root [ ~ ]# cat /proc/sysrq-trigger
+>> cat: /proc/sysrq-trigger: Input/output error
+>
+>  echo "t > /proc/sysrq-trigger"
+>
+> not cat.
+
+Ok, sorry, I had misunderstood, but now I've looked at the
+documentation.  I had in fact already done `echo t >
+/proc/sysrq-trigger' in an xterm (as root) and there was no output.
+Later, after booting kernel 5.1.0 because of the message flooding with
+5.6.4, I did `echo t > /proc/sysrq-trigger' in a virtual tty (also as
+root) and the only output was: `[ <timestamp>] sysrq: Show State'.  Is
+this expected?  (In /proc/sys/kernel/sysrq there is `1'.)  I couldn't
+try it in a 5.6.4 virtual tty because of the message flooding (see
+below).
+
+[...]
+>> I applied this patch to 5.6.4 and recompiled, and on the next boot with
+>> that kernel, the kernel buffer (and kernel and system logs) began to get
+>> flooded with these messages:
+>>=20
+>> Jun 14 10:37:13 strobe-jhalfs kernel: [ 5.943987]
+>> acpi_os_execute_deferred(843) Start ffff8fb82c7b6500
+>> 000000003edf1e05(ffff8fb82c492990)
+>> Jun 14 10:37:13 strobe-jhalfs kernel: [ 5.944102] acpi_os_execute(1101)
+>> Adding acpi_ev_asynch_enable_gpe+0x0/0x2f ffff8fb82c492990
+>> Jun 14 10:37:13 strobe-jhalfs kernel: [ 5.944104]
+>> acpi_os_execute_deferred(845) End ffff8fb82c7b6500
+>> 000000003edf1e05(ffff8fb82c492990)
+>> Jun 14 10:37:13 strobe-jhalfs kernel: [ 5.944105]
+>> acpi_os_execute_deferred(843) Start ffff8fb82b844800
+>> 000000002ba560ea(ffff8fb82c492990)
+>> Jun 14 10:37:13 strobe-jhalfs kernel: [ 5.944124]
+>> acpi_os_execute_deferred(845) End ffff8fb82b844800
+>> 000000002ba560ea(ffff8fb82c492990)
+>> Jun 14 10:37:13 strobe-jhalfs kernel: [ 5.944288]
+>> acpi_os_execute_deferred(843) Start ffff8fb82c7b6540
+>> 000000003edf1e05(ffff8fb82c492990)
+>> Jun 14 10:37:13 strobe-jhalfs kernel: [ 5.944387] acpi_os_execute(1101)
+>> Adding acpi_ev_asynch_enable_gpe+0x0/0x2f ffff8fb82c492990
+>>=20
+>> and so on without stopping.  I could start X and avoid seeing the
+>> messages, but was afraid the logs would fill up the root partition if I
+>> let it keep going, so I rebooted with another kernel.
+>>=20
+>> Was this message flood because I booted with "ignore_loglevel
+>> initcall_debug"?  In the logs there are also lots of messages like this:
+>
+> Is there a acpi_os_execute_* flood? The *few* at what appears to system
+> startup and might be normal. If there appear *many* more and are
+> constantly printing (check with dmesg) then we might be to something.
+
+The kernel log shows 305 of these messages in the 4 minutes and 17
+seconds between the start of klogd and when I rebooted.
+
+[...]
+> I attached the updated acpi patch. It limits the prints to the
+> kacpi_notify_wq queue which appears to stuck at shutdown.
+
+I applied this patch and rebuilt the kernel.  After booting 5.6.4 this
+morning there was again message flooding and this time I was unable to
+log in because of it, so had to do a hard reboot and booted with 5.1.0.
+The kernel log shows 207 acpi_os_execute_deferred_notify messages in 3
+minutes and 6 seconds; here are the first:
+
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.943848] acpi_os_execute(1109) =
+Adding acpi_ev_asynch_enable_gpe+0x0/0x2f ffff8d7aaba18990 <ffff8d7aab157fc=
+0>
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.943851] acpi_os_execute_deferr=
+ed_notify(851) Start ffff8d7aab157fc0 acpi_ev_asynch_enable_gpe+0x0/0x2f(ff=
+ff8d7aaba18990)
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.943865] acpi_os_execute_deferr=
+ed_notify(853) End   ffff8d7aab157fc0 acpi_ev_asynch_enable_gpe+0x0/0x2f(ff=
+ff8d7aaba18990)
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.944104] acpi_os_execute(1109) =
+Adding acpi_ev_asynch_enable_gpe+0x0/0x2f ffff8d7aaba18990 <ffff8d7aab157fc=
+0>
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.944106] acpi_os_execute_deferr=
+ed_notify(851) Start ffff8d7aab157fc0 acpi_ev_asynch_enable_gpe+0x0/0x2f(ff=
+ff8d7aaba18990)
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.944115] acpi_os_execute_deferr=
+ed_notify(853) End   ffff8d7aab157fc0 acpi_ev_asynch_enable_gpe+0x0/0x2f(ff=
+ff8d7aaba18990)
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.944406] acpi_os_execute(1109) =
+Adding acpi_ev_asynch_enable_gpe+0x0/0x2f ffff8d7aaba18990 <ffff8d7aab157fc=
+0>
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.944408] acpi_os_execute_deferr=
+ed_notify(851) Start ffff8d7aab157fc0 acpi_ev_asynch_enable_gpe+0x0/0x2f(ff=
+ff8d7aaba18990)
+Jun 15 08:55:22 strobe-jhalfs kernel: [    5.944417] acpi_os_execute_deferr=
+ed_notify(853) End   ffff8d7aab157fc0 acpi_ev_asynch_enable_gpe+0x0/0x2f(ff=
+ff8d7aaba18990)
+
+> The interesting part is to see if there is a acpi_os_execute() adding a
+> specific event multiple times which does not complete. Maybe at runtime,
+> maybe at shutdown time. If that is the case then ignoring this specific
+> event might fix the shutdown problem. With all this information so far,
+> I don't see a relation with this problem and the commit=E2=80=A6
+
+In those 3 minutes and 8 seconds there were 5 "Adding
+acpi_ev_asynch_enable_gpe" messages at the beginning, then 185 "Adding
+acpi_ev_notify_dispatch" messages, which kept coming until I rebooted.
+
+Steve Berman
