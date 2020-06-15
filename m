@@ -2,142 +2,88 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5086C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BA9207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B860A2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwx5ZwXb"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="aaQD18t4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbgFOMyN (ORCPT
+        id S1730238AbgFOMya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:54:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730180AbgFOMyF (ORCPT
+        Mon, 15 Jun 2020 08:54:30 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22274 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730218AbgFOMyY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:54:05 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D8BC05BD43;
-        Mon, 15 Jun 2020 05:54:04 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k1so6679156pls.2;
-        Mon, 15 Jun 2020 05:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/BsN6sT0XoGQQsg1j2eXjDaxyV/WqhpHkxTTB2bsuOI=;
-        b=kwx5ZwXbJmY+gdEhVsyY2TFkBMQv0VDqAWgY51tVViwSQteTvuK9j4EauYI2LJ69Tk
-         tTZnN7A+1vamo3xCKDUGQqVkYRupY3fal1Whh/TaXQzXye1WBTEqnm0E+/uMWxbgn1ek
-         0viBXX3y74hrLGthozCpzgM2Q69IYBGzdHt9tEDa8YGqukAw72U1blcxV1I4vN1haDXJ
-         cO7fhfy/516lcLTA0esHJpwaQeeqTnHSrg+YEw5Tztyh87NzFajE5pH+n1EtEqgiiVHI
-         W+JOEU9QIb6RikjFKkzYrkavjbnj1d7flB+ql+8NICeNa3PktFVBxICcRAfQKh3+JDMN
-         116g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/BsN6sT0XoGQQsg1j2eXjDaxyV/WqhpHkxTTB2bsuOI=;
-        b=ZOAYvYeNQPkotZN/LIJgz3BqEIQURmIYoH2K0k1yY7ovYVenXNpaqIzQ28bum3LXwR
-         YxII1lk7DMJ4R90GjSOqWjt6Muf+tox8lPZCq7lSnW2w/3kx/yL5mvbplotZepZcHGRV
-         RD+uB/wqIMJZ+1sBS/5GKvPb7oRWS7/w8VPepzUsoperXDqlsnIk+cKKBVLckeQKdPGs
-         YZxAjM8GM03TTpoUDIrtg0JPvvxc+SOvKZoW7z7P+qzVV2F0zeEapB/DyE3luQrGtFd5
-         8s3bFuY/+Aylh+8oLchXIrY5HSDct10zoJBok2siTFSgXdKT/+NxOGhHAPdkWlp8DUvP
-         oSVA==
-X-Gm-Message-State: AOAM532V3ZHMOLH8exLh0AiCQM3aEjl3en/tBg1B1teLSJ6XQOv/nIZH
-        XniMBbre4GYpF7r1wLLiRaM=
-X-Google-Smtp-Source: ABdhPJx/GVVjfxNT/ENYaoVHX+Y6zSM3++zUo6/QLeWdmerDI0Ox5ULcQxb19SXZUsh4FzbC9hfkDA==
-X-Received: by 2002:a17:90a:a405:: with SMTP id y5mr11996352pjp.15.1592225643846;
-        Mon, 15 Jun 2020 05:54:03 -0700 (PDT)
-Received: from syed ([106.198.195.84])
-        by smtp.gmail.com with ESMTPSA id g84sm13147530pfb.113.2020.06.15.05.53.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 05:54:03 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 18:23:47 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     linus.walleij@linaro.org, akpm@linux-foundation.org
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        rrichter@marvell.com, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 3/4] gpio: thunderx: Utilize for_each_set_clump macro
-Message-ID: <3dfa9a7e2215eee79006ee07b139c3e12dc01160.1592224129.git.syednwaris@gmail.com>
-References: <cover.1592224128.git.syednwaris@gmail.com>
+        Mon, 15 Jun 2020 08:54:24 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FCqnb7011050;
+        Mon, 15 Jun 2020 14:54:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=kkty9Awoo0IVXf8uf5q3BXusDQstQvIXLN4JcfqXozQ=;
+ b=aaQD18t4rb6P5c/PYFhR4q/GpllK+j9kYF9tPGd4latDf9n9WOTwJROgTVO37g+k95b7
+ Oq7+yeiWcG239NEkE1UOsbfz1dqKG2E1enAMmX/6aAa7WnLP8T4TUucOkQWEabHirVC2
+ 2WDy85YUzUJGQtoZKny0bnC3J9qJvMmeHkmmePIAv4HHspZn8xbIcCw/oryi8MqLE7dy
+ sqwM6r3ELVIbGD3lD1cmixl35c7BDWJHl/WhDhOXU4W3AcDXbJ4ex7klr+ioSVrJvMIp
+ BkMUJCzoEAgQPy/ciBqdkC8MRlvTGXsCuLrRbDnZbCPHvGml4ew3IKwW2Ft/P+5lGvuF fg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvspcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 14:54:21 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8BEC610002A;
+        Mon, 15 Jun 2020 14:54:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8119F2B35E0;
+        Mon, 15 Jun 2020 14:54:21 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 14:54:21
+ +0200
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <alexandre.torgue@st.com>
+Subject: [PATCH 0/2] pinctrl: stm32: add changes to better manage
+Date:   Mon, 15 Jun 2020 14:54:05 +0200
+Message-ID: <20200615125407.27632-1-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1592224128.git.syednwaris@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch reimplements the thunderx_gpio_set_multiple function in
-drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
-Instead of looping for each bank in thunderx_gpio_set_multiple
-function, now we can skip bank which is not set and save cycles.
+Hi,
 
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
-Changes in v8:
- - No change.
+Clocks and resets for GPIO banks could be defined but not yet ready when
+stm32 pinctrl is probed. This series adds changes to manage probe defer
+when a clock or a reset is not yet registered in the system.
 
-Changes in v7:
- - No change.
+regards
+alex
 
-Changes in v6:
- - No change.
+Etienne Carriere (2):
+  pinctrl: stm32: don't print an error on probe deferral during clock
+    get
+  pinctrl: stm32: defer probe if reset resource is not yet ready
 
-Changes in v5:
- - No change.
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 35 +++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
 
-Changes in v4:
- - Minor change: Inline value '64' in code for better code readability.
-
-Changes in v3:
- - Change datatype of some variables from u64 to unsigned long
-   in function thunderx_gpio_set_multiple.
-
-Changes in v2:
- - No change.
-
- drivers/gpio/gpio-thunderx.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index 9f66deab46ea..58c9bb25a377 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -275,12 +275,15 @@ static void thunderx_gpio_set_multiple(struct gpio_chip *chip,
- 				       unsigned long *bits)
- {
- 	int bank;
--	u64 set_bits, clear_bits;
-+	unsigned long set_bits, clear_bits, gpio_mask;
-+	unsigned long offset;
-+
- 	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
- 
--	for (bank = 0; bank <= chip->ngpio / 64; bank++) {
--		set_bits = bits[bank] & mask[bank];
--		clear_bits = ~bits[bank] & mask[bank];
-+	for_each_set_clump(offset, gpio_mask, mask, chip->ngpio, 64) {
-+		bank = offset / 64;
-+		set_bits = bits[bank] & gpio_mask;
-+		clear_bits = ~bits[bank] & gpio_mask;
- 		writeq(set_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_SET);
- 		writeq(clear_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_CLR);
- 	}
 -- 
-2.26.2
+2.17.1
 
