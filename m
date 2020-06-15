@@ -2,163 +2,244 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9229EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F56B206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="I8w6ve+Y"
+	by mail.kernel.org (Postfix) with ESMTP id 643FA207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbgFOOEv (ORCPT
+        id S1730065AbgFOOGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:04:51 -0400
-Received: from mout.web.de ([212.227.17.12]:44813 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbgFOOEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:04:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592229880;
-        bh=4v21AZdQnfl4I0lRhOIakIYNWUq/Km4A1kjWkH+LG+k=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=I8w6ve+YKYhThZ5ofnfAiHqCU6Iq0GaKT36raCtasNO/C1hsYDcMCg+shCQretSDK
-         2R4ivxOfmD6Q7PJxZN5wEtYBPSi6Z0aUGucyr38L+j7sSnCB95rrOxEVML66BjUcO6
-         k/VGonGCrDOX31U126vWYT/MxzRNwupovNjzlGf0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.107.236]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M1o86-1ivkAs1QQU-00tnO6; Mon, 15
- Jun 2020 16:04:40 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coccinelle: api: add device_attr_show script
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1f028ee6-b014-c240-21d8-0c1950334fe6@web.de>
-Date:   Mon, 15 Jun 2020 16:04:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 10:06:00 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37018 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729243AbgFOOF7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:05:59 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id CC4281C0BD2; Mon, 15 Jun 2020 16:05:57 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 16:05:57 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        martin_rysavy@centrum.cz, linux-pm@vger.kernel.org
+Subject: [RFC] Limiting charge current on Droid 4 (and N900)
+Message-ID: <20200615140557.GA22781@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZHx86tvl9ZN2Q273cNj9qJz+VxDh7ipJR+Ha23Z/58jiwxrAkuX
- sxDc8DXF1pHdiOrY0LFdU4Vpo65k11kXZvoTipRisB+u7lnegNmrRMfv0C2bUDYrEUUy7HC
- n1xDtOrB9aTNlkPLuNqg1otetrw8ccFOPcqdbIFs48bL+hn38TSmUQvqhJy3Fj5AYOjES5o
- D8FVCfiVrIFxi9w/I9lPA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0MtBwmoIY+o=:sedTTOKGnKCR6XboMZ0vhW
- T2BHiXqCdkej4yq+NYLSQVHjX1XTsTsNDK2IARqkK1hI5lpzfdM/kMqpMH83IfTyDbFc3cjM+
- 6WZ7YhNIWvrrik/k2++CcpX89pZTDmgSHjdQLoV3I8QMHjtmQmqYHPGd4WIxiLQEFItX7t368
- lOv1QOPblDh8BaVCNVTN6jplY+WBSbBQVjgxWKL8+eosRjUS4hhxwGWbpC8ivbNlBjKw3QfaF
- ZQGnnz/f8nETWUIzips7ModFvv7+yRL0xcRGmzpU0qVor0ojfbOYVUWoBi9gSxzjoY2nus7ca
- ne7aPKBS39CTg5X/1l8WK3EAOsfszIlN3CpHkjVPjbw5lurPV4QiIJzq9FeD0cIUHOapV9sSv
- jrOugx2ycYvxHXoO8LiIwdZouUPiKV0G5MuHjpDraPYzqudX7prYsXkHtrCIg4AaJDhYwT6UO
- 9xusztz7Xp4DwNnxZGgpm4cyf+wsXibQ3NZKEXvwTkHRIV99LJ/7NrRqy1q9W7fWNkS0GYsRi
- voyP4b62sHsTCo86AQWZfcsbNVT7CKGx+9yGdGJeqpxBimk3FQeueRYWmhMcI08wCCDhDYG/G
- MauZCP2tDVt3C0GaXMl0XcMr1G3kPZ3fGtemWvC+ySLitk2BjOGtHDYjI1gyK6FWNedhuNvkj
- 8Jg7Z5EM0FhvAC5CUmz6yNWg4ZbTAtuYmYHm1pIe+S8rg4pZXpGNXNx3r5lxjhw6mj02+v+aP
- v/GJ0AUgo5e/gDLzzXzgaTyyrzP8IOAum57wfk0BLKmG41+bgzpqw13FfgoE1AODiubWsFxzC
- IyrVhNNI+UWOx6sy7qrEtsrunbXKRb09MclwlgQAb+i0hZnwbF9ta9FRSDsrxxEbLKyLfX+rg
- CfjdNhlIFSQul/8N5a1VR5CUWprtcP6k8Eg9ZqpGBp822ub6qSv09jU32BybtDcDzypfQT1jZ
- fyzEEGnYvuxaowjcrwKGnFy51vtrepB9IDc6ISmhv1PkPqoR5kh8+DZqg62QbFI0Ai0mnSGuT
- YMafZGeEN3cBWrCn3yqQ8KTVY7nccAiT6s8/4h4LlGM8oTgbvC2BFgXmK1I6tpEJlt/rsF3RP
- XadVDJrJdyQLgNw8847sS5+aamRBiCaGxoBVZuWAJdw8dlnoEvdRj5rvYM5VjgGiZG43GEExz
- yajQKCTE89ozfsxOYmTPssT/y7T4m97guJniW/DAVIWt0p7mx/eWV8IOq/vC4tyJmVtCUAxq7
- 4RtZj0gWVAhtJjm2e
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +// Confidence: High
 
-Would you like to add any suggestion for a possible patch message?
+--17pEHd4RhPHOinZp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
 
-=E2=80=A6
-> +virtual report
-> +virtual org
-> +virtual context
-> +virtual patch
+Droid 4 has same problem as N900: it is often neccessary to manually
+tweak current draw from USB, for example when using thin charging cable.
 
-+virtual report, org, context, patch
+N900 creates unique attribute by hand, but I believe
+POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT looks suitable. (Should N900 be
+converted?)
 
-Is such a SmPL code variant more succinct?
+Comments? Would the patch be acceptable after fixing whitespace?
 
+Best regards,
+									Pavel
 
-=E2=80=A6
-> +ssize_t show(struct device *dev, struct device_attribute *attr, char *b=
-uf)
-> +{
-> +	<...
-> +*	return snprintf@p(...);
-> +	...>
-> +}
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-I suggest to reconsider the selection of the SmPL nest construct.
-https://github.com/coccinelle/coccinelle/blob/e06b9156dfa02a28cf3cbf0913a1=
-0513f3d163ab/docs/manual/cocci_syntax.tex#L783
+diff --git a/drivers/power/supply/cpcap-battery.c b/drivers/power/supply/cp=
+cap-battery.c
+index b16848cfb58c..39a00716372f 100644
+--- a/drivers/power/supply/cpcap-battery.c
++++ b/drivers/power/supply/cpcap-battery.c
+@@ -3,7 +3,7 @@
+  *
+  * Copyright (C) 2017 Tony Lindgren <tony@atomide.com>
+  *
+- * Some parts of the code based on earlie Motorola mapphone Linux kernel
++ * Some parts of the code based on earlier Motorola mapphone Linux kernel
+  * drivers:
+  *
+  * Copyright (C) 2009-2010 Motorola, Inc.
+diff --git a/drivers/power/supply/cpcap-charger.c b/drivers/power/supply/cp=
+cap-charger.c
+index cf1e05b511d9..292d7a31c663 100644
+--- a/drivers/power/supply/cpcap-charger.c
++++ b/drivers/power/supply/cpcap-charger.c
+@@ -89,6 +89,8 @@
+  * CPCAP_REG_CRM charge currents. These seem to match MC13783UG.pdf
+  * values in "Table 8-3. Charge Path Regulator Current Limit
+  * Characteristics" for the nominal values.
++ *
++ * Except 70mA and 1.596A and unlimited, these are simply 88.7mA / step.
+  */
+ #define CPCAP_REG_CRM_ICHRG(val)	(((val) & 0xf) << 0)
+ #define CPCAP_REG_CRM_ICHRG_0A000	CPCAP_REG_CRM_ICHRG(0x0)
+@@ -147,6 +149,8 @@ struct cpcap_charger_ddata {
+ 	int status;
+ 	int state;
+ 	int voltage;
++	int limit_current;
++
+ 	int last_current;
+ 	int last_current_retries;
+ };
+@@ -175,6 +179,7 @@ static enum power_supply_property cpcap_charger_props[]=
+ =3D {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
++	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+ 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+ 	POWER_SUPPLY_PROP_CURRENT_NOW,
+ };
+@@ -238,6 +243,9 @@ static int cpcap_charger_get_property(struct power_supp=
+ly *psy,
+ 	case POWER_SUPPLY_PROP_STATUS:
+ 		val->intval =3D ddata->status;
+ 		break;
++  	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
++		val->intval =3D ddata->limit_current;
++		break;
+ 	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
+ 		val->intval =3D ddata->voltage;
+ 		break;
+@@ -308,6 +316,25 @@ cpcap_charger_get_bat_const_charge_voltage(struct cpca=
+p_charger_ddata *ddata)
+ 	return voltage;
+ }
+=20
++static int cpcap_charger_current_to_regval(int microamp)
++{
++	int miliamp =3D microamp/1000;
++	int res;
++	if (miliamp < 0)
++		return -EINVAL;
++	if (miliamp < 70)
++		return CPCAP_REG_CRM_ICHRG(0x0);
++	if (miliamp < 177)
++		return CPCAP_REG_CRM_ICHRG(0x1);
++	if (miliamp > 1596)
++		return CPCAP_REG_CRM_ICHRG(0xe);
++
++	res =3D microamp / 88666;
++	if (res > 0xd)
++		res =3D 0xd;
++	return CPCAP_REG_CRM_ICHRG(res);
++}
++
+ static int cpcap_charger_set_property(struct power_supply *psy,
+ 				      enum power_supply_property psp,
+ 				      const union power_supply_propval *val)
+@@ -316,6 +343,12 @@ static int cpcap_charger_set_property(struct power_sup=
+ply *psy,
+ 	int voltage, batvolt;
+=20
+ 	switch (psp) {
++  	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
++		if (cpcap_charger_current_to_regval(val->intval) < 0)
++			return -EINVAL;
++		ddata->limit_current =3D val->intval;
++		schedule_delayed_work(&ddata->detect_work, 0);
++		break;
+ 	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
+ 		voltage =3D cpcap_charger_match_voltage(val->intval);
+ 		batvolt =3D cpcap_charger_get_bat_const_charge_voltage(ddata);
+@@ -335,6 +368,7 @@ static int cpcap_charger_property_is_writeable(struct p=
+ower_supply *psy,
+ 					       enum power_supply_property psp)
+ {
+ 	switch (psp) {
++	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
+ 	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE:
+ 		return 1;
+ 	default:
+@@ -657,23 +691,21 @@ static void cpcap_usb_detect(struct work_struct *work)
+=20
+ 	if (!ddata->feeding_vbus && cpcap_charger_vbus_valid(ddata) &&
+ 	    s.chrgcurr1) {
+-		int max_current;
+-		int vchrg;
++		int max_current =3D 532000;
++		int vchrg, ichrg;
+=20
+ 		if (cpcap_charger_battery_found(ddata))
+-			max_current =3D CPCAP_REG_CRM_ICHRG_1A596;
+-		else
+-			max_current =3D CPCAP_REG_CRM_ICHRG_0A532;
++			max_current =3D 1596000;
+=20
+ 		switch (ddata->state) {
+ 		case CPCAP_CHARGER_DETECTING:
+ 			ddata->last_current_retries =3D 0;
+ 			break;
+ 		case CPCAP_CHARGER_DISCONNECTED:
+-			if (ddata->last_current > CPCAP_REG_CRM_ICHRG_0A532) {
++			if (ddata->last_current > 532000) {
+ 				/* Attempt current 3 times before lowering */
+ 				if (ddata->last_current_retries++ >=3D 3) {
+-					ddata->last_current--;
++					ddata->last_current -=3D 100000;
+ 					ddata->last_current_retries =3D 0;
+ 					/* Wait a bit for voltage to ramp up */
+ 					usleep_range(40000, 50000);
+@@ -688,11 +720,16 @@ static void cpcap_usb_detect(struct work_struct *work)
+ 			break;
+ 		}
+=20
++		if (max_current > ddata->limit_current)
++			max_current =3D ddata->limit_current;
++
+ 		ddata->last_current =3D max_current;
++
++		ichrg =3D cpcap_charger_current_to_regval(max_current);
+ 		vchrg =3D cpcap_charger_voltage_to_regval(ddata->voltage);
+ 		error =3D cpcap_charger_set_state(ddata,
+ 						CPCAP_REG_CRM_VCHRG(vchrg),
+-						max_current, 0);
++						ichrg, 0);
+ 		if (error)
+ 			goto out_err;
+ 		cpcap_charger_update_state(ddata, CPCAP_CHARGER_CHARGING);
+@@ -864,6 +901,7 @@ static int cpcap_charger_probe(struct platform_device *=
+pdev)
+=20
+ 	ddata->dev =3D &pdev->dev;
+ 	ddata->voltage =3D 4200000;
++	ddata->limit_current =3D 532000;
+=20
+ 	ddata->reg =3D dev_get_regmap(ddata->dev->parent, NULL);
+ 	if (!ddata->reg)
 
-Can the construct =E2=80=9C<+... =E2=80=A6 ...+>=E2=80=9D become relevant =
-here?
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--17pEHd4RhPHOinZp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Would you like to consider any further software design consequences
-around the safe application of the asterisk functionality in rules
-for the semantic patch language?
+-----BEGIN PGP SIGNATURE-----
 
-Regards,
-Markus
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXueARQAKCRAw5/Bqldv6
+8r/sAJ46iCoAwzi+b8D09i52j6yXo5rYVgCggxr+sue70dpus3LswQUr8Ki7lSM=
+=YnOL
+-----END PGP SIGNATURE-----
+
+--17pEHd4RhPHOinZp--
