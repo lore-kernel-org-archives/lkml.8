@@ -2,256 +2,343 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9140CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B603BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62CF32068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3A02068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L07X6N0e"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="nwxC12eG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgFOHXU (ORCPT
+        id S1728629AbgFOHXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:23:20 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60173 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728597AbgFOHXT (ORCPT
+        Mon, 15 Jun 2020 03:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728368AbgFOHXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:23:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592205797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DWSQ7TzFCPTxWe8HmQSmBV7hNMRZ/Fyl0silEj6pvAY=;
-        b=L07X6N0efN3OscpE/X9wIg0ITYpUCyeLn6R+nsTDnbaKUGabIjvYc5TJ1d0ZIpzx/QfcHf
-        fFqtI0j6BtBtuHrnBc7VC0WRr+uVYMBaRtbBmTF4TtfZTpY3k82kqp3FjWdg/yRzIQm2K0
-        4cxJHf4PPoX9Zl3I/GBbcMnQPmicsGQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-510-ecXJ71sHM66H_jmQIYvxrg-1; Mon, 15 Jun 2020 03:23:15 -0400
-X-MC-Unique: ecXJ71sHM66H_jmQIYvxrg-1
-Received: by mail-wm1-f71.google.com with SMTP id a18so4658054wmm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:23:15 -0700 (PDT)
+        Mon, 15 Jun 2020 03:23:20 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07552C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:23:19 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g10so13492682wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:23:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XY/kg57wcJSHswDW9ogS03xzi4RY+NmHRKldYaxeSpE=;
+        b=nwxC12eGq8ElOmgtjCizwM5OoCzDRHda5UlhQdaK2MbsMe1oI6VwRxrMP9JQljhAmS
+         Y5O1KH5K90BvGRwE7TGHQfFiRJrRGSDPSzPIGBI+a4e12dHicqKTmXXcAzF1LpcgtLjE
+         hyK68heyn4yAaS+s09PUop9kE80jPeyGIJHeF6dUdGqdmf+rtLg55ANIp8hCPIXehGie
+         em78vufhN2elFUDCRUeG5tLloCMOXEqHuR32u+1t8l21EnFl56kq+GuRKAWR7x6kkDN9
+         0lCMUrOsHYuY6Pb1KJHHYM6cVv//r1gZFC/0Qdds8Ps4CjPLr2G9nfXfvdiodv1jp52A
+         r9EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DWSQ7TzFCPTxWe8HmQSmBV7hNMRZ/Fyl0silEj6pvAY=;
-        b=JIKw2skAzM4bq5KV6hUrS3zX4GvZq0hMpj5vVOD25WnIgdQvfLCqAhNNvWVZoJdcAF
-         zQj/fXd8TiR3CPVHPJBsJQ20eJkUBPuo2/WoltHhmh9BQLJ3t6A96LUXWF35jfI+pOwQ
-         IWnrXgLBIy15pHSNa56oy3yHM0seuPdHi2S7t62fHFZNC5xzdg15Ve5swhNvw4mcWWmI
-         2Tf/ntpjXPVd/WKtbhYm58yCXJj+1RSRfLgyIKNXLMmbvIdv1Occpf8OB4eG3LPGNIgw
-         nVUE2x5VDLHp0oTeEWf0cL6sbVsZQw6qffwWqLFS54zL6EEX7P+r9CJqsUsndV3KT9Fc
-         93Yg==
-X-Gm-Message-State: AOAM531MpIcKo3aobLhgh6VnErychfbbITytMGTeI8FG+XCTphMrJuPi
-        j75wugM7LbmCS7rNz157tFCvi6yfqf+F5s6WI1O8dxHIYYkSiAw4XywHhPlDNOQXye+2pLg1DFD
-        gU5/jKX8xJ6qdgpxUbYrvyICV
-X-Received: by 2002:adf:f847:: with SMTP id d7mr26632558wrq.261.1592205794211;
-        Mon, 15 Jun 2020 00:23:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx4AzRkEmQ5p+prTmG2+DllWCywp5X3TfYTIV/yAdbItyMD18ixBFX0caqeDHHMcD/75TVyHg==
-X-Received: by 2002:adf:f847:: with SMTP id d7mr26632537wrq.261.1592205793927;
-        Mon, 15 Jun 2020 00:23:13 -0700 (PDT)
-Received: from steredhat ([5.180.207.22])
-        by smtp.gmail.com with ESMTPSA id a6sm22724347wrn.38.2020.06.15.00.23.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XY/kg57wcJSHswDW9ogS03xzi4RY+NmHRKldYaxeSpE=;
+        b=Z3eCt44+cggeHaRFbLr07HqcdQHxxFIrVgQH+YLK/t4OQR5cxPego+P34NT2WrTE9f
+         zadhWWHuDdWL0Ht400Q3/vsvu4d+dcADfF77j7RoSGWrBe18suZd6cQgp3jHe5FV0Y34
+         POVGW21dPuht/0owCoAYeBaGfZ83DTQtAM8El0xgzmuETYj3E03VTr/HUjQYU2+PdbqF
+         qEt0CRC6NNTnOWq1ysn2ZNfx+r0+W2adU+ckf16MS8eNSK7ZrLGNHMYpgnJRTyRgXPvj
+         Y2TBBi6FuxCDUuEW1JRPNk7Lreg3xduyY/XF103LS7BvtBW4UDhpEivBANYZBvgo7vfx
+         hXMQ==
+X-Gm-Message-State: AOAM532ICHKOzsH+2hD6U5NSwp2O2p8yFg5iPwdn+Tkllmen9b504MeD
+        CyY92VC+4n2Ld3LxGeluQBScjw==
+X-Google-Smtp-Source: ABdhPJwEzOlDtcsNcAW8Dx9lP/OPqsWQb5BWh1JCCMrRzq6fRztahSj/dMhOR5JM9obggeHqdf5xgQ==
+X-Received: by 2002:a1c:c3d7:: with SMTP id t206mr11734242wmf.69.1592205796745;
+        Mon, 15 Jun 2020 00:23:16 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id o20sm24241261wra.29.2020.06.15.00.23.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 00:23:13 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 09:23:10 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Jeff Moyer <jmoyer@redhat.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] io_uring: add restrictions to support untrusted
- applications and guests
-Message-ID: <20200615072310.iymkgr4dqdwzafg3@steredhat>
-References: <20200609142406.upuwpfmgqjeji4lc@steredhat>
- <f96beb0a-415c-92fb-96f4-3902b613e9e4@kernel.dk>
+        Mon, 15 Jun 2020 00:23:16 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] regmap: convert all regmap_update_bits() and co. macros to static inlines
+Date:   Mon, 15 Jun 2020 09:23:13 +0200
+Message-Id: <20200615072313.11106-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f96beb0a-415c-92fb-96f4-3902b613e9e4@kernel.dk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 09:52:30AM -0600, Jens Axboe wrote:
-> On 6/9/20 8:24 AM, Stefano Garzarella wrote:
-> > Hi Jens,
-> > Stefan and I have a proposal to share with io_uring community.
-> > Before implementing it we would like to discuss it to receive feedbacks and
-> > to see if it could be accepted:
-> > 
-> > Adding restrictions to io_uring
-> > =====================================
-> > The io_uring API provides submission and completion queues for performing
-> > asynchronous I/O operations. The queues are located in memory that is
-> > accessible to both the host userspace application and the kernel, making it
-> > possible to monitor for activity through polling instead of system calls. This
-> > design offers good performance and this makes exposing io_uring to guests an
-> > attractive idea for improving I/O performance in virtualization.
-> > 
-> > PoC and preliminary benchmarks
-> > ---------------------------
-> > We realized a PoC, using QEMU and virtio-blk device, to share io_uring
-> > CQ and SQ rings with the guest.
-> > QEMU initializes io_uring, registers the device (NVMe) fd through
-> > io_uring_register(2), and maps the rings in the guest memory.
-> > The virtio-blk driver uses these rings to send requests instead of using
-> > the standard virtqueues.
-> > 
-> > The PoC implements a pure polling solution where the application is polling
-> > (IOPOLL enabled) in the guest and the sqpoll_kthread is polling in the host
-> > (SQPOLL and IOPOLL enabled).
-> > 
-> > These are the encouraging results we obtained from this preliminary work;
-> > we used fio (rw=randread bs=4k) to measure the kIOPS on a NVMe device:
-> > 
-> > - bare-metal
-> >                                                        iodepth
-> >   | fio ioengine                              |  1  |  8  |  16 |  32 |
-> >   |-------------------------------------------|----:|----:|----:|----:|
-> >   | io_uring (SQPOLL + IOPOLL)                | 119 | 550 | 581 | 585 |
-> >   | io_uring (IOPOLL)                         | 122 | 502 | 519 | 538 |
-> > 
-> > - QEMU/KVM guest (aio=io_uring)
-> >                                                        iodepth
-> >   | virtio-blk            | fio ioengine      |  1  |  8  |  16 |  32 |
-> >   |-----------------------|-------------------|----:|----:|----:|----:|
-> >   | virtqueues            | io_uring (IOPOLL) |  27 | 144 | 209 | 266 |
-> >   | virtqueues + iothread | io_uring (IOPOLL) |  73 | 264 | 306 | 312 |
-> >   | io_uring passthrough  | io_uring (IOPOLL) | 104 | 532 | 577 | 585 |
-> > 
-> >   All guest experiments are using the QEMU io_uring backend with SQPOLL and
-> >   IOPOLL enabled. The virtio-blk driver is modified to support blovk io_poll
-> >   on both virtqueues and io_uring passthrough.
-> > 
-> > Before developing this proof-of-concept further we would like to discuss
-> > io_uring changes required to restrict rings since this mechanism is a
-> > prerequisite for real-world use cases where guests are untrusted.
-> > 
-> > Restrictions
-> > ------------
-> > This document proposes io_uring API changes that safely allow untrusted
-> > applications or guests to use io_uring. io_uring's existing security model is
-> > that of kernel system call handler code. It is designed to reject invalid
-> > inputs from host userspace applications. Supporting guests as io_uring API
-> > clients adds a new trust domain with access to even fewer resources than host
-> > userspace applications.
-> > 
-> > Guests do not have direct access to host userspace application file descriptors
-> > or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
-> > as QEMU, grants access to a subset of its file descriptors and memory. The
-> > allowed file descriptors are typically the disk image files belonging to the
-> > guest. The memory is typically the virtual machine's RAM that the VMM has
-> > allocated on behalf of the guest.
-> > 
-> > The following extensions to the io_uring API allow the host application to
-> > grant access to some of its file descriptors.
-> > 
-> > These extensions are designed to be applicable to other use cases besides
-> > untrusted guests and are not virtualization-specific. For example, the
-> > restrictions can be used to allow only a subset of sqe operations available to
-> > an application similar to seccomp syscall whitelisting.
-> > 
-> > An address translation and memory restriction mechanism would also be
-> > necessary, but we can discuss this later.
-> > 
-> > The IOURING_REGISTER_RESTRICTIONS opcode
-> > ----------------------------------------
-> > The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
-> > installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
-> > passed to untrusted code with the knowledge that only operations present in the
-> > whitelist can be executed.
-> > 
-> > The whitelist approach ensures that new features added to io_uring do not
-> > accidentally become available when an existing application is launched on a
-> > newer kernel version.
-> > 
-> > The IORING_REGISTER_RESTRICTIONS opcode takes an array of struct
-> > io_uring_restriction elements that describe whitelisted features:
-> > 
-> >   #define IORING_REGISTER_RESTRICTIONS 11
-> > 
-> >   /* struct io_uring_restriction::opcode values */
-> >   enum {
-> >       /* Allow an io_uring_register(2) opcode */
-> >       IORING_RESTRICTION_REGISTER_OP,
-> > 
-> >       /* Allow an sqe opcode */
-> >       IORING_RESTRICTION_SQE_OP,
-> > 
-> >       /* Only allow fixed files */
-> >       IORING_RESTRICTION_FIXED_FILES_ONLY,
-> > 
-> >       /* Only allow registered addresses and translate them */
-> >       IORING_RESTRICTION_BUFFER_CHECK
-> >   };
-> > 
-> >   struct io_uring_restriction {
-> >       __u16 opcode;
-> >       union {
-> >           __u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
-> >           __u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
-> >       };
-> >       __u8 resv;
-> >       __u32 resv2[3];
-> >   };
-> > 
-> > This call can only be made once. Afterwards it is not possible to change
-> > restrictions anymore. This prevents untrusted code from removing restrictions.
-> > 
-> > Limiting access to io_uring operations
-> > --------------------------------------
-> > The following example shows how to whitelist IORING_OP_READV, IORING_OP_WRITEV,
-> > and IORING_OP_FSYNC:
-> > 
-> >   struct io_uring_restriction restrictions[] = {
-> >       {
-> >           .opcode = IORING_RESTRICTION_SQE_OP,
-> >           .sqe_op = IORING_OP_READV,
-> >       },
-> >       {
-> >           .opcode = IORING_RESTRICTION_SQE_OP,
-> >           .sqe_op = IORING_OP_WRITEV,
-> >       },
-> >       {
-> >           .opcode = IORING_RESTRICTION_SQE_OP,
-> >           .sqe_op = IORING_OP_FSYNC,
-> >       },
-> >       ...
-> >   };
-> > 
-> >   io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
-> >                     restrictions, ARRAY_SIZE(restrictions));
-> > 
-> > Limiting access to file descriptors
-> > -----------------------------------
-> > The fixed files mechanism can be used to limit access to a set of file
-> > descriptors:
-> > 
-> >   struct io_uring_restriction restrictions[] = {
-> >       {
-> >           .opcode = IORING_RESTRICTION_FIXED_FILES_ONLY,
-> >       },
-> >       ...
-> >   };
-> > 
-> >   io_uring_register(ringfd, IORING_REGISTER_RESTRICTIONS,
-> >                     restrictions, ARRAY_SIZE(restrictions));
-> > 
-> > Only requests with the sqe->flags IOSQE_FIXED_FILE bit set will be allowed.
-> 
-> I don't think this sounds unreasonable, but I'd really like to see a
-> prototype hacked up before rendering any further opinions on it :-)
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Yeah :-) I'll be back with a prototype of this changes ASAP.
+There's no reason to have these as macros. Let's convert them all to
+static inlines for better readability and stronger typing.
 
-Thanks for you feedback,
-Stefano
+Suggested-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ include/linux/regmap.h | 222 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 192 insertions(+), 30 deletions(-)
+
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index cb666b9c6b6a..f4917efed5c3 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -80,36 +80,6 @@ struct reg_sequence {
+ 				}
+ #define REG_SEQ0(_reg, _def)	REG_SEQ(_reg, _def, 0)
+ 
+-#define	regmap_update_bits(map, reg, mask, val) \
+-	regmap_update_bits_base(map, reg, mask, val, NULL, false, false)
+-#define	regmap_update_bits_async(map, reg, mask, val)\
+-	regmap_update_bits_base(map, reg, mask, val, NULL, true, false)
+-#define	regmap_update_bits_check(map, reg, mask, val, change)\
+-	regmap_update_bits_base(map, reg, mask, val, change, false, false)
+-#define	regmap_update_bits_check_async(map, reg, mask, val, change)\
+-	regmap_update_bits_base(map, reg, mask, val, change, true, false)
+-
+-#define	regmap_write_bits(map, reg, mask, val) \
+-	regmap_update_bits_base(map, reg, mask, val, NULL, false, true)
+-
+-#define	regmap_field_write(field, val) \
+-	regmap_field_update_bits_base(field, ~0, val, NULL, false, false)
+-#define	regmap_field_force_write(field, val) \
+-	regmap_field_update_bits_base(field, ~0, val, NULL, false, true)
+-#define	regmap_field_update_bits(field, mask, val)\
+-	regmap_field_update_bits_base(field, mask, val, NULL, false, false)
+-#define	regmap_field_force_update_bits(field, mask, val) \
+-	regmap_field_update_bits_base(field, mask, val, NULL, false, true)
+-
+-#define	regmap_fields_write(field, id, val) \
+-	regmap_fields_update_bits_base(field, id, ~0, val, NULL, false, false)
+-#define	regmap_fields_force_write(field, id, val) \
+-	regmap_fields_update_bits_base(field, id, ~0, val, NULL, false, true)
+-#define	regmap_fields_update_bits(field, id, mask, val)\
+-	regmap_fields_update_bits_base(field, id, mask, val, NULL, false, false)
+-#define	regmap_fields_force_update_bits(field, id, mask, val) \
+-	regmap_fields_update_bits_base(field, id, mask, val, NULL, false, true)
+-
+ /**
+  * regmap_read_poll_timeout - Poll until a condition is met or a timeout occurs
+  *
+@@ -1054,6 +1024,42 @@ int regmap_bulk_read(struct regmap *map, unsigned int reg, void *val,
+ int regmap_update_bits_base(struct regmap *map, unsigned int reg,
+ 			    unsigned int mask, unsigned int val,
+ 			    bool *change, bool async, bool force);
++
++static inline int regmap_update_bits(struct regmap *map, unsigned int reg,
++				     unsigned int mask, unsigned int val)
++{
++	return regmap_update_bits_base(map, reg, mask, val, NULL, false, false);
++}
++
++static inline int regmap_update_bits_async(struct regmap *map, unsigned int reg,
++					   unsigned int mask, unsigned int val)
++{
++	return regmap_update_bits_base(map, reg, mask, val, NULL, true, false);
++}
++
++static inline int regmap_update_bits_check(struct regmap *map, unsigned int reg,
++					   unsigned int mask, unsigned int val,
++					   bool *change)
++{
++	return regmap_update_bits_base(map, reg, mask, val,
++				       change, false, false);
++}
++
++static inline int
++regmap_update_bits_check_async(struct regmap *map, unsigned int reg,
++			       unsigned int mask, unsigned int val,
++			       bool *change)
++{
++	return regmap_update_bits_base(map, reg, mask, val,
++				       change, true, false);
++}
++
++static inline int regmap_write_bits(struct regmap *map, unsigned int reg,
++				    unsigned int mask, unsigned int val)
++{
++	return regmap_update_bits_base(map, reg, mask, val, NULL, false, true);
++}
++
+ int regmap_get_val_bytes(struct regmap *map);
+ int regmap_get_max_register(struct regmap *map);
+ int regmap_get_reg_stride(struct regmap *map);
+@@ -1152,6 +1158,65 @@ int regmap_fields_read(struct regmap_field *field, unsigned int id,
+ int regmap_fields_update_bits_base(struct regmap_field *field,  unsigned int id,
+ 				   unsigned int mask, unsigned int val,
+ 				   bool *change, bool async, bool force);
++
++static inline int regmap_field_write(struct regmap_field *field,
++				     unsigned int val)
++{
++	return regmap_field_update_bits_base(field, ~0, val,
++					     NULL, false, false);
++}
++
++static inline int regmap_field_force_write(struct regmap_field *field,
++					   unsigned int val)
++{
++	return regmap_field_update_bits_base(field, ~0, val, NULL, false, true);
++}
++
++static inline int regmap_field_update_bits(struct regmap_field *field,
++					   unsigned int mask, unsigned int val)
++{
++	return regmap_field_update_bits_base(field, mask, val,
++					     NULL, false, false);
++}
++
++static inline int
++regmap_field_force_update_bits(struct regmap_field *field,
++			       unsigned int mask, unsigned int val)
++{
++	return regmap_field_update_bits_base(field, mask, val,
++					     NULL, false, true);
++}
++
++static inline int regmap_fields_write(struct regmap_field *field,
++				      unsigned int id, unsigned int val)
++{
++	return regmap_fields_update_bits_base(field, id, ~0, val,
++					      NULL, false, false);
++}
++
++static inline int regmap_fields_force_write(struct regmap_field *field,
++					    unsigned int id, unsigned int val)
++{
++	return regmap_fields_update_bits_base(field, id, ~0, val,
++					      NULL, false, true);
++}
++
++static inline int
++regmap_fields_update_bits(struct regmap_field *field, unsigned int id,
++			  unsigned int mask, unsigned int val)
++{
++	return regmap_fields_update_bits_base(field, id, mask, val,
++					      NULL, false, false);
++}
++
++static inline int
++regmap_fields_force_update_bits(struct regmap_field *field, unsigned int id,
++				unsigned int mask, unsigned int val)
++{
++	return regmap_fields_update_bits_base(field, id, mask, val,
++					      NULL, false, true);
++}
++
+ /**
+  * struct regmap_irq_type - IRQ type definitions.
+  *
+@@ -1458,6 +1523,103 @@ static inline int regmap_fields_update_bits_base(struct regmap_field *field,
+ 	return -EINVAL;
+ }
+ 
++static inline int regmap_update_bits(struct regmap *map, unsigned int reg,
++				     unsigned int mask, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int regmap_update_bits_async(struct regmap *map, unsigned int reg,
++					   unsigned int mask, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int regmap_update_bits_check(struct regmap *map, unsigned int reg,
++					   unsigned int mask, unsigned int val,
++					   bool *change)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int
++regmap_update_bits_check_async(struct regmap *map, unsigned int reg,
++			       unsigned int mask, unsigned int val,
++			       bool *change)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int regmap_write_bits(struct regmap *map, unsigned int reg,
++				    unsigned int mask, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int regmap_field_write(struct regmap_field *field,
++				     unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int regmap_field_force_write(struct regmap_field *field,
++					   unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int regmap_field_update_bits(struct regmap_field *field,
++					   unsigned int mask, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int
++regmap_field_force_update_bits(struct regmap_field *field,
++			       unsigned int mask, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int regmap_fields_write(struct regmap_field *field,
++				      unsigned int id, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int regmap_fields_force_write(struct regmap_field *field,
++					    unsigned int id, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int
++regmap_fields_update_bits(struct regmap_field *field, unsigned int id,
++			  unsigned int mask, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
++static inline int
++regmap_fields_force_update_bits(struct regmap_field *field, unsigned int id,
++				unsigned int mask, unsigned int val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
+ static inline int regmap_get_val_bytes(struct regmap *map)
+ {
+ 	WARN_ONCE(1, "regmap API is disabled");
+-- 
+2.26.1
 
