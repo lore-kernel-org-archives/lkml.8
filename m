@@ -2,102 +2,122 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC319C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E208C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9CA920739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:19:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARSthNo3"
+	by mail.kernel.org (Postfix) with ESMTP id E8E9F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgFOWTG (ORCPT
+        id S1726490AbgFOWVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:19:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFOWTG (ORCPT
+        Mon, 15 Jun 2020 18:21:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36166 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725843AbgFOWVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:19:06 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D5CC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:19:05 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id m25so10325283vsp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:19:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r9T7k1DpPFTY/gAD5b6MEb9oHnKklfAWLgEYHIDgzf0=;
-        b=ARSthNo3qKbcMSHrOKeeWC4s+yNkZz9S1UbIt1WGKeODX5s69r5L5uSsoRuhcRobJN
-         Xj/Xqk+norC+HRQUaNtFFSzzpLlDGWLoiCGIG8belx4tZTOHTmOWO3KyhG55PsCyo78l
-         BOc8VvFbjNWSv0dAxz6W1DZo3IWtoKJj8pmBC1bQ13laz7a2BhtLrt0NuIgsKWVvKVI4
-         PuMFjEszl5teVPOZypEKgh60EpvkWUDFZrHyghbXOgFpxCgNwlFe3x/0p38CxgBadiC/
-         Xn+4v2ouT8LgYI2JX5xP2KovVOoZVW7YpVcOuO4bjCBRaGBKQ9tPGG2pf02zrtM5A62i
-         Y2mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r9T7k1DpPFTY/gAD5b6MEb9oHnKklfAWLgEYHIDgzf0=;
-        b=ufKJ4WEnWixGn3A2GRMEFTl5HGoH2Mnjud2Ft4UMMxtMjxl/O6r9PYuhUXalKCyz1H
-         eiagwkB41IH0aIlXiLDfaelRTXx9y+dJANUhuwVBE5P+sCKe3e9M2eHsqMXvo+rkOcuG
-         Up8LKURXo3fr+9QARYD/Jl6BhAtEntXnoJAgU9FtN8QqS9eWwbNyVAe4zXqcYQe30YTB
-         c9L6GG6B5hmewtqgiqF0unegVYoKk+bBMRRviWuM+yDhOqI6NahNhAJoatkj1cdnjylU
-         sJwRsAnIepEYkLCOUZ+oVJYo9TeDXlZ1W/hMMed2GrU1Zg0aiDDQ9XZqLwK5+yn4uyDU
-         CGQQ==
-X-Gm-Message-State: AOAM533Q8L3FR5F3jrV/rm3pMOACo8OdbVfrRylqWRzEwnBBX169XheX
-        ODxOFSLQCf5eqxsMem+zThvPSctp6upBsWaoUiY=
-X-Google-Smtp-Source: ABdhPJxc//Rmt+6lw+UJCTnqtvocCC/v7PiZuZB0+sopLg9uyknCBc0IboBTC1S2jba9JDzayMa0+Yx33OFN66c17YE=
-X-Received: by 2002:a67:3211:: with SMTP id y17mr22659348vsy.56.1592259544861;
- Mon, 15 Jun 2020 15:19:04 -0700 (PDT)
+        Mon, 15 Jun 2020 18:21:18 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FM2NMR163141;
+        Mon, 15 Jun 2020 18:21:16 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31msf012w2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 18:21:16 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FMFk22026375;
+        Mon, 15 Jun 2020 22:21:15 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02wdc.us.ibm.com with ESMTP id 31pey48r1m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 22:21:15 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FMLDr520185518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 22:21:13 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD0CEC605F;
+        Mon, 15 Jun 2020 22:21:14 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80295C605A;
+        Mon, 15 Jun 2020 22:21:14 +0000 (GMT)
+Received: from Davids-MBP.randomparity.org (unknown [9.211.152.140])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 22:21:14 +0000 (GMT)
+Subject: Re: [PATCH] tg3: driver sleeps indefinitely when EEH errors exceed
+ eeh_max_freezes
+To:     Michael Chan <michael.chan@broadcom.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        Siva Reddy Kallam <siva.kallam@broadcom.com>,
+        Prashant Sreedharan <prashant@broadcom.com>,
+        Michael Chan <mchan@broadcom.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200615190119.382589-1-drc@linux.vnet.ibm.com>
+ <CACKFLimd0a=Y8WyvqCt4BD7SU_Cg1vQ=baKs6-uPv0dZuCm=mw@mail.gmail.com>
+From:   David Christensen <drc@linux.vnet.ibm.com>
+Message-ID: <95bf20c6-a812-32ad-fd38-45cba7e10491@linux.vnet.ibm.com>
+Date:   Mon, 15 Jun 2020 15:21:14 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-24-jim.cromie@gmail.com> <20200614060501.GB2608744@kroah.com>
-In-Reply-To: <20200614060501.GB2608744@kroah.com>
-From:   jim.cromie@gmail.com
-Date:   Mon, 15 Jun 2020 16:18:38 -0600
-Message-ID: <CAJfuBxyAYU+cE+JpE+T6+k0YhqG3pyk2ShPruX4A9yCTeKX3Jg@mail.gmail.com>
-Subject: Re: [PATCH v2 23/24] kset-example: add pr_debug()s for easy
- visibility of its operation
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACKFLimd0a=Y8WyvqCt4BD7SU_Cg1vQ=baKs6-uPv0dZuCm=mw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_09:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 adultscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 clxscore=1011
+ cotscore=-2147483648 phishscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 12:05 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Sat, Jun 13, 2020 at 09:57:37AM -0600, Jim Cromie wrote:
-> > put pr_debug()s into most functions, to easily see code operate when
-> > module is loaded and used.
-> >
-> >   #> dmesg -w &
-> >   #> modprobe kset-example dyndbg=+pfml
-> >   #> cat /sys/kernel/kset-example/*/*
-> > ---
+On 6/15/20 1:45 PM, Michael Chan wrote:
+> On Mon, Jun 15, 2020 at 12:01 PM David Christensen
+> <drc@linux.vnet.ibm.com> wrote:
+>>
+>> The driver function tg3_io_error_detected() calls napi_disable twice,
+>> without an intervening napi_enable, when the number of EEH errors exceeds
+>> eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
+>>
+>> The function is called once with the PCI state pci_channel_io_frozen and
+>> then called again with the state pci_channel_io_perm_failure when the
+>> number of EEH failures in an hour exceeds eeh_max_freezes.
+>>
+>> Protecting the calls to napi_enable/napi_disable with a new state
+>> variable prevents the long sleep.
+> 
+> This works, but I think a simpler fix is to check tp->pcierr_recovery
+> in tg3_io_error_detected() and skip most of the tg3 calls (including
+> the one that disables NAPI) if the flag is true.
 
-> >  static int __init example_init(void)
-> >  {
-> > +     pr_debug("called");
->
-> Why???  If you want to do something like this, use ftrace, that is what
-> it is for.
->
-> thanks,
->
-> greg k-h
+This might be the smallest change that would work.  Does it make sense 
+to the reader?
 
+diff --git a/drivers/net/ethernet/broadcom/tg3.c 
+b/drivers/net/ethernet/broadcom/tg3.c
+index 7a3b22b35238..1f37c69d213d 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -18168,8 +18168,8 @@ static pci_ers_result_t 
+tg3_io_error_detected(struct pci_dev *pdev,
 
-mostly I needed an easy place to try out pr_debug_n  in the next patch.
-if that next patch seems like a good anti-pattern for pr_debug_n use/misuse,
-then I could combine the 2, and add a 'dont do this, use ftrace' comment too.
-or not, of course.
+         rtnl_lock();
+
+-       /* We probably don't have netdev yet */
+-       if (!netdev || !netif_running(netdev))
++       /* May be second call or maybe we don't have netdev yet */
++       if (tp->pcierr_recovery || !netdev || !netif_running(netdev))
+                 goto done;
+
+         /* We needn't recover from permanent error */
+
