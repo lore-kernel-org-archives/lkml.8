@@ -2,220 +2,84 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F97C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0D720644
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B296120644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgFOOvd (ORCPT
+        id S1730739AbgFOOws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgFOOvd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:51:33 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E96C8C061A0E;
-        Mon, 15 Jun 2020 07:51:32 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jkqSQ-0004kV-7n; Mon, 15 Jun 2020 16:51:30 +0200
-Date:   Mon, 15 Jun 2020 16:51:30 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Stephen Berman <stephen.berman@gmx.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-Message-ID: <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
-References: <87y2owwo2o.fsf@rub.de>
- <20200609202339.cgy57twm2zdtjhje@linutronix.de>
- <87tuzjcovq.fsf@gmx.net>
- <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
- <87imfyh6yx.fsf@gmx.net>
- <87wo4dligz.fsf@gmx.net>
- <20200612110122.jossn5zrktcvpbpm@linutronix.de>
- <87tuzdrgm5.fsf@gmx.net>
- <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
- <874krcsquv.fsf@gmx.net>
+        Mon, 15 Jun 2020 10:52:48 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2310 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728304AbgFOOws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:52:48 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 55033B26EC0FA270F1FE;
+        Mon, 15 Jun 2020 15:52:42 +0100 (IST)
+Received: from [127.0.0.1] (10.47.8.237) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 15 Jun
+ 2020 15:52:41 +0100
+Subject: Re: [PATCH 2/2] perf pmu: Improve CPU core PMU HW event list ordering
+To:     Namhyung Kim <namhyung@kernel.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1592214046-32385-1-git-send-email-john.garry@huawei.com>
+ <1592214046-32385-3-git-send-email-john.garry@huawei.com>
+ <CAM9d7ciyOmzxUZ4dGJ12607rTnCCdNBbuQtv1gEmUe0FQJxELA@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <7554ef7d-6d85-fa5f-2018-415f2260fa60@huawei.com>
+Date:   Mon, 15 Jun 2020 15:51:19 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="oidbd7fmhy4rt4hc"
-Content-Disposition: inline
-In-Reply-To: <874krcsquv.fsf@gmx.net>
+In-Reply-To: <CAM9d7ciyOmzxUZ4dGJ12607rTnCCdNBbuQtv1gEmUe0FQJxELA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.8.237]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 15/06/2020 15:36, Namhyung Kim wrote:>>   static int cmp_sevent(const 
+void *a, const void *b)
+>> @@ -1416,6 +1417,12 @@ static int cmp_sevent(const void *a, const void *b)
+>>                  if (n)
+>>                          return n;
+>>          }
+>> +
+>> +       if (as->is_cpu && !bs->is_cpu)
+>> +               return -1;
+>> +       else if (!as->is_cpu && bs->is_cpu)
+>> +               return 1;
+>> +
+> This can be:
+> 
+>          if (as->is_cpu != bs->is_cpu)
+>                  return bs->is_cpu - as->is_cpu;
+> 
 
---oidbd7fmhy4rt4hc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's more concise, but maybe not as readable at a glance. I don't mind 
+though, so can change.
 
-On 2020-06-15 09:58:00 [+0200], Stephen Berman wrote:
-> Ok, sorry, I had misunderstood, but now I've looked at the
-> documentation.  I had in fact already done `echo t >
-> /proc/sysrq-trigger' in an xterm (as root) and there was no output.
-> Later, after booting kernel 5.1.0 because of the message flooding with
-> 5.6.4, I did `echo t > /proc/sysrq-trigger' in a virtual tty (also as
-> root) and the only output was: `[ <timestamp>] sysrq: Show State'.  Is
-> this expected?  (In /proc/sys/kernel/sysrq there is `1'.)  I couldn't
-> try it in a 5.6.4 virtual tty because of the message flooding (see
-> below).
+Thanks,
+John
 
-If you do this "t" then there should be a lot of output on your console.
-If you do this from an xterm then you can see the output after typing
-"dmesg". The output should appear also in your system log.
-
-> The kernel log shows 305 of these messages in the 4 minutes and 17
-> seconds between the start of klogd and when I rebooted.
-
-Okay, this is a lot.
-
-> > The interesting part is to see if there is a acpi_os_execute() adding a
-> > specific event multiple times which does not complete. Maybe at runtime,
-> > maybe at shutdown time. If that is the case then ignoring this specific
-> > event might fix the shutdown problem. With all this information so far,
-> > I don't see a relation with this problem and the commit=E2=80=A6
->=20
-> In those 3 minutes and 8 seconds there were 5 "Adding
-> acpi_ev_asynch_enable_gpe" messages at the beginning, then 185 "Adding
-> acpi_ev_notify_dispatch" messages, which kept coming until I rebooted.
-
-5 acpi_ev_asynch_enable_gpe() in three minutes since boot isn't much.
-185 of "Adding acpi_ev_notify_dispatch" is a lot.
-
-But to be clear, only=20
-  acpi_os_execute(1109) Adding acpi_ev_notify_dispatch" messages?
-No
-  "acpi_os_execute_deferred_notify() Start/End acpi_ev_notify_dispatch"?=20
-
-The syslog should have captured the log on disk.
-
-I attached a modified acpi_dbg.patch. Please enable:
-- CONFIG_ACPI_DEBUG=3Dy
-
-Looking at your 5.1 you have tracing enabled (hope it still is).
-
-The attached patch will dump the date into the tracing buffer, so you
-console should remain "clean". Once it records 300 of those "requests
-for acpi_ev_notify_dispatch" it will stop recording.
-After 4-5 minutes please do
-	cat /sys/kernel/debug/tracing/trace > file.txt
-
-compress it and send it.
-
-> Steve Berman
-
-Sebastian
-
---oidbd7fmhy4rt4hc
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment; filename="acpi_dbg.patch"
-
-diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
-index 3e39907fedd9..816e23d103c6 100644
---- a/drivers/acpi/acpica/evgpe.c
-+++ b/drivers/acpi/acpica/evgpe.c
-@@ -477,6 +477,7 @@ static void ACPI_SYSTEM_XFACE acpi_ev_asynch_execute_gpe_method(void *context)
- 		 * notifies on multiple device objects.
- 		 */
- 		notify = gpe_event_info->dispatch.notify_list;
-+		trace_printk("notify %px\n", gpe_event_info);
- 		while (ACPI_SUCCESS(status) && notify) {
- 			status =
- 			    acpi_ev_queue_notify_request(notify->device_node,
-@@ -484,6 +485,7 @@ static void ACPI_SYSTEM_XFACE acpi_ev_asynch_execute_gpe_method(void *context)
- 
- 			notify = notify->next;
- 		}
-+		trace_printk("Event notify %px done %x\n", gpe_event_info, status);
- 
- 		break;
- 
-@@ -491,6 +493,9 @@ static void ACPI_SYSTEM_XFACE acpi_ev_asynch_execute_gpe_method(void *context)
- 
- 		/* Allocate the evaluation information block */
- 
-+		trace_printk("Evaluate %4.4s\n",
-+			     acpi_ut_get_node_name(gpe_event_info->dispatch.method_node));
-+
- 		info = ACPI_ALLOCATE_ZEROED(sizeof(struct acpi_evaluate_info));
- 		if (!info) {
- 			status = AE_NO_MEMORY;
-diff --git a/drivers/acpi/acpica/evmisc.c b/drivers/acpi/acpica/evmisc.c
-index ce1eda6beb84..735057419a8e 100644
---- a/drivers/acpi/acpica/evmisc.c
-+++ b/drivers/acpi/acpica/evmisc.c
-@@ -72,6 +72,7 @@ acpi_ev_queue_notify_request(struct acpi_namespace_node *node, u32 notify_value)
- 	union acpi_generic_state *info;
- 	u8 handler_list_id = 0;
- 	acpi_status status = AE_OK;
-+	static int num_req = 0;
- 
- 	ACPI_FUNCTION_NAME(ev_queue_notify_request);
- 
-@@ -129,19 +130,19 @@ acpi_ev_queue_notify_request(struct acpi_namespace_node *node, u32 notify_value)
- 	info->notify.handler_list_head = handler_list_head;
- 	info->notify.global = &acpi_gbl_global_notify[handler_list_id];
- 
--	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
--			  "Dispatching Notify on [%4.4s] (%s) Value 0x%2.2X (%s) Node %p\n",
-+	trace_printk("Dispatching Notify on [%4.4s] (%s) Value 0x%2.2X (%s) Node %px\n",
- 			  acpi_ut_get_node_name(node),
- 			  acpi_ut_get_type_name(node->type), notify_value,
- 			  acpi_ut_get_notify_name(notify_value, ACPI_TYPE_ANY),
--			  node));
-+			  node);
- 
- 	status = acpi_os_execute(OSL_NOTIFY_HANDLER,
- 				 acpi_ev_notify_dispatch, info);
- 	if (ACPI_FAILURE(status)) {
- 		acpi_ut_delete_generic_state(info);
- 	}
--
-+	if (num_req++ == 300)
-+		tracing_off();
- 	return (status);
- }
- 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 762c5d50b8fe..67d5ac9aa433 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -844,6 +844,16 @@ static void acpi_os_execute_deferred(struct work_struct *work)
- 	kfree(dpc);
- }
- 
-+static void acpi_os_execute_deferred_notify(struct work_struct *work)
-+{
-+	struct acpi_os_dpc *dpc = container_of(work, struct acpi_os_dpc, work);
-+
-+	trace_printk("Start %px %pS(%px)\n", dpc, dpc->function, dpc->context);
-+	dpc->function(dpc->context);
-+	trace_printk("End %px %pS(%px)\n", dpc, dpc->function, dpc->context);
-+	kfree(dpc);
-+}
-+
- #ifdef CONFIG_ACPI_DEBUGGER
- static struct acpi_debugger acpi_debugger;
- static bool acpi_debugger_initialized;
-@@ -1096,7 +1106,8 @@ acpi_status acpi_os_execute(acpi_execute_type type,
- 	 */
- 	if (type == OSL_NOTIFY_HANDLER) {
- 		queue = kacpi_notify_wq;
--		INIT_WORK(&dpc->work, acpi_os_execute_deferred);
-+		trace_printk("Adding %pS %px <%px>\n", function, context, dpc);
-+		INIT_WORK(&dpc->work, acpi_os_execute_deferred_notify);
- 	} else if (type == OSL_GPE_HANDLER) {
- 		queue = kacpid_wq;
- 		INIT_WORK(&dpc->work, acpi_os_execute_deferred);
-
---oidbd7fmhy4rt4hc--
