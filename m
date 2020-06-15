@@ -2,92 +2,157 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3856C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A611C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B865C2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0ksf44c"
+	by mail.kernel.org (Postfix) with ESMTP id 73E5F2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbgFONMl (ORCPT
+        id S1730302AbgFONNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729875AbgFONMk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:12:40 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58783C061A0E;
-        Mon, 15 Jun 2020 06:12:40 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o15so17359370ejm.12;
-        Mon, 15 Jun 2020 06:12:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2h9e+eGSGjdU1mcqeHyapMumElVznZdYrWvaheMOzqI=;
-        b=Q0ksf44c9R2gEIuPhfga4T8ZPy44bz9mmNtp5TrPqDt0zy3h3IYsdGw9dHQqxds82u
-         GXvbnM1Xi0b4b2hnB+w0kK9TP2zzxgEd7aaKnL1apOKaxXSRP597wQvtvGUcshJe7eLf
-         nQHKS0rsn3X77V3PpALQ4kbe3cu7P5+fJEn9QedYTiTcSfSltGufbwjelvjcFs7S3oHs
-         S0YtSc/PKNDKe6x5BVXj3Moivdikrn7JLpMDmuv6sZibjsgcA8r5k/xU2rZxw4NblVx8
-         xqf5YoHfv7Z8oDB/H8XE9qEmNCnG8Zl+hll1ZDQb8jnJ/sitZKyIYoYqp9pVF2kvz1wI
-         abyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2h9e+eGSGjdU1mcqeHyapMumElVznZdYrWvaheMOzqI=;
-        b=gOgEXX4r3nkT6+sXKRqOjceV1XZ8+RkJysFPzQiUF1sFaBFB5Uzjx2iPR8IJ4By2Ye
-         XnXQ9Q5RPo8j0nP7ezROKAUfNnf0w7h3CFlGfidc40WIR9v1A32FY3Am5NI5U8iM/u3c
-         /c2Uug7ngbJOAG3+RyckxqVnllSQgVqICdgWhQiyIQPv1RNtE9D2KxfN8BWPb4rBfCqf
-         8p5gyEZRv9a0J6+OOCnbCfnTFYwLpVZw1YF5u4a26KBqB06sCqpSFyeNOKfEviPed9sx
-         TMH5ArTKw+doES/rX6pQ1bftNuxRj6IcvU2CbR+bBfh2giwgFlD32WYtnnbRUsOuskeQ
-         Jucg==
-X-Gm-Message-State: AOAM530hFyaRwr7AeE1XQvNfsgxgdvFboHAOaqqVxsjT53GH0hoXYjjD
-        0b18fV3gmAI38RD8Lzs8SaWlc/QUalvTnmpqGq4=
-X-Google-Smtp-Source: ABdhPJzMRrPQPqIr3p2C+5xxpngruQQ43MqrZbGlhHVmMGkRJpRsikRWrtEymCTacC8UqFHrJ2gPifhqgc4PA0xb2OM=
-X-Received: by 2002:a17:906:e47:: with SMTP id q7mr25487375eji.279.1592226759060;
- Mon, 15 Jun 2020 06:12:39 -0700 (PDT)
+        Mon, 15 Jun 2020 09:13:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:47528 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730213AbgFONNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:13:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 844A731B;
+        Mon, 15 Jun 2020 06:13:17 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E73B93F6CF;
+        Mon, 15 Jun 2020 06:13:15 -0700 (PDT)
+Subject: Re: [RFC PATCH] serial: samsung: Re-factors UART IRQ resource for
+ various Samsung SoC
+To:     Tamseel Shams <m.shams@samsung.com>, kgene@kernel.org,
+        krzk@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
+Cc:     linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com,
+        linux-arm-kernel@lists.infradead.org
+References: <CGME20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43@epcas5p4.samsung.com>
+ <20200615122609.71884-1-m.shams@samsung.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <027c0955-3246-8c1e-4d0d-053a2a177dc6@arm.com>
+Date:   Mon, 15 Jun 2020 14:13:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
- <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de> <20200615123052.GO4447@sirena.org.uk>
- <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com> <20200615131006.GR4447@sirena.org.uk>
-In-Reply-To: <20200615131006.GR4447@sirena.org.uk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 15 Jun 2020 16:12:28 +0300
-Message-ID: <CA+h21hpusy=zx8AuUqk_4zShtst8QeNJxCPT4dMGh0jhm5uZng@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on interrupt
- in exit paths
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200615122609.71884-1-m.shams@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 at 16:10, Mark Brown <broonie@kernel.org> wrote:
+On 2020-06-15 13:26, Tamseel Shams wrote:
+> In few older Samsung SoCs like s3c2410, s3c2412
+> and s3c2440, UART IP is having 2 interrupt lines.
+> However, in other SoCs like s3c6400, s5pv210,
+> exynos5433, and exynos4210 UART is having only 1
+> interrupt line. Due to this, "platform_get_irq(platdev, 1)"
+> call in the driver gives the following warning:
+> "IRQ index 1 not found" on recent platforms.
+> 
+> This patch re-factors the IRQ resources handling for
+> each platform and hence fixing the above warnings seen
+> on some platforms.
+> 
+> Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+> ---
+>   drivers/tty/serial/samsung_tty.c | 20 ++++++++++++++++----
+>   1 file changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+> index 6ef614d8648c..078dcb3e316f 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -60,6 +60,7 @@ struct s3c24xx_uart_info {
+>   	char			*name;
+>   	unsigned int		type;
+>   	unsigned int		fifosize;
+> +	unsigned int		irq_cnt;
+>   	unsigned long		rx_fifomask;
+>   	unsigned long		rx_fifoshift;
+>   	unsigned long		rx_fifofull;
+> @@ -1908,12 +1909,17 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
+>   	else {
+>   		port->irq = ret;
+>   		ourport->rx_irq = ret;
+> -		ourport->tx_irq = ret + 1;
+> +		if (ourport->info->irq_cnt == 1)
+> +			ourport->tx_irq = ret;
+> +		else
+> +			ourport->tx_irq = ret + 1;
+>   	}
+>   
+> -	ret = platform_get_irq(platdev, 1);
+> -	if (ret > 0)
+> -		ourport->tx_irq = ret;
+> +	if (ourport->info->irq_cnt != 1) {
+> +		ret = platform_get_irq(platdev, 1);
+> +		if (ret > 0)
+> +			ourport->tx_irq = ret;
 
->
-> It's a bit unusual to need to actually free the IRQ over suspend -
-> what's driving that requirement here?
+FWIW, if you're not going to do anything in the error case then you may 
+as well just call platform_get_irq_optional() unconditionally.
 
-clk_disable_unprepare(dspi->clk); is driving the requirement - same as
-in dspi_remove case, the module will fault when its registers are
-accessed without a clock.
+Robin.
 
--Vladimir
+> +	}
+>   	/*
+>   	 * DMA is currently supported only on DT platforms, if DMA properties
+>   	 * are specified.
+> @@ -2387,6 +2393,7 @@ static struct s3c24xx_serial_drv_data s3c2410_serial_drv_data = {
+>   		.name		= "Samsung S3C2410 UART",
+>   		.type		= PORT_S3C2410,
+>   		.fifosize	= 16,
+> +		.irq_cnt	= 2,
+>   		.rx_fifomask	= S3C2410_UFSTAT_RXMASK,
+>   		.rx_fifoshift	= S3C2410_UFSTAT_RXSHIFT,
+>   		.rx_fifofull	= S3C2410_UFSTAT_RXFULL,
+> @@ -2414,6 +2421,7 @@ static struct s3c24xx_serial_drv_data s3c2412_serial_drv_data = {
+>   		.name		= "Samsung S3C2412 UART",
+>   		.type		= PORT_S3C2412,
+>   		.fifosize	= 64,
+> +		.irq_cnt	= 2,
+>   		.has_divslot	= 1,
+>   		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
+>   		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
+> @@ -2443,6 +2451,7 @@ static struct s3c24xx_serial_drv_data s3c2440_serial_drv_data = {
+>   		.name		= "Samsung S3C2440 UART",
+>   		.type		= PORT_S3C2440,
+>   		.fifosize	= 64,
+> +		.irq_cnt	= 2,
+>   		.has_divslot	= 1,
+>   		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
+>   		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
+> @@ -2471,6 +2480,7 @@ static struct s3c24xx_serial_drv_data s3c6400_serial_drv_data = {
+>   		.name		= "Samsung S3C6400 UART",
+>   		.type		= PORT_S3C6400,
+>   		.fifosize	= 64,
+> +		.irq_cnt	= 1,
+>   		.has_divslot	= 1,
+>   		.rx_fifomask	= S3C2440_UFSTAT_RXMASK,
+>   		.rx_fifoshift	= S3C2440_UFSTAT_RXSHIFT,
+> @@ -2498,6 +2508,7 @@ static struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
+>   	.info = &(struct s3c24xx_uart_info) {
+>   		.name		= "Samsung S5PV210 UART",
+>   		.type		= PORT_S3C6400,
+> +		.irq_cnt	= 1,
+>   		.has_divslot	= 1,
+>   		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,
+>   		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,
+> @@ -2526,6 +2537,7 @@ static struct s3c24xx_serial_drv_data s5pv210_serial_drv_data = {
+>   	.info = &(struct s3c24xx_uart_info) {			\
+>   		.name		= "Samsung Exynos UART",	\
+>   		.type		= PORT_S3C6400,			\
+> +		.irq_cnt	= 1,				\
+>   		.has_divslot	= 1,				\
+>   		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,	\
+>   		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,	\
+> 
