@@ -6,68 +6,69 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B943AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7B720B80
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6125C207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592264481;
-	bh=4B3zxx0t4t/cAMnTcb1CgWAE+WyO6z4UCRqXbi4xzFg=;
+	s=default; t=1592264486;
+	bh=bqkgpEtV0AWOIPCPj9PiP6DShiunetgdC6n3vDohao0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=EEXzk0cO0DsoS2ep/G35oG3+PBO1doYQ7K1r8pG1E9btKjfWnH6I1naB7Sk52Rq2J
-	 MhTmW2dP7k2bgb/abUwID8TzvdAwXG1drNcMDAlN3k/JAErxYEphO+iA31de9E56L7
-	 +Nl39RLQMVa8vn5+vzLp3derdZUTAM/kLNmXJqQs=
+	b=I+JaUfaivg4DDL69vkBiIF6r2RGynFf3yzy26pngcOi1PtK0U0MmFZdShbpmfV/lG
+	 TTZrnn/dvPRYG0Y3lRn0nhd1c5khHuQAS5ZIGveF2GRWQ4U76qxyTJ6gvhDk7vjZNO
+	 a9wzIF2xsaOIFX2dwppaFXNo0/6xdy0NGeFm/nfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgFOXlU (ORCPT
+        id S1727095AbgFOXlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:41:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 19:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgFOXlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:41:17 -0400
+        id S1725960AbgFOXlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:41:22 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B32D20714;
-        Mon, 15 Jun 2020 23:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9742520714;
+        Mon, 15 Jun 2020 23:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592264477;
-        bh=4B3zxx0t4t/cAMnTcb1CgWAE+WyO6z4UCRqXbi4xzFg=;
+        s=default; t=1592264482;
+        bh=bqkgpEtV0AWOIPCPj9PiP6DShiunetgdC6n3vDohao0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=AxBMUE88327gyD7AWPGhve+Wh8ybmWBfw1Vr5OWesrVIVG7NxKRQswpbnAXtofFbO
-         sLu3+N4jgXfA/ewD0/dj0zcDJeqxyFwsdjQymufuXtNvL6JVXHeVeKRAOTHmv+8yXX
-         grzN41FYi/g6IrCDmey/eZzzF6h2ijQ5jvrYbNpA=
-Date:   Tue, 16 Jun 2020 00:41:15 +0100
+        b=WpSKBKw/jkVDxSpozeUjw+b5Q20jpDsbmG6j9QLYzHfE6QV6JGML3Y8Bu05o1H3fZ
+         E1fGGIqiyIzrSIhKYR9ASCLoVIZV8u26vGpDbe8amA9anugOS5kJS7RfrEuVaes0CI
+         Ozc/7F5Hb6zZLBaf1uIdc1CqPSe3RtQmxm6VeAYA=
+Date:   Tue, 16 Jun 2020 00:41:19 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     linux-gpio@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-rdma@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org
-In-Reply-To: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
-Subject: Re: [PATCH 00/17] spelling.txt: /decriptors/descriptors/
-Message-Id: <159226447507.27673.16785893373246037922.b4-ty@kernel.org>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Tzung-Bi Shih <tzungbi@google.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Yicheng Li <yichengli@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>
+In-Reply-To: <20200612040526.192878-1-pihsun@chromium.org>
+References: <20200612040526.192878-1-pihsun@chromium.org>
+Subject: Re: [PATCH v6 0/3] Add support for voltage regulator on ChromeOS EC.
+Message-Id: <159226447507.27673.12544473672334795721.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 13:45:53 +0100, Kieran Bingham wrote:
-> I wouldn't normally go through spelling fixes, but I caught sight of
-> this typo twice, and then foolishly grepped the tree for it, and saw how
-> pervasive it was.
+On Fri, 12 Jun 2020 12:05:17 +0800, Pi-Hsun Shih wrote:
+> Add support for controlling voltage regulator that is connected and
+> controlled by ChromeOS EC. Kernel controls these regulators through
+> newly added EC host commands.
 > 
-> so here I am ... fixing a typo globally... but with an addition in
-> scripts/spelling.txt so it shouldn't re-appear ;-)
+> Changes from v5:
+> * Move new host command to a separate patch.
+> * Use devm_regulator_register.
+> * Address review comments.
 > 
 > [...]
 
@@ -77,10 +78,12 @@ Applied to
 
 Thanks!
 
-[1/2] regulator: Fix trivial spelling
-      commit: d3f3723387f97118c337689fc73e4199fb4331ce
-[2/2] regulator: gpio: Fix trivial spelling
-      commit: 1f0b740004f09d2f1b716fd6c2fdca81004ded05
+[1/3] dt-bindings: regulator: Add DT binding for cros-ec-regulator
+      commit: 54bd53b9c11ed856abeedbf1ce92a19b546f56cf
+[2/3] platform/chrome: cros_ec: Add command for regulator control.
+      commit: dff08caf35ecef4f7647f8b1e40877a254852a2b
+[3/3] regulator: Add driver for cros-ec-regulator
+      commit: 8d9f8d57e023893bfa708d83e3a787e77766a378
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
