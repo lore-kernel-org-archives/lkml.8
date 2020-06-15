@@ -2,153 +2,87 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0364FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA2B206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592205578;
-	bh=sUsoYboFQvARlrHTsUiM3cD/BcO9o1B8GEAGyFExK74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zXAx96P2raLHR7M5yT2om9AxFH29k7YY020fDnkNObsbGvHyd+VgYTkYKx8PnO058
-	 JkRw7KMTkzYatXFTz25sJ3EyuMEf1ONTTMvdztGTDnR0aPFDcgH9WoY3eRMqbTb4Dm
-	 bqnuPt85ekaV3sC/4T5uqGb8GnrwXCZE0Dtk1BvE=
+	by mail.kernel.org (Postfix) with ESMTP id CF8C2206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgFOHTh (ORCPT
+        id S1728562AbgFOHUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:19:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37906 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 03:20:06 -0400
+Received: from mga06.intel.com ([134.134.136.31]:46777 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728417AbgFOHTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:19:36 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B20206D7;
-        Mon, 15 Jun 2020 07:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592205575;
-        bh=sUsoYboFQvARlrHTsUiM3cD/BcO9o1B8GEAGyFExK74=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hX5i481ti5uYsYfjR/Sys+++2YWQBXqKyMhY/nyXTZJa7t1hCPaq5YJrQbzTkKRF/
-         77ipSxJq9l/mLcTdE6/Qa8hj7e3xFezC0EhH1hgmKtR7uTTBgAJLdh6w0LPf35xvvP
-         2qAqtlDOGdeHKH/hC+vYmb0SZDCN0s/5y4Ux1Du0=
-Date:   Mon, 15 Jun 2020 12:49:31 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Message-ID: <20200615071931.GK1393454@vkoul-mobl>
-References: <1591880310-1813-1-git-send-email-yibin.gong@nxp.com>
- <1591880310-1813-2-git-send-email-yibin.gong@nxp.com>
- <20200611134042.GG4671@sirena.org.uk>
- <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612101357.GA5396@sirena.org.uk>
- <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612141611.GI5396@sirena.org.uk>
- <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        id S1728268AbgFOHUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:20:06 -0400
+IronPort-SDR: N33jDiy6WlRnjBigzHEbGB1ze3x9aiOb6JyNGy3os0Hsg3qQ4RN2XKSZXsMRBXVKWGG40qxe4D
+ m/ld/TkDIGmg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 00:20:05 -0700
+IronPort-SDR: pVjKcvD5DUuXyhgZT/+naM0K/wlrsMopD51B8UUhQTP3hZZFhEZH31f+pgYgEtpm5B0DDhvfBj
+ ZNbGfr7bb5DA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
+   d="scan'208";a="382433255"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.172.204]) ([10.249.172.204])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2020 00:20:03 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Sun, Jian" <jian.sun@intel.com>
+Subject: Re: [Issue]platform/x86: iommu: System can't shutdown because iommu
+ driver keeps checking the status of DMA_GSTS_TES
+To:     Koba Ko <koba.ko@canonical.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>
+References: <CAJB-X+Ww=bZN2qZ=e=4EkN_RUTiZxHxkdnHh50y9iVqZmT_XQg@mail.gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <111dde48-8018-6d74-5df8-1534143f4de6@linux.intel.com>
+Date:   Mon, 15 Jun 2020 15:20:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+In-Reply-To: <CAJB-X+Ww=bZN2qZ=e=4EkN_RUTiZxHxkdnHh50y9iVqZmT_XQg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-06-20, 13:04, Robin Gong wrote:
-> On 2020/06/12 22:16 Mark Brown <broonie@kernel.org> wrote: 
-> > On Fri, Jun 12, 2020 at 01:48:41PM +0000, Robin Gong wrote:
-> > > On 2020/06/12 18:14 Mark Brown <broonie@kernel.org> wrote:
-> > 
-> > > > Please look at the formatting of your e-mails - they're really hard
-> > > > to read.  The line length is over 80 columns and there's no breaks between
-> > paragraphs.
-> > 
-> > > Sorry for that, seems my outlook format issue, hope it's ok now this
-> > > time :)
-> > 
-> > Yes, looks good thanks!
-> > 
-> > > > Client could enable this feature by choosing SPI_MASTER_FALLBACK
-> > > > freely without any impact on others.
-> > 
-> > > > SPI_MASTER_FALLBACK.  If this works why would any driver not enable
-> > > > the flag?
-> > 
-> > > Just make sure little impact if it's not good enough and potential
-> > > issue may come out after it's merged into mainline. TBH, I'm not sure
-> > > if it has taken care all in spi core. Besides, I don't know if other spi client need
-> > this feature.
-> > 
-> > It's not something that's going to come up a lot for most devices, it'd be a
-> > mapping failure due to running out of memory or something, but your point
-> > about that being possible is valid.
-> > 
-> > > > > Any error happen in DMA could fallback to PIO , seems a nice to
-> > > > > have,
-> > > > because it could
-> > > > > give chance to run in PIO which is more reliable. But if there is
-> > > > > also error in
-> > 
-> > > > PIO, thus may loop here, it's better adding limit try times here?
-> > 
-> > > > An error doesn't mean nothing happened on the bus, an error could
-> > > > for example also be something like a FIFO overrun which corrupts data.
-> > 
-> > > Do you mean fallback to PIO may cause FIFO overrun since some latency
-> > > involved so that this patch seems not useful as expected?
-> > 
-> > No, I mean that the reason the DMA transfer fails may be something that
-> > happens after we've started putting things on the bus - the bit about FIFOs is
-> > just a random example of an error that could happen.
-> > 
-> Sorry Mark for that I can't get your point... The bus error such as data corrupt
-> seems not the spi core's business since it can only be caught in spi controller
-> driver or upper level such as mtd driver (spi-nor) which know what's the failure
-> happen at spi bus HW level or what's the correct data/message. In other words,
-> spi core can't detect such error by transfer_one().
+Hi Koba Ko,
+
+On 2020/6/15 11:19, Koba Ko wrote:
+> hi All,
+> I have a machine and there's only intel gpu.
+> the secureboot and vt-d is enabled in BIOS.
+> On the Ubuntu desktop, I do s2idle first and restart the machine.
+> The machine can't restart successfully, so I need to press the 
+> power button to shutdown.
+> I tried  each of the following and the issue can't be triggered.
+> 1. disable secure boot in BIOS.
+> 2. intel_iommu=off.
+> 3. intel_iomm=igfx_off.
+> 4. nomodeset
+> 5. i915.modeset=0.
 > 
-> > > > It *could* but only in extreme situations, and again this isn't just
-> > > > handling errors from failure to prepare the hardware but also
-> > > > anything that happens after it.
-> > 
-> > > Okay, understood your point. You prefer to some interface provided by
-> > > dma engine before dmaengine_prep_slave_sg so that can_dma() can know
-> > > if this dma channel is ready indeed. But unfortunately, seems there is no
-> > one....
-> > 
-> > Well, this is free software and everything can be modified!  The other option
-> > would be framework changes in SPI that allowed us to indicate from the driver
-> > that an error occured before we started doing anything to the hardware (like
-> > happens here) through something like a special error code or splitting up the
-> > API.
-> Yes, but both assume spi controller driver could detect such dma failure before
-> dmaengine_prep_*(). Let's wait Vinod's comment for that if dmaengine_slave_config
-> could keep direction.
+> After I investigate further, find inte_iommu keeps checking the status 
+> of DMA_GSTS_TES.
+> During the procedure of restart, the driver would disable iommu 
+> translation and
+> check status of DMA_GSTS_TES until status of DMA_GSTS_TES is 0.
+> 
+> If you need more information, I can provide it.
 
-The direction is already in the prep_ call, so sending in
-dmaengine_slave_config is not required, pls pass it in the prep_ call
+Do you mind telling what platform is it?
 
-> But despite of that case, do you think this patch is valid for transfer_one() failue
-> in dma and fallback to pio?
-
--- 
-~Vinod
+Best regards,
+baolu
