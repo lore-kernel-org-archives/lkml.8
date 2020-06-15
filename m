@@ -2,36 +2,38 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5796AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E76208C7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1132208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgFOXnt (ORCPT
+        id S1727012AbgFOXnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:43:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:56754 "EHLO foss.arm.com"
+        Mon, 15 Jun 2020 19:43:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:56774 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726601AbgFOXnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:43:46 -0400
+        id S1726943AbgFOXns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:43:48 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 579A01042;
-        Mon, 15 Jun 2020 16:43:45 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C072811FB;
+        Mon, 15 Jun 2020 16:43:47 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 57A8F3F73C;
-        Mon, 15 Jun 2020 16:43:44 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C183B3F73C;
+        Mon, 15 Jun 2020 16:43:46 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
-Subject: [PATCH v2 2/4] sched/topology: Define and assign sched_domain flag metadata
-Date:   Tue, 16 Jun 2020 00:41:52 +0100
-Message-Id: <20200615234154.23982-3-valentin.schneider@arm.com>
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com
+Subject: [PATCH v2 4/4] arm, sched/topology: Remove SD_SHARE_POWERDOMAIN
+Date:   Tue, 16 Jun 2020 00:41:54 +0100
+Message-Id: <20200615234154.23982-5-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615234154.23982-1-valentin.schneider@arm.com>
 References: <20200615234154.23982-1-valentin.schneider@arm.com>
@@ -42,241 +44,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some expectations regarding how sched domain flags should be laid
-out, but none of them are checked or asserted in
-sched_domain_debug_one(). After staring at said flags for a while, I've
-come to realize they all (except *one*) fall in either of two categories:
+This flag was introduced in 2014 by commit
 
-- Shared with children: those flags are set from the base CPU domain
-  upwards. Any domain that has it set will have it set in its children. It
-  hints at "some property holds true / some behaviour is enabled until this
-  level".
+  d77b3ed5c9f8 ("sched: Add a new SD_SHARE_POWERDOMAIN for sched_domain")
 
-- Shared with parents: those flags are set from the topmost domain
-  downwards. Any domain that has it set will have it set in its parents. It
-  hints at "some property isn't visible / some behaviour is disabled until
-  this level".
+but AFAIA it was never leveraged by the scheduler. The closest thing I can
+think of is EAS caring about frequency domains, and it does that by
+leveraging performance domains.
 
-The odd one out is SD_PREFER_SIBLING, which is cleared below levels with
-SD_ASYM_CPUCAPACITY. The change was introduced by commit
+Remove the flag.
 
-  9c63e84db29b ("sched/core: Disable SD_PREFER_SIBLING on asymmetric CPU capacity domains")
-
-as it could break misfit migration on some systems. In light of this, we
-might want to change it back to make it fit one of the two categories and
-fix the issue another way.
-
-Tweak the sched_domain flag declaration to assign each flag an expected
-layout, and include the rationale for each flag "meta type" assignment as a
-comment. Consolidate the flag metadata into an array; the index of a flag's
-metadata can easily be found with log2(flag), IOW __ffs(flag).
-
+Suggested-by: Morten Rasmussen <morten.rasmussen@arm.com>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 ---
- include/linux/sched/sd_flags.h | 164 +++++++++++++++++++++++++++------
- include/linux/sched/topology.h |  14 ++-
- 2 files changed, 149 insertions(+), 29 deletions(-)
+ arch/arm/kernel/topology.c     |  2 +-
+ include/linux/sched/sd_flags.h | 20 ++++++--------------
+ kernel/sched/topology.c        | 10 +++-------
+ 3 files changed, 10 insertions(+), 22 deletions(-)
 
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index b5adaf744630..353f3ee660e4 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -243,7 +243,7 @@ void store_cpu_topology(unsigned int cpuid)
+ 
+ static inline int cpu_corepower_flags(void)
+ {
+-	return SD_SHARE_PKG_RESOURCES  | SD_SHARE_POWERDOMAIN;
++	return SD_SHARE_PKG_RESOURCES;
+ }
+ 
+ static struct sched_domain_topology_level arm_topology[] = {
 diff --git a/include/linux/sched/sd_flags.h b/include/linux/sched/sd_flags.h
-index 685bbe736945..6cad2bd954fe 100644
+index 6cad2bd954fe..48ed983a523e 100644
 --- a/include/linux/sched/sd_flags.h
 +++ b/include/linux/sched/sd_flags.h
-@@ -3,31 +3,139 @@
-  * sched-domains (multiprocessor balancing) flag declarations.
+@@ -83,21 +83,13 @@ SD_FLAG(SD_ASYM_CPUCAPACITY,    5, SDF_SHARED_PARENT)
   */
+ SD_FLAG(SD_SHARE_CPUCAPACITY,   6, SDF_SHARED_CHILD)
  
--/* Balance when about to become idle */
--SD_FLAG(SD_BALANCE_NEWIDLE,     0)
--/* Balance on exec */
--SD_FLAG(SD_BALANCE_EXEC,        1)
--/* Balance on fork, clone */
--SD_FLAG(SD_BALANCE_FORK,        2)
--/* Balance on wakeup */
--SD_FLAG(SD_BALANCE_WAKE,        3)
--/* Wake task to waking CPU */
--SD_FLAG(SD_WAKE_AFFINE,         4)
--/* Domain members have different CPU capacities */
--SD_FLAG(SD_ASYM_CPUCAPACITY,    5)
--/* Domain members share CPU capacity */
--SD_FLAG(SD_SHARE_CPUCAPACITY,   6)
--/* Domain members share power domain */
--SD_FLAG(SD_SHARE_POWERDOMAIN,   7)
--/* Domain members share CPU pkg resources */
--SD_FLAG(SD_SHARE_PKG_RESOURCES, 8)
--/* Only a single load balancing instance */
--SD_FLAG(SD_SERIALIZE,           9)
--/* Place busy groups earlier in the domain */
--SD_FLAG(SD_ASYM_PACKING,        10)
--/* Prefer to place tasks in a sibling domain */
--SD_FLAG(SD_PREFER_SIBLING,      11)
--/* sched_domains of this level overlap */
--SD_FLAG(SD_OVERLAP,             12)
--/* cross-node balancing */
--SD_FLAG(SD_NUMA,                13)
-+#ifndef SD_FLAG
-+#define SD_FLAG(x, y, z)
-+#endif
-+
-+/*
-+ * Expected flag uses
-+ *
-+ * SHARED_CHILD: These flags are meant to be set from the base domain upwards.
-+ * If a domain has this flag set, all of its children should have it set. This
-+ * is usually because the flag describes some shared resource (all CPUs in that
-+ * domain share the same foobar), or because they are tied to a scheduling
-+ * behaviour that we want to disable at some point in the hierarchy for
-+ * scalability reasons.
-+ *
-+ * In those cases it doesn't make sense to have the flag set for a domain but
-+ * not have it in (some of) its children: sched domains ALWAYS span their child
-+ * domains, so operations done with parent domains will cover CPUs in the lower
-+ * child domains.
-+ *
-+ *
-+ * SHARED_PARENT: These flags are meant to be set from the highest domain
-+ * downwards. If a domain has this flag set, all of its parents should have it
-+ * set. This is usually for topology properties that start to appear above a
-+ * certain level (e.g. domain starts spanning CPUs outside of the base CPU's
-+ * socket).
-+ */
-+#define SDF_SHARED_CHILD 0x1
-+#define SDF_SHARED_PARENT 0x2
-+
-+/*
-+ * Balance when about to become idle
-+ *
-+ * SHARED_CHILD: Set from the base domain up to cpuset.sched_relax_domain_level.
-+ */
-+SD_FLAG(SD_BALANCE_NEWIDLE,     0, SDF_SHARED_CHILD)
-+
-+/*
-+ * Balance on exec
-+ *
-+ * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ */
-+SD_FLAG(SD_BALANCE_EXEC,        1, SDF_SHARED_CHILD)
-+
-+/*
-+ * Balance on fork, clone
-+ *
-+ * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ */
-+SD_FLAG(SD_BALANCE_FORK,        2, SDF_SHARED_CHILD)
-+
-+/*
-+ * Balance on wakeup
-+ *
-+ * SHARED_CHILD: Set from the base domain up to cpuset.sched_relax_domain_level.
-+ */
-+SD_FLAG(SD_BALANCE_WAKE,        3, SDF_SHARED_CHILD)
-+
-+/*
-+ * Consider waking task on waking CPU.
-+ *
-+ * SHARED_CHILD: Set from the base domain up to the NUMA reclaim level.
-+ */
-+SD_FLAG(SD_WAKE_AFFINE,         4, SDF_SHARED_CHILD)
-+
-+/*
-+ * Domain members have different CPU capacities
-+ *
-+ * SHARED_PARENT: Set from the topmost domain down to the first domain where
-+ * asymmetry is detected.
-+ */
-+SD_FLAG(SD_ASYM_CPUCAPACITY,    5, SDF_SHARED_PARENT)
-+
-+/*
-+ * Domain members share CPU capacity (i.e. SMT)
-+ *
-+ * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-+ * CPU capacity.
-+ */
-+SD_FLAG(SD_SHARE_CPUCAPACITY,   6, SDF_SHARED_CHILD)
-+
-+/*
-+ * Domain members share power domain
-+ *
-+ * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-+ * the same power domain.
-+ */
-+SD_FLAG(SD_SHARE_POWERDOMAIN,   7, SDF_SHARED_CHILD)
-+
-+/*
-+ * Domain members share CPU package resources (i.e. caches)
-+ *
-+ * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
-+ * the same cache(s).
-+ */
-+SD_FLAG(SD_SHARE_PKG_RESOURCES, 8, SDF_SHARED_CHILD)
-+
-+/*
-+ * Only a single load balancing instance
-+ *
-+ * SHARED_PARENT: Set for all NUMA levels (incl. NODE). Could be set
-+ * from a different level upwards, but it doesn't change that if a domain has
-+ * this flag set, then all of its parents need to have it too (otherwise the
-+ * serialization doesn't make sense).
-+ */
-+SD_FLAG(SD_SERIALIZE,           9, SDF_SHARED_PARENT)
-+
-+/*
-+ * Place busy tasks earlier in the domain
-+ *
-+ * SHARED_CHILD: Usually set on the SMT level. Technically could be set further
-+ * up, but currently assumed to be set from the base domain upwards (see
-+ * update_top_cache_domain()).
-+ */
-+SD_FLAG(SD_ASYM_PACKING,        10, SDF_SHARED_CHILD)
-+
-+/*
-+ * Prefer to place tasks in a sibling domain
-+ *
-+ * NONE: Set up until domains start spanning NUMA nodes. Close to being a
-+ * SHARED_CHILD flag, but cleared below domains with SD_ASYM_CPUCAPACITY.
-+ */
-+SD_FLAG(SD_PREFER_SIBLING,      11, 0)
-+
-+/*
-+ * sched_domains of this level overlap
-+ *
-+ * SHARED_PARENT: Set for all NUMA levels above NODE.
-+ */
-+SD_FLAG(SD_OVERLAP,             12, SDF_SHARED_PARENT)
-+
-+/*
-+ * cross-node balancing
-+ *
-+ * SHARED_PARENT: Set for all NUMA levels above NODE.
-+ */
-+SD_FLAG(SD_NUMA,                13, SDF_SHARED_PARENT)
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 03be762b652e..35c2816d8ed6 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -11,10 +11,22 @@
+-/*
+- * Domain members share power domain
+- *
+- * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
+- * the same power domain.
+- */
+-SD_FLAG(SD_SHARE_POWERDOMAIN,   7, SDF_SHARED_CHILD)
+-
+ /*
+  * Domain members share CPU package resources (i.e. caches)
+  *
+  * SHARED_CHILD: Set from the base domain up until spanned CPUs no longer share
+  * the same cache(s).
   */
- #ifdef CONFIG_SMP
+-SD_FLAG(SD_SHARE_PKG_RESOURCES, 8, SDF_SHARED_CHILD)
++SD_FLAG(SD_SHARE_PKG_RESOURCES, 7, SDF_SHARED_CHILD)
  
--#define SD_FLAG(name, idx) static const unsigned int name = BIT(idx);
-+#define SD_FLAG(name, idx, type) static const unsigned int name = BIT(idx);
- #include <linux/sched/sd_flags.h>
- #undef SD_FLAG
+ /*
+  * Only a single load balancing instance
+@@ -107,7 +99,7 @@ SD_FLAG(SD_SHARE_PKG_RESOURCES, 8, SDF_SHARED_CHILD)
+  * this flag set, then all of its parents need to have it too (otherwise the
+  * serialization doesn't make sense).
+  */
+-SD_FLAG(SD_SERIALIZE,           9, SDF_SHARED_PARENT)
++SD_FLAG(SD_SERIALIZE,           8, SDF_SHARED_PARENT)
  
-+#ifdef CONFIG_SCHED_DEBUG
-+#define SD_FLAG(_name, idx, _meta_flags) [idx] = {.meta_flags = _meta_flags, .name = #_name},
-+
-+static const struct {
-+	unsigned int meta_flags;
-+	char *name;
-+} sd_flag_debug[] = {
-+#include <linux/sched/sd_flags.h>
-+};
-+#undef SD_FLAG
-+#endif
-+
- #ifdef CONFIG_SCHED_SMT
- static inline int cpu_smt_flags(void)
- {
+ /*
+  * Place busy tasks earlier in the domain
+@@ -116,7 +108,7 @@ SD_FLAG(SD_SERIALIZE,           9, SDF_SHARED_PARENT)
+  * up, but currently assumed to be set from the base domain upwards (see
+  * update_top_cache_domain()).
+  */
+-SD_FLAG(SD_ASYM_PACKING,        10, SDF_SHARED_CHILD)
++SD_FLAG(SD_ASYM_PACKING,        9, SDF_SHARED_CHILD)
+ 
+ /*
+  * Prefer to place tasks in a sibling domain
+@@ -124,18 +116,18 @@ SD_FLAG(SD_ASYM_PACKING,        10, SDF_SHARED_CHILD)
+  * NONE: Set up until domains start spanning NUMA nodes. Close to being a
+  * SHARED_CHILD flag, but cleared below domains with SD_ASYM_CPUCAPACITY.
+  */
+-SD_FLAG(SD_PREFER_SIBLING,      11, 0)
++SD_FLAG(SD_PREFER_SIBLING,      10, 0)
+ 
+ /*
+  * sched_domains of this level overlap
+  *
+  * SHARED_PARENT: Set for all NUMA levels above NODE.
+  */
+-SD_FLAG(SD_OVERLAP,             12, SDF_SHARED_PARENT)
++SD_FLAG(SD_OVERLAP,             11, SDF_SHARED_PARENT)
+ 
+ /*
+  * cross-node balancing
+  *
+  * SHARED_PARENT: Set for all NUMA levels above NODE.
+  */
+-SD_FLAG(SD_NUMA,                13, SDF_SHARED_PARENT)
++SD_FLAG(SD_NUMA,                12, SDF_SHARED_PARENT)
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 2082a07b91a9..1dd5b6405d62 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -165,8 +165,7 @@ static int sd_degenerate(struct sched_domain *sd)
+ 			 SD_BALANCE_EXEC |
+ 			 SD_SHARE_CPUCAPACITY |
+ 			 SD_ASYM_CPUCAPACITY |
+-			 SD_SHARE_PKG_RESOURCES |
+-			 SD_SHARE_POWERDOMAIN)) {
++			 SD_SHARE_PKG_RESOURCES)) {
+ 		if (sd->groups != sd->groups->next)
+ 			return 0;
+ 	}
+@@ -197,8 +196,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
+ 			    SD_ASYM_CPUCAPACITY |
+ 			    SD_SHARE_CPUCAPACITY |
+ 			    SD_SHARE_PKG_RESOURCES |
+-			    SD_PREFER_SIBLING |
+-			    SD_SHARE_POWERDOMAIN);
++			    SD_PREFER_SIBLING);
+ 		if (nr_node_ids == 1)
+ 			pflags &= ~SD_SERIALIZE;
+ 	}
+@@ -1309,7 +1307,6 @@ int __read_mostly		node_reclaim_distance = RECLAIM_DISTANCE;
+  *   SD_SHARE_CPUCAPACITY   - describes SMT topologies
+  *   SD_SHARE_PKG_RESOURCES - describes shared caches
+  *   SD_NUMA                - describes NUMA topologies
+- *   SD_SHARE_POWERDOMAIN   - describes shared power domain
+  *
+  * Odd one out, which beside describing the topology has a quirk also
+  * prescribes the desired behaviour that goes along with it:
+@@ -1320,8 +1317,7 @@ int __read_mostly		node_reclaim_distance = RECLAIM_DISTANCE;
+ 	(SD_SHARE_CPUCAPACITY	|	\
+ 	 SD_SHARE_PKG_RESOURCES |	\
+ 	 SD_NUMA		|	\
+-	 SD_ASYM_PACKING	|	\
+-	 SD_SHARE_POWERDOMAIN)
++	 SD_ASYM_PACKING)
+ 
+ static struct sched_domain *
+ sd_init(struct sched_domain_topology_level *tl,
 -- 
 2.27.0
 
