@@ -2,61 +2,89 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E3CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7F02067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224032078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592239308;
+	bh=Sg9pbTBM29sML7ioDwEww4Qaaa7omQvS8yZyfbKVLPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OSThk0XiveHSr5TQBfXDi06E1he3MDkPd/JJXeSmvecNvOZkf4g2qI1gmkJqLBNnM
+	 7Ft1Qizrky0ecTXkq+jI7jJ6yjYsCLwxGRl0VeoGlI3Fy+ZeqIza5EK1MHqN+3Hi4I
+	 smXcEU5D9dOJUubKbalzatWc19pNaxyoCwsXTqzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbgFOQli (ORCPT
+        id S1731101AbgFOQlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:41:38 -0400
-Received: from verein.lst.de ([213.95.11.211]:34309 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbgFOQlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:41:37 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 14E2268AFE; Mon, 15 Jun 2020 18:41:34 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 18:41:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/6] exec: simplify the compat syscall handling
-Message-ID: <20200615164133.GA23493@lst.de>
-References: <20200615130032.931285-1-hch@lst.de> <20200615130032.931285-3-hch@lst.de> <CAK8P3a0bRD3RzE_X6Tjzu9Tj+OhHhP+S=k6+VYODBGko8oQhew@mail.gmail.com> <20200615141239.GA12951@lst.de> <CAK8P3a2MeZhayZWkPbd4Ckq3n410p_n808NJTwN=JjzqHRiAXg@mail.gmail.com> <20200615144310.GA15101@lst.de> <CAK8P3a17h782gO65qJ9Mmz0EuiTSKQPEyr_=nvqOtnmQZuh9Kw@mail.gmail.com> <20200615150926.GA17108@lst.de> <CAMzpN2htYX7s6pmRg-c8qwZL1f1_+sB=ztDG_L=617hWsm-=8g@mail.gmail.com>
+        Mon, 15 Jun 2020 12:41:46 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37841 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730985AbgFOQlm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:41:42 -0400
+Received: by mail-il1-f195.google.com with SMTP id e11so15914850ilr.4;
+        Mon, 15 Jun 2020 09:41:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3Urph/U1UKzR1PGfVK4c+aNc5CstzpffUrGS0jzQZrg=;
+        b=NWOFhuynPH9TBcqI22lYfH9Y8BplE/rJ/75sF3nhHZSWGc5lGXlSw6WCVnOsyE4N8c
+         Rd6x+5IJZDc/mxrsyFf3FWwIl5eWbZfoaP5aB5H/63K04kCz04OY+UETq7F6kELlgxVL
+         YltXUe9cSlkktKV4p5JTpHDups5wDgIy2gCIFZG9FN1WBX5/SHb5iqWTB1GxDRvwomfd
+         fmPf5DOld6I9iV4FWVj1yWZAbnSDHbdC3JkxugL0eLWoN8uGpJstj6e6KPDOwJYHbBUC
+         x1Qrwkrox+WBidDYUNPGT6PaZqWa5ax/oWIrymrFNl4Hx08dpQ0e2zEGuCdfPaCc5Fvr
+         sYDA==
+X-Gm-Message-State: AOAM533ACBNglswbY2qrmTzcJBtw8xkXK3IScFisCSJloUYlLWpG098d
+        7kAB1B0Hi3ylx+GpGyJA6g==
+X-Google-Smtp-Source: ABdhPJzR+1azivHuOTLfcrjgVgEufsot5KpaUT3Obr+FfX/SVPDRyiHptwaIbAJrewGwD3KKNi3pSA==
+X-Received: by 2002:a92:c985:: with SMTP id y5mr27865848iln.50.1592239300220;
+        Mon, 15 Jun 2020 09:41:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id k185sm8463534ilk.16.2020.06.15.09.41.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:41:39 -0700 (PDT)
+Received: (nullmailer pid 1922706 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:41:38 -0000
+Date:   Mon, 15 Jun 2020 10:41:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     festevam@gmail.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Linux-imx@nxp.com, ulf.hansson@linaro.org, s.hauer@pengutronix.de,
+        shawnguo@kernel.org, kernel@pengutronix.de, mpa@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org
+Subject: Re: [PATCH V2 3/3] dt-bindings: mmc: Convert mxs mmc to json-schema
+Message-ID: <20200615164138.GA1922410@bogus>
+References: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
+ <1591234886-15351-4-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMzpN2htYX7s6pmRg-c8qwZL1f1_+sB=ztDG_L=617hWsm-=8g@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1591234886-15351-4-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 11:33:49AM -0400, Brian Gerst wrote:
-> If you move those aliases above all the __SYSCALL_* defines it will
-> work, since that will get the forward declaration too.  This would be
-> the simplest workaround.
+On Thu, 04 Jun 2020 09:41:26 +0800, Anson Huang wrote:
+> Convert the MXS MMC binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- add "unevaluatedProperties: false".
+> ---
+>  Documentation/devicetree/bindings/mmc/mxs-mmc.txt  | 27 ----------
+>  Documentation/devicetree/bindings/mmc/mxs-mmc.yaml | 58 ++++++++++++++++++++++
+>  2 files changed, 58 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
+> 
 
-That compiles and also passes my exaustive x32 tests (chroot + ls -l).
-
-This is the updated version:
-
-http://git.infradead.org/users/hch/misc.git/commitdiff/c8d319711ad2f53be003ae8e9be08519068bdcee
+Applied, thanks!
