@@ -2,124 +2,170 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B121BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79DDF2068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0862068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:29:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592209789;
+	bh=23TYPFpEKvNG+M9i5OGqsm7+0VGa7qmB7xwajbtz/wU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ulnbj/qwl2Cc1QQk644ep599V8McU+FuNybJg9ZL8hs97SDug9S12z6Vg7J97F87A
+	 2N2LXVBLEsFpAFoZi6nBSFJM1Q2kgSIJ93ICOQjMGC8aF/2jPmz8wyiiaDNyPEMxkn
+	 n93oc4VS1wSDhE5jefVj4rKKVDn06lgn3AA4AN3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgFOI3d (ORCPT
+        id S1729066AbgFOI3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:29:33 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5890 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728872AbgFOI3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:29:32 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 22705C249E38EBCC0C97;
-        Mon, 15 Jun 2020 16:29:08 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 15 Jun
- 2020 16:29:00 +0800
-Subject: Re: [PATCH] erofs: Eliminate usage of uninitialized_var() macro
-To:     Gao Xiang <hsiangkao@redhat.com>, Jason Yan <yanaijie@huawei.com>
-CC:     Kees Cook <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <xiang@kernel.org>, <linux-erofs@lists.ozlabs.org>
-References: <20200615040141.3627746-1-yanaijie@huawei.com>
- <20200615072521.GA25317@xiangao.remote.csb>
- <783fe4f9-fb1f-7f5e-c900-7e30d5c85222@huawei.com>
- <20200615080714.GB25317@xiangao.remote.csb>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <4319ff76-c61f-e266-354f-83526207c767@huawei.com>
-Date:   Mon, 15 Jun 2020 16:29:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 15 Jun 2020 04:29:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728920AbgFOI3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:29:45 -0400
+Received: from kernel.org (unknown [87.70.26.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0A822068E;
+        Mon, 15 Jun 2020 08:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592209784;
+        bh=23TYPFpEKvNG+M9i5OGqsm7+0VGa7qmB7xwajbtz/wU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Flm5vp3x+Sr5xNiY+TsswHMxMMM66rFoAkf6bDLGOOmK//WbN06VBkC9RP4FMU2a5
+         qJKxQkn0M5uE/Jm/NEYcJkWZMEsbC65SPM8S9WC/pF9tXYRYufOOstFYKxjjrB1AUf
+         fwxcH6K7gdb2bGQcqv9kakRnWoneX0oeF6edxIqM=
+Date:   Mon, 15 Jun 2020 11:29:37 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     akpm@linux-foundation.org, bhe@redhat.com, geert@linux-m68k.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mm@kvack.org, rppt@linux.ibm.com
+Subject: Re: [PATCH 04/21] mm: free_area_init: use maximal zone PFNs rather
+ than zone sizes
+Message-ID: <20200615082937.GB7882@kernel.org>
+References: <20200412194859.12663-5-rppt@kernel.org>
+ <f53e68db-ed81-6ef6-5087-c7246d010ea2@linux-m68k.org>
+ <20200615062234.GA7882@kernel.org>
+ <24563231-ed19-6f4f-617e-4d6bfc7553e4@linux-m68k.org>
 MIME-Version: 1.0
-In-Reply-To: <20200615080714.GB25317@xiangao.remote.csb>
-Content-Type: text/plain; charset="gbk"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24563231-ed19-6f4f-617e-4d6bfc7553e4@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/15 16:07, Gao Xiang wrote:
-> On Mon, Jun 15, 2020 at 03:43:09PM +0800, Jason Yan wrote:
->>
->>
->> �?2020/6/15 15:25, Gao Xiang 写道:
->>> Hi Jason,
->>>
->>> On Mon, Jun 15, 2020 at 12:01:41PM +0800, Jason Yan wrote:
->>>> This is an effort to eliminate the uninitialized_var() macro[1].
->>>>
->>>> The use of this macro is the wrong solution because it forces off ANY
->>>> analysis by the compiler for a given variable. It even masks "unused
->>>> variable" warnings.
->>>>
->>>> Quoted from Linus[2]:
->>>>
->>>> "It's a horrible thing to use, in that it adds extra cruft to the
->>>> source code, and then shuts up a compiler warning (even the _reliable_
->>>> warnings from gcc)."
->>>>
->>>> The gcc option "-Wmaybe-uninitialized" has been disabled and this change
->>>> will not produce any warnnings even with "make W=1".
->>>>
->>>> [1] https://github.com/KSPP/linux/issues/81
->>>> [2] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
->>>>
->>>> Cc: Kees Cook <keescook@chromium.org>
->>>> Cc: Chao Yu <yuchao0@huawei.com>
->>>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->>>> ---
->>>
->>> I'm fine with the patch since "-Wmaybe-uninitialized" has been disabled and
->>> I've also asked Kees for it in private previously.
->>>
->>> I still remembered that Kees sent out a treewide patch. Sorry about that
->>> I don't catch up it... But what is wrong with the original patchset?
->>>
->>
->> Yes, Kees has remind me of that and I will let him handle it. So you can
->> ignore this patch.
-> 
-> Okay, I was just wondering if this part should be send out via EROFS tree
-> for this cycle. However if there was an automatic generated patch by Kees,
-> I think perhaps Linus could pick them out directly. But anyway, both ways
-> are fine with me. ;) Ping me when needed.
+(reduced the spam list)
 
-Either way is okay to me.
+On Mon, Jun 15, 2020 at 05:17:28PM +1000, Greg Ungerer wrote:
+> Hi Mike,
+> 
+> On 15/6/20 4:22 pm, Mike Rapoport wrote:
+> > On Mon, Jun 15, 2020 at 01:53:42PM +1000, Greg Ungerer wrote:
+> > > From: Mike Rapoport <rppt@linux.ibm.com>
+> > > > Currently, architectures that use free_area_init() to initialize memory map
+> > > > and node and zone structures need to calculate zone and hole sizes. We can
+> > > > use free_area_init_nodes() instead and let it detect the zone boundaries
+> > > > while the architectures will only have to supply the possible limits for
+> > > > the zones.
+> > > > 
+> > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > > 
+> > > This is causing some new warnings for me on boot on at least one non-MMU m68k target:
+> > 
+> > There were a couple of changes that cause this. The free_area_init()
+> > now relies on memblock data and architectural limits for zone sizes
+> > rather than on explisit pfns calculated by the arch code. I've update
+> > motorola variant and missed coldfire. Angelo sent a fix for mcfmmu.c
+> > [1] and I've updated it to include nommu as well
+> > 
+> > [1] https://lore.kernel.org/linux-m68k/20200614225119.777702-1-angelo.dureghello@timesys.com
+> > 
+> > > From 55b8523df2a5c4565b132c0691990f0821040fec Mon Sep 17 00:00:00 2001
+> > From: Angelo Dureghello <angelo.dureghello@timesys.com>
+> > Date: Mon, 15 Jun 2020 00:51:19 +0200
+> > Subject: [PATCH] m68k: fix registration of memory regions with memblock
+> > 
+> > Commit 3f08a302f533 ("mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP option")
+> > introduced assumption that UMA systems have their memory at node 0 and
+> > updated most of them, but it forgot nommu and coldfire variants of m68k.
+> > 
+> > The later change in free area initialization in commit fa3354e4ea39 ("mm:
+> > free_area_init: use maximal zone PFNs rather than zone sizes") exposed that
+> > and caused a lot of "BUG: Bad page state in process swapper" reports.
+> 
+> Even with this patch applied I am still seeing the same messages.
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Argh, it was to early in the morning...
+Can you please try the one below?
 
-Thanks,
+It seems that coldfire didn't register all its physical memory with
+memblock and the pfn list was damaged because of that.
 
+
+diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
+index e779b19e0193..f66f4b1d062e 100644
+--- a/arch/m68k/kernel/setup_no.c
++++ b/arch/m68k/kernel/setup_no.c
+@@ -138,7 +138,8 @@ void __init setup_arch(char **cmdline_p)
+ 	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
+ 		 __bss_stop, memory_start, memory_start, memory_end);
+ 
+-	memblock_add(memory_start, memory_end - memory_start);
++	memblock_add(_rambase, memory_end - _rambase);
++	memblock_reserve(_rambase, memory_start - _rambase);
+ 
+ 	/* Keep a copy of command line */
+ 	*cmdline_p = &command_line[0];
+
+> Regards
+> Greg
 > 
-> Thanks,
-> Gao Xiang
 > 
->>
->> Thanks,
->> Jason
->>
->>> Thanks,
->>> Gao Xiang
->>>
->>>
->>> .
->>>
->>
 > 
-> .
-> 
+> > Using memblock_add_node() with nid = 0 to register memory banks solves the
+> > problem.
+> > 
+> > Fixes: 3f08a302f533 ("mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP option")
+> > Fixes: fa3354e4ea39 ("mm: free_area_init: use maximal zone PFNs rather than zone sizes")
+> > Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+> > Co-developed-by: Mike Rapoport <rppt@linux.ibm.com>
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> >   arch/m68k/kernel/setup_no.c | 2 +-
+> >   arch/m68k/mm/mcfmmu.c       | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
+> > index e779b19e0193..0c4589a39ba9 100644
+> > --- a/arch/m68k/kernel/setup_no.c
+> > +++ b/arch/m68k/kernel/setup_no.c
+> > @@ -138,7 +138,7 @@ void __init setup_arch(char **cmdline_p)
+> >   	pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
+> >   		 __bss_stop, memory_start, memory_start, memory_end);
+> > -	memblock_add(memory_start, memory_end - memory_start);
+> > +	memblock_add_node(memory_start, memory_end - memory_start, 0);
+> >   	/* Keep a copy of command line */
+> >   	*cmdline_p = &command_line[0];
+> > diff --git a/arch/m68k/mm/mcfmmu.c b/arch/m68k/mm/mcfmmu.c
+> > index 29f47923aa46..7d04210d34f0 100644
+> > --- a/arch/m68k/mm/mcfmmu.c
+> > +++ b/arch/m68k/mm/mcfmmu.c
+> > @@ -174,7 +174,7 @@ void __init cf_bootmem_alloc(void)
+> >   	m68k_memory[0].addr = _rambase;
+> >   	m68k_memory[0].size = _ramend - _rambase;
+> > -	memblock_add(m68k_memory[0].addr, m68k_memory[0].size);
+> > +	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0);
+> >   	/* compute total pages in system */
+> >   	num_pages = PFN_DOWN(_ramend - _rambase);
+> > 
+
+-- 
+Sincerely yours,
+Mike.
