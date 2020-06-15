@@ -2,129 +2,103 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AB9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5593C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E28920739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63972080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592243121;
+	bh=x7aWa3ERynTO62vC4sDxAGQx/aHtiEifeDzxKPdV7/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2scXHwXE0n5BjwJM5aLD1FTdJuo8J11Jm6tovEzqQAX5gfpVcMxXLk0qAg/cNKVLq
+	 SugwcGb99XdOqT9eryUBKzvmyretjhCYb56iUeD0+PX0Ue6r1IYx2FRelwzZI0hF1z
+	 DgUEADbSrl5mAEgThIklonaij+QuWPfg900VdPjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbgFORor (ORCPT
+        id S1731246AbgFORpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:44:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53084 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728585AbgFORoq (ORCPT
+        Mon, 15 Jun 2020 13:45:20 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40524 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbgFORpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:44:46 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FHfUGt010936;
-        Mon, 15 Jun 2020 13:44:39 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31np7brx08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 13:44:39 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FHfrn1013137;
-        Mon, 15 Jun 2020 13:44:39 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31np7brwyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 13:44:39 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FHeKHU030081;
-        Mon, 15 Jun 2020 17:44:37 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 31mpe840c8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 17:44:37 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FHiZMp59047984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 17:44:35 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F20B742045;
-        Mon, 15 Jun 2020 17:44:34 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D126842042;
-        Mon, 15 Jun 2020 17:44:33 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.184.11])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jun 2020 17:44:33 +0000 (GMT)
-Message-ID: <1592243068.11061.155.camel@linux.ibm.com>
-Subject: Re: [PATCH 4/5] LSM: Define SELinux function to measure security
- state
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        John Johansen <john.johansen@canonical.com>
-Cc:     Stephen Smalley <stephen.smalley@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 15 Jun 2020 13:44:28 -0400
-In-Reply-To: <2df1bc4f-675d-7868-de5b-1256346f982e@schaufler-ca.com>
-References: <20200613024130.3356-1-nramas@linux.microsoft.com>
-         <20200613024130.3356-5-nramas@linux.microsoft.com>
-         <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
-         <a9a20aa5-963e-5f49-9391-0673fdda378e@linux.microsoft.com>
-         <2df1bc4f-675d-7868-de5b-1256346f982e@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_07:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 impostorscore=0 clxscore=1015
- cotscore=-2147483648 mlxscore=0 lowpriorityscore=0 phishscore=0
- suspectscore=0 spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006150130
+        Mon, 15 Jun 2020 13:45:19 -0400
+Received: by mail-il1-f195.google.com with SMTP id t8so187996ilm.7;
+        Mon, 15 Jun 2020 10:45:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yY9vsdbUetvZHFE31+hfyR4zS8VWyOrgrboCYCv/8Es=;
+        b=Ad+HGS6IhiQAKe6aWHl9u1CsHcl2nBr2y9cFsNKUX07qldfl/lUKKGmoPIFsIjZbk0
+         ClsrbLeA6vKNI++uRbmqYKbalPsi6RZlEKDSaC0tEqLyh8h9wGSXF3R5J/7St+bLYXbU
+         775ZBLEIm9dN/3rxndWWFNVGPuilhl7LwFnaJXV5c0myQlQwMbvsXwrZ4TlGR5Js7krP
+         aNN/ctDoMKcunKDZ5k8BckAUTfMflqKQSR2KZIMK/c8hGBQTVTjeA1YgChS6IGKtbbMu
+         KnNhUbkbX0FCnGOUIPfP+s/Ij+gmC/+aHKFNsij2CvvIQEhNfCtFgZ6S+CpvzF0/0rg/
+         gySQ==
+X-Gm-Message-State: AOAM531te8qLfIqPnKI7o5KQ5dUOrkigk+BgJuG06HtENKqbJ7So3zjK
+        KvXGaZ4nYr60nmKjiGSBdA==
+X-Google-Smtp-Source: ABdhPJwOXqazAV/sM0GMJuEhVIuLysGJdm4vB1cY73m25QTyGn1nHq3E9zbNcU5wGs7GjtP99KP3sg==
+X-Received: by 2002:a92:c985:: with SMTP id y5mr28134527iln.50.1592243118446;
+        Mon, 15 Jun 2020 10:45:18 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id z16sm8322579ilz.64.2020.06.15.10.45.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 10:45:17 -0700 (PDT)
+Received: (nullmailer pid 2023356 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:45:16 -0000
+Date:   Mon, 15 Jun 2020 11:45:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: net: dsa: qca8k: document SGMII
+ properties
+Message-ID: <20200615174516.GA2018349@bogus>
+References: <cover.1591380105.git.noodles@earth.li>
+ <ca767d2dd00280f7c0826c133d1ff6f262b6736d.1591380105.git.noodles@earth.li>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca767d2dd00280f7c0826c133d1ff6f262b6736d.1591380105.git.noodles@earth.li>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Cc'ing John)
-
-On Mon, 2020-06-15 at 10:33 -0700, Casey Schaufler wrote:
-> On 6/15/2020 9:45 AM, Lakshmi Ramasubramanian wrote:
-> > On 6/15/20 4:57 AM, Stephen Smalley wrote:
-> >
-> > Hi Stephen,
-> >
-> > Thanks for reviewing the patches.
-> >
-> >>> +void security_state_change(char *lsm_name, void *state, int state_len)
-> >>> +{
-> >>> +       ima_lsm_state(lsm_name, state, state_len);
-> >>> +}
-> >>> +
-> >>
-> >> What's the benefit of this trivial function instead of just calling
-> >> ima_lsm_state() directly?
-> >
-> > One of the feedback Casey Schaufler had given earlier was that calling an IMA function directly from SELinux (or, any of the Security Modules) would be a layering violation.
+On Fri, Jun 05, 2020 at 07:10:02PM +0100, Jonathan McDowell wrote:
+> This patch documents the qca8k's SGMII related properties that allow
+> configuration of the SGMII port.
 > 
-> Hiding the ima_lsm_state() call doesn't address the layering.
-> The point is that SELinux code being called from IMA (or the
-> other way around) breaks the subsystem isolation. Unfortunately,
-> it isn't obvious to me how you would go about what you're doing
-> without integrating the subsystems.
+> Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> ---
+>  Documentation/devicetree/bindings/net/dsa/qca8k.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> index ccbc6d89325d..9e7d74a248ad 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
+> @@ -11,7 +11,11 @@ Required properties:
+>  
+>  Optional properties:
+>  
+> +- disable-serdes-autoneg: Boolean, disables auto-negotiation on the SerDes
+>  - reset-gpios: GPIO to be used to reset the whole device
+> +- sgmii-delay: Boolean, presence delays SGMII clock by 2ns
+> +- sgmii-mode: String, operation mode of the SGMII interface.
+> +  Supported values are: "basex", "mac", "phy".
 
-Casey, I'm not sure why you think there is a layering issue here.
- There were multiple iterations of IMA before it was upstreamed.  One
-iteration had separate integrity hooks(LIM).  Only when the IMA calls
-and the security hooks are co-located, are they combined, as requested
-by Linus.
+Either these should be common properties and documented in a common 
+spot or they need vendor prefixes. They seem like they former to me 
+(though 'sgmii-delay' would need to be more general and take a time).
 
-There was some AppArmour discussion about calling IMA directly, but I
-haven't heard about it in a while or seen the patch.
-
-Mimi
+Rob
