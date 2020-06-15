@@ -2,131 +2,244 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F37AA20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555B220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:38:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="UYDuKMmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbgFOOh5 (ORCPT
+        id S1730607AbgFOOiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:37:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2654 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730353AbgFOOh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:37:57 -0400
-IronPort-SDR: h3stUm/CZrdTIziMwB+c9BTDUL1JFocgWdhQ36MfzLQyJbfCPUqpVLgKzF3Ca4CWqGKTN2k1wd
- 5ysEacp0vYdQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 07:37:56 -0700
-IronPort-SDR: HDmyH6Zd5XJufDTOy4f5Xd7UADrGqZ8lXpJOBhuqhz0Ql7RwxgdACz7uySYMjKgu4HDmOVEup0
- M+puvSTr+AMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="308145953"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 15 Jun 2020 07:37:56 -0700
-Received: from [10.249.225.172] (abudanko-mobl.ccr.corp.intel.com [10.249.225.172])
-        by linux.intel.com (Postfix) with ESMTP id AC5A8580698;
-        Mon, 15 Jun 2020 07:37:54 -0700 (PDT)
-Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static polled
- file descriptors
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <5de4b954-24f0-1e8d-5a0d-7b12783b8218@linux.intel.com>
- <3c92a0ad-d7d3-4e78-f0b8-1d3a7122c69e@linux.intel.com>
- <20200605105051.GA1404794@krava> <20200605113834.GC1404794@krava>
- <be40edeb-0cb9-5e11-2a22-8392316cdced@linux.intel.com>
- <49eca46e-4d0e-2ae5-d7d9-e37a4d680270@linux.intel.com>
- <20200608084344.GA1520715@krava>
- <2d80a43a-54cf-3d12-92fd-066217c95d76@linux.intel.com>
- <20200608160758.GD1558310@krava>
- <bde9bcc3-9ec0-6e37-26f6-139b038ad3de@linux.intel.com>
- <20200615123048.GB2088119@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <8b29e324-eb8d-2266-562b-ca46aec76a3e@linux.intel.com>
-Date:   Mon, 15 Jun 2020 17:37:53 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 10:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729243AbgFOOiv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:38:51 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9140DC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:38:51 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id h185so7907807pfg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M1NtAaJQbnuNgbUb1D/FsI0at4jS7yofQQpYC64HM5M=;
+        b=UYDuKMmOwZdlZz6/KeX+EVpriSho+LhNzH7LrG+Thh/SIIZmeyofDwtXtRWFG31XqV
+         b/bf1jkuLyzT9zFLkumChihEfVoedph8rF6sN3z08OTcMv8OXaZNiQv0ND0yalI3ewz8
+         hDISCJlPgvyphk7rwMFtXmg1y8CIasdYPW6Y+uQ9LzPXj53kCVj8wvKcrIwkinIX+CP1
+         NIQpPszxYenej3pFLpnHQoUhsobAlifGRpMF4gwTV9zkgR5YsyboWYcIFtVCpLtX0kKH
+         VVwDYyCrtXxIKQLEbYWBnnKoqKxATGIeEduSFD2hFV77eNhdqRPzMvQuMl//iCVmuqVI
+         +xMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M1NtAaJQbnuNgbUb1D/FsI0at4jS7yofQQpYC64HM5M=;
+        b=TvMO+242Ae7gPXG5gnychGV03NRzgbvjalIKoTR03HjOeM2c9XP62CZI/l9Bl9A1VZ
+         fgopC5JFn7kcyT7RehCKH6yLVIlCRN6I+DMVYJtvxOlLm29zb06PKkqYMtQZWaXD8FMl
+         7nFxFlJVU0cRD7xEIj5eQUIKni4QJsvDrP66bpxSRPoHNmyn4dn22OYEuUr5I//Gua1b
+         exc6+N+xfNk3KymrRX5cu+sBtLJcHoejZzUNh4FUAk0pKEw3WawF7lF+P7SU+KUN9XcH
+         gsDFPDwMUJ/RccohbLjDYGXW574GKmvZzAZhfRp3bHtqr5fr4M8PO/49VM+uDAQzAkY4
+         V2AA==
+X-Gm-Message-State: AOAM530et5jo2NCXvKoST5+pGqG6utClNUDIgemT2Lg0kjbiPmnh48Er
+        gY5d3qtbDAEnywM9lZDNSMi67gBZP1Q=
+X-Google-Smtp-Source: ABdhPJxiGsnXmYIs7G3t9SMJRek0VnDmtWmhF+DPVXkG3tqC3vCgC7Z/gu3POHo0euBdrQ1pF0bQ1g==
+X-Received: by 2002:a62:3382:: with SMTP id z124mr23666064pfz.263.1592231930594;
+        Mon, 15 Jun 2020 07:38:50 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.gmail.com with ESMTPSA id y10sm12327239pgi.54.2020.06.15.07.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 07:38:49 -0700 (PDT)
+From:   Mark Salyzyn <salyzyn@android.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Chiawei Wang <chiaweiwang@google.com>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Allison Randal <allison@lohutok.net>
+Subject: [PATCH v2]: arch: arm64: vdso: export the symbols for time()
+Date:   Mon, 15 Jun 2020 07:38:24 -0700
+Message-Id: <20200615143838.143137-1-salyzyn@android.com>
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
 MIME-Version: 1.0
-In-Reply-To: <20200615123048.GB2088119@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Chiawei Wang <chiaweiwang@google.com>
 
-On 15.06.2020 15:30, Jiri Olsa wrote:
-> On Mon, Jun 15, 2020 at 08:20:38AM +0300, Alexey Budankov wrote:
->>
->> On 08.06.2020 19:07, Jiri Olsa wrote:
->>> On Mon, Jun 08, 2020 at 12:54:31PM +0300, Alexey Budankov wrote:
->>>>
->>>> On 08.06.2020 11:43, Jiri Olsa wrote:
->>>>> On Mon, Jun 08, 2020 at 11:08:56AM +0300, Alexey Budankov wrote:
->>>>>>
->>>>>> On 05.06.2020 19:15, Alexey Budankov wrote:
->>>>>>>
->>>>>>> On 05.06.2020 14:38, Jiri Olsa wrote:
->> <SNIP>
->>>>>>> revents = fdarray_fixed_revents(array, pos);
->>>>>>> fdarray__del(array, pos);
->>>>>>
->>>>>> So how is it about just adding _revents() and _del() for fixed fds with
->>>>>> correction of retval to bool for fdarray__add()?
->>>>>
->>>>> I don't like the separation for fixed and non-fixed fds,
->>>>> why can't we make generic?
->>>>
->>>> Usage models are different but they want still to be parts of the same class
->>>> for atomic poll(). The distinction is filterable vs. not filterable.
->>>> The distinction should be somehow provided in API. Options are:
->>>> 1. expose separate API calls like __add_nonfilterable(), __del_nonfilterable();
->>>>    use nonfilterable quality in __filter() and __poll() and, perhaps, other internals;
->>>> 2. extend fdarray__add(, nonfilterable) with the nonfilterable quality
->>>>    use the type in __filter() and __poll() and, perhaps, other internals;
->>>>    expose less API calls in comparison with option 1
->>>>
->>>> Exposure of pos for filterable fds should be converted to bool since currently
->>>> the returned pos can become stale and there is no way in API to check its state.
->>>> So it could look like this:
->>>>
->>>> fdkey = fdarray__add(array, fd, events, type)
->>>> type: filterable, nonfilterable, somthing else
->>>> revents = fdarray__get_revents(fdkey);
->>>> fdarray__del(array, fdkey);
->>>
->>> I think there's solution without having filterable type,
->>> I'm not sure why you think this is needed
->>>
->>> I'm busy with other things this week, but I think I can
->>> come up with some patch early next week if needed
->>
->> Friendly reminder.
-> 
-> hm? I believe we discussed this in here:
->   https://lore.kernel.org/lkml/20200609145611.GI1558310@krava/
+__cvdso_time() can be found in vDSO implementation,
+but the symbols for time() are not exported.
 
-Do you want it to be implemented like in the patch posted by the link?
+Export the symbols and run bionic-benchmarks.
 
-~Alexey
+BEFORE:
+bionic-benchmarks32 --bionic_extra BM_time_time
+-----------------------------------------------------
+Benchmark           Time             CPU   Iterations
+-----------------------------------------------------
+BM_time_time     83.6 ns         83.5 ns      8385964
 
-> 
-> jirka
-> 
+bionic-benchmarks64 --bionic_extra BM_time_time
+-----------------------------------------------------
+Benchmark           Time             CPU   Iterations
+-----------------------------------------------------
+BM_time_time     63.5 ns         63.4 ns     11037509
+
+AFTER:
+bionic-benchmarks32 --bionic_extra BM_time_time
+-----------------------------------------------------
+Benchmark           Time             CPU   Iterations
+-----------------------------------------------------
+BM_time_time     8.57 ns         8.56 ns     81887312
+
+bionic-benchmarks64 --bionic_extra BM_time_time
+-----------------------------------------------------
+Benchmark           Time             CPU   Iterations
+-----------------------------------------------------
+BM_time_time     7.52 ns         7.51 ns     93253809
+
+Signed-off-by: Chiawei Wang <chiaweiwang@google.com>
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Enrico Weigelt <info@metux.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org
+---
+v2:
+- add prototypes in both vgettimeofday.c
+- use __kernel_old_time_t instead of time_t
+---
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h | 12 ++++++++++++
+ arch/arm64/include/asm/vdso/gettimeofday.h        | 10 ++++++++++
+ arch/arm64/kernel/vdso/vdso.lds.S                 |  1 +
+ arch/arm64/kernel/vdso/vgettimeofday.c            |  5 +++++
+ arch/arm64/kernel/vdso32/vdso.lds.S               |  1 +
+ arch/arm64/kernel/vdso32/vgettimeofday.c          |  5 +++++
+ 6 files changed, 34 insertions(+)
+
+diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+index b6907ae78e53..d0a5655785bd 100644
+--- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+@@ -14,8 +14,20 @@
+ 
+ #define VDSO_HAS_CLOCK_GETRES		1
+ 
++#define VDSO_HAS_TIME			1
++
+ #define BUILD_VDSO32			1
+ 
++extern int __vdso_clock_gettime(clockid_t clock,
++				struct old_timespec32 *ts);
++extern int __vdso_clock_gettime64(clockid_t clock,
++				  struct __kernel_timespec *ts);
++extern int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
++			       struct timezone *tz);
++extern int __vdso_clock_getres(clockid_t clock_id,
++			       struct old_timespec32 *res);
++extern __kernel_old_time_t time(__kernel_old_time_t *time);
++
+ static __always_inline
+ int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
+ 			  struct timezone *_tz)
+diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
+index afba6ba332f8..e0dcf0dce6c0 100644
+--- a/arch/arm64/include/asm/vdso/gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/gettimeofday.h
+@@ -11,6 +11,16 @@
+ 
+ #define VDSO_HAS_CLOCK_GETRES		1
+ 
++#define VDSO_HAS_TIME			1
++
++extern int __kernel_clock_gettime(clockid_t clock,
++				  struct __kernel_timespec *ts);
++extern int __kernel_gettimeofday(struct __kernel_old_timeval *tv,
++				 struct timezone *tz);
++extern int __kernel_clock_getres(clockid_t clock_id,
++				 struct __kernel_timespec *res);
++extern __kernel_old_time_t __vdso_time(__kernel_old_time_t *time);
++
+ static __always_inline
+ int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
+ 			  struct timezone *_tz)
+diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
+index 7ad2d3a0cd48..61dddb0af1a5 100644
+--- a/arch/arm64/kernel/vdso/vdso.lds.S
++++ b/arch/arm64/kernel/vdso/vdso.lds.S
+@@ -77,6 +77,7 @@ VERSION
+ 		__kernel_gettimeofday;
+ 		__kernel_clock_gettime;
+ 		__kernel_clock_getres;
++		__kernel_time;
+ 	local: *;
+ 	};
+ }
+diff --git a/arch/arm64/kernel/vdso/vgettimeofday.c b/arch/arm64/kernel/vdso/vgettimeofday.c
+index 4236cf34d7d9..9a9058ba1f89 100644
+--- a/arch/arm64/kernel/vdso/vgettimeofday.c
++++ b/arch/arm64/kernel/vdso/vgettimeofday.c
+@@ -23,3 +23,8 @@ int __kernel_clock_getres(clockid_t clock_id,
+ {
+ 	return __cvdso_clock_getres(clock_id, res);
+ }
++
++__kernel_old_time_t __vdso_time(__kernel_old_time_t *time)
++{
++	return __cvdso_time(time);
++}
+diff --git a/arch/arm64/kernel/vdso32/vdso.lds.S b/arch/arm64/kernel/vdso32/vdso.lds.S
+index a3944927eaeb..2222c78451b4 100644
+--- a/arch/arm64/kernel/vdso32/vdso.lds.S
++++ b/arch/arm64/kernel/vdso32/vdso.lds.S
+@@ -69,6 +69,7 @@ VERSION
+ 		__kernel_rt_sigreturn_arm;
+ 		__kernel_rt_sigreturn_thumb;
+ 		__vdso_clock_gettime64;
++		__vdso_time;
+ 	local: *;
+ 	};
+ }
+diff --git a/arch/arm64/kernel/vdso32/vgettimeofday.c b/arch/arm64/kernel/vdso32/vgettimeofday.c
+index 5acff29c5991..7eb988fa06d8 100644
+--- a/arch/arm64/kernel/vdso32/vgettimeofday.c
++++ b/arch/arm64/kernel/vdso32/vgettimeofday.c
+@@ -30,6 +30,11 @@ int __vdso_clock_getres(clockid_t clock_id,
+ 	return __cvdso_clock_getres_time32(clock_id, res);
+ }
+ 
++__kernel_old_time_t time(__kernel_old_time_t *time)
++{
++	return __cvdso_time(time);
++}
++
+ /* Avoid unresolved references emitted by GCC */
+ 
+ void __aeabi_unwind_cpp_pr0(void)
+-- 
+2.27.0.290.gba653c62da-goog
+
