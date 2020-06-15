@@ -2,89 +2,99 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AA8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11812C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C299207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592238540;
-	bh=U213PqxUIyke/ueHCuQ8qiXMvMkXwAf1Ol4fY9m+HaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k8jhQc5ex0zwrb5yadFzZYuZzl6HQny0TR+p0h0BeUpqVLJI1J2uM58NXK3ZuCgh1
-	 h/RnqAG2wgyV7ehk09Qhdc8sZHnUtfNU2wWOkO6TPaQzh+ZOs82KqnxafG3x/D/wbB
-	 zUwM62+o0ndb0jhqFJMyKKAYOIvhmYzaGjR/Twic=
+	by mail.kernel.org (Postfix) with ESMTP id E57A2207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:30:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="et3m76/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbgFOQ27 (ORCPT
+        id S1730795AbgFOQa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:28:59 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37403 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730447AbgFOQ26 (ORCPT
+        Mon, 15 Jun 2020 12:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730135AbgFOQa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:28:58 -0400
-Received: by mail-io1-f67.google.com with SMTP id r2so71005ioo.4;
-        Mon, 15 Jun 2020 09:28:57 -0700 (PDT)
+        Mon, 15 Jun 2020 12:30:27 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5964C061A0E;
+        Mon, 15 Jun 2020 09:30:27 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ga6so68925pjb.1;
+        Mon, 15 Jun 2020 09:30:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ASmt28ZfnzD93uzKYATIUhSUcUfooSj22w2duyIt7AY=;
+        b=et3m76/iHThHfneXsKeu5YnEa+PruBQQXKk9HqWY4ZoZOUTlnPRy9n10dLSgNeBqXa
+         FxaXy+tVLhlV9Nsa/d78ifONIRhgp82gFfUecYCgQJrV7SSRBLVS3Hdm5WXCSqjKFz4U
+         lxMvOyk7im3iX59lVLBFwEKrrauiggT/Eao2r340PMzYLo0Tw8nNE/2niSDKaVmaL2s+
+         VwIcEccOfwRi38aACDklaFwAyPfPtJc1NPTfoYVVRFb+4MdiKCsOQ/MqgsDnpuKyoDZG
+         KPdGfDG/CRCBvpQV8TI3Ud4B92KuEkSlF36OivFoH5megJrnyFKDFINZrlxH6vjNhHzS
+         78eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=crjYBLmEThzX/ubrSU80z4HF6XsY3k0B4QYp27AbQnw=;
-        b=Gk/DtWMYkNTL5DibjSAiLnxVMaEb5urYGjMuVYNeJvJ3kxuzK0wfzNbDQkVoxpevro
-         EFQs9PYrCnKTe0I9z+llrO4WBRBsCqzBxfapP/yBC13WYPA3e7UBQA+aNnilVaVaenbS
-         EF+yt47yVdw0yE1NkEP0np0gFC3YGwj4+BOqJ17ew0pDoSYNiQsnhjeIGfS7YgDMxOZ3
-         NSfnanCE+lNDYA0Ny416UCm8jMvgWUmbwl9qAMFN8hge9TfGgqQNnXgwEz3rMH/VXZtz
-         ESUkkXgsMVnbjMjI4w9ux2hK+USPM6LiPSW8DyVl0PT7pYulSr6Qhhvz4QwKTApdDwNE
-         h6ew==
-X-Gm-Message-State: AOAM532Rs/B18opzPuDPkzYhmgvAB1yLWb8eqWnAB6FRfUvH83tMM4cJ
-        ywaNfEoCdSK5PYlEY7LIbEWJbKI=
-X-Google-Smtp-Source: ABdhPJxS6wJAJT/g0Pb1HsZ6yVGg+5gSqeG5fcUoDbi72yD1UIqBysfLFirFj8i3qjvTrW9lCBgTAw==
-X-Received: by 2002:a05:6638:54:: with SMTP id a20mr21791499jap.3.1592238537002;
-        Mon, 15 Jun 2020 09:28:57 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id k5sm8154372ili.80.2020.06.15.09.28.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 09:28:56 -0700 (PDT)
-Received: (nullmailer pid 1898612 invoked by uid 1000);
-        Mon, 15 Jun 2020 16:28:55 -0000
-Date:   Mon, 15 Jun 2020 10:28:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Linux-imx@nxp.com, ulf.hansson@linaro.org, shawnguo@kernel.org,
-        robh+dt@kernel.org, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        s.hauer@pengutronix.de, mpa@pengutronix.de, festevam@gmail.com
-Subject: Re: [PATCH V2 2/3] dt-bindings: mmc: Convert imx mmc to json-schema
-Message-ID: <20200615162855.GA1893084@bogus>
-References: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
- <1591234886-15351-3-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ASmt28ZfnzD93uzKYATIUhSUcUfooSj22w2duyIt7AY=;
+        b=tAkZLm1MV9IN1d7/ypu89p5adOT2eesnmP3l1RrnL2cdj8tPt3KsWBS5aZIWma/efX
+         zK4CUWAzaBfbiZvm5MngGnitEbZMuUI8tx6otFLqqUK7O4xKEp3KBfv/HpE+i+v9uU0U
+         UktDa+PaVrw19t3agGMRrZX4EveR4qmhBlu6ifwnAP/93Wok3hh3BD4nd0og7rSUnjqk
+         68S3vUBDm4hv6j3/BDZbF+YBYXRQTdCGn/tXUH8FP4FpYMhzqLNG9opLplnmiBZ6hg86
+         3Ch09qm6fxQ5LjVcBo5u/qOwoEuoaCZIgf4RIGz4iVUwH7MFXKzDOKkq0wZay7YOdRGy
+         2ofA==
+X-Gm-Message-State: AOAM533CMQxWqZhKirVVtSxRY7kJ7ipahqTte8O2wr1PkgAjTryfJfaP
+        P/TM9SGS/QOHmShP4eGZzz8=
+X-Google-Smtp-Source: ABdhPJxnlnBVRkWoafdExfTsdOI0XxhF/LQdTziOsh4cHc+YwBthLB9vTd2LIM4dNN9St0wT9gR4FA==
+X-Received: by 2002:a17:90a:6886:: with SMTP id a6mr154721pjd.170.1592238627113;
+        Mon, 15 Jun 2020 09:30:27 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y5sm12126709pgl.85.2020.06.15.09.30.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 09:30:25 -0700 (PDT)
+Subject: Re: [PATCH v4] mtd: parsers: bcm63xx: simplify CFE detection
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, jonas.gorski@gmail.com,
+        linus.walleij@linaro.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <20200612073549.1658336-1-noltari@gmail.com>
+ <20200615091740.2958303-1-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <748c496d-cdc4-d243-71bd-c7f16c2f8311@gmail.com>
+Date:   Mon, 15 Jun 2020 09:30:20 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591234886-15351-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200615091740.2958303-1-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 04 Jun 2020 09:41:25 +0800, Anson Huang wrote:
-> Convert the i.MX MMC binding to DT schema format using json-schema
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- add "unevaluatedProperties: false".
-> ---
->  .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 23 ----------
->  .../devicetree/bindings/mmc/fsl-imx-mmc.yaml       | 53 ++++++++++++++++++++++
->  2 files changed, 53 insertions(+), 23 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.yaml
-> 
 
-Applied, thanks!
+
+On 6/15/2020 2:17 AM, Álvaro Fernández Rojas wrote:
+> Instead of trying to parse CFE version string, which is customized by some
+> vendors, let's just check that "CFE1" was passed on argument 3.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
