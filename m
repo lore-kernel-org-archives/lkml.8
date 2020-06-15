@@ -2,174 +2,92 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B784C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5EE20810
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35B620857
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592243333;
-	bh=re2k6orV5gMuJ1pAo7uM+A/UuzHEsVckHe7VfIeBl0s=;
+	s=default; t=1592243389;
+	bh=3qojykwI73YT6vs2eUO4Y1wH9K9uTw5/aZktI/KvWpQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W7y7rZgtiJKQ4DRdOd1soRceUhpKAd7wXyE3jVpUTEmCqmjNMrw8w3YCsg+3i8ARm
-	 sV/TxYly9H+COUmEKWc6meTRoWe4IBeeNe6SR3CUdOfC3+KZ8smLl2QbwxmtKH324M
-	 J9Zh4KWcoGQbyPMgKy6O6da40NMBziLGneyE33kk=
+	b=xMzY7GGuis2vngOfY8W/I3JEKMffUlEm6XHLsaNKdFw+SbLnJBnLbdPJDgJ9bz1+r
+	 loMz7MYtxgeQep/xcE+7zFHB/Ch/XL84WDfPeoRcxQ8XdFWVgely82d8gLlC3GBump
+	 hBeavM3x9Fe8Xr/lhV57Ha7SWAVey+erPCK5lWvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbgFORsv (ORCPT
+        id S1731307AbgFORts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:48:51 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:32789 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFORsu (ORCPT
+        Mon, 15 Jun 2020 13:49:48 -0400
+Received: from mail-io1-f44.google.com ([209.85.166.44]:34235 "EHLO
+        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgFORts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:48:50 -0400
-Received: by mail-il1-f193.google.com with SMTP id z2so16133450ilq.0;
-        Mon, 15 Jun 2020 10:48:50 -0700 (PDT)
+        Mon, 15 Jun 2020 13:49:48 -0400
+Received: by mail-io1-f44.google.com with SMTP id m81so18869339ioa.1;
+        Mon, 15 Jun 2020 10:49:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=7kn635n+A3EnYes4BFXu6QF7YNnmuVI9peNToiemopE=;
-        b=jzmCUB8gPiBXXg9Z+5ah+r/Gx3tI1u8/I3HTamCaM4GjS/MspRzVxABJWH3XBZj8dK
-         vuc7125g8kmjAi48zTc0ROdSR5bkzvDnCobiG/2Lbna2rl3WI1WMt/Zfhlke2t/tga4x
-         a4d/PsrWoLUMm+S3ZXW7LYYnUTGX47KNXm9C/8sxz+bZKVCLYbsYAYAg0F0yFUFOAmWt
-         6njmt7mbpY4NyD1Zjw604m/D+KrHAvQi8bGxb7aY7pSEX7Hn16xGYu+yfEp8pR/wXx9o
-         f1/mFTcGVmPqa6MHmhVZpJbiI0bAh6cVa2OoyPYiYNqky7DF4sQ4eopx+AAmSKA18Ok5
-         vDeA==
-X-Gm-Message-State: AOAM531zCMRioVhzWelZ2NwslpVRLnE5Cj7JkBph0qH9wnzZkkIn7qAx
-        YasmaZprMxEiCmPha7VFjA==
-X-Google-Smtp-Source: ABdhPJxw8ZUBrSdNoZ0KM84tqgOSaSJTSDg0ljmVjphSbOR1nFj9HkbHbjM55RFjiGVS/wkHkSpA7A==
-X-Received: by 2002:a92:c6cd:: with SMTP id v13mr26329867ilm.150.1592243329646;
-        Mon, 15 Jun 2020 10:48:49 -0700 (PDT)
+        bh=E69M+/HHxmjJy3WjxOHBrpSNM901zCVG7eSXC9OYuK0=;
+        b=iyL4iBcrw43O5O7+88TQxSRAdyiZp3ctlo+APjEjwZklXte6xRu0yk4jzqONzevAhq
+         yGZc09Oc2POqozMC2PK8Yj0KC/B3m9YkSDpCljUUbI8PGmldbupWWcciN2kT8LEZMhke
+         Dpn34g3sc4Yf5kpd7hOde/Fax55ZzeOGKPPXek2Mv/yP2miho0jwsA9nyXdnpt2+3AA6
+         QKMBlZ8OpqMumtNtU/YqJEi/G+QGHf7WS83xKrrE2dgUF8UqBHjXz/k2vEvAbHj9+fxz
+         e5umvNH07dGC3iFQxuOoDvxEhuov/uZX2tQC0fZscmvG0ib544jTUkoC2I/5uGpy8U76
+         rqSg==
+X-Gm-Message-State: AOAM532aqL4TVplBPrfx+yIBCxKNPS5cQo4EBgQMu3T6+rJYkj4sYOE6
+        /j4LSh6liR2mD2oMEGKVUQ==
+X-Google-Smtp-Source: ABdhPJxSbp+Dx4S42WakM7ahqNnP4zH6CRsjYOaTpPLDM89io2xDIJzBRgBMzaq+AEa//YCCSaYWMg==
+X-Received: by 2002:a6b:8b12:: with SMTP id n18mr28410717iod.160.1592243387326;
+        Mon, 15 Jun 2020 10:49:47 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id b13sm8297409ilq.20.2020.06.15.10.48.48
+        by smtp.gmail.com with ESMTPSA id h13sm2334102ile.18.2020.06.15.10.49.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:48:49 -0700 (PDT)
-Received: (nullmailer pid 2028876 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:48:48 -0000
-Date:   Mon, 15 Jun 2020 11:48:48 -0600
+        Mon, 15 Jun 2020 10:49:46 -0700 (PDT)
+Received: (nullmailer pid 2030488 invoked by uid 1000);
+        Mon, 15 Jun 2020 17:49:45 -0000
+Date:   Mon, 15 Jun 2020 11:49:45 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 03/12] dt-bindings: PCI: Add bindings for more Brcmstb
- chips
-Message-ID: <20200615174848.GA2023599@bogus>
-References: <20200605212706.7361-1-james.quinlan@broadcom.com>
- <20200605212706.7361-4-james.quinlan@broadcom.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com
+Subject: Re: [PATCHv2 1/6] dt-bindings: power: supply: gpio-charger: convert
+ to yaml
+Message-ID: <20200615174945.GA2030383@bogus>
+References: <20200605224403.181015-1-sebastian.reichel@collabora.com>
+ <20200605224403.181015-2-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200605212706.7361-4-james.quinlan@broadcom.com>
+In-Reply-To: <20200605224403.181015-2-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 05:26:43PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
+On Sat, 06 Jun 2020 00:43:58 +0200, Sebastian Reichel wrote:
+> Convert the gpio-charger bindings from text format to
+> new YAML based representation.
 > 
-> - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
->   7211 (STB version of RPi4).
-> - add new property 'brcm,scb-sizes'
-> - add new property 'resets'
-> - add new property 'reset-names' for 7216 only
-> - allow 'ranges' and 'dma-ranges' to have more than one item and update
->   the example to show this.
-> 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 > ---
->  .../bindings/pci/brcm,stb-pcie.yaml           | 58 ++++++++++++++++---
->  1 file changed, 51 insertions(+), 7 deletions(-)
+>  .../bindings/power/supply/gpio-charger.txt    | 31 ----------
+>  .../bindings/power/supply/gpio-charger.yaml   | 58 +++++++++++++++++++
+>  2 files changed, 58 insertions(+), 31 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> index 8680a0f86c5a..4a012d77513f 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
->  maintainers:
->    - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->  
-> -allOf:
-> -  - $ref: /schemas/pci/pci-bus.yaml#
-> -
->  properties:
->    compatible:
-> -    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> +    items:
-> +      - enum:
-> +          - brcm,bcm2711-pcie # The Raspberry Pi 4
-> +          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-> +          - brcm,bcm7216-pcie # Broadcom 7216 Arm
-> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
->  
->    reg:
->      maxItems: 1
-> @@ -34,10 +37,12 @@ properties:
->        - const: msi
->  
->    ranges:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 4
->  
->    dma-ranges:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 6
->  
->    clocks:
->      maxItems: 1
-> @@ -58,8 +63,33 @@ properties:
->  
->    aspm-no-l0s: true
->  
-> +  resets:
-> +    description: for "brcm,bcm7216-pcie", must be a valid reset
-> +      phandle pointing to the RESCAL reset controller provider node.
-> +    $ref: "/schemas/types.yaml#/definitions/phandle"
-> +
-> +  reset-names:
-> +    items:
-> +      - const: rescal
-> +
-> +  brcm,scb-sizes:
-> +    description: u64 giving the 64bit PCIe memory
-> +      viewport size of a memory controller.  There may be up to
-> +      three controllers, and each size must be a power of two
-> +      with a size greater or equal to the amount of memory the
-> +      controller supports.  Note that each memory controller
-> +      may have two component regions -- base and extended -- so
-> +      this information cannot be deduced from the dma-ranges.
-> +
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint64-array
-> +      - items:
-> +          minItems: 1
-> +          maxItems: 3
-
-This can be (dropping 'allOf'):
-
-$ref: /schemas/types.yaml#/definitions/uint64-array
-minItems: 1
-maxItems: 3
-
-With that,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
