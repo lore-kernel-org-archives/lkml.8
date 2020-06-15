@@ -2,151 +2,100 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B797C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82BFA207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C963207D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LiuL+G5P"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p5g9OZ21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgFOWXN (ORCPT
+        id S1726563AbgFOWX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:23:13 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43335 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726314AbgFOWXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:23:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592259791;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hWAHEvELG7PCXiHldR7PdlXbQKIkg3HJngutFs9FQdI=;
-        b=LiuL+G5PRpvHXqyEnZHBShVsSfHxZ+C9ExOAtt8DgJHK8bvimxEns1tnodOjCPpaOqy3Vl
-        Dp70aIH5RubYG4QntPYpLY50Slek689rXzw91zvmAEitjrvmyxsTrVsyhS/0e9BCOt0XX/
-        JwAhsBvc2kCiuV9LsmlQxhQXMn6HSc8=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-gWqiYIhtO6O2UTi8_SSFUg-1; Mon, 15 Jun 2020 18:23:09 -0400
-X-MC-Unique: gWqiYIhtO6O2UTi8_SSFUg-1
-Received: by mail-qv1-f72.google.com with SMTP id t20so14080448qvy.16
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:23:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hWAHEvELG7PCXiHldR7PdlXbQKIkg3HJngutFs9FQdI=;
-        b=Kxa6ge80l3dJb78vrkAtlQREjJySZTTig8ZXleUYnxsqzDbmAGJeQIo11/W1Ryg6WV
-         RynMQVoIolmmf0IPwnFc42871M+hv+VRn5wcxpBfmlZ8mMbTemaTGDJgaLtgwGwcMva+
-         FtsBtaE+i3wJt0eFADiD58CchgxR2uvDvJ0jlwgBfnBEQ8UYV+Q9vQTO8YkapEG9RYkb
-         ewJWBljS979SLKaXdimF3mS6RBgW5JLteMBWX3pLypAWNY/9bJVWjW+DxKNrRjih67RG
-         P9bGNqxrWxcE8qKqa4r1wuNIFCw0f74hU6rJRILq4esaI923xKMWluHmMC7FSyoh9LA+
-         ozlQ==
-X-Gm-Message-State: AOAM533KDyya3wDlSZ8ASO8XrCsYCzi7OKvw+gMW49FI+Ja6Jql4Ze5w
-        mojvhCL/wRumopCvZmd9axh7QlvWiWnbret/A+b4J3xC6JtNB8stE1/6bsX9vOthrTdOcq+Wvyf
-        sfoaNLLHFZ/5Yt7lwlAtIoUk1
-X-Received: by 2002:a0c:f84c:: with SMTP id g12mr26695599qvo.31.1592259788750;
-        Mon, 15 Jun 2020 15:23:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzyBZmVWyEmv0sPI1YBaFXr2Se+d7tyy64EI3sFlERYrvc/tp+2ai4tWd5V/XX5SRT29OLZxQ==
-X-Received: by 2002:a0c:f84c:: with SMTP id g12mr26695582qvo.31.1592259788510;
-        Mon, 15 Jun 2020 15:23:08 -0700 (PDT)
-Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id q38sm14019321qtb.74.2020.06.15.15.23.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 15:23:07 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Peter Xu <peterx@redhat.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-Subject: [PATCH 20/25] mm/sh: Use mm_fault_accounting()
-Date:   Mon, 15 Jun 2020 18:23:06 -0400
-Message-Id: <20200615222306.8502-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615221607.7764-1-peterx@redhat.com>
-References: <20200615221607.7764-1-peterx@redhat.com>
+        Mon, 15 Jun 2020 18:23:27 -0400
+Received: from ozlabs.org ([203.11.71.1]:50137 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726537AbgFOWXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 18:23:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49m5Sm5fqRz9sR4;
+        Tue, 16 Jun 2020 08:23:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592259801;
+        bh=EFHHX4gSso4C1okvQV3vD2uZZPY/0g4jxOaIc3AwBvE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=p5g9OZ21x9+fIxEbcPa05l7FFWpVyBObXE8mvj1w8zCgWv8uhAFizCxUqPx5QKv1Y
+         zbmSSmEs4wjkiCfLNxkwaSLgYMITRjlDIJ/XIpKjKsHFaadmmzGLzJIdLm2jmjFV0u
+         UP2OT8tnAp+rptrdAniYb4L/AxSoSKI3oSNsswcqdUTP/Oj8GVezpPAb8Q+JKy4oOZ
+         e8GD8r2dbitO4/7TTs+D9G7XEDjVQn0ng/iLwbgbjcn4VC3VDme7yHOBv2VgtHbWvN
+         H7IaLG/lKswyhEJGvyA2ttIb3lyavlcpiwWejXH2RcGoteN25YdnL5rBj8YkFcAWnh
+         RBZfeQ78rguXg==
+Date:   Tue, 16 Jun 2020 08:23:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: linux-next: Fixes tag needs some work in the nand tree
+Message-ID: <20200616082312.76d03fe8@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/w6n4N.YcXZH5sXQXjs=GiyG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new mm_fault_accounting() helper for page fault accounting.
+--Sig_/w6n4N.YcXZH5sXQXjs=GiyG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Avoid doing page fault accounting multiple times if the page fault is retried.
+Hi all,
 
-CC: Yoshinori Sato <ysato@users.sourceforge.jp>
-CC: Rich Felker <dalias@libc.org>
-CC: linux-sh@vger.kernel.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/sh/mm/fault.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+In commit
 
-diff --git a/arch/sh/mm/fault.c b/arch/sh/mm/fault.c
-index 5f23d7907597..06b232973488 100644
---- a/arch/sh/mm/fault.c
-+++ b/arch/sh/mm/fault.c
-@@ -379,7 +379,7 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
- 	struct task_struct *tsk;
- 	struct mm_struct *mm;
- 	struct vm_area_struct * vma;
--	vm_fault_t fault;
-+	vm_fault_t fault, major = 0;
- 	unsigned int flags = FAULT_FLAG_DEFAULT;
- 
- 	tsk = current;
-@@ -412,8 +412,6 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
- 	if ((regs->sr & SR_IMASK) != SR_IMASK)
- 		local_irq_enable();
- 
--	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
--
- 	/*
- 	 * If we're in an interrupt, have no user context or are running
- 	 * with pagefaults disabled then we must not take the fault:
-@@ -465,21 +463,13 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
- 	 * the fault.
- 	 */
- 	fault = handle_mm_fault(vma, address, flags);
-+	major |= fault & VM_FAULT_MAJOR;
- 
- 	if (unlikely(fault & (VM_FAULT_RETRY | VM_FAULT_ERROR)))
- 		if (mm_fault_error(regs, error_code, address, fault))
- 			return;
- 
- 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
--		if (fault & VM_FAULT_MAJOR) {
--			tsk->maj_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
--				      regs, address);
--		} else {
--			tsk->min_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
--				      regs, address);
--		}
- 		if (fault & VM_FAULT_RETRY) {
- 			flags |= FAULT_FLAG_TRIED;
- 
-@@ -493,4 +483,5 @@ asmlinkage void __kprobes do_page_fault(struct pt_regs *regs,
- 	}
- 
- 	up_read(&mm->mmap_sem);
-+	mm_fault_accounting(tsk, regs, address, major);
- }
--- 
-2.26.2
+  350e8dab0868 ("mtd: rawnand: qcom: avoid write to unavailable register")
 
+Fixes tag
+
+  Fixes: d49076a1347ea ("mtd: nand: qcom: Support for IPQ8074 QPIC NAND con=
+troller")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: dce84760b09f ("mtd: nand: qcom: Support for IPQ8074 QPIC NAND contro=
+ller")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/w6n4N.YcXZH5sXQXjs=GiyG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7n9NAACgkQAVBC80lX
+0GyU0Af9H/r/NzyiEkJgL9IVNS+qrM60yo5BIeqGCXtJyD4Re+ujxmq4qYOiV2Jl
+7mHxZ/aS2dH55DoHsMsuoJ+B/r8buO+c1TepYqrgZeEBu/ewz+SNngn3iP05A5eh
+AF8ujNNhMQLYcb8jG1zbxEEcype/kgNp8PS9siRcecPuHxrioZr0wHsA3N1114Kl
+G7MZDNRpYw2FDyvu4r5VrAmrAIjbeHrWAz8DiNXZkRoyJu3ecP15qXafY75+ALVF
+eUzg1nrucTUK2HTlfEuvdW2yAI0bTE5h5YGtmWNNhYicU2oPBQeZ95xTrAgubcP5
+KlUzQchf/TP8kyiFzY3nBd50f9QB+w==
+=veyG
+-----END PGP SIGNATURE-----
+
+--Sig_/w6n4N.YcXZH5sXQXjs=GiyG--
