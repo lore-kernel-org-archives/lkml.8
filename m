@@ -2,111 +2,239 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3529C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CA0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B14A62078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592239596;
-	bh=1KT+vWhBgSpztqjzGMDQ4D4S8JwxH2WCmGD+wQfbPAA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=H4tM6TK77ofRVE9LaqnVajsBpbutC9XKVmQ17Cm9Tf9yA4WT4oh5JbOjgakR/KbZJ
-	 lfguMDioJcz3jafddHudsPmpBQIGdfSQtY3cakjPP69lGO1bgBWw3CE9HHZE90zpXK
-	 GVmfvlwfA0pL/jckfGwmb5HRLVtsTseFXg0oghcc=
+	by mail.kernel.org (Postfix) with ESMTP id 2EB032078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731091AbgFOQqf (ORCPT
+        id S1731080AbgFOQqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731046AbgFOQqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:46:33 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 945BBC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:46:32 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s1so20050843ljo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BZvZBCuCQSkLPs9g5InfZ9ThZzzENQM2asJ2hMImD+8=;
-        b=ZWk3x5iEjnyTLq8IMemOkgARbFQCw/Q53/428riLywNB6u9f+bQvXVcEgFAYoeyppV
-         fCCBULVD7KWfArLFv0AgIvtaFvWI/tVW+Ez2gZY7mm3zfsO/bpanBZ32Aq/zacBlYhG6
-         8bUzNz2BvrW4v3rb3iq/l8f6ouqvyn24pdFzI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BZvZBCuCQSkLPs9g5InfZ9ThZzzENQM2asJ2hMImD+8=;
-        b=G8qDX+XcsxEaa8MLmjStQoPhHHziZx6jCTMmW6iBy2axFcT95DxUF2vZjRf4SImJKr
-         Hs6joANmiDvpc63d43Tpq0uperdXlqqpKtzAz5yPka9XgY+v4MEXSqjxvGOBmK1sp4L+
-         y/iGt24JoQoP3eC+BYr9oeGrrrhbsHvoRfFOA0teazYldwsCR+c0AVWURrn8he5i1FZe
-         8x1YX+i6zYVg+tTiLquhJkzuRq3+B3T3dhSC4MnVA0B2y9islY/XSKc8/Y5vPb6hpsqW
-         aD4hpUi2xmlCt3LSFo/4MfAmbqFgV9fpMYSmC/d26AwNRpuI9O3YmK1lV1kWLN7/LeT5
-         4c9Q==
-X-Gm-Message-State: AOAM531z8IGg/05v5K+l5ZtHCAuap7NIBKchUwG0Wr2rpQC7hoHbFuQI
-        hG0OJDWpDTf3u7AbapYbi1S0hFYyP5M=
-X-Google-Smtp-Source: ABdhPJyKzLIPijsUXI035d/6wgimrFNKTu1+sSbEkZgmtRNngQllheUh8mqAsMIvLQAVdIei41t0Yw==
-X-Received: by 2002:a05:651c:38b:: with SMTP id e11mr12077725ljp.415.1592239590299;
-        Mon, 15 Jun 2020 09:46:30 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id p19sm4641367lfc.91.2020.06.15.09.46.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 09:46:29 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id d27so5382774lfq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:46:29 -0700 (PDT)
-X-Received: by 2002:ac2:4422:: with SMTP id w2mr5160341lfl.152.1592239588691;
- Mon, 15 Jun 2020 09:46:28 -0700 (PDT)
+        Mon, 15 Jun 2020 12:46:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35756 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728585AbgFOQqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:46:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BDEF7AC22;
+        Mon, 15 Jun 2020 16:46:35 +0000 (UTC)
+Subject: Re: [PATCH 1/3] mm/slub: Fix slabs_node return value when
+ CONFIG_SLUB_DEBUG disabled
+To:     Muchun Song <songmuchun@bytedance.com>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>
+References: <20200614123923.99189-1-songmuchun@bytedance.com>
+ <20200614123923.99189-2-songmuchun@bytedance.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <fb5dc63d-4d54-c393-eac6-414993cda595@suse.cz>
+Date:   Mon, 15 Jun 2020 18:46:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200615121257.798894-1-hch@lst.de> <20200615121257.798894-11-hch@lst.de>
-In-Reply-To: <20200615121257.798894-11-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 15 Jun 2020 09:46:12 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiBJjjV4NuKr_z2Q3vWEXSoGtAmkH=jZ0SkBJ=wZh4=hw@mail.gmail.com>
-Message-ID: <CAHk-=wiBJjjV4NuKr_z2Q3vWEXSoGtAmkH=jZ0SkBJ=wZh4=hw@mail.gmail.com>
-Subject: Re: [PATCH 10/13] integrity/ima: switch to using __kernel_read
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200614123923.99189-2-songmuchun@bytedance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 5:13 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> __kernel_read has a bunch of additional sanity checks, and this moves
-> the set_fs out of non-core code.
+On 6/14/20 2:39 PM, Muchun Song wrote:
+> The slabs_node() always return zero when CONFIG_SLUB_DEBUG is disabled.
+> But some codes determine whether slab is empty by checking the return
+> value of slabs_node(). As you know, the result is not correct. This
+> problem can be reproduce by the follow code(and boot system with the
+> cmdline of "slub_nomerge"):
+> 
+>   void *objs[32];
+>   struct kmem_cache *cache = kmem_cache_create("kmem-test", 128, 0,
+> 			0, 0);
+> 
+>   if (cache) {
+>   	int i;
+> 
+> 	/* Make a full slab */
+>   	for (i = 0; i < ARRAY_SIZE(objs); i++)
+> 		objs[i] = kmem_cache_alloc(cache, GFP_KERNEL_ACCOUNT);
+> 
+> 	/*
+>   	 * This really should fail because the slab cache still has
+>   	 * objects. But we did destroy the @cache because of zero
+>   	 * returned by slabs_node().
+>   	 */
+>   	kmem_cache_destroy(cache);
+>   }
 
-Wel, you also seem to be removing this part:
+Hmm, the whole SLUB subsystem (or even kernel) has some trust in the other
+individual subsystems doing the right thing. I.e. if allocate an object once and
+free it twice, bad things will happen. If you are debugging such a problem, you
+enable SLUB_DEBUG (and the boot parameter).
 
-> -       if (!(file->f_mode & FMODE_READ))
-> -               return -EBADF;
+This particular situation is the same - SLUB trusts its users to free their
+objects before calling kmem_cache_destroy(). If they don't and just leak them,
+then they stay leaked and nothing worse will happen (I'd expect). If they
+destroy the cache and later try to e.g. free the objects, then there will most
+likely be a crash.
 
-which you didn't add in the previous patch that implemented __kernel_read().
+And yeah, if you are debugging such thing, you will compile with SLUB_DEBUG and
+make sure there's slub_nomerge (or you won't catch it anyway).
 
-It worries me that you're making these kinds of transformations where
-the comments imply it's a no-op, but the actual code doesn't agree.
+Hmm, but there's one exception in __kmem_cache_shrink() where the caller wants
+to know if all slabs were discarded. kmem_cache_shrink() passes that to its
+callers, but seems nobody cares about the return value.
 
-Especially when it's part of one large patch series and each commit
-looks trivial.
+The only caller that seems to care is __kmemcg_cache_deactivate_after_rcu():
 
-This kind of series needs more care. Maybe that test isn't necessary,
-but it isn't obvious, and I really don't like how you completely
-glossed over totally changing what the code did.
+        if (!__kmem_cache_shrink(s))
+                sysfs_slab_remove(s);
 
-               Linus
+Perhaps that will go away with memcg rework? (CC Roman). If yes, we also have
+the option to stop returning the value in kmem_cache_shrink() (as nobody seems
+to care), and then slabs_node() remains a debug only thing.
+
+> To fix it, we can move the nr_slabs of kmem_cache_node out of the
+> CONFIG_SLUB_DEBUG. So we can get the corrent value returned by the
+> slabs_node().
+> 
+> With this patch applied, we will get a warning message and stack
+> trace in the dmesg.
+> 
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+>  mm/slab.h |  2 +-
+>  mm/slub.c | 80 +++++++++++++++++++++++++++++++++------------------------------
+>  2 files changed, 43 insertions(+), 39 deletions(-)
+> 
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 0b91f2a7b033..062d4542b7e2 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -619,8 +619,8 @@ struct kmem_cache_node {
+>  #ifdef CONFIG_SLUB
+>  	unsigned long nr_partial;
+>  	struct list_head partial;
+> -#ifdef CONFIG_SLUB_DEBUG
+>  	atomic_long_t nr_slabs;
+> +#ifdef CONFIG_SLUB_DEBUG
+>  	atomic_long_t total_objects;
+>  	struct list_head full;
+>  #endif
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 49b5cb7da318..1a3e6a5b7287 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -1070,39 +1070,14 @@ static void remove_full(struct kmem_cache *s, struct kmem_cache_node *n, struct
+>  	list_del(&page->slab_list);
+>  }
+>  
+> -/* Tracking of the number of slabs for debugging purposes */
+> -static inline unsigned long slabs_node(struct kmem_cache *s, int node)
+> +/* Tracking of the number of objects for debugging purposes */
+> +static inline void inc_objects_node(struct kmem_cache_node *n, int objects)
+>  {
+> -	struct kmem_cache_node *n = get_node(s, node);
+> -
+> -	return atomic_long_read(&n->nr_slabs);
+> +	atomic_long_add(objects, &n->total_objects);
+>  }
+>  
+> -static inline unsigned long node_nr_slabs(struct kmem_cache_node *n)
+> +static inline void dec_objects_node(struct kmem_cache_node *n, int objects)
+>  {
+> -	return atomic_long_read(&n->nr_slabs);
+> -}
+> -
+> -static inline void inc_slabs_node(struct kmem_cache *s, int node, int objects)
+> -{
+> -	struct kmem_cache_node *n = get_node(s, node);
+> -
+> -	/*
+> -	 * May be called early in order to allocate a slab for the
+> -	 * kmem_cache_node structure. Solve the chicken-egg
+> -	 * dilemma by deferring the increment of the count during
+> -	 * bootstrap (see early_kmem_cache_node_alloc).
+> -	 */
+> -	if (likely(n)) {
+> -		atomic_long_inc(&n->nr_slabs);
+> -		atomic_long_add(objects, &n->total_objects);
+> -	}
+> -}
+> -static inline void dec_slabs_node(struct kmem_cache *s, int node, int objects)
+> -{
+> -	struct kmem_cache_node *n = get_node(s, node);
+> -
+> -	atomic_long_dec(&n->nr_slabs);
+>  	atomic_long_sub(objects, &n->total_objects);
+>  }
+>  
+> @@ -1413,15 +1388,8 @@ slab_flags_t kmem_cache_flags(unsigned int object_size,
+>  
+>  #define disable_higher_order_debug 0
+>  
+> -static inline unsigned long slabs_node(struct kmem_cache *s, int node)
+> -							{ return 0; }
+> -static inline unsigned long node_nr_slabs(struct kmem_cache_node *n)
+> -							{ return 0; }
+> -static inline void inc_slabs_node(struct kmem_cache *s, int node,
+> -							int objects) {}
+> -static inline void dec_slabs_node(struct kmem_cache *s, int node,
+> -							int objects) {}
+> -
+> +static inline void inc_objects_node(struct kmem_cache_node *n, int objects) {}
+> +static inline void dec_objects_node(struct kmem_cache_node *n, int objects) {}
+>  static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+>  			       void *freelist, void *nextfree)
+>  {
+> @@ -1429,6 +1397,42 @@ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+>  }
+>  #endif /* CONFIG_SLUB_DEBUG */
+>  
+> +static inline unsigned long slabs_node(struct kmem_cache *s, int node)
+> +{
+> +	struct kmem_cache_node *n = get_node(s, node);
+> +
+> +	return atomic_long_read(&n->nr_slabs);
+> +}
+> +
+> +static inline unsigned long node_nr_slabs(struct kmem_cache_node *n)
+> +{
+> +	return atomic_long_read(&n->nr_slabs);
+> +}
+> +
+> +static inline void inc_slabs_node(struct kmem_cache *s, int node, int objects)
+> +{
+> +	struct kmem_cache_node *n = get_node(s, node);
+> +
+> +	/*
+> +	 * May be called early in order to allocate a slab for the
+> +	 * kmem_cache_node structure. Solve the chicken-egg
+> +	 * dilemma by deferring the increment of the count during
+> +	 * bootstrap (see early_kmem_cache_node_alloc).
+> +	 */
+> +	if (likely(n)) {
+> +		atomic_long_inc(&n->nr_slabs);
+> +		inc_objects_node(n, objects);
+> +	}
+> +}
+> +
+> +static inline void dec_slabs_node(struct kmem_cache *s, int node, int objects)
+> +{
+> +	struct kmem_cache_node *n = get_node(s, node);
+> +
+> +	atomic_long_dec(&n->nr_slabs);
+> +	dec_objects_node(n, objects);
+> +}
+> +
+>  /*
+>   * Hooks for other subsystems that check memory allocations. In a typical
+>   * production configuration these hooks all should produce no code at all.
+> 
+
