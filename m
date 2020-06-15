@@ -2,124 +2,110 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A34C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F286C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0991D2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5VTwYE0"
+	by mail.kernel.org (Postfix) with ESMTP id 0DA2D2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592226612;
+	bh=Q4kYEv8y1kbvADRAP1BgbtoDH5hmbT0bRy3I3ZrTBxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vb4ZVnWM7+mOBZGICe8XqX0DfZCS0chfEs4c9rq+jiQc8PejT6RX8imwdceu6OUke
+	 vdbQqAv/JOmywl5VQhF6HSXcgDMzp1GEniYWYADnmyluudkmvlqzom54JNis8Y91wH
+	 GncOFXnEQBC2/VGvwJbvfIhGe7j9EcHePb41lrsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbgFONJm (ORCPT
+        id S1730280AbgFONKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:09:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729875AbgFONJm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:09:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4CE2C061A0E;
-        Mon, 15 Jun 2020 06:09:40 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y17so17034677wrn.11;
-        Mon, 15 Jun 2020 06:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2hNGEnaVoQal93lbWY/52qr5BHwkcMyXt4V9L1ZazME=;
-        b=G5VTwYE05Hk6xTerY0UHALfQgUm4ZA9zNF43JDgzQzmX7a9vFtFm/DNZWQKBTHuV/v
-         T9fa23JAS7/fngxzS4BlWqvX5QustnRT6M4McOPfpP7jIAMgFHp0AJb1V7G9Uco3qjZE
-         CvFR56tzw08bxyI+g35zy0Z0Rk5y2vJv3Z6TWhtXeh1RJlaAuHldcoHUNPSCYRdE6mq9
-         BlB6n7uE2H1Jj7mnAf25mo7xISovDdlaot4t1h+hl4u7fUmLPyzVK3I4nX9OXC6ByRsn
-         vIXebOCAVv/3Vm/Ou1uIKZ2ApFfFf40qTyyla/F41iyBGFmkNcPj1xQVC4PsXn5RMMPt
-         NPxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2hNGEnaVoQal93lbWY/52qr5BHwkcMyXt4V9L1ZazME=;
-        b=qplgHj0Mb68ze5fh0sxChH4ZyxUL9guogFAaZhfulqU6tWGmuddT7jcDXiOkR8/b42
-         Yd7ASQgFtDTQf4/zRUjLqh8QH/gR0mSh27lrHKMElqq0JSq5Ia2hCtCAaj5pPOrc6GeO
-         BR/T/3YsJAmR7jABYPhv6c6K9UsIkqvJDNSlQRsn1Jv4tYdNzt58OnN+CQOcOX7cDNYN
-         YHsmuz7yvyH4WBGH7J4tNe4/Pz3yjp827KE2iiJ3+sp1MNXEHv0VCzlEguCym1OAtmqr
-         RPUb76YlUmFbPl7la4+kf8vucW87F1F5eO3PMTUrRIl2qCxAxXmd2NOLg91zJDhJi1iQ
-         BnHQ==
-X-Gm-Message-State: AOAM531/vuZvBvbcMccn/k4sEAlyEQd5ZdmntzjEmFKASgQqFnO+lKnS
-        kp4JEZdR2fjmrdWXGHETGTI=
-X-Google-Smtp-Source: ABdhPJzkAkLa4121RL9RP4yPu1ORGLEtaYbRqL3TLPlEw210EC99TJLJBc7JAC3sCZA2Z/uibPSA3Q==
-X-Received: by 2002:adf:f245:: with SMTP id b5mr28026570wrp.303.1592226579595;
-        Mon, 15 Jun 2020 06:09:39 -0700 (PDT)
-Received: from ubuntu-laptop ([2a01:598:b10e:413b:41dc:307c:ea47:9556])
-        by smtp.googlemail.com with ESMTPSA id s2sm21459716wmh.11.2020.06.15.06.09.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jun 2020 06:09:39 -0700 (PDT)
-Message-ID: <47dcc56312229fc8f25f39c2beeb3a8ba811f3e9.camel@gmail.com>
-Subject: Re: [RFC PATCH v2 2/5] scsi: ufs: Add UFS-feature layer
-From:   Bean Huo <huobean@gmail.com>
-To:     daejun7.park@samsung.com, ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Date:   Mon, 15 Jun 2020 15:09:28 +0200
-In-Reply-To: <231786897.01592212081335.JavaMail.epsvc@epcpadp2>
-References: <336371513.41592205783606.JavaMail.epsvc@epcpadp2>
-         <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
-         <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p8>
-         <231786897.01592212081335.JavaMail.epsvc@epcpadp2>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 15 Jun 2020 09:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729875AbgFONKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:10:10 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E642074D;
+        Mon, 15 Jun 2020 13:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592226610;
+        bh=Q4kYEv8y1kbvADRAP1BgbtoDH5hmbT0bRy3I3ZrTBxo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LqTVQ+jqhr9sSuJEIjKtb+t7uP4Os3/80y041zWF2krFR9JKwQskpt0QEd/T7vJgW
+         6QPbsSsF+Q8LvR4mLDEWheUmbYY7U/rm3Nz/8raTQmh9v0P8ie0/r5CA1EnmeFIDG5
+         40QA+6TE1KO+vSLWQ4RcWUL7JJLez+pRm3r/kGv8=
+Date:   Mon, 15 Jun 2020 14:10:06 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on
+ interrupt in exit paths
+Message-ID: <20200615131006.GR4447@sirena.org.uk>
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+ <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
+ <20200615123052.GO4447@sirena.org.uk>
+ <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y2MHPAl/EzyWgzIZ"
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Daejun
 
-On Mon, 2020-06-15 at 16:23 +0900, Daejun Park wrote:
-> +void ufsf_scan_features(struct ufs_hba *hba)
-> +{
-> +       int ret;
-> +
-> +       init_waitqueue_head(&hba->ufsf.sdev_wait);
-> +       atomic_set(&hba->ufsf.slave_conf_cnt, 0);
-> +
-> +       if (hba->dev_info.wspecversion >= HPB_SUPPORTED_VERSION &&
-> +           (hba->dev_info.b_ufs_feature_sup & UFS_DEV_HPB_SUPPORT)) 
+--y2MHPAl/EzyWgzIZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-How about removing this check "(hba->dev_info.wspecversion >=
-HPB_SUPPORTED_VERSION" since ufs with lower version than v3.1 can add
-HPB feature by FFU, 
-if (hba->dev_info.b_ufs_feature_sup  &UFS_FEATURE_SUPPORT_HPB_BIT) is
-enough.
+On Mon, Jun 15, 2020 at 03:56:01PM +0300, Vladimir Oltean wrote:
 
+> And the down-shot is that whatever is done in dspi_remove (free_irq)
+> also needs to be done in dspi_suspend, but with extra care in
+> dspi_resume not only to request the irq again, but also to flush the
+> module's FIFOs and clear interrupts, because there might have been
+> nasty stuff uncaught during sleep:
 
-> 
-> +#define HPB_SUPPORTED_VERSION                  0x0310
+>     regmap_update_bits(dspi->regmap, SPI_MCR,
+>                SPI_MCR_CLR_TXF | SPI_MCR_CLR_RXF,
+>                SPI_MCR_CLR_TXF | SPI_MCR_CLR_RXF);
+>     regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
 
+> So it's pretty messy.
 
+It's a bit unusual to need to actually free the IRQ over suspend -
+what's driving that requirement here?  I can see we might need to
+reinit the hardware but usually the interrupt handler can be left there
+safely.
 
-Thank,
-Bean
+--y2MHPAl/EzyWgzIZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ncy4ACgkQJNaLcl1U
+h9ByxAf/Viw1asiMeFVTEX5NW6sj2JWKphdxsdlXt8jQ48yPQUOSKBWTcHKvZUop
+ugkURiAdYNLhV5qA/+6ORBe21lszw0YK85cF/+vY4T5AoeUnutOiw7yfl3w68zVX
+hibcK47M3IJ1vcbyruaMSvPSvc/EeAXs08szmYOtgAPCCL5eYd6iWt/bCVj/FtqO
+30k5jVxSAvPUlOIrFWYcNkAFYYtrir6EOSRemnKkBuF+LIKW11LG1apvb28X56jv
+cRvTVPjzMAc9KlAVOoLWEEQ/o/XTA9PT70Qd2It67gRmdQZ/13L/L6Cqrys+5Du5
+SCO6T+EoDrqAzA8mzY8EpJ18jhIDtA==
+=h3aO
+-----END PGP SIGNATURE-----
+
+--y2MHPAl/EzyWgzIZ--
