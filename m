@@ -2,145 +2,148 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E33C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3573BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E54C2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:01:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592233297;
-	bh=L8IZqOnP8hUd/A9XWaCziUtb1PHyKSN2DrU4rzDxPFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H887Q45cPtwbwo48M0jrADpTepNQXcWdl83lbaLzl2QEWBj2v/cSmRTLuJsf8rTn7
-	 FhL8q0E0H/jPz6oiYoUp1331vR7OHafUvy4XxuVOsvthsZmSlTnpfXmCEnIEfpSyik
-	 PZs9Exl+w0yHjr4d6c5WMsfbeENYJXRaD2r/Rltk=
+	by mail.kernel.org (Postfix) with ESMTP id 160642063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:02:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H3A4uLXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbgFOPBf (ORCPT
+        id S1730917AbgFOPCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:01:35 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:32962 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730701AbgFOPBe (ORCPT
+        Mon, 15 Jun 2020 11:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730777AbgFOPCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:01:34 -0400
-Received: by mail-wm1-f68.google.com with SMTP id j198so217256wmj.0;
-        Mon, 15 Jun 2020 08:01:32 -0700 (PDT)
+        Mon, 15 Jun 2020 11:02:16 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FEFC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:02:15 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id x14so2218531uao.7
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:02:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TrvvsAEP4GTcir2Zy4zr3JBpHk31E0joGe1xHbcm+mg=;
+        b=H3A4uLXQWE02D9hYonsJYD+dAcZKqOzS19HfKOalhkBF4qwfzczgYQl1W0V8OQsYXD
+         95VWw7nAcce5a/v3X1xmaJEUAxd0JQhaKynN57OA1tKKU6N1LhVNw3fYE7ZH0++G+pva
+         EdI1a+96k5CQcCD5Of6MAu9qR7pjeDAfI0yPs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=b5qvOg57UADgLzf+akmZ9rdaUG21I31nx25QubBlwmU=;
-        b=GJQh/VJKFKAKo32UkCmm1AsUJKDfzKS8R5gkpAT7LGjZc+m+uLoNQdh38qtMOJBwhB
-         ltEUy99rwEB4nx1OBW1nLvh6f0yW9BfCM9hX28erFG3OwHcO0pC16kiazKWGo6lZfELd
-         OzvO/i1hG39hpjlvhoot6fNuW7gjSauZn8m0xRTGYbWw7/DX9k0/fZjCVVleF3p8qOeL
-         AHsMwCiasQRcLuSGCQ8Rg+6rHmjQjewi4rKgQli9/O8rO7Y1Rhzn/+VKrCOn7c7mdQuu
-         ImiJm0SYrc549bqgDGdGGULrNrUFXuV+Ek1jDKaWAwgn9R66KNa0vWaP8Cr9OVj1iTyz
-         FM4A==
-X-Gm-Message-State: AOAM530+E6W168TcMFq2xxdh9bkLNmuLzKEPpDqHXvc64slTkaJWNH1a
-        i3XVEGZ7DiVvCELzsZLgQKk=
-X-Google-Smtp-Source: ABdhPJy9VSpz3kEOLPJzTJYggxYQ0jplJOLKluJZv/AfUmoOv+0rtrfCSC4WAqGA4V1CHa6ojpRzKQ==
-X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr12771377wmm.108.1592233291158;
-        Mon, 15 Jun 2020 08:01:31 -0700 (PDT)
-Received: from localhost (ip-37-188-174-201.eurotel.cz. [37.188.174.201])
-        by smtp.gmail.com with ESMTPSA id d9sm24638967wre.28.2020.06.15.08.01.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 08:01:29 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 17:01:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm: memcontrol: handle div0 crash race condition in
- memory.low
-Message-ID: <20200615150128.GL25296@dhcp22.suse.cz>
-References: <20200615140658.601684-1-hannes@cmpxchg.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TrvvsAEP4GTcir2Zy4zr3JBpHk31E0joGe1xHbcm+mg=;
+        b=UwiQ7N4zOnZC+3WOQdOdvf1y5mRcrIDrlm850zncHpr7TGmO03wKFpnftURGBGLfTY
+         sruH3Xe+ShDqxpBVWw2RQPD3GnL34xVSg11LJ/VKID5IunyafGDdXpDM+nrKei1qpAXS
+         m3woYsjDuJXhL4dDcOh4duvt7RCsNhT/f8n22Rz152vSWAgBniYiukmtonLb5RBGIqMV
+         HmROhht3e09Kv9+3ey6I6cmQkNJHB0Z7w2IswlzGxU2O7SdiUEXcKsTeTsWzOVmfBL7r
+         rkOGYogOaJMXEtspXE6t+WFLJkBvB7rJyKgtb0AbwIwO43qZaNFdBigzshkWuzh8J01V
+         F7Sw==
+X-Gm-Message-State: AOAM530n9a25xjoh0nGu5am+0PSDpo5XdCk2LfYvchKtj9g1iks8vYzq
+        y5LYt2eN9ZJpLwO20l+4r6e+vkLFN74=
+X-Google-Smtp-Source: ABdhPJxQgxHjFH4v2OK6EcEiB93DGsFBNHcv2em1yOxgryn+evvIHpMoy2P1YAq5o3kzuwLUPAICQA==
+X-Received: by 2002:ab0:186d:: with SMTP id j45mr20082578uag.104.1592233334752;
+        Mon, 15 Jun 2020 08:02:14 -0700 (PDT)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id g10sm1911130vsa.2.2020.06.15.08.02.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 08:02:14 -0700 (PDT)
+Received: by mail-vs1-f47.google.com with SMTP id l10so9514662vsr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:02:14 -0700 (PDT)
+X-Received: by 2002:a67:8881:: with SMTP id k123mr19565964vsd.198.1592233331996;
+ Mon, 15 Jun 2020 08:02:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615140658.601684-1-hannes@cmpxchg.org>
+References: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+ <20200615143237.519F3C433C8@smtp.codeaurora.org> <CAD=FV=VaexjLaaZJSxndTEi6KCFaPWW=sUt6hjy9=0Qn68kH1g@mail.gmail.com>
+ <87zh94idik.fsf@codeaurora.org>
+In-Reply-To: <87zh94idik.fsf@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 15 Jun 2020 08:02:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XfUHD=vw-mvQsdHcn=zhB9-mD6ivrM93jkfHdgb+odiA@mail.gmail.com>
+Message-ID: <CAD=FV=XfUHD=vw-mvQsdHcn=zhB9-mD6ivrM93jkfHdgb+odiA@mail.gmail.com>
+Subject: Re: [PATCH] ath10k: Wait until copy complete is actually done before completing
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, ath10k@lists.infradead.org,
+        Rakesh Pillai <pillair@codeaurora.org>,
+        netdev <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, kuabhs@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 15-06-20 10:06:58, Johannes Weiner wrote:
-> Tejun reports seeing rare div0 crashes in memory.low stress testing:
-> 
-> [37228.504582] RIP: 0010:mem_cgroup_calculate_protection+0xed/0x150
-> [37228.505059] Code: 0f 46 d1 4c 39 d8 72 57 f6 05 16 d6 42 01 40 74 1f 4c 39 d8 76 1a 4c 39 d1 76 15 4c 29 d1 4c 29 d8 4d 29 d9 31 d2 48 0f af c1 <49> f7 f1 49 01 c2 4c 89 96 38 01 00 00 5d c3 48 0f af c7 31 d2 49
-> [37228.506254] RSP: 0018:ffffa14e01d6fcd0 EFLAGS: 00010246
-> [37228.506769] RAX: 000000000243e384 RBX: 0000000000000000 RCX: 0000000000008f4b
-> [37228.507319] RDX: 0000000000000000 RSI: ffff8b89bee84000 RDI: 0000000000000000
-> [37228.507869] RBP: ffffa14e01d6fcd0 R08: ffff8b89ca7d40f8 R09: 0000000000000000
-> [37228.508376] R10: 0000000000000000 R11: 00000000006422f7 R12: 0000000000000000
-> [37228.508881] R13: ffff8b89d9617000 R14: ffff8b89bee84000 R15: ffffa14e01d6fdb8
-> [37228.509397] FS:  0000000000000000(0000) GS:ffff8b8a1f1c0000(0000) knlGS:0000000000000000
-> [37228.509917] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [37228.510442] CR2: 00007f93b1fc175b CR3: 000000016100a000 CR4: 0000000000340ea0
-> [37228.511076] Call Trace:
-> [37228.511561]  shrink_node+0x1e5/0x6c0
-> [37228.512044]  balance_pgdat+0x32d/0x5f0
-> [37228.512521]  kswapd+0x1d7/0x3d0
-> [37228.513346]  ? wait_woken+0x80/0x80
-> [37228.514170]  kthread+0x11c/0x160
-> [37228.514983]  ? balance_pgdat+0x5f0/0x5f0
-> [37228.515797]  ? kthread_park+0x90/0x90
-> [37228.516593]  ret_from_fork+0x1f/0x30
-> 
-> This happens when parent_usage == siblings_protected. We check that
-> usage is bigger than protected, which should imply parent_usage being
-> bigger than siblings_protected. However, we don't read (or even
-> update) these values atomically, and they can be out of sync as the
-> memory state changes under us. A bit of fluctuation around the target
-> protection isn't a big deal, but we need to handle the div0 case.
-> 
-> Check the parent state explicitly to make sure we have a reasonable
-> positive value for the divisor.
-> 
-> Fixes: 8a931f801340 ("mm: memcontrol: recursive memory.low protection")
-> Reported-by: Tejun Heo <tj@kernel.org>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Hi,
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+On Mon, Jun 15, 2020 at 7:56 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+> Doug Anderson <dianders@chromium.org> writes:
+>
+> > On Mon, Jun 15, 2020 at 7:32 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+> >>
+> >> Douglas Anderson <dianders@chromium.org> wrote:
+> >>
+> >> > On wcn3990 we have "per_ce_irq = true".  That makes the
+> >> > ath10k_ce_interrupt_summary() function always return 0xfff. The
+> >> > ath10k_ce_per_engine_service_any() function will see this and think
+> >> > that _all_ copy engines have an interrupt.  Without checking, the
+> >> > ath10k_ce_per_engine_service() assumes that if it's called that the
+> >> > "copy complete" (cc) interrupt fired.  This combination seems bad.
+> >> >
+> >> > Let's add a check to make sure that the "copy complete" interrupt
+> >> > actually fired in ath10k_ce_per_engine_service().
+> >> >
+> >> > This might fix a hard-to-reproduce failure where it appears that the
+> >> > copy complete handlers run before the copy is really complete.
+> >> > Specifically a symptom was that we were seeing this on a Qualcomm
+> >> > sc7180 board:
+> >> >   arm-smmu 15000000.iommu: Unhandled context fault:
+> >> >   fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
+> >> >
+> >> > Even on platforms that don't have wcn3990 this still seems like it
+> >> > would be a sane thing to do.  Specifically the current IRQ handler
+> >> > comments indicate that there might be other misc interrupt sources
+> >> > firing that need to be cleared.  If one of those sources was the one
+> >> > that caused the IRQ handler to be called it would also be important to
+> >> > double-check that the interrupt we cared about actually fired.
+> >> >
+> >> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> >> > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> >>
+> >> ath10k firmwares work very differently, on what hardware and firmware did you
+> >> test this? I'll add that information to the commit log.
+> >
+> > I am running on a Qualcomm sc7180 SoC.
+>
+> Sorry, I was unclear, I meant the ath10k hardware :) I guess WCN3990 but
+> what firmware version?
 
-> ---
->  mm/memcontrol.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 0b38b6ad547d..5de0a9035b5f 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6360,11 +6360,16 @@ static unsigned long effective_protection(unsigned long usage,
->  	 * We're using unprotected memory for the weight so that if
->  	 * some cgroups DO claim explicit protection, we don't protect
->  	 * the same bytes twice.
-> +	 *
-> +	 * Check both usage and parent_usage against the respective
-> +	 * protected values. One should imply the other, but they
-> +	 * aren't read atomically - make sure the division is sane.
->  	 */
->  	if (!(cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_RECURSIVE_PROT))
->  		return ep;
-> -
-> -	if (parent_effective > siblings_protected && usage > protected) {
-> +	if (parent_effective > siblings_protected &&
-> +	    parent_usage > siblings_protected &&
-> +	    usage > protected) {
->  		unsigned long unclaimed;
->  
->  		unclaimed = parent_effective - siblings_protected;
-> -- 
-> 2.26.2
+Ah, sorry!  Yes, it appears to be wcn3990 based on my device tree:
 
--- 
-Michal Hocko
-SUSE Labs
+$ git grep -A2 wifi -- arch/arm64/boot/dts/qcom/sc7180.dtsi
+
+wifi: wifi@18800000 {
+        compatible = "qcom,wcn3990-wifi";
+        reg = <0 0x18800000 0 0x800000>;
+        reg-names = "membase";
+
+Firmware isn't final yet, but currently my boot log shows:
+
+qmi fw_version 0x322a01ea
+fw_build_timestamp 2020-05-20 03:47
+QC_IMAGE_VERSION_STRING=WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
+
+-Doug
