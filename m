@@ -2,119 +2,107 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC412C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA3D207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D09207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592260556;
-	bh=eTCB2EW6RLvV2Ig6ZGQCIIQyJWs+h/bOXkyK93wZCEs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=JKHl9Jkv0inZqs+vu5gwf/ArUpspwyJfaHEHCxXRlaqFMQv0alrDgb/9ni5Avy2Rp
-	 4gYDEP8GkGpLVEnb7SmLafq7imltVHzpaLQ0knutEh7qFuISkVmsvSpFpj6w1kjlPA
-	 wEFtM+JifFm32vC1c+rawzyGavDsNFr50c0AEeKE=
+	s=default; t=1592260695;
+	bh=NxEoxsPnKpVaUgBMolvqzprgY0L/U6ngzncz0qbEMbs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GAKWIcuUPpe2LSfFWCYVU85D4tkfdIJ6Gnm8Pa1tHOOZ5f83Q73Q59MJgQa/jOPbc
+	 fWXoQWMyYMIRgBprhnTKvGz46mTA/XQYqezMQEMfQTck6LimfCZzPYPtscQLwYaOfw
+	 kDYc61Z2s2c00n8jXpp0WMDnb2OFmfSd7OEOmZes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgFOWfz (ORCPT
+        id S1726463AbgFOWiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:35:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgFOWfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:35:54 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 328402071A;
-        Mon, 15 Jun 2020 22:35:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592260553;
-        bh=eTCB2EW6RLvV2Ig6ZGQCIIQyJWs+h/bOXkyK93wZCEs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=2nsSQhEoykRtd2Dk7GGmt826DRiFh1FIGpadTjWGwRD62mpsmGMf+M0Wf73pKi0+a
-         /jtRnFn0psed2Dixgfi6+TK+Fny4jcSx99o0IiRb1v9YpI9OVbyYJ+jTiRNnYfBmP0
-         8mCZhW0wPaHXe3DOYyXkt5E0N9HrsFWbt1RfmEjY=
-Date:   Mon, 15 Jun 2020 17:41:12 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Steve French <sfrench@samba.org>
-Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] cifs: misc: Use array_size() in if-statement controlling
- expression
-Message-ID: <20200615224112.GA12307@embeddedor>
+        Mon, 15 Jun 2020 18:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgFOWiN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 18:38:13 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DCEFC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:12 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i27so21130752ljb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hDkCcz9pJTljCHKlO0VjvIrQ/0YyW9zXpKFl2PZzA9U=;
+        b=WJKgNcDeluq3Js9hmc9GLKlZTmxtuneMSLtXZEDSyZObiMxXS09cxnh8mLcBHQIA/m
+         mRMDkRHN7y8aDfxnO8mxEh58PAPuojiTplNIr4Yfzac55vzGpJfQ7xUxHmhDZdjqsFwL
+         1k+AJpguvcfOehk6AZXEWzgMGoD0mC/2oC8Ek=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hDkCcz9pJTljCHKlO0VjvIrQ/0YyW9zXpKFl2PZzA9U=;
+        b=ifbcU4H9PzEJJ1mCUU0MHHfBI8B7swvbmrsw100hsssDwna9fPmyNG0YagxDi/Xkci
+         secSBIm5gNntCGr/IrsErf1cITRjmk9bUUL7G9mi/M6H66na1p42TH/uf4HckrcNcWdC
+         GmWf57KB/CCkwfAod5Y8q1Ja0CtCD6U5Z/lz90Aq+5SO9FS+od5ZQmuvj95Ti8Q8DKlW
+         ugeu5Z9nnKth5SulB25HuxuysngyQRWEYo4gRvQvsPTS22nsQeBSBUIa1dA/ToWbn+gb
+         H2wUqhG+nyqXOTXc2GLrwe5DE5CR0w6jQRKNEnExwi2qScXX0CUob6aa81RWltglpeuf
+         91Cw==
+X-Gm-Message-State: AOAM531zEHLmsZ+X9QplIwgvZJ381Fs3XEVvrcnOprIbsU/tiri0N5IU
+        KvnYSygHk+a1WQT2v9QC6S7PZ0NYglQ=
+X-Google-Smtp-Source: ABdhPJyq+Yot0q5h/sO3UmHhhlzRV+XGk3194SIdDYQu7Z5jylNL+61acWKIqjXr4KW1Inf/C/slvA==
+X-Received: by 2002:a2e:3808:: with SMTP id f8mr13687344lja.165.1592260690125;
+        Mon, 15 Jun 2020 15:38:10 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id a23sm1115491lfb.10.2020.06.15.15.38.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 15:38:09 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id a26so6090947lfj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:08 -0700 (PDT)
+X-Received: by 2002:ac2:521a:: with SMTP id a26mr95385lfl.192.1592260688575;
+ Mon, 15 Jun 2020 15:38:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAHk-=wgB6xs-gfihkMSngyAcRHaQ0oE3jVawVMzzAh4Xm0VsSQ@mail.gmail.com>
+ <20200615222427.60126-1-sashal@kernel.org>
+In-Reply-To: <20200615222427.60126-1-sashal@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 15 Jun 2020 15:37:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wid9pjXmafH_-F6TooC9j7nfqKweWbHKzENkk+YHTo=AQ@mail.gmail.com>
+Message-ID: <CAHk-=wid9pjXmafH_-F6TooC9j7nfqKweWbHKzENkk+YHTo=AQ@mail.gmail.com>
+Subject: Re: [PATCH] scripts/decode_stacktrace: warn when modpath is needed
+ but is unset
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use array_size() instead of the open-coded version in the controlling
-expression of the if statement.
+On Mon, Jun 15, 2020 at 3:24 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> When a user tries to parse a symbol located inside a module he must have
+> modpath set. Otherwise, decode_stacktrace won't be able to parse the
+> symbol correctly.
+>
+> Right now the failure is silent and easily missed by the user. What's
+> worse is that by the time the user realizes what happened (or someone on
+> LKML asks him to add the modpath and re-run), he might have already got
+> rid of the vmlinux/modules.
 
-Also, while there, use the preferred form for passing a size of a struct.
-The alternative form where struct name is spelled out hurts readability
-and introduces an opportunity for a bug when the pointer variable type is
-changed but the corresponding sizeof that is passed as argument is not.
+Well, that looks straightforward.
 
-This issue was found with the help of Coccinelle and, audited and fixed
-manually.
+Applied,
 
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/cifs/misc.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
-
-diff --git a/fs/cifs/misc.c b/fs/cifs/misc.c
-index 56791a692c8b..e44d049142d0 100644
---- a/fs/cifs/misc.c
-+++ b/fs/cifs/misc.c
-@@ -844,28 +844,26 @@ setup_aio_ctx_iter(struct cifs_aio_ctx *ctx, struct iov_iter *iter, int rw)
- 	struct bio_vec *bv = NULL;
- 
- 	if (iov_iter_is_kvec(iter)) {
--		memcpy(&ctx->iter, iter, sizeof(struct iov_iter));
-+		memcpy(&ctx->iter, iter, sizeof(*iter));
- 		ctx->len = count;
- 		iov_iter_advance(iter, count);
- 		return 0;
- 	}
- 
--	if (max_pages * sizeof(struct bio_vec) <= CIFS_AIO_KMALLOC_LIMIT)
--		bv = kmalloc_array(max_pages, sizeof(struct bio_vec),
--				   GFP_KERNEL);
-+	if (array_size(max_pages, sizeof(*bv)) <= CIFS_AIO_KMALLOC_LIMIT)
-+		bv = kmalloc_array(max_pages, sizeof(*bv), GFP_KERNEL);
- 
- 	if (!bv) {
--		bv = vmalloc(array_size(max_pages, sizeof(struct bio_vec)));
-+		bv = vmalloc(array_size(max_pages, sizeof(*bv)));
- 		if (!bv)
- 			return -ENOMEM;
- 	}
- 
--	if (max_pages * sizeof(struct page *) <= CIFS_AIO_KMALLOC_LIMIT)
--		pages = kmalloc_array(max_pages, sizeof(struct page *),
--				      GFP_KERNEL);
-+	if (array_size(max_pages, sizeof(*pages)) <= CIFS_AIO_KMALLOC_LIMIT)
-+		pages = kmalloc_array(max_pages, sizeof(*pages), GFP_KERNEL);
- 
- 	if (!pages) {
--		pages = vmalloc(array_size(max_pages, sizeof(struct page *)));
-+		pages = vmalloc(array_size(max_pages, sizeof(*pages)));
- 		if (!pages) {
- 			kvfree(bv);
- 			return -ENOMEM;
--- 
-2.27.0
-
+              Linus
