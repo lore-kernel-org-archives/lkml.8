@@ -2,137 +2,256 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C159BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFE520707
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961FB20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:34:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yUN9zY+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgFOKaq (ORCPT
+        id S1729301AbgFOKe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:30:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:44638 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728860AbgFOKad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:30:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 578A91F1;
-        Mon, 15 Jun 2020 03:30:32 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 455BB3F71F;
-        Mon, 15 Jun 2020 03:30:29 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 11:30:27 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Wooyeon Kim <wooy88.kim@samsung.com>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Bhupesh Sharma' <bhsharma@redhat.com>,
-        'Julien Grall' <julien.grall@arm.com>,
-        'Vincenzo Frascino' <vincenzo.frascino@arm.com>,
-        'Will Deacon' <will@kernel.org>, yhwan.joo@samsung.com,
-        'Anisse Astier' <aastier@freebox.fr>,
-        'Marc Zyngier' <maz@kernel.org>,
-        'Allison Randal' <allison@lohutok.net>,
-        'Sanghoon Lee' <shoon114.lee@samsung.com>,
-        'Wooki Min' <wooki.min@samsung.com>,
-        'Kees Cook' <keescook@chromium.org>,
-        'Suzuki K Poulose' <suzuki.poulose@arm.com>,
-        jihun.kim@samsung.com,
-        'Kristina Martsenko' <kristina.martsenko@arm.com>,
-        'Jeongtae Park' <jtp.park@samsung.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        'Steve Capper' <steve.capper@arm.com>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, 'James Morse' <james.morse@arm.com>,
-        'Sudeep Holla' <sudeep.holla@arm.com>, dh.han@samsung.com
-Subject: Re: [PATCH] arm64: fpsimd: Added API to manage fpsimd state inside
- kernel
-Message-ID: <20200615103024.GI25945@arm.com>
-References: <CGME20200605073214epcas2p1576f3f90dbcefaad6180f2559ca5980d@epcas2p1.samsung.com>
- <20200605073052.23044-1-wooy88.kim@samsung.com>
- <20200605103705.GD85498@C02TD0UTHF1T.local>
- <20200608103340.GA31466@arm.com>
- <001401d63fd4$95646690$c02d33b0$@samsung.com>
- <20200611141101.GA31408@gaia>
+        Mon, 15 Jun 2020 06:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbgFOKeu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:34:50 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82EF1C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:34:50 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f7so16866493ejq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j5XMGazWwGhDJ5Y/GJxd/IOFuFz4Mx+W59DIWX6atAo=;
+        b=yUN9zY+w+uEF7QUjafBk8bygiw68mGJQOUSQN1qm0nXky1JJl4ooC3C4lnT6eBEIsq
+         9vNvV+fXRQ4KAj7m4pbN/bWKcyMsQyYVIB66iX8gUjSsz/bMfjOQGMgGjqEbb2YS7BZ4
+         zvkfRM/bob0uBZbS+pt+joSiVGVtobC83KXezDgob1W9PfH/z3TZs8aQyeTrsaZMS1q0
+         KZrUUdo03gANUOOLjwOBI6LD8pehI1rBeu0cqKr7ARKiJnFVE1U+upDauUgdEkgveKEf
+         K/nztd00eMKZTlqV4gsN/PVZ5gzU3TBm7XTlfeZSlvtoWxeusfty1M/jxM244rzyyTZb
+         9zEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j5XMGazWwGhDJ5Y/GJxd/IOFuFz4Mx+W59DIWX6atAo=;
+        b=jGVnB9KOsGIDDj8Ihuj+dgALugxvO+x0hwiLvFI1YxDHtpMskCcNGC2x6xvaXCo6Wc
+         4Na1NTR/IpTgQGyE+DBA7nSn2umWJoWngTzw2tq6JE3iGU4ewqEs3KNpm36ZHzoOBeay
+         /GRElPFiYXJrENAOj0/vzj/kUw80jG+cfFvy4pb88/3qKTENkFUqi6oOuPa2HTQjPOt9
+         Jtdysiya80UDbqyEPdh/W3UjlOcncNmvPuEgPVKS3hNCQFzfF6z4BvID1V5aM/1wA0mI
+         nurx0B16oz4OfiBcc5jQt0Zh6ToVY88bl7JWUhvvFj01Z2BWdz4KqwLTHYeTW1QiCVTG
+         h4rw==
+X-Gm-Message-State: AOAM5330DT9IKd2EAmeakXmNGLHtvCLQacSKqtCqnZxm1BJNm0CmVUiN
+        ShOxswEtyfc1lceZ9F4fHHAUkQ==
+X-Google-Smtp-Source: ABdhPJx1280e9KwTAh7L8gxkMqPelJpVU6bgb9LhdKNWQEIq/YWdEIkALizUMB+r3MxYtN9/T11Ilg==
+X-Received: by 2002:a17:906:fb19:: with SMTP id lz25mr25935106ejb.349.1592217288982;
+        Mon, 15 Jun 2020 03:34:48 -0700 (PDT)
+Received: from [192.168.1.3] (212-5-158-38.ip.btc-net.bg. [212.5.158.38])
+        by smtp.googlemail.com with ESMTPSA id rv14sm8837913ejb.110.2020.06.15.03.34.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 03:34:48 -0700 (PDT)
+Subject: Re: [PATCH v4 1/3] venus: Add debugfs interface to set firmware log
+ level
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20200613223919.7038-1-stanimir.varbanov@linaro.org>
+ <20200613223919.7038-2-stanimir.varbanov@linaro.org>
+ <20200614063511.GA2611869@kroah.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <d86671f8-fb27-671b-cc0c-bc4ab1353943@linaro.org>
+Date:   Mon, 15 Jun 2020 13:34:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611141101.GA31408@gaia>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200614063511.GA2611869@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 03:11:02PM +0100, Catalin Marinas wrote:
-> On Thu, Jun 11, 2020 at 06:42:12PM +0900, Wooyeon Kim wrote:
-> > I am in charge of camera driver development in Samsung S.LSI division.
-> > 
-> > In order to guarantee real time processing such as Camera 3A algorithm in
-> > current or ongoing projects, prebuilt binary is loaded and used in kernel
-> > space, rather than user space.
+Hi Greg,
+
+On 6/14/20 9:35 AM, Greg KH wrote:
+> On Sun, Jun 14, 2020 at 01:39:17AM +0300, Stanimir Varbanov wrote:
+>> This will be useful when debugging specific issues related to
+>> firmware HFI interface.
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 > 
-> Thanks for the additional details.
+> You didn't cc: any of us on the patchs, like you did on 0/3 :(
 
-I have to ask: there are other camera drivers in existence already.
-What makes your hardware so different that it requires all this data
-processing to be done inside the kernel?
+yes, sorry about that.
 
-> If you do such intensive processing in an IRQ context you'd probably
-> introduce additional IRQ latency. Wouldn't offloading such work to a
-> real-time (user) thread help? In a non-preempt-rt kernel, I don't think
-> you can get much in terms of (soft) guarantees for IRQ latency anyway.
 > 
-> > Because the binary is built with other standard library which could use
-> > FPSIMD register, kernel API should keep the original FPSIMD state for other
-> > user tasks.
 > 
-> Can you not recompile those libraries not to use FP?
+>> ---
+>>  drivers/media/platform/qcom/venus/Makefile    |  2 +-
+>>  drivers/media/platform/qcom/venus/core.c      |  3 +++
+>>  drivers/media/platform/qcom/venus/core.h      |  3 +++
+>>  drivers/media/platform/qcom/venus/dbgfs.c     | 21 +++++++++++++++++++
+>>  drivers/media/platform/qcom/venus/dbgfs.h     | 12 +++++++++++
+>>  drivers/media/platform/qcom/venus/hfi_venus.c |  7 ++++++-
+>>  6 files changed, 46 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.c
+>>  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.h
+>>
+>> diff --git a/drivers/media/platform/qcom/venus/Makefile b/drivers/media/platform/qcom/venus/Makefile
+>> index 64af0bc1edae..dfc636865709 100644
+>> --- a/drivers/media/platform/qcom/venus/Makefile
+>> +++ b/drivers/media/platform/qcom/venus/Makefile
+>> @@ -3,7 +3,7 @@
+>>  
+>>  venus-core-objs += core.o helpers.o firmware.o \
+>>  		   hfi_venus.o hfi_msgs.o hfi_cmds.o hfi.o \
+>> -		   hfi_parser.o pm_helpers.o
+>> +		   hfi_parser.o pm_helpers.o dbgfs.o
+>>  
+>>  venus-dec-objs += vdec.o vdec_ctrls.o
+>>  venus-enc-objs += venc.o venc_ctrls.o
+>> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+>> index 203c6538044f..249141e27fea 100644
+>> --- a/drivers/media/platform/qcom/venus/core.c
+>> +++ b/drivers/media/platform/qcom/venus/core.c
+>> @@ -290,6 +290,8 @@ static int venus_probe(struct platform_device *pdev)
+>>  	if (ret)
+>>  		goto err_dev_unregister;
+>>  
+>> +	venus_dbgfs_init(core);
+>> +
+>>  	return 0;
+>>  
+>>  err_dev_unregister:
+>> @@ -337,6 +339,7 @@ static int venus_remove(struct platform_device *pdev)
+>>  	v4l2_device_unregister(&core->v4l2_dev);
+>>  	mutex_destroy(&core->pm_lock);
+>>  	mutex_destroy(&core->lock);
+>> +	venus_dbgfs_deinit(core);
+>>  
+>>  	return ret;
+>>  }
+>> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+>> index 7118612673c9..b48782f9aa95 100644
+>> --- a/drivers/media/platform/qcom/venus/core.h
+>> +++ b/drivers/media/platform/qcom/venus/core.h
+>> @@ -12,6 +12,7 @@
+>>  #include <media/v4l2-ctrls.h>
+>>  #include <media/v4l2-device.h>
+>>  
+>> +#include "dbgfs.h"
+>>  #include "hfi.h"
+>>  
+>>  #define VIDC_CLKS_NUM_MAX		4
+>> @@ -136,6 +137,7 @@ struct venus_caps {
+>>   * @priv:	a private filed for HFI operations
+>>   * @ops:		the core HFI operations
+>>   * @work:	a delayed work for handling system fatal error
+>> + * @root:	debugfs root directory
+>>   */
+>>  struct venus_core {
+>>  	void __iomem *base;
+>> @@ -185,6 +187,7 @@ struct venus_core {
+>>  	unsigned int codecs_count;
+>>  	unsigned int core0_usage_count;
+>>  	unsigned int core1_usage_count;
+>> +	struct dentry *root;
+>>  };
+>>  
+>>  struct vdec_controls {
+>> diff --git a/drivers/media/platform/qcom/venus/dbgfs.c b/drivers/media/platform/qcom/venus/dbgfs.c
+>> new file mode 100644
+>> index 000000000000..782d54ac1b8f
+>> --- /dev/null
+>> +++ b/drivers/media/platform/qcom/venus/dbgfs.c
+>> @@ -0,0 +1,21 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2020 Linaro Ltd.
+>> + */
+>> +
+>> +#include <linux/debugfs.h>
+>> +
+>> +#include "core.h"
+>> +
+>> +extern int venus_fw_debug;
+>> +
+>> +void venus_dbgfs_init(struct venus_core *core)
+>> +{
+>> +	core->root = debugfs_create_dir("venus", NULL);
+>> +	debugfs_create_x32("fw_level", 0644, core->root, &venus_fw_debug);
+>> +}
+>> +
+>> +void venus_dbgfs_deinit(struct venus_core *core)
+>> +{
+>> +	debugfs_remove_recursive(core->root);
+>> +}
+>> diff --git a/drivers/media/platform/qcom/venus/dbgfs.h b/drivers/media/platform/qcom/venus/dbgfs.h
+>> new file mode 100644
+>> index 000000000000..b7b621a8472f
+>> --- /dev/null
+>> +++ b/drivers/media/platform/qcom/venus/dbgfs.h
+>> @@ -0,0 +1,12 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/* Copyright (C) 2020 Linaro Ltd. */
+>> +
+>> +#ifndef __VENUS_DBGFS_H__
+>> +#define __VENUS_DBGFS_H__
+>> +
+>> +struct venus_core;
+>> +
+>> +void venus_dbgfs_init(struct venus_core *core);
+>> +void venus_dbgfs_deinit(struct venus_core *core);
+>> +
+>> +#endif
+>> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+>> index 0d8855014ab3..3a04b08ab85a 100644
+>> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+>> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+>> @@ -130,7 +130,7 @@ struct venus_hfi_device {
+>>  };
+>>  
+>>  static bool venus_pkt_debug;
+>> -static int venus_fw_debug = HFI_DEBUG_MSG_ERROR | HFI_DEBUG_MSG_FATAL;
+>> +int venus_fw_debug = HFI_DEBUG_MSG_ERROR | HFI_DEBUG_MSG_FATAL;
+>>  static bool venus_sys_idle_indicator;
+>>  static bool venus_fw_low_power_mode = true;
+>>  static int venus_hw_rsp_timeout = 1000;
+>> @@ -1130,9 +1130,14 @@ static int venus_session_init(struct venus_inst *inst, u32 session_type,
+>>  			      u32 codec)
+>>  {
+>>  	struct venus_hfi_device *hdev = to_hfi_priv(inst->core);
+>> +	struct device *dev = hdev->core->dev;
+>>  	struct hfi_session_init_pkt pkt;
+>>  	int ret;
+>>  
+>> +	ret = venus_sys_set_debug(hdev, venus_fw_debug);
+>> +	if (ret)
+>> +		dev_warn(dev, "setting fw debug msg ON failed (%d)\n", ret);
 > 
-> As Mark said, for a kernel API we require at least an in-kernel,
-> upstreamed, user of that functionality.
+> Why do you care about this to tell the user about it?
+
+I already answered to this question in previous patchset version. I'll
+drop the message and return an error if set_debug fail.
+
 > 
-> > In the case of the kernel_neon_begin / kernel_neon_end that you mentioned,
-> > there is a limitation that cannot be used in hardirq context.
-> > Also, if another kernel task switching occurs while kernel API is being
-> > used, fpsimd register corruption may occur.
+> thanks,
 > 
-> kernel_neon_begin/end disable preemption, so you can't have a task
-> switch (you can have interrupts though but we don't allow FPSIMD in IRQ
-> context).
+> greg k-h
+> 
 
-Note, the decision not to support kernel_neon_begin / kernel_neon_end in
-hardirq context was deliberate.  hardirq handlers shouldn't usually do
-anything at all except ensure that something responds to the hardware
-event, by waking some other thread or scheduling a workqueue item for
-example.  An IRQ handler that only does that has no need to do any data
-processing, and gains no advantage from using FPSIMD.
-
-Doing additional work in hardirq context will harm interrupt latency for
-the rest of the system.
-
-So, you should move the data processing work out of the hardirq handler.
-Is there a reason why this is not possible?
-
-
-Secondly, there is the question of whether FPSIMD can be used by kernel
-threads.  Currently this is only supported in a limited way.  Again,
-this a deliberate decision, for now.
-
-Can you split the processing work into small blocks using
-kernel_neon_begin/kernel_neon_end, similarly to the arm64 crypto
-drivers?
-
-This is the current accepted way of doing number crunching inside the
-kernel without harming preemption latency too much.  Even so, it's
-primarily intended for things that affect critical paths inside the
-kernel, such as crypto or checksumming in the filesysem and network
-subsystems.
-
-Cheers
----Dave
+-- 
+regards,
+Stan
