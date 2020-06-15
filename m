@@ -2,188 +2,231 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA28C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E60C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD02206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:57:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="q34wYY50"
+	by mail.kernel.org (Postfix) with ESMTP id 58824206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgFOX5n (ORCPT
+        id S1726784AbgFOX7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:57:43 -0400
-Received: from mail-dm6nam11on2073.outbound.protection.outlook.com ([40.107.223.73]:6082
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725960AbgFOX5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:57:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W0FzlObrMvPx5Yfe59cqeB4s5PBDwHAPm4oORECBLfvckF/JemopLMnzuU4tyaaDrpNjQlRu8OahNPD6W3DqYB6RbYjH8Yijr3e8Gt9+8RZiV+Lo9UJyCSaBJA28oEB/JmnrqyHR4vCSiDd+NS2cVY4BNJaWShJ/654Y3QxyRbUi0X9IYu6Ob20nd0GGfQpHUEx8YfobfzXW/GbFwGvc1jTc7vKge+4QnEeN7VWVBFZyPWNa1FSyzDMhxX0oSIiiUDLBoKA/yRZ6flz4jOllVHW8CQ7xzEMi6Pf3mFBq9UJ9KpkFB4U4Xi/ILyvYvB5oFXfT30dsgBqjG1uSUT6WvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hGRwWTggQ0JenzXESwFnQH6dFS/cDUfqaFEXscCU1lg=;
- b=IGJ6ljUvS35rkfN+1onFftrEQjMHsxKjca9IcJXgUbX/76QPts/sK4gafEd2sUnfs54X81nAL5eTB7UPgo1mGyQ9ERdZbYdk8vWu+1XFJ97UrQFiAlAyGtrQ/inqNy+URVVpHUcLx0pPipGBiZB6pG+yueXJqD/SDsi6onvFnSoZ+vh5ZGPD2Q7KWg0QJ741U/7VCgoxk2sTSBVx1SyYUstzpx1419LYV0+l/y/zxKHDkj9GOCyuBEfy6mPzaTS5JvLCFmzHs9EhPm1QHOewQppBThDtwdE3iiGTbpmJCAAfM6lFNNbFvF66i6Q0rkEFjNSjrHcaF4+0P8x+JAe0wQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hGRwWTggQ0JenzXESwFnQH6dFS/cDUfqaFEXscCU1lg=;
- b=q34wYY50ITrcmyKSzrn5nf7wMAM+m5Q8xJWbTW42dX8UIR/wCykmHBP9rJPk27Jiejva/ygilhCbebKTTTgXvpPxFeb8FKhRJ8FUEOwjAQ1OM8t8OwBJj213V56/30Z5R0A/crk4SPf64KzBhOQe3o8GzOuGDRlc9EHK+palCdk=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
- by SN6PR12MB2766.namprd12.prod.outlook.com (2603:10b6:805:78::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Mon, 15 Jun
- 2020 23:57:39 +0000
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::18d:97b:661f:9314]) by SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::18d:97b:661f:9314%7]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
- 23:57:39 +0000
-Subject: Re: [PATCH] drm/amdkfd: Fix reference count leaks.
-To:     wu000273@umn.edu, kjlu@umn.edu
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200613193226.21531-1-wu000273@umn.edu>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <349ff701-613e-7234-45ec-0f874e135712@amd.com>
-Date:   Mon, 15 Jun 2020 19:57:36 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <20200613193226.21531-1-wu000273@umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: YTOPR0101CA0015.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::28) To SN1PR12MB2414.namprd12.prod.outlook.com
- (2603:10b6:802:2e::31)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.31.149.124] (165.204.55.211) by YTOPR0101CA0015.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Mon, 15 Jun 2020 23:57:38 +0000
-X-Originating-IP: [165.204.55.211]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 738983ea-0144-4371-63ce-08d81187e25c
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2766:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB2766ED1B2714A6C580444A9A929C0@SN6PR12MB2766.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-Forefront-PRVS: 04359FAD81
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IhIWeAsmAUdBrj5JNEKVy5K1cfH+zxZgDiA65KrudyzmjPeO4noZTM+QAHsl4zq0TKmCSuVVOtmLpUWrh9UW815B9m/3A1zLD5YVrXvBe+NhC9MH53iWIOSSSu8a+Co3IadYMKzKWdiMiTL15mcrVrfh7oQNLbzLiZxdqh+FNEUGodDjWwc/q+2o4mpJCaPjOdjL2AeOnw1wloJqEbzVCtGqA+4utlBrN7tZo+oY3RbVfFabgNs8qqPT/t5XfnI3xlhRz14XUEqSi1oS6ZhD6rQmjMa74EatrXroxp4QZu8VT5HJvr34vGhwTJTvfGOkih3n68tZwzSLNVV78PXIj6bZN8/FLALfvJFBeU7wD0CeCV3P1jWCceRrxUsYqvOK
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(39860400002)(136003)(186003)(16526019)(4326008)(8676002)(66556008)(956004)(2906002)(2616005)(6486002)(44832011)(8936002)(66946007)(66476007)(86362001)(31696002)(36756003)(52116002)(31686004)(26005)(5660300002)(16576012)(83380400001)(478600001)(53546011)(316002)(54906003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: r4DnOhXjAc4fW3GdDSsVGeFgpdtmezcg5n00Km52427cDOatx+gxKVjKy3natk1Ps8N5+qS5B8sN0c6NT1kqbEdWNOM32aOSPvzC8P3eZhrVcB5oCZkEjF2OkENsCEEjI0RpYRX0DWPV+80z1y2PHAfVipl99CKiVvgD8XXHYA8yUnARfF59SWaq538tEBcFIXovdhfNvAfOZCSPB/XQMaFI4LiV7GcCpHfomfR3VsQJwlIn0iTI6atkdslNFjUDs0jfkLtWliMFWd2299w4PXtZ0J/sEHhqg0Fyb/Q9ZxO7tTo1+k70YdvLN/a7dtyGpcxRUYcxYE7t3DInt8oa1J8kVUNXFN1P5314Kg/4+flJQFBE34paqTQNE3CaVliz3XDp2sz7JIwnux8wr0ZR7qYymhh4veOhLGt1dUip/hufl03dhzGmPNMtYsll1s7aceFHyXiCnFrDYsgTHHqYJIZCqb+NvtWZZtDFHP7ufblBSrWBFqu9qFX5FDybjCMF
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 738983ea-0144-4371-63ce-08d81187e25c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 23:57:39.1546
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C2NeNXi6vGnnkQn5W4EDXVy52sAn/tQbHmk/sOZgCT5sdpoYRNvdrPyRlj7xku5yKLHDWJlJHAA4u8TLj7gB/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2766
+        Mon, 15 Jun 2020 19:59:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:16071 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725960AbgFOX7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:59:00 -0400
+IronPort-SDR: HESacQ+dLlDZGpShz8r/q03RCspVdbjDQnCbPvyEG+aliDB6/ATGyFkxa4sUlIOl/j7pP6tSGq
+ 0avXI1k/krVQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 16:58:58 -0700
+IronPort-SDR: dHTXH5faPP/KeC8Bu/ZUWkOhKD96CG8brw+X5POJU09JGloLbXkpXpTqmHhxmFEQM1ALPidmjM
+ 1IDKLpNaL6xA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,516,1583222400"; 
+   d="scan'208";a="382697634"
+Received: from km-skylake-client-platform.sc.intel.com ([10.3.52.141])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2020 16:58:58 -0700
+Message-ID: <b8cfc58db0505b84bdb49906f570eed226b39a5c.camel@intel.com>
+Subject: Re: [RFC PATCH 1/3] Documentation/x86: Add documentation for
+ /proc/cpuinfo feature flags
+From:   Kyung Min Park <kyung.min.park@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, hpa@zytor.com, gregkh@linuxfoundation.org,
+        ak@linux.intel.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, ricardo.neri@intel.com,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Date:   Mon, 15 Jun 2020 16:44:03 -0700
+In-Reply-To: <20200615181527.GM14668@zn.tnic>
+References: <20200610200701.16757-1-kyung.min.park@intel.com>
+         <20200610200701.16757-2-kyung.min.park@intel.com>
+         <20200615181527.GM14668@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-13 15:32, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
->
-> kobject_init_and_add() takes reference even when it fails.
-> If this function returns an error, kobject_put() must be called to
-> properly clean up the memory associated with the object.
->
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Hi Borislav,
 
-Thank you. The patch is
+On Mon, 2020-06-15 at 20:15 +0200, Borislav Petkov wrote:
+> On Wed, Jun 10, 2020 at 01:06:59PM -0700, Kyung Min Park wrote:
+> > Add documentation for /proc/cpuinfo feature flags enumeration.
+> > Document how and when x86 feature flags are used. Also discuss what
+> > their presence or absence mean for the kernel, users, and
+> > applications.
+> > 
+> > Suggested-by: Dave Hansen <dave.hansen@intel.com>
+> > Co-developed-by: Ricardo Neri <
+> > ricardo.neri-calderon@linux.intel.com>
+> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > Signed-off-by: Kyung Min Park <kyung.min.park@intel.com>
+> > ---
+> >  Documentation/x86/cpuinfo.rst | 152
+> > ++++++++++++++++++++++++++++++++++
+> >  Documentation/x86/index.rst   |   1 +
+> >  2 files changed, 153 insertions(+)
+> >  create mode 100644 Documentation/x86/cpuinfo.rst
+> 
+> I guess, although if we ever change how all that works, we need to
+> update the documentation but this is the usual thing with
+> documentation.
+> Maybe it should not be documented in such a detail. :)
+> 
 
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Sure :)
 
-I'm applying the patch to our amd-staging-drm-next branch.
+> > diff --git a/Documentation/x86/cpuinfo.rst
+> > b/Documentation/x86/cpuinfo.rst
+> > new file mode 100644
+> > index 000000000000..d01d2c03a4d7
+> > --- /dev/null
+> > +++ b/Documentation/x86/cpuinfo.rst
+> > @@ -0,0 +1,152 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=================
+> > +x86 Feature Flags
+> > +=================
+> > +
+> > +Introduction
+> > +============
+> > +
+> > +On x86, flags appearing in /proc/cpuinfo have an X86_FEATURE
+> > definition
+> > +in arch/x86/include/asm/cpufeatures.h. If the kernel, any
+> > application,
+> > +or an end user
+> 
+> The kernel yes - the other two, not really. Userspace simply does
+> CPUID
+> directly.
+> 
 
-Regards,
-   Felix
+Okay, let me remove those two (application, user) here.
 
+> > might care about a feature, it can and should have
+> > +X86_FEATURE_* defined. These flags represent hardware features as
+> > +well as software features.
+> > +
+> > +If users want to know if a feature is available on a given system,
+> > they
+> > +try to find the flag in /proc/cpuinfo. If a given flag is present,
+> > it
+> > +means that the kernel supports it and is currently making it
+> > available.
+> > +If such flag represents a hardware feature, it also means that the
+> > +hardware supports it.
+> > +
+> > +If the expected flag does not appear in /proc/cpuinfo, things are
+> > murkier.
+> > +Users need to find out the reason why the flag is missing and find
+> > the way
+> > +how to enable it, which is not always easy.
+> 
+> This needs to say:
+> 
+> It can be that the kernel doesn't support that feature and thus
+> hasn't
+> enabled it.
+> 
 
-> ---
->   drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
->   1 file changed, 15 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-> index bb77f7af2b6d..dc3c4149f860 100644
-> --- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-> @@ -632,8 +632,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
->   
->   	ret = kobject_init_and_add(dev->kobj_node, &node_type,
->   			sys_props.kobj_nodes, "%d", id);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		kobject_put(dev->kobj_node);
->   		return ret;
-> +	}
->   
->   	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
->   	if (!dev->kobj_mem)
-> @@ -680,8 +682,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
->   			return -ENOMEM;
->   		ret = kobject_init_and_add(mem->kobj, &mem_type,
->   				dev->kobj_mem, "%d", i);
-> -		if (ret < 0)
-> +		if (ret < 0) {
-> +			kobject_put(mem->kobj);
->   			return ret;
-> +		}
->   
->   		mem->attr.name = "properties";
->   		mem->attr.mode = KFD_SYSFS_FILE_MODE;
-> @@ -699,8 +703,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
->   			return -ENOMEM;
->   		ret = kobject_init_and_add(cache->kobj, &cache_type,
->   				dev->kobj_cache, "%d", i);
-> -		if (ret < 0)
-> +		if (ret < 0) {
-> +			kobject_put(cache->kobj);
->   			return ret;
-> +		}
->   
->   		cache->attr.name = "properties";
->   		cache->attr.mode = KFD_SYSFS_FILE_MODE;
-> @@ -718,8 +724,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
->   			return -ENOMEM;
->   		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
->   				dev->kobj_iolink, "%d", i);
-> -		if (ret < 0)
-> +		if (ret < 0) {
-> +			kobject_put(iolink->kobj);
->   			return ret;
-> +		}
->   
->   		iolink->attr.name = "properties";
->   		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
-> @@ -798,8 +806,10 @@ static int kfd_topology_update_sysfs(void)
->   		ret = kobject_init_and_add(sys_props.kobj_topology,
->   				&sysprops_type,  &kfd_device->kobj,
->   				"topology");
-> -		if (ret < 0)
-> +		if (ret < 0) {
-> +			kobject_put(sys_props.kobj_topology);
->   			return ret;
-> +		}
->   
->   		sys_props.kobj_nodes = kobject_create_and_add("nodes",
->   				sys_props.kobj_topology);
+Sure, Let me modify.
+
+> > There are several factors that
+> > +can explain missing flags: the expected feature failed to enable,
+> > the feature
+> > +is missing in hardware, platform firmware did not enable it, the
+> > feature is
+> > +disabled at build or run time, or an old kernel is in use. In such
+> > cases,
+> > +the users need to rely on tools like 
+> > http://www.etallen.com/cpuid.html
+> > +(which is not updated with kernel releases) or other custom tools
+> > that
+> > +read CPUID.
+> 
+> In general, this should say something along the lines that
+> /proc/cpuinfo
+> shows features which the kernel supports.
+> 
+> "For a full list of CPUID flags which the CPU supports, use
+> tools/arch/x86/tools/cpuid/cpuid"
+> 
+> :-)
+
+Sure.
+
+> 
+> > +
+> > +How are feature flags created?
+> > +==============================
+> > +
+> > +a: Feature flags can be derived from the contents of CPUID leaves.
+> > +------------------------------------------------------------------
+> > +These feature definitions are organized mirroring the layout of
+> > CPUID
+> > +leaves and grouped in words with offsets as mapped in enum
+> > cpuid_leafs
+> > +in cpufeatures.h (see arch/x86/include/asm/cpufeatures.h for
+> > details).
+> > +If a feature is defined with a X86_FEATURE_<name> definition in
+> > +cpufeatures.h, and if it is detected at run time, the flags will
+> > be
+> > +displayed accordingly in /proc/cpuinfo. For example, the flag
+> > "avx2"
+> > +comes from X86_FEATURE_AVX2 in cpufeatures.h.
+> > +
+> > +b: Flags can be from scattered CPUID-based features.
+> > +----------------------------------------------------
+> > +Hardware features enumerated in sparsely populated CPUID leaves
+> > get
+> > +software-defined values. Still, CPUID needs to be queried to
+> > determine
+> > +if a given feature is present. This is done in
+> > init_scattered_cpuid_features().
+> > +For instance, X86_FEATURE_CQM_LLC is defined as 11*32 + 0 and its
+> > presence is
+> > +checked at runtime in the respective CPUID leaf [EAX=f, ECX=0] bit
+> > EDX[1].
+> > +
+> > +The intent of scattering CPUID leaves is to not bloat struct
+> > +cpuinfo_x86.x86_capability[] unnecessarily. For instance, the
+> > CPUID leaf
+> > +[EAX=7, ECX=0] has 30 features and is dense, but the CPUID leaf
+> > [EAX=7, EAX=1]
+> > +has only one feature and would waste 31 bits of space in the
+> > x86_capability[]
+> > +array.
+> 
+> ... and that per-CPU.
+
+Let me add more explanation regarding with per-CPU.
+
+> 
+> > +
+> > +c: Flags can be created synthetically under certain conditions for
+> > hardware features.
+> > +----------------------------------------------------------------
+> > ---------------------
+> > +Examples of conditions include whether certain features are
+> > present in
+> > +MSR_IA32_CORE_CAPS or specific CPU models are identified. If the
+> > needed
+> > +conditions are met, the features are enabled by the macro
+> > set_cpu_cap or
+> > +setup_force_cpu_cap macro.
+> 
+> ... by the ... macros.
+> 
+Sure, let me fix that.
+
