@@ -2,92 +2,115 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD328C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A23520707
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ZJzgOZhC"
+	by mail.kernel.org (Postfix) with ESMTP id B51B620707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgFOH6p (ORCPT
+        id S1729006AbgFOH6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:58:45 -0400
-Received: from www.zeus03.de ([194.117.254.33]:49220 "EHLO mail.zeus03.de"
+        Mon, 15 Jun 2020 03:58:51 -0400
+Received: from smtp.asem.it ([151.1.184.197]:51429 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbgFOH6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:58:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=k1; bh=zy9ju7B6YlDDHE
-        ooLxFkrGU+ZF5mtEjzYhXAsCLKff0=; b=ZJzgOZhC1+clVG+dYzuwHLtkuNQiVP
-        8i/w8ENmpvV/PkIYUiMSd68dh45K9gwwZez+JRqlsGtwiuOBU5JQmHZ6QSeJyN5n
-        voFrkUqBaQUygGoB3q3sAiJ4H98h2X9CmuN33PdjVxtzISc5SM4r00MoqHF1aF3M
-        /HY0LWJP5rrHY=
-Received: (qmail 989253 invoked from network); 15 Jun 2020 09:58:29 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 Jun 2020 09:58:29 +0200
-X-UD-Smtp-Session: l3s3148p1@FhXZyhqoDrYgAwDPXwRdAFnN6pRlEuNX
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] video: backlight: tosa_lcd: convert to use i2c_new_client_device()
-Date:   Mon, 15 Jun 2020 09:58:13 +0200
-Message-Id: <20200615075816.2848-5-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
-References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
+        id S1728868AbgFOH6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:58:49 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000317057.MSG 
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:58:39 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
+ Jun 2020 09:58:37 +0200
+Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Mon, 15 Jun 2020 09:58:37 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-csky@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v1] doc: devicetree: bindings: fix spelling mistake
+Date:   Mon, 15 Jun 2020 09:58:35 +0200
+Message-ID: <20200615075835.15202-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A09020A.5EE72A2D.0065,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move away from the deprecated API and return the shiny new ERRPTR where
-useful.
+Fix typo: "triger" --> "trigger"
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Acked-by: Guo Ren <guoren@kernel.org>
 ---
 
-I'd like to push it via I2C for 5.8-rc2.
+v1: add Acked-by: Guo Ren <guoren@kernel.org>
 
- drivers/video/backlight/tosa_lcd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
+ .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
+ Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/backlight/tosa_lcd.c b/drivers/video/backlight/tosa_lcd.c
-index e8ab583e5098..113116d3585c 100644
---- a/drivers/video/backlight/tosa_lcd.c
-+++ b/drivers/video/backlight/tosa_lcd.c
-@@ -107,7 +107,7 @@ static void tosa_lcd_tg_on(struct tosa_lcd_data *data)
- 	/* TG LCD GVSS */
- 	tosa_tg_send(spi, TG_PINICTL, 0x0);
+diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+index ba455589f869..e1c49b660d3a 100644
+--- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
+@@ -12,7 +12,7 @@ Required properties for the top level node:
+    Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+    interrupt. Should be 2. The first cell defines the interrupt number,
+-   the second encodes the triger flags encoded as described in
++   the second encodes the trigger flags encoded as described in
+    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ - compatible:
+   - "mediatek,mt7621-gpio" for Mediatek controllers
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+index e13405355166..e6bbcae4d07f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+@@ -10,7 +10,7 @@ Interrupt number definition:
+  16-31  : private  irq, and we use 16 as the co-processor timer.
+  31-1024: common irq for soc ip.
  
--	if (!data->i2c) {
-+	if (IS_ERR_OR_NULL(data->i2c)) {
- 		/*
- 		 * after the pannel is powered up the first time,
- 		 * we can access the i2c bus so probe for the DAC
-@@ -119,7 +119,7 @@ static void tosa_lcd_tg_on(struct tosa_lcd_data *data)
- 			.addr	= DAC_BASE,
- 			.platform_data = data->spi,
- 		};
--		data->i2c = i2c_new_device(adap, &info);
-+		data->i2c = i2c_new_client_device(adap, &info);
- 	}
- }
+-Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
++Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
+  IRQ_TYPE_LEVEL_HIGH (default)
+  IRQ_TYPE_LEVEL_LOW
+  IRQ_TYPE_EDGE_RISING
+diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+index 15cfec08fbb8..f5c7e99cf52b 100644
+--- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
++++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+@@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
+  - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
+  - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
+  - PTIM_CCVR "cr<3, 14>" Current counter value reg.
+- - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
++ - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
  
+ ==============================
+ timer node bindings definition
 -- 
-2.27.0
+2.17.1
 
