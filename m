@@ -2,150 +2,110 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7048EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4827020644
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="K8m/ctpW"
+	by mail.kernel.org (Postfix) with ESMTP id CE9C320644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbgFOO7R (ORCPT
+        id S1730873AbgFOO7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:59:17 -0400
-Received: from mail-dm6nam10on2088.outbound.protection.outlook.com ([40.107.93.88]:22368
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730748AbgFOO7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:59:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jZeFgfuL5bh5uN4coMQLlOXChUFATwfTP2Gy0X6iiwlodC2xiIubVeeQO1mraG85l90A+8B841K2YpzixZYfL9V6zK+Ib9gd/hkUK1my/uordV+zr/ZoO4U7JumNBq2VVkN153Km39wy5wCao/1kDVeKQBc+gFXAK2KZ76GpT4CX3ngbGBwf5X9S+KK5GGzQUtnv+LlQbvWQHVjda0yBNdNAjh1tfO59qhdyAK78V108P4w4+0tONzao6WFBaa8LOXrhu9r1iCJdjPcPRiK4ZkCvJii3kSedJGldVwyeXYyUsQ1Exf8lO2zx32Tr+I6MfQDLgGOwd3dbzAk5Ku+QXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/bcC9MkYeqvrUjtlL9qaLnB5HR24Pi7ZVt9P1rJaHG0=;
- b=M8rPvvJmowJtKGzfFlasXMb56cOOJq0yo6Y3xwX61a+Q2HBjkhfp+CWSrTJlL/0LuchIw4apvgQlVMfFj3CmnL+rusFwrQl5+G0XZY5stXcfz1e+zaFwyA13hsRJCg1vJu7Th47TFilE/LH91YFzIt3gM9vhmOTQjugBy+W8xXU/GLqiofRbUqFzcyY0h9bk8FKViEx+MC4kNwPcZQJfIVCRTrBynwwRgKBXtqMKlr0Q6NLv0tg2Bw+QqH2c4veI1q4VPquykHsuUtd8aoWs4i2QM3NIRWsLrr9PZRAzh0wm5F/SJsaIuOpqAZviqIeoDcFMV9Tr6y3TPCjw6K/EGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/bcC9MkYeqvrUjtlL9qaLnB5HR24Pi7ZVt9P1rJaHG0=;
- b=K8m/ctpW3ihg9B4PH0D+QikK1DqxdtGQfJU/G3jtTvOQM59NKC757p6KUp0YrPig1cgTXJJ/uR6yFs4z74Cd1Q6GLfbpf9C9slxR8omNUx1+IvomrVJnWOLo0sPzIFJXUREFed1AKtaR3WxAaV9IJnaI+fuEvn5Vz+UBuYpU8Yc=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SA0PR12MB4414.namprd12.prod.outlook.com (2603:10b6:806:9a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20; Mon, 15 Jun
- 2020 14:59:11 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2%3]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
- 14:59:11 +0000
-Subject: RE: [PATCH 3/3] KVM:SVM: Enable INVPCID feature on AMD
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-References: <159191202523.31436.11959784252237488867.stgit@bmoger-ubuntu>
- <159191213022.31436.11150808867377936241.stgit@bmoger-ubuntu>
- <CALMp9eSC-wwP50gtprpakKjPYeZ5LdDSFS6i__csVCJwUKmqjA@mail.gmail.com>
- <d0b09992-eb87-651a-3b97-0787e07cc46d@amd.com>
- <CALMp9eRZQXgJvt3MGreq47ApM5ObTU7YFQV_GcY5N+jozGK1Uw@mail.gmail.com>
- <d0c38022-2d82-aacc-4829-02c557edddc0@amd.com>
- <CALMp9eSn36W=YK5XtaVATJis-J--udGK4ZOESDhYyT0zJ4YZ9A@mail.gmail.com>
- <4f5a7fca-02b3-4cd9-159c-59fcda3debd0@redhat.com>
-From:   Babu Moger <babu.moger@amd.com>
-Message-ID: <3775e38a-9ebc-3ced-569a-fde066df673d@amd.com>
-Date:   Mon, 15 Jun 2020 09:59:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <4f5a7fca-02b3-4cd9-159c-59fcda3debd0@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 15 Jun 2020 10:59:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15810 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730793AbgFOO7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:59:18 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FE2flF024089;
+        Mon, 15 Jun 2020 10:59:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31mseymq8m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 10:59:11 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FElM6M019905;
+        Mon, 15 Jun 2020 10:59:11 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31mseymq79-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 10:59:11 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FEu0qZ023477;
+        Mon, 15 Jun 2020 14:59:09 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 31mpe83sv2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 14:59:09 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FEvnCs61931950
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 14:57:49 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA3AF42049;
+        Mon, 15 Jun 2020 14:59:06 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4E724207A;
+        Mon, 15 Jun 2020 14:59:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.184.11])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 14:59:05 +0000 (GMT)
+Message-ID: <1592233145.11061.129.camel@linux.ibm.com>
+Subject: Re: [PATCH 5/5] LSM: Define workqueue for measuring security module
+ state
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Stephen Smalley <stephen.smalley@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 15 Jun 2020 10:59:05 -0400
+In-Reply-To: <CAEjxPJ7v5Lu-vzqg0ZVh8zJ9uZ=odN3jt_5+9d9x+RydsNWK0g@mail.gmail.com>
+References: <20200613024130.3356-1-nramas@linux.microsoft.com>
+         <20200613024130.3356-6-nramas@linux.microsoft.com>
+         <CAEjxPJ7v5Lu-vzqg0ZVh8zJ9uZ=odN3jt_5+9d9x+RydsNWK0g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM5PR15CA0058.namprd15.prod.outlook.com
- (2603:10b6:3:ae::20) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.31.79] (165.204.77.1) by DM5PR15CA0058.namprd15.prod.outlook.com (2603:10b6:3:ae::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend Transport; Mon, 15 Jun 2020 14:59:10 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: fe7140c4-5196-4281-4466-08d8113ca995
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4414:
-X-Microsoft-Antispam-PRVS: <SA0PR12MB44141D6EC40FAB142CDF4D26959C0@SA0PR12MB4414.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 04359FAD81
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: noG5mZo3eyy/Jpm8CgL/MZ6pUpiU26xB972qBr6OSmLh1sbfc0EPc20zuu/+Vl0xTWz2mQaIlWAx5HShtjewIjZXncQvSfYl31rH/s44XARpTwvAPWA1TptcNdiUjLEEhsk5AJfSuc4bFxYZ7brlIoP88OAozaPKX0UpIkbWzYkqz5aTMdEqiF6297pG6fYjxDuBiRFODBRSm3vO/0QytN8Y88KEh4BnTMs4yorvqy4RiwQhqrhzzS5R1oFo4YKAu+dyJ8kA2cMjDjTz45iTZb/fK3ausFBLH0ObRRNMNbuuG0YsWDO3XIFtiLIZQN0JYcejPcZyIFIuBfiYl60BVtoIHtR6DI6iy3MpBGNKB3jHNaP4pgttpoPQDtjdNuSa
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(39860400002)(396003)(346002)(5660300002)(956004)(44832011)(2616005)(52116002)(53546011)(26005)(31686004)(316002)(16576012)(54906003)(110136005)(16526019)(186003)(86362001)(31696002)(7416002)(66476007)(66556008)(66946007)(8676002)(36756003)(2906002)(8936002)(6486002)(83380400001)(4326008)(478600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 2t249DHXb3wpxYpy8QKhLv29oHK10p7FeSYLtlQUDIzaY8LgMomrIiR2oRRh7l5IXXUQmswWGB4u6PUVoCSYp3u4bZ6sGF+OBuHlm2Wdh8HrJDFXRYr5pDy+SrT/OvkxnDYnBBDQqwg5W+BtJwrvfnbQjK1tsXTqoS+r0Dyk/ceKgwjvxB6ukWuM1wdhi0UvDT4R2O1IeX168BdRgkkKCpSlI5bL6J/qjFvfawvwr7WbbqmrpeDX7yawNzueDJ89OK5WQ0AD2Em6oiKd8YBSYueHykUDiaVY0kxoWB7i2H0aKNxm0BAcwm4fEt8sYoj0+JBGUmhINx1CaTO4uxknplfWIQ+3hIonG/rFM8DMxVYXdJk+7Rjz8wlJ6aaVLMGkkh2JOyXS0uj5CDqltUzQlycJ4wWmQbSTsnKnWOH5/edh5JhzWwqGjrgWkDarkgiV3WVzEKUC1UFznK5mF9b8ns+xlIrOF+OE0gEYiRlsNSE=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe7140c4-5196-4281-4466-08d8113ca995
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 14:59:11.5196
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jWMxZMojEAvrB051gJQXsr7QX9YIGd9xpLQcQnbzD4RIv3urzrvFLNktOjC7bUKu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4414
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_03:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 adultscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 clxscore=1015
+ cotscore=-2147483648 phishscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Paolo Bonzini <pbonzini@redhat.com>
-> Sent: Monday, June 15, 2020 8:47 AM
-> To: Jim Mattson <jmattson@google.com>; Moger, Babu
-> <Babu.Moger@amd.com>
-> Cc: Wanpeng Li <wanpengli@tencent.com>; Joerg Roedel <joro@8bytes.org>;
-> the arch/x86 maintainers <x86@kernel.org>; Sean Christopherson
-> <sean.j.christopherson@intel.com>; Ingo Molnar <mingo@redhat.com>;
-> Borislav Petkov <bp@alien8.de>; H . Peter Anvin <hpa@zytor.com>; Vitaly
-> Kuznetsov <vkuznets@redhat.com>; Thomas Gleixner <tglx@linutronix.de>;
-> LKML <linux-kernel@vger.kernel.org>; kvm list <kvm@vger.kernel.org>
-> Subject: Re: [PATCH 3/3] KVM:SVM: Enable INVPCID feature on AMD
-> 
-> On 13/06/20 02:04, Jim Mattson wrote:
-> >> I think I have misunderstood this part. I was not inteding to change the
-> >> #GP behaviour. I will remove this part. My intension of these series is to
-> >> handle invpcid in shadow page mode. I have verified that part. Hope I did
-> >> not miss anything else.
-> > You don't really have to intercept INVPCID when tdp is in use, right?
-> > There are certainly plenty of operations for which kvm does not
-> > properly raise #UD when they aren't enumerated in the guest CPUID.
+On Mon, 2020-06-15 at 09:33 -0400, Stephen Smalley wrote:
+> On Fri, Jun 12, 2020 at 10:42 PM Lakshmi Ramasubramanian
+> <nramas@linux.microsoft.com> wrote:
 > >
+> > The data maintained by the security modules could be tampered with by
+> > malware. The LSM needs to periodically query the state of
+> > the security modules and measure the data when the state is changed.
+> >
+> > Define a workqueue for handling this periodic query and measurement.
 > 
-> Indeed; for RDRAND and RDSEED it makes sense to do so because the
-> instructions may introduce undesirable nondeterminism (or block all the
-> packages in your core as they have been doing for a few weeks).
-> Therefore on Intel we trap them and raise #UD; on AMD this is not
-> possible because RDRAND has no intercept.
-> 
-> In general however we do not try to hard to raise #UD and that is
-> usually not even possible.
+> Won't this make it difficult/impossible to predict the IMA PCR value?
+> Unless I missed it, you are going to end up measuring every N minutes
+> even if there was no change and therefore constantly be extending the
+> PCR.  That will break attestation or sealing against the IMA PCR.
 
-Yes. Sure. Thanks.
-> 
-> Paolo
+Even if it attempts to add the same measurement to the list multiple
+times, unless something changed, there should only be one measurement
+in the list.
 
+Mimi
