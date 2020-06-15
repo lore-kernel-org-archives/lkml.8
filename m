@@ -7,95 +7,87 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D774C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3856C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 659112074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B865C2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mN0IPe7V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0ksf44c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgFONME (ORCPT
+        id S1730200AbgFONMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54138 "EHLO
+        Mon, 15 Jun 2020 09:12:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729875AbgFONMD (ORCPT
+        with ESMTP id S1729875AbgFONMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:12:03 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 483FBC061A0E;
-        Mon, 15 Jun 2020 06:12:03 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id s135so6923499pgs.2;
-        Mon, 15 Jun 2020 06:12:03 -0700 (PDT)
+        Mon, 15 Jun 2020 09:12:40 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58783C061A0E;
+        Mon, 15 Jun 2020 06:12:40 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o15so17359370ejm.12;
+        Mon, 15 Jun 2020 06:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=P/gBrMCkfFTO8CRsYbxCfaojgRfaZJLVJnlYiKEGsMw=;
-        b=mN0IPe7VubxIctoBsWAtpeiEpB1oN9DcYBsmZuGFsmHNh1XBFBLkBKVjKE0CHmTqC8
-         yzEyz8yNMXyaRMljBc1ZbeHMQLBMRsdRL8x+Bh1/oyCSjMNKAB0U0oPVhirLPC9QB0J6
-         hb964AFthWLQuhlrxX9HysopcqT+5ccUgna5AmJDOBsOR7Y6lvf30+0k2WxqQleaJaa3
-         yiwSxTV6YZdTirQaB2VcMYSHGx2UYGRRcsRn2lCi/iliy8AT6QG/8lNOpnXKaz00nisB
-         6Z/LH5dfalParvsPvTIxS6xfDo/mwAM1ZpoDZcwlreb5BuA0/B2Thkftr0EOBbL/lXaL
-         H9rQ==
+         :cc;
+        bh=2h9e+eGSGjdU1mcqeHyapMumElVznZdYrWvaheMOzqI=;
+        b=Q0ksf44c9R2gEIuPhfga4T8ZPy44bz9mmNtp5TrPqDt0zy3h3IYsdGw9dHQqxds82u
+         GXvbnM1Xi0b4b2hnB+w0kK9TP2zzxgEd7aaKnL1apOKaxXSRP597wQvtvGUcshJe7eLf
+         nQHKS0rsn3X77V3PpALQ4kbe3cu7P5+fJEn9QedYTiTcSfSltGufbwjelvjcFs7S3oHs
+         S0YtSc/PKNDKe6x5BVXj3Moivdikrn7JLpMDmuv6sZibjsgcA8r5k/xU2rZxw4NblVx8
+         xqf5YoHfv7Z8oDB/H8XE9qEmNCnG8Zl+hll1ZDQb8jnJ/sitZKyIYoYqp9pVF2kvz1wI
+         abyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=P/gBrMCkfFTO8CRsYbxCfaojgRfaZJLVJnlYiKEGsMw=;
-        b=MLT1jsmFi0UC2H13Lkhgp+hLX+2SwK0pqXUSAzrmS82KZ7imzoj3v0rQZm2SI9vml7
-         pJI0xXQv2BqUyDQVrIUvsjJv8PuDvSdmJZpgmy2tUZHKooLY+PALPUmM25ltA6q8fhcn
-         V2dANLeDn+245hsiyw2sx7sim71YF/ecWDCR/xsPRMlaTF34mH3G2McRtW412tYwUMrv
-         u6DwJgvIY3GtZsM7too+jSlEwEN+PhRTseWbUu99aMN5oZ3GS2xM8NMbWi5LxnI79TLt
-         t/lYQ3o2hU7bhinX9k7yGlrrzn7Fw1cNk6mhSXw9BlYfGNiwAIncApqqfOjtbSCJVA8h
-         EmBw==
-X-Gm-Message-State: AOAM533eaCLdq1NdpgxMFpwKyNfPLHzA8l/qsEwJHi8I76bSZ8SBU1I1
-        gA3Lw6tQ+n9Wqz+Xq/9yab3lBG0SnABMjcddoas=
-X-Google-Smtp-Source: ABdhPJyJ+g+QyiL0CvzlxB0k16mRYVogzm5EeqL/c+LYCpUN29bYjp3kOKxz71Glrx8FeRpPzizJwvi8awIXtMmXqnk=
-X-Received: by 2002:a63:f042:: with SMTP id s2mr4607946pgj.4.1592226722131;
- Mon, 15 Jun 2020 06:12:02 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=2h9e+eGSGjdU1mcqeHyapMumElVznZdYrWvaheMOzqI=;
+        b=gOgEXX4r3nkT6+sXKRqOjceV1XZ8+RkJysFPzQiUF1sFaBFB5Uzjx2iPR8IJ4By2Ye
+         XnXQ9Q5RPo8j0nP7ezROKAUfNnf0w7h3CFlGfidc40WIR9v1A32FY3Am5NI5U8iM/u3c
+         /c2Uug7ngbJOAG3+RyckxqVnllSQgVqICdgWhQiyIQPv1RNtE9D2KxfN8BWPb4rBfCqf
+         8p5gyEZRv9a0J6+OOCnbCfnTFYwLpVZw1YF5u4a26KBqB06sCqpSFyeNOKfEviPed9sx
+         TMH5ArTKw+doES/rX6pQ1bftNuxRj6IcvU2CbR+bBfh2giwgFlD32WYtnnbRUsOuskeQ
+         Jucg==
+X-Gm-Message-State: AOAM530hFyaRwr7AeE1XQvNfsgxgdvFboHAOaqqVxsjT53GH0hoXYjjD
+        0b18fV3gmAI38RD8Lzs8SaWlc/QUalvTnmpqGq4=
+X-Google-Smtp-Source: ABdhPJzMRrPQPqIr3p2C+5xxpngruQQ43MqrZbGlhHVmMGkRJpRsikRWrtEymCTacC8UqFHrJ2gPifhqgc4PA0xb2OM=
+X-Received: by 2002:a17:906:e47:: with SMTP id q7mr25487375eji.279.1592226759060;
+ Mon, 15 Jun 2020 06:12:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <53b5504b-dd06-c1d5-5334-d4c5525eca93@web.de>
-In-Reply-To: <53b5504b-dd06-c1d5-5334-d4c5525eca93@web.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 15 Jun 2020 16:11:50 +0300
-Message-ID: <CAHp75VesznYipMFXM77VfazDrTYxSQk+mhKR81-OhmMJS33ttQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca953x: Add support for the PCAL9535
-To:     Jan Kiszka <jan.kiszka@web.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+ <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de> <20200615123052.GO4447@sirena.org.uk>
+ <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com> <20200615131006.GR4447@sirena.org.uk>
+In-Reply-To: <20200615131006.GR4447@sirena.org.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 15 Jun 2020 16:12:28 +0300
+Message-ID: <CA+h21hpusy=zx8AuUqk_4zShtst8QeNJxCPT4dMGh0jhm5uZng@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on interrupt
+ in exit paths
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2020 at 5:45 PM Jan Kiszka <jan.kiszka@web.de> wrote:
+On Mon, 15 Jun 2020 at 16:10, Mark Brown <broonie@kernel.org> wrote:
+
 >
-> From: Jan Kiszka <jan.kiszka@siemens.com>
->
-> The PCAL9535 [1] is compatible to the PCA9535. Additionally, it comes
-> with interrupt support and input latching. Other features are not
-> supported by the GPIO subsystem.
->
+> It's a bit unusual to need to actually free the IRQ over suspend -
+> what's driving that requirement here?
 
-> [1] https://www.nxp.com/docs/en/data-sheet/PCAL9535A.pdf
+clk_disable_unprepare(dspi->clk); is driving the requirement - same as
+in dspi_remove case, the module will fault when its registers are
+accessed without a clock.
 
-Can we have this as a Datasheet: tag?
-
-
-> @@ -1131,6 +1131,7 @@ static const struct of_device_id pca953x_dt_ids[] =
-=3D {
-
-> +       { .compatible =3D "nxp,pcal9535", .data =3D OF_953X(16, PCA_LATCH=
-_INT), },
-
-Also, please update I=C2=B2C ID table.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-Vladimir
