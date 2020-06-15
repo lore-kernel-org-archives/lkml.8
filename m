@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B02E2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3C72067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgFOHvT (ORCPT
+        id S1729156AbgFOHvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:51:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40052 "EHLO mx2.suse.de"
+        Mon, 15 Jun 2020 03:51:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40062 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbgFOHtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728844AbgFOHtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 03:49:17 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1A950B01C;
+        by mx2.suse.de (Postfix) with ESMTP id AF44FB028;
         Mon, 15 Jun 2020 07:49:17 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 11/38] vt: use modern types in do_con_write
-Date:   Mon, 15 Jun 2020 09:48:43 +0200
-Message-Id: <20200615074910.19267-11-jslaby@suse.cz>
+Subject: [PATCH 14/38] vt: extract attribute inversion to vc_invert_attr
+Date:   Mon, 15 Jun 2020 09:48:46 +0200
+Message-Id: <20200615074910.19267-14-jslaby@suse.cz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615074910.19267-1-jslaby@suse.cz>
 References: <20200615074910.19267-1-jslaby@suse.cz>
@@ -40,73 +40,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use bools for rescan and inverse. And true/false accordingly.
-
-Use u8 for width instead of uint8_t.
+We continue cleaning up do_con_write. This (hopefully) makes the
+inversion code obvious.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/vt/vt.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/tty/vt/vt.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index b86639351dd2..a9e4924fa675 100644
+index 5004242d601b..bf171bb1d2fd 100644
 --- a/drivers/tty/vt/vt.c
 +++ b/drivers/tty/vt/vt.c
-@@ -2581,10 +2581,10 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
- 	struct vc_data *vc;
- 	unsigned char vc_attr;
- 	struct vt_notifier_param param;
--	uint8_t rescan;
--	uint8_t inverse;
--	uint8_t width;
- 	u16 himask, charmask;
-+	u8 width;
-+	bool rescan;
-+	bool inverse;
+@@ -2658,6 +2658,21 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
+ 	return -1;
+ }
  
- 	if (in_interrupt())
- 		return count;
-@@ -2620,8 +2620,8 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
- 		buf++;
- 		n++;
- 		count--;
--		rescan = 0;
--		inverse = 0;
-+		rescan = false;
-+		inverse = false;
- 		width = 1;
- 
- 		/* Do no translation at all in control states */
-@@ -2660,7 +2660,7 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
- 			/* Single ASCII byte or first byte of a sequence received */
- 			if (vc->vc_utf_count) {
- 			    /* Continuation byte expected */
--			    rescan = 1;
-+			    rescan = true;
- 			    vc->vc_utf_count = 0;
- 			    c = 0xfffd;
- 			} else if (c > 0x7f) {
-@@ -2746,7 +2746,7 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
- 				    /* Display U+FFFD. If it's not found, display an inverse question mark. */
- 				    tc = conv_uni_to_pc(vc, 0xfffd);
- 				    if (tc < 0) {
--					inverse = 1;
-+					inverse = true;
- 					tc = conv_uni_to_pc(vc, '?');
- 					if (tc < 0) tc = '?';
- 				    }
-@@ -2807,8 +2807,8 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
++static inline unsigned char vc_invert_attr(const struct vc_data *vc)
++{
++	if (!vc->vc_can_do_color)
++		return vc->vc_attr ^ 0x08;
++
++	if (vc->vc_hi_font_mask == 0x100)
++		return   (vc->vc_attr & 0x11) |
++			((vc->vc_attr & 0xe0) >> 4) |
++			((vc->vc_attr & 0x0e) << 4);
++
++	return   (vc->vc_attr & 0x88) |
++		((vc->vc_attr & 0x70) >> 4) |
++		((vc->vc_attr & 0x07) << 4);
++}
++
+ /* acquires console_lock */
+ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int count)
+ {
+@@ -2776,14 +2791,7 @@ static int do_con_write(struct tty_struct *tty, const unsigned char *buf, int co
+ 			if (!inverse) {
+ 				vc_attr = vc->vc_attr;
+ 			} else {
+-				/* invert vc_attr */
+-				if (!vc->vc_can_do_color) {
+-					vc_attr = (vc->vc_attr) ^ 0x08;
+-				} else if (vc->vc_hi_font_mask == 0x100) {
+-					vc_attr = ((vc->vc_attr) & 0x11) | (((vc->vc_attr) & 0xe0) >> 4) | (((vc->vc_attr) & 0x0e) << 4);
+-				} else {
+-					vc_attr = ((vc->vc_attr) & 0x88) | (((vc->vc_attr) & 0x70) >> 4) | (((vc->vc_attr) & 0x07) << 4);
+-				}
++				vc_attr = vc_invert_attr(vc);
  				con_flush(vc, draw_from, draw_to, &draw_x);
+ 			}
  
- 			if (rescan) {
--				rescan = 0;
--				inverse = 0;
-+				rescan = false;
-+				inverse = false;
- 				width = 1;
- 				c = orig;
- 				goto rescan_last_byte;
 -- 
 2.27.0
 
