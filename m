@@ -2,94 +2,73 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB973C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9312078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA39206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oAHfUjpS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DgNA8zNj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgFONAJ (ORCPT
+        id S1730271AbgFONAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:00:09 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36530 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730270AbgFONAC (ORCPT
+        Mon, 15 Jun 2020 09:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729977AbgFONAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:00:02 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FCq4WF001659;
-        Mon, 15 Jun 2020 14:59:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=a+/ALK3THVscsxKzBuqYICXhJ6Fgulb3uVPQcBiLSxs=;
- b=oAHfUjpS6HBzDTqripKJQAN/FmyVfvPka6PwfsNHIDu7MjuJEGEHuZC367njC2XIaAnx
- 8CLrgYZgHvWjjGwhlQ6ypb/M/+t9o0ajsaQQsiHyCjrWSoj1p92q/pqjG43Vx1j6/FIi
- eoN5tWYEd12bFWbPy/FHgb87gCcEd4Vh/bUTG5CaJVOpiwTfttkbnLJMcCoTyZRlvSq0
- IOPhcb5mzVlDAlcUWbF+N3t0ZoT+O5XF3JIZ6jiAigDHQTkqFTFtqjoyxK0SNR+0smkv
- kkdSnrcHMBsI3oXQ1WHKlvrdZrJmbUK21da07nl+cmRobmrPzoeqmh3TRg41+pAuBxo/ TA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mnph1h21-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 14:59:58 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 565CD10002A;
-        Mon, 15 Jun 2020 14:59:58 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4D3C72B3613;
-        Mon, 15 Jun 2020 14:59:58 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 14:59:58
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <alexandre.torgue@st.com>
-Subject: [PATCH 1/2] pinctrl: stm32: return proper error code in pin_config_set
-Date:   Mon, 15 Jun 2020 14:59:50 +0200
-Message-ID: <20200615125951.28008-2-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200615125951.28008-1-alexandre.torgue@st.com>
-References: <20200615125951.28008-1-alexandre.torgue@st.com>
+        Mon, 15 Jun 2020 09:00:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2023C061A0E;
+        Mon, 15 Jun 2020 06:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=KEBwjnYUxfYhJTwez4F4fZnZA29JFLpBE55ailzCXvU=; b=DgNA8zNjg31fURBe4MXNxzAOhB
+        NK3HSZHgIza8gTjAdkipWM3Ym6khB8DZ1Ua2lKEqsk4tChR51Rv6Nj5tQjHuqiwguPR1MTqqOvvVn
+        ATtNL2LZr+Fd8c2w/Zj7gjJH5p4xd42seDJ5bXqk5d2VCQMt91YWdE22Y+ATPBXjMmnbBTqWS0Dd0
+        WC9a5c+5d0BUckpT8EBBuMnD6ZAGG8RnlfP6N+x8oECvP3pxtIr9pT9jH+TUIZfKlbL5tKsxJA+6t
+        4OnNPShuVQndS1ghp/bJMSINGJuiWu3E2lGr+9nhQG8ntYFYHPcdmIj4F16cvC9IPe1XdgSVWewgZ
+        aNIELFwg==;
+Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkoj4-0007nP-Cw; Mon, 15 Jun 2020 13:00:34 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: properly support exec and wait with kernel pointers
+Date:   Mon, 15 Jun 2020 15:00:26 +0200
+Message-Id: <20200615130032.931285-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-".pin_config_set" or ".pin_config_group_set" can be called with a
-configuration not supported (i.e. PIN_CONFIG_PERSIST_STATE). In this case,
-it is more suitable to return -ENOTSUPP instead of -EINVAL.
+Hi all,
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+this series first cleans up the exec code and then adds proper
+kernel_execveat and kernel_wait callers instead of relying on the fact
+that the early init code and kernel threads implicitly run with
+the address limit set to KERNEL_DS.
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index a657cd829ce6..5d9839beaa07 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -1084,7 +1084,7 @@ static int stm32_pconf_parse_conf(struct pinctrl_dev *pctldev,
- 		ret = stm32_pmx_gpio_set_direction(pctldev, range, pin, false);
- 		break;
- 	default:
--		ret = -EINVAL;
-+		ret = -ENOTSUPP;
- 	}
- 
- 	return ret;
--- 
-2.17.1
-
+Note that the cleanup removes the compat execve(at) handlers (almost)
+entirely, as we can handle the compat difference very nicely in a
+unified codebase.  The only exception is x86 where this would list the
+handlers twice in the same syscall table due to the messed up x32
+design.  I had to add an extra compat handler just for that case, but
+maybe someone has a better idea.
