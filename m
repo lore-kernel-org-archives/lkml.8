@@ -2,193 +2,228 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 05:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3774C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 05:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35ADE20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 05:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="VnHovaYB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T6bPl0dm"
+	by mail.kernel.org (Postfix) with ESMTP id 9E65720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 05:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgFOFaB (ORCPT
+        id S1727867AbgFOFf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 01:30:01 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:40351 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbgFOFaA (ORCPT
+        Mon, 15 Jun 2020 01:35:26 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:46987 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbgFOFfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 01:30:00 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 11C7858015D;
-        Mon, 15 Jun 2020 01:29:59 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 15 Jun 2020 01:29:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=T
-        aA4E30QnHyeJ9whAqz+gQm0yiiY1N3IeCntOygSgK0=; b=VnHovaYBvVNQ5PB69
-        2joW6HWwNYxw+wLXn1HV058OUH4LUVjdRtUcukZZkSgJ5bp0VgMXUaZLpNfQ+VwE
-        Wd0GVbRcy6B+PqW998RP/0zpjkb/FyI5oBBzt9gpnPkhS/hROGqv4YLpOMzcIcxq
-        TJQL1Xv8t6WIo2ob5T6LjcaDwPlEVyU5ot92ibnwhuvOXKv6Vdc5JfcjvUmyCfW5
-        BU4YA9BpbtqGg8NjsYglD+Roerx5mi/qbpNwtqEeX6M5FoXjGjEIBZSgd26Ob+4i
-        n7E1j4daZ4TRFTe9ztm4Wuxv2vzXhUqciaS0pAZzjoqAB1gt/CwKxzbauG4VKLSR
-        6NIJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=TaA4E30QnHyeJ9whAqz+gQm0yiiY1N3IeCntOygSg
-        K0=; b=T6bPl0dmmV+dSft3EEM3ybxMd1c/zRbCddAhVegeIYK6h2twX3hVO/12y
-        L9wfTjIZxSZmg4UxUA6/hjMjZWGQFhWGkP+wmA362R0DmTXGNzCueZyvVDlbKB6m
-        d1TZsa4OqjKUk3zTlcm/o0cFBN2cnQxWdNHu08VW9hg5bePFlGt3zdf0RhAqjxap
-        S9O6IYZNT2zyEL7FrmTdhWV0RuMRQNh6BOlz1Cn0OwJKqdhfWU0z+eYnGEDh0lqA
-        U3hC5ID2RB/VCpU+7Xnqfp3A3F7F0jPyTw54w7Pw+VYNoAMIN6c+NNqdqBnc2qb6
-        EX1FA+M1rSVZ9RjiFxCHbMenonGJw==
-X-ME-Sender: <xms:UAfnXgchR5EfKaztTnPmBJEqIwAJhjyy4s1u_RDLA6EBXk8q5KXEuA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeijedgleekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepuefhfffgveejjeevhfdukeejhedtiefhgeejfeeuuddtkedugeei
-    hfduteelffetnecuffhomhgrihhnpehlihhnuhigqdhsuhhngihirdhorhhgnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:UAfnXiN2X4_CmZVwRgc2hQ9c57zCzsCTMNu2VwPLWGK9a7NE8qEWCg>
-    <xmx:UAfnXhgXbQlQlWFfOYc2YwnRrfMGPI-ddUY8YxtMJLcqGQliEwJnKQ>
-    <xmx:UAfnXl_RNWWM8Nx-uvbY74bwSX1fkCMRrx0RI9d8g5fT-EvqgPOnbg>
-    <xmx:VwfnXuIHbrppvTvIufguNgabIuddsz8xtj8GMgOmr9F4WXgMBD0j6A>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A99B330618B7;
-        Mon, 15 Jun 2020 01:29:51 -0400 (EDT)
-Subject: Re: [PATCH v2 1/9] irqchip/sun6i-r: Use a stacked irqchip driver
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200525041302.51213-1-samuel@sholland.org>
- <20200525041302.51213-2-samuel@sholland.org>
- <20200608084853.wr6eca5nt772p5h7@gilmour.lan>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <fcfe6d02-2500-37de-e795-664bf2c7b5ee@sholland.org>
-Date:   Mon, 15 Jun 2020 00:29:50 -0500
+        Mon, 15 Jun 2020 01:35:25 -0400
+Received: from [192.168.1.11] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id A6F3F100003;
+        Mon, 15 Jun 2020 05:35:18 +0000 (UTC)
+Subject: Re: [PATCH 0/2] PUD/PGDIR entries for linear mapping
+To:     Atish Patra <atishp@atishpatra.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Anup Patel <anup@brainfault.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>
+References: <20200603153608.30056-1-alex@ghiti.fr>
+ <CAOnJCUJSKvLDsXC8+wyO1xsZDzLJmjY2kwMKhjz0t+uS8h0pDw@mail.gmail.com>
+ <7ad7057e-fdab-14ef-9bdb-c77ccefd208a@ghiti.fr>
+ <CAOnJCUKcMmchxgeHNx997EH5JM_OAJFUDCNT6Ca2B-xHE4YT5A@mail.gmail.com>
+ <36739fc4-21ea-14f4-f2a6-52614b602dea@ghiti.fr>
+ <8867b8d5-4a15-fbc1-67e1-7fc48be6eae3@ghiti.fr>
+ <CAOnJCUJGgFKmVyvan6j9n93FJjAnsDP-QHzgTZ3kNAeJfAV_9Q@mail.gmail.com>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <05648f6c-1792-80b7-ae80-388664fda580@ghiti.fr>
+Date:   Mon, 15 Jun 2020 01:35:18 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200608084853.wr6eca5nt772p5h7@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAOnJCUJGgFKmVyvan6j9n93FJjAnsDP-QHzgTZ3kNAeJfAV_9Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/8/20 3:48 AM, Maxime Ripard wrote:
-> On Sun, May 24, 2020 at 11:12:54PM -0500, Samuel Holland wrote:
->> The R_INTC in the A31 and newer sun8i/sun50i SoCs is more similar to the
->> original sun4i interrupt controller than the sun7i/sun9i NMI controller.
->> It is used for two distinct purposes:
->>  1) To control the trigger, latch, and mask for the NMI input pin
->>  2) To provide the interrupt input for the ARISC coprocessor
->>
->> As this interrupt controller is not documented, information about it
->> comes from vendor-provided ARISC firmware and from experimentation.
->>
->> Like the original sun4i interrupt controller, it has:
->>  - A VECTOR_REG at 0x00 (configurable via the BASE_ADDR_REG at 0x04)
->>  - A NMI_CTRL_REG, PENDING_REG, and ENABLE_REG as used by both the
->>    sun4i and sunxi-nmi drivers
->>  - A MASK_REG at 0x50
->>  - A RESP_REG at 0x60
->>
->> Differences from the sun4i interrupt controller appear to be:
->>  - It is only known to have one register of each kind (max 32 inputs)
->>  - There is no FIQ-related logic
->>  - There is no interrupt priority logic
->>
->> In order to fulfill its two purposes, this hardware block combines two
->> types of IRQs. First, the NMI pin is routed to the "IRQ 0" input on this
->> chip, with a trigger type controlled by the NMI_CTRL_REG. The "IRQ 0
->> pending" output from this chip, if enabled, is then routed to a SPI IRQ
->> input on the GIC, as IRQ_TYPE_LEVEL_HIGH. In other words, bit 0 of
->> ENABLE_REG *does* affect the NMI IRQ seen at the GIC.
->>
->> The NMI is then followed by a contiguous block of (at least) 15 IRQ
->> inputs that are connected in parallel to both R_INTC and the GIC. Or
->> in other words, the other bits of ENABLE_REG *do not* affect the IRQs
->> seen at the GIC.
->>
->> Finally, the global "IRQ pending" output from R_INTC, after being masked
->> by MASK_REG and RESP_REG, is connected to the "external interrupt" input
->> of the ARISC CPU (an OR1200). This path is not relevant to Linux.
->>
->> Because of the 1:1 correspondence between R_INTC and GIC inputs, this is
->> a perfect scenario for using a stacked irqchip driver. We want to hook
->> into enabling/disabling IRQs to add more features to the GIC
->> (specifically to allow masking the NMI and setting its trigger type),
->> but we don't need to actually handle the IRQ in this driver.
->>
->> And since R_INTC is in the always-on power domain, and its output is
->> connected directly in to the power management coprocessor, a stacked
->> irqchip driver provides a simple way to add wakeup support to this set
->> of IRQs. That is a future patch; for now, just the NMI is moved over.
->>
->> This driver keeps the same DT binding as the existing driver. The
->> "interrupt" property of the R_INTC node is used to determine 1) the
->> offset between GIC and R_INTC hwirq numbers and 2) the type of trigger
->> between the R_INTC "IRQ 0 pending" output and the GIC NMI input.
->>
->> This commit mostly reverts commit 173bda53b340 ("irqchip/sunxi-nmi:
->> Support sun6i-a31-r-intc compatible").
->>
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> 
-> As usual, thanks for that commit log (and the experiments you did to
-> write it in the first place).
-> 
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> 
-> Maxime
+Hi Atish,
 
-I've done more experimenting, and I've learned what comes after the first 16
-IRQs: all of the other SPI IRQs, multiplexed in clusters of 8, with per-IRQ
-masks for the inputs to each cluster.
+Le 6/12/20 à 1:43 PM, Atish Patra a écrit :
+> On Fri, Jun 12, 2020 at 6:17 AM Alex Ghiti <alex@ghiti.fr> wrote:
+>> Le 6/12/20 à 8:59 AM, Alex Ghiti a écrit :
+>>> Hi Atish,
+>>>
+>>> Le 6/11/20 à 1:29 PM, Atish Patra a écrit :
+>>>> On Wed, Jun 10, 2020 at 11:51 PM Alex Ghiti<alex@ghiti.fr>  wrote:
+>>>>> Hi Atish,
+>>>>>
+>>>>> Le 6/10/20 à 2:32 PM, Atish Patra a écrit :
+>>>>>> On Wed, Jun 3, 2020 at 8:36 AM Alexandre Ghiti<alex@ghiti.fr>  wrote:
+>>>>>>> This small patchset intends to use PUD/PGDIR entries for linear
+>>>>>>> mapping
+>>>>>>> in order to better utilize TLB.
+>>>>>>>
+>>>>>>> At the moment, only PMD entries can be used since on common platforms
+>>>>>>> (qemu/unleashed), the kernel is loaded at DRAM + 2MB which
+>>>>>>> dealigns virtual
+>>>>>>> and physical addresses and then prevents the use of PUD/PGDIR
+>>>>>>> entries.
+>>>>>>> So the kernel must be able to get those 2MB for PAGE_OFFSET to map
+>>>>>>> the
+>>>>>>> beginning of the DRAM: this is achieved in patch 1.
+>>>>>>>
+>>>>>> I don't have in depth knowledge of how mm code works so this question
+>>>>>> may be a completely
+>>>>>> stupid one :). Just for my understanding,
+>>>>>> As per my understanding, kernel will map those 2MB of memory but
+>>>>>> never use it.
+>>>>>> How does the kernel ensure that it doesn't allocate any memory from
+>>>>>> those 2MB
+>>>>>> memory if it is not marked as reserved?
+>>>>> Yes, a 1GB hugepage will cover those 2MB: I rely on the previous boot
+>>>>> stage to mark this region
+>>>>> as reserved if there is something there (like opensbi). Otherwise, the
+>>>>> kernel will indeed try to
+>>>>> allocate memory from there :)
+>>>>>
+>>>> In that case, this patch mandates that the firmware region has to be
+>>>> mark "reserved"
+>>>> the device tree so that the Linux kernel doesn't try to allocate
+>>>> memory from there.
+>>>> OpenSBI is already doing it from v0.7. Thus, any user using latest
+>>>> OpenSBI can leverage
+>>>> this patch for a better TLB utilization.
+>>>
+>>> Note that *currently* OpenSBI v0.7 still adds the "no-map" property
+>>> which prevents such optimization.
+>>>
+> Thanks for the clarification. When I said latest, I meant including
+> your patch in the mailing list.
+>
+>>>> However, legacy previous boot stages(BBL) do not reserve this area via
+>>>> DT which may
+>>>> result in an unexpected crash. I am not sure how many developers still
+>>>> use BBL though.
+>>>>
+>>>> Few general suggestions to tackle this problem:
+>>>> 1. This mandatory requirement should be added to the booting document
+>>>> so that any other
+>>>> SBI implementation is also aware of it.
+>>>> 2. You may have to move the patch1 to a separate config so that any
+>>>> users of legacy boot stages
+>>>> can disable this feature.
+>>>
+>>> IMHO, the region occupied by runtime services should be marked as
+>>> reserved in the device-tree. So it seems redundant to add this as a
+>>> requirement, I would rather consider its absence as a bug.
+>>>
+> I agree. I was just suggesting to document this bug :).
 
-In fact, the H6 has so many IRQs that it begins to use the the second register
-in each group (0x14, 0x44, 0x54). This means that more than one register in each
-group are in fact implemented.
+Oh ok then, we meant the same thing :)
+>
+>>> Even if I understand that this might break some system, I don't like
+>>> the idea of a new config to support old "buggy" bootloaders: when will
+>>> we be able to remove it ? We'll never know when people will stop using
+>>> those bootloaders, so it will stay here forever...Where can I find the
+> Personally, I am fine with that. However, there were few concerns in the past.
+> I am leaving it to Palmer to decide.
+>
+> @Palmer Dabbelt : Any thoughts ?
+>
+>>> boot document you are talking about ? Can we simply state here that
+>>> this kernel version will not be compatible with those bootloaders
+>>> (we'll draw an exhaustive list here) ?
+> Yes.
+>
+>> Ok, I have just found Documentation/riscv/boot-image-header.rst: could
+>> we imagine doing something like incrementing the version and use that as
+>> a hint in the kernel not to map the 2MB offset ? That's still legacy,
+>> but at least it does not require to recompile a kernel as the check
+>> would be done at runtime.
+>>
+> I was suggesting to add a risc-v specific booting document and
+> document this "bug".
+> Documentation/riscv/boot-image-header.rst can be linked from that document or
+> the boot hader content can be included in that. No changes in code is necessary.
+>
+> Eventually, this booting document will also include other additional
+> booting constraints for RISC-V
+> such as minimum extension required to boot Linux, csr state upon
+> entering S-mode, mmu state.
 
-See https://linux-sunxi.org/INTC#IRQ_Mapping for more details.
 
-The ability to send other IRQs to the AR100 makes it possible to implement
-functionality like USB Remote Wakeup or Wake on LAN without adding complexity to
-the AR100 firmware.
+Ok I will prepare a boot document that links to the existing documents and
+add all of that, I will need you for the last constraints that I don't 
+know about.
 
-I will need to update the driver to take advantage of this ability, and it
-raises some questions about the binding. Since the NMI is not the
-lowest-numbered IRQ that can be mapped, the numbering scheme would need to
-change. Maybe the IRQ number should be the same as the GIC SPI IRQ number? But
-this would mean a new compatible.
+Thanks Atish,
 
-The other question is which devices should be routed through this irqchip
-driver? Anything that provides a wakeup source needs to go through it, so it can
-intercept irq_set_wake. Probably other devices should not, as 1) not quite all
-IRQs can even be sent to the AR100 for wakeup (e.g. the A64 appears to stop in
-the middle of the GPU IRQs), and 2) stacking on another irqchip driver adds a
-(tiny) overhead to masking/unmasking during IRQ handling.
+Alex
 
-Thoughts?
-Samuel
+>>> Alex
+>>>
+>>>
+>>>>> Alex
+>>>>>
+>>>>>
+>>>>>>> But furthermore, at the moment, the firmware (opensbi) explicitly
+>>>>>>> asks the
+>>>>>>> kernel not to map the region it occupies, which is on those common
+>>>>>>> platforms at the very beginning of the DRAM and then it also dealigns
+>>>>>>> virtual and physical addresses. I proposed a patch here:
+>>>>>>>
+>>>>>>> https://github.com/riscv/opensbi/pull/167
+>>>>>>>
+>>>>>>> that removes this 'constraint' but *not* all the time as it offers
+>>>>>>> some
+>>>>>>> kind of protection in case PMP is not available. So sometimes, we may
+>>>>>>> have a part of the memory below the kernel that is removed creating a
+>>>>>>> misalignment between virtual and physical addresses. So for
+>>>>>>> performance
+>>>>>>> reasons, we must at least make sure that PMD entries can be used:
+>>>>>>> that
+>>>>>>> is guaranteed by patch 1 too.
+>>>>>>>
+>>>>>>> Finally the second patch simply improves best_map_size so that
+>>>>>>> whenever
+>>>>>>> possible, PUD/PGDIR entries are used.
+>>>>>>>
+>>>>>>> Below is the kernel page table without this patch on a 6G platform:
+>>>>>>>
+>>>>>>> ---[ Linear mapping ]---
+>>>>>>> 0xffffc00000000000-0xffffc00176e00000 0x0000000080200000 5998M
+>>>>>>> PMD     D A . . . W R V
+>>>>>>>
+>>>>>>> And with this patchset + opensbi patch:
+>>>>>>>
+>>>>>>> ---[ Linear mapping ]---
+>>>>>>> 0xffffc00000000000-0xffffc00140000000 0x0000000080000000
+>>>>>>> 5G PUD     D A . . . W R V
+>>>>>>> 0xffffc00140000000-0xffffc00177000000 0x00000001c0000000 880M
+>>>>>>> PMD     D A . . . W R V
+>>>>>>>
+>>>>>>> Alexandre Ghiti (2):
+>>>>>>>      riscv: Get memory below load_pa while ensuring linear mapping
+>>>>>>> is PMD
+>>>>>>>        aligned
+>>>>>>>      riscv: Use PUD/PGDIR entries for linear mapping when possible
+>>>>>>>
+>>>>>>>     arch/riscv/include/asm/page.h |  8 ++++
+>>>>>>>     arch/riscv/mm/init.c          | 69
+>>>>>>> +++++++++++++++++++++++++++++------
+>>>>>>>     2 files changed, 65 insertions(+), 12 deletions(-)
+>>>>>>>
+>>>>>>> --
+>>>>>>> 2.20.1
+>>>>>>>
+>>>>>>>
+>
+>
