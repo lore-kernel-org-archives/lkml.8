@@ -2,181 +2,141 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07291C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD4A4206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7286206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:26:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/GNw0tz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lc/0UVSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbgFOJ0v (ORCPT
+        id S1729129AbgFOJ0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:26:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47512 "EHLO
+        Mon, 15 Jun 2020 05:26:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729054AbgFOJ0u (ORCPT
+        with ESMTP id S1728815AbgFOJ0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 05:26:50 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4ABC05BD43;
-        Mon, 15 Jun 2020 02:26:49 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id p20so16614224ejd.13;
-        Mon, 15 Jun 2020 02:26:49 -0700 (PDT)
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 973E4C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:26:48 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g10so13864933wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:26:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tRB46svp3cKLTLHsZXPNPHUSuyqFTSAjZCb+UaO0soU=;
-        b=A/GNw0tzhhu1S73BaJJ9tSD/edwR2eWXIHoaGyKD9n9qXCpz36cRpzAYxoUKS+pWLy
-         mUjx9ZLfMeQf+C9QpYfUspvNFvAkbmjuf0MQUk9opVbvqiatri6or/6KJKXdGfToxfvk
-         r7UPkAXMT3lYYOUrmIL9uZr7oQBi3dxU2Dyn3bgsRjw5hu+36Wu4BfxE9VNRJQIhRkWG
-         MwCzmUtADezv7K4KdGiq3dqUayt6+5ote2iYlDnO+AkDDfaQ8YC+3G+EWMS6+XfeTqUc
-         WDE7O7xsnfLk96NpIMfQuW8PnnihlZ/dyFC3McnXQVxE86rt/dn300eF1zVLJrsOe/y1
-         wdXQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Rzxkol7w2QC50xcBFexG/soZ0rzW0UYaIlHrmwy/Vl4=;
+        b=lc/0UVSxPinnkjDB/lFuqYGDeDU3GTO/xQpG14bzThYrcAzSIf4rcgTtABwesYQmpk
+         ZeZ393630Ant4rb6ydPcR037Ny5WHbHzrVRrSUjC8OiOndguT3fbjALpGxY3uIqF4+xy
+         G1ROVao91s3C13/YISlmmLI8VYZXLxC0P3FVJrVvPi1id7KFd427AluMHr3mqBvePJIN
+         rfDMCdtRR2HgrtpQf9WGtvgaJlsedSjanZYR5rOamASSWWy2HcJX7fjYPARmrc4cCR3h
+         sEOAwa/hDp/2yGmDo3eYiDgB4+0KR5/c7ELTwXQoUcAOApfqXqz7IZP19e5bpylQpseK
+         rSeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tRB46svp3cKLTLHsZXPNPHUSuyqFTSAjZCb+UaO0soU=;
-        b=pvk5+ZZ/7wa8Cq5vmna+AjjwZuBb8KvX5TDqawNLm8x3rjsOpiBQYB+a8zxiXk7Fe3
-         EIAGO9Nu2bW/aUPL0LHv8aQ49PrVCucCbPEGnbJDcYeiWTSoSgWPLD0ZZ3bQtryJ7Qd7
-         N7HklwE7TpS1k9gh17J1uUPZd4uCfCE/9oY+WfM2IEW37WpSu5Kvsq1Gsdmrw6ic44MC
-         G7jkMq5kUpA+qlKhXghqaHiyFn+weNVPFP2Ok2qzB4ARZz+wsgZPWtZmB11qMbvnQ6uo
-         Tgn3EMANNOWfk9vWO7fo32OKXlMzRJ7f30vX5U7GZAuVfup1ENPSxIthUV7Keu6jgaJn
-         n4+A==
-X-Gm-Message-State: AOAM531hHtCdp56kB2Xum0ti/k3MTs9ahBu6qDkid+hC3x4xLEBOqM4R
-        wOYjo7bvbn9qmH1a823/a95CgUXb9rPf2rupk58=
-X-Google-Smtp-Source: ABdhPJz1zDIjLAD7bTpcOHlGZppWwiRhHMaUlb7JNcmoOEYuKKt+W0cF3kHt77LjyfAkyIdB0xsSGpaWjD5F00uohKA=
-X-Received: by 2002:a17:906:1149:: with SMTP id i9mr25938500eja.100.1592213208629;
- Mon, 15 Jun 2020 02:26:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Rzxkol7w2QC50xcBFexG/soZ0rzW0UYaIlHrmwy/Vl4=;
+        b=CJAIyCMrtO2Axw35/DAIFj1uyPkk5g7u/9v9e+QdwP6LGadhG6q2AT/LQNS6PdCp9E
+         DI6e1030VpA80RbW1GIyTl0lyk1vjZdnHKfDLfuMMfVTBtZHjkmZPJ7+fv0R+3x69FCe
+         MEHWWfRfRJUI/YlXZslCgoeqk2j7eJjDq3CDWSELdjY9bOWGEChK9KHJZSGpoVuTtzkR
+         /Ceda0M452qKtvMD2/8UyMXGjKUIVIEipR3Ljl37hSkeoYNb415BgOOcnFBkq68pxK+P
+         QZfwnVh0FKZoEthw3cEgmbyc9zse2A+a5PCq7Vv/khD/lEMDuBsLrWGYS6h8hnh2osSH
+         3J2A==
+X-Gm-Message-State: AOAM5332zvO6CRifxXRIrKC+kYKvgNgm/TclArymTZe4RQZVaBPIKwZY
+        oeBFpq9P9PZgpqP+DqYZqc0i9Q==
+X-Google-Smtp-Source: ABdhPJwCaq+quncmRhoHqb9o1t8O7Lp9QJlLwsERoVR/Cy+mzVIJu9PSqQTp80ULC4g08tqY/VX/vA==
+X-Received: by 2002:a1c:790a:: with SMTP id l10mr11470065wme.80.1592213207106;
+        Mon, 15 Jun 2020 02:26:47 -0700 (PDT)
+Received: from dell ([2.27.167.101])
+        by smtp.gmail.com with ESMTPSA id k21sm24685707wrd.24.2020.06.15.02.26.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 02:26:46 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 10:26:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux@roeck-us.net,
+        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
+ devices with the correct of_nodes
+Message-ID: <20200615092644.GA2608702@dell>
+References: <20200611191002.2256570-1-lee.jones@linaro.org>
+ <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
 MIME-Version: 1.0
-References: <1592132154-20175-1-git-send-email-krzk@kernel.org>
- <1592132154-20175-2-git-send-email-krzk@kernel.org> <CA+h21ho_pa0H2MG-aAmUCFj37aYW4es-2V75P4KL-Zjq7qtfRQ@mail.gmail.com>
- <20200614111829.GA9694@kozik-lap> <CA+h21hqE3RbD2XTBbcRsMhsO2OaZ65tAaevFOr00p9ezu8O+iA@mail.gmail.com>
- <CA+h21hoVjJkGyxTEnh2Bixjoqxb12k-KK37U4Xy-27ntZz8aTw@mail.gmail.com>
- <20200614151247.GA2494@kozik-lap> <CA+h21hotvdXUgUzMaVfb_6EM-9kcoHvvnT4r+EHx7m6z4R0pxg@mail.gmail.com>
- <20200615070858.GA20941@kozik-lap>
-In-Reply-To: <20200615070858.GA20941@kozik-lap>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 15 Jun 2020 12:26:37 +0300
-Message-ID: <CA+h21hoLq59R2p=+f4jZFmd5OSQ3590FeRB+oHBKLKDHq5knRg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] spi: spi-fsl-dspi: Initialize completion before
- possible interrupt
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 at 10:09, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Sun, Jun 14, 2020 at 06:34:33PM +0300, Vladimir Oltean wrote:
-> > On Sun, 14 Jun 2020 at 18:12, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > On Sun, Jun 14, 2020 at 04:43:28PM +0300, Vladimir Oltean wrote:
-> > > > On Sun, 14 Jun 2020 at 16:39, Vladimir Oltean <olteanv@gmail.com> wrote:
-> > > > >
-> > > > > On Sun, 14 Jun 2020 at 14:18, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > > > >
-> > > > > > On Sun, Jun 14, 2020 at 02:14:15PM +0300, Vladimir Oltean wrote:
-> > > > > > > On Sun, 14 Jun 2020 at 13:56, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > If interrupt fires early, the dspi_interrupt() could complete
-> > > > > > > > (dspi->xfer_done) before its initialization happens.
-> > > > > > > >
-> > > > > > > > Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
-> > > >
-> > > > Also please note that this patch merely replaced an
-> > > > init_waitqueue_head with init_completion. But the "bug" (if we can
-> > > > call it that) originates from even before.
-> > >
-> > > Yeah, I know, the Fixes is not accurate. Backport to earlier kernels
-> > > would be manual so I am not sure if accurate Fixes matter.
-> > >
-> > > >
-> > > > > > > > Cc: <stable@vger.kernel.org>
-> > > > > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > > > > > ---
-> > > > > > >
-> > > > > > > Why would an interrupt fire before spi_register_controller, therefore
-> > > > > > > before dspi_transfer_one_message could get called?
-> > > > > > > Is this master or slave mode?
-> > > > > >
-> > > > > > I guess practically it won't fire.  It's more of a matter of logical
-> > > > > > order and:
-> > > > > > 1. Someone might fix the CONFIG_DEBUG_SHIRQ_FIXME one day,
-> > > > >
-> > > > > And what if CONFIG_DEBUG_SHIRQ_FIXME gets fixed? I uncommented it, and
-> > > > > still no issues. dspi_interrupt checks the status bit of the hw, sees
-> > > > > there's nothing to do, and returns IRQ_NONE.
-> > >
-> > > Indeed, still the logical way of initializing is to do it before any
-> > > possible use.
-> > >
-> > > > >
-> > > > > > 2. The hardware is actually initialized before and someone could attach
-> > > > > >    to SPI bus some weird device.
-> > > > > >
-> > > > >
-> > > > > Some weird device that does what?
-> > >
-> > > You never know what people will connect to a SoM :).
-> > >
-> > > Wolfram made actually much better point - bootloaders are known to
-> > > initialize some things and leaving them in whatever state, assuming that
-> > > Linux kernel will redo any initialization properly.
-> > >
-> > > Best regards,
-> > > Krzysztof
-> > >
-> >
-> > I don't buy the argument.
-> > So ok, maybe some broken bootloader leaves a SPI_SR interrupt pending
-> > (do you have any example of that?). But the driver clears interrupts
-> > by writing SPI_SR_CLEAR in dspi_init (called _before_ requesting the
-> > IRQ). It clears 10 bits from the status register. There are 2 points
-> > to be made here:
-> > - The dspi_interrupt only handles data availability interrupt
-> > (SPI_SR_EOQF | SPI_SR_CMDTCF). Only then does it matter whether the
-> > completion was already initialized or not. But these interrupts _are_
-> > cleared. But assume they weren't. What would Linux even do with a SPI
-> > transfer initiated by the previously running software environment? Why
-> > would it be a smart thing to handle that data in the first place?
-> > - The 10 bits from the status register are all the bits that can be
-> > cleared. The rest of the register, if you look at it, contains the TX
-> > FIFO Counter, the Transmit Next Pointer, the RX FIFO Counter, and the
-> > Pop Next Pointer.
-> > So, unless there's something I'm missing, I don't actually see how
-> > this broken bootloader can do any harm to us.
->
-> Let's rephrase it: you think therefore that completion should be
-> initialzed *after* requesting shared interrupts? You think that exactly
-> that order shall be used in the source code?
->
-> Best regards,
-> Krzysztof
->
->
+On Sun, 14 Jun 2020, Frank Rowand wrote:
 
-I think that completion should be initialized before it is used, just
-like any other variable. So far you have not proven any code path
-through which it can be used uninitialized, therefore I don't see why
-this should be accepted as a bug fix. Cleanup, cosmetic refactoring,
-design patterns, whatever, sure.
+> Hi Lee,
+> 
+> I'm looking at 5.8-rc1.
+> 
+> The only use of OF_MFD_CELL() where the same compatible is specified
+> for multiple elements of a struct mfd_cell array is for compatible
+> "stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
+> 
+>         OF_MFD_CELL("ab8500-pwm",
+>                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
+>         OF_MFD_CELL("ab8500-pwm",
+>                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
+>         OF_MFD_CELL("ab8500-pwm",
+>                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
+> 
+> The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
+> are:
+> 
+>    arch/arm/boot/dts/ste-ab8500.dtsi
+>    arch/arm/boot/dts/ste-ab8505.dtsi
+> 
+> These two .dtsi files only have a single node with this compatible.
+> Chasing back to .dts and .dtsi files that include these two .dtsi
+> files, I see no case where there are multiple nodes with this
+> compatible.
+> 
+> So it looks to me like there is no .dts in mainline that is providing
+> the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
+> is expecting.  No case that there are multiple mfd child nodes where
+> mfd_add_device() would assign the first of n child nodes with the
+> same compatible to multiple devices.
+> 
+> So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
+> Am I missing something here?
+> 
+> If I am correct, then either drivers/mfd/ab8500-core.c or
+> ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
 
-Thanks,
--Vladimir
+Your analysis is correct.
+
+Although it's not "broken", it just works when it really shouldn't.
+
+I will be fixing the 'ab8500-pwm' case in due course.
+
+> Moving forward, your proposed OF_MFD_CELL_REG() method seems a good
+> approach (I have not completely read the actual code in the patch yet
+> though).
+
+Thanks.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
