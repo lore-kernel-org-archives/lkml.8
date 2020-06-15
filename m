@@ -2,109 +2,161 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D68C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A30E20707
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9168E20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:13:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEx+2txC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BtM+4fLs";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ndD77+6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgFOHNJ (ORCPT
+        id S1728470AbgFOHNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:13:09 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44768 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728251AbgFOHNH (ORCPT
+        Mon, 15 Jun 2020 03:13:13 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:5221 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbgFOHNK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:13:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592205186;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=E3++9fAWe/b7XlLrTToP5Y8eC+hZgKd4hA8M+NDkd1Y=;
-        b=UEx+2txC7oqVC0LhQ01NzU9fWLp6XuSOXhMHuWnvBd5Ki5hCW4uRRRmFd5XoF+bkuQx0jD
-        rlDqzbQKJfQrWsktxZUYfYt/XdVr7i7ztZ22/Lky4gVcLmJtuv/vgGW3gI7JEEF2zO6H7A
-        +ZYY/RfOODn8/BFwUfSFEmGuWkd8lk4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-294-T-oP4H5SMq6AWMVP-7ZYTQ-1; Mon, 15 Jun 2020 03:12:59 -0400
-X-MC-Unique: T-oP4H5SMq6AWMVP-7ZYTQ-1
-Received: by mail-wr1-f71.google.com with SMTP id c14so6647251wrm.15
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:12:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E3++9fAWe/b7XlLrTToP5Y8eC+hZgKd4hA8M+NDkd1Y=;
-        b=S61rAWi/QkbuCkI4OeefxUjQkLh6Tgmf6Cgx5at4+2EBqm9uDBrjafibe1npNCLoKN
-         7BOiWEf+CrCFM7mTdu4V+tObzzWrKJQCv4c+VP8C+XOMt1xTqOw0IwLo8ZGAWgsEd39i
-         8YhUS+IOUb1oeeOgMnNT6xcBQXP5FTzyDvwVAUS9ENNNtBr8HxcRc+/JSKn6KeYqLWH7
-         hNMEKvd8Z+RR+0mzVV0U2pWQ54OhvAyxN3NcSYw7Q9y9YuiZgwFRDeQ2utXM43u9Tnsu
-         7fKXuyANus3sykFUMrM5yXA7gssimp0GTAXMwpakwUdsw3FiHUAiM9jcIAn7VzTF183N
-         6M+w==
-X-Gm-Message-State: AOAM533eAfnDvO2z6XJ5Z3HVfjvU8SNnyd7ugXsQagS+IwHEad4FuA4u
-        odDbvwFt79kPe4SWd6RArKQMx2Ui6L6y2/SL8OAIisuc3mnaTrQi9ZBI2U+658TLl7aH1eZnfhc
-        V6XjNeQ9f/+nGO6Sk2Hdm+wuw
-X-Received: by 2002:adf:fec8:: with SMTP id q8mr28353159wrs.2.1592205177933;
-        Mon, 15 Jun 2020 00:12:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwSZe918tll2ZSyHGEdKwQVQaOk3rhZPCzlb3iWg1Kr0iPZ98GBO0leCPdeCExwntcSaXXFOw==
-X-Received: by 2002:adf:fec8:: with SMTP id q8mr28353140wrs.2.1592205177700;
-        Mon, 15 Jun 2020 00:12:57 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c461:afc9:1:2046? ([2001:b07:6468:f312:c461:afc9:1:2046])
-        by smtp.gmail.com with ESMTPSA id a14sm23889987wrv.20.2020.06.15.00.12.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 00:12:57 -0700 (PDT)
-Subject: Re: fastpath_t? __no_kcsan? Both?
-To:     paulmck@kernel.org, cai@lca.pw, elver@google.com
-Cc:     linux-kernel@vger.kernel.org
-References: <20200615042002.GA14788@paulmck-ThinkPad-P72>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0bdd3592-24ae-ab35-a6cd-40d842b127e0@redhat.com>
-Date:   Mon, 15 Jun 2020 09:12:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200615042002.GA14788@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8
+        Mon, 15 Jun 2020 03:13:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592205189; x=1623741189;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=XrXQePVHQh8XpeC51qYFRMHa2ZO4E84iBpr4QqIfKvE=;
+  b=BtM+4fLsw95GPQV85Bhvjmya3rN0VEUN4fk9Bv8uFIS3BKv/IvNetDeE
+   ifpJiaL2Zo3dfN+YKdb/YI4H24/s9BSHDDi0oxdtVnwvn63tznwd02blZ
+   G2jjjdPw9VbHl/tn8v6YumhEAm37nWWBH7SEwair24WLQOh8Mp7Kg+gzR
+   TKrYO/TSIBsZz1n0bO3lJXvuZ2LrNEA9WgpxDuqZLtlTa1dlOjCkmq3qa
+   OMLVZoHnJoxJoSwPnEtouYG7tSpzgakHYv16WbT+1Vkrmnsjdaqukddkv
+   qHH68nuS5tmcxaRmgrWaFFktQpgvv8bWMM0V/5ZkK7WhPZFSUn81hJaSK
+   Q==;
+IronPort-SDR: V6F6tanRWsI22vjGKM0iFubq3FktLsSqdLJ5gYxyyVJmIWq0GwVYEOJELlvfbHPdzwCsYXVtXy
+ 9XvO4zVy8uil30Rd82oysPHLUwzwu3Ik3usCM30n69whwIJIgc5mWsk00anwMgek5+jI4L1T0n
+ fTYWTlTy3NCSBI6mk6mHBVsKeqtat5I4d3+WeSiyMzc/DMerJgMYYfDnwigY8gOHQyTFE/n2cS
+ Lu4PQ7pBWMqY5TMqmvEu45xl8bu3Apq94Lw7ExtKKYOOMWpq4380eBCdOlhGx3wjUug5OtaGTd
+ 0Ao=
+X-IronPort-AV: E=Sophos;i="5.73,514,1583164800"; 
+   d="scan'208";a="141394461"
+Received: from mail-mw2nam10lp2107.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.107])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Jun 2020 15:13:07 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ccoDHVjRUDPmZkSvo0yDV7zuaYlgVtxTTqKLkdDoC8Ie2e6EG8F5muJz+mJ4mHOMB7AHRnSEqFeDPLh5eAVTWojmsQ66pzYHNrq6+xWiZa4yXZuJf0+xgVnT2IEhhyl4fxu98orRFH9rJEhENCeM8lMPkm4WovtW5LK8cWR9HY/sqRcQPFymgLtqE9PoU9s8gpGZs2zb1Nj/87lbSKmb7IP/WSOv404xEepfjw6rt6gB/0rYp34BpzXW+pIYFK1EP+m0mG+IjObQtGY61UPZQBgOg696Q5TXRrrRo/Z6dF95SKJqb99ZRs5voosxaN00sJNMaKcSlqYVCqz12ZVwyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HDjza1bFlTensGY0L822yDbavh470DuLXjk7QvBLp7s=;
+ b=XKSqKxzVLfRsKqY3kL6wIYd2z9eQ5EFB1m9eV43Y16QgIuVTy3OlHwO+t2CULEk8+czL8dElI+baqwaegY7g8wvImyFdcil37KvFxAy1vUsLWj6UzDFUs6B1UMc1DVb6OMBPyZ+Wi42XaBf1/OroiP/cDIycGf5N7wlApstCUTKFlI5fPlvQjOvURoDf6OsnHc1b00iOUplv7tbXSefobJjHtywsqzh0OO36x304wzEB23DQfdrzXS1E/teFkS0DjjTFux7iAQdDaXjvxKZ9zuD9G2IMobr5yRxwAGNozgYjF3h94V+d+K7HLJDNnm+99chdo/uTsXVIr3K1bojF2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HDjza1bFlTensGY0L822yDbavh470DuLXjk7QvBLp7s=;
+ b=ndD77+6x8Gj9/w5HTom1w8yIrV2RDO647+/TeYuhMPRYqqedl/M9kk6dYumE7zUzEr0YgRXwf6meF4mYIner1GYLI1c9uCwKZsYK5pEEN02vlVOPVZcotgbSHK0//HL69Fe48VUSSLyG1QK0Mgulni8H3fApPQEcCLPO7aa2FKw=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (52.135.119.19) by
+ SN6PR04MB4574.namprd04.prod.outlook.com (52.135.120.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3088.18; Mon, 15 Jun 2020 07:13:04 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3088.028; Mon, 15 Jun 2020
+ 07:13:04 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "cc.chou@mediatek.com" <cc.chou@mediatek.com>,
+        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>
+Subject: RE: [PATCH v2 2/2] scsi: ufs: Add trace event for UIC commands
+Thread-Topic: [PATCH v2 2/2] scsi: ufs: Add trace event for UIC commands
+Thread-Index: AQHWQuDrRUZ57LvD6kiE43KBKdsIrajZQg/Q
+Date:   Mon, 15 Jun 2020 07:13:04 +0000
+Message-ID: <SN6PR04MB46400CE00A5CAF16CE4D4367FC9C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200615064753.20935-1-stanley.chu@mediatek.com>
+ <20200615064753.20935-3-stanley.chu@mediatek.com>
+In-Reply-To: <20200615064753.20935-3-stanley.chu@mediatek.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a1ea8bc6-3310-421d-90dd-08d810fb8c0d
+x-ms-traffictypediagnostic: SN6PR04MB4574:
+x-microsoft-antispam-prvs: <SN6PR04MB457447B792F0ED634E2F58C0FC9C0@SN6PR04MB4574.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 04359FAD81
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Eizy1Ex9jEY46HVldKsKB7r6rbPtlNTxkYHKq9KlhDiyC5Hxy+5kyBLZIcG3XstvXkI/RZm4c320gzOw/qm1qU3u2UalKiwHOLCw6eCPEnx6d4RvphVs1gQIaybQbAQF5ldNQvGWPYecvgeZXTpmss/TVO1FC0UqGqHXlXmoTBExp3FvFf76TS8sHwAbLfg5zMx9RMmNa75JfF8fX8PuJd4nYs6Si3AM6GurwaDVPV7M3e0XQqS+8slAt6lEGy00X0EzPUuja+mbBB60n4nqbV3AZhb5Fr2cHIzdHF/zniFp0uOrsUS9to6qpGS69o8ED1r4L0SzaaTaB8VL4xr9eA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(346002)(366004)(39860400002)(376002)(4744005)(86362001)(7416002)(9686003)(52536014)(5660300002)(55016002)(4326008)(478600001)(110136005)(54906003)(33656002)(316002)(2906002)(7696005)(186003)(6506007)(26005)(66446008)(8676002)(66476007)(8936002)(66946007)(71200400001)(76116006)(66556008)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: bDCGYeHlK9I0yEPEXZG8XcsMyM7h102qMEcxN4AIEgVh+1mmGwulJFzn2VL+QJfjjDLGKefG54oqcVNDvyCmikfUd/hll15XHyIs1CqAAvw73RcWzxpYHxE4kimKL9f8t8F4yQUzWNPHPQd2Z75gIUjaO51N9/aM+Qx977U24oFE4DFlIC/zgR9LIBxp8Gl65D94I5t5I7cjQvefQ491c5sZ4GpgaiRwC0kavnoC2xrMyE5Y55Alffw1smsv9Yvorxz1M03t/XAbJbolUO+v+22An5xVIX2n+FPRwWBKc1rCMNCEa91kdBxcHBTJHrXoc5IiWngnLz0ceixMqHvl1O/cqaohM2lPqLhnTqxsry4ziwxWOuwsK54W+21+vnvFNWhoG5olRJctTMe6F641Zg2JsTGILZ4L7Ayt3By8DXnpWpfcyXHYH+KFxih2D3FNKZBMUh3Kd7jAoOjHQdbb+YCu4rdEX65YnqlOPJpQCX8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1ea8bc6-3310-421d-90dd-08d810fb8c0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 07:13:04.4060
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CYUqtGUueEYCxrSz2Ykj3KVC+FXeAOQ7jUWkGN5ZqTr7nb1B9dN2uOrkf6OhEDsj39Ki7dmd61/QXBqWk6aqPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4574
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/06/20 06:20, Paul E. McKenney wrote:
-> 
-> I get the following conflict when rebasing 39a8c47635b0 ("kvm/svm:
-> Disable KCSAN for svm_vcpu_run()") onto v5.8-rc1:
-> 
-> <<<<<<< 6c410247efb2d3907b508a2448ab9ab1c86d938c
-> static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
-> =======
-> static __no_kcsan void svm_vcpu_run(struct kvm_vcpu *vcpu)
->>>>>>>> kvm/svm: Disable KCSAN for svm_vcpu_run()
-> The "natural" resolution would be this:
-> 
-> static fastpath_t __no_kcsan void svm_vcpu_run(struct kvm_vcpu *vcpu)
-> 
-> But does that make sense?
+>         /* Write UIC Cmd */
+>         ufshcd_writel(hba, uic_cmd->command & COMMAND_OPCODE_MASK,
+>                       REG_UIC_COMMAND);
+> @@ -4825,11 +4847,15 @@ static irqreturn_t ufshcd_uic_cmd_compl(struct
+> ufs_hba *hba, u32 intr_status)
+>                         ufshcd_get_uic_cmd_result(hba);
+>                 hba->active_uic_cmd->argument3 =3D
+>                         ufshcd_get_dme_attr_val(hba);
+> +               ufshcd_add_uic_command_trace(hba, hba->active_uic_cmd,
+> +                                            "complete");
+>                 complete(&hba->active_uic_cmd->done);
+>                 retval =3D IRQ_HANDLED;
+>         }
+>=20
+>         if ((intr_status & UFSHCD_UIC_PWR_MASK) && hba->uic_async_done) {
+> +               ufshcd_add_uic_command_trace(hba, hba->active_uic_cmd,
+> +                                            "complete");
+>                 complete(hba->uic_async_done);
+>                 retval =3D IRQ_HANDLED;
 
-fastpath_t is just an enum, so
 
-	static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
-
-Now that KCSAN has been merged however I can do this change myself.
-
-Thanks!
-
-Paolo
-
+Why not call ufshcd_add_uic_command_trace once if retval =3D=3D IRQ_HANDLED=
+?
+Is it that the exact timestamp?
