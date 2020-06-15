@@ -2,74 +2,224 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83391C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A33EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0042078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D20F2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:10:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dwu4BoZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbgFOQKh (ORCPT
+        id S1730865AbgFOQKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:10:37 -0400
-Received: from mga06.intel.com ([134.134.136.31]:25931 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgFOQKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:10:36 -0400
-IronPort-SDR: 2D+D1Ub91RTlXcwXKusZE6FNrGccbOgpOMx1ujJh61wxDXpHP6M5yZ2oydWh4z8To8TzCafAFP
- tCEOao7pLPKA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 09:10:34 -0700
-IronPort-SDR: hEe4Gy2y6FmwjPa7jpciT7Mp1PdK5jkRkiimAFiu1AMHEiCtfpkhsvAgBUnOfDD+QGNM0+GvHd
- khuRGVAfcsPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,515,1583222400"; 
-   d="scan'208";a="290743974"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 15 Jun 2020 09:10:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A81C1217; Mon, 15 Jun 2020 19:10:32 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
-Date:   Mon, 15 Jun 2020 19:10:32 +0300
-Message-Id: <20200615161032.12906-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.27.0.rc2
+        Mon, 15 Jun 2020 12:10:55 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31704 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728585AbgFOQKz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:10:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592237453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gO0KIzYd49wn9s7qVa6jSasKGeMas6UA1ZI/tcFRyJ0=;
+        b=dwu4BoZbKEeJlIN/Yse424GWqVHib3V0fXb07ayK0xKTmHf1mGfVCVZgrFw744tOOe/KGp
+        7nBzG1GDQyA5bbBKWhnc7a7WEl9d5cZvgwXHtaJvB6poM4dHYca1EUXmGu1utnDYXpcgAW
+        ZfeZJrl+j2SYCzfai16ImEcfwzoCrRw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-imWPGdcsOC62zydqkXShdg-1; Mon, 15 Jun 2020 12:10:16 -0400
+X-MC-Unique: imWPGdcsOC62zydqkXShdg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 457689D6DB4;
+        Mon, 15 Jun 2020 16:02:25 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-2.rdu2.redhat.com [10.10.115.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DE1405C1C3;
+        Mon, 15 Jun 2020 16:02:24 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 4D5FA220628; Mon, 15 Jun 2020 12:02:24 -0400 (EDT)
+Date:   Mon, 15 Jun 2020 12:02:24 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: async_pf: change
+ kvm_setup_async_pf()/kvm_arch_setup_async_pf() return type to bool
+Message-ID: <20200615160224.GG351167@redhat.com>
+References: <20200615121334.91300-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615121334.91300-1-vkuznets@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Emmitsburg PCH has the same LPSS than Intel Ice Lake.
-Add the new IDs to the list of supported devices.
+On Mon, Jun 15, 2020 at 02:13:34PM +0200, Vitaly Kuznetsov wrote:
+> Unlike normal 'int' functions returning '0' on success, kvm_setup_async_pf()/
+> kvm_arch_setup_async_pf() return '1' when a job to handle page fault
+> asynchronously was scheduled and '0' otherwise. To avoid the confusion
+> change return type to 'bool'.
+> 
+> No functional change intended.
+> 
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/mfd/intel-lpss-pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+Looks good to me. Nobody checks the error from kvm_arch_setup_async_pf().
+Callers only seem to care about success or failure at this point of time,
+and they fall back to synchorounous page fault upon failure. This 
+could be changed back once somebody needs specific error code.
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index cc64cdda41c1..9a58032f818a 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -201,6 +201,9 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x1ac4), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
-+	/* EBG */
-+	{ PCI_VDEVICE(INTEL, 0x1bad), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x1bae), (kernel_ulong_t)&bxt_uart_info },
- 	/* GLK */
- 	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
--- 
-2.27.0.rc2
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+
+Vivek
+
+> ---
+>  arch/s390/kvm/kvm-s390.c | 20 +++++++++-----------
+>  arch/x86/kvm/mmu/mmu.c   |  4 ++--
+>  include/linux/kvm_host.h |  4 ++--
+>  virt/kvm/async_pf.c      | 16 ++++++++++------
+>  4 files changed, 23 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index d47c19718615..7fd4fdb165fc 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -3954,33 +3954,31 @@ bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu)
+>  	return true;
+>  }
+>  
+> -static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu)
+> +static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu)
+>  {
+>  	hva_t hva;
+>  	struct kvm_arch_async_pf arch;
+> -	int rc;
+>  
+>  	if (vcpu->arch.pfault_token == KVM_S390_PFAULT_TOKEN_INVALID)
+> -		return 0;
+> +		return false;
+>  	if ((vcpu->arch.sie_block->gpsw.mask & vcpu->arch.pfault_select) !=
+>  	    vcpu->arch.pfault_compare)
+> -		return 0;
+> +		return false;
+>  	if (psw_extint_disabled(vcpu))
+> -		return 0;
+> +		return false;
+>  	if (kvm_s390_vcpu_has_irq(vcpu, 0))
+> -		return 0;
+> +		return false;
+>  	if (!(vcpu->arch.sie_block->gcr[0] & CR0_SERVICE_SIGNAL_SUBMASK))
+> -		return 0;
+> +		return false;
+>  	if (!vcpu->arch.gmap->pfault_enabled)
+> -		return 0;
+> +		return false;
+>  
+>  	hva = gfn_to_hva(vcpu->kvm, gpa_to_gfn(current->thread.gmap_addr));
+>  	hva += current->thread.gmap_addr & ~PAGE_MASK;
+>  	if (read_guest_real(vcpu, vcpu->arch.pfault_token, &arch.pfault_token, 8))
+> -		return 0;
+> +		return false;
+>  
+> -	rc = kvm_setup_async_pf(vcpu, current->thread.gmap_addr, hva, &arch);
+> -	return rc;
+> +	return kvm_setup_async_pf(vcpu, current->thread.gmap_addr, hva, &arch);
+>  }
+>  
+>  static int vcpu_pre_run(struct kvm_vcpu *vcpu)
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 979a7e1c263d..3dd0af7e7515 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4045,8 +4045,8 @@ static void shadow_page_table_clear_flood(struct kvm_vcpu *vcpu, gva_t addr)
+>  	walk_shadow_page_lockless_end(vcpu);
+>  }
+>  
+> -static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> -				   gfn_t gfn)
+> +static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> +				    gfn_t gfn)
+>  {
+>  	struct kvm_arch_async_pf arch;
+>  
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 62ec926c78a0..9edc6fc71a89 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -211,8 +211,8 @@ struct kvm_async_pf {
+>  
+>  void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu);
+>  void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu);
+> -int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> -		       unsigned long hva, struct kvm_arch_async_pf *arch);
+> +bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> +			unsigned long hva, struct kvm_arch_async_pf *arch);
+>  int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
+>  #endif
+>  
+> diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
+> index 45799606bb3e..390f758d5a27 100644
+> --- a/virt/kvm/async_pf.c
+> +++ b/virt/kvm/async_pf.c
+> @@ -156,17 +156,21 @@ void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu)
+>  	}
+>  }
+>  
+> -int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> -		       unsigned long hva, struct kvm_arch_async_pf *arch)
+> +/*
+> + * Try to schedule a job to handle page fault asynchronously. Returns 'true' on
+> + * success, 'false' on failure (page fault has to be handled synchronously).
+> + */
+> +bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> +			unsigned long hva, struct kvm_arch_async_pf *arch)
+>  {
+>  	struct kvm_async_pf *work;
+>  
+>  	if (vcpu->async_pf.queued >= ASYNC_PF_PER_VCPU)
+> -		return 0;
+> +		return false;
+>  
+>  	/* Arch specific code should not do async PF in this case */
+>  	if (unlikely(kvm_is_error_hva(hva)))
+> -		return 0;
+> +		return false;
+>  
+>  	/*
+>  	 * do alloc nowait since if we are going to sleep anyway we
+> @@ -174,7 +178,7 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  	 */
+>  	work = kmem_cache_zalloc(async_pf_cache, GFP_NOWAIT | __GFP_NOWARN);
+>  	if (!work)
+> -		return 0;
+> +		return false;
+>  
+>  	work->wakeup_all = false;
+>  	work->vcpu = vcpu;
+> @@ -193,7 +197,7 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>  
+>  	schedule_work(&work->work);
+>  
+> -	return 1;
+> +	return true;
+>  }
+>  
+>  int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu)
+> -- 
+> 2.25.4
+> 
 
