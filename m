@@ -2,111 +2,81 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E71DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 888BE207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:24:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h9i73P/s"
+	by mail.kernel.org (Postfix) with ESMTP id 3FD99206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbgFOUYT (ORCPT
+        id S1731254AbgFOU1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:24:19 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56446 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728870AbgFOUYS (ORCPT
+        Mon, 15 Jun 2020 16:27:35 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53564 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbgFOU1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:24:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592252657;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=C/iH4DY/6Yao+IlFOJ9ZaQwmC0Ra1ZHKELUELgNEM4Y=;
-        b=h9i73P/sUfHCioamiDpz7l8jez2COOZtyKSuzvQ7zZBEFhsSUuxHEUXgCuL9TFGszG8n2+
-        8nZwdgQiRDj1qVy31yqRNSgdpNrj70e/3Ib0Lxgw8l0DK+C4xzugaMomoWeX21hi2l6nLC
-        PXEu6cNQyl/gLH7aLI38/1kkpA9GdPo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-234-SRe7YmtwODqSgPnUHCQbpg-1; Mon, 15 Jun 2020 16:24:15 -0400
-X-MC-Unique: SRe7YmtwODqSgPnUHCQbpg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADCE2E93F;
-        Mon, 15 Jun 2020 20:24:14 +0000 (UTC)
-Received: from random.internal.datastacks.com (ovpn-113-167.phx2.redhat.com [10.3.113.167])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A0AEE9CFCE;
-        Mon, 15 Jun 2020 20:24:13 +0000 (UTC)
-From:   Peter Jones <pjones@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Jones <pjones@redhat.com>
-Subject: [PATCH] Make it possible to disable efivar_ssdt entirely
-Date:   Mon, 15 Jun 2020 16:24:08 -0400
-Message-Id: <20200615202408.2242614-1-pjones@redhat.com>
+        Mon, 15 Jun 2020 16:27:34 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id AAA581C0BD2; Mon, 15 Jun 2020 22:27:31 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 22:27:31 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, robh@kernel.org,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v27 00/15] Multicolor Framework v27
+Message-ID: <20200615202731.GA18028@duo.ucw.cz>
+References: <20200615201522.19677-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
+Content-Disposition: inline
+In-Reply-To: <20200615201522.19677-1-dmurphy@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In most cases, such as CONFIG_ACPI_CUSTOM_DSDT and
-CONFIG_ACPI_TABLE_UPGRADE, boot-time modifications to firmware tables
-are tied to specific Kconfig options.  Currently this is not the case
-for modifying the ACPI SSDT via the efivar_ssdt kernel command line
-option and associated EFI variable.
 
-This patch adds CONFIG_EFI_CUSTOM_SSDT_OVERLAYS, which defaults
-disabled, in order to allow enabling or disabling that feature during
-the build.
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Peter Jones <pjones@redhat.com>
----
- drivers/firmware/efi/efi.c   |  2 +-
- drivers/firmware/efi/Kconfig | 11 +++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+Hi!
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 48d0188936c..4b12a598ccf 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -192,7 +192,7 @@ static void generic_ops_unregister(void)
- 	efivars_unregister(&generic_efivars);
- }
- 
--#if IS_ENABLED(CONFIG_ACPI)
-+#if IS_ENABLED(CONFIG_EFI_CUSTOM_SSDT_OVERLAYS)
- #define EFIVAR_SSDT_NAME_MAX	16
- static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
- static int __init efivar_ssdt_setup(char *str)
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index 6b38f9e5d20..fe433f76b03 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -278,3 +278,14 @@ config EFI_EARLYCON
- 	depends on SERIAL_EARLYCON && !ARM && !IA64
- 	select FONT_SUPPORT
- 	select ARCH_USE_MEMREMAP_PROT
-+
-+config EFI_CUSTOM_SSDT_OVERLAYS
-+	bool "Load custom ACPI SSDT overlay from an EFI variable"
-+	depends on EFI_VARS
-+	default ACPI_TABLE_UPGRADE
-+	help
-+	  Allow loading of an ACPI SSDT overlay from an EFI variable specified
-+	  by a kernel command line option.
-+
-+	  See Documentation/admin-guide/acpi/ssdt-overlays.rst for more
-+	  information.
--- 
-2.26.2
+> This is the multi color LED framework.   This framework presents clustered
+> colored LEDs into an array and allows the user space to adjust the bright=
+ness
+> of the cluster using a single file write.  The individual colored LEDs
+> intensities are controlled via a single file that is an array of
+> LEDs
 
+Please don't do this. Pinging whoever you think is blocking the merge
+is okay, but resending big series just because people are busy over
+the merge window is not cool.
+
+Thanks,
+
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--/04w6evG8XlLl3ft
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXufZswAKCRAw5/Bqldv6
+8oiWAJoCSSDkCf6k/qeMYDUghOTeiGFARQCfWO71W5nRBiBrtWapSuqWfwhtZsw=
+=SGoc
+-----END PGP SIGNATURE-----
+
+--/04w6evG8XlLl3ft--
