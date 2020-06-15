@@ -2,104 +2,111 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ECEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B97C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D73922067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLGeR2Fg"
+	by mail.kernel.org (Postfix) with ESMTP id 68ACD20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592210236;
+	bh=wLAQMOP7sUI7QW1xWDZ25vUVU0vunXdDeSZzftuei+k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RmkGx470pMlCgJmkR5SSzcuZZcGNeSC+8aI3+ejizY+drjwavjis5BJ+Cvu9TPRan
+	 9AUsBiiAEcUH1/aviwd65SPPs1Wt7Nu5xK2I/b2lJIxN8nq6B4CjwpdprIu6H6360E
+	 b6eLjnASGjdD61gmpSRSD3qiqO+m1JPmqiqVgIWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgFOIgp (ORCPT
+        id S1729105AbgFOIhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728895AbgFOIgo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:36:44 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0DCC061A0E;
-        Mon, 15 Jun 2020 01:36:44 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x22so7516035pfn.3;
-        Mon, 15 Jun 2020 01:36:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AjIM9F1YD0eAghWW7pMVSiUA+YlC9IghbUbcMANQW/0=;
-        b=CLGeR2FghoElL6R9Z2Bi2Yc5VrXUneQKgPEEdLL5cd2SYNibiDR7XLtCr186JA5PZa
-         SJAD8dGgN62hOWYcXD3CqmrwNovDbLGKM4RqTpf6fgq1WtLuuPSV8BRxAaURmKp8h59g
-         MM8Eisp5mkQXQBpjuRJYC9jhL1LxU9pA8DByK43F0zYuaZnccWbHeaPjqtYcq4rzmG6W
-         5i+oMlGV7Ck25vjXEFF0WlG7ytL3KJyviRZnmj3oxZlTkpaBr778OcE0sEvSgwRw8O97
-         C0gnF1Y2gQwPfmEWs452TBVzA2j3kGYzKqi4vgUQhBxu+Fi+E87lyDWVEU7/bRoxHEM2
-         2gaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AjIM9F1YD0eAghWW7pMVSiUA+YlC9IghbUbcMANQW/0=;
-        b=BLwa2hwpjuYfYn5fdTg7II5bPNwLUFpQdPO45AbTwfMGoaiTVB4XWZmjxkDhUW3q08
-         1QYgqD6X+/Nmg6+otGiB54yz94qBwl6HC6mXPYeD/EMYullWucmmF/PN8S8UHyXvI4jR
-         TyQNQQh1VvUG/mUuFBsj+eHljz6hiboqmO+dMMdFjOPEceemr+S5A729tWTZpO/we0ym
-         z752c1kT6xky6Efw0ChaDgIqINl/cIHnNeYRDHuSGRnNzPrc9+F3gGFLP9xsbbdWi+pK
-         dgrNQcfudfPgjGSvdYizcV7hR0oRvKin7i1l5PJPspdvAnckXPWM0/R+lzdz57qf3850
-         yu5g==
-X-Gm-Message-State: AOAM533ZurEFVS6XcCgM3GFSJG6I2vnFb44hmMKXNTEe6wjPtIhjQO/9
-        AAeMwPAN2sIfglRqY39DdHI=
-X-Google-Smtp-Source: ABdhPJzLH7mZO6kEiWcWMGU6S/x10QPmiLfRXXFbYPCqwGr9bT15E1iyvq1yTuxedDzoprcOo9IRXA==
-X-Received: by 2002:a63:8f17:: with SMTP id n23mr14889002pgd.40.1592210203981;
-        Mon, 15 Jun 2020 01:36:43 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id x1sm11954844pju.3.2020.06.15.01.36.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 01:36:43 -0700 (PDT)
-From:   Geliang Tang <geliangtang@gmail.com>
-To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] mptcp: use list_first_entry_or_null
-Date:   Mon, 15 Jun 2020 16:34:28 +0800
-Message-Id: <6cf9b609f1d77b389165448b9a9b38f6bee48f87.1592209896.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 15 Jun 2020 04:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728603AbgFOIhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:37:14 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 284562067B;
+        Mon, 15 Jun 2020 08:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592210234;
+        bh=wLAQMOP7sUI7QW1xWDZ25vUVU0vunXdDeSZzftuei+k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hyMmJdPowVHu1mOFM4vJ7GRMRbYbqAzUrkzkMhiGtwzejuwM/49hRrIEz717PRTAZ
+         jAaT4JLSVKEqwgqHse2wKzA8mlHeu0lnUgIJ3HHjvGO9LSmvtdoJo/JQu9xabompNq
+         dzsGxznodwlsMMW9yD0VJkBL2oJkPvfo+7J7G/Q0=
+Date:   Mon, 15 Jun 2020 10:37:10 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] Documentation: media: convert to use
+ i2c_new_client_device()
+Message-ID: <20200615103710.5e61104c@coco.lan>
+In-Reply-To: <20200615075816.2848-6-wsa+renesas@sang-engineering.com>
+References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
+        <20200615075816.2848-6-wsa+renesas@sang-engineering.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use list_first_entry_or_null to simplify the code.
+Em Mon, 15 Jun 2020 09:58:14 +0200
+Wolfram Sang <wsa+renesas@sang-engineering.com> escreveu:
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- Changes in v2:
-  - Add "net-next" tag in Subject.
----
- net/mptcp/protocol.h | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> Move away from the deprecated API and advertise the new one.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> ---
+> 
+> I'd like to push it via I2C for 5.8-rc2.
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 70ed698bd206..db56535dfc29 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -232,10 +232,7 @@ static inline struct mptcp_data_frag *mptcp_rtx_head(const struct sock *sk)
- {
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 
--	if (list_empty(&msk->rtx_queue))
--		return NULL;
--
--	return list_first_entry(&msk->rtx_queue, struct mptcp_data_frag, list);
-+	return list_first_entry_or_null(&msk->rtx_queue, struct mptcp_data_frag, list);
- }
- 
- struct mptcp_subflow_request_sock {
--- 
-2.17.1
+OK!
 
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+> 
+>  Documentation/driver-api/media/v4l2-subdev.rst    | 2 +-
+>  Documentation/userspace-api/media/conf_nitpick.py | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/media/v4l2-subdev.rst b/Documentation/driver-api/media/v4l2-subdev.rst
+> index 6e71f67455bb..bc7e1fc40a9d 100644
+> --- a/Documentation/driver-api/media/v4l2-subdev.rst
+> +++ b/Documentation/driver-api/media/v4l2-subdev.rst
+> @@ -451,7 +451,7 @@ The bridge driver also has some helper functions it can use:
+>  					"module_foo", "chipid", 0x36, NULL);
+>  
+>  This loads the given module (can be ``NULL`` if no module needs to be loaded)
+> -and calls :c:func:`i2c_new_device` with the given ``i2c_adapter`` and
+> +and calls :c:func:`i2c_new_client_device` with the given ``i2c_adapter`` and
+>  chip/address arguments. If all goes well, then it registers the subdev with
+>  the v4l2_device.
+>  
+> diff --git a/Documentation/userspace-api/media/conf_nitpick.py b/Documentation/userspace-api/media/conf_nitpick.py
+> index d0c50d75f518..0a8e236d07ab 100644
+> --- a/Documentation/userspace-api/media/conf_nitpick.py
+> +++ b/Documentation/userspace-api/media/conf_nitpick.py
+> @@ -27,7 +27,7 @@ nitpick_ignore = [
+>      ("c:func", "copy_to_user"),
+>      ("c:func", "determine_valid_ioctls"),
+>      ("c:func", "ERR_PTR"),
+> -    ("c:func", "i2c_new_device"),
+> +    ("c:func", "i2c_new_client_device"),
+>      ("c:func", "ioctl"),
+>      ("c:func", "IS_ERR"),
+>      ("c:func", "KERNEL_VERSION"),
+
+
+
+Thanks,
+Mauro
