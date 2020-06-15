@@ -2,129 +2,76 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93885C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D701720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BB32068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iL/tiCXi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1TSKnUTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbgFOKrX (ORCPT
+        id S1729603AbgFOKr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:47:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33814 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728815AbgFOKrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:47:21 -0400
-Received: from zn.tnic (p200300ec2f063c00a9ba54d750d72537.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:3c00:a9ba:54d7:50d7:2537])
+        Mon, 15 Jun 2020 06:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728815AbgFOKrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:47:25 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7CBC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UYG8iL47fsRoRKjxPoG9NBoov4V0eZBJOPZR2/0HGqQ=; b=1TSKnUTasfM1qZ5paxJKFtDT6h
+        OFyYY6neCc9p1kybx5xi/z/zW9yVgb4JkvQspgLmaIT/IHpL+ynqmz8z/6ihlNrvDas1BGPV4EA3a
+        uVd/y4KZKfHGjwwF1hQzWI93+KJYASnp+z18yVnV6UrJwQ4trtOV8NFJJ6u+tGzejMbDNPG1pbhzi
+        22IDSND4en850ae8qL4TmybLogrbmzI+pdmkANmI8wwfBvCAei0Atn/LiYS4IWfmrwtLPfSOg2n9V
+        w/sZiIMc6zyI6Vc/stiayhEnhc3saIjthcSURHixGU2vrVsh14l0Hv+obM+nVSKG54HYPUywdl/LD
+        s6hAMtMQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkmds-0000yp-NT; Mon, 15 Jun 2020 10:47:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3ADD41EC035B;
-        Mon, 15 Jun 2020 12:47:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592218040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=MHpggwvr0BvKUJlLLSPpdNMqETzjB0UWRAJLzGCSE/s=;
-        b=iL/tiCXidPNan8giRcIyigGQx5uElNnFHtoi8CPJqgTD1GDpCflOrn0nAU3x/BFR1MKsr9
-        /FbVAxLKXMjzZ9eB8hrm/0c/bc8xDsoB5bbHqdA5bOB1ooC7cz3ft3Luc/KTbs/VQQOdaw
-        5J1XrRalyY763xRL08Jx9Q9rnTD72K4=
-Date:   Mon, 15 Jun 2020 12:47:13 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Gross <mgross@linux.intel.com>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Johansen <john.johansen@canonical.com>,
-        Steve Beattie <sbeattie@ubuntu.com>
-Subject: Re: [PATCH] x86/speculation/srbds: do not try to turn mitigation off
- when not supported
-Message-ID: <20200615104713.GE14668@zn.tnic>
-References: <20200609174313.2600320-1-cascardo@canonical.com>
- <20200615082858.GC14668@zn.tnic>
- <20200615102738.GZ4342@mussarela>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 96C643010C8;
+        Mon, 15 Jun 2020 12:47:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7875920705C4E; Mon, 15 Jun 2020 12:47:02 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 12:47:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Tobias Klauser <tklauser@distanz.ch>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] objtool: Free memory in error case in special_get_alts
+Message-ID: <20200615104702.GN2497@hirez.programming.kicks-ass.net>
+References: <20200612115628.8992-1-tklauser@distanz.ch>
+ <alpine.LSU.2.21.2006151238390.5945@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200615102738.GZ4342@mussarela>
+In-Reply-To: <alpine.LSU.2.21.2006151238390.5945@pobox.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 07:27:38AM -0300, Thadeu Lima de Souza Cascardo wrote:
-> It was booted without the microcode update. There was microcode available, but
-> systems may be booted without it, thus causing warnings due to the MSR
-> read/write.
+On Mon, Jun 15, 2020 at 12:40:32PM +0200, Miroslav Benes wrote:
+> Hi,
+> 
+> On Fri, 12 Jun 2020, Tobias Klauser wrote:
+> 
+> > Avoid a memory leak in case get_alt_entry returns an error.
+> 
+> yes, this is not the only one, but I doubt we want to spend time on that. 
+> The process is about to exit anyway.
 
-Right.
-
-> That's exactly the fix in the patch I sent, right? Do you want me to resend
-> with a comment, then?
-
-Your patch replaced
-
--       if (srbds_mitigation == SRBDS_MITIGATION_UCODE_NEEDED)
-
-Thinking about this more, I think the proper thing to do is this:
-
----
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 0b71970d2d3d..ce2931563f8f 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -432,14 +432,14 @@ void update_srbds_msr(void)
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		return;
- 
--	if (srbds_mitigation == SRBDS_MITIGATION_UCODE_NEEDED)
-+	if (srbds_mitigation == SRBDS_MITIGATION_UCODE_NEEDED ||
-+	    srbds_mitigation == SRBDS_MITIGATION_TSX_OFF)
- 		return;
- 
- 	rdmsrl(MSR_IA32_MCU_OPT_CTRL, mcu_ctrl);
- 
- 	switch (srbds_mitigation) {
- 	case SRBDS_MITIGATION_OFF:
--	case SRBDS_MITIGATION_TSX_OFF:
- 		mcu_ctrl |= RNGDS_MITG_DIS;
- 		break;
- 	case SRBDS_MITIGATION_FULL:
----
-
-because looking at:
-
-  7e5b3c267d25 ("x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation")
-
-it says:
-
-    While it is present on all affected CPU models, the microcode mitigation
-    is not needed on models that enumerate ARCH_CAPABILITIES[MDS_NO] in the
-    cases where TSX is not supported or has been disabled with TSX_CTRL.
-
-which could be also understood as "there won't be microcode for those
-CPUs and thus MSR_IA32_MCU_OPT_CTRL won't be there."
-
-Because if that is the case, then SRBDS_MITIGATION_TSX_OFF means the MSR
-is not there and therefore we should not touch it.
-
-And you've actually shown that without the microcode loaded, you
-can have a system which is MDS_NO and which hasn't generated
-MSR_IA32_MCU_OPT_CTRL (because the microcode is not loaded) and thus
-can't touch said MSR.
-
-Mark?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Right, that's just wasting cycles.
