@@ -2,421 +2,173 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9822BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B39420739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18BF20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bIn9HOmB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R6YkbzpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgFOWGt (ORCPT
+        id S1726480AbgFOWQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:06:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgFOWGs (ORCPT
+        Mon, 15 Jun 2020 18:16:15 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40140 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726314AbgFOWQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:06:48 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7949CC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:06:48 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id h22so525538pjf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EV7dxD7fMr+Ylyvl9y5nlIzLH4Zik3ewFcRfV+P+MWk=;
-        b=bIn9HOmBE9lzqITss2TaKh1dCiNXoqI+Ce9AWodfQl/pZNdV9SbWrV3A4vzm0VJEV6
-         /4zsXV9jYwFsf4bWz85G5vQCR0LPB3oLRphrn/+KHDVtzTOP/kPg0cHDr0ouZE7QnsgF
-         WsfOfZLiVMKbfTs3mgMfui+xEhl3dVcjvy2iabUAJ7GaECHBtQ0BEMivJGb+WcrDPt5y
-         shxj9hDQwSJDgTVBZ3LvbVYrl0i96XZy0uFqS7HXZeU6RxUklHtPBKKnzmAzgGCUoWQ2
-         hcYrLeaJrzGv3ckw4Nj06zzqnTeQunEQm6cGtOZ3rObUT+AEKsSIkM99wdvZg1HQjRNS
-         MP1A==
+        Mon, 15 Jun 2020 18:16:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592259372;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qVFaTHERIS8zyGm9WNuNIMiOUtUSSq7Mw9RxxyBA+O0=;
+        b=R6YkbzpVnj4TZo8sJPs9oao/BEOrrmoyGATHzMlipAUZCA5BaVEvdVQjDs9nDFnANpm8q1
+        naaO9Ry0ampPNEH2s/2uqaYSC98i6vZFioq7VJaMyD8PyeWcp+4gh04X2GEs/x+feLAGJK
+        lBM1pwUJ6Sdi7blz8uxvetf9nRFnFBU=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-XN8iuLSWON6rgnEMWNZLiA-1; Mon, 15 Jun 2020 18:16:10 -0400
+X-MC-Unique: XN8iuLSWON6rgnEMWNZLiA-1
+Received: by mail-qt1-f199.google.com with SMTP id y7so15170273qti.8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:16:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EV7dxD7fMr+Ylyvl9y5nlIzLH4Zik3ewFcRfV+P+MWk=;
-        b=SYfx5ueVEGcQ7RszxWlhq5okHUDseU0Pu+7iwASxlYmxjHVdno/tOyedhThCyTKuDr
-         1hoMzEsR0V5q+QYYkhbYQ2LjTc57ELEfav8hFE5OzBU4n0f8lF/KtFIe365DgnNw+EfV
-         KOk0iLkeeq9ds36TdDqxurtrLjp6Hb/Ef7dHFTQ5YApGVm3m9OtmvDMxRXnMwXZiJWfB
-         FzDWzY7KkefIvPxJkauCWUTvssF/MZR5l+JwZJtSQQPnx4XYujBP1cduc/hXMyKFxPxZ
-         4i0dtLLef3Ha9M7Te3Ju9hq4OXb1kV3OHS6Ylkxx18Uu9LjxA7koxtZKDSrTlJ7ER68S
-         JOMg==
-X-Gm-Message-State: AOAM531NzkoxRwWLnJVUiKj6DIMYwzfTp5OJMmsjCgIklHNlFtRJN02+
-        iVSvLIAwSsb1SjfRzl4JUCmaFPzd98SmryC7yq+nrA==
-X-Google-Smtp-Source: ABdhPJyEzSaghFv56LKhrCRQppzXCy8b/BtKziqLVpkF6KGTMySM9LnQi4bDWrGBI2O6s0i457/o4qR8p4F4ccZ6DtI=
-X-Received: by 2002:a17:90a:e2c4:: with SMTP id fr4mr48171pjb.32.1592258807433;
- Mon, 15 Jun 2020 15:06:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qVFaTHERIS8zyGm9WNuNIMiOUtUSSq7Mw9RxxyBA+O0=;
+        b=I5Z5d/rc4vBl1b37BjvU0Z1i0sXv0AFsmFvtk4ZnGEZo3c1ZT+E3446sk/ygywpsG3
+         C/YovhxQ11tixNwLZfsDwh+mAzwZbXGN8Zkzz0WjRnsfEheO0ze46hIBCFsAtwAIdpOt
+         q08N/HJRqB5zOnE4N/fVSh8qF3EAAkmiPrXnLemAnwmE58giGzH8Uz/FmiDJMHpvFRrn
+         cOLhB9LnsO4hjOoMQQE/jKB4zfOV9hUZrQTGa22sIjrVRaKOx9sl7Lkik3H8DjbuEf0o
+         DGMd5qpkOCFRdtVOV+u7rRF1wXT1tT3YAnPZ2yz/vuR+/qtlz3s24FBRA531Yj2L54M/
+         t+qA==
+X-Gm-Message-State: AOAM531pjW4kHCgGLrJornIx7jglZl6etozdZUS+PzSPluls2fdxcB5x
+        D9z97pOjs0hZyHiGYCnO84SpQQ0Tb6hO0sqKCEvGK2gNoHwxmd+XvGFfXoZmHmEiL8lAYtuwqro
+        VJEyNgs1qaOraREJ8u+NtlV6k
+X-Received: by 2002:a37:d89:: with SMTP id 131mr18163757qkn.454.1592259369624;
+        Mon, 15 Jun 2020 15:16:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzO4CUTnwkVRCrJ0Win2S1iok5yGvnnMgqhjNgxkBMVdltq3RhL4r6jXOOLCvoq1cxn7UqqQA==
+X-Received: by 2002:a37:d89:: with SMTP id 131mr18163733qkn.454.1592259369320;
+        Mon, 15 Jun 2020 15:16:09 -0700 (PDT)
+Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id w13sm12351509qkb.91.2020.06.15.15.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 15:16:08 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: [PATCH 00/25] mm: Page fault accounting cleanups
+Date:   Mon, 15 Jun 2020 18:15:42 -0400
+Message-Id: <20200615221607.7764-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200615062520.GK12456@shao2-debian> <CANn89i+s=oFTq6KFhT0z1CReQPZCGoEPShEFHVvXAmC9sUDH7g@mail.gmail.com>
- <CAKwvOdkv=L=QKQc7HtOi5ZNdao35m18PMr7ep+4sKv5iogVDLg@mail.gmail.com>
- <CANn89iJYCHqvCTvzommOL4RHtKLT5wyXMzpWKNfrBFTgs4kNAw@mail.gmail.com>
- <CANn89iLnmKaa30tPoyK_GrJr-_ALYBwjcJ0pBcvmckA9PAvrgA@mail.gmail.com>
- <CAKwvOd=shEiDQZxZPyUCC=CJLrzmP5FHr04cE-KVN_-6+qz1jQ@mail.gmail.com>
- <CANn89i+sQTXxvMOujdCO_dUb06AXPns8EcLN6OjnccwaFm+M3A@mail.gmail.com>
- <CAKwvOd=CmgMLvNBbfZ6tQPk-dRhunPDOwL-NGDNiNvU6pV8TJQ@mail.gmail.com> <CAKwvOdme9sUqrz8yd0zTyAapTWA4ugtsR4ebUO48wFFZF5Ug8w@mail.gmail.com>
-In-Reply-To: <CAKwvOdme9sUqrz8yd0zTyAapTWA4ugtsR4ebUO48wFFZF5Ug8w@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 15 Jun 2020 15:06:35 -0700
-Message-ID: <CAKwvOdn=zedhsAk9n7hG5ndZP9Pvgexyra2Q+t8TZiqTZaR7=A@mail.gmail.com>
-Subject: Re: net/sched/sch_fq.c:966:12: warning: stack frame size of 1400
- bytes in function 'fq_dump'
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 1:37 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Mon, Jun 15, 2020 at 1:36 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > On Mon, Jun 15, 2020 at 11:45 AM Eric Dumazet <edumazet@google.com> wrote:
-> > >
-> > > On Mon, Jun 15, 2020 at 11:07 AM Nick Desaulniers
-> > > <ndesaulniers@google.com> wrote:
-> > > >
-> > > > On Mon, Jun 15, 2020 at 10:59 AM 'Eric Dumazet' via Clang Built Linux
-> > > > <clang-built-linux@googlegroups.com> wrote:
-> > > > >
-> > > > > On Mon, Jun 15, 2020 at 10:54 AM Eric Dumazet <edumazet@google.com> wrote:
-> > > > > >
-> > > > > > On Mon, Jun 15, 2020 at 10:44 AM Nick Desaulniers
-> > > > > > <ndesaulniers@google.com> wrote:
-> > > > > > >
-> > > > > > > On Mon, Jun 15, 2020 at 9:17 AM 'Eric Dumazet' via Clang Built Linux
-> > > > > > > <clang-built-linux@googlegroups.com> wrote:
-> > > > > > > >
-> > > > > > > > On Sun, Jun 14, 2020 at 11:26 PM kernel test robot <lkp@intel.com> wrote:
-> > > > > > > > >
-> > > > > > > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > > > > > > > > head:   96144c58abe7ff767e754b5b80995f7b8846d49b
-> > > > > > > > > commit: 39d010504e6b4485d7ceee167743620dd33f4417 net_sched: sch_fq: add horizon attribute
-> > > > > > > > > date:   6 weeks ago
-> > > > > > > > > :::::: branch date: 3 hours ago
-> > > > > > > > > :::::: commit date: 6 weeks ago
-> > > > > > > > > config: arm-randconfig-r006-20200614 (attached as .config)
-> > > > > > > > > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project c669a1ed6386d57a75a602b53266466dae1e1d84)
-> > > > > > > > > reproduce (this is a W=1 build):
-> > > > > > > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > > > > > > >         chmod +x ~/bin/make.cross
-> > > > > > > > >         # install arm cross compiling tool for clang build
-> > > > > > > > >         # apt-get install binutils-arm-linux-gnueabi
-> > > > > > > > >         git checkout 39d010504e6b4485d7ceee167743620dd33f4417
-> > > > > > > > >         # save the attached .config to linux build tree
-> > > > > > > > >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm
-> > > > > > > > >
-> > > > > > > > > If you fix the issue, kindly add following tag as appropriate
-> > > > > > > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > > > > > >
-> > > > > > > > > All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> > > > > > > > >
-> > > > > > > > > >> net/sched/sch_fq.c:966:12: warning: stack frame size of 1400 bytes in function 'fq_dump' [-Wframe-larger-than=]
-> > > > > > > > > static int fq_dump(struct Qdisc *sch, struct sk_buff *skb)
-> > > > > > > > > ^
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > This looks like a bug in CLANG on ARM, there is no way fq_dump() could
-> > > > > > > > consume so much stack space.
-> > > > > > >
-> > > > > > > You can use
-> > > > > > > https://github.com/ClangBuiltLinux/frame-larger-than
-> > > > > > > to help debug these.  You might be surprised who's doing larger stack
-> > > > > > > allocations than expected.
-> > > > > >
-> > > > > > What is wrong with scripts/checkstack.pl  ?
-> > > > >
-> > > > > After using CLANG on x86 I get :
-> > > > >
-> > > > > $ objdump -d net/sched/sch_fq.o | scripts/checkstack.pl
-> > > > > 0x00001136 fq_change [sch_fq.o]: 192
-> > > > > 0x00000016 __direct_call_Qdisc_enqueue1 [sch_fq.o]: 112
-> > > > > 0x000019e0 fq_dump_stats [sch_fq.o]: 112
-> > > > > 0x00001b43 fq_dump_stats [sch_fq.o]: 112
-> > > > >
-> > > > > So CLANG on x86 seems fine.
-> > > > >
-> > > > > I said : " this looks like a bug in CLANG on ARM"
-> > > >
-> > > > This is a randconfig, so some option is turning on something that's
-> > > > causing excessive stack usage with your patch on ARM.  Building who
-> > > > knows what config with x86 and claiming it works doesn't really cut
-> > > > it.  You looked at fq_dump and claimed it should be fine.  Did you
-> > > > verify each called function that was inlined?
-> > >
-> > > Nick, my patch added exactly _one_ u64 variable in the stack.
-> > > That's a whooping  8 bytes, right ?
-> >
-> > What if I add a single byte of stack usage, and that's enough to trip
-> > this warning?  Not my problem?
-> >
-> > >
-> > > We should be able to use as many nla_put_u32() calls in a function,
-> > > without changing stack sizes.
-> >
-> > That's good to know, see below. (That not be the case here).
-> >
-> > >
-> > > If CLANG can not do that, then this is a CLANG problem, I have no
-> > > intention of fixing it,
-> > > I hope this is very clear ;)
-> >
-> > At least you tested it with Clang, so I appreciate you taking the time
-> > to do that.  Here's how we might go about debugging this further:
-> >
-> > $ git checkout 39d010504e6b4485d7ceee167743620dd33f4417
-> > $ wget https://lore.kernel.org/lkml/20200615062520.GK12456@shao2-debian/2-a.bin
-> > -O .config.gz
-> > $ gunzip .config.gz
+Gerald Schaefer reported an issue a week ago regarding to incorrect page fault
+accountings for retried page fault after commit 4064b9827063 ("mm: allow
+VM_FAULT_RETRY for multiple times"):
 
-Also, it looks like CONFIG_UBSAN=y was set in this randconfig, so that
-may play a part in the excessive stack usage.  We've definitely seen
-that with CONFIG_KASAN=y.
+  https://lore.kernel.org/lkml/20200610174811.44b94525@thinkpad/
 
-> > $ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make CC=clang -j71
-> > net/sched/sch_fq.o
-> > ...
-> > net/sched/sch_fq.c:966:12: warning: stack frame size of 1400 bytes in
-> > function 'fq_dump' [-Wframe-larger-than=]
-> > $ python3 /path/to/frame_larger_than.py net/sched/sch_fq.o fq_dump
-> > fq_dump:
-> >         8       u64                             horizon
-> >         8       u64                             ce_threshold
-> >         4       struct fq_sched_data*           q
-> >         4       struct nlattr*                  opts
-> > qdisc_priv:
-> > nla_nest_start_noflag:
-> >         4       struct nlattr*                  start
-> >         4       struct nlattr*                  start
-> > skb_tail_pointer:
-> >         4       uint32_t                        __base
-> >         4       uint32_t                        __rem
-> > is_power_of_2:
-> >         4       uint32_t                        __n_lo
-> >         4       uint32_t                        __res_lo
-> >         8       uint64_t                        ___n
-> >         8       uint64_t                        ___m
-> >         4       uint32_t                        ___bias
-> >         8       uint64_t                        ___res
-> >         8       uint64_t                        ___t
-> >         8       uint64_t                        ___x
-> >         4       uint32_t                        ___p
-> > __arch_xprod_64:
-> >         4       unsigned int                    tmp
-> >         8       long long unsigned int          res
-> >         4       unsigned int                    tmp
-> >         8       long long unsigned int          res
-> >         4       uint32_t                        __base
-> >         4       uint32_t                        __rem
-> > is_power_of_2:
-> >         4       uint32_t                        __n_lo
-> >         4       uint32_t                        __res_lo
-> >         8       uint64_t                        ___n
-> >         8       uint64_t                        ___res
-> >         8       uint64_t                        ___t
-> >         8       uint64_t                        ___x
-> >         8       uint64_t                        ___m
-> >         4       uint32_t                        ___p
-> >         4       uint32_t                        ___bias
-> > __arch_xprod_64:
-> >         4       unsigned int                    tmp
-> >         8       long long unsigned int          res
-> >         4       unsigned int                    tmp
-> >         8       long long unsigned int          res
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> >         4       long unsigned int               __UNIQUE_ID___y256
-> >         4       long unsigned int               __UNIQUE_ID___x255
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u32:
-> >         4       u32                             tmp
-> >         4       u32                             tmp
-> > nla_put_u8:
-> >         1       u8                              tmp
-> >         1       u8                              tmp
-> > nla_nest_end:
-> > skb_tail_pointer:
-> >
-> > So is_power_of_2/__arch_xprod_64 looks excessively large, and the
-> > nla_put_u* routines seem to have 2 temporary variables?
-> >
-> > (I should update the tool to better denote the end of an inlined
-> > frame; I don't think is_power_of_2 is the source, it looks like
-> > do_div() calls with 64b non-integer constant expressions. Having those
-> > be macros vs noinline_for_stack might be of interest for the non-ICE
-> > case, cc Arnd).
-> >
-> > Let me see if I can extend the tool to print file+line numbers so we
-> > can see if those `tmp`s are one in the same or not.
-> >
-> > >
-> > > >
-> > > >
-> > > > And the issue with checkstack is it tells you the depth, but not *what
-> > > > variables* and from which inlined function may be the cause.
-> > >
-> > >
-> > > OK. Thank you.
-> > >
-> > >
-> > > >
-> > > >
-> > > > >
-> > > > >
-> > > > >
-> > > > > >
-> > > > > > >
-> > > > > > > >
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > > 1 warning generated.
-> > > > > > > > >
-> > > > > > > > > # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39d010504e6b4485d7ceee167743620dd33f4417
-> > > > > > > > > git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > > > > > > > > git remote update linus
-> > > > > > > > > git checkout 39d010504e6b4485d7ceee167743620dd33f4417
-> > > > > > > > > vim +/fq_dump +966 net/sched/sch_fq.c
-> > > > > > > > >
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   965
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  @966  static int fq_dump(struct Qdisc *sch, struct sk_buff *skb)
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   967  {
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   968          struct fq_sched_data *q = qdisc_priv(sch);
-> > > > > > > > > 48872c11b77271 Eric Dumazet   2018-11-11   969          u64 ce_threshold = q->ce_threshold;
-> > > > > > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   970          u64 horizon = q->horizon;
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   971          struct nlattr *opts;
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   972
-> > > > > > > > > ae0be8de9a53cd Michal Kubecek 2019-04-26   973          opts = nla_nest_start_noflag(skb, TCA_OPTIONS);
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   974          if (opts == NULL)
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   975                  goto nla_put_failure;
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   976
-> > > > > > > > > 65c5189a2b57b9 Eric Dumazet   2013-11-15   977          /* TCA_FQ_FLOW_DEFAULT_RATE is not used anymore */
-> > > > > > > > > 65c5189a2b57b9 Eric Dumazet   2013-11-15   978
-> > > > > > > > > 48872c11b77271 Eric Dumazet   2018-11-11   979          do_div(ce_threshold, NSEC_PER_USEC);
-> > > > > > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   980          do_div(horizon, NSEC_PER_USEC);
-> > > > > > > > > 48872c11b77271 Eric Dumazet   2018-11-11   981
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   982          if (nla_put_u32(skb, TCA_FQ_PLIMIT, sch->limit) ||
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   983              nla_put_u32(skb, TCA_FQ_FLOW_PLIMIT, q->flow_plimit) ||
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   984              nla_put_u32(skb, TCA_FQ_QUANTUM, q->quantum) ||
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   985              nla_put_u32(skb, TCA_FQ_INITIAL_QUANTUM, q->initial_quantum) ||
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   986              nla_put_u32(skb, TCA_FQ_RATE_ENABLE, q->rate_enable) ||
-> > > > > > > > > 76a9ebe811fb3d Eric Dumazet   2018-10-15   987              nla_put_u32(skb, TCA_FQ_FLOW_MAX_RATE,
-> > > > > > > > > 76a9ebe811fb3d Eric Dumazet   2018-10-15   988                          min_t(unsigned long, q->flow_max_rate, ~0U)) ||
-> > > > > > > > > f52ed89971adbe Eric Dumazet   2013-11-15   989              nla_put_u32(skb, TCA_FQ_FLOW_REFILL_DELAY,
-> > > > > > > > > f52ed89971adbe Eric Dumazet   2013-11-15   990                          jiffies_to_usecs(q->flow_refill_delay)) ||
-> > > > > > > > > 06eb395fa9856b Eric Dumazet   2015-02-04   991              nla_put_u32(skb, TCA_FQ_ORPHAN_MASK, q->orphan_mask) ||
-> > > > > > > > > 77879147a3481b Eric Dumazet   2016-09-19   992              nla_put_u32(skb, TCA_FQ_LOW_RATE_THRESHOLD,
-> > > > > > > > > 77879147a3481b Eric Dumazet   2016-09-19   993                          q->low_rate_threshold) ||
-> > > > > > > > > 48872c11b77271 Eric Dumazet   2018-11-11   994              nla_put_u32(skb, TCA_FQ_CE_THRESHOLD, (u32)ce_threshold) ||
-> > > > > > > > > 583396f4ca4d6e Eric Dumazet   2020-03-16   995              nla_put_u32(skb, TCA_FQ_BUCKETS_LOG, q->fq_trees_log) ||
-> > > > > > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   996              nla_put_u32(skb, TCA_FQ_TIMER_SLACK, q->timer_slack) ||
-> > > > > > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   997              nla_put_u32(skb, TCA_FQ_HORIZON, (u32)horizon) ||
-> > > > > > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   998              nla_put_u8(skb, TCA_FQ_HORIZON_DROP, q->horizon_drop))
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   999                  goto nla_put_failure;
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1000
-> > > > > > > > > d59b7d8059ddc4 Yang Yingliang 2014-03-12  1001          return nla_nest_end(skb, opts);
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1002
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1003  nla_put_failure:
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1004          return -1;
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1005  }
-> > > > > > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1006
-> > > > > > > > >
-> > > > > > > > > :::::: The code at line 966 was first introduced by commit
-> > > > > > > > > :::::: afe4fd062416b158a8a8538b23adc1930a9b88dc pkt_sched: fq: Fair Queue packet scheduler
-> > > > > > > > >
-> > > > > > > > > :::::: TO: Eric Dumazet <edumazet@google.com>
-> > > > > > > > > :::::: CC: David S. Miller <davem@davemloft.net>
-> > > > > > > > >
-> > > > > > > > > ---
-> > > > > > > > > 0-DAY CI Kernel Test Service, Intel Corporation
-> > > > > > > > > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> > > > > > > > > _______________________________________________
-> > > > > > > > > kbuild mailing list -- kbuild@lists.01.org
-> > > > > > > > > To unsubscribe send an email to kbuild-leave@lists.01.org
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > > > > > > > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > > > > > > > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CANn89i%2Bs%3DoFTq6KFhT0z1CReQPZCGoEPShEFHVvXAmC9sUDH7g%40mail.gmail.com.
-> > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > --
-> > > > > > > Thanks,
-> > > > > > > ~Nick Desaulniers
-> > > > >
-> > > > > --
-> > > > > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > > > > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > > > > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CANn89iLnmKaa30tPoyK_GrJr-_ALYBwjcJ0pBcvmckA9PAvrgA%40mail.gmail.com.
-> > > >
-> > > >
-> > > >
-> > > > --
-> > > > Thanks,
-> > > > ~Nick Desaulniers
-> >
-> >
-> >
-> > --
-> > Thanks,
-> > ~Nick Desaulniers
->
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
+When I was looking at the issue, I actually found some other trivial issues too
+related to the page fault accounting, namely:
 
+  - Incorrect accountings
 
+    - The major issue that was reported by Gerald, that we did multiple
+      accounting when the page fault retried while we should only do it once
+      (for either perf event accounting or per-task accounting).
+
+    - In many archs, major fault is only accounted when the 1st page fault is a
+      major fault, or the last page fault is a major fault.  Ideally we should
+      account the page fault as a major fault as long as any of the page fault
+      retries is a major fault and keep the same behavior across archs.
+
+  - Missing accountings of perf events (PERF_COUNT_SW_PAGE_FAULTS[_[MAJ|MIN]]).
+
+  - Doing accounting with mmap_sem: not a big deal, but logically we can move
+    it after releasing the mmap_sem because accounting does not need it.
+
+This series tries to address all of them by introducing mm_fault_accounting()
+first, so that we move all the page fault accounting into the common code base,
+then call it properly from arch pf handlers just like handle_mm_fault().  There
+are some special cases, e.g., the um arch does not have "regs" in the fault
+handler, so it's still using the manual statistics.
+
+For each of the patch that fixes a specific arch, I'm CCing the maintainers and
+the arch list if there is.  Besides, I only lightly tested this series on x86.
+
+Please have a look, thanks.
+
+Peter Xu (25):
+  mm/um: Fix extra accounting for page fault retries
+  mm: Introduce mm_fault_accounting()
+  mm/alpha: Use mm_fault_accounting()
+  mm/arc: Use mm_fault_accounting()
+  mm/arm: Use mm_fault_accounting()
+  mm/arm64: Use mm_fault_accounting()
+  mm/csky: Use mm_fault_accounting()
+  mm/hexagon: Use mm_fault_accounting()
+  mm/ia64: Use mm_fault_accounting()
+  mm/m68k: Use mm_fault_accounting()
+  mm/microblaze: Use mm_fault_accounting()
+  mm/mips: Use mm_fault_accounting()
+  mm/nds32: Use mm_fault_accounting()
+  mm/nios2: Use mm_fault_accounting()
+  mm/openrisc: Use mm_fault_accounting()
+  mm/parisc: Use mm_fault_accounting()
+  mm/powerpc: Use mm_fault_accounting()
+  mm/riscv: Use mm_fault_accounting()
+  mm/s390: Use mm_fault_accounting()
+  mm/sh: Use mm_fault_accounting()
+  mm/sparc32: Use mm_fault_accounting()
+  mm/sparc64: Use mm_fault_accounting()
+  mm/unicore32: Use mm_fault_accounting()
+  mm/x86: Use mm_fault_accounting()
+  mm/xtensa: Use mm_fault_accounting()
+
+ arch/alpha/mm/fault.c      |  9 ++++-----
+ arch/arc/mm/fault.c        | 15 +++------------
+ arch/arm/mm/fault.c        | 21 ++++-----------------
+ arch/arm64/mm/fault.c      | 17 ++---------------
+ arch/csky/mm/fault.c       | 13 +------------
+ arch/hexagon/mm/vm_fault.c |  9 +++------
+ arch/ia64/mm/fault.c       |  8 +++-----
+ arch/m68k/mm/fault.c       | 13 +++----------
+ arch/microblaze/mm/fault.c |  8 +++-----
+ arch/mips/mm/fault.c       | 14 +++-----------
+ arch/nds32/mm/fault.c      | 19 +++----------------
+ arch/nios2/mm/fault.c      | 13 +++----------
+ arch/openrisc/mm/fault.c   |  8 +++-----
+ arch/parisc/mm/fault.c     |  8 +++-----
+ arch/powerpc/mm/fault.c    | 13 ++++---------
+ arch/riscv/mm/fault.c      | 21 +++------------------
+ arch/s390/mm/fault.c       | 21 +++++----------------
+ arch/sh/mm/fault.c         | 15 +++------------
+ arch/sparc/mm/fault_32.c   | 16 +++-------------
+ arch/sparc/mm/fault_64.c   | 16 ++++------------
+ arch/um/kernel/trap.c      | 13 +++++++------
+ arch/unicore32/mm/fault.c  | 15 +++++++--------
+ arch/x86/mm/fault.c        | 10 +---------
+ arch/xtensa/mm/fault.c     | 14 +++-----------
+ include/linux/mm.h         |  2 ++
+ mm/memory.c                | 18 ++++++++++++++++++
+ 26 files changed, 101 insertions(+), 248 deletions(-)
 
 -- 
-Thanks,
-~Nick Desaulniers
+2.26.2
+
