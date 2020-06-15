@@ -2,107 +2,98 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC412C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92D09207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592260695;
-	bh=NxEoxsPnKpVaUgBMolvqzprgY0L/U6ngzncz0qbEMbs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GAKWIcuUPpe2LSfFWCYVU85D4tkfdIJ6Gnm8Pa1tHOOZ5f83Q73Q59MJgQa/jOPbc
-	 fWXoQWMyYMIRgBprhnTKvGz46mTA/XQYqezMQEMfQTck6LimfCZzPYPtscQLwYaOfw
-	 kDYc61Z2s2c00n8jXpp0WMDnb2OFmfSd7OEOmZes=
+	by mail.kernel.org (Postfix) with ESMTP id A4890207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:38:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3FDwr9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgFOWiO (ORCPT
+        id S1726529AbgFOWiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57210 "EHLO
+        Mon, 15 Jun 2020 18:38:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFOWiN (ORCPT
+        with ESMTP id S1725843AbgFOWiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:38:13 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DCEFC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:12 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id i27so21130752ljb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:12 -0700 (PDT)
+        Mon, 15 Jun 2020 18:38:19 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DE6C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:19 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id q2so10334425vsr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hDkCcz9pJTljCHKlO0VjvIrQ/0YyW9zXpKFl2PZzA9U=;
-        b=WJKgNcDeluq3Js9hmc9GLKlZTmxtuneMSLtXZEDSyZObiMxXS09cxnh8mLcBHQIA/m
-         mRMDkRHN7y8aDfxnO8mxEh58PAPuojiTplNIr4Yfzac55vzGpJfQ7xUxHmhDZdjqsFwL
-         1k+AJpguvcfOehk6AZXEWzgMGoD0mC/2oC8Ek=
+        bh=uB0HaPwXy50jpF9rLf6Va8RuH3FYVyhSdvvt08br5zU=;
+        b=X3FDwr9nZuJCmTh8GMOnY3FLyA7+HVUEP8pR16yq4aXwBt2APUy+WQlUH7WXO0w1yO
+         K9as3TCf0flU3QG2pe9+qgtngay4G9A79ycQaoQ4ShA7R+KHuuMILpAkdyspjt4fvz6b
+         6DskIBmOoDOnE5ANKPtw3rJuuPoEMNorRI16aJuahLNR+o/RI1Ik23dHdVKZ53W8GhiO
+         J1khFgOVTEgwxS3L+AUhna+J37YyTVU2rP6BqVu+sLwyJQw2uq4WV6kfNIneyfyzlld3
+         1owtRTKd697eSOPCJApkFir0AjBBvikH2FdzrTguRztSShfhAO2U/NyeEMkDfaUHROTb
+         wA+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hDkCcz9pJTljCHKlO0VjvIrQ/0YyW9zXpKFl2PZzA9U=;
-        b=ifbcU4H9PzEJJ1mCUU0MHHfBI8B7swvbmrsw100hsssDwna9fPmyNG0YagxDi/Xkci
-         secSBIm5gNntCGr/IrsErf1cITRjmk9bUUL7G9mi/M6H66na1p42TH/uf4HckrcNcWdC
-         GmWf57KB/CCkwfAod5Y8q1Ja0CtCD6U5Z/lz90Aq+5SO9FS+od5ZQmuvj95Ti8Q8DKlW
-         ugeu5Z9nnKth5SulB25HuxuysngyQRWEYo4gRvQvsPTS22nsQeBSBUIa1dA/ToWbn+gb
-         H2wUqhG+nyqXOTXc2GLrwe5DE5CR0w6jQRKNEnExwi2qScXX0CUob6aa81RWltglpeuf
-         91Cw==
-X-Gm-Message-State: AOAM531zEHLmsZ+X9QplIwgvZJ381Fs3XEVvrcnOprIbsU/tiri0N5IU
-        KvnYSygHk+a1WQT2v9QC6S7PZ0NYglQ=
-X-Google-Smtp-Source: ABdhPJyq+Yot0q5h/sO3UmHhhlzRV+XGk3194SIdDYQu7Z5jylNL+61acWKIqjXr4KW1Inf/C/slvA==
-X-Received: by 2002:a2e:3808:: with SMTP id f8mr13687344lja.165.1592260690125;
-        Mon, 15 Jun 2020 15:38:10 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id a23sm1115491lfb.10.2020.06.15.15.38.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 15:38:09 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id a26so6090947lfj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:38:08 -0700 (PDT)
-X-Received: by 2002:ac2:521a:: with SMTP id a26mr95385lfl.192.1592260688575;
- Mon, 15 Jun 2020 15:38:08 -0700 (PDT)
+        bh=uB0HaPwXy50jpF9rLf6Va8RuH3FYVyhSdvvt08br5zU=;
+        b=nVr5GvlTnoZvgdUbn4OK15Ne+Gnd7OxHUq9g+uC0wF2RTTrY65FSGTrXtzur1/OLDz
+         FwwpDUNZLkl79viQkMjjHXCUt6ih+hXN0YJu6839PZvH7DDXDj0sZRAM5HXoSSrJOHV/
+         hFBBE1YlyV+3FRdFZrHm4NePA4+Z/CLRcmBndvsJ2mSmXmVm4pmobwit8wRTuIiYncf4
+         y4mSBHari6ERTeuCd9sITmdSM5Waw1N5qJQ29QSzEW5q+0wUtCh1ginFJdpfggdauUdK
+         8v0PqwD+S/tDHsVUhi0lz8PSna5eg3ok7p0tWeUI9gg9wmyQKdW++APvR55oKPdmNMKe
+         sRPQ==
+X-Gm-Message-State: AOAM5305QCOv2noHakbumez7IC/rw/2VZAF1t6YkhXp+FheutjSu1Hy8
+        r3YzZdmIYcVEpHKiVF4JdqcGMF6qlE7i1mDtR2c=
+X-Google-Smtp-Source: ABdhPJyqW3jvG9hiix79BPnCB5e/t/YfkMU4SWUOaw1QLk2myo2b7g+Q0rTbLC0jk3VQQRfnIaMWXgzp6zg1dAxZEDU=
+X-Received: by 2002:a67:c511:: with SMTP id e17mr20082140vsk.210.1592260698905;
+ Mon, 15 Jun 2020 15:38:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHk-=wgB6xs-gfihkMSngyAcRHaQ0oE3jVawVMzzAh4Xm0VsSQ@mail.gmail.com>
- <20200615222427.60126-1-sashal@kernel.org>
-In-Reply-To: <20200615222427.60126-1-sashal@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 15 Jun 2020 15:37:52 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wid9pjXmafH_-F6TooC9j7nfqKweWbHKzENkk+YHTo=AQ@mail.gmail.com>
-Message-ID: <CAHk-=wid9pjXmafH_-F6TooC9j7nfqKweWbHKzENkk+YHTo=AQ@mail.gmail.com>
-Subject: Re: [PATCH] scripts/decode_stacktrace: warn when modpath is needed
- but is unset
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+References: <20200613155738.2249399-1-jim.cromie@gmail.com>
+ <20200613155738.2249399-11-jim.cromie@gmail.com> <20200615133740.GG31238@alley>
+In-Reply-To: <20200615133740.GG31238@alley>
+From:   jim.cromie@gmail.com
+Date:   Mon, 15 Jun 2020 16:37:52 -0600
+Message-ID: <CAJfuBxwtbgOFvo3k+_ucwTQkek8mo1f-AF6_u7qKDF6tBBGV+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 10/24] dyndbg: refactor parse_linerange out of ddebug_parse_query
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 3:24 PM Sasha Levin <sashal@kernel.org> wrote:
+On Mon, Jun 15, 2020 at 7:37 AM Petr Mladek <pmladek@suse.com> wrote:
 >
-> When a user tries to parse a symbol located inside a module he must have
-> modpath set. Otherwise, decode_stacktrace won't be able to parse the
-> symbol correctly.
+> On Sat 2020-06-13 09:57:24, Jim Cromie wrote:
+> > make the code-block reusable to later handle "file foo.c:101-200" etc.
 >
-> Right now the failure is silent and easily missed by the user. What's
-> worse is that by the time the user realizes what happened (or someone on
-> LKML asks him to add the modpath and re-run), he might have already got
-> rid of the vmlinux/modules.
+> > This should be a 90%+ code-move, with minimal adaptations; reindent,
+> > and scafolding.
+>
+> This sentence sounds like the author did some hidden
+> microoptimizations and potentially broke the code.
+> It made me nervous.
+>
+> But in fact, I do not see any real change except that the variable
+> "first" does not longer need to be defined. So, it is just a code move.
+>
+> In this case, I usually write:
+>
+> This patch does not change the existing behavior.
 
-Well, that looks straightforward.
+I see your point.
 
-Applied,
-
-              Linus
+it was code move, reindent, add function wrapper, add call, compile
+I just dont recall if I had to touch anything else, add/move var decls etc.
