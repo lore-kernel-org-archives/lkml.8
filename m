@@ -2,107 +2,154 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A57C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7E92067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592221779;
-	bh=KBS3k962uIeoGIj7AE9xCtqXokyAYDPTKBzow9UPIbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A+3vsmUMxtWvprzm7JTBPmd6eGk8buRKIantIQwT+yGY/23q6EgJ8GIr1Vzm9M3cn
-	 Hk5EKHCSQjPtE7M+lSicgKGcTWUnZN62mXdeUC57Zj10y2axwJOc/upFAu77+gxpAd
-	 5Ex0tviEMz8xP92p2JCO3EkAc/JtWezSolCwN0vs=
+	by mail.kernel.org (Postfix) with ESMTP id CBAB220679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgFOLth (ORCPT
+        id S1729724AbgFOLuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgFOLtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:49:36 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8142067B;
-        Mon, 15 Jun 2020 11:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592221776;
-        bh=KBS3k962uIeoGIj7AE9xCtqXokyAYDPTKBzow9UPIbA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EXLYpGnNS0pqxJH7aoMvgBLh9EaD5elG5QJD6JyGX+QHPiFZUL5IUVRs9E0togdYa
-         n61UQYJE0LdU5rekLyFy7YBrYhJ4LCKka89wOoy9B0d7+QCCgYH8hgVmJy2YHIBxAH
-         LpYEpVyfxpwdc/uy3azVsoRptB5h1XYCw0jQoSSU=
-Date:   Mon, 15 Jun 2020 12:49:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [PATCH v2 2/2] regulator: Add support for sync_state() callbacks
-Message-ID: <20200615114933.GF4447@sirena.org.uk>
-References: <20200528190610.179984-1-saravanak@google.com>
- <20200528190610.179984-3-saravanak@google.com>
- <20200529130012.GJ4610@sirena.org.uk>
- <CAGETcx9Y8VoPCjrVFdDwU=+m3_0OTZQgj9b5eSHSTgSqeCZrUQ@mail.gmail.com>
- <20200601172323.GE45647@sirena.org.uk>
- <CAGETcx-T=NstJDV2S8gKmqpOv1r2-fTRs1pwOtSQ6rJumhVGBg@mail.gmail.com>
- <20200609105115.GA4583@sirena.org.uk>
- <CAPDyKFohcYjSvBjjB01mg7bOFCJA8XukgRPsZJm48X44sFzeYA@mail.gmail.com>
+        Mon, 15 Jun 2020 07:50:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41142 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728285AbgFOLuF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 07:50:05 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FBg3T5127084;
+        Mon, 15 Jun 2020 07:50:02 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5eud4n6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 07:50:02 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FA3w7v187985;
+        Mon, 15 Jun 2020 07:50:02 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5eud4kt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 07:50:01 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FBjlpH005231;
+        Mon, 15 Jun 2020 11:49:58 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma02fra.de.ibm.com with ESMTP id 31mpe89dj7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 11:49:58 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FBntha59507018
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 11:49:55 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E389AE058;
+        Mon, 15 Jun 2020 11:49:55 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A334AE045;
+        Mon, 15 Jun 2020 11:49:55 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.1.141])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jun 2020 11:49:55 +0000 (GMT)
+Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
+To:     Halil Pasic <pasic@linux.ibm.com>, Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, mst@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
+ <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
+ <f7eb1154-0f52-0f12-129f-2b511f5a4685@linux.ibm.com>
+ <6356ba7f-afab-75e1-05ff-4a22b88c610e@linux.ibm.com>
+ <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
+ <20200615123725.13f6a8de.pasic@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <96a236da-7165-b59b-e013-919554fb1ac4@linux.ibm.com>
+Date:   Mon, 15 Jun 2020 13:49:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oFbHfjnMgUMsrGjO"
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFohcYjSvBjjB01mg7bOFCJA8XukgRPsZJm48X44sFzeYA@mail.gmail.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200615123725.13f6a8de.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_01:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ adultscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 malwarescore=0
+ suspectscore=0 bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006150082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---oFbHfjnMgUMsrGjO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jun 15, 2020 at 12:27:23PM +0200, Ulf Hansson wrote:
+On 2020-06-15 12:37, Halil Pasic wrote:
+> On Mon, 15 Jun 2020 11:01:55 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+> 
+>>> hum, in between I found another way which seems to me much better:
+>>>
+>>> We already have the force_dma_unencrypted() function available which
+>>> AFAIU is what we want for encrypted memory protection and is already
+>>> used by power and x86 SEV/SME in a way that seems AFAIU compatible
+>>> with our problem.
+>>>
+>>> Even DMA and IOMMU are different things, I think they should be used
+>>> together in our case.
+>>>
+>>> What do you think?
+>>>
+>>> The patch would then be something like:
+>>>
+>>> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+>>> index a977e32a88f2..53476d5bbe35 100644
+>>> --- a/drivers/virtio/virtio.c
+>>> +++ b/drivers/virtio/virtio.c
+>>> @@ -4,6 +4,7 @@
+>>>   #include <linux/virtio_config.h>
+>>>   #include <linux/module.h>
+>>>   #include <linux/idr.h>
+>>> +#include <linux/dma-direct.h>
+>>>   #include <uapi/linux/virtio_ids.h>
+>>>
+>>>   /* Unique numbering for virtio devices. */
+>>> @@ -179,6 +180,10 @@ int virtio_finalize_features(struct virtio_device
+>>> *dev)
+>>>          if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+>>>                  return 0;
+>>>
+>>> +       if (force_dma_unencrypted(&dev->dev) &&
+>>> +           !virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+>>> +               return -EIO;
+>>> +
+>>>          virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
+>>>          status = dev->config->get_status(dev);
+>>>          if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+>>
+>>
+>> I think this can work but need to listen from Michael
+> 
+> I don't think Christoph Hellwig will like force_dma_unencrypted()
+> in virtio code:
+> https://lkml.org/lkml/2020/2/20/630
+> 
+> Regards,
+> Halil
+> 
 
-> eMMC is not only about voltage levels, but also about enable/disable
-> of the regulator(s).
+OK, then back to the first idea.
+Thanks,
 
-> More precisely, one needs to follow the steps specified in the eMMC
-> spec, when disabling the regulator(s).
+Pierre
 
-> In other words, the mmc host driver needs to be probed (consumer of
-> the regulator), before the regulator(s) can be disabled.
-
-Right, though you can generally get away with it if you completely cut
-the power.  The big thing is that as part of this we need to actually do
-the things at the time the driver asks for them to be done rather than
-some other time.
-
---oFbHfjnMgUMsrGjO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nYE0ACgkQJNaLcl1U
-h9ANLwf/bAnNh2Hd66L+yesQj7Bv7AnAbxPcxAGA1+6KiyAIun81pvU0EmDxmQde
-GM6t6O69FNXnOJbYKF2nuk/8DRz5994GzIuIVCHoUu2TQFDvdIy88+a7TKWpaR3u
-bXLwDhSAmW4/cl+sZGnnUHAVl+GwdJ3xFCOrxtu35JvNtTaTB5FfbsVkVwF48J5G
-Owj9hrQjT9YM3UicHHEsdkpr9Xc3UfzgaUeKmWKU/mAxh/2xeKJ1iRW38TUVK/ZQ
-joLOO/QHMzIy0qUs9uqXOa7ZFNfQHey1AljhqfCkqSH5Srvumo2XWTinn30MVr55
-d4qgkKQ2R68HJl7OfXXohkoMyBXCow==
-=N1d2
------END PGP SIGNATURE-----
-
---oFbHfjnMgUMsrGjO--
+-- 
+Pierre Morel
+IBM Lab Boeblingen
