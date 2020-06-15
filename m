@@ -2,142 +2,103 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90220C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA96C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D2A2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7CrXqAZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2AE952074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731581AbgFOUp7 (ORCPT
+        id S1731614AbgFOUqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:45:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58188 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731532AbgFOUp6 (ORCPT
+        Mon, 15 Jun 2020 16:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731403AbgFOUqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:45:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592253956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=TJCHkDZhyWuXXWeNe8iaosb9wy02/ddef5wGJbSOb7I=;
-        b=W7CrXqAZd3+FKnL5DYdHliT9kTfvJBuE8yu+Ee1EDFT2EweDFNYfgt8IYJ/CeoZiISudoh
-        pFylDFlzt2apcSf7c/3vvFxGTRPCqVIRFf2Vxm/N4tVMV4n1vZ23KD6zy9VMKXs4IG86du
-        JYHR/Y/orqaM1fkT63qOqILrxvppcoA=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-454-jYK7UMzNPtOvh8bZUOyIFw-1; Mon, 15 Jun 2020 16:45:55 -0400
-X-MC-Unique: jYK7UMzNPtOvh8bZUOyIFw-1
-Received: by mail-qk1-f197.google.com with SMTP id 16so15200963qka.15
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 13:45:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TJCHkDZhyWuXXWeNe8iaosb9wy02/ddef5wGJbSOb7I=;
-        b=pdqCH8R1PW2Qgu2jiYKdSA/A4GGo82j9tO/iilGj5TINQrZbivLypuYUEQoVdAkVVI
-         WJCg4j5w6RpXaqcfudyuaJ+Wl7XCokWEEYXX9tNvX7a5baqg+uqxXORh4cFN/0MAzphI
-         qNTSf5kyBU5h61uHPiIJF0ZbIvvdkRkotznMqxU1Ee6zGIUdrerQ6nHZ29jWyZ9pUquM
-         GEKfL2SJ9pDfcCMUl23wxrq/jj3t35l8O87Dlu627ar6FtPvKCcgwjc0wPQYF0DFOmIR
-         e00WyLWyO/pIFII3Azg40/m+12+fXc+xLUtykde3bvkcwWClVFAj5tLKjBS6+duwni/c
-         aHiA==
-X-Gm-Message-State: AOAM5309dIU2Fd8QTjiODlIBA/64JZCElU7IbiLfQUjVL0SwSZOvAza5
-        RJZUO9Ihiri9U4zrRrMIEtRQS82v4ykbdxZbg1SLOmAFDRweUYcCZkkcHMkJRNSQa3IBsVlSz06
-        gxKdePfgC7Qj0NXb/+O6mxc9F
-X-Received: by 2002:a05:6214:1705:: with SMTP id db5mr26325349qvb.14.1592253954764;
-        Mon, 15 Jun 2020 13:45:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyXbo7hbbH7LW9AmslC0JZpfWQroeYx2/3suBFGIqLSIO/NH3DhE72c7GflQe+8P1pIGbWHfw==
-X-Received: by 2002:a05:6214:1705:: with SMTP id db5mr26325332qvb.14.1592253954529;
-        Mon, 15 Jun 2020 13:45:54 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id s70sm12563576qke.80.2020.06.15.13.45.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 13:45:53 -0700 (PDT)
-From:   trix@redhat.com
-To:     paul@paul-moore.com, stephen.smalley.work@gmail.com,
-        eparis@parisplace.org, omosnace@redhat.com, weiyongjun1@huawei.com
-Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH v3] selinux: fix another double free
-Date:   Mon, 15 Jun 2020 13:45:48 -0700
-Message-Id: <20200615204548.9230-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Mon, 15 Jun 2020 16:46:42 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F96CC061A0E;
+        Mon, 15 Jun 2020 13:46:42 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A96951210A401;
+        Mon, 15 Jun 2020 13:46:41 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 13:46:40 -0700 (PDT)
+Message-Id: <20200615.134640.514632878913727284.davem@davemloft.net>
+To:     olteanv@gmail.com
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        richardcochran@gmail.com, vinicius.gomes@intel.com
+Subject: Re: [PATCH net] net: dsa: sja1105: fix PTP timestamping with large
+ tc-taprio cycles
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200614205409.1580736-1-olteanv@gmail.com>
+References: <20200614205409.1580736-1-olteanv@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jun 2020 13:46:42 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Sun, 14 Jun 2020 23:54:09 +0300
 
-Clang static analysis reports this double free error
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> It isn't actually described clearly at all in UM10944.pdf, but on TX of
+> a management frame (such as PTP), this needs to happen:
+> 
+> - The destination MAC address (i.e. 01-80-c2-00-00-0e), along with the
+>   desired destination port, need to be installed in one of the 4
+>   management slots of the switch, over SPI.
+> - The host can poll over SPI for that management slot's ENFPORT field.
+>   That gets unset when the switch has matched the slot to the frame.
+> 
+> And therein lies the problem. ENFPORT does not mean that the packet has
+> been transmitted. Just that it has been received over the CPU port, and
+> that the mgmt slot is yet again available.
+> 
+> This is relevant because of what we are doing in sja1105_ptp_txtstamp_skb,
+> which is called right after sja1105_mgmt_xmit. We are in a hard
+> real-time deadline, since the hardware only gives us 24 bits of TX
+> timestamp, so we need to read the full PTP clock to reconstruct it.
+> Because we're in a hurry (in an attempt to make sure that we have a full
+> 64-bit PTP time which is as close as possible to the actual transmission
+> time of the frame, to avoid 24-bit wraparounds), first we read the PTP
+> clock, then we poll for the TX timestamp to become available.
+> 
+> But of course, we don't know for sure that the frame has been
+> transmitted when we read the full PTP clock. We had assumed that ENFPORT
+> means it has, but the assumption is incorrect. And while in most
+> real-life scenarios this has never been caught due to software delays,
+> nowhere is this fact more obvious than with a tc-taprio offload, where
+> PTP traffic gets a small timeslot very rarely (example: 1 packet per 10
+> ms). In that case, we will be reading the PTP clock for timestamp
+> reconstruction too early (before the packet has been transmitted), and
+> this renders the reconstruction procedure incorrect (see the assumptions
+> described in the comments found on function sja1105_tstamp_reconstruct).
+> So the PTP TX timestamps will be off by 1<<24 clock ticks, or 135 ms
+> (1 tick is 8 ns).
+> 
+> So fix this case of premature optimization by simply reordering the
+> sja1105_ptpegr_ts_poll and the sja1105_ptpclkval_read function calls. It
+> turns out that in practice, the 135 ms hard deadline for PTP timestamp
+> wraparound is not so hard, since even the most bandwidth-intensive PTP
+> profiles, such as 802.1AS-2011, have a sync frame interval of 125 ms.
+> So if we couldn't deliver a timestamp in 135 ms (which we can), we're
+> toast and have much bigger problems anyway.
+> 
+> Fixes: 47ed985e97f5 ("net: dsa: sja1105: Add logic for TX timestamping")
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
-        kfree(node->expr.nodes);
-        ^~~~~~~~~~~~~~~~~~~~~~~
-
-When cond_read_node fails, it calls cond_node_destroy which frees the
-node but does not poison the entry in the node list.  So when it
-returns to its caller cond_read_list, cond_read_list deletes the
-partial list.  The latest entry in the list will be deleted twice.
-
-So instead of freeing the node in cond_read_node, let list freeing in
-code_read_list handle the freeing the problem node along with all of the
-earlier nodes.
-
-Because cond_read_node no longer does any error handling, the goto's
-the error case are redundant.  Instead just return the error code.
-
-Fixes: 60abd3181db2 ("selinux: convert cond_list to array")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
-v3: simplify returns
-
- security/selinux/ss/conditional.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
-
-diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/conditional.c
-index da94a1b4bfda..450bc02f4cd2 100644
---- a/security/selinux/ss/conditional.c
-+++ b/security/selinux/ss/conditional.c
-@@ -392,27 +392,19 @@ static int cond_read_node(struct policydb *p, struct cond_node *node, void *fp)
- 
- 		rc = next_entry(buf, fp, sizeof(u32) * 2);
- 		if (rc)
--			goto err;
-+			return rc;
- 
- 		expr->expr_type = le32_to_cpu(buf[0]);
- 		expr->bool = le32_to_cpu(buf[1]);
- 
--		if (!expr_node_isvalid(p, expr)) {
--			rc = -EINVAL;
--			goto err;
--		}
-+		if (!expr_node_isvalid(p, expr))
-+			return -EINVAL;
- 	}
- 
- 	rc = cond_read_av_list(p, fp, &node->true_list, NULL);
- 	if (rc)
--		goto err;
--	rc = cond_read_av_list(p, fp, &node->false_list, &node->true_list);
--	if (rc)
--		goto err;
--	return 0;
--err:
--	cond_node_destroy(node);
--	return rc;
-+		return rc;
-+	return cond_read_av_list(p, fp, &node->false_list, &node->true_list);
- }
- 
- int cond_read_list(struct policydb *p, void *fp)
--- 
-2.18.1
-
+Applied and queued up for -stable, thank you.
