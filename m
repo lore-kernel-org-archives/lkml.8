@@ -5,115 +5,162 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E67C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF85AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 558D12071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B100F20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 21:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kF+GOarz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tExXfijl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgFOVvU (ORCPT
+        id S1726391AbgFOVw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 17:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49992 "EHLO
+        Mon, 15 Jun 2020 17:52:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgFOVvT (ORCPT
+        with ESMTP id S1726044AbgFOVw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 17:51:19 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47FC0C061A0E;
-        Mon, 15 Jun 2020 14:51:19 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id q2so10270446vsr.1;
-        Mon, 15 Jun 2020 14:51:19 -0700 (PDT)
+        Mon, 15 Jun 2020 17:52:27 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52EEEC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 14:52:26 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q25so1099947wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 14:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qgketSwNHBH9JjKBViUJC5dtablUpG9gaeko3bA7e1g=;
-        b=kF+GOarzfpIuy/JohE32cXP4Vd2JnpxHM6h0pYme+S7/RWHhC/TmS14r6nlHzUA7+H
-         s338WjKce/rQdZZlsDASW3HB7VCWcETvbyXs5Ia+aeWjOfo2+BUJGG2Fxb36GrbjhXrp
-         jSuaGAHywJk+9Yvu636+61kzkxBZNPZywBqUJLXOBQfAwAhROHIsoXp6Du9Z6Mtqxc96
-         AmJxrsalGzepTrvbjQHDzP3eAh6alhDAJx2EhVaWiQWYgykER/4i2ofnR1OF7vVHz4q/
-         +pBMozwuGP4nTI9vBVOIcndY/I2eL2OkLca321sNh+qPYUJM6wM03a2MSLl/2VkmBCmS
-         /DjQ==
+        bh=pMrmQR08NbuxMuMQ9XTt0aege9jgLzpM8HoXAcM2lr4=;
+        b=tExXfijlyDzCgiPKBttpScZpH7EE0HQbvlprkUGn54gjurJarPMV0iKnTgho8tBucC
+         nk+dgtb0H3n7ccO1adYneQODQn9PnSRoqgDVhPAffWjhSq3p+PeGnV42A6hU3HcjR7cw
+         OCuZuQBKhZTKSRlocN73E1fSqeHc6W5WwGoEtWxsQUTIXGBLzpPOqiHkB9lQUo8kqKMI
+         LdykCrm6aFJY7yehqk1cxFzlJ3R1GIRe8uqQi1r+WXlFRc1/F57y8KV90Ga6W+S11i7n
+         7Kb5Hcw1py9IfXCwtjD/zPBchiFqChNmuTgbcLd/9kFHBg5CzWhpBMdLfH8UHGVpFLnv
+         cEyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qgketSwNHBH9JjKBViUJC5dtablUpG9gaeko3bA7e1g=;
-        b=Kvt3V1oGNqFsQtQxJJYhn3ST/33jQ2AVrA09WbuDqCtRvBnHiE+nKM1LoZaSWK9/B2
-         mSC8l3wRrxo0dkydoAA/orVuOljsB8ONe4ycU9RSSrb4SvH+0qSd55hIA2211GSdq0DS
-         75YvRuCcNQNOwshPtW5XfDzCV68c6RVWsot7kTn8+ZTp+irThCagNl6Wz3Ia0ESKZU24
-         TqoquTuqWTeoNIeGt1W94++81cGajBgIsjGr3xO/wugmft0OPZv8XNjRkbMN1X89FeH2
-         BvqSF5Ewuk2++ujb56zTSAunKo/2QY+H6aLmmotDOJXK0jk+LElj/ks0d/2dvyQJV7D8
-         FJtg==
-X-Gm-Message-State: AOAM5308otkTayKyQg3zIRkzzIaH6cApD9HS6O4nwWM+ui9sMMB/Alip
-        qN7hxWLijQRO7bIicUTJwRMmHHhGjBq2WKoBFp0=
-X-Google-Smtp-Source: ABdhPJzv/Bc7NGZajPShdorVicz6OHnHErN3ywjEZYsKSV3VG3JL4TYVkoKlW2KXsaRy+3TOPCaluY8wxU3XWXFdMS4=
-X-Received: by 2002:a67:b149:: with SMTP id z9mr20210130vsl.85.1592257878077;
- Mon, 15 Jun 2020 14:51:18 -0700 (PDT)
+        bh=pMrmQR08NbuxMuMQ9XTt0aege9jgLzpM8HoXAcM2lr4=;
+        b=FpcJOIZ7hcyXQEow93zr4kKgbUzJSqtZrK3wEaNDCchzWx154GVaP3cKMYiATE4EAE
+         pmBmKjSG+LPOQ+M0VRyZv2JP9wEYjJeqqTPPlXRsJh54t+EQZqZAHOzOiMeUgem3IEON
+         ihj7QYNrVBKt8566BqcLfINlixIE/thM6gUDPNs6nQFB6RL/BNCWibk++ILLteeUWjJe
+         zw2tP3WFfyRdoZ7u5C4Rog77W4TaawLuPoqOEVC16PgZeHduyOhlEHSfv8pwBGvfRA9d
+         2ECFdVnQSp+eU+8I66yaRX8GtO05NrJ0jCCDmJIbG7xvcHCmXYE50UkNgJAr/wxb1bXZ
+         pfcQ==
+X-Gm-Message-State: AOAM533EsQ3Qy/k3F0wI5Ch3OLbLUtnDmj0Cn4E7cYvtFDZaHxms4Y1Y
+        AF84BpqLB82CTR3yfXeoaqov5ZBo2N7vTuCa0VY=
+X-Google-Smtp-Source: ABdhPJwSxUGklIsrSu/SHjWDyPn/otPVKio1ZbHbv4bC0MTX+tgbgI1YdyYgobjmthIhIY4phxxYn+K1f0UdCUPIRMU=
+X-Received: by 2002:a1c:32c4:: with SMTP id y187mr1309269wmy.79.1592257945080;
+ Mon, 15 Jun 2020 14:52:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200614200121.14147-1-digetx@gmail.com> <20200614200121.14147-6-digetx@gmail.com>
-In-Reply-To: <20200614200121.14147-6-digetx@gmail.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Mon, 15 Jun 2020 22:47:37 +0100
-Message-ID: <CACvgo50P5i2jX6ZrMD=UuGr_bA=8MbFhYBWBNvkMcdCyJKS5xg@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2_5=2F5=5D_drm=2Ftegra=3A_plane=3A_Support_180=C2=B0_r?=
-        =?UTF-8?Q?otation?=
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Derek Basehore <dbasehore@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>, linux-tegra@vger.kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <20200614015539.123654-1-pakki001@umn.edu>
+In-Reply-To: <20200614015539.123654-1-pakki001@umn.edu>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 15 Jun 2020 17:52:14 -0400
+Message-ID: <CADnq5_NK7YP-yfN1SWhXk0Kromxs46LbEtFSTfA94cbhvgUEGQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon: fix multiple reference count leak
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     wu000273@umn.edu, David Airlie <airlied@linux.ie>,
+        Kangjie Lu <kjlu@umn.edu>, LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-
-Perhaps a silly question:
-
-On Mon, 15 Jun 2020 at 08:28, Dmitry Osipenko <digetx@gmail.com> wrote:
+On Mon, Jun 15, 2020 at 3:27 AM Aditya Pakki <pakki001@umn.edu> wrote:
 >
-> Combining horizontal and vertical reflections gives us 180 degrees of
-> rotation.
+> On calling pm_runtime_get_sync() the reference count of the device
+> is incremented. In case of failure, decrement the
+> reference count before returning the error.
+
+Is this required if pm_runtime_get_sync() fails?
+
+Alex
+
 >
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 > ---
->  drivers/gpu/drm/tegra/dc.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>  drivers/gpu/drm/radeon/radeon_connectors.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-> index f31bca27cde4..ddd9b88f8fce 100644
-> --- a/drivers/gpu/drm/tegra/dc.c
-> +++ b/drivers/gpu/drm/tegra/dc.c
-
-> +       if (rotation & DRM_MODE_ROTATE_180) {
-> +               plane_state->reflect_x = !plane_state->reflect_x;
-> +               plane_state->reflect_y = !plane_state->reflect_y;
-> +       }
-> +
-As mentioned by Ville the above is already handled by
-drm_rotation_simplify() ... although it makes me wonder:
-
-
->         err = drm_plane_create_rotation_property(&plane->base,
->                                                  DRM_MODE_ROTATE_0,
->                                                  DRM_MODE_ROTATE_0 |
-> +                                                DRM_MODE_ROTATE_180 |
->                                                  DRM_MODE_REFLECT_X |
->                                                  DRM_MODE_REFLECT_Y);
-
-Would it make sense for drm_plane_create_rotation_property() itself,
-to add DRM_MODE_ROTATE_180, when both reflections are supported?
-
--Emil
+> diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+> index fe12d9d91d7a..e30834434442 100644
+> --- a/drivers/gpu/drm/radeon/radeon_connectors.c
+> +++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+> @@ -879,8 +879,10 @@ radeon_lvds_detect(struct drm_connector *connector, bool force)
+>
+>         if (!drm_kms_helper_is_poll_worker()) {
+>                 r = pm_runtime_get_sync(connector->dev->dev);
+> -               if (r < 0)
+> +               if (r < 0) {
+> +                       pm_runtime_put_autosuspend(connector->dev->dev);
+>                         return connector_status_disconnected;
+> +               }
+>         }
+>
+>         if (encoder) {
+> @@ -1025,8 +1027,10 @@ radeon_vga_detect(struct drm_connector *connector, bool force)
+>
+>         if (!drm_kms_helper_is_poll_worker()) {
+>                 r = pm_runtime_get_sync(connector->dev->dev);
+> -               if (r < 0)
+> +               if (r < 0) {
+> +                       pm_runtime_put_autosuspend(connector->dev->dev);
+>                         return connector_status_disconnected;
+> +               }
+>         }
+>
+>         encoder = radeon_best_single_encoder(connector);
+> @@ -1163,8 +1167,10 @@ radeon_tv_detect(struct drm_connector *connector, bool force)
+>
+>         if (!drm_kms_helper_is_poll_worker()) {
+>                 r = pm_runtime_get_sync(connector->dev->dev);
+> -               if (r < 0)
+> +               if (r < 0) {
+> +                       pm_runtime_put_autosuspend(connector->dev->dev);
+>                         return connector_status_disconnected;
+> +               }
+>         }
+>
+>         encoder = radeon_best_single_encoder(connector);
+> @@ -1247,8 +1253,10 @@ radeon_dvi_detect(struct drm_connector *connector, bool force)
+>
+>         if (!drm_kms_helper_is_poll_worker()) {
+>                 r = pm_runtime_get_sync(connector->dev->dev);
+> -               if (r < 0)
+> +               if (r < 0) {
+> +                       pm_runtime_put_autosuspend(connector->dev->dev);
+>                         return connector_status_disconnected;
+> +               }
+>         }
+>
+>         if (radeon_connector->detected_hpd_without_ddc) {
+> @@ -1657,8 +1665,10 @@ radeon_dp_detect(struct drm_connector *connector, bool force)
+>
+>         if (!drm_kms_helper_is_poll_worker()) {
+>                 r = pm_runtime_get_sync(connector->dev->dev);
+> -               if (r < 0)
+> +               if (r < 0) {
+> +                       pm_runtime_put_autosuspend(connector->dev->dev);
+>                         return connector_status_disconnected;
+> +               }
+>         }
+>
+>         if (!force && radeon_check_hpd_status_unchanged(connector)) {
+> --
+> 2.25.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
