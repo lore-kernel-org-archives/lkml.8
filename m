@@ -2,125 +2,94 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D32C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE26B207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF3F2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:58:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVr/Sb7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbgFOM6I (ORCPT
+        id S1730258AbgFOM6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:58:08 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14441 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730129AbgFOM6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:58:01 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49lrwQ0wthz9v1fl;
-        Mon, 15 Jun 2020 14:57:58 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id aXFx7kJdYhJB; Mon, 15 Jun 2020 14:57:58 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49lrwQ06Xvz9v1fM;
-        Mon, 15 Jun 2020 14:57:58 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 77D768B796;
-        Mon, 15 Jun 2020 14:57:58 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 25kJTR5Pyx86; Mon, 15 Jun 2020 14:57:58 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3308A8B75F;
-        Mon, 15 Jun 2020 14:57:58 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2DB5265B0E; Mon, 15 Jun 2020 12:57:58 +0000 (UTC)
-Message-Id: <087fa12b6e920e32315136b998aa834f99242695.1592225558.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1592225557.git.christophe.leroy@csgroup.eu>
-References: <cover.1592225557.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH 2/3] mm: Allow arches to provide ptep_get()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-Date:   Mon, 15 Jun 2020 12:57:58 +0000 (UTC)
+        Mon, 15 Jun 2020 08:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730071AbgFOM6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:58:46 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448C0C061A0E;
+        Mon, 15 Jun 2020 05:58:46 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so6782517plt.5;
+        Mon, 15 Jun 2020 05:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XitcCGm+N2xk+i04pt3A4f+pfim66XLwLBHkrjOHPeA=;
+        b=ZVr/Sb7MOhagf/RGhel4f7RhEI8nQ3l15ir4uqZwbq0/IUw01U7/hK4l9O6mmhpaQe
+         TH2PvZZczVErnPhIU4XubP9XEwIYH2ymLXfgTeP7G6KctMqFiJ6sdsKv2PuyNRbQTJgk
+         tLsUoZ8oj3NvigYd0YXBG+4zd+Esjx5kSTNVNapIuqBF4MlKSdnw/iNqb92Dwki7/8lQ
+         EYWHyEuqfGDqxAA1HKxN/Gct2whmlDSnPNCENYujxpSWEHQhKazOeoTeXCOtrx2gO19v
+         PuwpM6occwi3z8U1+cXSEccQSqJkzO4ASQSmx/BeL+BrCZF/AI5AUD0yFhc3KkJ/KwCW
+         K5pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XitcCGm+N2xk+i04pt3A4f+pfim66XLwLBHkrjOHPeA=;
+        b=oDyFk/5kCdpvGvhe6Il5gXrGhTvEPwbD1vQrW1GWVxWVw8Rp/kJ12pXMw+EiFQ2llN
+         1JWJDn1BbwQ4CzixBi31S430el6zB6W2/NVA4rl6Br2wSR28/Znath1Frrw2Cfp01p4b
+         kvfgLtF6IIqEbFBqe55llEVxeyH0dIIpIeDNJh86++DajgfjOm5rV+Ds1FtQq9yA8zyr
+         RSDVtbAQtmaGUNt3Ewer9VU3NwQ+czWiAFTAYDguPq2KqkkQ/6gUSW8Tb+Q1GWOFEt8S
+         jci6cT3/dJ/f+sYcHg/PKElvuP59zfcjsUP8aU24G5d1ihMSgbtmLbiqId15jaRqeMcG
+         XpuQ==
+X-Gm-Message-State: AOAM532fjSM6Ti19Zphl4WFryLIYtWSRmaRnL3vLKrvrwkUHV2SwsTXj
+        OFzShTf6UhOl9c6Nm4BLLlU=
+X-Google-Smtp-Source: ABdhPJwfxJvN6VGMc2O3Y02pnnTEat36EFoaAi15AnQE+izYbp/GXj23cVtK4kjHmr1rj/U2FhWHcQ==
+X-Received: by 2002:a17:90a:ed8f:: with SMTP id k15mr10829721pjy.63.1592225925722;
+        Mon, 15 Jun 2020 05:58:45 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id q129sm14496133pfc.60.2020.06.15.05.58.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 05:58:45 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 05:58:43 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vinicius.gomes@intel.com
+Subject: Re: [PATCH net] net: dsa: sja1105: fix PTP timestamping with large
+ tc-taprio cycles
+Message-ID: <20200615125843.GC16362@localhost>
+References: <20200614205409.1580736-1-olteanv@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200614205409.1580736-1-olteanv@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 2ab3a0a02905 ("READ_ONCE: Enforce atomicity for
-{READ,WRITE}_ONCE() memory accesses"), it is not possible anymore
-to use READ_ONCE() to access complex page table entries like
-the one defined for powerpc 8xx with 16k size pages.
+On Sun, Jun 14, 2020 at 11:54:09PM +0300, Vladimir Oltean wrote:
+> So fix this case of premature optimization by simply reordering the
+> sja1105_ptpegr_ts_poll and the sja1105_ptpclkval_read function calls. It
+> turns out that in practice, the 135 ms hard deadline for PTP timestamp
+> wraparound is not so hard, since even the most bandwidth-intensive PTP
+> profiles, such as 802.1AS-2011, have a sync frame interval of 125 ms.
+> So if we couldn't deliver a timestamp in 135 ms (which we can), we're
+> toast and have much bigger problems anyway.
+> 
+> Fixes: 47ed985e97f5 ("net: dsa: sja1105: Add logic for TX timestamping")
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
 
-Define a ptep_get() helper that architectures can override instead
-of performing a READ_ONCE() on the page table entry pointer.
-
-Fixes: 2ab3a0a02905 ("READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses")
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- include/asm-generic/hugetlb.h | 2 +-
- include/linux/pgtable.h       | 7 +++++++
- mm/gup.c                      | 2 +-
- 3 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
-index 40f85decc2ee..8e1e6244a89d 100644
---- a/include/asm-generic/hugetlb.h
-+++ b/include/asm-generic/hugetlb.h
-@@ -122,7 +122,7 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- #ifndef __HAVE_ARCH_HUGE_PTEP_GET
- static inline pte_t huge_ptep_get(pte_t *ptep)
- {
--	return READ_ONCE(*ptep);
-+	return ptep_get(ptep);
- }
- #endif
- 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 32b6c52d41b9..56c1e8eb7bb0 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -249,6 +249,13 @@ static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
- }
- #endif
- 
-+#ifndef __HAVE_ARCH_PTEP_GET
-+static inline pte_t ptep_get(pte_t *ptep)
-+{
-+	return READ_ONCE(*ptep);
-+}
-+#endif
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- #ifndef __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
- static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
-diff --git a/mm/gup.c b/mm/gup.c
-index 761df4944ef5..6f47697f8fb0 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2196,7 +2196,7 @@ static inline pte_t gup_get_pte(pte_t *ptep)
-  */
- static inline pte_t gup_get_pte(pte_t *ptep)
- {
--	return READ_ONCE(*ptep);
-+	return ptep_get(ptep);
- }
- #endif /* CONFIG_GUP_GET_PTE_LOW_HIGH */
- 
--- 
-2.25.0
-
+Acked-by: Richard Cochran <richardcochran@gmail.com>
