@@ -4,146 +4,196 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E08C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E525C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F541207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B119207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203836;
-	bh=Zjrj5OZPyOvO/jdeTX5ow9onQ7aySUfQ8A2G+IxyPwg=;
+	s=default; t=1592203841;
+	bh=l/voElHgBXF6XaGCARYoDwEnBOxjNFzYqUDS5RtZWBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ufg9JZ11H6gqXsG6h30WWikXSWbw+JVHQQGVU/bNWRsQ6n69kkn+Bbwirqn951+L0
-	 HVhXo7n2XzpZm9BNa1gAkx87FRlqgIy0pzIMrdWH5LRndbpJCkFpwnfcoAuXTwzoXm
-	 0ZtgOmq/bB2KwAnaEhMFcz+QRagH64k8E5CM0FS0=
+	b=1WkkQlXnpzKMT1sjSgQ55bbaNuCqqdzT+YnSlg9HMgSDRPe+4Sg8nAjucHNIwXglW
+	 bMWnABD2BalZur8MAjWIrUjVz/43PNhHye9SHIx95HYSa0CEgPDLFoOeKc1fOE/6W8
+	 5PAJAzdC0y+cBoEbch0+Pz5J1hhPmUBxEPAchc50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgFOGue (ORCPT
+        id S1728891AbgFOGuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:50:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36292 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728163AbgFOGuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:50:32 -0400
+        id S1728587AbgFOGue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:50:34 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D13642068E;
-        Mon, 15 Jun 2020 06:50:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C7CA20857;
+        Mon, 15 Jun 2020 06:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592203832;
-        bh=Zjrj5OZPyOvO/jdeTX5ow9onQ7aySUfQ8A2G+IxyPwg=;
+        bh=l/voElHgBXF6XaGCARYoDwEnBOxjNFzYqUDS5RtZWBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z6qPHiEJvDFO3m03Z3MykURm1pxCjKqA7BRudV0z0cClR3Gj0Haead/QHgYsEuRsZ
-         9cKmmhifM2c5Fjgg9fvqLnGjr59D95Wb58DRWpOTLG+J9P/6wo+8EDOoj9WpHkjMUb
-         EB1eHrBt2YkupNXURpl6HKyoKz+JJ22wnuqLeTm8=
+        b=Z+xFLW/A6QPFJ8r+sDAdHZeJ06Y3JWxsjc0qDyJ/sUQOnVug737ar7f9uEZygLqhv
+         /e1w/Wd6SRBOew6HFjVvNtPx5+Vy1j9ugv6V7onPJizAwLIiGabpbNNknFounpkbaM
+         UX43oHtxDkBEV1nqqaVJphgPvLWnBxch7/ih7PA4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jkiwv-009o5W-RI; Mon, 15 Jun 2020 08:50:29 +0200
+        id 1jkiww-009o6F-A7; Mon, 15 Jun 2020 08:50:30 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH 02/22] docs: thermal: convert cpu-idle-cooling.rst to ReST
-Date:   Mon, 15 Jun 2020 08:50:07 +0200
-Message-Id: <7640755514809a7b5fe2756f3702613865877dcb.1592203650.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 11/22] docs: misc-devices/bh1770glc.txt: convert to ReST
+Date:   Mon, 15 Jun 2020 08:50:16 +0200
+Message-Id: <58ba712524318d03b3196bba33cb409472b4807d.1592203650.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592203650.git.mchehab+huawei@kernel.org>
 References: <cover.1592203650.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Despite being named with .rst extension, this file doesn't
-match the ReST standard. It actually causes a crash at
-Sphinx:
-
-	Sphinx parallel build error:
-	docutils.utils.SystemMessage: /devel/v4l/docs/Documentation/driver-api/thermal/cpu-idle-cooling.rst:69: (SEVERE/4) Unexpected section title.
-
-Add needed markups for it to be properly parsed.
-
-While here, add it to the thermal index.rst.
+- Adjust document title markup;
+- use list markups;
+- Adjust identations to display properly at ReST output.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../driver-api/thermal/cpu-idle-cooling.rst        | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ .../{bh1770glc.txt => bh1770glc.rst}          | 45 +++++++++++++------
+ Documentation/misc-devices/index.rst          |  1 +
+ 2 files changed, 33 insertions(+), 13 deletions(-)
+ rename Documentation/misc-devices/{bh1770glc.txt => bh1770glc.rst} (83%)
 
-diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-index b9f34ceb2a38..c2a7ca676853 100644
---- a/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-+++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-@@ -1,3 +1,5 @@
+diff --git a/Documentation/misc-devices/bh1770glc.txt b/Documentation/misc-devices/bh1770glc.rst
+similarity index 83%
+rename from Documentation/misc-devices/bh1770glc.txt
+rename to Documentation/misc-devices/bh1770glc.rst
+index 7d64c014dc70..ea5ca58bb958 100644
+--- a/Documentation/misc-devices/bh1770glc.txt
++++ b/Documentation/misc-devices/bh1770glc.rst
+@@ -1,9 +1,13 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
- ================
- CPU Idle Cooling
- ================
-@@ -48,7 +50,7 @@ idle state target residency, we lead to dropping the static and the
- dynamic leakage for this period (modulo the energy needed to enter
- this state). So the sustainable power with idle cycles has a linear
- relation with the OPP’s sustainable power and can be computed with a
--coefficient similar to:
-+coefficient similar to::
++=======================
+ Kernel driver bh1770glc
+ =======================
  
- 	    Power(IdleCycle) = Coef x Power(OPP)
+ Supported chips:
+-ROHM BH1770GLC
+-OSRAM SFH7770
++
++- ROHM BH1770GLC
++- OSRAM SFH7770
  
-@@ -139,7 +141,7 @@ Power considerations
- --------------------
+ Data sheet:
+ Not freely available
+@@ -48,12 +52,16 @@ chip_id
+ 	RO - shows detected chip type and version
  
- When we reach the thermal trip point, we have to sustain a specified
--power for a specific temperature but at this time we consume:
-+power for a specific temperature but at this time we consume::
+ power_state
+-	RW - enable / disable chip. Uses counting logic
+-	     1 enables the chip
+-	     0 disables the chip
++	RW - enable / disable chip
++
++	Uses counting logic
++
++	     - 1 enables the chip
++	     - 0 disables the chip
  
-  Power = Capacitance x Voltage^2 x Frequency x Utilisation
+ lux0_input
+ 	RO - measured lux value
++
+ 	     sysfs_notify called when threshold interrupt occurs
  
-@@ -148,7 +150,7 @@ wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
- fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
- because we don’t want to change the OPP. We can group the
- ‘Capacitance’ and the ‘Utilisation’ into a single term which is the
--‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
-+‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have::
+ lux0_sensor_range
+@@ -66,16 +74,22 @@ lux0_rate_avail
+ 	RO - supported measurement rates
  
-  Pdyn = Cdyn x Voltage^2 x Frequency
+ lux0_thresh_above_value
+-	RW - HI level threshold value. All results above the value
++	RW - HI level threshold value
++
++	     All results above the value
+ 	     trigs an interrupt. 65535 (i.e. sensor_range) disables the above
+ 	     interrupt.
  
-@@ -157,7 +159,7 @@ in order to target the sustainable power defined in the device
- tree. So with the idle injection mechanism, we want an average power
- (Ptarget) resulting in an amount of time running at full power on a
- specific OPP and idle another amount of time. That could be put in a
--equation:
-+equation::
+ lux0_thresh_below_value
+-	RW - LO level threshold value. All results below the value
++	RW - LO level threshold value
++
++	     All results below the value
+ 	     trigs an interrupt. 0 disables the below interrupt.
  
-  P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
- 			(Trunning + Tidle)
-@@ -168,7 +170,7 @@ equation:
+ lux0_calibscale
+-	RW - calibration value. Set to neutral value by default.
++	RW - calibration value
++
++	     Set to neutral value by default.
+ 	     Output results are multiplied with calibscale / calibscale_default
+ 	     value.
  
- At this point if we know the running period for the CPU, that gives us
- the idle injection we need. Alternatively if we have the idle
--injection duration, we can compute the running duration with:
-+injection duration, we can compute the running duration with::
+@@ -84,32 +98,37 @@ lux0_calibscale_default
  
-  Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
+ prox0_raw
+ 	RO - measured proximity value
++
+ 	     sysfs_notify called when threshold interrupt occurs
  
-@@ -191,7 +193,7 @@ However, in this demonstration we ignore three aspects:
-    target residency, otherwise we end up consuming more energy and
-    potentially invert the mitigation effect
+ prox0_sensor_range
+ 	RO - prox0_raw max value
  
--So the final equation is:
-+So the final equation is::
+ prox0_raw_en
+-	RW - enable / disable proximity - uses counting logic
+-	     1 enables the proximity
+-	     0 disables the proximity
++	RW - enable / disable proximity
++
++	     Uses counting logic
++
++	     - 1 enables the proximity
++	     - 0 disables the proximity
  
-  Trunning = (Tidle - Twakeup ) x
- 		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
+ prox0_thresh_above_count
+ 	RW - number of proximity interrupts needed before triggering the event
+ 
+ prox0_rate_above
+ 	RW - Measurement rate (in Hz) when the level is above threshold
+-	     i.e. when proximity on has been reported.
++	i.e. when proximity on has been reported.
+ 
+ prox0_rate_below
+ 	RW - Measurement rate (in Hz) when the level is below threshold
+-	     i.e. when proximity off has been reported.
++	i.e. when proximity off has been reported.
+ 
+ prox0_rate_avail
+ 	RO - Supported proximity measurement rates in Hz
+ 
+ prox0_thresh_above0_value
+ 	RW - threshold level which trigs proximity events.
++
+ 	     Filtered by persistence filter (prox0_thresh_above_count)
+ 
+ prox0_thresh_above1_value
+diff --git a/Documentation/misc-devices/index.rst b/Documentation/misc-devices/index.rst
+index 27e268805067..edf66b59f2d4 100644
+--- a/Documentation/misc-devices/index.rst
++++ b/Documentation/misc-devices/index.rst
+@@ -15,6 +15,7 @@ fit into other categories.
+    :maxdepth: 2
+ 
+    ad525x_dpot
++   bh1770glc
+    eeprom
+    c2port
+    ibmvmc
 -- 
 2.26.2
 
