@@ -2,94 +2,96 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B57C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF50CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8A692070E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592224816;
-	bh=EO5ZRYBpH1C4C5qa2NcbMw592fMRBuFirZPGlbFWgZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ant5bMl4m48UhLhXm4yzHl+4bffUq6kAv8WIKCbrY2kwtHZlamGywfwmHeLG6i1Ea
-	 bjzwEwJyJ797pRPEWlUCHbIyQEyw9BeIBDPRm3ZD7/K31fNiX4etKQNt5rwluITWKp
-	 4v1v2YKgzwhnHt0YFe4+QltcX/qZdmxF8i/BoGVU=
+	by mail.kernel.org (Postfix) with ESMTP id 8B6A62067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:42:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ncapYoML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbgFOMkP (ORCPT
+        id S1729866AbgFOMmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:40:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 08:42:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:52648 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729826AbgFOMkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:40:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728510AbgFOMmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:42:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592224955; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=IcH9ie83cqyX2wRpW4LqU8OPLSE6vdIbgqFcdhJpvVk=; b=ncapYoML2lndb38pf3Ds67Q17LKtmLHSTKxHm9w2lIMwa4gxhbwoaGuUQl1cKhNClVKVVGIC
+ CTvLiuhAiwEclf5tFKaz08gVWbtN7BnnkDLq7+pPtEibTsW31BLVp7hD8muQOK1RJ++2DF4j
+ h0NdyOelNif6mh52HxSJ3Q/pT1w=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ee76cb2567385e8e76d0813 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 12:42:26
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4D7E5C433CA; Mon, 15 Jun 2020 12:42:25 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCA07206D7;
-        Mon, 15 Jun 2020 12:40:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592224814;
-        bh=EO5ZRYBpH1C4C5qa2NcbMw592fMRBuFirZPGlbFWgZM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oL7MGWqxb7/sHBciJkrGU8DD+KZlRiKzHJ74HIG12Az6wHonwsHTNTgtloHbnGRcj
-         /QwdGybYjHazzpVxdUQsYIm4bLsnRA5KW8pOQwTqgJDVshFRmE6VWUuBA7bQe8LRSF
-         CpA46qSwmr6OmDHrvC9yir2bl19Ej1Vcl5GQH/74=
-Date:   Mon, 15 Jun 2020 13:40:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     krzk@kernel.org, sbkim73@samsung.com, s.nawrocki@samsung.com,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: sound: Document wm8994 endpoints
-Message-ID: <20200615124011.GQ4447@sirena.org.uk>
-References: <20200614202411.27843-1-xc-racer2@live.ca>
- <BN6PR04MB066019A8783D22F1C4A588B7A39F0@BN6PR04MB0660.namprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0pkK7MCEo5hACTvx"
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB066019A8783D22F1C4A588B7A39F0@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B53DC433C8;
+        Mon, 15 Jun 2020 12:42:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B53DC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkshah@codeaurora.org,
+        ilina@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
+Date:   Mon, 15 Jun 2020 18:12:07 +0530
+Message-Id: <1592224927-28576-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The PDC irqchip driver currently does not handle dual-edge interrupts,
+and we have atleast one board with sc7180 designed to configure gpio28
+as a dual-edge interrupt. This interrupt is however not expected to be
+wakeup capable, so an easy way to fix this, seems to be to make this
+gpio non wakeup capable and let TLMM handle it.
 
---0pkK7MCEo5hACTvx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It would have been nice to be able to do this only for the particular
+board with this design, however this change of removing gpio28 from the
+pinctrl SoC file means we end up with one less wakeup capable gpio for
+the entire SoC.
 
-On Sun, Jun 14, 2020 at 01:24:09PM -0700, Jonathan Bakker wrote:
-> The wm8994 exposes several inputs and outputs that can be used by
-> machine drivers in their routing.  Add them to the documention so
-> they don't have been duplicated in any machine drivers bindings.
+Reported-by: Jimmy Cheng-Yi Chiang <cychiang@google.com>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ drivers/pinctrl/qcom/pinctrl-sc7180.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+index 1b6465a..3afcc01 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+@@ -1122,7 +1122,7 @@ static const struct msm_pingroup sc7180_groups[] = {
+ static const struct msm_gpio_wakeirq_map sc7180_pdc_map[] = {
+ 	{0, 40}, {3, 50}, {4, 42}, {5, 70}, {6, 41}, {9, 35},
+ 	{10, 80}, {11, 51}, {16, 20}, {21, 55}, {22, 90}, {23, 21},
+-	{24, 61}, {26, 52}, {28, 36}, {30, 100}, {31, 33}, {32, 81},
++	{24, 61}, {26, 52}, {30, 100}, {31, 33}, {32, 81},
+ 	{33, 62}, {34, 43}, {36, 91}, {37, 53}, {38, 63}, {39, 72},
+ 	{41, 101}, {42, 7}, {43, 34}, {45, 73}, {47, 82}, {49, 17},
+ 	{52, 109}, {53, 102}, {55, 92}, {56, 56}, {57, 57}, {58, 83},
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
---0pkK7MCEo5hACTvx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7nbCoACgkQJNaLcl1U
-h9BsHAf/R6p55ub66+PR9VoeILZ3Cel+cYNBquoO9QHAW7l3ZzoLyIGqAp3+HqMz
-CDspNYVkwDTh/lheZ5gCxCJojyx+XZIv7ypw7jk8qmPlq4ICg3Mfr8CYedv0iOWt
-3lllvjaGn3onurgnp5AL086sjlU04BVyfi5NVt6RtCxYVTZM3lmJbOvS063tcHIf
-+95X95RPCersu7prWaUarL/MD+PKPMdLvzQqWo8+YZ5CmtdJULDPPfk6l6trGiuH
-nCLjvbWMZu8OGLAqcgf2bWDbu6RbaCCIO9SmGfl3oBOS1aTyoCHk5uMhuhCBxRfn
-3q3R0h86r0xl2NoEBOrRZ+gCE7y4vQ==
-=Qt7u
------END PGP SIGNATURE-----
-
---0pkK7MCEo5hACTvx--
