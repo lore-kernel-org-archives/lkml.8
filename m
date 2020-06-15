@@ -2,34 +2,34 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9155EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6D52068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BCE2068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgFOHtT (ORCPT
+        id S1729102AbgFOHuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:49:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39998 "EHLO mx2.suse.de"
+        Mon, 15 Jun 2020 03:50:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40062 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728813AbgFOHtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:49:15 -0400
+        id S1728863AbgFOHtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:49:20 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 821CEAFF9;
-        Mon, 15 Jun 2020 07:49:16 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id C604AB036;
+        Mon, 15 Jun 2020 07:49:18 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 08/38] vt: use tty_insert_flip_string in respond_string
-Date:   Mon, 15 Jun 2020 09:48:40 +0200
-Message-Id: <20200615074910.19267-8-jslaby@suse.cz>
+Subject: [PATCH 20/38] vc: simplify condition in vc_con_write_normal
+Date:   Mon, 15 Jun 2020 09:48:52 +0200
+Message-Id: <20200615074910.19267-20-jslaby@suse.cz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615074910.19267-1-jslaby@suse.cz>
 References: <20200615074910.19267-1-jslaby@suse.cz>
@@ -40,78 +40,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass the length of a string to respond_string and use
-tty_insert_flip_string instead of a loop with tty_insert_flip_char. This
-simplifies the processing on the tty side.
+Convert (!(A && !B) || C) into (!A || B || C) to improve readability.
 
-The added strlens are optimized during constant folding and propagation
-and the result are proper constants in assembly.
+No functional changes, as was just proven by objdump.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/vt/vt.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+ drivers/tty/vt/vt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 3adb7f409524..49c9d1e4067c 100644
+index 893f72dc812c..d3cd256ba0fa 100644
 --- a/drivers/tty/vt/vt.c
 +++ b/drivers/tty/vt/vt.c
-@@ -1809,40 +1809,43 @@ static void csi_m(struct vc_data *vc)
- 	update_attr(vc);
- }
+@@ -2747,7 +2747,7 @@ static int vc_con_write_normal(struct vc_data *vc, int tc, int c,
+ 			return -1; /* nothing to display */
  
--static void respond_string(const char *p, struct tty_port *port)
-+static void respond_string(const char *p, size_t len, struct tty_port *port)
- {
--	while (*p) {
--		tty_insert_flip_char(port, *p, 0);
--		p++;
--	}
-+	tty_insert_flip_string(port, p, len);
- 	tty_schedule_flip(port);
- }
- 
- static void cursor_report(struct vc_data *vc, struct tty_struct *tty)
- {
- 	char buf[40];
-+	int len;
- 
--	sprintf(buf, "\033[%d;%dR", vc->state.y + (vc->vc_decom ? vc->vc_top + 1 : 1), vc->state.x + 1);
--	respond_string(buf, tty->port);
-+	len = sprintf(buf, "\033[%d;%dR", vc->state.y +
-+			(vc->vc_decom ? vc->vc_top + 1 : 1),
-+			vc->state.x + 1);
-+	respond_string(buf, len, tty->port);
- }
- 
- static inline void status_report(struct tty_struct *tty)
- {
--	respond_string("\033[0n", tty->port);	/* Terminal ok */
-+	static const char teminal_ok[] = "\033[0n";
-+
-+	respond_string(teminal_ok, strlen(teminal_ok), tty->port);
- }
- 
- static inline void respond_ID(struct tty_struct *tty)
- {
--	respond_string(VT102ID, tty->port);
-+	respond_string(VT102ID, strlen(VT102ID), tty->port);
- }
- 
- void mouse_report(struct tty_struct *tty, int butt, int mrx, int mry)
- {
- 	char buf[8];
-+	int len;
- 
--	sprintf(buf, "\033[M%c%c%c", (char)(' ' + butt), (char)('!' + mrx),
--		(char)('!' + mry));
--	respond_string(buf, tty->port);
-+	len = sprintf(buf, "\033[M%c%c%c", (char)(' ' + butt),
-+			(char)('!' + mrx), (char)('!' + mry));
-+	respond_string(buf, len, tty->port);
- }
- 
- /* invoked via ioctl(TIOCLINUX) and through set_selection_user */
+ 		/* Glyph not found */
+-		if ((!(vc->vc_utf && !vc->vc_disp_ctrl) || c < 128) &&
++		if ((!vc->vc_utf || vc->vc_disp_ctrl || c < 128) &&
+ 				!(c & ~charmask)) {
+ 			/*
+ 			 * In legacy mode use the glyph we get by a 1:1
 -- 
 2.27.0
 
