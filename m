@@ -2,148 +2,187 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3573BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58310C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 160642063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H3A4uLXQ"
+	by mail.kernel.org (Postfix) with ESMTP id 358642063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:02:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592233363;
+	bh=cLE/KDQ7zi8CXnleskZoZ1Ql9hp/DpDm7B2xPgtp8Pc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dS9MArv8PbS2KKo40mj6SKo74e0re/CABWFMSvsQBQ/y9R0/skF74h+rpl6PE+wO4
+	 XUdMxWFhkV2Ktr/tuBXSeUm3Jg8uvEFIFTlxe0O+6AdLxTwkfSQFb+ZvFn2ztkVtde
+	 /PunDeqQFobgql9jOAQtIta/V1MTUHNJ8SOUNdAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbgFOPCT (ORCPT
+        id S1730924AbgFOPCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:02:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730777AbgFOPCQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:02:16 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FEFC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:02:15 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id x14so2218531uao.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TrvvsAEP4GTcir2Zy4zr3JBpHk31E0joGe1xHbcm+mg=;
-        b=H3A4uLXQWE02D9hYonsJYD+dAcZKqOzS19HfKOalhkBF4qwfzczgYQl1W0V8OQsYXD
-         95VWw7nAcce5a/v3X1xmaJEUAxd0JQhaKynN57OA1tKKU6N1LhVNw3fYE7ZH0++G+pva
-         EdI1a+96k5CQcCD5Of6MAu9qR7pjeDAfI0yPs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TrvvsAEP4GTcir2Zy4zr3JBpHk31E0joGe1xHbcm+mg=;
-        b=UwiQ7N4zOnZC+3WOQdOdvf1y5mRcrIDrlm850zncHpr7TGmO03wKFpnftURGBGLfTY
-         sruH3Xe+ShDqxpBVWw2RQPD3GnL34xVSg11LJ/VKID5IunyafGDdXpDM+nrKei1qpAXS
-         m3woYsjDuJXhL4dDcOh4duvt7RCsNhT/f8n22Rz152vSWAgBniYiukmtonLb5RBGIqMV
-         HmROhht3e09Kv9+3ey6I6cmQkNJHB0Z7w2IswlzGxU2O7SdiUEXcKsTeTsWzOVmfBL7r
-         rkOGYogOaJMXEtspXE6t+WFLJkBvB7rJyKgtb0AbwIwO43qZaNFdBigzshkWuzh8J01V
-         F7Sw==
-X-Gm-Message-State: AOAM530n9a25xjoh0nGu5am+0PSDpo5XdCk2LfYvchKtj9g1iks8vYzq
-        y5LYt2eN9ZJpLwO20l+4r6e+vkLFN74=
-X-Google-Smtp-Source: ABdhPJxQgxHjFH4v2OK6EcEiB93DGsFBNHcv2em1yOxgryn+evvIHpMoy2P1YAq5o3kzuwLUPAICQA==
-X-Received: by 2002:ab0:186d:: with SMTP id j45mr20082578uag.104.1592233334752;
-        Mon, 15 Jun 2020 08:02:14 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id g10sm1911130vsa.2.2020.06.15.08.02.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 08:02:14 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id l10so9514662vsr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:02:14 -0700 (PDT)
-X-Received: by 2002:a67:8881:: with SMTP id k123mr19565964vsd.198.1592233331996;
- Mon, 15 Jun 2020 08:02:11 -0700 (PDT)
+        Mon, 15 Jun 2020 11:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730777AbgFOPCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 11:02:41 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B542078A;
+        Mon, 15 Jun 2020 15:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592233360;
+        bh=cLE/KDQ7zi8CXnleskZoZ1Ql9hp/DpDm7B2xPgtp8Pc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y/Z6obKYdtRw3N7G0dSci0N/ySSHnfwI0VNvmTCeY5dHarhRxKChHbUr6Buy9daJP
+         D4GTJuhsL/S5ZeAsl+9VS3pxK89gzUu2/ZqmiHMO2Yj5hAnMlh0RuCyELdAW2JFx3u
+         wr/1hQxPWYOL9irTK4WJNpAqnTDfHvZBVpb+ZVVs=
+Received: by mail-ot1-f42.google.com with SMTP id n5so2708691otj.1;
+        Mon, 15 Jun 2020 08:02:39 -0700 (PDT)
+X-Gm-Message-State: AOAM532EM5j/AyvpSbbWi9j5UQinstFVaQwmlaCAq06tbrAIz0M03qz2
+        Bo4HU11cnwS+FjD5wPaNSzFjkcmbzs6dSCGc+Q==
+X-Google-Smtp-Source: ABdhPJzjxGO9DWEIsfipS4yrm2PPJNlfjEILXBJsHkZzS1HbqK8iCTqz315EJs5dkJCwXWaRJRWjBuWpAO9+qSTHPZY=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr22220499ots.192.1592233359274;
+ Mon, 15 Jun 2020 08:02:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
- <20200615143237.519F3C433C8@smtp.codeaurora.org> <CAD=FV=VaexjLaaZJSxndTEi6KCFaPWW=sUt6hjy9=0Qn68kH1g@mail.gmail.com>
- <87zh94idik.fsf@codeaurora.org>
-In-Reply-To: <87zh94idik.fsf@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 15 Jun 2020 08:02:00 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XfUHD=vw-mvQsdHcn=zhB9-mD6ivrM93jkfHdgb+odiA@mail.gmail.com>
-Message-ID: <CAD=FV=XfUHD=vw-mvQsdHcn=zhB9-mD6ivrM93jkfHdgb+odiA@mail.gmail.com>
-Subject: Re: [PATCH] ath10k: Wait until copy complete is actually done before completing
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, ath10k@lists.infradead.org,
-        Rakesh Pillai <pillair@codeaurora.org>,
-        netdev <netdev@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, kuabhs@google.com
+References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
+ <20200612221003.GA3901624@bogus> <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
+In-Reply-To: <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 15 Jun 2020 09:02:28 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+o6Hwz6vN2mgYGnZF4wX5nFoaXRMweQr8euep-9OmBiA@mail.gmail.com>
+Message-ID: <CAL_Jsq+o6Hwz6vN2mgYGnZF4wX5nFoaXRMweQr8euep-9OmBiA@mail.gmail.com>
+Subject: Re: [PATCH v10 1/4] dt-bindings: media: i2c: Add bindings for Maxim
+ Integrated MAX9286
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Jun 15, 2020 at 7:56 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+On Sat, Jun 13, 2020 at 6:28 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
 >
-> Doug Anderson <dianders@chromium.org> writes:
+> Hi Rob,
 >
-> > On Mon, Jun 15, 2020 at 7:32 AM Kalle Valo <kvalo@codeaurora.org> wrote:
-> >>
-> >> Douglas Anderson <dianders@chromium.org> wrote:
-> >>
-> >> > On wcn3990 we have "per_ce_irq = true".  That makes the
-> >> > ath10k_ce_interrupt_summary() function always return 0xfff. The
-> >> > ath10k_ce_per_engine_service_any() function will see this and think
-> >> > that _all_ copy engines have an interrupt.  Without checking, the
-> >> > ath10k_ce_per_engine_service() assumes that if it's called that the
-> >> > "copy complete" (cc) interrupt fired.  This combination seems bad.
-> >> >
-> >> > Let's add a check to make sure that the "copy complete" interrupt
-> >> > actually fired in ath10k_ce_per_engine_service().
-> >> >
-> >> > This might fix a hard-to-reproduce failure where it appears that the
-> >> > copy complete handlers run before the copy is really complete.
-> >> > Specifically a symptom was that we were seeing this on a Qualcomm
-> >> > sc7180 board:
-> >> >   arm-smmu 15000000.iommu: Unhandled context fault:
-> >> >   fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
-> >> >
-> >> > Even on platforms that don't have wcn3990 this still seems like it
-> >> > would be a sane thing to do.  Specifically the current IRQ handler
-> >> > comments indicate that there might be other misc interrupt sources
-> >> > firing that need to be cleared.  If one of those sources was the one
-> >> > that caused the IRQ handler to be called it would also be important to
-> >> > double-check that the interrupt we cared about actually fired.
-> >> >
-> >> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >> > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-> >>
-> >> ath10k firmwares work very differently, on what hardware and firmware did you
-> >> test this? I'll add that information to the commit log.
+> On Fri, Jun 12, 2020 at 04:10:03PM -0600, Rob Herring wrote:
+> > On Fri, 12 Jun 2020 15:47:10 +0100, Kieran Bingham wrote:
+> > > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > >
+> > > The MAX9286 deserializes video data received on up to 4 Gigabit
+> > > Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using=
+ up
+> > > to 4 data lanes.
+> > >
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboar=
+d.com>
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.co=
+m>
+> > > Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
+h.se>
+> > > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnat=
+ech.se>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > >
+> > > ---
+> > >
+> > > v7:
+> > >  - Collect Rob's RB tag
+> > >  - Remove redundant maxItems from remote-endpoints
+> > >  - Fix SPDX licence tag
+> > >
+> > > v10:
+> > > [Jacopo]
+> > >  - Fix dt-validation
+> > >  - Fix dt-binding examples with 2 reg entries
+> > >
+> > > [Kieran]
+> > >  - Correctly match the hex camera node reg
+> > >  - Add (required) GPIO controller support
+> > >
+> > >  .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++=
+++
+> > >  1 file changed, 366 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim=
+,max9286.yaml
+> > >
 > >
-> > I am running on a Qualcomm sc7180 SoC.
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/me=
+dia/i2c/maxim,max9286.example.dt.yaml: example-0: i2c@e66d8000:reg:0: [0, 3=
+865935872, 0, 64] is too long
+> >
+> >
+> > See https://patchwork.ozlabs.org/patch/1308280
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master=
+ --upgrade
+> >
 >
-> Sorry, I was unclear, I meant the ath10k hardware :) I guess WCN3990 but
-> what firmware version?
+> I have updated my dt-schema installation to the latest github master
+> -------------------------------------------------------------------------=
+------
+> Successfully installed dtschema-2020.6.dev8+g4d2d86c
+>
+> https://github.com/devicetree-org/dt-schema/commit/4d2d86c5cd65cd3944ce0a=
+aa400866bc36727bea
+>
+> $ /usr/bin/dt-validate -V
+> 2020.6.dev8+g4d2d86c
+> -------------------------------------------------------------------------=
+------
+>
+> But I still cannot reproduce the error.
+>
+> However, I see this commit in your next branch
+> https://github.com/devicetree-org/dt-schema/commit/b72500282cfd2eba6f9df4=
+d7553f696544b40ee6
+> "schemas: Add a schema to check 'reg' sizes "
+>
+> Which sounds very likely related to the above reported error.
+> Was this intentional ?
 
-Ah, sorry!  Yes, it appears to be wcn3990 based on my device tree:
+Yes, I can't add the new checks to master until all the in tree schema
+are fixed yet I want to check submissions with pending checks, so I
+created the 'next' branch.
 
-$ git grep -A2 wifi -- arch/arm64/boot/dts/qcom/sc7180.dtsi
+> I'm not sure how I should handle this. The error reports the i2c node
+> parents should have both address-cells and size-cells properties set
+> to 2, but in the example there is not i2c node parent at all :)
+> Should I add a parent node for the i2c in the example snippet ?
 
-wifi: wifi@18800000 {
-        compatible = "qcom,wcn3990-wifi";
-        reg = <0 0x18800000 0 0x800000>;
-        reg-names = "membase";
+The examples have default sizes of 1 cell. If you need something
+different, the example has to define a parent node to specify it. In
+your case, I'd just change 'reg' to use 1 cell each.
 
-Firmware isn't final yet, but currently my boot log shows:
-
-qmi fw_version 0x322a01ea
-fw_build_timestamp 2020-05-20 03:47
-QC_IMAGE_VERSION_STRING=WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
-
--Doug
+Rob
