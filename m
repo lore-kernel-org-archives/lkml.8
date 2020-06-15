@@ -2,120 +2,98 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8930C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1103C206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hee7HZ6p"
+	by mail.kernel.org (Postfix) with ESMTP id A1DB5206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbgFOJ47 (ORCPT
+        id S1729594AbgFOJ5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbgFOJ47 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:56:59 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8E6C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:56:58 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id q25so14181597wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:56:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jsEUyoBTDZqiVYB9PCZ1vVhMpPe0f/z8iobsEEaUCw4=;
-        b=hee7HZ6p8is7oxi8Go4xvjyiDZzsY/Q+zce2fLd0aZKNQ4xq9xxZXaeTFvZyTHGx0u
-         We48FXH41ePPSmjgZtYxZYcJb0Uoa/nkYeRcJwhhzBMu/ML0l51V3qHJrUedtxhKHlys
-         107STx4b3Qbby2dqKQ7s734eMiKgDM8Z8rj5YjQBw6JEQtdpwkUCBsRq+MpToxj2hGS5
-         ZRBBucPpuY/Kf7Qps9hGJoxtK4BqnKR6bebmikQszNyf5LMJtRI3AW5e8Yeov2as/M87
-         m01CbnP9fo+lblePdhg+zIrzirypT1fqvxlRcTLiNoxzFTl4p/OkfyAZSC7k7NmGFEKI
-         jR0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jsEUyoBTDZqiVYB9PCZ1vVhMpPe0f/z8iobsEEaUCw4=;
-        b=bbRso443lbz+sKIX3Os5ubyrqYA51k5pWVftEeEQhXJNvYs8alZ3CVp3qo9jUmPPUa
-         X1PJ0UY1cldpgiDd7jRQfU92nWJ+l2K8fXcn78LjBly+tdH1Mo+g4Kb/VSkeTPVUk288
-         mAsscvTlg7UTwBeggdaju4ul8EuonixY63Ae7809N/9F6+ahk6B0yFJ82a32UUr3ib8W
-         vbYUHbK1S416B4sPbRRMhb9JPJ4NESrXyeI52jtEFBKG5+Aku5IfQlWvBrw4tMvvc9G3
-         UBPZ7Z+CtC9I5e6XfOWjx+dhhdm6dk+aAmlFTAxoL6NYIE3HCRFaqSl1Hx+2Qy/b50ti
-         Z+0g==
-X-Gm-Message-State: AOAM531j1es6B+sVfCUPdp0+sU+NzIimIm7hCrpYaKTkvkTlXmLQZYEg
-        VVf3un5YyPxH8aeqEQN1y2J/vg==
-X-Google-Smtp-Source: ABdhPJxZKKismQou/hvN0RyW10M0LOdtR9H7U0D3onGtbD82lRgrB1A+y0Judglrp+oKwjLU5BgKcw==
-X-Received: by 2002:a1c:4c12:: with SMTP id z18mr12843943wmf.155.1592215017188;
-        Mon, 15 Jun 2020 02:56:57 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id t7sm22347837wrq.41.2020.06.15.02.56.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 02:56:56 -0700 (PDT)
-Subject: Re: [RFC v2 2/3] drivers: nvmem: Add QTI qfprom-efuse support
-To:     Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org, saiprakash.ranjan@codeaurora.org,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-References: <1591868882-16553-1-git-send-email-rbokka@codeaurora.org>
- <1591868882-16553-3-git-send-email-rbokka@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <39ad93ee-236d-0e5e-571a-28ef91173309@linaro.org>
-Date:   Mon, 15 Jun 2020 10:56:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 15 Jun 2020 05:57:34 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59474 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728369AbgFOJ5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 05:57:31 -0400
+IronPort-SDR: DQ4VVTd9bpJfXh0sMYOy2FFxK9NCU9kqPx74jx+P9zt7zMq0m2RE/Ofhwd7J/wlM2tabdjq8Lv
+ 10pRocL3Wdbw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 02:57:30 -0700
+IronPort-SDR: RjkgDfsWSWEoQvV9dUX30JYTzaTHqYboGDi5Dc8vaZeBgcgY0/Z2yMTiS5MnCxFLYvvFzHnml0
+ hw7NcqkTJBiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
+   d="scan'208";a="290640218"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 15 Jun 2020 02:57:28 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jklru-00DXZQ-8o; Mon, 15 Jun 2020 12:57:30 +0300
+Date:   Mon, 15 Jun 2020 12:57:30 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH] serial: 8250_port: Fix imprecise external abort for
+ mctrl if inactive
+Message-ID: <20200615095730.GT2428291@smile.fi.intel.com>
+References: <20200602001813.30459-1-tony@atomide.com>
+ <20200602080811.GI19480@localhost>
+ <CAHp75Vfi5nDgwT10J_EKYn90vGuiL1hyfre+t_w_OFREFY-Tqg@mail.gmail.com>
+ <20200602133659.GD37466@atomide.com>
+ <20200602185515.GF37466@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <1591868882-16553-3-git-send-email-rbokka@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602185515.GF37466@atomide.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 02, 2020 at 11:55:15AM -0700, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [200602 13:38]:
+> > * Andy Shevchenko <andy.shevchenko@gmail.com> [200602 08:33]:
+> > Now that we can detach and reattach the kernel serial console,
+> > there should not be any need for pm_runtime_irq_safe() anymore :)
+> 
+> Below is a hastily tested RFC patch to remove pm_runtime_irq_safe()
+> for 8250_omap.c that seems to work for idle use case :)
+> 
+> > And the UART wake-up from deeper idle states can only happen with
+> > help of external hardware like GPIO controller or pinctrl controller.
+> 
+> It does not yet include the check for configured wakeirq though.
+> And omap-serial.c needs a similar patch or maybe we can attempt
+> to just drop it this time as 8250_omap.c should be used nowadays.
+> Or just drop PM from omap-serial.c if it can't be dropped.
+> 
+> Andy, is the change below the only remaining blocker now for
+> your serial PM runtime changes?
 
-I think Doug already covered most of the comments and his fixes seems be 
-in right direction.
+In private chat we have got more or less working solution. We both will going
+to give more tests and then I will share (at least as a branch on some public
+Git service) the set.
 
-On 11/06/2020 10:48, Ravi Kumar Bokka wrote:
-> +	qfpraw = platform_get_resource_byname(pdev, IORESOURCE_MEM, "raw");
-> +
-> +	priv->qfpraw = devm_ioremap_resource(dev, qfpraw);
-> +	if (IS_ERR(priv->qfpraw)) {
+-- 
+With Best Regards,
+Andy Shevchenko
 
-General comment for up-streaming is that your patch should not break 
-whats in mainline, Your patch is totally ignoring!! Please be mindful 
-while doing changes to drivers which are used by other platforms.
 
---srini
-> +		ret = PTR_ERR(priv->qfpraw);
-> +		goto err;
-> +	}
-> +
-> +	qfpconf = platform_get_resource_byname(pdev, IORESOURCE_MEM, "conf");
-> +
-> +	priv->qfpconf = devm_ioremap_resource(dev, qfpconf);
-> +	if (IS_ERR(priv->qfpconf)) {
-> +		ret = PTR_ERR(priv->qfpconf);
-> +		goto err;
-> +	}
-> +
-> +	qfpcorrected = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						    "corrected");
-> +
-> +	priv->qfpcorrected = devm_ioremap_resource(dev, qfpcorrected);
-> +	if (IS_ERR(priv->qfpcorrected)) {
-> +		ret = PTR_ERR(priv->qfpcorrected);
-> +		goto err;
-> +	}
