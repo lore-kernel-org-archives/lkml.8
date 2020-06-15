@@ -2,140 +2,190 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F866C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA9C206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5DC20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="shXgN8Rl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pGbdVD61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730771AbgFOOxf (ORCPT
+        id S1730699AbgFOOxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:53:35 -0400
-Received: from mail-vi1eur05on2059.outbound.protection.outlook.com ([40.107.21.59]:6211
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728304AbgFOOxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:53:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cOKOwJuFJ6Ob2aVm4zLI7ttVBIEZbaVbqrBdiJGs/ub9+7/mYUIhou0WuMCCxpO/R2EtWnrjgF2C3/YDD+fISkKpfpPBtFGsqXYN2F7BeoZR4iMsrJ3XFnQcXr94bsisYgF/S0fL7X/TtyIlpY6JnnQ0JRSHykt2V1Z/sVGgeMVEfOsLzSXFCG753jiDHrWQo1ROag1CNnAPJnXhRoJK/FBYAuIIoPdtO0PyZzpI3em4AsDbpgSbROfWCxENCXsGmSf0dv1FDcJzdMd/ZQLWzJgoPYAyIycgQ7VgBCPdBJBEkNyzeh2AWHD/MhyQmtlfqWn8m+/zHya2qfbzxb6mBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Bc/Xhpc7c79ShuhNKagxGQHYTBvh9hkPN5apWBVGFs=;
- b=WR/kcVFRsvX+VoE9XEs/LKl+VPCSJseYbztI8W8s/ULjWgIaxT4UXPBfouOX0AOre5Mk2aBHK5bU93A19lqzPNA9n+Phm/EBXUaFUYsG7W1K1s+zwDXykVXT32jZydNVAeSp3CUfiBQIITd1Yg00YeeSzCUTvqC/Ism7YN1Gjp9zMv9EJIFnCdvveOdLF/2DN3udSNpzBCyXpNANKfPQ42xz/GfBtmQKVSXgtDqvBUTNWrM97mHO90bQlQIPWclmv1iK6at17usZDlycGrwjf67dY4ojyLzBs3ZK0qbJIkJmjmMU1WFJ1Ez/kqB0Tdr/WA3+yzL3w39e1krsROMpTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Bc/Xhpc7c79ShuhNKagxGQHYTBvh9hkPN5apWBVGFs=;
- b=shXgN8RlKI/KdlM0GGF5IaUaw9lQGRpDXtaptG7UkbcPvUGi7yQJILAzN6ohc4p63cE6NI1Jaq9uvAy/luWZIy5wqNGIbW18IX4ijddUEmjW1SxjHyjbiGHYpI3No4mNmrjgExWmWq8GaGGTQnnzmS+6+ZxxcDClxKihVE+OlZE=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6525.eurprd04.prod.outlook.com (2603:10a6:803:120::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Mon, 15 Jun
- 2020 14:53:30 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3088.028; Mon, 15 Jun 2020
- 14:53:30 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Thread-Topic: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Thread-Index: AQHWP6z7CX2etPvPnk+oddH8JEW5FKjTbHIAgADDYUCAAJUwgIAACjoQgAA5dICAAOmA8IADsXmAgAANH1CAAASJgIAACZlAgAAGaACAAAKk4A==
-Date:   Mon, 15 Jun 2020 14:53:29 +0000
-Message-ID: <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20200611134042.GG4671@sirena.org.uk>
- <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612101357.GA5396@sirena.org.uk>
- <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612141611.GI5396@sirena.org.uk>
- <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615123553.GP4447@sirena.org.uk>
- <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615133905.GV4447@sirena.org.uk>
- <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615143622.GX4447@sirena.org.uk>
-In-Reply-To: <20200615143622.GX4447@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.235.111]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 959003b8-59ff-4c32-64a0-08d8113bde29
-x-ms-traffictypediagnostic: VE1PR04MB6525:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6525AA69BC7D7041FDDEE116899C0@VE1PR04MB6525.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 04359FAD81
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: m6KHG73sDXZAyWX49AlNpiK8HZSyGhBQDqrcCuQDMSiIzhE+0k/qgZ/OdPH+9m+Izv8MkfXQc4QAn5t55XPvWknFlKTrfEZmfIYr8FnboCZK0Dz/A7WzgyFlf2ldx80sY6eZLkZEdxdqgvFquoWPXUBini176OshB/906MuEEdiz55CJaz4SkSS5qyc7jjHgSvGsr55fS4GufguCJO4MnRXlEcPRpnyAGDb8yy7eUB/d1I5Nzk7/+1Pa84UVn6IGi7MWH6iZGWvMezAihEQxaiU1EzPRredkNZBE2viZyw/KZGm0PAp0igIa4Lahyb4N5VQtv1QGXJxPpmeKK9sWhg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(39860400002)(366004)(136003)(71200400001)(52536014)(6916009)(8676002)(4326008)(86362001)(33656002)(26005)(4744005)(83380400001)(5660300002)(2906002)(54906003)(8936002)(478600001)(316002)(7416002)(66946007)(66476007)(66556008)(64756008)(66446008)(9686003)(6506007)(55016002)(7696005)(53546011)(186003)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: ceA14vWNvicsfLKYk781BjrrUbx3D49V5FYqvkWaEoPdMZO70piURMUBvPcBtD3BKGQDeOcmo1NsdUHQzeX9rvTXBWlVsUg7Cb/JtkttEO0XgNrc7Dl9tF6t/YjQapc/nTUV+2TXYA7qpf4uwKfOcoMACS9eTfNbHcgg2D/jt/nZEtJ6pbbUX8/ia7xFL9H0Zu/bbzlbUUcwVe7FsDP5PDOLSJKxiilRuuXZvC7gSj55ZqJRihrXyRcBxg9B6HPf6Q6sisPMPX/JaZf0MhRZ+CqeNl4dtUE7mgNaD/1MBOR0nsbqq2+ANzG/dKxdD9ypH74IWtZO12UI1SLzWIp0Ycw4l7C4g/Fre/LCTSU3qp339A/q50FVv8AIOKmg4/YnPs60r5/dDYNsKn5REmWUrep2SZmdKO+oOnU7el5t9cGlVkzrMGJHlNR3S6W1PO7QgfhI+LyVCpZej0prAE11iLYe6YEiDsLqBz8dP83UeLybKWPdcr8/m4KddddGmxTo
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 15 Jun 2020 10:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730529AbgFOOxp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:53:45 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90ACEC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:53:44 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r9so14958335wmh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TO/UlS5nQwaskSKkWnxhtbr58cxMAZAbeQDdoacE6pI=;
+        b=pGbdVD61bJ5VXk7tPHS9VeyRR1c449xy+yOAiFLWktnxVI5RGEPjXKHzyoAQ/HB7Xv
+         g/jTZqHr8NXLeCjbGKe7oW7GrT8VdnM20DSsCwZ0R5/gMhf5zpOWfx74tRx1aCqYAEyT
+         MUezcBhiKZRgvqGVf6acB/crB0YnbfkBZrFbZL+IH2LiJKXCPkOmDTqMP3iuDGAUGYCB
+         I2BBhxF8G6hQ31pMB4dwjOp73L+bMb/fkN4QOU9cYT7po6BQF6rOCoCxxLM/Hge69Szf
+         RqNpg0f80hMy8P/P7NDKZFxLi4kV6HghZOkM5Nx6oKs9p34w8bDqlJLE5Ejf1GWKq/bW
+         huzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TO/UlS5nQwaskSKkWnxhtbr58cxMAZAbeQDdoacE6pI=;
+        b=ffCEfZR/JGzKfZUzO30Vj6LC/QnvpRTMnPmaAelQohSD0Sr19Noi31hzBYZLQcqHYY
+         ArvBYkspGSI6w6jjqtSTs0PLTidtl9Cpi2B/3NYFjsh5BJc1owe+98KjSsmm3ctz9Diz
+         M653dJWlKn/fXJYRI2JX/RNvhq5BA26Qtze5MMlYVzo8uHT5t7fWesU7U0cuFRcYW6DW
+         RjJYDGCudHSqPMYcWrRgpDBFgeeXnVkF0HE+ykK6ahvzEGX8yLGo6x+WQJc9UWvxjAV5
+         1rzrWDWt7w05PwQmmwcYaDntDD1bP/iVy3gUXPbrEo8oIPWM4w7q8t6VyRYylyiqO/sl
+         WeUw==
+X-Gm-Message-State: AOAM531arr0W2ThR3gpnPvsnqhcyvK/09IcoGDbyCecdZGIV3prNv9Jl
+        WwynQ7ZyPp4mpSOY8BjVkTungw==
+X-Google-Smtp-Source: ABdhPJyObri4Sx4uNpy8MHQeWbXJ3AvJJL/BWpDdAHYNWah9fhogVmCUj27GgYrTiDSWdeTsa65shQ==
+X-Received: by 2002:a7b:c76a:: with SMTP id x10mr13701463wmk.16.1592232823049;
+        Mon, 15 Jun 2020 07:53:43 -0700 (PDT)
+Received: from google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id s8sm25864689wrg.50.2020.06.15.07.53.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 07:53:42 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 16:53:36 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
+ noinstr-compatible
+Message-ID: <20200615145336.GA220132@google.com>
+References: <CACT4Y+Zwm47qs8yco0nNoD_hFzHccoGyPznLHkBjAeg9REZ3gA@mail.gmail.com>
+ <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
+ <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
+ <20200608110108.GB2497@hirez.programming.kicks-ass.net>
+ <20200611215538.GE4496@worktop.programming.kicks-ass.net>
+ <CACT4Y+aKVKEp1yoBYSH0ebJxeqKj8TPR9MVtHC1Mh=jgX0ZvLw@mail.gmail.com>
+ <20200612114900.GA187027@google.com>
+ <CACT4Y+bBtCbEk2tg60gn5bgfBjARQFBgtqkQg8VnLLg5JwyL5g@mail.gmail.com>
+ <CANpmjNM+Tcn40MsfFKvKxNTtev-TXDsosN+z9ATL8hVJdK1yug@mail.gmail.com>
+ <20200615142949.GT2531@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 959003b8-59ff-4c32-64a0-08d8113bde29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 14:53:29.8763
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nbwsj8K9HOO5+HieE1raLiD/el0lQkCB81b2qhB5ncpYHZzYNdhAk15xoqFenontzxrESE/DlRdeq06D3IAXUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6525
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615142949.GT2531@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/15 22:36 Mark Brown <broonie@kernel.org> wrote:=20
-> On Mon, Jun 15, 2020 at 02:18:54PM +0000, Robin Gong wrote:
-> > Seems not easy to find a suitable error value, how about EBADR which
-> > sounds like no any available dma_async_tx_descriptor got by calling
-> dmaengine_prep_slave_sg?
->=20
-> > #define EBADR           53      /* Invalid request descriptor */
->=20
-> We could also pass in a flag that could be set separately to the error co=
-de to
-> indicate that nothing had happened to the hardware yet.
-Do you mean spi-imx.c checking 'ctlr->flags' before return such error code?
-Or just like below done in spi.c.
-+fallback_pio:
-                        ret =3D ctlr->transfer_one(ctlr, msg->spi, xfer);
-                        if (ret < 0) {
-+                               if (ret =3D=3D - EBADR && ctlr->cur_msg_map=
-ped &&
-+                                  (ctlr->flags & SPI_CONTROLLER_FALLBACK))=
- {
-+                                       __spi_unmap_msg(ctlr, msg);
-+                                       ctlr->fallback =3D true;
-+                                       goto fallback_pio;
-+                               }
-+
+On Mon, 15 Jun 2020, Peter Zijlstra wrote:
+
+> On Mon, Jun 15, 2020 at 09:53:06AM +0200, Marco Elver wrote:
+> > 
+> > Disabling KCOV for smp_processor_id now moves the crash elsewhere. In
+> > the case of KASAN into its 'memcpy' wrapper, called after
+> > __this_cpu_read in fixup_bad_iret. This is making me suspicious,
+> > because it shouldn't be called from the noinstr functions.
+> 
+> With your .config, objtool complains about exactly that though:
+> 
+> vmlinux.o: warning: objtool: fixup_bad_iret()+0x8e: call to memcpy() leaves .noinstr.text section
+> 
+> The utterly gruesome thing below 'cures' that.
+
+Is __memcpy() generally available? I think that bypasses KASAN and
+whatever else.
+
+> > For KCSAN the crash still happens in check_preemption_disabled, in the
+> > inlined native_save_fl function (apparently on its 'pushf'). If I turn
+> > fixup_bad_iret's __this_cpu_read into a raw_cpu_read (to bypass
+> > check_preemption_disabled), no more crash with KCSAN.
+> 
+> vmlinux.o: warning: objtool: debug_smp_processor_id()+0x0: call to __sanitizer_cov_trace_pc() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: check_preemption_disabled()+0x1f: call to __sanitizer_cov_trace_pc() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: __this_cpu_preempt_check()+0x4: call to __sanitizer_cov_trace_pc() leaves .noinstr.text section
+> 
+> That could be either of those I suppose, did you have the NOP patches
+> on? Let me try... those seem to placate objtool at least.
+> 
+> I do see a fair amount of __kasan_check*() crud though:
+> 
+> vmlinux.o: warning: objtool: rcu_nmi_exit()+0x44: call to __kasan_check_read() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: rcu_dynticks_eqs_enter()+0x1c: call to __kasan_check_write() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: rcu_nmi_enter()+0x46: call to __kasan_check_read() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: rcu_dynticks_eqs_exit()+0x21: call to __kasan_check_write() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: __rcu_is_watching()+0x1c: call to __kasan_check_read() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: debug_locks_off()+0x1b: call to __kasan_check_write() leaves .noinstr.text section
+> 
+> That wasn't supported to happen with the __no_sanitize patches on (which
+> I didn't forget). Aah, I think we've lost a bunch of patches.. /me goes
+> rummage.
+> 
+> This:
+> 
+>   https://lkml.kernel.org/r/20200603114051.896465666@infradead.org
+> 
+> that cures the rcu part of that.
+> 
+> Let me go look at your KCSAN thing now...
+
+I tried to find the stack that is used by the crashing code -- which led
+me to entry_stack? So I tried this:
+
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -370,7 +370,7 @@ struct x86_hw_tss {
+ #define IO_BITMAP_OFFSET_INVALID	(__KERNEL_TSS_LIMIT + 1)
+ 
+ struct entry_stack {
+-	unsigned long		words[64];
++	unsigned long		words[128];
+ };
+ 
+ struct entry_stack_page {
+
+No more crash. But that's probably not what we want. Just a datapoint.
+
+> ---
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index af75109485c26..031a21fb5a741 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -675,6 +675,14 @@ struct bad_iret_stack {
+>  	struct pt_regs regs;
+>  };
+>  
+> +void __always_inline __badcpy(void *dst, void *src, int nr)
+> +{
+> +	unsigned long *d = dst, *s = src;
+> +	nr /= sizeof(unsigned long);
+> +	while (nr--)
+> +		*(d++) = *(s++);
+> +}
+> +
+
+If we can use __memcpy() here, that would probably solve that.
+
+Thanks,
+-- Marco
