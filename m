@@ -2,131 +2,105 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48096C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C24F207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C37F206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6/gFRBE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVDDhxKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbgFOPvB (ORCPT
+        id S1730550AbgFOPvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:51:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50684 "EHLO
+        Mon, 15 Jun 2020 11:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbgFOPvB (ORCPT
+        with ESMTP id S1727785AbgFOPvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:51:01 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021E8C061A0E;
-        Mon, 15 Jun 2020 08:51:01 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id dp10so7945017qvb.10;
-        Mon, 15 Jun 2020 08:51:00 -0700 (PDT)
+        Mon, 15 Jun 2020 11:51:35 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25C42C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:51:35 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id c12so12926205qtq.11
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=N9MFjwIDkU/fRqTGThssGDIRUjhg7G4jDT1glvQytko=;
-        b=X6/gFRBEJqbq4+cK0EGmbFrgwomFmfr5VkoFKsDNSFrhhdfoslSRjoM7gQ42xcICsG
-         U/wljtL5OhFb8BZ0LZ48hCmYesemEBxVgbZPauTA9XPY1VUy4KEdyts95yq9dFN1OMeO
-         7gFqWfdIMqRv+mpONsnRV8MCNb/abPPIjyMYThcTOoK8hRcl0oukJZJV2Ql1xbdzzCZq
-         uPayhqVctr9ekAn1upOhXqEwEEpNwbII/kgrSAjd6DYfo4OlZ1PDpuupzqWJ/4C7LQ4Q
-         uJY9GfUIvEWEXUKS25KcAhaq/MLcmyJQNNrpjBYfcN+A3pmxwon1fcdwpbEUWUHUmzou
-         53eg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=UZX8kJypcdRudMNk/yqbaAULEa0GgrvTWFiLapF3ppA=;
+        b=DVDDhxKs97v0ViamvyVPQYvxNI6G3AiiEkqEkaNtVLehAmYCt2hw+tc3mMBY+Obc3I
+         LWGBmnOCFM9eB8TtD5JBgur/ruQUBqK8oTs5uLVkFv4sgtROn0+nGkINdeeq3+ShM0aL
+         vb1r8h+eWwicGifbUzslOtBmPi5T3jLgRYZBsBwKsTN1thCfrgMcNYjFFKCjfV2Rff9L
+         zxzKdJVprjOs7YvPqflFUzRFsZmSrDixXUHXNzL/oY1dmw7Sh+xxbWM+zDOVwGlcSJ5b
+         up6heqv130fjS6GpULbXaiAc1Qogjgc22coehZQjo8zOHrVYb/f9YApyV9JlXvOPaKk5
+         GgJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=N9MFjwIDkU/fRqTGThssGDIRUjhg7G4jDT1glvQytko=;
-        b=CLmJ56AIRUFLcx+1MD0S3c9uqJyhZuKj66AMA3Vp/91H1/AihWnHZDuAAmoWMuP5bh
-         m/pesHKUi9vmIuiMvqhOzjlnF+iWlgqLaAzhigeA90YEZht69MYea1F4Rss+HGxG+4d0
-         l6mcyPNmn2iw0xUNyZ4Z4OyrCIFNePIdhPSU5YInegU0eRIZXWBjmeVW9A9u4crdvkr7
-         T5S3Q248OICq/MxzFks4qW9LioglmG9qMw9XlTrO0SPDol2Y8YEe+OstwLhfWotAMTAa
-         dofe8ejbTGx74LGQYp7FHSgEcNX7zmscsD1pKvEVvPBv2iO9f9aF9i50FqtMLhfZ6hDW
-         Ow2Q==
-X-Gm-Message-State: AOAM531CFqgTSQgw/U+v86ua00VUnYyeesE/AgjCYSbJyK0wvtfAFoCQ
-        31kqgvjno49Zs6QOh/4lIFA=
-X-Google-Smtp-Source: ABdhPJwS5pLhv+GpLxbnPFbPnNMz5u4jKgJdKqPDGY5OlRkFbGA76E8NSp8H1Sa6R8xxkGGx8TDq9Q==
-X-Received: by 2002:a0c:c303:: with SMTP id f3mr25899662qvi.240.1592236260121;
-        Mon, 15 Jun 2020 08:51:00 -0700 (PDT)
-Received: from buszk-y710.fios-router.home (pool-108-54-206-188.nycmny.fios.verizon.net. [108.54.206.188])
-        by smtp.googlemail.com with ESMTPSA id 185sm11757262qke.92.2020.06.15.08.50.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=UZX8kJypcdRudMNk/yqbaAULEa0GgrvTWFiLapF3ppA=;
+        b=U5+RkaWL74lX25A64ROA5Bg9x6j8pBLU5gm5AhAohL8S+5WpLWodUNLvXDm8aY/Nmr
+         dw9pLA9M9N6w9Hh490uSEjnTqS/ZC4oTqUeVhP27M/enXu1k7VqWR+qZQn/4FNN9DE+a
+         glPistGffZZY6iHF5owedwYrstBALbMTe6OqsfASJjP2E6Fnlkiz1b0Qg47TJqiFBw/y
+         R1VsscajBEu1Ca4eHGkhbTG7x7VaYicyQTsfpWqg2ySrc+aXywe+iTBjo0bBZrvJY5KX
+         k0m80gGqbBQvU6Tkjta+qFpb7+hK3a5QNZNOrS/1G1obocbku56tWIvNHHtRkmap2MTq
+         FHDw==
+X-Gm-Message-State: AOAM532P4sQkvLZIcIrFgTi8YfICucyP1sVRyXFCRjZCAVekA5HK21If
+        c0Aj1s+pjoJ3doqktOBScd4=
+X-Google-Smtp-Source: ABdhPJxeANHNcEmoNUON065BVtaY13iweUtSN3b5/pyVk0um5hUk+YbDa/1H7SefqtxjGZYmmC6NRg==
+X-Received: by 2002:ac8:6f1a:: with SMTP id g26mr16013226qtv.121.1592236294418;
+        Mon, 15 Jun 2020 08:51:34 -0700 (PDT)
+Received: from sevic69 ([186.151.118.242])
+        by smtp.gmail.com with ESMTPSA id x186sm10173492qkd.125.2020.06.15.08.51.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 08:50:59 -0700 (PDT)
-From:   Zekun Shen <bruceshenzk@gmail.com>
-Cc:     Zekun Shen <bruceshenzk@gmail.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] net: alx: fix race condition in alx_remove
-Date:   Mon, 15 Jun 2020 11:50:29 -0400
-Message-Id: <20200615155029.21002-1-bruceshenzk@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200614165912.25622-1-bruceshenzk@gmail.com>
-References: <20200614165912.25622-1-bruceshenzk@gmail.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 15 Jun 2020 08:51:33 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 09:51:31 -0600
+From:   Sebastian Arriola <sebdeveloper6952@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net,
+        florian.c.schilhabel@googlemail.com
+Subject: [PATCH] staging: rtl8712: Remove unnecesary else after return
+ statement.
+Message-ID: <20200615155131.GA4563@sevic69>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race condition exist during termination. The path is
-alx_stop and then alx_remove. An alx_schedule_link_check could be called
-before alx_stop by interrupt handler and invoke alx_link_check later.
-Alx_stop frees the napis, and alx_remove cancels any pending works.
-If any of the work is scheduled before termination and invoked before
-alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
+This patch fixes the checkpatch.pl warning:
 
-This patch fix the race condition by moving cancel_work_sync functions
-before alx_free_napis inside alx_stop. Because interrupt handler can call
-alx_schedule_link_check again, alx_free_irq is moved before
-cancel_work_sync calls too.
+WARNING: else is not generally useful after a break or return
+490: FILE: drivers/staging/rtl8712/rtl8712_recv.c:490:
+			return false;
+		else
 
-Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+Signed-off-by: Sebastian Arriola <sebdeveloper6952@gmail.com>
 ---
-Changes in v2:
-- move alx_free_irq before cancel_work_sync calls
-- prevent another interrupt to cause race condition
+ drivers/staging/rtl8712/rtl8712_recv.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
- drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index b9b4edb91..9b7f1af5f 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1249,8 +1249,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
- 
- static void __alx_stop(struct alx_priv *alx)
- {
--	alx_halt(alx);
- 	alx_free_irq(alx);
-+
-+	cancel_work_sync(&alx->link_check_wk);
-+	cancel_work_sync(&alx->reset_wk);
-+
-+	alx_halt(alx);
- 	alx_free_rings(alx);
- 	alx_free_napis(alx);
- }
-@@ -1855,9 +1859,6 @@ static void alx_remove(struct pci_dev *pdev)
- 	struct alx_priv *alx = pci_get_drvdata(pdev);
- 	struct alx_hw *hw = &alx->hw;
- 
--	cancel_work_sync(&alx->link_check_wk);
--	cancel_work_sync(&alx->reset_wk);
--
- 	/* restore permanent mac address */
- 	alx_set_macaddr(hw, hw->perm_addr);
- 
+diff --git a/drivers/staging/rtl8712/rtl8712_recv.c b/drivers/staging/rtl8712/rtl8712_recv.c
+index 116773943a2e..4cd391a7193a 100644
+--- a/drivers/staging/rtl8712/rtl8712_recv.c
++++ b/drivers/staging/rtl8712/rtl8712_recv.c
+@@ -487,8 +487,7 @@ static int enqueue_reorder_recvframe(struct recv_reorder_ctrl *preorder_ctrl,
+ 			plist = plist->next;
+ 		else if (SN_EQUAL(pnextattrib->seq_num, pattrib->seq_num))
+ 			return false;
+-		else
+-			break;
++		break;
+ 	}
+ 	list_del_init(&(prframe->u.hdr.list));
+ 	list_add_tail(&(prframe->u.hdr.list), plist);
 -- 
-2.17.1
+2.25.1
 
