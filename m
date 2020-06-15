@@ -2,106 +2,140 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F866C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 785ED20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA9C206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SlV5EozB"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="shXgN8Rl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbgFOOx1 (ORCPT
+        id S1730771AbgFOOxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730613AbgFOOx0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:53:26 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748E5C061A0E;
-        Mon, 15 Jun 2020 07:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=8o15lOc1lDE+izueLOJdR6PR6C+0mzzoK26JzWEPT2U=; b=SlV5EozBrBJwoKZWtH98UnaCl2
-        x6SKNalZBE/ZcWUtN/3ZjTGWOVk84a8M9LuojCopndPU5I03J8KuBdgQXLmQITQHf1n7G5e1z7kPm
-        hRrj5FufRJS03gnqBb116hMma7ykDaKy0XKjeDQQFyGTwl87Fu8LiVDO/JzZwNVdOgY2hAP/3kRdZ
-        fZ8bkhWZvHi9JrGJJZqZxjf6vBUWBwc4Q1A5vnALY/4GCdfDaEzxPwKQQUUXSiL4gb3DcfJISIfWe
-        o3Ciln1ibEQHhOQmFlIGKsNUjuqIaUOPVK9DqxSElFKii1FOT7wPK8XSt2Abr6jXLYvMyM30FtboN
-        QY+rxM6Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkqUH-00015g-R8; Mon, 15 Jun 2020 14:53:25 +0000
-Subject: Re: [PATCH] Documentation: fix malformed table in
- filesystems/proc.rst
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Daniel Kiss <daniel.kiss@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-References: <016e5a38-5289-9111-05bb-7d0aa0cce5a5@infradead.org>
- <20200615085305.275a7b24@coco.lan>
- <a9634ff3-fc33-0d2b-959b-bd3dd79600bf@infradead.org>
- <20200615072217.0e59ea63@lwn.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <abf43ec1-fe06-fb5e-12e4-66c64e09b125@infradead.org>
-Date:   Mon, 15 Jun 2020 07:53:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200615072217.0e59ea63@lwn.net>
-Content-Type: text/plain; charset=utf-8
+        Mon, 15 Jun 2020 10:53:35 -0400
+Received: from mail-vi1eur05on2059.outbound.protection.outlook.com ([40.107.21.59]:6211
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728304AbgFOOxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:53:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cOKOwJuFJ6Ob2aVm4zLI7ttVBIEZbaVbqrBdiJGs/ub9+7/mYUIhou0WuMCCxpO/R2EtWnrjgF2C3/YDD+fISkKpfpPBtFGsqXYN2F7BeoZR4iMsrJ3XFnQcXr94bsisYgF/S0fL7X/TtyIlpY6JnnQ0JRSHykt2V1Z/sVGgeMVEfOsLzSXFCG753jiDHrWQo1ROag1CNnAPJnXhRoJK/FBYAuIIoPdtO0PyZzpI3em4AsDbpgSbROfWCxENCXsGmSf0dv1FDcJzdMd/ZQLWzJgoPYAyIycgQ7VgBCPdBJBEkNyzeh2AWHD/MhyQmtlfqWn8m+/zHya2qfbzxb6mBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Bc/Xhpc7c79ShuhNKagxGQHYTBvh9hkPN5apWBVGFs=;
+ b=WR/kcVFRsvX+VoE9XEs/LKl+VPCSJseYbztI8W8s/ULjWgIaxT4UXPBfouOX0AOre5Mk2aBHK5bU93A19lqzPNA9n+Phm/EBXUaFUYsG7W1K1s+zwDXykVXT32jZydNVAeSp3CUfiBQIITd1Yg00YeeSzCUTvqC/Ism7YN1Gjp9zMv9EJIFnCdvveOdLF/2DN3udSNpzBCyXpNANKfPQ42xz/GfBtmQKVSXgtDqvBUTNWrM97mHO90bQlQIPWclmv1iK6at17usZDlycGrwjf67dY4ojyLzBs3ZK0qbJIkJmjmMU1WFJ1Ez/kqB0Tdr/WA3+yzL3w39e1krsROMpTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Bc/Xhpc7c79ShuhNKagxGQHYTBvh9hkPN5apWBVGFs=;
+ b=shXgN8RlKI/KdlM0GGF5IaUaw9lQGRpDXtaptG7UkbcPvUGi7yQJILAzN6ohc4p63cE6NI1Jaq9uvAy/luWZIy5wqNGIbW18IX4ijddUEmjW1SxjHyjbiGHYpI3No4mNmrjgExWmWq8GaGGTQnnzmS+6+ZxxcDClxKihVE+OlZE=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6525.eurprd04.prod.outlook.com (2603:10a6:803:120::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Mon, 15 Jun
+ 2020 14:53:30 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3088.028; Mon, 15 Jun 2020
+ 14:53:30 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Thread-Topic: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Thread-Index: AQHWP6z7CX2etPvPnk+oddH8JEW5FKjTbHIAgADDYUCAAJUwgIAACjoQgAA5dICAAOmA8IADsXmAgAANH1CAAASJgIAACZlAgAAGaACAAAKk4A==
+Date:   Mon, 15 Jun 2020 14:53:29 +0000
+Message-ID: <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20200611134042.GG4671@sirena.org.uk>
+ <VE1PR04MB66383245FAD2AE33CFEA76F789810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612101357.GA5396@sirena.org.uk>
+ <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200612141611.GI5396@sirena.org.uk>
+ <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615123553.GP4447@sirena.org.uk>
+ <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615133905.GV4447@sirena.org.uk>
+ <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615143622.GX4447@sirena.org.uk>
+In-Reply-To: <20200615143622.GX4447@sirena.org.uk>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.235.111]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 959003b8-59ff-4c32-64a0-08d8113bde29
+x-ms-traffictypediagnostic: VE1PR04MB6525:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6525AA69BC7D7041FDDEE116899C0@VE1PR04MB6525.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 04359FAD81
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m6KHG73sDXZAyWX49AlNpiK8HZSyGhBQDqrcCuQDMSiIzhE+0k/qgZ/OdPH+9m+Izv8MkfXQc4QAn5t55XPvWknFlKTrfEZmfIYr8FnboCZK0Dz/A7WzgyFlf2ldx80sY6eZLkZEdxdqgvFquoWPXUBini176OshB/906MuEEdiz55CJaz4SkSS5qyc7jjHgSvGsr55fS4GufguCJO4MnRXlEcPRpnyAGDb8yy7eUB/d1I5Nzk7/+1Pa84UVn6IGi7MWH6iZGWvMezAihEQxaiU1EzPRredkNZBE2viZyw/KZGm0PAp0igIa4Lahyb4N5VQtv1QGXJxPpmeKK9sWhg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(39860400002)(366004)(136003)(71200400001)(52536014)(6916009)(8676002)(4326008)(86362001)(33656002)(26005)(4744005)(83380400001)(5660300002)(2906002)(54906003)(8936002)(478600001)(316002)(7416002)(66946007)(66476007)(66556008)(64756008)(66446008)(9686003)(6506007)(55016002)(7696005)(53546011)(186003)(76116006);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ceA14vWNvicsfLKYk781BjrrUbx3D49V5FYqvkWaEoPdMZO70piURMUBvPcBtD3BKGQDeOcmo1NsdUHQzeX9rvTXBWlVsUg7Cb/JtkttEO0XgNrc7Dl9tF6t/YjQapc/nTUV+2TXYA7qpf4uwKfOcoMACS9eTfNbHcgg2D/jt/nZEtJ6pbbUX8/ia7xFL9H0Zu/bbzlbUUcwVe7FsDP5PDOLSJKxiilRuuXZvC7gSj55ZqJRihrXyRcBxg9B6HPf6Q6sisPMPX/JaZf0MhRZ+CqeNl4dtUE7mgNaD/1MBOR0nsbqq2+ANzG/dKxdD9ypH74IWtZO12UI1SLzWIp0Ycw4l7C4g/Fre/LCTSU3qp339A/q50FVv8AIOKmg4/YnPs60r5/dDYNsKn5REmWUrep2SZmdKO+oOnU7el5t9cGlVkzrMGJHlNR3S6W1PO7QgfhI+LyVCpZej0prAE11iLYe6YEiDsLqBz8dP83UeLybKWPdcr8/m4KddddGmxTo
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 959003b8-59ff-4c32-64a0-08d8113bde29
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 14:53:29.8763
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nbwsj8K9HOO5+HieE1raLiD/el0lQkCB81b2qhB5ncpYHZzYNdhAk15xoqFenontzxrESE/DlRdeq06D3IAXUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6525
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 6:22 AM, Jonathan Corbet wrote:
-> On Sun, 14 Jun 2020 23:54:26 -0700
-> Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
->> On 6/14/20 11:53 PM, Mauro Carvalho Chehab wrote:
->>> Em Sun, 14 Jun 2020 20:33:22 -0700
->>> Randy Dunlap <rdunlap@infradead.org> escreveu:
->>>   
->>>> From: Randy Dunlap <rdunlap@infradead.org>
->>>>
->>>> Fix malformed table in "proc.rst" by dropping a needless hyphen ('-').
->>>>
->>>> Documentation/filesystems/proc.rst:548: WARNING: Malformed table.
->>>> Text in column margin in table line 29.
->>>>
->>>> Fixes: 424037b77519 ("mm: smaps: Report arm64 guarded pages in smaps")
->>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>>> Cc: Daniel Kiss <daniel.kiss@arm.com>
->>>> Cc: Mark Brown <broonie@kernel.org>
->>>> Cc: Catalin Marinas <catalin.marinas@arm.com>  
->>>
->>> I submitted an identical patch on Jan, 3.   
->>
->> OK. Well, that's disappointing IMHO.
-> 
-> Sorry if I have caused disappointment.
-
-No problem. I read Jan and not June.
-
-> In any case, that's *June*, not January, that the patch was submitted.  I
-> didn't apply it because, since the problem didn't come through docs-next,
-> it didn't apply there.  Now that docs-next is caught up with 5.8-rc1 I can
-> apply such things again...
-
-thanks.
--- 
-~Randy
-
+On 2020/06/15 22:36 Mark Brown <broonie@kernel.org> wrote:=20
+> On Mon, Jun 15, 2020 at 02:18:54PM +0000, Robin Gong wrote:
+> > Seems not easy to find a suitable error value, how about EBADR which
+> > sounds like no any available dma_async_tx_descriptor got by calling
+> dmaengine_prep_slave_sg?
+>=20
+> > #define EBADR           53      /* Invalid request descriptor */
+>=20
+> We could also pass in a flag that could be set separately to the error co=
+de to
+> indicate that nothing had happened to the hardware yet.
+Do you mean spi-imx.c checking 'ctlr->flags' before return such error code?
+Or just like below done in spi.c.
++fallback_pio:
+                        ret =3D ctlr->transfer_one(ctlr, msg->spi, xfer);
+                        if (ret < 0) {
++                               if (ret =3D=3D - EBADR && ctlr->cur_msg_map=
+ped &&
++                                  (ctlr->flags & SPI_CONTROLLER_FALLBACK))=
+ {
++                                       __spi_unmap_msg(ctlr, msg);
++                                       ctlr->fallback =3D true;
++                                       goto fallback_pio;
++                               }
++
