@@ -2,243 +2,300 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B095C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A44BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC3D2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kVqXru94"
+	by mail.kernel.org (Postfix) with ESMTP id 02F002078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592238290;
+	bh=NvZ4xROZpS01Xr+qnNQUx1FmKHE5zI1O4pPdowqV0+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y3bLypNHOiOjlVe+BgpolKmlo4V17nBl8yUe1xAqVt20xxF1aKzlPs5gaqYttC8BJ
+	 CfxIZg0m2r10kASpbAxCWKW/kZAH22vcJ/yAzeHJ1+VDv2pwMmdra3iQDLODgFWYxv
+	 H2MYXxI1mnBb3v8kNE+IkAWKcAl5j12HfzYcsgk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731163AbgFOQYh (ORCPT
+        id S1731052AbgFOQYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:24:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731154AbgFOQYg (ORCPT
+        Mon, 15 Jun 2020 12:24:49 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43328 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730837AbgFOQYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:24:36 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14BC5C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:24:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UJfkIp8eAX3oRf38KIcxAmyB5E1JmZKm235O+JB/jIk=; b=kVqXru94VUVkOwInbNsGARN7J/
-        /rs9mTMp5j1tMw7lg/jrpXEX96pF2704hlx0fIk3w+E/qVPVVb8sKzXJwxKz5eyaYEouEzYlpkW1N
-        8LbLgVHqWi8PM/EZBH2jUnS/DzqdbSnaatAH6Eu6ui2qfUegQZ2LbpsDC066wjEAfpyt3Jrjrp/Fy
-        iQzlgsvf/8rdPKvokUayKypJrPldm8zW5jSn2vCQcSI8uYyxN/F0vzE3MihFp7TM5mFKE+LuX7LgT
-        WxCFkzZmIMRY+WuuWg4bNaNTd9s/Nt+XCjiymy2PPS8dtipfytyHl+E1AQJktBzrzL2FtYZ43D5x1
-        gsfIeADg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkruP-0005t4-9S; Mon, 15 Jun 2020 16:24:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4F96230753E;
-        Mon, 15 Jun 2020 18:24:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 36565203C3762; Mon, 15 Jun 2020 18:24:27 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 18:24:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de
-Cc:     x86@kernel.org, elver@google.com, paulmck@kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        will@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com
-Subject: Re: [PATCH 2/9] rcu: Fixup noinstr warnings
-Message-ID: <20200615162427.GI2554@hirez.programming.kicks-ass.net>
-References: <20200603114014.152292216@infradead.org>
- <20200603114051.896465666@infradead.org>
- <20200615154905.GZ2531@hirez.programming.kicks-ass.net>
- <20200615155513.GG2554@hirez.programming.kicks-ass.net>
+        Mon, 15 Jun 2020 12:24:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id u13so949543iol.10;
+        Mon, 15 Jun 2020 09:24:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YdqlCPeMy6mhxxUsYFBiIEErVyP/IfOhgQot6haL/bk=;
+        b=I5e2QY3eZQrqlGn4yblkXnJhtih4rj+nydKLgcMIQvoGLgVSQVLnXotzdc2Wr7evNl
+         uoSm/mu6TDDorwxO6x1iSt64gnQrV+WZKhN6YeElA8VcAdDCwFUxbMtmta+J7Sf+8jI8
+         Rz5+MqAh1Hc8fXpnqzE/fnK21YRhpZYxEjsLjJYa4IyFw0b6R+DAATT4F5YdYpUeTWfU
+         ExOk7pMg+/AGXrNGiF5wQCITGF7neycb41uBfF+Qhr76dMfw2fcBhiisdvVYJUY5j9Ab
+         Gy/VSF2b0rhKlgvRfVtTHoY8k8GnlFGC0hULG1VoCLexTWAa1i9ixUS/kTGIu81cS1bf
+         6rjQ==
+X-Gm-Message-State: AOAM530054BYeytVx8yAWG361wHbEDKDFD6nn4iIOjDbnddBS3Ve9dtx
+        R92rr7oPr4D1xWuYP6gFfQ==
+X-Google-Smtp-Source: ABdhPJw9jyd07OqpB3eUqIEGtPzpWwPUI8yPAdfXF+9S621Y7f0IepBuQ20G4JgHvwQeMt9CPRwfrA==
+X-Received: by 2002:a5e:dc03:: with SMTP id b3mr29058506iok.27.1592238286532;
+        Mon, 15 Jun 2020 09:24:46 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id g64sm8166922iof.5.2020.06.15.09.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 09:24:46 -0700 (PDT)
+Received: (nullmailer pid 1891953 invoked by uid 1000);
+        Mon, 15 Jun 2020 16:24:45 -0000
+Date:   Mon, 15 Jun 2020 10:24:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     ulf.hansson@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        mpa@pengutronix.de, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/3] dt-bindings: mmc: Convert imx esdhc to json-schema
+Message-ID: <20200615162445.GA1885779@bogus>
+References: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
+ <1591234886-15351-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200615155513.GG2554@hirez.programming.kicks-ass.net>
+In-Reply-To: <1591234886-15351-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 05:55:13PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 15, 2020 at 05:49:05PM +0200, Peter Zijlstra wrote:
-> > @@ -983,13 +993,17 @@ noinstr void rcu_nmi_enter(void)
-> >  		if (!in_nmi())
-> >  			rcu_cleanup_after_idle();
-> >  
-> > +		instrumentation_begin();
-> > +		// instrumentation for the noinstr rcu_dynticks_curr_cpu_in_eqs()
-> > +		instrument_atomic_read(&rdp->dynticks, sizeof(rdp->dynticks));
-> > +		// instrumentation for the noinstr rcu_dynticks_eqs_exit()
-> > +		instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
-> > +
-> >  		incby = 1;
-> >  	} else if (!in_nmi()) {
-> >  		instrumentation_begin();
-> >  		rcu_irq_enter_check_tick();
-> > -		instrumentation_end();
-> >  	}
-> > -	instrumentation_begin();
-> >  	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
-> >  			  rdp->dynticks_nmi_nesting,
-> >  			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
+On Thu, Jun 04, 2020 at 09:41:24AM +0800, Anson Huang wrote:
+> Convert the i.MX ESDHC binding to DT schema format using json-schema
 > 
-> Oh, that's lost a possible instrumentation_begin() :/ But weirdly
-> objtool didn't complain about that... Let me poke at that.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+> 	- add "unevaluatedProperties: false".
+> ---
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |  67 -----------
+>  .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     | 124 +++++++++++++++++++++
+>  2 files changed, 124 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> deleted file mode 100644
+> index de1b8bd..0000000
+> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> +++ /dev/null
+> @@ -1,67 +0,0 @@
+> -* Freescale Enhanced Secure Digital Host Controller (eSDHC) for i.MX
+> -
+> -The Enhanced Secure Digital Host Controller on Freescale i.MX family
+> -provides an interface for MMC, SD, and SDIO types of memory cards.
+> -
+> -This file documents differences between the core properties described
+> -by mmc.txt and the properties used by the sdhci-esdhc-imx driver.
+> -
+> -Required properties:
+> -- compatible : Should be "fsl,<chip>-esdhc", the supported chips include
+> -	       "fsl,imx25-esdhc"
+> -	       "fsl,imx35-esdhc"
+> -	       "fsl,imx51-esdhc"
+> -	       "fsl,imx53-esdhc"
+> -	       "fsl,imx6q-usdhc"
+> -	       "fsl,imx6sl-usdhc"
+> -	       "fsl,imx6sx-usdhc"
+> -	       "fsl,imx6ull-usdhc"
+> -	       "fsl,imx7d-usdhc"
+> -	       "fsl,imx7ulp-usdhc"
+> -	       "fsl,imx8mq-usdhc"
+> -	       "fsl,imx8mm-usdhc"
+> -	       "fsl,imx8mn-usdhc"
+> -	       "fsl,imx8mp-usdhc"
+> -	       "fsl,imx8qm-usdhc"
+> -	       "fsl,imx8qxp-usdhc"
+> -
+> -Optional properties:
+> -- fsl,wp-controller : Indicate to use controller internal write protection
+> -- fsl,delay-line : Specify the number of delay cells for override mode.
+> -  This is used to set the clock delay for DLL(Delay Line) on override mode
+> -  to select a proper data sampling window in case the clock quality is not good
+> -  due to signal path is too long on the board. Please refer to eSDHC/uSDHC
+> -  chapter, DLL (Delay Line) section in RM for details.
+> -- voltage-ranges : Specify the voltage range in case there are software
+> -  transparent level shifters on the outputs of the controller. Two cells are
+> -  required, first cell specifies minimum slot voltage (mV), second cell
+> -  specifies maximum slot voltage (mV). Several ranges could be specified.
+> -- fsl,tuning-start-tap: Specify the start dealy cell point when send first CMD19
+> -  in tuning procedure.
+> -- fsl,tuning-step: Specify the increasing delay cell steps in tuning procedure.
+> -  The uSDHC use one delay cell as default increasing step to do tuning process.
+> -  This property allows user to change the tuning step to more than one delay
+> -  cells which is useful for some special boards or cards when the default
+> -  tuning step can't find the proper delay window within limited tuning retries.
+> -- fsl,strobe-dll-delay-target: Specify the strobe dll control slave delay target.
+> -  This delay target programming host controller loopback read clock, and this
+> -  property allows user to change the delay target for the strobe input read clock.
+> -  If not use this property, driver default set the delay target to value 7.
+> -  Only eMMC HS400 mode need to take care of this property.
+> -
+> -Examples:
+> -
+> -esdhc@70004000 {
+> -	compatible = "fsl,imx51-esdhc";
+> -	reg = <0x70004000 0x4000>;
+> -	interrupts = <1>;
+> -	fsl,wp-controller;
+> -};
+> -
+> -esdhc@70008000 {
+> -	compatible = "fsl,imx51-esdhc";
+> -	reg = <0x70008000 0x4000>;
+> -	interrupts = <2>;
+> -	cd-gpios = <&gpio1 6 0>; /* GPIO1_6 */
+> -	wp-gpios = <&gpio1 5 0>; /* GPIO1_5 */
+> -};
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> new file mode 100644
+> index 0000000..74db24aa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> @@ -0,0 +1,124 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mmc/fsl-imx-esdhc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale Enhanced Secure Digital Host Controller (eSDHC) for i.MX
+> +
+> +maintainers:
+> +  - Shawn Guo <shawn.guo@linaro.org>
+> +
+> +allOf:
+> +  - $ref: "mmc-controller.yaml"
+> +
+> +description: |
+> +  The Enhanced Secure Digital Host Controller on Freescale i.MX family
+> +  provides an interface for MMC, SD, and SDIO types of memory cards.
+> +
+> +  This file documents differences between the core properties described
+> +  by mmc.txt and the properties used by the sdhci-esdhc-imx driver.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,imx25-esdhc
+> +      - fsl,imx35-esdhc
+> +      - fsl,imx51-esdhc
+> +      - fsl,imx53-esdhc
+> +      - fsl,imx6q-usdhc
+> +      - fsl,imx6sl-usdhc
+> +      - fsl,imx6sx-usdhc
+> +      - fsl,imx6ull-usdhc
+> +      - fsl,imx7d-usdhc
+> +      - fsl,imx7ulp-usdhc
+> +      - fsl,imx8mq-usdhc
+> +      - fsl,imx8mm-usdhc
+> +      - fsl,imx8mn-usdhc
+> +      - fsl,imx8mp-usdhc
+> +      - fsl,imx8qm-usdhc
+> +      - fsl,imx8qxp-usdhc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  fsl,wp-controller:
+> +    description: |
+> +      boolean, if present, indicate to use controller internal write protection.
+> +    type: boolean
+> +
+> +  fsl,delay-line:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Specify the number of delay cells for override mode.
+> +      This is used to set the clock delay for DLL(Delay Line) on override mode
+> +      to select a proper data sampling window in case the clock quality is not good
+> +      due to signal path is too long on the board. Please refer to eSDHC/uSDHC
+> +      chapter, DLL (Delay Line) section in RM for details.
+> +    default: 0
+> +
+> +  voltage-ranges:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32-matrix'
+> +    description: |
+> +      Specify the voltage range in case there are software
+> +      transparent level shifters on the outputs of the controller. Two cells are
+> +      required, first cell specifies minimum slot voltage (mV), second cell
+> +      specifies maximum slot voltage (mV). Several ranges could be specified.
+> +    items:
+> +      items:
+> +        - description: value for minimum slot voltage
+> +        - description: value for maximum slot voltage
+> +    maxItems: 1
 
-Like so then...
+This contradicts 'Several ranges could be specified.'
 
----
-Subject: rcu: Fixup noinstr warnings
+> +
+> +  fsl,tuning-start-tap:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Specify the start dealy cell point when send first CMD19 in tuning procedure.
 
-A KCSAN build revealed we have explicit annoations through atomic_*()
-usage, switch to arch_atomic_*() for the respective functions.
+typo: delay
 
-vmlinux.o: warning: objtool: rcu_nmi_exit()+0x4d: call to __kcsan_check_access() leaves .noinstr.text section
-vmlinux.o: warning: objtool: rcu_dynticks_eqs_enter()+0x25: call to __kcsan_check_access() leaves .noinstr.text section
-vmlinux.o: warning: objtool: rcu_nmi_enter()+0x4f: call to __kcsan_check_access() leaves .noinstr.text section
-vmlinux.o: warning: objtool: rcu_dynticks_eqs_exit()+0x2a: call to __kcsan_check_access() leaves .noinstr.text section
-vmlinux.o: warning: objtool: __rcu_is_watching()+0x25: call to __kcsan_check_access() leaves .noinstr.text section
-
-Additionally, without the NOP in instrumentation_begin(), objtool would
-not detect the lack of the 'else instrumentation_begin();' branch in
-rcu_nmi_enter().
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/linux/compiler.h |    2 +-
- kernel/rcu/tree.c        |   33 +++++++++++++++++++++++++--------
- 2 files changed, 26 insertions(+), 9 deletions(-)
-
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -123,7 +123,7 @@ void ftrace_likely_update(struct ftrace_
- #ifdef CONFIG_DEBUG_ENTRY
- /* Begin/end of an instrumentation safe region */
- #define instrumentation_begin() ({					\
--	asm volatile("%c0:\n\t"						\
-+	asm volatile("%c0: nop\n\t"						\
- 		     ".pushsection .discard.instr_begin\n\t"		\
- 		     ".long %c0b - .\n\t"				\
- 		     ".popsection\n\t" : : "i" (__COUNTER__));		\
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -250,7 +250,7 @@ static noinstr void rcu_dynticks_eqs_ent
- 	 * next idle sojourn.
- 	 */
- 	rcu_dynticks_task_trace_enter();  // Before ->dynticks update!
--	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
-+	seq = arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
- 	// RCU is no longer watching.  Better be in extended quiescent state!
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     (seq & RCU_DYNTICK_CTRL_CTR));
-@@ -274,13 +274,13 @@ static noinstr void rcu_dynticks_eqs_exi
- 	 * and we also must force ordering with the next RCU read-side
- 	 * critical section.
- 	 */
--	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
-+	seq = arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
- 	// RCU is now watching.  Better not be in an extended quiescent state!
- 	rcu_dynticks_task_trace_exit();  // After ->dynticks update!
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
- 		     !(seq & RCU_DYNTICK_CTRL_CTR));
- 	if (seq & RCU_DYNTICK_CTRL_MASK) {
--		atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
-+		arch_atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
- 		smp_mb__after_atomic(); /* _exit after clearing mask. */
- 	}
- }
-@@ -313,7 +313,7 @@ static __always_inline bool rcu_dynticks
- {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
- 
--	return !(atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
-+	return !(arch_atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
- }
- 
- /*
-@@ -633,6 +633,10 @@ static noinstr void rcu_eqs_enter(bool u
- 	do_nocb_deferred_wakeup(rdp);
- 	rcu_prepare_for_idle();
- 	rcu_preempt_deferred_qs(current);
-+
-+	// instrumentation for the noinstr rcu_dynticks_eqs_enter()
-+	instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
-+
- 	instrumentation_end();
- 	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
- 	// RCU is watching here ...
-@@ -692,6 +696,7 @@ noinstr void rcu_nmi_exit(void)
- {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
- 
-+	instrumentation_begin();
- 	/*
- 	 * Check for ->dynticks_nmi_nesting underflow and bad ->dynticks.
- 	 * (We are exiting an NMI handler, so RCU better be paying attention
-@@ -705,7 +710,6 @@ noinstr void rcu_nmi_exit(void)
- 	 * leave it in non-RCU-idle state.
- 	 */
- 	if (rdp->dynticks_nmi_nesting != 1) {
--		instrumentation_begin();
- 		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
- 				  atomic_read(&rdp->dynticks));
- 		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
-@@ -714,13 +718,15 @@ noinstr void rcu_nmi_exit(void)
- 		return;
- 	}
- 
--	instrumentation_begin();
- 	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
- 	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
- 	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
- 
- 	if (!in_nmi())
- 		rcu_prepare_for_idle();
-+
-+	// instrumentation for the noinstr rcu_dynticks_eqs_enter()
-+	instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
- 	instrumentation_end();
- 
- 	// RCU is watching here ...
-@@ -838,6 +844,10 @@ static void noinstr rcu_eqs_exit(bool us
- 	rcu_dynticks_eqs_exit();
- 	// ... but is watching here.
- 	instrumentation_begin();
-+
-+	// instrumentation for the noinstr rcu_dynticks_eqs_exit()
-+	instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
-+
- 	rcu_cleanup_after_idle();
- 	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
-@@ -983,13 +993,20 @@ noinstr void rcu_nmi_enter(void)
- 		if (!in_nmi())
- 			rcu_cleanup_after_idle();
- 
-+		instrumentation_begin();
-+		// instrumentation for the noinstr rcu_dynticks_curr_cpu_in_eqs()
-+		instrument_atomic_read(&rdp->dynticks, sizeof(rdp->dynticks));
-+		// instrumentation for the noinstr rcu_dynticks_eqs_exit()
-+		instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
-+
- 		incby = 1;
- 	} else if (!in_nmi()) {
- 		instrumentation_begin();
- 		rcu_irq_enter_check_tick();
--		instrumentation_end();
-+	} else {
-+		instrumentation_begin();
- 	}
--	instrumentation_begin();
-+
- 	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
- 			  rdp->dynticks_nmi_nesting,
- 			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
+> +    default: 0
+> +
+> +  fsl,tuning-step:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Specify the increasing delay cell steps in tuning procedure.
+> +      The uSDHC use one delay cell as default increasing step to do tuning process.
+> +      This property allows user to change the tuning step to more than one delay
+> +      cells which is useful for some special boards or cards when the default
+> +      tuning step can't find the proper delay window within limited tuning retries.
+> +    default: 0
+> +
+> +  fsl,strobe-dll-delay-target:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Specify the strobe dll control slave delay target.
+> +      This delay target programming host controller loopback read clock, and this
+> +      property allows user to change the delay target for the strobe input read clock.
+> +      If not use this property, driver default set the delay target to value 7.
+> +      Only eMMC HS400 mode need to take care of this property.
+> +    default: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    mmc@70004000 {
+> +        compatible = "fsl,imx51-esdhc";
+> +        reg = <0x70004000 0x4000>;
+> +        interrupts = <1>;
+> +        fsl,wp-controller;
+> +    };
+> +
+> +    mmc@70008000 {
+> +        compatible = "fsl,imx51-esdhc";
+> +        reg = <0x70008000 0x4000>;
+> +        interrupts = <2>;
+> +        cd-gpios = <&gpio1 6 0>; /* GPIO1_6 */
+> +        wp-gpios = <&gpio1 5 0>; /* GPIO1_5 */
+> +    };
+> -- 
+> 2.7.4
+> 
