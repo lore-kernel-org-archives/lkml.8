@@ -2,93 +2,111 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D240EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C317FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE952078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BC32068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:12:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a/H1lS9d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p2TtdrCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgFOXML (ORCPT
+        id S1726750AbgFOXM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34182 "EHLO
+        Mon, 15 Jun 2020 19:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725960AbgFOXMK (ORCPT
+        with ESMTP id S1726674AbgFOXM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:12:10 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAEBC08C5C4
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 16:12:10 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h22so613385pjf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 16:12:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=brcjvLKF1tqBCWFby3z+8MOldV/7mW3P5ikqS7XALSA=;
-        b=a/H1lS9d3FYn9UhSPXJsrr9Ixza6PpJjH8tSHUvh/CVDtcrK+HwLEfl5AcfQGKk7Yt
-         DgkSjxwNcl1kly5pAN0wEFgD8B08fUExsWnorPyLFmvpIBj+R/zkm9nzMFoDzMIv7hC6
-         We3UEU2NIbpxqEVOI2R78klemetd7V15D0qk4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=brcjvLKF1tqBCWFby3z+8MOldV/7mW3P5ikqS7XALSA=;
-        b=WbhWna5AXL5zCXVzgntZ5pqxfD0S2Ka88QXW7D+Mo4EJFKGJA2H8FHYlHldB/tsP8G
-         aRGJY0XlNgdov1pOms1EZ5OFsgBfUp5FlcWv/Hcq9pwA+6KOohyqIHNEAZG1cn4yKOWS
-         fDKKCs+LkVpQVQWjPV3TUCHdOGBgXxsLfYE7Iydlh8an2ff8vNg+Zo0cCVYqufjuKieX
-         CYr/BCcwqrybccnAakxgE/wv74Rk2/f2beT/eXhohdd1mplfIx0RJm1bi60T7PPwpMAK
-         eZ8t3gwiQFnNDQsV2JT/sDBH9O7PF0Sz04NCaWWDTWNQqNdlbRozjSqJyShEAzWoddbV
-         5Hlw==
-X-Gm-Message-State: AOAM5303+44DKqoTHsy8CxLNb13AQK3IIEHsHnM3pUUAcSkyyCeW3PKl
-        KG5pKf1mDYMIWyB2cJNcYmXfIQ==
-X-Google-Smtp-Source: ABdhPJyyci+2oQlVyjby51mYZoyBYZiTzI2eRXhAYx5ofJPrOzIloyTJpVXRIiOsGGjwxvfH9O22kg==
-X-Received: by 2002:a17:90b:3004:: with SMTP id hg4mr266813pjb.208.1592262729649;
-        Mon, 15 Jun 2020 16:12:09 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h3sm513401pje.28.2020.06.15.16.12.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 16:12:08 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 16:12:07 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc-owner@vger.kernel.org,
-        rnayak@codeaurora.org, sibis@codeaurora.org, matthias@chromium.org
-Subject: Re: [PATCH V4 1/2] mmc: sdhci-msm: Add interconnect bandwidth
- scaling support
-Message-ID: <20200615231207.GX4525@google.com>
-References: <1591691846-7578-1-git-send-email-ppvk@codeaurora.org>
- <1591691846-7578-2-git-send-email-ppvk@codeaurora.org>
+        Mon, 15 Jun 2020 19:12:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31104C061A0E;
+        Mon, 15 Jun 2020 16:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=LtcgqswidDAh1TGx28PEvhiX42PmovYfIp8aD84tuVI=; b=p2TtdrCtmKF8Prq8BRAYMRM8H1
+        rVEvD7B5NsOnv1OtZL3XSB1CFq5x/VPY5ElUsicHyz7npUdIRk3awMp3Mc92QCzi6E9vUQU2GRxVj
+        75uEC4niNvcTTqLOGSQtZTBq12nm4JuLUsrffbS+jsLp/Hbsyh0ViIgHJ27MA62epFLDgo5zyIiJu
+        ViIpl6d4oCPG7BNV9OBdVi2HbpM/o6/lxeWN4MyJIYPxNpypE37UgOnuhuL+eoF4tozUYV1xKp645
+        3Uu6fGz50h9nbleDhfNMoeceSmBQJy82XHK5CwCmsujUhrG815hxb3FGOxq6AReqyBz8kxw5+MYcF
+        yGLEhzTg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkyH7-0007Nh-U6; Mon, 15 Jun 2020 23:12:21 +0000
+Subject: Re: [PATCH 1/4] proc/bootconfig: Fix to use correct quotes for value
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, stable@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <159197538852.80267.10091816844311950396.stgit@devnote2>
+ <159197539793.80267.10836787284189465765.stgit@devnote2>
+ <20200615151139.5cc223fc@oasis.local.home>
+ <7abefbc81fc6aaefed6bbd2117e7bc97b90babe9.camel@perches.com>
+ <20200615172123.1fe77f3c@oasis.local.home>
+ <ddb4adb9-bf01-abd4-38dd-d6d064569d6e@infradead.org>
+ <20200615184218.752a17fa@oasis.local.home>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a3cbc2cf-7371-3e2b-e794-4fbfc52aaad9@infradead.org>
+Date:   Mon, 15 Jun 2020 16:12:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200615184218.752a17fa@oasis.local.home>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1591691846-7578-2-git-send-email-ppvk@codeaurora.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 02:07:25PM +0530, Pradeep P V K wrote:
-> Interconnect bandwidth scaling support is now added as a
-> part of OPP. So, make sure interconnect driver is ready
-> before handling interconnect scaling.
+On 6/15/20 3:42 PM, Steven Rostedt wrote:
+> On Mon, 15 Jun 2020 15:30:41 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
 > 
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+>>>> Please don't infect kernel sources with that style oddity.  
+>>>
+>>> What do you mean? It's already "infected" all over the kernel, (has
+>>> been for years!) and I kinda like it. It makes reading variables much
+>>> easier on the eyes, and as I get older, that means a lot more ;-)  
+>>
+>> Yeah, there is some infection, more in some places than others,
+>> but I agree with Joe -- it's not needed or wanted by some of us.
+> 
+> We all have preferences. But for code that I need to review, I prefer
+> it.
+> 
+> Why would you be bothered by it? Which is easier on the eyes to read
+> variables?
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+"to read variables"?  I mostly read code, not variables.
 
-Do you plan to send also patches that add the necessary DT entries?
-I'm particularly interested in SC7180.
+>  	struct xbc_node *leaf, *vnode;
+>  	const char *val;
+> 	char q;
+>  	char *key, *end = dst + size;
+>  	int ret = 0;
+> 
+> or
+> 
+>  	struct xbc_node *leaf, *vnode;
+>  	char *key, *end = dst + size;
+>  	const char *val;
+> 	char q;
+>  	int ret = 0;
+> 
+> ?
+
+But yes, we all have preferences. For data declaration, mine is more like
+order of use or some grouping having to do with locality.
+
+cheers.
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
