@@ -2,197 +2,162 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89131C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F38120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:35:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bqn4wC0a"
+	by mail.kernel.org (Postfix) with ESMTP id 71A692067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgFOIf2 (ORCPT
+        id S1729041AbgFOIg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:35:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28907 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728649AbgFOIf1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:35:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592210125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=phOlbjTOdvARM/mTZZxrS9vASbyMVJpwN2vWscSJYrs=;
-        b=Bqn4wC0ax//pQVvX6TbdXNPSId4x5ZOlS6jSr6sb40v1l/loeEvVbc2tQkn88DUlw+1EPx
-        fk8TlG2Ei2E+nbGmi4xVXHr7BOjItQVLALcz6slUzFySvCVgT3RE1dK0kSM6fidsvBOTMa
-        QoY3rFPPJXRO/FQbjlGV85N5oX5AzZ0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-513-NV9ou7YNP6-KaeK6Zm2EbQ-1; Mon, 15 Jun 2020 04:35:23 -0400
-X-MC-Unique: NV9ou7YNP6-KaeK6Zm2EbQ-1
-Received: by mail-ej1-f71.google.com with SMTP id z21so7468275ejl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 01:35:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=phOlbjTOdvARM/mTZZxrS9vASbyMVJpwN2vWscSJYrs=;
-        b=nuMXt2GeskLq8OKL0OuzPhhDDehATx+M76qHQXB2KqWQsdnKt3i4nVexMgHU2N+fPG
-         7utcb8uWlibFYaHOSLRSQ4/5bhGAQKwLTExPJosNGc7jqaNHfBI6QVuHUPgcwaJcYceP
-         cU1ZrNc0Yb0+5gWYUMPdmrZstPuMUiqpRh6aq5Kq1BVqw5eg73JTIBtRGVEyYpewK653
-         wbYBY/eLoCcJFjVLv0wa/kaaX+Z+M1u6oCAPvjOI1povvJzGf5YnsJ4MCirIQLRpDlvq
-         R/gSwc8TpQtcaypV5E72aQyMNqjlClMUrnLK0afJ9GgYmeM9qrx4iBt0pwKntyYtU3BD
-         qA5A==
-X-Gm-Message-State: AOAM531cKLzoyTGyE4BF2EnznJDnrDWkLSkaaNR6SpQD+/T6KvsE1qbH
-        GZzk7yqd4CAHzeOA44s4ULZyk5yf0wEgZtoFRXLV5u/ZJqX+apeBBQOPjEeZLzGmv9WLV0ICKRP
-        SWsAe3b2HGwhJgiDXQRVzD4Kb
-X-Received: by 2002:a17:906:3e0c:: with SMTP id k12mr23882437eji.441.1592210121746;
-        Mon, 15 Jun 2020 01:35:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxwJhR4Ph1kPkjPbkWaXkAb68i/Q8V3TMlwCsSQPQMFouFvWhAe3TPiPcOe32u+hPvuWdgu9g==
-X-Received: by 2002:a17:906:3e0c:: with SMTP id k12mr23882413eji.441.1592210121421;
-        Mon, 15 Jun 2020 01:35:21 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id bg21sm8608364ejb.90.2020.06.15.01.35.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 01:35:20 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Ju-Hyoung Lee <juhlee@microsoft.com>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: RE: hv_hypercall_pg page permissios
-In-Reply-To: <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
-References: <20200407073830.GA29279@lst.de> <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net> <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
-Date:   Mon, 15 Jun 2020 10:35:19 +0200
-Message-ID: <87y2ooiv5k.fsf@vitty.brq.redhat.com>
+        Mon, 15 Jun 2020 04:36:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40946 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729016AbgFOIg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:36:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4536DAA7C;
+        Mon, 15 Jun 2020 08:36:28 +0000 (UTC)
+Subject: Re: [PATCH v2] nvdimm: Avoid race between probe and reading device
+ attributes
+To:     Richard Palethorpe <rpalethorpe@suse.com>,
+        linux-nvdimm@lists.01.org
+Cc:     linux-kernel@vger.kernel.org, Coly Li <colyli@suse.com>
+References: <20200615074723.12163-1-rpalethorpe@suse.com>
+From:   Coly Li <colyli@suse.de>
+Autocrypt: addr=colyli@suse.de; keydata=
+ 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
+Message-ID: <f59b5b3f-0de8-0ca1-6b39-9e93c57b2903@suse.de>
+Date:   Mon, 15 Jun 2020 16:36:17 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200615074723.12163-1-rpalethorpe@suse.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dexuan Cui <decui@microsoft.com> writes:
+On 2020/6/15 15:47, Richard Palethorpe wrote:
+> It is possible to cause a division error and use-after-free by querying the
+> nmem device before the driver data is fully initialised in nvdimm_probe. E.g
+> by doing
+> 
+> (while true; do
+>      cat /sys/bus/nd/devices/nmem*/available_slots 2>&1 > /dev/null
+>  done) &
+> 
+> while true; do
+>      for i in $(seq 0 4); do
+> 	 echo nmem$i > /sys/bus/nd/drivers/nvdimm/bind
+>      done
+>      for i in $(seq 0 4); do
+> 	 echo nmem$i > /sys/bus/nd/drivers/nvdimm/unbind
+>      done
+>  done
+> 
+> On 5.7-rc3 this causes:
 
->> From: linux-hyperv-owner@vger.kernel.org
->> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Andy Lutomirski
->> Sent: Tuesday, April 7, 2020 2:01 PM
->> To: Christoph Hellwig <hch@lst.de>
->> Cc: vkuznets <vkuznets@redhat.com>; x86@kernel.org;
->> linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; KY Srinivasan
->> <kys@microsoft.com>; Stephen Hemminger <stephen@networkplumber.org>;
->> Andy Lutomirski <luto@kernel.org>; Peter Zijlstra <peterz@infradead.org>
->> Subject: Re: hv_hypercall_pg page permissios
->> 
->> 
->> > On Apr 7, 2020, at 12:38 AM, Christoph Hellwig <hch@lst.de> wrote:
->> >
->> > ﻿On Tue, Apr 07, 2020 at 09:28:01AM +0200, Vitaly Kuznetsov wrote:
->> >> Christoph Hellwig <hch@lst.de> writes:
->> >>
->> >>> Hi all,
->> >>>
->> >>> The x86 Hyper-V hypercall page (hv_hypercall_pg) is the only allocation
->> >>> in the kernel using __vmalloc with exectutable persmissions, and the
->> >>> only user of PAGE_KERNEL_RX.  Is there any good reason it needs to
->> >>> be readable?  Otherwise we could use vmalloc_exec and kill off
->> >>> PAGE_KERNEL_RX.  Note that before 372b1e91343e6 ("drivers: hv: Turn
->> off
->> >>> write permission on the hypercall page") it was even mapped writable..
->> >>
->> >> [There is nothing secret in the hypercall page, by reading it you can
->> >> figure out if you're running on Intel or AMD (VMCALL/VMMCALL) but it's
->> >> likely not the only possible way :-)]
->> >>
->> >> I see no reason for hv_hypercall_pg to remain readable. I just
->> >> smoke-tested
->> >
->> > Thanks, I have the same in my WIP tree, but just wanted to confirm this
->> > makes sense.
->> 
->> Just to make sure we’re all on the same page: x86 doesn’t normally have an
->> execute-only mode. Executable memory in the kernel is readable unless you
->> are using fancy hypervisor-based XO support.
->
-> Hi hch,
-> The patch is merged into the mainine recently, but unluckily we noticed
-> a warning with CONFIG_DEBUG_WX=y (it looks typically this config is defined
-> by default in Linux distros, at least in Ubuntu 18.04's  
-> /boot/config-4.18.0-11-generic).
->
-> Should we revert this patch, or figure out a way to ask the DEBUG_WX code to
-> ignore this page?
->
+[snipped]
 
-Are you sure it is hv_hypercall_pg? AFAIU it shouldn't be W+X as we
-are allocating it with vmalloc_exec(). In other words, if you revert
-78bb17f76edc, does the issue go away?
+> 
+> This can be prevented by setting the driver data after initialisation is
+> complete.
+> 
+> Fixes: 4d88a97aa9e8 ("libnvdimm, nvdimm: dimm driver and base libnvdimm device-driver infrastructure")
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: linux-nvdimm@lists.01.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Coly Li <colyli@suse.com>
+> Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
 
-> [   19.387536] debug: unmapping init [mem 0xffffffff82713000-0xffffffff82886fff]
-> [   19.431766] Write protecting the kernel read-only data: 18432k
-> [   19.438662] debug: unmapping init [mem 0xffffffff81c02000-0xffffffff81dfffff]
-> [   19.446830] debug: unmapping init [mem 0xffffffff821d6000-0xffffffff821fffff]
-> [   19.522368] ------------[ cut here ]------------
-> [   19.527495] x86/mm: Found insecure W+X mapping at address 0xffffc90000012000
-> [   19.535066] WARNING: CPU: 26 PID: 1 at arch/x86/mm/dump_pagetables.c:248 note_page+0x639/0x690
-> [   19.539038] Modules linked in:
-> [   19.539038] CPU: 26 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #1
-> [   19.539038] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
-> [   19.539038] RIP: 0010:note_page+0x639/0x690
-> [   19.539038] Code: fe ff ff 31 c0 e9 a0 fe ff ff 80 3d 39 d1 31 01 00 0f 85 76 fa ff ff 48 c7 c7 98 55 0a 82 c6 05 25 d1 31 01 01 e8 f7 c9 00 00 <0f> 0b e9 5c fa ff ff 48 83 c0 18 48 c7 45 68 00 00 00 00 48 89 45
-> [   19.539038] RSP: 0000:ffffc90003137cb0 EFLAGS: 00010282
-> [   19.539038] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000007
-> [   19.539038] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff810fa9c4
-> [   19.539038] RBP: ffffc90003137ea0 R08: 0000000000000000 R09: 0000000000000000
-> [   19.539038] R10: 0000000000000001 R11: 0000000000000000 R12: ffffc90000013000
-> [   19.539038] R13: 0000000000000000 R14: ffffc900001ff000 R15: 0000000000000000
-> [   19.539038] FS:  0000000000000000(0000) GS:ffff8884dad00000(0000) knlGS:0000000000000000
-> [   19.539038] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   19.539038] CR2: 0000000000000000 CR3: 0000000002210001 CR4: 00000000003606e0
-> [   19.539038] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   19.539038] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   19.539038] Call Trace:
-> [   19.539038]  ptdump_pte_entry+0x39/0x40
-> [   19.539038]  __walk_page_range+0x5b7/0x960
-> [   19.539038]  walk_page_range_novma+0x7e/0xd0
-> [   19.539038]  ptdump_walk_pgd+0x53/0x90
-> [   19.539038]  ptdump_walk_pgd_level_core+0xdf/0x110
-> [   19.539038]  ? ptdump_walk_pgd_level_debugfs+0x40/0x40
-> [   19.539038]  ? hugetlb_get_unmapped_area+0x2f0/0x2f0
-> [   19.703692]  ? rest_init+0x24d/0x24d
-> [   19.703692]  ? rest_init+0x24d/0x24d
-> [   19.703692]  kernel_init+0x2c/0x113
-> [   19.703692]  ret_from_fork+0x24/0x30
-> [   19.703692] irq event stamp: 2840666
-> [   19.703692] hardirqs last  enabled at (2840665): [<ffffffff810fa9c4>] console_unlock+0x444/0x5b0
-> [   19.703692] hardirqs last disabled at (2840666): [<ffffffff81001ec9>] trace_hardirqs_off_thunk+0x1a/0x1c
-> [   19.703692] softirqs last  enabled at (2840662): [<ffffffff81c00366>] __do_softirq+0x366/0x490
-> [   19.703692] softirqs last disabled at (2840655): [<ffffffff8107dba8>] irq_exit+0xe8/0x100
-> [   19.703692] ---[ end trace 99ca90806a8e657c ]---
-> [   19.786235] x86/mm: Checked W+X mappings: FAILED, 1 W+X pages found.
-> [   19.793298] rodata_test: all tests were successful
-> [   19.798508] x86/mm: Checking user space page tables
-> [   19.818007] x86/mm: Checked W+X mappings: passed, no W+X pages found.
->
-> Thanks,
-> -- Dexuan
 
--- 
-Vitaly
+Reviewed-by: Coly Li <colyli@suse.de>
+
+Thanks.
+
+Coly Li
+
+> ---
+> 
+> V2:
+> + Reviewed by Coly and removed unecessary lock
+> 
+>  drivers/nvdimm/dimm.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
+> index 7d4ddc4d9322..3d3988e1d9a0 100644
+> --- a/drivers/nvdimm/dimm.c
+> +++ b/drivers/nvdimm/dimm.c
+> @@ -43,7 +43,6 @@ static int nvdimm_probe(struct device *dev)
+>  	if (!ndd)
+>  		return -ENOMEM;
+>  
+> -	dev_set_drvdata(dev, ndd);
+>  	ndd->dpa.name = dev_name(dev);
+>  	ndd->ns_current = -1;
+>  	ndd->ns_next = -1;
+> @@ -106,6 +105,8 @@ static int nvdimm_probe(struct device *dev)
+>  	if (rc)
+>  		goto err;
+>  
+> +	dev_set_drvdata(dev, ndd);
+> +
+>  	return 0;
+>  
+>   err:
+> 
 
