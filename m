@@ -2,132 +2,100 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67838C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF344C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8BD2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42462068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgFOHmO convert rfc822-to-8bit (ORCPT
+        id S1728701AbgFOHnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbgFOHmN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:42:13 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEADC061A0E;
-        Mon, 15 Jun 2020 00:42:13 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jkjkv-0003IX-2c; Mon, 15 Jun 2020 09:42:09 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A70B41C00ED;
-        Mon, 15 Jun 2020 09:42:08 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 07:42:08 -0000
-From:   "tip-bot2 for Babu Moger" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/resctrl: Fix memory bandwidth counter width for AMD
-Cc:     Babu Moger <babu.moger@amd.com>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com>
-References: <159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com>
+        Mon, 15 Jun 2020 03:43:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5827 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728260AbgFOHnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:43:18 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3F70A45BD575FDFD01CC;
+        Mon, 15 Jun 2020 15:43:13 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.7) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Mon, 15 Jun 2020
+ 15:43:09 +0800
+Subject: Re: [PATCH] erofs: Eliminate usage of uninitialized_var() macro
+To:     Gao Xiang <hsiangkao@redhat.com>
+CC:     <xiang@kernel.org>, <chao@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>, Kees Cook <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+References: <20200615040141.3627746-1-yanaijie@huawei.com>
+ <20200615072521.GA25317@xiangao.remote.csb>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <783fe4f9-fb1f-7f5e-c900-7e30d5c85222@huawei.com>
+Date:   Mon, 15 Jun 2020 15:43:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Message-ID: <159220692843.16989.9350605607122935266.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200615072521.GA25317@xiangao.remote.csb>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.7]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     2c18bd525c47f882f033b0a813ecd09c93e1ecdf
-Gitweb:        https://git.kernel.org/tip/2c18bd525c47f882f033b0a813ecd09c93e1ecdf
-Author:        Babu Moger <babu.moger@amd.com>
-AuthorDate:    Thu, 04 Jun 2020 14:45:16 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 15 Jun 2020 09:35:38 +02:00
 
-x86/resctrl: Fix memory bandwidth counter width for AMD
+ÔÚ 2020/6/15 15:25, Gao Xiang Ð´µÀ:
+> Hi Jason,
+> 
+> On Mon, Jun 15, 2020 at 12:01:41PM +0800, Jason Yan wrote:
+>> This is an effort to eliminate the uninitialized_var() macro[1].
+>>
+>> The use of this macro is the wrong solution because it forces off ANY
+>> analysis by the compiler for a given variable. It even masks "unused
+>> variable" warnings.
+>>
+>> Quoted from Linus[2]:
+>>
+>> "It's a horrible thing to use, in that it adds extra cruft to the
+>> source code, and then shuts up a compiler warning (even the _reliable_
+>> warnings from gcc)."
+>>
+>> The gcc option "-Wmaybe-uninitialized" has been disabled and this change
+>> will not produce any warnnings even with "make W=1".
+>>
+>> [1] https://github.com/KSPP/linux/issues/81
+>> [2] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+>>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Cc: Chao Yu <yuchao0@huawei.com>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> ---
+> 
+> I'm fine with the patch since "-Wmaybe-uninitialized" has been disabled and
+> I've also asked Kees for it in private previously.
+> 
+> I still remembered that Kees sent out a treewide patch. Sorry about that
+> I don't catch up it... But what is wrong with the original patchset?
+> 
 
-Memory bandwidth is calculated reading the monitoring counter
-at two intervals and calculating the delta. It is the softwareâ€™s
-responsibility to read the count often enough to avoid having
-the count roll over _twice_ between reads.
+Yes, Kees has remind me of that and I will let him handle it. So you can 
+ignore this patch.
 
-The current code hardcodes the bandwidth monitoring counter's width
-to 24 bits for AMD. This is due to default base counter width which
-is 24. Currently, AMD does not implement the CPUID 0xF.[ECX=1]:EAX
-to adjust the counter width. But, the AMD hardware supports much
-wider bandwidth counter with the default width of 44 bits.
+Thanks,
+Jason
 
-Kernel reads these monitoring counters every 1 second and adjusts the
-counter value for overflow. With 24 bits and scale value of 64 for AMD,
-it can only measure up to 1GB/s without overflowing. For the rates
-above 1GB/s this will fail to measure the bandwidth.
+> Thanks,
+> Gao Xiang
+> 
+> 
+> .
+> 
 
-Fix the issue setting the default width to 44 bits by adjusting the
-offset.
-
-AMD future products will implement CPUID 0xF.[ECX=1]:EAX.
-
- [ bp: Let the line stick out and drop {}-brackets around a single
-   statement. ]
-
-Fixes: 4d05bf71f157 ("x86/resctrl: Introduce AMD QOS feature")
-Signed-off-by: Babu Moger <babu.moger@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/159129975546.62538.5656031125604254041.stgit@naples-babu.amd.com
----
- arch/x86/kernel/cpu/resctrl/core.c     | 8 ++++----
- arch/x86/kernel/cpu/resctrl/internal.h | 1 +
- 2 files changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 12f967c..6a9df71 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -981,10 +981,10 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
- 
- 		c->x86_cache_max_rmid  = ecx;
- 		c->x86_cache_occ_scale = ebx;
--		if (c->x86_vendor == X86_VENDOR_INTEL)
--			c->x86_cache_mbm_width_offset = eax & 0xff;
--		else
--			c->x86_cache_mbm_width_offset = -1;
-+		c->x86_cache_mbm_width_offset = eax & 0xff;
-+
-+		if (c->x86_vendor == X86_VENDOR_AMD && !c->x86_cache_mbm_width_offset)
-+			c->x86_cache_mbm_width_offset = MBM_CNTR_WIDTH_OFFSET_AMD;
- 	}
- }
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index f20a47d..5ffa322 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -37,6 +37,7 @@
- #define MBA_IS_LINEAR			0x4
- #define MBA_MAX_MBPS			U32_MAX
- #define MAX_MBA_BW_AMD			0x800
-+#define MBM_CNTR_WIDTH_OFFSET_AMD	20
- 
- #define RMID_VAL_ERROR			BIT_ULL(63)
- #define RMID_VAL_UNAVAIL		BIT_ULL(62)
