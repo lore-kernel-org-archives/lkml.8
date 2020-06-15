@@ -2,121 +2,148 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4113C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA84C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A709F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC9120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 11:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XIIEk3jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgFOLZM (ORCPT
+        id S1729687AbgFOLZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 07:25:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43662 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729038AbgFOLZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 07:25:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6D267AECD;
-        Mon, 15 Jun 2020 11:25:13 +0000 (UTC)
-Subject: Re: [PATCH v2] page_alloc: consider highatomic reserve in wmartermark
- fast
-To:     Jaewon Kim <jaewon31.kim@gmail.com>
-Cc:     Jaewon Kim <jaewon31.kim@samsung.com>, mgorman@techsingularity.net,
-        minchan@kernel.org, mgorman@suse.de, hannes@cmpxchg.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, ytk.lee@samsung.com,
-        cmlaika.kim@samsung.com
-References: <CGME20200612085027epcas1p46383a7eda792eabbd1e74cd08fe988c9@epcas1p4.samsung.com>
- <20200613025102.12880-1-jaewon31.kim@samsung.com>
- <dd899dd9-43cd-f1fd-15af-863706fa62dc@suse.cz>
- <CAJrd-UuTcEJqgvarWWLyKjbZ9B_saLgdLNKWt-gcjY4CgfMSUw@mail.gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <62621a8b-5bdd-ed20-d816-5958ab07d44f@suse.cz>
-Date:   Mon, 15 Jun 2020 13:25:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 07:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729038AbgFOLZi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 07:25:38 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330C9C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 04:25:38 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id b13so5535105uav.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 04:25:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vrKmkhg+c1u0kB4U6Q0PfBV1XmTvqqdQ8hWTNkN5v2k=;
+        b=XIIEk3jhhCjnXxJTApUX1KsztsSHxmkhzNIzJiVbqEHf7zAn0F9ATFYCTcxehIn7Db
+         PSo6AK16Dk/Mq2bHaFCNXJPKhXFfIyKWlZ64UGJVCrZI5POsNEiNmiXtK4/nrUoQyxE7
+         QHFnkyTx7Mf1Cjrktsn7BMYv521Nzaa/sKvQWydv/s1Sx4G5vEEGEzjGrqvH0ubiDc45
+         oBYNVXzgJF6M5MhYQLfXHAaZnaB+ow+dxNe5MRjqhZkkny1Gytj8LuYB8sxhWldVtsrz
+         jrDMHgw3N8/IG4Ozcd3vnUA3fApwh05lTSBFjbz5aKHtOvycqlLUQb87pFCTW7Ocp/gA
+         +uhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vrKmkhg+c1u0kB4U6Q0PfBV1XmTvqqdQ8hWTNkN5v2k=;
+        b=e9m8ysudpoMS7yL4ZOx+VoGM3SXuIKl7oIGgCAEHe5scl142TZPRB77eoMY5U5cZ++
+         LbIjx33a0Z49xlsNEfZ+Q5xiNoE3MT6Gawr+B6dBVxTn1zocmP6TIuDxY/UNysZhr6/E
+         /z9HUrb430GkYJghSg3ARDaNseYYUnryS3K8FHU+JBnzhwXRyKTNw/+tSLEi+M+PYceO
+         Yr+EXNI/pxu7Dq5/xc9QUPlsybXVanoF37lLEMAIS4XrZn9sm3t5FZ7EQR382402cnJl
+         gQ9jmdoYi7iUjBQ6NHhKz00flAF6L4MQhwU2El65gYHFSxI3RlPRSCbBWe+FQFggTn3J
+         qOBA==
+X-Gm-Message-State: AOAM532gEhWTn1VCjCm+xvZm9aDsVEJxdViJUYppACzKss6mX86UyyOi
+        boXomTFDlnJg7QEjZFeQdUawwHxcIxuVpTcqCVMPJQ==
+X-Google-Smtp-Source: ABdhPJzqNGqsG+5owbRVG/KlqJGvlwwJKZq02aq94CP4ikq3550XKb+IM6Rhtt+J/C/aq6FLjSiLs0/JETpwhEPnOTc=
+X-Received: by 2002:a9f:22e1:: with SMTP id 88mr18170672uan.19.1592220336997;
+ Mon, 15 Jun 2020 04:25:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJrd-UuTcEJqgvarWWLyKjbZ9B_saLgdLNKWt-gcjY4CgfMSUw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200429103644.5492-1-daniel.lezcano@linaro.org> <20200429103644.5492-4-daniel.lezcano@linaro.org>
+In-Reply-To: <20200429103644.5492-4-daniel.lezcano@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 15 Jun 2020 13:25:00 +0200
+Message-ID: <CAPDyKFrdzcf5e98EM0VvwxnR0zDFQ851PDLOZ9wpe-LO6n4Abw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] thermal: cpuidle: Register cpuidle cooling device
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>, lukasz.luba@arm.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "open list:CPU IDLE TIME MANAGEMENT FRAMEWORK" 
+        <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CPUIDLE DRIVER - ARM PSCI" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/20 6:16 AM, Jaewon Kim wrote:
-> 
-> 
-> 2020년 6월 12일 (금) 오후 11:34, Vlastimil Babka <vbabka@suse.cz
-> <mailto:vbabka@suse.cz>>님이 작성:
->>
->> On 6/13/20 4:51 AM, Jaewon Kim wrote:
->> > zone_watermark_fast was introduced by commit 48ee5f3696f6 ("mm,
->> > page_alloc: shortcut watermark checks for order-0 pages"). The commit
->> > simply checks if free pages is bigger than watermark without additional
->> > calculation such like reducing watermark.
->> >
->> > It considered free cma pages but it did not consider highatomic
->> > reserved. This may incur exhaustion of free pages except high order
->> > atomic free pages.
->> >
->> > Assume that reserved_highatomic pageblock is bigger than watermark min,
->> > and there are only few free pages except high order atomic free. Because
->> > zone_watermark_fast passes the allocation without considering high order
->> > atomic free, normal reclaimable allocation like GFP_HIGHUSER will
->> > consume all the free pages. Then finally order-0 atomic allocation may
->> > fail on allocation.
->>
->> I don't understand why order-0 atomic allocation will fail. Is it because of
->> watermark check, or finding no suitable pages?
->> - watermark check should be OK as atomic allocations can use reserves
->> - suitable pages should be OK, even if all free pages are in the highatomic
->> reserves, because rmqueue() contains:
->>
->> if (alloc_flags & ALLOC_HARDER)
->>         page = __rmqueue_smallest(zone, order, MIGRATE_HIGHATOMIC);
->>
->> So what am I missing?
->>
-> Hello
-> The order-0 atomic allocation can be failed because of depletion of suitable
-> free page.
-> Watermark check passes order-0 atomic allocation but it will be failed at
-> finding a free page.
-> The  __rmqueue_smallest(zone, order, MIGRATE_HIGHATOMIC) can be used
-> only for highorder.
+On Wed, 29 Apr 2020 at 12:37, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>
+> The cpuidle driver can be used as a cooling device by injecting idle
+> cycles. The DT binding for the idle state added an optional
+>
+> When the property is set, register the cpuidle driver with the idle
+> state node pointer as a cooling device. The thermal framework will do
+> the association automatically with the thermal zone via the
+> cooling-device defined in the device tree cooling-maps section.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  - V4:
+>    - Do not check the return value as the function does no longer return one
+> ---
+>  drivers/cpuidle/cpuidle-arm.c  | 3 +++
+>  drivers/cpuidle/cpuidle-psci.c | 3 +++
+>  2 files changed, 6 insertions(+)
+>
+> diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
+> index 9e5156d39627..8c758920d699 100644
+> --- a/drivers/cpuidle/cpuidle-arm.c
+> +++ b/drivers/cpuidle/cpuidle-arm.c
+> @@ -8,6 +8,7 @@
+>
+>  #define pr_fmt(fmt) "CPUidle arm: " fmt
+>
+> +#include <linux/cpu_cooling.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/cpu_pm.h>
+> @@ -124,6 +125,8 @@ static int __init arm_idle_init_cpu(int cpu)
+>         if (ret)
+>                 goto out_kfree_drv;
+>
+> +       cpuidle_cooling_register(drv);
+> +
+>         return 0;
+>
+>  out_kfree_drv:
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index bae9140a65a5..1f38e0dfc9b2 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -9,6 +9,7 @@
+>  #define pr_fmt(fmt) "CPUidle PSCI: " fmt
+>
+>  #include <linux/cpuhotplug.h>
+> +#include <linux/cpu_cooling.h>
+>  #include <linux/cpuidle.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/cpu_pm.h>
+> @@ -313,6 +314,8 @@ static int __init psci_idle_init_cpu(int cpu)
+>         if (ret)
+>                 goto out_kfree_drv;
+>
+> +       cpuidle_cooling_register(drv);
+> +
 
-Ah, that's what I missed, rmqueue() will divert all order-0 allocations to
-rmqueue_pcplist() so those will not reach the hunk above. Thanks.
+Apologies for the late reply, but just noticed this change in v5.8-rc1.
 
->> > @@ -3598,9 +3604,12 @@ static inline bool zone_watermark_fast(struct zone
-> *z, unsigned int order,
->>         /*
->>          * Fast check for order-0 only. If this fails then the reserves
->>          * need to be calculated. There is a corner case where the check
->>          * passes but only the high-order atomic reserve are free. If
->> >        * the caller is !atomic then it'll uselessly search the free
->> >        * list. That corner case is then slower but it is harmless.
->> >        */
->>
->> The comment stops being true after this patch? It also suggests that Mel
->> anticipated this corner case, but that it should only cause a false positive
->> zone_watermark_fast() and then rmqueue() fails for !ALLOC_HARDER as it cannot
->> use MIGRATE_HIGHATOMIC blocks. It expects atomic order-0 still works. So what's
->> going on?
-> 
-> As Mel also agreed with me in v1 mail thread, this highatomic reserved should
-> be considered even in watermark fast.
-> 
-> The comment, I think, may need to be changed. Prior to this patch, non highatomic
-> allocation may do useless search, but it also can take ALL non highatomic free.
-> 
-> With this patch, non highatomic allocation will NOT do useless search. Rather,
+Don't you need a cpuidle_cooling_unregister function? For example,
+cpuidle-psci may fail and then calls cpuidle_unregister() to cleans up
+things.
 
-Yes, that's what I meant.
+Is that okay?
+
+Kind regards
+Uffe
