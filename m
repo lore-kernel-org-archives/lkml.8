@@ -6,57 +6,59 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C11C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E35C433DF
 	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1E532074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138B72078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:19:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AsGxb9ri"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vcInKu4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbgFONTK (ORCPT
+        id S1730366AbgFONTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55228 "EHLO
+        Mon, 15 Jun 2020 09:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730120AbgFONTG (ORCPT
+        with ESMTP id S1730303AbgFONTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:19:06 -0400
+        Mon, 15 Jun 2020 09:19:07 -0400
 Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D9CC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:19:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AC9C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=ZdhsOaBNJGKhEv4OpT5hfQDLgLq3hEJ9gvhXOHNcyDM=; b=AsGxb9riNVYUI8cg650pyaz+tV
-        CGSpRJ7i+tFmTjS96nvOXFzCs39zu3ICdDUMmtGQ7gYlfnqpvOTdtesTWbxQyAjIq7sA8dLZCrwAs
-        Vs4Z4ZISfMg3NdGfZ5QvNNML54u5ld0XAid226XsySX8kxaRCoShVMex6O0CsuGyhEwZDm+XSPeiG
-        O1LkfjWnMRMz+z+2IZHtXNE8uoFK973VnRQ7FoWjZ8iR3l5Bg6KsR14ogYbi62Z9fPoK7O8U+iyY9
-        3WDVLwyawWTZh4z6rwhXyJgKDb+9phBBeETCUvW4g2IMNJhgU6L3ATZG8cdfjgGu5ldvX0wBWZkhl
-        eddIRC9w==;
+        bh=zSxqSe4X9MD+Qi+S4zynGws2Pb4iOlhR16IuCrYb+/k=; b=vcInKu4T6YzSq3XikO+x6BmAq/
+        Q5pC/K5XWhwyuvI9AZEvcvOmsO69hgAiKSvZqDMnRfFdBoJTBqlLdhybqNQRXl553559uiCQv/6jj
+        fWiv7T+YKb3Lx8HvdLdPGydunN0k9Z7NX547HJ1cvYH+9SXBdX6HHnyEU5r5G55gGkTcmKkfj1hHI
+        RlQyZkw46OqUyoOJf++3rN9/eHIISS7FJLvOu+9Jmtcqfw2UeSd/Q4NOnIitfDoGsL4Z6eyawyBDz
+        HJQD8PoWG+iaL9XTheD3PfiDCm/FXUrkoPk/fAGpc5fVSfSWk23r64JzSx8qR6kB+xu122+IfCqP2
+        xhh/N1cA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkp0G-0004PC-GC; Mon, 15 Jun 2020 13:18:20 +0000
+        id 1jkp0G-0004PD-Gm; Mon, 15 Jun 2020 13:18:20 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4D782306102;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 61D2F306368;
         Mon, 15 Jun 2020 15:18:17 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id AAB8A2392E70B; Mon, 15 Jun 2020 15:18:16 +0200 (CEST)
-Message-ID: <20200615131143.373485207@infradead.org>
+        id AF68A2392E70C; Mon, 15 Jun 2020 15:18:16 +0200 (CEST)
+Message-ID: <20200615131143.434079683@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 15 Jun 2020 14:56:59 +0200
+Date:   Mon, 15 Jun 2020 14:57:00 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org, tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, juri.lelli@redhat.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
         rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
         paulmck@kernel.org, frederic@kernel.org, peterz@infradead.org,
-        ast@kernel.org, daniel@iogearbox.net, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com
-Subject: [PATCH 5/6] irq_work: Cleanup
+        tsbogend@alpha.franken.de, axboe@kernel.dk, rjw@rjwysocki.net,
+        daniel.lezcano@linaro.org, dchickles@marvell.com,
+        davem@davemloft.net, kuba@kernel.org, daniel.thompson@linaro.org,
+        gerald.schaefer@de.ibm.com
+Subject: [PATCH 6/6] smp: Cleanup smp_call_function*()
 References: <20200615125654.678940605@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,232 +67,441 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get rid of the __call_single_node union and clean up the API a little
+Get rid of the __call_single_node union and cleanup the API a little
 to avoid external code relying on the structure layout as much.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/irq_work.h |   33 +++++++++++++++++++++------------
- include/linux/irqflags.h |    4 ++--
- kernel/bpf/stackmap.c    |    2 +-
- kernel/irq_work.c        |   18 +++++++++---------
- kernel/printk/printk.c   |    6 ++----
- kernel/rcu/tree.c        |    3 +--
- kernel/time/tick-sched.c |    6 ++----
- kernel/trace/bpf_trace.c |    2 +-
- 8 files changed, 39 insertions(+), 35 deletions(-)
+ arch/mips/kernel/process.c                      |    3 -
+ arch/mips/kernel/smp.c                          |   24 +++-----------
+ arch/s390/pci/pci_irq.c                         |    4 --
+ arch/x86/kernel/cpuid.c                         |    5 ---
+ arch/x86/lib/msr-smp.c                          |    5 ---
+ block/blk-mq.c                                  |    4 --
+ block/blk-softirq.c                             |    9 +----
+ drivers/cpuidle/coupled.c                       |    3 -
+ drivers/net/ethernet/cavium/liquidio/lio_core.c |    9 +----
+ include/linux/smp.h                             |   11 ++----
+ kernel/debug/debug_core.c                       |    5 +--
+ kernel/sched/core.c                             |   12 +------
+ kernel/smp.c                                    |   40 ++++++++++++------------
+ net/core/dev.c                                  |    3 -
+ 14 files changed, 44 insertions(+), 93 deletions(-)
 
---- a/include/linux/irq_work.h
-+++ b/include/linux/irq_work.h
-@@ -14,28 +14,37 @@
-  */
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -686,7 +686,7 @@ unsigned long arch_align_stack(unsigned
+ 	return sp & ALMASK;
+ }
  
- struct irq_work {
+-static DEFINE_PER_CPU(call_single_data_t, backtrace_csd);
++static DEFINE_PER_CPU(call_single_data_t, backtrace_csd) = CSD_INIT(handle_backtrace, NULL);
+ static struct cpumask backtrace_csd_busy;
+ 
+ static void handle_backtrace(void *info)
+@@ -714,7 +714,6 @@ static void raise_backtrace(cpumask_t *m
+ 		}
+ 
+ 		csd = &per_cpu(backtrace_csd, cpu);
+-		csd->func = handle_backtrace;
+ 		smp_call_function_single_async(cpu, csd);
+ 	}
+ }
+--- a/arch/mips/kernel/smp.c
++++ b/arch/mips/kernel/smp.c
+@@ -687,36 +687,22 @@ EXPORT_SYMBOL(flush_tlb_one);
+ 
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+ 
+-static DEFINE_PER_CPU(call_single_data_t, tick_broadcast_csd);
+-
+-void tick_broadcast(const struct cpumask *mask)
+-{
+-	call_single_data_t *csd;
+-	int cpu;
+-
+-	for_each_cpu(cpu, mask) {
+-		csd = &per_cpu(tick_broadcast_csd, cpu);
+-		smp_call_function_single_async(cpu, csd);
+-	}
+-}
+-
+ static void tick_broadcast_callee(void *info)
+ {
+ 	tick_receive_broadcast();
+ }
+ 
+-static int __init tick_broadcast_init(void)
++static DEFINE_PER_CPU(call_single_data_t, tick_broadcast_csd) = CSD_INIT(tick_broadcast_callee, NULL);
++
++void tick_broadcast(const struct cpumask *mask)
+ {
+ 	call_single_data_t *csd;
+ 	int cpu;
+ 
+-	for (cpu = 0; cpu < NR_CPUS; cpu++) {
++	for_each_cpu(cpu, mask) {
+ 		csd = &per_cpu(tick_broadcast_csd, cpu);
+-		csd->func = tick_broadcast_callee;
++		smp_call_function_single_async(cpu, csd);
+ 	}
+-
+-	return 0;
+ }
+-early_initcall(tick_broadcast_init);
+ 
+ #endif /* CONFIG_GENERIC_CLOCKEVENTS_BROADCAST */
+--- a/arch/s390/pci/pci_irq.c
++++ b/arch/s390/pci/pci_irq.c
+@@ -178,9 +178,7 @@ static void zpci_handle_fallback_irq(voi
+ 		if (atomic_inc_return(&cpu_data->scheduled) > 1)
+ 			continue;
+ 
+-		cpu_data->csd.func = zpci_handle_remote_irq;
+-		cpu_data->csd.info = &cpu_data->scheduled;
+-		cpu_data->csd.flags = 0;
++		cpu_data->csd = CSD_INIT(zpci_handle_remote_irq, &cpu_data->scheduled);
+ 		smp_call_function_single_async(cpu, &cpu_data->csd);
+ 	}
+ }
+--- a/arch/x86/kernel/cpuid.c
++++ b/arch/x86/kernel/cpuid.c
+@@ -74,10 +74,7 @@ static ssize_t cpuid_read(struct file *f
+ 
+ 	init_completion(&cmd.done);
+ 	for (; count; count -= 16) {
+-		call_single_data_t csd = {
+-			.func = cpuid_smp_cpuid,
+-			.info = &cmd,
+-		};
++		call_single_data_t csd = CSD_INIT(cpuid_smp_cpuid, &cmd);
+ 
+ 		cmd.regs.eax = pos;
+ 		cmd.regs.ecx = pos >> 32;
+--- a/arch/x86/lib/msr-smp.c
++++ b/arch/x86/lib/msr-smp.c
+@@ -169,10 +169,7 @@ static void __wrmsr_safe_on_cpu(void *in
+ int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h)
+ {
+ 	struct msr_info_completion rv;
+-	call_single_data_t csd = {
+-		.func	= __rdmsr_safe_on_cpu,
+-		.info	= &rv,
+-	};
++	call_single_data_t csd = CSD_INIT(__rdmsr_safe_on_cpu, &rv);
+ 	int err;
+ 
+ 	memset(&rv, 0, sizeof(rv));
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -629,9 +629,7 @@ void blk_mq_force_complete_rq(struct req
+ 		shared = cpus_share_cache(cpu, ctx->cpu);
+ 
+ 	if (cpu != ctx->cpu && !shared && cpu_online(ctx->cpu)) {
+-		rq->csd.func = __blk_mq_complete_request_remote;
+-		rq->csd.info = rq;
+-		rq->csd.flags = 0;
++		rq->csd = CSD_INIT(__blk_mq_complete_request_remote, rq);
+ 		smp_call_function_single_async(ctx->cpu, &rq->csd);
+ 	} else {
+ 		q->mq_ops->complete(rq);
+--- a/block/blk-softirq.c
++++ b/block/blk-softirq.c
+@@ -57,13 +57,8 @@ static void trigger_softirq(void *data)
+ static int raise_blk_irq(int cpu, struct request *rq)
+ {
+ 	if (cpu_online(cpu)) {
+-		call_single_data_t *data = &rq->csd;
+-
+-		data->func = trigger_softirq;
+-		data->info = rq;
+-		data->flags = 0;
+-
+-		smp_call_function_single_async(cpu, data);
++		rq->csd = CSD_INIT(trigger_softirq, rq);
++		smp_call_function_single_async(cpu, &rq->csd);
+ 		return 0;
+ 	}
+ 
+--- a/drivers/cpuidle/coupled.c
++++ b/drivers/cpuidle/coupled.c
+@@ -674,8 +674,7 @@ int cpuidle_coupled_register_device(stru
+ 	coupled->refcnt++;
+ 
+ 	csd = &per_cpu(cpuidle_coupled_poke_cb, dev->cpu);
+-	csd->func = cpuidle_coupled_handle_poke;
+-	csd->info = (void *)(unsigned long)dev->cpu;
++	*csd = CSD_INIT(cpuidle_coupled_handle_poke, (void *)(unsigned long)dev->cpu);
+ 
+ 	return 0;
+ }
+--- a/drivers/net/ethernet/cavium/liquidio/lio_core.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_core.c
+@@ -726,13 +726,8 @@ static void liquidio_napi_drv_callback(v
+ 	    droq->cpu_id == this_cpu) {
+ 		napi_schedule_irqoff(&droq->napi);
+ 	} else {
+-		call_single_data_t *csd = &droq->csd;
+-
+-		csd->func = napi_schedule_wrapper;
+-		csd->info = &droq->napi;
+-		csd->flags = 0;
+-
+-		smp_call_function_single_async(droq->cpu_id, csd);
++		droq->csd = CSD_INIT(napi_schedule_wrapper, &droq->napi);
++		smp_call_function_single_async(droq->cpu_id, &droq->csd);
+ 	}
+ }
+ 
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -21,17 +21,14 @@ typedef bool (*smp_cond_func_t)(int cpu,
+  * structure shares (partial) layout with struct irq_work
+  */
+ struct __call_single_data {
 -	union {
 -		struct __call_single_node node;
 -		struct {
--			struct llist_node llnode;
--			atomic_t flags;
+-			struct llist_node llist;
+-			unsigned int flags;
 -		};
 -	};
 +	struct __call_single_node node;
- 	void (*func)(struct irq_work *);
+ 	smp_call_func_t func;
+ 	void *info;
  };
  
-+#define __IRQ_WORK_INIT(_func, _flags) (struct irq_work){	\
-+	.node = { .u_flags = (_flags), },			\
-+	.func = (_func),					\
-+}
++#define CSD_INIT(_func, _info) \
++	(struct __call_single_data){ .func = (_func), .info = (_info), }
 +
-+#define IRQ_WORK_INIT(_func) __IRQ_WORK_INIT(_func, 0)
-+#define IRQ_WORK_INIT_LAZY(_func) __IRQ_WORK_INIT(_func, IRQ_WORK_LAZY)
-+#define IRQ_WORK_INIT_HARD(_func) __IRQ_WORK_INIT(_func, IRQ_WORK_HARD_IRQ)
-+
-+#define DEFINE_IRQ_WORK(name, _f)				\
-+	struct irq_work name = IRQ_WORK_INIT(_f)
-+
- static inline
- void init_irq_work(struct irq_work *work, void (*func)(struct irq_work *))
+ /* Use __aligned() to avoid to use 2 cache lines for 1 csd */
+ typedef struct __call_single_data call_single_data_t
+ 	__aligned(sizeof(struct __call_single_data));
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -225,8 +225,6 @@ int __weak kgdb_skipexception(int except
+  * Default (weak) implementation for kgdb_roundup_cpus
+  */
+ 
+-static DEFINE_PER_CPU(call_single_data_t, kgdb_roundup_csd);
+-
+ void __weak kgdb_call_nmi_hook(void *ignored)
  {
--	atomic_set(&work->flags, 0);
--	work->func = func;
-+	*work = IRQ_WORK_INIT(func);
- }
- 
--#define DEFINE_IRQ_WORK(name, _f) struct irq_work name = {	\
--		.flags = ATOMIC_INIT(0),			\
--		.func  = (_f)					\
-+static inline bool irq_work_pending(struct irq_work *work)
-+{
-+	return atomic_read(&work->node.a_flags) & IRQ_WORK_PENDING;
- }
- 
-+static inline bool irq_work_busy(struct irq_work *work)
-+{
-+	return atomic_read(&work->node.a_flags) & IRQ_WORK_BUSY;
-+}
- 
- bool irq_work_queue(struct irq_work *work);
- bool irq_work_queue_on(struct irq_work *work, int cpu);
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -90,12 +90,12 @@ do {						\
- 
- # define lockdep_irq_work_enter(__work)					\
- 	  do {								\
--		  if (!(atomic_read(&__work->flags) & IRQ_WORK_HARD_IRQ))\
-+		  if (!(atomic_read(&__work->node.a_flags) & IRQ_WORK_HARD_IRQ))\
- 			current->irq_config = 1;			\
- 	  } while (0)
- # define lockdep_irq_work_exit(__work)					\
- 	  do {								\
--		  if (!(atomic_read(&__work->flags) & IRQ_WORK_HARD_IRQ))\
-+		  if (!(atomic_read(&__work->node.a_flags) & IRQ_WORK_HARD_IRQ))\
- 			current->irq_config = 0;			\
- 	  } while (0)
- 
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -292,7 +292,7 @@ static void stack_map_get_build_id_offse
- 	if (irqs_disabled()) {
- 		if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
- 			work = this_cpu_ptr(&up_read_work);
--			if (atomic_read(&work->irq_work.flags) & IRQ_WORK_BUSY) {
-+			if (irq_work_busy(&work->irq_work)) {
- 				/* cannot queue more up_read, fallback */
- 				irq_work_busy = true;
- 			}
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -31,7 +31,7 @@ static bool irq_work_claim(struct irq_wo
- {
- 	int oflags;
- 
--	oflags = atomic_fetch_or(IRQ_WORK_CLAIMED | CSD_TYPE_IRQ_WORK, &work->flags);
-+	oflags = atomic_fetch_or(IRQ_WORK_CLAIMED | CSD_TYPE_IRQ_WORK, &work->node.a_flags);
  	/*
- 	 * If the work is already pending, no need to raise the IPI.
- 	 * The pairing atomic_fetch_andnot() in irq_work_run() makes sure
-@@ -53,12 +53,12 @@ void __weak arch_irq_work_raise(void)
- static void __irq_work_queue_local(struct irq_work *work)
+@@ -240,6 +238,8 @@ void __weak kgdb_call_nmi_hook(void *ign
+ 	kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
+ }
+ 
++static DEFINE_PER_CPU(call_single_data_t, kgdb_roundup_csd) = CSD_INIT(kgdb_call_nmi_hook, NULL);
++
+ void __weak kgdb_roundup_cpus(void)
  {
- 	/* If the work is "lazy", handle it from next tick if any */
--	if (atomic_read(&work->flags) & IRQ_WORK_LAZY) {
--		if (llist_add(&work->llnode, this_cpu_ptr(&lazy_list)) &&
-+	if (atomic_read(&work->node.a_flags) & IRQ_WORK_LAZY) {
-+		if (llist_add(&work->node.llist, this_cpu_ptr(&lazy_list)) &&
- 		    tick_nohz_tick_stopped())
- 			arch_irq_work_raise();
- 	} else {
--		if (llist_add(&work->llnode, this_cpu_ptr(&raised_list)))
-+		if (llist_add(&work->node.llist, this_cpu_ptr(&raised_list)))
- 			arch_irq_work_raise();
- 	}
- }
-@@ -102,7 +102,7 @@ bool irq_work_queue_on(struct irq_work *
- 	if (cpu != smp_processor_id()) {
- 		/* Arch remote IPI send/receive backend aren't NMI safe */
- 		WARN_ON_ONCE(in_nmi());
--		__smp_call_single_queue(cpu, &work->llnode);
-+		__smp_call_single_queue(cpu, &work->node.llist);
- 	} else {
- 		__irq_work_queue_local(work);
- 	}
-@@ -142,7 +142,7 @@ void irq_work_single(void *arg)
- 	 * to claim that work don't rely on us to handle their data
- 	 * while we are in the middle of the func.
- 	 */
--	flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->flags);
-+	flags = atomic_fetch_andnot(IRQ_WORK_PENDING, &work->node.a_flags);
+ 	call_single_data_t *csd;
+@@ -266,7 +266,6 @@ void __weak kgdb_roundup_cpus(void)
+ 			continue;
+ 		kgdb_info[cpu].rounding_up = true;
  
- 	lockdep_irq_work_enter(work);
- 	work->func(work);
-@@ -152,7 +152,7 @@ void irq_work_single(void *arg)
- 	 * no-one else claimed it meanwhile.
- 	 */
- 	flags &= ~IRQ_WORK_PENDING;
--	(void)atomic_cmpxchg(&work->flags, flags, flags & ~IRQ_WORK_BUSY);
-+	(void)atomic_cmpxchg(&work->node.a_flags, flags, flags & ~IRQ_WORK_BUSY);
+-		csd->func = kgdb_call_nmi_hook;
+ 		ret = smp_call_function_single_async(cpu, csd);
+ 		if (ret)
+ 			kgdb_info[cpu].rounding_up = false;
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -221,14 +221,6 @@ void update_rq_clock(struct rq *rq)
+ 	update_rq_clock_task(rq, delta);
  }
  
- static void irq_work_run_list(struct llist_head *list)
-@@ -166,7 +166,7 @@ static void irq_work_run_list(struct lli
- 		return;
- 
- 	llnode = llist_del_all(list);
--	llist_for_each_entry_safe(work, tmp, llnode, llnode)
-+	llist_for_each_entry_safe(work, tmp, llnode, node.llist)
- 		irq_work_single(work);
- }
- 
-@@ -198,7 +198,7 @@ void irq_work_sync(struct irq_work *work
- {
- 	lockdep_assert_irqs_enabled();
- 
--	while (atomic_read(&work->flags) & IRQ_WORK_BUSY)
-+	while (irq_work_busy(work))
- 		cpu_relax();
- }
- EXPORT_SYMBOL_GPL(irq_work_sync);
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3031,10 +3031,8 @@ static void wake_up_klogd_work_func(stru
- 		wake_up_interruptible(&log_wait);
- }
- 
--static DEFINE_PER_CPU(struct irq_work, wake_up_klogd_work) = {
--	.func = wake_up_klogd_work_func,
--	.flags = ATOMIC_INIT(IRQ_WORK_LAZY),
--};
-+static DEFINE_PER_CPU(struct irq_work, wake_up_klogd_work) =
-+	IRQ_WORK_INIT_LAZY(wake_up_klogd_work_func);
- 
- void wake_up_klogd(void)
- {
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1273,8 +1273,6 @@ static int rcu_implicit_dynticks_qs(stru
- 		if (IS_ENABLED(CONFIG_IRQ_WORK) &&
- 		    !rdp->rcu_iw_pending && rdp->rcu_iw_gp_seq != rnp->gp_seq &&
- 		    (rnp->ffmask & rdp->grpmask)) {
--			init_irq_work(&rdp->rcu_iw, rcu_iw_handler);
--			atomic_set(&rdp->rcu_iw.flags, IRQ_WORK_HARD_IRQ);
- 			rdp->rcu_iw_pending = true;
- 			rdp->rcu_iw_gp_seq = rnp->gp_seq;
- 			irq_work_queue_on(&rdp->rcu_iw, rdp->cpu);
-@@ -3740,6 +3738,7 @@ int rcutree_prepare_cpu(unsigned int cpu
- 	rdp->cpu_no_qs.b.norm = true;
- 	rdp->core_needs_qs = false;
- 	rdp->rcu_iw_pending = false;
-+	rdp->rcu_iw = IRQ_WORK_INIT_HARD(rcu_iw_handler);
- 	rdp->rcu_iw_gp_seq = rdp->gp_seq - 1;
- 	trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("cpuonl"));
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -243,10 +243,8 @@ static void nohz_full_kick_func(struct i
- 	/* Empty, the tick restart happens on tick_nohz_irq_exit() */
- }
- 
--static DEFINE_PER_CPU(struct irq_work, nohz_full_kick_work) = {
--	.func = nohz_full_kick_func,
--	.flags = ATOMIC_INIT(IRQ_WORK_HARD_IRQ),
--};
-+static DEFINE_PER_CPU(struct irq_work, nohz_full_kick_work) =
-+	IRQ_WORK_INIT_HARD(nohz_full_kick_func);
- 
+-static inline void
+-rq_csd_init(struct rq *rq, call_single_data_t *csd, smp_call_func_t func)
+-{
+-	csd->flags = 0;
+-	csd->func = func;
+-	csd->info = rq;
+-}
+-
+ #ifdef CONFIG_SCHED_HRTICK
  /*
-  * Kick this CPU if it's full dynticks in order to force it to
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1013,7 +1013,7 @@ static int bpf_send_signal_common(u32 si
- 			return -EINVAL;
+  * Use HR-timers to deliver accurate preemption points.
+@@ -329,7 +321,7 @@ void hrtick_start(struct rq *rq, u64 del
+ static void hrtick_rq_init(struct rq *rq)
+ {
+ #ifdef CONFIG_SMP
+-	rq_csd_init(rq, &rq->hrtick_csd, __hrtick_start);
++	rq->hrtick_csd = CSD_INIT(__hrtick_start, rq);
+ #endif
+ 	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	rq->hrtick_timer.function = hrtick;
+@@ -6776,7 +6768,7 @@ void __init sched_init(void)
+ 		rq->last_blocked_load_update_tick = jiffies;
+ 		atomic_set(&rq->nohz_flags, 0);
  
- 		work = this_cpu_ptr(&send_signal_work);
--		if (atomic_read(&work->irq_work.flags) & IRQ_WORK_BUSY)
-+		if (irq_work_busy(&work->irq_work))
- 			return -EBUSY;
+-		rq_csd_init(rq, &rq->nohz_csd, nohz_csd_func);
++		rq->nohz_csd = CSD_INIT(nohz_csd_func, rq);
+ #endif
+ #endif /* CONFIG_SMP */
+ 		hrtick_rq_init(rq);
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -24,7 +24,7 @@
+ #include "smpboot.h"
+ #include "sched/smp.h"
  
- 		/* Add the current task, which is the target of sending signal,
+-#define CSD_TYPE(_csd)	((_csd)->flags & CSD_FLAG_TYPE_MASK)
++#define CSD_TYPE(_csd)	((_csd)->node.u_flags & CSD_FLAG_TYPE_MASK)
+ 
+ struct call_function_data {
+ 	call_single_data_t	__percpu *csd;
+@@ -105,13 +105,13 @@ void __init call_function_init(void)
+  */
+ static __always_inline void csd_lock_wait(call_single_data_t *csd)
+ {
+-	smp_cond_load_acquire(&csd->flags, !(VAL & CSD_FLAG_LOCK));
++	smp_cond_load_acquire(&csd->node.u_flags, !(VAL & CSD_FLAG_LOCK));
+ }
+ 
+ static __always_inline void csd_lock(call_single_data_t *csd)
+ {
+ 	csd_lock_wait(csd);
+-	csd->flags |= CSD_FLAG_LOCK;
++	csd->node.u_flags |= CSD_FLAG_LOCK;
+ 
+ 	/*
+ 	 * prevent CPU from reordering the above assignment
+@@ -123,12 +123,12 @@ static __always_inline void csd_lock(cal
+ 
+ static __always_inline void csd_unlock(call_single_data_t *csd)
+ {
+-	WARN_ON(!(csd->flags & CSD_FLAG_LOCK));
++	WARN_ON(!(csd->node.u_flags & CSD_FLAG_LOCK));
+ 
+ 	/*
+ 	 * ensure we're all done before releasing data:
+ 	 */
+-	smp_store_release(&csd->flags, 0);
++	smp_store_release(&csd->node.u_flags, 0);
+ }
+ 
+ static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, csd_data);
+@@ -180,7 +180,7 @@ static int generic_exec_single(int cpu,
+ 		return -ENXIO;
+ 	}
+ 
+-	__smp_call_single_queue(cpu, &csd->llist);
++	__smp_call_single_queue(cpu, &csd->node.llist);
+ 
+ 	return 0;
+ }
+@@ -233,7 +233,7 @@ static void flush_smp_call_function_queu
+ 		 * We don't have to use the _safe() variant here
+ 		 * because we are not invoking the IPI handlers yet.
+ 		 */
+-		llist_for_each_entry(csd, entry, llist) {
++		llist_for_each_entry(csd, entry, node.llist) {
+ 			switch (CSD_TYPE(csd)) {
+ 			case CSD_TYPE_ASYNC:
+ 			case CSD_TYPE_SYNC:
+@@ -258,22 +258,22 @@ static void flush_smp_call_function_queu
+ 	 * First; run all SYNC callbacks, people are waiting for us.
+ 	 */
+ 	prev = NULL;
+-	llist_for_each_entry_safe(csd, csd_next, entry, llist) {
++	llist_for_each_entry_safe(csd, csd_next, entry, node.llist) {
+ 		/* Do we wait until *after* callback? */
+ 		if (CSD_TYPE(csd) == CSD_TYPE_SYNC) {
+ 			smp_call_func_t func = csd->func;
+ 			void *info = csd->info;
+ 
+ 			if (prev) {
+-				prev->next = &csd_next->llist;
++				prev->next = &csd_next->node.llist;
+ 			} else {
+-				entry = &csd_next->llist;
++				entry = &csd_next->node.llist;
+ 			}
+ 
+ 			func(info);
+ 			csd_unlock(csd);
+ 		} else {
+-			prev = &csd->llist;
++			prev = &csd->node.llist;
+ 		}
+ 	}
+ 
+@@ -284,14 +284,14 @@ static void flush_smp_call_function_queu
+ 	 * Second; run all !SYNC callbacks.
+ 	 */
+ 	prev = NULL;
+-	llist_for_each_entry_safe(csd, csd_next, entry, llist) {
++	llist_for_each_entry_safe(csd, csd_next, entry, node.llist) {
+ 		int type = CSD_TYPE(csd);
+ 
+ 		if (type != CSD_TYPE_TTWU) {
+ 			if (prev) {
+-				prev->next = &csd_next->llist;
++				prev->next = &csd_next->node.llist;
+ 			} else {
+-				entry = &csd_next->llist;
++				entry = &csd_next->node.llist;
+ 			}
+ 
+ 			if (type == CSD_TYPE_ASYNC) {
+@@ -305,7 +305,7 @@ static void flush_smp_call_function_queu
+ 			}
+ 
+ 		} else {
+-			prev = &csd->llist;
++			prev = &csd->node.llist;
+ 		}
+ 	}
+ 
+@@ -341,7 +341,7 @@ int smp_call_function_single(int cpu, sm
+ {
+ 	call_single_data_t *csd;
+ 	call_single_data_t csd_stack = {
+-		.flags = CSD_FLAG_LOCK | CSD_TYPE_SYNC,
++		.node = { .u_flags = CSD_FLAG_LOCK | CSD_TYPE_SYNC, },
+ 	};
+ 	int this_cpu;
+ 	int err;
+@@ -416,12 +416,12 @@ int smp_call_function_single_async(int c
+ 
+ 	preempt_disable();
+ 
+-	if (csd->flags & CSD_FLAG_LOCK) {
++	if (csd->node.u_flags & CSD_FLAG_LOCK) {
+ 		err = -EBUSY;
+ 		goto out;
+ 	}
+ 
+-	csd->flags = CSD_FLAG_LOCK;
++	csd->node.u_flags = CSD_FLAG_LOCK;
+ 	smp_wmb();
+ 
+ 	err = generic_exec_single(cpu, csd);
+@@ -539,10 +539,10 @@ static void smp_call_function_many_cond(
+ 
+ 		csd_lock(csd);
+ 		if (wait)
+-			csd->flags |= CSD_TYPE_SYNC;
++			csd->node.u_flags |= CSD_TYPE_SYNC;
+ 		csd->func = func;
+ 		csd->info = info;
+-		if (llist_add(&csd->llist, &per_cpu(call_single_queue, cpu)))
++		if (llist_add(&csd->node.llist, &per_cpu(call_single_queue, cpu)))
+ 			__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
+ 	}
+ 
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -10643,8 +10643,7 @@ static int __init net_dev_init(void)
+ 		INIT_LIST_HEAD(&sd->poll_list);
+ 		sd->output_queue_tailp = &sd->output_queue;
+ #ifdef CONFIG_RPS
+-		sd->csd.func = rps_trigger_softirq;
+-		sd->csd.info = sd;
++		sd->csd = CSD_INIT(rps_trigger_softirq, sd);
+ 		sd->cpu = i;
+ #endif
+ 
 
 
