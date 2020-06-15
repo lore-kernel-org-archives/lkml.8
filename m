@@ -6,66 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8799A20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E773208C7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 23:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592264495;
-	bh=N1Ij/usB8zQH3UBOLC7sOuqSq5QNpKZThVTtUkokQlU=;
+	s=default; t=1592264507;
+	bh=yLKprjvYdeM2ZZTs7QutXPbGketTYe8lmu80ENlF0jY=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Zmn1CON2CXw3bINfDaUKZEXlwcCnSXItxsOBNUegugWqau6uEzr5fPncbY9RRhdhJ
-	 fRPG2Lb3jqtqLPaItxPp57Tq2HVkcrnLnGp3ONOTlhDkdhNmQJ3YGC10lO1H5JBqLY
-	 Xe048MhzEFQ4BBru5WChD1yDvG8XpkIfV6HNYJjo=
+	b=zCr35Ch3a5UILWKXLSPVJX1xccn90kvmbKxdWEpmISRzWIRstRexIAGFtaBlXyHLU
+	 qxLTQEWHHwNN/PT2AaoS6pfqOcjUWHbyZ22P4uyb3sAyEiX/Kq8vd3GQ/5iFoItdtM
+	 DFtdZfN9FskbRX5pZ5wgYXVkpHb04LcE/d37d/Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgFOXle (ORCPT
+        id S1727121AbgFOXlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 19:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54942 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 19:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgFOXld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 19:41:33 -0400
+        id S1726546AbgFOXln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 19:41:43 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54BD52080D;
-        Mon, 15 Jun 2020 23:41:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A79A207D3;
+        Mon, 15 Jun 2020 23:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592264492;
-        bh=N1Ij/usB8zQH3UBOLC7sOuqSq5QNpKZThVTtUkokQlU=;
+        s=default; t=1592264502;
+        bh=yLKprjvYdeM2ZZTs7QutXPbGketTYe8lmu80ENlF0jY=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=kvFwLRFSbEs5scz61K7kuHQL196g5fyYJPoHYLKA+b/8sSSzZW+z0JTFrUwPYQ1it
-         l3zXX3FSQv2cQ6/9Dep7/KG1wkUqiJU5uF4WKW7zYSwH//iofye5WkOtT7cxxx+D0J
-         NMiwC4OSbciUwPUuyr3j0oBN/0W+xSoNk9tlvl6c=
-Date:   Tue, 16 Jun 2020 00:41:30 +0100
+        b=2a2G1SOVrPxDawm1pzTc1nYf1WLvIYwZ0Fv1oax7R/33p0WJZH8ZOrsHQevlBLf44
+         5Dhk8UhA5WHoL+BdSPh/9F90ec2Z2qBQb4h1HcCJVOlyi+m/I53juMMlpZR74T25x+
+         9xIu73DUK127oJJhxctVCxOGbpu2NhSw/c25tncM=
+Date:   Tue, 16 Jun 2020 00:41:40 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-In-Reply-To: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1591736054-568-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 0/2] Add MSIOF support for R8A7742 SOC
-Message-Id: <159226448569.27735.1827248945903303044.b4-ty@kernel.org>
+To:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Xu Yilun <yilun.xu@intel.com>
+Cc:     russell.h.weight@intel.com, matthew.gerlach@linux.intel.com,
+        hao.wu@intel.com, trix@redhat.com
+In-Reply-To: <1591845911-10197-1-git-send-email-yilun.xu@intel.com>
+References: <1591845911-10197-1-git-send-email-yilun.xu@intel.com>
+Subject: Re: [PATCH 0/6] Add more configuration and regmap support for spi-altera
+Message-Id: <159226448570.27735.16680770943081080712.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 21:54:12 +0100, Lad Prabhakar wrote:
-> This patch series adds support for MSIOF on R8A7742 SOC.
+On Thu, 11 Jun 2020 11:25:05 +0800, Xu Yilun wrote:
+> This patchset adds platform_data for spi-altera, to enable more IP
+> configurations, and creating specific spi client devices. It also adds
+> regmap support, to enable the indirect access to this IP.
 > 
-> Cheers,
-> Prabhakar
-> 
-> Lad Prabhakar (2):
->   dt-bindings: spi: renesas,sh-msiof: Add r8a7742 support
->   ARM: dts: r8a7742: Add MSIOF[0123] support
+> We have a PCIE based FPGA platform which integrates this IP to communicate
+> with a BMC chip (Intel MAX10) over SPI. The IP is configured as 32bit data
+> width. There is also an indirect access interface in FPGA for host to
+> access the registers of this IP. This patchset enables this use case.
 > 
 > [...]
 
@@ -75,8 +71,12 @@ Applied to
 
 Thanks!
 
-[1/1] spi: renesas,sh-msiof: Add r8a7742 support
-      commit: 6383b118efafff8cce8fc8fa5b7e893a523b698f
+[1/3] spi: altera: add 32bit data width transfer support.
+      commit: 3011d314751535782508a86bbd8de415ea99909f
+[2/3] spi: altera: add SPI core parameters support via platform data.
+      commit: 8e04187c1bc7953f6dfad3400c58b1b0b0ad767b
+[3/3] spi: altera: add platform data for slave information.
+      commit: 1fccd182a4694a848f2d6f3b1820d6fc71d9c99d
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
