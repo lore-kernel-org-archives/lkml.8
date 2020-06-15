@@ -2,97 +2,90 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB80C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8CB207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A64E2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="IGw30QmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbgFONnN (ORCPT
+        id S1730057AbgFONoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:43:13 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:37341 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729766AbgFONnL (ORCPT
+        Mon, 15 Jun 2020 09:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729875AbgFONoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:43:11 -0400
-Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mw8cU-1it0HY3zKG-00s7EG; Mon, 15 Jun 2020 15:43:09 +0200
-Received: by mail-qt1-f169.google.com with SMTP id g62so12548439qtd.5;
-        Mon, 15 Jun 2020 06:43:08 -0700 (PDT)
-X-Gm-Message-State: AOAM533oOJiu6Mi5dcw5HQ5xZhmN5vYIJvIt+KPwy/rdqjmINu9VL4qr
-        Onj8rDU1VJRZ0P7mLV/W0xkU38n0ihIzsHj8PUI=
-X-Google-Smtp-Source: ABdhPJx0OrXbUjQwUsWKBodkMGMMvkpFLaAJzfOc49aX/puOn3OjGDjHT6HOJmLaKzQk1we2dir5thvL/kN4mVexpfQ=
-X-Received: by 2002:ac8:7417:: with SMTP id p23mr15803567qtq.204.1592228587251;
- Mon, 15 Jun 2020 06:43:07 -0700 (PDT)
+        Mon, 15 Jun 2020 09:44:15 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B78C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:44:15 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id v13so13111792otp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DkKzg92P2Wnmc9kMYYYrw93PtoNbrM8ZnPROxEKKoGY=;
+        b=IGw30QmJ+zoGDiIJebtjFFK1H5e+9EUGpw/HlqPgVsV3po4pBBzrd7wL1xOXbZCKlL
+         VMJK+1M4hHq4Ujc6lpsMU4FAJZMkdjuyS7+yyTZIN7YhgiPBYStd87+PSepcobYI+WRR
+         aFzTk4hsgfulW39A/h9w38hQ1GFGMs8s40EntE/XsOWOTpVB+RlAn6pHfzVn+uecbgKO
+         3tSHkXE3g7qTHRtUl0yXv7+RVhKXjDXetd2D8LREamfHmo9J0Fm5zrSpowKFNNipg1Ro
+         DFe1l2lZZeOsGq8MCrDQTgK9A8yyUWl3tktSeGzUqSDPcp5LmXeNa8L3Yt85Mlv+yx+a
+         8ctw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DkKzg92P2Wnmc9kMYYYrw93PtoNbrM8ZnPROxEKKoGY=;
+        b=VgfvyG+K74Zhh70vLn2JeQntutUOKgwsBXbGlLKa2bC2Ph8JXojArTIRTwId2J1ywC
+         V1Qln4jCRnFgbeIyxsiNhen86fHX8+g/IUJqyUT972v2qhhZSXeVmXlGvsO/cAGjVWOK
+         HmPRTuX7VZGalH1j1rng6VY9EWSbjIGUggJ5p1XYuH6vJakP1dcbgNRv2Hzt1ZVLd7qj
+         OKpDWg5HacD7DOEZoperHqKpoHjxXP+JnnvkffNmyJMhUoM5BujDHtQoHkLmUi/IaceT
+         f272x7stOvYyH0fbvCS0JvTayQ4ZZ9mghQHYhddpHh0JbEUAKImTYWYQ+ioUSndzcY/o
+         mI0Q==
+X-Gm-Message-State: AOAM533NJsy5FsYEuBhDcLIdT+R4tXHbiNRgAFMXBzKPdBcN4m1Ete2H
+        GU1IP2LRo8+5NL6kkqJLTG85QA==
+X-Google-Smtp-Source: ABdhPJyAlmEykMTdyfYusdBb3mxs03AQ09kHwYETLJTNl0C6+v5Qud6g/yU6aTwFkXV/gTFa0lZmKw==
+X-Received: by 2002:a9d:6b93:: with SMTP id b19mr20597483otq.31.1592228654131;
+        Mon, 15 Jun 2020 06:44:14 -0700 (PDT)
+Received: from cisco ([2601:282:b02:8120:f5b5:cc36:51c:a840])
+        by smtp.gmail.com with ESMTPSA id m84sm3132316oif.32.2020.06.15.06.44.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 06:44:13 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 07:44:06 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org
+Subject: Re: [RFC PATCH] seccomp: Add extensibility mechanism to read
+ notifications
+Message-ID: <20200615134406.GA2893648@cisco>
+References: <20200613072609.5919-1-sargun@sargun.me>
 MIME-Version: 1.0
-References: <20200615130032.931285-1-hch@lst.de>
-In-Reply-To: <20200615130032.931285-1-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 15 Jun 2020 15:42:51 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3CWhrfyR4taGip8xE3U6HcRMtKBY5A69_cqzJwU1N+Cw@mail.gmail.com>
-Message-ID: <CAK8P3a3CWhrfyR4taGip8xE3U6HcRMtKBY5A69_cqzJwU1N+Cw@mail.gmail.com>
-Subject: Re: properly support exec and wait with kernel pointers
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:rusj1mesNG8PiZzUVe5/rN2bwLYhg+ZprrFcw5Whf1VekE7WI/R
- efU6HaemjvIlwO2ZocfNFVc8NVj/hUyFhyPDK5eH9MsCCg9S2Rk4RrlwclH/V6oz2MasksG
- X1KmosfGRdj2OMrOzWlMOSUDvjkX8YWGvkjH5Hwpa6lJzWdPVWiiBmSxuEKqyRJ+K/6GZnc
- mttaIBpytdyyq/QlJxf1Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cSHZrhOSM4w=:ZFLH4rWdmx4Ny3qvYVPLt/
- E5QCmylrF9/f+xxmTZN58R4WkytL4+t4Y5WqL12OrMSFOIo3OpND9ibxwmlhU1yLuEn+tHVPO
- 9IAmq6F1+r4qJVOOx7HFZ+WcCVmJ5TlBQPBf5nfX4tZon6azNayZWi+mE5DY3XKdEHiXRyfia
- sbPBIFFPP5mXZEjIBIWM7DGlOZEE784lGHb9V6jAiteT32s/SJRhN9duf+CtSj5+1kXKybFQj
- wk8DyErE1n9IC5I7jeiLMUaXpJlvAaAz+O5uBCZxQpHH9WO2YbsVU8h+GvIDm5prRGe22U7Rz
- kS9H/XpYSM3qkkcX0nainDv+6UecbfgzGSKPgZeO/nM5MWvfYJVQdpRpy7vuonniMp4nu/yhU
- bUx5je8QxDa2KoY2G+8J1fF/cuSeEdR/YfpvJcQk55DNWDVuoPrm+qpSwKnNXEDZjFCpeUZyn
- XaXqoG8sco3+BNZDJ/B7lIwB/5Wm5yIUgf32wDEOAAB6RS+HnE/XWkXottZ+PgGLqAbcwjnp1
- LiUhW0IJ9Kv7zXvcPbX/1ydE2xm8iQ+jYvorl4waJIfHLuXQOZqyMFYvnllLee/5225K5PdGw
- E2kA4dkI/Oum+dJYoQE7U6/m1bv4NjgCQeSNpfvrI55vZ6XPvKl/fcBnrSfS4blL2f3xuGH9h
- 0lP1XefYK5SG7WsCPjwO5TXXdCwxP1BKWDVue0UM+ilbr3GBfJW+S+OPhWLmVsZ/jZiw6Gj1Q
- QHjHjTJSuxnFcpPXGOJNlSgGtilm19Cd83YSMoqRcd1THhSnrzg+HslOsR/JiHoy8lnu+0HUk
- j5xur1fjMASRqR61EWcHx8b9yZTzohCnH9puhiqDX1ItkTqk/0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613072609.5919-1-sargun@sargun.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 3:00 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> Hi all,
->
-> this series first cleans up the exec code and then adds proper
-> kernel_execveat and kernel_wait callers instead of relying on the fact
-> that the early init code and kernel threads implicitly run with
-> the address limit set to KERNEL_DS.
->
-> Note that the cleanup removes the compat execve(at) handlers (almost)
-> entirely, as we can handle the compat difference very nicely in a
-> unified codebase.  The only exception is x86 where this would list the
-> handlers twice in the same syscall table due to the messed up x32
-> design.  I had to add an extra compat handler just for that case, but
-> maybe someone has a better idea.
+On Sat, Jun 13, 2020 at 12:26:09AM -0700, Sargun Dhillon wrote:
+> This introduces an extensibility mechanism to receive seccomp
+> notifications. It uses read(2), as opposed to using an ioctl. The listener
+> must be first configured to write the notification via the
+> SECCOMP_IOCTL_NOTIF_CONFIG ioctl with the fields that the user is
+> interested in.
 
-I looked at all the patches and I like it a lot. I replied with some suggestions
-for x32, but maybe I misunderstood what its problem is, as I don't see
-anything preventing us from having two entries in the x32 table pointing
-to the same function.
+I think we're not supposed to use read for control any more, because
+"read is for data".
 
-       Arnd
+Tycho
