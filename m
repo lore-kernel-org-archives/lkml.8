@@ -2,240 +2,177 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63855C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78125C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DA4207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52882207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 18:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vJVJDRbS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PhMfsiax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbgFOSHm (ORCPT
+        id S1731276AbgFOSH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 14:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
+        Mon, 15 Jun 2020 14:07:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgFOSHm (ORCPT
+        with ESMTP id S1729862AbgFOSHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 14:07:42 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F7AAC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 11:07:41 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s10so7936084pgm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 11:07:41 -0700 (PDT)
+        Mon, 15 Jun 2020 14:07:54 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F958C061A0E;
+        Mon, 15 Jun 2020 11:07:54 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id n24so20268630lji.10;
+        Mon, 15 Jun 2020 11:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f51GDLsBir2dAMmlhVmB+JP/MQ48jFa5bE42ESbx4vQ=;
-        b=vJVJDRbSHJQyVm+QZONnR87czvKv/DXIwooc3Xyw/92Mjl44Fs+3KzISBmCdoMsRXU
-         h8lheqKzfqccOKU56okzVGUtCCESyp0tYHMlW7a5qvG7mMIM1AhGwFDfaUciwa02AouN
-         Dm540ICWNSCOXVItRldTGrZ2j19RCkSBx1qBXOIvm+d9xExgJ/aSRJs8QsFi08dcPKAI
-         Py4THGRKmqCdc1RU03ciQiVSI1ZHfeHSFDC0uHed4mtGwErNSlma2bY4vlLTwY059N5R
-         B4U5I8HmiqvTiIYwSE9CFF7EyJcxTYrKiqMQQH4HpXDZ81a7uaF5QFA+CdIFn4CDCs45
-         HK1w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NNImWCHhqtVojGsejk+J9a5xVKeWHP7W32GZw/jq2rU=;
+        b=PhMfsiax1F0GGmU/3UlPcnuAdoANLNF0BEfPxiOqIPK1akEnQxyIgigJivXEqMaXo0
+         a1qHBTdoHDqU628wXUXrX4pF/ySYe7Tb+Mb7PBD+JGteidbWgcKR/lHS+w4eEv0Y/XHC
+         X51dcTQjHHT1n1QYZ0YIJX057l07QPNIcqygM+gVP7pkeEnpm5xfzRUYoqFj2TWlEBtt
+         Lkm5ShpF/pfwZzxQX4q0xlQCySYBNxPtvyShbRykK97+sbUavl0hGJ4zu9smWN8LwYwU
+         KOm48VEI/Kreye82qxJtoEujLnviMUqzNNePJFWILkD2y8xUE3aGutF5D1n3XlEJXjrV
+         4R3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f51GDLsBir2dAMmlhVmB+JP/MQ48jFa5bE42ESbx4vQ=;
-        b=IPl6G0WbamywiadqoxRRKk/9gb3Z9tLshUn0xbT17UKGcAjwqV5nSefxIESLmzTwLG
-         MhsAkD4VMzIshF58cORK6dzPV/8i66wpfqkp5bytyl44xCWRQ6YQWqMVoj/prRxS8pZN
-         9VJW6E+Td7FacMcy3Asfw01NA4x9dTrlF5uZJXJbwmOddIXqVgya+hrSc9Duf58wIMUe
-         wGnL0sIn/xCczMXoIGqaoNVGiYIpPfXTPEuVpM+gCIo6unVNP0kTWysU8M3Orhdcbnil
-         +a+LLsa2jJYX3eEbOf0VAWw0PzavYIIGHLNR7UvyR9uIZDT2IBIj6J5QsX5IWXi2k+EK
-         2JAA==
-X-Gm-Message-State: AOAM530kHXdIURgrSwE2kaWeeNfDd2EdAirQJs0oZx/yNTJHaaJvrS8Q
-        1QZbTnfbbvmdIoXF+Dc/IzpgGBabKHzh8SugED3B3w==
-X-Google-Smtp-Source: ABdhPJxHYP7KA0QYxDXu7mev6O+7Etnn9xex/H7qdmDwGQ2qEuYZzM0Ra38xAOwl/y9htawzXbtYAceUKf/kz/6MTgE=
-X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr24597859pfu.169.1592244460591;
- Mon, 15 Jun 2020 11:07:40 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NNImWCHhqtVojGsejk+J9a5xVKeWHP7W32GZw/jq2rU=;
+        b=nyMrYUtyIkF7iS5LCzLg3LEwyNF9BS9vxt7iKh5yPZbOWkfpctAaPiCYodIbJw3FQY
+         JUP8hko6xhOTUFScFKrEiU0XwQ1W5axh2WjFr4PbMLN5xFtmQgB0gryW2xC1gJcK5mCx
+         1rQ2vHcMGjOvVvUexUUHGeU/HDp6INIaNwhRC52GPjftvG5etDCzLXxSnep4HSHf4bal
+         DzGYviLMFyctx0xytsxJmOtnZp2QR/jkKLkWQ2PsVmoXOVolhNbfKuoxfxDoHtcR1c1K
+         7bkuazTo7Cv/1T6ukKhqLyDFKyL+Z5b7exZwje8679ZuDx7x8LqJkZgjnRPB7vDbGzvL
+         k0dA==
+X-Gm-Message-State: AOAM530pPylwNpzzPwcsvBx8vZuMS0oGuP5GCO1338G4eZE91Aw8iPbD
+        no5G1bzp59c8NejzGeFHRAg=
+X-Google-Smtp-Source: ABdhPJxamRu1no/0/HxGYEY1/YGWpSzM/ErZw9qvr5rjj+WTz8FcixUS/8+BKmChF630FnamwPhT3A==
+X-Received: by 2002:a2e:81d4:: with SMTP id s20mr13376914ljg.184.1592244472721;
+        Mon, 15 Jun 2020 11:07:52 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id o16sm4678233ljg.90.2020.06.15.11.07.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 11:07:51 -0700 (PDT)
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v2_5/5=5d_drm/tegra=3a_plane=3a_Support_18?=
+ =?UTF-8?Q?0=c2=b0_rotation?=
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20200614200121.14147-1-digetx@gmail.com>
+ <20200614200121.14147-6-digetx@gmail.com> <20200615165758.GR6112@intel.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a22285cb-21d9-bb0e-3b6b-3b1876ebbb59@gmail.com>
+Date:   Mon, 15 Jun 2020 21:07:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200615062520.GK12456@shao2-debian> <CANn89i+s=oFTq6KFhT0z1CReQPZCGoEPShEFHVvXAmC9sUDH7g@mail.gmail.com>
- <CAKwvOdkv=L=QKQc7HtOi5ZNdao35m18PMr7ep+4sKv5iogVDLg@mail.gmail.com>
- <CANn89iJYCHqvCTvzommOL4RHtKLT5wyXMzpWKNfrBFTgs4kNAw@mail.gmail.com> <CANn89iLnmKaa30tPoyK_GrJr-_ALYBwjcJ0pBcvmckA9PAvrgA@mail.gmail.com>
-In-Reply-To: <CANn89iLnmKaa30tPoyK_GrJr-_ALYBwjcJ0pBcvmckA9PAvrgA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 15 Jun 2020 11:07:29 -0700
-Message-ID: <CAKwvOd=shEiDQZxZPyUCC=CJLrzmP5FHr04cE-KVN_-6+qz1jQ@mail.gmail.com>
-Subject: Re: net/sched/sch_fq.c:966:12: warning: stack frame size of 1400
- bytes in function 'fq_dump'
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200615165758.GR6112@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:59 AM 'Eric Dumazet' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> On Mon, Jun 15, 2020 at 10:54 AM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Mon, Jun 15, 2020 at 10:44 AM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > On Mon, Jun 15, 2020 at 9:17 AM 'Eric Dumazet' via Clang Built Linux
-> > > <clang-built-linux@googlegroups.com> wrote:
-> > > >
-> > > > On Sun, Jun 14, 2020 at 11:26 PM kernel test robot <lkp@intel.com> wrote:
-> > > > >
-> > > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > > > > head:   96144c58abe7ff767e754b5b80995f7b8846d49b
-> > > > > commit: 39d010504e6b4485d7ceee167743620dd33f4417 net_sched: sch_fq: add horizon attribute
-> > > > > date:   6 weeks ago
-> > > > > :::::: branch date: 3 hours ago
-> > > > > :::::: commit date: 6 weeks ago
-> > > > > config: arm-randconfig-r006-20200614 (attached as .config)
-> > > > > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project c669a1ed6386d57a75a602b53266466dae1e1d84)
-> > > > > reproduce (this is a W=1 build):
-> > > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > > >         chmod +x ~/bin/make.cross
-> > > > >         # install arm cross compiling tool for clang build
-> > > > >         # apt-get install binutils-arm-linux-gnueabi
-> > > > >         git checkout 39d010504e6b4485d7ceee167743620dd33f4417
-> > > > >         # save the attached .config to linux build tree
-> > > > >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm
-> > > > >
-> > > > > If you fix the issue, kindly add following tag as appropriate
-> > > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > >
-> > > > > All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> > > > >
-> > > > > >> net/sched/sch_fq.c:966:12: warning: stack frame size of 1400 bytes in function 'fq_dump' [-Wframe-larger-than=]
-> > > > > static int fq_dump(struct Qdisc *sch, struct sk_buff *skb)
-> > > > > ^
-> > > >
-> > > >
-> > > > This looks like a bug in CLANG on ARM, there is no way fq_dump() could
-> > > > consume so much stack space.
-> > >
-> > > You can use
-> > > https://github.com/ClangBuiltLinux/frame-larger-than
-> > > to help debug these.  You might be surprised who's doing larger stack
-> > > allocations than expected.
-> >
-> > What is wrong with scripts/checkstack.pl  ?
->
-> After using CLANG on x86 I get :
->
-> $ objdump -d net/sched/sch_fq.o | scripts/checkstack.pl
-> 0x00001136 fq_change [sch_fq.o]: 192
-> 0x00000016 __direct_call_Qdisc_enqueue1 [sch_fq.o]: 112
-> 0x000019e0 fq_dump_stats [sch_fq.o]: 112
-> 0x00001b43 fq_dump_stats [sch_fq.o]: 112
->
-> So CLANG on x86 seems fine.
->
-> I said : " this looks like a bug in CLANG on ARM"
+15.06.2020 19:57, Ville Syrjälä пишет:
+> On Sun, Jun 14, 2020 at 11:01:21PM +0300, Dmitry Osipenko wrote:
+>> Combining horizontal and vertical reflections gives us 180 degrees of
+>> rotation.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/gpu/drm/tegra/dc.c | 13 ++++++++++++-
+>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+>> index f31bca27cde4..ddd9b88f8fce 100644
+>> --- a/drivers/gpu/drm/tegra/dc.c
+>> +++ b/drivers/gpu/drm/tegra/dc.c
+>> @@ -608,6 +608,7 @@ static int tegra_plane_atomic_check(struct drm_plane *plane,
+>>  {
+>>  	struct tegra_plane_state *plane_state = to_tegra_plane_state(state);
+>>  	unsigned int rotation = DRM_MODE_ROTATE_0 |
+>> +				DRM_MODE_ROTATE_180 |
+> 
+> Leave this out ...
+> 
+>>  				DRM_MODE_REFLECT_X |
+>>  				DRM_MODE_REFLECT_Y;
+>>  	struct tegra_bo_tiling *tiling = &plane_state->tiling;
+>> @@ -659,6 +660,14 @@ static int tegra_plane_atomic_check(struct drm_plane *plane,
+>>  	else
+>>  		plane_state->reflect_y = false;
+>>  
+>> +	if (tegra_fb_is_bottom_up(state->fb))
+>> +		plane_state->reflect_y = true;
+>> +
+>> +	if (rotation & DRM_MODE_ROTATE_180) {
+>> +		plane_state->reflect_x = !plane_state->reflect_x;
+>> +		plane_state->reflect_y = !plane_state->reflect_y;
+>> +	}
+> 
+> ... and drm_rotation_simplify() will do this for you.
 
-This is a randconfig, so some option is turning on something that's
-causing excessive stack usage with your patch on ARM.  Building who
-knows what config with x86 and claiming it works doesn't really cut
-it.  You looked at fq_dump and claimed it should be fine.  Did you
-verify each called function that was inlined?
+Hello Ville,
 
-And the issue with checkstack is it tells you the depth, but not *what
-variables* and from which inlined function may be the cause.
+Indeed, thank you for the suggestion!
 
->
->
->
-> >
-> > >
-> > > >
-> > > >
-> > > >
-> > > > > 1 warning generated.
-> > > > >
-> > > > > # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39d010504e6b4485d7ceee167743620dd33f4417
-> > > > > git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > > > > git remote update linus
-> > > > > git checkout 39d010504e6b4485d7ceee167743620dd33f4417
-> > > > > vim +/fq_dump +966 net/sched/sch_fq.c
-> > > > >
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   965
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  @966  static int fq_dump(struct Qdisc *sch, struct sk_buff *skb)
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   967  {
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   968          struct fq_sched_data *q = qdisc_priv(sch);
-> > > > > 48872c11b77271 Eric Dumazet   2018-11-11   969          u64 ce_threshold = q->ce_threshold;
-> > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   970          u64 horizon = q->horizon;
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   971          struct nlattr *opts;
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   972
-> > > > > ae0be8de9a53cd Michal Kubecek 2019-04-26   973          opts = nla_nest_start_noflag(skb, TCA_OPTIONS);
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   974          if (opts == NULL)
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   975                  goto nla_put_failure;
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   976
-> > > > > 65c5189a2b57b9 Eric Dumazet   2013-11-15   977          /* TCA_FQ_FLOW_DEFAULT_RATE is not used anymore */
-> > > > > 65c5189a2b57b9 Eric Dumazet   2013-11-15   978
-> > > > > 48872c11b77271 Eric Dumazet   2018-11-11   979          do_div(ce_threshold, NSEC_PER_USEC);
-> > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   980          do_div(horizon, NSEC_PER_USEC);
-> > > > > 48872c11b77271 Eric Dumazet   2018-11-11   981
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   982          if (nla_put_u32(skb, TCA_FQ_PLIMIT, sch->limit) ||
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   983              nla_put_u32(skb, TCA_FQ_FLOW_PLIMIT, q->flow_plimit) ||
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   984              nla_put_u32(skb, TCA_FQ_QUANTUM, q->quantum) ||
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   985              nla_put_u32(skb, TCA_FQ_INITIAL_QUANTUM, q->initial_quantum) ||
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   986              nla_put_u32(skb, TCA_FQ_RATE_ENABLE, q->rate_enable) ||
-> > > > > 76a9ebe811fb3d Eric Dumazet   2018-10-15   987              nla_put_u32(skb, TCA_FQ_FLOW_MAX_RATE,
-> > > > > 76a9ebe811fb3d Eric Dumazet   2018-10-15   988                          min_t(unsigned long, q->flow_max_rate, ~0U)) ||
-> > > > > f52ed89971adbe Eric Dumazet   2013-11-15   989              nla_put_u32(skb, TCA_FQ_FLOW_REFILL_DELAY,
-> > > > > f52ed89971adbe Eric Dumazet   2013-11-15   990                          jiffies_to_usecs(q->flow_refill_delay)) ||
-> > > > > 06eb395fa9856b Eric Dumazet   2015-02-04   991              nla_put_u32(skb, TCA_FQ_ORPHAN_MASK, q->orphan_mask) ||
-> > > > > 77879147a3481b Eric Dumazet   2016-09-19   992              nla_put_u32(skb, TCA_FQ_LOW_RATE_THRESHOLD,
-> > > > > 77879147a3481b Eric Dumazet   2016-09-19   993                          q->low_rate_threshold) ||
-> > > > > 48872c11b77271 Eric Dumazet   2018-11-11   994              nla_put_u32(skb, TCA_FQ_CE_THRESHOLD, (u32)ce_threshold) ||
-> > > > > 583396f4ca4d6e Eric Dumazet   2020-03-16   995              nla_put_u32(skb, TCA_FQ_BUCKETS_LOG, q->fq_trees_log) ||
-> > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   996              nla_put_u32(skb, TCA_FQ_TIMER_SLACK, q->timer_slack) ||
-> > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   997              nla_put_u32(skb, TCA_FQ_HORIZON, (u32)horizon) ||
-> > > > > 39d010504e6b44 Eric Dumazet   2020-05-01   998              nla_put_u8(skb, TCA_FQ_HORIZON_DROP, q->horizon_drop))
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29   999                  goto nla_put_failure;
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1000
-> > > > > d59b7d8059ddc4 Yang Yingliang 2014-03-12  1001          return nla_nest_end(skb, opts);
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1002
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1003  nla_put_failure:
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1004          return -1;
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1005  }
-> > > > > afe4fd062416b1 Eric Dumazet   2013-08-29  1006
-> > > > >
-> > > > > :::::: The code at line 966 was first introduced by commit
-> > > > > :::::: afe4fd062416b158a8a8538b23adc1930a9b88dc pkt_sched: fq: Fair Queue packet scheduler
-> > > > >
-> > > > > :::::: TO: Eric Dumazet <edumazet@google.com>
-> > > > > :::::: CC: David S. Miller <davem@davemloft.net>
-> > > > >
-> > > > > ---
-> > > > > 0-DAY CI Kernel Test Service, Intel Corporation
-> > > > > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> > > > > _______________________________________________
-> > > > > kbuild mailing list -- kbuild@lists.01.org
-> > > > > To unsubscribe send an email to kbuild-leave@lists.01.org
-> > > >
-> > > > --
-> > > > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > > > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > > > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CANn89i%2Bs%3DoFTq6KFhT0z1CReQPZCGoEPShEFHVvXAmC9sUDH7g%40mail.gmail.com.
-> > >
-> > >
-> > >
-> > > --
-> > > Thanks,
-> > > ~Nick Desaulniers
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CANn89iLnmKaa30tPoyK_GrJr-_ALYBwjcJ0pBcvmckA9PAvrgA%40mail.gmail.com.
+> Though the bottim_up() thing will need a slightly different tweak I
+> guess.
+> 
+> I'd write this as somehting like:
+> rotation = state->rotation;
+> if (bottom_up())
+> 	rotation ^= DRM_MODE_REFLECT_Y;
+> rotation = drm_rotation_simplify(rotation,
+> 				 DRM_MODE_ROTATE_0 |
+> 				 DRM_MODE_REFLECT_X |
+> 				 DRM_MODE_REFLECT_Y;
+> 
+> Also note my use of XOR for the bottom_up() handling. I suspect
+> the current code is already broken if you combine bottom_up()
+> and REFLECT_Y since it just uses an OR instead of an XOR. That's
+> assuming my hucnh what bottom_up() is supposed to do is correct.
 
+The bottom_up() is a legacy way of specifying reflect_y flag of the
+modern DRM's rotation property. It's was used by older userspace before
+Tegra DRM driver got support for the rotation property and we keep it
+today in order to maintain backwards compatibility with older userspace.
+Although, maybe it's about time to retire it since I don't think that
+such old userspace exists anymore.
 
+The legacy bottom_up() duplicates the modern reflect_y flag, so these
+are not mutually exclusive. Combining with yours suggestion above, we
+can write it in this way:
 
--- 
-Thanks,
-~Nick Desaulniers
+  /*
+   * Older userspace used custom BO flag in order to specify
+   * the Y reflection, while modern userspace uses the generic
+   * DRM rotation property in order to achieve the same result.
+   * The legacy BO flag amends the modern rotation property
+   * when both are set.
+   */
+  if (tegra_fb_is_bottom_up(state->fb))
+    rotation = drm_rotation_simplify(state->rotation |
+                                     DRM_MODE_REFLECT_Y,
+                                     rotation);
+  else
+    rotation = drm_rotation_simplify(state->rotation,
+                                     rotation);
+
+Thank you very much for taking a look at this patch! I'll prepare v3 in
+accordance to yours comments.
