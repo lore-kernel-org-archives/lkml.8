@@ -2,133 +2,115 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25403C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F068020739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="oNj8hWZt"
+	by mail.kernel.org (Postfix) with ESMTP id 64A7F206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592203346;
+	bh=7xqClezn+XLBX7i3FDe2bv3gv8yisqFUxYU0iWm999I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2l/TRxJG0SB3eOCErM/o7HoUvI/VEMLF9RbxzyL20B/M57YC4ooJ2AtmLSwkEOpgM
+	 gZoYTfCad2jjCnjndU8IqVyJExoS4+jbUy1OUlpd3IVlfm11Vd0oyy3BFv3KAtYa+3
+	 lZXw2YNygQxjf0Zzhw/UL0cQfys2zP2/ydwlIHPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgFOGl5 (ORCPT
+        id S1728434AbgFOGmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:41:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgFOGl4 (ORCPT
+        Mon, 15 Jun 2020 02:42:24 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41645 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgFOGmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:41:56 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBA2C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:41:56 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id z2so14252335ilq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bK0Qp6h6dwfemWmyvHsC+Wip59HhIpavOmMER/ZWjbw=;
-        b=oNj8hWZtqPfHdMws2rjs6Zk9srH9hbdHfv4lMssnWJONTrkBSWKZ/qkpqhTrc0kG2X
-         KpMM55sKx6/MSq9CpAj3L6i1BnwfQnWPAWfbhvkzsIed7u+BuvCZDOA6Rk4o0aIo09rH
-         DO/OIb1SuKDxpoLs6tm8UFJ5vMWJCTCTYxys2qj8r/1Zf9s/9fDYAWLCCzsZdsludgj8
-         Wy7gr8hb9yBkBgEXVmAEu5FUDPaYeLzCAvguRIPcFpvViOK2gBD28JilN8FFa5EKJ2p8
-         VqTnw2KN+SWWaFZrNYDtKofXfUjNfZtMYsN2IMEI7vqPpJPNw133B+5Yez8b3PNDCLhE
-         4HTw==
+        Mon, 15 Jun 2020 02:42:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j10so15791321wrw.8
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Jun 2020 23:42:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bK0Qp6h6dwfemWmyvHsC+Wip59HhIpavOmMER/ZWjbw=;
-        b=bjp1jp81UG2T6SCuDuvKNDUscgrx3qcwzceOgnNBGJjLGrMGEgML5+EooGWupLsZXc
-         ZR8fvz0qcltpV5k/Q2vJRVsuAeEmoraqa+tnVRcTfB0cvvcsZTfsEiQgMOZX+GMoK4Me
-         VFahEVi9Io2LSEYsCxcGoA3bMdyh0EHRNkr0nx2QODZ8ivdICKFjrcrbKL91gn7cEOwQ
-         aCI6mBDzzrRXLvyA7GmfOHM2tgc6rvrmBQfVEeqFjxgj7dJGbMprfnlxQ+cy6ZnXQOdo
-         FvydpDUXbA6wvEG+c043zN/L4RcujXKlHS2YMIqXq9Q7n3rNHdDF/EiT01UVrBh6JniS
-         +aCA==
-X-Gm-Message-State: AOAM532kTf8/o9vx2iIcRJ0yl786pZjfrKQEtBBU9Y3XYqSF5hhhyNlH
-        YT6wdQu0aVfoafm9BPp1Xml6U0r7ZqbYnBtaTqmJsQ==
-X-Google-Smtp-Source: ABdhPJzlI9S3kYF9RYQ4+SUFFVK1+FFHn0zDGsj9Q8tKs+ZRaYfChlqYUW4i6u1gfiAX/mlgFULixFQDtsob/T5Ip8U=
-X-Received: by 2002:a92:d1d0:: with SMTP id u16mr24697660ilg.2.1592203315520;
- Sun, 14 Jun 2020 23:41:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=r5bbY+2GSPiy6U8SvmPVHs8hp2v5pEnTmjUC34UGuPc=;
+        b=A135TxUplBv5TP7yop7xA4MgZCmzEHV4flpdG11OANUw20Joq4ZCG61C7vAehszwZM
+         0WllDiDQTd64vv05gHJXNmo5hOlLM9U4GgUqoo8U0kuhZEs2HlrKStQ6W4opZjxs4KpT
+         VZRXlpHbjbQzFAyj0noPGaoIJ1bonsD2ezmL7q9LiHAl8MB5/fMImUzHQMKdm28dyIv2
+         qA6bFbExfV/lnLZBnhCAd32NtwC1WHFR75H+R1Wcztd0rm4nff9fWACxHOt2ysvFYX/j
+         mLhjvlBxM8PY2Fd6qarlCA5D3rf9klQpU08zTjYxlYYWyDEIdk7vBcLkAP8clvDXNdlU
+         xM6A==
+X-Gm-Message-State: AOAM533VyMYk6Y2r76sbgJi7/0UU1yilVtD5dg82E71Kc/C/vHt07NeL
+        9+yK3VypyPPWNwGgpIMVhOs=
+X-Google-Smtp-Source: ABdhPJzuZ4QyVs1o9eY/IW0ZUzlwf4irr7o0CATLvQzfHAqo+xJXFL4GQptQe8/gC8HJp3y5qGV8yg==
+X-Received: by 2002:adf:e4d1:: with SMTP id v17mr26738308wrm.224.1592203341583;
+        Sun, 14 Jun 2020 23:42:21 -0700 (PDT)
+Received: from localhost (ip-37-188-174-201.eurotel.cz. [37.188.174.201])
+        by smtp.gmail.com with ESMTPSA id h27sm26967510wrb.18.2020.06.14.23.42.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jun 2020 23:42:20 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 08:42:19 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Subject: Re: [PATCH] mm, memcg: prevent missed memory.low load tears
+Message-ID: <20200615064219.GA25296@dhcp22.suse.cz>
+References: <20200612174437.GA391453@chrisdown.name>
 MIME-Version: 1.0
-References: <20200614123923.99189-1-songmuchun@bytedance.com>
- <20200614123923.99189-4-songmuchun@bytedance.com> <CAAmzW4N1DRBxsMAX2a_jxUW10vOwW1VsGj8ztuvvWT4NB3Ocnw@mail.gmail.com>
-In-Reply-To: <CAAmzW4N1DRBxsMAX2a_jxUW10vOwW1VsGj8ztuvvWT4NB3Ocnw@mail.gmail.com>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Mon, 15 Jun 2020 14:41:19 +0800
-Message-ID: <CAMZfGtUQ+0w=n9YSQjQc1uwJFJrvtfj=rcTnNYnewCPiHmDLEw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH 3/3] mm/slub: Fix release all resources
- used by a slab cache
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200612174437.GA391453@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 2:23 PM Joonsoo Kim <js1304@gmail.com> wrote:
->
-> 2020=EB=85=84 6=EC=9B=94 14=EC=9D=BC (=EC=9D=BC) =EC=98=A4=ED=9B=84 9:39,=
- Muchun Song <songmuchun@bytedance.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
-> >
-> > The function of __kmem_cache_shutdown() is that release all resources
-> > used by the slab cache, while currently it stop release resources when
-> > the preceding node is not empty.
-> >
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > ---
-> >  mm/slub.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/mm/slub.c b/mm/slub.c
-> > index b73505df3de2..4e477ef0f2b9 100644
-> > --- a/mm/slub.c
-> > +++ b/mm/slub.c
-> > @@ -3839,6 +3839,7 @@ bool __kmem_cache_empty(struct kmem_cache *s)
-> >   */
-> >  int __kmem_cache_shutdown(struct kmem_cache *s)
-> >  {
-> > +       int ret =3D 0;
-> >         int node;
-> >         struct kmem_cache_node *n;
-> >
-> > @@ -3846,11 +3847,11 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
-> >         /* Attempt to free all objects */
-> >         for_each_kmem_cache_node(s, node, n) {
-> >                 free_partial(s, n);
-> > -               if (node_nr_slabs(n))
-> > -                       return 1;
-> > +               if (!ret && node_nr_slabs(n))
-> > +                       ret =3D 1;
-> >         }
->
-> I don't think that this is an improvement.
->
-> If the shutdown condition isn't met, we don't need to process further.
-> Just 'return 1' looks okay to me.
->
-> And, with this change, sysfs_slab_remove() is called even if the
-> shutdown is failed.
-> It's better not to have side effects when failing.
+On Fri 12-06-20 18:44:37, Chris Down wrote:
+> Looks like one of these got missed when massaging in f86b810c2610 ("mm,
+> memcg: prevent memory.low load/store tearing") with other linux-mm
+> changes.
+> 
+> Reported-by: Michal Koutný <mkoutny@suse.com>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
 
-If someone calls __kmem_cache_shutdown, he may want to release
-resources used by the slab cache as much as possible. If we continue,
-we may release more pages. From this point, is it an improvement?
+Acked-by: Michal Hocko <mhocko@suse.com>
 
---=20
-Yours,
-Muchun
+> ---
+>  mm/memcontrol.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 0b38b6ad547d..f7cc66a80348 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6416,7 +6416,7 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>  
+>  	if (parent == root) {
+>  		memcg->memory.emin = READ_ONCE(memcg->memory.min);
+> -		memcg->memory.elow = memcg->memory.low;
+> +		memcg->memory.elow = READ_ONCE(memcg->memory.low);
+>  		goto out;
+>  	}
+>  
+> @@ -6428,7 +6428,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>  			atomic_long_read(&parent->memory.children_min_usage)));
+>  
+>  	WRITE_ONCE(memcg->memory.elow, effective_protection(usage, parent_usage,
+> -			memcg->memory.low, READ_ONCE(parent->memory.elow),
+> +			READ_ONCE(memcg->memory.low),
+> +			READ_ONCE(parent->memory.elow),
+>  			atomic_long_read(&parent->memory.children_low_usage)));
+>  
+>  out:
+> -- 
+> 2.27.0
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
