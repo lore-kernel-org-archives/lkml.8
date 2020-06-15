@@ -2,115 +2,116 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3733BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C392C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 154892071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592232963;
-	bh=2TC//kCSiqr/n1JFxAXwx0DjT4t5nRNJzXNSfvJPnHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VA41BpjCNnIkH8cKGa9hsi66XQcFz3jlxA1+eKWQMLATvD30gWWBDeN/yKFZ8KUK1
-	 58Fp9Ev6DNLKRrTb14lQjNTWC8JayBr3dQIslL5POHg2mmRrhOvbSsdQ/LYC2BPFW9
-	 aUIjAuW17RdOqZrGxp80x4NLuK9zWlTkGdwbR46U=
+	by mail.kernel.org (Postfix) with ESMTP id 7BA1B20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:56:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ffNKK/c6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730834AbgFOO4A (ORCPT
+        id S1730843AbgFOO4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43552 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 10:56:35 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57451 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730213AbgFOOz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:55:59 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730747AbgFOO4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:56:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592232994; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=RTqnmaAhKbyyX5m1MHI2x1eM5OG8zLQJxTp6BIGwfIk=; b=ffNKK/c64j1GQNR54vNuyufjjpx7JOMxPH3L+B+wmGecBfIVxfatxXH3nf2rioJbrnpPcfdJ
+ 0dyYxHiQbKbi7YgZiFSkvUnI6471MQgE3BunsrkSglnSyGkHd+CLAtOaeihDRBrQwZNxYewJ
+ +NPn5qd8hM+W8U5nF1HGnZvEeHE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ee78c183a8a8b20b8539e91 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 14:56:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E58F7C433C8; Mon, 15 Jun 2020 14:56:23 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B7E20644;
-        Mon, 15 Jun 2020 14:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592232958;
-        bh=2TC//kCSiqr/n1JFxAXwx0DjT4t5nRNJzXNSfvJPnHQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WAzQ4fSL7Ni+8MhSFeK+hvrEhia4ExOvj7gnafrN8h09OzqA8zOjGsggpxgqezOZb
-         /FiV+/68Cwz+OQkYgCZvTdup8NA67tIxQiZtGhIeChI9QUQ1HW4FBBZ+bwiaqevDRJ
-         hcqc3jkKbV2Vqns7sVYJ1qD2BUt+qAK841dWOONM=
-Date:   Mon, 15 Jun 2020 15:55:56 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Message-ID: <20200615145556.GY4447@sirena.org.uk>
-References: <20200612101357.GA5396@sirena.org.uk>
- <VE1PR04MB66384013797FE6B01943F2A889810@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200612141611.GI5396@sirena.org.uk>
- <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615123553.GP4447@sirena.org.uk>
- <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615133905.GV4447@sirena.org.uk>
- <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615143622.GX4447@sirena.org.uk>
- <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB0F6C433CA;
+        Mon, 15 Jun 2020 14:56:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EB0F6C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, ath10k@lists.infradead.org,
+        Rakesh Pillai <pillair@codeaurora.org>,
+        netdev <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, kuabhs@google.com
+Subject: Re: [PATCH] ath10k: Wait until copy complete is actually done before completing
+References: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+        <20200615143237.519F3C433C8@smtp.codeaurora.org>
+        <CAD=FV=VaexjLaaZJSxndTEi6KCFaPWW=sUt6hjy9=0Qn68kH1g@mail.gmail.com>
+Date:   Mon, 15 Jun 2020 17:56:19 +0300
+In-Reply-To: <CAD=FV=VaexjLaaZJSxndTEi6KCFaPWW=sUt6hjy9=0Qn68kH1g@mail.gmail.com>
+        (Doug Anderson's message of "Mon, 15 Jun 2020 07:39:33 -0700")
+Message-ID: <87zh94idik.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lPJ5i9rX1WvdYcWF"
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Doug Anderson <dianders@chromium.org> writes:
 
---lPJ5i9rX1WvdYcWF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Mon, Jun 15, 2020 at 7:32 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>>
+>> Douglas Anderson <dianders@chromium.org> wrote:
+>>
+>> > On wcn3990 we have "per_ce_irq = true".  That makes the
+>> > ath10k_ce_interrupt_summary() function always return 0xfff. The
+>> > ath10k_ce_per_engine_service_any() function will see this and think
+>> > that _all_ copy engines have an interrupt.  Without checking, the
+>> > ath10k_ce_per_engine_service() assumes that if it's called that the
+>> > "copy complete" (cc) interrupt fired.  This combination seems bad.
+>> >
+>> > Let's add a check to make sure that the "copy complete" interrupt
+>> > actually fired in ath10k_ce_per_engine_service().
+>> >
+>> > This might fix a hard-to-reproduce failure where it appears that the
+>> > copy complete handlers run before the copy is really complete.
+>> > Specifically a symptom was that we were seeing this on a Qualcomm
+>> > sc7180 board:
+>> >   arm-smmu 15000000.iommu: Unhandled context fault:
+>> >   fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
+>> >
+>> > Even on platforms that don't have wcn3990 this still seems like it
+>> > would be a sane thing to do.  Specifically the current IRQ handler
+>> > comments indicate that there might be other misc interrupt sources
+>> > firing that need to be cleared.  If one of those sources was the one
+>> > that caused the IRQ handler to be called it would also be important to
+>> > double-check that the interrupt we cared about actually fired.
+>> >
+>> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+>>
+>> ath10k firmwares work very differently, on what hardware and firmware did you
+>> test this? I'll add that information to the commit log.
+>
+> I am running on a Qualcomm sc7180 SoC.
 
-On Mon, Jun 15, 2020 at 02:53:29PM +0000, Robin Gong wrote:
-> On 2020/06/15 22:36 Mark Brown <broonie@kernel.org> wrote:=20
+Sorry, I was unclear, I meant the ath10k hardware :) I guess WCN3990 but
+what firmware version?
 
-> > We could also pass in a flag that could be set separately to the error =
-code to
-> > indicate that nothing had happened to the hardware yet.
-
-> Do you mean spi-imx.c checking 'ctlr->flags' before return such error cod=
-e?
-> Or just like below done in spi.c.
-
-No, I mean passing in an additional argument which can provide richer
-data than trying to smash things into the return value.
-
---lPJ5i9rX1WvdYcWF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ni/sACgkQJNaLcl1U
-h9DpXQf9G2jk6fHADMgZvO5cMWF40DK3HTy0XpAr55BZ3EtoJ9SfnWU4hvTmyvn/
-9gWPmaXi84y5Uq1tvrYZXp70urjy0GAgJD6gpSDPq1PPql9PhVdPtOWg0K9KYt1r
-iGep527JQyKrorlKPIZ1SLN/9qxexF4GMjkyR7Bjx4H9rrSCKyG+TLrNFGQZL0ft
-Z93yp3K+RJb8TfYwIF50LbTix6pY4mTd6kNG7rd4RLinkGjBWZWnbdwKQkgBeffM
-qKVL0ySu1Pgd24bOR6aCKQxdKuCAyxj6dy5Hwya7ZgryKH0eVDdS3P0Vx5pqXS1l
-jXQt7/A7B3EFdjfQTsqDuDAuACaijw==
-=lGYg
------END PGP SIGNATURE-----
-
---lPJ5i9rX1WvdYcWF--
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
