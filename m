@@ -2,75 +2,121 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71379C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515952074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27F4207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731494AbgFOUWk (ORCPT
+        id S1731507AbgFOUWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728492AbgFOUWj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:22:39 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8A2C061A0E;
-        Mon, 15 Jun 2020 13:22:39 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0E9C2120ED49B;
-        Mon, 15 Jun 2020 13:22:39 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 13:22:38 -0700 (PDT)
-Message-Id: <20200615.132238.313795664514868636.davem@davemloft.net>
-To:     olteanv@gmail.com
-Cc:     netdev@vger.kernel.org, UNGLinuxDriver@microchip.com,
-        claudiu.manoil@nxp.com, alexandre.belloni@bootlin.com,
-        andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net] MAINTAINERS: merge entries for felix and ocelot
- drivers
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200615164244.2012128-1-olteanv@gmail.com>
-References: <20200615164244.2012128-1-olteanv@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 15 Jun 2020 16:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731172AbgFOUWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 16:22:48 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E22A2074D;
+        Mon, 15 Jun 2020 20:22:47 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 16:22:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@redhat.com>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/trace: Remove function callback casts
+Message-ID: <20200615162245.13d3feff@oasis.local.home>
+In-Reply-To: <20200615161738.18d07ce6@oasis.local.home>
+References: <20200614070154.6039-1-oscar.carter@gmx.com>
+        <20200615161738.18d07ce6@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jun 2020 13:22:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
-Date: Mon, 15 Jun 2020 19:42:44 +0300
+On Mon, 15 Jun 2020 16:17:38 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> On Sun, 14 Jun 2020 09:01:54 +0200
+> Oscar Carter <oscar.carter@gmx.com> wrote:
 > 
-> The ocelot switchdev driver also provides a set of library functions for
-> the felix DSA driver, which in practice means that most of the patches
-> will be of interest to both groups of driver maintainers.
+> > In an effort to enable -Wcast-function-type in the top-level Makefile to
+> > support Control Flow Integrity builds, remove all the function callback
+> > casts.
+> > 
+> > To do this, use the ftrace_ops_list_func function as a wrapper when the
+> > arch not supports ftrace ops instead of the use of a function cast.
+> >   
 > 
-> So, as also suggested in the discussion here, let's merge the 2 entries
-> into a single larger one:
-> https://www.spinics.net/lists/netdev/msg657412.html
+> We need more tricker than this.
 > 
-> Note that the entry has been renamed into "OCELOT SWITCH" since neither
-> Vitesse nor Microsemi exist any longer as company names, instead they
-> are now named Microchip (which again might be subject to change in the
-> future), so use the device family name instead.
+> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> > ---
+> >  kernel/trace/ftrace.c | 11 ++++++++---
+> >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index c163c3531faf..ed1efc0e3a25 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -119,13 +119,12 @@ struct ftrace_ops __rcu *ftrace_ops_list __read_mostly = &ftrace_list_end;
+> >  ftrace_func_t ftrace_trace_function __read_mostly = ftrace_stub;
+> >  struct ftrace_ops global_ops;
+> > 
+> > -#if ARCH_SUPPORTS_FTRACE_OPS
+> >  static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+> >  				 struct ftrace_ops *op, struct pt_regs *regs);
+> > -#else
+> > +
+> > +#if !ARCH_SUPPORTS_FTRACE_OPS
+> >  /* See comment below, where ftrace_ops_list_func is defined */
+> >  static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip);
+> > -#define ftrace_ops_list_func ((ftrace_func_t)ftrace_ops_no_ops)  
 > 
-> Suggested-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> Acked-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> The reason for the typecast is because this gets called from asm with only two parameters.
 
-Applied, thanks.
+[ Some how hit a short cut key that sent this before I was finished! :-p ]
+
+As I was saying. This typecast is being paranoid, as archs will call
+the ftrace_ops_list_func directly, and only pass in two parameters.
+
+Now one way around this is to instead of having the typecast, I could
+use linker magic to create another function that I can define without
+the typecast to get the same effect. Similar to what I did in commit:
+
+46f9469247c6f ("ftrace: Rename ftrace_graph_stub to ftrace_stub_graph")
+
+-- Steve
+
+
+
+> 
+> >  #endif
+> > 
+> >  static inline void ftrace_ops_init(struct ftrace_ops *ops)
+> > @@ -6860,6 +6859,12 @@ static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+> >  }
+> >  NOKPROBE_SYMBOL(ftrace_ops_list_func);
+> >  #else
+> > +static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+> > +				 struct ftrace_ops *op, struct pt_regs *regs)
+> > +{
+> > +	ftrace_ops_no_ops(ip, parent_ip);
+> > +}
+> > +
+> >  static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip)
+> >  {
+> >  	__ftrace_ops_list_func(ip, parent_ip, NULL, NULL);
+> > --
+> > 2.20.1  
+> 
+
