@@ -3,152 +3,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED89C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6144C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 916AF20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A631A2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PWTUPyRS"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="f6i/VNPO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbgFOIzh (ORCPT
+        id S1729277AbgFOIz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:55:37 -0400
-Received: from mail-dm6nam11on2066.outbound.protection.outlook.com ([40.107.223.66]:1249
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        Mon, 15 Jun 2020 04:55:56 -0400
+Received: from mail-bn8nam12on2052.outbound.protection.outlook.com ([40.107.237.52]:6178
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728526AbgFOIzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:55:36 -0400
+        id S1728522AbgFOIzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 04:55:55 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k0teWHyDYueGlf0t0mFdTjuzHoGJ81lJo8ham9LGEd4lrhG/WhsIWl/BNokeTkqS+HdEvoiDTkCfUYlhu4js14E0AjN/flKXcGZ93vGI2YQ+/EqWNZq2HX58xcG+dDM/VgpPCDFv5IIo1ILUrsIle3hWjeaTvlAyz5EAJFKKCv5j76fAg6dljALG2HCifapT1Y0rjE8bE+2Y7HE7Styabvj/b338GKPM0UuI7cyIDAjBhOtddfk8KAUZleWOd+t9qzEIHrGM0Tdi44nm2i3XUzxZ7noXR2J4LAGkyxy0fRrxVyaj6sBiAVOB2a+hzAFj0N52Sgn0ThuWmGeT/nBQ2g==
+ b=Zt8BREdVhwAeVzCmv5MwlFTumq5+sMJRIdPzRHSiulQhPoSfYh8LBwa3ZR9qz+GJp11fFQe1fHaa56HepVGYV+k1ExMnZ7BoUS4LLGA+lw3+Vpc6sKo+aaLJc4UZ1NDqksuFLJzD1QmA8IMcn2CIbl4/gqOks7knZWUruobEaedAWvHe1n5+puIkG30ljhH4rRi03yYkfrfPav/UsNsWmRBOWO1H5/Bv4iHJtqhILmSwqolsvU9pzYWpuk0EMK9B6jA3rznvgxW5XMRt/Ha/TxCc0ktBkn595W4efsEAvguEJkzv3wMp/3mj4HFNmvdfWY7yT58Kh5fpSqd+PsD+nw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=caso4/0QK0RPuLPY5+h88j14LzivqNpQK+t8n+09m0M=;
- b=hSVyUyCzJazkYwWOGfNtcZl4lYGsqUUPmcp310vJhDNFlqd9zFwbkpDn8NA/WWEOAOifUtjY8Hbp0g/15noDVwXhIAZHPQrVCcIgiEk69siSsTu/ebYgLMQOH8/9x4nFlznW0qw8JG73IjUlyN3ky2agZ2kkhbYq1r6bzHT1WW/UvfkywVCd/VKQtScPVAW5oOcGQ19n0xH5oOXb+LMNFkhWuPj6EXP+nyldDOxVBWdzKluNHYzcW2A6Dk3t1QaPag767wTgaeG1VFk9lZwKdEZBC8QPZiLiMpEAXDcpIWHfkFx0EZhp/ymC6U5B8ivUDKzKj+x79gzvkRahkefq6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=X3PzevvFwGCx8aQpkl021dctWbE4retiBmRf7+rmtDg=;
+ b=QsVb8RlVzxKELFVI1IHTTEQ/fkCCMId/0KZ8RcH2ZxBFhCB9q3gUzRZPAwW1Q7dg7ysRIcTRyC+huLzvTxTsZ2bc6pqG75z5vJlQzpkETSJUbsrZhQ7e/w9ao7QQhziG/fHLgBxPZp9ca33584S3Thrm6A5x+x6FzX4W1fxR2jgiOcXF9mnEeOF5V9KfwbJbUK3vOacUUO8ru3C3tlIcRTgc7onYjYBgVmnLpdIs9fjPhLX5IoQnHXX8zeatl/etlVCQ6pJKP3CZi+BCoZeQcUziBqQRMo/CbXQAI/SbddWqyZ5vVwiZeJDAhI0d6CKxhtgORqxhYlXRrytJB0bwTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=canonical.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=caso4/0QK0RPuLPY5+h88j14LzivqNpQK+t8n+09m0M=;
- b=PWTUPyRS2AMrkUdYzFVuPCP3BsiPCcsMALJ1hLTd2Dr12EZ3lzLhHvMyrMXXOknoWdEpVDhHMmt93kfYu0eifosIGuTLXM9WpzcK0PZ1xX9ZcitTj39i0lGV+debw89bz+mvym2c6EYkZZJ6x+6vDDMzqvcyfHcwXjuXGX5ZxWg=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
- by DM6PR12MB3785.namprd12.prod.outlook.com (2603:10b6:5:1cd::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Mon, 15 Jun
- 2020 08:55:33 +0000
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.3088.029; Mon, 15 Jun 2020
- 08:55:33 +0000
-Subject: Re: [PATCH] drm/ttm: Fix dma_fence refcnt leak when adding move fence
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>, Huang Rui <ray.huang@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>
-References: <1592051425-94019-1-git-send-email-xiyuyang19@fudan.edu.cn>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <a494dbe2-7f6e-20d2-cd3c-1ef247349053@amd.com>
-Date:   Mon, 15 Jun 2020 10:55:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <1592051425-94019-1-git-send-email-xiyuyang19@fudan.edu.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM4PR0701CA0013.eurprd07.prod.outlook.com
- (2603:10a6:200:42::23) To DM6PR12MB4401.namprd12.prod.outlook.com
- (2603:10b6:5:2a9::15)
+ bh=X3PzevvFwGCx8aQpkl021dctWbE4retiBmRf7+rmtDg=;
+ b=f6i/VNPOhwh6/DM2+j1ARnA0m2eOPlUnsQNwdFo6JKEpoWHYWQAzE1aCCwMSgXGpE/V/y/0htfnDeMB16Wug67pG4IJ45J5hSR/pCDNlMb2im8uP9PJSRArLhxBl/9vdSWyebDyw9B4DFXic7sNfP1VstSqUYZfCvr7CxFZlM64=
+Received: from SN2PR01CA0036.prod.exchangelabs.com (2603:10b6:804:2::46) by
+ DM5PR02MB2316.namprd02.prod.outlook.com (2603:10b6:3:53::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3088.24; Mon, 15 Jun 2020 08:55:52 +0000
+Received: from SN1NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:804:2:cafe::6) by SN2PR01CA0036.outlook.office365.com
+ (2603:10b6:804:2::46) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend
+ Transport; Mon, 15 Jun 2020 08:55:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; canonical.com; dkim=none (message not signed)
+ header.d=none;canonical.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT035.mail.protection.outlook.com (10.152.72.145) with Microsoft SMTP
+ Server id 15.20.3088.18 via Frontend Transport; Mon, 15 Jun 2020 08:55:52
+ +0000
+Received: from [149.199.38.66] (port=60206 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jkktG-0005zI-7P; Mon, 15 Jun 2020 01:54:50 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jkkuF-0002Zh-NJ; Mon, 15 Jun 2020 01:55:51 -0700
+Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05F8tjFL030054;
+        Mon, 15 Jun 2020 01:55:45 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jkku9-0002Y4-HZ; Mon, 15 Jun 2020 01:55:45 -0700
+Subject: Re: [PATCH] net: axienet: fix spelling mistake in comment "Exteneded"
+ -> "extended"
+To:     Colin King <colin.king@canonical.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200615082911.7252-1-colin.king@canonical.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <1e0ddd7d-5fd5-ec2a-2cda-ab3924de4762@xilinx.com>
+Date:   Mon, 15 Jun 2020 10:55:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM4PR0701CA0013.eurprd07.prod.outlook.com (2603:10a6:200:42::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.10 via Frontend Transport; Mon, 15 Jun 2020 08:55:30 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
+In-Reply-To: <20200615082911.7252-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 324310e7-c417-4957-6984-08d81109dcc7
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3785:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3785E9B358D312B2486F47F6839C0@DM6PR12MB3785.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(396003)(346002)(136003)(376002)(39860400002)(46966005)(47076004)(2906002)(31696002)(31686004)(336012)(426003)(316002)(186003)(26005)(81166007)(9786002)(82310400002)(8676002)(2616005)(8936002)(83380400001)(356005)(82740400003)(4326008)(6666004)(478600001)(36756003)(70206006)(70586007)(110136005)(5660300002)(44832011)(43740500002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8618f19c-3bc3-4668-e4b7-08d81109e82e
+X-MS-TrafficTypeDiagnostic: DM5PR02MB2316:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB23168C7C2B98E156B1642CE3C69C0@DM5PR02MB2316.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:2582;
 X-Forefront-PRVS: 04359FAD81
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: einueZtfa2o2jawHASqsHuWa2SPlE8Q5HYxJ3e0BtS0E6gkP4Yy/R4V0d9jFVXSzrqARCDb7W0zeTXzj9OKOCx/dLZ88mehukY7KMgM0NmxeoHSLSSoT0oZzupaP+A0i6yFyw6Ai8H3bE/6lR5W/HhARvX/hRtswd8lmHsIQZO2Ty+nMgrkTqIkTdBOOOP5ViYGaqBR7X6G3TB6yh2bvsly1yRstZD+tCXe9DwQo6etd2HzsSmPBnHTcabLPntHg4xv6onkPVVEEZCtFqcoHsR6mKL68lI2Mt7jkoVmSd97TF+Q8+w730CyquceL4iwlFZX0CoA/IreJZA08xL5u4MuSDHPZWYLRc66q7fv06Cin/0dafoOUvBCPXwLmfykJ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(8676002)(83380400001)(7416002)(5660300002)(6666004)(110136005)(478600001)(8936002)(4326008)(186003)(16526019)(2906002)(316002)(36756003)(66946007)(66476007)(66556008)(86362001)(31686004)(52116002)(31696002)(2616005)(6486002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Kuk2JihSJPFEuigJ9nEnVm/GXtuSxJLzxLiY/Cl3fMYiwb8Dy8ZgfT1sAd43V9cF1r0ld5X3rDv9j2tyjm3t2kELn7lx2iAM75ScsSMNy3wSsbdF0vYseA1hxJhOc9kSniqq4y4XD4ECVguMWBURJWyq1jJNIRdTYp6BQm7pwmcGsLO9fCnmJ1PhAQ9O66t8nAgLxm5m79EKW+ejaF8AG916JFgF08ImdD+YLjyn6a/DElrsCkWlbaFObjCGwW0fsUcZpwYWv3B42oXGIowny6iI4pfCRHvul+fIOSTXfFnDdnIAB8qEwoGnkqTjF2yT9GHaj5SilEk2rJpxocRY8Lr6dfC83J00iHGVuMFxgousq6XWXWum/063t58QjPypKKWAywSOQq8kIa2TEnsJww/6NRqL846Xh4mhwXAVTk7JiHEy4JWi3eMTa83zMdSuNxaO9ZqDOLhzk7kJjdmxRYgEON4TJ8v5QQvF3qabbjHIteNjEIYQNIdUV4Fmu7O1D/FAP7R5X60yHUTNR6DDlxgx1EPdAjGpKWvrlSCTSoGuMuaPbIxbuuWIq0oOmEi/
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 324310e7-c417-4957-6984-08d81109dcc7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 08:55:33.1828
+X-Microsoft-Antispam-Message-Info: DQgRVmHKucv/9MWwRADJvJzOJpWIBOT6mu6Ebt8zLDHxvEIljZNiPVTshe5QSIwfCbbMZomGOsxkCe0USJn2b1SAXsbeNvPQsVZ6XY+8FSrPDO3ih/8os88jXf5moiS2NkOOohLzIH0rYFmOOZpVxax5neh9DneTmFPySBVT26LCPEPQzGHR9TD6fSDb3JnMQ4pQXgiAYd+ERSLhi1Jabfn3a89IrKW+TcgKTYO8wNg/mkdRawHJSL/znRm3qtPj3N9DoasM6U6Us/PGl1KDuAqOU/C61duTKAUN3xRv9UizN2qkz5bme6rjW5QYjGEIhBWZzP9HDA//c5PeTgo4ZqH3AFrqc8xJWK3oq7TC6+JTQFwgv8W4BrHdBUn6oRH85UuFgeQ++Bq1Bg7tjeKkPeCckpETDWzJWTRn09seoXbTjFwG+aOYWOzVsZMXonEq
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2020 08:55:52.0590
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bC/pRgeG32uym8YMMNDiDyexG8BJy5UTETC8bZXuIgTcYekST6FGxqH4uYcGDqq1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3785
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8618f19c-3bc3-4668-e4b7-08d81109e82e
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2316
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 13.06.20 um 14:30 schrieb Xiyu Yang:
-> ttm_bo_add_move_fence() invokes dma_fence_get(), which returns a
-> reference of the specified dma_fence object to "fence" with increased
-> refcnt.
->
-> When ttm_bo_add_move_fence() returns, local variable "fence" becomes
-> invalid, so the refcount should be decreased to keep refcount balanced.
->
-> The reference counting issue happens in one exception handling path of
-> ttm_bo_add_move_fence(). When no_wait_gpu flag is equals to true, the
-> function forgets to decrease the refcnt increased by dma_fence_get(),
-> causing a refcnt leak.
->
-> Fix this issue by calling dma_fence_put() when no_wait_gpu flag is
-> equals to true.
->
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-
-Reviewed and pushed this one as well as the other ttm fix to drm-misc-fixes.
-
-That should show up in Linus tree rather soon.
-
-Thanks for the help,
-Christian.
-
-PS: Are you working on some new automated scripts to catch that stuff or 
-how did you stumbled over it?
-
+On 15. 06. 20 10:29, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a comment. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->   drivers/gpu/drm/ttm/ttm_bo.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-> index f73b81c2576e..0f20e14a4cfd 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo.c
-> @@ -883,8 +883,10 @@ static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
->   	if (!fence)
->   		return 0;
->   
-> -	if (no_wait_gpu)
-> +	if (no_wait_gpu) {
-> +		dma_fence_put(fence);
->   		return -EBUSY;
-> +	}
->   
->   	dma_resv_add_shared_fence(bo->base.resv, fence);
->   
+>  drivers/net/ethernet/xilinx/xilinx_axienet.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> index fbaf3c987d9c..f34c7903ff52 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> @@ -186,7 +186,7 @@
+>  #define XAE_RAF_TXVSTRPMODE_MASK	0x00000180 /* Tx VLAN STRIP mode */
+>  #define XAE_RAF_RXVSTRPMODE_MASK	0x00000600 /* Rx VLAN STRIP mode */
+>  #define XAE_RAF_NEWFNCENBL_MASK		0x00000800 /* New function mode */
+> -/* Exteneded Multicast Filtering mode */
+> +/* Extended Multicast Filtering mode */
+>  #define XAE_RAF_EMULTIFLTRENBL_MASK	0x00001000
+>  #define XAE_RAF_STATSRST_MASK		0x00002000 /* Stats. Counter Reset */
+>  #define XAE_RAF_RXBADFRMEN_MASK		0x00004000 /* Recv Bad Frame Enable */
+> 
 
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+Thanks,
+Michal
