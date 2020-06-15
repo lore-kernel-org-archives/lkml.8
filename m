@@ -2,249 +2,231 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1142C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D97C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88FAB2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE6E207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGRXvuMI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QeBQ/6PM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbgFOUxu (ORCPT
+        id S1731696AbgFOUxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731674AbgFOUxo (ORCPT
+        Mon, 15 Jun 2020 16:53:54 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51999 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731685AbgFOUxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:53:44 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21311C061A0E;
-        Mon, 15 Jun 2020 13:53:44 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id o15so18912984ejm.12;
-        Mon, 15 Jun 2020 13:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LDa+04Be/xlCMfl0fRh8XBQFwebwbi4UUBkBIjXXdhY=;
-        b=PGRXvuMIFyIyF0h7nvwdA9KxzYRPeJd6LCvKVzfgb7pdPBPrsn8zxeQcLcklnQmz8D
-         YtDv6vLtJ4f+usnGazC1HDWUsJE8WFMZWCqrV5ovlUX27WOjlvxuE8QRFU/w7oPkp3u5
-         VYw9FDFcLiYXJt3xIxTvb936e6YjpMPpjM4fZV7Tinyl0y5c1UN7tJlT7wL9fI2paqNU
-         8xpuI9pU/TcB2OWWfM3aPZXNyHgzh9OiAyJYKd2EDIV1jwVVCFQbraCHLCrNmi0QncP1
-         6dTfBylyDtKKO8P2UTGFsIpu8gyVAC3gqCYi5Z+i7Xm9XJLoQEv70YfhyNMwDB3J81+p
-         wyWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LDa+04Be/xlCMfl0fRh8XBQFwebwbi4UUBkBIjXXdhY=;
-        b=OyX2fFwvU3dWmZL8IFTu2B/OWhPGZgv4vnk8aQiuMutoz41Tp1vwQi1g+dOHgrGZpJ
-         4hiFdweeb849uFY5cmR1KTE0HH/64LOnvYNuSj5/DnR7eMWnbEz0Hjt2MJTrEuzvil/U
-         VQZjiYE+7ptclZEnk9h1iRzhdOh0hKzhquagFg4lTf5HJXeWGFYKjH0vcVRXMm+PaMfk
-         V42wSCM4gF60zKwbCFhpgXBDnY9OyJYpglqZrt+jvLkErzcnYs3BgIWCLj4Go2awSiXo
-         LIhTCU1NsQWg2j7CZGDBLv+JWNJGRQl2Mc+Dlcp3sVTiLXizl0nIIqs8UfJveTLQ44ut
-         gB0g==
-X-Gm-Message-State: AOAM532kgnWzuYaBW+aIDtoQP6eBNxsNKJjePgq902CUxsn58xBkd1jh
-        si48igviRUbcqEYqOAW3veM=
-X-Google-Smtp-Source: ABdhPJyvgvddV2Am6iMRQU4f+LdnBjLu14NU9cgIVBN7HODprFfy3to/JBy7qUDrKUviQJd70jZljA==
-X-Received: by 2002:a17:906:470a:: with SMTP id y10mr28676692ejq.535.1592254421834;
-        Mon, 15 Jun 2020 13:53:41 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-95-238-254-39.retail.telecomitalia.it. [95.238.254.39])
-        by smtp.googlemail.com with ESMTPSA id u13sm9738503ejf.60.2020.06.15.13.53.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 13:53:41 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [RESEND PATCH v7 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
-Date:   Mon, 15 Jun 2020 22:53:27 +0200
-Message-Id: <20200615205333.20747-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200615205333.20747-1-ansuelsmth@gmail.com>
-References: <20200615205333.20747-1-ansuelsmth@gmail.com>
+        Mon, 15 Jun 2020 16:53:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592254429;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yVc8FVEHGw/fuRb0Dy/ArqZ1F92rZ6HzYhBb/pVuY9I=;
+        b=QeBQ/6PMX7H4/V98gIdc6wZzgI/Oj6y3brIdT+PzMKzBQjptdtAHP1nEF0MB2w1BFRSmen
+        3fYasFJDy2DqmVUqZDiwMAl9wRmNtT5dzZJ8b1OAtixKsZyv4ssWvLNA7+4S7SH0qjwiga
+        2fWMdWhqN6I8c5FK8L+HtUfWFth4gp0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-188-jNzpBkjhOAaFaMp1q2b6ow-1; Mon, 15 Jun 2020 16:53:47 -0400
+X-MC-Unique: jNzpBkjhOAaFaMp1q2b6ow-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C364C873402;
+        Mon, 15 Jun 2020 20:53:45 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-41.rdu2.redhat.com [10.10.117.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7BC25D9CD;
+        Mon, 15 Jun 2020 20:53:38 +0000 (UTC)
+Subject: Re: [PATCH 2/2] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200615160830.8471-1-longman@redhat.com>
+ <20200615160830.8471-3-longman@redhat.com> <20200615164351.GF11255@magnolia>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <2f03b074-4732-01e4-b0ff-482bb4bb44ce@redhat.com>
+Date:   Mon, 15 Jun 2020 16:53:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200615164351.GF11255@magnolia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-inizialize and use usb on ipq806x SoC.
+On 6/15/20 12:43 PM, Darrick J. Wong wrote:
+> On Mon, Jun 15, 2020 at 12:08:30PM -0400, Waiman Long wrote:
+>> Depending on the workloads, the following circular locking dependency
+>> warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+>> lock) may show up:
+>>
+>> ======================================================
+>> WARNING: possible circular locking dependency detected
+>> 5.0.0-rc1+ #60 Tainted: G        W
+>> ------------------------------------------------------
+>> fsfreeze/4346 is trying to acquire lock:
+>> 0000000026f1d784 (fs_reclaim){+.+.}, at:
+>> fs_reclaim_acquire.part.19+0x5/0x30
+>>
+>> but task is already holding lock:
+>> 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+>>
+>> which lock already depends on the new lock.
+>>    :
+>>   Possible unsafe locking scenario:
+>>
+>>         CPU0                    CPU1
+>>         ----                    ----
+>>    lock(sb_internal);
+>>                                 lock(fs_reclaim);
+>>                                 lock(sb_internal);
+>>    lock(fs_reclaim);
+>>
+>>   *** DEADLOCK ***
+>>
+>> 4 locks held by fsfreeze/4346:
+>>   #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+>>   #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+>>   #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+>>   #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+>>
+>> stack backtrace:
+>> Call Trace:
+>>   dump_stack+0xe0/0x19a
+>>   print_circular_bug.isra.10.cold.34+0x2f4/0x435
+>>   check_prev_add.constprop.19+0xca1/0x15f0
+>>   validate_chain.isra.14+0x11af/0x3b50
+>>   __lock_acquire+0x728/0x1200
+>>   lock_acquire+0x269/0x5a0
+>>   fs_reclaim_acquire.part.19+0x29/0x30
+>>   fs_reclaim_acquire+0x19/0x20
+>>   kmem_cache_alloc+0x3e/0x3f0
+>>   kmem_zone_alloc+0x79/0x150
+>>   xfs_trans_alloc+0xfa/0x9d0
+>>   xfs_sync_sb+0x86/0x170
+>>   xfs_log_sbcount+0x10f/0x140
+>>   xfs_quiesce_attr+0x134/0x270
+>>   xfs_fs_freeze+0x4a/0x70
+>>   freeze_super+0x1af/0x290
+>>   do_vfs_ioctl+0xedc/0x16c0
+>>   ksys_ioctl+0x41/0x80
+>>   __x64_sys_ioctl+0x73/0xa9
+>>   do_syscall_64+0x18f/0xd23
+>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>
+>> This is a false positive as all the dirty pages are flushed out before
+>> the filesystem can be frozen.
+>>
+>> Perhaps breaking the fs_reclaim pseudo lock into a per filesystem lock
+>> may fix the issue. However, that will greatly complicate the logic and
+>> may not be worth it.
+>>
+>> Another way to fix it is to disable the taking of the fs_reclaim
+>> pseudo lock when in the freezing code path as a reclaim on the
+>> freezed filesystem is not possible. By using the newly introduced
+>> PF_MEMALLOC_NOLOCKDEP flag, lockdep checking is disabled in
+>> xfs_trans_alloc() if XFS_TRANS_NO_WRITECOUNT flag is set.
+>>
+>> In the freezing path, there is another path where memory allocation
+>> is being done without the XFS_TRANS_NO_WRITECOUNT flag:
+>>
+>>    xfs_fs_freeze()
+>>    => xfs_quiesce_attr()
+>>       => xfs_log_quiesce()
+>>          => xfs_log_unmount_write()
+>>             => xlog_unmount_write()
+>>                => xfs_log_reserve()
+>> 	         => xlog_ticket_alloc()
+>>
+>> In this case, we just disable fs reclaim for this particular 600 bytes
+>> memory allocation.
+>>
+>> Without this patch, the command sequence below will show that the lock
+>> dependency chain sb_internal -> fs_reclaim exists.
+>>
+>>   # fsfreeze -f /home
+>>   # fsfreeze --unfreeze /home
+>>   # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+>>
+>> After applying the patch, such sb_internal -> fs_reclaim lock dependency
+>> chain can no longer be found. Because of that, the locking dependency
+>> warning will not be shown.
+>>
+>> Suggested-by: Dave Chinner <david@fromorbit.com>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>   fs/xfs/xfs_log.c   |  9 +++++++++
+>>   fs/xfs/xfs_trans.c | 30 ++++++++++++++++++++++++++----
+>>   2 files changed, 35 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+>> index 00fda2e8e738..33244680d0d4 100644
+>> --- a/fs/xfs/xfs_log.c
+>> +++ b/fs/xfs/xfs_log.c
+>> @@ -830,8 +830,17 @@ xlog_unmount_write(
+>>   	xfs_lsn_t		lsn;
+>>   	uint			flags = XLOG_UNMOUNT_TRANS;
+>>   	int			error;
+>> +	unsigned long		pflags;
+>>   
+>> +	/*
+>> +	 * xfs_log_reserve() allocates memory. This can lead to fs reclaim
+>> +	 * which may conflicts with the unmount process. To avoid that,
+>> +	 * disable fs reclaim for this allocation.
+>> +	 */
+>> +	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
+>>   	error = xfs_log_reserve(mp, 600, 1, &tic, XFS_LOG, 0);
+>> +	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
+>> +
+>>   	if (error)
+>>   		goto out_err;
+>>   
+>> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+>> index 3c94e5ff4316..ddb10ad3f51f 100644
+>> --- a/fs/xfs/xfs_trans.c
+>> +++ b/fs/xfs/xfs_trans.c
+>> @@ -255,7 +255,27 @@ xfs_trans_alloc(
+>>   	struct xfs_trans	**tpp)
+>>   {
+>>   	struct xfs_trans	*tp;
+>> -	int			error;
+>> +	int			error = 0;
+>> +	unsigned long		pflags = -1;
+>> +
+>> +	/*
+>> +	 * When XFS_TRANS_NO_WRITECOUNT is set, it means there are no dirty
+>> +	 * data pages in the filesystem at this point.
+> That's not true.  Look at the other callers of xfs_trans_alloc_empty.
+Yes, I am aware of that. I can change it to check the freeze state.
+>
+> Also: Why not set PF_MEMALLOC_NOFS at the start of the freeze call
+> chain?
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
-v7:
-* Drop useless AllOf 
-v6:
-* Add maximum value
-v5:
-* Fix dt_binding_check error
-v4:
-* Add qcom to specific bindings
-v3:
-* Use explicit reg instead of regmap
+I guess we can do that, but it eliminates a potential source for memory 
+reclaim leading to freeze error when not much free memory is left. We 
+can go this route if you think this is not a problem.
 
- .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 55 ++++++++++++++
- .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 73 +++++++++++++++++++
- 2 files changed, 128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-new file mode 100644
-index 000000000000..23887ebe08fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-hs
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    hs_phy_0: phy@110f8800 {
-+      compatible = "qcom,ipq806x-usb-phy-hs";
-+      reg = <0x110f8800 0x30>;
-+      clocks = <&gcc USB30_0_UTMI_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-new file mode 100644
-index 000000000000..fa30c24b4405
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description:
-+  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+  controllers used in ipq806x. Each DWC3 PHY controller should have its
-+  own node.
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq806x-usb-phy-ss
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: ref
-+      - const: xo
-+
-+  qcom,rx-eq:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for rx_eq.
-+    default: 4
-+    maximum: 7
-+
-+  qcom,tx-deamp-3_5db:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for transmit preemphasis.
-+    default: 23
-+    maximum: 63
-+
-+  qcom,mpll:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Override value for mpll.
-+    default: 0
-+    maximum: 7
-+
-+required:
-+  - compatible
-+  - "#phy-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+
-+    ss_phy_0: phy@110f8830 {
-+      compatible = "qcom,ipq806x-usb-phy-ss";
-+      reg = <0x110f8830 0x30>;
-+      clocks = <&gcc USB30_0_MASTER_CLK>;
-+      clock-names = "ref";
-+      #phy-cells = <0>;
-+    };
--- 
-2.25.1
+Cheers,
+Longman
 
