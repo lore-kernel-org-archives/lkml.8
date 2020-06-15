@@ -2,146 +2,91 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C87CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249462078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijbkIRJf"
+	by mail.kernel.org (Postfix) with ESMTP id 800C8207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbgFOQ0N (ORCPT
+        id S1730864AbgFOQ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:26:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729637AbgFOQ0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:26:12 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F74C061A0E;
-        Mon, 15 Jun 2020 09:26:12 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id w20so7811194pga.6;
-        Mon, 15 Jun 2020 09:26:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=TYrNTlrmIzbmT7MQbSQ47vQPQ5UxVm04h6DXBVDeZMk=;
-        b=ijbkIRJfR21AwWxSRpF2fPyfu+JgSXoqpg7BmQmxgvoM7zti3LiBimpS4AEwtdyY55
-         xypmr1+arzjntgNcn8BifWdwyNGBolrcWxrgri+Rq3uLYBvCwiZfGeA7+BLSnb/fy2be
-         GTHrhW0REwqwYg2xZhm7tf3St94Z2t5+1nE7yf66eNuKEuRPA+lGIQ+kHd4pa4nAwmP6
-         tahDicEruLVheNLCyh3SG6p2ZAP7NxAyKeHCptEw8W6ObQeSi7m5ONbTExjsZh2FWfwE
-         W6rpshIrvSPAgtcqJfEDcNsYiYEdQvpDn/ery5vt5EaEd3JTtfuU5rOPVvEk+Q0ypBnx
-         4vAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TYrNTlrmIzbmT7MQbSQ47vQPQ5UxVm04h6DXBVDeZMk=;
-        b=hXsWVLcIjxlgJDJAscz1FQlPIhOGGzMZeiZV7WElUrRovZBemMphRuoDMtP2Ml9sD1
-         Ym15RjEHq6+WoOi6EApsmKg2ooEChbWX6LorSQv1l40dTYhxFMkG8iUCMTpN+TcfjW1a
-         jD6Ks/qrv7F/EuedA0DZYlJLXoROFws8pfFzWK0Nc6NLafuzARTOAGmRTlHscGS35YNB
-         vduoX/Ek5HlBRbWfy3ImeKQr+Iz1+YD5yLz4aDYW3r4Gp+RmtOA0V/PYGcOzgj9+742c
-         Ea1x+RHHek58gsZRv64T6L0eYsJpBp52eGEOZKiwMwDEB0FPwZeSGRDe1owGAAMc/9ZN
-         3HNQ==
-X-Gm-Message-State: AOAM532fdxBTpse374AIMQO296XbY2JDBYym3pyFJLOPmZNlUU8QDpzP
-        DjdrQdUUpVVYeeH3+6ePMDS85GdV
-X-Google-Smtp-Source: ABdhPJwptr8oelZoC62cLr/hOohunZtdiJ/EY2r0Xvs0/j/PYTVVxj2vditwJiciJRH6Y1Gf/EzpLw==
-X-Received: by 2002:a63:d54b:: with SMTP id v11mr21330284pgi.198.1592238371811;
-        Mon, 15 Jun 2020 09:26:11 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g21sm14232286pfh.134.2020.06.15.09.26.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 09:26:10 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] spi: bcm63xx-spi: add reset support
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        broonie@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200615080309.2897694-1-noltari@gmail.com>
- <20200615090943.2936839-1-noltari@gmail.com>
- <20200615090943.2936839-2-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <16650d01-7c5a-21be-35a8-c74ad0a47b45@gmail.com>
-Date:   Mon, 15 Jun 2020 09:26:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Mon, 15 Jun 2020 12:26:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56484 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730788AbgFOQ0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:26:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 747E9ACFE;
+        Mon, 15 Jun 2020 16:26:25 +0000 (UTC)
+Message-ID: <810816166d8ef554e1bb1f4a2b39ea0b8a1a3d5b.camel@suse.de>
+Subject: Re: [PATCH v4 3/3] ARM: dts: bcm2711: Add HDMI DVP
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        MaximeRipard <maxime@cerno.tech>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Date:   Mon, 15 Jun 2020 18:26:19 +0200
+In-Reply-To: <e22222ca7f41b960e9bb1a31e0dd2de95b8c0cd1.1591867332.git-series.maxime@cerno.tech>
+References: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech>
+         <e22222ca7f41b960e9bb1a31e0dd2de95b8c0cd1.1591867332.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-q9+H19jK4iCuSUzIgRNL"
+User-Agent: Evolution 3.36.3 
 MIME-Version: 1.0
-In-Reply-To: <20200615090943.2936839-2-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--=-q9+H19jK4iCuSUzIgRNL
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/15/2020 2:09 AM, Álvaro Fernández Rojas wrote:
-> bcm63xx arch resets the SPI controller at early boot. However, bmips arch
-> needs to perform a reset when probing the driver.
-> 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+On Thu, 2020-06-11 at 11:23 +0200, Maxime Ripard wrote:
+> Now that we have a driver for the DVP, let's add its DT node.
+>=20
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
->  v2: use devm_reset_control_get_exclusive
-> 
->  drivers/spi/spi-bcm63xx.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/drivers/spi/spi-bcm63xx.c b/drivers/spi/spi-bcm63xx.c
-> index 0f1b10a4ef0c..8ab04affaf7b 100644
-> --- a/drivers/spi/spi-bcm63xx.c
-> +++ b/drivers/spi/spi-bcm63xx.c
-> @@ -18,6 +18,7 @@
->  #include <linux/err.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/of.h>
-> +#include <linux/reset.h>
->  
->  /* BCM 6338/6348 SPI core */
->  #define SPI_6348_RSET_SIZE		64
-> @@ -493,6 +494,7 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
->  	struct bcm63xx_spi *bs;
->  	int ret;
->  	u32 num_cs = BCM63XX_SPI_MAX_CS;
-> +	struct reset_control *reset;
->  
->  	if (dev->of_node) {
->  		const struct of_device_id *match;
-> @@ -529,6 +531,15 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
->  		return PTR_ERR(clk);
->  	}
->  
-> +	reset = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(reset)) {
-> +		ret = PTR_ERR(reset);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev,
-> +				"failed to get reset controller: %d\n", ret);
-> +		return ret;
-> +	}
 
-This should be devm_reset_control_get_exclusive_optional() for a number
-of reasons the first one being the most important as it reflects reality
-of the HW:
+I can take this patch, but I guess the rest should go trough the clock tree=
+.
+Is it OK with you?
 
-- not all BCM63xx platforms have a dedicated reset line for the SPI
-controller (like the ARM-based SoCs)
+Regards,
+Nicolas
 
-- until you also update all Device Tree sources to have a 'resets'
-property in their SPI controller node, this is likely going to be failing
 
-This also applies to patch 3.
--- 
-Florian
+
+--=-q9+H19jK4iCuSUzIgRNL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7noSsACgkQlfZmHno8
+x/60KQf8DcikWxE71NrTvwrqPcZ8tTbET2o1LmElA8UjZC1GyON6J5rb7G9wZ3b7
+ZacWpXr+y8DfgVVGKdCnUGjS2MNwA1GRvweSOldqrDnftVIjLoGkr7dDIVyPfIc2
+EaqkX8o5xzWDNYrvzRjOllOr7hTKl9SiDvE6XTTpZakBUAweqQSLWyJI0Ns5dJJD
+x3MBxn2NJvP7FJI6pKatBcLFnx68QLy5SXr3WbcXSM7Np2qW66vkM5oWu7PLHull
+CBJEBiStVhGxWM9Ej/WGAl8SsWqEnZN/g8CBqMDWdMvMSFgcyAcxaz7PnaT8OrK7
+DLuSwuP/IZe/pTsekRuENoXtSEcESg==
+=0XwD
+-----END PGP SIGNATURE-----
+
+--=-q9+H19jK4iCuSUzIgRNL--
+
