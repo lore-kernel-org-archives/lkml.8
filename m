@@ -2,195 +2,365 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F30C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6862065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5603D2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stNWaVR9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TWbCfBmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgFOJtK (ORCPT
+        id S1729417AbgFOJuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgFOJtH (ORCPT
+        Mon, 15 Jun 2020 05:50:07 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:23314 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729027AbgFOJuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:49:07 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0BFC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:49:07 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s18so17155500ioe.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 02:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VXrYkWGJrAVwMKl7EpALp308abGzBC/xarfEjXsxyt8=;
-        b=stNWaVR9mILoXoa35qUlmQKoIfjReV21Ygcw+kmOknzdyAd47EecdwrcHgyRIiCHc1
-         kQCq9ajBuZH0EJcKAEy41F5r1lmg3Xev/NaEqR0jd32aw7B93AXyVciu8HlaioBsrRMa
-         K7pPbZ5Hun7PnTPlPf5NuynGDQOxVE/YVHxIVl0QfCfgsQXN3QkPEgKr16OI3zfTVvXm
-         jpxgMZCcczb2muIjitZvQEWmx8fQMMOFJUYtyfZ8LcgYQiO9lgA8ZWnm1GzkJnvbizYr
-         568nqQkmYJRdlD94NgsZ4GOm/ePu02U7PzSC2Tb7IfKNchJUi/Aeb/K1M6dPJXfapOmD
-         A7Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VXrYkWGJrAVwMKl7EpALp308abGzBC/xarfEjXsxyt8=;
-        b=oiNY1bLyeNMp44K2IseSivqdQBc0BxWS7XSmvuf1Nh5UgPzHa69G/PRyWsf9ZDalpq
-         /QI/9IGkTjHXlnVE0k/CsnrZG1knoX1pHNmHQyu+406Ohch44JOqDIP5M74l9DxDzZQA
-         zDRHEYob3Orv/eHezOM6zNS8AgYe3B3pgcHJZpSqX7kTTWUFdSNE1qjB6t1g0dBN63zH
-         vDLkzmrGf3tZN+w9LsobWK0pEjYZ9t+Kp+ta4YTAcvBh1iodVSdiZDHK9wNZagQ4Y4oT
-         kQYYOy8pgp1xq4WPBufb697A4BZAUqJQ0hW7Kr3izpFBaLSU6djZcsELHu966rArtT1R
-         1a7g==
-X-Gm-Message-State: AOAM531IV61LDpe4gXQuzu4zIsMqD3/J8CypRdMdiLxaTWPfFG3mtlwp
-        zzpKNK3t2IPtRAqXqYO2NcluIQZtfRcQDX7LDOY=
-X-Google-Smtp-Source: ABdhPJxtXsKmf8Rv/T8eBzugDRbZKh4vUmXzvKagG59avK0BfoIYZLDJkcITgkfHBgVawjBi74gfiqsC3RANgxO/XoI=
-X-Received: by 2002:a5e:aa14:: with SMTP id s20mr27326679ioe.58.1592214546938;
- Mon, 15 Jun 2020 02:49:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1591254387-10304-1-git-send-email-gene.chen.richtek@gmail.com> <20200604133943.GE6644@sirena.org.uk>
-In-Reply-To: <20200604133943.GE6644@sirena.org.uk>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Mon, 15 Jun 2020 17:48:55 +0800
-Message-ID: <CAE+NS35ktxq2MiNXNWh7Q-gzdbm7Xoj2tXqrgzjkkv8W_tR3Sw@mail.gmail.com>
-Subject: Re: [PATCH] regulator: mt6360: Add support for MT6360 regulator
-To:     Mark Brown <broonie@kernel.org>
-Cc:     matthias.bgg@gmail.com, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com, Lee Jones <lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 15 Jun 2020 05:50:06 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200615095003epoutp026865d55f6d06865efd4311f8786ab0d2~Yrr8UEzXk2308523085epoutp02f
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:50:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200615095003epoutp026865d55f6d06865efd4311f8786ab0d2~Yrr8UEzXk2308523085epoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592214604;
+        bh=2ivsfWpsjds0lXjl9MUgPX5dQ16pCU3H9lxwQHqhi5E=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=TWbCfBmuG+c6TP9/AZKUJp8N1R83NG6UVaKhFSj1H8c0fy1XZCSbaE6xD5bcq+5Zu
+         Ut+U1grXd0kEARy4hnXLwNrpxtSltZ79OrOt5w56cldBl2lAsk69RB+iC/zeGR4jQ5
+         56gWy2kTt7KZZBLsqLZQQf3UTDGkSGKQ166ZBUQU=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200615095003epcas1p2a75469652c674106dbd78aee3624bf58~Yrr7jwchH0374103741epcas1p20;
+        Mon, 15 Jun 2020 09:50:03 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [RFC PATCH v2 5/5] scsi: ufs: Prepare HPB read for cached
+ sub-region
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <231786897.01592214002170.JavaMail.epsvc@epcpadp1>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <963815509.21592214603155.JavaMail.epsvc@epcpadp1>
+Date:   Mon, 15 Jun 2020 18:41:43 +0900
+X-CMS-MailID: 20200615094143epcms2p4ea72d7ebeafc262795e46e90c5766d70
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210
+References: <231786897.01592214002170.JavaMail.epsvc@epcpadp1>
+        <231786897.01592213402355.JavaMail.epsvc@epcpadp1>
+        <231786897.01592212081335.JavaMail.epsvc@epcpadp2>
+        <336371513.41592205783606.JavaMail.epsvc@epcpadp2>
+        <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
+        <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p4>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Loop MFD maintainer,
+This patch changes the read I/O to the HPB read I/O.
 
-Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B46=E6=9C=884=E6=97=A5=
- =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=889:39=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Thu, Jun 04, 2020 at 03:06:27PM +0800, Gene Chen wrote:
->
-> This looks nice and simple, a few fairly small comments below but high
-> level it's basically fine.
->
-> > --- /dev/null
-> > +++ b/drivers/regulator/mt6360-regulator.c
-> > @@ -0,0 +1,571 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2020 MediaTek Inc.
->
-> Please make the entire comment a C++ one so things look more
-> intentional.
->
+If the logical address of the read I/O belongs to active sub-region, the
+HPB driver modifies the read I/O command to HPB read. It modifies the upiu
+command of UFS instead of modifying the existing SCSI command.
 
-ACK
+In the HPB version 1.0, the maximum read I/O size that can be converted to
+HPB read is 4KB.
 
-> > +     for (i =3D 0; i < devdata->num_irq_descs; i++) {
-> > +             irq_desc =3D devdata->irq_descs + i;
-> > +             if (unlikely(!irq_desc->name))
-> > +                     continue;
->
-> Do we really need an unlikely here?  This shouldn't be a hot path.
->
+The dirty map of the active sub-region prevents an incorrect HPB read that
+has stale physical page number which is updated by previous write I/O.
 
-ACK, we will remove it
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ drivers/scsi/ufs/ufshpb.c | 234 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 234 insertions(+)
 
-> > +static int mt6360_regulator_set_mode(
-> > +                               struct regulator_dev *rdev, unsigned in=
-t mode)
-> > +{
->
-> > +     switch (1 << (ffs(mode) - 1)) {
-> > +     case REGULATOR_MODE_NORMAL:
->
-> I don't understand why this isn't just a straight switch on mode?
->
+diff --git a/drivers/scsi/ufs/ufshpb.c b/drivers/scsi/ufs/ufshpb.c
+index 6229c6fcb5e1..848f51e9a1a1 100644
+--- a/drivers/scsi/ufs/ufshpb.c
++++ b/drivers/scsi/ufs/ufshpb.c
+@@ -25,6 +25,22 @@ static inline int ufshpb_is_valid_srgn(struct ufshpb_region *rgn,
+ 		srgn->srgn_state == HPB_SRGN_VALID;
+ }
+ 
++static inline bool ufshpb_is_read_cmd(struct scsi_cmnd *cmd)
++{
++	return req_op(cmd->request) == REQ_OP_READ;
++}
++
++static inline bool ufshpb_is_write_discard_cmd(struct scsi_cmnd *cmd)
++{
++	return op_is_write(req_op(cmd->request)) ||
++	       op_is_discard(req_op(cmd->request));
++}
++
++static inline bool ufshpb_is_support_chunk(int transfer_len)
++{
++	return transfer_len <= HPB_MULTI_CHUNK_HIGH;
++}
++
+ static inline bool ufshpb_is_general_lun(int lun)
+ {
+ 	return lun < UFS_UPIU_MAX_UNIT_NUM_ID;
+@@ -116,6 +132,224 @@ static inline void ufshpb_lu_put(struct ufshpb_lu *hpb)
+ 	put_device(&hpb->hpb_lu_dev);
+ }
+ 
++static inline u32 ufshpb_get_lpn(struct scsi_cmnd *cmnd)
++{
++	return blk_rq_pos(cmnd->request) >>
++		(ilog2(cmnd->device->sector_size) - 9);
++}
++
++static inline unsigned int ufshpb_get_len(struct scsi_cmnd *cmnd)
++{
++	return blk_rq_sectors(cmnd->request) >>
++		(ilog2(cmnd->device->sector_size) - 9);
++}
++
++static void ufshpb_set_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
++			     int srgn_idx, int srgn_offset, int cnt)
++{
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	int set_bit_len;
++	int bitmap_len = hpb->entries_per_srgn;
++
++next_srgn:
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	if ((srgn_offset + cnt) > bitmap_len)
++		set_bit_len = bitmap_len - srgn_offset;
++	else
++		set_bit_len = cnt;
++
++	if (rgn->rgn_state != HPB_RGN_INACTIVE &&
++	    srgn->srgn_state == HPB_SRGN_VALID)
++		bitmap_set(srgn->mctx->ppn_dirty, srgn_offset, set_bit_len);
++
++	srgn_offset = 0;
++	if (++srgn_idx == hpb->srgns_per_rgn) {
++		srgn_idx = 0;
++		rgn_idx++;
++	}
++
++	cnt -= set_bit_len;
++	if (cnt > 0)
++		goto next_srgn;
++
++	WARN_ON(cnt < 0);
++}
++
++static bool ufshpb_test_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
++				   int srgn_idx, int srgn_offset, int cnt)
++{
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	int bitmap_len = hpb->entries_per_srgn;
++	int bit_len;
++
++next_srgn:
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	if (!ufshpb_is_valid_srgn(rgn, srgn))
++		return true;
++
++	/*
++	 * If the region state is active, mctx must be allocated.
++	 * In this case, check whether the region is evicted or
++	 * mctx allcation fail.
++	 */
++	WARN_ON(!srgn->mctx);
++
++	if ((srgn_offset + cnt) > bitmap_len)
++		bit_len = bitmap_len - srgn_offset;
++	else
++		bit_len = cnt;
++
++	if (find_next_bit(srgn->mctx->ppn_dirty,
++			  bit_len, srgn_offset) >= srgn_offset)
++		return true;
++
++	srgn_offset = 0;
++	if (++srgn_idx == hpb->srgns_per_rgn) {
++		srgn_idx = 0;
++		rgn_idx++;
++	}
++
++	cnt -= bit_len;
++	if (cnt > 0)
++		goto next_srgn;
++
++	return false;
++}
++
++static u64 ufshpb_get_ppn(struct ufshpb_lu *hpb,
++			  struct ufshpb_map_ctx *mctx, int pos, int *error)
++{
++	u64 *ppn_table;
++	struct page *page;
++	int index, offset;
++
++	index = pos / (PAGE_SIZE / HPB_ENTRY_SIZE);
++	offset = pos % (PAGE_SIZE / HPB_ENTRY_SIZE);
++
++	page = mctx->m_page[index];
++	if (unlikely(!page)) {
++		*error = -ENOMEM;
++		dev_err(&hpb->hpb_lu_dev,
++			"error. cannot find page in mctx\n");
++		return 0;
++	}
++
++	ppn_table = page_address(page);
++	if (unlikely(!ppn_table)) {
++		*error = -ENOMEM;
++		dev_err(&hpb->hpb_lu_dev, "error. cannot get ppn_table\n");
++		return 0;
++	}
++
++	return ppn_table[offset];
++}
++
++static inline void
++ufshpb_get_pos_from_lpn(struct ufshpb_lu *hpb, unsigned long lpn, int *rgn_idx,
++			int *srgn_idx, int *offset)
++{
++	int rgn_offset;
++
++	*rgn_idx = lpn >> hpb->entries_per_rgn_shift;
++	rgn_offset = lpn & hpb->entries_per_rgn_mask;
++	*srgn_idx = rgn_offset >> hpb->entries_per_srgn_shift;
++	*offset = rgn_offset & hpb->entries_per_srgn_mask;
++}
++
++static void
++ufshpb_set_hpb_read_to_upiu(struct ufshpb_lu *hpb, struct ufshcd_lrb *lrbp,
++				  u32 lpn, u64 ppn,  unsigned int transfer_len)
++{
++	unsigned char *cdb = lrbp->ucd_req_ptr->sc.cdb;
++
++	cdb[0] = UFSHPB_READ;
++
++	put_unaligned_be64(ppn, &cdb[6]);
++	cdb[14] = transfer_len;
++}
++
++/* routine : READ10 -> HPB_READ  */
++static void ufshpb_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
++{
++	struct ufshpb_lu *hpb;
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	struct scsi_cmnd *cmd = lrbp->cmd;
++	u32 lpn;
++	u64 ppn;
++	unsigned long flags;
++	int transfer_len, rgn_idx, srgn_idx, srgn_offset;
++	int err = 0;
++
++	hpb = ufshpb_get_hpb_data(cmd);
++	err = ufshpb_lu_get(hpb);
++	if (unlikely(err))
++		return;
++
++	WARN_ON(hpb->lun != cmd->device->lun);
++	if (!ufshpb_is_write_discard_cmd(cmd) &&
++	    !ufshpb_is_read_cmd(cmd))
++		goto put_hpb;
++
++	transfer_len = ufshpb_get_len(cmd);
++	if (unlikely(!transfer_len))
++		goto put_hpb;
++
++	lpn = ufshpb_get_lpn(cmd);
++	ufshpb_get_pos_from_lpn(hpb, lpn, &rgn_idx, &srgn_idx, &srgn_offset);
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	/* If command type is WRITE or DISCARD, set bitmap as drity */
++	if (ufshpb_is_write_discard_cmd(cmd)) {
++		spin_lock_irqsave(&hpb->hpb_state_lock, flags);
++		ufshpb_set_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
++				 transfer_len);
++		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++		goto put_hpb;
++	}
++
++	WARN_ON(!ufshpb_is_read_cmd(cmd));
++
++	if (!ufshpb_is_support_chunk(transfer_len))
++		goto put_hpb;
++
++	spin_lock_irqsave(&hpb->hpb_state_lock, flags);
++	if (ufshpb_test_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
++				   transfer_len)) {
++		atomic_inc(&hpb->stats.miss_cnt);
++		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++		goto put_hpb;
++	}
++
++	ppn = ufshpb_get_ppn(hpb, srgn->mctx, srgn_offset, &err);
++	spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++	if (unlikely(err)) {
++		/*
++		 * In this case, the region state is active,
++		 * but the ppn table is not allocated.
++		 * Make sure that ppn table must be allocated on
++		 * active state.
++		 */
++		WARN_ON(true);
++		dev_err(&hpb->hpb_lu_dev,
++			"ufshpb_get_ppn failed. err %d\n", err);
++		goto put_hpb;
++	}
++
++	ufshpb_set_hpb_read_to_upiu(hpb, lrbp, lpn, ppn, transfer_len);
++
++	atomic_inc(&hpb->stats.hit_cnt);
++put_hpb:
++	ufshpb_lu_put(hpb);
++}
++
+ static struct ufshpb_req *ufshpb_get_map_req(struct ufshpb_lu *hpb,
+ 					     struct ufshpb_subregion *srgn)
+ {
+-- 
+2.17.1
 
-ACK
 
-> > +static unsigned int mt6360_regulator_get_mode(struct regulator_dev *rd=
-ev)
-> > +{
-> > +     const struct mt6360_regulator_desc *desc =3D
-> > +                            (const struct mt6360_regulator_desc *)rdev=
-->desc;
-> > +     int shift =3D ffs(desc->mode_get_mask) - 1, ret;
-> > +     unsigned int val =3D 0;
-> > +
-> > +     default:
-> > +             ret =3D 0;
-> > +     }
->
-> If we can't parse a valid value from the hardware then that's an error.
->
-
-ACK
-
-> > +static int mt6360_regulator_reg_write(void *context,
-> > +                                   unsigned int reg, unsigned int val)
-> > +{
-> > +     struct mt6360_regulator_data *mrd =3D context;
-> > +     u8 chunk[4] =3D {0};
-> > +
-> > +     /* chunk 0 ->i2c addr, 1 -> reg_addr, 2 -> reg_val 3-> crc8 */
-> > +     chunk[0] =3D (mrd->i2c->addr & 0x7f) << 1;
-> > +     chunk[1] =3D reg & 0x3f;
-> > +     chunk[2] =3D (u8)val;
-> > +     chunk[3] =3D crc8(mrd->crc8_table, chunk, 3, 0);
-> > +     /* also dummy one byte */
-> > +     return i2c_smbus_write_i2c_block_data(mrd->i2c, chunk[1], 3, chun=
-k + 2);
-> > +}
->
-> Oh, wow - that's a fun I/O interface!
->
-> > +static const struct of_device_id __maybe_unused mt6360_regulator_of_id=
-[] =3D {
-> > +     {
-> > +             .compatible =3D "mediatek,mt6360_pmic",
-> > +             .data =3D (void *)&mt6360_pmic_devdata,
-> > +     },
-> > +     {
-> > +             .compatible =3D "mediatek,mt6360_ldo",
-> > +             .data =3D (void *)&mt6360_ldo_devdata,
-> > +     },
-> > +     {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mt6360_regulator_of_id);
->
-> I don't see any DT bindings documentation for this, documentation is
-> required for all new bindings.
->
-
-ACK, we will update binding document later.
-
-> > +     mrd->regmap =3D devm_regmap_init(&(mrd->i2c->dev),
-> > +                                    NULL, mrd, devdata->regmap_config)=
-;
-> > +     if (IS_ERR(mrd->regmap)) {
-> > +             dev_err(&pdev->dev, "Failed to register regmap\n");
-> > +             return PTR_ERR(mrd->regmap);
-> > +     }
->
-> This looks like a MFD so it's surprising to see us defining a regmap at
-> this level.  Why are we doing this?
-
-Because MT6360 include PMU/PMIC/LDO/TYPEC part, only PMIC/LDO i2c R/W
-need contain CRC format.
-We will update new patch to conclude r/w in mfd driver.
-According to different register address with bank number, we can
-distinguish different part of module.
