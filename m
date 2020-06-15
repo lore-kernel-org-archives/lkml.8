@@ -2,67 +2,85 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF17C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0139C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2589207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BB120756
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:23:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JLGm/mOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbgFOTRa (ORCPT
+        id S1728519AbgFOTWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbgFOTRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:17:30 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2574720739;
-        Mon, 15 Jun 2020 19:17:29 +0000 (UTC)
-Date:   Mon, 15 Jun 2020 15:17:27 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        kernel test robot <lkp@intel.com>,
-        linux-sparse@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kbuild-all@lists.01.org
-Subject: Re: [PATCH] printk: Make linux/printk.h self-contained
-Message-ID: <20200615151727.3c7e9786@oasis.local.home>
-In-Reply-To: <20200615114038.GA20708@gondor.apana.org.au>
-References: <20200611125144.GA2506@gondor.apana.org.au>
-        <20200613122834.GA23739@xsang-OptiPlex-9020>
-        <20200613130949.GA22005@gondor.apana.org.au>
-        <20200613142901.65xieioomt6bbqa6@ltop.local>
-        <20200615114038.GA20708@gondor.apana.org.au>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 15 Jun 2020 15:22:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728093AbgFOTWz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 15:22:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C6DC061A0E;
+        Mon, 15 Jun 2020 12:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=1SYTwpfB40+JGZH3GQvOKxvSVPzTOSW3WlfOs5EOLH0=; b=JLGm/mOAW+/i4uJ5JrpcZNUndT
+        w3i4B341Ih/AC8yrlBlLTOpPHZdLHl6Dju82tC2wReRTx6nYmCILE22RdtxTsYW2IOvVfzH7FSFZC
+        h3HJoTbFzueBfPOFJom+mGAIL9NpEMn6OnFYKVtnIEQWUK2YAzMFHdPXFDhMueI4/1Tq7GCIQJqVm
+        ItT8tAK3p14xyDnAdroABoNLdUupPoyv7bcaViU3f6IhaZjgOK1ZWHAaKQaZbStfV+7FGfqyrJ78S
+        g2SWVVxL+rAfOLm3Vm6P8rbhLrni4/OxZM/MCFha92X/Qf9ucYh5bIe9+Wb4gy9FQFKNOMUrVBdT9
+        C1/02cSA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkuh4-0003nA-CC; Mon, 15 Jun 2020 19:22:54 +0000
+To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] trace/events/block.h: drop kernel-doc for dropped function
+ parameter
+Message-ID: <d572a150-192a-bbce-4449-8de45bce1a9b@infradead.org>
+Date:   Mon, 15 Jun 2020 12:22:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 21:40:38 +1000
-Herbert Xu <herbert@gondor.apana.org.au> wrote:
+From: Randy Dunlap <rdunlap@infradead.org>
 
-> Thanks for investigating.  I now realise that this was sent against
-> my first patch which did have this problem, which was fixed in my
-> second patch.  Sorry for the false alarm.
+Fix kernel-doc warning: the parameter was removed, so also remove
+the kernel-doc notation for it.
 
-Which is why it is recommended that new patches start their own threads ;-)
+../include/trace/events/block.h:278: warning: Excess function parameter 'error' description in 'trace_block_bio_complete'
 
-That said,
+Fixes: d24de76af836 ("block: remove the error argument to the block_bio_complete tracepoint")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+---
+ include/trace/events/block.h |    1 -
+ 1 file changed, 1 deletion(-)
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+--- linux-next-20200615.orig/include/trace/events/block.h
++++ linux-next-20200615/include/trace/events/block.h
+@@ -254,7 +254,6 @@ TRACE_EVENT(block_bio_bounce,
+  * block_bio_complete - completed all work on the block operation
+  * @q: queue holding the block operation
+  * @bio: block operation completed
+- * @error: io error value
+  *
+  * This tracepoint indicates there is no further work to do on this
+  * block IO operation @bio.
 
-for the v2 patch.
-
--- Steve
