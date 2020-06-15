@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9362C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D41C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9422076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90F62076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ApO+QWVC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DORPIwZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbgFOMx5 (ORCPT
+        id S1730265AbgFOMyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
+        Mon, 15 Jun 2020 08:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730117AbgFOMxp (ORCPT
+        with ESMTP id S1730147AbgFOMxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:53:45 -0400
+        Mon, 15 Jun 2020 08:53:54 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E7EC05BD1E;
-        Mon, 15 Jun 2020 05:53:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4673CC05BD43;
+        Mon, 15 Jun 2020 05:53:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=DJZ925lCffNrvvt2J0iUL7aj+wlObhzuylSyf0HcAGg=; b=ApO+QWVCFegFRmEJjE5R8Gwm4q
-        B1s1DJh2gpLxSdhqH14smF+hwZtY3zXFa+rfyfZwEmu+/CH8x6i6bMGO+iVQQ1bvpIlZNC2k8BzE1
-        7mSjipDzJN2zrOEMM2e33JFBLrZ+HShzRBWCPYzAWHkSNhtg3MTG40XcUxaY8U+JLdOdrKypOt6Gf
-        vacIBfjM+GfpUvUP38wyr2ODT2P2TIXa12I279U3LbiiJriZp7fgPm/vjHgyXH8zyAQbREECQw0f+
-        j+3KBouy1lZEi8/KlrnqQo7qBKyIc4J+7KLsU0HS1YQUYBioagFmro164nuFpJmASqbQQpZT0VKm1
-        6kHWS38g==;
+        bh=yk3OCOpM9ERuS6a7MWF8GpDAoj/9WQHMyiD2P3ZZBTM=; b=DORPIwZ4pxAzbWNekeX4NpVqD6
+        5vreyh7ssVzIaBGUxUs1gWnQ77tIyIbRjU4bJj7tsABikZwKQdazCT61K4vaD7pc9HWKcX/oFvhIw
+        N6jg0rDdNHrh483CrbV+/YSUkMJe0fEhSZnz33uausGMSKErc8yBF3lWiSR15D4avN0uXid+acj0P
+        PjgteRwcXZytXz8HVCciPH9+cnEot3o/fRE0ImlApFNOLRKDfkeIrCT035sVajkuThuCN+wxoIIM+
+        5TVXHg9ncXD5UzOqD/itkvzou3EXKU/p4+fSUEzAjeTtxECwX6XEmZqqb/w0ddneoIkqX0J9G5XZ7
+        ighIujvA==;
 Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkocS-0000sj-H6; Mon, 15 Jun 2020 12:53:44 +0000
+        id 1jkocb-0000uh-Ps; Mon, 15 Jun 2020 12:53:54 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 08/16] initrd: remove support for multiple floppies
-Date:   Mon, 15 Jun 2020 14:53:15 +0200
-Message-Id: <20200615125323.930983-9-hch@lst.de>
+Subject: [PATCH 12/16] initramfs: remove the populate_initrd_image and clean_rootfs stubs
+Date:   Mon, 15 Jun 2020 14:53:19 +0200
+Message-Id: <20200615125323.930983-13-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200615125323.930983-1-hch@lst.de>
 References: <20200615125323.930983-1-hch@lst.de>
@@ -59,293 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the special handling for multiple floppies in the initrd code.
-No one should be using floppies for booting these days. (famous last
-words..)
+If initrd support is not enable just print the warning directly instead
+of hiding the fact that we just failed behind two stub functions.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/arm/kernel/atags_parse.c |  2 -
- arch/sh/kernel/setup.c        |  2 -
- arch/sparc/kernel/setup_32.c  |  2 -
- arch/sparc/kernel/setup_64.c  |  2 -
- arch/x86/kernel/setup.c       |  2 -
- include/linux/initrd.h        |  6 ---
- init/do_mounts.c              | 69 ++++-------------------------------
- init/do_mounts.h              |  1 -
- init/do_mounts_rd.c           | 20 +++-------
- 9 files changed, 12 insertions(+), 94 deletions(-)
+ init/initramfs.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/kernel/atags_parse.c b/arch/arm/kernel/atags_parse.c
-index ce02f92f4ab262..6c12d9fe694e3e 100644
---- a/arch/arm/kernel/atags_parse.c
-+++ b/arch/arm/kernel/atags_parse.c
-@@ -91,8 +91,6 @@ __tagtable(ATAG_VIDEOTEXT, parse_tag_videotext);
- static int __init parse_tag_ramdisk(const struct tag *tag)
- {
- 	rd_image_start = tag->u.ramdisk.start;
--	rd_doload = (tag->u.ramdisk.flags & 1) == 0;
--	rd_prompt = (tag->u.ramdisk.flags & 2) == 0;
- 
- 	if (tag->u.ramdisk.size)
- 		rd_size = tag->u.ramdisk.size;
-diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
-index 67f5a3b44c2eff..4144be650d4106 100644
---- a/arch/sh/kernel/setup.c
-+++ b/arch/sh/kernel/setup.c
-@@ -290,8 +290,6 @@ void __init setup_arch(char **cmdline_p)
- 
- #ifdef CONFIG_BLK_DEV_RAM
- 	rd_image_start = RAMDISK_FLAGS & RAMDISK_IMAGE_START_MASK;
--	rd_prompt = ((RAMDISK_FLAGS & RAMDISK_PROMPT_FLAG) != 0);
--	rd_doload = ((RAMDISK_FLAGS & RAMDISK_LOAD_FLAG) != 0);
- #endif
- 
- 	if (!MOUNT_ROOT_RDONLY)
-diff --git a/arch/sparc/kernel/setup_32.c b/arch/sparc/kernel/setup_32.c
-index 6d07b85b9e2470..eea43a1aef1b9a 100644
---- a/arch/sparc/kernel/setup_32.c
-+++ b/arch/sparc/kernel/setup_32.c
-@@ -353,8 +353,6 @@ void __init setup_arch(char **cmdline_p)
- 	ROOT_DEV = old_decode_dev(root_dev);
- #ifdef CONFIG_BLK_DEV_RAM
- 	rd_image_start = ram_flags & RAMDISK_IMAGE_START_MASK;
--	rd_prompt = ((ram_flags & RAMDISK_PROMPT_FLAG) != 0);
--	rd_doload = ((ram_flags & RAMDISK_LOAD_FLAG) != 0);	
- #endif
- 
- 	prom_setsync(prom_sync_me);
-diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
-index f765fda871eb61..d87244197d5cbb 100644
---- a/arch/sparc/kernel/setup_64.c
-+++ b/arch/sparc/kernel/setup_64.c
-@@ -659,8 +659,6 @@ void __init setup_arch(char **cmdline_p)
- 	ROOT_DEV = old_decode_dev(root_dev);
- #ifdef CONFIG_BLK_DEV_RAM
- 	rd_image_start = ram_flags & RAMDISK_IMAGE_START_MASK;
--	rd_prompt = ((ram_flags & RAMDISK_PROMPT_FLAG) != 0);
--	rd_doload = ((ram_flags & RAMDISK_LOAD_FLAG) != 0);
- #endif
- 
- 	task_thread_info(&init_task)->kregs = &fake_swapper_regs;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index a3767e74c758c0..b9a68d8e06d8d1 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -870,8 +870,6 @@ void __init setup_arch(char **cmdline_p)
- 
- #ifdef CONFIG_BLK_DEV_RAM
- 	rd_image_start = boot_params.hdr.ram_size & RAMDISK_IMAGE_START_MASK;
--	rd_prompt = ((boot_params.hdr.ram_size & RAMDISK_PROMPT_FLAG) != 0);
--	rd_doload = ((boot_params.hdr.ram_size & RAMDISK_LOAD_FLAG) != 0);
- #endif
- #ifdef CONFIG_EFI
- 	if (!strncmp((char *)&boot_params.efi_info.efi_loader_signature,
-diff --git a/include/linux/initrd.h b/include/linux/initrd.h
-index aa591435572868..8db6f8c8030b68 100644
---- a/include/linux/initrd.h
-+++ b/include/linux/initrd.h
-@@ -2,12 +2,6 @@
- 
- #define INITRD_MINOR 250 /* shouldn't collide with /dev/ram* too soon ... */
- 
--/* 1 = load ramdisk, 0 = don't load */
--extern int rd_doload;
--
--/* 1 = prompt for ramdisk, 0 = don't prompt */
--extern int rd_prompt;
--
- /* starting block # of image */
- extern int rd_image_start;
- 
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 1a4dfa17fb2899..4f4ceb35805503 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -28,8 +28,6 @@
- 
- #include "do_mounts.h"
- 
--int __initdata rd_doload;	/* 1 = load RAM disk, 0 = don't load */
--
- int root_mountflags = MS_RDONLY | MS_SILENT;
- static char * __initdata root_device_name;
- static char __initdata saved_root_name[64];
-@@ -39,7 +37,7 @@ dev_t ROOT_DEV;
- 
- static int __init load_ramdisk(char *str)
- {
--	rd_doload = simple_strtol(str,NULL,0) & 3;
-+	pr_warn("ignoring the depreated load_ramdisk= option\n");
- 	return 1;
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 7a38012e1af742..d10404625c31f0 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -618,13 +618,7 @@ static void __init clean_rootfs(void)
+ 	ksys_close(fd);
+ 	kfree(buf);
  }
- __setup("load_ramdisk=", load_ramdisk);
-@@ -553,66 +551,20 @@ static int __init mount_cifs_root(void)
- }
- #endif
- 
--#if defined(CONFIG_BLK_DEV_RAM) || defined(CONFIG_BLK_DEV_FD)
--void __init change_floppy(char *fmt, ...)
+-#else
+-static inline void clean_rootfs(void)
 -{
--	struct termios termios;
--	char buf[80];
--	char c;
--	int fd;
--	va_list args;
--	va_start(args, fmt);
--	vsprintf(buf, fmt, args);
--	va_end(args);
--	fd = ksys_open("/dev/root", O_RDWR | O_NDELAY, 0);
--	if (fd >= 0) {
--		ksys_ioctl(fd, FDEJECT, 0);
--		ksys_close(fd);
--	}
--	printk(KERN_NOTICE "VFS: Insert %s and press ENTER\n", buf);
--	fd = ksys_open("/dev/console", O_RDWR, 0);
--	if (fd >= 0) {
--		ksys_ioctl(fd, TCGETS, (long)&termios);
--		termios.c_lflag &= ~ICANON;
--		ksys_ioctl(fd, TCSETSF, (long)&termios);
--		ksys_read(fd, &c, 1);
--		termios.c_lflag |= ICANON;
--		ksys_ioctl(fd, TCSETSF, (long)&termios);
--		ksys_close(fd);
--	}
 -}
--#endif
--
- void __init mount_root(void)
+-#endif /* CONFIG_BLK_DEV_RAM */
+ 
+-#ifdef CONFIG_BLK_DEV_RAM
+ static void __init populate_initrd_image(char *err)
  {
- #ifdef CONFIG_ROOT_NFS
- 	if (ROOT_DEV == Root_NFS) {
--		if (mount_nfs_root())
--			return;
--
--		printk(KERN_ERR "VFS: Unable to mount root fs via NFS, trying floppy.\n");
--		ROOT_DEV = Root_FD0;
-+		if (!mount_nfs_root())
-+			printk(KERN_ERR "VFS: Unable to mount root fs via NFS.\n");
-+		return;
- 	}
- #endif
- #ifdef CONFIG_CIFS_ROOT
- 	if (ROOT_DEV == Root_CIFS) {
--		if (mount_cifs_root())
--			return;
--
--		printk(KERN_ERR "VFS: Unable to mount root fs via SMB, trying floppy.\n");
--		ROOT_DEV = Root_FD0;
--	}
--#endif
--#ifdef CONFIG_BLK_DEV_FD
--	if (MAJOR(ROOT_DEV) == FLOPPY_MAJOR) {
--		/* rd_doload is 2 for a dual initrd/ramload setup */
--		if (rd_doload==2) {
--			if (rd_load_disk(1)) {
--				ROOT_DEV = Root_RAM1;
--				root_device_name = NULL;
--			}
--		} else
--			change_floppy("root floppy");
-+		if (!mount_cifs_root())
-+			printk(KERN_ERR "VFS: Unable to mount root fs via SMB.\n");
-+		return;
- 	}
- #endif
- #ifdef CONFIG_BLOCK
-@@ -631,8 +583,6 @@ void __init mount_root(void)
-  */
- void __init prepare_namespace(void)
- {
--	int is_floppy;
--
- 	if (root_delay) {
- 		printk(KERN_INFO "Waiting %d sec before mounting root device...\n",
- 		       root_delay);
-@@ -675,11 +625,6 @@ void __init prepare_namespace(void)
- 		async_synchronize_full();
- 	}
- 
--	is_floppy = MAJOR(ROOT_DEV) == FLOPPY_MAJOR;
--
--	if (is_floppy && rd_doload && rd_load_disk(0))
--		ROOT_DEV = Root_RAM0;
--
- 	mount_root();
- out:
- 	devtmpfs_mount();
-diff --git a/init/do_mounts.h b/init/do_mounts.h
-index 50d6c8941e15a1..c855b3f0e06d19 100644
---- a/init/do_mounts.h
-+++ b/init/do_mounts.h
-@@ -9,7 +9,6 @@
- #include <linux/major.h>
- #include <linux/root_dev.h>
- 
--void  change_floppy(char *fmt, ...);
- void  mount_block_root(char *name, int flags);
- void  mount_root(void);
- extern int root_mountflags;
-diff --git a/init/do_mounts_rd.c b/init/do_mounts_rd.c
-index 32fb049d18f9b4..27b1bccf6f12a8 100644
---- a/init/do_mounts_rd.c
-+++ b/init/do_mounts_rd.c
-@@ -15,11 +15,9 @@
- #include <linux/decompress/generic.h>
- 
- 
--int __initdata rd_prompt = 1;/* 1 = prompt for RAM disk, 0 = don't prompt */
--
- static int __init prompt_ramdisk(char *str)
- {
--	rd_prompt = simple_strtol(str,NULL,0) & 1;
-+	pr_warn("ignoring the depreated prompt_ramdisk= option\n");
- 	return 1;
+ 	ssize_t written;
+@@ -644,11 +638,6 @@ static void __init populate_initrd_image(char *err)
+ 		       written, initrd_end - initrd_start);
+ 	ksys_close(fd);
  }
- __setup("prompt_ramdisk=", prompt_ramdisk);
-@@ -178,7 +176,7 @@ int __init rd_load_image(char *from)
- 	int res = 0;
- 	int in_fd, out_fd;
- 	unsigned long rd_blocks, devblocks;
--	int nblocks, i, disk;
-+	int nblocks, i;
- 	char *buf = NULL;
- 	unsigned short rotate = 0;
- 	decompress_fn decompressor = NULL;
-@@ -243,21 +241,15 @@ int __init rd_load_image(char *from)
+-#else
+-static void __init populate_initrd_image(char *err)
+-{
+-	printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
+-}
+ #endif /* CONFIG_BLK_DEV_RAM */
  
- 	printk(KERN_NOTICE "RAMDISK: Loading %dKiB [%ld disk%s] into ram disk... ",
- 		nblocks, ((nblocks-1)/devblocks)+1, nblocks>devblocks ? "s" : "");
--	for (i = 0, disk = 1; i < nblocks; i++) {
-+	for (i = 0; i < nblocks; i++) {
- 		if (i && (i % devblocks == 0)) {
--			pr_cont("done disk #%d.\n", disk++);
-+			pr_cont("done disk #1.\n");
- 			rotate = 0;
- 			if (ksys_close(in_fd)) {
- 				printk("Error closing the disk.\n");
- 				goto noclose_input;
- 			}
--			change_floppy("disk #%d", disk);
--			in_fd = ksys_open(from, O_RDONLY, 0);
--			if (in_fd < 0)  {
--				printk("Error opening disk.\n");
--				goto noclose_input;
--			}
--			printk("Loading disk #%d... ", disk);
-+			break;
- 		}
- 		ksys_read(in_fd, buf, BLOCK_SIZE);
- 		ksys_write(out_fd, buf, BLOCK_SIZE);
-@@ -284,8 +276,6 @@ int __init rd_load_image(char *from)
+ static int __init populate_rootfs(void)
+@@ -668,8 +657,12 @@ static int __init populate_rootfs(void)
  
- int __init rd_load_disk(int n)
- {
--	if (rd_prompt)
--		change_floppy("root floppy disk to be loaded into RAM disk");
- 	create_dev("/dev/root", ROOT_DEV);
- 	create_dev("/dev/ram", MKDEV(RAMDISK_MAJOR, n));
- 	return rd_load_image("/dev/root");
+ 	err = unpack_to_rootfs((char *)initrd_start, initrd_end - initrd_start);
+ 	if (err) {
++#ifdef CONFIG_BLK_DEV_RAM
+ 		clean_rootfs();
+ 		populate_initrd_image(err);
++#else
++		printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
++#endif
+ 	}
+ 
+ done:
 -- 
 2.26.2
 
