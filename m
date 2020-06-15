@@ -2,172 +2,521 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B498DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8397C2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:44:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ngWpM4Vd"
+	by mail.kernel.org (Postfix) with ESMTP id 9811A2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgFOHoy (ORCPT
+        id S1728456AbgFOHrJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgFOHow (ORCPT
+        Mon, 15 Jun 2020 03:47:09 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:42705 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgFOHrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:44:52 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE00AC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:44:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id p5so15958320wrw.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wLML/7CffDFBhoqwyzC9IFFqzUtN0PnXKPbU0+WecW8=;
-        b=ngWpM4Vd5ByUkX1bUWebKGgG0vYWezYAT7vWvhgdaTo8IBZujJgVraWXo6Ox6Yb/+9
-         cR5YyPmPnGK45v6sM/dK+T+hW3FTrjwS10sazaftNflzQNQFOABhYSmVSimImmg7Euyf
-         NWVYY4ypkR2JseWN9ChtJP2Zy7FLfsT19Qf0ZhjPbmHYo5yH0kRts0nNcfii4NqLMQfR
-         V0ShmXbG7Hr4Fn6EETdOiX0bcZ9x7AHb8xGgXyVHxF7rsg+vYDrbgjynUJQAntcaQYal
-         CY/a/rom9ousRJ9Z25dSmcaGbQViMd2DjSbRFsfm6lLnvb+dsVxLdfbwJedlIfVqAzC/
-         sDYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wLML/7CffDFBhoqwyzC9IFFqzUtN0PnXKPbU0+WecW8=;
-        b=jU055WTpF5yUdsLOX0CUp9q6lLnXEW+nH58c9S4u5gmxmo1AJQ4wFVuD67be6ISsOs
-         OPPVE8VygQEQCB1A7CCre/ayfK3wo0ixTPP9hXiH4QXR2WHs755zdH2FQDdasln+28An
-         W2Lva9IXx86Jrge7T8UlddXhkgKxtmAQicPLBcZKztwW6UyFtPsY8648bZBzw/iFzLBE
-         AYQkpaBUQF+Q0O4s5VpMsHhwcwr6w8L2j+IsPqWY34SwVgkPR1tjnerMb0shRwo21FWM
-         UvCVmrRtNAiDyx+4xnX9/HvCm3wHOhxSi8QDpGIDx/r9XeBerx8DhX+eWkKjBpUn5VHp
-         g2eQ==
-X-Gm-Message-State: AOAM531+uxvLvOeteYjffcZsv0cnvvI7t1V8RckcgKak/nLNqbp/7Rlc
-        hbc4emzvX8nBjSbfHLhGwcxRIQ==
-X-Google-Smtp-Source: ABdhPJw4+6gHE62n11a4DToU9lNCniCgkvi+x33BOd94wC0+HgPDvk1KRFmpSkPOQNQpytwNGESEAg==
-X-Received: by 2002:a5d:6150:: with SMTP id y16mr29528478wrt.219.1592207089789;
-        Mon, 15 Jun 2020 00:44:49 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id z16sm23227610wrm.70.2020.06.15.00.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 00:44:49 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [RESEND PATCH] irqchip/irq-mtk-sysirq: replace spinlock with raw_spinlock
-Date:   Mon, 15 Jun 2020 09:44:45 +0200
-Message-Id: <20200615074445.3579-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        Mon, 15 Jun 2020 03:47:09 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 928171C0003;
+        Mon, 15 Jun 2020 07:47:01 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 09:47:00 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Yifeng Zhao <yifeng.zhao@rock-chips.com>, richard@nod.at,
+        vigneshr@ti.com, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        heiko@sntech.de, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 2/8] mtd: rawnand: rockchip: NFC drivers for RK3308,
+ RK2928 and others
+Message-ID: <20200615094700.69342be1@xps13>
+In-Reply-To: <7e4ce8b1-73c4-8b9a-5726-b121f53de8df@gmail.com>
+References: <20200609074020.23860-1-yifeng.zhao@rock-chips.com>
+        <20200609074020.23860-3-yifeng.zhao@rock-chips.com>
+        <7e4ce8b1-73c4-8b9a-5726-b121f53de8df@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Johan,
 
-This driver may take a regular spinlock when a raw spinlock
-(irq_desc->lock) is already taken which results in the following
-lockdep splat:
+Johan Jonker <jbx6244@gmail.com> wrote on Sat, 13 Jun 2020 15:31:52
++0200:
 
-=============================
-[ BUG: Invalid wait context ]
-5.7.0-rc7 #1 Not tainted
------------------------------
-swapper/0/0 is trying to lock:
-ffffff800303b798 (&chip_data->lock){....}-{3:3}, at: mtk_sysirq_set_type+0x48/0xc0
-other info that might help us debug this:
-context-{5:5}
-2 locks held by swapper/0/0:
- #0: ffffff800302ee68 (&desc->request_mutex){....}-{4:4}, at: __setup_irq+0xc4/0x8a0
- #1: ffffff800302ecf0 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xe4/0x8a0
-stack backtrace:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7 #1
-Hardware name: Pumpkin MT8516 (DT)
-Call trace:
- dump_backtrace+0x0/0x180
- show_stack+0x14/0x20
- dump_stack+0xd0/0x118
- __lock_acquire+0x8c8/0x2270
- lock_acquire+0xf8/0x470
- _raw_spin_lock_irqsave+0x50/0x78
- mtk_sysirq_set_type+0x48/0xc0
- __irq_set_trigger+0x58/0x170
- __setup_irq+0x420/0x8a0
- request_threaded_irq+0xd8/0x190
- timer_of_init+0x1e8/0x2c4
- mtk_gpt_init+0x5c/0x1dc
- timer_probe+0x74/0xf4
- time_init+0x14/0x44
- start_kernel+0x394/0x4f0
+> Hi Yifeng, Miquel,
+> 
+> Some more comments about swap();
+> 
+> On 6/9/20 9:40 AM, Yifeng Zhao wrote:
+> 
+> [..]
+> 
+> > +static int rk_nfc_ooblayout_free(struct mtd_info *mtd, int section,
+> > +				 struct mtd_oob_region *oob_region)
+> > +{
+> > +	struct nand_chip *chip = mtd_to_nand(mtd);
+> > +  
+> 
+> > +	if (section >= chip->ecc.steps)
+> > +		return -ERANGE;  
+> 
+> Given:
+> 
+> NFC_SYS_DATA_SIZE = 4
+> chip->ecc.steps = 8
+> section [0..7]
+> 
+> Total free OOB size advertised to the MTD framework is:
+> 
+> ecc.steps * NFC_SYS_DATA_SIZE - 1 BBM
+> 8 * 4 - 1 = 31 bytes
+> 
+> With link address in OOB byte [0..3] this become:
+> 31 - 4 = 27 bytes
+> 
+> Does that give data lost?
+> Should we limit the number of free OOB bytes by 4 more to be save?
+> Is my calculation correct?
 
-Replace the spinlock_t with raw_spinlock_t to avoid this warning.
+I don't know what link address is, but yes if it's an area used by the
+controller for whatever reason it should be left alone, neither "free"
+nor "ecc".
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
-Rebased on top of v5.8-rc1.
+> 
+> See further questions about this below.
+> 
+> > +
+> > +	if (!section) {
+> > +		/* The first byte is bad block mask flag. */
+> > +		oob_region->length = NFC_SYS_DATA_SIZE - 1;
+> > +		oob_region->offset = 1;
+> > +	} else {
+> > +		oob_region->length = NFC_SYS_DATA_SIZE;
+> > +		oob_region->offset = section * NFC_SYS_DATA_SIZE;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int rk_nfc_ooblayout_ecc(struct mtd_info *mtd, int section,
+> > +				struct mtd_oob_region *oob_region)
+> > +{
+> > +	struct nand_chip *chip = mtd_to_nand(mtd);
+> > +  
+> 
+> > +	if (section)
+> > +		return -ERANGE;  
+> 
+> With the formule above a section > 0 does not alow ECC.
+> 
+> Just a question about the MTD inner working for Miquel:
+> 
+> With ooblayout_free using 8 steps and this just 1 does it still generate
+> the correct ECC? Does it calculate ECC over 1024B or over 8*1024B ?
 
- drivers/irqchip/irq-mtk-sysirq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+These functions do not generate anything and it's just a helper to
+retrieve the ECC or free bytes, meaning that if you have 4 ECC bytes
+per step, all concatenated, you will end with with an unique  ECC
+section of 8 * 4 ECC bytes, this is perfectly fine.
 
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 73eae5966a40..6ff98b87e5c0 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -15,7 +15,7 @@
- #include <linux/spinlock.h>
- 
- struct mtk_sysirq_chip_data {
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- 	u32 nr_intpol_bases;
- 	void __iomem **intpol_bases;
- 	u32 *intpol_words;
-@@ -37,7 +37,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 	reg_index = chip_data->which_word[hwirq];
- 	offset = hwirq & 0x1f;
- 
--	spin_lock_irqsave(&chip_data->lock, flags);
-+	raw_spin_lock_irqsave(&chip_data->lock, flags);
- 	value = readl_relaxed(base + reg_index * 4);
- 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
- 		if (type == IRQ_TYPE_LEVEL_LOW)
-@@ -53,7 +53,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 
- 	data = data->parent_data;
- 	ret = data->chip->irq_set_type(data, type);
--	spin_unlock_irqrestore(&chip_data->lock, flags);
-+	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
- 	return ret;
- }
- 
-@@ -212,7 +212,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 		ret = -ENOMEM;
- 		goto out_free_which_word;
- 	}
--	spin_lock_init(&chip_data->lock);
-+	raw_spin_lock_init(&chip_data->lock);
- 
- 	return 0;
- 
--- 
-2.26.1
+> 
+> Should we move the text that explains the layout closer to these
+> functions and add a little more text to explain why we choose this
+> particular layout?
 
+Yes please.
+
+> 
+> /*
+>  * NFC Page Data Layout:
+>  *	1024 Bytes Data + 4Bytes sys data + 28Bytes~124Bytes ecc +
+>  *	1024 Bytes Data + 4Bytes sys data + 28Bytes~124Bytes ecc +
+>  *	......
+>  * NAND Page Data Layout:
+>  *	1024 * n Data + m Bytes oob
+>  * Original Bad Block Mask Location:
+>  *	First byte of oob(spare).
+>  * nand_chip->oob_poi data layout:
+>  *	4Bytes sys data + .... + 4Bytes sys data + ecc data.
+>  */
+> 
+> We expect now ECC data after n steps * 4 OOB bytes,
+
+fine
+
+> but are we still using it with HW ECC or only for raw?
+
+both, you need to ensure reading a raw pages gives you a regular
+data+ecc organization instead of the NFC's layout.
+
+> 
+> > +
+> > +	oob_region->offset = NFC_SYS_DATA_SIZE * chip->ecc.steps;
+> > +	oob_region->length = mtd->oobsize - oob_region->offset;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct mtd_ooblayout_ops rk_nfc_ooblayout_ops = {
+> > +	.free = rk_nfc_ooblayout_free,
+> > +	.ecc = rk_nfc_ooblayout_ecc,
+> > +};  
+> 
+> [..]
+> 
+> > +static int rk_nfc_write_page(struct mtd_info *mtd, struct nand_chip *chip,
+> > +			     const u8 *buf, int page, int raw)
+> > +{
+> > +	struct rk_nfc *nfc = nand_get_controller_data(chip);
+> > +	struct rk_nfc_nand_chip *rk_nand = to_rk_nand(chip);
+> > +	struct nand_ecc_ctrl *ecc = &chip->ecc;
+> > +	int oob_step = (ecc->bytes > 60) ? NFC_MAX_OOB_PER_STEP :
+> > +			NFC_MIN_OOB_PER_STEP;
+> > +	int pages_per_blk = mtd->erasesize / mtd->writesize;
+> > +	int ret = 0, i, boot_rom_mode = 0;
+> > +	dma_addr_t dma_data, dma_oob;
+> > +	u32 reg;
+> > +	u8 *oob;
+> > +
+> > +	nand_prog_page_begin_op(chip, page, 0, NULL, 0);
+> > +
+> > +	if (!raw) {
+> > +		memcpy(nfc->page_buf, buf, mtd->writesize);
+> > +		memset(nfc->oob_buf, 0xff, oob_step * ecc->steps);
+> > +
+> > +		/*
+> > +		 * The first 8(some devices are 4 or 16) blocks in use by
+> > +		 * the boot ROM and the first 32 bits of oob need to link
+> > +		 * to the next page address in the same block.
+> > +		 * Config the ECC algorithm supported by the boot ROM.
+> > +		 */
+> > +		if (page < pages_per_blk * rk_nand->boot_blks &&
+> > +		    chip->options & NAND_IS_BOOT_MEDIUM) {
+> > +			boot_rom_mode = 1;
+> > +			if (rk_nand->boot_ecc != ecc->strength)
+> > +				rk_nfc_hw_ecc_setup(chip, ecc,
+> > +						    rk_nand->boot_ecc);
+> > +		}
+> > +
+> > +		/*
+> > +		 * Swap the first oob with the seventh oob and bad block
+> > +		 * mask is saved at the seventh oob.
+> > +		 */
+> > +		swap(chip->oob_poi[0], chip->oob_poi[7]);  
+> 
+> Add more info on why this is swapped.
+> 
+> LA[0..3] is a link address that the BBM shouldn't over write.
+> For Yifeng: Is there an other reason?
+> 
+> Before swap:
+> 
+> BBM  OOB1 OOB2 OOB3, OOB4 OOB5 OOB6 OOB7, OOB8 ....
+> 
+> After swap:
+> 
+> OOB7 OOB1 OOB2 OOB3, OOB4 OOB5 OOB6 BBM , OOB8 ....
+> 
+> If (!i && boot_rom_mode):
+> 
+> LA0  LA1  LA2  LA3 , OOB4 OOB5 OOB6 BBM , OOB8 ....
+> 
+> Read back after swap again:
+> 
+> BBM  LA1  LA2  LA3 , OOB4 OOB5 OOB6 LA0 , OOB8 ....
+> 
+> Question:
+> Are data OOB7 OOB1 OOB2 OOB3 lost now?
+> Is this correct?
+> 
+> #################################################
+> Proposal:
+> Should we reduce the free OOB size by 4
+> and shift everything 4 bytes to recover all bytes?
+> Replace the first 4 bytes with 0XFF or LA[0..3].
+> 
+> Normal:
+> 0xFF 0XFF 0XFF 0xFF, BBM  OOB1 OOB2 OOB3, OOB4
+> 
+> If (!i && boot_rom_mode):
+> LA0  LA1  LA2  LA3 , BBM  OOB1 OOB2 OOB3, OOB4
+> 
+> Question for Miquel and Yifeng:
+> Does this work? Could you test?
+> 
+> > +
+> > +		for (i = 0; i < ecc->steps; i++) {  
+> 
+> Just a proposel:
+> 
+> 		if (!i && boot_rom_mode)
+> 			reg = (page & (pages_per_blk - 1)) * 4;
+> 		else if (!i)
+> 			reg = 0xFFFFFFFF;
+> 		else	
+> 			oob = chip->oob_poi + (i-1) * NFC_SYS_DATA_SIZE;
+> 			reg = oob[0] | oob[1] << 8 | oob[2] << 16 |
+> 			      oob[3] << 24;
+> 
+> > +
+> > +			if (nfc->cfg->type == NFC_V6 ||
+> > +			    nfc->cfg->type == NFC_V8)
+> > +				nfc->oob_buf[i * oob_step / 4] = reg;
+> > +			else
+> > +				nfc->oob_buf[i] = reg;
+> > +		}
+> > +
+> > +		dma_data = dma_map_single(nfc->dev, (void *)nfc->page_buf,
+> > +					  mtd->writesize, DMA_TO_DEVICE);
+> > +		dma_oob = dma_map_single(nfc->dev, nfc->oob_buf,
+> > +					 ecc->steps * oob_step,
+> > +					 DMA_TO_DEVICE);
+> > +
+> > +		reinit_completion(&nfc->done);
+> > +		writel(INT_DMA, nfc->regs + nfc->cfg->int_en_off);
+> > +
+> > +		rk_nfc_xfer_start(nfc, NFC_WRITE, ecc->steps, dma_data,
+> > +				  dma_oob);
+> > +		ret = wait_for_completion_timeout(&nfc->done,
+> > +						  msecs_to_jiffies(100));
+> > +		if (!ret)
+> > +			dev_warn(nfc->dev, "write: wait dma done timeout.\n");
+> > +		/*
+> > +		 * Whether the DMA transfer is completed or not. The driver
+> > +		 * needs to check the NFC`s status register to see if the data
+> > +		 * transfer was completed.
+> > +		 */
+> > +		ret = rk_nfc_wait_for_xfer_done(nfc);
+> > +
+> > +		dma_unmap_single(nfc->dev, dma_data, mtd->writesize,
+> > +				 DMA_TO_DEVICE);
+> > +		dma_unmap_single(nfc->dev, dma_oob, ecc->steps * oob_step,
+> > +				 DMA_TO_DEVICE);
+> > +
+> > +		if (boot_rom_mode && rk_nand->boot_ecc != ecc->strength)
+> > +			rk_nfc_hw_ecc_setup(chip, ecc, ecc->strength);
+> > +
+> > +		if (ret) {
+> > +			ret = -EIO;
+> > +			dev_err(nfc->dev,
+> > +				 "write: wait transfer done timeout.\n");
+> > +		}
+> > +	} else {
+> > +		rk_nfc_write_buf(chip, buf, mtd->writesize + + mtd->oobsize);  
+> 
+> Remove a '+'
+> 
+> > +	}
+> > +
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = nand_prog_page_end_op(chip);
+> > +
+> > +	/* Deselect the currently selected target. */
+> > +	rk_nfc_select_chip(chip, -1);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int rk_nfc_write_page_raw(struct nand_chip *chip, const u8 *buf,
+> > +				 int oob_on, int page)
+> > +{
+> > +	struct mtd_info *mtd = nand_to_mtd(chip);
+> > +	struct rk_nfc *nfc = nand_get_controller_data(chip);
+> > +	u32 i;
+> > +
+> > +	memset(nfc->buffer, 0xff, mtd->writesize + mtd->oobsize);
+> > +	swap(chip->oob_poi[0], chip->oob_poi[7]);
+> > +	for (i = 0; i < chip->ecc.steps; i++) {
+> > +		if (buf)
+> > +			memcpy(rk_data_ptr(chip, i), data_ptr(chip, buf, i),
+> > +			       chip->ecc.size);
+> > +
+> > +		memcpy(rk_oob_ptr(chip, i), oob_ptr(chip, i),
+> > +		       NFC_SYS_DATA_SIZE);
+> > +	}
+> > +
+> > +	return rk_nfc_write_page(mtd, chip, nfc->buffer, page, 1);
+> > +}
+> > +
+> > +static int rk_nfc_write_oob_std(struct nand_chip *chip, int page)
+> > +{
+> > +	return rk_nfc_write_page_raw(chip, NULL, 1, page);
+> > +}
+> > +
+> > +static int rk_nfc_read_page(struct mtd_info *mtd, struct nand_chip *chip,
+> > +			    u32 data_offs, u32 readlen,
+> > +			    u8 *buf, int page, int raw)
+> > +{
+> > +	struct rk_nfc *nfc = nand_get_controller_data(chip);
+> > +	struct rk_nfc_nand_chip *rk_nand = to_rk_nand(chip);
+> > +	struct nand_ecc_ctrl *ecc = &chip->ecc;
+> > +	int oob_step = (ecc->bytes > 60) ? NFC_MAX_OOB_PER_STEP :
+> > +			NFC_MIN_OOB_PER_STEP;
+> > +	int pages_per_blk = mtd->erasesize / mtd->writesize;
+> > +	dma_addr_t dma_data, dma_oob;
+> > +	int ret = 0, i, boot_rom_mode = 0;
+> > +	int bitflips = 0, bch_st;
+> > +	u8 *oob;
+> > +	u32 tmp;
+> > +
+> > +	nand_read_page_op(chip, page, 0, NULL, 0);
+> > +	if (!raw) {
+> > +		dma_data = dma_map_single(nfc->dev, nfc->page_buf,
+> > +					  mtd->writesize,
+> > +					  DMA_FROM_DEVICE);
+> > +		dma_oob = dma_map_single(nfc->dev, nfc->oob_buf,
+> > +					 ecc->steps * oob_step,
+> > +					 DMA_FROM_DEVICE);
+> > +
+> > +		/*
+> > +		 * The first 8(some devices are 4 or 16) blocks in use by
+> > +		 * the bootrom.
+> > +		 * Config the ECC algorithm supported by the boot ROM.
+> > +		 */
+> > +		if (page < pages_per_blk * rk_nand->boot_blks &&
+> > +		    chip->options & NAND_IS_BOOT_MEDIUM) {
+> > +			boot_rom_mode = 1;
+> > +			if (rk_nand->boot_ecc != ecc->strength)
+> > +				rk_nfc_hw_ecc_setup(chip, ecc,
+> > +						    rk_nand->boot_ecc);
+> > +		}
+> > +
+> > +		reinit_completion(&nfc->done);
+> > +		writel(INT_DMA, nfc->regs + nfc->cfg->int_en_off);
+> > +		rk_nfc_xfer_start(nfc, NFC_READ, ecc->steps, dma_data,
+> > +				  dma_oob);
+> > +		ret = wait_for_completion_timeout(&nfc->done,
+> > +						  msecs_to_jiffies(100));
+> > +		if (!ret)
+> > +			dev_warn(nfc->dev, "read: wait dma done timeout.\n");
+> > +		/*
+> > +		 * Whether the DMA transfer is completed or not. The driver
+> > +		 * needs to check the NFC`s status register to see if the data
+> > +		 * transfer was completed.
+> > +		 */
+> > +		ret = rk_nfc_wait_for_xfer_done(nfc);
+> > +		dma_unmap_single(nfc->dev, dma_data, mtd->writesize,
+> > +				 DMA_FROM_DEVICE);
+> > +		dma_unmap_single(nfc->dev, dma_oob, ecc->steps * oob_step,
+> > +				 DMA_FROM_DEVICE);
+> > +
+> > +		if (ret) {
+> > +			bitflips = -EIO;
+> > +			dev_err(nfc->dev,
+> > +				 "read: wait transfer done timeout.\n");
+> > +			goto out;
+> > +		}
+> > +
+> > +		for (i = 0; i < ecc->steps; i++) {
+> > +			oob = chip->oob_poi + i * NFC_SYS_DATA_SIZE;
+> > +			if (nfc->cfg->type == NFC_V6 ||
+> > +			    nfc->cfg->type == NFC_V8)
+> > +				tmp = nfc->oob_buf[i * oob_step / 4];
+> > +			else
+> > +				tmp = nfc->oob_buf[i];
+> > +			*oob++ = (u8)tmp;
+> > +			*oob++ = (u8)(tmp >> 8);
+> > +			*oob++ = (u8)(tmp >> 16);
+> > +			*oob++ = (u8)(tmp >> 24);
+> > +		}
+> > +
+> > +		/*
+> > +		 * Swap the first oob with the seventh oob and bad block
+> > +		 * mask is saved at the seventh oob.
+> > +		 */
+> > +		swap(chip->oob_poi[0], chip->oob_poi[7]);
+> > +
+> > +		for (i = 0; i < ecc->steps / 2; i++) {
+> > +			bch_st = readl_relaxed(nfc->regs +
+> > +					       nfc->cfg->bch_st_off + i * 4);
+> > +			if (bch_st & BIT(nfc->cfg->ecc0.err_flag_bit) ||
+> > +			    bch_st & BIT(nfc->cfg->ecc1.err_flag_bit)) {
+> > +				mtd->ecc_stats.failed++;
+> > +				bitflips = -1;
+> > +			} else {
+> > +				ret = ECC_ERR_CNT(bch_st, nfc->cfg->ecc0);
+> > +				mtd->ecc_stats.corrected += ret;
+> > +				bitflips = max_t(u32, bitflips, ret);
+> > +
+> > +				ret = ECC_ERR_CNT(bch_st, nfc->cfg->ecc1);
+> > +				mtd->ecc_stats.corrected += ret;
+> > +				bitflips = max_t(u32, bitflips, ret);
+> > +			}
+> > +		}
+> > +out:
+> > +		memcpy(buf, nfc->page_buf, mtd->writesize);
+> > +
+> > +		if (boot_rom_mode && rk_nand->boot_ecc != ecc->strength)
+> > +			rk_nfc_hw_ecc_setup(chip, ecc, ecc->strength);
+> > +
+> > +		if (bitflips < 0)
+> > +			dev_err(nfc->dev, "read page: %x ecc error!\n", page);
+> > +	} else {
+> > +		rk_nfc_read_buf(chip, buf, mtd->writesize + mtd->oobsize);
+> > +	}
+> > +	/* Deselect the currently selected target. */
+> > +	rk_nfc_select_chip(chip, -1);
+> > +
+> > +	return bitflips;
+> > +}
+> > +
+> > +static int rk_nfc_write_page_hwecc(struct nand_chip *chip, const u8 *buf,
+> > +				   int oob_on, int page)
+> > +{
+> > +	return rk_nfc_write_page(nand_to_mtd(chip), chip, buf, page, 0);
+> > +}
+> > +
+> > +static int rk_nfc_read_page_hwecc(struct nand_chip *chip, u8 *p, int oob_on,
+> > +				  int pg)
+> > +{
+> > +	struct mtd_info *mtd = nand_to_mtd(chip);
+> > +
+> > +	return rk_nfc_read_page(mtd, chip, 0, mtd->writesize, p, pg, 0);
+> > +}
+> > +
+> > +static int rk_nfc_read_page_raw(struct nand_chip *chip, u8 *buf, int oob_on,
+> > +				int page)
+> > +{
+> > +	struct mtd_info *mtd = nand_to_mtd(chip);
+> > +	struct rk_nfc *nfc = nand_get_controller_data(chip);
+> > +	int i, ret;
+> > +
+> > +	ret = rk_nfc_read_page(mtd, chip, 0, mtd->writesize, nfc->buffer,
+> > +			       page, 1);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	for (i = 0; i < chip->ecc.steps; i++) {
+> > +		memcpy(oob_ptr(chip, i), rk_oob_ptr(chip, i),
+> > +		       NFC_SYS_DATA_SIZE);
+> > +
+> > +		if (buf)
+> > +			memcpy(data_ptr(chip, buf, i), rk_data_ptr(chip, i),
+> > +			       chip->ecc.size);
+> > +	}
+> > +	swap(chip->oob_poi[0], chip->oob_poi[7]);
+> > +
+> > +	return ret;
+> > +}  
+> 
+> [..]
+
+
+
+
+Thanks,
+Miquèl
