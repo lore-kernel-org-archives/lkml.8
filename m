@@ -2,214 +2,133 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1824207D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7FD20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="INkNszYZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ccJZoZAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbgFOTnE (ORCPT
+        id S1729995AbgFOTpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58242 "EHLO
+        Mon, 15 Jun 2020 15:45:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730712AbgFOTmR (ORCPT
+        with ESMTP id S1728773AbgFOTpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:42:17 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6A2C08C5C8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:42:15 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id bh7so7214448plb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sCHL24pJFJSFoASanMhktjUvoQlUfrXyegYhzckyoiE=;
-        b=INkNszYZmY2wifOY2yJAIkXAChxTSePBWyOoj3tvJYRWfzjz0IgEM3o3cn8P1ksFmx
-         kb6GtYmizImAg60vsTx3PS8iS2T6XGxfB0EbenzJoUUHJutkblYTO2bxLU5FnMDwZNJo
-         JCmcIxNy4/LBVcnMwL5CsOSeX2VcquT7Y6Emw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sCHL24pJFJSFoASanMhktjUvoQlUfrXyegYhzckyoiE=;
-        b=WiXJ7sEHVFzvGyFFbhVis2gBdlp8sqoYWk278sSG2VqHtdFNKQdZGbL4bcYnKuxPRs
-         HhHFGxIjM1oOk7iX9BBbPWYsL5cFiN5kDCqMHezC44pOc4uznpUBlVZ7Y65KqCVG/Zxe
-         VdOl1s5J/Ml4BUyV/uGsRQTBpAILSw/Y4IA8lYwmTO/YvoJ7yQOGBiyz8k1q6v0CkA10
-         OdzhN8eQJk8NtlygCmCvF3bRnnktk+4wz6FKQ+wT8nl2DgYBrNAsAd9gEbvCSOxFzJsr
-         cmpNPlFSKnViRwEnRAVgu9Ft+FBzIjlxq46cIeTu1hmLiSj7BV2PiXmmJZr+ANd+ipwl
-         65nw==
-X-Gm-Message-State: AOAM531oA5jvGbsbW/mu2DNK68QEP7HroR49sD4IEFbQuuMQ92uyzSjw
-        RsFRc3P8+TPT6r7rd4KXatuO9Q==
-X-Google-Smtp-Source: ABdhPJyETP8Ql6VRKP/AE8oPj2cFuyHxiNTpgJzwUePlExmYGh8vR9y/8m3suyFQihVgaBg1YKVx5g==
-X-Received: by 2002:a17:90a:db91:: with SMTP id h17mr857845pjv.6.1592250135228;
-        Mon, 15 Jun 2020 12:42:15 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id gq8sm293663pjb.14.2020.06.15.12.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 12:42:14 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v9 4/8] firmware: test partial file reads of request_partial_firmware_into_buf
-Date:   Mon, 15 Jun 2020 12:41:47 -0700
-Message-Id: <20200615194151.7011-5-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200615194151.7011-1-scott.branden@broadcom.com>
-References: <20200615194151.7011-1-scott.branden@broadcom.com>
+        Mon, 15 Jun 2020 15:45:04 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 732BCC061A0E;
+        Mon, 15 Jun 2020 12:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xBOByS3E0Zys2CPBDIgxUeZbWA4Bggf7qnRRJFZDgbg=; b=ccJZoZAJS7S+exDFb7nwytDFaz
+        jMY9z+wNIHCwcVBo5f6lLYxF4r+7koFDk5eaZG5VVHJhTUPaIlTz6Rox/3u3g8adfDUPxollIE9bk
+        6aKS/j5V2d6yQQAw4RIWYR0kFAGpg2LQmTQwBJp+zg2wj2IqNE3JeYBnzum+14hiJbpkaMw5YVAgO
+        I/oXCCZtVNxEqIanK3xz5UJijXZy4KvEPQTWx4Z139hHwvDrYhpbiQHxNImlMbUKxvQe7wa3pF3Lp
+        VsaDeRDWqTg5m2uDjj2bwMDN10SSt0YG6tSBMjtH2u10GpD4ukK1VZd4Oa+ZT4Be0tPhIIeL2qtmd
+        YutHTJhg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkv2S-0008J0-KF; Mon, 15 Jun 2020 19:45:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7C9CB3028C8;
+        Mon, 15 Jun 2020 21:44:58 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6724E203D5DB2; Mon, 15 Jun 2020 21:44:58 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 21:44:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-tip-commits@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
+Subject: Re: [tip: x86/entry] x86/entry: Treat BUG/WARN as NMI-like entries
+Message-ID: <20200615194458.GL2531@hirez.programming.kicks-ass.net>
+References: <f8fe40e0088749734b4435b554f73eee53dcf7a8.1591932307.git.luto@kernel.org>
+ <159199140855.16989.18012912492179715507.tip-bot2@tip-bot2>
+ <20200615145018.GU2531@hirez.programming.kicks-ass.net>
+ <CALCETrWhbg_61CTo9_T6s1NDFvOgUx7ebSzhXj7O_m8htePwKA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWhbg_61CTo9_T6s1NDFvOgUx7ebSzhXj7O_m8htePwKA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add firmware tests for partial file reads of
-request_partial_firmware_into_buf.
+On Mon, Jun 15, 2020 at 10:06:20AM -0700, Andy Lutomirski wrote:
+> On Mon, Jun 15, 2020 at 7:50 AM Peter Zijlstra <peterz@infradead.org> wrote:
 
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- .../selftests/firmware/fw_filesystem.sh       | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
+> Hmm.  IMO you're making two changes here, and this is fiddly enough
+> that it might be worth separating them for bisection purposes.
 
-diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
-index fcc281373b4d..afc2e469ac06 100755
---- a/tools/testing/selftests/firmware/fw_filesystem.sh
-+++ b/tools/testing/selftests/firmware/fw_filesystem.sh
-@@ -149,6 +149,26 @@ config_unset_into_buf()
- 	echo 0 >  $DIR/config_into_buf
- }
- 
-+config_set_buf_size()
-+{
-+	echo $1 >  $DIR/config_buf_size
-+}
-+
-+config_set_file_offset()
-+{
-+	echo $1 >  $DIR/config_file_offset
-+}
-+
-+config_set_partial()
-+{
-+	echo 1 >  $DIR/config_partial
-+}
-+
-+config_unset_partial()
-+{
-+	echo 0 >  $DIR/config_partial
-+}
-+
- config_set_sync_direct()
- {
- 	echo 1 >  $DIR/config_sync_direct
-@@ -207,6 +227,35 @@ read_firmwares()
- 	done
- }
- 
-+read_partial_firmwares()
-+{
-+	if [ "$(cat $DIR/config_into_buf)" == "1" ]; then
-+		fwfile="${FW_INTO_BUF}"
-+	else
-+		fwfile="${FW}"
-+	fi
-+
-+	if [ "$1" = "xzonly" ]; then
-+		fwfile="${fwfile}-orig"
-+	fi
-+
-+	# Strip fwfile down to match partial offset and length
-+	partial_data="$(cat $fwfile)"
-+	partial_data="${partial_data:$2:$3}"
-+
-+	for i in $(seq 0 3); do
-+		config_set_read_fw_idx $i
-+
-+		read_firmware="$(cat $DIR/read_firmware)"
-+
-+		# Verify the contents are what we expect.
-+		if [ $read_firmware != $partial_data ]; then
-+			echo "request #$i: partial firmware was not loaded" >&2
-+			exit 1
-+		fi
-+	done
-+}
-+
- read_firmwares_expect_nofile()
- {
- 	for i in $(seq 0 3); do
-@@ -319,6 +368,21 @@ test_batched_request_firmware_into_buf()
- 	echo "OK"
- }
- 
-+test_batched_request_partial_firmware_into_buf()
-+{
-+	echo -n "Batched request_partial_firmware_into_buf() $2 off=$3 size=$4 try #$1: "
-+	config_reset
-+	config_set_name $TEST_FIRMWARE_INTO_BUF_FILENAME
-+	config_set_into_buf
-+	config_set_partial
-+	config_set_buf_size $4
-+	config_set_file_offset $3
-+	config_trigger_sync
-+	read_partial_firmwares $2 $3 $4
-+	release_all_firmware
-+	echo "OK"
-+}
-+
- test_batched_request_firmware_direct()
- {
- 	echo -n "Batched request_firmware_direct() $2 try #$1: "
-@@ -371,6 +435,22 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware_into_buf $i normal
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_partial_firmware_into_buf $i normal 0 10
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_partial_firmware_into_buf $i normal 0 5
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_partial_firmware_into_buf $i normal 1 6
-+done
-+
-+for i in $(seq 1 5); do
-+	test_batched_request_partial_firmware_into_buf $i normal 2 10
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i normal
- done
--- 
-2.17.1
+Sure, can do.
 
+> > ---
+> >
+> > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> > index af75109485c26..a47e74923c4c8 100644
+> > --- a/arch/x86/kernel/traps.c
+> > +++ b/arch/x86/kernel/traps.c
+> > @@ -218,21 +218,22 @@ static inline void handle_invalid_op(struct pt_regs *regs)
+> >
+> >  DEFINE_IDTENTRY_RAW(exc_invalid_op)
+> >  {
+> > -       bool rcu_exit;
+> > -
+> >         /*
+> >          * Handle BUG/WARN like NMIs instead of like normal idtentries:
+> >          * if we bugged/warned in a bad RCU context, for example, the last
+> >          * thing we want is to BUG/WARN again in the idtentry code, ad
+> >          * infinitum.
+> >          */
+> > -       if (!user_mode(regs) && is_valid_bugaddr(regs->ip)) {
+> > -               enum bug_trap_type type;
+> > +       if (!user_mode(regs)) {
+> > +               enum bug_trap_type type = BUG_TRAP_TYPE_NONE;
+> >
+> >                 nmi_enter();
+> >                 instrumentation_begin();
+> >                 trace_hardirqs_off_finish();
+> > -               type = report_bug(regs->ip, regs);
+> > +
+> > +               if (is_valid_bugaddr(regs->ip))
+> > +                       type = report_bug(regs->ip, regs);
+> > +
+> 
+> Sigh, this is indeed necessary.
+
+:-)
+
+> >                 if (regs->flags & X86_EFLAGS_IF)
+> >                         trace_hardirqs_on_prepare();
+> >                 instrumentation_end();
+> > @@ -249,13 +250,16 @@ DEFINE_IDTENTRY_RAW(exc_invalid_op)
+> >                  * was just a normal #UD, we want to continue onward and
+> >                  * crash.
+> >                  */
+> > -       }
+> > +               handle_invalid_op(regs);
+> 
+> But this is really a separate change.  This makes handle_invalid_op()
+> be NMI-like even for non-BUG/WARN kernel #UD entries.  One might argue
+> that this doesn't matter, and that's probably right, but I think it
+> should be its own change with its own justification.  With just my
+> patch, I intentionally call handle_invalid_op() via the normal
+> idtentry_enter_cond_rcu() path.
+
+All !user exceptions really should be NMI-like. If you want to go
+overboard, I suppose you can look at IF and have them behave interrupt
+like when set, but why make things complicated.
+
+Anyway, let me to smaller and proper patches for this.
