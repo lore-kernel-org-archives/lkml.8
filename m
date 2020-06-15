@@ -2,78 +2,103 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF947C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ABAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3DF520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8835620679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:41:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592217694;
+	bh=lXL7rej+TefHWIFaMbpYGDc3wQKLdDlDqma+LFXrdjc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nJGeKB4Cjv6Rz61+AmwrYv8Tl+L2hJLkE/h4W4Cy7uoMvpj8pvEt7iFPS6cnkHHbT
+	 uEvpkNjHXGgmCDdql8tDacvspk5nKfEqmDlZYQnMqX3s/frjhSmI2DuEqrge9Z1V95
+	 EJ6CNRpD6U7XCdWOtt0F78Vu4ktLWwzHmEKfTvg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgFOKke (ORCPT
+        id S1729585AbgFOKld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:40:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51820 "EHLO mx2.suse.de"
+        Mon, 15 Jun 2020 06:41:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgFOKke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:40:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DD87DABF4;
-        Mon, 15 Jun 2020 10:40:36 +0000 (UTC)
-Date:   Mon, 15 Jun 2020 12:40:32 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Tobias Klauser <tklauser@distanz.ch>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: Free memory in error case in special_get_alts
-In-Reply-To: <20200612115628.8992-1-tklauser@distanz.ch>
-Message-ID: <alpine.LSU.2.21.2006151238390.5945@pobox.suse.cz>
-References: <20200612115628.8992-1-tklauser@distanz.ch>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1728860AbgFOKlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:41:31 -0400
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA7F620739;
+        Mon, 15 Jun 2020 10:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592217690;
+        bh=lXL7rej+TefHWIFaMbpYGDc3wQKLdDlDqma+LFXrdjc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OGOq9Im6cBsPVdtab/7Bgg7k4nhtsakjRiFqAJH/nIHTR+S760HE3LzNcXvix+VVR
+         d4OnimzP05MbT5sl0bcWSXL6vVce5Tm49RPajy7+7rE4NuB+3mvV4I/NU//PfBp1JQ
+         KNKlDBfAYXmukmFvmA7JqjMKni9JUpl7+MrfoJro=
+Received: by mail-ot1-f44.google.com with SMTP id g7so12702248oti.13;
+        Mon, 15 Jun 2020 03:41:30 -0700 (PDT)
+X-Gm-Message-State: AOAM530zqM/RyOQNQrwOu4IQ4nkajsV9173DqD2JMhzHoKZV7WOwrSiQ
+        VauMBIw11A6AbJDwNHv5BxgQkzAOvAZACcgbBxM=
+X-Google-Smtp-Source: ABdhPJxtAfnS7BRUD3aYiVQIBX9PUBhev5wuEg2dXY9GecvgeYwoq047fbdU9i5Ndvc9V3w28MipNmxK5kaJ1dHIZ+E=
+X-Received: by 2002:a9d:5a12:: with SMTP id v18mr2978751oth.90.1592217690079;
+ Mon, 15 Jun 2020 03:41:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200604022031.164207-1-masahiroy@kernel.org> <20200604022031.164207-2-masahiroy@kernel.org>
+ <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXEHDFnhgsz4w+6DuwPxcSZ5P8o0rMzQ504Nt4i31MXwJQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 15 Jun 2020 12:41:18 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFhULbche0kbGr+mHofOYBU2WT8i7Bgx-qgz6Cp6AE8ow@mail.gmail.com>
+Message-ID: <CAMj1kXFhULbche0kbGr+mHofOYBU2WT8i7Bgx-qgz6Cp6AE8ow@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] efi/libstub: refactor Makefile to not use lib-y syntax
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Atish Patra <atish.patra@wdc.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 15 Jun 2020 at 12:26, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Thu, 4 Jun 2020 at 04:20, Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Documentation/kbuild/makefiles.rst says:
+> >
+> >   Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+> >
+> > This is because lib-y is inteded to be hooked to KBUILD_VMLINUX_LIBS,
+> > which is passed down to scripts/link-vmlinux.sh.
+> >
+> > Besides, lib-y is not so interesting because objects from lib-y are
+> > mostly linked in normal usecases. For example, lib-y only saves 364
+> > bytes for x86_64_defconfig. You can see the details in commit
+> > 7273ad2b08f8 ("kbuild: link lib-y objects to vmlinux forcibly when
+> > CONFIG_MODULES=y").
+> >
+> > I think we should consider to deprecate lib-y syntax at some point
+> > because we should aim for better solution like dead code elimination
+> > or LTO.
+> >
+> > Other than lib/ and arch/*/lib, this Makefile is the only user of
+> > lib-y. Replace lib-y with a custom rule.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> Series queued in efi/urgent.
+>
 
-On Fri, 12 Jun 2020, Tobias Klauser wrote:
+Actually, I am seeing this now
 
-> Avoid a memory leak in case get_alt_entry returns an error.
-
-yes, this is not the only one, but I doubt we want to spend time on that. 
-The process is about to exit anyway.
-
-Miroslav
-
-> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
-> ---
->  tools/objtool/special.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-> index e74e0189de22..f6f7dee1ba77 100644
-> --- a/tools/objtool/special.c
-> +++ b/tools/objtool/special.c
-> @@ -188,8 +188,10 @@ int special_get_alts(struct elf *elf, struct list_head *alts)
->  			memset(alt, 0, sizeof(*alt));
->  
->  			ret = get_alt_entry(elf, entry, sec, idx, alt);
-> -			if (ret)
-> +			if (ret) {
-> +				free(alt);
->  				return ret;
-> +			}
->  
->  			list_add_tail(&alt->list, alts);
->  		}
-> -- 
-> 2.27.0
-> 
-
+/home/ard/linux/scripts/Makefile.build:421: warning: overriding recipe
+for target 'drivers/firmware/efi/libstub/lib.a'
+/home/ard/linux/drivers/firmware/efi/libstub/Makefile:131: warning:
+ignoring old recipe for target 'drivers/firmware/efi/libstub/lib.a'
