@@ -2,249 +2,116 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2895C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7815BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 550692078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7F52063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 15:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpG1v374"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="aPeEzEq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbgFOPI3 (ORCPT
+        id S1730934AbgFOPJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 11:08:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44048 "EHLO
+        Mon, 15 Jun 2020 11:09:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729875AbgFOPI0 (ORCPT
+        with ESMTP id S1730794AbgFOPJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:08:26 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FD3C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:08:25 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c12so9735655lfc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:08:25 -0700 (PDT)
+        Mon, 15 Jun 2020 11:09:16 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC4CC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:09:14 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id f7so17830630ejq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 08:09:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+wmoyb0CAL/LuhyaYWGTYXhkQwz3N5+E6mLs3ScOlYA=;
-        b=JpG1v374tQ+JD8JP3ukzFO5K3qzXy06U7rK7ck9F9YGJ5GwNp5lDIxkK71DMR2COXr
-         lShPHgDOS8IbkETbBFQ4c9RD/CeHFsfb1TUlXxtTUl2ibKTy7q/ZQU+128NSsmObej/l
-         a1z3TQPxOuazkTUAyePjpva/6QJ6N3Di2bPrlg5R4ZMtZ6Wo4TgYVw0gmwjIeOcv1XEq
-         Zi0FcYIprt3ItL/YGaXfRqtzbv3MCFTRNIA91/SYb/NULP41p8wKTUcnp0+v/DqK2Fvs
-         /m+fhYWGoD5xaWb3gAq0md6hRYGk9N8Vna2w//Smrg3pelOIzBDlj/kCAdaqZP2I0/Rp
-         1GdQ==
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I3pYBTJCH1fWxzUVivyIxWA31KHjVQXjnfV1c/iHSQ8=;
+        b=aPeEzEq8Bmncf5GDxG4bKMbLMmpAo3LrvR3mDRIGWrMYi8m0weo1We6uJeEyp/OCdf
+         /K4tB062Vr1+uzaRvdUPls1EMMG+6mqPlTcGG+J0AVYmUhkuQd4uuhW8AEwLZcc4EZoB
+         CSGBuXP88a9JMP/xuTmLWTkbgT6ick7fAsj5k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+wmoyb0CAL/LuhyaYWGTYXhkQwz3N5+E6mLs3ScOlYA=;
-        b=VnN3kkRKoH7UPodGAHlkqwjmwRdc9tMzQSAGzih9kE40F09uVC0ll6F2rSFLyLhYFr
-         UgmuWU0WxDOtQw/4d4UhoaSU1nmSers3F6/4BqZu3bEjKXBPc1ejl03sNSC0Nc4Z2Taw
-         JbmH3y+LmgNAUC82RVN+5Z0Uf4rjfzwGyXVmHKkaZ07lD5nDj4UWqdKAXmk/rQyt5ZWc
-         /bLBOcgzC7dHQOoCL7XkYVsCBPwk2CAo0JnRpld1q41Biwcz3Bpq6ecsEBEtqJJiq8Zd
-         vUM7tJ98IefGPGOsLTiLb25ESB9Hp4SyD5w6jZYwnhrdLkQt8ZTH61iKLPI/w+v9QWJm
-         OKvQ==
-X-Gm-Message-State: AOAM531KqJE34tKmpi3rMPqEr3gyyJW8JM7Zmz/LINuLFpIq05anY/CR
-        xIb/KovxpZnLpkDH4gRq7aDF8hrnoCwDLEjsGao=
-X-Google-Smtp-Source: ABdhPJxnb16s3HzpwAQcogzDTuHatdlI1VVy/3H4sed0It4QaNIaVF3ia1LCclY05FYXohLe+n3Z9rWH0s639w6yG0c=
-X-Received: by 2002:a19:8389:: with SMTP id f131mr2452754lfd.16.1592233704228;
- Mon, 15 Jun 2020 08:08:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I3pYBTJCH1fWxzUVivyIxWA31KHjVQXjnfV1c/iHSQ8=;
+        b=O5bRwUEXRqUprctV4cUVyF2Gdf4EjESRcoPWfHfIQnVOeUNp2vwMk4Jrx8nc9F5G6X
+         QxUsZJDAXa+tP/Ce/NOgSVZJwJKs8HLf0Kuk/sPYp+MDQqvREMGOvDp4TAr0Z/WCTO43
+         HDi/hkCo9J8fZRA4SpVIQcTMiGKsNnQ8UHo3JvL9kti6cuwYje4ZArHGIAFIFeOum8l5
+         mbzD6qNgVydO4VGUs1koVsorV9z0XYw0Swg9K+U/RdD98eVwxdi0pQqLpa65g/xIZ7EI
+         OYfqwwwQpsTDNRwIiIH2BSthIJo4ZRw6uEcGkNTdIkE/A2uvgXF3f76yciukfRdCNP2X
+         zdvw==
+X-Gm-Message-State: AOAM531fBq2OXtjAy7N4S1Q1urxGLi8YCTfy8R4RzC6Xn+CflZK9OVYq
+        Lsc2/z0UUqD1xAyoAPPyadWtbg==
+X-Google-Smtp-Source: ABdhPJzeW4+2+GixiCcm6tt6aIOT33friuuTwTXSJQgxiQ6xtbaI4m513By7G/zR8apVHeGwbGMnMg==
+X-Received: by 2002:a17:906:edb6:: with SMTP id sa22mr14094332ejb.393.1592233752926;
+        Mon, 15 Jun 2020 08:09:12 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:3c3c])
+        by smtp.gmail.com with ESMTPSA id s17sm9134265eju.80.2020.06.15.08.09.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 08:09:12 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 16:09:11 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm: memcontrol: handle div0 crash race condition in
+ memory.low
+Message-ID: <20200615150911.GD157916@chrisdown.name>
+References: <20200615140658.601684-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-References: <20200615034715.11438-1-zhang.lyra@gmail.com> <CADBw62oCNrvTgu9k-iykaX4bbpVWjbg3GN+v5yPBCc9R2bR3Pg@mail.gmail.com>
-In-Reply-To: <CADBw62oCNrvTgu9k-iykaX4bbpVWjbg3GN+v5yPBCc9R2bR3Pg@mail.gmail.com>
-From:   Orson Zhai <orsonzhai@gmail.com>
-Date:   Mon, 15 Jun 2020 23:08:12 +0800
-Message-ID: <CA+H2tpF95rLRb8qbgCsrKBtjTV7JMTenuaYBHf19tpAXFqmqMQ@mail.gmail.com>
-Subject: Re: [PATCH] mfd: sprd: get subdevices from DT instead for SC27XX SPI
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200615140658.601684-1-hannes@cmpxchg.org>
+User-Agent: Mutt/1.14.2 (2020-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:12 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+Johannes Weiner writes:
+>Tejun reports seeing rare div0 crashes in memory.low stress testing:
 >
-> On Mon, Jun 15, 2020 at 11:47 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> >
-> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> >
-> > SC27XX-SPI added subdevices according to a pre-defined mfd_cell array,
-> > no matter these devices were really included on board. So with this
-> > patch we switch to a new way of detecting subdevices which are
-> > defined in the devicetree.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  drivers/mfd/sprd-sc27xx-spi.c | 102 +++++++++++-----------------------
-> >  1 file changed, 31 insertions(+), 71 deletions(-)
-> >
-> > diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
-> > index 33336cde4724..aa3daa0cfcf5 100644
-> > --- a/drivers/mfd/sprd-sc27xx-spi.c
-> > +++ b/drivers/mfd/sprd-sc27xx-spi.c
-> > @@ -93,73 +93,6 @@ enum usb_charger_type sprd_pmic_detect_charger_type(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(sprd_pmic_detect_charger_type);
-> >
-> > -static const struct mfd_cell sprd_pmic_devs[] = {
-> > -       {
-> > -               .name = "sc27xx-wdt",
-> > -               .of_compatible = "sprd,sc2731-wdt",
-> > -       }, {
-> > -               .name = "sc27xx-rtc",
-> > -               .of_compatible = "sprd,sc2731-rtc",
-> > -       }, {
-> > -               .name = "sc27xx-charger",
-> > -               .of_compatible = "sprd,sc2731-charger",
-> > -       }, {
-> > -               .name = "sc27xx-chg-timer",
-> > -               .of_compatible = "sprd,sc2731-chg-timer",
-> > -       }, {
-> > -               .name = "sc27xx-fast-chg",
-> > -               .of_compatible = "sprd,sc2731-fast-chg",
-> > -       }, {
-> > -               .name = "sc27xx-chg-wdt",
-> > -               .of_compatible = "sprd,sc2731-chg-wdt",
-> > -       }, {
-> > -               .name = "sc27xx-typec",
-> > -               .of_compatible = "sprd,sc2731-typec",
-> > -       }, {
-> > -               .name = "sc27xx-flash",
-> > -               .of_compatible = "sprd,sc2731-flash",
-> > -       }, {
-> > -               .name = "sc27xx-eic",
-> > -               .of_compatible = "sprd,sc2731-eic",
-> > -       }, {
-> > -               .name = "sc27xx-efuse",
-> > -               .of_compatible = "sprd,sc2731-efuse",
-> > -       }, {
-> > -               .name = "sc27xx-thermal",
-> > -               .of_compatible = "sprd,sc2731-thermal",
-> > -       }, {
-> > -               .name = "sc27xx-adc",
-> > -               .of_compatible = "sprd,sc2731-adc",
-> > -       }, {
-> > -               .name = "sc27xx-audio-codec",
-> > -               .of_compatible = "sprd,sc2731-audio-codec",
-> > -       }, {
-> > -               .name = "sc27xx-regulator",
-> > -               .of_compatible = "sprd,sc2731-regulator",
-> > -       }, {
-> > -               .name = "sc27xx-vibrator",
-> > -               .of_compatible = "sprd,sc2731-vibrator",
-> > -       }, {
-> > -               .name = "sc27xx-keypad-led",
-> > -               .of_compatible = "sprd,sc2731-keypad-led",
-> > -       }, {
-> > -               .name = "sc27xx-bltc",
-> > -               .of_compatible = "sprd,sc2731-bltc",
-> > -       }, {
-> > -               .name = "sc27xx-fgu",
-> > -               .of_compatible = "sprd,sc2731-fgu",
-> > -       }, {
-> > -               .name = "sc27xx-7sreset",
-> > -               .of_compatible = "sprd,sc2731-7sreset",
-> > -       }, {
-> > -               .name = "sc27xx-poweroff",
-> > -               .of_compatible = "sprd,sc2731-poweroff",
-> > -       }, {
-> > -               .name = "sc27xx-syscon",
-> > -               .of_compatible = "sprd,sc2731-syscon",
-> > -       },
-> > -};
-> > -
-> >  static int sprd_pmic_spi_write(void *context, const void *data, size_t count)
-> >  {
-> >         struct device *dev = context;
-> > @@ -205,6 +138,35 @@ static const struct regmap_config sprd_pmic_config = {
-> >         .max_register = 0xffff,
-> >  };
-> >
-> > +static int sprd_pmic_add_subdevices(struct device *dev, int id,
-> > +                        struct irq_domain *domain)
-> > +{
-> > +       int ret = 0;
-> > +       struct device_node *child, *parent = dev->of_node;
-> > +       struct mfd_cell cell = {0};
-> > +       const char *comp;
-> > +       unsigned int prefix_len = strlen("sprd,");
-> > +       char buf[30];
-> > +
-> > +       for_each_child_of_node(parent, child) {
-> > +               comp = of_get_property(child, "compatible", NULL);
-> > +               if (!comp || strncmp("sprd,", comp, prefix_len))
-> > +                       return -EINVAL;
-> > +
-> > +               memcpy(buf, comp, strlen(comp) + 1);
-> > +               cell.of_compatible = buf;
-> > +               cell.name = buf + prefix_len;
+>[37228.504582] RIP: 0010:mem_cgroup_calculate_protection+0xed/0x150
+>[37228.505059] Code: 0f 46 d1 4c 39 d8 72 57 f6 05 16 d6 42 01 40 74 1f 4c 39 d8 76 1a 4c 39 d1 76 15 4c 29 d1 4c 29 d8 4d 29 d9 31 d2 48 0f af c1 <49> f7 f1 49 01 c2 4c 89 96 38 01 00 00 5d c3 48 0f af c7 31 d2 49
+>[37228.506254] RSP: 0018:ffffa14e01d6fcd0 EFLAGS: 00010246
+>[37228.506769] RAX: 000000000243e384 RBX: 0000000000000000 RCX: 0000000000008f4b
+>[37228.507319] RDX: 0000000000000000 RSI: ffff8b89bee84000 RDI: 0000000000000000
+>[37228.507869] RBP: ffffa14e01d6fcd0 R08: ffff8b89ca7d40f8 R09: 0000000000000000
+>[37228.508376] R10: 0000000000000000 R11: 00000000006422f7 R12: 0000000000000000
+>[37228.508881] R13: ffff8b89d9617000 R14: ffff8b89bee84000 R15: ffffa14e01d6fdb8
+>[37228.509397] FS:  0000000000000000(0000) GS:ffff8b8a1f1c0000(0000) knlGS:0000000000000000
+>[37228.509917] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>[37228.510442] CR2: 00007f93b1fc175b CR3: 000000016100a000 CR4: 0000000000340ea0
+>[37228.511076] Call Trace:
+>[37228.511561]  shrink_node+0x1e5/0x6c0
+>[37228.512044]  balance_pgdat+0x32d/0x5f0
+>[37228.512521]  kswapd+0x1d7/0x3d0
+>[37228.513346]  ? wait_woken+0x80/0x80
+>[37228.514170]  kthread+0x11c/0x160
+>[37228.514983]  ? balance_pgdat+0x5f0/0x5f0
+>[37228.515797]  ? kthread_park+0x90/0x90
+>[37228.516593]  ret_from_fork+0x1f/0x30
 >
-> I feel it is a little hackish, you can create any device nodes from DT
-> even the PMIC does not support.
+>This happens when parent_usage == siblings_protected. We check that
+>usage is bigger than protected, which should imply parent_usage being
+>bigger than siblings_protected. However, we don't read (or even
+>update) these values atomically, and they can be out of sync as the
+>memory state changes under us. A bit of fluctuation around the target
+>protection isn't a big deal, but we need to handle the div0 case.
+>
+>Check the parent state explicitly to make sure we have a reasonable
+>positive value for the divisor.
+>
+>Fixes: 8a931f801340 ("mm: memcontrol: recursive memory.low protection")
+>Reported-by: Tejun Heo <tj@kernel.org>
 
-In the old code, if sub cells have wrong compatible strings, he will not get
-an opportunity to be probed.
-It is confused to user for  there is no any error and warning message.
-I think it maybe better to let them being probed even when they might be wrong.
-The cell will check by itself --  return success in probing if in the
-right place or return error if any
-thing is wrong there.
-
-Best,
-Orson
-
->
-> I am not sure the problem caused by the original method, you can use
-> the compatible string to be compatible with different PMICs, such as
-> SC2730 ADC:
-> compatible = "sprd,sc2731-adc", "sprd,sc2730-adc";
->
-> Moreover I think you can add the "sprd,sc2730-xxx" compatible string
-> for the mfd_cell in this driver if you are sure we want to support
-> SC2730 PMIC.
->
-> > +
-> > +               ret = devm_mfd_add_devices(dev, id, &cell, 1, NULL, 0, domain);
-> > +               if (ret) {
-> > +                       pr_err("devm_mfd_add_devices return fail ret=%d\n", ret);
-> > +                       break;
-> > +               }
-> > +       }
-> > +
-> > +       return ret;
-> > +}
-> > +
-> >  static int sprd_pmic_probe(struct spi_device *spi)
-> >  {
-> >         struct sprd_pmic *ddata;
-> > @@ -263,10 +225,8 @@ static int sprd_pmic_probe(struct spi_device *spi)
-> >                 return ret;
-> >         }
-> >
-> > -       ret = devm_mfd_add_devices(&spi->dev, PLATFORM_DEVID_AUTO,
-> > -                                  sprd_pmic_devs, ARRAY_SIZE(sprd_pmic_devs),
-> > -                                  NULL, 0,
-> > -                                  regmap_irq_get_domain(ddata->irq_data));
-> > +       ret = sprd_pmic_add_subdevices(&spi->dev, PLATFORM_DEVID_AUTO,
-> > +                                      regmap_irq_get_domain(ddata->irq_data));
-> >         if (ret) {
-> >                 dev_err(&spi->dev, "Failed to register device %d\n", ret);
-> >                 return ret;
-> > --
-> > 2.20.1
-> >
->
->
-> --
-> Baolin Wang
+Acked-by: Chris Down <chris@chrisdown.name>
