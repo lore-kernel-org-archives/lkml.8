@@ -2,106 +2,109 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24CD20756
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rcWMKzQG"
+	by mail.kernel.org (Postfix) with ESMTP id 731B2207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgFOT2J (ORCPT
+        id S1730303AbgFOT2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55978 "EHLO
+        Mon, 15 Jun 2020 15:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729647AbgFOT2I (ORCPT
+        with ESMTP id S1729647AbgFOT2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:28:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88540C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=bxE5+wON8aWjefwp90f/TBXJRL9rZflW6Zz1LiSTctg=; b=rcWMKzQGHlNqR5M2sEeGUmyDoU
-        VswsHnC5ifQ16KXix+iGOqNqCN60tXZ4nvGwPwpPJ89w48hBUIBiAYjXB469YtsPH25Q31wWTEsEE
-        UYCXmF20TbUtEyuug+7hUNwrRAsUBvQOA6vHXEExfLu++14dcSFX1TOPtv4nBThGtK5IMtKTXRaD2
-        6KBs8VLwONVRHiDlT9MEfrybG2i8KtlxKvvWTSw0O7dsfxGadWu7KeVlofL9gixx9TFMkTYCim1vt
-        y4JzqujjHe9fWJxUD6OPLou/xPMOG2O2vxi0j0ikt4uinkhpUNtw6iHBdYGq8Fb5f31zTXnFRysAN
-        qZB6sNbw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkum6-0007P2-QJ; Mon, 15 Jun 2020 19:28:06 +0000
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Byungchul Park <byungchul.park@lge.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] kernel/rcu/tree.c: fix kernel-doc warnings
-Message-ID: <6b6af324-1c81-5b8d-bfc1-e800e9792172@infradead.org>
-Date:   Mon, 15 Jun 2020 12:28:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 15:28:16 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E6CC05BD43;
+        Mon, 15 Jun 2020 12:28:16 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jkumD-0002wk-OX; Mon, 15 Jun 2020 21:28:13 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2123B1C00ED;
+        Mon, 15 Jun 2020 21:28:13 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 19:28:12 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/asm: Unify __ASSEMBLY__ blocks
+Cc:     Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200604133204.7636-1-bp@alien8.de>
+References: <20200604133204.7636-1-bp@alien8.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <159224929288.16989.16009858447868087390.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+The following commit has been merged into the x86/cleanups branch of tip:
 
-Fix kernel-doc warnings:
+Commit-ID:     28b60197b573cd0b2d8f0ded56a5441c6147af14
+Gitweb:        https://git.kernel.org/tip/28b60197b573cd0b2d8f0ded56a5441c6147af14
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Thu, 04 Jun 2020 12:50:44 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 15 Jun 2020 19:29:36 +02:00
 
-../kernel/rcu/tree.c:959: warning: Excess function parameter 'irq' description in 'rcu_nmi_enter'
-../kernel/rcu/tree.c:3006: warning: Function parameter or member 'count' not described in 'kfree_rcu_cpu'
+x86/asm: Unify __ASSEMBLY__ blocks
 
-Fixes: cf7614e13c8f ("rcu: Refactor rcu_{nmi,irq}_{enter,exit}()")
-Fixes: 9154244c1ab6 ("rcu/tree: Add a shrinker to prevent OOM due to kfree_rcu() batching")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Byungchul Park <byungchul.park@lge.com>
-Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: Paul E. McKenney <paulmck@kernel.org>
+Merge the two ifndef __ASSEMBLY__ blocks.
+
+No functional changes.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200604133204.7636-1-bp@alien8.de
 ---
-Note: The first Fixes: commit ID might be incorrect.
+ arch/x86/include/asm/asm.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
- kernel/rcu/tree.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
---- linux-next-20200615.orig/kernel/rcu/tree.c
-+++ linux-next-20200615/kernel/rcu/tree.c
-@@ -944,7 +944,6 @@ void __rcu_irq_enter_check_tick(void)
+diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+index 0f63585..5c15f95 100644
+--- a/arch/x86/include/asm/asm.h
++++ b/arch/x86/include/asm/asm.h
+@@ -144,7 +144,7 @@
+ 	_ASM_PTR (entry);					\
+ 	.popsection
  
- /**
-  * rcu_nmi_enter - inform RCU of entry to NMI context
-- * @irq: Is this call from rcu_irq_enter?
-  *
-  * If the CPU was idle from RCU's viewpoint, update rdp->dynticks and
-  * rdp->dynticks_nmi_nesting to let the RCU grace-period handling know
-@@ -2986,6 +2985,7 @@ struct kfree_rcu_cpu_work {
-  * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
-  * @monitor_todo: Tracks whether a @monitor_work delayed work is pending
-  * @initialized: The @lock and @rcu_work fields have been initialized
-+ * @count: Number of objects for which GP not started
-  *
-  * This is a per-CPU structure.  The reason that it is not included in
-  * the rcu_data structure is to permit this code to be extracted from
-@@ -3001,7 +3001,6 @@ struct kfree_rcu_cpu {
- 	struct delayed_work monitor_work;
- 	bool monitor_todo;
- 	bool initialized;
--	// Number of objects for which GP not started
- 	int count;
- };
+-#else
++#else /* ! __ASSEMBLY__ */
+ # define _EXPAND_EXTABLE_HANDLE(x) #x
+ # define _ASM_EXTABLE_HANDLE(from, to, handler)			\
+ 	" .pushsection \"__ex_table\",\"a\"\n"			\
+@@ -164,9 +164,7 @@
+ 	_ASM_EXTABLE_HANDLE(from, to, ex_handler_fault)
  
-
-
+ /* For C file, we already have NOKPROBE_SYMBOL macro */
+-#endif
+ 
+-#ifndef __ASSEMBLY__
+ /*
+  * This output constraint should be used for any inline asm which has a "call"
+  * instruction.  Otherwise the asm may be inserted before the frame pointer
+@@ -175,6 +173,6 @@
+  */
+ register unsigned long current_stack_pointer asm(_ASM_SP);
+ #define ASM_CALL_CONSTRAINT "+r" (current_stack_pointer)
+-#endif
++#endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_X86_ASM_H */
