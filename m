@@ -2,93 +2,196 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D48C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1109C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B352078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC2C20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 01:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XXfUbPRT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgFOBuo (ORCPT
+        id S1728148AbgFOB7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Jun 2020 21:50:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48406 "EHLO mail.kernel.org"
+        Sun, 14 Jun 2020 21:59:31 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58355 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727946AbgFOBuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Jun 2020 21:50:44 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728117AbgFOB73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Jun 2020 21:59:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30E382053B;
-        Mon, 15 Jun 2020 01:50:43 +0000 (UTC)
-Date:   Sun, 14 Jun 2020 21:50:41 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH] [traceevent] add_new_comm(): Fix memory leak
-Message-ID: <20200614215041.024f818f@gandalf.local.home>
-In-Reply-To: <20200614181517.30187-1-gaurav1086@gmail.com>
-References: <20200614181517.30187-1-gaurav1086@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49lZJb1frTz9sRf;
+        Mon, 15 Jun 2020 11:59:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592186367;
+        bh=Y62cSTTNiDsE9l7hCk4un3+VHOfggzDmAIhiWe5M/x0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XXfUbPRTm0kLQoyKHVRXRQbBSKJZNAcNagxbHMZuWLVTHNHaBqScbhNiLy8jLOOLL
+         Nm+Dk7fwfjoQnz+X+bRAL42VE13EBSGZzNvyA4nrOTABAg50VLUt6XoaMuAQiBUahk
+         E8/bh5RnF8LRPHhB2eYR/hNTeIMUSu4D9B1vpMLZpKJ6b+H8wsrcjGBH6xNQ3hocDr
+         6J0uAyZAMLoZ65hiDUxkzMwMImcqmDReK2aAPoswfkxe0E7x0g4l5LkUQw4+wTfxwD
+         76gu1dKG4KQ8nN1pb7YMZorEt7mq9pt0dvyoDr7RWx1qqAm2YvtBBvwJB6vco4eDis
+         TAlgCIBFsiC9A==
+Date:   Mon, 15 Jun 2020 11:59:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: stats (Was: Linux 5.8-rc1)
+Message-ID: <20200615115926.515187f8@canb.auug.org.au>
+In-Reply-To: <CAHk-=whfuea587g8rh2DeLFFGYxiVuh-bzq22osJwz3q4SOfmA@mail.gmail.com>
+References: <CAHk-=whfuea587g8rh2DeLFFGYxiVuh-bzq22osJwz3q4SOfmA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/CXDwErle5zWfhPG8oDMXpaY";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Jun 2020 14:14:53 -0400
-Gaurav Singh <gaurav1086@gmail.com> wrote:
+--Sig_/CXDwErle5zWfhPG8oDMXpaY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> The pointer cmdlines need to be explicity freed in case the
-> realloc() fails. Fix it by adding a free() if realloc()
-> returns a NULL pointer.
-> 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> ---
->  tools/lib/traceevent/event-parse.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-> index e1bd2a93c6db..7f0133420931 100644
-> --- a/tools/lib/traceevent/event-parse.c
-> +++ b/tools/lib/traceevent/event-parse.c
-> @@ -284,12 +284,13 @@ static int add_new_comm(struct tep_handle *tep,
->  		return 0;
->  	}
->  
-> -	cmdlines = realloc(cmdlines, sizeof(*cmdlines) * (tep->cmdline_count + 1));
-> -	if (!cmdlines) {
-> +	struct tep_cmdline *new_cmdlines = realloc(cmdlines, sizeof(*cmdlines) * (tep->cmdline_count + 1));
-> +	if (!new_cmdlines) {
-> +		free(cmdlines);
->  		errno = ENOMEM;
+Hi all,
 
-NAK! This was fine as is.
+On Sun, 14 Jun 2020 13:44:07 -0700 Linus Torvalds <torvalds@linux-foundatio=
+n.org> wrote:
+>
+> So I didn't really expect this, but 5.8 looks to be one of our biggest
+> releases of all time.
 
-What you just did was make tep->cmdline point to freed data, which will
-crash later on when tep is freed, and we free tep->cmdline.
+This was the second largest linux-next (and may have been the largest
+if June 1 had not been a pubic holiday here).
 
-If we fail to realloc, then the caller of add_new_comm will get the report
-that it failed, and then can determine what to do next. We don't want to
-touch tep->cmdline on failure.
+As usual, the executive friendly graph is at
+http://neuling.org/linux-next-size.html :-)
 
--- Steve
+(No merge commits counted, next-20200602 was the first linux-next after
+the merge window opened.)
 
+Commits in v5.8-rc1 (relative to v5.7):            14206
+Commits in next-20200602:                          13631
+Commits with the same SHA1:                        12174
+Commits with the same patch_id:                      843 (1)
+Commits with the same subject line:                  130 (1)
 
->  		return -1;
->  	}
-> -	tep->cmdlines = cmdlines;
-> +	tep->cmdlines = new_cmdlines;
->  
->  	key.comm = strdup(comm);
->  	if (!key.comm) {
+(1) not counting those in the lines above.
 
+So commits in -rc1 that were in next-20200602:     13147 92%
+
+Some breakdown of the list of extra commits (relative to next-20200602)
+in -rc1:
+
+Top ten first word of commit summary:
+
+    140 powerpc
+    117 perf
+     49 kvm
+     46 net
+     32 media
+     23 drm
+     22 dm
+     21 thermal
+     21 scsi
+     19 x86
+
+Top ten authors:
+
+     45 christophe.leroy@csgroup.eu
+     38 irogers@google.com
+     32 christophe.leroy@c-s.fr
+     21 acme@redhat.com
+     20 mchehab+huawei@kernel.org
+     20 masahiroy@kernel.org
+     18 amit.kucheria@linaro.org
+     16 david@redhat.com
+     15 hare@suse.de
+     14 viro@zeniv.linux.org.uk
+
+Top ten commiters:
+
+    148 mpe@ellerman.id.au
+    120 acme@redhat.com
+     80 davem@davemloft.net
+     49 torvalds@linux-foundation.org
+     39 pbonzini@redhat.com
+     35 mst@redhat.com
+     34 axboe@kernel.dk
+     32 mchehab+huawei@kernel.org
+     28 daniel.lezcano@linaro.org
+     23 tglx@linutronix.de
+
+There are also 485 commits in next-20200602 that didn't make it into
+v5.8-rc1.
+
+Top ten first word of commit summary:
+
+     90 drm
+     51 mm
+     20 bus
+     14 i2c
+     13 fsinfo
+     13 fs
+     10 memory
+     10 media
+      8 soc
+      8 fsi
+
+Top ten authors:
+
+     42 akpm@linux-foundation.org
+     20 alexander.deucher@amd.com
+     19 dhowells@redhat.com
+     18 cai@lca.pw
+     15 axboe@kernel.dk
+     15 arnd@arndb.de
+     12 minchan@kernel.org
+     11 ysato@users.sourceforge.jp
+     10 rppt@linux.ibm.com
+     10 ira.weiny@intel.com
+
+Some of Andrew's patches are fixes for other patches in his tree (and
+have been merged into those).
+
+Top ten commiters:
+
+    164 sfr@canb.auug.org.au
+     84 alexander.deucher@amd.com
+     19 dhowells@redhat.com
+     18 ysato@users.sourceforge.jp
+     15 tglx@linutronix.de
+     15 axboe@kernel.dk
+     14 wsa@kernel.org
+     14 manivannan.sadhasivam@linaro.org
+     13 treding@nvidia.com
+     11 tytso@mit.edu
+
+Those commits by me are from the quilt series (mainly Andrew's mmotm
+tree).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CXDwErle5zWfhPG8oDMXpaY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7m1f4ACgkQAVBC80lX
+0Gx8qQf/cLJTXGWaHqDI4FOhyRAvwxSVYB3M53FhLTfgPL/kTJryVaEYNl7U8syj
+RnFlKfz0L407SrIaDc4FEzrVPIN5Y9djIrNDrAdSkdDPuyxh5xYAJndrs1jHVJlW
+38H117bfHIbPNT3v0KDHtAVAm4pQauPYLtiHrJEkJuCL77sAw4J0z77fbl8ZEUUh
+ChOnIh9qBBHWp+oPcNPOMhUHYfbDBECMCAlj6al5DFX8II8TErDVgC0PFdeyyum+
+yxjhFKZDzOtIQfhPrwv0dnG21lyZNSsW/RNhekFVvHRncRvHjM/aaAk+PkURgVdD
+2EI/vp8obFc+1C2xRVMu30t9Oyqeiw==
+=MqAZ
+-----END PGP SIGNATURE-----
+
+--Sig_/CXDwErle5zWfhPG8oDMXpaY--
