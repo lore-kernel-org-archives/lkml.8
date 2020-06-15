@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98883C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D63DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72857206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C99E2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:01:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o2RhlHWQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qo5IGkkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbgFONBB (ORCPT
+        id S1730407AbgFONBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52402 "EHLO
+        Mon, 15 Jun 2020 09:01:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730365AbgFONAz (ORCPT
+        with ESMTP id S1730251AbgFONA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:00:55 -0400
+        Mon, 15 Jun 2020 09:00:58 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 232CBC05BD43;
-        Mon, 15 Jun 2020 06:00:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A280DC061A0E;
+        Mon, 15 Jun 2020 06:00:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=ZZGHsoXTnXgAmRUOcfo4lrl/+NT7PZj7FPHx1htWx6U=; b=o2RhlHWQ1U73lI4UBKreMeuh1d
-        V96c20aFyOomEbcWIphJ3pyFjo5ItIgAm/KJIp5Sh1J+gPI5HXmI2YG1i19dy0QhOUqa5pA81t8KD
-        8/u9BQVaEmeq5snWMfRRjHfqH9pEVoWlA2NmGYotUCCMF4BVxoOflkeOJwlSnXr92QyTzmss9vYvp
-        2FljztR/Rre+glKjpQSOqFsSl+so6GyRD1Gz9+tBqcY5EzihIIRZ/cHIDuBAmZeBeHYYSHNAPg77K
-        9wpc/KR89+aovx2wkhPYW15B4NlsBqIVk/0t+F3bcJ4qSvUnBH8prQVTmMXJr70LHsZmWncdVjCvE
-        mVSsqGbw==;
+        bh=T94kCvjMg3POOYY9QZ5B+bKnsinmf9rCUNlS0Naq4B0=; b=Qo5IGkkztcUZUo+cF8SPeORX9i
+        w8KjM/VC9s4RMbj4LN1fKVtGCejc53i0Zu2X7+dZHUKqbl+/UWNGou0bWdNaQSGZGFBALkNZyyX7G
+        7WPcNWmdxBXgCdcQmbNo4w+COAtvJ909XyC6k/F9jHQD/7PTa4oq2W1vPCOQ0q/U7pcIct/SwXOFK
+        ttpKACNil9TDb9+ef+c4u10g1xvHGoDSCuYvcugulrM6h5bvWrzi4gpMUu3jqFiIt+7jLRAhrE1wo
+        AYbI592N/mkwbu7osPGGfCrVJQGOe+sP14GCKFKsGMmY+XEQIT5qRRum69TNwcvDRsf4IHCkpK76+
+        SpOrojPQ==;
 Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkojF-0007w7-BU; Mon, 15 Jun 2020 13:00:45 +0000
+        id 1jkojK-00081b-G3; Mon, 15 Jun 2020 13:00:51 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -48,9 +48,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
         sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] exec: split prepare_arg_pages
-Date:   Mon, 15 Jun 2020 15:00:30 +0200
-Message-Id: <20200615130032.931285-5-hch@lst.de>
+Subject: [PATCH 6/6] kernel: add a kernel_wait helper
+Date:   Mon, 15 Jun 2020 15:00:32 +0200
+Message-Id: <20200615130032.931285-7-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200615130032.931285-1-hch@lst.de>
 References: <20200615130032.931285-1-hch@lst.de>
@@ -62,61 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move counting the arguments and enviroment variables out of
-prepare_arg_pages and rename the rest of the function to check_arg_limit.
-This prepares for a version of do_execvat that takes kernel pointers.
+Add a helper that waits for a pid and stores the status in the passed
+in kernel pointer.  Use it to fix the usage of kernel_wait4 in
+call_usermodehelper_exec_sync that only happens to work due to the
+implicit set_fs(KERNEL_DS) for kernel threads.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/exec.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ include/linux/sched/task.h |  1 +
+ kernel/exit.c              | 16 ++++++++++++++++
+ kernel/umh.c               | 29 ++++-------------------------
+ 3 files changed, 21 insertions(+), 25 deletions(-)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 6e4d9d1ffa35fa..696b1e8180d7d8 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -439,20 +439,10 @@ static int count_strings(const char __user *const __user *argv)
- 	return i;
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 38359071236ad7..a80007df396e95 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -102,6 +102,7 @@ struct task_struct *fork_idle(int);
+ struct mm_struct *copy_init_mm(void);
+ extern pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
+ extern long kernel_wait4(pid_t, int __user *, int, struct rusage *);
++int kernel_wait(pid_t pid, int *stat);
+ 
+ extern void free_task(struct task_struct *tsk);
+ 
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 727150f2810338..fd598846df0b17 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -1626,6 +1626,22 @@ long kernel_wait4(pid_t upid, int __user *stat_addr, int options,
+ 	return ret;
  }
  
--static int prepare_arg_pages(struct linux_binprm *bprm,
--		const char __user *const __user *argv,
--		const char __user *const __user *envp)
-+static int check_arg_limit(struct linux_binprm *bprm)
++int kernel_wait(pid_t pid, int *stat)
++{
++	struct wait_opts wo = {
++		.wo_type	= PIDTYPE_PID,
++		.wo_pid		= find_get_pid(pid),
++		.wo_flags	= WEXITED,
++	};
++	int ret;
++
++	ret = do_wait(&wo);
++	if (ret > 0 && wo.wo_stat)
++		*stat = wo.wo_stat;
++	put_pid(wo.wo_pid);
++	return ret;
++}
++
+ SYSCALL_DEFINE4(wait4, pid_t, upid, int __user *, stat_addr,
+ 		int, options, struct rusage __user *, ru)
  {
- 	unsigned long limit, ptr_size;
+diff --git a/kernel/umh.c b/kernel/umh.c
+index 1284823dbad338..6fd948e478bec4 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -126,37 +126,16 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
+ {
+ 	pid_t pid;
  
--	bprm->argc = count_strings(argv);
--	if (bprm->argc < 0)
--		return bprm->argc;
+-	/* If SIGCLD is ignored kernel_wait4 won't populate the status. */
++	/* If SIGCLD is ignored do_wait won't populate the status. */
+ 	kernel_sigaction(SIGCHLD, SIG_DFL);
+ 	pid = kernel_thread(call_usermodehelper_exec_async, sub_info, SIGCHLD);
+-	if (pid < 0) {
++	if (pid < 0)
+ 		sub_info->retval = pid;
+-	} else {
+-		int ret = -ECHILD;
+-		/*
+-		 * Normally it is bogus to call wait4() from in-kernel because
+-		 * wait4() wants to write the exit code to a userspace address.
+-		 * But call_usermodehelper_exec_sync() always runs as kernel
+-		 * thread (workqueue) and put_user() to a kernel address works
+-		 * OK for kernel threads, due to their having an mm_segment_t
+-		 * which spans the entire address space.
+-		 *
+-		 * Thus the __user pointer cast is valid here.
+-		 */
+-		kernel_wait4(pid, (int __user *)&ret, 0, NULL);
 -
--	bprm->envc = count_strings(envp);
--	if (bprm->envc < 0)
--		return bprm->envc;
--
- 	/*
- 	 * Limit to 1/4 of the max stack size or 3/4 of _STK_LIM
- 	 * (whichever is smaller) for the argv+env strings.
-@@ -1890,7 +1880,19 @@ int do_execveat(int fd, struct filename *filename,
- 	if (retval)
- 		goto out_unmark;
+-		/*
+-		 * If ret is 0, either call_usermodehelper_exec_async failed and
+-		 * the real error code is already in sub_info->retval or
+-		 * sub_info->retval is 0 anyway, so don't mess with it then.
+-		 */
+-		if (ret)
+-			sub_info->retval = ret;
+-	}
++	else
++		kernel_wait(pid, &sub_info->retval);
  
--	retval = prepare_arg_pages(bprm, argv, envp);
-+	bprm->argc = count_strings(argv);
-+	if (bprm->argc < 0) {
-+		retval = bprm->argc;
-+		goto out;
-+	}
-+
-+	bprm->envc = count_strings(envp);
-+	if (bprm->envc < 0) {
-+		retval = bprm->envc;
-+		goto out;
-+	}
-+
-+	retval = check_arg_limit(bprm);
- 	if (retval < 0)
- 		goto out;
+ 	/* Restore default kernel sig handler */
+ 	kernel_sigaction(SIGCHLD, SIG_IGN);
+-
+ 	umh_complete(sub_info);
+ }
  
 -- 
 2.26.2
