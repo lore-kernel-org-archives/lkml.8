@@ -2,96 +2,112 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89929C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69BF5206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E51206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4AGUVXn"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="plcRE/HT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbgFOMP0 (ORCPT
+        id S1730035AbgFOMPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45288 "EHLO
+        Mon, 15 Jun 2020 08:15:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729642AbgFOMPY (ORCPT
+        with ESMTP id S1729642AbgFOMPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:15:24 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E0EC061A0E;
-        Mon, 15 Jun 2020 05:15:24 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id a137so15671678oii.3;
-        Mon, 15 Jun 2020 05:15:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OYfeN+lomf5loXuUSsePWE7mRHJpvA/I4T/5bpNYLAY=;
-        b=T4AGUVXndhnCDxHQKxLQEEIc7ZokeMONi82ra0kiJCuQXe9+11agB7ic0ynPmiAoSb
-         YidIatx5FjuebJ9yH5fabmkbLzPM+66rbekkPAMm+rocOnEtGC0tqhKCRbibxP78oO8O
-         nglHx6uNc6cPOTSvevCrGFEgn98bPyInJoHeLkTMagnFAno4QsEqJ/H06FEGAYr/d9IM
-         2guwwi62J8i82MhHKColWTGHiRz3R0EJgpE4xCg3U/x8m0DGrSl9Q9jbFzuju49YurpP
-         pG3X7Gdr5W+6C4bKny6xvD4XZIYR2T6lVZJcgdRrCxwHe1yMkwfOT9BMi+EQ5CJxNtHB
-         87pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OYfeN+lomf5loXuUSsePWE7mRHJpvA/I4T/5bpNYLAY=;
-        b=EpJPYeHb9cRA4EvAVOsTIBst+Zreq+VSd2mAi1j05lkbs763B+ngqYpDo5hyQVfObJ
-         fA2Pz0b0nBzZlq38vWV//yNA09hJqgBUuByvafpN3VzIC3e+bCwQk4YBanEJECLlLf6D
-         01P91GpXbr8hTgp5brQ86a1fwRDUpYtmtFOT5Jz2sSMwI5JQdaIdgdzL6yl37wFo2yeo
-         np2zeQwXpOLP2ZB6kShM4UUlLtlVCR9U0ar6aDQGeXWhn8atS5wEtySfLhc70ebt0+dP
-         wq1qOMBgaMsuhLIvB+KqUSua/qpcTTY1f3AFhLac8uQDgwmQIarQc4Vetw6jh6DYLbLf
-         3Dag==
-X-Gm-Message-State: AOAM533SbwHbCLin1jLhT0Eld5FBVPilX3qsbh/Cg1/QRW9yyjub6fKo
-        XPuy5dV+pQHJ71BOtZhORNhA1E5j5/XJxnC0MqI=
-X-Google-Smtp-Source: ABdhPJztOxHdnvbh3si4JN5xzx3gZccaRMhjgkbZe5bLxwDBW5pTkhmE9ShDj0Bv2mq7su7RD+R2Vcb9E9HVjBArfU4=
-X-Received: by 2002:aca:ec97:: with SMTP id k145mr8317724oih.92.1592223323851;
- Mon, 15 Jun 2020 05:15:23 -0700 (PDT)
+        Mon, 15 Jun 2020 08:15:38 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D457C061A0E;
+        Mon, 15 Jun 2020 05:15:38 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f063c0085fbd8d4455f52fc.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:3c00:85fb:d8d4:455f:52fc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E7BB41EC0299;
+        Mon, 15 Jun 2020 14:15:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592223336;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=IvLplpOzdVR3pvv87mkIgy3s3a9HTre37RLfwpBuQDk=;
+        b=plcRE/HT8GZ7mDZeXigYxsn/J0PdLHE1t9di7d6lkuXvUjT1Zof0zG7KP6SR3Uf+cE0Wjk
+        l3L4tt5jYOsrc+gkBhllMZbwzxaGLpqY/tkVRGFNbVQdfyJTtWZOL1+0huSI5i62Hg7vzW
+        CkJLUbF2zDsZnIDh3W8rolEcZRq2V8s=
+Date:   Mon, 15 Jun 2020 14:15:24 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Liam Merwick <liam.merwick@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Brad Campbell <lists2009@fnarfbargle.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during
+ wakeup
+Message-ID: <20200615121524.GH14668@zn.tnic>
+References: <20200605200728.10145-1-sean.j.christopherson@intel.com>
+ <b2ac2400-dbc1-f6bc-a397-17f1ae10bd83@oracle.com>
+ <20200608172921.GC8223@linux.intel.com>
 MIME-Version: 1.0
-References: <20200613024130.3356-1-nramas@linux.microsoft.com>
- <20200613024130.3356-5-nramas@linux.microsoft.com> <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
-In-Reply-To: <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 15 Jun 2020 08:15:13 -0400
-Message-ID: <CAEjxPJ4MMjGGMy5b5pFfdZ=mUiBMv4M558Kwdu_VG8OOCU_aUA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] LSM: Define SELinux function to measure security state
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Stephen Smalley <stephen.smalley@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200608172921.GC8223@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 7:57 AM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
-> I think I mentioned this on a previous version of these patches, but I
-> would recommend including more than just the enabled and enforcing
-> states in your measurement.  Other low-hanging fruit would be the
-> other selinux_state booleans (checkreqprot, initialized,
-> policycap[0..__POLICYDB_CAPABILITY_MAX]).  Going a bit further one
-> could take a hash of the loaded policy by using security_read_policy()
+On Mon, Jun 08, 2020 at 10:29:21AM -0700, Sean Christopherson wrote:
+> On Mon, Jun 08, 2020 at 11:12:35AM +0100, Liam Merwick wrote:
+> > On 05/06/2020 21:07, Sean Christopherson wrote:
+> > >Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the case
+> > >where firmware doesn't initialize or save/restore across S3.  This fixes
+> > >a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
+> > >taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
+> > >
+> > >Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already deals
+> > >with the case where the MSR is locked, and because APs already redo
+> > >init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow being
+> > >used to reinitialize APs upon wakeup.  Do the call in the early wakeup
+> > >flow to avoid dependencies in the syscore_ops chain, e.g. simply adding
+> > >a resume hook is not guaranteed to work, as KVM does VMXON in its own
+> > >resume hook, kvm_resume(), when KVM has active guests.
+> > >
+> > >Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
+> > >Cc: Maxim Levitsky <mlevitsk@redhat.com>
+> > >Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > >Cc: kvm@vger.kernel.org
+> > 
+> > Should it have the following tag since it fixes a commit introduced in 5.6?
+> > Cc: stable@vger.kernel.org # v5.6
+> 
+> It definitely warrants a backport to v5.6.  I didn't include a Cc to stable
+> because I swear I had seen an email fly by that stated an explicit Cc is
+> unnecessary/unwanted for tip-tree patches, but per a recent statement from
+> Boris it looks like I'm simply confused[*].  I'll add the Cc in v2.
+> 
+> [*] https://lkml.kernel.org/r/20200417164752.GF7322@zn.tnic
 
-On second thought, you probably a variant of security_read_policy()
-since it would be a kernel-internal allocation and thus shouldn't use
-vmalloc_user().
+Yeah, I was simply parroting what Greg has told me. Maybe he should
+finally do that script. :-P
 
-> and then computing a hash using whatever hash ima prefers over the
-> returned data,len pair.  You likely also need to think about how to
-> allow future extensibility of the state in a backward-compatible
-> manner, so that future additions do not immediately break systems
-> relying on older measurements.
+Also, I believe Sasha's Skynet machine already does that...
+
+CCed both.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
