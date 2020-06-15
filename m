@@ -2,129 +2,99 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9292620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:39:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IjXvDmBN"
+	by mail.kernel.org (Postfix) with ESMTP id F07B420739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbgFOOju (ORCPT
+        id S1730723AbgFOOkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730665AbgFOOjt (ORCPT
+        Mon, 15 Jun 2020 10:40:49 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:38635 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730707AbgFOOks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:39:49 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A68C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:39:48 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id u15so3979496vkk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bEeXvFEwQXQ2y1eWlGB8T8Xdt9cee0AQhh/eHPPAS7A=;
-        b=IjXvDmBNK5eFh5/xjjshicx5i0C0eryt36PZLb6YWSCQUQbzhvG1iR7GQQNXMe6GMg
-         QETkfdn5LSARucFRdaAqF9OtFB+jgMVp55JCfmlpdbnwKJXbddu6Vgm1rUVIPBOtV7nv
-         jLtitgQgqLA7qf1vzt6Eys8MG767Vc5x0+oJ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bEeXvFEwQXQ2y1eWlGB8T8Xdt9cee0AQhh/eHPPAS7A=;
-        b=XbrEXPow08DbTtfnFNX5Lu7Hq3eXw0TrbrH3w1M9p/DKr5qJtIYfouqvrh8MPKjoxG
-         ExmX1i4pr8knjDoXnFAzI5zGt7FEErnGQb7q/wJPxw+8BUjSI+jLrybbJxMlPl6uQUxa
-         8ts17UoFQTWK+gIU0AV2QQufz7xnZet17JLp8r1qyABd7HEPiPLaMlnbhxVCv8AP4I4k
-         d+j/mfbeyPL4uoviTuTg2BCTsyGGkAXSQfDMqTtMVufExECMUnnPp+uwNLmM0aY11ON1
-         J/3kN2+5ssb9jwp7ihcpqnItUoJPD+uawndxRjLlmuvpYF+5YR0EDiAmJ24k9k9QRds5
-         Fo3w==
-X-Gm-Message-State: AOAM530KV2RebxqMR5QKnkdAEa1adiMfLFsQGT29dAiBXvvFm1BvYOUg
-        Ld9siqgEVUgMoZdN/iFZ65bbPTaJ9BU=
-X-Google-Smtp-Source: ABdhPJwELxkZBBkvX9LKKkbh9M4dNzlc661K5iHIIh8zBe2IBpZ4D3jhjJhZr4dTaD76JqrDYpLmNA==
-X-Received: by 2002:a1f:ab0f:: with SMTP id u15mr17773919vke.99.1592231987131;
-        Mon, 15 Jun 2020 07:39:47 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id y141sm996308vkd.4.2020.06.15.07.39.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 07:39:46 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id j13so9495939vsn.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:39:45 -0700 (PDT)
-X-Received: by 2002:a67:1703:: with SMTP id 3mr20641752vsx.169.1592231985028;
- Mon, 15 Jun 2020 07:39:45 -0700 (PDT)
+        Mon, 15 Jun 2020 10:40:48 -0400
+Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MhFpq-1jFNQS2dOs-00eMxN; Mon, 15 Jun 2020 16:40:46 +0200
+Received: by mail-qv1-f44.google.com with SMTP id p15so7836070qvr.9;
+        Mon, 15 Jun 2020 07:40:45 -0700 (PDT)
+X-Gm-Message-State: AOAM530oKr5G6Wya8ZW8EcZAQsiktb3q8OAbapeIjGV508MLBbm5q2Ya
+        dRnpTrf84sI4lMGHMpWYxx4xoENEvkrSYnIG4p4=
+X-Google-Smtp-Source: ABdhPJy5G+lqXMDgYV5VNdPxt3xfenQEOCWyA8aXe4/SWcJM/wjewAOCgmyKi30Ru8Z83jxOnA642v09TgrEUqRdTlc=
+X-Received: by 2002:ad4:4b33:: with SMTP id s19mr23452579qvw.211.1592232044975;
+ Mon, 15 Jun 2020 07:40:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
- <20200615143237.519F3C433C8@smtp.codeaurora.org>
-In-Reply-To: <20200615143237.519F3C433C8@smtp.codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 15 Jun 2020 07:39:33 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VaexjLaaZJSxndTEi6KCFaPWW=sUt6hjy9=0Qn68kH1g@mail.gmail.com>
-Message-ID: <CAD=FV=VaexjLaaZJSxndTEi6KCFaPWW=sUt6hjy9=0Qn68kH1g@mail.gmail.com>
-Subject: Re: [PATCH] ath10k: Wait until copy complete is actually done before completing
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     kuabhs@google.com, Rakesh Pillai <pillair@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
+References: <20200615130032.931285-1-hch@lst.de> <20200615130032.931285-3-hch@lst.de>
+ <CAK8P3a0bRD3RzE_X6Tjzu9Tj+OhHhP+S=k6+VYODBGko8oQhew@mail.gmail.com> <20200615141239.GA12951@lst.de>
+In-Reply-To: <20200615141239.GA12951@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 15 Jun 2020 16:40:28 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2MeZhayZWkPbd4Ckq3n410p_n808NJTwN=JjzqHRiAXg@mail.gmail.com>
+Message-ID: <CAK8P3a2MeZhayZWkPbd4Ckq3n410p_n808NJTwN=JjzqHRiAXg@mail.gmail.com>
+Subject: Re: [PATCH 2/6] exec: simplify the compat syscall handling
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:yeyn4LpBjnSQIL5kmXl59WvDCslbrj9cB+DtsPez3ktB1CQQRma
+ Wys1ZX994H4JCDvP0zEMNnj97nFfkV8XQ8W59Yp7HuS3/bWo+blADuXafMKBgjxPd1GURDR
+ nVOjqlFFWNphzXU+UQBD06kJYPMLH6lQwc8izTEFtL6jyDDxG5F9nhXAOwmyJBqNZ28HKbH
+ azWTAkJSQKXT25ml0g6Ug==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CnPrP/o/P08=:f/QukO5DjQmM0jq7i3UNlT
+ /iTb4X9zyrotln7mI6R3s2273e0i48RiLhjNxIwV1LIbF+NrO1u0OvKPGTMS8/YOUFLbBpGdL
+ i8cFbR6pUUVKNQ1mRY9hzGPqZ+ZzAQiZO7+3iijn1t0Hljh7+rWNjm1f3u+mmszn4CS1m1RK/
+ +Fda3A7N16NNNBPh7itpeIZuzu0g0MBMNFTv2pTIa7oYc8RlC73oeFPvoprU1di/JYqfF+1ar
+ CHG5gskG3ZuDSuoO+M7+mJvD9UWz530A+Cc/swVkq9nqehf6yyNldcZa9O/GmjO5wgu8I2Hst
+ zJWUcmXe49izUFHgaturu1BlqUx30YcFQzQWnMUrK3C/lWLBwViDleuE+noaZTXIE2eUxgm4U
+ HCBg5d+2s+eXTcQENpPAr53mA5xzGUeZYCAuTyf15hpSFHKq3yh/azxk4NvEcZ6QhITgj80mH
+ Rgmo4GEI5b1xJaY9PFCzC+6xV0VbcbyP6qKgf8i4741vmRtRygqqsrrcHLaUHPHdetiRokeVi
+ y0nGT6NWtMBnnJ9N0tb2gQ6fmGURdISohB5GyvgRdjqne7JYa0v+ltKiN6+snk9Tn3KdFh7MN
+ Q8pSKgVxI2JmMTs+y3n4I5vjAlBM7Mryy3d/ns41Nq3ia0eo1P9SaUTvySbFChf8UEfuEMxW5
+ xLTePhBkX9UpbX6xHFJ2crlXLCSPYFNjTz7wt59LhC6GAYwjVTfeN/4WpaakGXQ0qE1Lj9R16
+ NbHBa1Ulp0y3Zqo0iVlevDZUVErGhx1gQBnxaan4GzemyP88NrUYinQCJha4qOb6r6zXoDOQX
+ KOooMqgr5qovbuc/5wLI83qzQ7fFEBn4ysISz6QxP9QKeJNOnY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Jun 15, 2020 at 4:12 PM Christoph Hellwig <hch@lst.de> wrote:
+> On Mon, Jun 15, 2020 at 03:31:35PM +0200, Arnd Bergmann wrote:
 
-On Mon, Jun 15, 2020 at 7:32 AM Kalle Valo <kvalo@codeaurora.org> wrote:
 >
-> Douglas Anderson <dianders@chromium.org> wrote:
+> > I don't really understand
+> > the comment, why can't this just use this?
 >
-> > On wcn3990 we have "per_ce_irq = true".  That makes the
-> > ath10k_ce_interrupt_summary() function always return 0xfff. The
-> > ath10k_ce_per_engine_service_any() function will see this and think
-> > that _all_ copy engines have an interrupt.  Without checking, the
-> > ath10k_ce_per_engine_service() assumes that if it's called that the
-> > "copy complete" (cc) interrupt fired.  This combination seems bad.
-> >
-> > Let's add a check to make sure that the "copy complete" interrupt
-> > actually fired in ath10k_ce_per_engine_service().
-> >
-> > This might fix a hard-to-reproduce failure where it appears that the
-> > copy complete handlers run before the copy is really complete.
-> > Specifically a symptom was that we were seeing this on a Qualcomm
-> > sc7180 board:
-> >   arm-smmu 15000000.iommu: Unhandled context fault:
-> >   fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
-> >
-> > Even on platforms that don't have wcn3990 this still seems like it
-> > would be a sane thing to do.  Specifically the current IRQ handler
-> > comments indicate that there might be other misc interrupt sources
-> > firing that need to be cleared.  If one of those sources was the one
-> > that caused the IRQ handler to be called it would also be important to
-> > double-check that the interrupt we cared about actually fired.
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> That errors out with:
 >
-> ath10k firmwares work very differently, on what hardware and firmware did you
-> test this? I'll add that information to the commit log.
+> ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1040): undefined reference to
+> `__x32_sys_execve'
+> ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1108): undefined reference to
+> `__x32_sys_execveat'
+> make: *** [Makefile:1139: vmlinux] Error 1
 
-I am running on a Qualcomm sc7180 SoC.
+Ah, I see: it's marked x32-only, so arch/x86/entry/syscall_x32.c
+uses the __x32 prefix instead of the __x64 one. Marking it 'common'
+instead would make it work, but also create an extra entry point
+for native processes, something that commit
+6365b842aae4 ("x86/syscalls: Split the x32 syscalls into their own table")
+was trying to avoid.
 
-> --
-> https://patchwork.kernel.org/patch/11595887/
->
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
->
+      Arnd
