@@ -2,173 +2,127 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3777CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05247206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kIDXUPsi"
+	by mail.kernel.org (Postfix) with ESMTP id F3C3E20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592233040;
+	bh=uymLKgjS97z/sTHQNwWzkQyWi0WqhtFk0Kd2t3cwE8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lMev/NA+3Lkmw2MKV0WqRoXaqrhrONGR8wUPvAv5D6jbtgd5LYL9FRsi5j6aAlOAr
+	 1Ppd8owXeGKGoPE1RdCgodOOErH/fORCwDfrQTGQ0BGwCI1QNzRuAr+fErFTDQpnKz
+	 0qDxNfBuTIfzluj52vlEsAYOn0tNTZ3B+gA1Geuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730808AbgFOO5O (ORCPT
+        id S1730856AbgFOO5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:57:14 -0400
-Received: from m12-14.163.com ([220.181.12.14]:60271 "EHLO m12-14.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730652AbgFOO5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:57:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=dEe5e
-        43rDVb5syfbbJurCXIT1sjOVadZWQ34XIbuhM0=; b=kIDXUPsisrAJUzR8wP0Ug
-        1cemo8pYj1D+YbJHU8OJdSaRML0VODmjrAg9YE5d3s+h8KqIdHNz9MARoXhBviEx
-        hEou+V3vhA8EDZXXWa2Ms5K4eYRtbhJI3FEJGSN6UZfB6bJQsir8SjB7w2eBfgbI
-        AEzAWV32L9pQqBXVhjMADA=
-Received: from SZA191027643-PM.china.huawei.com (unknown [223.74.115.177])
-        by smtp10 (Coremail) with SMTP id DsCowACXn9s7jOdepjg4Gw--.52954S2;
-        Mon, 15 Jun 2020 22:57:00 +0800 (CST)
-From:   yunaixin03610@163.com
-To:     linux-kernel@vger.kernel.org
-Cc:     yunaixin <yunaixin@huawei.com>
-Subject: [PATCH 0/5] Adding Huawei BMA drivers
-Date:   Mon, 15 Jun 2020 22:56:53 +0800
-Message-Id: <20200615145658.956-1-yunaixin03610@163.com>
-X-Mailer: git-send-email 2.26.2.windows.1
+        Mon, 15 Jun 2020 10:57:18 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40081 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730652AbgFOO5R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 10:57:17 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r15so15150729wmh.5;
+        Mon, 15 Jun 2020 07:57:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mHcrbBO+Fo3bCvnKiSJoGOEsXEa+5QUFU82tEXS61oo=;
+        b=ogcYxfeBxA3qwa97mzrPW4jopWKMl64hXm7wg3STD1q+94yNg/pyj0DXYNIJfvSOQT
+         azvYNagX3x48ssnmy+HICSeQ2mkqKvnCs2zl9PU5Yj78VmJW6Lqy2vhHl0nmbcZV/649
+         w8vkmTP+K5H+jRoSaw5eRCWd3CT8Lr0zstF1/8VNEiXajHcuHSAKjpIoNnVhBOQE510m
+         LKUUEKVpyNKoZAV3ZMq8TRtpgEdtHwSN8H80hyALfXvVZs5VnK/IZas882+H30MCsHU7
+         U4uu/U/K3UKJNxMKH5oY4DoC+3XrOvRdimldFlX+9CVqmDw34Jwn7h55Ij8Yj1SlOps2
+         m2Uw==
+X-Gm-Message-State: AOAM533t3mN9LVm+kKdihYnfkL7IFG8kPLbsu+IVn0cwfVWqLUDdeQlx
+        KY1FV+M9ItiPOfq0Nv5DCjE=
+X-Google-Smtp-Source: ABdhPJxeN+YKTx2rDQYMG6z/DLFGaJz5APWUznLyEEfgFrNUKvASgGOX1PuuNkKdoJhfxX4g/JUpFA==
+X-Received: by 2002:a1c:7903:: with SMTP id l3mr13169484wme.50.1592233034481;
+        Mon, 15 Jun 2020 07:57:14 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id s8sm24402667wrm.96.2020.06.15.07.57.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jun 2020 07:57:13 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 16:57:11 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on
+ interrupt in exit paths
+Message-ID: <20200615145711.GA24927@kozik-lap>
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+ <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
+ <20200615123052.GO4447@sirena.org.uk>
+ <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com>
+ <20200615131006.GR4447@sirena.org.uk>
+ <CA+h21hpusy=zx8AuUqk_4zShtst8QeNJxCPT4dMGh0jhm5uZng@mail.gmail.com>
+ <20200615134119.GB3321@kozik-lap>
+ <CA+h21hp29i=AdZB_fBQ4mwAh=3Oovopwz3ruzzJqiKpRpZYzhg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID: DsCowACXn9s7jOdepjg4Gw--.52954S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtw4DtFWUKrW3tr15Aw1UZFb_yoWxtFWrpa
-        yjya4UurWxKFy7Xw1vy3W8KFn8J3WDtry5u393Z3WrX3s2yry5JryDWF15uF1fWa97Gr4I
-        vF1Y9F1fWFZ8X3JanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jjQ6JUUUUU=
-X-Originating-IP: [223.74.115.177]
-X-CM-SenderInfo: 51xqtxx0lqijqwrqqiywtou0bp/1tbiNhxE5lWBjd4PWAAAsY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+h21hp29i=AdZB_fBQ4mwAh=3Oovopwz3ruzzJqiKpRpZYzhg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yunaixin <yunaixin@huawei.com>
+On Mon, Jun 15, 2020 at 05:23:28PM +0300, Vladimir Oltean wrote:
+> On Mon, 15 Jun 2020 at 16:41, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Mon, Jun 15, 2020 at 04:12:28PM +0300, Vladimir Oltean wrote:
+> > > On Mon, 15 Jun 2020 at 16:10, Mark Brown <broonie@kernel.org> wrote:
+> > >
+> > > >
+> > > > It's a bit unusual to need to actually free the IRQ over suspend -
+> > > > what's driving that requirement here?
+> > >
+> > > clk_disable_unprepare(dspi->clk); is driving the requirement - same as
+> > > in dspi_remove case, the module will fault when its registers are
+> > > accessed without a clock.
+> >
+> > In few cases when I have shared interrupt in different drivers, they
+> > were just disabling it during suspend. Why it has to be freed?
+> >
+> > Best regards,
+> > Krzysztof
+> >
+> 
+> Not saying it _has_ to be freed, just to be prevented from running
+> concurrently with us disabling the clock.
+> But if we can get away in dspi_suspend with just disable_irq, can't we
+> also get away in dspi_remove with just devm_free_irq?
 
-This patch set contains 5 communication drivers for Huawei BMA software.=0D
-The BMA software is a system management software. It supports the status=0D
-monitoring, performance monitoring, and event monitoring of various=0D
-components, including server CPUs, memory, hard disks, NICs, IB cards,=0D
-PCIe cards, RAID controller cards, and optical modules.=0D
-=0D
-These 5 drivers are used to send/receive message through PCIe channel in=0D
-different ways by BMA software.
+One reason why they have to be different could be following scenario:
+1. Device could be unbound any time and disabling IRQ in remove() would
+   effectively disable the IRQ also for other devices using this shared
+   line. First disable_irq() really disables it, the latter just
+   increases the counter.
+2. However during system suspend, it is expected that all drivers in
+   their suspend (and later resume) callbacks will do the same - disable
+   the shared IRQ line. And finally the system disables interrupts
+   globally so the line will be balanced.
 
-yunaixin (5):
-  Huawei BMA: Adding Huawei BMA driver: host_edma_drv
-  Huawei BMA: Adding Huawei BMA driver: host_cdev_drv
-  Huawei BMA: Adding Huawei BMA driver: host_veth_drv
-  Huawei BMA: Adding Huawei BMA driver: cdev_veth_drv
-  Huawei BMA: Adding Huawei BMA driver: host_kbox_drv
+Freeing IRQ solves the case #1 without causing any imbalance between
+enables/disables or requests/frees.  Disabling IRQ solves the #2, also
+without any imbalance.
 
- drivers/net/ethernet/huawei/Kconfig           |    1 +
- drivers/net/ethernet/huawei/Makefile          |    1 +
- drivers/net/ethernet/huawei/bma/Kconfig       |    5 +
- drivers/net/ethernet/huawei/bma/Makefile      |    9 +
- .../net/ethernet/huawei/bma/cdev_drv/Kconfig  |   11 +
- .../net/ethernet/huawei/bma/cdev_drv/Makefile |    2 +
- .../ethernet/huawei/bma/cdev_drv/bma_cdev.c   |  369 +++
- .../ethernet/huawei/bma/cdev_veth_drv/Kconfig |   11 +
- .../huawei/bma/cdev_veth_drv/Makefile         |    2 +
- .../bma/cdev_veth_drv/virtual_cdev_eth_net.c  | 1839 ++++++++++++
- .../bma/cdev_veth_drv/virtual_cdev_eth_net.h  |  300 ++
- .../net/ethernet/huawei/bma/edma_drv/Kconfig  |   11 +
- .../net/ethernet/huawei/bma/edma_drv/Makefile |    2 +
- .../huawei/bma/edma_drv/bma_devintf.c         |  597 ++++
- .../huawei/bma/edma_drv/bma_devintf.h         |   40 +
- .../huawei/bma/edma_drv/bma_include.h         |  118 +
- .../ethernet/huawei/bma/edma_drv/bma_pci.c    |  533 ++++
- .../ethernet/huawei/bma/edma_drv/bma_pci.h    |   94 +
- .../ethernet/huawei/bma/edma_drv/edma_host.c  | 1462 ++++++++++
- .../ethernet/huawei/bma/edma_drv/edma_host.h  |  351 +++
- .../huawei/bma/include/bma_ker_intf.h         |   91 +
- .../net/ethernet/huawei/bma/kbox_drv/Kconfig  |   11 +
- .../net/ethernet/huawei/bma/kbox_drv/Makefile |    2 +
- .../ethernet/huawei/bma/kbox_drv/kbox_dump.c  |  122 +
- .../ethernet/huawei/bma/kbox_drv/kbox_dump.h  |   33 +
- .../ethernet/huawei/bma/kbox_drv/kbox_hook.c  |  101 +
- .../ethernet/huawei/bma/kbox_drv/kbox_hook.h  |   33 +
- .../huawei/bma/kbox_drv/kbox_include.h        |   42 +
- .../ethernet/huawei/bma/kbox_drv/kbox_main.c  |  168 ++
- .../ethernet/huawei/bma/kbox_drv/kbox_main.h  |   23 +
- .../ethernet/huawei/bma/kbox_drv/kbox_mce.c   |  264 ++
- .../ethernet/huawei/bma/kbox_drv/kbox_mce.h   |   23 +
- .../ethernet/huawei/bma/kbox_drv/kbox_panic.c |  187 ++
- .../ethernet/huawei/bma/kbox_drv/kbox_panic.h |   25 +
- .../huawei/bma/kbox_drv/kbox_printk.c         |  362 +++
- .../huawei/bma/kbox_drv/kbox_printk.h         |   33 +
- .../huawei/bma/kbox_drv/kbox_ram_drive.c      |  188 ++
- .../huawei/bma/kbox_drv/kbox_ram_drive.h      |   31 +
- .../huawei/bma/kbox_drv/kbox_ram_image.c      |  135 +
- .../huawei/bma/kbox_drv/kbox_ram_image.h      |   84 +
- .../huawei/bma/kbox_drv/kbox_ram_op.c         |  986 +++++++
- .../huawei/bma/kbox_drv/kbox_ram_op.h         |   77 +
- .../net/ethernet/huawei/bma/veth_drv/Kconfig  |   11 +
- .../net/ethernet/huawei/bma/veth_drv/Makefile |    2 +
- .../ethernet/huawei/bma/veth_drv/veth_hb.c    | 2508 +++++++++++++++++
- .../ethernet/huawei/bma/veth_drv/veth_hb.h    |  442 +++
- 46 files changed, 11742 insertions(+)
- create mode 100644 drivers/net/ethernet/huawei/bma/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_drv/bma_cdev.c
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_veth_drv/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_veth_drv/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_veth_drv/virtual_c=
-dev_eth_net.c
- create mode 100644 drivers/net/ethernet/huawei/bma/cdev_veth_drv/virtual_c=
-dev_eth_net.h
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.c
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_devintf.h
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_include.h
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.c
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/bma_pci.h
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/edma_host.c
- create mode 100644 drivers/net/ethernet/huawei/bma/edma_drv/edma_host.h
- create mode 100644 drivers/net/ethernet/huawei/bma/include/bma_ker_intf.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_dump.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_dump.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_hook.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_hook.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_include.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_main.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_main.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_mce.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_mce.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_panic.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_panic.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_printk.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_printk.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_ram_drive=
-.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_ram_drive=
-.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_ram_image=
-.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_ram_image=
-.h
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_ram_op.c
- create mode 100644 drivers/net/ethernet/huawei/bma/kbox_drv/kbox_ram_op.h
- create mode 100644 drivers/net/ethernet/huawei/bma/veth_drv/Kconfig
- create mode 100644 drivers/net/ethernet/huawei/bma/veth_drv/Makefile
- create mode 100644 drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.c
- create mode 100644 drivers/net/ethernet/huawei/bma/veth_drv/veth_hb.h
+Best regards,
+Krzysztof
 
---=20
-2.26.2.windows.1
 
 
