@@ -2,140 +2,96 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D61C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED00C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB1A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA61720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:39:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uBocQdrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgFOKhg (ORCPT
+        id S1729539AbgFOKjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:37:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9806 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728885AbgFOKhf (ORCPT
+        Mon, 15 Jun 2020 06:39:48 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37159 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728885AbgFOKjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:37:35 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F9WB8k191943;
-        Mon, 15 Jun 2020 06:37:33 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31mua61uwf-1
+        Mon, 15 Jun 2020 06:39:47 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FAWmbh003202;
+        Mon, 15 Jun 2020 12:39:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=+F4jY1HeRhewZM8MzbOTtBBvHoX7iWPMn/pDhsYtkiM=;
+ b=uBocQdrSSSMoeRwxrI5NC2KcwfBXV8R+joFckdr9h6lID30OI0WKQ58EuGTsUgLPN+Eb
+ a4RZAyYxPgrZm0PEWmnJZsAwAUX6fRwGmgucsYVJvNuU4azLblG+PZjnSr5jCdtqLRAi
+ UxTcsJPrSQEgn1kdgCqB/MYkhndfq7JMebfav5j5vMDNXndEj5YEjWb5PWB64kwPCbsT
+ 4f+ZAlBJ1ACsDu99IzspOmQOCALzMLQWycO1YQwuXHmak7pbg6sDnVOEkwpBHMowYf9C
+ 5A19as0A0DbrgT9BAJcCUGhrEll+vVMv8+Gnw+MQPj7f1b5wkgLDijIQuuX6/8YLU//+ Ag== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvs5c4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 06:37:33 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FAIrP7011677;
-        Mon, 15 Jun 2020 06:37:33 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31mua61uvk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 06:37:32 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FATw2G015404;
-        Mon, 15 Jun 2020 10:37:30 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 31mpe83chp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 10:37:30 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FAaAMr64684452
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jun 2020 10:36:10 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 990E711C05B;
-        Mon, 15 Jun 2020 10:37:27 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A22611C05C;
-        Mon, 15 Jun 2020 10:37:27 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.56.158])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jun 2020 10:37:27 +0000 (GMT)
-Date:   Mon, 15 Jun 2020 12:37:25 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
-Message-ID: <20200615123725.13f6a8de.pasic@linux.ibm.com>
-In-Reply-To: <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
-References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
-        <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
-        <f7eb1154-0f52-0f12-129f-2b511f5a4685@linux.ibm.com>
-        <6356ba7f-afab-75e1-05ff-4a22b88c610e@linux.ibm.com>
-        <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Mon, 15 Jun 2020 12:39:34 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4DBF210002A;
+        Mon, 15 Jun 2020 12:39:34 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1D8BD20EAA2;
+        Mon, 15 Jun 2020 12:39:34 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
+ 2020 12:39:33 +0200
+Subject: Re: [PATCH 0/2] STM32 Fix uart nodes in stm32mp15-pinctrl
+To:     Erwan Le Ray <erwan.leray@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+References: <20200528074003.24875-1-erwan.leray@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <b0c3a1f8-217c-968d-dfeb-484afd8eefd5@st.com>
+Date:   Mon, 15 Jun 2020 12:39:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+In-Reply-To: <20200528074003.24875-1-erwan.leray@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-12_17:2020-06-12,2020-06-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- spamscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- clxscore=1015 adultscore=0 mlxscore=0 suspectscore=0 phishscore=0
- priorityscore=1501 cotscore=-2147483648 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006150075
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 11:01:55 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+Hi Erwan
 
-> > hum, in between I found another way which seems to me much better:
-> >
-> > We already have the force_dma_unencrypted() function available which 
-> > AFAIU is what we want for encrypted memory protection and is already 
-> > used by power and x86 SEV/SME in a way that seems AFAIU compatible 
-> > with our problem.
-> >
-> > Even DMA and IOMMU are different things, I think they should be used 
-> > together in our case.
-> >
-> > What do you think?
-> >
-> > The patch would then be something like:
-> >
-> > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> > index a977e32a88f2..53476d5bbe35 100644
-> > --- a/drivers/virtio/virtio.c
-> > +++ b/drivers/virtio/virtio.c
-> > @@ -4,6 +4,7 @@
-> >  #include <linux/virtio_config.h>
-> >  #include <linux/module.h>
-> >  #include <linux/idr.h>
-> > +#include <linux/dma-direct.h>
-> >  #include <uapi/linux/virtio_ids.h>
-> >
-> >  /* Unique numbering for virtio devices. */
-> > @@ -179,6 +180,10 @@ int virtio_finalize_features(struct virtio_device 
-> > *dev)
-> >         if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
-> >                 return 0;
-> >
-> > +       if (force_dma_unencrypted(&dev->dev) &&
-> > +           !virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
-> > +               return -EIO;
-> > +
-> >         virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
-> >         status = dev->config->get_status(dev);
-> >         if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {  
+On 5/28/20 9:40 AM, Erwan Le Ray wrote:
+> Fix uart nodes ordering and uart7_pins_a comments in stm32mp15-pinctrl.
 > 
+> Erwan Le Ray (2):
+>    ARM: dts: stm32: fix uart nodes ordering in stm32mp15-pinctrl
+>    ARM: dts: stm32: fix uart7_pins_a comments in stm32mp15-pinctrl
 > 
-> I think this can work but need to listen from Michael
+>   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 130 +++++++++++------------
+>   1 file changed, 65 insertions(+), 65 deletions(-)
+> 
 
-I don't think Christoph Hellwig will like force_dma_unencrypted()
-in virtio code:
-https://lkml.org/lkml/2020/2/20/630
 
-Regards,
-Halil
+Series applied on stm32-next.
+
+Regards
+Alex
