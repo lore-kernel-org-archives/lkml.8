@@ -2,123 +2,116 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6A02068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6D52068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgFOHuO (ORCPT
+        id S1728877AbgFOHtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:50:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40174 "EHLO mx2.suse.de"
+        Mon, 15 Jun 2020 03:49:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39998 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728875AbgFOHtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:49:20 -0400
+        id S1728813AbgFOHtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:49:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 82F3EB001;
-        Mon, 15 Jun 2020 07:49:21 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 821CEAFF9;
+        Mon, 15 Jun 2020 07:49:16 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 30/38] vt_ioctl: eliminate use of uival and ucval
-Date:   Mon, 15 Jun 2020 09:49:02 +0200
-Message-Id: <20200615074910.19267-30-jslaby@suse.cz>
+Subject: [PATCH 08/38] vt: use tty_insert_flip_string in respond_string
+Date:   Mon, 15 Jun 2020 09:48:40 +0200
+Message-Id: <20200615074910.19267-8-jslaby@suse.cz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615074910.19267-1-jslaby@suse.cz>
 References: <20200615074910.19267-1-jslaby@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They were used for the first parameter of put_user. But put_user accepts
-constants in the parameter and also determines the type only by the
-second parameter. So we can safely drop these helpers and simplify the
-code a bit.
+Pass the length of a string to respond_string and use
+tty_insert_flip_string instead of a loop with tty_insert_flip_char. This
+simplifies the processing on the tty side.
 
-Including the removal of set_int label.
+The added strlens are optimized during constant folding and propagation
+and the result are proper constants in assembly.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/vt/vt_ioctl.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/tty/vt/vt.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-index 87fe088c3eb4..911edd8d1272 100644
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -353,8 +353,6 @@ int vt_ioctl(struct tty_struct *tty,
- 	struct vc_data *vc = tty->driver_data;
- 	struct console_font_op op;	/* used in multiple places here */
- 	unsigned int console = vc->vc_num;
--	unsigned char ucval;
--	unsigned int uival;
- 	void __user *up = (void __user *)arg;
- 	int i, perm;
- 	int ret;
-@@ -406,8 +404,7 @@ int vt_ioctl(struct tty_struct *tty,
- 		/*
- 		 * this is naïve.
- 		 */
--		ucval = KB_101;
--		return put_user(ucval, (char __user *)arg);
-+		return put_user(KB_101, (char __user *)arg);
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 3adb7f409524..49c9d1e4067c 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1809,40 +1809,43 @@ static void csi_m(struct vc_data *vc)
+ 	update_attr(vc);
+ }
  
- 		/*
- 		 * These cannot be implemented on any machine that implements
-@@ -495,8 +492,7 @@ int vt_ioctl(struct tty_struct *tty,
- 		break;
+-static void respond_string(const char *p, struct tty_port *port)
++static void respond_string(const char *p, size_t len, struct tty_port *port)
+ {
+-	while (*p) {
+-		tty_insert_flip_char(port, *p, 0);
+-		p++;
+-	}
++	tty_insert_flip_string(port, p, len);
+ 	tty_schedule_flip(port);
+ }
  
- 	case KDGETMODE:
--		uival = vc->vc_mode;
--		goto setint;
-+		return put_user(vc->vc_mode, (int __user *)arg);
+ static void cursor_report(struct vc_data *vc, struct tty_struct *tty)
+ {
+ 	char buf[40];
++	int len;
  
- 	case KDMAPDISP:
- 	case KDUNMAPDISP:
-@@ -516,8 +512,7 @@ int vt_ioctl(struct tty_struct *tty,
- 		break;
+-	sprintf(buf, "\033[%d;%dR", vc->state.y + (vc->vc_decom ? vc->vc_top + 1 : 1), vc->state.x + 1);
+-	respond_string(buf, tty->port);
++	len = sprintf(buf, "\033[%d;%dR", vc->state.y +
++			(vc->vc_decom ? vc->vc_top + 1 : 1),
++			vc->state.x + 1);
++	respond_string(buf, len, tty->port);
+ }
  
- 	case KDGKBMODE:
--		uival = vt_do_kdgkbmode(console);
--		return put_user(uival, (int __user *)arg);
-+		return put_user(vt_do_kdgkbmode(console), (int __user *)arg);
+ static inline void status_report(struct tty_struct *tty)
+ {
+-	respond_string("\033[0n", tty->port);	/* Terminal ok */
++	static const char teminal_ok[] = "\033[0n";
++
++	respond_string(teminal_ok, strlen(teminal_ok), tty->port);
+ }
  
- 	/* this could be folded into KDSKBMODE, but for compatibility
- 	   reasons it is not so easy to fold KDGKBMETA into KDGKBMODE */
-@@ -526,9 +521,7 @@ int vt_ioctl(struct tty_struct *tty,
+ static inline void respond_ID(struct tty_struct *tty)
+ {
+-	respond_string(VT102ID, tty->port);
++	respond_string(VT102ID, strlen(VT102ID), tty->port);
+ }
  
- 	case KDGKBMETA:
- 		/* FIXME: should review whether this is worth locking */
--		uival = vt_do_kdgkbmeta(console);
--	setint:
--		return put_user(uival, (int __user *)arg);
-+		return put_user(vt_do_kdgkbmeta(console), (int __user *)arg);
+ void mouse_report(struct tty_struct *tty, int butt, int mrx, int mry)
+ {
+ 	char buf[8];
++	int len;
  
- 	case KDGETKEYCODE:
- 	case KDSETKEYCODE:
-@@ -650,8 +643,8 @@ int vt_ioctl(struct tty_struct *tty,
- 			if (!vt_in_use(i))
- 				break;
- 		console_unlock();
--		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
--		goto setint;		 
-+		i = i < MAX_NR_CONSOLES ? (i+1) : -1;
-+		return put_user(i, (int __user *)arg);
+-	sprintf(buf, "\033[M%c%c%c", (char)(' ' + butt), (char)('!' + mrx),
+-		(char)('!' + mry));
+-	respond_string(buf, tty->port);
++	len = sprintf(buf, "\033[M%c%c%c", (char)(' ' + butt),
++			(char)('!' + mrx), (char)('!' + mry));
++	respond_string(buf, len, tty->port);
+ }
  
- 	/*
- 	 * ioctl(fd, VT_ACTIVATE, num) will cause us to switch to vt # num,
+ /* invoked via ioctl(TIOCLINUX) and through set_selection_user */
 -- 
 2.27.0
 
