@@ -2,118 +2,101 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA829C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76866C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD81620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5848520739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 09:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PhelqSKT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1lDEnnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgFOJJI (ORCPT
+        id S1729360AbgFOJJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 05:09:08 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:43104 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729267AbgFOJJG (ORCPT
+        Mon, 15 Jun 2020 05:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729338AbgFOJJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 05:09:06 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05F93vZX011755;
-        Mon, 15 Jun 2020 11:08:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=6AGPKZTlObc1ZPKgs7FhyKVk6uWShOigJZrNQVvB/pQ=;
- b=PhelqSKTVsO9nZgxPwkhPrpVsE6gksTSuihQPK4G/z2nVgsBkuC4x58ewVjROKixHJ+C
- W/4HBioio2gBS1c8S4MtZnCBLt05dArjTqB4g2zoZNivZMxri3hLhpEzw6k7btE0Uvh1
- enZ56vrKTX5EdVl3HYI/E+Xvd+8rpBjQ/i58kX6S+UCHcMWZW1mzTeecE5Vx9ngJTgEu
- O129wBWbL0/d2uzLwXvkXi0gJsQau8l59g74IMwVilDzwSEr0LaCFjP1/eCN6V6nQSVp
- ZkHSj3MAZn1RPHvcwhIic8Oct4dc4F/l0aFb0Dg1Te+nU+DlOUXtDy3RaYoyxus2Obqz AQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mnph0hu0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 11:08:49 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E3F4D100034;
-        Mon, 15 Jun 2020 11:08:48 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D1F1A2BE22D;
-        Mon, 15 Jun 2020 11:08:48 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
- 2020 11:08:48 +0200
-Subject: Re: [PATCH v4 0/4] Enable stmpe811 touch screen on stm32f429-disco
- board
-To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <p.zabel@pengutronix.de>,
-        <pierre-yves.mordret@st.com>, <philippe.schenker@toradex.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <1591709203-12106-1-git-send-email-dillon.minfei@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <618d3fea-aa9f-dbf6-04a1-e9db621a6cd5@st.com>
-Date:   Mon, 15 Jun 2020 11:08:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 05:09:47 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09ECAC061A0E;
+        Mon, 15 Jun 2020 02:09:47 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id l11so16271184wru.0;
+        Mon, 15 Jun 2020 02:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wWe0dPSepbRkhIrx/P9OFbxlWpLX58b/aaaTuIJ8EVM=;
+        b=K1lDEnnWOpcbHlNK13IscIis9/Te0HddSGIP7HnTFsMt7pqvq5BBlytlsGQy2+jsQB
+         VHKMhhLmZH5tvVwfDznXMwihpgBkezZVyufBSF4xLD6l0qJoE7HtgnDAYyX/tZKvpyJf
+         sbyHb4Wb3y5r3BOIYnnrsxWfWiu7ZiwnGUhjJNARuGNOhrze/e5hFC5DwqqwxPtxZmul
+         OpbpqjlEmZ6aF7rJXmhXZLZU30EXDfV4vh4YkSxY6aoEfsvkFTI5RYEB/VUDB05NWCxm
+         RzC4pr/UIrwIUgEixToDYnfErKKPBmhF7QhFvqkRB6mVCbNBXxgvjxcZ8sv3ZkaKYytd
+         dfOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wWe0dPSepbRkhIrx/P9OFbxlWpLX58b/aaaTuIJ8EVM=;
+        b=OrAB5zEa8h9VRyD2ujXUVK7DLRlOpa5FRZ+vocWfPVPk8mp//GftgOu277m0XHp4/u
+         zhu8c2aMbr9wuGLJ1Y94fnrySZkoU51A7Hk/wiLnmBIGIAxkWgkgJcD3uXmthZMQGt9p
+         Ok+1/BD6Ck7bQ0N+nq9mznlRq7n/G7YtgjQDyrbFpGZ6RGpyWlCKc6M73LZ8ZD90T22h
+         ckQK7kivxFx6SIlgrHE/oOzfF/5wlsAj7I6JjGdYg0YREG3jMQDhACT/3n0Vcf1W5rkc
+         Pnoec02ghq83oH9+jmoDdlaYHB2Z4I3OhsK4aoUtfBvemAJXMAQM+kd+5nx3UKQlwpsv
+         N+tg==
+X-Gm-Message-State: AOAM532onN8C4dlhetSfHAfpCv+i3AR4QwvTHkyPbm/+APhb7pE5+xLp
+        PyYE8ijXUluNyIm2pcWhQLmyyYJzmqO52A==
+X-Google-Smtp-Source: ABdhPJy16EawT2d8WoSHLA3avvLM4HBMOaqYQGYYaOFDz6vtilAsoS0fwcwoqIg8DSXB4x3S3mAbrg==
+X-Received: by 2002:a5d:428e:: with SMTP id k14mr27556780wrq.21.1592212185663;
+        Mon, 15 Jun 2020 02:09:45 -0700 (PDT)
+Received: from skynet.lan (168.red-88-20-188.staticip.rima-tde.net. [88.20.188.168])
+        by smtp.gmail.com with ESMTPSA id z7sm23109370wrt.6.2020.06.15.02.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 02:09:45 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     broonie@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v2 0/4] spi: bcm63xx: add BMIPS support
+Date:   Mon, 15 Jun 2020 11:09:39 +0200
+Message-Id: <20200615090943.2936839-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200615080309.2897694-1-noltari@gmail.com>
+References: <20200615080309.2897694-1-noltari@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1591709203-12106-1-git-send-email-dillon.minfei@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_01:2020-06-15,2020-06-15 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dillon
+BCM63xx SPI and HSSPI controller are present on several BMIPS SoCs (BCM6318,
+BCM6328, BCM6358, BCM6362, BCM6368 and BCM63268).
 
-On 6/9/20 3:26 PM, dillon.minfei@gmail.com wrote:
-> From: dillon min <dillon.minfei@gmail.com>
-> 
-> This patchset is intend to enable stmpe811 touch screen on stm32f429-disco
-> board with three dts and one i2c driver changes.
-> 
-> has been validated by ts_print tool
-> 
-> Changes log:
-> V4: indroduce 'IIC_LAST_BYTE_POS' to compatible with xipkernel boot
-> 
-> V3: just add change log in [PATCH V3 3/4] below ---
-> 
-> V2: remove id, blocks, irq-trigger from stmpe811 dts
-> 
-> V1:
-> ARM: dts: stm32: add I2C3 support on STM32F429 SoC
-> ARM: dts: stm32: Add pin map for I2C3 controller on stm32f4
-> ARM: dts: stm32: enable stmpe811 on stm32429-disco board
-> i2c: stm32f4: Fix stmpe811 get xyz data timeout issue
-> 
-> dillon min (4):
->    ARM: dts: stm32: add I2C3 support on STM32F429 SoC
->    ARM: dts: stm32: Add pin map for I2C3 controller on stm32f4
->    ARM: dts: stm32: enable stmpe811 on stm32429-disco board
->    i2c: stm32f4: Fix stmpe811 get xyz data timeout issue
-> 
->   arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 12 +++++++++
->   arch/arm/boot/dts/stm32f429-disco.dts  | 47 ++++++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/stm32f429.dtsi       | 12 +++++++++
->   drivers/i2c/busses/i2c-stm32f4.c       | 12 ++++++---
->   4 files changed, 80 insertions(+), 3 deletions(-)
-> 
+v2: use devm_reset_control_get_exclusive
 
-DT patches applied on stm32-next. I changed node ordering in patch 3.
+Álvaro Fernández Rojas (4):
+  spi: bcm63xx-spi: add reset support
+  spi: bcm63xx-spi: allow building for BMIPS
+  spi: bcm63xx-hsspi: add reset support
+  spi: bcm63xx-hsspi: allow building for BMIPS
 
-Thanks
-Alex
+ drivers/spi/Kconfig             |  4 ++--
+ drivers/spi/spi-bcm63xx-hsspi.c | 17 +++++++++++++++++
+ drivers/spi/spi-bcm63xx.c       | 17 +++++++++++++++++
+ 3 files changed, 36 insertions(+), 2 deletions(-)
+
+-- 
+2.27.0
+
