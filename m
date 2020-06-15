@@ -6,83 +6,46 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0364FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8C2206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE652068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgFOHUG (ORCPT
+        id S1728565AbgFOHVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:20:06 -0400
-Received: from mga06.intel.com ([134.134.136.31]:46777 "EHLO mga06.intel.com"
+        Mon, 15 Jun 2020 03:21:38 -0400
+Received: from verein.lst.de ([213.95.11.211]:59980 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbgFOHUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:20:06 -0400
-IronPort-SDR: N33jDiy6WlRnjBigzHEbGB1ze3x9aiOb6JyNGy3os0Hsg3qQ4RN2XKSZXsMRBXVKWGG40qxe4D
- m/ld/TkDIGmg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 00:20:05 -0700
-IronPort-SDR: pVjKcvD5DUuXyhgZT/+naM0K/wlrsMopD51B8UUhQTP3hZZFhEZH31f+pgYgEtpm5B0DDhvfBj
- ZNbGfr7bb5DA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="382433255"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.172.204]) ([10.249.172.204])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2020 00:20:03 -0700
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Sun, Jian" <jian.sun@intel.com>
-Subject: Re: [Issue]platform/x86: iommu: System can't shutdown because iommu
- driver keeps checking the status of DMA_GSTS_TES
-To:     Koba Ko <koba.ko@canonical.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-References: <CAJB-X+Ww=bZN2qZ=e=4EkN_RUTiZxHxkdnHh50y9iVqZmT_XQg@mail.gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <111dde48-8018-6d74-5df8-1534143f4de6@linux.intel.com>
-Date:   Mon, 15 Jun 2020 15:20:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726299AbgFOHVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:21:38 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DA67168AFE; Mon, 15 Jun 2020 09:21:36 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 09:21:36 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, kernel test robot <lkp@intel.com>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ata: fix AHCI_SHT() macro definition
+Message-ID: <20200615072136.GB21903@lst.de>
+References: <CGME20200612120932eucas1p29411e0c60963fad8c36ca35f2e6b8872@eucas1p2.samsung.com> <0d803e72-b15e-4673-4858-4741f2772fc4@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJB-X+Ww=bZN2qZ=e=4EkN_RUTiZxHxkdnHh50y9iVqZmT_XQg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d803e72-b15e-4673-4858-4741f2772fc4@samsung.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Koba Ko,
-
-On 2020/6/15 11:19, Koba Ko wrote:
-> hi All,
-> I have a machine and there's only intel gpu.
-> the secureboot and vt-d is enabled in BIOS.
-> On the Ubuntu desktop, I do s2idle first and restart the machine.
-> The machine can't restart successfully, so I need to press the 
-> power button to shutdown.
-> I tried  each of the following and the issue can't be triggered.
-> 1. disable secure boot in BIOS.
-> 2. intel_iommu=off.
-> 3. intel_iomm=igfx_off.
-> 4. nomodeset
-> 5. i915.modeset=0.
+On Fri, Jun 12, 2020 at 02:09:31PM +0200, Bartlomiej Zolnierkiewicz wrote:
+> Fix AHCI_SHT() macro definition to not reinitialize .can_queue and
+> .sdev_attrs fields.
 > 
-> After I investigate further, find inte_iommu keeps checking the status 
-> of DMA_GSTS_TES.
-> During the procedure of restart, the driver would disable iommu 
-> translation and
-> check status of DMA_GSTS_TES until status of DMA_GSTS_TES is 0.
-> 
-> If you need more information, I can provide it.
+> This removes gcc warnings from W=1 builds such as:
 
-Do you mind telling what platform is it?
-
-Best regards,
-baolu
+I think these warnings arg bogus, at least when used with cases like
+libata that want to implement inheritance schemes.  Can we get them
+removed from W=1 insted if people really are about W=1 builds?
