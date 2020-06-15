@@ -2,598 +2,201 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1893AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2390EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D777D2071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87452071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H2yw4IM1"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HIkFMbit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbgFOUQt (ORCPT
+        id S1731556AbgFOUQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:16:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35450 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731510AbgFOUQs (ORCPT
+        Mon, 15 Jun 2020 16:16:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731547AbgFOUQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:16:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05FKGiJU091761;
-        Mon, 15 Jun 2020 15:16:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592252204;
-        bh=1pOpLOZ81Fe1PFeEaBwpUllxJADniS+WI2eD7h4pF08=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=H2yw4IM1Dk4B7BBMC8i+buAq9/RB59hHGLN7IBpyw3MA5SwNZL5HHh5bE2LsFRH/q
-         gHI/wW1HO25R3YMOpA+v3qmkFxo8IjTbVqSJWaOYdoS0plCTUFXpEloA9Hjp0Enz++
-         3jN+E/fYdxaB7r/xlGrHYJoxmJq+utk3hPpgk8yw=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05FKGirg071678
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 15 Jun 2020 15:16:44 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
- Jun 2020 15:16:43 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 15 Jun 2020 15:16:43 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05FKGh54063670;
-        Mon, 15 Jun 2020 15:16:43 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework support to lp55xx
-Date:   Mon, 15 Jun 2020 15:15:18 -0500
-Message-ID: <20200615201522.19677-12-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615201522.19677-1-dmurphy@ti.com>
-References: <20200615201522.19677-1-dmurphy@ti.com>
+        Mon, 15 Jun 2020 16:16:49 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D6EC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 13:16:49 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id di13so8384683qvb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 13:16:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NzhfudWzFXurQXJFFY6vmZI0IP33jXkPNuEEVWW9ngg=;
+        b=HIkFMbitJmwxA+wuBmiV/tLZRI8bv58z/NXUoopl8qO0ywOkldDeby/ja0GC3/IAqx
+         lHbWvl07kJ1b3BoUH/cGWmMJSISFk3ll1hp3T8i1L30GckXMMEDcAV9j77zO9P9veybN
+         Rj9uBwrAc4FG4en8AeH5Suk7m/opKG6AaCfS0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NzhfudWzFXurQXJFFY6vmZI0IP33jXkPNuEEVWW9ngg=;
+        b=U+XMwfNlCFBdMqp9RbH8X3fMcJ+w/SZjPqiSKTfJ7JY/cE/ginrjAPNZUNqPaEGkSq
+         BOXaWBM+GlpE3buleHEWHp45j5zCJtfPnSEx/Ho/dujvue76Rl85+RXLdQHdDkOY4nuO
+         UbqZnD9yLPhvzJjVx8AR+OzrJC+ortQUouxz6I/OHlMDh504iKgzzJSEmhZ2Cm4cZn2k
+         87rWZDAhK0g/If+GFkkwS1atQGSTx4kwPDHnSnyh9GMfPEo9mpff3gQ3RG4BdiglallA
+         6qBn3FSRIKo2RjtpJeam4f2oUAtwRHVLzJLpKA554Kekx07L62hfKODWexO17c450cv1
+         bVxg==
+X-Gm-Message-State: AOAM532coMGNxsT317W3oK9Ju80F5F44R0FwoSI+HnFnnVjrcfDKnRcm
+        AXT5vJSQt7GwEGmqGSE+MoethRdfJyo=
+X-Google-Smtp-Source: ABdhPJxHwdiVrt4vLkrYyu+U112rb6GNpXazXrwy/4PK9SltE0k6ktbFvzYya9iwY9wzc2LAGeSrfw==
+X-Received: by 2002:a0c:bd9a:: with SMTP id n26mr26886256qvg.21.1592252208523;
+        Mon, 15 Jun 2020 13:16:48 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id x66sm11800990qkb.33.2020.06.15.13.16.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 13:16:47 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 16:16:47 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
+        Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH x86/entry: Force rcu_irq_enter() when in idle task
+Message-ID: <20200615201647.GC12037@google.com>
+References: <20200611235305.GA32342@paulmck-ThinkPad-P72>
+ <CALCETrWo-zpiDsYGtKvm8LzW6CQ5L19a3+Ag_9g8aL4wHaJj9g@mail.gmail.com>
+ <871rmkzcc8.fsf@nanos.tec.linutronix.de>
+ <87wo4cxubv.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wo4cxubv.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add multicolor framework support for the lp55xx family.
+Hi Thomas, Paul,
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/leds/Kconfig                      |   1 +
- drivers/leds/leds-lp5521.c                |  14 +-
- drivers/leds/leds-lp5523.c                |  14 +-
- drivers/leds/leds-lp5562.c                |  13 +-
- drivers/leds/leds-lp55xx-common.c         | 177 +++++++++++++++++++---
- drivers/leds/leds-lp55xx-common.h         |  14 +-
- drivers/leds/leds-lp8501.c                |  14 +-
- include/linux/platform_data/leds-lp55xx.h |   8 +
- 8 files changed, 208 insertions(+), 47 deletions(-)
+On Fri, Jun 12, 2020 at 03:55:00PM +0200, Thomas Gleixner wrote:
+> The idea of conditionally calling into rcu_irq_enter() only when RCU is
+> not watching turned out to be not completely thought through.
+> 
+> Paul noticed occasional premature end of grace periods in RCU torture
+> testing. Bisection led to the commit which made the invocation of
+> rcu_irq_enter() conditional on !rcu_is_watching().
+> 
+> It turned out that this conditional breaks RCU assumptions about the idle
+> task when the scheduler tick happens to be a nested interrupt. Nested
+> interrupts can happen when the first interrupt invokes softirq processing
+> on return which enables interrupts. If that nested tick interrupt does not
+> invoke rcu_irq_enter() then the nest accounting in RCU claims that this is
+> the first interrupt which might mark a quiescient state and end grace
+> periods prematurely.
+> 
+> Change the condition from !rcu_is_watching() to is_idle_task(current) which
+> enforces that interrupts in the idle task unconditionally invoke
+> rcu_irq_enter() independent of the RCU state.
+> 
+> This is also correct vs. user mode entries in NOHZ full scenarios because
+> user mode entries bring RCU out of EQS and force the RCU irq nesting state
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index d3a792cac814..8fe94f3571e2 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -388,6 +388,7 @@ config LEDS_LP50XX
- config LEDS_LP55XX_COMMON
- 	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
- 	depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
-+	depends on OF
- 	select FW_LOADER
- 	select FW_LOADER_USER_HELPER
- 	help
-diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
-index 6d2163c0f625..6ff81d6be789 100644
---- a/drivers/leds/leds-lp5521.c
-+++ b/drivers/leds/leds-lp5521.c
-@@ -505,9 +505,16 @@ static int lp5521_probe(struct i2c_client *client,
- 	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
- 	struct device_node *np = client->dev.of_node;
- 
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->cfg = &lp5521_cfg;
-+
- 	if (!pdata) {
- 		if (np) {
--			pdata = lp55xx_of_populate_pdata(&client->dev, np);
-+			pdata = lp55xx_of_populate_pdata(&client->dev, np,
-+							 chip);
- 			if (IS_ERR(pdata))
- 				return PTR_ERR(pdata);
- 		} else {
-@@ -516,10 +523,6 @@ static int lp5521_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
--
- 	led = devm_kcalloc(&client->dev,
- 			pdata->num_channels, sizeof(*led), GFP_KERNEL);
- 	if (!led)
-@@ -527,7 +530,6 @@ static int lp5521_probe(struct i2c_client *client,
- 
- 	chip->cl = client;
- 	chip->pdata = pdata;
--	chip->cfg = &lp5521_cfg;
- 
- 	mutex_init(&chip->lock);
- 
-diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
-index 15e7051392f5..b076c16df9ab 100644
---- a/drivers/leds/leds-lp5523.c
-+++ b/drivers/leds/leds-lp5523.c
-@@ -872,9 +872,16 @@ static int lp5523_probe(struct i2c_client *client,
- 	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
- 	struct device_node *np = client->dev.of_node;
- 
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->cfg = &lp5523_cfg;
-+
- 	if (!pdata) {
- 		if (np) {
--			pdata = lp55xx_of_populate_pdata(&client->dev, np);
-+			pdata = lp55xx_of_populate_pdata(&client->dev, np,
-+							 chip);
- 			if (IS_ERR(pdata))
- 				return PTR_ERR(pdata);
- 		} else {
-@@ -883,10 +890,6 @@ static int lp5523_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
--
- 	led = devm_kcalloc(&client->dev,
- 			pdata->num_channels, sizeof(*led), GFP_KERNEL);
- 	if (!led)
-@@ -894,7 +897,6 @@ static int lp5523_probe(struct i2c_client *client,
- 
- 	chip->cl = client;
- 	chip->pdata = pdata;
--	chip->cfg = &lp5523_cfg;
- 
- 	mutex_init(&chip->lock);
- 
-diff --git a/drivers/leds/leds-lp5562.c b/drivers/leds/leds-lp5562.c
-index 1c94422408b0..7ecdd199d7ef 100644
---- a/drivers/leds/leds-lp5562.c
-+++ b/drivers/leds/leds-lp5562.c
-@@ -520,9 +520,16 @@ static int lp5562_probe(struct i2c_client *client,
- 	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
- 	struct device_node *np = client->dev.of_node;
- 
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->cfg = &lp5562_cfg;
-+
- 	if (!pdata) {
- 		if (np) {
--			pdata = lp55xx_of_populate_pdata(&client->dev, np);
-+			pdata = lp55xx_of_populate_pdata(&client->dev, np,
-+							 chip);
- 			if (IS_ERR(pdata))
- 				return PTR_ERR(pdata);
- 		} else {
-@@ -531,9 +538,6 @@ static int lp5562_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
- 
- 	led = devm_kcalloc(&client->dev,
- 			pdata->num_channels, sizeof(*led), GFP_KERNEL);
-@@ -542,7 +546,6 @@ static int lp5562_probe(struct i2c_client *client,
- 
- 	chip->cl = client;
- 	chip->pdata = pdata;
--	chip->cfg = &lp5562_cfg;
- 
- 	mutex_init(&chip->lock);
- 
-diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 882ef39e4965..d33564aef563 100644
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -35,6 +35,11 @@ static struct lp55xx_led *dev_to_lp55xx_led(struct device *dev)
- 	return cdev_to_lp55xx_led(dev_get_drvdata(dev));
- }
- 
-+static struct lp55xx_led *mcled_cdev_to_led(struct led_classdev_mc *mc_cdev)
-+{
-+	return container_of(mc_cdev, struct lp55xx_led, mc_cdev);
-+}
-+
- static void lp55xx_reset_device(struct lp55xx_chip *chip)
- {
- 	struct lp55xx_device_config *cfg = chip->cfg;
-@@ -131,6 +136,18 @@ static struct attribute *lp55xx_led_attrs[] = {
- };
- ATTRIBUTE_GROUPS(lp55xx_led);
- 
-+static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
-+				    enum led_brightness brightness)
-+{
-+	struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
-+	struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
-+	struct lp55xx_device_config *cfg = led->chip->cfg;
-+
-+	led_mc_calc_color_components(&led->mc_cdev, brightness);
-+	return cfg->multicolor_brightness_fn(led);
-+
-+}
-+
- static int lp55xx_set_brightness(struct led_classdev *cdev,
- 			     enum led_brightness brightness)
- {
-@@ -147,9 +164,12 @@ static int lp55xx_init_led(struct lp55xx_led *led,
- 	struct lp55xx_platform_data *pdata = chip->pdata;
- 	struct lp55xx_device_config *cfg = chip->cfg;
- 	struct device *dev = &chip->cl->dev;
-+	int max_channel = cfg->max_channel;
-+	struct mc_subled *mc_led_info;
-+	struct led_classdev *led_cdev;
- 	char name[32];
-+	int i, j = 0;
- 	int ret;
--	int max_channel = cfg->max_channel;
- 
- 	if (chan >= max_channel) {
- 		dev_err(dev, "invalid channel: %d / %d\n", chan, max_channel);
-@@ -159,10 +179,43 @@ static int lp55xx_init_led(struct lp55xx_led *led,
- 	if (pdata->led_config[chan].led_current == 0)
- 		return 0;
- 
-+	if (pdata->led_config[chan].name) {
-+		led->cdev.name = pdata->led_config[chan].name;
-+	} else {
-+		snprintf(name, sizeof(name), "%s:channel%d",
-+			pdata->label ? : chip->cl->name, chan);
-+		led->cdev.name = name;
-+	}
-+
-+	if (pdata->led_config[chan].num_colors > 1) {
-+		mc_led_info = devm_kcalloc(dev,
-+					   pdata->led_config[chan].num_colors,
-+					   sizeof(*mc_led_info), GFP_KERNEL);
-+		if (!mc_led_info)
-+			return -ENOMEM;
-+
-+		led_cdev = &led->mc_cdev.led_cdev;
-+		led_cdev->name = led->cdev.name;
-+		led_cdev->brightness_set_blocking = lp55xx_set_mc_brightness;
-+		led->mc_cdev.num_colors = pdata->led_config[chan].num_colors;
-+		for (i = 0; i < led->mc_cdev.num_colors; i++) {
-+			mc_led_info[i].color_index =
-+				pdata->led_config[chan].color_id[i];
-+			mc_led_info[i].channel =
-+					pdata->led_config[chan].output_num[i];
-+			j++;
-+		}
-+
-+		led->mc_cdev.subled_info = mc_led_info;
-+	} else {
-+		led->cdev.brightness_set_blocking = lp55xx_set_brightness;
-+	}
-+
-+	led->cdev.groups = lp55xx_led_groups;
-+	led->cdev.default_trigger = pdata->led_config[chan].default_trigger;
- 	led->led_current = pdata->led_config[chan].led_current;
- 	led->max_current = pdata->led_config[chan].max_current;
- 	led->chan_nr = pdata->led_config[chan].chan_nr;
--	led->cdev.default_trigger = pdata->led_config[chan].default_trigger;
- 
- 	if (led->chan_nr >= max_channel) {
- 		dev_err(dev, "Use channel numbers between 0 and %d\n",
-@@ -170,18 +223,11 @@ static int lp55xx_init_led(struct lp55xx_led *led,
- 		return -EINVAL;
- 	}
- 
--	led->cdev.brightness_set_blocking = lp55xx_set_brightness;
--	led->cdev.groups = lp55xx_led_groups;
--
--	if (pdata->led_config[chan].name) {
--		led->cdev.name = pdata->led_config[chan].name;
--	} else {
--		snprintf(name, sizeof(name), "%s:channel%d",
--			pdata->label ? : chip->cl->name, chan);
--		led->cdev.name = name;
--	}
-+	if (pdata->led_config[chan].num_colors > 1)
-+		ret = devm_led_classdev_multicolor_register(dev, &led->mc_cdev);
-+	else
-+		ret = devm_led_classdev_register(dev, &led->cdev);
- 
--	ret = devm_led_classdev_register(dev, &led->cdev);
- 	if (ret) {
- 		dev_err(dev, "led register err: %d\n", ret);
- 		return ret;
-@@ -525,14 +571,105 @@ void lp55xx_unregister_sysfs(struct lp55xx_chip *chip)
- }
- EXPORT_SYMBOL_GPL(lp55xx_unregister_sysfs);
- 
-+static int lp55xx_parse_common_child(struct device_node *np,
-+				     struct lp55xx_led_config *cfg,
-+				     int led_number, int *chan_nr)
-+{
-+	int ret;
-+
-+	of_property_read_string(np, "chan-name",
-+				&cfg[led_number].name);
-+	of_property_read_u8(np, "led-cur",
-+			    &cfg[led_number].led_current);
-+	of_property_read_u8(np, "max-cur",
-+			    &cfg[led_number].max_current);
-+
-+	ret = of_property_read_u32(np, "reg", chan_nr);
-+	if (ret)
-+		return ret;
-+
-+	if (*chan_nr < 0 || *chan_nr > cfg->max_channel)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int lp55xx_parse_multi_led_child(struct device_node *child,
-+					 struct lp55xx_led_config *cfg,
-+					 int child_number, int color_number)
-+{
-+	int chan_nr, color_id, ret;
-+
-+	ret = lp55xx_parse_common_child(child, cfg, child_number, &chan_nr);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_property_read_u32(child, "color", &color_id);
-+	if (ret)
-+		return ret;
-+
-+	cfg[child_number].color_id[color_number] = color_id;
-+	cfg[child_number].output_num[color_number] = chan_nr;
-+
-+	return 0;
-+}
-+
-+static int lp55xx_parse_multi_led(struct device_node *np,
-+				  struct lp55xx_led_config *cfg,
-+				  int child_number)
-+{
-+	struct device_node *child;
-+	int num_colors = 0, ret;
-+
-+	for_each_child_of_node(np, child) {
-+		ret = lp55xx_parse_multi_led_child(child, cfg, child_number,
-+						   num_colors);
-+		if (ret)
-+			return ret;
-+		num_colors++;
-+	}
-+
-+	cfg[child_number].num_colors = num_colors;
-+
-+	return 0;
-+}
-+
-+static int lp55xx_parse_logical_led(struct device_node *np,
-+				   struct lp55xx_led_config *cfg,
-+				   int child_number)
-+{
-+	int led_color, ret;
-+	int chan_nr = 0;
-+
-+	cfg[child_number].default_trigger =
-+		of_get_property(np, "linux,default-trigger", NULL);
-+
-+	ret = of_property_read_u32(np, "color", &led_color);
-+	if (ret)
-+		return ret;
-+
-+	if (led_color == LED_COLOR_ID_MULTI)
-+		return lp55xx_parse_multi_led(np, cfg, child_number);
-+
-+	ret =  lp55xx_parse_common_child(np, cfg, child_number, &chan_nr);
-+	if (ret < 0)
-+		return ret;
-+
-+	cfg[child_number].chan_nr = chan_nr;
-+
-+	return ret;
-+}
-+
- struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
--						      struct device_node *np)
-+						      struct device_node *np,
-+						      struct lp55xx_chip *chip)
- {
- 	struct device_node *child;
- 	struct lp55xx_platform_data *pdata;
- 	struct lp55xx_led_config *cfg;
- 	int num_channels;
- 	int i = 0;
-+	int ret;
- 
- 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
-@@ -550,16 +687,12 @@ struct lp55xx_platform_data *lp55xx_of_populate_pdata(struct device *dev,
- 
- 	pdata->led_config = &cfg[0];
- 	pdata->num_channels = num_channels;
-+	cfg->max_channel = chip->cfg->max_channel;
- 
- 	for_each_child_of_node(np, child) {
--		cfg[i].chan_nr = i;
--
--		of_property_read_string(child, "chan-name", &cfg[i].name);
--		of_property_read_u8(child, "led-cur", &cfg[i].led_current);
--		of_property_read_u8(child, "max-cur", &cfg[i].max_current);
--		cfg[i].default_trigger =
--			of_get_property(child, "linux,default-trigger", NULL);
--
-+		ret = lp55xx_parse_logical_led(child, cfg, i);
-+		if (ret)
-+			return ERR_PTR(-EINVAL);
- 		i++;
- 	}
- 
-diff --git a/drivers/leds/leds-lp55xx-common.h b/drivers/leds/leds-lp55xx-common.h
-index b9b1041e8143..2f38c5b33830 100644
---- a/drivers/leds/leds-lp55xx-common.h
-+++ b/drivers/leds/leds-lp55xx-common.h
-@@ -12,6 +12,8 @@
- #ifndef _LEDS_LP55XX_COMMON_H
- #define _LEDS_LP55XX_COMMON_H
- 
-+#include <linux/led-class-multicolor.h>
-+
- enum lp55xx_engine_index {
- 	LP55XX_ENGINE_INVALID,
- 	LP55XX_ENGINE_1,
-@@ -93,6 +95,7 @@ struct lp55xx_reg {
-  * @max_channel        : Maximum number of channels
-  * @post_init_device   : Chip specific initialization code
-  * @brightness_fn      : Brightness function
-+ * @multicolor_brightness_fn : Multicolor brightness function
-  * @set_led_current    : LED current set function
-  * @firmware_cb        : Call function when the firmware is loaded
-  * @run_engine         : Run internal engine for pattern
-@@ -106,9 +109,12 @@ struct lp55xx_device_config {
- 	/* define if the device has specific initialization process */
- 	int (*post_init_device) (struct lp55xx_chip *chip);
- 
--	/* access brightness register */
-+	/* set LED brightness */
- 	int (*brightness_fn)(struct lp55xx_led *led);
- 
-+	/* set multicolor LED brightness */
-+	int (*multicolor_brightness_fn)(struct lp55xx_led *led);
-+
- 	/* current setting function */
- 	void (*set_led_current) (struct lp55xx_led *led, u8 led_current);
- 
-@@ -159,6 +165,8 @@ struct lp55xx_chip {
-  * struct lp55xx_led
-  * @chan_nr         : Channel number
-  * @cdev            : LED class device
-+ * @mc_cdev         : Multi color class device
-+ * @color_components: Multi color LED map information
-  * @led_current     : Current setting at each led channel
-  * @max_current     : Maximun current at each led channel
-  * @brightness      : Brightness value
-@@ -167,6 +175,7 @@ struct lp55xx_chip {
- struct lp55xx_led {
- 	int chan_nr;
- 	struct led_classdev cdev;
-+	struct led_classdev_mc mc_cdev;
- 	u8 led_current;
- 	u8 max_current;
- 	u8 brightness;
-@@ -196,6 +205,7 @@ extern void lp55xx_unregister_sysfs(struct lp55xx_chip *chip);
- 
- /* common device tree population function */
- extern struct lp55xx_platform_data
--*lp55xx_of_populate_pdata(struct device *dev, struct device_node *np);
-+*lp55xx_of_populate_pdata(struct device *dev, struct device_node *np,
-+			  struct lp55xx_chip *chip);
- 
- #endif /* _LEDS_LP55XX_COMMON_H */
-diff --git a/drivers/leds/leds-lp8501.c b/drivers/leds/leds-lp8501.c
-index a58019cdb8c3..ac2c31db4a65 100644
---- a/drivers/leds/leds-lp8501.c
-+++ b/drivers/leds/leds-lp8501.c
-@@ -308,9 +308,16 @@ static int lp8501_probe(struct i2c_client *client,
- 	struct lp55xx_platform_data *pdata = dev_get_platdata(&client->dev);
- 	struct device_node *np = client->dev.of_node;
- 
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->cfg = &lp8501_cfg;
-+
- 	if (!pdata) {
- 		if (np) {
--			pdata = lp55xx_of_populate_pdata(&client->dev, np);
-+			pdata = lp55xx_of_populate_pdata(&client->dev, np,
-+							 chip);
- 			if (IS_ERR(pdata))
- 				return PTR_ERR(pdata);
- 		} else {
-@@ -319,10 +326,6 @@ static int lp8501_probe(struct i2c_client *client,
- 		}
- 	}
- 
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
--
- 	led = devm_kcalloc(&client->dev,
- 			pdata->num_channels, sizeof(*led), GFP_KERNEL);
- 	if (!led)
-@@ -330,7 +333,6 @@ static int lp8501_probe(struct i2c_client *client,
- 
- 	chip->cl = client;
- 	chip->pdata = pdata;
--	chip->cfg = &lp8501_cfg;
- 
- 	mutex_init(&chip->lock);
- 
-diff --git a/include/linux/platform_data/leds-lp55xx.h b/include/linux/platform_data/leds-lp55xx.h
-index 96a787100fda..d85275aea38c 100644
---- a/include/linux/platform_data/leds-lp55xx.h
-+++ b/include/linux/platform_data/leds-lp55xx.h
-@@ -12,17 +12,25 @@
- #ifndef _LEDS_LP55XX_H
- #define _LEDS_LP55XX_H
- 
-+#include <linux/led-class-multicolor.h>
-+
- /* Clock configuration */
- #define LP55XX_CLOCK_AUTO	0
- #define LP55XX_CLOCK_INT	1
- #define LP55XX_CLOCK_EXT	2
- 
-+#define LP55XX_MAX_GROUPED_CHAN	4
-+
- struct lp55xx_led_config {
- 	const char *name;
- 	const char *default_trigger;
- 	u8 chan_nr;
- 	u8 led_current; /* mA x10, 0 if led is not connected */
- 	u8 max_current;
-+	int num_colors;
-+	unsigned int max_channel;
-+	int color_id[LED_COLOR_ID_MAX];
-+	int output_num[LED_COLOR_ID_MAX];
- };
- 
- struct lp55xx_predef_pattern {
--- 
-2.26.2
+I had to re-read this sentence a couple of times. The 'user mode entries'
+sounds like 'entry into user mode'. It would be good to reword it to 'IRQ
+entry in user mode'.
 
+My knowledge predates the rcu-watching reworks so apologies on the below
+question but I still didn't fully follow why when the idle task behaves
+differently from being in user mode. Even with user mode we should have:
+
+<user mode>  (in EQS)
+  <irq entry>   <---------- exits EQS so now rcu is watching
+     <softirq entry in the exit path>
+        <timer tick irq entry>  <-- the buggy !watching logic prevents rcu_irq_enter
+	    -> report QS since tick thinks it is first level.
+
+Is there a subtlety here I'm missing? I checked the RCU code and I did not
+see anywhere that rcu_user_enter() makes it behave differently. Both
+rcu_user_enter() and rcu_idle_enter() call rcu_eqs_enter().
+
+> accounting to nested. As only the first interrupt can enter from user mode
+> a nested tick interrupt will enter from kernel mode and as the nesting
+> state accounting is forced to nesting it will not do anything stupid even
+> if rcu_irq_enter() has not been invoked.
+> 
+> Fixes: 3eeec3858488 ("x86/entry: Provide idtentry_entry/exit_cond_rcu()")
+> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/x86/entry/common.c |   35 ++++++++++++++++++++++++++++-------
+>  1 file changed, 28 insertions(+), 7 deletions(-)
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -557,14 +557,34 @@ bool noinstr idtentry_enter_cond_rcu(str
+>  		return false;
+>  	}
+>  
+> -	if (!__rcu_is_watching()) {
+> +	/*
+> +	 * If this entry hit the idle task invoke rcu_irq_enter() whether
+> +	 * RCU is watching or not.
+> +	 *
+> +	 * Interupts can nest when the first interrupt invokes softirq
+> +	 * processing on return which enables interrupts.
+> +	 *
+> +	 * Scheduler ticks in the idle task can mark quiescent state and
+> +	 * terminate a grace period, if and only if the timer interrupt is
+> +	 * not nested into another interrupt.
+> +	 *
+> +	 * Checking for __rcu_is_watching() here would prevent the nesting
+> +	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
+> +	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
+> +	 * assume that it is the first interupt and eventually claim
+> +	 * quiescient state and end grace periods prematurely.
+> +	 *
+> +	 * Unconditionally invoke rcu_irq_enter() so RCU state stays
+> +	 * consistent.
+
+It is not really unconditional though, we are checking for the idle task
+below.  I suggest a slight reword of the comments accordingly.
+
+thanks,
+
+ - Joel
+
+
+> +	 *
+> +	 * TINY_RCU does not support EQS, so let the compiler eliminate
+> +	 * this part when enabled.
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_TINY_RCU) && is_idle_task(current)) {
+>  		/*
+>  		 * If RCU is not watching then the same careful
+>  		 * sequence vs. lockdep and tracing is required
+>  		 * as in enter_from_user_mode().
+> -		 *
+> -		 * This only happens for IRQs that hit the idle
+> -		 * loop, i.e. if idle is not using MWAIT.
+>  		 */
+>  		lockdep_hardirqs_off(CALLER_ADDR0);
+>  		rcu_irq_enter();
+> @@ -576,9 +596,10 @@ bool noinstr idtentry_enter_cond_rcu(str
+>  	}
+>  
+>  	/*
+> -	 * If RCU is watching then RCU only wants to check
+> -	 * whether it needs to restart the tick in NOHZ
+> -	 * mode.
+> +	 * If RCU is watching then RCU only wants to check whether it needs
+> +	 * to restart the tick in NOHZ mode. rcu_irq_enter_check_tick()
+> +	 * already contains a warning when RCU is not watching, so no point
+> +	 * in having another one here.
+>  	 */
+>  	instrumentation_begin();
+>  	rcu_irq_enter_check_tick();
