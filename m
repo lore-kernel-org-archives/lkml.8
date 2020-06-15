@@ -2,92 +2,102 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D02C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72BE72074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E3420768
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 22:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592260381;
+	bh=TcSkE8feA1Y5hV3SRpqYFksS8VaMhXK8tXnnlRGauik=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Nse0dAJvJn3WpHbChbSMIB3/kIkTxv2btx1vwhnrar6S2S9g0m/gcDoVaH7FoUDBB
+	 i/WOzTRYFI9g5Lu5d9zmcqbmZxQvkaOzn2uy4m4ePeKvARG7Pcd30Ixzh6iuTHDiiW
+	 Qom+HGrgEGxgF+Q5UPhTubxg57kPfSGShsfrSHUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgFOWcJ (ORCPT
+        id S1726722AbgFOWdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 18:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56272 "EHLO
+        Mon, 15 Jun 2020 18:33:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgFOWcF (ORCPT
+        with ESMTP id S1726408AbgFOWdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 18:32:05 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC6CC061A0E;
-        Mon, 15 Jun 2020 15:32:05 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jkxdq-0006yF-Ry; Tue, 16 Jun 2020 00:31:49 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1D5361C0085;
-        Tue, 16 Jun 2020 00:31:46 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 22:31:45 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86, kcsan: Remove __no_kcsan_or_inline usage
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        Mon, 15 Jun 2020 18:33:00 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 994ACC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:32:59 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z9so21150329ljh.13
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vd6AIgm+IPo36EOLrgfHWggTU08p8NWiT28+L7heEG0=;
+        b=gcjDZqGeH9Zuwf3pX+/VMlji/YXNA1F0wAexen6Z6HTt2gX9G5IUfBVO7vSABxCJDg
+         Ey2OaU0b7tX3efR27AMqGHD23Xibbxpq9t/Reyc65DQpSmDjKiZC87fj5q5fWp4RZa+r
+         xxKOHE+484EY1f6IwzY2RWcrmFqZieNm/9XX4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vd6AIgm+IPo36EOLrgfHWggTU08p8NWiT28+L7heEG0=;
+        b=c/4mu6yd/EaVBNZ0CJKZIJ3PLtr5jcmpMW+4z98O6/7kWSkcWJRfH6lbYT+ob6/MIt
+         vh8e+8EVl8emMIlc4O7xujHecUk8Yydl6ySxaiAGnOUBDhZHsUhyuJSQ87DF/4aY2PTb
+         HlYLHMfkR5QAcGX99iasGtYmqaY8e8IenVcE6es1aZtCXo/LgmvUKI8H1ygkCmW9eTvb
+         jjjpjBAyVzm9/6Pib4FsxQpbIoy8PPVwHfqYsATJhP+jDd8GmcIOZvtNVF91spTPgCw2
+         3plgj6URmgDvX9WCRp+cPnyeUgKYTTzgEMewgS15s+JgeFPf440TrWnHwnP7gS4lAfuy
+         L8ww==
+X-Gm-Message-State: AOAM531UvicDFW5KhWEnS0U4lnTBf82X/fiD5+O8wn4rwl0QosWDu3WJ
+        jAKAoPQkshiRFFXm3h6dmTsR1SAFmF0=
+X-Google-Smtp-Source: ABdhPJxJ1Ka550LM1wSPssCes5YbOwuU3TS/xxWNomr3z07Wieh4SBrLVudSFZelPEu92God0PJqrw==
+X-Received: by 2002:a2e:8858:: with SMTP id z24mr14287937ljj.128.1592260377782;
+        Mon, 15 Jun 2020 15:32:57 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id 1sm4796606lft.95.2020.06.15.15.32.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 15:32:57 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id c21so10553940lfb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 15:32:56 -0700 (PDT)
+X-Received: by 2002:a19:ae0f:: with SMTP id f15mr93022lfc.142.1592260376585;
+ Mon, 15 Jun 2020 15:32:56 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159226030583.16989.14047273989814602913.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200615221607.7764-1-peterx@redhat.com> <20200615221607.7764-3-peterx@redhat.com>
+In-Reply-To: <20200615221607.7764-3-peterx@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 15 Jun 2020 15:32:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh3KYWKMPWYcyu9c-UPAwCXMcN86Wr5xyivCumWxEi7AQ@mail.gmail.com>
+Message-ID: <CAHk-=wh3KYWKMPWYcyu9c-UPAwCXMcN86Wr5xyivCumWxEi7AQ@mail.gmail.com>
+Subject: Re: [PATCH 02/25] mm: Introduce mm_fault_accounting()
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/entry branch of tip:
+On Mon, Jun 15, 2020 at 3:16 PM Peter Xu <peterx@redhat.com> wrote:
+>
+> Provide this helper for doing memory page fault accounting across archs.  It
+> can be defined unconditionally because perf_sw_event() is always defined, and
+> perf_sw_event() will be a no-op if !CONFIG_PERF_EVENTS.
 
-Commit-ID:     e82587336695f14283987c9aa0bfd775b520856d
-Gitweb:        https://git.kernel.org/tip/e82587336695f14283987c9aa0bfd775b520856d
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 02 Jun 2020 14:24:47 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:08 +02:00
+Well, the downside is that now it forces a separate I$ miss and all
+those extra arguments because it's a out-of-line function and the
+compiler won't see that they all go away.
 
-x86, kcsan: Remove __no_kcsan_or_inline usage
+Yeah, maybe some day maybe we'll have LTO and these kinds of things
+will not matter. And maybe they already don't. But it seems kind of
+sad to basically force non-optimal code generation from this series.
 
-Now that KCSAN relies on -tsan-distinguish-volatile we no longer need
-the annotation for constant_test_bit(). Remove it.
+Why would you export the symbol, btw? Page fault handling is never a module.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/bitops.h | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 35460fe..0367efd 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -201,12 +201,8 @@ arch_test_and_change_bit(long nr, volatile unsigned long *addr)
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
- }
- 
--static __no_kcsan_or_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
-+static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
- {
--	/*
--	 * Because this is a plain access, we need to disable KCSAN here to
--	 * avoid double instrumentation via instrumented bitops.
--	 */
- 	return ((1UL << (nr & (BITS_PER_LONG-1))) &
- 		(addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
- }
+              Linus
