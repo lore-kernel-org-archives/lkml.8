@@ -2,120 +2,166 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBD212080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2768020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="U9lxy3jE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q1gomGsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731404AbgFOTmw (ORCPT
+        id S1731345AbgFOTmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:42:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58306 "EHLO
+        Mon, 15 Jun 2020 15:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730913AbgFOTma (ORCPT
+        with ESMTP id S1731172AbgFOTmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:42:30 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A221C08C5C8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:42:26 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 64so8257811pfv.11
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:42:26 -0700 (PDT)
+        Mon, 15 Jun 2020 15:42:43 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0286C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:42:42 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y18so7226511plr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EN1IhuHOwzgoOcWyZIy9cQLF20jppiOEN2CrFnDInH8=;
-        b=U9lxy3jE22JUx9l9TV8z9qLuPgIwP3ylxQU8Oumrvr9oyBQsLce9TnB7+K5bfye5Rt
-         uSfK6xnQ0iLu3hF2G/vBHdDn/bbuiTEXKjRZhRPX4Oe5f9f7l4y/eKqXwqR0BaJFJ6Kg
-         yVYKCNCf6yBQoC4Q5z7/kPeFqVPc4lPPSW40Y=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tNVFiaYWMiO2hIPSPELA+UbwGrUr+c9/QS6tPzZlZsA=;
+        b=Q1gomGsuoZPi4npsUFWHj1X8MZjjMEubXg7JRHxvk16FoLBYMBUvqQMm982CkHMfju
+         kTVQPbwC0DsOCx0LE6fgPtUKSTAeU8r5AWd12DkRI0M02V8Z+b+P4J2xJcfSFVf8Wchh
+         6A31hSMp5TIxadWGu7+0uTJE0uXGGueo9vk6M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EN1IhuHOwzgoOcWyZIy9cQLF20jppiOEN2CrFnDInH8=;
-        b=uMj5vPfWtPuZBfoS+X2YJjUUMZAdNNapbHJz3n18xKgsjAPj1x7D3hsLxYHT+mpa4n
-         R9CfoHdgMkEVb4R8pAqEewwbwgMpl4yRySIu+1/3Rg6xoc/apsQmZLgIb6TvvtdznFCj
-         lHDx9oRNd26Kimzdqk3vw9hh488h/tRBOWVtloGWYI5gkE3+IQW6w+DGAqyJkmW1d5/A
-         hm026JR4JjNm9EsgBh7bzYIb/h/JpTbTDmyFBlbk9H4uvgQRPThErCYbkkdmXYAApNMb
-         r0tsPNt7VVs8MXp1pBqup9yW2hKyhbBlDN7bahDf6FVnzO/xs5tyIOs2tjTFk02V4DJQ
-         B91w==
-X-Gm-Message-State: AOAM532zsKLVS09ySxT7qGC/MrBzsM4EUbrs0S8ErH3WtELnSy7w3mb2
-        uifkn+B669m6kXXYC1M2e++9rw==
-X-Google-Smtp-Source: ABdhPJyBz/jS9zEuqkK2ql9UA5VzjypmIVHnFoC/77SXnpjE2nUSYBpVs6rkRwL2bVBYYLvYR9xePA==
-X-Received: by 2002:a63:214d:: with SMTP id s13mr21585779pgm.277.1592250145955;
-        Mon, 15 Jun 2020 12:42:25 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id gq8sm293663pjb.14.2020.06.15.12.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 12:42:25 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tNVFiaYWMiO2hIPSPELA+UbwGrUr+c9/QS6tPzZlZsA=;
+        b=TA05viUH5y6dydsgl4m7ff4hyGQ/YUfRzRw98OoXP5SXU6FTX6MAvMycSLibfD4KGO
+         8SdyG7V6PBx8U4bR3D8x6xaRTAOcfWf+pXm/VexEwfPxB7vsZoaOO8o/8NcHstyssol2
+         hz2yJ0T9K/iyCvm/AegLB4mZKP67TgK0JuI2tUTfguKx7mPXcm9TsaQPQ+RRA6fVFcsJ
+         Ml1sGidJoRozRttiQSwgmWKzItwdsz/SorArNLkshPtDNcHr0kVHJSzC+c4BScdocuI8
+         YbtIj98KBCPGnwkIsItweMFmvl//O3FKpNVSVUtVNuwyKrKGtTd77KrYp1Gqvlvv8Iue
+         5Sow==
+X-Gm-Message-State: AOAM530XJtd3GYhq5ikNqUaFXLvldDwlmIZxNCmkN5UGv4BjoEKgFAxQ
+        E0OuN7Jop3q6WuuXiVM9JJipWA==
+X-Google-Smtp-Source: ABdhPJxeWDuRfhj7W7RmVrlhoom2XQpVpwdGn2PnNXzzogrg7beHu71xLjlNVRnZ9EVTyBGEIkw/Uw==
+X-Received: by 2002:a17:902:ed53:: with SMTP id y19mr13563762plb.318.1592250162297;
+        Mon, 15 Jun 2020 12:42:42 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id m1sm264533pjr.56.2020.06.15.12.42.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2020 12:42:41 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 12:42:39 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v9 7/8] MAINTAINERS: bcm-vk: add maintainer for Broadcom VK Driver
-Date:   Mon, 15 Jun 2020 12:41:50 -0700
-Message-Id: <20200615194151.7011-8-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200615194151.7011-1-scott.branden@broadcom.com>
-References: <20200615194151.7011-1-scott.branden@broadcom.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200615194239.GW4525@google.com>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
+ <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
+ <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add maintainer entry for new Broadcom VK Driver
+On Thu, Jun 04, 2020 at 04:16:31AM -0700, Stephen Boyd wrote:
+> Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
+> > 
+> > On 6/3/2020 11:06 PM, Stephen Boyd wrote:
+> > > Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
+> > >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > >> index 1dfd024..d33ae86 100644
+> > >> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> > >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > >> @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+> > >>          return 0;
+> > >>   }
+> > >>   
+> > >> +
+> > >> +/**
+> > >> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
+> > >> + * @qcom:                      Pointer to the concerned usb core.
+> > >> + *
+> > >> + */
+> > >> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+> > >> +{
+> > >> +       struct device *dev = qcom->dev;
+> > >> +       int ret;
+> > >> +
+> > >> +       if (!device_is_bound(&qcom->dwc3->dev))
+> > >> +               return -EPROBE_DEFER;
+> > > How is this supposed to work? I see that this was added in an earlier
+> > > revision of this patch series but there isn't any mention of why
+> > > device_is_bound() is used here. It would be great if there was a comment
+> > > detailing why this is necessary. It sounds like maximum_speed is
+> > > important?
+> > >
+> > > Furthermore, dwc3_qcom_interconnect_init() is called by
+> > > dwc3_qcom_probe() which is the function that registers the device for
+> > > qcom->dwc3->dev. If that device doesn't probe between the time it is
+> > > registered by dwc3_qcom_probe() and this function is called then we'll
+> > > fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
+> > > qcom->dwc3->dev device from the platform bus because we call
+> > > of_platform_depopulate() on the error path of dwc3_qcom_probe().
+> > >
+> > > So isn't this whole thing racy and can potentially lead us to a driver
+> > > probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
+> > > and we're trying to time it just right so that driver for dwc3 binds
+> > > before we setup interconnects? I don't know if dwc3 can communicate to
+> > > the wrapper but that would be more of a direct way to do this. Or maybe
+> > > the wrapper should try to read the DT property for maximum speed and
+> > > fallback to a worst case high bandwidth value if it can't figure it out
+> > > itself without help from dwc3 core.
+> > >
+> > This was added in V4 to address comments from Matthias in V3
+> > 
+> > https://patchwork.kernel.org/patch/11148587/
+> > 
+> 
+> Yes, that why I said:
+> 
+> "I see that this was added in an earlier
+>  revision of this patch series but there isn't any mention of why
+>  device_is_bound() is used here. It would be great if there was a comment
+>  detailing why this is necessary. It sounds like maximum_speed is
+>  important?"
+> 
+> Can you please respond to the rest of my email?
 
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+I agree with Stephen that using device_is_bound() isn't a good option
+in this case, when I suggested it I wasn't looking at the big picture
+of how probing the core driver is triggered, sorry about that.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 83078661cd2b..ce29c7d0b228 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3657,6 +3657,13 @@ L:	netdev@vger.kernel.org
- S:	Supported
- F:	drivers/net/ethernet/broadcom/tg3.*
- 
-+BROADCOM VK DRIVER
-+M:	Scott Branden <scott.branden@broadcom.com>
-+L:	bcm-kernel-feedback-list@broadcom.com
-+S:	Supported
-+F:	drivers/misc/bcm-vk/
-+F:	include/uapi/linux/misc/bcm_vk.h
-+
- BROCADE BFA FC SCSI DRIVER
- M:	Anil Gurumurthy <anil.gurumurthy@qlogic.com>
- M:	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
--- 
-2.17.1
+Reading the speed from the DT with usb_get_maximum_speed() as Stephen
+suggests would be an option, the inconvenient is that we then
+essentially require the property to be defined, while the core driver
+gets a suitable value from hardware registers. Not sure if the wrapper
+driver could read from the same registers.
 
+One option could be to poll device_is_bound() for 100 ms (or so), with
+sleeps between polls. It's not elegant but would probably work if we
+don't find a better solution.
