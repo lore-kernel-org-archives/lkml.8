@@ -2,113 +2,123 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21672C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B66FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEEC1204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:06:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mJP006AL"
+	by mail.kernel.org (Postfix) with ESMTP id F0BAF206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgFOIGF (ORCPT
+        id S1728709AbgFOIGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35090 "EHLO
+        Mon, 15 Jun 2020 04:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728260AbgFOIGE (ORCPT
+        with ESMTP id S1728260AbgFOIGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:06:04 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DC93C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 01:06:04 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id y1so11868724qtv.12
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 01:06:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=y7uJRbGGvdP4YgJCKlTTB04yoKIdbZ44XdVpkWA4eLo=;
-        b=mJP006ALkTf6tZMnk0CVb/lK0d+Kiphgow+YqE9InaHh6PwPBjimUFuooivb+XgO/z
-         YJP2VsyWT6TJbHKlDdKIeAEg8Yui6RwoVxXhpfOmdRuZkqmL/Zxl18t51xd47VPlUOsd
-         QL3d86JyiZYbt5UOla/FE5BccZnXY97vwK3Ek1zSKpxuiMPjau4NLcpKgk1eYngggqXO
-         7lQBbV7aA2+JZf2K7oENSOGFTEt8iGsWY2X3AvnsMf8QE8tn7Ry/SFd3Qozyy/jQ8+tE
-         EAtylBk66FAHxyL6n0lFBxmRFF+oiqOtYrDIxl45Nv5BwHheeu4B6S+06mKi1YVckaI6
-         uQPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=y7uJRbGGvdP4YgJCKlTTB04yoKIdbZ44XdVpkWA4eLo=;
-        b=lghBZ86QPoSSSntwAmwOy8Srk7Xjymdf98O079pcdPoGiVkZcLbwwwWmkXU3gb1nx7
-         ykNyN8jSWDMaqgILsDC9Wns34T4+2xvvPkbBR0JqQfAAXiGHmSr0++lxmRA5Xktub7v/
-         kbMjWrMAi9qKbm6/SJBG90OVF+FzNhuzZbK5JQ/IC8u4hH7tRFe2yFOr54T4wLnDa0mf
-         3jRxIgdBJElVuaRCaDfaw9TJQzF6NBOvXr6TvRH+Ks5BJUUTEB6JZaE5RieZNdtEm/QJ
-         u4T+3bpqi/HcSdLJTJRZmZVpV68vjV82ZPZbn7dVjZAs9pfhDchDowLOl1Vbm2Y9V8QJ
-         kyPA==
-X-Gm-Message-State: AOAM532l8Omr2HZrLfXdqHSBn1Vz15guuOJSUo/hR+o937Zugjx2f0gy
-        0sQAXl1o9qVGmxO4Q38FaGUp8m8jIy2wgPRkTjfXLA==
-X-Google-Smtp-Source: ABdhPJzuVatKjvfNPfptZxy9khtOlStDT/4TZpiCuQrHEGqM5lJmhBgrRKpjXG+7iknxfcdBL4pKYW0yuMxvK9LiYt4=
-X-Received: by 2002:ac8:1bc1:: with SMTP id m1mr14067075qtk.57.1592208362743;
- Mon, 15 Jun 2020 01:06:02 -0700 (PDT)
+        Mon, 15 Jun 2020 04:06:31 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E9CFC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 01:06:30 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:2191:9276:807:82c1])
+        by laurent.telenet-ops.be with bizsmtp
+        id rL6V2200E4zira501L6VoG; Mon, 15 Jun 2020 10:06:29 +0200
+Received: from geert (helo=localhost)
+        by ramsan with local-esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jkk8T-0002jL-4B; Mon, 15 Jun 2020 10:06:29 +0200
+Date:   Mon, 15 Jun 2020 10:06:29 +0200 (CEST)
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+cc:     linux-kernel@vger.kernel.org
+Subject: Re: treewide: replace '---help---' in Kconfig files with 'help'
+In-Reply-To: <git-mailbomb-linux-master-a7f7f6248d9740d710fd6bd190293fe5e16410ac@kernel.org>
+Message-ID: <alpine.DEB.2.21.2006151004180.10003@ramsan.of.borg>
+References: <git-mailbomb-linux-master-a7f7f6248d9740d710fd6bd190293fe5e16410ac@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <cover.1592203542.git.mchehab+huawei@kernel.org> <97beeedde507eaeea189ae955c9f35ecf1563d6d.1592203542.git.mchehab+huawei@kernel.org>
-In-Reply-To: <97beeedde507eaeea189ae955c9f35ecf1563d6d.1592203542.git.mchehab+huawei@kernel.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 15 Jun 2020 10:05:51 +0200
-Message-ID: <CAMpxmJUyOfM3hqqEzeHzQxOYG57+ZZD-wLVYbtOaRsiNDiEfYg@mail.gmail.com>
-Subject: Re: [PATCH 08/29] gpio: driver.h: fix kernel-doc markup
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 15 cze 2020 o 08:47 Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> napisa=C5=82(a):
->
-> There is one parameter with a wrong name at kernel-doc macro:
->
-> ./include/linux/gpio/driver.h:499: warning: Function parameter or member =
-'gc' not described in 'gpiochip_add_data'
-> ./include/linux/gpio/driver.h:499: warning: Excess function parameter 'ch=
-ip' description in 'gpiochip_add_data'
->
-> Fix it.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  include/linux/gpio/driver.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index c4f272af7af5..c11261f3c724 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -481,7 +481,7 @@ extern int gpiochip_add_data_with_key(struct gpio_chi=
-p *gc, void *data,
->
->  /**
->   * gpiochip_add_data() - register a gpio_chip
-> - * @chip: the chip to register, with chip->base initialized
-> + * @gc: the chip to register, with chip->base initialized
->   * @data: driver-private data associated with this chip
->   *
->   * Context: potentially before irqs will work
-> --
-> 2.26.2
->
+ 	Hi Yamada-san,
 
-Patch applied, thanks!
+On Sat, 13 Jun 2020, Linux Kernel Mailing List wrote:
+> Commit:     a7f7f6248d9740d710fd6bd190293fe5e16410ac
+> Parent:     e4a42c82e943b97ce124539fcd7a47445b43fa0d
+> Refname:    refs/heads/master
+> Web:        https://git.kernel.org/torvalds/c/a7f7f6248d9740d710fd6bd190293fe5e16410ac
+> Author:     Masahiro Yamada <masahiroy@kernel.org>
+> AuthorDate: Sun Jun 14 01:50:22 2020 +0900
+> Committer:  Masahiro Yamada <masahiroy@kernel.org>
+> CommitDate: Sun Jun 14 01:57:21 2020 +0900
+>
+>    treewide: replace '---help---' in Kconfig files with 'help'
+>
+>    Since commit 84af7a6194e4 ("checkpatch: kconfig: prefer 'help' over
+>    '---help---'"), the number of '---help---' has been gradually
+>    decreasing, but there are still more than 2400 instances.
+>
+>    This commit finishes the conversion. While I touched the lines,
+>    I also fixed the indentation.
+>
+>    There are a variety of indentation styles found.
+>
+>      a) 4 spaces + '---help---'
+>      b) 7 spaces + '---help---'
+>      c) 8 spaces + '---help---'
+>      d) 1 space + 1 tab + '---help---'
+>      e) 1 tab + '---help---'    (correct indentation)
+>      f) 1 tab + 1 space + '---help---'
+>      g) 1 tab + 2 spaces + '---help---'
+>
+>    In order to convert all of them to 1 tab + 'help', I ran the
+>    following commend:
+>
+>      $ find . -name 'Kconfig*' | xargs sed -i 's/^[[:space:]]*---help---/\thelp/'
+>
+>    Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+> index 88b05b5256a9..1fa2fe2ef053 100644
+> --- a/arch/ia64/Kconfig
+> +++ b/arch/ia64/Kconfig
+> @@ -266,7 +266,7 @@ config PERMIT_BSP_REMOVE
+> 	bool "Support removal of Bootstrap Processor"
+> 	depends on HOTPLUG_CPU
+> 	default n
+> -	---help---
+> +	help
+> 	Say Y here if your platform SAL will support removal of BSP with HOTPLUG_CPU
+> 	support.
+>
+> @@ -274,7 +274,7 @@ config FORCE_CPEI_RETARGET
+> 	bool "Force assumption that CPEI can be re-targeted"
+> 	depends on PERMIT_BSP_REMOVE
+> 	default n
+> -	---help---
+> +	help
+> 	Say Y if you need to force the assumption that CPEI can be re-targeted to
+> 	any cpu in the system. This hint is available via ACPI 3.0 specifications.
+> 	Tiger4 systems are capable of re-directing CPEI to any CPU other than BSP.
 
-Bartosz
+I guess help text blocks like the above should be indented?
+Unfortunately there are many of them.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
