@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41889C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB832076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA512076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QsRTzAVs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u74rcC6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgFOMxy (ORCPT
+        id S1730169AbgFOMx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:53:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51204 "EHLO
+        Mon, 15 Jun 2020 08:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729955AbgFOMxb (ORCPT
+        with ESMTP id S1730133AbgFOMxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:53:31 -0400
+        Mon, 15 Jun 2020 08:53:49 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC39C05BD1E;
-        Mon, 15 Jun 2020 05:53:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D6AC05BD43;
+        Mon, 15 Jun 2020 05:53:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=LpqL9i2xKT/stdVPfY21iDNhXvNHas6++utf6Lf7se8=; b=QsRTzAVsNQPikM5ZFHeCWShrm7
-        fEPo7IdlP917xlxiMGLRVzx1WO6bcqgKsU6z73WXfeiIneXPIXLxPI0BgdML9ghbMF6S1BlK8h230
-        37zF/5QjwSwIYbRZkI5EcsVrCYmVsG9RBf/FKcUGk5dP0c1R3Lh0jcHQHK1WsrAy4gASB89YkNV7J
-        Jcq/QLKoICY8559NJV0YhH1CKF/dbMeiyMdnwseQ3BtjBoj0/mrqw3Bn/WAYRHmrFwZDPmgzJqY3V
-        QC5Lr6FciDUyi+WJqxTtjOLbWWUD6bR3dK6eY5KmFmoK3DwVPAlTyuEqY9t1eAi3/PTn9U6C1Cg8I
-        202/zG1A==;
+        bh=mVCNbeSu3qxrN9+1p35fkL75uFwlirio5U3UnojRiiI=; b=u74rcC6LUuz0mnivs/QX1Itvne
+        CbqBu8IAvoVMS5E1Zh6xE+ZBA84mYObqVxqz7MT8wMUwvlwpAd8tHB1izEkKJuqHamM/B2b10HgYV
+        302mO6FzvRIk/E5F07X2jWBh6acMzBWNcAdrxZXy3lqcX/NWOmdMP5UabHIAzo3cBCX8rNW58XrUJ
+        ZtPs42+DzdO8mfMVwURwf5J40MNivfufOKYAkV7ATqaG3BCs9XVJOIH6Vly6Jtkzn0URxlU3B1FVF
+        /V+rX7GNWu9nzmf4NkKnq6O0jm8YlXq0GfPsbD9Tr53f/FIuNigQgybUZq5wzFtl6E4a3Rvh0kB2u
+        yOmZjr4Q==;
 Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jkocE-0000m4-J6; Mon, 15 Jun 2020 12:53:30 +0000
+        id 1jkocX-0000tn-5C; Mon, 15 Jun 2020 12:53:49 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     "H. Peter Anvin" <hpa@zytor.com>, Song Liu <song@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 02/16] md: move the early init autodetect code to drivers/md/
-Date:   Mon, 15 Jun 2020 14:53:09 +0200
-Message-Id: <20200615125323.930983-3-hch@lst.de>
+Subject: [PATCH 10/16] initrd: switch initrd loading to struct file based APIs
+Date:   Mon, 15 Jun 2020 14:53:17 +0200
+Message-Id: <20200615125323.930983-11-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200615125323.930983-1-hch@lst.de>
 References: <20200615125323.930983-1-hch@lst.de>
@@ -59,130 +59,258 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like the NFS and CIFS root code this better lives with the
-driver it is tightly integrated with.
+There is no good reason to mess with file descriptors from in-kernel
+code, switch the initrd loading to struct file based read and writes
+instead.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/md/Makefile                               |  3 +++
- init/do_mounts_md.c => drivers/md/md-autodetect.c | 15 +++++++++++++--
- include/linux/raid/detect.h                       |  8 ++++++++
- init/Makefile                                     |  1 -
- init/do_mounts.c                                  |  1 +
- init/do_mounts.h                                  | 10 ----------
- 6 files changed, 25 insertions(+), 13 deletions(-)
- rename init/do_mounts_md.c => drivers/md/md-autodetect.c (96%)
+ fs/read_write.c          |  2 +-
+ include/linux/syscalls.h |  1 -
+ init/do_mounts_rd.c      | 82 ++++++++++++++++++++--------------------
+ 3 files changed, 43 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/md/Makefile b/drivers/md/Makefile
-index 31840f95cd408b..6d3e234dc46a5d 100644
---- a/drivers/md/Makefile
-+++ b/drivers/md/Makefile
-@@ -43,6 +43,9 @@ obj-$(CONFIG_MD_FAULTY)		+= faulty.o
- obj-$(CONFIG_MD_CLUSTER)	+= md-cluster.o
- obj-$(CONFIG_BCACHE)		+= bcache/
- obj-$(CONFIG_BLK_DEV_MD)	+= md-mod.o
-+ifeq ($(CONFIG_BLK_DEV_MD),y)
-+obj-y				+= md-autodetect.o
-+endif
- obj-$(CONFIG_BLK_DEV_DM)	+= dm-mod.o
- obj-$(CONFIG_BLK_DEV_DM_BUILTIN) += dm-builtin.o
- obj-$(CONFIG_DM_UNSTRIPED)	+= dm-unstripe.o
-diff --git a/init/do_mounts_md.c b/drivers/md/md-autodetect.c
-similarity index 96%
-rename from init/do_mounts_md.c
-rename to drivers/md/md-autodetect.c
-index 359363e85ccd0b..fe806f7b9759a1 100644
---- a/init/do_mounts_md.c
-+++ b/drivers/md/md-autodetect.c
-@@ -1,10 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <linux/kernel.h>
-+#include <linux/blkdev.h>
-+#include <linux/init.h>
-+#include <linux/syscalls.h>
-+#include <linux/mount.h>
-+#include <linux/major.h>
- #include <linux/delay.h>
-+#include <linux/raid/detect.h>
- #include <linux/raid/md_u.h>
- #include <linux/raid/md_p.h>
+diff --git a/fs/read_write.c b/fs/read_write.c
+index bbfa9b12b15eb7..fc1cbe2517894f 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -301,7 +301,7 @@ loff_t vfs_llseek(struct file *file, loff_t offset, int whence)
+ }
+ EXPORT_SYMBOL(vfs_llseek);
  
--#include "do_mounts.h"
--
+-off_t ksys_lseek(unsigned int fd, off_t offset, unsigned int whence)
++static off_t ksys_lseek(unsigned int fd, off_t offset, unsigned int whence)
+ {
+ 	off_t retval;
+ 	struct fd f = fdget_pos(fd);
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 7c354c2955f51e..6a078b2c442a4e 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1246,7 +1246,6 @@ int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
+ int ksys_getdents64(unsigned int fd, struct linux_dirent64 __user *dirent,
+ 		    unsigned int count);
+ int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg);
+-off_t ksys_lseek(unsigned int fd, off_t offset, unsigned int whence);
+ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
+ void ksys_sync(void);
+ int ksys_unshare(unsigned long unshare_flags);
+diff --git a/init/do_mounts_rd.c b/init/do_mounts_rd.c
+index 27b1bccf6f12a8..7b64390c075043 100644
+--- a/init/do_mounts_rd.c
++++ b/init/do_mounts_rd.c
+@@ -31,7 +31,8 @@ static int __init ramdisk_start_setup(char *str)
+ }
+ __setup("ramdisk_start=", ramdisk_start_setup);
+ 
+-static int __init crd_load(int in_fd, int out_fd, decompress_fn deco);
++static int __init crd_load(struct file *in_file, struct file *out_file,
++		decompress_fn deco);
+ 
  /*
-  * When md (and any require personalities) are compiled into the kernel
-  * (not a module), arrays can be assembles are boot time using with AUTODETECT
-@@ -114,6 +119,12 @@ static int __init md_setup(char *str)
- 	return 1;
+  * This routine tries to find a RAM disk image to load, and returns the
+@@ -53,7 +54,8 @@ static int __init crd_load(int in_fd, int out_fd, decompress_fn deco);
+  *	lz4
+  */
+ static int __init
+-identify_ramdisk_image(int fd, int start_block, decompress_fn *decompressor)
++identify_ramdisk_image(struct file *file, int start_block,
++		decompress_fn *decompressor)
+ {
+ 	const int size = 512;
+ 	struct minix_super_block *minixsb;
+@@ -64,6 +66,7 @@ identify_ramdisk_image(int fd, int start_block, decompress_fn *decompressor)
+ 	unsigned char *buf;
+ 	const char *compress_name;
+ 	unsigned long n;
++	loff_t pos;
+ 
+ 	buf = kmalloc(size, GFP_KERNEL);
+ 	if (!buf)
+@@ -78,8 +81,8 @@ identify_ramdisk_image(int fd, int start_block, decompress_fn *decompressor)
+ 	/*
+ 	 * Read block 0 to test for compressed kernel
+ 	 */
+-	ksys_lseek(fd, start_block * BLOCK_SIZE, 0);
+-	ksys_read(fd, buf, size);
++	pos = start_block * BLOCK_SIZE;
++	kernel_read(file, buf, size, &pos);
+ 
+ 	*decompressor = decompress_method(buf, size, &compress_name);
+ 	if (compress_name) {
+@@ -124,8 +127,8 @@ identify_ramdisk_image(int fd, int start_block, decompress_fn *decompressor)
+ 	/*
+ 	 * Read 512 bytes further to check if cramfs is padded
+ 	 */
+-	ksys_lseek(fd, start_block * BLOCK_SIZE + 0x200, 0);
+-	ksys_read(fd, buf, size);
++	pos = start_block * BLOCK_SIZE + 0x200;
++	kernel_read(file, buf, size, &pos);
+ 
+ 	if (cramfsb->magic == CRAMFS_MAGIC) {
+ 		printk(KERN_NOTICE
+@@ -138,8 +141,8 @@ identify_ramdisk_image(int fd, int start_block, decompress_fn *decompressor)
+ 	/*
+ 	 * Read block 1 to test for minix and ext2 superblock
+ 	 */
+-	ksys_lseek(fd, (start_block+1) * BLOCK_SIZE, 0);
+-	ksys_read(fd, buf, size);
++	pos = (start_block + 1) * BLOCK_SIZE;
++	kernel_read(file, buf, size, &pos);
+ 
+ 	/* Try minix */
+ 	if (minixsb->s_magic == MINIX_SUPER_MAGIC ||
+@@ -166,15 +169,23 @@ identify_ramdisk_image(int fd, int start_block, decompress_fn *decompressor)
+ 	       start_block);
+ 
+ done:
+-	ksys_lseek(fd, start_block * BLOCK_SIZE, 0);
+ 	kfree(buf);
+ 	return nblocks;
  }
  
-+static inline int create_dev(char *name, dev_t dev)
++static unsigned long nr_blocks(struct file *file)
 +{
-+	ksys_unlink(name);
-+	return ksys_mknod(name, S_IFBLK|0600, new_encode_dev(dev));
++	struct inode *inode = file->f_mapping->host;
++
++	if (!S_ISBLK(inode->i_mode))
++		return 0;
++	return i_size_read(inode) >> 10;
 +}
 +
- static void __init md_setup_drive(void)
+ int __init rd_load_image(char *from)
  {
- 	int minor, i, ent, partitioned;
-diff --git a/include/linux/raid/detect.h b/include/linux/raid/detect.h
-index 37dd3f40cd316e..1f029a71c3ef05 100644
---- a/include/linux/raid/detect.h
-+++ b/include/linux/raid/detect.h
-@@ -1,3 +1,11 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- 
- void md_autodetect_dev(dev_t dev);
-+
-+#ifdef CONFIG_BLK_DEV_MD
-+void md_run_setup(void);
-+#else
-+static inline void md_run_setup(void)
-+{
-+}
-+#endif
-diff --git a/init/Makefile b/init/Makefile
-index 57499b1ff4714d..6bc37f64b3617c 100644
---- a/init/Makefile
-+++ b/init/Makefile
-@@ -18,7 +18,6 @@ obj-y                          += init_task.o
- mounts-y			:= do_mounts.o
- mounts-$(CONFIG_BLK_DEV_RAM)	+= do_mounts_rd.o
- mounts-$(CONFIG_BLK_DEV_INITRD)	+= do_mounts_initrd.o
--mounts-$(CONFIG_BLK_DEV_MD)	+= do_mounts_md.o
- 
- # dependencies on generated files need to be listed explicitly
- $(obj)/version.o: include/generated/compile.h
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 29d326b6c29d2d..1a4dfa17fb2899 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -23,6 +23,7 @@
- #include <linux/nfs_fs.h>
- #include <linux/nfs_fs_sb.h>
- #include <linux/nfs_mount.h>
-+#include <linux/raid/detect.h>
- #include <uapi/linux/mount.h>
- 
- #include "do_mounts.h"
-diff --git a/init/do_mounts.h b/init/do_mounts.h
-index 7513d1c14d13fe..50d6c8941e15a1 100644
---- a/init/do_mounts.h
-+++ b/init/do_mounts.h
-@@ -41,13 +41,3 @@ bool __init initrd_load(void);
- static inline bool initrd_load(void) { return false; }
- 
+ 	int res = 0;
+-	int in_fd, out_fd;
++	struct file *in_file, *out_file;
+ 	unsigned long rd_blocks, devblocks;
+ 	int nblocks, i;
+ 	char *buf = NULL;
+@@ -184,20 +195,20 @@ int __init rd_load_image(char *from)
+ 	char rotator[4] = { '|' , '/' , '-' , '\\' };
  #endif
+ 
+-	out_fd = ksys_open("/dev/ram", O_RDWR, 0);
+-	if (out_fd < 0)
++	out_file = filp_open("/dev/ram", O_RDWR, 0);
++	if (IS_ERR(out_file))
+ 		goto out;
+ 
+-	in_fd = ksys_open(from, O_RDONLY, 0);
+-	if (in_fd < 0)
++	in_file = filp_open(from, O_RDONLY, 0);
++	if (IS_ERR(in_file))
+ 		goto noclose_input;
+ 
+-	nblocks = identify_ramdisk_image(in_fd, rd_image_start, &decompressor);
++	nblocks = identify_ramdisk_image(in_file, rd_image_start, &decompressor);
+ 	if (nblocks < 0)
+ 		goto done;
+ 
+ 	if (nblocks == 0) {
+-		if (crd_load(in_fd, out_fd, decompressor) == 0)
++		if (crd_load(in_file, out_file, decompressor) == 0)
+ 			goto successful_load;
+ 		goto done;
+ 	}
+@@ -206,11 +217,7 @@ int __init rd_load_image(char *from)
+ 	 * NOTE NOTE: nblocks is not actually blocks but
+ 	 * the number of kibibytes of data to load into a ramdisk.
+ 	 */
+-	if (ksys_ioctl(out_fd, BLKGETSIZE, (unsigned long)&rd_blocks) < 0)
+-		rd_blocks = 0;
+-	else
+-		rd_blocks >>= 1;
 -
--#ifdef CONFIG_BLK_DEV_MD
++	rd_blocks = nr_blocks(out_file);
+ 	if (nblocks > rd_blocks) {
+ 		printk("RAMDISK: image too big! (%dKiB/%ldKiB)\n",
+ 		       nblocks, rd_blocks);
+@@ -220,13 +227,10 @@ int __init rd_load_image(char *from)
+ 	/*
+ 	 * OK, time to copy in the data
+ 	 */
+-	if (ksys_ioctl(in_fd, BLKGETSIZE, (unsigned long)&devblocks) < 0)
+-		devblocks = 0;
+-	else
+-		devblocks >>= 1;
 -
--void md_run_setup(void);
--
--#else
--
--static inline void md_run_setup(void) {}
--
--#endif
+ 	if (strcmp(from, "/initrd.image") == 0)
+ 		devblocks = nblocks;
++	else
++		devblocks = nr_blocks(in_file);
+ 
+ 	if (devblocks == 0) {
+ 		printk(KERN_ERR "RAMDISK: could not determine device size\n");
+@@ -245,14 +249,11 @@ int __init rd_load_image(char *from)
+ 		if (i && (i % devblocks == 0)) {
+ 			pr_cont("done disk #1.\n");
+ 			rotate = 0;
+-			if (ksys_close(in_fd)) {
+-				printk("Error closing the disk.\n");
+-				goto noclose_input;
+-			}
++			fput(in_file);
+ 			break;
+ 		}
+-		ksys_read(in_fd, buf, BLOCK_SIZE);
+-		ksys_write(out_fd, buf, BLOCK_SIZE);
++		kernel_read(in_file, buf, BLOCK_SIZE, &in_file->f_pos);
++		kernel_write(out_file, buf, BLOCK_SIZE, &out_file->f_pos);
+ #if !defined(CONFIG_S390)
+ 		if (!(i % 16)) {
+ 			pr_cont("%c\b", rotator[rotate & 0x3]);
+@@ -265,9 +266,9 @@ int __init rd_load_image(char *from)
+ successful_load:
+ 	res = 1;
+ done:
+-	ksys_close(in_fd);
++	fput(in_file);
+ noclose_input:
+-	ksys_close(out_fd);
++	fput(out_file);
+ out:
+ 	kfree(buf);
+ 	ksys_unlink("/dev/ram");
+@@ -283,11 +284,11 @@ int __init rd_load_disk(int n)
+ 
+ static int exit_code;
+ static int decompress_error;
+-static int crd_infd, crd_outfd;
++static struct file *crd_infile, *crd_outfile;
+ 
+ static long __init compr_fill(void *buf, unsigned long len)
+ {
+-	long r = ksys_read(crd_infd, buf, len);
++	long r = kernel_read(crd_infile, buf, len, &crd_infile->f_pos);
+ 	if (r < 0)
+ 		printk(KERN_ERR "RAMDISK: error while reading compressed data");
+ 	else if (r == 0)
+@@ -297,7 +298,7 @@ static long __init compr_fill(void *buf, unsigned long len)
+ 
+ static long __init compr_flush(void *window, unsigned long outcnt)
+ {
+-	long written = ksys_write(crd_outfd, window, outcnt);
++	long written = kernel_write(crd_outfile, window, outcnt, &crd_outfile->f_pos);
+ 	if (written != outcnt) {
+ 		if (decompress_error == 0)
+ 			printk(KERN_ERR
+@@ -316,11 +317,12 @@ static void __init error(char *x)
+ 	decompress_error = 1;
+ }
+ 
+-static int __init crd_load(int in_fd, int out_fd, decompress_fn deco)
++static int __init crd_load(struct file *in_file, struct file *out_file,
++		decompress_fn deco)
+ {
+ 	int result;
+-	crd_infd = in_fd;
+-	crd_outfd = out_fd;
++	crd_infile = in_file;
++	crd_outfile = out_file;
+ 
+ 	if (!deco) {
+ 		pr_emerg("Invalid ramdisk decompression routine.  "
 -- 
 2.26.2
 
