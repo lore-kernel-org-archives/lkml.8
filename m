@@ -2,212 +2,164 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD2CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0662E208B3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592242922;
-	bh=HdnWgcJ03gAfD1VQ+kJO14dYsTkMlReWaMNpu69mPL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lKL7d1/uPZjSXyHK3XghcMGb/6GGNcQdOQa6GorSMsgHkf+LH21A8APpce+wVkHsy
-	 ErhTfywm7x1DRjKxDL+TdqVMreE0XmAypSODfhUs0LClxKAKDAeeL3Y5c8HIKqIJZT
-	 USlmPhUmRPXZV/tN6aTMOQxHyQ3Ux++8YkpfGZO0=
+	by mail.kernel.org (Postfix) with ESMTP id 07ACF20739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:42:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UcU6Mtkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731244AbgFORmA (ORCPT
+        id S1731261AbgFORmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:42:00 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46764 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729402AbgFORl7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:41:59 -0400
-Received: by mail-io1-f65.google.com with SMTP id t9so18825452ioj.13;
-        Mon, 15 Jun 2020 10:41:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qMpmhFEcqSXIab1ZqD47f2fH1FWApjPBtMrvK1o14Oo=;
-        b=qHIbs8BW6gr1Ii8LGWb6TAwskikDUASz/af2O3F6V5iXK7Hq7UQHmzWGumBPHSUZY0
-         O64KIHSXtU1JYYiOrx3af0NAestyy+FMBiYeSiKlvScC6NSlhXuhrbcJKHj5jg3/ooGH
-         cfS4FkaOl7WTckKsMQGPXP06QLbjbL9dY5Su5ddwX8TvK0L0OTphBQJA/XFs/ZPVt8S/
-         PpFCrOmpMloRUTht3Tokai2ZfAmb07w97MvHIBit2LLIrJ05WAza7S0JtPgUBEHUQKkn
-         DDJvBB2rauhQ5eMoiZQyXiUkYEs0JHN1H326zW+K/VuCKRPAhsnh4MWEwswLyuQxWNkS
-         aBrg==
-X-Gm-Message-State: AOAM530dUEN6sr4FUc4VKrLE4aVHNu6MbVRTI+02XMloO1XOfNPVgVq7
-        JTk3uRHYmO9JrLHWoXgrhw==
-X-Google-Smtp-Source: ABdhPJzbVJjmZIYFseBxe+B3y3UPFiRRE+yWGYRph4XvFAwYRcecAH80ZNK4RkoiE8qSCHQ5Rd+BYw==
-X-Received: by 2002:a05:6638:604:: with SMTP id g4mr23171216jar.80.1592242918695;
-        Mon, 15 Jun 2020 10:41:58 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t189sm8220707iod.16.2020.06.15.10.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:41:58 -0700 (PDT)
-Received: (nullmailer pid 2018089 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:41:56 -0000
-Date:   Mon, 15 Jun 2020 11:41:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     balbi@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: usb: ti,keystone-dwc3.yaml: Improve
- schema
-Message-ID: <20200615174156.GA2008179@bogus>
-References: <20200602124055.1680-1-rogerq@ti.com>
- <5f81187b-0558-3815-051b-e40685fd047a@ti.com>
+        Mon, 15 Jun 2020 13:42:10 -0400
+Received: from mail-eopbgr1320114.outbound.protection.outlook.com ([40.107.132.114]:5151
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729402AbgFORmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 13:42:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XWHLLVOfGPt5i0zR3g6Sje08UzGYEisUKMm85fCM7EjAeps/gBy3yJDzLOdzXbl/dy0Gp8xNtdnd8B7dAjVDJRPK14EN1d9PFDbAihIVjdliveRDiVFwNpZtLbl+eIjlY8fpa5Vo2T6p1dcUdRdqSTlkBQ+orROF9ACX5iTVCGgBnF+waqci/pxgu+0JIr4h/U1g2RKFawtbIe3C5LQhYTgiL6br85j8VvFf/WzyUjCursKaloZdHT9Ub22/QOtkVObPE8LOUGL6AUBgo+C2nGhjXwPAOtGZ8Td5ZZ1VVMkQJ5fjXnGjXbuB2Zx1EdSoLmtW2WXu3dE0q2fUm0L4XQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+HKLQCM6M1PsrcOyNFS7D9b+SAj6UooDQ6M+4demsZI=;
+ b=IFB4bnjiWn64nobPq5AUF5aMvKEdO8kgJ1o21N4Tlp98WwdSFEdHOaKGwv/CywKIxPll8ErnuEG+V8lzZ26cclEneAJB439ZuNiiSS8lbLo8vWJU5V9w8g91wNAeHSQMqydHXFw0N1ufkL0pFTn31QYgdjMdWcPeQGqVStuiPROsuUEIVZbsz09IbS+KlsFHeaxwAWnc019/v/0zokSGzSsbJShHPMi71xWRTdwiR4ooBM+ANsmOKgFr3uqjyKEoKpdpan2JY7k02KP1RK9dxge9UI0ic/ARchS1nkvPrpuyqRe1hR9VWajtv0LsMCGNe2IdvVRwGFuYKSDlFs8V5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+HKLQCM6M1PsrcOyNFS7D9b+SAj6UooDQ6M+4demsZI=;
+ b=UcU6MtkkkAX/vYo5j8ds4J01PgTDf49iE73MhZie91LvSniacHpN738W4dz28xXhqYk41Y+KYZaPwRUCwGooP2u8ZtFiD4wwuIGlCA8in3YWrjXq/CFErDAScXWOcQrY//Iknrx7lh9bXNBwWHeAJevT7Ag6fb3o370IHRQbxLQ=
+Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b5::19)
+ by HK2P15301MB0019.APCP153.PROD.OUTLOOK.COM (2603:1096:202:f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.15; Mon, 15 Jun
+ 2020 17:41:41 +0000
+Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e567:3a32:6574:8983]) by HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e567:3a32:6574:8983%8]) with mapi id 15.20.3131.009; Mon, 15 Jun 2020
+ 17:41:41 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>, Christoph Hellwig <hch@lst.de>
+CC:     Stephen Hemminger <stephen@networkplumber.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Ju-Hyoung Lee <juhlee@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: hv_hypercall_pg page permissios
+Thread-Topic: hv_hypercall_pg page permissios
+Thread-Index: AQHWDR+7o7IWH4OD3UKrKLNTyqpwjqjU/2DwgATGLoCAAJaLQA==
+Date:   Mon, 15 Jun 2020 17:41:40 +0000
+Message-ID: <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+References: <20200407073830.GA29279@lst.de>
+ <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net>
+ <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <87y2ooiv5k.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87y2ooiv5k.fsf@vitty.brq.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-15T17:41:38Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d684f98c-067c-4200-9ca7-0624449fed1d;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [2601:600:a280:7f70:b8fb:6bb:502d:341f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 825cd6e0-507e-489b-052d-08d811535cec
+x-ms-traffictypediagnostic: HK2P15301MB0019:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK2P15301MB0019301B700A55ACB2DBEF16BF9C0@HK2P15301MB0019.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04359FAD81
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OjlQARfMawEP4L+dVFGPt0yz5glLtMPP9SdkKfZn+c4UOPylz1s9DXlUTXWyhqOf1ZlFA8jfvm7q0oOCEFbfKGYRxI7CauuMrhqUnZFP/Y6bWzLx6VV54BfuNwCl1MVW9GWHKbV2DJ2o90i96dKrxCP2d8EzjZRaYrkP7Q+o4c9OO+Sy24HGaS3FfViPiLXMuYdHe3fHFpFWNfzeq7gCPrlPqF664SAHbkuYZ4lxWgrUV5crZ3IDwC7DXn1J4bbljzcMgl9Q0E3jVrOhn9crRW1NehW4cypw4PcuQm4ge5/9+obZYn0RFuqGmt9EUDK676BBzFcRQmknB3tvHl7hfA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0322.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(366004)(396003)(346002)(136003)(478600001)(86362001)(9686003)(8936002)(8676002)(186003)(6506007)(55016002)(8990500004)(82950400001)(82960400001)(66556008)(7116003)(71200400001)(53546011)(76116006)(66446008)(64756008)(7696005)(66476007)(66946007)(83380400001)(2906002)(52536014)(110136005)(10290500003)(54906003)(33656002)(4326008)(5660300002)(316002)(107886003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 1PAN2IelGau9wmehE0uVwPh2ZmSxc8Tqf7QTkwoR/QFSfFMbfIkp/vTgODLyb9ybA0krcKcPA3lVGu8SwDBCUzi8rtv9+ZULSMCGA2dGpQW+BY/KAkbXzGyC9bfpvxmKe7P3ghboeqZk35UR57ZtJpcm0L1R3CD+OvPxKVn4TLBDruzoeujearipaFfGOXH66qUeOoR5RDV42sg4ghqUHNpbskz2pTNEUwTerKQuv9NNYi5JPfop+fIn0vKYqsAhcdAYLVjH5Rfy0tPqi9KCcbtxFJxI+YTAoAsO15ewnAU9+xQqIvk89g5c3uH8AVN8axgXmkBicK20visLsazRtyhSfs/oEBe/GoMDvacqkQg3XP025Jiv9qcDxory+/f88P2/l35RiWFIgY4Kisq5xCIGRDhUSPR5x1lVqxLbsZ8PNHyYOJus8EgRODeXzn5+1qEQlTggjqz7/ifYd/z6JiVw+IYtGLV9st23rn6BS1o8dekCgAfQkR4fJxkMHIrdR2oO6Q1mz8FZ/hAb1dchc/EsAIY79l08+LXh1v1c3rU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f81187b-0558-3815-051b-e40685fd047a@ti.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 825cd6e0-507e-489b-052d-08d811535cec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2020 17:41:40.6987
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eHPkVpUf1CZMlC9l3dx+0fXz88JOhksWvfZA7Wpj30Gzme6eE6SJanfFsi5dT35+fkqVQlmEq8eIr6D+CtaUgA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2P15301MB0019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 10:52:15AM +0300, Roger Quadros wrote:
-> There were some review comments after the patch was integrated.
-> Address those.
-> 
-> Fixes: 1883a934e156 ("dt-bindings: usb: convert keystone-usb.txt to YAML")
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
-> 
-> Changelog:
-> v2
-> - don't use quotes for enum/const string
-> - use phandle instead of phandle-array for phys
-> - add maxItems for phy-names
-> 
->  .../bindings/usb/ti,keystone-dwc3.yaml        | 50 ++++++++++++++-----
->  1 file changed, 37 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-> index f127535feb0b..394e47d2f5d7 100644
-> --- a/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-> +++ b/Documentation/devicetree/bindings/usb/ti,keystone-dwc3.yaml
-> @@ -11,64 +11,88 @@ maintainers:
->  properties:
->    compatible:
-> -    oneOf:
-> -      - const: "ti,keystone-dwc3"
-> -      - const: "ti,am654-dwc3"
-> +    items:
-> +      - enum:
-> +        - ti,keystone-dwc3
-> +        - ti,am654-dwc3
->    reg:
->      maxItems: 1
-> -    description: Address and length of the register set for the USB subsystem on
-> -      the SOC.
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
-> +
-> +  ranges: true
-
-blank line
-
->    interrupts:
->      maxItems: 1
-> -    description: The irq number of this device that is used to interrupt the MPU.
-> -
->    clocks:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-
-Common property. It already has a type and doesn't need to be 
-redefined here.
-
-Just "maxItems: 1" if it is a single clock is enough, or an 'items' list 
-for each entry if more than 1.
-
->      description: Clock ID for USB functional clock.
-
-Drop.
-
-> +  assigned-clocks:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-
-
-> +
-> +  assigned-clock-parents:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> +
->    power-domains:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-
-Same as 'clocks'.
-
->      description: Should contain a phandle to a PM domain provider node
->        and an args specifier containing the USB device id
->        value. This property is as per the binding,
->        Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->    phys:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-
-Same as 'clocks'.
-
->      description:
->        PHY specifier for the USB3.0 PHY. Some SoCs need the USB3.0 PHY
->        to be turned on before the controller.
->        Documentation/devicetree/bindings/phy/phy-bindings.txt
->    phy-names:
-> +    maxItems: 1
->      items:
-> -      - const: "usb3-phy"
-> +      - const: usb3-phy
-
-Don't need maxItems as that's implied by the length of 'items'.
-
-> +
-> +  dma-coherent: true
-> -  dwc3:
-> +  dma-ranges: true
-> +
-> +patternProperties:
-> +  "usb@[a-f0-9]+$":
-> +    type: object
->      description: This is the node representing the DWC3 controller instance
->        Documentation/devicetree/bindings/usb/dwc3.txt
->  required:
->    - compatible
->    - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
->    - interrupts
-> -  - clocks
-> +
-> +additionalProperties: false
->  examples:
->    - |
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
-> -    usb: usb@2680000 {
-> +    dwc3@2680000 {
->        compatible = "ti,keystone-dwc3";
->        #address-cells = <1>;
->        #size-cells = <1>;
->        reg = <0x2680000 0x10000>;
->        clocks = <&clkusb>;
-> -      clock-names = "usb";
->        interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
->        ranges;
-> -      dwc3@2690000 {
-> +      usb@2690000 {
->          compatible = "synopsys,dwc3";
->          reg = <0x2690000 0x70000>;
->          interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-> 
+PiBGcm9tOiBWaXRhbHkgS3V6bmV0c292IDx2a3V6bmV0c0ByZWRoYXQuY29tPg0KPiBTZW50OiBN
+b25kYXksIEp1bmUgMTUsIDIwMjAgMTozNSBBTQ0KPiBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNyb3Nv
+ZnQuY29tPiB3cml0ZXM6DQo+IA0KPiA+PiBGcm9tOiBsaW51eC1oeXBlcnYtb3duZXJAdmdlci5r
+ZXJuZWwub3JnDQo+ID4+IDxsaW51eC1oeXBlcnYtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBC
+ZWhhbGYgT2YgQW5keSBMdXRvbWlyc2tpDQo+ID4+IFNlbnQ6IFR1ZXNkYXksIEFwcmlsIDcsIDIw
+MjAgMjowMSBQTQ0KPiA+PiA+IE9uIEFwciA3LCAyMDIwLCBhdCAxMjozOCBBTSwgQ2hyaXN0b3Bo
+IEhlbGx3aWcgPGhjaEBsc3QuZGU+IHdyb3RlOg0KPiA+PiA+DQo+ID4+ID4g77u/T24gVHVlLCBB
+cHIgMDcsIDIwMjAgYXQgMDk6Mjg6MDFBTSArMDIwMCwgVml0YWx5IEt1em5ldHNvdiB3cm90ZToN
+Cj4gPj4gPj4gQ2hyaXN0b3BoIEhlbGx3aWcgPGhjaEBsc3QuZGU+IHdyaXRlczoNCj4gPj4gPj4N
+Cj4gPj4gPj4+IEhpIGFsbCwNCj4gPj4gPj4+DQo+ID4+ID4+PiBUaGUgeDg2IEh5cGVyLVYgaHlw
+ZXJjYWxsIHBhZ2UgKGh2X2h5cGVyY2FsbF9wZykgaXMgdGhlIG9ubHkgYWxsb2NhdGlvbg0KPiA+
+PiA+Pj4gaW4gdGhlIGtlcm5lbCB1c2luZyBfX3ZtYWxsb2Mgd2l0aCBleGVjdHV0YWJsZSBwZXJz
+bWlzc2lvbnMsIGFuZCB0aGUNCj4gPj4gPj4+IG9ubHkgdXNlciBvZiBQQUdFX0tFUk5FTF9SWC4g
+IElzIHRoZXJlIGFueSBnb29kIHJlYXNvbiBpdCBuZWVkcyB0bw0KPiA+PiA+Pj4gYmUgcmVhZGFi
+bGU/ICBPdGhlcndpc2Ugd2UgY291bGQgdXNlIHZtYWxsb2NfZXhlYyBhbmQga2lsbCBvZmYNCj4g
+Pj4gPj4+IFBBR0VfS0VSTkVMX1JYLiAgTm90ZSB0aGF0IGJlZm9yZSAzNzJiMWU5MTM0M2U2ICgi
+ZHJpdmVyczogaHY6DQo+IFR1cm4NCj4gPj4gb2ZmDQo+ID4+ID4+PiB3cml0ZSBwZXJtaXNzaW9u
+IG9uIHRoZSBoeXBlcmNhbGwgcGFnZSIpIGl0IHdhcyBldmVuIG1hcHBlZCB3cml0YWJsZS4uDQo+
+ID4+ID4+DQo+ID4+ID4+IFtUaGVyZSBpcyBub3RoaW5nIHNlY3JldCBpbiB0aGUgaHlwZXJjYWxs
+IHBhZ2UsIGJ5IHJlYWRpbmcgaXQgeW91IGNhbg0KPiA+PiA+PiBmaWd1cmUgb3V0IGlmIHlvdSdy
+ZSBydW5uaW5nIG9uIEludGVsIG9yIEFNRCAoVk1DQUxML1ZNTUNBTEwpIGJ1dCBpdCdzDQo+ID4+
+ID4+IGxpa2VseSBub3QgdGhlIG9ubHkgcG9zc2libGUgd2F5IDotKV0NCj4gPj4gPj4NCj4gPj4g
+Pj4gSSBzZWUgbm8gcmVhc29uIGZvciBodl9oeXBlcmNhbGxfcGcgdG8gcmVtYWluIHJlYWRhYmxl
+LiBJIGp1c3QNCj4gPj4gPj4gc21va2UtdGVzdGVkDQo+ID4+ID4NCj4gPj4gPiBUaGFua3MsIEkg
+aGF2ZSB0aGUgc2FtZSBpbiBteSBXSVAgdHJlZSwgYnV0IGp1c3Qgd2FudGVkIHRvIGNvbmZpcm0g
+dGhpcw0KPiA+PiA+IG1ha2VzIHNlbnNlLg0KPiA+Pg0KPiA+PiBKdXN0IHRvIG1ha2Ugc3VyZSB3
+ZeKAmXJlIGFsbCBvbiB0aGUgc2FtZSBwYWdlOiB4ODYgZG9lc27igJl0IG5vcm1hbGx5IGhhdmUN
+Cj4gYW4NCj4gPj4gZXhlY3V0ZS1vbmx5IG1vZGUuIEV4ZWN1dGFibGUgbWVtb3J5IGluIHRoZSBr
+ZXJuZWwgaXMgcmVhZGFibGUgdW5sZXNzIHlvdQ0KPiA+PiBhcmUgdXNpbmcgZmFuY3kgaHlwZXJ2
+aXNvci1iYXNlZCBYTyBzdXBwb3J0Lg0KPiA+DQo+ID4gSGkgaGNoLA0KPiA+IFRoZSBwYXRjaCBp
+cyBtZXJnZWQgaW50byB0aGUgbWFpbmluZSByZWNlbnRseSwgYnV0IHVubHVja2lseSB3ZSBub3Rp
+Y2VkDQo+ID4gYSB3YXJuaW5nIHdpdGggQ09ORklHX0RFQlVHX1dYPXkgKGl0IGxvb2tzIHR5cGlj
+YWxseSB0aGlzIGNvbmZpZyBpcyBkZWZpbmVkDQo+ID4gYnkgZGVmYXVsdCBpbiBMaW51eCBkaXN0
+cm9zLCBhdCBsZWFzdCBpbiBVYnVudHUgMTguMDQncw0KPiA+IC9ib290L2NvbmZpZy00LjE4LjAt
+MTEtZ2VuZXJpYykuDQo+ID4NCj4gPiBTaG91bGQgd2UgcmV2ZXJ0IHRoaXMgcGF0Y2gsIG9yIGZp
+Z3VyZSBvdXQgYSB3YXkgdG8gYXNrIHRoZSBERUJVR19XWCBjb2RlDQo+IHRvDQo+ID4gaWdub3Jl
+IHRoaXMgcGFnZT8NCj4gPg0KPiANCj4gQXJlIHlvdSBzdXJlIGl0IGlzIGh2X2h5cGVyY2FsbF9w
+Zz8gDQpZZXMsIDEwMCUgc3VyZS4gSSBwcmludGVkIHRoZSB2YWx1ZSBvZiBodl9oeXBlcmNhbGxf
+cGcgYW5kIGFuZCBpdCBtYXRjaGVkIHRoZQ0KYWRkcmVzcyBpbiB0aGUgd2FybmluZyBsaW5lICIg
+eDg2L21tOiBGb3VuZCBpbnNlY3VyZSBXK1ggbWFwcGluZyBhdCBhZGRyZXNzIi4NCg0KPiBBRkFJ
+VSBpdCBzaG91bGRuJ3QgYmUgVytYIGFzIHdlDQo+IGFyZSBhbGxvY2F0aW5nIGl0IHdpdGggdm1h
+bGxvY19leGVjKCkuIEluIG90aGVyIHdvcmRzLCBpZiB5b3UgcmV2ZXJ0DQo+IDc4YmIxN2Y3NmVk
+YywgZG9lcyB0aGUgaXNzdWUgZ28gYXdheT8NCj4gDQo+IFZpdGFseQ0KDQpZZXMsIHRoZSB3YXJu
+aW5nIGdvZXMgYXdheSBpZiBJIHJldmVydA0KNzhiYjE3Zjc2ZWRjICgieDg2L2h5cGVydjogdXNl
+IHZtYWxsb2NfZXhlYyBmb3IgdGhlIGh5cGVyY2FsbCBwYWdlIikNCjg4ZGNhNGNhNWE5MyAoIm1t
+OiByZW1vdmUgdGhlIHBncHJvdCBhcmd1bWVudCB0byBfX3ZtYWxsb2MiKSANCihJIGhhdmUgdG8g
+cmV2ZXJ0IHRoZSBzZWNvbmQgYXMgd2VsbCB3aXRoIHNvbWUgbWFudWFsIGFkanVzdG1lbnRzLCBz
+aW5jZQ0KX192bWFsbG9jKCkgaGFzIDIgcGFyYW1ldGVycyBub3cuKQ0KDQpUaGFua3MsDQpEZXh1
+YW4NCg==
