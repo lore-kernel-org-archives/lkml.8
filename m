@@ -2,171 +2,232 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49256C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E05F206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192C72074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 14:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYWmZk35"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tMGDs1fB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgFOOBN (ORCPT
+        id S1730193AbgFOOBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 10:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33598 "EHLO
+        Mon, 15 Jun 2020 10:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgFOOBM (ORCPT
+        with ESMTP id S1730135AbgFOOBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 10:01:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC125C061A0E;
-        Mon, 15 Jun 2020 07:01:11 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id p5so17232386wrw.9;
-        Mon, 15 Jun 2020 07:01:11 -0700 (PDT)
+        Mon, 15 Jun 2020 10:01:33 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AD5EC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:01:32 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k6so1892468pll.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 07:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M7wQKWp9lNb+0zWRIHsa3B/WaoRNCApu4CB/A57cLAA=;
-        b=QYWmZk35FyUTn2ZVO/ILE+7wV0p9nKuexSfotzMLtwksG9mZT8SaHCx6GkpndBvjtv
-         ERbAhDS0UK5Yz9TmoRQaf9AosmldGH6QyEkp0UyvbFRx0MefuJnOS24MN1EaOxHx48fc
-         VMpRbQHPvoEqGP6Iep7jFFM6PR7FwGaqtkd4JqpY1dhokoBOA2oO9qAABtvkLEd79632
-         BhRLCB/7Lh1qQwhZGqWUlbMzQjD7tVzJuqtLstZyF5qaQvKxyNarA3Yv49lBBCvA0siG
-         hTf2S2/hLpoWANuEmbUXqTQVr0MJtUj7Js69HCmIeg60oFZUI/OhH/mMpbSPYxmB+zXC
-         8KEQ==
+        d=linaro.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=8ES2NVshIOgfEMCf72wvYUExToe999LpTEELFEYgbIc=;
+        b=tMGDs1fBAbWOpekLNkbLGeRxaer/gDzJk4z0CLytkTCxnH5P9sYGrEzQe8zC3xJb7I
+         f12rYbaNdXcEz0Lxpu06vzpOtKQFoI7YtEOiG0pyEoIzbcGa9e4mNicHkkMH0IojaqrZ
+         Doohf/eYCV/vrunU+4iTVvd8YAI35NsWd8mSPzoQw0x08IfabLoijEVUYnd8wbeth3+r
+         zFrS5Hl8YylmZDVE4KhdtobyJAhlPB32+hknqzvYxrQg5OirgwjX4rdt6huIFO1T8+Mi
+         0Utq3wiKizi4n/MJwPtY1csN+yvR9G+9ealXuHkxo2w1TZK0bF11/NQlUMpFcW8aMY+M
+         XQFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=M7wQKWp9lNb+0zWRIHsa3B/WaoRNCApu4CB/A57cLAA=;
-        b=gPwJOJhpGYsduILtmcYE8cKYMotw8wRSqgjZW212GS2GgS890mFqI8+SdzK8JVwVSa
-         e9FR7WUMHQaIiQxYOUfGBce5DxkDL4A4x+qdO/GSydc/xOJ4itsxBsoww3FDhGbvkz15
-         Be9x34TDtCKfuTs6DYXEKYpGjo/r8GBx/3bvb6Jzqw9oGKPK4PEgr/oClbr5A7KKdOsa
-         JGEtu9ab2Wf97qdQta8F/XvXIX9rb80QR3bW/a9XUUqEMVMbrXX/+LsnHs7D/corzx0A
-         UPp9UlnPTbScuJqmT4sGgiGtXOChAtYqii/eOMR4aiE6QPHxTKOUcngTwG0BErvd9XTc
-         obqQ==
-X-Gm-Message-State: AOAM531zv2h57VtrNFpVofIEzm7kqpAQYEDaQ5QCmqU/OH3m+idZ32sm
-        4L+7KPxL6xssh+Swio7MF9UZVTu6
-X-Google-Smtp-Source: ABdhPJy4hwrw4GC32VIHoHzNMPLIZ+ob1IM2iYpeXw/u5Ad2TzyFeOTTQE2m/CfgvzuE7W9ttFPQ/g==
-X-Received: by 2002:a5d:40d0:: with SMTP id b16mr28482081wrq.218.1592229670557;
-        Mon, 15 Jun 2020 07:01:10 -0700 (PDT)
-Received: from [192.168.43.243] ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id d17sm25697154wrg.75.2020.06.15.07.01.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 07:01:08 -0700 (PDT)
-Subject: Re: [PATCH 1/1] io_uring: fix lazy work init
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     jiufei.xue@linux.alibaba.com,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-References: <a75c1537cc655cb766e8e2517e18f74e13d60f1b.1592228129.git.asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <1d7ac6e0-a14c-a102-ad33-a3b2b1e160d4@gmail.com>
-Date:   Mon, 15 Jun 2020 16:59:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=8ES2NVshIOgfEMCf72wvYUExToe999LpTEELFEYgbIc=;
+        b=GjOK5AFfDytc+2O5lWDxeOfykEp+Quprljx3H0/LI2ZnHTQ1vnQd7if3qdQzixR/Gw
+         2UvXxXxc5dnz26rgzEFSrby3PMRjoiXXRHxM63fi/hlLyKKW1tpj8zKti8G15OcGUh9l
+         Hk209AmMG6rT00dC0TNAKrDugnYzTtw74DxBDDgJZ7M5nNEz0O9VCLOb1z4V8m1G3EMU
+         ry+jNH/pwHcROk3wN+U/g605Jo9c87rRddQu1Ihx9Yis4iqroQ6ufD1quGt2dRnfKjx7
+         GIVGtlMx3yB1t21JgKO9cidnK5OuNUspjXK9tqxQwBCFy3K4kTHqEJtLBoAProtnB3O4
+         K/7Q==
+X-Gm-Message-State: AOAM531E/YPww9V4VEeRf32HyCDQ/7lmy2PhM3dA8SxKDSOeCh4SebOQ
+        hhMfty5s5eLaVho8UtofuUE4
+X-Google-Smtp-Source: ABdhPJxvPO0BNiqVGlonkLfh0wYJeKkGOFIFSFn0SFRbCZK2iFCaXihPRZlZWxzbRuCq1qQpSAMZUg==
+X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr11644235pjq.14.1592229691691;
+        Mon, 15 Jun 2020 07:01:31 -0700 (PDT)
+Received: from ?IPv6:2409:4072:6e9c:5ed9:4574:ef47:f924:dba6? ([2409:4072:6e9c:5ed9:4574:ef47:f924:dba6])
+        by smtp.gmail.com with ESMTPSA id c9sm14246360pfp.100.2020.06.15.07.01.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 07:01:30 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 19:31:21 +0530
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200612135355.30286-11-andrey.konovalov@linaro.org>
+References: <20200612135355.30286-1-andrey.konovalov@linaro.org> <20200612135355.30286-11-andrey.konovalov@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <a75c1537cc655cb766e8e2517e18f74e13d60f1b.1592228129.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 10/10] media: i2c: imx290: set bus_type before calling v4l2_fwnode_endpoint_alloc_parse()
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>, mchehab@kernel.org,
+        sakari.ailus@iki.fi
+CC:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Message-ID: <69487D0C-D5CE-4B41-9593-A1AF7D205681@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/06/2020 16:36, Pavel Begunkov wrote:
-> Don't leave garbage in req.work before punting async on -EAGAIN
-> in io_iopoll_queue().
 
-oops, cc'ed a wrong person.
-+Cc: Xiaoguang Wang
 
-> 
-> [  140.922099] general protection fault, probably for non-canonical
->      address 0xdead000000000100: 0000 [#1] PREEMPT SMP PTI
-> ...
-> [  140.922105] RIP: 0010:io_worker_handle_work+0x1db/0x480
-> ...
-> [  140.922114] Call Trace:
-> [  140.922118]  ? __next_timer_interrupt+0xe0/0xe0
-> [  140.922119]  io_wqe_worker+0x2a9/0x360
-> [  140.922121]  ? _raw_spin_unlock_irqrestore+0x24/0x40
-> [  140.922124]  kthread+0x12c/0x170
-> [  140.922125]  ? io_worker_handle_work+0x480/0x480
-> [  140.922126]  ? kthread_park+0x90/0x90
-> [  140.922127]  ret_from_fork+0x22/0x30
-> 
-> Fixes: 7cdaf587de7c ("io_uring: avoid whole io_wq_work copy for requests
-> completed inline")
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  fs/io_uring.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 54addaba742d..410b2df16c71 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -1105,6 +1105,7 @@ static inline void io_prep_async_work(struct io_kiocb *req,
->  			req->work.flags |= IO_WQ_WORK_UNBOUND;
->  	}
->  
-> +	io_req_init_async(req);
->  	io_req_work_grab_env(req, def);
->  
->  	*link = io_prep_linked_timeout(req);
-> 
+On 12 June 2020 7:23:55 PM IST, Andrey Konovalov <andrey=2Ekonovalov@linar=
+o=2Eorg> wrote:
+>The bus_type field of v4l2_fwnode_endpoint structure passed as the
+>argument
+>to v4l2_fwnode_endpoint_alloc_parse() function must be initiaized=2E
+>Set it to V4L2_MBUS_CSI2_DPHY, and check for -ENXIO which is returned
+>when the requested media bus type doesn't match the fwnode=2E
+>
+>Also remove v4l2_fwnode_endpoint field from struct imx290 as it is only
+>needed in the probe function: use the local variable for this purpose=2E
+>
+>Signed-off-by: Andrey Konovalov <andrey=2Ekonovalov@linaro=2Eorg>
 
--- 
-Pavel Begunkov
+Reviewed-by: Manivannan Sadhasivam <manivannan=2Esadhasivam@linaro=2Eorg>
+
+Wondering if we need to tag fixes for this patch!
+
+Thanks,=20
+Mani
+
+>---
+> drivers/media/i2c/imx290=2Ec | 38 +++++++++++++++++++-------------------
+> 1 file changed, 19 insertions(+), 19 deletions(-)
+>
+>diff --git a/drivers/media/i2c/imx290=2Ec b/drivers/media/i2c/imx290=2Ec
+>index 02001c1b0dfc=2E=2E9c97830164e9 100644
+>--- a/drivers/media/i2c/imx290=2Ec
+>+++ b/drivers/media/i2c/imx290=2Ec
+>@@ -70,7 +70,6 @@ struct imx290 {
+> 	u8 bpp;
+>=20
+> 	struct v4l2_subdev sd;
+>-	struct v4l2_fwnode_endpoint ep;
+> 	struct media_pad pad;
+> 	struct v4l2_mbus_framefmt current_format;
+> 	const struct imx290_mode *current_mode;
+>@@ -914,17 +913,18 @@ static const struct media_entity_operations
+>imx290_subdev_entity_ops =3D {
+>* of MIPI data lanes are mentioned in the device tree, or the value of
+>the
+>  * first missing frequency otherwise=2E
+>  */
+>-static s64 imx290_check_link_freqs(const struct imx290 *imx290)
+>+static s64 imx290_check_link_freqs(const struct imx290 *imx290,
+>+				   const struct v4l2_fwnode_endpoint *ep)
+> {
+> 	int i, j;
+> 	const s64 *freqs =3D imx290_link_freqs_ptr(imx290);
+> 	int freqs_count =3D imx290_link_freqs_num(imx290);
+>=20
+> 	for (i =3D 0; i < freqs_count; i++) {
+>-		for (j =3D 0; j < imx290->ep=2Enr_of_link_frequencies; j++)
+>-			if (freqs[i] =3D=3D imx290->ep=2Elink_frequencies[j])
+>+		for (j =3D 0; j < ep->nr_of_link_frequencies; j++)
+>+			if (freqs[i] =3D=3D ep->link_frequencies[j])
+> 				break;
+>-		if (j =3D=3D imx290->ep=2Enr_of_link_frequencies)
+>+		if (j =3D=3D ep->nr_of_link_frequencies)
+> 			return freqs[i];
+> 	}
+> 	return 0;
+>@@ -934,6 +934,10 @@ static int imx290_probe(struct i2c_client *client)
+> {
+> 	struct device *dev =3D &client->dev;
+> 	struct fwnode_handle *endpoint;
+>+	/* Only CSI2 is supported for now: */
+>+	struct v4l2_fwnode_endpoint ep =3D {
+>+		=2Ebus_type =3D V4L2_MBUS_CSI2_DPHY
+>+	};
+> 	struct imx290 *imx290;
+> 	u32 xclk_freq;
+> 	s64 fq;
+>@@ -956,15 +960,18 @@ static int imx290_probe(struct i2c_client
+>*client)
+> 		return -EINVAL;
+> 	}
+>=20
+>-	ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, &imx290->ep);
+>+	ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
+> 	fwnode_handle_put(endpoint);
+>-	if (ret) {
+>+	if (ret =3D=3D -ENXIO) {
+>+		dev_err(dev, "Unsupported bus type, should be CSI2\n");
+>+		goto free_err;
+>+	} else if (ret) {
+> 		dev_err(dev, "Parsing endpoint node failed\n");
+> 		goto free_err;
+> 	}
+>=20
+> 	/* Get number of data lanes */
+>-	imx290->nlanes =3D imx290->ep=2Ebus=2Emipi_csi2=2Enum_data_lanes;
+>+	imx290->nlanes =3D ep=2Ebus=2Emipi_csi2=2Enum_data_lanes;
+> 	if (imx290->nlanes !=3D 2 && imx290->nlanes !=3D 4) {
+> 		dev_err(dev, "Invalid data lanes: %d\n", imx290->nlanes);
+> 		ret =3D -EINVAL;
+>@@ -973,27 +980,20 @@ static int imx290_probe(struct i2c_client
+>*client)
+>=20
+> 	dev_dbg(dev, "Using %u data lanes\n", imx290->nlanes);
+>=20
+>-	if (!imx290->ep=2Enr_of_link_frequencies) {
+>+	if (!ep=2Enr_of_link_frequencies) {
+> 		dev_err(dev, "link-frequency property not found in DT\n");
+> 		ret =3D -EINVAL;
+> 		goto free_err;
+> 	}
+>=20
+> 	/* Check that link frequences for all the modes are in device tree */
+>-	fq =3D imx290_check_link_freqs(imx290);
+>+	fq =3D imx290_check_link_freqs(imx290, &ep);
+> 	if (fq) {
+> 		dev_err(dev, "Link frequency of %lld is not supported\n", fq);
+> 		ret =3D -EINVAL;
+> 		goto free_err;
+> 	}
+>=20
+>-	/* Only CSI2 is supported for now */
+>-	if (imx290->ep=2Ebus_type !=3D V4L2_MBUS_CSI2_DPHY) {
+>-		dev_err(dev, "Unsupported bus type, should be CSI2\n");
+>-		ret =3D -EINVAL;
+>-		goto free_err;
+>-	}
+>-
+> 	/* get system clock (xclk) */
+> 	imx290->xclk =3D devm_clk_get(dev, "xclk");
+> 	if (IS_ERR(imx290->xclk)) {
+>@@ -1108,7 +1108,7 @@ static int imx290_probe(struct i2c_client
+>*client)
+> 	pm_runtime_enable(dev);
+> 	pm_runtime_idle(dev);
+>=20
+>-	v4l2_fwnode_endpoint_free(&imx290->ep);
+>+	v4l2_fwnode_endpoint_free(&ep);
+>=20
+> 	return 0;
+>=20
+>@@ -1118,7 +1118,7 @@ static int imx290_probe(struct i2c_client
+>*client)
+> 	v4l2_ctrl_handler_free(&imx290->ctrls);
+> 	mutex_destroy(&imx290->lock);
+> free_err:
+>-	v4l2_fwnode_endpoint_free(&imx290->ep);
+>+	v4l2_fwnode_endpoint_free(&ep);
+>=20
+> 	return ret;
+> }
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
