@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A04DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 106542067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2014D20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203752;
-	bh=WPe7/bYjKlBgbB2jve3JvxrAVd0G2R+iB0dbw6y3t5o=;
+	s=default; t=1592203755;
+	bh=sTFjDVFNxvaxYL1XIBkVBYNkDxJgnmCW7W2tRtvvhLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bknOuOQ//iB6pv3anumOMWyefW+KUuQBGja8DPhk+y9YDevub3S8HJjgykbhAht2I
-	 1Wv/JuQxoJE/AWe5teDWkqGQSQToOq43M/oLralFPrwUiiMPfbisyfoCNcfzw2r7nA
-	 WMc2dLcRp2dAvUnG1S8/5mvvFr+TLhnaXvfyA5NI=
+	b=YkKvZDxpdJIcGcfny59bKHo9znkwdQWYiVreF8/xbu/XwdehWPVMNN+kO7gwmYC8L
+	 3KWuVBrpIuFwyyulDoyW5sUVP3PqZ6BUV66dzauI+R0d1cc3MY93hyk6/RIOG5zzKw
+	 ot+qA/DLAUzRZKyDuqMWWft6k7y0zJ0cM1u6IEAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgFOGtK (ORCPT
+        id S1728767AbgFOGtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59952 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:49:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbgFOGrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728454AbgFOGrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Jun 2020 02:47:13 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA8D920899;
-        Mon, 15 Jun 2020 06:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BF52208B3;
+        Mon, 15 Jun 2020 06:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592203632;
-        bh=WPe7/bYjKlBgbB2jve3JvxrAVd0G2R+iB0dbw6y3t5o=;
+        bh=sTFjDVFNxvaxYL1XIBkVBYNkDxJgnmCW7W2tRtvvhLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPyCV8IGIfHhToINSgCHTx4MPNtSCMHYGFK94virHPa0vJW1MT2EZ1d+2+SGIN32l
-         Kn1A2N7d+13JN31Eoedept+vFEq5NIngvHa2uV+IaelYouYhOFT57d+4aPVYlFLR0Y
-         AFULx1U2H5zUClAKUZsADTGQE3fGj4LKqVRtmAmo=
+        b=ICoImG8MfZOxFPF4J9t5PiRfFS02yMYiYen8UYtYGTH/6L+bBsLSvJ57bf3MBjHVp
+         Sqw/BUN+7pWxD2uMhLQg+R5NO9c/+0XeHuc0baGjOvfeaofkbPrlNjvLyIhxC7eOBT
+         f993jZxvSg8IZTHnBu0AQJOhbhZBhrRpWf3wfRjM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jkith-009nmj-Oq; Mon, 15 Jun 2020 08:47:09 +0200
+        id 1jkith-009nn5-To; Mon, 15 Jun 2020 08:47:09 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 12/29] dt: update a reference for reneases pcar file renamed to yaml
-Date:   Mon, 15 Jun 2020 08:46:51 +0200
-Message-Id: <72d7ec91a60e852d34f3e15bc5faef1f62a8260e.1592203542.git.mchehab+huawei@kernel.org>
+        Shuah Khan <shuah@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Sandipan Das <sandipan@linux.ibm.com>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH 16/29] selftests/vm/keys: fix a broken reference at protection_keys.c
+Date:   Mon, 15 Jun 2020 08:46:55 +0200
+Message-Id: <8f0e19f790d5ac3beeea2b77f14f3afe538f7708.1592203542.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592203542.git.mchehab+huawei@kernel.org>
 References: <cover.1592203542.git.mchehab+huawei@kernel.org>
@@ -66,28 +66,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file was renamed, but its reference at pfc-pinctl.txt is
-still pointing to the old file.
+Changeset 1eecbcdca2bd ("docs: move protection-keys.rst to the core-api book")
+from Jun 7, 2019 converted protection-keys.txt file to ReST.
 
-Fixes: 7f7d408e5a00 ("dt-bindings: gpio: rcar: Convert to json-schema")
+A recent change at protection_keys.c partially reverted such
+changeset, causing it to point to a non-existing file:
+
+	- * Tests x86 Memory Protection Keys (see Documentation/core-api/protection-keys.rst)
+	+ * Tests Memory Protection Keys (see Documentation/vm/protection-keys.txt)
+
+It sounds to me that the changeset that introduced such change
+4645e3563673 ("selftests/vm/pkeys: rename all references to pkru to a generic name")
+could also have other side effects, as it sounds that it was not
+generated against uptream code, but, instead, against a version
+older than Jun 7, 2019.
+
+Fixes: 4645e3563673 ("selftests/vm/pkeys: rename all references to pkru to a generic name")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt         | 2 +-
+ tools/testing/selftests/vm/protection_keys.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index b68613188c19..1b8e8b4a6379 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -114,7 +114,7 @@ with values derived from the SoC user manual.
-    [flags]>
- 
- On other mach-shmobile platforms GPIO is handled by the gpio-rcar driver.
--Please refer to Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+Please refer to Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
- for documentation of the GPIO device tree bindings on those platforms.
- 
- 
+diff --git a/tools/testing/selftests/vm/protection_keys.c b/tools/testing/selftests/vm/protection_keys.c
+index fc19addcb5c8..fdbb602ecf32 100644
+--- a/tools/testing/selftests/vm/protection_keys.c
++++ b/tools/testing/selftests/vm/protection_keys.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Tests Memory Protection Keys (see Documentation/vm/protection-keys.txt)
++ * Tests Memory Protection Keys (see Documentation/core-api/protection-keys.rst)
+  *
+  * There are examples in here of:
+  *  * how to set protection keys on memory
 -- 
 2.26.2
 
