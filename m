@@ -2,529 +2,220 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA62C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00E5920679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62306207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:06:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vxuv+kmC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0VOVV+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbgFOQEX (ORCPT
+        id S1730595AbgFOQF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729792AbgFOQEU (ORCPT
+        Mon, 15 Jun 2020 12:05:59 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52030 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729599AbgFOQF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:04:20 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F92C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:04:20 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r15so94793wmh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:04:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aXjxepnjjatFsj/BNH3gly6nWmkYuW6nwfvtGhq8YZw=;
-        b=Vxuv+kmCzlOCCD03KGA9dJVsQc5ER3NVpNueUmZm70ZzJsRr2JQCgaADd0AwNXgnWp
-         xMMSRFZb1lMxW0V+KLodupa7Ums2Os8FpskFcdvbxzplFGTmISGjxI6GiciRYYY15gs/
-         hxm4KnDSYCLUPeQlMEkuW6iCrzyJoV4YReQXxmzw7MPI0ctwtq2qoxbSfJ+x62xgg6e1
-         w+zHGWcH5GTcyIp2b6G9f/OD8uZrR/QKlqNGL3m5AfghFpW8pJIoVE0B2FktjZ3prEQT
-         H5m80GR3j8UfBzVhyT52SUmurtItmJ7aHPzkNff+cnl1I6agnsOCDSf9W+wtKqdPodUv
-         WATg==
+        Mon, 15 Jun 2020 12:05:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592237155;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EtKo6KVBT8F3Afdkrt4T9djjz+Jv9Qwx4Oz3C76nT6k=;
+        b=Q0VOVV+BeGFyvluFE+qtIzI+bt8ByBmWLYSpkfdCF8SgE1JdVEw0iGxBiGgFFsBPiGvVZV
+        oYTt0doiKT3rAdGJYp5p1H+G157amEOs9Z6SfvmvhLfUbugR/1A3IrI/VPSWcxD5u3VcFK
+        +AVUbWaY+CGre0uwWPRJIJksG17GTHI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-ophkZyGeNdK7sFNV0FdxKw-1; Mon, 15 Jun 2020 12:05:53 -0400
+X-MC-Unique: ophkZyGeNdK7sFNV0FdxKw-1
+Received: by mail-wr1-f72.google.com with SMTP id w16so7202639wru.18
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 09:05:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aXjxepnjjatFsj/BNH3gly6nWmkYuW6nwfvtGhq8YZw=;
-        b=d8XIhw7mZ9wlJFq7iqI+mwJSZ2Bjcci/zPoU0YXUEPov/AbyvcaC8UvOIIAiSRRpKT
-         ya18GKMdfzp3ECM76mIENYbm7stM4EdyGEB6Z/Q+ImpGTckybeIh/SqPd/EUr6NZhVmP
-         FU3b85uHSD6DqwaSHfczdAfK4EQS+10sRbifff8Jfnv4rW6LgukRlxCQ+rDQcopt3zNj
-         uK3xxew3ntrYRJyVOD2yJFRBtWaTsEP8ats8ZVNLIh2FMXiJwGUy1yZp6Mz1Ev+e23Nr
-         bq3eni/sfv0R8jGd9MVnHmC9nzUc0+AmjL2CMfmtWFRrOyvwXizVUMctvYP09ZsNOiD+
-         dysA==
-X-Gm-Message-State: AOAM530YR7JlK5j9bMsK579tZ+nUK9DfxWBjiVt9EEVK3nzhamZzojFp
-        wj0bs5Ztd5MgT4mzYQ+9+qko5u4Zu38=
-X-Google-Smtp-Source: ABdhPJy1JvlFJcaanlDxu9RqyjFLZ2UvS51Gwery7ItNOQYHY+YUHLvzZ8EqOLSYNRNH38lwlvY6vw==
-X-Received: by 2002:a1c:e90a:: with SMTP id q10mr34864wmc.140.1592237058544;
-        Mon, 15 Jun 2020 09:04:18 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id v28sm27762728wra.77.2020.06.15.09.04.16
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EtKo6KVBT8F3Afdkrt4T9djjz+Jv9Qwx4Oz3C76nT6k=;
+        b=tJGxTj7C3iVASSrNoaEw7woi2M/4NOnsiTnPGAO/I5lCwh5SE/kA80ygqPTLEzVQR4
+         rwHegFnGq0Dcx0+bo33gwudYujo5BM7RHEd7HelGW24CttEOvwHbKkdbjAGwoyQ6nHrJ
+         8GvXxCGNQV7qt0m/V9vXubwiTTf150Keo9cparFzdnjNX+eL5+b9fnaS+GIkA0qU0WXc
+         AdT7FcVunRw4wp+q0QSN5JdwHp31l13Cm/f+WzN2fKknkh9yYIHUiuyQtFbdQ9BowYte
+         3puKWMp2jBTZeX93Z7wnNn2Lp/xX6z/DP+m3L8N5wQuwp+9HfSmBNyUhVI+y0MXiD5nw
+         7ViA==
+X-Gm-Message-State: AOAM53191C6FKRHb7zxHQQaP6d+ZF2A+1alw7clqP95xh+s3w+IEvwNo
+        l8Yy7g0ziX9PaD3UD05Moz+B4astPJUAv09+G7u0yFn2d1Z6fPAYVRVCS4lKFEdLaWo8JktMvlO
+        vAY/OXYk+snOJ3uRFx3+rEN3Y
+X-Received: by 2002:adf:ab09:: with SMTP id q9mr28781406wrc.79.1592237151208;
+        Mon, 15 Jun 2020 09:05:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxpIXgP9Ms+ZJpzoVE6mikNA364JTxrGxpUv0kJTDAr0AwoXyKEIdRdb45S5SHiSsNwq06UYw==
+X-Received: by 2002:adf:ab09:: with SMTP id q9mr28781381wrc.79.1592237150934;
+        Mon, 15 Jun 2020 09:05:50 -0700 (PDT)
+Received: from eperezma.remote.csb (92.143.221.87.dynamic.jazztel.es. [87.221.143.92])
+        by smtp.gmail.com with ESMTPSA id k64sm6548wmf.34.2020.06.15.09.05.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 09:04:17 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 17:04:15 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, paulmck@kernel.org, frederic@kernel.org,
-        tsbogend@alpha.franken.de, axboe@kernel.dk, rjw@rjwysocki.net,
-        daniel.lezcano@linaro.org, dchickles@marvell.com,
-        davem@davemloft.net, kuba@kernel.org, gerald.schaefer@de.ibm.com
-Subject: Re: [PATCH 6/6] smp: Cleanup smp_call_function*()
-Message-ID: <20200615160415.3esh2pdenzrjvmar@holly.lan>
-References: <20200615125654.678940605@infradead.org>
- <20200615131143.434079683@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615131143.434079683@infradead.org>
+        Mon, 15 Jun 2020 09:05:50 -0700 (PDT)
+Message-ID: <26bef3f07277b028034c019e456b4f236078c5fb.camel@redhat.com>
+Subject: Re: [PATCH RFC v7 03/14] vhost: use batched get_vq_desc version
+From:   Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>
+Date:   Mon, 15 Jun 2020 18:05:48 +0200
+In-Reply-To: <20200611072702-mutt-send-email-mst@kernel.org>
+References: <20200610113515.1497099-1-mst@redhat.com>
+         <20200610113515.1497099-4-mst@redhat.com>
+         <CAJaqyWdGKh5gSTndGuVPyJSgt3jfjfW4xNCrJ2tQ9f+mD8=sMQ@mail.gmail.com>
+         <20200610111147-mutt-send-email-mst@kernel.org>
+         <CAJaqyWe6d19hFAbpqaQqOPuQQmBQyevyF4sTVkaXKhD729XDkw@mail.gmail.com>
+         <20200611072702-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-6.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 02:57:00PM +0200, Peter Zijlstra wrote:
-> Get rid of the __call_single_node union and cleanup the API a little
-> to avoid external code relying on the structure layout as much.
+On Thu, 2020-06-11 at 07:30 -0400, Michael S. Tsirkin wrote:
+> On Wed, Jun 10, 2020 at 06:18:32PM +0200, Eugenio Perez Martin wrote:
+> > On Wed, Jun 10, 2020 at 5:13 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > On Wed, Jun 10, 2020 at 02:37:50PM +0200, Eugenio Perez Martin wrote:
+> > > > > +/* This function returns a value > 0 if a descriptor was found, or 0 if none were found.
+> > > > > + * A negative code is returned on error. */
+> > > > > +static int fetch_descs(struct vhost_virtqueue *vq)
+> > > > > +{
+> > > > > +       int ret;
+> > > > > +
+> > > > > +       if (unlikely(vq->first_desc >= vq->ndescs)) {
+> > > > > +               vq->first_desc = 0;
+> > > > > +               vq->ndescs = 0;
+> > > > > +       }
+> > > > > +
+> > > > > +       if (vq->ndescs)
+> > > > > +               return 1;
+> > > > > +
+> > > > > +       for (ret = 1;
+> > > > > +            ret > 0 && vq->ndescs <= vhost_vq_num_batch_descs(vq);
+> > > > > +            ret = fetch_buf(vq))
+> > > > > +               ;
+> > > > 
+> > > > (Expanding comment in V6):
+> > > > 
+> > > > We get an infinite loop this way:
+> > > > * vq->ndescs == 0, so we call fetch_buf() here
+> > > > * fetch_buf gets less than vhost_vq_num_batch_descs(vq); descriptors. ret = 1
+> > > > * This loop calls again fetch_buf, but vq->ndescs > 0 (and avail_vq ==
+> > > > last_avail_vq), so it just return 1
+> > > 
+> > > That's what
+> > >          [PATCH RFC v7 08/14] fixup! vhost: use batched get_vq_desc version
+> > > is supposed to fix.
+> > > 
+> > 
+> > Sorry, I forgot to include that fixup.
+> > 
+> > With it I don't see CPU stalls, but with that version latency has
+> > increased a lot and I see packet lost:
+> > + ping -c 5 10.200.0.1
+> > PING 10.200.0.1 (10.200.0.1) 56(84) bytes of data.
+> > > From 10.200.0.2 icmp_seq=1 Destination Host Unreachable
+> > > From 10.200.0.2 icmp_seq=2 Destination Host Unreachable
+> > > From 10.200.0.2 icmp_seq=3 Destination Host Unreachable
+> > 64 bytes from 10.200.0.1: icmp_seq=5 ttl=64 time=6848 ms
+> > 
+> > --- 10.200.0.1 ping statistics ---
+> > 5 packets transmitted, 1 received, +3 errors, 80% packet loss, time 76ms
+> > rtt min/avg/max/mdev = 6848.316/6848.316/6848.316/0.000 ms, pipe 4
+> > --
+> > 
+> > I cannot even use netperf.
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-For kgdb,
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-
-Daniel.
-
-
-> ---
->  arch/mips/kernel/process.c                      |    3 -
->  arch/mips/kernel/smp.c                          |   24 +++-----------
->  arch/s390/pci/pci_irq.c                         |    4 --
->  arch/x86/kernel/cpuid.c                         |    5 ---
->  arch/x86/lib/msr-smp.c                          |    5 ---
->  block/blk-mq.c                                  |    4 --
->  block/blk-softirq.c                             |    9 +----
->  drivers/cpuidle/coupled.c                       |    3 -
->  drivers/net/ethernet/cavium/liquidio/lio_core.c |    9 +----
->  include/linux/smp.h                             |   11 ++----
->  kernel/debug/debug_core.c                       |    5 +--
->  kernel/sched/core.c                             |   12 +------
->  kernel/smp.c                                    |   40 ++++++++++++------------
->  net/core/dev.c                                  |    3 -
->  14 files changed, 44 insertions(+), 93 deletions(-)
-> 
-> --- a/arch/mips/kernel/process.c
-> +++ b/arch/mips/kernel/process.c
-> @@ -686,7 +686,7 @@ unsigned long arch_align_stack(unsigned
->  	return sp & ALMASK;
->  }
->  
-> -static DEFINE_PER_CPU(call_single_data_t, backtrace_csd);
-> +static DEFINE_PER_CPU(call_single_data_t, backtrace_csd) = CSD_INIT(handle_backtrace, NULL);
->  static struct cpumask backtrace_csd_busy;
->  
->  static void handle_backtrace(void *info)
-> @@ -714,7 +714,6 @@ static void raise_backtrace(cpumask_t *m
->  		}
->  
->  		csd = &per_cpu(backtrace_csd, cpu);
-> -		csd->func = handle_backtrace;
->  		smp_call_function_single_async(cpu, csd);
->  	}
->  }
-> --- a/arch/mips/kernel/smp.c
-> +++ b/arch/mips/kernel/smp.c
-> @@ -687,36 +687,22 @@ EXPORT_SYMBOL(flush_tlb_one);
->  
->  #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
->  
-> -static DEFINE_PER_CPU(call_single_data_t, tick_broadcast_csd);
-> -
-> -void tick_broadcast(const struct cpumask *mask)
-> -{
-> -	call_single_data_t *csd;
-> -	int cpu;
-> -
-> -	for_each_cpu(cpu, mask) {
-> -		csd = &per_cpu(tick_broadcast_csd, cpu);
-> -		smp_call_function_single_async(cpu, csd);
-> -	}
-> -}
-> -
->  static void tick_broadcast_callee(void *info)
->  {
->  	tick_receive_broadcast();
->  }
->  
-> -static int __init tick_broadcast_init(void)
-> +static DEFINE_PER_CPU(call_single_data_t, tick_broadcast_csd) = CSD_INIT(tick_broadcast_callee, NULL);
-> +
-> +void tick_broadcast(const struct cpumask *mask)
->  {
->  	call_single_data_t *csd;
->  	int cpu;
->  
-> -	for (cpu = 0; cpu < NR_CPUS; cpu++) {
-> +	for_each_cpu(cpu, mask) {
->  		csd = &per_cpu(tick_broadcast_csd, cpu);
-> -		csd->func = tick_broadcast_callee;
-> +		smp_call_function_single_async(cpu, csd);
->  	}
-> -
-> -	return 0;
->  }
-> -early_initcall(tick_broadcast_init);
->  
->  #endif /* CONFIG_GENERIC_CLOCKEVENTS_BROADCAST */
-> --- a/arch/s390/pci/pci_irq.c
-> +++ b/arch/s390/pci/pci_irq.c
-> @@ -178,9 +178,7 @@ static void zpci_handle_fallback_irq(voi
->  		if (atomic_inc_return(&cpu_data->scheduled) > 1)
->  			continue;
->  
-> -		cpu_data->csd.func = zpci_handle_remote_irq;
-> -		cpu_data->csd.info = &cpu_data->scheduled;
-> -		cpu_data->csd.flags = 0;
-> +		cpu_data->csd = CSD_INIT(zpci_handle_remote_irq, &cpu_data->scheduled);
->  		smp_call_function_single_async(cpu, &cpu_data->csd);
->  	}
->  }
-> --- a/arch/x86/kernel/cpuid.c
-> +++ b/arch/x86/kernel/cpuid.c
-> @@ -74,10 +74,7 @@ static ssize_t cpuid_read(struct file *f
->  
->  	init_completion(&cmd.done);
->  	for (; count; count -= 16) {
-> -		call_single_data_t csd = {
-> -			.func = cpuid_smp_cpuid,
-> -			.info = &cmd,
-> -		};
-> +		call_single_data_t csd = CSD_INIT(cpuid_smp_cpuid, &cmd);
->  
->  		cmd.regs.eax = pos;
->  		cmd.regs.ecx = pos >> 32;
-> --- a/arch/x86/lib/msr-smp.c
-> +++ b/arch/x86/lib/msr-smp.c
-> @@ -169,10 +169,7 @@ static void __wrmsr_safe_on_cpu(void *in
->  int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h)
->  {
->  	struct msr_info_completion rv;
-> -	call_single_data_t csd = {
-> -		.func	= __rdmsr_safe_on_cpu,
-> -		.info	= &rv,
-> -	};
-> +	call_single_data_t csd = CSD_INIT(__rdmsr_safe_on_cpu, &rv);
->  	int err;
->  
->  	memset(&rv, 0, sizeof(rv));
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -629,9 +629,7 @@ void blk_mq_force_complete_rq(struct req
->  		shared = cpus_share_cache(cpu, ctx->cpu);
->  
->  	if (cpu != ctx->cpu && !shared && cpu_online(ctx->cpu)) {
-> -		rq->csd.func = __blk_mq_complete_request_remote;
-> -		rq->csd.info = rq;
-> -		rq->csd.flags = 0;
-> +		rq->csd = CSD_INIT(__blk_mq_complete_request_remote, rq);
->  		smp_call_function_single_async(ctx->cpu, &rq->csd);
->  	} else {
->  		q->mq_ops->complete(rq);
-> --- a/block/blk-softirq.c
-> +++ b/block/blk-softirq.c
-> @@ -57,13 +57,8 @@ static void trigger_softirq(void *data)
->  static int raise_blk_irq(int cpu, struct request *rq)
->  {
->  	if (cpu_online(cpu)) {
-> -		call_single_data_t *data = &rq->csd;
-> -
-> -		data->func = trigger_softirq;
-> -		data->info = rq;
-> -		data->flags = 0;
-> -
-> -		smp_call_function_single_async(cpu, data);
-> +		rq->csd = CSD_INIT(trigger_softirq, rq);
-> +		smp_call_function_single_async(cpu, &rq->csd);
->  		return 0;
->  	}
->  
-> --- a/drivers/cpuidle/coupled.c
-> +++ b/drivers/cpuidle/coupled.c
-> @@ -674,8 +674,7 @@ int cpuidle_coupled_register_device(stru
->  	coupled->refcnt++;
->  
->  	csd = &per_cpu(cpuidle_coupled_poke_cb, dev->cpu);
-> -	csd->func = cpuidle_coupled_handle_poke;
-> -	csd->info = (void *)(unsigned long)dev->cpu;
-> +	*csd = CSD_INIT(cpuidle_coupled_handle_poke, (void *)(unsigned long)dev->cpu);
->  
->  	return 0;
->  }
-> --- a/drivers/net/ethernet/cavium/liquidio/lio_core.c
-> +++ b/drivers/net/ethernet/cavium/liquidio/lio_core.c
-> @@ -726,13 +726,8 @@ static void liquidio_napi_drv_callback(v
->  	    droq->cpu_id == this_cpu) {
->  		napi_schedule_irqoff(&droq->napi);
->  	} else {
-> -		call_single_data_t *csd = &droq->csd;
-> -
-> -		csd->func = napi_schedule_wrapper;
-> -		csd->info = &droq->napi;
-> -		csd->flags = 0;
-> -
-> -		smp_call_function_single_async(droq->cpu_id, csd);
-> +		droq->csd = CSD_INIT(napi_schedule_wrapper, &droq->napi);
-> +		smp_call_function_single_async(droq->cpu_id, &droq->csd);
->  	}
->  }
->  
-> --- a/include/linux/smp.h
-> +++ b/include/linux/smp.h
-> @@ -21,17 +21,14 @@ typedef bool (*smp_cond_func_t)(int cpu,
->   * structure shares (partial) layout with struct irq_work
->   */
->  struct __call_single_data {
-> -	union {
-> -		struct __call_single_node node;
-> -		struct {
-> -			struct llist_node llist;
-> -			unsigned int flags;
-> -		};
-> -	};
-> +	struct __call_single_node node;
->  	smp_call_func_t func;
->  	void *info;
->  };
->  
-> +#define CSD_INIT(_func, _info) \
-> +	(struct __call_single_data){ .func = (_func), .info = (_info), }
-> +
->  /* Use __aligned() to avoid to use 2 cache lines for 1 csd */
->  typedef struct __call_single_data call_single_data_t
->  	__aligned(sizeof(struct __call_single_data));
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -225,8 +225,6 @@ int __weak kgdb_skipexception(int except
->   * Default (weak) implementation for kgdb_roundup_cpus
->   */
->  
-> -static DEFINE_PER_CPU(call_single_data_t, kgdb_roundup_csd);
-> -
->  void __weak kgdb_call_nmi_hook(void *ignored)
->  {
->  	/*
-> @@ -240,6 +238,8 @@ void __weak kgdb_call_nmi_hook(void *ign
->  	kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
->  }
->  
-> +static DEFINE_PER_CPU(call_single_data_t, kgdb_roundup_csd) = CSD_INIT(kgdb_call_nmi_hook, NULL);
-> +
->  void __weak kgdb_roundup_cpus(void)
->  {
->  	call_single_data_t *csd;
-> @@ -266,7 +266,6 @@ void __weak kgdb_roundup_cpus(void)
->  			continue;
->  		kgdb_info[cpu].rounding_up = true;
->  
-> -		csd->func = kgdb_call_nmi_hook;
->  		ret = smp_call_function_single_async(cpu, csd);
->  		if (ret)
->  			kgdb_info[cpu].rounding_up = false;
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -221,14 +221,6 @@ void update_rq_clock(struct rq *rq)
->  	update_rq_clock_task(rq, delta);
->  }
->  
-> -static inline void
-> -rq_csd_init(struct rq *rq, call_single_data_t *csd, smp_call_func_t func)
-> -{
-> -	csd->flags = 0;
-> -	csd->func = func;
-> -	csd->info = rq;
-> -}
-> -
->  #ifdef CONFIG_SCHED_HRTICK
->  /*
->   * Use HR-timers to deliver accurate preemption points.
-> @@ -329,7 +321,7 @@ void hrtick_start(struct rq *rq, u64 del
->  static void hrtick_rq_init(struct rq *rq)
->  {
->  #ifdef CONFIG_SMP
-> -	rq_csd_init(rq, &rq->hrtick_csd, __hrtick_start);
-> +	rq->hrtick_csd = CSD_INIT(__hrtick_start, rq);
->  #endif
->  	hrtimer_init(&rq->hrtick_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
->  	rq->hrtick_timer.function = hrtick;
-> @@ -6776,7 +6768,7 @@ void __init sched_init(void)
->  		rq->last_blocked_load_update_tick = jiffies;
->  		atomic_set(&rq->nohz_flags, 0);
->  
-> -		rq_csd_init(rq, &rq->nohz_csd, nohz_csd_func);
-> +		rq->nohz_csd = CSD_INIT(nohz_csd_func, rq);
->  #endif
->  #endif /* CONFIG_SMP */
->  		hrtick_rq_init(rq);
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -24,7 +24,7 @@
->  #include "smpboot.h"
->  #include "sched/smp.h"
->  
-> -#define CSD_TYPE(_csd)	((_csd)->flags & CSD_FLAG_TYPE_MASK)
-> +#define CSD_TYPE(_csd)	((_csd)->node.u_flags & CSD_FLAG_TYPE_MASK)
->  
->  struct call_function_data {
->  	call_single_data_t	__percpu *csd;
-> @@ -105,13 +105,13 @@ void __init call_function_init(void)
->   */
->  static __always_inline void csd_lock_wait(call_single_data_t *csd)
->  {
-> -	smp_cond_load_acquire(&csd->flags, !(VAL & CSD_FLAG_LOCK));
-> +	smp_cond_load_acquire(&csd->node.u_flags, !(VAL & CSD_FLAG_LOCK));
->  }
->  
->  static __always_inline void csd_lock(call_single_data_t *csd)
->  {
->  	csd_lock_wait(csd);
-> -	csd->flags |= CSD_FLAG_LOCK;
-> +	csd->node.u_flags |= CSD_FLAG_LOCK;
->  
->  	/*
->  	 * prevent CPU from reordering the above assignment
-> @@ -123,12 +123,12 @@ static __always_inline void csd_lock(cal
->  
->  static __always_inline void csd_unlock(call_single_data_t *csd)
->  {
-> -	WARN_ON(!(csd->flags & CSD_FLAG_LOCK));
-> +	WARN_ON(!(csd->node.u_flags & CSD_FLAG_LOCK));
->  
->  	/*
->  	 * ensure we're all done before releasing data:
->  	 */
-> -	smp_store_release(&csd->flags, 0);
-> +	smp_store_release(&csd->node.u_flags, 0);
->  }
->  
->  static DEFINE_PER_CPU_SHARED_ALIGNED(call_single_data_t, csd_data);
-> @@ -180,7 +180,7 @@ static int generic_exec_single(int cpu,
->  		return -ENXIO;
->  	}
->  
-> -	__smp_call_single_queue(cpu, &csd->llist);
-> +	__smp_call_single_queue(cpu, &csd->node.llist);
->  
->  	return 0;
->  }
-> @@ -233,7 +233,7 @@ static void flush_smp_call_function_queu
->  		 * We don't have to use the _safe() variant here
->  		 * because we are not invoking the IPI handlers yet.
->  		 */
-> -		llist_for_each_entry(csd, entry, llist) {
-> +		llist_for_each_entry(csd, entry, node.llist) {
->  			switch (CSD_TYPE(csd)) {
->  			case CSD_TYPE_ASYNC:
->  			case CSD_TYPE_SYNC:
-> @@ -258,22 +258,22 @@ static void flush_smp_call_function_queu
->  	 * First; run all SYNC callbacks, people are waiting for us.
->  	 */
->  	prev = NULL;
-> -	llist_for_each_entry_safe(csd, csd_next, entry, llist) {
-> +	llist_for_each_entry_safe(csd, csd_next, entry, node.llist) {
->  		/* Do we wait until *after* callback? */
->  		if (CSD_TYPE(csd) == CSD_TYPE_SYNC) {
->  			smp_call_func_t func = csd->func;
->  			void *info = csd->info;
->  
->  			if (prev) {
-> -				prev->next = &csd_next->llist;
-> +				prev->next = &csd_next->node.llist;
->  			} else {
-> -				entry = &csd_next->llist;
-> +				entry = &csd_next->node.llist;
->  			}
->  
->  			func(info);
->  			csd_unlock(csd);
->  		} else {
-> -			prev = &csd->llist;
-> +			prev = &csd->node.llist;
->  		}
->  	}
->  
-> @@ -284,14 +284,14 @@ static void flush_smp_call_function_queu
->  	 * Second; run all !SYNC callbacks.
->  	 */
->  	prev = NULL;
-> -	llist_for_each_entry_safe(csd, csd_next, entry, llist) {
-> +	llist_for_each_entry_safe(csd, csd_next, entry, node.llist) {
->  		int type = CSD_TYPE(csd);
->  
->  		if (type != CSD_TYPE_TTWU) {
->  			if (prev) {
-> -				prev->next = &csd_next->llist;
-> +				prev->next = &csd_next->node.llist;
->  			} else {
-> -				entry = &csd_next->llist;
-> +				entry = &csd_next->node.llist;
->  			}
->  
->  			if (type == CSD_TYPE_ASYNC) {
-> @@ -305,7 +305,7 @@ static void flush_smp_call_function_queu
->  			}
->  
->  		} else {
-> -			prev = &csd->llist;
-> +			prev = &csd->node.llist;
->  		}
->  	}
->  
-> @@ -341,7 +341,7 @@ int smp_call_function_single(int cpu, sm
->  {
->  	call_single_data_t *csd;
->  	call_single_data_t csd_stack = {
-> -		.flags = CSD_FLAG_LOCK | CSD_TYPE_SYNC,
-> +		.node = { .u_flags = CSD_FLAG_LOCK | CSD_TYPE_SYNC, },
->  	};
->  	int this_cpu;
->  	int err;
-> @@ -416,12 +416,12 @@ int smp_call_function_single_async(int c
->  
->  	preempt_disable();
->  
-> -	if (csd->flags & CSD_FLAG_LOCK) {
-> +	if (csd->node.u_flags & CSD_FLAG_LOCK) {
->  		err = -EBUSY;
->  		goto out;
->  	}
->  
-> -	csd->flags = CSD_FLAG_LOCK;
-> +	csd->node.u_flags = CSD_FLAG_LOCK;
->  	smp_wmb();
->  
->  	err = generic_exec_single(cpu, csd);
-> @@ -539,10 +539,10 @@ static void smp_call_function_many_cond(
->  
->  		csd_lock(csd);
->  		if (wait)
-> -			csd->flags |= CSD_TYPE_SYNC;
-> +			csd->node.u_flags |= CSD_TYPE_SYNC;
->  		csd->func = func;
->  		csd->info = info;
-> -		if (llist_add(&csd->llist, &per_cpu(call_single_queue, cpu)))
-> +		if (llist_add(&csd->node.llist, &per_cpu(call_single_queue, cpu)))
->  			__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
->  	}
->  
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -10643,8 +10643,7 @@ static int __init net_dev_init(void)
->  		INIT_LIST_HEAD(&sd->poll_list);
->  		sd->output_queue_tailp = &sd->output_queue;
->  #ifdef CONFIG_RPS
-> -		sd->csd.func = rps_trigger_softirq;
-> -		sd->csd.info = sd;
-> +		sd->csd = CSD_INIT(rps_trigger_softirq, sd);
->  		sd->cpu = i;
->  #endif
->  
+> OK so that's the bug to try to find and fix I think.
 > 
 > 
+> > If I modify with my proposed version:
+> > + ping -c 5 10.200.0.1
+> > PING 10.200.0.1 (10.200.0.1) 56(84) bytes of data.
+> > 64 bytes from 10.200.0.1: icmp_seq=1 ttl=64 time=7.07 ms
+> > 64 bytes from 10.200.0.1: icmp_seq=2 ttl=64 time=0.358 ms
+> > 64 bytes from 10.200.0.1: icmp_seq=3 ttl=64 time=5.35 ms
+> > 64 bytes from 10.200.0.1: icmp_seq=4 ttl=64 time=2.27 ms
+> > 64 bytes from 10.200.0.1: icmp_seq=5 ttl=64 time=0.426 ms
+> 
+> Not sure which version this is.
+> 
+> > [root@localhost ~]# netperf -H 10.200.0.1 -p 12865 -l 10 -t TCP_STREAM
+> > MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to
+> > 10.200.0.1 () port 0 AF_INET
+> > Recv   Send    Send
+> > Socket Socket  Message  Elapsed
+> > Size   Size    Size     Time     Throughput
+> > bytes  bytes   bytes    secs.    10^6bits/sec
+> > 
+> > 131072  16384  16384    10.01    4742.36
+> > [root@localhost ~]# netperf -H 10.200.0.1 -p 12865 -l 10 -t UDP_STREAM
+> > MIGRATED UDP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to
+> > 10.200.0.1 () port 0 AF_INET
+> > Socket  Message  Elapsed      Messages
+> > Size    Size     Time         Okay Errors   Throughput
+> > bytes   bytes    secs            #      #   10^6bits/sec
+> > 
+> > 212992   65507   10.00        9214      0     482.83
+> > 212992           10.00        9214            482.83
+> > 
+> > I will compare with the non-batch version for reference, but the
+> > difference between the two is noticeable. Maybe it's worth finding a
+> > good value for the if() inside fetch_buf?
+> > 
+> > Thanks!
+> > 
+> 
+> I don't think it's performance, I think it's a bug somewhere,
+> e.g. maybe we corrupt a packet, or stall the queue, or
+> something like this.
+> 
+> Let's do this, I will squash the fixups and post v8 so you can bisect
+> and then debug cleanly.
+
+Ok, so if we apply the patch proposed in v7 08/14 (Or the version 8 of the patchset sent), this is what happens:
+
+1. Userland (virtio_test in my case) introduces just one buffer in vq, and it kicks
+2. vhost module reaches fetch_descs, called from vhost_get_vq_desc. From there we call fetch_buf in a for loop.
+3. The first time we call fetch_buf, it returns properly one buffer. However, the second time we call it, it returns 0
+because vq->avail_idx == vq->last_avail_idx and vq->avail_idx == last_avail_idx code path.
+4. fetch_descs assign ret = 0, so it returns 0. vhost_get_vq_desc will goto err, and it will signal no new buffer
+(returning vq->num).
+
+So to fix it and maintain the batching maybe we could return vq->ndescs in case ret == 0:
+
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index c0dfb5e3d2af..5993d4f34ca9 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -2315,7 +2327,8 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+ 
+ 	/* On success we expect some descs */
+ 	BUG_ON(ret > 0 && !vq->ndescs);
+-	return ret;
++	return ret ?: vq->ndescs;
+ }
+ 
+ /* Reverse the effects of fetch_descs */
+--
+
+Another possibility could be to return different codes from fetch_buf, but I find the suggested modification easier.
+
+What do you think?
+
+Thanks!
+
