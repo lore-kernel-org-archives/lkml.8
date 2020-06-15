@@ -2,173 +2,117 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E6CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C04EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBF1207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6700020739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lUQORoJx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GXZh6+9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbgFONel (ORCPT
+        id S1730684AbgFONer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:34:41 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:62212 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730144AbgFONdM (ORCPT
+        Mon, 15 Jun 2020 09:34:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730213AbgFONek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:33:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592227992; x=1623763992;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ocWwAHGLDpwRsiyn8IYZMcfhC8Ol2jDQSyOYycWpEvI=;
-  b=lUQORoJxX/CnVX+mc4C+Z+mYBKct6iPpYiqeT5+ZEHCNwONjJ88fDP4T
-   w34T2hu2quaeELnc1/qJLS+LXIJ6tK5AAv7IZVuW1KAbhJLfYt6tW8EJx
-   h0LfkkzIki3zDbz1/AjaYN8q6nDs4yqSVXGaPAdZNHH6ojZyrnJgxew9B
-   NmgU5/jy0Y9zl7cm/68rrQL1fI/yAGAGXq4kzzmvCSrufBqapZ22sh81x
-   RdW9dwhNp7GHG5W58rqqxj0iqre7s2Wl7IYpdHHrnBHjZ+A+BcBAm7Gnp
-   vvSa8+LEfqBFBcKQBQ1eCjg29/a8Du3Im7n00Is7tgEztPb3UR10bfjrk
-   A==;
-IronPort-SDR: /pS9FphvLqbSjrYfPxe0RnBxe1q+EI6DTzPx4KjZrCDMT7ro6+Vrba+6f30m6L1zYUxVJA5A+j
- W5jXd6kLDOVv+q8kVRC1ejz/Wcxm5h2fUnGiVKwernBlN6hd74xe7U8SavTjiGJxkocKc9OzsP
- xJqOBaOHC3rYhNlXAvccitg0kAN8AzHylw+44XQSekp6ccq9eKZILOGUyhWSqolHJpDR3+Qf3M
- 2fykgNMqjKHBLjAy7aNq0etkGWIXRGUAaQEKZZ6JGtgkT+5nbAJnr+mIChv5w3lIRhWr8/86Lp
- xuQ=
-X-IronPort-AV: E=Sophos;i="5.73,514,1583218800"; 
-   d="scan'208";a="83619467"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jun 2020 06:33:11 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 15 Jun 2020 06:33:08 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 15 Jun 2020 06:33:08 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 04/10] arm64: dts: sparx5: Add pinctrl support
-Date:   Mon, 15 Jun 2020 15:32:36 +0200
-Message-ID: <20200615133242.24911-5-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200615133242.24911-1-lars.povlsen@microchip.com>
-References: <20200615133242.24911-1-lars.povlsen@microchip.com>
+        Mon, 15 Jun 2020 09:34:40 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6C95C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=27u+aslpGbbxT2/ao8LzkoAS94gMgtGGpixmRkO16yw=; b=GXZh6+9ppaEZPvsgVPReJkP861
+        N2AoVKj7lQsfyO3QFcYsq5FFIIKI5ME6bm+OLfj8ebaleQ89yX7wTLy4PWCJH/fVuZcjj5nMqoJLO
+        3B92qb6xhSlelPwMssdoZ7loUMyct0lO8yq5DHIYR2H91+/pfmhrpfyJwUoBArqnmigpJ04pqWMY9
+        q7FDdDXJMfgx/3amEidcTJOhk4Jao8VT05Wax01QPrfMX3WsCCOIhW+jsozdYC9xb18+xkUQe83Up
+        4jcaMGoi8Cp0+pK+HbYQIWOxOmYFzRf7twCOZTQDc9Iikmi1kkHCPEIr5M4c4vuYyAq8Q8q9X2bA9
+        +r2B+kzw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkpFb-0004qF-8H; Mon, 15 Jun 2020 13:34:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ECDF73060FD;
+        Mon, 15 Jun 2020 15:34:09 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CF9652392E715; Mon, 15 Jun 2020 15:34:09 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 15:34:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@kernel.org, tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        paulmck@kernel.org, frederic@kernel.org
+Subject: Re: [PATCH 1/6] sched: Fix ttwu_queue_cond()
+Message-ID: <20200615133409.GS2531@hirez.programming.kicks-ass.net>
+References: <20200615125654.678940605@infradead.org>
+ <20200615131143.130326165@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615131143.130326165@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This add pinctrl support to the Microchip Sparx5 SoC.
+On Mon, Jun 15, 2020 at 02:56:55PM +0200, Peter Zijlstra wrote:
+> Where the condition:
+> 
+>   !cpus_share_cache(smp_processor_id(), cpu)
+> 
+> already implies 'cpu != smp_processor_id()', because a CPU always
+> shares cache with itself, the secondary condition added in commit:
+> 
+>   2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
+> 
+> voids that implication, resulting in attempting to do local wake-ups
+> through the queue mechanism.
+> 
+> Fixes: 2ebb17717550 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
+> Reported-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Tested-by: Paul E. McKenney <paulmck@kernel.org>
+> ---
+>  kernel/sched/core.c |   13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2356,11 +2356,22 @@ bool cpus_share_cache(int this_cpu, int
+>  
+>  static inline bool ttwu_queue_cond(int cpu, int wake_flags)
+>  {
+> +	int this_cpu = smp_processor_id();
+> +
+> +	/*
+> +	 * Only ever queue for remote wakeups. The on_cpu case can only ever
+> +	 * happen remotely, and for the normal case it makes no sense to
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 26 +++++++++++++++++++
- .../dts/microchip/sparx5_pcb134_board.dtsi    |  5 ++++
- .../dts/microchip/sparx5_pcb135_board.dtsi    |  5 ++++
- 3 files changed, 36 insertions(+)
+The 'funny' thing here is, that this must be false for this patch to
+make any difference.. I just cannot see how.
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 4a54b7d039167..baf4176ce1dfe 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -109,6 +109,8 @@ gic: interrupt-controller@600300000 {
- 		};
- 
- 		uart0: serial@600100000 {
-+			pinctrl-0 = <&uart_pins>;
-+			pinctrl-names = "default";
- 			compatible = "ns16550a";
- 			reg = <0x6 0x00100000 0x20>;
- 			clocks = <&ahb_clk>;
-@@ -120,6 +122,8 @@ uart0: serial@600100000 {
- 		};
- 
- 		uart1: serial@600102000 {
-+			pinctrl-0 = <&uart2_pins>;
-+			pinctrl-names = "default";
- 			compatible = "ns16550a";
- 			reg = <0x6 0x00102000 0x20>;
- 			clocks = <&ahb_clk>;
-@@ -138,5 +142,27 @@ timer1: timer@600105000 {
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		gpio: pinctrl@6110101e0 {
-+			compatible = "microchip,sparx5-pinctrl";
-+			reg = <0x6 0x110101e0 0x90>, <0x6 0x10508010 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&gpio 0 0 64>;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+			#interrupt-cells = <2>;
-+
-+			uart_pins: uart-pins {
-+				pins = "GPIO_10", "GPIO_11";
-+				function = "uart";
-+			};
-+
-+			uart2_pins: uart2-pins {
-+				pins = "GPIO_26", "GPIO_27";
-+				function = "uart2";
-+			};
-+
-+		};
-+
- 	};
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-index 005cf6babb9b3..9b2aec400101b 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-@@ -7,4 +7,9 @@
- #include "sparx5_pcb_common.dtsi"
- 
- /{
-+	gpio-restart {
-+		compatible = "gpio-restart";
-+		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
-+		priority = <200>;
-+	};
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-index 005cf6babb9b3..9b2aec400101b 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-@@ -7,4 +7,9 @@
- #include "sparx5_pcb_common.dtsi"
- 
- /{
-+	gpio-restart {
-+		compatible = "gpio-restart";
-+		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
-+		priority = <200>;
-+	};
- };
--- 
-2.27.0
+Also, if this is false, and p->on_cpu == 1 and p->cpu == this_cpu, then
+p _should_ be current, in which case we should never get here either,
+due to the 'p == current' special case in try_to_wake_up().
 
+The only other option is that 'p == next', but then we'd be doing
+wakeups from the middle of __schedule() and seems 'unlikely' too, esp.
+so since none of the actual stack-traces we have shows that.
+
+So colour me terribly confused.
+
+> +	 * involve IPIs here, and would be broken, as many architectures cannot
+> +	 * trivially IPI self in any case.
+> +	 */
+> +	if (cpu == this_cpu)
+> +		return false;
