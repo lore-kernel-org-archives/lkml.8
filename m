@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3311C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB97BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7D520747
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B28207CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 04:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="a/U3scyj"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="l0Gx52Ee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgFOEGF (ORCPT
+        id S1728237AbgFOEGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 00:06:05 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50504 "EHLO
+        Mon, 15 Jun 2020 00:06:09 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50534 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgFOEGB (ORCPT
+        with ESMTP id S1728177AbgFOEGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 00:06:01 -0400
+        Mon, 15 Jun 2020 00:06:07 -0400
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9FE06891B1;
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F168D891B4;
         Mon, 15 Jun 2020 16:05:57 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
         s=mail181024; t=1592193957;
-        bh=3cfAFYHU5BJxG56tepVZpAZxLjvCy9XsBWxa/cSrxSo=;
+        bh=14TIDfQM4sjvxFhCbCg35NzSBMoiXfw8Vj4bejq5yIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=a/U3scyjDp9kk7+DzU/JZRxhiSq5YSOtj5A+EUZB0hDoQp0v9IT01nMfXtxS1a8ry
-         9q8NCDpRvkIQzZ71vOEFY9qrR97g5Iasx0geEk4V0c8xxgv/zX34sh3aTRLWe0mpzj
-         X/AvcQ+y/nmKwc8fDAU5KsgYfMRKtE0gmZjxYQ1nUrBDO+lxXk4gZPTRoTAPRKjz9I
-         9C2AxZjE6GTFIS7Q4QOQRIqC7V8w6xgqn4pk3k/dGUHHpWdrG3G7QfAYMAWgonLYM+
-         QwQyQj0uSRmHXKLB9IIxIbm49khrAjB7GPnhM/G4Kv2cJTgkqGHPlQZ2oKksWsEBl5
-         bsWLPtasJNTHg==
+        b=l0Gx52Eec/kBwQTSjVGM1xUEVTnOBPvth+mR/mmHeqzS2g0bsS7raeSlSODiYpT7V
+         W4ws/XLQ8vQ9ewAcH7jdo0ADllaXeioz1Q5nh3QQ1MttwRxS4n+NFMv+J4VluNhGT2
+         cLJWS9knrdkCjO6ggsZ18jzofmykcZT98rgm+ZtiY3B+qPrvEmq+SgQuj5+eGnwchT
+         +IRNrRDKwUO21kSMGf4KmfH5A5iFZxCIO6HY7Xj94lZKfP4mj62LWexSiHldtQCipY
+         dOXKrnJGjKTXg8dXnzZJQqTv8uS5TwQR7kOZmJFoO+qIxmt5zGilQ3kUM5NRb9sNma
+         74UeLuJR5tYXw==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ee6f3a50002>; Mon, 15 Jun 2020 16:05:57 +1200
+        id <B5ee6f3a50003>; Mon, 15 Jun 2020 16:05:57 +1200
 Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id 9EC4F13EDE4;
+        by smtp (Postfix) with ESMTP id AAFB113EDE4;
         Mon, 15 Jun 2020 16:05:56 +1200 (NZST)
 Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 50DA5341107; Mon, 15 Jun 2020 16:05:57 +1200 (NZST)
+        id 5B313341283; Mon, 15 Jun 2020 16:05:57 +1200 (NZST)
 From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 To:     broonie@kernel.org, kdasu.kdev@gmail.com
 Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH 2/5] spi: bcm-qspi: Improve debug reading SPI data
-Date:   Mon, 15 Jun 2020 16:05:54 +1200
-Message-Id: <20200615040557.2011-3-mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH 5/5] spi: bcm-qspi: Improve interrupt handling
+Date:   Mon, 15 Jun 2020 16:05:57 +1200
+Message-Id: <20200615040557.2011-6-mark.tomlinson@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200615040557.2011-1-mark.tomlinson@alliedtelesis.co.nz>
 References: <20200615040557.2011-1-mark.tomlinson@alliedtelesis.co.nz>
@@ -63,59 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch prevents device debug when data is not read from hardware
-(i.e. when there is no receive buffer).
+Acknowledge interrupts correctly and add support for fifo-full
+interrupt, distinguishing it from the done interrupt.
 
 Reviewed-by: Callum Sinclair <callum.sinclair@alliedtelesis.co.nz>
 Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 ---
- drivers/spi/spi-bcm-qspi.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/spi/spi-bcm-qspi.c | 11 ++++++-----
+ drivers/spi/spi-bcm-qspi.h |  5 ++++-
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
-index 8fc5b9b3757b..92e04d24359f 100644
+index 0cc51bcda300..3753eff8a154 100644
 --- a/drivers/spi/spi-bcm-qspi.c
 +++ b/drivers/spi/spi-bcm-qspi.c
-@@ -749,21 +749,22 @@ static void read_from_hw(struct bcm_qspi *qspi, int=
- slots)
- 	tp =3D qspi->trans_pos;
-=20
- 	for (slot =3D 0; slot < slots; slot++) {
--		if (tp.trans->bits_per_word <=3D 8) {
--			u8 *buf =3D tp.trans->rx_buf;
+@@ -1123,6 +1123,8 @@ static irqreturn_t bcm_qspi_bspi_lr_l2_isr(int irq,=
+ void *dev_id)
+ 		if (qspi->bspi_rf_op_len =3D=3D 0) {
+ 			qspi->bspi_rf_op =3D NULL;
+ 			if (qspi->soc_intc) {
++				/* Ack BSPI done interrupt */
++				soc_intc->bcm_qspi_int_ack(soc_intc, BSPI_DONE);
+ 				/* disable soc BSPI interrupt */
+ 				soc_intc->bcm_qspi_int_set(soc_intc, BSPI_DONE,
+ 							   false);
+@@ -1134,11 +1136,10 @@ static irqreturn_t bcm_qspi_bspi_lr_l2_isr(int ir=
+q, void *dev_id)
+ 				bcm_qspi_bspi_lr_clear(qspi);
+ 			else
+ 				bcm_qspi_bspi_flush_prefetch_buffers(qspi);
+-		}
 -
--			if (buf)
--				buf[tp.byte] =3D read_rxram_slot_u8(qspi, slot);
--			dev_dbg(&qspi->pdev->dev, "RD %02x\n",
--				buf ? buf[tp.byte] : 0x0);
--		} else {
--			u16 *buf =3D tp.trans->rx_buf;
--
--			if (buf)
--				buf[tp.byte / 2] =3D read_rxram_slot_u16(qspi,
--								      slot);
--			dev_dbg(&qspi->pdev->dev, "RD %04x\n",
--				buf ? buf[tp.byte / 2] : 0x0);
-+		if (tp.trans->rx_buf) {
-+			if (tp.trans->bits_per_word <=3D 8) {
-+				u8 *buf =3D tp.trans->rx_buf;
-+
-+				buf[tp.byte] =3D
-+					read_rxram_slot_u8(qspi, slot);
-+				dev_dbg(&qspi->pdev->dev, "RD %02x\n",
-+					buf[tp.byte]);
-+			} else {
-+				u16 *buf =3D tp.trans->rx_buf;
-+
-+				buf[tp.byte / 2] =3D
-+					read_rxram_slot_u16(qspi, slot);
-+				dev_dbg(&qspi->pdev->dev, "RD %04x\n",
-+					buf[tp.byte / 2]);
-+			}
- 		}
+-		if (qspi->soc_intc)
+-			/* clear soc BSPI interrupt */
+-			soc_intc->bcm_qspi_int_ack(soc_intc, BSPI_DONE);
++		} else  if (qspi->soc_intc)
++			/* Ack FIFO full interrupt */
++			soc_intc->bcm_qspi_int_ack(soc_intc,
++						   BSPI_FIFO_FULL);
+ 	}
 =20
- 		update_qspi_trans_byte_count(qspi, &tp,
+ 	status &=3D INTR_BSPI_LR_SESSION_DONE_MASK;
+diff --git a/drivers/spi/spi-bcm-qspi.h b/drivers/spi/spi-bcm-qspi.h
+index 01aec6460108..b68e275bc721 100644
+--- a/drivers/spi/spi-bcm-qspi.h
++++ b/drivers/spi/spi-bcm-qspi.h
+@@ -48,7 +48,8 @@ enum {
+ 	MSPI_DONE =3D 0x1,
+ 	BSPI_DONE =3D 0x2,
+ 	BSPI_ERR =3D 0x4,
+-	MSPI_BSPI_DONE =3D 0x7
++	MSPI_BSPI_DONE =3D 0x7,
++	BSPI_FIFO_FULL =3D 0x8
+ };
+=20
+ struct bcm_qspi_soc_intc {
+@@ -84,6 +85,8 @@ static inline u32 get_qspi_mask(int type)
+ 		return INTR_MSPI_DONE_MASK;
+ 	case BSPI_DONE:
+ 		return BSPI_LR_INTERRUPTS_ALL;
++	case BSPI_FIFO_FULL:
++		return INTR_BSPI_LR_FULLNESS_REACHED_MASK;
+ 	case MSPI_BSPI_DONE:
+ 		return QSPI_INTERRUPTS_ALL;
+ 	case BSPI_ERR:
 --=20
 2.27.0
 
