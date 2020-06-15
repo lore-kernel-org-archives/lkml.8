@@ -2,100 +2,135 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1157AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC289C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9A13206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Qh4w60AD"
+	by mail.kernel.org (Postfix) with ESMTP id 9427B206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgFOKMO (ORCPT
+        id S1729213AbgFOKMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:12:14 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22460 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728368AbgFOKMO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:12:14 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FA9nop017544;
-        Mon, 15 Jun 2020 12:12:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=d3GjQF0BzX+PN+NqBFNl58BCi48VHp5WyEJcoWpGzZE=;
- b=Qh4w60ADIEMTpDsoxohyQ9Ih50clXyZZs9u/+lc0WnUycb7Ig8HgvcIuavp2QzBzto9s
- pmW6O42deSa+OyUIEJwKxCQAROZ0VGg+0just0JmbVu/62FSwt4Q0tIpX7FtW45WENV8
- NlQRnYxPP9yo6PgAxoZUxtKZALY1kNaZVreGndLuxbjFprxzTKbgn2OKSGKrNGuuI7PP
- 195FLNG567s+Alro3Cc6ZWB2C185rEBbI8vGh1I0BmBtCGpNrtO6S+DIiauFDVV+dJqT
- Zy/d4GlEPlf4aJ5u/jFASaKo5pIy4za3/CvRlZNzepua/Ziop0gM9nyscvOEZh4u4Pi9 nQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mkx915uv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 12:12:02 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9D9D5100042;
-        Mon, 15 Jun 2020 12:12:01 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8845720E2C3;
-        Mon, 15 Jun 2020 12:12:01 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun
- 2020 12:12:00 +0200
-Subject: Re: [PATCH 0/3] STM32 update uart4 pin configuration for low power
-To:     Erwan Le Ray <erwan.leray@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-References: <20200528073853.24759-1-erwan.leray@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <751071df-6879-da91-3519-38770971c43f@st.com>
-Date:   Mon, 15 Jun 2020 12:12:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 15 Jun 2020 06:12:48 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2308 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728368AbgFOKMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:12:47 -0400
+Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id D56DDB752A101E85160F;
+        Mon, 15 Jun 2020 11:12:45 +0100 (IST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.26.179) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 15 Jun 2020 11:12:45 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <bp@alien8.de>, <james.morse@arm.com>, <lenb@kernel.org>,
+        <tony.luck@intel.com>, <dan.carpenter@oracle.com>,
+        <zhangliguang@linux.alibaba.com>,
+        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
+        <jroedel@suse.de>
+CC:     <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v9 0/2] ACPI / APEI: Add support to notify the vendor specific HW errors
+Date:   Mon, 15 Jun 2020 11:09:57 +0100
+Message-ID: <20200615100959.499-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200528073853.24759-1-erwan.leray@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.26.179]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
+ lhreml715-chm.china.huawei.com (10.201.108.66)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Erwan
+Presently the vendor drivers are unable to do the recovery for the
+vendor specific recoverable HW errors because APEI driver does not
+support reporting the error to the vendor drivers.
 
-On 5/28/20 9:38 AM, Erwan Le Ray wrote:
-> Update uart4 pin configuration for low power in pinctrl, and for ed/ev
-> and dkx boards.
-> 
-> Erwan Le Ray (3):
->    ARM: dts: stm32: update uart4 pin configuration for low power on
->      stm32mp157
->    ARM: dts: stm32: Update pin states for uart4 on stm32mp157c-ed1
->    ARM: dts: stm32: Update UART4 pin states on stm32mp15xx-dkx
-> 
->   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 17 +++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts    |  4 +++-
->   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi   |  4 +++-
->   3 files changed, 23 insertions(+), 2 deletions(-)
-> 
+patch set
+1. add new interface to the APEI driver for reporting the 
+   vendor specific non-fatal HW errors to the drivers.
 
-Series applied on stm32-next.
+2. add driver to handle HiSilicon hip PCIe controller's errors.
 
-Regards
-Alex
+V9:
+1. Fixed 2 improvements suggested by the kbuild test robot. 
+1.1 Change ghes_gdata_pool_init() as static function.
+1.2. Removed using buffer to store the error data for
+     logging in the hisi_pcie_handle_error()
+
+V8:
+1. Removed reporting the standard errors through the interface
+   because of the conflict with the recent patches in the
+   memory error handling path.
+2. Fix comments by Dan Carpenter.
+   
+V7:
+1. Add changes in the APEI driver suggested by Borislav Petkov, for
+   queuing up all the non-fatal HW errors to the work queue and
+   notify the registered kernel drivers from the bottom half using
+   blocking notifier, common interface for both standard and
+   vendor-spcific errors.
+2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+   by Bjorn Helgaas.
+
+V6:
+1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+
+V5:
+1. Fix comments from James Morse.
+1.1 Changed the notification method to use the atomic_notifier_chain.
+1.2 Add the error handled status for the user space.  
+
+V4:
+1. Fix for the following smatch warning in the PCIe error driver,
+   reported by kbuild test robot<lkp@intel.com>:
+   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+
+V3:
+1. Fix the comments from Bjorn Helgaas.
+
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
+
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI / APEI: Add support to notify the vendor specific HW errors
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+
+ drivers/acpi/apei/ghes.c                 | 130 +++++++++-
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 305 +++++++++++++++++++++++
+ include/acpi/ghes.h                      |  28 +++
+ 5 files changed, 471 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
+-- 
+2.17.1
+
+
