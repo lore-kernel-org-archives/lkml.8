@@ -2,343 +2,103 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B603BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3A02068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5045D206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="nwxC12eG"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="o8c0FPcp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgFOHXV (ORCPT
+        id S1728642AbgFOHYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728368AbgFOHXU (ORCPT
+        Mon, 15 Jun 2020 03:24:10 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:46402 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728368AbgFOHYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:23:20 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07552C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:23:19 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g10so13492682wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 00:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XY/kg57wcJSHswDW9ogS03xzi4RY+NmHRKldYaxeSpE=;
-        b=nwxC12eGq8ElOmgtjCizwM5OoCzDRHda5UlhQdaK2MbsMe1oI6VwRxrMP9JQljhAmS
-         Y5O1KH5K90BvGRwE7TGHQfFiRJrRGSDPSzPIGBI+a4e12dHicqKTmXXcAzF1LpcgtLjE
-         hyK68heyn4yAaS+s09PUop9kE80jPeyGIJHeF6dUdGqdmf+rtLg55ANIp8hCPIXehGie
-         em78vufhN2elFUDCRUeG5tLloCMOXEqHuR32u+1t8l21EnFl56kq+GuRKAWR7x6kkDN9
-         0lCMUrOsHYuY6Pb1KJHHYM6cVv//r1gZFC/0Qdds8Ps4CjPLr2G9nfXfvdiodv1jp52A
-         r9EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XY/kg57wcJSHswDW9ogS03xzi4RY+NmHRKldYaxeSpE=;
-        b=Z3eCt44+cggeHaRFbLr07HqcdQHxxFIrVgQH+YLK/t4OQR5cxPego+P34NT2WrTE9f
-         zadhWWHuDdWL0Ht400Q3/vsvu4d+dcADfF77j7RoSGWrBe18suZd6cQgp3jHe5FV0Y34
-         POVGW21dPuht/0owCoAYeBaGfZ83DTQtAM8El0xgzmuETYj3E03VTr/HUjQYU2+PdbqF
-         qEt0CRC6NNTnOWq1ysn2ZNfx+r0+W2adU+ckf16MS8eNSK7ZrLGNHMYpgnJRTyRgXPvj
-         Y2TBBi6FuxCDUuEW1JRPNk7Lreg3xduyY/XF103LS7BvtBW4UDhpEivBANYZBvgo7vfx
-         hXMQ==
-X-Gm-Message-State: AOAM532ICHKOzsH+2hD6U5NSwp2O2p8yFg5iPwdn+Tkllmen9b504MeD
-        CyY92VC+4n2Ld3LxGeluQBScjw==
-X-Google-Smtp-Source: ABdhPJwEzOlDtcsNcAW8Dx9lP/OPqsWQb5BWh1JCCMrRzq6fRztahSj/dMhOR5JM9obggeHqdf5xgQ==
-X-Received: by 2002:a1c:c3d7:: with SMTP id t206mr11734242wmf.69.1592205796745;
-        Mon, 15 Jun 2020 00:23:16 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id o20sm24241261wra.29.2020.06.15.00.23.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 00:23:16 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] regmap: convert all regmap_update_bits() and co. macros to static inlines
-Date:   Mon, 15 Jun 2020 09:23:13 +0200
-Message-Id: <20200615072313.11106-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        Mon, 15 Jun 2020 03:24:09 -0400
+X-UUID: 76efff77d7964554ab7924da97e32582-20200615
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=qBTmmysW9mKb6RFIDfIeX1e+1dXzsBfF2+qumyv3dGk=;
+        b=o8c0FPcpuBDXKePFQOGk+QKCHcz4v/jOU34m+VhL7h6DVFLkcvEozZ2PeDQj2ZpDet6LHAUl/Bfuw/tfDoOvprX9Qmj+zh6lEAtMCJuQdePNol5ZvD78uT1SeCRnmLNK7n3zW/hOWNBJ0USkzTDU01rY/SevStDsR8aJyg8Z/vg=;
+X-UUID: 76efff77d7964554ab7924da97e32582-20200615
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1253782035; Mon, 15 Jun 2020 15:24:05 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 15 Jun 2020 15:24:03 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 15 Jun 2020 15:24:02 +0800
+Message-ID: <1592205843.25636.82.camel@mtkswgap22>
+Subject: RE: [PATCH v2 2/2] scsi: ufs: Add trace event for UIC commands
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "cc.chou@mediatek.com" <cc.chou@mediatek.com>,
+        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>
+Date:   Mon, 15 Jun 2020 15:24:03 +0800
+In-Reply-To: <SN6PR04MB46400CE00A5CAF16CE4D4367FC9C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200615064753.20935-1-stanley.chu@mediatek.com>
+         <20200615064753.20935-3-stanley.chu@mediatek.com>
+         <SN6PR04MB46400CE00A5CAF16CE4D4367FC9C0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: CCA224B35034D6AA6CDD7520EB7BDB9D9CA9E88F74510A9DD30EC7E85C9088CB2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-There's no reason to have these as macros. Let's convert them all to
-static inlines for better readability and stronger typing.
-
-Suggested-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- include/linux/regmap.h | 222 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 192 insertions(+), 30 deletions(-)
-
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index cb666b9c6b6a..f4917efed5c3 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -80,36 +80,6 @@ struct reg_sequence {
- 				}
- #define REG_SEQ0(_reg, _def)	REG_SEQ(_reg, _def, 0)
- 
--#define	regmap_update_bits(map, reg, mask, val) \
--	regmap_update_bits_base(map, reg, mask, val, NULL, false, false)
--#define	regmap_update_bits_async(map, reg, mask, val)\
--	regmap_update_bits_base(map, reg, mask, val, NULL, true, false)
--#define	regmap_update_bits_check(map, reg, mask, val, change)\
--	regmap_update_bits_base(map, reg, mask, val, change, false, false)
--#define	regmap_update_bits_check_async(map, reg, mask, val, change)\
--	regmap_update_bits_base(map, reg, mask, val, change, true, false)
--
--#define	regmap_write_bits(map, reg, mask, val) \
--	regmap_update_bits_base(map, reg, mask, val, NULL, false, true)
--
--#define	regmap_field_write(field, val) \
--	regmap_field_update_bits_base(field, ~0, val, NULL, false, false)
--#define	regmap_field_force_write(field, val) \
--	regmap_field_update_bits_base(field, ~0, val, NULL, false, true)
--#define	regmap_field_update_bits(field, mask, val)\
--	regmap_field_update_bits_base(field, mask, val, NULL, false, false)
--#define	regmap_field_force_update_bits(field, mask, val) \
--	regmap_field_update_bits_base(field, mask, val, NULL, false, true)
--
--#define	regmap_fields_write(field, id, val) \
--	regmap_fields_update_bits_base(field, id, ~0, val, NULL, false, false)
--#define	regmap_fields_force_write(field, id, val) \
--	regmap_fields_update_bits_base(field, id, ~0, val, NULL, false, true)
--#define	regmap_fields_update_bits(field, id, mask, val)\
--	regmap_fields_update_bits_base(field, id, mask, val, NULL, false, false)
--#define	regmap_fields_force_update_bits(field, id, mask, val) \
--	regmap_fields_update_bits_base(field, id, mask, val, NULL, false, true)
--
- /**
-  * regmap_read_poll_timeout - Poll until a condition is met or a timeout occurs
-  *
-@@ -1054,6 +1024,42 @@ int regmap_bulk_read(struct regmap *map, unsigned int reg, void *val,
- int regmap_update_bits_base(struct regmap *map, unsigned int reg,
- 			    unsigned int mask, unsigned int val,
- 			    bool *change, bool async, bool force);
-+
-+static inline int regmap_update_bits(struct regmap *map, unsigned int reg,
-+				     unsigned int mask, unsigned int val)
-+{
-+	return regmap_update_bits_base(map, reg, mask, val, NULL, false, false);
-+}
-+
-+static inline int regmap_update_bits_async(struct regmap *map, unsigned int reg,
-+					   unsigned int mask, unsigned int val)
-+{
-+	return regmap_update_bits_base(map, reg, mask, val, NULL, true, false);
-+}
-+
-+static inline int regmap_update_bits_check(struct regmap *map, unsigned int reg,
-+					   unsigned int mask, unsigned int val,
-+					   bool *change)
-+{
-+	return regmap_update_bits_base(map, reg, mask, val,
-+				       change, false, false);
-+}
-+
-+static inline int
-+regmap_update_bits_check_async(struct regmap *map, unsigned int reg,
-+			       unsigned int mask, unsigned int val,
-+			       bool *change)
-+{
-+	return regmap_update_bits_base(map, reg, mask, val,
-+				       change, true, false);
-+}
-+
-+static inline int regmap_write_bits(struct regmap *map, unsigned int reg,
-+				    unsigned int mask, unsigned int val)
-+{
-+	return regmap_update_bits_base(map, reg, mask, val, NULL, false, true);
-+}
-+
- int regmap_get_val_bytes(struct regmap *map);
- int regmap_get_max_register(struct regmap *map);
- int regmap_get_reg_stride(struct regmap *map);
-@@ -1152,6 +1158,65 @@ int regmap_fields_read(struct regmap_field *field, unsigned int id,
- int regmap_fields_update_bits_base(struct regmap_field *field,  unsigned int id,
- 				   unsigned int mask, unsigned int val,
- 				   bool *change, bool async, bool force);
-+
-+static inline int regmap_field_write(struct regmap_field *field,
-+				     unsigned int val)
-+{
-+	return regmap_field_update_bits_base(field, ~0, val,
-+					     NULL, false, false);
-+}
-+
-+static inline int regmap_field_force_write(struct regmap_field *field,
-+					   unsigned int val)
-+{
-+	return regmap_field_update_bits_base(field, ~0, val, NULL, false, true);
-+}
-+
-+static inline int regmap_field_update_bits(struct regmap_field *field,
-+					   unsigned int mask, unsigned int val)
-+{
-+	return regmap_field_update_bits_base(field, mask, val,
-+					     NULL, false, false);
-+}
-+
-+static inline int
-+regmap_field_force_update_bits(struct regmap_field *field,
-+			       unsigned int mask, unsigned int val)
-+{
-+	return regmap_field_update_bits_base(field, mask, val,
-+					     NULL, false, true);
-+}
-+
-+static inline int regmap_fields_write(struct regmap_field *field,
-+				      unsigned int id, unsigned int val)
-+{
-+	return regmap_fields_update_bits_base(field, id, ~0, val,
-+					      NULL, false, false);
-+}
-+
-+static inline int regmap_fields_force_write(struct regmap_field *field,
-+					    unsigned int id, unsigned int val)
-+{
-+	return regmap_fields_update_bits_base(field, id, ~0, val,
-+					      NULL, false, true);
-+}
-+
-+static inline int
-+regmap_fields_update_bits(struct regmap_field *field, unsigned int id,
-+			  unsigned int mask, unsigned int val)
-+{
-+	return regmap_fields_update_bits_base(field, id, mask, val,
-+					      NULL, false, false);
-+}
-+
-+static inline int
-+regmap_fields_force_update_bits(struct regmap_field *field, unsigned int id,
-+				unsigned int mask, unsigned int val)
-+{
-+	return regmap_fields_update_bits_base(field, id, mask, val,
-+					      NULL, false, true);
-+}
-+
- /**
-  * struct regmap_irq_type - IRQ type definitions.
-  *
-@@ -1458,6 +1523,103 @@ static inline int regmap_fields_update_bits_base(struct regmap_field *field,
- 	return -EINVAL;
- }
- 
-+static inline int regmap_update_bits(struct regmap *map, unsigned int reg,
-+				     unsigned int mask, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_update_bits_async(struct regmap *map, unsigned int reg,
-+					   unsigned int mask, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_update_bits_check(struct regmap *map, unsigned int reg,
-+					   unsigned int mask, unsigned int val,
-+					   bool *change)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int
-+regmap_update_bits_check_async(struct regmap *map, unsigned int reg,
-+			       unsigned int mask, unsigned int val,
-+			       bool *change)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_write_bits(struct regmap *map, unsigned int reg,
-+				    unsigned int mask, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_field_write(struct regmap_field *field,
-+				     unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_field_force_write(struct regmap_field *field,
-+					   unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_field_update_bits(struct regmap_field *field,
-+					   unsigned int mask, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int
-+regmap_field_force_update_bits(struct regmap_field *field,
-+			       unsigned int mask, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_fields_write(struct regmap_field *field,
-+				      unsigned int id, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int regmap_fields_force_write(struct regmap_field *field,
-+					    unsigned int id, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int
-+regmap_fields_update_bits(struct regmap_field *field, unsigned int id,
-+			  unsigned int mask, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
-+static inline int
-+regmap_fields_force_update_bits(struct regmap_field *field, unsigned int id,
-+				unsigned int mask, unsigned int val)
-+{
-+	WARN_ONCE(1, "regmap API is disabled");
-+	return -EINVAL;
-+}
-+
- static inline int regmap_get_val_bytes(struct regmap *map)
- {
- 	WARN_ONCE(1, "regmap API is disabled");
--- 
-2.26.1
+SGkgQXZyaSwNCg0KT24gTW9uLCAyMDIwLTA2LTE1IGF0IDA3OjEzICswMDAwLCBBdnJpIEFsdG1h
+biB3cm90ZToNCj4gPiAgICAgICAgIC8qIFdyaXRlIFVJQyBDbWQgKi8NCj4gPiAgICAgICAgIHVm
+c2hjZF93cml0ZWwoaGJhLCB1aWNfY21kLT5jb21tYW5kICYgQ09NTUFORF9PUENPREVfTUFTSywN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgUkVHX1VJQ19DT01NQU5EKTsNCj4gPiBAQCAtNDgy
+NSwxMSArNDg0NywxNSBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgdWZzaGNkX3VpY19jbWRfY29tcGwo
+c3RydWN0DQo+ID4gdWZzX2hiYSAqaGJhLCB1MzIgaW50cl9zdGF0dXMpDQo+ID4gICAgICAgICAg
+ICAgICAgICAgICAgICAgdWZzaGNkX2dldF91aWNfY21kX3Jlc3VsdChoYmEpOw0KPiA+ICAgICAg
+ICAgICAgICAgICBoYmEtPmFjdGl2ZV91aWNfY21kLT5hcmd1bWVudDMgPQ0KPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIHVmc2hjZF9nZXRfZG1lX2F0dHJfdmFsKGhiYSk7DQo+ID4gKyAgICAg
+ICAgICAgICAgIHVmc2hjZF9hZGRfdWljX2NvbW1hbmRfdHJhY2UoaGJhLCBoYmEtPmFjdGl2ZV91
+aWNfY21kLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICJjb21wbGV0ZSIpOw0KPiA+ICAgICAgICAgICAgICAgICBjb21wbGV0ZSgmaGJhLT5hY3RpdmVf
+dWljX2NtZC0+ZG9uZSk7DQo+ID4gICAgICAgICAgICAgICAgIHJldHZhbCA9IElSUV9IQU5ETEVE
+Ow0KPiA+ICAgICAgICAgfQ0KPiA+IA0KPiA+ICAgICAgICAgaWYgKChpbnRyX3N0YXR1cyAmIFVG
+U0hDRF9VSUNfUFdSX01BU0spICYmIGhiYS0+dWljX2FzeW5jX2RvbmUpIHsNCj4gPiArICAgICAg
+ICAgICAgICAgdWZzaGNkX2FkZF91aWNfY29tbWFuZF90cmFjZShoYmEsIGhiYS0+YWN0aXZlX3Vp
+Y19jbWQsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ImNvbXBsZXRlIik7DQo+ID4gICAgICAgICAgICAgICAgIGNvbXBsZXRlKGhiYS0+dWljX2FzeW5j
+X2RvbmUpOw0KPiA+ICAgICAgICAgICAgICAgICByZXR2YWwgPSBJUlFfSEFORExFRDsNCj4gDQo+
+IA0KPiBXaHkgbm90IGNhbGwgdWZzaGNkX2FkZF91aWNfY29tbWFuZF90cmFjZSBvbmNlIGlmIHJl
+dHZhbCA9PSBJUlFfSEFORExFRD8NCj4gSXMgaXQgdGhhdCB0aGUgZXhhY3QgdGltZXN0YW1wPw0K
+DQpUaGFua3MhIFRoaXMgbWFrZXMgdGhlIGNvZGUgY2xlYW5lci4NCkZpeGVkIGluIHYzLg0KDQpT
+dGFubGV5IENodQ0K
 
