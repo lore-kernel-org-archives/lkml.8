@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C65C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B44DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8B520578
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FC320578
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:42:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="b4FeK6Ib";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rk/dbtVf"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="IhM8tywD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HlRKy6y6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbgFOImR (ORCPT
+        id S1729332AbgFOImQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:42:17 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:40009 "EHLO
+        Mon, 15 Jun 2020 04:42:16 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:56163 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729280AbgFOIl6 (ORCPT
+        by vger.kernel.org with ESMTP id S1729292AbgFOImB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:41:58 -0400
+        Mon, 15 Jun 2020 04:42:01 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 484F558014F;
-        Mon, 15 Jun 2020 04:41:57 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 69BAE580151;
+        Mon, 15 Jun 2020 04:42:00 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 15 Jun 2020 04:41:57 -0400
+  by compute4.internal (MEProxy); Mon, 15 Jun 2020 04:42:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=DQpPTJYxXtp+r
-        dATG2C/JzFH6pA6g3j8lECnpVhYo0g=; b=b4FeK6IbtHqEoEb6fFPildyK5VRq5
-        GtHuaolO/QH6+RZsyovSKT7E7Jhffse8oMelUDeO8enFSfhH6KFsgqowjXpmHnXq
-        YawVh39y6mbNlauo+hisQTS3b//83NjN6fuqUoyIrUTDDy9YqbHrwoMfEoA1hVq4
-        mPouJOtDgG/84eGz9zlxxQlM7cdk3fhad0lSruGUZdhBBcves4u/dbZOEH4zoLw/
-        +vULqoLWwXj5baOkh+yivJzqxAogEevpemnCAfzZeJZLHJbYeVKdxYDGt8bEoTfr
-        92H5tPZExJh8hv3ilernL05QGnr2XwJKsHcJfskm5D3ZqNVdKXIPR8Kuw==
+        :mime-version:content-transfer-encoding; s=fm3; bh=gnlr+Pk8xA6Pc
+        FY6qSNBIheVgCOOISk87u1kUFkHHzk=; b=IhM8tywD/G8Ae84RkeS2W9SEeLtKc
+        s2ICt03/3ZfQBpWO7kvpH/ujR+1NP3Q98haqYzijb6x3qavqoEMJueK2ACAgNrOP
+        tKdH4eTHghh9fO9KNRTIXZ0vlodmTF90MB1hJ/Jdteurz77AId0yS4Jfa2boT9RI
+        7Gs10GCSqoe6YBQv9/8y5xNVRrWs16snDn05P80QnVmjHs2xK9cLFL+uPnWSmWzr
+        FaquJyX0fU6KwTj6V5h1NX6Sg2AHGhWbrzbD6tGTPa4dJa4IwtqSKE73/U8gt+B+
+        OX1RFLQdJ8Qu1VbNam/wYk8lmJ1rTJxifQHOfxzIjQLnQSVZPyMuQ9rVQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=DQpPTJYxXtp+rdATG2C/JzFH6pA6g3j8lECnpVhYo0g=; b=rk/dbtVf
-        QHFeUN1u45113xhLXEeF5VIqK2HxXePO+lm/HBJnUyYnWWWFcejz8fx2MiqtcMYJ
-        aRxOTKmJ6D8QNwCYXsKmH58R8YrHVjjzt+QBC0c0QjRjse9vEOGJ0KGM8WbcCYfI
-        VnATZyWh+KG5VRiad0JIpS6Muq8fe3xbMjsoZq/PLXKni3LolOoPR/10UQcWe9sB
-        ohc8v6+qmJ1Xn+kAftOlt6knWoRBKeL4c4VSqbTNNFnl6Yf36QmmRdqYO7LP/kfY
-        x6K9Nde6ZE1q1yVvPJ0TuoXyWCaCbp5BKb4SpdM45O1Wh7eg23VMS9GogTWtRaQm
-        pAir3l8JSqsQqQ==
-X-ME-Sender: <xms:VTTnXvOsyFUyq9ftS0mXb4k_GEeQl0DR_XtvYicZfPv1UXFKUH3sYA>
+        fm3; bh=gnlr+Pk8xA6PcFY6qSNBIheVgCOOISk87u1kUFkHHzk=; b=HlRKy6y6
+        i0lkCFlWFYcHkX/w/Ho7g52rf0OdH1A4HH1vFcnT5VNWmhkAiaw4uQKjiQYWblgD
+        izx1J1c+aWpsi3HZR15ZvTSrzH/7jraJhf+VHCABlYNCxKwB+ah2hka3mA5VwQsf
+        +Uy7L5T6alJOP1p8yyz9ixXKXGYnHSznUldWS80r9TXDGUwmDq1erkkShzc16ZFB
+        rbAkiIEziEpZGOi1RmAFlSWoQObF9LEjpu78QsprDSjGn8bpKslp0V0CDPMccrme
+        6zXXmUlwA3bvQMZ1/GOT8dY/C56lZXxhk1SyfHc/vrPgBvqZQxX+qrlNov94njDl
+        0D+QjEGcPrfiJw==
+X-ME-Sender: <xms:WDTnXuc5BNLREWvz0qmjJpM6f6Dixh7a1JI7K8kLkW0YhSnEE7SuSg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeikedgtdeiucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeikedgtdeiucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvddune
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:VTTnXp8RzkMIrCJDjKdi7geKZfGrXzr-wn3gN0JIGLsafEkVeGfkuw>
-    <xmx:VTTnXuSyhhrepg789uZTllxAV9fRAlcI01rUHCgGe-LRaHmhOrPxmg>
-    <xmx:VTTnXjtvJjfz0HToGQaShVfDto4_BFWWEgNAgHbUphDU25BMQqEO7A>
-    <xmx:VTTnXr7UcfGOO1i5QfaHojGBTRxYk_nDcxFpW6cOxRAgWZuToJmjuw>
+X-ME-Proxy: <xmx:WDTnXoNNvDJTLwWBVjhDXOjy2LXbwqmaBwe6JTmDnZN_SxDCwlVvfA>
+    <xmx:WDTnXvgK9c0UF5R1yiw1GoR-a4_YYpwtrGVCENclRuj5l5Y9MPYIQw>
+    <xmx:WDTnXr_ns0rBl70qwiweV2ro0Cwa9zMaRTUMGDybXJRPQstLF8QiLw>
+    <xmx:WDTnXkJ2Hh_iPKRGeEG9zpk4gVgY-nh4RQaIR1Jcz9HslxyyljcnrQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D571B30618B7;
-        Mon, 15 Jun 2020 04:41:56 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 06A883061DC5;
+        Mon, 15 Jun 2020 04:41:59 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     linux-rpi-kernel@lists.infradead.org,
@@ -77,9 +77,9 @@ Cc:     linux-rpi-kernel@lists.infradead.org,
         Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v5 23/27] Revert "clk: bcm2835: remove pllb"
-Date:   Mon, 15 Jun 2020 10:41:03 +0200
-Message-Id: <5d26a4c58248f5be7760a7f2f720a1310baea5dd.1592210452.git-series.maxime@cerno.tech>
+Subject: [PATCH v5 25/27] clk: bcm2835: Allow custom CCF flags for the PLLs
+Date:   Mon, 15 Jun 2020 10:41:05 +0200
+Message-Id: <ae8bd505d8851f6646e244cd76b6b289346973c8.1592210452.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
 References: <cover.98f979c2af2337c57217016d21d7c68e1ac2ce8a.1592210452.git-series.maxime@cerno.tech>
@@ -90,58 +90,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 2256d89333bd17b8b56b42734a7e1046d52f7fc3. Since we
-will be expanding the firmware clock driver, we'll need to remove the
-quirks to deal with the PLLB. However, we still want to expose the clock
-tree properly, so having that clock in the MMIO driver will allow that.
+While some clock types allow for each clock to specify its own custom
+flags, the PLLs can't. We will need this for the PLLB, so let's add it.
 
 Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/clk/bcm/clk-bcm2835.c | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+ drivers/clk/bcm/clk-bcm2835.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 6bb7efa12037..32f5c13be9d1 100644
+index 32f5c13be9d1..b50f00f109bf 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1684,10 +1684,32 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.fixed_divider = 1,
- 		.flags = CLK_SET_RATE_PARENT),
+@@ -421,6 +421,7 @@ struct bcm2835_pll_data {
+ 	u32 reference_enable_mask;
+ 	/* Bit in CM_LOCK to indicate when the PLL has locked. */
+ 	u32 lock_mask;
++	u32 flags;
  
--	/*
--	 * PLLB is used for the ARM's clock. Controlled by firmware, see
--	 * clk-raspberrypi.c.
--	 */
-+	/* PLLB is used for the ARM's clock. */
-+	[BCM2835_PLLB]		= REGISTER_PLL(
-+		SOC_ALL,
-+		.name = "pllb",
-+		.cm_ctrl_reg = CM_PLLB,
-+		.a2w_ctrl_reg = A2W_PLLB_CTRL,
-+		.frac_reg = A2W_PLLB_FRAC,
-+		.ana_reg_base = A2W_PLLB_ANA0,
-+		.reference_enable_mask = A2W_XOSC_CTRL_PLLB_ENABLE,
-+		.lock_mask = CM_LOCK_FLOCKB,
-+
-+		.ana = &bcm2835_ana_default,
-+
-+		.min_rate = 600000000u,
-+		.max_rate = 3000000000u,
-+		.max_fb_rate = BCM2835_MAX_FB_RATE),
-+	[BCM2835_PLLB_ARM]	= REGISTER_PLL_DIV(
-+		SOC_ALL,
-+		.name = "pllb_arm",
-+		.source_pll = "pllb",
-+		.cm_reg = CM_PLLB,
-+		.a2w_reg = A2W_PLLB_ARM,
-+		.load_mask = CM_PLLB_LOADARM,
-+		.hold_mask = CM_PLLB_HOLDARM,
-+		.fixed_divider = 1,
-+		.flags = CLK_SET_RATE_PARENT),
+ 	const struct bcm2835_pll_ana_bits *ana;
  
- 	/*
- 	 * PLLC is the core PLL, used to drive the core VPU clock.
+@@ -1310,7 +1311,7 @@ static struct clk_hw *bcm2835_register_pll(struct bcm2835_cprman *cprman,
+ 	init.num_parents = 1;
+ 	init.name = pll_data->name;
+ 	init.ops = &bcm2835_pll_clk_ops;
+-	init.flags = CLK_IGNORE_UNUSED;
++	init.flags = pll_data->flags | CLK_IGNORE_UNUSED;
+ 
+ 	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+ 	if (!pll)
 -- 
 git-series 0.9.1
