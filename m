@@ -2,107 +2,79 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC4BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A79BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E10152074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ADCD2071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:16:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="PYRP3IWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgFONPk (ORCPT
+        id S1730278AbgFONQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:15:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:47626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729977AbgFONPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:15:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6C2031B;
-        Mon, 15 Jun 2020 06:15:38 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.79.186])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2D45C3F6CF;
-        Mon, 15 Jun 2020 06:15:34 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        ziy@nvidia.com, Anshuman Khandual <anshuman.khandual@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [RFC V2 2/2] arm64/mm: Enable THP migration
-Date:   Mon, 15 Jun 2020 18:45:18 +0530
-Message-Id: <1592226918-26378-3-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592226918-26378-1-git-send-email-anshuman.khandual@arm.com>
-References: <1592226918-26378-1-git-send-email-anshuman.khandual@arm.com>
+        Mon, 15 Jun 2020 09:16:34 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:30956 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729977AbgFONQd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:16:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1592226989;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=zqxmVgdmjcOl7HZi58VyJB7Dsh33gu503wdQu+OOuvI=;
+        b=PYRP3IWJeVC0k8GcSwZWnnL2k/7V1/H/CkXXuoY2ldq1bLIepW6O9o2CHvdtbw8suo
+        9dgBnSp6aIZzH+JAjGFk9vg1iImYNMPA71taWZ0sT/wrYcJjf8AI505YnOQj33PlLX+R
+        jMxFe8ml9Csm9zGguDFc6ZYqP+L8Iee7VI3pg6avK0lc1IfSUvTc5pXKnNC8ac2ClK8t
+        cTUxHNcMSnPKYYnJWeeix2hM3DfBaQ1yZzdlgKyntfIX05kBKC9q1d7jyrZrClAvh1Rf
+        EwTE4avkGwilvJjPIDDWwgfIadZg941fcqD/YmBkniY8M6sL/sxcBI59Twnv9PtpdI1X
+        hdOQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaJfSc9CNS"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.10.4 DYNA|AUTH)
+        with ESMTPSA id U03fedw5FDGPB5E
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 15 Jun 2020 15:16:25 +0200 (CEST)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     LABBE Corentin <clabbe@baylibre.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 13/14] crypto: sun8i-ce: Add support for the PRNG
+Date:   Mon, 15 Jun 2020 15:16:25 +0200
+Message-ID: <2861786.iSnlG1rnU6@tauon.chronox.de>
+In-Reply-To: <20200615130253.GA8958@Red>
+References: <1587736934-22801-1-git-send-email-clabbe@baylibre.com> <5634597.9v007L4FOH@tauon.chronox.de> <20200615130253.GA8958@Red>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In certain page migration situations, a THP page can be migrated without
-being split into it's constituent subpages. This saves time required to
-split a THP and put it back together when required. But it also saves an
-wider address range translation covered by a single TLB entry, reducing
-future page fault costs.
+Am Montag, 15. Juni 2020, 15:02:53 CEST schrieb LABBE Corentin:
 
-A previous patch changed platform THP helpers per generic memory semantics,
-clearing the path for THP migration support. This adds two more THP helpers
-required to create PMD migration swap entries. Now just enable HP migration
-via ARCH_ENABLE_THP_MIGRATION.
+Hi,
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Suzuki Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/Kconfig               |  4 ++++
- arch/arm64/include/asm/pgtable.h | 10 ++++++++++
- 2 files changed, 14 insertions(+)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 31380da53689..01d432dc813e 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1874,6 +1874,10 @@ config ARCH_ENABLE_HUGEPAGE_MIGRATION
- 	def_bool y
- 	depends on HUGETLB_PAGE && MIGRATION
- 
-+config ARCH_ENABLE_THP_MIGRATION
-+	def_bool y
-+	depends on TRANSPARENT_HUGEPAGE
-+
- menu "Power management options"
- 
- source "kernel/power/Kconfig"
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 560be593a8dc..892c30129cd2 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -907,6 +907,16 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
- #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
- #define __swp_entry_to_pte(swp)	((pte_t) { (swp).val })
- 
-+#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-+#define __pmd_to_swp_entry(pmd)		((swp_entry_t) { pmd_val(pmd) })
-+
-+/*
-+ * pmd_present() must return false for a swap PMD entry.
-+ * Just explicitly clear PMD_TABLE_BIT while converting.
-+ */
-+#define __swp_entry_to_pmd(swp)		__pmd((swp).val & ~PMD_TABLE_BIT)
-+#endif /* CONFIG_ARCH_ENABLE_THP_MIGRATION */
-+
- /*
-  * Ensure that there are not more swap files than can be encoded in the kernel
-  * PTEs.
--- 
-2.20.1
+> I still dont see any memset_secure in kzfree (mm/slab_common.c).
+> Does I miss something ?
+
+Nope, you do not miss anything, it seems that the patch that I had seen did 
+not go in.
+> 
+> Regards
+
+
+Ciao
+Stephan
+
 
