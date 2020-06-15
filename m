@@ -2,50 +2,92 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE652068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44552068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 07:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgFOHVi (ORCPT
+        id S1728444AbgFOHWY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 03:21:38 -0400
-Received: from verein.lst.de ([213.95.11.211]:59980 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgFOHVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:21:38 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DA67168AFE; Mon, 15 Jun 2020 09:21:36 +0200 (CEST)
-Date:   Mon, 15 Jun 2020 09:21:36 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, kernel test robot <lkp@intel.com>,
-        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ata: fix AHCI_SHT() macro definition
-Message-ID: <20200615072136.GB21903@lst.de>
-References: <CGME20200612120932eucas1p29411e0c60963fad8c36ca35f2e6b8872@eucas1p2.samsung.com> <0d803e72-b15e-4673-4858-4741f2772fc4@samsung.com>
+        Mon, 15 Jun 2020 03:22:24 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49875 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgFOHWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 03:22:24 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 49AE41C000B;
+        Mon, 15 Jun 2020 07:22:22 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 09:22:21 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch] mtd: set master partition panic write flag
+Message-ID: <20200615092221.7f269810@xps13>
+In-Reply-To: <CB182F6C-EB9E-4E90-BF6E-115C925FCFFE@gmail.com>
+References: <20200504235403.13504-1-kdasu.kdev@gmail.com>
+        <CB182F6C-EB9E-4E90-BF6E-115C925FCFFE@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d803e72-b15e-4673-4858-4741f2772fc4@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 02:09:31PM +0200, Bartlomiej Zolnierkiewicz wrote:
-> Fix AHCI_SHT() macro definition to not reinitialize .can_queue and
-> .sdev_attrs fields.
-> 
-> This removes gcc warnings from W=1 builds such as:
+Hi Kamal,
 
-I think these warnings arg bogus, at least when used with cases like
-libata that want to implement inheritance schemes.  Can we get them
-removed from W=1 insted if people really are about W=1 builds?
+Kamal Dasu <kdasu.kdev@gmail.com> wrote on Sat, 13 Jun 2020 02:49:31
+-0400:
+
+> Can you please accept this if there are no objections.
+> 
+> Kamal
+> 
+> > On May 4, 2020, at 7:54 PM, Kamal Dasu <kdasu.kdev@gmail.com> wrote:
+> > 
+> > ﻿Check and set master panic write flag so that low level drivers
+> > can use it to take required action to ensure oops data gets written
+> > to assigned mtdoops device partition.
+> > 
+> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> > ---
+> > drivers/mtd/mtdcore.c | 4 ++--
+> > 1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> > index 2916674208b3..7e37ed2f38ea 100644
+> > --- a/drivers/mtd/mtdcore.c
+> > +++ b/drivers/mtd/mtdcore.c
+> > @@ -1235,8 +1235,8 @@ int mtd_panic_write(struct mtd_info *mtd, loff_t to, size_t len, size_t *retlen,
+> >        return -EROFS;
+> >    if (!len)
+> >        return 0;
+> > -    if (!mtd->oops_panic_write)
+> > -        mtd->oops_panic_write = true;
+> > +    if (!master->oops_panic_write)
+> > +        master->oops_panic_write = true;
+> > 
+> >    return master->_panic_write(master, mtd_get_master_ofs(mtd, to), len,
+> >                    retlen, buf);
+> > -- 
+> > 2.17.1
+> >   
+
+I thing we missed it. However, shouldn't we have a Cc:/Fixes: pair of
+tags here? We could send it as part of a fixes PR then.
+
+Thanks,
+Miquèl
