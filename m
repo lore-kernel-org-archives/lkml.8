@@ -2,121 +2,111 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C27F4207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888BE207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 20:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h9i73P/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731507AbgFOUWs (ORCPT
+        id S1731172AbgFOUYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 16:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731172AbgFOUWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 16:22:48 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 15 Jun 2020 16:24:19 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56446 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728870AbgFOUYS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 16:24:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592252657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=C/iH4DY/6Yao+IlFOJ9ZaQwmC0Ra1ZHKELUELgNEM4Y=;
+        b=h9i73P/sUfHCioamiDpz7l8jez2COOZtyKSuzvQ7zZBEFhsSUuxHEUXgCuL9TFGszG8n2+
+        8nZwdgQiRDj1qVy31yqRNSgdpNrj70e/3Ib0Lxgw8l0DK+C4xzugaMomoWeX21hi2l6nLC
+        PXEu6cNQyl/gLH7aLI38/1kkpA9GdPo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-SRe7YmtwODqSgPnUHCQbpg-1; Mon, 15 Jun 2020 16:24:15 -0400
+X-MC-Unique: SRe7YmtwODqSgPnUHCQbpg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E22A2074D;
-        Mon, 15 Jun 2020 20:22:47 +0000 (UTC)
-Date:   Mon, 15 Jun 2020 16:22:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Remove function callback casts
-Message-ID: <20200615162245.13d3feff@oasis.local.home>
-In-Reply-To: <20200615161738.18d07ce6@oasis.local.home>
-References: <20200614070154.6039-1-oscar.carter@gmx.com>
-        <20200615161738.18d07ce6@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADCE2E93F;
+        Mon, 15 Jun 2020 20:24:14 +0000 (UTC)
+Received: from random.internal.datastacks.com (ovpn-113-167.phx2.redhat.com [10.3.113.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A0AEE9CFCE;
+        Mon, 15 Jun 2020 20:24:13 +0000 (UTC)
+From:   Peter Jones <pjones@redhat.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Jones <pjones@redhat.com>
+Subject: [PATCH] Make it possible to disable efivar_ssdt entirely
+Date:   Mon, 15 Jun 2020 16:24:08 -0400
+Message-Id: <20200615202408.2242614-1-pjones@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 16:17:38 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+In most cases, such as CONFIG_ACPI_CUSTOM_DSDT and
+CONFIG_ACPI_TABLE_UPGRADE, boot-time modifications to firmware tables
+are tied to specific Kconfig options.  Currently this is not the case
+for modifying the ACPI SSDT via the efivar_ssdt kernel command line
+option and associated EFI variable.
 
-> On Sun, 14 Jun 2020 09:01:54 +0200
-> Oscar Carter <oscar.carter@gmx.com> wrote:
-> 
-> > In an effort to enable -Wcast-function-type in the top-level Makefile to
-> > support Control Flow Integrity builds, remove all the function callback
-> > casts.
-> > 
-> > To do this, use the ftrace_ops_list_func function as a wrapper when the
-> > arch not supports ftrace ops instead of the use of a function cast.
-> >   
-> 
-> We need more tricker than this.
-> 
-> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> > ---
-> >  kernel/trace/ftrace.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index c163c3531faf..ed1efc0e3a25 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -119,13 +119,12 @@ struct ftrace_ops __rcu *ftrace_ops_list __read_mostly = &ftrace_list_end;
-> >  ftrace_func_t ftrace_trace_function __read_mostly = ftrace_stub;
-> >  struct ftrace_ops global_ops;
-> > 
-> > -#if ARCH_SUPPORTS_FTRACE_OPS
-> >  static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
-> >  				 struct ftrace_ops *op, struct pt_regs *regs);
-> > -#else
-> > +
-> > +#if !ARCH_SUPPORTS_FTRACE_OPS
-> >  /* See comment below, where ftrace_ops_list_func is defined */
-> >  static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip);
-> > -#define ftrace_ops_list_func ((ftrace_func_t)ftrace_ops_no_ops)  
-> 
-> The reason for the typecast is because this gets called from asm with only two parameters.
+This patch adds CONFIG_EFI_CUSTOM_SSDT_OVERLAYS, which defaults
+disabled, in order to allow enabling or disabling that feature during
+the build.
 
-[ Some how hit a short cut key that sent this before I was finished! :-p ]
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ drivers/firmware/efi/efi.c   |  2 +-
+ drivers/firmware/efi/Kconfig | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-As I was saying. This typecast is being paranoid, as archs will call
-the ftrace_ops_list_func directly, and only pass in two parameters.
-
-Now one way around this is to instead of having the typecast, I could
-use linker magic to create another function that I can define without
-the typecast to get the same effect. Similar to what I did in commit:
-
-46f9469247c6f ("ftrace: Rename ftrace_graph_stub to ftrace_stub_graph")
-
--- Steve
-
-
-
-> 
-> >  #endif
-> > 
-> >  static inline void ftrace_ops_init(struct ftrace_ops *ops)
-> > @@ -6860,6 +6859,12 @@ static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
-> >  }
-> >  NOKPROBE_SYMBOL(ftrace_ops_list_func);
-> >  #else
-> > +static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
-> > +				 struct ftrace_ops *op, struct pt_regs *regs)
-> > +{
-> > +	ftrace_ops_no_ops(ip, parent_ip);
-> > +}
-> > +
-> >  static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip)
-> >  {
-> >  	__ftrace_ops_list_func(ip, parent_ip, NULL, NULL);
-> > --
-> > 2.20.1  
-> 
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 48d0188936c..4b12a598ccf 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -192,7 +192,7 @@ static void generic_ops_unregister(void)
+ 	efivars_unregister(&generic_efivars);
+ }
+ 
+-#if IS_ENABLED(CONFIG_ACPI)
++#if IS_ENABLED(CONFIG_EFI_CUSTOM_SSDT_OVERLAYS)
+ #define EFIVAR_SSDT_NAME_MAX	16
+ static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
+ static int __init efivar_ssdt_setup(char *str)
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index 6b38f9e5d20..fe433f76b03 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -278,3 +278,14 @@ config EFI_EARLYCON
+ 	depends on SERIAL_EARLYCON && !ARM && !IA64
+ 	select FONT_SUPPORT
+ 	select ARCH_USE_MEMREMAP_PROT
++
++config EFI_CUSTOM_SSDT_OVERLAYS
++	bool "Load custom ACPI SSDT overlay from an EFI variable"
++	depends on EFI_VARS
++	default ACPI_TABLE_UPGRADE
++	help
++	  Allow loading of an ACPI SSDT overlay from an EFI variable specified
++	  by a kernel command line option.
++
++	  See Documentation/admin-guide/acpi/ssdt-overlays.rst for more
++	  information.
+-- 
+2.26.2
 
