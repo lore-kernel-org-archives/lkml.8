@@ -2,127 +2,100 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 827852067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:58:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MlWYFLP9"
+	by mail.kernel.org (Postfix) with ESMTP id 711E9206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592204334;
+	bh=P2Ary7w7QLpxLwvvO6zF7cGZEv1dglEer1JOQDUDFW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=op57rNhfWiJZlLDGz8LLiAKC/cfJQOXPkqMtcSwIBOu6LRJpSW0JRMVcp01V+2R/9
+	 w2RYg2J/HE4BCcMEOKl8jUxKcrMfOfx6LBgv+qhWWABPS70WlAf+YFrH9syLrDReR8
+	 cOPkYdavCVtmGeLXcbmUwOLkUMv2o4UMaeF7jzU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgFOG6O (ORCPT
+        id S1728421AbgFOG6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:58:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbgFOG6N (ORCPT
+        Mon, 15 Jun 2020 02:58:53 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34371 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728276AbgFOG6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:58:13 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EDC7C061A0E;
-        Sun, 14 Jun 2020 23:58:13 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f063c003187a4190bac43a1.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:3c00:3187:a419:bac:43a1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 605D21EC035B;
-        Mon, 15 Jun 2020 08:58:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592204289;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=CR5WZsxSRd8wp7PRr2IddZUw7c7yYSIxMJrU72FZPyc=;
-        b=MlWYFLP9sJ5Q7JUJ8QL5SNrTmi0dnIhtDAbSg4yv0XgSfFC//8sn49UW1FcqR0+ba765zB
-        ysLDXkylZK/hPafkdc9cWvkKAwG3U96CsGRgMcdzHCWK0jblIHgzr/FErfaviIqI+X3haH
-        ZbTW6iKntgeylRmrGPqsgu20AYPMoOY=
-Date:   Mon, 15 Jun 2020 08:58:06 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Anthony Steinhauser <asteinhauser@google.com>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/speculation: Merge one test in
- spectre_v2_user_select_mitigation()
-Message-ID: <20200615065806.GB14668@zn.tnic>
-References: <159169282952.17951.3529693809120577424.tip-bot2@tip-bot2>
- <20200611140951.GD30352@zn.tnic>
- <CAN_oZf16odNhpY6_LqkVY2wpy90jKM9-vgKo4LE8OJ-QTDCKiw@mail.gmail.com>
- <20200611154356.GE30352@zn.tnic>
+        Mon, 15 Jun 2020 02:58:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r7so15863614wro.1;
+        Sun, 14 Jun 2020 23:58:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=15pzvZ3HgzVpOIe1NSunNL4NazqLAoN4J8Q/f2NVLd8=;
+        b=kJO4LvBPRRxzDW+hruK9cyPECKVXeUaSwoFgi+rt2G6j+lvqMywBKgbouLf/Eo2fOy
+         NpyxzN1XfaIgdFRG5jULjxbGPCBbX4HODlf39u3MEvt14GwJ55uKeBypggTnNZ7vBCd0
+         HGPkDqMSgwZxG/6ZlDE+KOz5E3m957i07jdGGGyKgyjHdNHlsVAvNeqBgFujfsnJJQpb
+         ijW+HdEUM6Ys8hizKHPZhkPKBRO7NI348HpK8s/0W94RxXbmOXuQIP8N7zZI4I5sWSxD
+         xU3jbcyUWF4nBN4mhDKyeLdsSqswK3xq51Y9iPsRHZqTYMcFh0LJxR47A7uDRKdIAOGA
+         gGug==
+X-Gm-Message-State: AOAM530Ug/mBhDx99ZzCAvVdxySQtHBGrpPVy9akjY7ZLvcOEqATSO1d
+        3aL/+pj7KFtMQjX3lycC8ig=
+X-Google-Smtp-Source: ABdhPJxC3uTidSFQuPJd5N+ZIugAF5DjMqJZwBdBMRxo/CsJfJGnW54QJwO/PEzPpqMarcPL1KnxUw==
+X-Received: by 2002:a5d:5585:: with SMTP id i5mr26775604wrv.112.1592204329345;
+        Sun, 14 Jun 2020 23:58:49 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id d63sm22195666wmc.22.2020.06.14.23.58.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 14 Jun 2020 23:58:48 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 08:58:46 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     wu000273@umn.edu
+Cc:     kjlu@umn.edu,
+        =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        linux-samsung-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] char: hw_random: Fix a reference count leak.
+Message-ID: <20200615065846.GA5791@kozik-lap>
+References: <20200613214128.32665-1-wu000273@umn.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200611154356.GE30352@zn.tnic>
+In-Reply-To: <20200613214128.32665-1-wu000273@umn.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(dropping stable@ from Cc).
+On Sat, Jun 13, 2020 at 04:41:28PM -0500, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
+> 
+> Calling pm_runtime_get_sync increments the counter even in case of
+> failure, causing incorrect ref count if pm_runtime_put_sync is not
+> called in error handling paths. Thus replace the jump target
+> "err_pm_get" by "err_clock".
+> 
+> Fixes: 6cd225cc5d8a ("hwrng: exynos - add Samsung Exynos True RNG driver")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 
----
+1. Cc: <stable@vger.kernel.org>
+2. Subject prefix:
+	hwrng: exynos - 
+3. Subject title: Fix PM runtime reference count leak
+   (no need for end stop)
 
-Merge the test whether the CPU supports STIBP into the test which
-determines whether STIBP is required. Thus try to simplify what is
-already an insane logic.
+With these changes:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Remove a superfluous newline in a comment, while at it.
+Best regards,
+Krzysztof
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Anthony Steinhauser <asteinhauser@google.com>
----
- arch/x86/kernel/cpu/bugs.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 0b71970d2d3d..7beaefa9d198 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -763,10 +763,12 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
- 	}
- 
- 	/*
--	 * If enhanced IBRS is enabled or SMT impossible, STIBP is not
-+	 * If no STIBP, enhanced IBRS is enabled or SMT impossible, STIBP is not
- 	 * required.
- 	 */
--	if (!smt_possible || spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
-+	if (!boot_cpu_has(X86_FEATURE_STIBP) ||
-+	    !smt_possible ||
-+	    spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return;
- 
- 	/*
-@@ -778,12 +780,6 @@ spectre_v2_user_select_mitigation(enum spectre_v2_mitigation_cmd v2_cmd)
- 	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
- 		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
- 
--	/*
--	 * If STIBP is not available, clear the STIBP mode.
--	 */
--	if (!boot_cpu_has(X86_FEATURE_STIBP))
--		mode = SPECTRE_V2_USER_NONE;
--
- 	spectre_v2_user_stibp = mode;
- 
- set_mode:
-@@ -1270,7 +1266,6 @@ static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
- 		 * Indirect branch speculation is always disabled in strict
- 		 * mode. It can neither be enabled if it was force-disabled
- 		 * by a  previous prctl call.
--
- 		 */
- 		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
- 		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
--- 
-2.21.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
