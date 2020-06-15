@@ -2,188 +2,126 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A45C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D37C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 789972071A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9227A207F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WYviMdqQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="SPoa65QW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbgFONd2 (ORCPT
+        id S1730659AbgFONeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:33:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60303 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730065AbgFONdW (ORCPT
+        Mon, 15 Jun 2020 09:34:25 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:55673 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730490AbgFONdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:33:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592227999;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rW5iv07E6/hrUraCliFumYl+bzeZy7nOt0DSLH2NiHw=;
-        b=WYviMdqQ5pSKcUymcCZwcFnPBBDDxM8N7S2qDqxKWsLmg8BZrcjA2zm7V0UJ7IWQlAbMw1
-        IgLRhXJZywWBIG1Rchi272wNlbFeeAF3Cfn2/QPNRbpFyak1QTUna84NvYLWLygb6wsdkI
-        UuPGliWCafBuCEk0ZtJmGAFKeqW4P98=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-sS7K9garOXu5AYIN-tR-MQ-1; Mon, 15 Jun 2020 09:33:17 -0400
-X-MC-Unique: sS7K9garOXu5AYIN-tR-MQ-1
-Received: by mail-wr1-f72.google.com with SMTP id e7so7097830wrp.14
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 06:33:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rW5iv07E6/hrUraCliFumYl+bzeZy7nOt0DSLH2NiHw=;
-        b=eCKfQ+QYAeKjNTPBQA9F58m/6Hno9IbHOwDXXvtnzjlQLkur99HYbWP4fsB3kgnLwR
-         WYBoK9ha/ms4SIjGaQSLvfgVOnJGO0LHNVXMZDNqPllwqN02PKtp2EJQY7ZgF0T5aU34
-         96gYtzFUDn+csFBdnxt4vWkTZsPiLwOUHTK7/62wMIKNX7EYIJANibw9e+PNthYgTSvo
-         TpUIUEOYJ3IU0+vvH6S/8pv6c/dCgViAcowweowm7Rqquu+X9iYc15n0tsCXLqTKR/1x
-         NZ6ysF0lveANIgBAQfdJahIw0WGlu/usEGceKinGmWgxnmEJccodd2b2kq9x+4LXHv1e
-         7PUA==
-X-Gm-Message-State: AOAM533fC56xxQEyevxDt9jz4FhrK6RETyMPvKEOLP5zTknedhcrXfj/
-        6neawttGuxWshbEWWvC8G4I8F4kHFvdHTDk2rqL3j15dZcgURWoUyMTtkYqAwzoDkt1XEKq+dtO
-        l/CiIrSLbZ5p45sQcbl4RTJcw
-X-Received: by 2002:a1c:dd44:: with SMTP id u65mr14130849wmg.180.1592227995767;
-        Mon, 15 Jun 2020 06:33:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwTmQVyxizijdU9DGs+rVmKRlfN8AQJjZJCbybP3u6h9bBk/MGo7QOVBdSHWtcmKkOZgBvGeQ==
-X-Received: by 2002:a1c:dd44:: with SMTP id u65mr14130816wmg.180.1592227995477;
-        Mon, 15 Jun 2020 06:33:15 -0700 (PDT)
-Received: from steredhat ([5.180.207.22])
-        by smtp.gmail.com with ESMTPSA id b19sm53221wmj.0.2020.06.15.06.33.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 06:33:14 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 15:33:10 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Aleksa Sarai <asarai@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        io-uring <io-uring@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [RFC] io_uring: add restrictions to support untrusted
- applications and guests
-Message-ID: <20200615133310.qwdmnctrir5zgube@steredhat>
-References: <20200609142406.upuwpfmgqjeji4lc@steredhat>
- <CAG48ez3kdNKjif==MbX36cKNYDpZwEPMZaJQ1rrpXZZjGZwbKw@mail.gmail.com>
+        Mon, 15 Jun 2020 09:33:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592228003; x=1623764003;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0PFUuYEkowikkFlJngUHzPP7u9ABrMBxXuzfa3P9yDo=;
+  b=SPoa65QWbrpFHzTkPFRMGb5647AHuesebi9TYlZiaMbAqhGoP3vkMVck
+   0fQfoaFns2CLSZUI9EgQ8GCJVD4jSmV+NUTRerUxkoRf7xIMtT5pareci
+   oHQ4JayTFSKoE72HQyz+DtxO59/TjnvpMQDzlb56zw+fLHy4yCHGKXFHb
+   x1Y6DOJRMtvTuUfSpXvI5V2jbh530p3OwY43KNrljRt2XfhsGMucuB1Du
+   7rOBtt96EpgLMWHgxcDkCXIJeZtm6hoFG04cR2aLvwtwA7qJbV8j+hj49
+   +E/YhTU01k1S+riRPnriKbLO/Ar/B78spvC68SWhnd/8z5LmFAYIuD7Ks
+   w==;
+IronPort-SDR: oJYzDtKgrsOsrZsmpYoJQvL1qlnxoMuGLHlPBrX7kLDQE45P0YJUtqovnh9AFPgJlzfqJ+aRRD
+ x77v63jtqehCSxfsMNzJdqePinUFECPkEaPbgZMBDlVlHdRrer7Ezl+isPcU2z1NueCToqkSwi
+ 8nZuk2r7cp97TO8JhHHED1BqTvyW68Bk5jiXFgmNk+/94qbITexJ92qmEZmG8wJcX1LP8AengO
+ jCjW0xgdeFDZWBYzqsvk8jLYvbvDp6KnIycQB5AjhydodFDBLNoc/Y7TTb3C+NNCiOEao3Y+6h
+ BSQ=
+X-IronPort-AV: E=Sophos;i="5.73,514,1583218800"; 
+   d="scan'208";a="15805525"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jun 2020 06:33:22 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 15 Jun 2020 06:33:22 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Mon, 15 Jun 2020 06:33:18 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 07/10] dt-bindings: clock: sparx5: Add bindings include file
+Date:   Mon, 15 Jun 2020 15:32:39 +0200
+Message-ID: <20200615133242.24911-8-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200615133242.24911-1-lars.povlsen@microchip.com>
+References: <20200615133242.24911-1-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez3kdNKjif==MbX36cKNYDpZwEPMZaJQ1rrpXZZjGZwbKw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 11:04:06AM +0200, Jann Horn wrote:
-> +Kees, Christian, Sargun, Aleksa, kernel-hardening for their opinions
-> on seccomp-related aspects
-> 
-> On Tue, Jun 9, 2020 at 4:24 PM Stefano Garzarella <sgarzare@redhat.com> wrote:
-> > Hi Jens,
-> > Stefan and I have a proposal to share with io_uring community.
-> > Before implementing it we would like to discuss it to receive feedbacks and
-> > to see if it could be accepted:
-> >
-> > Adding restrictions to io_uring
-> > =====================================
-> > The io_uring API provides submission and completion queues for performing
-> > asynchronous I/O operations. The queues are located in memory that is
-> > accessible to both the host userspace application and the kernel, making it
-> > possible to monitor for activity through polling instead of system calls. This
-> > design offers good performance and this makes exposing io_uring to guests an
-> > attractive idea for improving I/O performance in virtualization.
-> [...]
-> > Restrictions
-> > ------------
-> > This document proposes io_uring API changes that safely allow untrusted
-> > applications or guests to use io_uring. io_uring's existing security model is
-> > that of kernel system call handler code. It is designed to reject invalid
-> > inputs from host userspace applications. Supporting guests as io_uring API
-> > clients adds a new trust domain with access to even fewer resources than host
-> > userspace applications.
-> >
-> > Guests do not have direct access to host userspace application file descriptors
-> > or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
-> > as QEMU, grants access to a subset of its file descriptors and memory. The
-> > allowed file descriptors are typically the disk image files belonging to the
-> > guest. The memory is typically the virtual machine's RAM that the VMM has
-> > allocated on behalf of the guest.
-> >
-> > The following extensions to the io_uring API allow the host application to
-> > grant access to some of its file descriptors.
-> >
-> > These extensions are designed to be applicable to other use cases besides
-> > untrusted guests and are not virtualization-specific. For example, the
-> > restrictions can be used to allow only a subset of sqe operations available to
-> > an application similar to seccomp syscall whitelisting.
-> >
-> > An address translation and memory restriction mechanism would also be
-> > necessary, but we can discuss this later.
-> >
-> > The IOURING_REGISTER_RESTRICTIONS opcode
-> > ----------------------------------------
-> > The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
-> > installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
-> > passed to untrusted code with the knowledge that only operations present in the
-> > whitelist can be executed.
-> 
-> This approach of first creating a normal io_uring instance and then
-> installing restrictions separately in a second syscall means that it
-> won't be possible to use seccomp to restrict newly created io_uring
-> instances; code that should be subject to seccomp restrictions and
-> uring restrictions would only be able to use preexisting io_uring
-> instances that have already been configured by trusted code.
-> 
-> So I think that from the seccomp perspective, it might be preferable
-> to set up these restrictions in the io_uring_setup() syscall. It might
-> also be a bit nicer from a code cleanliness perspective, since you
-> won't have to worry about concurrently changing restrictions.
-> 
+The Sparx5 support 9 different clock outputs. This include file has
+defines for each supported clock ordinal.
 
-Thank you for these details!
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ include/dt-bindings/clock/microchip,sparx5.h | 23 ++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
 
-It seems feasible to include the restrictions during io_uring_setup().
-
-The only doubt concerns the possibility of allowing the trusted code to
-do some operations, before passing queues to the untrusted code, for
-example registering file descriptors, buffers, eventfds, etc.
-
-To avoid this, I should include these operations in io_uring_setup(),
-adding some code that I wanted to avoid by reusing io_uring_register().
-
-If I add restrictions in io_uring_setup() and then add an operation to
-go into safe mode (e.g. a flag in io_uring_enter()), we would have the same
-problem, right?
-
-Just to be clear, I mean something like this:
-
-    /* params will include restrictions */
-    fd = io_uring_setup(entries, params);
-
-    /* trusted code */
-    io_uring_register_files(fd, ...);
-    io_uring_register_buffers(fd, ...);
-    io_uring_register_eventfd(fd, ...);
-
-    /* enable safe mode */
-    io_uring_enter(fd, ..., IORING_ENTER_ENABLE_RESTRICTIONS);
-
-
-Anyway, including a list of things to register in the 'params', passed
-to io_uring_setup(), should be feasible, if Jens agree :-)
-
-Thanks,
-Stefano
+diff --git a/include/dt-bindings/clock/microchip,sparx5.h b/include/dt-bindings/clock/microchip,sparx5.h
+new file mode 100644
+index 0000000000000..4b04dabacec2c
+--- /dev/null
++++ b/include/dt-bindings/clock/microchip,sparx5.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2019 Microchip Inc.
++ *
++ * Author: Lars Povlsen <lars.povlsen@microchip.com>
++ */
++
++#ifndef _DT_BINDINGS_CLK_SPARX5_H
++#define _DT_BINDINGS_CLK_SPARX5_H
++
++#define CLK_ID_CORE	0
++#define CLK_ID_DDR	1
++#define CLK_ID_CPU2	2
++#define CLK_ID_ARM2	3
++#define CLK_ID_AUX1	4
++#define CLK_ID_AUX2	5
++#define CLK_ID_AUX3	6
++#define CLK_ID_AUX4	7
++#define CLK_ID_SYNCE	8
++
++#define N_CLOCKS	9
++
++#endif
+-- 
+2.27.0
 
