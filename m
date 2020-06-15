@@ -2,114 +2,184 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73313C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE70C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD37206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:16:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oR0SekK0"
+	by mail.kernel.org (Postfix) with ESMTP id CFFC12053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 08:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgFOIQU (ORCPT
+        id S1728901AbgFOIRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 04:16:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36654 "EHLO
+        Mon, 15 Jun 2020 04:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbgFOIQS (ORCPT
+        with ESMTP id S1728505AbgFOIRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 04:16:18 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26316C05BD1E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 01:16:12 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id v79so14887439qkb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 01:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ks2k3rFOx4dlXObGXJhZwTdC2QELUN8WUaqANCpIqu0=;
-        b=oR0SekK0lTaOSzhQhm3NVzAkhfa0SpTMN6fEILfsLxFaBYWpSetDd7sPHZPUqFseTt
-         +djNWxLvdiqI7s5zK45K0gBO/eWabDbDou3csHCVptKlBrXFFQFVHk4fEiukWvr9CP91
-         /FUC9cqYx7Vpq3NqWQa8U9pQVNwCJxzVBmt3nEWsQYCY63e0PdScNBok6/pNLMzTEDFT
-         30gRH/C7UO4xbWv7NlvtzutoF5xAkAebZmo3otmBf29Kp0NhgkVfT3vNzeYRVCr5cQWe
-         Ibrvy8kXQRsiep5lMwRUp/BBI3x9Ei0QqhbTYemZ8MS9Z8xlBP3Ua4ooIUT+Au1sLiBY
-         gfHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ks2k3rFOx4dlXObGXJhZwTdC2QELUN8WUaqANCpIqu0=;
-        b=MVi3mqwaEd9v1rbgxMMrKPnIH4k0aCaShO/ynIsTaVKuMuszWyZu2mudoBGhw9lJr+
-         6kms+1tUD9bk8C9eB3/i0Q2XVIdohixlrkv/P5FAIeFBbFe8zntrs1aOT05ZI4Lr/P6g
-         rLQLaKEANL0pWOIeJjtQJArOsOXXWd3pr1dAaHwByTPPsnNQsuHS0XN2DGq2PzHGjiVw
-         8CyAlaOD3BioCCU3VeP0jCF5oqGuLn5rbyrR4yKcrZoF8xOtHz74/BIWPqif94L6ci80
-         2ayNX11dEXkDDmrYyRMmkfFNkV15tbp0bs7y5VipqvFRPikjR72r/8wCSXUEzMtfjsvo
-         +CwA==
-X-Gm-Message-State: AOAM532Xm9rv8pcd9Re1d0EO+scwy4YeAg6preVPPZw+IrOdZYBEyIiK
-        tF5lXOIA2vP0Et5m84Z1ZfHGM2k8XQ+HkVWooIJbjg==
-X-Google-Smtp-Source: ABdhPJwFBN98NMpqmvYRdwb//kMKIs//wi3K/6j6KcI/70oz0Y0XgSq3+DgIBu966lDGXREPemn0TX9xNdPBs0sd2M0=
-X-Received: by 2002:a37:4f52:: with SMTP id d79mr14333922qkb.330.1592208971419;
- Mon, 15 Jun 2020 01:16:11 -0700 (PDT)
+        Mon, 15 Jun 2020 04:17:18 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99B1C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 01:17:18 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jkkIq-0001Tu-Rk; Mon, 15 Jun 2020 10:17:12 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:21d2:558:c34a:b7bf] (unknown [IPv6:2a03:f580:87bc:d400:21d2:558:c34a:b7bf])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id CD84A5163FC;
+        Mon, 15 Jun 2020 08:17:10 +0000 (UTC)
+Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on interrupt
+ in exit paths
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
+        kernel@pengutronix.de
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
+Date:   Mon, 15 Jun 2020 10:17:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com> <20200609124610.3445662-4-kieran.bingham+renesas@ideasonboard.com>
-In-Reply-To: <20200609124610.3445662-4-kieran.bingham+renesas@ideasonboard.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 15 Jun 2020 10:16:00 +0200
-Message-ID: <CAMpxmJXboB0qkG637eoAabj1_KBe2inNgWG3aMagSar94UuaXQ@mail.gmail.com>
-Subject: Re: [PATCH 03/17] drivers: gpio: Fix trivial spelling
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 9 cze 2020 o 14:46 Kieran Bingham
-<kieran.bingham+renesas@ideasonboard.com> napisa=C5=82(a):
->
-> The word 'descriptor' is misspelled throughout the tree.
->
-> Fix it up accordingly:
->     decriptors -> descriptors
->
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+On 6/15/20 10:07 AM, Krzysztof Kozlowski wrote:
+> If interrupt comes late, during probe error path or device remove (could
+> be triggered with CONFIG_DEBUG_SHIRQ), the interrupt handler
+> dspi_interrupt() will access registers with the clock being disabled.  This
+> leads to external abort on non-linefetch on Toradex Colibri VF50 module
+> (with Vybrid VF5xx):
+> 
+>     $ echo 4002d000.spi > /sys/devices/platform/soc/40000000.bus/4002d000.spi/driver/unbind
+> 
+>     Unhandled fault: external abort on non-linefetch (0x1008) at 0x8887f02c
+>     Internal error: : 1008 [#1] ARM
+>     CPU: 0 PID: 136 Comm: sh Not tainted 5.7.0-next-20200610-00009-g5c913fa0f9c5-dirty #74
+>     Hardware name: Freescale Vybrid VF5xx/VF6xx (Device Tree)
+>       (regmap_mmio_read32le) from [<8061885c>] (regmap_mmio_read+0x48/0x68)
+>       (regmap_mmio_read) from [<8060e3b8>] (_regmap_bus_reg_read+0x24/0x28)
+>       (_regmap_bus_reg_read) from [<80611c50>] (_regmap_read+0x70/0x1c0)
+>       (_regmap_read) from [<80611dec>] (regmap_read+0x4c/0x6c)
+>       (regmap_read) from [<80678ca0>] (dspi_interrupt+0x3c/0xa8)
+>       (dspi_interrupt) from [<8017acec>] (free_irq+0x26c/0x3cc)
+>       (free_irq) from [<8017dcec>] (devm_irq_release+0x1c/0x20)
+>       (devm_irq_release) from [<805f98ec>] (release_nodes+0x1e4/0x298)
+>       (release_nodes) from [<805f9ac8>] (devres_release_all+0x40/0x60)
+>       (devres_release_all) from [<805f5134>] (device_release_driver_internal+0x108/0x1ac)
+>       (device_release_driver_internal) from [<805f521c>] (device_driver_detach+0x20/0x24)
+> 
+> Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
->  drivers/gpio/TODO | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-> index b989c9352da2..e560e45e84f8 100644
-> --- a/drivers/gpio/TODO
-> +++ b/drivers/gpio/TODO
-> @@ -5,7 +5,7 @@ subsystem.
->  GPIO descriptors
->
->  Starting with commit 79a9becda894 the GPIO subsystem embarked on a journ=
-ey
-> -to move away from the global GPIO numberspace and toward a decriptor-bas=
-ed
-> +to move away from the global GPIO numberspace and toward a descriptor-ba=
-sed
->  approach. This means that GPIO consumers, drivers and machine descriptio=
-ns
->  ideally have no use or idea of the global GPIO numberspace that has/was
->  used in the inception of the GPIO subsystem.
-> --
-> 2.25.1
->
+> 
+> This is an follow up of my other patch for I2C IMX driver [1]. Let's fix the
+> issues consistently.
+> 
+> [1] https://lore.kernel.org/lkml/1592130544-19759-2-git-send-email-krzk@kernel.org/T/#u
+> 
+> Changes since v1:
+> 1. Disable the IRQ instead of using non-devm interface.
+> ---
+>  drivers/spi/spi-fsl-dspi.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 58190c94561f..023e05c53b85 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -1400,7 +1400,7 @@ static int dspi_probe(struct platform_device *pdev)
+>  		ret = dspi_request_dma(dspi, res->start);
+>  		if (ret < 0) {
+>  			dev_err(&pdev->dev, "can't get dma channels\n");
+> -			goto out_clk_put;
+> +			goto disable_irq;
+>  		}
+>  	}
+>  
+> @@ -1415,11 +1415,14 @@ static int dspi_probe(struct platform_device *pdev)
+>  	ret = spi_register_controller(ctlr);
+>  	if (ret != 0) {
+>  		dev_err(&pdev->dev, "Problem registering DSPI ctlr\n");
+> -		goto out_clk_put;
+> +		goto disable_irq;
+>  	}
+>  
+>  	return ret;
+>  
+> +disable_irq:
+> +	if (dspi->irq > 0)
+> +		disable_irq(dspi->irq);
+>  out_clk_put:
+>  	clk_disable_unprepare(dspi->clk);
+>  out_ctlr_put:
+> @@ -1435,6 +1438,8 @@ static int dspi_remove(struct platform_device *pdev)
+>  
+>  	/* Disconnect from the SPI framework */
+>  	dspi_release_dma(dspi);
+> +	if (dspi->irq > 0)
+> +		disable_irq(dspi->irq);
 
-Patch applied, thanks!
+What happens, if you re-bind the driver?
+Is the IRQ still working?
+Who is taking care of calling the enable_irq() again?
+What happens, if you really have a shared IRQ line?
+Is the IRQ disabled for all other devices on the same IRQ line?
 
-Bartosz
+>  	clk_disable_unprepare(dspi->clk);
+>  	spi_unregister_controller(dspi->ctlr);
+>  
+> 
+Marc
+
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
