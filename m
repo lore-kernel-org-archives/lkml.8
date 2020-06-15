@@ -2,173 +2,110 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A731BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715982067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592215228;
-	bh=00G+G40iLh/fz0ZoDfre7cPvPu8PXFNDupSAUY86Lvw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Wj4eP2uT/m3VFiBs26Jbn47yePIB316Ifui9OuVX+XNsMwnpj+2Vnjd6Jp0ZMYuEB
-	 u4LvOv93JEEJ/T+QcRd2oufWTPsefSfraMwFJpDJCH9j7sBB+TBs5VKs/vi3Be8+BB
-	 J9tBKengscM0RyACMe0RDKgyJguH2sdYFJWuOcak=
+	by mail.kernel.org (Postfix) with ESMTP id 158B42068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 10:01:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0NhFHpH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbgFOKAY (ORCPT
+        id S1729407AbgFOKBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 06:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729017AbgFOKAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 06:00:21 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E0AD20714;
-        Mon, 15 Jun 2020 10:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592215221;
-        bh=00G+G40iLh/fz0ZoDfre7cPvPu8PXFNDupSAUY86Lvw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=15MPTThiFiuBGre6NKmQUmf7lBRfm5NBAyLEIkeijmEMZ2kWvGTAQVLZ4mTdSZ8TK
-         OIE7eU4azos03DmxpznByoh4CP/xnbp6jlqp4BKMO1d2d4tUECtI8NEs0arkc0j+G6
-         KfMZdv7ggoIWzQvzd+Zt3tiL2pxVQ5SaoXtqrmiw=
-Received: by mail-oi1-f169.google.com with SMTP id x202so15328039oix.11;
-        Mon, 15 Jun 2020 03:00:21 -0700 (PDT)
-X-Gm-Message-State: AOAM532mNQulw32ycf3foHJ3HOFc/80lhUffjPjq94xY6B8KQNDj6j/7
-        BejDowYLmTbRy/HgJz1K31c9REoMCKvns1X9ge8=
-X-Google-Smtp-Source: ABdhPJw3tdI8zwDBVzm2IE5Fc1IJYBRoBO9Vu7dfS8iQs1S3WvzDCbp3jBUnfOMao1V0VmclY1k4jJKLGRpqrW7v99o=
-X-Received: by 2002:aca:ba03:: with SMTP id k3mr1821642oif.33.1592215220452;
- Mon, 15 Jun 2020 03:00:20 -0700 (PDT)
+        Mon, 15 Jun 2020 06:01:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgFOKBc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 06:01:32 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB132C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:01:31 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id m2so6912328pjv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 03:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SM4junO6RsxYtsNidTq+rujDE8gOtQN9q2DY15B+ppc=;
+        b=X0NhFHpHPSiSyhPZWUuIZqarNW63bMJRXZj0lVecPsoxNwkxJHx8isErxhHHG+Yutg
+         f98JMoCY9GOqNahjTK94Ws1EUOtbKzFKSZMPCQdJKUzVzXzAqKrWgWY4VjA9f3iuZfqA
+         2rt+EXe7fhnDXajvkrjr7SE4s+RbacQtfX431IZg9pr7qvA3HuJaHDYOuLouFFMj/JPi
+         aSSyukV87RPp1PWptJNdbC17BvMuxTKdlmCu4wCokxPpKKbMASmKz3jbeiUvJa+l1JLD
+         W3ASv60AtidpudKLFtis7EyqZcvyLts8tlfiXxeV0/nbrX1a8xmh+oo8JNgKk7tw0XtL
+         hqqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SM4junO6RsxYtsNidTq+rujDE8gOtQN9q2DY15B+ppc=;
+        b=LaN+d8I+3pQBXEokWo0IU1YTjFOS03+I/5cTigStxXiiAdPaK0obgom2qOREQ+E0XC
+         aVm5iTNrZPwgi1OOUlvXSFf4tG6XTW1YltcqMHgFt5sovRZcra0jK1y7btUW96kKGZoi
+         8ZgTH6cXy/UTGQV7VtQ7RsRznUHVuzFqem1taH9oKC27k/vUN0LWm+uu5cCdHCF183fC
+         CZPGDdG83Bwd6lBjA26K7i4zUwPpuRlV4X94utXZj4GNukU/g1/7HTWNKzXhTSeBluRy
+         Rx30Yq+wt86wEvQqnZlUCtPtPqtqDhoWJkaJKhm/qDOBaaEpAu4VbCP01qemRJ0r8h3c
+         lnDg==
+X-Gm-Message-State: AOAM533x0l9a0G/9B+U0mbG1tN+I7uJn7w016s2sRkin5+1B58puaIor
+        AGFb0OpQvLxOlPB5K5MLhH12OenSxTs=
+X-Google-Smtp-Source: ABdhPJxNTo8OpibLA7vYR59eJ4apzhhKEEDyKcdjlb0z+L4e7GXG6HnQEzJeOMPvfO3eKziIynTe/g==
+X-Received: by 2002:a17:902:7c16:: with SMTP id x22mr5570064pll.66.1592215291236;
+        Mon, 15 Jun 2020 03:01:31 -0700 (PDT)
+Received: from localhost ([49.207.193.84])
+        by smtp.gmail.com with ESMTPSA id w6sm11991849pjy.15.2020.06.15.03.01.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jun 2020 03:01:30 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 15:31:29 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: ARM: vmsplit 4g/4g
+Message-ID: <20200615100129.GB5921@afzalpc>
+References: <20200514133545.GA5020@afzalpc>
+ <CAK8P3a1PVwkAi8ycUAB-7EMk4nQ_qOu0rC5vJAQk_q9j5xvOJw@mail.gmail.com>
+ <20200516060624.GA6371@afzalpc>
+ <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
+ <20200607125932.GA4576@afzalpc>
+ <20200607161116.GN1551@shell.armlinux.org.uk>
+ <20200608110902.GA5736@afzalpc>
+ <CACRpkdboPBGBdHaRtZ=OAFvikYZVh=BVu192uyiB8T=yeHHEbA@mail.gmail.com>
+ <20200612102551.GA5377@afzalpc>
+ <CACRpkdZB5usrY1HkunoceFtz8-QhtTAojJftD=-n0s6fBB2j1g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200527171425.GA4053@embeddedor> <202005290131.4B104937C@keescook>
- <20200529173722.GB10051@embeddedor>
-In-Reply-To: <20200529173722.GB10051@embeddedor>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 15 Jun 2020 12:00:09 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGargNLdbuy0AhLUJS4j1eANGuMnvBpzWBTeVmr-9=-1g@mail.gmail.com>
-Message-ID: <CAMj1kXGargNLdbuy0AhLUJS4j1eANGuMnvBpzWBTeVmr-9=-1g@mail.gmail.com>
-Subject: Re: [PATCH] efi: Replace zero-length array and use struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZB5usrY1HkunoceFtz8-QhtTAojJftD=-n0s6fBB2j1g@mail.gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020 at 19:32, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
->
-> On Fri, May 29, 2020 at 01:31:54AM -0700, Kees Cook wrote:
-> > On Wed, May 27, 2020 at 12:14:25PM -0500, Gustavo A. R. Silva wrote:
-> > > The current codebase makes use of the zero-length array language
-> > > extension to the C90 standard, but the preferred mechanism to declare
-> > > variable-length types such as these ones is a flexible array member[1][2],
-> > > introduced in C99:
-> > >
-> > > struct foo {
-> > >         int stuff;
-> > >         struct boo array[];
-> > > };
-> > >
-> > > By making use of the mechanism above, we will get a compiler warning
-> > > in case the flexible array does not occur last in the structure, which
-> > > will help us prevent some kind of undefined behavior bugs from being
-> > > inadvertently introduced[3] to the codebase from now on.
-> > >
-> > > Also, notice that, dynamic memory allocations won't be affected by
-> > > this change:
-> > >
-> > > "Flexible array members have incomplete type, and so the sizeof operator
-> > > may not be applied. As a quirk of the original implementation of
-> > > zero-length arrays, sizeof evaluates to zero."[1]
-> > >
-> > > sizeof(flexible-array-member) triggers a warning because flexible array
-> > > members have incomplete type[1]. There are some instances of code in
-> > > which the sizeof operator is being incorrectly/erroneously applied to
-> > > zero-length arrays and the result is zero. Such instances may be hiding
-> > > some bugs. So, this work (flexible-array member conversions) will also
-> > > help to get completely rid of those sorts of issues.
-> > >
-> > > Lastly, make use of the sizeof_field() helper instead of an open-coded
-> > > version.
-> > >
-> > > This issue was found with the help of Coccinelle and audited _manually_.
-> > >
-> > > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > > [2] https://github.com/KSPP/linux/issues/21
-> > > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> > >
-> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> >
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> >
->
-> Thanks :)
->
+Hi Linus,
 
-Queued in efi/urgent, thanks
+On Mon, Jun 15, 2020 at 11:11:04AM +0200, Linus Walleij wrote:
 
+> OK I would be very happy to look at it so I can learn a bit about the
+> hands-on and general approach here. Just send it to this address
+> directly and I will look!
 
-> Please, see more comments below...
->
-> > > ---
-> > >  drivers/firmware/efi/efi.c | 3 ++-
-> > >  include/linux/efi.h        | 7 ++-----
-> > >  2 files changed, 4 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> > > index 7f1657b6c30df..edc5d36caf54e 100644
-> > > --- a/drivers/firmware/efi/efi.c
-> > > +++ b/drivers/firmware/efi/efi.c
-> > > @@ -622,7 +622,8 @@ int __init efi_config_parse_tables(const efi_config_table_t *config_tables,
-> > >                     rsv = (void *)(p + prsv % PAGE_SIZE);
-> > >
-> > >                     /* reserve the entry itself */
-> > > -                   memblock_reserve(prsv, EFI_MEMRESERVE_SIZE(rsv->size));
-> > > +                   memblock_reserve(prsv,
-> > > +                                    struct_size(rsv, entry, rsv->size));
-> > >
-> > >                     for (i = 0; i < atomic_read(&rsv->count); i++) {
-> > >                             memblock_reserve(rsv->entry[i].base,
-> > > diff --git a/include/linux/efi.h b/include/linux/efi.h
-> > > index c45ac969ea4eb..328cc52a5fd45 100644
-> > > --- a/include/linux/efi.h
-> > > +++ b/include/linux/efi.h
-> > > @@ -1234,14 +1234,11 @@ struct linux_efi_memreserve {
-> > >     struct {
-> > >             phys_addr_t     base;
-> > >             phys_addr_t     size;
-> > > -   } entry[0];
-> > > +   } entry[];
-> > >  };
-> > >
-> > > -#define EFI_MEMRESERVE_SIZE(count) (sizeof(struct linux_efi_memreserve) + \
-> > > -   (count) * sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
-> > > -
-> > >  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
-> > > -   / sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
-> > > +   / sizeof_field(struct linux_efi_memreserve, entry[0]))
-> >
-> > Whoa. This is kind of a "reverse struct_size()". I wonder if any other
-> > places in the kernel do a similar calculation?
-> >
->
-> So far this is the only intance of this I've run into.
->
-> What I've found is that there are many instances of the open-coded
-> version of sizeof_field() and offsetof(). I'm addressing them on the
-> way.
->
-> Thanks
-> --
-> Gustavo
+Have sent it
+
+> > For the next 3 weeks, right now, i cannot say whether i would be able
+> > to spend time on it, perhaps might be possible, but only during that
+> > time i will know.
+> 
+> I'm going for vacation the next 2 weeks or so, but then it'd be great if
+> we can start looking at this in-depth!
+
+Yes for me too
+
+Regards
+afzal
