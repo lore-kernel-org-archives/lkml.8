@@ -2,123 +2,185 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA516C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4175C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D69E20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A409207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 19:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="O0zD/ign"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dkbPpsjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgFOTlC (ORCPT
+        id S1730154AbgFOTmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 15:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
+        Mon, 15 Jun 2020 15:42:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbgFOTlC (ORCPT
+        with ESMTP id S1729847AbgFOTmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 15:41:02 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B54C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:41:01 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id p18so12390287eds.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:41:01 -0700 (PDT)
+        Mon, 15 Jun 2020 15:42:03 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16482C08C5C5
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:42:01 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h95so300655pje.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 12:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4s29RXI4DZmoz7Uu9spIoKDjM10KzT1NJ7eoQ6iGuKQ=;
-        b=O0zD/ignX49ZyEfuD6nUnsJTM4Z2o6FY8NMNsDmSNfe6aQVWNrOXTRTPjuGCOQ7uCB
-         k9fwQ/N07Of5R++0Wqywf7IkNDOTgpQYrKqFq25Z4tEh9kpSx0iQG8sB0skjvtknQbe8
-         LAlKIYFmc59bA3kzhgA6+V+U1gaq//XY0YNfP9M1mcKrtpnepdygD4ppBX7FT2nrwDnH
-         SQHjoOUEzTNzr7VSEmdqRr8gky5IcYTdj1QWaJduNkBbFQDElcSFHxEf5PNUM5ITYStm
-         7DRJEHhlCSLXRKelwGOwYMezexaBwP1VefdC3djrn0BKXNFFcPnyNgUmAm3/YL88FCYy
-         QPOg==
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=HYEguIgCbs72qU3RQvrxRYIXfQehsVQ9xr9hBAlsIv0=;
+        b=dkbPpsjDjU6G8ru0ttn46RPKVPgFK19yRuH9PgkL25/VkhONVT6d1SRaSawFEkIh3P
+         q2G9dK2MaZXWR8pk5Y2Y1Mt/EV6grY8Q7bXEvq8BPnQgIoE3kerT+l+D6ATbDm2I1+nO
+         Ua7wjPbwO7pX5wW8J0wsCoA2UyrRPH+drXvz8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4s29RXI4DZmoz7Uu9spIoKDjM10KzT1NJ7eoQ6iGuKQ=;
-        b=YGLTLccEvXf1uxSPbt8BX9ao2VLIL/19spN+e1ZrgdTiIveynjcg9bbRJ/HzE8E6lV
-         IAs9bJQi/cWj1Tm5bD8XbFxPIKxQw65LmzMsH73VaM/L1yqUqwFCko8lAhzWNCPYO+yB
-         V8cuXmpu2y+gd6FhWbHlptAAPRrPchIyVMExAZ9X+7j5/3J8IqY1a+2ylYjE8staZKuk
-         ZsMcReKJxagQyuH3Sh4cvIQq+wYjgXTFdwv7xwjSCZsdDWrk0y6aCHITcmubAm4Rm1M3
-         Ft5RAuyY05tQMQjiLT+Ip9HLrMjUO1cBv2R0WwRKjmnF/9mkaWow1HTY4FPV97XDWd3u
-         JuCQ==
-X-Gm-Message-State: AOAM530a4MxgwVXZzyScu2Spf9MqKAFBme6RI64xj3xxgO9m8znlpKBi
-        Cj6ruvp2sYlsB0HCcEW6+PUy+hTYAnU7sVM+SuLBJg==
-X-Google-Smtp-Source: ABdhPJw7gZGRCrEp8Uckb0OtIxiFQkW6W0bIFXefK59EdVk9QlmbMAZVSR15quYWqkF3RICuTtvR0uovNicOGRMtPBI=
-X-Received: by 2002:a50:c359:: with SMTP id q25mr26045616edb.123.1592250060573;
- Mon, 15 Jun 2020 12:41:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200615124407.32596-1-vaibhav@linux.ibm.com> <20200615124407.32596-3-vaibhav@linux.ibm.com>
- <20200615125552.GI14668@zn.tnic>
-In-Reply-To: <20200615125552.GI14668@zn.tnic>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 15 Jun 2020 12:40:49 -0700
-Message-ID: <CAPcyv4gmAk=mRCVQCgdSEN9JQ9b+C_u0xug-knZpQmGNL_ywxA@mail.gmail.com>
-Subject: Re: [PATCH v13 2/6] seq_buf: Export seq_buf_printf
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HYEguIgCbs72qU3RQvrxRYIXfQehsVQ9xr9hBAlsIv0=;
+        b=bgvZQjwUsAVDMEZP1yAQtGjAc4gtkwIDy8LgUr4QvhiNdkjlt07ieEUMMOCl20gqi8
+         iSQY5GFo9sHDWTNj68QGs90XWmvBCp4j96thpcgs/c2kcs3Q7TVy4tr1XtyQI1Ys/OvZ
+         /iDmjqjf1Ci8hVIXIHkNj/Un7TZriGioiKPCYIOUObHLkAoctvzk0UFKIsf+7WEtdLNa
+         l5Y2MNyQQO8776DdfoGU4Agmgw4dp7YYW0an4rkGV60ywcexRZaBg0p1csN84Xkgz1gv
+         f7AqyeCCByIL9OW6PW6B26eDeoi+AAcUaFTh96KnaQjg8MnabBotwSQsmHgQgbbiOUY2
+         NG0A==
+X-Gm-Message-State: AOAM531oLjjrVJ2eI/ig2nRLyISEMhFaESJWSXv7gL+zh3qvSqTZferd
+        QySTXibwpBO5uCNvTI1mO/jZUQ==
+X-Google-Smtp-Source: ABdhPJxlw3cBZEDOlyThQIHDpnQsA/kqwh3v+wvEHfOnz+hY04zT6ELbTDVN9pSlaag4HAinH9avGg==
+X-Received: by 2002:a17:902:b411:: with SMTP id x17mr22579249plr.272.1592250120762;
+        Mon, 15 Jun 2020 12:42:00 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id gq8sm293663pjb.14.2020.06.15.12.41.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 12:42:00 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH v9 0/8] firmware: add request_partial_firmware_into_buf
+Date:   Mon, 15 Jun 2020 12:41:43 -0700
+Message-Id: <20200615194151.7011-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 5:56 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Mon, Jun 15, 2020 at 06:14:03PM +0530, Vaibhav Jain wrote:
-> > 'seq_buf' provides a very useful abstraction for writing to a string
-> > buffer without needing to worry about it over-flowing. However even
-> > though the API has been stable for couple of years now its still not
-> > exported to kernel loadable modules limiting its usage.
-> >
-> > Hence this patch proposes update to 'seq_buf.c' to mark
-> > seq_buf_printf() which is part of the seq_buf API to be exported to
-> > kernel loadable GPL modules. This symbol will be used in later parts
-> > of this patch-set to simplify content creation for a sysfs attribute.
-> >
-> > Cc: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-> > Cc: Cezary Rojewski <cezary.rojewski@intel.com>
-> > Cc: Christoph Hellwig <hch@infradead.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-> > ---
-> > Changelog:
-> >
-> > v12..v13:
-> > * None
-> >
-> > v11..v12:
-> > * None
->
-> Can you please resend your patchset once a week like everyone else and
-> not flood inboxes with it?
+This patch series adds partial read support via a new call
+request_partial_firmware_into_buf.
+Such support is needed when the whole file is not needed and/or
+only a smaller portion of the file will fit into allocated memory
+at any one time.
+In order to accept the enhanced API it has been requested that kernel
+selftests and upstreamed driver utilize the API enhancement and so
+are included in this patch series.
 
-Hi Boris,
+Also in this patch series is the addition of a new Broadcom VK driver
+utilizing the new request_firmware_into_buf enhanced API.
 
-I gave Vaibhav some long shot hope that his series could be included
-in my libnvdimm pull request for -rc1. Save for a last minute clang
-report that I misread as a gcc warning, I likely would have included.
-This spin is looking to address the last of the comments I had and
-something I would consider for -rc2. So, in this case the resends were
-requested by me and I'll take the grumbles on Vaibhav's behalf.
+Further comment followed to add IMA support of the partial reads
+originating from request_firmware_into_buf calls.
+
+Changes from v8:
+ - correct compilation error when CONFIG_FW_LOADER not defined
+Changes from v7:
+ - removed swiss army knife kernel_pread_* style approach
+   and simply add offset parameter in addition to those needed
+   in kernel_read_* functions thus removing need for kernel_pread enum
+Changes from v6:
+ - update ima_post_read_file check on IMA_FIRMWARE_PARTIAL_READ
+ - adjust new driver i2c-slave-eeprom.c use of request_firmware_into_buf
+ - remove an extern
+Changes from v5:
+ - add IMA FIRMWARE_PARTIAL_READ support
+ - change kernel pread flags to enum
+ - removed legacy support from driver
+ - driver fixes
+Changes from v4:
+ - handle reset issues if card crashes
+ - allow driver to have min required msix
+ - add card utilization information
+Changes from v3:
+ - fix sparse warnings
+ - fix printf format specifiers for size_t
+ - fix 32-bit cross-compiling reports 32-bit shifts
+ - use readl/writel,_relaxed to access pci ioremap memory,
+  removed memory barriers and volatile keyword with such change
+ - driver optimizations for interrupt/poll functionalities
+Changes from v2:
+ - remove unnecessary code and mutex locks in lib/test_firmware.c
+ - remove VK_IOCTL_ACCESS_BAR support from driver and use pci sysfs instead
+ - remove bitfields
+ - remove Kconfig default m
+ - adjust formatting and some naming based on feedback
+ - fix error handling conditions
+ - use appropriate return codes
+ - use memcpy_toio instead of direct access to PCIE bar
+
+Scott Branden (8):
+  fs: introduce kernel_pread_file* support
+  firmware: add request_partial_firmware_into_buf
+  test_firmware: add partial read support for request_firmware_into_buf
+  firmware: test partial file reads of request_partial_firmware_into_buf
+  bcm-vk: add bcm_vk UAPI
+  misc: bcm-vk: add Broadcom VK driver
+  MAINTAINERS: bcm-vk: add maintainer for Broadcom VK Driver
+  ima: add FIRMWARE_PARTIAL_READ support
+
+ MAINTAINERS                                   |    7 +
+ drivers/base/firmware_loader/firmware.h       |    5 +
+ drivers/base/firmware_loader/main.c           |   79 +-
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/bcm-vk/Kconfig                   |   29 +
+ drivers/misc/bcm-vk/Makefile                  |   11 +
+ drivers/misc/bcm-vk/bcm_vk.h                  |  407 +++++
+ drivers/misc/bcm-vk/bcm_vk_dev.c              | 1310 +++++++++++++++
+ drivers/misc/bcm-vk/bcm_vk_msg.c              | 1440 +++++++++++++++++
+ drivers/misc/bcm-vk/bcm_vk_msg.h              |  202 +++
+ drivers/misc/bcm-vk/bcm_vk_sg.c               |  271 ++++
+ drivers/misc/bcm-vk/bcm_vk_sg.h               |   60 +
+ drivers/misc/bcm-vk/bcm_vk_tty.c              |  352 ++++
+ fs/exec.c                                     |   93 +-
+ include/linux/firmware.h                      |   12 +
+ include/linux/fs.h                            |   15 +
+ include/uapi/linux/misc/bcm_vk.h              |   99 ++
+ lib/test_firmware.c                           |  154 +-
+ security/integrity/ima/ima_main.c             |   24 +-
+ .../selftests/firmware/fw_filesystem.sh       |   80 +
+ 21 files changed, 4599 insertions(+), 53 deletions(-)
+ create mode 100644 drivers/misc/bcm-vk/Kconfig
+ create mode 100644 drivers/misc/bcm-vk/Makefile
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_dev.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_tty.c
+ create mode 100644 include/uapi/linux/misc/bcm_vk.h
+
+-- 
+2.17.1
+
