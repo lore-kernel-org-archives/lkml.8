@@ -2,100 +2,96 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26247C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F174B20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592243438;
-	bh=vAvioDlgmiL13gRj5lHUMxePiQfK0UiYiy0K8DfnIO0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=thebSnI55stHo4o5AnIjE1lgMFUU9XzTHCXLTn3fYIruKT2n4EH/fm9tfU089Ulh9
-	 +d7g6iQTcIEcEdWfUQ7/TRIfifCpLRMuXDMJCmpB7qEGf4myWkmW+w3e+fHllBj8Fp
-	 NUalmn3OdQtTuWO71HPQ6g1a6g2nXE2dagA+CImk=
+	by mail.kernel.org (Postfix) with ESMTP id 2D7E9206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="RnLGiJ5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbgFORuh (ORCPT
+        id S1729894AbgFORxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:50:37 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39175 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731065AbgFORug (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:50:36 -0400
-Received: by mail-il1-f195.google.com with SMTP id p5so16149186ile.6;
-        Mon, 15 Jun 2020 10:50:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QqFXAIP35kaKyGPJGm7boR5Cw7I5I86IlWfC5gy7jdY=;
-        b=kiIpc7AIL8Dk1fC0dggM5w81CZwU2lyBNIv0tFHeEQ9QzoHqcXPW455jjrSgyjTIwr
-         b9c6fHRM1AFlHMI0/ziww7CDIvlcPL77po3V+/Cax7rp51kVdaEUOlNl134THIOL5zYO
-         8Cq2nYBvkW2IcWwtaVo8Ywl9HOgFnPe8huvJEiMSMrOcOTZAExhFIyzwzBNkFL6TFs/M
-         ZYAj8Pd3pjOjHYqYsJC6b4fJbM2WDyzda7zfJHmuJrEnrqkwLHdPtV4oQIhJ5po6QU4u
-         8fNbYWQtjY6xEg2SJdPxB7Gggh8clzN1XYk5rGWJ3plBcXwAHiTc1QVdEM7+L4bBmwSx
-         mOiQ==
-X-Gm-Message-State: AOAM531AeRH2ukfl9fkBECMnt+Z1sWiokhdZfPTKP5zEu/4I/0OA7EQK
-        UaVQqfG5YSlBgVAJfU7EZQ==
-X-Google-Smtp-Source: ABdhPJxCEkYl2U35hyzTpC6rWtsSN7STUGL7WtCf6JOtFuiSQmZkx9jnmtarBm3jhTOq8YQocc2Szw==
-X-Received: by 2002:a92:aa13:: with SMTP id j19mr27556195ili.193.1592243434058;
-        Mon, 15 Jun 2020 10:50:34 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id b65sm8511986ilg.82.2020.06.15.10.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 10:50:33 -0700 (PDT)
-Received: (nullmailer pid 2031787 invoked by uid 1000);
-        Mon, 15 Jun 2020 17:50:32 -0000
-Date:   Mon, 15 Jun 2020 11:50:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        kernel@collabora.com, Emil Velikov <emil.velikov@collabora.com>,
-        linux-kernel@vger.kernel.org,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        linux-pm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sebastian Reichel <sre@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCHv2 2/6] power: supply: gpio-charger: Make gpios optional
-Message-ID: <20200615175032.GA2031757@bogus>
-References: <20200605224403.181015-1-sebastian.reichel@collabora.com>
- <20200605224403.181015-3-sebastian.reichel@collabora.com>
+        Mon, 15 Jun 2020 13:53:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40844 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729124AbgFORxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 13:53:20 -0400
+Received: from zn.tnic (p200300ec2f063c00329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:3c00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5EA7B1EC030F;
+        Mon, 15 Jun 2020 19:53:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592243599;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=S3O+QH4+12YuTGu+ImlSy838Q/+PfjN18A1LC76leQ0=;
+        b=RnLGiJ5TZ0mg81hAYnu5smsiVxg6BeGZtItDhR7JZ3Vog219pAcBZ+KuYnSR4sKsUoJaJL
+        VA4o7C3YmWAgIHBqk4gb2GV3JHKg1clf+woLNwAy4Ccb0+ERiwk6FH1XejBxdVjYEwUYgK
+        ALP2DCO7jaNbzVmF4uX4MAdB82g+xn4=
+From:   Borislav Petkov <bp@alien8.de>
+To:     X86 ML <x86@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86/alternatives: Add pr_fmt() to debug macros
+Date:   Mon, 15 Jun 2020 19:53:15 +0200
+Message-Id: <20200615175315.17301-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605224403.181015-3-sebastian.reichel@collabora.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 06 Jun 2020 00:43:59 +0200, Sebastian Reichel wrote:
-> While strongly recommended, not all devices have a gpio to
-> detect if the charger is connected. This moves the 'gpios'
-> from required to optional section.
-> 
-> This also modifies error handling for the GPIO a bit: We
-> no longer fallback to pdata, if a GPIO is specified using
-> GPIO descriptor tables. This is a bit cleaner and does
-> not have any real impact: There are only two mainline pdata
-> users (arm/mach-sa1100/collie.c, arm/mach-pxa/tosa.c) and
-> none of them specify the GPIO via gpiod descriptor tables.
-> Once both have been converted the driver's support for
-> specifying GPIOs numbers in pdata will be dropped.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/power/supply/gpio-charger.yaml   |  7 +++-
->  drivers/power/supply/gpio-charger.c           | 38 ++++++++++++-------
->  2 files changed, 31 insertions(+), 14 deletions(-)
-> 
+From: Borislav Petkov <bp@suse.de>
 
-Acked-by: Rob Herring <robh@kernel.org>
+... in order to have debug output prefixed with the pr_fmt text "SMP
+alternatives:" which allows easy grepping:
+
+  $ dmesg | grep "SMP alternatives"
+  [    0.167783] SMP alternatives: alt table ffffffff8272c780, -> ffffffff8272fd6e
+  [    0.168620] SMP alternatives: feat: 3*32+16, old: (x86_64_start_kernel+0x37/0x73 \
+		  (ffffffff826093f7) len: 5), repl: (ffffffff8272fd6e, len: 5), pad: 0
+  [    0.170103] SMP alternatives: ffffffff826093f7: old_insn: e8 54 a8 da fe
+  [    0.171184] SMP alternatives: ffffffff8272fd6e: rpl_insn: e8 cd 3e c8 fe
+  ...
+
+No functional changes.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/kernel/alternative.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 8fd39ff74a49..9e7dc37a8627 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -53,7 +53,7 @@ __setup("noreplace-smp", setup_noreplace_smp);
+ #define DPRINTK(fmt, args...)						\
+ do {									\
+ 	if (debug_alternative)						\
+-		printk(KERN_DEBUG "%s: " fmt "\n", __func__, ##args);	\
++		printk(KERN_DEBUG pr_fmt(fmt) "\n", ##args);		\
+ } while (0)
+ 
+ #define DUMP_BYTES(buf, len, fmt, args...)				\
+@@ -64,7 +64,7 @@ do {									\
+ 		if (!(len))						\
+ 			break;						\
+ 									\
+-		printk(KERN_DEBUG fmt, ##args);				\
++		printk(KERN_DEBUG pr_fmt(fmt), ##args);			\
+ 		for (j = 0; j < (len) - 1; j++)				\
+ 			printk(KERN_CONT "%02hhx ", buf[j]);		\
+ 		printk(KERN_CONT "%02hhx\n", buf[j]);			\
+-- 
+2.21.0
+
