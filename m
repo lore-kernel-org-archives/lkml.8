@@ -2,87 +2,137 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF83C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7527C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A3620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592237951;
-	bh=De1ygWfVC04QCSTpGYUm/kRvjgyR4IWcEhnOKIuZGzc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NsJDmHTKj4WEtUnCQ2ekUJtTMzlUIZpwkEproyz/lnjhMFLp1Iood2atDepJPQ3Bs
-	 H1xYI1PfPFlFmlPRVXufuco8jbG4hegrVwDhEdWtmMS0GLjnmIj58g2X3wELZeqtRB
-	 8W3h7MajdFzGMDbvpboGBZQiaEMy3Jo4uTrJ9a2Q=
+	by mail.kernel.org (Postfix) with ESMTP id B27DC20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 16:19:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DmL6Dsoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbgFOQTK (ORCPT
+        id S1730946AbgFOQTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 12:19:10 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35021 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729949AbgFOQTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:19:08 -0400
-Received: by mail-il1-f193.google.com with SMTP id l6so15893165ilo.2;
-        Mon, 15 Jun 2020 09:19:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UPfOOEL5DDndxKqYhH4//hh/kNNX+nOa7IzprjkujnA=;
-        b=cRmJu8cy9BSQ8vMTfFKkplQJ7m8wYIdBCxA8NFgquV3RERIwVs4HbnRuv2k3lAxvgW
-         M7pq3H/45CadZEKohN84B30aObT+CtS7HBnGnhBS24B9xpEwgAAzCyXfwSR6NbVeJD1I
-         TzDvacdfRhf5UDlR9PTTh9rEoV3pD+cibRpKJMcM3m7zMU9OYSharzpgmX4op3D6rljJ
-         Gg+9V2O9p2AYNJ9921zsNT9xXd2wcJa6SrXftCk0N3c6T1VAYEaStTCgurnS+Km4OG9W
-         3iBEfoM1xWr0mZQJia6iOqwvgD+N+ny1wooEEgcPZWOGjawEo2oBUT3u2qnivdfTIgCv
-         o21Q==
-X-Gm-Message-State: AOAM533nRY/J81nUfMsLyu8X0Zjl0rC56tnOASEMrNYn4/EchO/YrY5O
-        EBYyrLyV4zKspub3kxk+qA==
-X-Google-Smtp-Source: ABdhPJwBNTN8gYyShvFlByTQFx7N5htyq6qg0xw5IUoPCulOgSRZVKo6/Bey6il0ASqfKtWzFGQctA==
-X-Received: by 2002:a92:4948:: with SMTP id w69mr24962411ila.15.1592237947412;
-        Mon, 15 Jun 2020 09:19:07 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id p5sm8136663ilg.88.2020.06.15.09.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 09:19:06 -0700 (PDT)
-Received: (nullmailer pid 1882654 invoked by uid 1000);
-        Mon, 15 Jun 2020 16:19:04 -0000
-Date:   Mon, 15 Jun 2020 10:19:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Linux-imx@nxp.com, daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH V5] dt-bindings: thermal: Convert qoriq to json-schema
-Message-ID: <20200615161904.GA1882367@bogus>
-References: <1591234216-14927-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 15 Jun 2020 12:19:32 -0400
+Received: from mout.gmx.net ([212.227.15.18]:57969 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729637AbgFOQTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 12:19:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1592237959;
+        bh=pT77xwIyg5fdLwWqVyEl7LfKJAAWp7HtQdcGpD4ikuc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=DmL6DsoicACVVLfxurlPPEtO8vK3gkrBkvmX5YPQuLOLwygVgp1i2K4LiAjTuw8ZH
+         cx86iGqAWroh63eKU9DlPzY695dijHsj7exC+Gv4RKV5RzIyaipNIsSqKoMx3dyKuf
+         8Zz7r3bsVa3KJhRSSeNiL39BTADhDUh7dXAWN5bg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from strobe-jhalfs ([188.109.165.61]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MQ5vW-1jXihL2Ovo-00M2z2; Mon, 15
+ Jun 2020 18:19:19 +0200
+From:   Stephen Berman <stephen.berman@gmx.net>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+References: <87tuzjcovq.fsf@gmx.net>
+        <20200610102514.4vdzu5u7d6vnpicn@linutronix.de>
+        <87imfyh6yx.fsf@gmx.net> <87wo4dligz.fsf@gmx.net>
+        <20200612110122.jossn5zrktcvpbpm@linutronix.de>
+        <87tuzdrgm5.fsf@gmx.net>
+        <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
+        <874krcsquv.fsf@gmx.net>
+        <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
+        <87tuzcqqul.fsf@gmx.net>
+        <20200615155846.nd5n32qggusakxl7@linutronix.de>
+Date:   Mon, 15 Jun 2020 18:19:18 +0200
+In-Reply-To: <20200615155846.nd5n32qggusakxl7@linutronix.de> (Sebastian
+        Andrzej Siewior's message of "Mon, 15 Jun 2020 17:58:46 +0200")
+Message-ID: <87pna0qp2x.fsf@gmx.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591234216-14927-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:B6nN4qd35ZcpNV/+g4XvNSLfvahGBT1BOzOpMPdf9LQsSWO99HX
+ 4oUAVkqdjRIfx8RiDDMhfPQREolVALZz53Bj/L5uu6Ni+nK5zBmd8X/f0Hy6YZK/sDtKfr8
+ GF53V056/HklbpdUkHZfUNcKld7+Q/aZU4bo/ULXwNLbluUG6WWFVIcXHcfxRhZ/8PbFrWZ
+ wfN6SewVMMdwwkKGJp1vw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:y+soa4AeU/w=:C353QW0PCdUx0j024JugMW
+ jbkEChrZaAlM4UNcLuY2kfXvwgwqc/YwWVe8LDO1JR0S5DSH/iflGg5BaSiUpZMfZhXk5GYND
+ AvuW8FzyCnDoNErYLqmxdZp8EpTWaatcTO2glgF2XoLGxJxgfy4AYgRmwEgRU40OWQj8TdBi7
+ DPyZplAj5ejYNTmnhsA3zZ7SqyTu+P25TXDlqqRcjmqSwIE+Uw9h+HX56TbBc1w6nt9/VJyu4
+ PiGM+IZduvwCbgapSqveFuZjPFoJwTwvbQ7t79j5d/3xGAZ/7YxekFvxM9X/otY/9NX9cxIA1
+ QkR4tkumo3ZG0vhnNuwZZhZYHzaIvu4S6JVzQ2H1odX9iemy+j29nsWXX336xTsp5DYz7pDbt
+ 6Qos9Rt5oICAxAYUYrW11uFPs5V1v4P3s+46LmWIEtHjHgAa+NEbwkcOLLrB3aHHmfLzTwgei
+ FihqkXOFkQ6H5j5pa1Kx/Ew0VH19/QHtKQlfOjKbSGt+sbsA//fp8Le3D44Ge+XXaRoNw7OoI
+ G6ZoUdn7mruLrEXHLoTNCApTg4pkDScKxJJXwUwWvUreKTGsjVrBocDESI8EI/FUBvKWA2OBX
+ CdvPlgsmVLOQslu+0f94NhuH+VAakxx307c2Wp7XbsTSLrxR/0B4w+MaupzdO2YdAMobsLi2B
+ PWVwXkatO6l04SvUbo6nRph9ZW3k2tR5tOJFHD2tgS7Z78eoq63lW1o+Fo1nrgBtJXibq3HpG
+ uvPsTeSuWDS9Z56UDCWrB6Wyr2vYQXJMR23r1oNr/FBL+pt/7DnVi6+2YDCzywAeZyoSqBPR+
+ hKTXNaSZICYuC6astaFsMJdLu4me5ujuzn6JHGeOd3nccatvfiGSZZUbPWi/giIGzaH1NaTxN
+ f4yftTt3oeamDAtwYYgZR6YtShnJw53eqbstPrgU9dXBmlfeRdqXkTETLBaGCiJvNRMso/FgI
+ CLQo4MmndNyf4k71NkwgLEB/MSiU844lRXtvYlMxXex+S3FsDy6RaECKNzS5m1jYNtGfxCwmD
+ ieNzMrP59o2yLVTBWOclFOgGch9jzww+61We+opGdQYxWmnclhiUCoInPiPPWAxCj41rbjmpN
+ 1T4jA9bnIDEYHWgZGfdg5ighRBDEOdfceJpBuAozPXqG0vDv8oFGMeKga8LDzOzjC2plkeryU
+ PUwp8t5B1X0medU/9oz61lPoQPsXjRlfJuKu4Q9c6H67b0Px40zIoMNXRWwjqnP/sdss+MuR1
+ lVjUTBADjqIeF5z+Z
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 04 Jun 2020 09:30:16 +0800, Anson Huang wrote:
-> Convert the qoriq thermal binding to DT schema format using json-schema
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V4:
-> 	- add "additionalProperties: false"
-> ---
->  .../devicetree/bindings/thermal/qoriq-thermal.txt  |  71 -------------
->  .../devicetree/bindings/thermal/qoriq-thermal.yaml | 114 +++++++++++++++++++++
->  2 files changed, 114 insertions(+), 71 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
->  create mode 100644 Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-> 
+On Mon, 15 Jun 2020 17:58:46 +0200 Sebastian Andrzej Siewior <bigeasy@linut=
+ronix.de> wrote:
 
-Applied, thanks!
+> On 2020-06-15 17:41:06 [+0200], Stephen Berman wrote:
+>> > If you do this "t" then there should be a lot of output on your consol=
+e.
+>> > If you do this from an xterm then you can see the output after typing
+>> > "dmesg". The output should appear also in your system log.
+>>=20
+>> Ah, ok, I do see it in the log, it looks basically the same as the call
+>> trace I posted upthread.  I wonder why there was no such output in the
+>> console, could there be some setting that suppresses it even though
+>> /proc/sys/kernel/sysrq has `1'?
+>
+> You have ignore_loglevel soo everything should appear on your console.
+> The is true for your tty / ctrl+alt+f1 but your xterm shell.
+
+Yet that appears not to be the case here, or I'm still doing something
+wrong =F0=9F=A4=B7
+
+>> There were in fact 99 "Start .* acpi_ev_notify_dispatch" messages and 98
+>> "End .* acpi_ev_notify_dispatch" messages.  Here's the last of them
+>> before I rebooted:
+[...]=20
+>> acpi_os_execute_deferred_notify(851) Start ffff8d7aa8758a80
+>> acpi_ev_notify_dispatch+0x0/0x55(ffff8d7aa84e70a0)
+>> Jun 15 08:58:26 strobe-jhalfs kernel: [ 194.339017] acpi_os_execute(1109)
+>> Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a6730 <ffff8d7aabb384=
+c0>
+>> Jun 15 08:58:27 strobe-jhalfs kernel: [ 195.363005] acpi_os_execute(1109)
+>> Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa99a6780 <ffff8d7aabb385=
+00>
+>> Jun 15 08:58:27 strobe-jhalfs kernel: [ 195.367978]
+>> acpi_os_execute_deferred_notify(853) End ffff8d7aa8758a80
+[...]=20
+
+> Okay. So there is "Adding" of four events/work items in total, each
+> almost every second.
+> Processing of one work-item took two seconds, the other one took a
+> second. These events are "old" so I don't see the "adding" line for the
+> Start/End.
+> You could look in the log for ffff8d7aa8758a80 to seen when it was
+> enqueued but it feels like ACPI enqueues more events then it is capable
+> of processing.
+
+It's there, 196 lines above the Start ffff8d7aa8758a80 line:
+
+Jun 15 08:56:58 strobe-jhalfs kernel: [  106.275356] acpi_os_execute(1109) =
+Adding acpi_ev_notify_dispatch+0x0/0x55 ffff8d7aa84e70a0 <ffff8d7aa8758a80>
+
+Steve Berman
