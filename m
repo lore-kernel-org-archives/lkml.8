@@ -2,151 +2,447 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76389C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A657C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56CEC20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="R5Vktszu"
+	by mail.kernel.org (Postfix) with ESMTP id 5353520663
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbgFOMpO (ORCPT
+        id S1730033AbgFOMpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729989AbgFOMpL (ORCPT
+        Mon, 15 Jun 2020 08:45:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52016 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729989AbgFOMpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:45:11 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46ACFC05BD1E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 05:45:11 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o8so5061180wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 05:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5WfldrA7Ybz/CNtCQsbY2j9hmaVRS/lefK2C8B4/ydo=;
-        b=R5VktszuPwRyfKbFUb+M5pY4vbiXCrk4+CjaMUdUvbr7PL1EAycwk6hGg4WlqYqmSY
-         i46OfPU4CdegDGwNZ89JPs5mBGxAqhTNbEV7Eqxql4wv+MFbyHcmJURiBnibI5m9o+Mz
-         95M+LPZV7RdAvnGdDKofnOZsLb4NljOrjzxghwOXeVYOwW1P3B2O7lly8VxrGBEin/5M
-         634k7g8/GeaLN9NVEhvjgSLc/+Rv/LlOHfmPtwECdnW8JBSagOi3A4sT3GVVXvf0dhaf
-         8WyQqLaEYjxztW7LztMm4qjwAeRjtZoyLIeaw6Fi4uh8tljKNIEpNLRIzQDaD7qBNE/j
-         E3bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5WfldrA7Ybz/CNtCQsbY2j9hmaVRS/lefK2C8B4/ydo=;
-        b=mEOl77+234hjga+5gfbFr9FzxLLH+CYZm76pA0ljKFSnWZoSoqTlx1Bxd02VbGr/ag
-         zTd2TwBc6tVRKr9KmzKbMUNYUiXeQJ62HOdj2nU/Xj82roSC18R1Ke7iD21J+bWEtXuU
-         gDrn6GnuXcMVcqhfvBl7W+2yDvvYbpu8sJZgREldoc52DLIXX4hbu9hFJG1IQr8jAiUW
-         qFYaKDzz7u3JB3fyd6aBI36Wu+2g6o+O0lVkjFnRWdd/Ca+9WoFc0nEsHKmpxWCWxJDg
-         0gsYbntY9lTpgqFoGYMBNavlToGwKrDihv3A5Af1TaL6sJDLCeeS796vnANhrBYPS3gl
-         uw2g==
-X-Gm-Message-State: AOAM530NdLSkk9qQnpJptij5fXSh59Ya2jf3iaf/yB84tBkJdJbR2EjB
-        KfAI1EElBBhi7VTWhglGK41xyDhebReJPQ==
-X-Google-Smtp-Source: ABdhPJyOUgN6W95sji6BAD0z9Le4kY3qbFFlPrhTK7NksEopHHTFOHCgqndp2ELuG3T5LFhG8TYLWQ==
-X-Received: by 2002:a1c:188:: with SMTP id 130mr13072660wmb.93.1592225109747;
-        Mon, 15 Jun 2020 05:45:09 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id c16sm24705585wrx.4.2020.06.15.05.45.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 05:45:09 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 14:45:06 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH] ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
-Message-ID: <20200615124506.GA3833448@x1>
-References: <20200611220951.GA3355634@x1>
- <10637da2-8751-3c6f-cf1e-f0a53cca292d@ti.com>
+        Mon, 15 Jun 2020 08:45:16 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FC3Glw189729;
+        Mon, 15 Jun 2020 08:44:42 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31nacseyjx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:44:41 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05FC5FsM000853;
+        Mon, 15 Jun 2020 08:44:41 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31nacseyhn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 08:44:41 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05FCfoAi016019;
+        Mon, 15 Jun 2020 12:44:38 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 31mpe89f3g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 12:44:38 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05FCiZMM48300124
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jun 2020 12:44:35 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B74A3AE056;
+        Mon, 15 Jun 2020 12:44:35 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6943CAE051;
+        Mon, 15 Jun 2020 12:44:32 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.96.47])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 15 Jun 2020 12:44:32 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Mon, 15 Jun 2020 18:14:31 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v13 3/6] powerpc/papr_scm: Fetch nvdimm health information from PHYP
+Date:   Mon, 15 Jun 2020 18:14:04 +0530
+Message-Id: <20200615124407.32596-4-vaibhav@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615124407.32596-1-vaibhav@linux.ibm.com>
+References: <20200615124407.32596-1-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10637da2-8751-3c6f-cf1e-f0a53cca292d@ti.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ cotscore=-2147483648 priorityscore=1501 clxscore=1015 phishscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0
+ impostorscore=0 bulkscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006150098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 12:34:57PM +0300, Grygorii Strashko wrote:
-> 
-> 
-> On 12/06/2020 01:09, Drew Fustini wrote:
-> > Since commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for
-> > RGMII mode") the networking is broken on the BeagleBone AI which has
-> > the AR8035 PHY for Gigabit Ethernet [0].  The fix is to switch from
-> > phy-mode = "rgmii" to phy-mode = "rgmii-rxid".
-> > 
-> > Note: Grygorii Strashko made a similar phy-mode fix in 820f8a870f65 for
-> > other AM5729 boards.
-> 
-> commit ref is incorrect
+Implement support for fetching nvdimm health information via
+H_SCM_HEALTH hcall as documented in Ref[1]. The hcall returns a pair
+of 64-bit bitmap, bitwise-and of which is then stored in
+'struct papr_scm_priv' and subsequently partially exposed to
+user-space via newly introduced dimm specific attribute
+'papr/flags'. Since the hcall is costly, the health information is
+cached and only re-queried, 60s after the previous successful hcall.
 
-Do you mean commit ref 820f8a870f65 ? 
-("ARM: dts: am57xx: fix networking on boards with ksz9031 phy")
+The patch also adds a  documentation text describing flags reported by
+the the new sysfs attribute 'papr/flags' is also introduced at
+Documentation/ABI/testing/sysfs-bus-papr-pmem.
 
-I thought it made sense to point to that commit as you seemed to be
-fixing a very similar issue, just for a different phy.
+[1] commit 58b278f568f0 ("powerpc: Provide initial documentation for
+PAPR hcalls")
 
-Or did you mean commit ref cd28d1d6e52e ?
-("net: phy: at803x: Disable phy delay for RGMII mode")
+Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+---
+Changelog:
 
-I believe this is the commit that made it necessary to change the
-phy-mode property for the AR8035 PHY.
+v12..v13:
+* None
 
-> > 
-> > [0] https://github.com/beagleboard/beaglebone-ai/blob/master/BeagleBone-AI_sch.pdf
-> > 
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-> > Fixes: cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
-> 
-> Pls change fixed tag to
-> 520557d4854b ARM: dts: am5729: beaglebone-ai: adding device tree
-> as this board DTB was merged only in 5.8.
+v11..v12:
+* None
 
-Ok, will do.
+v10..v11:
+* None
 
-> 
-> > Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > ---
-> >   arch/arm/boot/dts/am5729-beagleboneai.dts | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
-> > index 9877d7709d41..4c51c6b05e64 100644
-> > --- a/arch/arm/boot/dts/am5729-beagleboneai.dts
-> > +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-> > @@ -505,7 +505,7 @@ &mac {
-> >   &cpsw_emac0 {
-> >   	phy-handle = <&phy0>;
-> > -	phy-mode = "rgmii";
-> > +	phy-mode = "rgmii-rxid";
-> >   };
-> >   &ocp {
-> > 
-> 
-> Thanks, pls fix above and you can add my
-> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> -- 
-> Best regards,
-> grygorii
+v9..v10:
+* Removed an avoidable 'goto' in __drc_pmem_query_health. [ Ira ].
 
-Thanks for taking the time to review.
+Resend:
+* Added ack from Aneesh.
 
--Drew
+v8..v9:
+* Rename some variables and defines to reduce usage of term SCM
+  replacing it with PMEM [Dan Williams, Aneesh]
+* s/PAPR_SCM_DIMM/PAPR_PMEM/g
+* s/papr_scm_nd_attributes/papr_nd_attributes/g
+* s/papr_scm_nd_attribute_group/papr_nd_attribute_group/g
+* s/papr_scm_dimm_attr_groups/papr_nd_attribute_groups/g
+* Renamed file sysfs-bus-papr-scm to sysfs-bus-papr-pmem
+
+v7..v8:
+* Update type of variable 'rc' in __drc_pmem_query_health() and
+  drc_pmem_query_health() to long and int respectively. [ Ira ]
+* Updated the patch description to s/64 bit Big Endian Number/64-bit
+  bitmap/ [ Ira, Aneesh ].
+
+Resend:
+* None
+
+v6..v7 :
+* Used the exported buf_seq_printf() function to generate content for
+  'papr/flags'
+* Moved the PAPR_SCM_DIMM_* bit-flags macro definitions to papr_scm.c
+  and removed the papr_scm.h file [Mpe]
+* Some minor consistency issued in sysfs-bus-papr-scm
+  documentation. [Mpe]
+* s/dimm_mutex/health_mutex/g [Mpe]
+* Split drc_pmem_query_health() into two function one of which takes
+  care of caching and locking. [Mpe]
+* Fixed a local copy creation of dimm health information using
+  READ_ONCE(). [Mpe]
+
+v5..v6 :
+* Change the flags sysfs attribute from 'papr_flags' to 'papr/flags'
+  [Dan Williams]
+* Include documentation for 'papr/flags' attr [Dan Williams]
+* Change flag 'save_fail' to 'flush_fail' [Dan Williams]
+* Caching of health bitmap to reduce expensive hcalls [Dan Williams]
+* Removed usage of PPC_BIT from 'papr-scm.h' header [Mpe]
+* Replaced two __be64 integers from papr_scm_priv to a single u64
+  integer [Mpe]
+* Updated patch description to reflect the changes made in this
+  version.
+* Removed avoidable usage of 'papr_scm_priv.dimm_mutex' from
+  flags_show() [Dan Williams]
+
+v4..v5 :
+* None
+
+v3..v4 :
+* None
+
+v2..v3 :
+* Removed PAPR_SCM_DIMM_HEALTH_NON_CRITICAL as a condition for
+       	 NVDIMM unarmed [Aneesh]
+
+v1..v2 :
+* New patch in the series.
+---
+ Documentation/ABI/testing/sysfs-bus-papr-pmem |  27 +++
+ arch/powerpc/platforms/pseries/papr_scm.c     | 168 +++++++++++++++++-
+ 2 files changed, 193 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-papr-pmem
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-papr-pmem b/Documentation/ABI/testing/sysfs-bus-papr-pmem
+new file mode 100644
+index 000000000000..5b10d036a8d4
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-papr-pmem
+@@ -0,0 +1,27 @@
++What:		/sys/bus/nd/devices/nmemX/papr/flags
++Date:		Apr, 2020
++KernelVersion:	v5.8
++Contact:	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-nvdimm@lists.01.org,
++Description:
++		(RO) Report flags indicating various states of a
++		papr-pmem NVDIMM device. Each flag maps to a one or
++		more bits set in the dimm-health-bitmap retrieved in
++		response to H_SCM_HEALTH hcall. The details of the bit
++		flags returned in response to this hcall is available
++		at 'Documentation/powerpc/papr_hcalls.rst' . Below are
++		the flags reported in this sysfs file:
++
++		* "not_armed"	: Indicates that NVDIMM contents will not
++				  survive a power cycle.
++		* "flush_fail"	: Indicates that NVDIMM contents
++				  couldn't be flushed during last
++				  shut-down event.
++		* "restore_fail": Indicates that NVDIMM contents
++				  couldn't be restored during NVDIMM
++				  initialization.
++		* "encrypted"	: NVDIMM contents are encrypted.
++		* "smart_notify": There is health event for the NVDIMM.
++		* "scrubbed"	: Indicating that contents of the
++				  NVDIMM have been scrubbed.
++		* "locked"	: Indicating that NVDIMM contents cant
++				  be modified until next power cycle.
+diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+index f35592423380..0c091622b15e 100644
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -12,6 +12,7 @@
+ #include <linux/libnvdimm.h>
+ #include <linux/platform_device.h>
+ #include <linux/delay.h>
++#include <linux/seq_buf.h>
+ 
+ #include <asm/plpar_wrappers.h>
+ 
+@@ -22,6 +23,44 @@
+ 	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
+ 	 (1ul << ND_CMD_SET_CONFIG_DATA))
+ 
++/* DIMM health bitmap bitmap indicators */
++/* SCM device is unable to persist memory contents */
++#define PAPR_PMEM_UNARMED                   (1ULL << (63 - 0))
++/* SCM device failed to persist memory contents */
++#define PAPR_PMEM_SHUTDOWN_DIRTY            (1ULL << (63 - 1))
++/* SCM device contents are persisted from previous IPL */
++#define PAPR_PMEM_SHUTDOWN_CLEAN            (1ULL << (63 - 2))
++/* SCM device contents are not persisted from previous IPL */
++#define PAPR_PMEM_EMPTY                     (1ULL << (63 - 3))
++/* SCM device memory life remaining is critically low */
++#define PAPR_PMEM_HEALTH_CRITICAL           (1ULL << (63 - 4))
++/* SCM device will be garded off next IPL due to failure */
++#define PAPR_PMEM_HEALTH_FATAL              (1ULL << (63 - 5))
++/* SCM contents cannot persist due to current platform health status */
++#define PAPR_PMEM_HEALTH_UNHEALTHY          (1ULL << (63 - 6))
++/* SCM device is unable to persist memory contents in certain conditions */
++#define PAPR_PMEM_HEALTH_NON_CRITICAL       (1ULL << (63 - 7))
++/* SCM device is encrypted */
++#define PAPR_PMEM_ENCRYPTED                 (1ULL << (63 - 8))
++/* SCM device has been scrubbed and locked */
++#define PAPR_PMEM_SCRUBBED_AND_LOCKED       (1ULL << (63 - 9))
++
++/* Bits status indicators for health bitmap indicating unarmed dimm */
++#define PAPR_PMEM_UNARMED_MASK (PAPR_PMEM_UNARMED |		\
++				PAPR_PMEM_HEALTH_UNHEALTHY)
++
++/* Bits status indicators for health bitmap indicating unflushed dimm */
++#define PAPR_PMEM_BAD_SHUTDOWN_MASK (PAPR_PMEM_SHUTDOWN_DIRTY)
++
++/* Bits status indicators for health bitmap indicating unrestored dimm */
++#define PAPR_PMEM_BAD_RESTORE_MASK  (PAPR_PMEM_EMPTY)
++
++/* Bit status indicators for smart event notification */
++#define PAPR_PMEM_SMART_EVENT_MASK (PAPR_PMEM_HEALTH_CRITICAL | \
++				    PAPR_PMEM_HEALTH_FATAL |	\
++				    PAPR_PMEM_HEALTH_UNHEALTHY)
++
++/* private struct associated with each region */
+ struct papr_scm_priv {
+ 	struct platform_device *pdev;
+ 	struct device_node *dn;
+@@ -39,6 +78,15 @@ struct papr_scm_priv {
+ 	struct resource res;
+ 	struct nd_region *region;
+ 	struct nd_interleave_set nd_set;
++
++	/* Protect dimm health data from concurrent read/writes */
++	struct mutex health_mutex;
++
++	/* Last time the health information of the dimm was updated */
++	unsigned long lasthealth_jiffies;
++
++	/* Health information for the dimm */
++	u64 health_bitmap;
+ };
+ 
+ static int drc_pmem_bind(struct papr_scm_priv *p)
+@@ -144,6 +192,61 @@ static int drc_pmem_query_n_bind(struct papr_scm_priv *p)
+ 	return drc_pmem_bind(p);
+ }
+ 
++/*
++ * Issue hcall to retrieve dimm health info and populate papr_scm_priv with the
++ * health information.
++ */
++static int __drc_pmem_query_health(struct papr_scm_priv *p)
++{
++	unsigned long ret[PLPAR_HCALL_BUFSIZE];
++	long rc;
++
++	/* issue the hcall */
++	rc = plpar_hcall(H_SCM_HEALTH, ret, p->drc_index);
++	if (rc != H_SUCCESS) {
++		dev_err(&p->pdev->dev,
++			"Failed to query health information, Err:%ld\n", rc);
++		return -ENXIO;
++	}
++
++	p->lasthealth_jiffies = jiffies;
++	p->health_bitmap = ret[0] & ret[1];
++
++	dev_dbg(&p->pdev->dev,
++		"Queried dimm health info. Bitmap:0x%016lx Mask:0x%016lx\n",
++		ret[0], ret[1]);
++
++	return 0;
++}
++
++/* Min interval in seconds for assuming stable dimm health */
++#define MIN_HEALTH_QUERY_INTERVAL 60
++
++/* Query cached health info and if needed call drc_pmem_query_health */
++static int drc_pmem_query_health(struct papr_scm_priv *p)
++{
++	unsigned long cache_timeout;
++	int rc;
++
++	/* Protect concurrent modifications to papr_scm_priv */
++	rc = mutex_lock_interruptible(&p->health_mutex);
++	if (rc)
++		return rc;
++
++	/* Jiffies offset for which the health data is assumed to be same */
++	cache_timeout = p->lasthealth_jiffies +
++		msecs_to_jiffies(MIN_HEALTH_QUERY_INTERVAL * 1000);
++
++	/* Fetch new health info is its older than MIN_HEALTH_QUERY_INTERVAL */
++	if (time_after(jiffies, cache_timeout))
++		rc = __drc_pmem_query_health(p);
++	else
++		/* Assume cached health data is valid */
++		rc = 0;
++
++	mutex_unlock(&p->health_mutex);
++	return rc;
++}
+ 
+ static int papr_scm_meta_get(struct papr_scm_priv *p,
+ 			     struct nd_cmd_get_config_data_hdr *hdr)
+@@ -286,6 +389,64 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+ 	return 0;
+ }
+ 
++static ssize_t flags_show(struct device *dev,
++			  struct device_attribute *attr, char *buf)
++{
++	struct nvdimm *dimm = to_nvdimm(dev);
++	struct papr_scm_priv *p = nvdimm_provider_data(dimm);
++	struct seq_buf s;
++	u64 health;
++	int rc;
++
++	rc = drc_pmem_query_health(p);
++	if (rc)
++		return rc;
++
++	/* Copy health_bitmap locally, check masks & update out buffer */
++	health = READ_ONCE(p->health_bitmap);
++
++	seq_buf_init(&s, buf, PAGE_SIZE);
++	if (health & PAPR_PMEM_UNARMED_MASK)
++		seq_buf_printf(&s, "not_armed ");
++
++	if (health & PAPR_PMEM_BAD_SHUTDOWN_MASK)
++		seq_buf_printf(&s, "flush_fail ");
++
++	if (health & PAPR_PMEM_BAD_RESTORE_MASK)
++		seq_buf_printf(&s, "restore_fail ");
++
++	if (health & PAPR_PMEM_ENCRYPTED)
++		seq_buf_printf(&s, "encrypted ");
++
++	if (health & PAPR_PMEM_SMART_EVENT_MASK)
++		seq_buf_printf(&s, "smart_notify ");
++
++	if (health & PAPR_PMEM_SCRUBBED_AND_LOCKED)
++		seq_buf_printf(&s, "scrubbed locked ");
++
++	if (seq_buf_used(&s))
++		seq_buf_printf(&s, "\n");
++
++	return seq_buf_used(&s);
++}
++DEVICE_ATTR_RO(flags);
++
++/* papr_scm specific dimm attributes */
++static struct attribute *papr_nd_attributes[] = {
++	&dev_attr_flags.attr,
++	NULL,
++};
++
++static struct attribute_group papr_nd_attribute_group = {
++	.name = "papr",
++	.attrs = papr_nd_attributes,
++};
++
++static const struct attribute_group *papr_nd_attr_groups[] = {
++	&papr_nd_attribute_group,
++	NULL,
++};
++
+ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+ {
+ 	struct device *dev = &p->pdev->dev;
+@@ -312,8 +473,8 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+ 	dimm_flags = 0;
+ 	set_bit(NDD_LABELING, &dimm_flags);
+ 
+-	p->nvdimm = nvdimm_create(p->bus, p, NULL, dimm_flags,
+-				  PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
++	p->nvdimm = nvdimm_create(p->bus, p, papr_nd_attr_groups,
++				  dimm_flags, PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
+ 	if (!p->nvdimm) {
+ 		dev_err(dev, "Error creating DIMM object for %pOF\n", p->dn);
+ 		goto err;
+@@ -399,6 +560,9 @@ static int papr_scm_probe(struct platform_device *pdev)
+ 	if (!p)
+ 		return -ENOMEM;
+ 
++	/* Initialize the dimm mutex */
++	mutex_init(&p->health_mutex);
++
+ 	/* optional DT properties */
+ 	of_property_read_u32(dn, "ibm,metadata-size", &metadata_size);
+ 
+-- 
+2.26.2
+
