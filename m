@@ -2,99 +2,86 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10515C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0F23207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:19:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/S2vKqa"
+	by mail.kernel.org (Postfix) with ESMTP id 3CB7720739
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgFONTo (ORCPT
+        id S1730432AbgFONUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729916AbgFONTn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:19:43 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E9AC061A0E;
-        Mon, 15 Jun 2020 06:19:41 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id c12so12459758qtq.11;
-        Mon, 15 Jun 2020 06:19:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Y3ar0NlCgHyRvUgHFVw4GwwVEYkMu69FrpNlEgYZaig=;
-        b=S/S2vKqaaiMkDzviRm/cegQn34GwLrWUJzwiHO0SG32LaLpY/rNXsqw3qrBJvWE8nz
-         vJ3yXdKMkbxGFOnXF0fJTJ3ng+YqmDPBZMVP+BTsB+Zp/2fLBUFulmvBSeR2p95aVSJr
-         lPiRIXtpA9L/nyr0fVE/shzaF0Tde6OSPgP2QV+vLGJR4bXoVXxPwRD4vx4aVhzvBaPi
-         bQML8PfmRN+AulAeCD43dyushoKncliEd7WaZG8x2g8gtsLZ5/sGnY5G27qsr8JuQVxc
-         uuj8QamlfZWw4WJO2jpbfL8RfbaR6EuvKjN3+WhhRHVkm2Nua00pgXNs3bQXjEt5AS2D
-         LgCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Y3ar0NlCgHyRvUgHFVw4GwwVEYkMu69FrpNlEgYZaig=;
-        b=C7yYLG4Ykl+2f5+Y8QlPsKHqaMUEWs9PuoiGv+as27jfFhxc7RR9TCYnEl2XR8T9Kh
-         FciXfhy4e7cI/7Sa41tXctZRu0hNkUdJrOd1u+MyTjuThX1UfAWTCO+kg2SiD3y9MPeu
-         qPdOXUxMzd6gW9EF/3D84DuvHB9WHw68a/P9yZi00LBQe8odQaBbOMhaGsjuYrXRu5F5
-         u5bSravj31uVmHaPhUpOpEVX3bAmrQwmCOACxeuYo5OqKLSTrg06isqhCYaNN1h/4qxl
-         3pz4/rfZHgIID9pe1ZOdOU1tvDq/5zDM75NTs8H3BwaRm+rnbYUzGc9s4dHImRgfJpPa
-         ukHA==
-X-Gm-Message-State: AOAM530WjD4z9CytIEFYSjBY1yHFeoE6WJNWF+hxYysKAtdUvBh/5V2m
-        Qlv43ScuPr7xk7qQdP6Gq6toE66o
-X-Google-Smtp-Source: ABdhPJyWlvPaYg5fM0exV17DKKfaRTgNRErTfbIaQDpsECFpyLk/C8vgs/087jTcN9C+sRmBlCN7vw==
-X-Received: by 2002:ac8:7c2:: with SMTP id m2mr15444087qth.282.1592227180849;
-        Mon, 15 Jun 2020 06:19:40 -0700 (PDT)
-Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
-        by smtp.gmail.com with ESMTPSA id q24sm11520968qkj.103.2020.06.15.06.19.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 06:19:40 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
-        stable@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/panel-simple: fix connector type for LogicPD Type28 Display
-Date:   Mon, 15 Jun 2020 08:19:34 -0500
-Message-Id: <20200615131934.12440-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 15 Jun 2020 09:20:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52140 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729916AbgFONUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 09:20:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8503BADE2;
+        Mon, 15 Jun 2020 13:20:33 +0000 (UTC)
+Date:   Mon, 15 Jun 2020 15:20:28 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Jim Cromie <jim.cromie@gmail.com>
+Cc:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
+        akpm@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v2 07/24] dyndbg: fix a BUG_ON in ddebug_describe_flags
+Message-ID: <20200615132028.GE31238@alley>
+References: <20200613155738.2249399-1-jim.cromie@gmail.com>
+ <20200613155738.2249399-8-jim.cromie@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200613155738.2249399-8-jim.cromie@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LogicPD Type28 display used by several Logic PD products has not
-worked since v5.5.
+On Sat 2020-06-13 09:57:21, Jim Cromie wrote:
+> ddebug_describe_flags currently fills a caller provided string buffer,
+> after testing its size (also passed) in a BUG_ON.  Fix this by
+> replacing them with a known-big-enough string buffer wrapped in a
+> struct, and passing that instead.
+> 
+> Also simplify the flags parameter, and instead de-ref the flags struct
+> in the caller; this makes the function reusable (soon) where flags are
+> unpacked.
 
-The connector type for the LogicPD Type 28 display is missing and
-drm_panel_bridge_add() requires connector type to be set.
+In all patches is missing:
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-CC: stable@vger.kernel.org #v5.5+
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index b6ecd1552132..334e9de5b2c8 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2495,6 +2495,7 @@ static const struct panel_desc logicpd_type_28 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- 	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
- 		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
-+	.connector_type = DRM_MODE_CONNECTOR_DPI,
- };
- 
- static const struct panel_desc mitsubishi_aa070mc01 = {
--- 
-2.17.1
+> ---
+>  lib/dynamic_debug.c | 31 +++++++++++++++----------------
+>  1 file changed, 15 insertions(+), 16 deletions(-)
+> 
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+> index 9b2445507988..aaace13d7536 100644
+> --- a/lib/dynamic_debug.c
+> +++ b/lib/dynamic_debug.c
+> @@ -87,22 +87,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+>  	{ _DPRINTK_FLAGS_NONE, '_' },
+>  };
+>  
+> +struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
 
+This looks too complicated. What about?
+
+	typedef char flags_buf[ARRAY_SIZE(opt_array) + 1];
+    used as
+	flags_buf fb;
+
+
+	#define FLAGS_BUF_SIZE (ARRAY_SIZE(opt_array) + 1)
+    used as
+	char flags_buf[FLAGS_BUF_SIZE];
+
+
+Best Regards,
+Petr
