@@ -2,119 +2,156 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF367C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0ECE2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED7F2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 06:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592203918;
-	bh=MXSdrHZzmbut5RIOsHKlqKuQT+OCYYx8HUozgUTh0GA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=u2vhMWrZrycZRLBWVbkWQfxjXiuTA2MXUxv5lAhhjSItR8KQtfkIqNCQuXOiUPR34
-	 z+6WRrpCsbCXE3Iv9FRnA5qqLO9vRFFFl5cJvDRlA4207cJse9/yAZK5e8EUYka446
-	 kHYBbDdeq/ZzS+c5AD9fBaQMyaYe3iqwu9Y9Dg/s=
+	s=default; t=1592203919;
+	bh=DkbqyiXi236RYVyqQecB4kPGnjLiBBi56GZaBwWOy7Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ExCYlsHerghfAgh2vUETm9yXkp3ZUTR2YrRQcG+jIK+g8VGtOFyzr4dMb7YEY1aXK
+	 qV96lWbHb9USi4LEDa+jCnsqDo0W7E5/ytFN/GL8PhctyWaOUYmh8+qD9NA9fZSkPt
+	 ms4WAS8FYi19dcFwcMux02AXPJ8Zf6X/KX73abIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbgFOGv4 (ORCPT
+        id S1728706AbgFOGvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 02:51:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
+        Mon, 15 Jun 2020 02:51:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728672AbgFOGvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 02:51:53 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        id S1728596AbgFOGuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 02:50:35 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FC762067B;
-        Mon, 15 Jun 2020 06:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56272208B3;
+        Mon, 15 Jun 2020 06:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592203912;
-        bh=MXSdrHZzmbut5RIOsHKlqKuQT+OCYYx8HUozgUTh0GA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VagLU8bhUbiMK1OapqvsVP9NnARbzuEyejCHT7HlskFXsSulenvAKUpOhebVs+gde
-         oHFgPkS8/W8ix6mS0/N9iUuyT6+K+BbWniodIBmHseHGeLMGOa90b+piCqgL2Oru7F
-         CrmZKQmzWdKog4MHPgO6jic9VgZkJx3U3FsMP89E=
-Date:   Mon, 15 Jun 2020 08:51:48 +0200
+        s=default; t=1592203832;
+        bh=DkbqyiXi236RYVyqQecB4kPGnjLiBBi56GZaBwWOy7Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r3Oa8miWM1zm+K1PodeLJ+vzdljfoIwtHiqoAG+DYkcKzfuJGPdX6hcAf9QEIPFCd
+         mVGpixnEG6Du3hsDiXPkYFrCOVjZkbso54yixNbmBduPOUItaufWYWYglKtGyvMhXz
+         tGzzVNBgzqCOMEGQtNBZc1uM+DlHlwJsoIvLb8ko=
+Received: from mchehab by mail.kernel.org with local (Exim 4.93)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jkiww-009o6O-DQ; Mon, 15 Jun 2020 08:50:30 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [PATCH] Documentation: fix sysctl/kernel.rst heading format
- warnings
-Message-ID: <20200615085148.43dd33d7@coco.lan>
-In-Reply-To: <8af1cb77-4b5a-64b9-da5d-f6a95e537f99@infradead.org>
-References: <8af1cb77-4b5a-64b9-da5d-f6a95e537f99@infradead.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH 13/22] docs: pci: endpoint/function/binding/pci-test.txt convert to ReST
+Date:   Mon, 15 Jun 2020 08:50:18 +0200
+Message-Id: <6254963b85417e44865dab05e4b99cd485074132.1592203650.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1592203650.git.mchehab+huawei@kernel.org>
+References: <cover.1592203650.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, 14 Jun 2020 21:11:00 -0700
-Randy Dunlap <rdunlap@infradead.org> escreveu:
+Convert this file to ReST by adding a proper title to it and
+use the right markups for a table.
 
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Fix heading format warnings in admin-guide/sysctl/kernel.rst:
-> 
-> Documentation/admin-guide/sysctl/kernel.rst:339: WARNING: Title underline too short.
-> hung_task_all_cpu_backtrace:
-> ================
-> 
-> Documentation/admin-guide/sysctl/kernel.rst:650: WARNING: Title underline too short.
-> oops_all_cpu_backtrace:
-> ================
-> 
-> Fixes: 0ec9dc9bcba0 ("kernel/hung_task.c: introduce sysctl to print all traces when a hung task is detected")
-> Fixes: 60c958d8df9c ("panic: add sysctl to dump all CPUs backtraces on oops event")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Guilherme G. Piccoli <gpiccoli@canonical.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
+While here, add a SPDX header.
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../endpoint/function/binding/pci-test.rst    | 26 +++++++++++++++++++
+ .../endpoint/function/binding/pci-test.txt    | 19 --------------
+ Documentation/PCI/endpoint/index.rst          |  2 ++
+ .../misc-devices/pci-endpoint-test.rst        |  2 +-
+ 4 files changed, 29 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
+ delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
 
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst |    8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> --- lnx-58-rc1.orig/Documentation/admin-guide/sysctl/kernel.rst
-> +++ lnx-58-rc1/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -335,8 +335,8 @@ Path for the hotplug policy agent.
->  Default value is "``/sbin/hotplug``".
->  
->  
-> -hung_task_all_cpu_backtrace:
-> -================
-> +hung_task_all_cpu_backtrace
-> +===========================
->  
->  If this option is set, the kernel will send an NMI to all CPUs to dump
->  their backtraces when a hung task is detected. This file shows up if
-> @@ -646,8 +646,8 @@ rate for each task.
->  scanned for a given scan.
->  
->  
-> -oops_all_cpu_backtrace:
-> -================
-> +oops_all_cpu_backtrace
-> +======================
->  
->  If this option is set, the kernel will send an NMI to all CPUs to dump
->  their backtraces when an oops event occurs. It should be used as a last
-> 
+diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.rst b/Documentation/PCI/endpoint/function/binding/pci-test.rst
+new file mode 100644
+index 000000000000..57ee866fb165
+--- /dev/null
++++ b/Documentation/PCI/endpoint/function/binding/pci-test.rst
+@@ -0,0 +1,26 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==========================
++PCI Test Endpoint Function
++==========================
++
++name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
++
++Configurable Fields:
++
++================   ===========================================================
++vendorid	   should be 0x104c
++deviceid	   should be 0xb500 for DRA74x and 0xb501 for DRA72x
++revid		   don't care
++progif_code	   don't care
++subclass_code	   don't care
++baseclass_code	   should be 0xff
++cache_line_size	   don't care
++subsys_vendor_id   don't care
++subsys_id	   don't care
++interrupt_pin	   Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
++msi_interrupts	   Should be 1 to 32 depending on the number of MSI interrupts
++		   to test
++msix_interrupts	   Should be 1 to 2048 depending on the number of MSI-X
++		   interrupts to test
++================   ===========================================================
+diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+deleted file mode 100644
+index cd76ba47394b..000000000000
+--- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-PCI TEST ENDPOINT FUNCTION
+-
+-name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+-
+-Configurable Fields:
+-vendorid	 : should be 0x104c
+-deviceid	 : should be 0xb500 for DRA74x and 0xb501 for DRA72x
+-revid		 : don't care
+-progif_code	 : don't care
+-subclass_code	 : don't care
+-baseclass_code	 : should be 0xff
+-cache_line_size	 : don't care
+-subsys_vendor_id : don't care
+-subsys_id	 : don't care
+-interrupt_pin	 : Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
+-msi_interrupts	 : Should be 1 to 32 depending on the number of MSI interrupts
+-		   to test
+-msix_interrupts	 : Should be 1 to 2048 depending on the number of MSI-X
+-		   interrupts to test
+diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+index d114ea74b444..4ca7439fbfc9 100644
+--- a/Documentation/PCI/endpoint/index.rst
++++ b/Documentation/PCI/endpoint/index.rst
+@@ -11,3 +11,5 @@ PCI Endpoint Framework
+    pci-endpoint-cfs
+    pci-test-function
+    pci-test-howto
++
++   function/binding/pci-test
+diff --git a/Documentation/misc-devices/pci-endpoint-test.rst b/Documentation/misc-devices/pci-endpoint-test.rst
+index 26e5d9ba146b..4cf3f4433be7 100644
+--- a/Documentation/misc-devices/pci-endpoint-test.rst
++++ b/Documentation/misc-devices/pci-endpoint-test.rst
+@@ -53,4 +53,4 @@ ioctl
+ 	      Perform read tests. The size of the buffer should be passed
+ 	      as argument.
+ 
+-.. [1] Documentation/PCI/endpoint/function/binding/pci-test.txt
++.. [1] Documentation/PCI/endpoint/function/binding/pci-test.rst
+-- 
+2.26.2
 
-
-
-Thanks,
-Mauro
