@@ -2,250 +2,144 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3217EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05FF82081A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592241248;
-	bh=biF6+GXRgmF5o0BXFMaiIWabRbz9GGjtwF2twAhw/FY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=mUKYvbTDPw1qJK8OmDahmLzinLqaROVZCQsrcc3cHJUzuDh51W71+IMxfxxpUre5E
-	 g0QzJE39R7l1WH5MqkEvszNH/NECzjaVZImlDixzd2gCKcsXW5ySc+WFSo3nIfTx9q
-	 eEI/5OY3GV1xk2pGQV+4io7PoUnV6i9cL6vTF63Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1517720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 17:14:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PKzDttg0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbgFOROG (ORCPT
+        id S1731235AbgFORON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 13:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbgFOROG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 13:14:06 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 15 Jun 2020 13:14:13 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36867 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729354AbgFOROI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 13:14:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592241246;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=laujHXtNzuWRWuumln1La0bpzgZIGk/wirXDlUO/7Ek=;
+        b=PKzDttg0lA9FLiqQMChpJlGa7om0/4/IAb3nUb3sX6K+/U3YWZTRBhMuEhXqgu0mW4GJ7U
+        7wJZSDiBqfJj6/ABldlWXCe4ezQZpQOEPqmEf7OGgUhD39Ktpn0WWrbGe0qHisX1z5WyYk
+        WDyKP1el+XVSbi4j7r0Wb0+gyfM/9IA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-0ataK8GQPYKHIOZZVTHhuQ-1; Mon, 15 Jun 2020 13:14:02 -0400
+X-MC-Unique: 0ataK8GQPYKHIOZZVTHhuQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF219207DA;
-        Mon, 15 Jun 2020 17:14:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592241245;
-        bh=biF6+GXRgmF5o0BXFMaiIWabRbz9GGjtwF2twAhw/FY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=KhxUCVrD+Ar8qGXz0PSliBFL9QbgCdenboSNkOHdYdQqZ7lPVEuCaSUG/Tu/za6eM
-         4Wn06XbAhjTQOJv6Zi8q3c9a762dpS0ZjEXh+Gi9YSp+lW2AFiNmB87PH6UAKuCr8d
-         3RmgVUuVQtclzrshGIJliEtDUmU0HcDMtZlW7pwg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D737935218F0; Mon, 15 Jun 2020 10:14:04 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 10:14:04 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, x86@kernel.org, elver@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        will@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com
-Subject: Re: [PATCH 2/9] rcu: Fixup noinstr warnings
-Message-ID: <20200615171404.GI2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200603114014.152292216@infradead.org>
- <20200603114051.896465666@infradead.org>
- <20200615154905.GZ2531@hirez.programming.kicks-ass.net>
- <20200615155513.GG2554@hirez.programming.kicks-ass.net>
- <20200615162427.GI2554@hirez.programming.kicks-ass.net>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FF6418585A7;
+        Mon, 15 Jun 2020 17:13:58 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-41.rdu2.redhat.com [10.10.117.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 34B6A5C1D6;
+        Mon, 15 Jun 2020 17:13:52 +0000 (UTC)
+Subject: Re: possible deadlock in send_sigio
+To:     Matthew Wilcox <willy@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
+        areber@redhat.com, aubrey.li@linux.intel.com,
+        Andrei Vagin <avagin@gmail.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, sargun@sargun.me,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <000000000000760d0705a270ad0c@google.com>
+ <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
+ <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
+ <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
+ <20200611142214.GI2531@hirez.programming.kicks-ass.net>
+ <b405aca6-a3b2-cf11-a482-2b4af1e548bd@redhat.com>
+ <20200611235526.GC94665@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200612070101.GA879624@tardis>
+ <20200615164902.GV8681@bombadil.infradead.org>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <0c854a69-9b89-9e45-f2c1-e60e2a9d3f1c@redhat.com>
+Date:   Mon, 15 Jun 2020 13:13:51 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615162427.GI2554@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200615164902.GV8681@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:24:27PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 15, 2020 at 05:55:13PM +0200, Peter Zijlstra wrote:
-> > On Mon, Jun 15, 2020 at 05:49:05PM +0200, Peter Zijlstra wrote:
-> > > @@ -983,13 +993,17 @@ noinstr void rcu_nmi_enter(void)
-> > >  		if (!in_nmi())
-> > >  			rcu_cleanup_after_idle();
-> > >  
-> > > +		instrumentation_begin();
-> > > +		// instrumentation for the noinstr rcu_dynticks_curr_cpu_in_eqs()
-> > > +		instrument_atomic_read(&rdp->dynticks, sizeof(rdp->dynticks));
-> > > +		// instrumentation for the noinstr rcu_dynticks_eqs_exit()
-> > > +		instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
-> > > +
-> > >  		incby = 1;
-> > >  	} else if (!in_nmi()) {
-> > >  		instrumentation_begin();
-> > >  		rcu_irq_enter_check_tick();
-> > > -		instrumentation_end();
-> > >  	}
-> > > -	instrumentation_begin();
-> > >  	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
-> > >  			  rdp->dynticks_nmi_nesting,
-> > >  			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
-> > 
-> > Oh, that's lost a possible instrumentation_begin() :/ But weirdly
-> > objtool didn't complain about that... Let me poke at that.
+On 6/15/20 12:49 PM, Matthew Wilcox wrote:
+> On Fri, Jun 12, 2020 at 03:01:01PM +0800, Boqun Feng wrote:
+>> On the archs using QUEUED_RWLOCKS, read_lock() is not always a recursive
+>> read lock, actually it's only recursive if in_interrupt() is true. So
+>> change the annotation accordingly to catch more deadlocks.
+> [...]
+>
+>> +#ifdef CONFIG_LOCKDEP
+>> +/*
+>> + * read_lock() is recursive if:
+>> + * 1. We force lockdep think this way in selftests or
+>> + * 2. The implementation is not queued read/write lock or
+>> + * 3. The locker is at an in_interrupt() context.
+>> + */
+>> +static inline bool read_lock_is_recursive(void)
+>> +{
+>> +	return force_read_lock_recursive ||
+>> +	       !IS_ENABLED(CONFIG_QUEUED_RWLOCKS) ||
+>> +	       in_interrupt();
+>> +}
+> I'm a bit uncomfortable with having the _lockdep_ definition of whether
+> a read lock is recursive depend on what the _implementation_ is.
+> The locking semantics should be the same, no matter which architecture
+> you're running on.  If we rely on read locks being recursive in common
+> code then we have a locking bug on architectures which don't use queued
+> rwlocks.
+>
+> I don't know whether we should just tell the people who aren't using
+> queued rwlocks that they have a new requirement or whether we should
+> say that read locks are never recursive, but having this inconsistency
+> is not a good idea!
 
-This merge window has been quite the trainwreck, hasn't it?  :-/
+Actually, qrwlock is more restrictive. It is possible that systems with 
+qrwlock may hit deadlock which doesn't happens in other systems that use 
+recursive rwlock. However, the current lockdep code doesn't detect those 
+cases.
 
-> Like so then...
+Changing lockdep to only use qrwlock semantics can be problematic as the 
+code hunk in locking selftest is due to the fact that it assumes 
+recursive lock. So we need to change that. Anyway, this patch can allow 
+us to see if current qrwlock semantics may have potential deadlock 
+problem in the current code. I actually have bug report about deadlock 
+due to qrwlock semantics in RHEL7. So I would certainly like to see if 
+the current upstream code may have also this kind of problem.
 
-Looks plausible, firing up some tests.
+Cheers,
+Longman
 
-							Thanx, Paul
-
-> ---
-> Subject: rcu: Fixup noinstr warnings
-> 
-> A KCSAN build revealed we have explicit annoations through atomic_*()
-> usage, switch to arch_atomic_*() for the respective functions.
-> 
-> vmlinux.o: warning: objtool: rcu_nmi_exit()+0x4d: call to __kcsan_check_access() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: rcu_dynticks_eqs_enter()+0x25: call to __kcsan_check_access() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: rcu_nmi_enter()+0x4f: call to __kcsan_check_access() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: rcu_dynticks_eqs_exit()+0x2a: call to __kcsan_check_access() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: __rcu_is_watching()+0x25: call to __kcsan_check_access() leaves .noinstr.text section
-> 
-> Additionally, without the NOP in instrumentation_begin(), objtool would
-> not detect the lack of the 'else instrumentation_begin();' branch in
-> rcu_nmi_enter().
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/compiler.h |    2 +-
->  kernel/rcu/tree.c        |   33 +++++++++++++++++++++++++--------
->  2 files changed, 26 insertions(+), 9 deletions(-)
-> 
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -123,7 +123,7 @@ void ftrace_likely_update(struct ftrace_
->  #ifdef CONFIG_DEBUG_ENTRY
->  /* Begin/end of an instrumentation safe region */
->  #define instrumentation_begin() ({					\
-> -	asm volatile("%c0:\n\t"						\
-> +	asm volatile("%c0: nop\n\t"						\
->  		     ".pushsection .discard.instr_begin\n\t"		\
->  		     ".long %c0b - .\n\t"				\
->  		     ".popsection\n\t" : : "i" (__COUNTER__));		\
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -250,7 +250,7 @@ static noinstr void rcu_dynticks_eqs_ent
->  	 * next idle sojourn.
->  	 */
->  	rcu_dynticks_task_trace_enter();  // Before ->dynticks update!
-> -	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
-> +	seq = arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
->  	// RCU is no longer watching.  Better be in extended quiescent state!
->  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
->  		     (seq & RCU_DYNTICK_CTRL_CTR));
-> @@ -274,13 +274,13 @@ static noinstr void rcu_dynticks_eqs_exi
->  	 * and we also must force ordering with the next RCU read-side
->  	 * critical section.
->  	 */
-> -	seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
-> +	seq = arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
->  	// RCU is now watching.  Better not be in an extended quiescent state!
->  	rcu_dynticks_task_trace_exit();  // After ->dynticks update!
->  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
->  		     !(seq & RCU_DYNTICK_CTRL_CTR));
->  	if (seq & RCU_DYNTICK_CTRL_MASK) {
-> -		atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
-> +		arch_atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
->  		smp_mb__after_atomic(); /* _exit after clearing mask. */
->  	}
->  }
-> @@ -313,7 +313,7 @@ static __always_inline bool rcu_dynticks
->  {
->  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
->  
-> -	return !(atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
-> +	return !(arch_atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
->  }
->  
->  /*
-> @@ -633,6 +633,10 @@ static noinstr void rcu_eqs_enter(bool u
->  	do_nocb_deferred_wakeup(rdp);
->  	rcu_prepare_for_idle();
->  	rcu_preempt_deferred_qs(current);
-> +
-> +	// instrumentation for the noinstr rcu_dynticks_eqs_enter()
-> +	instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
-> +
->  	instrumentation_end();
->  	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid irq-access tearing. */
->  	// RCU is watching here ...
-> @@ -692,6 +696,7 @@ noinstr void rcu_nmi_exit(void)
->  {
->  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
->  
-> +	instrumentation_begin();
->  	/*
->  	 * Check for ->dynticks_nmi_nesting underflow and bad ->dynticks.
->  	 * (We are exiting an NMI handler, so RCU better be paying attention
-> @@ -705,7 +710,6 @@ noinstr void rcu_nmi_exit(void)
->  	 * leave it in non-RCU-idle state.
->  	 */
->  	if (rdp->dynticks_nmi_nesting != 1) {
-> -		instrumentation_begin();
->  		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
->  				  atomic_read(&rdp->dynticks));
->  		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
-> @@ -714,13 +718,15 @@ noinstr void rcu_nmi_exit(void)
->  		return;
->  	}
->  
-> -	instrumentation_begin();
->  	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
->  	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
->  	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
->  
->  	if (!in_nmi())
->  		rcu_prepare_for_idle();
-> +
-> +	// instrumentation for the noinstr rcu_dynticks_eqs_enter()
-> +	instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
->  	instrumentation_end();
->  
->  	// RCU is watching here ...
-> @@ -838,6 +844,10 @@ static void noinstr rcu_eqs_exit(bool us
->  	rcu_dynticks_eqs_exit();
->  	// ... but is watching here.
->  	instrumentation_begin();
-> +
-> +	// instrumentation for the noinstr rcu_dynticks_eqs_exit()
-> +	instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
-> +
->  	rcu_cleanup_after_idle();
->  	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
->  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
-> @@ -983,13 +993,20 @@ noinstr void rcu_nmi_enter(void)
->  		if (!in_nmi())
->  			rcu_cleanup_after_idle();
->  
-> +		instrumentation_begin();
-> +		// instrumentation for the noinstr rcu_dynticks_curr_cpu_in_eqs()
-> +		instrument_atomic_read(&rdp->dynticks, sizeof(rdp->dynticks));
-> +		// instrumentation for the noinstr rcu_dynticks_eqs_exit()
-> +		instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks));
-> +
->  		incby = 1;
->  	} else if (!in_nmi()) {
->  		instrumentation_begin();
->  		rcu_irq_enter_check_tick();
-> -		instrumentation_end();
-> +	} else {
-> +		instrumentation_begin();
->  	}
-> -	instrumentation_begin();
-> +
->  	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
->  			  rdp->dynticks_nmi_nesting,
->  			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
