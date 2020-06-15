@@ -2,119 +2,97 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C57C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57572C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BADD20739
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:40:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHc+o9kg"
+	by mail.kernel.org (Postfix) with ESMTP id 382B4207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 13:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592228492;
+	bh=5yU8kGdPOUzUeaSLJ4oZ8Z8E8amDtVLdFsG4wItH9+E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cT/+/w0Soc3ukA86oKWKyb5ZyULO1EBZgAARGOK/jBIuBM8XQly9RIL5/mvewQSk7
+	 Ta9st9+dv5WkK77nNIssKSUuTn4R77UVzrwGZm7yohyHZMZn5TF2hTKtuE1Gb278W+
+	 xk7L4ccyGZmJPQpWzFa4+2wOH3nZh/KAcCmurIWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbgFONkk (ORCPT
+        id S1730528AbgFONl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 09:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730144AbgFONkj (ORCPT
+        Mon, 15 Jun 2020 09:41:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39964 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730144AbgFONl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 09:40:39 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA12C061A0E;
-        Mon, 15 Jun 2020 06:40:39 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id q69so3923975vkq.10;
-        Mon, 15 Jun 2020 06:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=ElaXRnkNmeRMuixjwpXiTNYKpSD0dU9yi1zQJdGOluc=;
-        b=gHc+o9kgsumsCqjFesloEU/ufyWX3VJyGjRWxqDxYYrVadZMzpQraiPKM4R2zuvFiR
-         RheoNEJW7LqiQmhnQlXxlIC2qFIkde7Qq5se95PpPOwJWDj1AgZOBP7uv2ZG5rSTVXA2
-         KMkipN8Th899KgSJGXhQg+0e91S8wU7ku5NxCDhl2Ax9QZ6nbDYEz68b8DFI7Pnnvn6y
-         wax7l16e4qLJ+rYAzCUHPVFmwiIJ7iuQzoFRp46BdWzHvWNcT/DrbtJ0qRIpjHTJ0Lzp
-         LiJ8ZIUOoO6iyavd6kIh8sWBxmMu7kbg2t7Bu9RJvj5earU32OF2/Sz0wZW8uN/kYHA7
-         4xrw==
+        Mon, 15 Jun 2020 09:41:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h5so17211889wrc.7;
+        Mon, 15 Jun 2020 06:41:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=ElaXRnkNmeRMuixjwpXiTNYKpSD0dU9yi1zQJdGOluc=;
-        b=KEQG2MJnYcTh+X9PVMQDHFjU1xd5IqULvPweUJ+CtCF5FL+h/+1jdyA66oFBJF5jpT
-         dgbsyNEqxFJReMPVTMGfN3G7KGNcz8Zvxbm579MRZphhNgwQkdVB080M2XYMN1mxZVRE
-         wfeEa8q5J+Q/7LP4ZoYXrHuUdw3z111nLlb+Yb2yUI2E8FQNGz9fAX8n+RB/PBsHUJiU
-         2IpXEKBOVTpznaYkzl10GpI21kjmwk3h7XHXkuwjGeu29Lz/EzcGH9wwBKhogWYPbqeX
-         +2AFLcpyBB4CaOS0XIr/EKDhO0KmwXe0unYV/WxCPJntdvs6LMvn6jEVAYwYvq2UkhxH
-         6c7A==
-X-Gm-Message-State: AOAM530xz9GWY1nj9Cz77Cfqi2VDsFIeDrosmE/+T/kjaATmlVNG1bbS
-        U7fizvf6YenmeXo2fq6pBhIST2zkrkxzEmPk9EM=
-X-Google-Smtp-Source: ABdhPJzMsRmgLZgO5xdVqsMeaOp9UyayolhyawQghYl9NToy2NJyfX8dqzUamTlqtF5+WFy1lmHCyClZU5ofEEU+LkQ=
-X-Received: by 2002:a1f:de43:: with SMTP id v64mr17099201vkg.13.1592228438394;
- Mon, 15 Jun 2020 06:40:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ldZ3qHesEPGPxRDy2PP+eNgQCVg0OujHEQewstkBEeU=;
+        b=jA5k23mlbwIzkQE4LMtlQnpaoBh53mSiTfiId1dOw8Mf2cErvL1nzI+UjNswKEwgO6
+         FPV4SF85jTtX3Cl31PQz++97s2ouDRvaGms2ThOWd5DBG4baTMwDrsk/oVkjpddxLyth
+         npGk2RY+ieASVplZEd0bTOx91lUDX/xvlmJqOSYFD9iZXuXs7pssjnhI80lWkJ0d0Eky
+         E7ZlnXxy1jpy4XhZ6Nv4cFzWdZAStzxBD1tLDgUU1GT95hdXMFFeBOIbeXp0dSk243W4
+         i+fty3zoSFWv/7JDB0vtlcLIlX2LUFFknQgXw8KUQ311LADnL6rcV3//idIk9zD+tDyp
+         xeRw==
+X-Gm-Message-State: AOAM531lBy6rLnL+wEUfwVqa5MvRtTsvB8uOWaYuwyI7ZDL0azv9+MMG
+        tmef1QIui/lAPZgdo+q3MFk=
+X-Google-Smtp-Source: ABdhPJxEQoPl9fMwozzagAz4U4ysT/MZSAaF26yHkz0oVX6eTwy/fgnKn3eGxjmHAf/0JWCAxrTRGw==
+X-Received: by 2002:adf:9205:: with SMTP id 5mr27655753wrj.232.1592228485925;
+        Mon, 15 Jun 2020 06:41:25 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id 104sm25964040wrl.25.2020.06.15.06.41.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jun 2020 06:41:25 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 15:41:19 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on
+ interrupt in exit paths
+Message-ID: <20200615134119.GB3321@kozik-lap>
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+ <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de>
+ <20200615123052.GO4447@sirena.org.uk>
+ <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com>
+ <20200615131006.GR4447@sirena.org.uk>
+ <CA+h21hpusy=zx8AuUqk_4zShtst8QeNJxCPT4dMGh0jhm5uZng@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1592135316.git.dsterba@suse.com> <CAHk-=whbO-6zmwfQaX2=cDfsq_sN1PZ6_CAbqLgw3DUptnFrPg@mail.gmail.com>
- <20200615125701.GY27795@twin.jikos.cz> <20200615132632.GA27848@infradead.org>
-In-Reply-To: <20200615132632.GA27848@infradead.org>
-Reply-To: fdmanana@gmail.com
-From:   Filipe Manana <fdmanana@gmail.com>
-Date:   Mon, 15 Jun 2020 14:40:26 +0100
-Message-ID: <CAL3q7H52qbmGdoq4U6ChZrqFBz+ufpfqJoRZBNhWnJVaAeKm=g@mail.gmail.com>
-Subject: Re: [GIT PULL] Btrfs updates for 5.8, part 2
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     dsterba@suse.cz, Linus Torvalds <torvalds@linux-foundation.org>,
-        David Sterba <dsterba@suse.com>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+h21hpusy=zx8AuUqk_4zShtst8QeNJxCPT4dMGh0jhm5uZng@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 2:29 PM Christoph Hellwig <hch@infradead.org> wrote=
-:
->
-> On Mon, Jun 15, 2020 at 02:57:01PM +0200, David Sterba wrote:
-> > On Sun, Jun 14, 2020 at 09:50:17AM -0700, Linus Torvalds wrote:
-> > > On Sun, Jun 14, 2020 at 4:56 AM David Sterba <dsterba@suse.com> wrote=
-:
-> > > >
-> > > > Reverts are not great, but under current circumstances I don't see
-> > > > better options.
-> > >
-> > > Pulled. Are people discussing how to make iomap work for everybody?
-> > > It's a bit sad if we can't have the major filesystems move away from
-> > > the old buffer head interfaces to a common more modern one..
+On Mon, Jun 15, 2020 at 04:12:28PM +0300, Vladimir Oltean wrote:
+> On Mon, 15 Jun 2020 at 16:10, Mark Brown <broonie@kernel.org> wrote:
+> 
 > >
-> > Yes, it's fixable and we definitely want to move to iomap. The direct t=
-o
-> > buffered fallback would fix one of the problems, but this would also
-> > mean that xfs would start doing that. Such change should be treated mor=
-e
-> > like a feature development than a bugfix, imposed by another filesystem=
-,
-> > and xfs people rightfully complained.
->
-> We can trivially key that off a flag at least for 5.8.  I suspect the
-> fallback actually is the right thing for XFS in the long run for that
-> particular case.
+> > It's a bit unusual to need to actually free the IRQ over suspend -
+> > what's driving that requirement here?
+> 
+> clk_disable_unprepare(dspi->clk); is driving the requirement - same as
+> in dspi_remove case, the module will fault when its registers are
+> accessed without a clock.
 
-We also have another regression (a deadlock) [1] introduced by the patchset=
-.
-I haven't looked into detail to figure out if it can be completely
-solved in btrfs or if it would need a change on iomap.
-Goldwyn was looking into it, but I don't know if he made any progress.
+In few cases when I have shared interrupt in different drivers, they
+were just disabling it during suspend. Why it has to be freed?
 
-[1] https://lore.kernel.org/linux-btrfs/CAL3q7H4F9iQJy3tgwZrWOKwenAnnn7oSth=
-QZUMEJ_vWx3WE3WQ@mail.gmail.com/#t
+Best regards,
+Krzysztof
 
---=20
-Filipe David Manana,
-
-=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
- right.=E2=80=9D
