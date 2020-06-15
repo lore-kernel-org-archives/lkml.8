@@ -2,105 +2,72 @@ Return-Path: <SRS0=PJcK=74=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A367BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A2B2076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:56:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWzYj+YU"
+	by mail.kernel.org (Postfix) with ESMTP id 8A01B2076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Jun 2020 12:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbgFOM4P (ORCPT
+        id S1730171AbgFOM5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 08:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729977AbgFOM4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:56:14 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8103C061A0E;
-        Mon, 15 Jun 2020 05:56:13 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id w16so16779760ejj.5;
-        Mon, 15 Jun 2020 05:56:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qXYey5+z4XH/ze0CWdNcvFvzyDDniwsSZOKQE4KvrPA=;
-        b=LWzYj+YUZE5h3uCy+V+oKermAdgPdGS6C8qL9LwMjPW6ITfnP0y2Dgs05yw/ayjMJu
-         RgJGJgRKxJtjJsprQaWp+UM3lJME/REUZLhE9zN06FpCC3UFkmHHEJrFrmCe7NeTfb6P
-         4viYgcN2myPkYCNOsbzttBX+tLoaW9BysLcBm6es9LK4wCQeyy8bmdhxBERMvuPilICH
-         NJANq3gd8DooJJODqZF5xLp8nWmuka+rLmFf2vfjj2VkOSVTvqyB2mUMzkytFygDICaj
-         etrCk9Km4O4ORHSnyhRPAlXYC5wu2pPYjB7Rc/jlmQdZ/xOxJFX2yNYUBlzYXyqSo+oY
-         goBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qXYey5+z4XH/ze0CWdNcvFvzyDDniwsSZOKQE4KvrPA=;
-        b=CjEsxxm55eC0ZxoYho8VfsBOy74pIXDF49Sc7OwWyZtZQZc++i/R1vaWrtBw+QL5To
-         qEWJZAxwrX6X1iYSOkZfRiw4hN2M+ZjZEPd8o1lVCTUQ4VBP5N/xsjScUxqFuFa+BG5N
-         bNWvVFLsgiTZQvIWGEJj/fDgQ8f2TC4tZ1cjs3wX+C5jF/vw137w0jdKLs2oZLS+OEr2
-         rYl5Miqy4UGMbNqsPHP0EfWOrCet6rC4e+dL2lzKWuNtyRulCAKynzeDycMaKMyA/3kY
-         kCtS/h5ZAD5/FgGlwcIOAI4EHJdc2kvYDUio1NLCFuewVxxysLkQlVBPSfwBsWBaETCP
-         LlNw==
-X-Gm-Message-State: AOAM530FhIG2cDYRukDKdZmm/4W47/csOXzHIQjMPdse08Ab8MtNn+BK
-        zzrkoAfdsK6MUAad5v1xiYQXXMewO63+mBzac2E=
-X-Google-Smtp-Source: ABdhPJxfD2eZnT7OjVjtGV+km3Oywp2EPuv/r9jJrK8yqXO8qIUu5maBk1Ir2ArbyCoC4j5QFo4imEk0dhb/iB+WsQo=
-X-Received: by 2002:a17:906:851:: with SMTP id f17mr24343551ejd.396.1592225772600;
- Mon, 15 Jun 2020 05:56:12 -0700 (PDT)
+        Mon, 15 Jun 2020 08:57:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34212 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729766AbgFOM5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:57:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5FF10ACB8;
+        Mon, 15 Jun 2020 12:57:14 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id D7C14DA7C3; Mon, 15 Jun 2020 14:57:01 +0200 (CEST)
+Date:   Mon, 15 Jun 2020 14:57:01 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Sterba <dsterba@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Btrfs updates for 5.8, part 2
+Message-ID: <20200615125701.GY27795@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Sterba <dsterba@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <cover.1592135316.git.dsterba@suse.com>
+ <CAHk-=whbO-6zmwfQaX2=cDfsq_sN1PZ6_CAbqLgw3DUptnFrPg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
- <e1f0326c-8ae8-ffb3-aace-10433b0c78a6@pengutronix.de> <20200615123052.GO4447@sirena.org.uk>
-In-Reply-To: <20200615123052.GO4447@sirena.org.uk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 15 Jun 2020 15:56:01 +0300
-Message-ID: <CA+h21hqC7hAenifvRqbwss=Sr+dAu3H9Dx=UF0TS0WVbkzTj2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] spi: spi-fsl-dspi: Fix external abort on interrupt
- in exit paths
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa@kernel.org>, stable@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whbO-6zmwfQaX2=cDfsq_sN1PZ6_CAbqLgw3DUptnFrPg@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 at 15:35, Mark Brown <broonie@kernel.org> wrote:
->
+On Sun, Jun 14, 2020 at 09:50:17AM -0700, Linus Torvalds wrote:
+> On Sun, Jun 14, 2020 at 4:56 AM David Sterba <dsterba@suse.com> wrote:
+> >
+> > Reverts are not great, but under current circumstances I don't see
+> > better options.
+> 
+> Pulled. Are people discussing how to make iomap work for everybody?
+> It's a bit sad if we can't have the major filesystems move away from
+> the old buffer head interfaces to a common more modern one..
 
->
-> Indeed.  The upshot of all this is that the interrupt needs to be freed
-> not disabled before the clocks are disabled, or some other mechanism
-> needs to be used to ensure that the interrupt handler won't attempt to
-> access the hardware when it shouldn't.  As Vladimir says there are
-> serious issues using devm for interrupt handlers (or anything else that
-> might cause code to be run) due to problems like this.
+Yes, it's fixable and we definitely want to move to iomap. The direct to
+buffered fallback would fix one of the problems, but this would also
+mean that xfs would start doing that. Such change should be treated more
+like a feature development than a bugfix, imposed by another filesystem,
+and xfs people rightfully complained.
 
-And the down-shot is that whatever is done in dspi_remove (free_irq)
-also needs to be done in dspi_suspend, but with extra care in
-dspi_resume not only to request the irq again, but also to flush the
-module's FIFOs and clear interrupts, because there might have been
-nasty stuff uncaught during sleep:
-
-    regmap_update_bits(dspi->regmap, SPI_MCR,
-               SPI_MCR_CLR_TXF | SPI_MCR_CLR_RXF,
-               SPI_MCR_CLR_TXF | SPI_MCR_CLR_RXF);
-    regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
-
-So it's pretty messy.
-
--Vladimir
+It's quite possible that there's a better way to fix it on the iomap API
+level but I haven't looked into that yet. We get support from iomap
+people to add what we need for btrfs, so it's just a matter of time and
+testing.
