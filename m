@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A95C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC2392098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4462098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323668;
-	bh=ehGZLwBStwiNoBJPxCADAHxsq8vyqACAuHk60HMadMY=;
+	s=default; t=1592323674;
+	bh=8LJvB/LGfhmrVz2EdFOe5aBaXRcWDqE+WFazPqlgZTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QFfsP3cBksTnvCo2Kr4qBw8tl5sxH6OFzvOsJeX/GWHEF4nux6iw1LmRJgEkZNZJz
-	 dHczXT2o/8cBxrZFb8dBIm7Joyt79Suy6KPMu6tUuhbTUzLd9kAxALjxPzqps+Jcp/
-	 BKgbnY5MKicfQzM47cXnxsIkwo8gVYc6KAcISv/g=
+	b=hpvPlPYuidvHr1wK8/d0LHcXJh1JVdpbnZheUGrMERJPUJ6aGnrfbBnn8V+2DJeel
+	 N3Gle+TOWhp2W+cC0p8Vn6w4RblKTf+Jqq6J/ScqySwUZVCrcgSCJM/PImhaNMv3Mk
+	 3cAxwpURnQfdxtmy5AITLxcRar7Ww095WDBM6qgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbgFPPqr (ORCPT
+        id S1732127AbgFPQHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39074 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:07:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730243AbgFPPqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:42 -0400
+        id S1729913AbgFPPqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 732C821473;
-        Tue, 16 Jun 2020 15:46:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB5F2071A;
+        Tue, 16 Jun 2020 15:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322402;
-        bh=ehGZLwBStwiNoBJPxCADAHxsq8vyqACAuHk60HMadMY=;
+        s=default; t=1592322399;
+        bh=8LJvB/LGfhmrVz2EdFOe5aBaXRcWDqE+WFazPqlgZTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I68xg1G8p43b1DoxY5CDv4moflDLmILwosULffkwatPdT+Apws4oqglblxhKS2qSA
-         737jSVMbG2NNODiOSyYCEKDG540W3k/ApXb/6+08ZQPl1zgBvluD5i+lHkyvUwxqNn
-         aGGB4wTo33uFyYtWy9NL07UEfvk/rS+B5lIjWRIA=
+        b=CBiAZS+32fW+PM8LwwQl08PK4HElbr/A5FfT+SJ5XWnCr749SZ+rcpAo5tiWWb4bS
+         nIV3Ki8haC4uDDoKhNo//m786OprgcmZKt0fNM6Ijk1KnZwIvpWILXn1N/VPR0301O
+         XYKwsF7R9LulSNrPIGGclUmLAB8SvD8dICFb9i1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.7 090/163] crypto: cavium/nitrox - Fix nitrox_get_first_device() when ndevlist is fully iterated
-Date:   Tue, 16 Jun 2020 17:34:24 +0200
-Message-Id: <20200616153111.154908502@linuxfoundation.org>
+        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.7 116/163] ovl: initialize error in ovl_copy_xattr
+Date:   Tue, 16 Jun 2020 17:34:50 +0200
+Message-Id: <20200616153112.359876631@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,45 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Yuxuan Shui <yshuiv7@gmail.com>
 
-commit 320bdbd816156f9ca07e5fed7bfb449f2908dda7 upstream.
+commit 520da69d265a91c6536c63851cbb8a53946974f0 upstream.
 
-When a list is completely iterated with 'list_for_each_entry(x, ...)', x is
-not NULL at the end.
+In ovl_copy_xattr, if all the xattrs to be copied are overlayfs private
+xattrs, the copy loop will terminate without assigning anything to the
+error variable, thus returning an uninitialized value.
 
-While at it, remove a useless initialization of the ndev variable. It
-is overridden by 'list_for_each_entry'.
+If ovl_copy_xattr is called from ovl_clear_empty, this uninitialized error
+value is put into a pointer by ERR_PTR(), causing potential invalid memory
+accesses down the line.
 
-Fixes: f2663872f073 ("crypto: cavium - Register the CNN55XX supported crypto algorithms.")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This commit initialize error with 0. This is the correct value because when
+there's no xattr to copy, because all xattrs are private, ovl_copy_xattr
+should succeed.
+
+This bug is discovered with the help of INIT_STACK_ALL and clang.
+
+Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1050405
+Fixes: 0956254a2d5b ("ovl: don't copy up opaqueness")
+Cc: stable@vger.kernel.org # v4.8
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/cavium/nitrox/nitrox_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/overlayfs/copy_up.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/cavium/nitrox/nitrox_main.c
-+++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
-@@ -278,7 +278,7 @@ static void nitrox_remove_from_devlist(s
- 
- struct nitrox_device *nitrox_get_first_device(void)
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -47,7 +47,7 @@ int ovl_copy_xattr(struct dentry *old, s
  {
--	struct nitrox_device *ndev = NULL;
-+	struct nitrox_device *ndev;
+ 	ssize_t list_size, size, value_size = 0;
+ 	char *buf, *name, *value = NULL;
+-	int uninitialized_var(error);
++	int error = 0;
+ 	size_t slen;
  
- 	mutex_lock(&devlist_lock);
- 	list_for_each_entry(ndev, &ndevlist, list) {
-@@ -286,7 +286,7 @@ struct nitrox_device *nitrox_get_first_d
- 			break;
- 	}
- 	mutex_unlock(&devlist_lock);
--	if (!ndev)
-+	if (&ndev->list == &ndevlist)
- 		return NULL;
- 
- 	refcount_inc(&ndev->refcnt);
+ 	if (!(old->d_inode->i_opflags & IOP_XATTR) ||
 
 
