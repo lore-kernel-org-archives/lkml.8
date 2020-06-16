@@ -2,183 +2,139 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08573C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D030BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C97602098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d+5q6fsa"
+	by mail.kernel.org (Postfix) with ESMTP id B50342098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592324230;
+	bh=RHVyUJryWVBrb37z8EtnL+5Xxwy5WhIbryfW9d+mlY4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hgkJbQ3GUqLxex3ALiXmFUAup/403tAUP3sETINxZqB3vq/o4GLSr3OMbShGV0l+y
+	 e/VRJF5ZKtwlBxwP5Kp8WVRrHbiIIMxlWUizeXXD8wjsGeMH1aXgPA+NhIolHDKQiC
+	 zrhb9afNsdFCAib5wjLilKkgZ6AdgojFN5rAgSo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732430AbgFPQRC (ORCPT
+        id S1730963AbgFPPje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:17:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730320AbgFPPjq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:46 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15085C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:39:46 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id u15so4902616vkk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:39:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OpIcNKoBWA32ZKSTXaPec3bskXiFI5FMVqf556OuUa0=;
-        b=d+5q6fsa3R7M8XLtKaS7HovoRpMgQG3JaLFBzKFpkgMdpWIQNxahgs7ClZDzZb7k38
-         BumsnzjNb5pv6Sua2mhhj083fF/4QDJWZha9MvspLatp/YzjekRwRBScURCqOMKApAUC
-         utzZ0I4TMfH0NiRDynsdJb/Hve8w2PKkCe2QYH1XkAFhB+vPU51WB3qM+H0sR/3awu6V
-         b/F4p1AbJvFtEZ9Uiw4e/HJsNJz6+9sx7qImlkh2OLPwcMdrRZSdgt4AJWdKzVAVjgKX
-         NWkFw11rdoKBEDOkNiqcjbOyacSJAb8VCzX7as9fQL/jEWSnmEIN9gnCq5ulbatUr1T1
-         H1UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OpIcNKoBWA32ZKSTXaPec3bskXiFI5FMVqf556OuUa0=;
-        b=V6eAvLr70aZ/GHnt33Gd+FU6+fxtgEnPECOdUKJa8ysuU0cjfJGBKMROt9A5GrP7sX
-         PjFCb2ATU8iqjP8XCJbfIjg3mVvYndMsHbwsdc8WlG1jycZF+UuPoGWbLZaYq1Y+Pe8O
-         n4yR5hx37WBmQ0sdnScP2y0WKJCSa5s7VyFC7yDPmb/tR7UOPAYX1ovYzEQ4hw8+sTWh
-         fnQ5PMRGjXjrqMwe/yvTYlaHQbS1GqMqFjGG0gFJ4uKYCvQsQ3+u6AtjvdA8YR560KTw
-         6Dl3G3Lm1N6SWegDro9MIo3oXnJcli0qz+Fzw8irLzA/fss6HXbJJCMUhjQ72D+wQJ74
-         XnVA==
-X-Gm-Message-State: AOAM532YCIr/bhWV3LUF8d45JJsM10VddFHxKrAYmXUIekOkZKZSbIi7
-        Dqa/CjFpUtIvR+WLtrr425ntaYh+pHw2neS5KoZVUw==
-X-Google-Smtp-Source: ABdhPJynNTSeftCC3/9Fn4eMnqHfujT6xn5kgc80WYjLXr1ID7DkYRFsjizJxUBmnTnusWqiT2jKctEgttJmO93Ow4k=
-X-Received: by 2002:a1f:2b43:: with SMTP id r64mr2264638vkr.5.1592321984533;
- Tue, 16 Jun 2020 08:39:44 -0700 (PDT)
+        Tue, 16 Jun 2020 11:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730951AbgFPPja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:39:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C3152145D;
+        Tue, 16 Jun 2020 15:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592321970;
+        bh=RHVyUJryWVBrb37z8EtnL+5Xxwy5WhIbryfW9d+mlY4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JNOD9wLMQhCPITDotwtwlcv+crJzmfaZvja50VnFYsweEx+bcu77AynJKLeqYcYsM
+         1pL4omj7p0E6RWTCRuo7bBQQY3hKR5c746K0Ie2fZC2bAsBjIyqpRmE9PvPnK3wcCB
+         0a31Xr0wmWE5H/GFgpbCKjb3bgJSktb/0dq94APw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
+        Gonglei <arei.gonglei@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        "Longpeng(Mike)" <longpeng2@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 086/134] crypto: virtio: Fix use-after-free in virtio_crypto_skcipher_finalize_req()
+Date:   Tue, 16 Jun 2020 17:34:30 +0200
+Message-Id: <20200616153104.901978904@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
+References: <20200616153100.633279950@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200528195442.190116-1-surenb@google.com> <20200604131215.GB4117@hirez.programming.kicks-ass.net>
- <CAJuCfpHNfOCRks_Ftbk7tEXsXs7AjPVUuxevKOtQWp9DCE4+8A@mail.gmail.com> <CAJuCfpGKsAs44AsRUF71E=Q-QyFbdH+05358BxhbQ-dAoz59YQ@mail.gmail.com>
-In-Reply-To: <CAJuCfpGKsAs44AsRUF71E=Q-QyFbdH+05358BxhbQ-dAoz59YQ@mail.gmail.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 16 Jun 2020 08:39:33 -0700
-Message-ID: <CAJuCfpEAW0PvO26cO8Dor+PY9PNetdqiTySkFFfocskdhUCvQg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] psi: eliminate kthread_worker from psi trigger
- scheduling mechanism
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>, mgorman@suse.de,
-        Shakeel Butt <shakeelb@google.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 7:56 PM Suren Baghdasaryan <surenb@google.com> wrote:
->
-> On Thu, Jun 4, 2020 at 12:20 PM Suren Baghdasaryan <surenb@google.com> wrote:
-> >
-> > On Thu, Jun 4, 2020 at 6:12 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Thu, May 28, 2020 at 12:54:42PM -0700, Suren Baghdasaryan wrote:
-> > > > Each psi group requires a dedicated kthread_delayed_work and
-> > > > kthread_worker. Since no other work can be performed using psi_group's
-> > > > kthread_worker, the same result can be obtained using a task_struct and
-> > > > a timer directly. This makes psi triggering simpler by removing lists
-> > > > and locks involved with kthread_worker usage and eliminates the need for
-> > > > poll_scheduled atomic use in the hot path.
-> > > >
-> > > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > > > ---
-> > > > This patch is meant to address Peter's request in [1] to pull
-> > > > kthread_queue_delayed_work() out from under rq->lock. This should also address
-> > > > the lockdep warning about possibility of a circular dependency described in [2]
-> > >
-> > > I think you could've just fixed kthread_queue_delayed_work(), that code
-> > > is sub-optimal.
->
-> After some more staring into kthread code I think I understand what
-> Peter's comment meant about delayed_work_list.
-> worker->delayed_work_list seems to be unnecessary because each
-> kthread_delayed_work has its own timer which will add the work into
-> worker->work_list when the time comes. So there is no need to store
-> the delayed work in an intermediate worker->delayed_work_list.
-> However I think kthread_destroy_worker() has an issue if it's called
-> while worker->delayed_work_list is non-empty. The issue is that
-> kthread_destroy_worker() does not stop all the
-> kthread_delayed_work->timers scheduled on the
-> worker->delayed_work_list. So if such a timer fires after a call to
-> kthread_destroy_worker(), timer's handler will dereference the already
-> destroyed worker.
->
-> If I'm right and this is indeed an issue then I think we do need
-> worker->delayed_work_list to cancel all the scheduled timers. The
-> issue can be avoided if we assume that the caller will alway call
-> kthread_cancel_delayed_work_sync() for each delayed_work scheduled on
-> worker->delayed_work_list before calling kthread_destroy_worker(). If
-> that's what we expect I think this expectation should be reflected in
-> the comments and a WARN_ON(!list_empty(&worker->delayed_work_list)) be
-> added in kthread_destroy_worker(). WDYT?
->
-> >
-> > Ok, let me look into it some more. My understanding was that the
-> > worker->lock in kthread_queue_delayed_work() was needed to synchronize
-> > worker->delayed_work_list access. But maybe I'm missing something... I
-> > assume you are talking about optimizing this beyond what
-> > https://lkml.org/lkml/2020/5/4/1148 was doing?
-> >
-> > BTW, any objections against taking https://lkml.org/lkml/2020/5/4/1148
-> > ? It's not the ultimate fix but it is an improvement since it gets
-> > some of the operations that were unnecessarily under worker->lock out
-> > of it.
-> >
-> > >
-> > > But I suppose this works too.
-> >
-> > In PSI's case there is always one work for each worker, so the
-> > delayed_work_list and work_list are not needed and therefore I can
-> > replace kthread_worker machinery with a task and a timer.
-> > I think I can simplify this a bit further. For example
-> > group->poll_wakeup doesn't have to be an atomic. Originally I wanted
-> > to avoid a possibility of a race when poll_timer_fn sets it and
-> > psi_poll_worker resets it and as a result misses a wakeup, however if
-> > psi_poll_worker resets it before calling psi_poll_work then there is
-> > no harm in missing a wakeup because we called psi_poll_work and did
-> > the required work anyway.
-> >
-> > One question about this patch I'm not sure about and wanted to ask you
-> > Peter is whether it's ok to call mod_timer from within a hotpath
-> > (while holding rq->lock). As I described in the additional comment,
-> > there is a possibility of a race between when I check timer_pending
-> > and the call to mod_timer, so it's possible that mod_timer might be
-> > called both from psi_poll_work (psi poll work handler) and from
-> > psi_task_change (hotpath under rq->lock). I see that mod_timer takes
-> > base->lock spinlock, and IIUC such a race might block the hotpath and
-> > therefore is unacceptable. If this is true I'll need to revive the
-> > poll_scheduled atomic to close this race and then I can change
-> > mod_timer into add_timer.
-> > WDYT? And sorry for my ignorance if this is a trivial question. I'm
-> > not sure about the rules when it comes to rq->locks.
+From: Longpeng(Mike) <longpeng2@huawei.com>
 
-Thanks for taking this patch, Peter. I just wanted to double-check if
-you considered the race I mentioned in the above paragraph and decided
-it's a non-issue. If it is an issue I can send a small follow-up patch
-to close the race or I can send a new version of the whole patch with
-the fix if that's preferable. Please LMK.
+[ Upstream commit 8c855f0720ff006d75d0a2512c7f6c4f60ff60ee ]
 
-> >
-> > Thanks,
-> > Suren.
-> >
-> > >
-> > > --
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> > >
+The system'll crash when the users insmod crypto/tcrypto.ko with mode=155
+( testing "authenc(hmac(sha1),cbc(aes))" ). It's caused by reuse the memory
+of request structure.
+
+In crypto_authenc_init_tfm(), the reqsize is set to:
+  [PART 1] sizeof(authenc_request_ctx) +
+  [PART 2] ictx->reqoff +
+  [PART 3] MAX(ahash part, skcipher part)
+and the 'PART 3' is used by both ahash and skcipher in turn.
+
+When the virtio_crypto driver finish skcipher req, it'll call ->complete
+callback(in crypto_finalize_skcipher_request) and then free its
+resources whose pointers are recorded in 'skcipher parts'.
+
+However, the ->complete is 'crypto_authenc_encrypt_done' in this case,
+it will use the 'ahash part' of the request and change its content,
+so virtio_crypto driver will get the wrong pointer after ->complete
+finish and mistakenly free some other's memory. So the system will crash
+when these memory will be used again.
+
+The resources which need to be cleaned up are not used any more. But the
+pointers of these resources may be changed in the function
+"crypto_finalize_skcipher_request". Thus release specific resources before
+calling this function.
+
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Reported-by: LABBE Corentin <clabbe@baylibre.com>
+Cc: Gonglei <arei.gonglei@huawei.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
+Acked-by: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200602070501.2023-3-longpeng2@huawei.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/crypto/virtio/virtio_crypto_algs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
+index 82b316b2f537..fea55b5da8b5 100644
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -580,10 +580,11 @@ static void virtio_crypto_ablkcipher_finalize_req(
+ 		scatterwalk_map_and_copy(req->info, req->dst,
+ 					 req->nbytes - AES_BLOCK_SIZE,
+ 					 AES_BLOCK_SIZE, 0);
+-	crypto_finalize_ablkcipher_request(vc_sym_req->base.dataq->engine,
+-					   req, err);
+ 	kzfree(vc_sym_req->iv);
+ 	virtcrypto_clear_request(&vc_sym_req->base);
++
++	crypto_finalize_ablkcipher_request(vc_sym_req->base.dataq->engine,
++					   req, err);
+ }
+ 
+ static struct virtio_crypto_algo virtio_crypto_algs[] = { {
+-- 
+2.25.1
+
+
+
