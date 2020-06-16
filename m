@@ -2,140 +2,109 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC39C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A98EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50D302074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833042074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgFPIOa (ORCPT
+        id S1726691AbgFPITJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:14:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63987 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFPIO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:14:28 -0400
-IronPort-SDR: VjF7EhjUJZC/gDac0uLwgddFY/LmBl0lzFa09CLc/oRPKpdFHWRS5Y4DwV+WMIuZUcH3ImsM9s
- +TPs++Ds6bNg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 01:14:27 -0700
-IronPort-SDR: iVknjRVF13XZH0gD8Jhr/izjiPVFRea5kevTpSrhIL3CDBHqaAWBOMfZ+S1kS7FViiDdc3O5rX
- kYCDPvJO4xOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="476351950"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Jun 2020 01:14:25 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jl6jk-00Dmpc-EB; Tue, 16 Jun 2020 11:14:28 +0300
-Date:   Tue, 16 Jun 2020 11:14:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     linus.walleij@linaro.org, akpm@linux-foundation.org,
-        vilhelm.gray@gmail.com, arnd@arndb.de, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/4] bitops: Introduce the for_each_set_clump macro
-Message-ID: <20200616081428.GP2428291@smile.fi.intel.com>
-References: <cover.1592224128.git.syednwaris@gmail.com>
- <fe12eedf3666f4af5138de0e70b67a07c7f40338.1592224129.git.syednwaris@gmail.com>
+        Tue, 16 Jun 2020 04:19:09 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2311 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726064AbgFPITJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 04:19:09 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 8494228CB8606B535B20;
+        Tue, 16 Jun 2020 09:19:05 +0100 (IST)
+Received: from localhost (10.52.122.153) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 16 Jun
+ 2020 09:19:05 +0100
+Date:   Tue, 16 Jun 2020 09:18:16 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Pavel Machek <pavel@denx.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Mathieu Othacehe <m.othacehe@gmail.com>
+Subject: Re: [PATCH 4.19 11/25] iio: vcnl4000: Fix i2c swapped word reading.
+Message-ID: <20200616091816.00004ac9@Huawei.com>
+In-Reply-To: <20200615133018.GA18126@duo.ucw.cz>
+References: <20200609174048.576094775@linuxfoundation.org>
+        <20200609174049.916148213@linuxfoundation.org>
+        <20200615133018.GA18126@duo.ucw.cz>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe12eedf3666f4af5138de0e70b67a07c7f40338.1592224129.git.syednwaris@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.122.153]
+X-ClientProxiedBy: lhreml711-chm.china.huawei.com (10.201.108.62) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:21:18PM +0530, Syed Nayyar Waris wrote:
-> This macro iterates for each group of bits (clump) with set bits,
-> within a bitmap memory region. For each iteration, "start" is set to
-> the bit offset of the found clump, while the respective clump value is
-> stored to the location pointed by "clump". Additionally, the
-> bitmap_get_value and bitmap_set_value functions are introduced to
-> respectively get and set a value of n-bits in a bitmap memory region.
-> The n-bits can have any size less than or equal to BITS_PER_LONG.
-> Moreover, during setting value of n-bit in bitmap, if a situation arise
-> that the width of next n-bit is exceeding the word boundary, then it
-> will divide itself such that some portion of it is stored in that word,
-> while the remaining portion is stored in the next higher word. Similar
-> situation occurs while retrieving value of n-bits from bitmap.
+On Mon, 15 Jun 2020 15:30:18 +0200
+Pavel Machek <pavel@denx.de> wrote:
 
-On the second view...
+> Hi!
+> 
+> > From: Mathieu Othacehe <m.othacehe@gmail.com>
+> > 
+> > commit 18dfb5326370991c81a6d1ed6d1aeee055cb8c05 upstream.
+> > 
+> > The bytes returned by the i2c reading need to be swapped
+> > unconditionally. Otherwise, on be16 platforms, an incorrect value will be
+> > returned.
+> > 
+> > Taking the slow path via next merge window as its been around a while
+> > and we have a patch set dependent on this which would be held up.  
+> 
+> Is there some explanation how this is correct Somewhere? I assume i2c
+> hardware has fixed endianity (not depending on CPU), so unconditional
+> swapping will cause problems either on le or on be machines...?
+> 
 
-> +static inline unsigned long bitmap_get_value(const unsigned long *map,
-> +					      unsigned long start,
-> +					      unsigned long nbits)
-> +{
-> +	const size_t index = BIT_WORD(start);
-> +	const unsigned long offset = start % BITS_PER_LONG;
+Hmm, this isn't introducing a bug, but looking again, it appears
+that the original code was fine as well..
 
-> +	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+smbus/I2C has a fixed ordering on the wire (when people actually obey the spec).
+So when an i2c_smbus_read_word_data call is made, the drivers / subsystem
+assume that ordering an provide the data in CPU endian order.
 
-This perhaps should use round_up()
+Unfortunately a reasonable set of devices provide data in the opposite
+order from that required by the i2c spec.  Thus it needs to be unconditionally
+swapped to put it back into the correct order.
+i2c_smbus_read_word_data_swapped does that for us.
 
-> +	const unsigned long space = ceiling - start;
+Now the reason it worked before was this was previously doing a
+block read rather than a word read. i2c_smbus_read_i2c_block_data
+which is just reading a bunch of bytes rather than doing a word read.
 
-And I think I see a scenario to complain.
+So this is a false positive as a fix.  Sorry about that.
+Conversely it shouldn't break anything.
 
-If start == 0, then ceiling will be 64.
-space == 64. Not good.
+Looking back at the history, what happened was that up to v5 of this patchset
+factored out the reads, but whilst doing that converted them to
+i2c_smbus_read_word_data with a be16_to_cpu call which was buggy and
+picked up in review.  Hence confusion occurred and I guess my eyes saw
+what they expected to see once the fix was pulled to the front of the series.
 
-> +	unsigned long value_low, value_high;
-> +
-> +	if (space >= nbits)
-> +		return (map[index] >> offset) & GENMASK(nbits - 1, 0);
-> +	else {
-> +		value_low = map[index] & BITMAP_FIRST_WORD_MASK(start);
-> +		value_high = map[index + 1] & BITMAP_LAST_WORD_MASK(start + nbits);
-> +		return (value_low >> offset) | (value_high << space);
-> +	}
-> +}
+Thanks,
 
-...
+Jonathan
 
-> +/**
-> + * bitmap_set_value - set n-bit value within a memory region
-> + * @map: address to the bitmap memory region
-> + * @value: value of nbits
-> + * @start: bit offset of the n-bit value
-> + * @nbits: size of value in bits
-> + */
-> +static inline void bitmap_set_value(unsigned long *map,
-> +				    unsigned long value,
-> +				    unsigned long start, unsigned long nbits)
-> +{
-> +	const size_t index = BIT_WORD(start);
-> +	const unsigned long offset = start % BITS_PER_LONG;
 
-> +	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
-> +	const unsigned long space = ceiling - start;
 
-Ditto for both lines.
-
-> +	value &= GENMASK(nbits - 1, 0);
-> +
-> +	if (space >= nbits) {
-> +		map[index] &= ~(GENMASK(nbits + offset - 1, offset));
-> +		map[index] |= value << offset;
-> +	} else {
-> +		map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
-> +		map[index] |= value << offset;
-> +		map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
-> +		map[index + 1] |= (value >> space);
-> +	}
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+> Best regards,
+> 								Pavel
 
 
