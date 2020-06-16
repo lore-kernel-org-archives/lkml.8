@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA96C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2D782071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAAC214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322413;
-	bh=nGMpzdufhyG1R9GMDA0h4SH+Am4sZjqYSzjxJP4ZUdg=;
+	s=default; t=1592322418;
+	bh=cB0xYbRke6CaPhv+2x3VkaVLolCq4Lq7+R793GDpnis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZqqdDKp+E2V+WAjoS1EvkVYMsbEkT2yB8p8szJYZ6oy9SkECBdM8Uyz2SBr7we656
-	 4L9SbNdR54/2S57XzBvFe3bc/YS59dsn+LVPEL+QqjHybETg62QGUbna75Tdo2AtPO
-	 gYYtpGfVwn+vRiX2deuayZ/dwWVeCjYNlGgzjjUQ=
+	b=U/2dxjyyhuF9T0Bzp3jmYjkXo7pR5mejd0KdqrTXPF3MAp5UnzqweonaWh7lxLNZz
+	 NYNZkEE2JpSs0OiVI41+phzkuogAIM5Qbi5ZvrFoYZZLxuuMJr91BM5U0YKO8HvJqV
+	 Q8kowWa+Qxa8Wm4giPmIGxt2phWtTBAchHms7Np8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbgFPPqw (ORCPT
+        id S1731218AbgFPPq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39334 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732230AbgFPPqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:50 -0400
+        id S1732230AbgFPPqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C3220E65;
-        Tue, 16 Jun 2020 15:46:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D223E214DB;
+        Tue, 16 Jun 2020 15:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322409;
-        bh=nGMpzdufhyG1R9GMDA0h4SH+Am4sZjqYSzjxJP4ZUdg=;
+        s=default; t=1592322412;
+        bh=cB0xYbRke6CaPhv+2x3VkaVLolCq4Lq7+R793GDpnis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJxBrgi3M+FLLbhAOqEcqUVeiGujDV0FO2iIPNBzCnbQihngpvfcYvXrLpm4vsUbe
-         d8rCF5D79A7p7Y63u+6WBzlramjrOCieaYLgFrSnIpgNt9zl19GgQ83sEvGWmxbyo+
-         otzip3+4uBbZHCsOAuL9hlH0Sub1eQoe/61wGj+g=
+        b=G0OkRiPqdZDd5gFvbKo4vhzkEqd+cv+GDFaznmBmOG5Z/wECczI9e+BBFwEzMwCfZ
+         faM/el+7CkgEs7i1C+g42wWl/oBLtOfn7k1e02kR+0EP34ca/9i2kSfkOapz+GjHug
+         xybbWDVTCzFwQpp73JA2xBRJxr2fA5HuhNkTtvpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 5.7 119/163] proc: Use new_inode not new_inode_pseudo
-Date:   Tue, 16 Jun 2020 17:34:53 +0200
-Message-Id: <20200616153112.507267988@linuxfoundation.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.7 091/163] crypto: algapi - Avoid spurious modprobe on LOADED
+Date:   Tue, 16 Jun 2020 17:34:25 +0200
+Message-Id: <20200616153111.195011314@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,83 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit ef1548adada51a2f32ed7faef50aa465e1b4c5da upstream.
+commit beeb460cd12ac9b91640b484b6a52dcba9d9fc8f upstream.
 
-Recently syzbot reported that unmounting proc when there is an ongoing
-inotify watch on the root directory of proc could result in a use
-after free when the watch is removed after the unmount of proc
-when the watcher exits.
+Currently after any algorithm is registered and tested, there's an
+unnecessary request_module("cryptomgr") even if it's already loaded.
+Also, CRYPTO_MSG_ALG_LOADED is sent twice, and thus if the algorithm is
+"crct10dif", lib/crc-t10dif.c replaces the tfm twice rather than once.
 
-Commit 69879c01a0c3 ("proc: Remove the now unnecessary internal mount
-of proc") made it easier to unmount proc and allowed syzbot to see the
-problem, but looking at the code it has been around for a long time.
+This occurs because CRYPTO_MSG_ALG_LOADED is sent using
+crypto_probing_notify(), which tries to load "cryptomgr" if the
+notification is not handled (NOTIFY_DONE).  This doesn't make sense
+because "cryptomgr" doesn't handle this notification.
 
-Looking at the code the fsnotify watch should have been removed by
-fsnotify_sb_delete in generic_shutdown_super.  Unfortunately the inode
-was allocated with new_inode_pseudo instead of new_inode so the inode
-was not on the sb->s_inodes list.  Which prevented
-fsnotify_unmount_inodes from finding the inode and removing the watch
-as well as made it so the "VFS: Busy inodes after unmount" warning
-could not find the inodes to warn about them.
+Fix this by using crypto_notify() instead of crypto_probing_notify().
 
-Make all of the inodes in proc visible to generic_shutdown_super,
-and fsnotify_sb_delete by using new_inode instead of new_inode_pseudo.
-The only functional difference is that new_inode places the inodes
-on the sb->s_inodes list.
-
-I wrote a small test program and I can verify that without changes it
-can trigger this issue, and by replacing new_inode_pseudo with
-new_inode the issues goes away.
-
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/000000000000d788c905a7dfa3f4@google.com
-Reported-by: syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com
-Fixes: 0097875bd415 ("proc: Implement /proc/thread-self to point at the directory of the current thread")
-Fixes: 021ada7dff22 ("procfs: switch /proc/self away from proc_dir_entry")
-Fixes: 51f0885e5415 ("vfs,proc: guarantee unique inodes in /proc")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: dd8b083f9a5e ("crypto: api - Introduce notifier for new crypto algorithms")
+Cc: <stable@vger.kernel.org> # v4.20+
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/proc/inode.c       |    2 +-
- fs/proc/self.c        |    2 +-
- fs/proc/thread_self.c |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ crypto/algapi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -599,7 +599,7 @@ const struct inode_operations proc_link_
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -403,7 +403,7 @@ static void crypto_wait_for_test(struct
+ 	err = wait_for_completion_killable(&larval->completion);
+ 	WARN_ON(err);
+ 	if (!err)
+-		crypto_probing_notify(CRYPTO_MSG_ALG_LOADED, larval);
++		crypto_notify(CRYPTO_MSG_ALG_LOADED, larval);
  
- struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
- {
--	struct inode *inode = new_inode_pseudo(sb);
-+	struct inode *inode = new_inode(sb);
- 
- 	if (inode) {
- 		inode->i_ino = de->low_ino;
---- a/fs/proc/self.c
-+++ b/fs/proc/self.c
-@@ -43,7 +43,7 @@ int proc_setup_self(struct super_block *
- 	inode_lock(root_inode);
- 	self = d_alloc_name(s->s_root, "self");
- 	if (self) {
--		struct inode *inode = new_inode_pseudo(s);
-+		struct inode *inode = new_inode(s);
- 		if (inode) {
- 			inode->i_ino = self_inum;
- 			inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
---- a/fs/proc/thread_self.c
-+++ b/fs/proc/thread_self.c
-@@ -43,7 +43,7 @@ int proc_setup_thread_self(struct super_
- 	inode_lock(root_inode);
- 	thread_self = d_alloc_name(s->s_root, "thread-self");
- 	if (thread_self) {
--		struct inode *inode = new_inode_pseudo(s);
-+		struct inode *inode = new_inode(s);
- 		if (inode) {
- 			inode->i_ino = thread_self_inum;
- 			inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+ out:
+ 	crypto_larval_kill(&larval->alg);
 
 
