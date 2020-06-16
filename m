@@ -2,52 +2,55 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B33207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5848320882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323090;
-	bh=dRzrmPTneQJ2RejTL0DG0atWQiNUcoX1ztdDbR2Xwcg=;
+	s=default; t=1592323100;
+	bh=SGKlEm4akjwRBtp7JgMewDQ7F6ow21dNEkrsU9VG3ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CS/pZMso8eVIMb1zpj/VxufL/RUVfDuZ71S67D9U/llyjDTtHnLQ0sKZPdYssBLKA
-	 C7WfTZDCCmhWOy5swCNuag52VqYdnw/uI+DBfzCobrrFRUhpRyZkyQ8LmzHRCktXyS
-	 5HCRe3qxSthC2smiLjA/3yBoXe7RFvQHpZJVmW9g=
+	b=CmX7stYxslmTK49cDDUZZsPz4toYWu4wrSHYs1C95s6lAGOYGT50ooeAaRvVtTOMy
+	 rwjoOVZ9que+syrlVh94UNVUDi+G09KTDcL+3O9YaA/rdFRx329kBdgaR/G3OEOGfR
+	 4FXcS23GWqCJHxOvref8CA3WfbAmxhcfNAX4HXXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733120AbgFPP6E (ORCPT
+        id S1733207AbgFPP6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54024 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732996AbgFPPyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:37 -0400
+        id S1732986AbgFPPy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC076207C4;
-        Tue, 16 Jun 2020 15:54:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F879208D5;
+        Tue, 16 Jun 2020 15:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322877;
-        bh=dRzrmPTneQJ2RejTL0DG0atWQiNUcoX1ztdDbR2Xwcg=;
+        s=default; t=1592322866;
+        bh=SGKlEm4akjwRBtp7JgMewDQ7F6ow21dNEkrsU9VG3ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qus1zGqJHjaKhsIcr1CBmlN1Xn2Y+71KeuCT1GLTlO8h4ap67XHirzcraJOD3Qpck
-         Y45VeDupXbN/STK30+i8QULb36HPD24O841Lm9SKaqDSfiZkPE7soPIxOd6moycuMx
-         m1x7rt20KbL4hLrikM83PRj4PeyaToa9ZQOFP+WM=
+        b=S01rn2JrDfPAhcfwYHPsKpBLN31eYOpDhBN5K2Uq2tfpK0d2XiXBSbWrMaGtdbkJh
+         iexbsuavrDNRZGoMD+txDp8CTXTQmoHp+CI/e7wg0jsYpwNI8DJNrICJ3ZyuRX+TEl
+         8eCVdqtAhXCZi7INEGwlmeKVJnlAF1ACtiAWjngY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Subject: [PATCH 5.6 139/161] ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-Date:   Tue, 16 Jun 2020 17:35:29 +0200
-Message-Id: <20200616153112.982858975@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Franck LENORMAND <franck.lenormand@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 105/161] firmware: imx: scu: Fix corruption of header
+Date:   Tue, 16 Jun 2020 17:34:55 +0200
+Message-Id: <20200616153111.360167837@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,57 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Franck LENORMAND <franck.lenormand@nxp.com>
 
-commit e4ff08a4d727146bb6717a39a8d399d834654345 upstream.
+[ Upstream commit f5f27b79eab80de0287c243a22169e4876b08d5e ]
 
-Write out of slab bounds. We should check epid.
+The header of the message to send can be changed if the
+response is longer than the request:
+ - 1st word, the header is sent
+ - the remaining words of the message are sent
+ - the response is received asynchronously during the
+   execution of the loop, changing the size field in
+   the header
+ - the for loop test the termination condition using
+   the corrupted header
 
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000006ac55b05a1c05d72@google.com
-BUG: KASAN: use-after-free in htc_process_conn_rsp
-drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
-BUG: KASAN: use-after-free in ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-Write of size 2 at addr ffff8881cea291f0 by task swapper/1/0
+It is the case for the API build_info which has just a
+header as request but 3 words in response.
 
-Call Trace:
- htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131
-[inline]
-ath9k_htc_rx_msg+0xa25/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:443
-ath9k_hif_usb_reg_in_cb+0x1ba/0x630
-drivers/net/wireless/ath/ath9k/hif_usb.c:718
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+This issue is fixed storing the header locally instead of
+using a pointer on it.
 
-Reported-and-tested-by: syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-4-hqjagain@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: edbee095fafb (firmware: imx: add SCU firmware driver support)
 
+Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/htc_hst.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/firmware/imx/imx-scu.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -113,6 +113,9 @@ static void htc_process_conn_rsp(struct
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index e94a5585b698..b3da2e193ad2 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -158,7 +158,7 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
  
- 	if (svc_rspmsg->status == HTC_SERVICE_SUCCESS) {
- 		epid = svc_rspmsg->endpoint_id;
-+		if (epid < 0 || epid >= ENDPOINT_MAX)
-+			return;
-+
- 		service_id = be16_to_cpu(svc_rspmsg->service_id);
- 		max_msglen = be16_to_cpu(svc_rspmsg->max_msg_len);
- 		endpoint = &target->endpoint[epid];
+ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ {
+-	struct imx_sc_rpc_msg *hdr = msg;
++	struct imx_sc_rpc_msg hdr = *(struct imx_sc_rpc_msg *)msg;
+ 	struct imx_sc_chan *sc_chan;
+ 	u32 *data = msg;
+ 	int ret;
+@@ -166,13 +166,13 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ 	int i;
+ 
+ 	/* Check size */
+-	if (hdr->size > IMX_SC_RPC_MAX_MSG)
++	if (hdr.size > IMX_SC_RPC_MAX_MSG)
+ 		return -EINVAL;
+ 
+-	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr->svc,
+-		hdr->func, hdr->size);
++	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr.svc,
++		hdr.func, hdr.size);
+ 
+-	size = sc_ipc->fast_ipc ? 1 : hdr->size;
++	size = sc_ipc->fast_ipc ? 1 : hdr.size;
+ 	for (i = 0; i < size; i++) {
+ 		sc_chan = &sc_ipc->chans[i % 4];
+ 
+-- 
+2.25.1
+
 
 
