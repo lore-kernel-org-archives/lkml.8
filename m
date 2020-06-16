@@ -2,97 +2,122 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CA6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB55C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAA7208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324288;
-	bh=him64+DPIChEX82ZwANJeJdiaQwo04Fo1rdBgwYSfcI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kqUNd75v0TvzKDDJu9watCCMah72/sleYMR7pZq7xHlPIJH9CD9tq3OXjmRKQ3RJK
-	 pS8/oBC1WePLK3hb0xfVFU67VFzgt5y2Fd8bGfHebZFiuqz8vcVXcEEgdNEVzdXFmG
-	 LjbgKZdWI6N0zgQP+rS3bcbhQwsqbXAftwdN7fp0=
+	by mail.kernel.org (Postfix) with ESMTP id CC62D20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XjCEbPGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbgFPQSH (ORCPT
+        id S1732580AbgFPQSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:18:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbgFPPi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7170D20C56;
-        Tue, 16 Jun 2020 15:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321907;
-        bh=him64+DPIChEX82ZwANJeJdiaQwo04Fo1rdBgwYSfcI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2eSr7AdD+LBysO4R1urWlb9bkeu6tM1WRf0EgVgKz9ThOLVSKmzooad/vDy1YB7cC
-         uIlwElV4tCFeZMibvtvut/qdhHQQ/ydYRhKInfFwzQI4/V6AE9jw9RrIUhBZ+ax0bu
-         h+Y9afHY8xzbW9Cs5v+8U3zxuuyXvETvnQHigScs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 044/134] perf/x86/intel: Add more available bits for OFFCORE_RESPONSE of Intel Tremont
-Date:   Tue, 16 Jun 2020 17:33:48 +0200
-Message-Id: <20200616153102.900302318@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
-References: <20200616153100.633279950@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 16 Jun 2020 12:18:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731751AbgFPQSK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:18:10 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7060AC06174E
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:18:10 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b5so9726629pfp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:18:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VPiig07nxQc9lwVFwfYIH3T1ET4UEo+E1D0Wd8u+hBk=;
+        b=XjCEbPGQUfD9AjE8Hevx52b4HKLCh8oQsGbdC1PHF3Q3QbQn9Ygd51hLvkzVjxG3RX
+         UtN728e+HKmcQcP8keX/4Kwc+Ht/ZOiBd+tejEg6vDoXtD7HbPCgbRcKvY43gkmThxUy
+         bNcZxPwfyTV9TOAjM5Nf8FXt7R7jq7FXYA3UM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VPiig07nxQc9lwVFwfYIH3T1ET4UEo+E1D0Wd8u+hBk=;
+        b=tjJx925ycNd2zbFp7d20NcU3d2MjrA7siT+GATRSqMZ7LTpUcma6l94bNuxTF8mgMt
+         2a2iMGyXG9PeLYDyFBXyfuMKug5XG8LtvmNn9radTCHZ4oosnHcUIK4UriuqQJkFRiPQ
+         73QLP2YQYZcZ5ombq50/Gy2X3WSvqYK48u4Bb087XoyeTpQ06EOTh9ncgpAwvDotTnB8
+         pqwyu78S5cSROL7IU9hAYzSK4e9xX3CfnhjDjcILLwNflp5TdNIpvrNjDaRk6G2ZMfsW
+         xINLYyTIT31oJu4Jrga1t3yx0dAibl/nTnUTj0bJ0zjNCS65cMQPtpPIlCDi5iEKG4MP
+         7gyw==
+X-Gm-Message-State: AOAM532Va5WamIcaUUPLHM6TofICHEqQ5aQ2I74l37kHmnecCIH1ymSH
+        ZQLGs2aE6wzeeSX5GuBDMbjd/Q==
+X-Google-Smtp-Source: ABdhPJyXAmJNtObOlU+rzC52vUgZGrV4mSFDLUt84VwfrotzrnZ8vPKhz8hCE9vZvCTtbLg7XCtYDQ==
+X-Received: by 2002:a65:484c:: with SMTP id i12mr2637328pgs.267.1592324290000;
+        Tue, 16 Jun 2020 09:18:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w6sm2996602pjy.15.2020.06.16.09.18.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 09:18:08 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 09:18:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        James Morris <jmorris@namei.org>,
+        Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] [RFC] security: allow using Clang's zero
+ initialization for stack variables
+Message-ID: <202006160911.BD403B5@keescook>
+References: <20200616083435.223038-1-glider@google.com>
+ <20200616100309.GA2614426@kroah.com>
+ <CAG_fn=VYN6ynu2bnW96-p-QRi77NstHC6DXS+AN0r0bm5K2j7w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=VYN6ynu2bnW96-p-QRi77NstHC6DXS+AN0r0bm5K2j7w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Tue, Jun 16, 2020 at 02:15:52PM +0200, Alexander Potapenko wrote:
+> > > +KBUILD_CFLAGS        += -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
+> > > +endif
+> >
+> > Gotta love the name...
+> 
+> This is basically the reason why we've been hesitating to add it to
+> the kernel from the very beginning.
+> 
+> > Anyway, if this is enabled, and clang changes the flag or drops it, does
+> > the build suddenly break?
+> 
+> My original intention (see v1 of this patch) was to make
+> zero-initialization a secondary option of INIT_STACK_ALL, so that
+> nothing changes for the existing users.
+> But I agree with Kees that these options should be made distinct, as
+> people may want to use them for different purposes (think debug vs.
+> release builds).
 
-commit 0813c40556fce1eeefb996e020cc5339e0b84137 upstream.
+Yeah, and if the flag changes again, we can adapt. But at this point,
+it's getting used downstream, so we need to land the config in the
+kernel.
 
-The mask in the extra_regs for Intel Tremont need to be extended to
-allow more defined bits.
+> We could make INIT_STACK_ALL_ZERO fall back to INIT_STACK_ALL_PATTERN
+> if the compiler flag goes away - does this make sense?
 
-"Outstanding Requests" (bit 63) is only available on MSR_OFFCORE_RSP0;
+I don't like this idea -- I'm very hesitant to make security options do
+something different than what they document. It means the end user can't
+reason about how their kernel is built when looking at their CONFIGs.
 
-Fixes: 6daeb8737f8a ("perf/x86/intel: Add Tremont core PMU support")
-Reported-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200501125442.7030-1-kan.liang@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > And does gcc have something like this as well, or does that have to come
+> > in a compiler plugin?
+> 
+> Kees mentioned someone's plans to implement that in GCC, but I don't
+> think they have done it already.
 
----
- arch/x86/events/intel/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I've had some GCC folks reach about about these features, but I haven't
+seen any public discussion yet.
 
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -1892,8 +1892,8 @@ static __initconst const u64 tnt_hw_cach
- 
- static struct extra_reg intel_tnt_extra_regs[] __read_mostly = {
- 	/* must define OFFCORE_RSP_X first, see intel_fixup_er() */
--	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0xffffff9fffull, RSP_0),
--	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xffffff9fffull, RSP_1),
-+	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x800ff0ffffff9fffull, RSP_0),
-+	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xff0ffffff9fffull, RSP_1),
- 	EVENT_EXTRA_END
- };
- 
-
-
+-- 
+Kees Cook
