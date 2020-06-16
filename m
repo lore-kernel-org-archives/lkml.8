@@ -2,251 +2,116 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78771C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73DC02065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528622082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="icgj9474"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K+ndqAaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgFPWIS (ORCPT
+        id S1726101AbgFPWMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:08:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22591 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725901AbgFPWIP (ORCPT
+        Tue, 16 Jun 2020 18:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725964AbgFPWMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:08:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592345292;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7CP01C0W+UxRSj8yLj//dWMR0NvRbCdUzzXI0Pchkjc=;
-        b=icgj9474u2wrWilpLRJan9gAMaYVW0Xanj4gTet7DS/B6U2lL58Mnnl0LodEDW4unC2GMe
-        H0FtanvExIWYg2TzhQ444wDGfPCt3iIsQVjL/Kzr+ENXiPNuxqfEy9SP+UHH4KmncyeWkh
-        nsw+nw1gSyDYej/CuiqUwH9nwQeINqE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-297-mfQ3lCVcPBC_o3iFK-fHVg-1; Tue, 16 Jun 2020 18:08:10 -0400
-X-MC-Unique: mfQ3lCVcPBC_o3iFK-fHVg-1
-Received: by mail-wr1-f71.google.com with SMTP id z10so67926wrs.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 15:08:09 -0700 (PDT)
+        Tue, 16 Jun 2020 18:12:01 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70A7C0613ED
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 15:11:59 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ga6so23725pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 15:11:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IAntcGVr69jG+2U9Kg/0cnUckvFxjteOolkcxbeRc9Y=;
+        b=K+ndqAaPDXsilMqepmXfCMFmGehmMghRgs/uYLROhyx6CasKx/nZUoyOyDLdqq2piY
+         C/V3d1JkmyubwTahebBr/V7/usnD6QdgIQXr35pyGRbVh4GWwwV8dAs7yvQIDrSWKDAc
+         ZHAVHA9KluaJyFPwX8WCoEpPL0TWDallcZXXU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7CP01C0W+UxRSj8yLj//dWMR0NvRbCdUzzXI0Pchkjc=;
-        b=ahD9czhszIoUrq4t7zVGsK7x69ChmRk8AlOuAXZZyZbudQUL8m7Pjmex1jpnwS5+5o
-         0gkNoudwvuZvXeL/JVsIy+AN0M/fO21NchJoSoDPULcBV+h6ajYdl33oJY8sgaz6g0dH
-         2ENRB8qFWbZ9pTuAgKFtj+Do17l/rRfFzdsnwBBKSMA+4s7VS90zEHLdhomJ4B2ofAH1
-         NWMv8Dg5Bod4qDB7+Dmg3XSZyWjMGRDArZZH5UUWZSIEKw07rLZRaJ7m5gR1Ir9kTZpo
-         Ht3vFIbwvWcsLD7BsDTfOFMc1HDrv8a6itpqY1VBUhVFdbC7K685uYEPtZxJDCxL2pB3
-         cLyw==
-X-Gm-Message-State: AOAM5314uIPa6nhnCB1Oq2kG4uUtFiI92+ziYDJhTzLU0iNBy2bDB7jf
-        yZjvUoMVbdVRuFTFsZzmm5SZiPQlPoZNaXHVRVWQr/m4g4Ca3HHibeWzRZeUUsT9DJZnRTtWfzM
-        ge3cz9Q4qzVQr9CROf1iwP41q
-X-Received: by 2002:a5d:4488:: with SMTP id j8mr4964196wrq.242.1592345288629;
-        Tue, 16 Jun 2020 15:08:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw+YwKGiCPOYkO3s9mtutwnCfxVpYD54lMU6VgHDv3qQP0i01djJPcPzyqmByuEL0gGp486jg==
-X-Received: by 2002:a5d:4488:: with SMTP id j8mr4964176wrq.242.1592345288283;
-        Tue, 16 Jun 2020 15:08:08 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-18-124.red.bezeqint.net. [79.178.18.124])
-        by smtp.gmail.com with ESMTPSA id n204sm6055762wma.5.2020.06.16.15.08.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 15:08:07 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 18:08:04 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH RFC v7 03/14] vhost: use batched get_vq_desc version
-Message-ID: <20200616180136-mutt-send-email-mst@kernel.org>
-References: <20200610113515.1497099-1-mst@redhat.com>
- <20200610113515.1497099-4-mst@redhat.com>
- <CAJaqyWdGKh5gSTndGuVPyJSgt3jfjfW4xNCrJ2tQ9f+mD8=sMQ@mail.gmail.com>
- <20200610111147-mutt-send-email-mst@kernel.org>
- <CAJaqyWe6d19hFAbpqaQqOPuQQmBQyevyF4sTVkaXKhD729XDkw@mail.gmail.com>
- <20200611072702-mutt-send-email-mst@kernel.org>
- <26bef3f07277b028034c019e456b4f236078c5fb.camel@redhat.com>
- <CAJaqyWeX7knekVPcsZ2+AAf8zvZhPvt46fZncAsLhwYJ3eUa1g@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=IAntcGVr69jG+2U9Kg/0cnUckvFxjteOolkcxbeRc9Y=;
+        b=smKRw0c1PBLn7H3mTuUfiRVI3gFxqG/gIT6HY/qzIKI/2fFvAGqXixm/8KSqbDWQwf
+         CM7vJwqw5/JMM10KXxUiHxzC62bpEM5wdEOpYJhdC8xLDkkWcL8SMI0Wfm9tkihdSd4I
+         OqUCKW44aEUSJbwpasWHR0J8PW415sBoq1Brn9VF+OF1K5Sw28M6brbQu2Pu3Ha9QAFg
+         ao+77bnIIOVIpc/m3z68eRfG/86RA9+XY3Ti1IqbittX+YSPw54gHkAzbFfiT58ZGscP
+         I0Zsa1c1SqmszQiP0nBLgyvs7UQwdxhyjjRu65avX15UxKJQe+O67D6U5E1flGyEHO4j
+         EDFw==
+X-Gm-Message-State: AOAM5311pyZZT7U7RbIkwfli4qw+RgfzdvbGPdQZcYazMMMHKqkxtPuH
+        UoCw801hFI8iVFBL3eCGYjSzfQ==
+X-Google-Smtp-Source: ABdhPJzSnCJjDw+p1Ezp/HhEv4OF149xFwUoopIq0eaTwuT98NS0ayzkV4ddBqNuQJGzJMA3vaFiHQ==
+X-Received: by 2002:a17:90b:19c4:: with SMTP id nm4mr4994217pjb.66.1592345519448;
+        Tue, 16 Jun 2020 15:11:59 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 73sm15563491pge.15.2020.06.16.15.11.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 15:11:58 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 15:11:57 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v6 4/5] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+Message-ID: <20200616221157.GA4525@google.com>
+References: <20200605213332.609-1-sibis@codeaurora.org>
+ <20200605213332.609-5-sibis@codeaurora.org>
+ <20200615172553.GU4525@google.com>
+ <e21f85d64d72ec637c10dae93e8323bb@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJaqyWeX7knekVPcsZ2+AAf8zvZhPvt46fZncAsLhwYJ3eUa1g@mail.gmail.com>
+In-Reply-To: <e21f85d64d72ec637c10dae93e8323bb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 05:23:43PM +0200, Eugenio Perez Martin wrote:
-> On Mon, Jun 15, 2020 at 6:05 PM Eugenio Pérez <eperezma@redhat.com> wrote:
-> >
-> > On Thu, 2020-06-11 at 07:30 -0400, Michael S. Tsirkin wrote:
-> > > On Wed, Jun 10, 2020 at 06:18:32PM +0200, Eugenio Perez Martin wrote:
-> > > > On Wed, Jun 10, 2020 at 5:13 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > On Wed, Jun 10, 2020 at 02:37:50PM +0200, Eugenio Perez Martin wrote:
-> > > > > > > +/* This function returns a value > 0 if a descriptor was found, or 0 if none were found.
-> > > > > > > + * A negative code is returned on error. */
-> > > > > > > +static int fetch_descs(struct vhost_virtqueue *vq)
-> > > > > > > +{
-> > > > > > > +       int ret;
-> > > > > > > +
-> > > > > > > +       if (unlikely(vq->first_desc >= vq->ndescs)) {
-> > > > > > > +               vq->first_desc = 0;
-> > > > > > > +               vq->ndescs = 0;
-> > > > > > > +       }
-> > > > > > > +
-> > > > > > > +       if (vq->ndescs)
-> > > > > > > +               return 1;
-> > > > > > > +
-> > > > > > > +       for (ret = 1;
-> > > > > > > +            ret > 0 && vq->ndescs <= vhost_vq_num_batch_descs(vq);
-> > > > > > > +            ret = fetch_buf(vq))
-> > > > > > > +               ;
-> > > > > >
-> > > > > > (Expanding comment in V6):
-> > > > > >
-> > > > > > We get an infinite loop this way:
-> > > > > > * vq->ndescs == 0, so we call fetch_buf() here
-> > > > > > * fetch_buf gets less than vhost_vq_num_batch_descs(vq); descriptors. ret = 1
-> > > > > > * This loop calls again fetch_buf, but vq->ndescs > 0 (and avail_vq ==
-> > > > > > last_avail_vq), so it just return 1
-> > > > >
-> > > > > That's what
-> > > > >          [PATCH RFC v7 08/14] fixup! vhost: use batched get_vq_desc version
-> > > > > is supposed to fix.
-> > > > >
-> > > >
-> > > > Sorry, I forgot to include that fixup.
-> > > >
-> > > > With it I don't see CPU stalls, but with that version latency has
-> > > > increased a lot and I see packet lost:
-> > > > + ping -c 5 10.200.0.1
-> > > > PING 10.200.0.1 (10.200.0.1) 56(84) bytes of data.
-> > > > > From 10.200.0.2 icmp_seq=1 Destination Host Unreachable
-> > > > > From 10.200.0.2 icmp_seq=2 Destination Host Unreachable
-> > > > > From 10.200.0.2 icmp_seq=3 Destination Host Unreachable
-> > > > 64 bytes from 10.200.0.1: icmp_seq=5 ttl=64 time=6848 ms
-> > > >
-> > > > --- 10.200.0.1 ping statistics ---
-> > > > 5 packets transmitted, 1 received, +3 errors, 80% packet loss, time 76ms
-> > > > rtt min/avg/max/mdev = 6848.316/6848.316/6848.316/0.000 ms, pipe 4
-> > > > --
-> > > >
-> > > > I cannot even use netperf.
-> > >
-> > > OK so that's the bug to try to find and fix I think.
-> > >
-> > >
-> > > > If I modify with my proposed version:
-> > > > + ping -c 5 10.200.0.1
-> > > > PING 10.200.0.1 (10.200.0.1) 56(84) bytes of data.
-> > > > 64 bytes from 10.200.0.1: icmp_seq=1 ttl=64 time=7.07 ms
-> > > > 64 bytes from 10.200.0.1: icmp_seq=2 ttl=64 time=0.358 ms
-> > > > 64 bytes from 10.200.0.1: icmp_seq=3 ttl=64 time=5.35 ms
-> > > > 64 bytes from 10.200.0.1: icmp_seq=4 ttl=64 time=2.27 ms
-> > > > 64 bytes from 10.200.0.1: icmp_seq=5 ttl=64 time=0.426 ms
-> > >
-> > > Not sure which version this is.
-> > >
-> > > > [root@localhost ~]# netperf -H 10.200.0.1 -p 12865 -l 10 -t TCP_STREAM
-> > > > MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to
-> > > > 10.200.0.1 () port 0 AF_INET
-> > > > Recv   Send    Send
-> > > > Socket Socket  Message  Elapsed
-> > > > Size   Size    Size     Time     Throughput
-> > > > bytes  bytes   bytes    secs.    10^6bits/sec
-> > > >
-> > > > 131072  16384  16384    10.01    4742.36
-> > > > [root@localhost ~]# netperf -H 10.200.0.1 -p 12865 -l 10 -t UDP_STREAM
-> > > > MIGRATED UDP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to
-> > > > 10.200.0.1 () port 0 AF_INET
-> > > > Socket  Message  Elapsed      Messages
-> > > > Size    Size     Time         Okay Errors   Throughput
-> > > > bytes   bytes    secs            #      #   10^6bits/sec
-> > > >
-> > > > 212992   65507   10.00        9214      0     482.83
-> > > > 212992           10.00        9214            482.83
-> > > >
-> > > > I will compare with the non-batch version for reference, but the
-> > > > difference between the two is noticeable. Maybe it's worth finding a
-> > > > good value for the if() inside fetch_buf?
-> > > >
-> > > > Thanks!
-> > > >
-> > >
-> > > I don't think it's performance, I think it's a bug somewhere,
-> > > e.g. maybe we corrupt a packet, or stall the queue, or
-> > > something like this.
-> > >
-> > > Let's do this, I will squash the fixups and post v8 so you can bisect
-> > > and then debug cleanly.
-> >
-> > Ok, so if we apply the patch proposed in v7 08/14 (Or the version 8 of the patchset sent), this is what happens:
-> >
-> > 1. Userland (virtio_test in my case) introduces just one buffer in vq, and it kicks
-> > 2. vhost module reaches fetch_descs, called from vhost_get_vq_desc. From there we call fetch_buf in a for loop.
-> > 3. The first time we call fetch_buf, it returns properly one buffer. However, the second time we call it, it returns 0
-> > because vq->avail_idx == vq->last_avail_idx and vq->avail_idx == last_avail_idx code path.
-> > 4. fetch_descs assign ret = 0, so it returns 0. vhost_get_vq_desc will goto err, and it will signal no new buffer
-> > (returning vq->num).
-> >
-> > So to fix it and maintain the batching maybe we could return vq->ndescs in case ret == 0:
-> >
-> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > index c0dfb5e3d2af..5993d4f34ca9 100644
-> > --- a/drivers/vhost/vhost.c
-> > +++ b/drivers/vhost/vhost.c
-> > @@ -2315,7 +2327,8 @@ static int fetch_descs(struct vhost_virtqueue *vq)
-> >
-> >         /* On success we expect some descs */
-> >         BUG_ON(ret > 0 && !vq->ndescs);
-> > -       return ret;
-> > +       return ret ?: vq->ndescs;
+Hi Sibi,
 
+after doing the review I noticed that Viresh replied on the cover letter
+that he picked the series up for v5.9, so I'm not sure if it makes sense
+to send a v7.
 
-I'd rather we used standard C. Also ret < 0 needs
-to be handled. Also - what if fetch of some descs fails
-but some succeeds?
-What do we want to do?
-Maybe:
+On Wed, Jun 17, 2020 at 02:35:00AM +0530, Sibi Sankar wrote:
 
-return vq->ndescs ? vq->ndescs : ret;
-
-
-> >  }
-> >
-> >  /* Reverse the effects of fetch_descs */
-> > --
-> >
-> > Another possibility could be to return different codes from fetch_buf, but I find the suggested modification easier.
-> >
-> > What do you think?
-> >
-> > Thanks!
-> >
+> > > @@ -112,7 +178,7 @@ static int qcom_cpufreq_hw_read_lut(struct
+> > > device *cpu_dev,
+> > > 
+> > >  		if (freq != prev_freq && core_count != LUT_TURBO_IND) {
+> > >  			table[i].frequency = freq;
+> > > -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
+> > > +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
+> > 
+> > This is the cross-validation mentioned above, right? Shouldn't it
+> > include
+> > a check of the return value?
 > 
-> Hi!
-> 
-> I can send a proposed RFC v9 in case it is more convenient for you.
-> 
-> Thanks!
+> Yes, this is the cross-validation step,
+> we adjust the voltage if opp-tables are
+> present/added successfully and enable
+> them, else we would just do a add opp.
+> We don't want to exit early on a single
+> opp failure. We will error out a bit
+> later if the opp-count ends up to be
+> zero.
 
-Excellent, pls go ahead!
-And can you include the performance numbers?
-It's enough to test the final version.
-
--- 
-MST
+At least an error/warning message would seem convenient when adjusting/adding
+an OPP fails, otherwise you would only notice by looking at the sysfs
+attributes (if you'd even spot a single/few OPPs to be missing).
 
