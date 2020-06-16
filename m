@@ -2,107 +2,142 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6012BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23442C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B3B206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:02:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MDycELU7"
+	by mail.kernel.org (Postfix) with ESMTP id 02C7F2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgFPICf (ORCPT
+        id S1727814AbgFPICj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgFPICe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:02:34 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97680C05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:02:33 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u26so1670741wmn.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:02:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=DG9CsBoSold8ADvr08jzS2w4s4f2Yjsljc/HghN3K7E=;
-        b=MDycELU7Yw9Bm0J8WL/xNoYK3RlcszGjNFK7EtI8mK4zRoh+fLTtLSpSMJ/3VoqdjR
-         QSltXb2CyfvzxQJubpJfDmYVP1z0vJ8aZCSgbmAz0mJYl+Hf5GfF1Im9mjK8rcqEhvDg
-         sRZFCujj8lwYEkNCWZFgvgTUv8owD3NS1VATRJ64gQsTopI59EY0fXYLnpPMrbayHz11
-         ADcuzxP54LmUnotsEuMH0b9a6bb5wO2cZ5pW5vRNlqj/j4izem04ROUYxE60C9W/wdNX
-         Aa+2LAH5axN3l3/BGVgQv6LTldXomMViD5BS01AaHnqtDKpYPgAkP9M6u1Uz2/Uygu6+
-         49ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DG9CsBoSold8ADvr08jzS2w4s4f2Yjsljc/HghN3K7E=;
-        b=aN5o6Hz+AAerD6lanTeR9wrUlSQU43+XEWYd8eVxT097z2tKAO/q3uPVlW5bIu5dWN
-         OsGjhqOxvraBqiuxoKq2UIGcr1E61C9yrdgoMVmjj3p19RruheUeAN1VswnyOhL0K2yf
-         FU7m4hzuy+90gewmycNPaIZbAE8Q8kkr1spKP2yKlitua4UHq7BrF7rrU7k3fVyNCVge
-         GXnZZUuDaFwbhKOicInx5RwBpx03XA2KCtlEUz6fd0YC5JOzLwvh9ApfhyIrqeEQyLo5
-         K1u8ucRcZwF4umJ5UA1LPjVpBxigwVphhETp8AWdctWGKyfEriTsFSdMJxP0mCrq4dWt
-         WBBA==
-X-Gm-Message-State: AOAM530XigdshXaywsEU2t2VsEnsBAwQds/5n2dti62tdfH7aSzFFcMa
-        BDRwc75URFG23UhW6LAi8dZlpw==
-X-Google-Smtp-Source: ABdhPJyz5STsSla8W9UIPdsl1rSlPo7Ad+1h++GCogywTejE1j4K8ojs6WkURTJdt6isSgLQ8BNklw==
-X-Received: by 2002:a7b:c212:: with SMTP id x18mr1847740wmi.119.1592294549564;
-        Tue, 16 Jun 2020 01:02:29 -0700 (PDT)
-Received: from dell ([109.180.115.156])
-        by smtp.gmail.com with ESMTPSA id s72sm2823327wme.35.2020.06.16.01.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 01:02:28 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:02:27 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     s.nawrocki@samsung.com, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v2 4/4] mfd: madera: Fix minor formatting issues
-Message-ID: <20200616080227.GJ2608702@dell>
-References: <20200615135323.15215-1-ckeepax@opensource.cirrus.com>
- <20200615135323.15215-4-ckeepax@opensource.cirrus.com>
+        Tue, 16 Jun 2020 04:02:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55508 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgFPICi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 04:02:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D45DDACA7;
+        Tue, 16 Jun 2020 08:02:39 +0000 (UTC)
+Subject: Re: [kernel/watchdog.c] f117955a22:
+ kmsg.Failed_to_set_sysctl_parameter'kernel.softlockup_panic=#':parameter_not_found
+To:     kernel test robot <rong.a.chen@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200616073833.GF5653@shao2-debian>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <55e7a318-9021-f350-c80f-bc95070568fb@suse.cz>
+Date:   Tue, 16 Jun 2020 10:02:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615135323.15215-4-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20200616073833.GF5653@shao2-debian>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020, Charles Keepax wrote:
+On 6/16/20 9:38 AM, kernel test robot wrote:
+> Greeting,
+> 
+> FYI, we noticed the following commit (built with gcc-9):
+> 
+> commit: f117955a2255721a6a0e9cecf6cad3a6eb43cbc3 ("kernel/watchdog.c: convert {soft/hard}lockup boot parameters to sysctl aliases")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> in testcase: boot
+> 
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> 
+> 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> 
+> 
+> 
+> [    5.306502] netconsole: network logging started
+> [    5.793973] input: ImExPS/2 Generic Explorer Mouse as /devices/platform/i8042/serio1/input/input3
+> [    5.804702] e1000: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
+> [    5.828198] Sending DHCP requests ., OK
+> [    5.829815] IP-Config: Got DHCP answer from 10.0.2.2, my address is 10.0.2.15
+> [    5.831412] IP-Config: Complete:
+> [    5.832501]      device=eth0, hwaddr=52:54:00:12:34:56, ipaddr=10.0.2.15, mask=255.255.255.0, gw=10.0.2.2
+> [    5.835246]      host=vm-snb-ssd-19, domain=, nis-domain=(none)
+> [    5.836806]      bootserver=10.0.2.2, rootserver=10.0.2.2, rootpath=
+> [    5.836808]      nameserver0=10.0.2.3
+> [    5.839613] ALSA device list:
+> [    5.857103]   No soundcards found.
+> [    5.860706] Freeing unused kernel image (initmem) memory: 1540K
+> [    5.868210] Write protecting the kernel read-only data: 20480k
+> [    5.870913] Freeing unused kernel image (text/rodata gap) memory: 2044K
+> [    5.872636] Freeing unused kernel image (rodata/data gap) memory: 68K
+> [    5.874149] rodata_test: all tests were successful
+> [    5.875553] Failed to set sysctl parameter 'kernel.softlockup_panic=1': parameter not found
 
-> The mfd_cell structures inconsistently use commas on single entries in
-> the table, make this consistent by always using a comma. Also remove an
-> extra blank line.
+In case the line above is the reason for this report, then it's because .config has:
+
+# CONFIG_SOFTLOCKUP_DETECTOR is not set
+
+While previously the softlockup_panic=1 parameter would be just silently ignored
+in that case. I don't think it's wrong to report it, though.
+
+> [    5.896259] Run /init as init process
+> [    5.897454]   with arguments:
+> [    5.898493]     /init
+> [    5.899418]   with environment:
+> [    5.900468]     HOME=/
+> [    5.901346]     TERM=linux
+> [    5.902311]     user=lkp
+> [    5.903266]     job=/lkp/jobs/scheduled/vm-snb-ssd-19/boot-1-debian-i386-20191205.cgz-f117955a2255721a6a0e9cecf6cad3a6eb43cbc3-20200615-43661-1fqppwn-3.yaml
+> [    5.906363]     ARCH=x86_64
+> [    5.907358]     kconfig=x86_64-kexec
+> [    5.908495]     branch=linus/master
+> [    5.909564]     commit=f117955a2255721a6a0e9cecf6cad3a6eb43cbc3
+> [    5.910982]     BOOT_IMAGE=/pkg/linux/x86_64-kexec/gcc-9/f117955a2255721a6a0e9cecf6cad3a6eb43cbc3/vmlinuz-5.7.0-12506-gf117955a22557
+> [    5.913735]     max_uptime=600
+> [    5.914651]     RESULT_ROOT=/result/boot/1/vm-snb-ssd/debian-i386-20191205.cgz/x86_64-kexec/gcc-9/f117955a2255721a6a0e9cecf6cad3a6eb43cbc3/3
+> [    5.917437]     LKP_SERVER=inn
+> [    5.918425]     selinux=0
+> [    5.919398]     softlockup_panic=1
+> [    5.920495]     nmi_watchdog=panic
+> [    5.925722]     prompt_ramdisk=0
+> [    5.926843]     vga=normal
+> [    5.927739]     watchdog_thresh=60
+> [    5.934222] systemd[1]: RTC configured in localtime, applying delta of 0 minutes to system time.
+> [    5.937449] systemd[1]: Failed to insert module 'autofs4': No such file or directory
+> [    5.941850] random: systemd: uninitialized urandom read (16 bytes read)
+> [    5.947176] random: systemd: uninitialized urandom read (16 bytes read)
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
 > 
-> Changes since v1:
->  - Added some additional commit description.
->  - Move the removing and unused forward declaration into a new patch.
+> To reproduce:
+> 
+>         # build kernel
+> 	cd linux
+> 	cp config-5.7.0-12506-gf117955a22557 .config
+> 	make HOSTCC=gcc-9 CC=gcc-9 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage
+> 
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> 
+> 
 > 
 > Thanks,
-> Charles
+> Rong Chen
 > 
->  drivers/mfd/madera-core.c | 12 ++++++------
->  drivers/mfd/madera-i2c.c  |  1 -
->  2 files changed, 6 insertions(+), 7 deletions(-)
 
-Applied, thanks.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
