@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EDDC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21FCC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 520C921475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BBC7214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322252;
-	bh=AU8kPO1hPe5EGPaST5+To5lYsboUwNEV7+7aWvUfdVY=;
+	s=default; t=1592322258;
+	bh=rBWiZvWqsDNBGLOZcEsUl4b/4HinwzVnrDOhaM190ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qdJ3dtX/L0fps3GVek/48Tbbv3MEyK786YLPGdFENF+rX9pZBx8Ykrlrfja2T09hG
-	 YVnT4XMT1rlmdARZSaRbwovy7GS0z0kMzXBJLZ1O+icyOjUja5HSarVTTKuEXUm0VV
-	 tOHPxruuOZ8IUTX+XN127ril8hBwjqfzrsIkefeY=
+	b=EJaiHWF6uRIB5xN/+7RH+edB3ocrmAniCQrPeBwRmhioVgtPePd9gkFFFdK+Ijg8w
+	 1F+XaAj23jKSaVnAfzYPil+o7WCouTzreo9IvbKBD+Skne64LOMNyX74HFoUg+qJLp
+	 /5RCw1TppfqlVD32hnZH22QD+SAy7/Dot6eORy+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgFPPoK (ORCPT
+        id S1731959AbgFPPoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:44:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:44:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731902AbgFPPoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:44:04 -0400
+        id S1731954AbgFPPoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71901208E4;
-        Tue, 16 Jun 2020 15:44:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F63521475;
+        Tue, 16 Jun 2020 15:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322244;
-        bh=AU8kPO1hPe5EGPaST5+To5lYsboUwNEV7+7aWvUfdVY=;
+        s=default; t=1592322249;
+        bh=rBWiZvWqsDNBGLOZcEsUl4b/4HinwzVnrDOhaM190ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t2ASHxiMGEE92BdGsHqaCMtbAr9q2ttgTAFrSlpqcsid4nSvJq0gvKqhIa3eCP0OK
-         PN6bYNzU1uioFVB+funV3yI/iOO75G7eS1iprwhxAGyjSrMgefLxu8cfGRuMDGmg8q
-         Ha3D8WdtNQjMBnwg7wAjUh0C6t4+8Py5GJOcXFW4=
+        b=qtPWNpKORFLFNd4wfOInM2JOu8MFfZooSDf+pUUiue1s+ljoswU2ti0yLAMVjmzZf
+         +BPGSNYY4qLg7eYbpHexoGCuz2H0Jay6Gkiww8E8sii7g0PqLb4ue3CMojR6h0JUZ1
+         9HoAQkG8aUnAj+o1E3yenfE63hiMxXwLdGSQybJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 026/163] smack: avoid unused sip variable warning
-Date:   Tue, 16 Jun 2020 17:33:20 +0200
-Message-Id: <20200616153108.134501400@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Cooper <andrew.cooper3@citrix.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 028/163] x86/cpu/amd: Make erratum #1054 a legacy erratum
+Date:   Tue, 16 Jun 2020 17:33:22 +0200
+Message-Id: <20200616153108.230470188@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,164 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Kim Phillips <kim.phillips@amd.com>
 
-[ Upstream commit 00720f0e7f288d29681d265c23b22bb0f0f4e5b4 ]
+[ Upstream commit e2abfc0448a46d8a137505aa180caf14070ec535 ]
 
-The mix of IS_ENABLED() and #ifdef checks has left a combination
-that causes a warning about an unused variable:
+Commit
 
-security/smack/smack_lsm.c: In function 'smack_socket_connect':
-security/smack/smack_lsm.c:2838:24: error: unused variable 'sip' [-Werror=unused-variable]
- 2838 |   struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
+  21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired
+		 counter IRPERF")
 
-Change the code to use C-style checks consistently so the compiler
-can handle it correctly.
+mistakenly added erratum #1054 as an OS Visible Workaround (OSVW) ID 0.
+Erratum #1054 is not OSVW ID 0 [1], so make it a legacy erratum.
 
-Fixes: 87fbfffcc89b ("broken ping to ipv6 linklocal addresses on debian buster")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+There would never have been a false positive on older hardware that
+has OSVW bit 0 set, since the IRPERF feature was not available.
+
+However, save a couple of RDMSR executions per thread, on modern
+system configurations that correctly set non-zero values in their
+OSVW_ID_Length MSRs.
+
+[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors. The
+revision guide is available from the bugzilla link below.
+
+Fixes: 21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF")
+Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200417143356.26054-1-kim.phillips@amd.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack.h     |  6 ------
- security/smack/smack_lsm.c | 25 ++++++++-----------------
- 2 files changed, 8 insertions(+), 23 deletions(-)
+ arch/x86/kernel/cpu/amd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/security/smack/smack.h b/security/smack/smack.h
-index 62529f382942..335d2411abe4 100644
---- a/security/smack/smack.h
-+++ b/security/smack/smack.h
-@@ -148,7 +148,6 @@ struct smk_net4addr {
- 	struct smack_known	*smk_label;	/* label */
- };
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 547ad7bbf0e0..8a1bdda895a4 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -1142,8 +1142,7 @@ static const int amd_erratum_383[] =
  
--#if IS_ENABLED(CONFIG_IPV6)
- /*
-  * An entry in the table identifying IPv6 hosts.
-  */
-@@ -159,9 +158,7 @@ struct smk_net6addr {
- 	int			smk_masks;	/* mask size */
- 	struct smack_known	*smk_label;	/* label */
- };
--#endif /* CONFIG_IPV6 */
+ /* #1054: Instructions Retired Performance Counter May Be Inaccurate */
+ static const int amd_erratum_1054[] =
+-	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
+-
++	AMD_LEGACY_ERRATUM(AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
  
--#ifdef SMACK_IPV6_PORT_LABELING
- /*
-  * An entry in the table identifying ports.
-  */
-@@ -174,7 +171,6 @@ struct smk_port_label {
- 	short			smk_sock_type;	/* Socket type */
- 	short			smk_can_reuse;
- };
--#endif /* SMACK_IPV6_PORT_LABELING */
- 
- struct smack_known_list_elem {
- 	struct list_head	list;
-@@ -335,9 +331,7 @@ extern struct smack_known smack_known_web;
- extern struct mutex	smack_known_lock;
- extern struct list_head smack_known_list;
- extern struct list_head smk_net4addr_list;
--#if IS_ENABLED(CONFIG_IPV6)
- extern struct list_head smk_net6addr_list;
--#endif /* CONFIG_IPV6 */
- 
- extern struct mutex     smack_onlycap_lock;
- extern struct list_head smack_onlycap_list;
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 8c61d175e195..14bf2f4aea3b 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -50,10 +50,8 @@
- #define SMK_RECEIVING	1
- #define SMK_SENDING	2
- 
--#ifdef SMACK_IPV6_PORT_LABELING
--DEFINE_MUTEX(smack_ipv6_lock);
-+static DEFINE_MUTEX(smack_ipv6_lock);
- static LIST_HEAD(smk_ipv6_port_list);
--#endif
- static struct kmem_cache *smack_inode_cache;
- struct kmem_cache *smack_rule_cache;
- int smack_enabled;
-@@ -2320,7 +2318,6 @@ static struct smack_known *smack_ipv4host_label(struct sockaddr_in *sip)
- 	return NULL;
- }
- 
--#if IS_ENABLED(CONFIG_IPV6)
- /*
-  * smk_ipv6_localhost - Check for local ipv6 host address
-  * @sip: the address
-@@ -2388,7 +2385,6 @@ static struct smack_known *smack_ipv6host_label(struct sockaddr_in6 *sip)
- 
- 	return NULL;
- }
--#endif /* CONFIG_IPV6 */
- 
- /**
-  * smack_netlabel - Set the secattr on a socket
-@@ -2477,7 +2473,6 @@ static int smack_netlabel_send(struct sock *sk, struct sockaddr_in *sap)
- 	return smack_netlabel(sk, sk_lbl);
- }
- 
--#if IS_ENABLED(CONFIG_IPV6)
- /**
-  * smk_ipv6_check - check Smack access
-  * @subject: subject Smack label
-@@ -2510,7 +2505,6 @@ static int smk_ipv6_check(struct smack_known *subject,
- 	rc = smk_bu_note("IPv6 check", subject, object, MAY_WRITE, rc);
- 	return rc;
- }
--#endif /* CONFIG_IPV6 */
- 
- #ifdef SMACK_IPV6_PORT_LABELING
- /**
-@@ -2599,6 +2593,7 @@ static void smk_ipv6_port_label(struct socket *sock, struct sockaddr *address)
- 	mutex_unlock(&smack_ipv6_lock);
- 	return;
- }
-+#endif
- 
- /**
-  * smk_ipv6_port_check - check Smack port access
-@@ -2661,7 +2656,6 @@ static int smk_ipv6_port_check(struct sock *sk, struct sockaddr_in6 *address,
- 
- 	return smk_ipv6_check(skp, object, address, act);
- }
--#endif /* SMACK_IPV6_PORT_LABELING */
- 
- /**
-  * smack_inode_setsecurity - set smack xattrs
-@@ -2836,24 +2830,21 @@ static int smack_socket_connect(struct socket *sock, struct sockaddr *sap,
- 		return 0;
- 	if (IS_ENABLED(CONFIG_IPV6) && sap->sa_family == AF_INET6) {
- 		struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
--#ifdef SMACK_IPV6_SECMARK_LABELING
--		struct smack_known *rsp;
--#endif
-+		struct smack_known *rsp = NULL;
- 
- 		if (addrlen < SIN6_LEN_RFC2133)
- 			return 0;
--#ifdef SMACK_IPV6_SECMARK_LABELING
--		rsp = smack_ipv6host_label(sip);
-+		if (__is_defined(SMACK_IPV6_SECMARK_LABELING))
-+			rsp = smack_ipv6host_label(sip);
- 		if (rsp != NULL) {
- 			struct socket_smack *ssp = sock->sk->sk_security;
- 
- 			rc = smk_ipv6_check(ssp->smk_out, rsp, sip,
- 					    SMK_CONNECTING);
- 		}
--#endif
--#ifdef SMACK_IPV6_PORT_LABELING
--		rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
--#endif
-+		if (__is_defined(SMACK_IPV6_PORT_LABELING))
-+			rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
-+
- 		return rc;
- 	}
- 	if (sap->sa_family != AF_INET || addrlen < sizeof(struct sockaddr_in))
+ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
+ {
 -- 
 2.25.1
 
