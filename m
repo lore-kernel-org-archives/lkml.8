@@ -2,106 +2,91 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D420CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAB1B20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592282527;
-	bh=GtNwE0hFzkAkNSXnsPIy9E3gQDaJM505lUX0wzO/VWo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZKpgNt4Lx/W53rsd6Ljqez2Dk84HcYHnkqDdQq7XN4FM+0YjFH8oCnOpUyXQXfLQB
-	 FlbUKvEBOWqjGePFKfg58oS7xUiHgM8Xa8fK1v+nK2colwxdmUdL6qKTVUDv99Adqb
-	 HxsqI6wUIyh1/qT/OfG/M2d97psaaAbC+AFbK3Xo=
+	by mail.kernel.org (Postfix) with ESMTP id B8EF1207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgFPEmG (ORCPT
+        id S1726638AbgFPEm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 00:42:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33442 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgFPEmG (ORCPT
+        Tue, 16 Jun 2020 00:42:26 -0400
+Received: from smtprelay0199.hostedemail.com ([216.40.44.199]:46622 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725306AbgFPEm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 00:42:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id i25so160026iog.0;
-        Mon, 15 Jun 2020 21:42:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+a0gGFXhmNQdUthZidZAy1jsxYqlreoERJ4tMXAeBPk=;
-        b=SGPqunUdewTilyUAX0MAJK7YIp2ObvbjiCtK33nnEaSsZYkxX8yIGKGG/FF2hnPHty
-         VdSAxUjFPmrBd6CgUoi53qcq3dg4qc6WKeFBPZRLHof73hoIP1CTM1ASeSxhgKNh1tIu
-         g9HMCKuei9s/hdaWN0o/FKqVxNbJTNULGQ5xOk+SlNlWRLUQR1ILrA+EEjnA2CEhM3+U
-         s2WnkY9PGOHlWniSUZtfTCAoTsWc0mQSeozHT+tWtGDk9J0E8VHrVe5dPZkr7bOQeNF0
-         iTcxgc1FaK76fmHfpngJq70QB3FuxTfDbAE8nSmJIkXG9emaviR5VFLfL0XU7CRx5lZH
-         c0XQ==
-X-Gm-Message-State: AOAM533gF7pzzk3kVSp5+u98ykN9xxEtnk5ot7gUyKIIPtLLE9RWPMU0
-        Pzr3vV69pkWvbAY0o5yQ1PuSLiX3NTY=
-X-Google-Smtp-Source: ABdhPJyUMw0oE51vIBMiFJW+SJ9w5Y2lXDWdOze+gRJ9zLufs7gomgFA2C1NCTaH9KdaFDoU/cGfCw==
-X-Received: by 2002:a6b:7b4a:: with SMTP id m10mr865233iop.55.1592282524888;
-        Mon, 15 Jun 2020 21:42:04 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id e25sm9137916ios.0.2020.06.15.21.42.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 21:42:03 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 21:42:02 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 1/5] dt-bindings: fpga: xilinx-slave-serial: valid for
- the 7 Series too
-Message-ID: <20200616044202.GA46300@epycbox.lan>
-References: <20200611211144.9421-1-luca@lucaceresoli.net>
+        Tue, 16 Jun 2020 00:42:26 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 1AC321260;
+        Tue, 16 Jun 2020 04:42:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: song81_2704b2626dfc
+X-Filterd-Recvd-Size: 2406
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 16 Jun 2020 04:42:23 +0000 (UTC)
+Message-ID: <4c9323077204a22683cd3ed92fea303a1a8b67fc.camel@perches.com>
+Subject: Re: [PATCH][next] scsi: fnic: Replace vmalloc() + memset() with
+ vzalloc() and use array_size()
+From:   Joe Perches <joe@perches.com>
+To:     "Satish Kharat (satishkh)" <satishkh@cisco.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Sesidhar Baddela (sebaddel)" <sebaddel@cisco.com>,
+        "Karan Tilak Kumar (kartilak)" <kartilak@cisco.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date:   Mon, 15 Jun 2020 21:42:22 -0700
+In-Reply-To: <873653F8-8FBB-4A9B-9380-B476674ECADE@cisco.com>
+References: <20200615225428.GA14959@embeddedor>
+         <873653F8-8FBB-4A9B-9380-B476674ECADE@cisco.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200611211144.9421-1-luca@lucaceresoli.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:11:40PM +0200, Luca Ceresoli wrote:
-> The Xilinx 7-series uses the same protocol, mention that.
+On Tue, 2020-06-16 at 00:19 +0000, Satish Kharat (satishkh) wrote:
+> Reviewed-by: Satish Kharat <satishkh@cisco.com>
+> ﻿
 > 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Acked-by: Moritz Fischer <mdf@kernel.org>
-> ---
->  .../devicetree/bindings/fpga/xilinx-slave-serial.txt     | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> On 6/15/20, 3:49 PM, "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> index cfa4ed42b62f..9f103f3872e8 100644
-> --- a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> @@ -1,11 +1,14 @@
->  Xilinx Slave Serial SPI FPGA Manager
->  
-> -Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
-> -what is referred to as "slave serial" interface.
-> +Xilinx Spartan-6 and 7 Series FPGAs support a method of loading the
-> +bitstream over what is referred to as "slave serial" interface.
->  The slave serial link is not technically SPI, and might require extra
->  circuits in order to play nicely with other SPI slaves on the same bus.
->  
-> -See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
-> +See:
-> +- https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
-> +- https://www.xilinx.com/support/documentation/user_guides/ug470_7Series_Config.pdf
-> +- https://www.xilinx.com/support/documentation/application_notes/xapp583-fpga-configuration.pdf
->  
->  Required properties:
->  - compatible: should contain "xlnx,fpga-slave-serial"
-> -- 
-> 2.27.0
-> 
+>     Use vzalloc() instead of the vmalloc() and memset. Also, use array_size()
+>     instead of the open-coded version.
+>     
+>     This issue was found with the help of Coccinelle and, audited and fixed
+>     manually.
+>     
+>     Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+>     Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>     ---
+>      drivers/scsi/fnic/fnic_trace.c | 16 ++++------------
+>      1 file changed, 4 insertions(+), 12 deletions(-)
+>     
+>     diff --git a/drivers/scsi/fnic/fnic_trace.c b/drivers/scsi/fnic/fnic_trace.c
+[]
+>     @@ -488,7 +488,7 @@ int fnic_trace_buf_init(void)
+>      	}
+>      
+>      	fnic_trace_entries.page_offset =
+>     -		vmalloc(array_size(fnic_max_trace_entries,
+>     +		vzalloc(array_size(fnic_max_trace_entries,
+>      				   sizeof(unsigned long)));
+
+Perhaps better as
+		kvcalloc(fnic_max_trace_entries, sizeof(unsigned long),
+			 GFP_KERNEL);
+
+
