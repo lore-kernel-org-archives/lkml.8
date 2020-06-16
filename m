@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E711C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D5420C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C1420C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322071;
-	bh=hZp3Mldm+3jkW42Y6cDhDCLhzps582Vypb3ZdBx/WTs=;
+	s=default; t=1592322074;
+	bh=mBnQN4Ex9jVGvZAugizJRWy2rfQJ1lYAFpAUvJ2znTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RJBtrzQ134oa9fbwVudYFstuc63BkJEqHC6hEqeaTQK1tJZGFdk8UHBVnY1QosYe8
-	 6+mtrNWI9oUndl4o+sU0eouVMpCMYfYrn0SltAciQNEw60n1RsyJCAEmA23S1aAGLl
-	 hzzajjmzzqYS7pgKGp0W0y4WDcKZ6FdabIW512kw=
+	b=JIk/G7H9wbqhXF2jUTrhOIIgVEpqrCPN+tHDJb9q/Wg6ou6GyqvnMepIghAWbkDHj
+	 Z+13nFJ6Q2mDNYSalT+1LfoLS+eenrSzNw7ktuEi3VvJJUN2or5Y4uwHaJL5y8OM9B
+	 NkBnoHZhantuTDxTopxpBgDg/AC9GB6auzZCMGTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730676AbgFPPlK (ORCPT
+        id S1730515AbgFPPlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:41:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56316 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:41:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730535AbgFPPlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:05 -0400
+        id S1729861AbgFPPlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53D90208D5;
-        Tue, 16 Jun 2020 15:41:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD3F220C56;
+        Tue, 16 Jun 2020 15:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322064;
-        bh=hZp3Mldm+3jkW42Y6cDhDCLhzps582Vypb3ZdBx/WTs=;
+        s=default; t=1592322069;
+        bh=mBnQN4Ex9jVGvZAugizJRWy2rfQJ1lYAFpAUvJ2znTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z+5W7LCpbOPbO9nljaFAvYoU+aJObuDO7y8QVjBt43Ygeetr1bDDK+caMTlNtpyOa
-         KfFAdym0O602tIB/nZFssjwf78ZRJ386IaN41fFv5UtvKGjl2suDohkd7SvfaI9Qoc
-         ShK/2ZJsOYO3owG98Ve6vVo3KDw8uSLyiMlG3LDo=
+        b=kf9gIYDYBV1JCRpkVKdEBzQ6h3E1XKQ/hNdJTnDua7dACBu0Z9rWqqdEZ3Y9UTGrB
+         8v409qdg4ymDO8KCh1Ri8WwtkSB32gz1Zp1gwE3Bjsvq6f0qBU9vXeABjT0VgAReCN
+         Ghu+RAvBk6UD3xnLWjTNbW8WaXXeEL59q4U9Xu+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com,
-        Barret Rhoden <brho@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 122/134] perf: Add cond_resched() to task_function_call()
-Date:   Tue, 16 Jun 2020 17:35:06 +0200
-Message-Id: <20200616153106.631067401@linuxfoundation.org>
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 124/134] mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
+Date:   Tue, 16 Jun 2020 17:35:08 +0200
+Message-Id: <20200616153106.725964658@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,68 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Barret Rhoden <brho@google.com>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-commit 2ed6edd33a214bca02bd2b45e3fc3038a059436b upstream.
+commit 9253d71011c349d5f5cc0cebdf68b4a80811b92d upstream.
 
-Under rare circumstances, task_function_call() can repeatedly fail and
-cause a soft lockup.
+Clear tuning_done flag while executing tuning to ensure vendor
+specific HS400 settings are applied properly when the controller
+is re-initialized in HS400 mode.
 
-There is a slight race where the process is no longer running on the cpu
-we targeted by the time remote_function() runs.  The code will simply
-try again.  If we are very unlucky, this will continue to fail, until a
-watchdog fires.  This can happen in a heavily loaded, multi-core virtual
-machine.
+Without this, re-initialization of the qcom SDHC in HS400 mode fails
+while resuming the driver from runtime-suspend or system-suspend.
 
-Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
-Signed-off-by: Barret Rhoden <brho@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200414222920.121401-1-brho@google.com
+Fixes: ff06ce417828 ("mmc: sdhci-msm: Add HS400 platform support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Link: https://lore.kernel.org/r/1590678838-18099-1-git-send-email-vbadigan@codeaurora.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/mmc/host/sdhci-msm.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -93,11 +93,11 @@ static void remote_function(void *data)
-  * @info:	the function call argument
-  *
-  * Calls the function @func when the task is currently running. This might
-- * be on the current CPU, which just calls the function directly
-+ * be on the current CPU, which just calls the function directly.  This will
-+ * retry due to any failures in smp_call_function_single(), such as if the
-+ * task_cpu() goes offline concurrently.
-  *
-- * returns: @func return value, or
-- *	    -ESRCH  - when the process isn't running
-- *	    -EAGAIN - when the process moved away
-+ * returns @func return value or -ESRCH when the process isn't running
-  */
- static int
- task_function_call(struct task_struct *p, remote_function_f func, void *info)
-@@ -110,11 +110,16 @@ task_function_call(struct task_struct *p
- 	};
- 	int ret;
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1113,6 +1113,12 @@ static int sdhci_msm_execute_tuning(stru
+ 	msm_host->use_cdr = true;
  
--	do {
--		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
--		if (!ret)
--			ret = data.ret;
--	} while (ret == -EAGAIN);
-+	for (;;) {
-+		ret = smp_call_function_single(task_cpu(p), remote_function,
-+					       &data, 1);
-+		ret = !ret ? data.ret : -EAGAIN;
+ 	/*
++	 * Clear tuning_done flag before tuning to ensure proper
++	 * HS400 settings.
++	 */
++	msm_host->tuning_done = 0;
 +
-+		if (ret != -EAGAIN)
-+			break;
-+
-+		cond_resched();
-+	}
- 
- 	return ret;
- }
++	/*
+ 	 * For HS400 tuning in HS200 timing requires:
+ 	 * - select MCLK/2 in VENDOR_SPEC
+ 	 * - program MCLK to 400MHz (or nearest supported) in GCC
 
 
