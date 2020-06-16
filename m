@@ -2,57 +2,52 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72C1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13426C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDFA22151B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC04E20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321980;
-	bh=jSVq4XjuXDGQJpWFMzGPMKgI5zzIl92O9dnJRH6zhiI=;
+	s=default; t=1592321984;
+	bh=hGX29h/XEmSvwgUH6YsyVe/7+5yKRFxO/MI5vqy7xRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kFtdNk382zlKx3QjDrwgaJVPO8QrfTHfmvx6ryNGtgtG26gEy1T8CSt4pWsKvJU+h
-	 iB5DyeXxkHPv/rvDvH9DmDqldZOscih5s0l03SyzksD4K+8skr50Ti6Pdid91rP+in
-	 JRslJ88N5kc9hWgY7gZ68PquOIaw53HrGNLXzRpk=
+	b=h5DxfEIaVkk+nH04uGZ9mXLh2Qx5XKEbkIkgLN+8iOviU4uk3ygZbvfFN7inFap4g
+	 g+jSGg/rVQsNXS3cTJ85jgA4w55XcD10WhKaUq8lKNgj73b8CVX7Sp0ZhsqNzHw/5o
+	 65+QeKsZLjy319UU01vlImfZJ+cSI8FuG8ge/Ki4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbgFPPjj (ORCPT
+        id S1731008AbgFPPjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:39:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53174 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:39:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730967AbgFPPjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:35 -0400
+        id S1730988AbgFPPji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:39:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7067121475;
-        Tue, 16 Jun 2020 15:39:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D307214F1;
+        Tue, 16 Jun 2020 15:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321975;
-        bh=jSVq4XjuXDGQJpWFMzGPMKgI5zzIl92O9dnJRH6zhiI=;
+        s=default; t=1592321977;
+        bh=hGX29h/XEmSvwgUH6YsyVe/7+5yKRFxO/MI5vqy7xRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J/EtV/xiXpGtnM+tkqm9hGlIzAyunW6mkdJXVe3S9VgRxcFzIG/r4oTB68flBHTw6
-         m4NmOpUW/sCd9FzQIcZ4ice1KcpCmLi7Wrpw0rJoiyjo9TUT4gTyMHPJ4qA/Y/kPy8
-         OHfIs68u2uzZVH4zkYw/jb8VZ5Nvc3zczwPXRXQw=
+        b=ZtGUgBDifB5dlk3Yo0PgzJB9vMjo66mdbbrY1JU5Z+NrV3m2h8xUU3osIcAYmPuPU
+         K4HVOOAJkZ5QPHPdvpGkFVIT607WGJpjG8N95DYLanFmdJAcVwb7EVw7/Ui2IJm+BU
+         J0WJEcKTRK4yGo/K2SCJSV5+NqxDKGVMcwRHOvCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        "Longpeng(Mike)" <longpeng2@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/134] crypto: virtio: Fix dest length calculation in __virtio_crypto_skcipher_do_req()
-Date:   Tue, 16 Jun 2020 17:34:32 +0200
-Message-Id: <20200616153104.996692528@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 089/134] dccp: Fix possible memleak in dccp_init and dccp_fini
+Date:   Tue, 16 Jun 2020 17:34:33 +0200
+Message-Id: <20200616153105.045631825@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -65,55 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng(Mike) <longpeng2@huawei.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit d90ca42012db2863a9a30b564a2ace6016594bda ]
+[ Upstream commit c96b6acc8f89a4a7f6258dfe1d077654c11415be ]
 
-The src/dst length is not aligned with AES_BLOCK_SIZE(which is 16) in some
-testcases in tcrypto.ko.
+There are some memory leaks in dccp_init() and dccp_fini().
 
-For example, the src/dst length of one of cts(cbc(aes))'s testcase is 17, the
-crypto_virtio driver will set @src_data_len=16 but @dst_data_len=17 in this
-case and get a wrong at then end.
+In dccp_fini() and the error handling path in dccp_init(), free lhash2
+is missing. Add inet_hashinfo2_free_mod() to do it.
 
-  SRC: pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp (17 bytes)
-  EXP: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc pp (17 bytes)
-  DST: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 00 (pollute the last bytes)
-  (pp: plaintext  cc:ciphertext)
+If inet_hashinfo2_init_mod() failed in dccp_init(),
+percpu_counter_destroy() should be called to destroy dccp_orphan_count.
+It need to goto out_free_percpu when inet_hashinfo2_init_mod() failed.
 
-Fix this issue by limit the length of dest buffer.
-
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-4-longpeng2@huawei.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: c92c81df93df ("net: dccp: fix kernel crash on module load")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/net/inet_hashtables.h |    6 ++++++
+ net/dccp/proto.c              |    7 +++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 3b37d0150814..ac420b201dd8 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -410,6 +410,7 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
- 		goto free;
- 	}
+--- a/include/net/inet_hashtables.h
++++ b/include/net/inet_hashtables.h
+@@ -185,6 +185,12 @@ static inline spinlock_t *inet_ehash_loc
  
-+	dst_len = min_t(unsigned int, req->nbytes, dst_len);
- 	pr_debug("virtio_crypto: src_len: %u, dst_len: %llu\n",
- 			req->nbytes, dst_len);
+ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo);
  
--- 
-2.25.1
-
++static inline void inet_hashinfo2_free_mod(struct inet_hashinfo *h)
++{
++	kfree(h->lhash2);
++	h->lhash2 = NULL;
++}
++
+ static inline void inet_ehash_locks_free(struct inet_hashinfo *hashinfo)
+ {
+ 	kvfree(hashinfo->ehash_locks);
+--- a/net/dccp/proto.c
++++ b/net/dccp/proto.c
+@@ -1139,14 +1139,14 @@ static int __init dccp_init(void)
+ 	inet_hashinfo_init(&dccp_hashinfo);
+ 	rc = inet_hashinfo2_init_mod(&dccp_hashinfo);
+ 	if (rc)
+-		goto out_fail;
++		goto out_free_percpu;
+ 	rc = -ENOBUFS;
+ 	dccp_hashinfo.bind_bucket_cachep =
+ 		kmem_cache_create("dccp_bind_bucket",
+ 				  sizeof(struct inet_bind_bucket), 0,
+ 				  SLAB_HWCACHE_ALIGN, NULL);
+ 	if (!dccp_hashinfo.bind_bucket_cachep)
+-		goto out_free_percpu;
++		goto out_free_hashinfo2;
+ 
+ 	/*
+ 	 * Size and allocate the main established and bind bucket
+@@ -1242,6 +1242,8 @@ out_free_dccp_ehash:
+ 	free_pages((unsigned long)dccp_hashinfo.ehash, ehash_order);
+ out_free_bind_bucket_cachep:
+ 	kmem_cache_destroy(dccp_hashinfo.bind_bucket_cachep);
++out_free_hashinfo2:
++	inet_hashinfo2_free_mod(&dccp_hashinfo);
+ out_free_percpu:
+ 	percpu_counter_destroy(&dccp_orphan_count);
+ out_fail:
+@@ -1265,6 +1267,7 @@ static void __exit dccp_fini(void)
+ 	kmem_cache_destroy(dccp_hashinfo.bind_bucket_cachep);
+ 	dccp_ackvec_exit();
+ 	dccp_sysctl_exit();
++	inet_hashinfo2_free_mod(&dccp_hashinfo);
+ 	percpu_counter_destroy(&dccp_orphan_count);
+ }
+ 
 
 
