@@ -2,108 +2,89 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F011C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6978D20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592304012;
-	bh=7dldRWO7gGRPlZ/8sV26jPzle1h5yQEqABWokXqyW38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R7aQ7nRB83yMRZXQ42e2Lj3VwMIvYEjaEhbh9jSgMB7n3ma/7LZJxSg27e6/CiKCn
-	 FQ/pLYJJkcubfmXPyl2KOh9qoSR3Pb2U3y8J1M1/twCluF+qZcAkF7wtXOQ7FVA6pI
-	 V2lTzh1arpK21biNYCuzyVl3zsEZWzBHOwsQusm4=
+	by mail.kernel.org (Postfix) with ESMTP id C8C8020767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cTYu7scx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgFPKkK (ORCPT
+        id S1728399AbgFPKki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgFPKj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:39:59 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Tue, 16 Jun 2020 06:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgFPKkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:40:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C61C0C08C5C2;
+        Tue, 16 Jun 2020 03:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rR80UlMfCW/sEc1igNxwYy8MqIUhUxy8OEBjw3HSVg8=; b=cTYu7scxjqowUHmGv450LUAoaX
+        IYsPxcwz87SK04dj2d0K2Awa/jRLEWooOfjnwEF0XVVW6R5EAlLKpJdoh4VbzNG3BSJtAdpw4CKC3
+        LoITBwOX7m4y1KewMMvqdDLayIZEcdsF/U2G+R+PdNMuSLBfu6CHz6N8rSLx8FbyXG5PERN1gMdnq
+        RUPFEsCsZmTNxC3uBTnvrQvtKC8S8nmz1drHllnBlArdFxKIc28GkmCXrkjiZahs9OWPKt+gv8UFC
+        IYmQsPjaBC3+X68k+RRNupUYJEZrGHTHWxlG5Je3dmb2SwWTYSDHfFMlY8/8eqwFvghT3ck0ESLsw
+        yYmXgdOw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jl918-0004Iu-6o; Tue, 16 Jun 2020 10:40:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EA0320786;
-        Tue, 16 Jun 2020 10:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592303998;
-        bh=7dldRWO7gGRPlZ/8sV26jPzle1h5yQEqABWokXqyW38=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s3YG0XKIGUKezsbFPu+LsttzfENLcVz6uOAgoe8u3j2JVe5uZvas/7wxHmBbu6K9t
-         ALdsxYeae+Xo/DSQ0UB0LtxZzXhGyfjKzGlO9MCz7WZaFInHWsgW/aTqaIQ1kR92IS
-         kp6WqPseGrtvHr9CykwXRzc0VOenTXqXbSlzpie0=
-Date:   Tue, 16 Jun 2020 11:39:56 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi@vger.kernel.org,
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66384306089;
+        Tue, 16 Jun 2020 12:40:32 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 52998203EDAAE; Tue, 16 Jun 2020 12:40:32 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:40:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dexuan Cui <decui@microsoft.com>, vkuznets <vkuznets@redhat.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Ju-Hyoung Lee <juhlee@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Wolfram Sang <wsa@kernel.org>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 3/3] genirq: Do not test disabled IRQs with DEBUG_SHIRQ
-Message-ID: <20200616103956.GL4447@sirena.org.uk>
-References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
- <1592208439-17594-3-git-send-email-krzk@kernel.org>
- <20200615120844.GL4447@sirena.org.uk>
- <CAJKOXPfEpLN9jS11WW367Na3Ukfi8p3urKDcJoafg9dHuCDSUA@mail.gmail.com>
+        KY Srinivasan <kys@microsoft.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: hv_hypercall_pg page permissios
+Message-ID: <20200616104032.GR2531@hirez.programming.kicks-ass.net>
+References: <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <87y2ooiv5k.fsf@vitty.brq.redhat.com>
+ <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <20200616072318.GA17600@lst.de>
+ <20200616101807.GO2531@hirez.programming.kicks-ass.net>
+ <20200616102350.GA29684@lst.de>
+ <20200616102412.GB29684@lst.de>
+ <20200616103137.GQ2531@hirez.programming.kicks-ass.net>
+ <20200616103313.GA30833@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/0D4jGRsNl8cPNu/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJKOXPfEpLN9jS11WW367Na3Ukfi8p3urKDcJoafg9dHuCDSUA@mail.gmail.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200616103313.GA30833@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 16, 2020 at 12:33:13PM +0200, Christoph Hellwig wrote:
+> sorry, s/ftrace/kprobes/.  See my updated branch here:
+> 
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/module_alloc-cleanup
 
---/0D4jGRsNl8cPNu/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jun 16, 2020 at 12:11:17PM +0200, Krzysztof Kozlowski wrote:
-> On Mon, Jun 15, 2020 at 01:08:44PM +0100, Mark Brown wrote:
-> > On Mon, Jun 15, 2020 at 10:07:19AM +0200, Krzysztof Kozlowski wrote:
-> > > Testing events during freeing of disabled shared interrupts
-> > > (CONFIG_DEBUG_SHIRQ) leads to false positives.  The driver disabled
-> > > interrupts on purpose to be sure that they will not fire during device
-> > > removal.
-
-> > Surely the whole issue with shared IRQs that's being tested for here is
-> > that when the interrupt is shared some other device connected to the
-> > same interrupt line may trigger an interrupt regardless of what's going
-> > on with this device?
-
-> Yes. However if that device disabled the interrupt, it should not be
-> fired for other users. In such case the testing does not point to a
-> real issue.
-
-To be honest I'd say that if you're disabling a shared interrupt that's
-a bit of an issue regardless of anything else that's going on, it'll
-disrupt other devices connected to it.
-
---/0D4jGRsNl8cPNu/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ooXsACgkQJNaLcl1U
-h9DoHgf+JwvDuPobncELlcEI/vWSGXCrDuPyH/+FJU0Ji63DjRavjk3dt7UI1UsD
-m70QleSoyhqku2gmsEnWKgRz08Y3KD8XCX6L/LwqmB2GKuZLlV2qHdgr6UkJ1UQ1
-XOF2w75Vip+CnBp6AlVuEGyJ9k32y6VGDXyAe8nkFZU1teHMEZ2BPv8ZwrtHIgjs
-/Mq6GUrSDXYSWkDD1AhLBG+ZjuCWm/UBy5anxCbAcnlIADxHVfLLzL58CPtOYNpy
-03RoSphUoITpHPlTssE5VGdByMnxY7116n0XbiCsP6+mVmm/KU9FpHwOYN5qmFWS
-hFrkjmbsmqNIpLXjzKQBxAiyDk5G0g==
-=x0XR
------END PGP SIGNATURE-----
-
---/0D4jGRsNl8cPNu/--
+Ah the insn slot page, yes. Didn't you just loose VM_FLUSH_RESET_PERMS
+there?
