@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2414EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC8232071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3073208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323752;
-	bh=5hODz8xCrwkUBsM3wjsrrX/EcStDVOcRIO9asavpuQo=;
+	s=default; t=1592323765;
+	bh=0JERohV4x/Bj7qeK8SMYNWYmz3BUXkYI0JZHeSB8q1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H29KuINFCXkiO+sj5uK02s1esueW6YDazKvSb3tvROhEwsKc1hkJLtcAsFCcAadqJ
-	 pjzl1obNFGtvtwgyet7mOEtUPokzcYAZP+k+tgjmZ6MPoMTr34ibFQwToEnliBzpzp
-	 GAJe/jgWl9YpgoteE7GHrPYiXQsfMYcQwpdidfjM=
+	b=fQXIvXPViJGOO5itGH7Zh8RkHn0Y1WVvg7EPqjsH9nGQhJq+ehS/gD924BL0WnuMs
+	 RVTTB/71P0/EwwJKZJoFyfQcGDFJHAivJslIA0Dr7+HK6UdjHFNcrb9IC+iNVL53MZ
+	 B31xo2rh477f9fvTtuAbxAxVYV2gMVZGbTMq1syc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732354AbgFPQJK (ORCPT
+        id S1732638AbgFPQJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:09:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36822 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731659AbgFPPp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:45:29 -0400
+        id S1732075AbgFPPpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10BA720776;
-        Tue, 16 Jun 2020 15:45:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAC982071A;
+        Tue, 16 Jun 2020 15:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322329;
-        bh=5hODz8xCrwkUBsM3wjsrrX/EcStDVOcRIO9asavpuQo=;
+        s=default; t=1592322316;
+        bh=0JERohV4x/Bj7qeK8SMYNWYmz3BUXkYI0JZHeSB8q1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ys0KP6Prn3Bd8t0Dp5X/aemuoykIClf80Np3iloO8VLUbVvRCti7Sgt9+6tgDoNdc
-         jPufs3RIEWdBSgn2OCu36moaLS34nnrRcITiu7ttdetPN4QewGfmQ3WgfwRvLhMfPL
-         hz2TndYH4zmwwMCelts+jihJL/rJYL6YL5M/YFis=
+        b=Ym0j7mxC534CRlDoVwal6hMu8Jo+Kii0TPlVPxR86jkVyrK2W9brVgLjHnInS/pOY
+         jX322jd31qhJrlg9cPsb5qGAz4ChCxcSOqS7dTX5LafheOof/ffNPmNw/rRz/Ux4Ya
+         RpnRJL7iAc13uUrpGydYFuDVJt+JOqLPGUWcbTlg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
-        Steve French <smfrench@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.7 059/163] smb3: add indatalen that can be a non-zero value to calculation of credit charge in smb2 ioctl
-Date:   Tue, 16 Jun 2020 17:33:53 +0200
-Message-Id: <20200616153109.675663159@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 5.7 057/163] efi/efivars: Add missing kobject_put() in sysfs entry creation error path
+Date:   Tue, 16 Jun 2020 17:33:51 +0200
+Message-Id: <20200616153109.579761829@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,51 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Namjae Jeon <namjae.jeon@samsung.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit ebf57440ec59a36e1fc5fe91e31d66ae0d1662d0 upstream.
+commit d8bd8c6e2cfab8b78b537715255be8d7557791c0 upstream.
 
-Some of tests in xfstests failed with cifsd kernel server since commit
-e80ddeb2f70e. cifsd kernel server validates credit charge from client
-by calculating it base on max((InputCount + OutputCount) and
-(MaxInputResponse + MaxOutputResponse)) according to specification.
+The documentation provided by kobject_init_and_add() clearly spells out
+the need to call kobject_put() on the kobject if an error is returned.
+Add this missing call to the error path.
 
-MS-SMB2 specification describe credit charge calculation of smb2 ioctl :
-
-If Connection.SupportsMultiCredit is TRUE, the server MUST validate
-CreditCharge based on the maximum of (InputCount + OutputCount) and
-(MaxInputResponse + MaxOutputResponse), as specified in section 3.3.5.2.5.
-If the validation fails, it MUST fail the IOCTL request with
-STATUS_INVALID_PARAMETER.
-
-This patch add indatalen that can be a non-zero value to calculation of
-credit charge in SMB2_ioctl_init().
-
-Fixes: e80ddeb2f70e ("smb3: fix incorrect number of credits when ioctl
-MaxOutputResponse > 64K")
-Cc: Stable <stable@vger.kernel.org>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-Cc: Steve French <smfrench@gmail.com>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Cc: <stable@vger.kernel.org>
+Reported-by: 亿一 <teroincn@gmail.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2pdu.c |    4 +++-
+ drivers/firmware/efi/efivars.c |    4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -2922,7 +2922,9 @@ SMB2_ioctl_init(struct cifs_tcon *tcon,
- 	 * response size smaller.
- 	 */
- 	req->MaxOutputResponse = cpu_to_le32(max_response_size);
--	req->sync_hdr.CreditCharge = cpu_to_le16(DIV_ROUND_UP(max_response_size, SMB2_MAX_BUFFER_SIZE));
-+	req->sync_hdr.CreditCharge =
-+		cpu_to_le16(DIV_ROUND_UP(max(indatalen, max_response_size),
-+					 SMB2_MAX_BUFFER_SIZE));
- 	if (is_fsctl)
- 		req->Flags = cpu_to_le32(SMB2_0_IOCTL_IS_FSCTL);
- 	else
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -522,8 +522,10 @@ efivar_create_sysfs_entry(struct efivar_
+ 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
+ 				   NULL, "%s", short_name);
+ 	kfree(short_name);
+-	if (ret)
++	if (ret) {
++		kobject_put(&new_var->kobj);
+ 		return ret;
++	}
+ 
+ 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
+ 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
 
 
