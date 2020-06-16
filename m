@@ -2,133 +2,74 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8472C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F80C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD7D3207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Q6fmMHtp"
+	by mail.kernel.org (Postfix) with ESMTP id 6A494207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730641AbgFPU4a (ORCPT
+        id S1730700AbgFPU4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:56:30 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:34510 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730453AbgFPU4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:56:20 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 3746C30D89A;
-        Tue, 16 Jun 2020 13:56:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 3746C30D89A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1592340979;
-        bh=Hf33bBktY+K2EKNdxjcAf5j79T33zNUAdOmLLOcq3Kk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6fmMHtp+AmlGNoel0w4MsoSbaeQ9I1GRsB5OKTjxsNn3R2yj+IY6PkPROeUIsSRX
-         BiT1d3La7SyEDRTRo0WpMeO6CJDCVNuYP+zjKIw7iM1lJ/vwCLzDZN7Lz7CK3zs7RD
-         HUiVic5WKS5s3otjVc18MP0UJcsXHBBVRUOrmtSg=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 9DAA014008C;
-        Tue, 16 Jun 2020 13:56:17 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 11/12] PCI: brcmstb: Set bus max burst size by chip type
-Date:   Tue, 16 Jun 2020 16:55:18 -0400
-Message-Id: <20200616205533.3513-12-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616205533.3513-1-james.quinlan@broadcom.com>
-References: <20200616205533.3513-1-james.quinlan@broadcom.com>
+        Tue, 16 Jun 2020 16:56:35 -0400
+Received: from mga14.intel.com ([192.55.52.115]:17159 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730453AbgFPU4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 16:56:32 -0400
+IronPort-SDR: q/+IbCPKVdoLd+BWN6Lw2qhL8NsleWXCoF9JmSYOvgMol1wmT5eJodFfLj6Eof2wjxkA4FI3a4
+ Q/255c8OOo+A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 13:56:31 -0700
+IronPort-SDR: zf4Y53dBEKcPjx6uKdVxaG8UVZm5RahWwZ6yADqa/Q4ka8CvTaxT+4y+0lBWaj5BR7QPTya7p2
+ WV/0A01nxZFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,519,1583222400"; 
+   d="scan'208";a="277051782"
+Received: from gosinald-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.36.106])
+  by orsmga006.jf.intel.com with ESMTP; 16 Jun 2020 13:56:26 -0700
+Date:   Tue, 16 Jun 2020 23:56:24 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
+        peterhuewe@gmx.de, jgg@ziepe.ca, gregkh@linuxfoundation.org,
+        jens.wiklander@linaro.org, linux-integrity@vger.kernel.org,
+        arnd@linaro.org, sumit.garg@linaro.org
+Subject: Re: [PATCHv8 2/3] optee: enable support for multi-stage bus
+ enumeration
+Message-ID: <20200616205624.GE20943@linux.intel.com>
+References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+ <20200604175851.758-3-maxim.uvarov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200604175851.758-3-maxim.uvarov@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+On Thu, Jun 04, 2020 at 08:58:50PM +0300, Maxim Uvarov wrote:
+> Some drivers (like ftpm) can operate only after tee-supplicant
+> runs because of tee-supplicant provides things like storage
+> services (rpmb, shm).  This patch splits probe of non tee-supplicant
+> dependable drivers to the early stage, and after tee-supplicant run
+> probe other drivers.
+> 
+> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> Suggested-by: Sumit Garg <sumit.garg@linaro.org>
+> Suggested-by: Arnd Bergmann <arnd@linaro.org>
+> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
-The proper value of the parameter SCB_MAX_BURST_SIZE varies per chip.  The
-2711 family requires 128B whereas other devices can employ 512.  The
-assignment is complicated by the fact that the values for this two-bit
-field have different meanings;
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-  Value   Type_Generic    Type_7278
+Looks good to me but Jens should really go this through in detail. I'm
+not the decision maker on this one.
 
-     00       Reserved         128B
-     01           128B         256B
-     10           256B         512B
-     11           512B     Reserved
-
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 29fad717f619..02b769534e53 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -55,7 +55,7 @@
- #define  PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK		0x1000
- #define  PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK	0x2000
- #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
--#define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128		0x0
-+
- #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
- #define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
- #define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
-@@ -847,7 +847,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	int num_out_wins = 0;
- 	u16 nlw, cls, lnksta;
- 	int i, ret, memc;
--	u32 tmp, aspm_support;
-+	u32 tmp, burst, aspm_support;
- 
- 	/* Reset the bridge */
- 	brcm_pcie_bridge_sw_init_set(pcie, 1);
-@@ -864,11 +864,22 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	/* Wait for SerDes to be stable */
- 	usleep_range(100, 200);
- 
-+	/*
-+	 * SCB_MAX_BURST_SIZE is a two bit field.  For GENERIC chips it
-+	 * is encoded as 0=128, 1=256, 2=512, 3=Rsvd, for BCM7278 it
-+	 * is encoded as 0=Rsvd, 1=128, 2=256, 3=512.
-+	 */
-+	if (pcie->type == BCM2711)
-+		burst = 0x0; /* 128B */
-+	else if (pcie->type == BCM7278)
-+		burst = 0x3; /* 512 bytes */
-+	else
-+		burst = 0x2; /* 512 bytes */
-+
- 	/* Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN */
- 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK);
- 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK);
--	u32p_replace_bits(&tmp, PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128,
--			  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK);
-+	u32p_replace_bits(&tmp, burst, PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK);
- 	writel(tmp, base + PCIE_MISC_MISC_CTRL);
- 
- 	ret = brcm_pcie_get_rc_bar2_size_and_offset(pcie, &rc_bar2_size,
--- 
-2.17.1
-
+/Jarkko
