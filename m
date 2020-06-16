@@ -2,260 +2,78 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E976C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A442207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ME1Vbzrx"
+	by mail.kernel.org (Postfix) with ESMTP id 0BB2A207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323090;
+	bh=L7HAS4sYz0Q0M+EaHokWTKwpor0s3bgHozek18pK5LY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=EOIDX1ccp0mGAfCtFq0TpOdOUbGTfQ380CHi8U8d86vlqjgapbftwnixheU5t4K1k
+	 7Bf/Dmvx2DK1PpYINvJgAndEsBrOmotiZ2i1KrGf/XfqdvreqzLgtVGa1i1y7ivSjc
+	 MAv69DhyFu5nEfB110UqgwX97f9QNEWhXwZDsAfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732999AbgFPP6B (ORCPT
+        id S1728809AbgFPP6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:58:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732997AbgFPPyh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05152C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:54:37 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id p5so21297384wrw.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aDlbEbbNRivF3ebZedTH8Z8/FH+h6CNXcJR+iNKCKPU=;
-        b=ME1VbzrxAlBBwHB1G/OhYY0V2n82GKbwpAk+OYZAtww0bAtsbbSlf4okMRpWh7j+Bg
-         H27gXbFGmFm00VD4/LOcE7zFeAfyMelJFT43q9zRNfHMw8VvLQtsL2qEKBhRYS0rkzf8
-         OObTbu0l1g0UXn03vOXV3J8AlULwUp5xOtwbM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aDlbEbbNRivF3ebZedTH8Z8/FH+h6CNXcJR+iNKCKPU=;
-        b=bMx1RToc0G0+5QTN9AxZ0c9v02hQLF1NXaZtvUYJ0pRPPGRDqAaDrvid2GYWQnygcw
-         7teJ1aiPB/fllgI/fia6kGmz6cGxyobnbEBGoqocPKlt1C15ZUxrAZxAq8KzDEZ7FG/v
-         Z44vf0Khy/0BvmyoLTvZ0JwkhT+L9791Vk8k9tEXm5xjKg98y1fxfEzxbH2SeV6+8ipM
-         wGcmwIHhmA0dTzacyW5N0NeDhlBDnM70m+u2RH9dzmudp78MM2axFmdhW1KyATIOWavE
-         s+w743VaPvY07ihPX8fiB3uWEer1A1Ibob8bA8S6y58wHIM5UzDImxAVyr01BMxT3hiv
-         fXhw==
-X-Gm-Message-State: AOAM530ThqRNeyjM8WLCshSp6eCc5nXSLGYFwgJqo5SkbopDiBoiVMPf
-        LZrY9Xt+wje+PgZC+EDnkDwf2g==
-X-Google-Smtp-Source: ABdhPJw/xY99cSSYy1TOkNlqCb1a1X4k8XHZ1Cb/ZTrXyvdfJ05YS9wh9WeiDmqxcDUWD31BZdw5oA==
-X-Received: by 2002:a5d:6b8c:: with SMTP id n12mr3763512wrx.61.1592322875641;
-        Tue, 16 Jun 2020 08:54:35 -0700 (PDT)
-Received: from google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id v6sm31576887wrf.61.2020.06.16.08.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 08:54:34 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 16 Jun 2020 17:54:33 +0200
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, bpf <bpf@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Florent Revest <revest@chromium.org>
-Subject: Re: [PATCH bpf-next 4/4] bpf: Add selftests for local_storage
-Message-ID: <20200616155433.GA11971@google.com>
-References: <20200526163336.63653-1-kpsingh@chromium.org>
- <20200526163336.63653-5-kpsingh@chromium.org>
- <CAEf4BzY0=Hh3O6qeD=2sMWpQRpHpizxH+nEA0hD0khPf3VAbhA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzY0=Hh3O6qeD=2sMWpQRpHpizxH+nEA0hD0khPf3VAbhA@mail.gmail.com>
+        Tue, 16 Jun 2020 11:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733119AbgFPP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:58:04 -0400
+Received: from localhost.localdomain (unknown [42.120.72.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9ADA21548;
+        Tue, 16 Jun 2020 15:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592323084;
+        bh=L7HAS4sYz0Q0M+EaHokWTKwpor0s3bgHozek18pK5LY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AuOpr7G3+Fh9kTygW02K/pdHhG0lP5NrT3swgnodY5YTjhLi6ow3Y1S3k66sWESZ/
+         RP1goGarTA+IuSP+K765jpDunyR1Ns6xKyskcRjY5NEQqnRznAxXKesdm0b01twqRG
+         EseNQ8zymopKcK248UAlBjPE8fpWH14y3pKaQ334=
+From:   guoren@kernel.org
+To:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
+        anup@brainfault.org, zong.li@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, tycho@tycho.ws, nickhu@andestech.com
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH 0/3] riscv: Enable LOCKDEP
+Date:   Tue, 16 Jun 2020 15:56:58 +0000
+Message-Id: <1592323021-98541-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-Jun 13:29, Andrii Nakryiko wrote:
-> On Tue, May 26, 2020 at 9:34 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > inode_local_storage:
-> >
-> > * Hook to the file_open and inode_unlink LSM hooks.
-> > * Create and unlink a temporary file.
-> > * Store some information in the inode's bpf_local_storage during
-> >   file_open.
-> > * Verify that this information exists when the file is unlinked.
-> >
-> > sk_local_storage:
-> >
-> > * Hook to the socket_post_create and socket_bind LSM hooks.
-> > * Open and bind a socket and set the sk_storage in the
-> >   socket_post_create hook using the start_server helper.
-> > * Verify if the information is set in the socket_bind hook.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > ---
-> >  .../bpf/prog_tests/test_local_storage.c       |  60 ++++++++
-> >  .../selftests/bpf/progs/local_storage.c       | 139 ++++++++++++++++++
-> >  2 files changed, 199 insertions(+)
-> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/test_local_storage.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/local_storage.c
-> >
-> 
-> [...]
-> 
-> > +struct dummy_storage {
-> > +       __u32 value;
-> > +};
-> > +
-> > +struct {
-> > +       __uint(type, BPF_MAP_TYPE_INODE_STORAGE);
-> > +       __uint(map_flags, BPF_F_NO_PREALLOC);
-> > +       __type(key, int);
-> > +       __type(value, struct dummy_storage);
-> > +} inode_storage_map SEC(".maps");
-> > +
-> > +struct {
-> > +       __uint(type, BPF_MAP_TYPE_SK_STORAGE);
-> > +       __uint(map_flags, BPF_F_NO_PREALLOC | BPF_F_CLONE);
-> > +       __type(key, int);
-> > +       __type(value, struct dummy_storage);
-> > +} sk_storage_map SEC(".maps");
-> > +
-> > +/* Using vmlinux.h causes the generated BTF to be so big that the object
-> > + * load fails at btf__load.
-> > + */
-> 
-> That's first time I hear about such issue. Do you have an error log
-> from verifier?
+From: Guo Ren <guoren@linux.alibaba.com>
 
-Here's what I get when I do the following change.
+Lockdep is needed by proving the spinlocks and rwlocks. To suupport
+it, we need fixup TRACE_IRQFLAGS_SUPPORT in kernel/entry.S. This
+patch follow Documentation/irqflags-tracing.txt.
 
---- a/tools/testing/selftests/bpf/progs/local_storage.c
-+++ b/tools/testing/selftests/bpf/progs/local_storage.c
-@@ -4,8 +4,8 @@
-  * Copyright 2020 Google LLC.
-  */
- 
-+#include "vmlinux.h"
- #include <errno.h>
--#include <linux/bpf.h>
- #include <stdbool.h>
- #include <bpf/bpf_helpers.h>
- #include <bpf/bpf_tracing.h>
-@@ -37,24 +37,6 @@ struct {
-        __type(value, struct dummy_storage);
- } sk_storage_map SEC(".maps");
- 
--/* Using vmlinux.h causes the generated BTF to be so big that the object
-- * load fails at btf__load.
-- */
--struct sock {} __attribute__((preserve_access_index));
--struct sockaddr {} __attribute__((preserve_access_index));
--struct socket {
--       struct sock *sk;
--} __attribute__((preserve_access_index));
--
--struct inode {} __attribute__((preserve_access_index));
--struct dentry {
--       struct inode *d_inode;
--} __attribute__((preserve_access_index));
--struct file {
--       struct inode *f_inode;
--} __attribute__((preserve_access_index));
+And there are 2 bugs block the lockdep implementation.
 
-./test_progs -t test_local_storage
-libbpf: Error loading BTF: Invalid argument(22)
-libbpf: magic: 0xeb9f
-version: 1
-flags: 0x0
-hdr_len: 24
-type_off: 0
-type_len: 4488
-str_off: 4488
-str_len: 3012
-btf_total_size: 7524
+Guo Ren (2):
+  riscv: Fixup static_obj() fail
+  riscv: Enable LOCKDEP_SUPPORT & fixup TRACE_IRQFLAGS_SUPPORT
 
-[1] STRUCT (anon) size=32 vlen=4
-	type type_id=2 bits_offset=0
-	map_flags type_id=6 bits_offset=64
-	key type_id=8 bits_offset=128
-	value type_id=9 bits_offset=192
-[2] PTR (anon) type_id=4
-[3] INT int size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
-[4] ARRAY (anon) type_id=3 index_type_id=5 nr_elems=28
-[5] INT __ARRAY_SIZE_TYPE__ size=4 bits_offset=0 nr_bits=32 encoding=(none)
-[6] PTR (anon) type_id=7
-[7] ARRAY (anon) type_id=3 index_type_id=5 nr_elems=1
-[8] PTR (anon) type_id=3
-[9] PTR (anon) type_id=10
-[10] STRUCT dummy_storage size=4 vlen=1
-	value type_id=11 bits_offset=0
-[11] TYPEDEF __u32 type_id=12
+Zong Li (1):
+  riscv: Fixup lockdep_assert_held with wrong param cpu_running
 
-  [... More BTF Dump ...]
+ arch/riscv/Kconfig              |  3 +++
+ arch/riscv/kernel/entry.S       | 41 ++++++++++++++++++++++++++++++++++++++++-
+ arch/riscv/kernel/smpboot.c     |  1 -
+ arch/riscv/kernel/vmlinux.lds.S |  2 +-
+ 4 files changed, 44 insertions(+), 3 deletions(-)
 
-[91] TYPEDEF wait_queue_head_t type_id=175
+-- 
+2.7.4
 
-  [... More BTF Dump ...]
-
-[173] FWD super_block struct
-[174] FWD vfsmount struct
-[175] FWD wait_queue_head struct
-[106] STRUCT socket_wq size=128 vlen=4
-	wait type_id=91 bits_offset=0 Invalid member
-
-libbpf: Error loading .BTF into kernel: -22.
-libbpf: map 'inode_storage_map': failed to create: Invalid argument(-22)
-libbpf: failed to load object 'local_storage'
-libbpf: failed to load BPF skeleton 'local_storage': -22
-test_test_local_storage:FAIL:skel_load lsm skeleton failed
-#81 test_local_storage:FAIL
-
-The failiure is in:
-
-[106] STRUCT socket_wq size=128 vlen=4
-	wait type_id=91 bits_offset=0 Invalid member
-
-> 
-> Clang is smart enough to trim down used types to only those that are
-> actually necessary, so too big BTF shouldn't be a thing. But let's try
-> to dig into this and fix whatever issue it is, before giving up :)
-> 
-
-I was wrong about the size being an issue. The verifier thinks the BTF
-is invalid and more specificially it thinks that the socket_wq's
-member with type_id=91, i.e. typedef wait_queue_head_t is invalid. Am
-I missing some toolchain patches?
-
-- KP
-
-
-> > +struct sock {} __attribute__((preserve_access_index));
-> > +struct sockaddr {} __attribute__((preserve_access_index));
-> > +struct socket {
-> > +       struct sock *sk;
-> > +} __attribute__((preserve_access_index));
-> > +
-> > +struct inode {} __attribute__((preserve_access_index));
-> > +struct dentry {
-> > +       struct inode *d_inode;
-> > +} __attribute__((preserve_access_index));
-> > +struct file {
-> > +       struct inode *f_inode;
-> > +} __attribute__((preserve_access_index));
-> > +
-> > +
-> 
-> [...]
