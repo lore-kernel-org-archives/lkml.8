@@ -2,214 +2,126 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F8C208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RMe1EOF/"
+	by mail.kernel.org (Postfix) with ESMTP id 20360208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323524;
+	bh=Fm0i/5n4/9Upu7WK7mhkko6W4ebeSGurcaytGvI0nts=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O4N15h52/FQN/BupTHEjB/PWQd0RS+fK+sOJeP6xd3F0Ll8mNHZFImJh7H80rWB45
+	 7wKE5fnSegSPb8UNsVPNXS9YEWzXaiklnBfgerRqcPH0dvMmbLJjDerbDPzHWWuJz+
+	 IQ6BiOL30pG0icaUnw4Ldy/6Sl37N+ntEsCR4+lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731830AbgFPPtE (ORCPT
+        id S1730250AbgFPPsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:49:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732220AbgFPPs7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:48:59 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421F9C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:48:59 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id h185so9700654pfg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:48:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aH/epTbtusDwdVV/kmnk+gLwl4nwhM0mg4o9WDdCqyA=;
-        b=RMe1EOF/QbamaW1pKPoBlac6ekdFsLU6mz3tWml5zqb7Z7Uujg9yC1sk7chzVhvyVA
-         sLDAvg0ARkYWCLwsNMrtTTAD8UMmfyaR/ZMzpg8PIYbdq5v157fkg2dRK2ZbWmeIjWFQ
-         S3gviQeWP5HFbvl3bpwsFl/6aB6LZ4cW2zpAI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aH/epTbtusDwdVV/kmnk+gLwl4nwhM0mg4o9WDdCqyA=;
-        b=bceS5t76YBS9A1zTWw+WEAoCe5gmlerYGEGr1hRdCpTYJmTq+nGqL/JAkakJ3zsAse
-         oNoZaapiEiiunHXmPhzAepzexJ08iGKkV3xW4cEYVC69riXwC2rEDTQRyWIv1qOh3L7e
-         hRq1Ei59E6R97QCbWde3Vxy0n1gitWn05yZLTUetTPYr+RV1Bpsm0AHciNi5euvgamch
-         ActOLwg2Ab0mhguRQgOc+Q4zeGUant2DjQNKtp5J5zq+w7Z08VMkU3qThSWNyJLqVrTU
-         /fIXiWa4EJVNpLjZ+euj9/BcJo9l7cls6vleAsm3sbT58+Yk2XFFvzAdrFuFM8he2ubI
-         PmxQ==
-X-Gm-Message-State: AOAM531ExChZGfKKWn1wOlu2YbA0T7zQDc3yXYgxb1o9boOc6ScUcxzQ
-        5IZaxVosC91pEhpNMbIFEe3rnA==
-X-Google-Smtp-Source: ABdhPJwiF2EGmCauQgmbrFK+BPdWWaiX4E7rH2Evt8OuhdmgMlvqfRGFBs5IfXJQ2kBCqUyaSrpS7w==
-X-Received: by 2002:a63:690:: with SMTP id 138mr1514366pgg.122.1592322538740;
-        Tue, 16 Jun 2020 08:48:58 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w24sm17371351pfn.11.2020.06.16.08.48.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 08:48:57 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 08:48:56 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "zhujianwei (C)" <zhujianwei7@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Hehuazhen <hehuazhen@huawei.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 4/8] seccomp: Implement constant action bitmaps
-Message-ID: <202006160757.99FD9B785@keescook>
-References: <20200616074934.1600036-1-keescook@chromium.org>
- <20200616074934.1600036-5-keescook@chromium.org>
- <CAG48ez1p=dR_2ikKq=xVxkoGg0fYpTBpkhJSv1w-6BG=76PAvw@mail.gmail.com>
+        Tue, 16 Jun 2020 11:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732454AbgFPPsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:48:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C19442071A;
+        Tue, 16 Jun 2020 15:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322529;
+        bh=Fm0i/5n4/9Upu7WK7mhkko6W4ebeSGurcaytGvI0nts=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w5v8ypEBCw4uRp2B8z8wfz4U2Mu1exGtVFy8KzvHAkOrsbbYwbHVyDH6gNhopV3WH
+         jWT+CVqXle7IZPyXKR+9YrA/eMquzMTqYFTLE4GhcDXtNtspbEkfGvdyOpywYXIxlq
+         RBQOS4bW64ZFKFgWPREs6LjIzllb29Y/K3qEdfDI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
+        Jiri Kosina <jkosina@suse.cz>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 158/163] block/floppy: fix contended case in floppy_queue_rq()
+Date:   Tue, 16 Jun 2020 17:35:32 +0200
+Message-Id: <20200616153114.373707009@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
+References: <20200616153106.849127260@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez1p=dR_2ikKq=xVxkoGg0fYpTBpkhJSv1w-6BG=76PAvw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 02:14:47PM +0200, Jann Horn wrote:
-> Wouldn't it be simpler to use a function that can run a subset of
-> seccomp cBPF and bails out on anything that indicates that a syscall's
-> handling is complex or on instructions it doesn't understand? For
-> syscalls that have a fixed policy, a typical seccomp filter doesn't
-> even use any of the BPF_ALU ops, the scratch space, or the X register;
-> it just uses something like the following set of operations, which is
-> easy to emulate without much code:
-> 
-> BPF_LD | BPF_W | BPF_ABS
-> BPF_JMP | BPF_JEQ | BPF_K
-> BPF_JMP | BPF_JGE | BPF_K
-> BPF_JMP | BPF_JGT | BPF_K
-> BPF_JMP | BPF_JA
-> BPF_RET | BPF_K
+From: Jiri Kosina <jkosina@suse.cz>
 
-Initially, I started down this path. It needed a bit of plumbing into
-BPF to better control the lifetime of the cBPF "saved original filter"
-(normally used by CHECKPOINT_RESTORE uses), and then I needed to keep
-making exceptions (same list you have: ALU, X register, scratch, etc)
-in the name of avoiding too much complexity in the emulator. I decided
-I'd rather reuse the existing infrastructure to actually execute the
-filter (no cBPF copy needed to be saved, no separate code, and full
-instruction coverage).
+commit 263c61581a38d0a5ad1f5f4a9143b27d68caeffd upstream.
 
-> 
-> Something like (completely untested):
-> 
-> /*
->  * Try to statically determine whether @filter will always return a fixed result
->  * when run for syscall @nr under architecture @arch.
->  * Returns true if the result could be determined; if so, the result will be
->  * stored in @action.
->  */
-> static bool seccomp_check_syscall(struct sock_filter *filter, unsigned int arch,
->                                   unsigned int nr, unsigned int *action)
-> {
->   int pc;
->   unsigned int reg_value = 0;
-> 
->   for (pc = 0; 1; pc++) {
->     struct sock_filter *insn = &filter[pc];
->     u16 code = insn->code;
->     u32 k = insn->k;
-> 
->     switch (code) {
->     case BPF_LD | BPF_W | BPF_ABS:
->       if (k == offsetof(struct seccomp_data, nr)) {
->         reg_value = nr;
->       } else if (k == offsetof(struct seccomp_data, arch)) {
->         reg_value = arch;
->       } else {
->         return false; /* can't optimize (non-constant value load) */
->       }
->       break;
->     case BPF_RET | BPF_K:
->       *action = insn->k;
->       return true; /* success: reached return with constant values only */
->     case BPF_JMP | BPF_JA:
->       pc += insn->k;
->       break;
->     case BPF_JMP | BPF_JEQ | BPF_K:
->     case BPF_JMP | BPF_JGE | BPF_K:
->     case BPF_JMP | BPF_JGT | BPF_K:
->     default:
->       if (BPF_CLASS(code) == BPF_JMP && BPF_SRC(code) == BPF_K) {
->         u16 op = BPF_OP(code);
->         bool op_res;
-> 
->         switch (op) {
->         case BPF_JEQ:
->           op_res = reg_value == k;
->           break;
->         case BPF_JGE:
->           op_res = reg_value >= k;
->           break;
->         case BPF_JGT:
->           op_res = reg_value > k;
->           break;
->         default:
->           return false; /* can't optimize (unknown insn) */
->         }
-> 
->         pc += op_res ? insn->jt : insn->jf;
->         break;
->       }
->       return false; /* can't optimize (unknown insn) */
->     }
->   }
-> }
+Since the switch of floppy driver to blk-mq, the contended (fdc_busy) case
+in floppy_queue_rq() is not handled correctly.
 
-I didn't actually finish going down the emulator path (I stopped right
-around the time I verified that libseccomp does use BPF_ALU -- though
-only BPF_AND), so I didn't actually evaluate the filter contents for other
-filter builders (i.e. Chrome).
+In case we reach floppy_queue_rq() with fdc_busy set (i.e. with the floppy
+locked due to another request still being in-flight), we put the request
+on the list of requests and return BLK_STS_OK to the block core, without
+actually scheduling delayed work / doing further processing of the
+request. This means that processing of this request is postponed until
+another request comes and passess uncontended.
 
-But, if BPF_ALU | BPF_AND were added to your code above, it would cover
-everything libseccomp generates (which covers a lot of the seccomp
-filters, e.g. systemd, docker). I just felt funny about an "incomplete"
-emulator.
+Which in some cases might actually never happen and we keep waiting
+indefinitely. The simple testcase is
 
-Though now you've got me looking. It seems this is the core
-of Chrome's BPF instruction generation:
-https://github.com/chromium/chromium/blob/master/sandbox/linux/bpf_dsl/policy_compiler.cc
-It also uses ALU|AND, but adds JMP|JSET.
+	for i in `seq 1 2000`; do echo -en $i '\r'; blkid --info /dev/fd0 2> /dev/null; done
 
-So... that's only 2 more instructions to cover what I think are likely
-the two largest seccomp instruction generators.
+run in quemu. That reliably causes blkid eventually indefinitely hanging
+in __floppy_read_block_0() waiting for completion, as the BIO callback
+never happens, and no further IO is ever submitted on the (non-existent)
+floppy device. This was observed reliably on qemu-emulated device.
 
-> That way, you won't need any of this complicated architecture-specific stuff.
+Fix that by not queuing the request in the contended case, and return
+BLK_STS_RESOURCE instead, so that blk core handles the request
+rescheduling and let it pass properly non-contended later.
 
-There are two arch-specific needs, and using a cBPF-subset emulator
-just gets rid of the local TLB flush. The other part is distinguishing
-the archs. Neither requirement is onerous (TLB flush usually just
-needs little more than an extern, arch is already documented in the
-per-arch syscall_get_arch()). The awkward part I ran into for arm64
-was a header include loop for compat due to how unistd is handled for
-getting NR_syscalls for the bitmap sizing (which I'm sure is solvable,
-but I just wanted to get the x86 RFC posted first).
+Fixes: a9f38e1dec107a ("floppy: convert to blk-mq")
+Cc: stable@vger.kernel.org
+Tested-by: Libor Pechacek <lpechacek@suse.cz>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--- 
-Kees Cook
+---
+ drivers/block/floppy.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -2938,17 +2938,17 @@ static blk_status_t floppy_queue_rq(stru
+ 		 (unsigned long long) current_req->cmd_flags))
+ 		return BLK_STS_IOERR;
+ 
+-	spin_lock_irq(&floppy_lock);
+-	list_add_tail(&bd->rq->queuelist, &floppy_reqs);
+-	spin_unlock_irq(&floppy_lock);
+-
+ 	if (test_and_set_bit(0, &fdc_busy)) {
+ 		/* fdc busy, this new request will be treated when the
+ 		   current one is done */
+ 		is_alive(__func__, "old request running");
+-		return BLK_STS_OK;
++		return BLK_STS_RESOURCE;
+ 	}
+ 
++	spin_lock_irq(&floppy_lock);
++	list_add_tail(&bd->rq->queuelist, &floppy_reqs);
++	spin_unlock_irq(&floppy_lock);
++
+ 	command_status = FD_COMMAND_NONE;
+ 	__reschedule_timeout(MAXTIMEOUT, "fd_request");
+ 	set_fdc(0);
+
+
