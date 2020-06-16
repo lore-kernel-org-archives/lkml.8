@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42644C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E89CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 299FF20E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F40E20E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322477;
-	bh=836BQ7sKBoQIsD+pQMIGl9OxYAOyGG+hkuJMsglpYlY=;
+	s=default; t=1592322483;
+	bh=5JcNY3+ofa7957DqRCh2OsXj0EcV00v6wRJI0km4tQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qA9WyB8SYKLQwP2zpKQja9rRFCenwo5e8SGyrWPINoIzY9jqce32lSweJCZWbmL8v
-	 CFIiB9BfAP+usWathG5N7ophTF2czZGYnsEGgRngkkfHjIf6RSxKEmqNbn+NrHrfud
-	 ZXeuNII10VmOPDPGY3+K3qDw3c73L5TDeSxsNWco=
+	b=W5u0Q36KF1w/zegOTzHpmTTNkFbgxgI3jZEADm51cuJp0+LRywUXT6xF6kNH6/Pj7
+	 /6WYNpi5lNJvuYz1bCLuL4Q5pcLu1IzHJV51yosg9jGDalA737wSxG5asdqo8fIeJh
+	 oydp0ueKjSGpbyHZi4zIs+oB3TBi3N+LhmRm3MvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731846AbgFPPrz (ORCPT
+        id S1732083AbgFPPsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:47:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41468 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:48:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732360AbgFPPrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:47:49 -0400
+        id S1732367AbgFPPry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C40F2071A;
-        Tue, 16 Jun 2020 15:47:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79D0D2071A;
+        Tue, 16 Jun 2020 15:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322468;
-        bh=836BQ7sKBoQIsD+pQMIGl9OxYAOyGG+hkuJMsglpYlY=;
+        s=default; t=1592322474;
+        bh=5JcNY3+ofa7957DqRCh2OsXj0EcV00v6wRJI0km4tQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYAqDeqB1VF7w3welnW5wzG+GW2zaizOp0aG2v+cArbt2FoEy22LLZe5SGbqmyOsY
-         XNi2/Uc+ydyEuYbOnKapxf2917JVdaViCbt3IYDWWLJGgEc4WapKflWOMfbJHNKbeu
-         Hz51dKYRJTRlO8ZAeVSCpGtVnmBbXQ1q6FEijMso=
+        b=AXOxH4gkVDch+SpgmPUvqV7qnHygyGIxFWbOqx9/7e9AJqLGFu8+jiOlN9U/cl8/l
+         RbCx2g5OehqLuyVN+I9qY9PQLv8fAzLvdeGUtYm1wi2/wNv1GYX8fxfoUQ/tijNDch
+         eP2dDLvpB9U5xgq0Z0p3k5PNoxk/fYVCwmcmMzmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com
-Subject: [PATCH 5.7 143/163] ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-Date:   Tue, 16 Jun 2020 17:35:17 +0200
-Message-Id: <20200616153113.655962454@linuxfoundation.org>
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
+Subject: [PATCH 5.7 145/163] drm/vkms: Hold gem object while still in-use
+Date:   Tue, 16 Jun 2020 17:35:19 +0200
+Message-Id: <20200616153113.747491695@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,215 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+commit 0ea2ea42b31abc1141f2fd3911f952a97d401fcb upstream.
 
-In ath9k_hif_usb_rx_cb interface number is assumed to be 0.
-usb_ifnum_to_if(urb->dev, 0)
-But it isn't always true.
+We need to keep the reference to the drm_gem_object
+until the last access by vkms_dumb_create.
 
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/000000000000666c9c05a1c05d12@google.com
-usb 2-1: new high-speed USB device number 2 using dummy_hcd
-usb 2-1: config 1 has an invalid interface number: 2 but max is 0
-usb 2-1: config 1 has no interface number 0
-usb 2-1: New USB device found, idVendor=0cf3, idProduct=9271, bcdDevice=
-1.08
-usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-general protection fault, probably for non-canonical address
-0xdffffc0000000015: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000af]
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
+Therefore, the put the object after it is used.
 
-Call Trace
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-__do_softirq+0x21e/0x950 kernel/softirq.c:292
-invoke_softirq kernel/softirq.c:373 [inline]
-irq_exit+0x178/0x1a0 kernel/softirq.c:413
-exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
-apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+This fixes a use-after-free issue reported by syzbot.
 
-Reported-and-tested-by: syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-6-hqjagain@gmail.com
+While here, change vkms_gem_create() symbol to static.
+
+Reported-and-tested-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200427214405.13069-1-ezequiel@collabora.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c |   48 +++++++++++++++++++++++--------
- drivers/net/wireless/ath/ath9k/hif_usb.h |    5 +++
- 2 files changed, 42 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/vkms/vkms_drv.h |    5 -----
+ drivers/gpu/drm/vkms/vkms_gem.c |   11 ++++++-----
+ 2 files changed, 6 insertions(+), 10 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -643,9 +643,9 @@ err:
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -117,11 +117,6 @@ struct drm_plane *vkms_plane_init(struct
+ 				  enum drm_plane_type type, int index);
  
- static void ath9k_hif_usb_rx_cb(struct urb *urb)
- {
--	struct sk_buff *skb = (struct sk_buff *) urb->context;
--	struct hif_device_usb *hif_dev =
--		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
-+	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
-+	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
-+	struct sk_buff *skb = rx_buf->skb;
- 	int ret;
+ /* Gem stuff */
+-struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+-				       struct drm_file *file,
+-				       u32 *handle,
+-				       u64 size);
+-
+ vm_fault_t vkms_gem_fault(struct vm_fault *vmf);
  
- 	if (!skb)
-@@ -685,14 +685,15 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
-+	kfree(rx_buf);
- }
- 
- static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
- {
--	struct sk_buff *skb = (struct sk_buff *) urb->context;
-+	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
-+	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
-+	struct sk_buff *skb = rx_buf->skb;
- 	struct sk_buff *nskb;
--	struct hif_device_usb *hif_dev =
--		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
- 	int ret;
- 
- 	if (!skb)
-@@ -750,6 +751,7 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
-+	kfree(rx_buf);
- 	urb->context = NULL;
- }
- 
-@@ -795,7 +797,7 @@ static int ath9k_hif_usb_alloc_tx_urbs(s
- 	init_usb_anchor(&hif_dev->mgmt_submitted);
- 
- 	for (i = 0; i < MAX_TX_URB_NUM; i++) {
--		tx_buf = kzalloc(sizeof(struct tx_buf), GFP_KERNEL);
-+		tx_buf = kzalloc(sizeof(*tx_buf), GFP_KERNEL);
- 		if (!tx_buf)
- 			goto err;
- 
-@@ -832,8 +834,9 @@ static void ath9k_hif_usb_dealloc_rx_urb
- 
- static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
- {
--	struct urb *urb = NULL;
-+	struct rx_buf *rx_buf = NULL;
- 	struct sk_buff *skb = NULL;
-+	struct urb *urb = NULL;
- 	int i, ret;
- 
- 	init_usb_anchor(&hif_dev->rx_submitted);
-@@ -841,6 +844,12 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 
- 	for (i = 0; i < MAX_RX_URB_NUM; i++) {
- 
-+		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
-+		if (!rx_buf) {
-+			ret = -ENOMEM;
-+			goto err_rxb;
-+		}
-+
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -855,11 +864,14 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 			goto err_skb;
- 		}
- 
-+		rx_buf->hif_dev = hif_dev;
-+		rx_buf->skb = skb;
-+
- 		usb_fill_bulk_urb(urb, hif_dev->udev,
- 				  usb_rcvbulkpipe(hif_dev->udev,
- 						  USB_WLAN_RX_PIPE),
- 				  skb->data, MAX_RX_BUF_SIZE,
--				  ath9k_hif_usb_rx_cb, skb);
-+				  ath9k_hif_usb_rx_cb, rx_buf);
- 
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->rx_submitted);
-@@ -885,6 +897,8 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
-+	kfree(rx_buf);
-+err_rxb:
- 	ath9k_hif_usb_dealloc_rx_urbs(hif_dev);
+ int vkms_dumb_create(struct drm_file *file, struct drm_device *dev,
+--- a/drivers/gpu/drm/vkms/vkms_gem.c
++++ b/drivers/gpu/drm/vkms/vkms_gem.c
+@@ -97,10 +97,10 @@ vm_fault_t vkms_gem_fault(struct vm_faul
  	return ret;
  }
-@@ -896,14 +910,21 @@ static void ath9k_hif_usb_dealloc_reg_in
  
- static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
+-struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+-				       struct drm_file *file,
+-				       u32 *handle,
+-				       u64 size)
++static struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
++					      struct drm_file *file,
++					      u32 *handle,
++					      u64 size)
  {
--	struct urb *urb = NULL;
-+	struct rx_buf *rx_buf = NULL;
- 	struct sk_buff *skb = NULL;
-+	struct urb *urb = NULL;
- 	int i, ret;
+ 	struct vkms_gem_object *obj;
+ 	int ret;
+@@ -113,7 +113,6 @@ struct drm_gem_object *vkms_gem_create(s
+ 		return ERR_CAST(obj);
  
- 	init_usb_anchor(&hif_dev->reg_in_submitted);
+ 	ret = drm_gem_handle_create(file, &obj->gem, handle);
+-	drm_gem_object_put_unlocked(&obj->gem);
+ 	if (ret)
+ 		return ERR_PTR(ret);
  
- 	for (i = 0; i < MAX_REG_IN_URB_NUM; i++) {
+@@ -142,6 +141,8 @@ int vkms_dumb_create(struct drm_file *fi
+ 	args->size = gem_obj->size;
+ 	args->pitch = pitch;
  
-+		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
-+		if (!rx_buf) {
-+			ret = -ENOMEM;
-+			goto err_rxb;
-+		}
++	drm_gem_object_put_unlocked(gem_obj);
 +
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -918,11 +939,14 @@ static int ath9k_hif_usb_alloc_reg_in_ur
- 			goto err_skb;
- 		}
+ 	DRM_DEBUG_DRIVER("Created object of size %lld\n", size);
  
-+		rx_buf->hif_dev = hif_dev;
-+		rx_buf->skb = skb;
-+
- 		usb_fill_int_urb(urb, hif_dev->udev,
- 				  usb_rcvintpipe(hif_dev->udev,
- 						  USB_REG_IN_PIPE),
- 				  skb->data, MAX_REG_IN_BUF_SIZE,
--				  ath9k_hif_usb_reg_in_cb, skb, 1);
-+				  ath9k_hif_usb_reg_in_cb, rx_buf, 1);
- 
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->reg_in_submitted);
-@@ -948,6 +972,8 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
-+	kfree(rx_buf);
-+err_rxb:
- 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
- 	return ret;
- }
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
-@@ -86,6 +86,11 @@ struct tx_buf {
- 	struct list_head list;
- };
- 
-+struct rx_buf {
-+	struct sk_buff *skb;
-+	struct hif_device_usb *hif_dev;
-+};
-+
- #define HIF_USB_TX_STOP  BIT(0)
- #define HIF_USB_TX_FLUSH BIT(1)
- 
+ 	return 0;
 
 
