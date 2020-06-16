@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A491C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15606C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33CD1207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08C0207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322086;
-	bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
+	s=default; t=1592322092;
+	bh=REfJ7+ONixLxyVEXno+zYpwYGwcixL3r/XPDzbPOx0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kvLiWhkRYz9oboAvhu71S0YoEFQYocY4CmjCNG7JvUXNh0Vjt2nOGgMNdxWGC+E6i
-	 +4PxxBjxbehLlGzxSEWrHvSGHuFnUmZeQZeprTyORmdzOYaq7R8KzZIv/Aaqsqeo3O
-	 s+ewJG4l/ADF6ED0mdIW5P+mzHlO/ViEdSwt1jbU=
+	b=yHqhJf7k6dJeotkC/EeeNMQxSMMAQT6SQhn6sA95Awy313x29R2q0et36Tb4BqlZ7
+	 CM4vX/ORufJwBNjTAMJIEh9Ix+OwP3UYqyVXY0piPxDkEUR9ItaShE3n0Cg5gO2JDq
+	 JpmQjc+aQuOdDXlQ3wYGZ0XA74uIu1CUjTJQSEEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731418AbgFPPlZ (ORCPT
+        id S1731447AbgFPPl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56966 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:41:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731414AbgFPPlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:22 -0400
+        id S1730106AbgFPPlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4028208E4;
-        Tue, 16 Jun 2020 15:41:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51ED7207C4;
+        Tue, 16 Jun 2020 15:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322082;
-        bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
+        s=default; t=1592322084;
+        bh=REfJ7+ONixLxyVEXno+zYpwYGwcixL3r/XPDzbPOx0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VTZ7TccO9knwV0vDUhM8pFykbxgG43AkMHv+XMlcpiIAkkowfkaVWSyQNdXEvZsQ6
-         AcBuwnroAtKbma1tu4BK2dzZIcguzssuSyfU6X5EYec1wxkmKuUH+sIcQMRHpTssIF
-         fH1DSjDkoxYn5nLxkzT/sQbe/y1jmPEyjJI2B7tM=
+        b=zFX9159XZQd+sR8GuVt/tyzgNk6GI5ac7NfnaBpru7Ipi4ZN0eKJJqeL1WnCTvhzu
+         tUkNhPExmaxTBlpkQrEDXtCMkAp9UfQhCGvNozGqrroMAEcRWvV7BHeGrfMqHFkNaX
+         a7YLncbbuL1dtfVjmTkz/KyYzQYXcZkftm+1rfjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.4 128/134] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node description
-Date:   Tue, 16 Jun 2020 17:35:12 +0200
-Message-Id: <20200616153106.919058662@linuxfoundation.org>
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 129/134] mmc: sdio: Fix potential NULL pointer error in mmc_sdio_init_card()
+Date:   Tue, 16 Jun 2020 17:35:13 +0200
+Message-Id: <20200616153106.967580831@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,34 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit a1af7f36c70369b971ee1cf679dd68368dad23f0 upstream.
+commit f04086c225da11ad16d7f9a2fbca6483ab16dded upstream.
 
-Remove non-removable and mmc-ddr-1_8v properties from the sdmmc0
-node which come probably from an unchecked copy/paste.
+During some scenarios mmc_sdio_init_card() runs a retry path for the UHS-I
+specific initialization, which leads to removal of the previously allocated
+card. A new card is then re-allocated while retrying.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Fixes:42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
-Cc: stable@vger.kernel.org # 4.19 and later
-Link: https://lore.kernel.org/r/20200401221504.41196-1-ludovic.desroches@microchip.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+However, in one of the corresponding error paths we may end up to remove an
+already removed card, which likely leads to a NULL pointer exception. So,
+let's fix this.
+
+Fixes: 5fc3d80ef496 ("mmc: sdio: don't use rocr to check if the card could support UHS mode")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200430091640.455-2-ulf.hansson@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/mmc/core/sdio.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -125,8 +125,6 @@
- 			bus-width = <8>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
--			non-removable;
--			mmc-ddr-1_8v;
- 			status = "okay";
- 		};
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -718,9 +718,8 @@ try_again:
+ 			/* Retry init sequence, but without R4_18V_PRESENT. */
+ 			retries = 0;
+ 			goto try_again;
+-		} else {
+-			goto remove;
+ 		}
++		return err;
+ 	}
  
+ 	/*
 
 
