@@ -2,100 +2,99 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2C27208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322908;
-	bh=WUbC/zbO0oTsMy1wNUm4FQ3VgtMh6IjDCj0UoOPUUAk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bb2BnlngSrO8XBxQm0Kq9jz9fAK0scI5lOKkc/Mo2QowrwijOU4Jo0GSCnzLmKA5O
-	 oBVOX7GUy28AT6hn1myWgXcaBFiHKMv6FFAfDctwnFPJGycI98oxKAdU3EQyLJwIA6
-	 rCtjxG5nslOlF8viWZDdU1+1QkxbPsFGloGWpw7U=
+	by mail.kernel.org (Postfix) with ESMTP id CC67F21532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733053AbgFPPzG (ORCPT
+        id S1733061AbgFPPzJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732640AbgFPPzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733047AbgFPPzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 11:55:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D24821532;
-        Tue, 16 Jun 2020 15:55:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322903;
-        bh=WUbC/zbO0oTsMy1wNUm4FQ3VgtMh6IjDCj0UoOPUUAk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dRmi7Z+rSg6+NAVQr0GKMzreW6MxfJreZ1dQLrif3ypqERH7FJ3L4StRIdTyKaggQ
-         xVgEtcdsQoBVgrSAKo+hj2Le76U0LxecqTflixXp7aQ5WK4pp/W/k+rLLTWtD+ayMS
-         Pqq7g+9rD7ytvuattf7sqzgaoXKvtBbaOjyrZMNI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.6 148/161] mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
-Date:   Tue, 16 Jun 2020 17:35:38 +0200
-Message-Id: <20200616153113.392853950@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
-References: <20200616153106.402291280@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA81DC061573;
+        Tue, 16 Jun 2020 08:55:03 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jlDvR-0001r7-MW; Tue, 16 Jun 2020 17:55:01 +0200
+Date:   Tue, 16 Jun 2020 17:55:01 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Stephen Berman <stephen.berman@gmx.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200616155501.psduxnisltitodme@linutronix.de>
+References: <87imfyh6yx.fsf@gmx.net>
+ <87wo4dligz.fsf@gmx.net>
+ <20200612110122.jossn5zrktcvpbpm@linutronix.de>
+ <87tuzdrgm5.fsf@gmx.net>
+ <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
+ <874krcsquv.fsf@gmx.net>
+ <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
+ <87tuzbh482.fsf@gmx.net>
+ <20200616073827.vysntufld3ves666@linutronix.de>
+ <87o8pjh1i0.fsf@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <87o8pjh1i0.fsf@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+On 2020-06-16 10:13:27 [+0200], Stephen Berman wrote:
+> Yes, thanks, that did it.  Trace attached.
 
-commit 9253d71011c349d5f5cc0cebdf68b4a80811b92d upstream.
+So TZ10 is a temperature sensor of some kind on your motherboard. In
+your v5.6 dmesg there is:
+| thermal LNXTHERM:00: registered as thermal_zone0
+| ACPI: Thermal Zone [TZ10] (17 C)
 
-Clear tuning_done flag while executing tuning to ensure vendor
-specific HS400 settings are applied properly when the controller
-is re-initialized in HS400 mode.
+So. In /sys/class/thermal/thermal_zone0/device/path you should also see
+TZ10. And /sys/class/thermal/thermal_zone0/temp should show the actual
+value.
+This comes from the "thermal" module.
 
-Without this, re-initialization of the qcom SDHC in HS400 mode fails
-while resuming the driver from runtime-suspend or system-suspend.
+Looking at the trace, might query the temperature every second which
+somehow results in "Dispatching Notify on". I don't understand how it
+gets from reading of the temperature to the notify part, maybe it is
+part of the ACPI…
 
-Fixes: ff06ce417828 ("mmc: sdhci-msm: Add HS400 platform support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Link: https://lore.kernel.org/r/1590678838-18099-1-git-send-email-vbadigan@codeaurora.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+However. Could you please make sure that the thermal module is not
+loaded at system startup? Adding
+    thermal.off=1
 
----
- drivers/mmc/host/sdhci-msm.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+to the kernel commandline should do the trick. And you should see
+   thermal control disabled
 
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -1118,6 +1118,12 @@ static int sdhci_msm_execute_tuning(stru
- 	msm_host->use_cdr = true;
- 
- 	/*
-+	 * Clear tuning_done flag before tuning to ensure proper
-+	 * HS400 settings.
-+	 */
-+	msm_host->tuning_done = 0;
-+
-+	/*
- 	 * For HS400 tuning in HS200 timing requires:
- 	 * - select MCLK/2 in VENDOR_SPEC
- 	 * - program MCLK to 400MHz (or nearest supported) in GCC
+in dmesg. That means your thermal_zone0 with TZ10 does not show up in
+/sys and nothing should schedule the work-items. This in turn should
+allow you to shutdown your system without the delay.
 
+If this works, could you please try to load the module with tzp=300?
+If you add this
+ 	thermal.tzp=300
+  
+to the kernel commandline then it should do the trick. You can verify it
+by
+   cat /sys/module/thermal/parameters/tzp 
 
+This should change the polling interval from what ACPI says to 30secs.
+This should ensure that you don't have so many worker waiting. So you
+should also be able to shutdown the system.
+
+> Steve Berman
+
+Sebastian
