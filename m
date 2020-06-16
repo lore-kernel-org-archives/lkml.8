@@ -2,64 +2,88 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0249C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66801C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 998C42071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B5D207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgFPOCt (ORCPT
+        id S1729077AbgFPOEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:02:49 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:60875 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729289AbgFPOCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:02:47 -0400
-Received: (qmail 31737 invoked by uid 1000); 16 Jun 2020 10:02:46 -0400
-Date:   Tue, 16 Jun 2020 10:02:46 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Sergey Organov <sorganov@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>
-Subject: Re: [PATCH 1/2] usb: gadget: introduce flag for large request
-Message-ID: <20200616140246.GA30975@rowland.harvard.edu>
-References: <1592310884-4307-1-git-send-email-macpaul.lin@mediatek.com>
+        Tue, 16 Jun 2020 10:04:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6343 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728997AbgFPOD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:03:59 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9F381D7136FA4F2B2E33;
+        Tue, 16 Jun 2020 22:03:57 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 16 Jun 2020 22:03:50 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <will@kernel.org>, <robin.murphy@arm.com>
+CC:     <joro@8bytes.org>, <trivial@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <maz@kernel.org>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH RFC v2 0/4] iommu/arm-smmu-v3: Improve cmdq lock efficiency
+Date:   Tue, 16 Jun 2020 21:59:49 +0800
+Message-ID: <1592315993-164290-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592310884-4307-1-git-send-email-macpaul.lin@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 08:34:43PM +0800, Macpaul Lin wrote:
-> Some USB hardware like DMA engine can help to process (split) the data
-> of each URB request into small packets. For example, the max packet size
-> of high speed is 512 bytes. These kinds of hardware can help to split
-> the continue Tx/Rx data requests into packets just at the max packet
-> size during transmission. Hence upper layer software can reduce some
-> effort for queueing many requests back and forth for larger data.
-> 
-> Here we introduce "can_exceed_maxp" flag in gadget when these kinds of
-> hardware is ready to support these operations.
+As mentioned in [0], the CPU may consume many cycles processing
+arm_smmu_cmdq_issue_cmdlist(). One issue we find is the cmpxchg() loop to
+get space on the queue takes approx 25% of the cycles for this function.
 
-This isn't needed.  All UDC drivers must be able to support requests that 
-are larger than the maxpacket size.
+This series removes that cmpxchg().
 
-Alan Stern
+For my NVMe test with 3x NVMe SSDs, I'm getting a ~24% throughput
+increase:
+Before: 1310 IOPs
+After: 1630 IOPs
+
+I also have a test harness to check the rate of DMA map+unmaps we can
+achieve:
+
+CPU count	32	64	128
+Before:		63187	19418	10169
+After:		93287	44789	15862
+
+(unit is map+unmaps per CPU per second)
+
+There's no specific problem that I know of with this series, as previous
+issues should now be fixed - but I'm a bit nervous about how we deal with
+the queue being full and wrapping.
+
+And I want to test more.
+
+Thanks
+
+[0] https://lore.kernel.org/linux-iommu/B926444035E5E2439431908E3842AFD24B86DB@DGGEMI525-MBS.china.huawei.com/T/#ma02e301c38c3e94b7725e685757c27e39c7cbde3
+
+John Garry (4):
+  iommu/arm-smmu-v3: Fix trivial typo
+  iommu/arm-smmu-v3: Calculate bits for prod and owner
+  iommu/arm-smmu-v3: Always issue a CMD_SYNC per batch
+  iommu/arm-smmu-v3: Remove cmpxchg() in arm_smmu_cmdq_issue_cmdlist()
+
+ drivers/iommu/arm-smmu-v3.c | 210 ++++++++++++++++++++++--------------
+ 1 file changed, 131 insertions(+), 79 deletions(-)
+
+-- 
+2.26.2
+
