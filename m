@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98856C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0A1214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB025208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322144;
-	bh=djLqvwOIRLMfyQA3QMmRQ5njsQ6BvC6f0GfJ1VSuINc=;
+	s=default; t=1592322153;
+	bh=XzVd0lZiloehEKPbTGLt3ZQh1nAHtnKqZP4nBXUXmCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/zgXk8+tLgNlJJKeFewFLi6/XBpw14O59EAXekaXbeR12/wTMcLAWxPYeg0WYRcV
-	 QIUjjHFqvOdMXd6pgKyAOJg0olG18DJ1NHJjlN+nvJ+uXsGFQ5MJXZafvSwksMqmty
-	 JSR7yRQfkD7kU5de63QO3WHuvEBveEx7ipjbHp+E=
+	b=ERaqcTsNlg1iNbpDCpyrQFQ3D9lPUqiOuBzWjnp5W9z6jjuAaAZ8sh5D6VEQRjtw+
+	 lpzFx6mX0qGZ7UMhyDAUBmJvnXWUafJwvbdwsVemxKc8JCpcTnQroKi1tbuO++SFJh
+	 fPDNuOwlozdKjqqWcxPpr8aiXd7ab3dWnSM4A34s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbgFPPmW (ORCPT
+        id S1731671AbgFPPmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58692 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:42:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731635AbgFPPmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:14 -0400
+        id S1730841AbgFPPmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8154E214DB;
-        Tue, 16 Jun 2020 15:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2DAC20C56;
+        Tue, 16 Jun 2020 15:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322134;
-        bh=djLqvwOIRLMfyQA3QMmRQ5njsQ6BvC6f0GfJ1VSuINc=;
+        s=default; t=1592322139;
+        bh=XzVd0lZiloehEKPbTGLt3ZQh1nAHtnKqZP4nBXUXmCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xn7Ktcl/aUw2au+U95jtXDBIjucxuLttWyvDJD0ThUKreQH/U2iAD18PsQEhaNHAb
-         IKoKJig8o/YRYlvNmfdrkJXDdRft1dQ+a7EQtbKpAYHhh1ExrvqdiHiPg5c6MYjGTP
-         Pgp/nHMDBgQEdJkAg9bL6eILcDr3D6hkUewzmbGw=
+        b=M8SpbazFH2osbO62Lb/fnMwXS3x1nlDTYbNTtm9NL/6OQbnNaE8kmUWOV11MGD8l1
+         ekl0H1UuuGCL0b1Q8BOZUIR5rqF5Tt3WMdxQ7gYbkg7DXIW3spprT6U0L1Udwcqxrq
+         V9jrJYtdt893DoCnaJJJn6qQPOkoOgU+MPIjgADY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 014/163] staging: mt7621-pci: properly power off dual-ported pcie phy
-Date:   Tue, 16 Jun 2020 17:33:08 +0200
-Message-Id: <20200616153107.558370601@linuxfoundation.org>
+Subject: [PATCH 5.7 016/163] selftests: fix flower parent qdisc
+Date:   Tue, 16 Jun 2020 17:33:10 +0200
+Message-Id: <20200616153107.656460940@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,73 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit 5fcded5e857cf66c9592e4be28c4dab4520c9177 ]
+[ Upstream commit 0531b0357ba37464e5c0033e1b7c69bbf5ecd8fb ]
 
-Pcie phy for pcie0 and pcie1 is shared using a dual ported
-one. Current code was assuming that if nothing is connected
-in pcie0 it won't be also nothing connected in pcie1. This
-assumtion is wrong for some devices such us 'Mikrotik rbm33g'
-and 'ZyXEL LTE3301-PLUS' where only connecting a card to the
-second bus on the phy is possible. For such devices kernel
-hangs in the same point because of the wrong poweroff of the
-phy getting the following trace:
+Flower tests used to create ingress filter with specified parent qdisc
+"parent ffff:" but dump them on "ingress". With recent commit that fixed
+tcm_parent handling in dump those are not considered same parent anymore,
+which causes iproute2 tc to emit additional "parent ffff:" in first line of
+filter dump output. The change in output causes filter match in tests to
+fail.
 
-mt7621-pci-phy 1e149000.pcie-phy: PHY for 0xbe149000 (dual port = 1)
-mt7621-pci-phy 1e14a000.pcie-phy: PHY for 0xbe14a000 (dual port = 0)
-mt7621-pci-phy 1e149000.pcie-phy: Xtal is 40MHz
-mt7621-pci-phy 1e14a000.pcie-phy: Xtal is 40MHz
-mt7621-pci 1e140000.pcie: pcie0 no card, disable it (RST & CLK)
-[hangs]
+Prevent parent qdisc output when dumping filters in flower tests by always
+correctly specifying "ingress" parent both when creating and dumping
+filters.
 
-The wrong assumption is located in the 'mt7621_pcie_init_ports'
-function where we are just making a power off of the phy for
-slots 0 and 2 if nothing is connected in them. Hence, only
-poweroff the phy if nothing is connected in both slot 0 and
-slot 1 avoiding the kernel to hang.
-
-Fixes: 5737cfe87a9c ("staging: mt7621-pci: avoid to poweroff the phy for slot one")
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Link: https://lore.kernel.org/r/20200409111652.30964-1-sergio.paracuellos@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: a7df4870d79b ("net_sched: fix tcm_parent in tc filter dump")
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/mt7621-pci/pci-mt7621.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ .../selftests/tc-testing/tc-tests/filters/tests.json        | 6 +++---
+ tools/testing/selftests/tc-testing/tdc_batch.py             | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/mt7621-pci/pci-mt7621.c b/drivers/staging/mt7621-pci/pci-mt7621.c
-index f58e3a51fc71..b9d460a9c041 100644
---- a/drivers/staging/mt7621-pci/pci-mt7621.c
-+++ b/drivers/staging/mt7621-pci/pci-mt7621.c
-@@ -502,17 +502,25 @@ static void mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
+index 8877f7b2b809..12aa4bc1f6a0 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
+@@ -32,7 +32,7 @@
+         "setup": [
+             "$TC qdisc add dev $DEV2 ingress"
+         ],
+-        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 parent ffff: handle 0xffffffff flower action ok",
++        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 ingress handle 0xffffffff flower action ok",
+         "expExitCode": "0",
+         "verifyCmd": "$TC filter show dev $DEV2 ingress",
+         "matchPattern": "filter protocol ip pref 1 flower.*handle 0xffffffff",
+@@ -77,9 +77,9 @@
+         },
+         "setup": [
+             "$TC qdisc add dev $DEV2 ingress",
+-            "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
++            "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
+         ],
+-        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
++        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
+         "expExitCode": "2",
+         "verifyCmd": "$TC -s filter show dev $DEV2 ingress",
+         "matchPattern": "filter protocol ip pref 1 flower chain 0 handle",
+diff --git a/tools/testing/selftests/tc-testing/tdc_batch.py b/tools/testing/selftests/tc-testing/tdc_batch.py
+index 6a2bd2cf528e..995f66ce43eb 100755
+--- a/tools/testing/selftests/tc-testing/tdc_batch.py
++++ b/tools/testing/selftests/tc-testing/tdc_batch.py
+@@ -72,21 +72,21 @@ mac_prefix = args.mac_prefix
  
- 	mt7621_pcie_reset_ep_deassert(pcie);
+ def format_add_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter add dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter add dev {} {} protocol ip ingress handle {} "
+             " flower {} src_mac {} dst_mac {} action drop {}".format(
+                 device, prio, handle, skip, src_mac, dst_mac, share_action))
  
-+	tmp = NULL;
- 	list_for_each_entry(port, &pcie->ports, list) {
- 		u32 slot = port->slot;
  
- 		if (!mt7621_pcie_port_is_linkup(port)) {
- 			dev_err(dev, "pcie%d no card, disable it (RST & CLK)\n",
- 				slot);
--			if (slot != 1)
--				phy_power_off(port->phy);
- 			mt7621_control_assert(port);
- 			mt7621_pcie_port_clk_disable(port);
- 			port->enabled = false;
-+
-+			if (slot == 0) {
-+				tmp = port;
-+				continue;
-+			}
-+
-+			if (slot == 1 && tmp && !tmp->enabled)
-+				phy_power_off(tmp->phy);
-+
- 		}
- 	}
- }
+ def format_rep_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter replace dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter replace dev {} {} protocol ip ingress handle {} "
+             " flower {} src_mac {} dst_mac {} action drop {}".format(
+                 device, prio, handle, skip, src_mac, dst_mac, share_action))
+ 
+ 
+ def format_del_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter del dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter del dev {} {} protocol ip ingress handle {} "
+             "flower".format(device, prio, handle))
+ 
+ 
 -- 
 2.25.1
 
