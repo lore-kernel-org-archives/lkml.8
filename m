@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03566C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D60DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCBD721532
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE78821527
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322849;
-	bh=31K/xXAjmx9ivj+GVlLUEC+9mIQeg4WPdAZ970qHfUE=;
+	s=default; t=1592322851;
+	bh=gGUmW2DrTIls4lFdQDuM1ToOLsMmr9KRvqtR7zLRIM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W5KkyxSXo+YxZ+ck5uYstUgUKdkx1lH1kU4qPQKGPyLW/C/MOx/6wYqyVSy3krsDN
-	 Iw01d31U/VvebFoU+ONvB4FulVdgyuNbhazPxKsP9Nra91rUmFWsld+mDZpHvdx2mL
-	 AN/7ddWQSzpn9+vf3tXuyRCyukQPMku94Aw35h4w=
+	b=PnCzvMwiOt9rYlZzwWIpV/kKodjqHICrZPBkPc2X/fG3hJmUbUDv3k8XzejR3RXgR
+	 6RLVjdgLTmeqL4ZBYlVr3n/ZCrJTCz4W0I2vZ1hNoStUBTyfxtm614dfWaijrHqqnO
+	 rKqLSTklW8EWFmIjtyzQeTq+0wGNebMhDNm4kO/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732944AbgFPPyI (ORCPT
+        id S1732930AbgFPPyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52848 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:54:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732932AbgFPPyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:01 -0400
+        id S1730565AbgFPPx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAB07208D5;
-        Tue, 16 Jun 2020 15:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7611C21532;
+        Tue, 16 Jun 2020 15:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322841;
-        bh=31K/xXAjmx9ivj+GVlLUEC+9mIQeg4WPdAZ970qHfUE=;
+        s=default; t=1592322836;
+        bh=gGUmW2DrTIls4lFdQDuM1ToOLsMmr9KRvqtR7zLRIM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OqvE5NXRjZMgJci0GPLe5pAKNw8VJvTJd5UttoloAA6mEGg14DYOh8evC3Ln5wn5t
-         d+NRq8Xb5IxfrOOu8s8VKXHug1r1wmiEU1X1TOHBIVrTh6gNvlV1NTf25+yxfFcDzG
-         PS+EtHWSTfN+Oq/jzFp1Xx8njy6bSvOO3JZnzByQ=
+        b=teoIW4z3S/o6yJzjT6OVwCllLfLzWqE4jeGmppAi8dskA8XFUq1mcGuJKsSlEsVn/
+         kQAOPNvi9Wy4guFcxvOccvdikFerHR4B3KCGRtzsu+F4yiecHrscmED0oog0ilMRSd
+         TbTfFJvHEk11MYY+E4Fz98SUyEnmpMAU0r1c5o20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.6 124/161] media: videobuf2-dma-contig: fix bad kfree in vb2_dma_contig_clear_max_seg_size
-Date:   Tue, 16 Jun 2020 17:35:14 +0200
-Message-Id: <20200616153112.270244216@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        kbuild test robot <lkp@intel.com>,
+        Alexey Charkov <alchark@gmail.com>,
+        Paul Mundt <lethal@linux-sh.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.6 122/161] video: vt8500lcdfb: fix fallthrough warning
+Date:   Tue, 16 Jun 2020 17:35:12 +0200
+Message-Id: <20200616153112.171028150@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -62,89 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-commit 0d9668721311607353d4861e6c32afeb272813dc upstream.
+commit 1c49f35e9e9156273124a0cfd38b57f7a7d4828f upstream.
 
-Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform:
-Initialize dma_parms for platform devices") in v5.7-rc5 causes
-vb2_dma_contig_clear_max_seg_size() to kfree memory that was not
-allocated by vb2_dma_contig_set_max_seg_size().
+Fix following warning:
+vt8500lcdfb.c: In function 'vt8500lcd_blank':
+vt8500lcdfb.c:229:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+      if (info->fix.visual == FB_VISUAL_PSEUDOCOLOR ||
+         ^
+vt8500lcdfb.c:233:2: note: here
+     case FB_BLANK_UNBLANK:
+     ^~~~
 
-The assumption in vb2_dma_contig_set_max_seg_size() seems to be that
-dev->dma_parms is always NULL when the driver is probed, and the case
-where dev->dma_parms has bee initialized by someone else than the driver
-(by calling vb2_dma_contig_set_max_seg_size) will cause a failure.
+Adding a simple "fallthrough;" fixed the warning.
+The fix was build tested.
 
-All the current users of these functions are platform devices, which now
-always have dma_parms set by the driver core. To fix the issue for v5.7,
-make vb2_dma_contig_set_max_seg_size() return an error if dma_parms is
-NULL to be on the safe side, and remove the kfree code from
-vb2_dma_contig_clear_max_seg_size().
-
-For v5.8 we should remove the two functions and move the
-dma_set_max_seg_size() calls into the drivers.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for platform devices")
-Cc: stable@vger.kernel.org
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: e41f1a989408 ("fbdev: Implement simple blanking in pseudocolor modes for vt8500lcdfb")
+Cc: Alexey Charkov <alchark@gmail.com>
+Cc: Paul Mundt <lethal@linux-sh.org>
+Cc: <stable@vger.kernel.org> # v2.6.38+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200412202143.GA26948@ravnborg.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/common/videobuf2/videobuf2-dma-contig.c |   20 +-----------------
- include/media/videobuf2-dma-contig.h                  |    2 -
- 2 files changed, 3 insertions(+), 19 deletions(-)
+ drivers/video/fbdev/vt8500lcdfb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-@@ -726,9 +726,8 @@ EXPORT_SYMBOL_GPL(vb2_dma_contig_memops)
- int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
- {
- 	if (!dev->dma_parms) {
--		dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
--		if (!dev->dma_parms)
--			return -ENOMEM;
-+		dev_err(dev, "Failed to set max_seg_size: dma_parms is NULL\n");
-+		return -ENODEV;
- 	}
- 	if (dma_get_max_seg_size(dev) < size)
- 		return dma_set_max_seg_size(dev, size);
-@@ -737,21 +736,6 @@ int vb2_dma_contig_set_max_seg_size(stru
- }
- EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
- 
--/*
-- * vb2_dma_contig_clear_max_seg_size() - release resources for DMA parameters
-- * @dev:	device for configuring DMA parameters
-- *
-- * This function releases resources allocated to configure DMA parameters
-- * (see vb2_dma_contig_set_max_seg_size() function). It should be called from
-- * device drivers on driver remove.
-- */
--void vb2_dma_contig_clear_max_seg_size(struct device *dev)
--{
--	kfree(dev->dma_parms);
--	dev->dma_parms = NULL;
--}
--EXPORT_SYMBOL_GPL(vb2_dma_contig_clear_max_seg_size);
--
- MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
- MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
- MODULE_LICENSE("GPL");
---- a/include/media/videobuf2-dma-contig.h
-+++ b/include/media/videobuf2-dma-contig.h
-@@ -25,7 +25,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2
- }
- 
- int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
--void vb2_dma_contig_clear_max_seg_size(struct device *dev);
-+static inline void vb2_dma_contig_clear_max_seg_size(struct device *dev) { }
- 
- extern const struct vb2_mem_ops vb2_dma_contig_memops;
- 
+--- a/drivers/video/fbdev/vt8500lcdfb.c
++++ b/drivers/video/fbdev/vt8500lcdfb.c
+@@ -230,6 +230,7 @@ static int vt8500lcd_blank(int blank, st
+ 		    info->fix.visual == FB_VISUAL_STATIC_PSEUDOCOLOR)
+ 			for (i = 0; i < 256; i++)
+ 				vt8500lcd_setcolreg(i, 0, 0, 0, 0, info);
++		fallthrough;
+ 	case FB_BLANK_UNBLANK:
+ 		if (info->fix.visual == FB_VISUAL_PSEUDOCOLOR ||
+ 		    info->fix.visual == FB_VISUAL_STATIC_PSEUDOCOLOR)
 
 
