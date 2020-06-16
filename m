@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE67BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51530C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3BB82074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2781E208B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNIctA3M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWwRMzhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgFPGNj (ORCPT
+        id S1727075AbgFPGNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
+        Tue, 16 Jun 2020 02:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgFPGNi (ORCPT
+        with ESMTP id S1725775AbgFPGNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:13:38 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF7FC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:37 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h5so19434889wrc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:37 -0700 (PDT)
+        Tue, 16 Jun 2020 02:13:40 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D64FC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:40 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id c3so19369883wru.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3E9VSoUOLHhugazwFio3UAs9OvlKnm9aFTThDmcTgz8=;
-        b=cNIctA3MdrGgqkHjXnHy0qQc1xxBQx+qOmpE7RSSHODs4sn8NUUnaoWrt4n30dU3Qo
-         FM0gHLp5n1Q8EXgvoXweMhqeNPhZjiRfC66JrAjx5v1YOekeAzTzdOUrLT/lqKkTAmw0
-         BX4lHim+q6T50HbOm0nIdQoRbKHULQ7bVkrNcPYkK0wqCZIadXPvWCgX+slPp/71cymn
-         zyDvVvc7gVc7OXgM2BiW4Z7reWM+Sl3++kO7VN4JTs+SM9VC5qRMpUyQtY46wJAJc3oH
-         r6QXWTb8mlTqLPiSghNHLbl9gS4eacnRTaBF6GQX2iyIhpM4M/P8YeqBBnR4wH4seoJM
-         PN0Q==
+        bh=PgyOLSFJ5bQTfGa08R4nY2HmoLSV39fHTBBBdZJG4Q8=;
+        b=QWwRMzhwppc/FPxcqAQm/jScGR+314vtkifE3g65MHaPfIF1WNZx6NaFulMRzxbZyD
+         aHYWawW8yrjYRN9YzeN8TmSYQ9bSU0nS44OucPxg9tQSs+WfyppYHYZkCE12OVkqLAeG
+         f3/JCaC7Gr25nfdG0aRql3KU/+3xSHB7EpoJ4WVGavbBUzKhq/A8XbTdqD91z1Vlm3Ab
+         T8katPHEeevzalrtdK8vAE/dELIAyjJO5m9NCAGbRxEAl74HbkXPXy56uWAypwhomRjC
+         3FpJGlSkkYsZYrrOXVMAimZ0KxjkQYJ3Ch6ufuVEOt4m/UnXKOZUIN6ShitM2FTgdUye
+         kwiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3E9VSoUOLHhugazwFio3UAs9OvlKnm9aFTThDmcTgz8=;
-        b=P1wSP0tqsFGCn8o9OtRO+d7DxAsRB/GotzihK9V9ZkvlT1YHo0+wbobMNkGSUAHV0j
-         W245Mbcz47UXM3hoqwFEjWrVvaQ0gviqGsRvOoxmOHqd26UxWAI00mewIi2MDmN4NGtH
-         D121kOu2miDBIIZ9d5u91eks7HRmW6f8qMSf8YOqMuDPJanQTNn+kd1nXeCquqi2L2U2
-         oA3t9mou/Inl+9vSO/DE91BfpzhVM0Xt8f6NIKk/ckQAQ46tF+rn5Nl0WWMdsRZQKKHN
-         UxqfDOZcgTm0s2xvIVVYdn1p/hlCIbacmaYXSyW1ZlReS6FRTG9RjIGLeW25JnRxAcxj
-         tNmw==
-X-Gm-Message-State: AOAM531abXAJdctDmg+WYD3vCq4f/uRRD098U/ulTD+mrdJLg3JRWCyT
-        H/70rDYL9FXqAIT2PtdNmrybHNAyt7c=
-X-Google-Smtp-Source: ABdhPJzMixjYzAd4b/oGpgFZ+vrG4UBuUIu70ofxtEW8MzRZI0JFlruwgOtXidiQan5gGKTpKyBU0w==
-X-Received: by 2002:a5d:6750:: with SMTP id l16mr1227350wrw.295.1592288016039;
-        Mon, 15 Jun 2020 23:13:36 -0700 (PDT)
+        bh=PgyOLSFJ5bQTfGa08R4nY2HmoLSV39fHTBBBdZJG4Q8=;
+        b=oh1Fp1ukde+EJ7fW6WS0hLhY1+V/zjQxiCmkHqY/gBA1w1gyN3klLePWtP4PYVtzwv
+         KBG7fNCcQ9+kxQF8i/zmvdGzj8IJzmpwLIletR/f9Y6vc7rBcaSLvMUy6xHMoCno/tFF
+         JNGGiVPxkOd/bjYu9lGLPRshS10Dq6o0VYyCUsoT5syWwZcZtGVOWwP4CX3iiEXN5m43
+         BosznVwWgz6pakZdGhgtCGGUAlwI8qnvtK394pi5QJxgS+2iDRC9BE1NSrmOsaxnpFMG
+         P8JMKTutCJX9WsSXK49w2wkJ8X5w2v9iSwHQHCJNkMTY8n3cIk3ZHgINQWI2w/Q3i4ch
+         qHmg==
+X-Gm-Message-State: AOAM530vVcouW0oU8WEuF2GIDkX2Z63qHrUF/gc0FpjpoOP5ffODvS/l
+        7lm6SzHD1yQs+KYugbZQq0FzjXpiMLk=
+X-Google-Smtp-Source: ABdhPJz4u1Zj8gM7CiUTWZee3eW97HGtlNAe/ziuAOBWK3I8097amQ/gUEJfnNLoiVuebco0cMCw1Q==
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr1226647wrv.174.1592288018068;
+        Mon, 15 Jun 2020 23:13:38 -0700 (PDT)
 Received: from ODED-MAIN.localdomain ([87.71.142.251])
-        by smtp.gmail.com with ESMTPSA id s2sm2354963wmh.15.2020.06.15.23.13.34
+        by smtp.gmail.com with ESMTPSA id s2sm2354963wmh.15.2020.06.15.23.13.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 23:13:35 -0700 (PDT)
+        Mon, 15 Jun 2020 23:13:36 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
 Cc:     gregkh@linuxfoundation.org, Ofir Bitton <obitton@habana.ai>
-Subject: [PATCH 2/7] habanalabs: Use pending CS amount per ASIC
-Date:   Tue, 16 Jun 2020 09:13:22 +0300
-Message-Id: <20200616061327.12006-2-oded.gabbay@gmail.com>
+Subject: [PATCH 3/7] habanalabs: sync stream generic functionality
+Date:   Tue, 16 Jun 2020 09:13:23 +0300
+Message-Id: <20200616061327.12006-3-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200616061327.12006-1-oded.gabbay@gmail.com>
 References: <20200616061327.12006-1-oded.gabbay@gmail.com>
@@ -75,219 +75,379 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ofir Bitton <obitton@habana.ai>
 
-Training schemes requires much more concurrent command submissions than
-inference does. In addition, training command submissions can be completed
-in a non serialized manner. Hence, we add support in which each ASIC will
-be able to configure the amount of concurrent pending command submissions,
-rather than use a predefined amount. This change will enhance performance
-by allowing the user to add more concurrent work without waiting for the
-previous work to be completed.
+Currently sync stream is limited only for external queues. We want to
+remove this constraint by adding a new queue property dedicated for sync
+stream. In addition we move the initialization and reset methods to the
+common code since we can re-use them with slight changes.
 
 Signed-off-by: Ofir Bitton <obitton@habana.ai>
 Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/command_submission.c |  6 ++++--
- drivers/misc/habanalabs/context.c            | 14 +++++++++++---
- drivers/misc/habanalabs/gaudi/gaudi.c        |  2 ++
- drivers/misc/habanalabs/gaudi/gaudiP.h       |  6 ++++++
- drivers/misc/habanalabs/goya/goya.c          |  2 ++
- drivers/misc/habanalabs/goya/goyaP.h         |  6 ++++++
- drivers/misc/habanalabs/habanalabs.h         |  9 +++++----
- drivers/misc/habanalabs/hw_queue.c           |  2 +-
- 8 files changed, 37 insertions(+), 10 deletions(-)
+ drivers/misc/habanalabs/command_submission.c |  6 ++-
+ drivers/misc/habanalabs/gaudi/gaudi.c        | 46 ++-----------------
+ drivers/misc/habanalabs/gaudi/gaudiP.h       |  2 -
+ drivers/misc/habanalabs/goya/goya.c          | 12 -----
+ drivers/misc/habanalabs/habanalabs.h         | 19 ++++++--
+ drivers/misc/habanalabs/hw_queue.c           | 48 ++++++++++++++++++--
+ 6 files changed, 67 insertions(+), 66 deletions(-)
 
 diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index f82974a916c3..e156803f4a99 100644
+index e156803f4a99..7b410bff72e0 100644
 --- a/drivers/misc/habanalabs/command_submission.c
 +++ b/drivers/misc/habanalabs/command_submission.c
-@@ -405,7 +405,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
- 	spin_lock(&ctx->cs_lock);
+@@ -727,6 +727,7 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
+ 	struct hl_cs_job *job;
+ 	struct hl_cs *cs;
+ 	struct hl_cb *cb;
++	enum hl_queue_type q_type;
+ 	u64 *signal_seq_arr = NULL, signal_seq;
+ 	u32 size_to_copy, q_idx, signal_seq_arr_len, cb_size;
+ 	int rc;
+@@ -759,9 +760,10 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
+ 	chunk = &cs_chunk_array[0];
+ 	q_idx = chunk->queue_index;
+ 	hw_queue_prop = &hdev->asic_prop.hw_queues_props[q_idx];
++	q_type = hw_queue_prop->type;
  
- 	cs_cmpl->cs_seq = ctx->cs_sequence;
--	other = ctx->cs_pending[cs_cmpl->cs_seq & (HL_MAX_PENDING_CS - 1)];
-+	other = ctx->cs_pending[cs_cmpl->cs_seq &
-+				(hdev->asic_prop.max_pending_cs - 1)];
- 	if ((other) && (!dma_fence_is_signaled(other))) {
- 		spin_unlock(&ctx->cs_lock);
- 		dev_dbg(hdev->dev,
-@@ -419,7 +420,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
+ 	if ((q_idx >= HL_MAX_QUEUES) ||
+-			(hw_queue_prop->type != QUEUE_TYPE_EXT)) {
++			(!hw_queue_prop->supports_sync_stream)) {
+ 		dev_err(hdev->dev, "Queue index %d is invalid\n", q_idx);
+ 		rc = -EINVAL;
+ 		goto free_cs_chunk_array;
+@@ -858,7 +860,7 @@ static int cs_ioctl_signal_wait(struct hl_fpriv *hpriv, enum hl_cs_type cs_type,
  
- 	cs->sequence = cs_cmpl->cs_seq;
+ 	*cs_seq = cs->sequence;
  
--	ctx->cs_pending[cs_cmpl->cs_seq & (HL_MAX_PENDING_CS - 1)] =
-+	ctx->cs_pending[cs_cmpl->cs_seq &
-+			(hdev->asic_prop.max_pending_cs - 1)] =
- 							&cs_cmpl->base_fence;
- 	ctx->cs_sequence++;
- 
-diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
-index ec92b3506b1f..1b96fefa4a65 100644
---- a/drivers/misc/habanalabs/context.c
-+++ b/drivers/misc/habanalabs/context.c
-@@ -22,9 +22,11 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
- 	 * to this function unless the ref count is 0
- 	 */
- 
--	for (i = 0 ; i < HL_MAX_PENDING_CS ; i++)
-+	for (i = 0 ; i < hdev->asic_prop.max_pending_cs ; i++)
- 		dma_fence_put(ctx->cs_pending[i]);
- 
-+	kfree(ctx->cs_pending);
-+
- 	if (ctx->asid != HL_KERNEL_ASID_ID) {
- 		/* The engines are stopped as there is no executing CS, but the
- 		 * Coresight might be still working by accessing addresses
-@@ -126,6 +128,11 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
- 	spin_lock_init(&ctx->cs_lock);
- 	atomic_set(&ctx->thread_ctx_switch_token, 1);
- 	ctx->thread_ctx_switch_wait_token = 0;
-+	ctx->cs_pending = kcalloc(hdev->asic_prop.max_pending_cs,
-+				sizeof(struct dma_fence *),
-+				GFP_KERNEL);
-+	if (!ctx->cs_pending)
-+		return -ENOMEM;
- 
- 	if (is_kernel_ctx) {
- 		ctx->asid = HL_KERNEL_ASID_ID; /* Kernel driver gets ASID 0 */
-@@ -170,6 +177,7 @@ int hl_ctx_put(struct hl_ctx *ctx)
- 
- struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
- {
-+	struct asic_fixed_properties *asic_prop = &ctx->hdev->asic_prop;
- 	struct dma_fence *fence;
- 
- 	spin_lock(&ctx->cs_lock);
-@@ -179,13 +187,13 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
- 		return ERR_PTR(-EINVAL);
- 	}
- 
--	if (seq + HL_MAX_PENDING_CS < ctx->cs_sequence) {
-+	if (seq + asic_prop->max_pending_cs < ctx->cs_sequence) {
- 		spin_unlock(&ctx->cs_lock);
- 		return NULL;
- 	}
- 
- 	fence = dma_fence_get(
--			ctx->cs_pending[seq & (HL_MAX_PENDING_CS - 1)]);
-+			ctx->cs_pending[seq & (asic_prop->max_pending_cs - 1)]);
- 	spin_unlock(&ctx->cs_lock);
- 
- 	return fence;
+-	job = hl_cs_allocate_job(hdev, QUEUE_TYPE_EXT, true);
++	job = hl_cs_allocate_job(hdev, q_type, true);
+ 	if (!job) {
+ 		dev_err(hdev->dev, "Failed to allocate a new job\n");
+ 		rc = -ENOMEM;
 diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index 4d69727bb53b..35e9080f6976 100644
+index 35e9080f6976..9ce032466243 100644
 --- a/drivers/misc/habanalabs/gaudi/gaudi.c
 +++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -429,6 +429,8 @@ static int gaudi_get_fixed_properties(struct hl_device *hdev)
- 	strncpy(prop->armcp_info.card_name, GAUDI_DEFAULT_CARD_NAME,
- 					CARD_NAME_MAX_LEN);
+@@ -345,10 +345,12 @@ static int gaudi_get_fixed_properties(struct hl_device *hdev)
+ 			prop->hw_queues_props[i].type = QUEUE_TYPE_EXT;
+ 			prop->hw_queues_props[i].driver_only = 0;
+ 			prop->hw_queues_props[i].requires_kernel_cb = 1;
++			prop->hw_queues_props[i].supports_sync_stream = 1;
+ 		} else if (gaudi_queue_type[i] == QUEUE_TYPE_CPU) {
+ 			prop->hw_queues_props[i].type = QUEUE_TYPE_CPU;
+ 			prop->hw_queues_props[i].driver_only = 1;
+ 			prop->hw_queues_props[i].requires_kernel_cb = 0;
++			prop->hw_queues_props[i].supports_sync_stream = 0;
+ 		} else if (gaudi_queue_type[i] == QUEUE_TYPE_INT) {
+ 			prop->hw_queues_props[i].type = QUEUE_TYPE_INT;
+ 			prop->hw_queues_props[i].driver_only = 0;
+@@ -357,6 +359,7 @@ static int gaudi_get_fixed_properties(struct hl_device *hdev)
+ 			prop->hw_queues_props[i].type = QUEUE_TYPE_NA;
+ 			prop->hw_queues_props[i].driver_only = 0;
+ 			prop->hw_queues_props[i].requires_kernel_cb = 0;
++			prop->hw_queues_props[i].supports_sync_stream = 0;
+ 		}
+ 	}
  
-+	prop->max_pending_cs = GAUDI_MAX_PENDING_CS;
-+
- 	return 0;
+@@ -364,7 +367,8 @@ static int gaudi_get_fixed_properties(struct hl_device *hdev)
+ 		prop->hw_queues_props[i].type = QUEUE_TYPE_NA;
+ 
+ 	prop->completion_queues_count = NUMBER_OF_CMPLT_QUEUES;
+-
++	prop->sync_stream_first_sob = 0;
++	prop->sync_stream_first_mon = 0;
+ 	prop->dram_base_address = DRAM_PHYS_BASE;
+ 	prop->dram_size = GAUDI_HBM_SIZE_32GB;
+ 	prop->dram_end_address = prop->dram_base_address +
+@@ -6263,44 +6267,6 @@ static u32 gaudi_get_queue_id_for_cq(struct hl_device *hdev, u32 cq_idx)
+ 	return gaudi_cq_assignment[cq_idx];
  }
  
+-static void gaudi_ext_queue_init(struct hl_device *hdev, u32 q_idx)
+-{
+-	struct gaudi_device *gaudi = hdev->asic_specific;
+-	struct hl_hw_queue *hw_queue = &hdev->kernel_queues[q_idx];
+-	struct hl_hw_sob *hw_sob;
+-	int sob, ext_idx = gaudi->ext_queue_idx++;
+-
+-	/*
+-	 * The external queues might not sit sequentially, hence use the
+-	 * real external queue index for the SOB/MON base id.
+-	 */
+-	hw_queue->base_sob_id = ext_idx * HL_RSVD_SOBS;
+-	hw_queue->base_mon_id = ext_idx * HL_RSVD_MONS;
+-	hw_queue->next_sob_val = 1;
+-	hw_queue->curr_sob_offset = 0;
+-
+-	for (sob = 0 ; sob < HL_RSVD_SOBS ; sob++) {
+-		hw_sob = &hw_queue->hw_sob[sob];
+-		hw_sob->hdev = hdev;
+-		hw_sob->sob_id = hw_queue->base_sob_id + sob;
+-		hw_sob->q_idx = q_idx;
+-		kref_init(&hw_sob->kref);
+-	}
+-}
+-
+-static void gaudi_ext_queue_reset(struct hl_device *hdev, u32 q_idx)
+-{
+-	struct hl_hw_queue *hw_queue = &hdev->kernel_queues[q_idx];
+-
+-	/*
+-	 * In case we got here due to a stuck CS, the refcnt might be bigger
+-	 * than 1 and therefore we reset it.
+-	 */
+-	kref_init(&hw_queue->hw_sob[hw_queue->curr_sob_offset].kref);
+-	hw_queue->curr_sob_offset = 0;
+-	hw_queue->next_sob_val = 1;
+-}
+-
+ static u32 gaudi_get_signal_cb_size(struct hl_device *hdev)
+ {
+ 	return sizeof(struct packet_msg_short) +
+@@ -6603,8 +6569,6 @@ static const struct hl_asic_funcs gaudi_funcs = {
+ 	.read_device_fw_version = gaudi_read_device_fw_version,
+ 	.load_firmware_to_device = gaudi_load_firmware_to_device,
+ 	.load_boot_fit_to_device = gaudi_load_boot_fit_to_device,
+-	.ext_queue_init = gaudi_ext_queue_init,
+-	.ext_queue_reset = gaudi_ext_queue_reset,
+ 	.get_signal_cb_size = gaudi_get_signal_cb_size,
+ 	.get_wait_cb_size = gaudi_get_wait_cb_size,
+ 	.gen_signal_cb = gaudi_gen_signal_cb,
 diff --git a/drivers/misc/habanalabs/gaudi/gaudiP.h b/drivers/misc/habanalabs/gaudi/gaudiP.h
-index a46530d375fa..76c3f840e05a 100644
+index 76c3f840e05a..8c654711d543 100644
 --- a/drivers/misc/habanalabs/gaudi/gaudiP.h
 +++ b/drivers/misc/habanalabs/gaudi/gaudiP.h
-@@ -57,6 +57,12 @@
+@@ -234,7 +234,6 @@ struct gaudi_internal_qman_info {
+  *                      engine.
+  * @multi_msi_mode: whether we are working in multi MSI single MSI mode.
+  *                  Multi MSI is possible only with IOMMU enabled.
+- * @ext_queue_idx: helper index for external queues initialization.
+  */
+ struct gaudi_device {
+ 	int (*armcp_info_get)(struct hl_device *hdev);
+@@ -253,7 +252,6 @@ struct gaudi_device {
+ 	u32				events_stat_aggregate[GAUDI_EVENT_SIZE];
+ 	u32				hw_cap_initialized;
+ 	u8				multi_msi_mode;
+-	u8				ext_queue_idx;
+ };
  
- #define GAUDI_DEFAULT_CARD_NAME		"HL2000"
- 
-+#define GAUDI_MAX_PENDING_CS		1024
-+
-+#if !IS_MAX_PENDING_CS_VALID(GAUDI_MAX_PENDING_CS)
-+#error "GAUDI_MAX_PENDING_CS must be power of 2 and greater than 1"
-+#endif
-+
- #define PCI_DMA_NUMBER_OF_CHNLS		3
- #define HBM_DMA_NUMBER_OF_CHNLS		5
- #define DMA_NUMBER_OF_CHNLS		(PCI_DMA_NUMBER_OF_CHNLS + \
+ void gaudi_init_security(struct hl_device *hdev);
 diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 0d2952bb58df..e872099a3f7a 100644
+index e872099a3f7a..547fd766667a 100644
 --- a/drivers/misc/habanalabs/goya/goya.c
 +++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -426,6 +426,8 @@ void goya_get_fixed_properties(struct hl_device *hdev)
- 
- 	strncpy(prop->armcp_info.card_name, GOYA_DEFAULT_CARD_NAME,
- 		CARD_NAME_MAX_LEN);
-+
-+	prop->max_pending_cs = GOYA_MAX_PENDING_CS;
+@@ -5160,16 +5160,6 @@ u32 goya_get_queue_id_for_cq(struct hl_device *hdev, u32 cq_idx)
+ 	return cq_idx;
  }
  
- /*
-diff --git a/drivers/misc/habanalabs/goya/goyaP.h b/drivers/misc/habanalabs/goya/goyaP.h
-index d36f8d90c9c9..9d8a1761252d 100644
---- a/drivers/misc/habanalabs/goya/goyaP.h
-+++ b/drivers/misc/habanalabs/goya/goyaP.h
-@@ -57,6 +57,12 @@
- 
- #define GOYA_DEFAULT_CARD_NAME		"HL1000"
- 
-+#define GOYA_MAX_PENDING_CS		64
-+
-+#if !IS_MAX_PENDING_CS_VALID(GOYA_MAX_PENDING_CS)
-+#error "GOYA_MAX_PENDING_CS must be power of 2 and greater than 1"
-+#endif
-+
- /* DRAM Memory Map */
- 
- #define CPU_FW_IMAGE_SIZE		0x10000000	/* 256MB */
+-static void goya_ext_queue_init(struct hl_device *hdev, u32 q_idx)
+-{
+-
+-}
+-
+-static void goya_ext_queue_reset(struct hl_device *hdev, u32 q_idx)
+-{
+-
+-}
+-
+ static u32 goya_get_signal_cb_size(struct hl_device *hdev)
+ {
+ 	return 0;
+@@ -5283,8 +5273,6 @@ static const struct hl_asic_funcs goya_funcs = {
+ 	.read_device_fw_version = goya_read_device_fw_version,
+ 	.load_firmware_to_device = goya_load_firmware_to_device,
+ 	.load_boot_fit_to_device = goya_load_boot_fit_to_device,
+-	.ext_queue_init = goya_ext_queue_init,
+-	.ext_queue_reset = goya_ext_queue_reset,
+ 	.get_signal_cb_size = goya_get_signal_cb_size,
+ 	.get_wait_cb_size = goya_get_wait_cb_size,
+ 	.gen_signal_cb = goya_gen_signal_cb,
 diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 1ecdcf8b763a..64d9b2dd3e19 100644
+index 64d9b2dd3e19..8cd4b55d0608 100644
 --- a/drivers/misc/habanalabs/habanalabs.h
 +++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -42,9 +42,6 @@
+@@ -50,6 +50,10 @@
+ /* MMU */
+ #define MMU_HASH_TABLE_BITS		7 /* 1 << 7 buckets */
  
- #define HL_MAX_QUEUES			128
++/*
++ * HL_RSVD_SOBS 'sync stream' reserved sync objects per QMAN stream
++ * HL_RSVD_MONS 'sync stream' reserved monitors per QMAN stream
++ */
+ #define HL_RSVD_SOBS			4
+ #define HL_RSVD_MONS			2
  
--/* MUST BE POWER OF 2 and larger than 1 */
--#define HL_MAX_PENDING_CS		64
--
- #define HL_IDLE_BUSY_TS_ARR_SIZE	4096
+@@ -141,11 +145,13 @@ struct hl_hw_sob {
+  *               false otherwise.
+  * @requires_kernel_cb: true if a CB handle must be provided for jobs on this
+  *                      queue, false otherwise (a CB address must be provided).
++ * @supports_sync_stream: True if queue supports sync stream
+  */
+ struct hw_queue_properties {
+ 	enum hl_queue_type	type;
+ 	u8			driver_only;
+ 	u8			requires_kernel_cb;
++	u8			supports_sync_stream;
+ };
  
- /* Memory */
-@@ -61,6 +58,9 @@
- 
- #define HL_MAX_SOB_VAL			(1 << 15)
- 
-+#define IS_POWER_OF_2(n)		(n != 0 && ((n & (n - 1)) == 0))
-+#define IS_MAX_PENDING_CS_VALID(n)	(IS_POWER_OF_2(n) && (n > 1))
-+
  /**
-  * struct pgt_info - MMU hop page info.
-  * @node: hash linked-list node for the pgts shadow hash of pgts.
-@@ -285,6 +285,7 @@ struct asic_fixed_properties {
- 	u32				high_pll;
+@@ -245,6 +251,9 @@ struct hl_mmu_properties {
+  * @cb_pool_cb_cnt: number of CBs in the CB pool.
+  * @cb_pool_cb_size: size of each CB in the CB pool.
+  * @tpc_enabled_mask: which TPCs are enabled.
++ * @sync_stream_first_sob: first sync object available for sync stream use
++ * @sync_stream_first_mon: first monitor available for sync stream use
++ * @tpc_enabled_mask: which TPCs are enabled.
+  * @completion_queues_count: number of completion queues.
+  */
+ struct asic_fixed_properties {
+@@ -286,6 +295,8 @@ struct asic_fixed_properties {
  	u32				cb_pool_cb_cnt;
  	u32				cb_pool_cb_size;
-+	u32				max_pending_cs;
+ 	u32				max_pending_cs;
++	u16				sync_stream_first_sob;
++	u16				sync_stream_first_mon;
  	u8				tpc_enabled_mask;
  	u8				completion_queues_count;
  };
-@@ -782,7 +783,7 @@ struct hl_ctx {
- 	struct hl_fpriv		*hpriv;
- 	struct hl_device	*hdev;
- 	struct kref		refcount;
--	struct dma_fence	*cs_pending[HL_MAX_PENDING_CS];
-+	struct dma_fence	**cs_pending;
- 	struct hl_va_range	*host_va_range;
- 	struct hl_va_range	*host_huge_va_range;
- 	struct hl_va_range	*dram_va_range;
+@@ -423,6 +434,7 @@ struct hl_cs_job;
+  *         exist).
+  * @curr_sob_offset: the id offset to the currently used SOB from the
+  *                   HL_RSVD_SOBS that are being used by this queue.
++ * @supports_sync_stream: True if queue supports sync stream
+  */
+ struct hl_hw_queue {
+ 	struct hl_hw_sob	hw_sob[HL_RSVD_SOBS];
+@@ -441,6 +453,7 @@ struct hl_hw_queue {
+ 	u16			base_mon_id;
+ 	u8			valid;
+ 	u8			curr_sob_offset;
++	u8			supports_sync_stream;
+ };
+ 
+ /**
+@@ -603,8 +616,6 @@ enum hl_pll_frequency {
+  *                          contained in registers
+  * @load_firmware_to_device: load the firmware to the device's memory
+  * @load_boot_fit_to_device: load boot fit to device's memory
+- * @ext_queue_init: Initialize the given external queue.
+- * @ext_queue_reset: Reset the given external queue.
+  * @get_signal_cb_size: Get signal CB size.
+  * @get_wait_cb_size: Get wait CB size.
+  * @gen_signal_cb: Generate a signal CB.
+@@ -707,8 +718,6 @@ struct hl_asic_funcs {
+ 					enum hl_fw_component fwc);
+ 	int (*load_firmware_to_device)(struct hl_device *hdev);
+ 	int (*load_boot_fit_to_device)(struct hl_device *hdev);
+-	void (*ext_queue_init)(struct hl_device *hdev, u32 hw_queue_id);
+-	void (*ext_queue_reset)(struct hl_device *hdev, u32 hw_queue_id);
+ 	u32 (*get_signal_cb_size)(struct hl_device *hdev);
+ 	u32 (*get_wait_cb_size)(struct hl_device *hdev);
+ 	void (*gen_signal_cb)(struct hl_device *hdev, void *data, u16 sob_id);
+@@ -1436,6 +1445,7 @@ struct hl_device_idle_busy_ts {
+  * @cdev_sysfs_created: were char devices and sysfs nodes created.
+  * @stop_on_err: true if engines should stop on error.
+  * @supports_sync_stream: is sync stream supported.
++ * @sync_stream_queue_idx: helper index for sync stream queues initialization.
+  * @supports_coresight: is CoreSight supported.
+  * @supports_soft_reset: is soft reset supported.
+  */
+@@ -1523,6 +1533,7 @@ struct hl_device {
+ 	u8				cdev_sysfs_created;
+ 	u8				stop_on_err;
+ 	u8				supports_sync_stream;
++	u8				sync_stream_queue_idx;
+ 	u8				supports_coresight;
+ 	u8				supports_soft_reset;
+ 
 diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
-index f4434b39ef1b..29b96d24edc2 100644
+index 29b96d24edc2..a8fa8021c617 100644
 --- a/drivers/misc/habanalabs/hw_queue.c
 +++ b/drivers/misc/habanalabs/hw_queue.c
-@@ -376,7 +376,7 @@ static void hw_queue_schedule_job(struct hl_cs_job *job)
- 	 * write address offset in the SM block (QMAN LBW message).
- 	 * The write address offset is calculated as "COMP_OFFSET << 2".
- 	 */
--	offset = job->cs->sequence & (HL_MAX_PENDING_CS - 1);
-+	offset = job->cs->sequence & (hdev->asic_prop.max_pending_cs - 1);
- 	ctl = ((offset << BD_CTL_COMP_OFFSET_SHIFT) & BD_CTL_COMP_OFFSET_MASK) |
- 		((q->pi << BD_CTL_COMP_DATA_SHIFT) & BD_CTL_COMP_DATA_MASK);
+@@ -663,9 +663,6 @@ static int ext_and_cpu_queue_init(struct hl_device *hdev, struct hl_hw_queue *q,
+ 	q->ci = 0;
+ 	q->pi = 0;
  
+-	if (!is_cpu_queue)
+-		hdev->asic_funcs->ext_queue_init(hdev, q->hw_queue_id);
+-
+ 	return 0;
+ 
+ free_queue:
+@@ -732,6 +729,42 @@ static int hw_queue_init(struct hl_device *hdev, struct hl_hw_queue *q)
+ 	return 0;
+ }
+ 
++static void sync_stream_queue_init(struct hl_device *hdev, u32 q_idx)
++{
++	struct hl_hw_queue *hw_queue = &hdev->kernel_queues[q_idx];
++	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	struct hl_hw_sob *hw_sob;
++	int sob, queue_idx = hdev->sync_stream_queue_idx++;
++
++	hw_queue->base_sob_id =
++		prop->sync_stream_first_sob + queue_idx * HL_RSVD_SOBS;
++	hw_queue->base_mon_id =
++		prop->sync_stream_first_mon + queue_idx * HL_RSVD_MONS;
++	hw_queue->next_sob_val = 1;
++	hw_queue->curr_sob_offset = 0;
++
++	for (sob = 0 ; sob < HL_RSVD_SOBS ; sob++) {
++		hw_sob = &hw_queue->hw_sob[sob];
++		hw_sob->hdev = hdev;
++		hw_sob->sob_id = hw_queue->base_sob_id + sob;
++		hw_sob->q_idx = q_idx;
++		kref_init(&hw_sob->kref);
++	}
++}
++
++void sync_stream_queue_reset(struct hl_device *hdev, u32 q_idx)
++{
++	struct hl_hw_queue *hw_queue = &hdev->kernel_queues[q_idx];
++
++	/*
++	 * In case we got here due to a stuck CS, the refcnt might be bigger
++	 * than 1 and therefore we reset it.
++	 */
++	kref_init(&hw_queue->hw_sob[hw_queue->curr_sob_offset].kref);
++	hw_queue->curr_sob_offset = 0;
++	hw_queue->next_sob_val = 1;
++}
++
+ /*
+  * queue_init - main initialization function for H/W queue object
+  *
+@@ -774,6 +807,9 @@ static int queue_init(struct hl_device *hdev, struct hl_hw_queue *q,
+ 		break;
+ 	}
+ 
++	if (q->supports_sync_stream)
++		sync_stream_queue_init(hdev, q->hw_queue_id);
++
+ 	if (rc)
+ 		return rc;
+ 
+@@ -848,6 +884,8 @@ int hl_hw_queues_create(struct hl_device *hdev)
+ 			i < HL_MAX_QUEUES ; i++, q_ready_cnt++, q++) {
+ 
+ 		q->queue_type = asic->hw_queues_props[i].type;
++		q->supports_sync_stream =
++				asic->hw_queues_props[i].supports_sync_stream;
+ 		rc = queue_init(hdev, q, i);
+ 		if (rc) {
+ 			dev_err(hdev->dev,
+@@ -889,7 +927,7 @@ void hl_hw_queue_reset(struct hl_device *hdev, bool hard_reset)
+ 			continue;
+ 		q->pi = q->ci = 0;
+ 
+-		if (q->queue_type == QUEUE_TYPE_EXT)
+-			hdev->asic_funcs->ext_queue_reset(hdev, q->hw_queue_id);
++		if (q->supports_sync_stream)
++			sync_stream_queue_reset(hdev, q->hw_queue_id);
+ 	}
+ }
 -- 
 2.17.1
 
