@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADD11212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0762100A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgFPMXJ (ORCPT
+        id S1729283AbgFPMXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
+        Tue, 16 Jun 2020 08:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729096AbgFPMWQ (ORCPT
+        with ESMTP id S1729067AbgFPMWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:22:16 -0400
+        Tue, 16 Jun 2020 08:22:14 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC51C08C5C2;
-        Tue, 16 Jun 2020 05:22:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C9DC08C5C2;
+        Tue, 16 Jun 2020 05:22:13 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbQ-0004kG-N2; Tue, 16 Jun 2020 14:22:08 +0200
+        id 1jlAbR-0004mO-TR; Tue, 16 Jun 2020 14:22:10 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 433B01C084B;
-        Tue, 16 Jun 2020 14:21:55 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:55 -0000
-From:   "tip-bot2 for Giovanni Gherdovich" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D80271C0857;
+        Tue, 16 Jun 2020 14:21:56 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:56 -0000
+From:   "tip-bot2 for Dietmar Eggemann" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] x86, sched: check for counters overflow in
- frequency invariant accounting
-Cc:     Giovanni Gherdovich <ggherdovich@suse.cz>,
+Subject: [tip: sched/core] sched/pelt: Remove redundant cap_scale() definition
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200531182453.15254-2-ggherdovich@suse.cz>
-References: <20200531182453.15254-2-ggherdovich@suse.cz>
+In-Reply-To: <20200603080304.16548-2-dietmar.eggemann@arm.com>
+References: <20200603080304.16548-2-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
-Message-ID: <159231011503.16989.15104341794896787549.tip-bot2@tip-bot2>
+Message-ID: <159231011668.16989.7990284675684399097.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,137 +60,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     e2b0d619b400ae326f954a018a1d65d736c237c5
-Gitweb:        https://git.kernel.org/tip/e2b0d619b400ae326f954a018a1d65d736c237c5
-Author:        Giovanni Gherdovich <ggherdovich@suse.cz>
-AuthorDate:    Sun, 31 May 2020 20:24:51 +02:00
+Commit-ID:     844eb6458facb09d4871a480d8bda06550927a80
+Gitweb:        https://git.kernel.org/tip/844eb6458facb09d4871a480d8bda06550927a80
+Author:        Dietmar Eggemann <dietmar.eggemann@arm.com>
+AuthorDate:    Wed, 03 Jun 2020 10:03:01 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:02 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:01 +02:00
 
-x86, sched: check for counters overflow in frequency invariant accounting
+sched/pelt: Remove redundant cap_scale() definition
 
-The product mcnt * arch_max_freq_ratio can overflows u64.
+Besides in PELT cap_scale() is used in the Deadline scheduler class for
+scale-invariant bandwidth enforcement.
+Remove the cap_scale() definition in kernel/sched/pelt.c and keep the
+one in kernel/sched/sched.h.
 
-For context, a large value for arch_max_freq_ratio would be 5000,
-corresponding to a turbo_freq/base_freq ratio of 5 (normally it's more like
-1500-2000). A large increment frequency for the MPERF counter would be 5GHz
-(the base clock of all CPUs on the market today is less than that). With
-these figures, a CPU would need to go without a scheduler tick for around 8
-days for the u64 overflow to happen. It is unlikely, but the check is
-warranted.
-
-Under similar conditions, the difference acnt of two consecutive APERF
-readings can overflow as well.
-
-In these circumstances is appropriate to disable frequency invariant
-accounting: the feature relies on measures of the clock frequency done at
-every scheduler tick, which need to be "fresh" to be at all meaningful.
-
-A note on i386: prior to version 5.1, the GCC compiler didn't have the
-builtin function __builtin_mul_overflow. In these GCC versions the macro
-check_mul_overflow needs __udivdi3() to do (u64)a/b, which the kernel
-doesn't provide. For this reason this change fails to build on i386 if
-GCC<5.1, and we protect the entire frequency invariant code behind
-CONFIG_X86_64 (special thanks to "kbuild test robot" <lkp@intel.com>).
-
-Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
-Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lkml.kernel.org/r/20200531182453.15254-2-ggherdovich@suse.cz
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20200603080304.16548-2-dietmar.eggemann@arm.com
 ---
- arch/x86/include/asm/topology.h |  2 +-
- arch/x86/kernel/smpboot.c       | 33 +++++++++++++++++++++++++++-----
- 2 files changed, 29 insertions(+), 6 deletions(-)
+ kernel/sched/pelt.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 79d8d54..f423457 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -193,7 +193,7 @@ static inline void sched_clear_itmt_support(void)
+diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+index b4b1ff9..dea5567 100644
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -83,8 +83,6 @@ static u32 __accumulate_pelt_segments(u64 periods, u32 d1, u32 d3)
+ 	return c1 + c2 + c3;
  }
- #endif /* CONFIG_SCHED_MC_PRIO */
  
--#ifdef CONFIG_SMP
-+#if defined(CONFIG_SMP) && defined(CONFIG_X86_64)
- #include <asm/cpufeature.h>
- 
- DECLARE_STATIC_KEY_FALSE(arch_scale_freq_key);
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index ffbd9a3..18d292f 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -56,6 +56,7 @@
- #include <linux/cpuidle.h>
- #include <linux/numa.h>
- #include <linux/pgtable.h>
-+#include <linux/overflow.h>
- 
- #include <asm/acpi.h>
- #include <asm/desc.h>
-@@ -1777,6 +1778,7 @@ void native_play_dead(void)
- 
- #endif
- 
-+#ifdef CONFIG_X86_64
+-#define cap_scale(v, s) ((v)*(s) >> SCHED_CAPACITY_SHIFT)
+-
  /*
-  * APERF/MPERF frequency ratio computation.
-  *
-@@ -2048,11 +2050,19 @@ static void init_freq_invariance(bool secondary)
- 	}
- }
- 
-+static void disable_freq_invariance_workfn(struct work_struct *work)
-+{
-+	static_branch_disable(&arch_scale_freq_key);
-+}
-+
-+static DECLARE_WORK(disable_freq_invariance_work,
-+		    disable_freq_invariance_workfn);
-+
- DEFINE_PER_CPU(unsigned long, arch_freq_scale) = SCHED_CAPACITY_SCALE;
- 
- void arch_scale_freq_tick(void)
- {
--	u64 freq_scale;
-+	u64 freq_scale = SCHED_CAPACITY_SCALE;
- 	u64 aperf, mperf;
- 	u64 acnt, mcnt;
- 
-@@ -2064,19 +2074,32 @@ void arch_scale_freq_tick(void)
- 
- 	acnt = aperf - this_cpu_read(arch_prev_aperf);
- 	mcnt = mperf - this_cpu_read(arch_prev_mperf);
--	if (!mcnt)
--		return;
- 
- 	this_cpu_write(arch_prev_aperf, aperf);
- 	this_cpu_write(arch_prev_mperf, mperf);
- 
--	acnt <<= 2*SCHED_CAPACITY_SHIFT;
--	mcnt *= arch_max_freq_ratio;
-+	if (check_shl_overflow(acnt, 2*SCHED_CAPACITY_SHIFT, &acnt))
-+		goto error;
-+
-+	if (check_mul_overflow(mcnt, arch_max_freq_ratio, &mcnt) || !mcnt)
-+		goto error;
- 
- 	freq_scale = div64_u64(acnt, mcnt);
-+	if (!freq_scale)
-+		goto error;
- 
- 	if (freq_scale > SCHED_CAPACITY_SCALE)
- 		freq_scale = SCHED_CAPACITY_SCALE;
- 
- 	this_cpu_write(arch_freq_scale, freq_scale);
-+	return;
-+
-+error:
-+	pr_warn("Scheduler frequency invariance went wobbly, disabling!\n");
-+	schedule_work(&disable_freq_invariance_work);
-+}
-+#else
-+static inline void init_freq_invariance(bool secondary)
-+{
- }
-+#endif /* CONFIG_X86_64 */
+  * Accumulate the three separate parts of the sum; d1 the remainder
+  * of the last (incomplete) period, d2 the span of full periods and d3
