@@ -2,213 +2,197 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48938C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D0420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2375D20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:42:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="N4lBkcJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgFPHlz (ORCPT
+        id S1726786AbgFPHmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:41:55 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:41428 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgFPHlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:41:52 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B92C1A05F8;
-        Tue, 16 Jun 2020 09:41:50 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B7B011A16D6;
-        Tue, 16 Jun 2020 09:41:44 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 043F84030D;
-        Tue, 16 Jun 2020 15:41:37 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ASoC: fsl-asoc-card: Add MQS support
-Date:   Tue, 16 Jun 2020 15:30:37 +0800
-Message-Id: <1592292637-25734-2-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592292637-25734-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1592292637-25734-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 16 Jun 2020 03:42:25 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:4292 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgFPHmV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 03:42:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1592293340; x=1623829340;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=BbAExRFRfMg+90dvctRpnkPL9WeMbxW5TouiucAxE2c=;
+  b=N4lBkcJHYL4Fkz3iamLC2iIFDVlLZgiYEeIzXp1ZKJNHhkGxT9OsRG7p
+   gow70ph3sqioOAUOOVmmR1YP5S8cqCzlQidY3Ciq/dvDbbWLQBsTqmhio
+   J8QcpK6Q9iqWjGrjgKS/T0vTl9t6x1AFuRO9GMBGzKh/+PrWgU+leAFHo
+   0=;
+IronPort-SDR: r2JyEaD1QuXScvjNdy4c2bI77Be29uPWBV9SHiMWSVtM/TDe/tfZK/jcEf07CedA9KI7vJFTHq
+ tzxVH/C7i+dg==
+X-IronPort-AV: E=Sophos;i="5.73,518,1583193600"; 
+   d="scan'208";a="36514975"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 16 Jun 2020 07:42:15 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (Postfix) with ESMTPS id 06CB4A18EB;
+        Tue, 16 Jun 2020 07:42:03 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 16 Jun 2020 07:42:03 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.248) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 16 Jun 2020 07:41:35 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <david@redhat.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v12 5/8] mm/damon/schemes: Implement statistics feature
+Date:   Tue, 16 Jun 2020 09:38:25 +0200
+Message-ID: <20200616073828.16509-6-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200616073828.16509-1-sjpark@amazon.com>
+References: <20200616073828.16509-1-sjpark@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.248]
+X-ClientProxiedBy: EX13D22UWC004.ant.amazon.com (10.43.162.198) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MQS codec isn't an i2c device, so add a new platform device for it.
+From: SeongJae Park <sjpark@amazon.de>
 
-MQS only support playback, so add a new audio map.
+To tune the DAMON-based operation schemes, knowing how many and how
+large regions are affected by each of the schemes will be helful.  Those
+stats could be used for not only the tuning, but also monitoring of the
+working set size and the number of regions, if the scheme does not
+change the program behavior too much.
 
-Add there maybe "model" property or no "audio-routing" property in
-devicetree, so add some enhancement for these two property.
+For the reason, this commit implements the statistics for the schemes.
+The total number and size of the regions that each scheme is applied are
+exported to users via '->stat_count' and '->stat_sz' of 'struct damos'.
+Admins can also check the number by reading 'schemes' debugfs file.  The
+last two integers now represents the stats.  To allow collecting the
+stats without changing the program behavior, this commit also adds new
+scheme action, 'DAMOS_STAT'.  Note that 'DAMOS_STAT' is not only making
+no memory operation actions, but also does not reset the age of regions.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 70 ++++++++++++++++++++++++++---------
- 1 file changed, 52 insertions(+), 18 deletions(-)
+ include/linux/damon.h |  6 ++++++
+ mm/damon.c            | 13 ++++++++++---
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 00be73900888..2ac8cb9ddd10 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -119,6 +119,13 @@ static const struct snd_soc_dapm_route audio_map_ac97[] = {
- 	{"ASRC-Capture",  NULL, "AC97 Capture"},
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index 928cda0ed509..076852bab7aa 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -73,6 +73,7 @@ struct damon_task {
+  * @DAMOS_PAGEOUT:	Call ``madvise()`` for the region with MADV_PAGEOUT.
+  * @DAMOS_HUGEPAGE:	Call ``madvise()`` for the region with MADV_HUGEPAGE.
+  * @DAMOS_NOHUGEPAGE:	Call ``madvise()`` for the region with MADV_NOHUGEPAGE.
++ * @DAMOS_STAT:		Do nothing but count the stat.
+  * @DAMOS_ACTION_LEN:	Number of supported actions.
+  */
+ enum damos_action {
+@@ -81,6 +82,7 @@ enum damos_action {
+ 	DAMOS_PAGEOUT,
+ 	DAMOS_HUGEPAGE,
+ 	DAMOS_NOHUGEPAGE,
++	DAMOS_STAT,		/* Do nothing but only record the stat */
+ 	DAMOS_ACTION_LEN,
  };
  
-+static const struct snd_soc_dapm_route audio_map_tx[] = {
-+	/* 1st half -- Normal DAPM routes */
-+	{"Playback",  NULL, "CPU-Playback"},
-+	/* 2nd half -- ASRC DAPM routes */
-+	{"CPU-Playback",  NULL, "ASRC-Playback"},
-+};
-+
- /* Add all possible widgets into here without being redundant */
- static const struct snd_soc_dapm_widget fsl_asoc_card_dapm_widgets[] = {
- 	SND_SOC_DAPM_LINE("Line Out Jack", NULL),
-@@ -482,6 +489,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- {
- 	struct device_node *cpu_np, *codec_np, *asrc_np;
- 	struct device_node *np = pdev->dev.of_node;
-+	struct platform_device *codec_pdev = NULL; /* used for non i2c device*/
- 	struct platform_device *asrc_pdev = NULL;
- 	struct platform_device *cpu_pdev;
- 	struct fsl_asoc_card_priv *priv;
-@@ -512,10 +520,13 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	}
- 
- 	codec_np = of_parse_phandle(np, "audio-codec", 0);
--	if (codec_np)
-+	if (codec_np) {
- 		codec_dev = of_find_i2c_device_by_node(codec_np);
--	else
-+		if (!codec_dev)
-+			codec_pdev = of_find_device_by_node(codec_np);
-+	} else {
- 		codec_dev = NULL;
-+	}
- 
- 	asrc_np = of_parse_phandle(np, "audio-asrc", 0);
- 	if (asrc_np)
-@@ -525,6 +536,13 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	if (codec_dev) {
- 		struct clk *codec_clk = clk_get(&codec_dev->dev, NULL);
- 
-+		if (!IS_ERR(codec_clk)) {
-+			priv->codec_priv.mclk_freq = clk_get_rate(codec_clk);
-+			clk_put(codec_clk);
-+		}
-+	} else if (codec_pdev) {
-+		struct clk *codec_clk = clk_get(&codec_pdev->dev, NULL);
-+
- 		if (!IS_ERR(codec_clk)) {
- 			priv->codec_priv.mclk_freq = clk_get_rate(codec_clk);
- 			clk_put(codec_clk);
-@@ -538,6 +556,11 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	/* Assign a default DAI format, and allow each card to overwrite it */
- 	priv->dai_fmt = DAI_FMT_BASE;
- 
-+	memcpy(priv->dai_link, fsl_asoc_card_dai,
-+	       sizeof(struct snd_soc_dai_link) * ARRAY_SIZE(priv->dai_link));
-+
-+	priv->card.dapm_routes = audio_map;
-+	priv->card.num_dapm_routes = ARRAY_SIZE(audio_map);
- 	/* Diversify the card configurations */
- 	if (of_device_is_compatible(np, "fsl,imx-audio-cs42888")) {
- 		codec_dai_name = "cs42888";
-@@ -573,13 +596,25 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		codec_dai_name = "ac97-hifi";
- 		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt = SND_SOC_DAIFMT_AC97;
-+		priv->card.dapm_routes = audio_map_ac97;
-+		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_ac97);
-+	} else if (of_device_is_compatible(np, "fsl,imx-audio-mqs")) {
-+		codec_dai_name = "fsl-mqs-dai";
-+		priv->card.set_bias_level = NULL;
-+		priv->dai_fmt = SND_SOC_DAIFMT_LEFT_J |
-+				SND_SOC_DAIFMT_CBS_CFS |
-+				SND_SOC_DAIFMT_NB_NF;
-+		priv->dai_link[1].dpcm_playback = 1;
-+		priv->dai_link[2].dpcm_playback = 1;
-+		priv->card.dapm_routes = audio_map_tx;
-+		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_tx);
- 	} else {
- 		dev_err(&pdev->dev, "unknown Device Tree compatible\n");
- 		ret = -EINVAL;
- 		goto asrc_fail;
- 	}
- 
--	if (!fsl_asoc_card_is_ac97(priv) && !codec_dev) {
-+	if (!fsl_asoc_card_is_ac97(priv) && !codec_dev && !codec_pdev) {
- 		dev_err(&pdev->dev, "failed to find codec device\n");
- 		ret = -EPROBE_DEFER;
- 		goto asrc_fail;
-@@ -601,19 +636,18 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->cpu_priv.sysclk_id[0] = FSL_SAI_CLK_MAST1;
- 	}
- 
--	snprintf(priv->name, sizeof(priv->name), "%s-audio",
--		 fsl_asoc_card_is_ac97(priv) ? "ac97" :
--		 codec_dev->name);
--
- 	/* Initialize sound card */
- 	priv->pdev = pdev;
- 	priv->card.dev = &pdev->dev;
--	priv->card.name = priv->name;
-+	ret = snd_soc_of_parse_card_name(&priv->card, "model");
-+	if (ret) {
-+		snprintf(priv->name, sizeof(priv->name), "%s-audio",
-+			 fsl_asoc_card_is_ac97(priv) ? "ac97" :
-+			 (codec_dev ? codec_dev->name : codec_pdev->name));
-+		priv->card.name = priv->name;
-+	}
- 	priv->card.dai_link = priv->dai_link;
--	priv->card.dapm_routes = fsl_asoc_card_is_ac97(priv) ?
--				 audio_map_ac97 : audio_map;
- 	priv->card.late_probe = fsl_asoc_card_late_probe;
--	priv->card.num_dapm_routes = ARRAY_SIZE(audio_map);
- 	priv->card.dapm_widgets = fsl_asoc_card_dapm_widgets;
- 	priv->card.num_dapm_widgets = ARRAY_SIZE(fsl_asoc_card_dapm_widgets);
- 
-@@ -621,13 +655,12 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	if (!asrc_pdev)
- 		priv->card.num_dapm_routes /= 2;
- 
--	memcpy(priv->dai_link, fsl_asoc_card_dai,
--	       sizeof(struct snd_soc_dai_link) * ARRAY_SIZE(priv->dai_link));
--
--	ret = snd_soc_of_parse_audio_routing(&priv->card, "audio-routing");
--	if (ret) {
--		dev_err(&pdev->dev, "failed to parse audio-routing: %d\n", ret);
--		goto asrc_fail;
-+	if (of_property_read_bool(np, "audio-routing")) {
-+		ret = snd_soc_of_parse_audio_routing(&priv->card, "audio-routing");
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to parse audio-routing: %d\n", ret);
-+			goto asrc_fail;
-+		}
- 	}
- 
- 	/* Normal DAI Link */
-@@ -724,6 +757,7 @@ static const struct of_device_id fsl_asoc_card_dt_ids[] = {
- 	{ .compatible = "fsl,imx-audio-sgtl5000", },
- 	{ .compatible = "fsl,imx-audio-wm8962", },
- 	{ .compatible = "fsl,imx-audio-wm8960", },
-+	{ .compatible = "fsl,imx-audio-mqs", },
- 	{}
+@@ -93,6 +95,8 @@ enum damos_action {
+  * @min_age_region:	Minimum age of target regions.
+  * @max_age_region:	Maximum age of target regions.
+  * @action:		&damo_action to be applied to the target regions.
++ * @stat_count:		Total number of regions that this scheme is applied.
++ * @stat_sz:		Total size of regions that this scheme is applied.
+  * @list:		List head for siblings.
+  *
+  * For each aggregation interval, DAMON applies @action to monitoring target
+@@ -107,6 +111,8 @@ struct damos {
+ 	unsigned int min_age_region;
+ 	unsigned int max_age_region;
+ 	enum damos_action action;
++	unsigned long stat_count;
++	unsigned long stat_sz;
+ 	struct list_head list;
  };
- MODULE_DEVICE_TABLE(of, fsl_asoc_card_dt_ids);
+ 
+diff --git a/mm/damon.c b/mm/damon.c
+index f3805e2a7534..5862b60cdea9 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -211,6 +211,8 @@ static struct damos *damon_new_scheme(
+ 	scheme->min_age_region = min_age_region;
+ 	scheme->max_age_region = max_age_region;
+ 	scheme->action = action;
++	scheme->stat_count = 0;
++	scheme->stat_sz = 0;
+ 	INIT_LIST_HEAD(&scheme->list);
+ 
+ 	return scheme;
+@@ -918,6 +920,8 @@ static int damos_do_action(struct damon_task *task, struct damon_region *r,
+ 	case DAMOS_NOHUGEPAGE:
+ 		madv_action = MADV_NOHUGEPAGE;
+ 		break;
++	case DAMOS_STAT:
++		return 0;
+ 	default:
+ 		pr_warn("Wrong action %d\n", action);
+ 		return -EINVAL;
+@@ -945,8 +949,11 @@ static void damon_do_apply_schemes(struct damon_ctx *c, struct damon_task *t,
+ 				(s->max_age_region &&
+ 				 s->max_age_region < r->age))
+ 			continue;
++		s->stat_count++;
++		s->stat_sz += sz;
+ 		damos_do_action(t, r, s->action);
+-		r->age = 0;
++		if (s->action != DAMOS_STAT)
++			r->age = 0;
+ 	}
+ }
+ 
+@@ -1499,11 +1506,11 @@ static ssize_t sprint_schemes(struct damon_ctx *c, char *buf, ssize_t len)
+ 
+ 	damon_for_each_scheme(s, c) {
+ 		rc = snprintf(&buf[written], len - written,
+-				"%u %u %u %u %u %u %d\n",
++				"%u %u %u %u %u %u %d %lu %lu\n",
+ 				s->min_sz_region, s->max_sz_region,
+ 				s->min_nr_accesses, s->max_nr_accesses,
+ 				s->min_age_region, s->max_age_region,
+-				s->action);
++				s->action, s->stat_count, s->stat_sz);
+ 		if (!rc)
+ 			return -ENOMEM;
+ 
 -- 
-2.21.0
+2.17.1
 
