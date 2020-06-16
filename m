@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C02C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2582C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 644CE2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F9B208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323655;
-	bh=Cy0Pcw1eJIo5XdE8jhQZwIHhrSWVtsnsbrsGEpRIzio=;
+	s=default; t=1592323659;
+	bh=kWkYnOgyIZpYVEMaZD7avyMdh028gxcHAOd0VE+Y3yE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jktNSLdq8VeXQXY5uWkr5/1hPW+82s/ZV7UAMYxBIlR4+wcM9+Kov9Dz69+a8NHhb
-	 xla9Q5+50oD3WikkVb/dbBFe/+IxZTB4wv391JV+lSLGy9Z15yfhdX39hgebNSO/U5
-	 O5Uex8CZck9Gn5taYcUm2qL9t+w4ry+2L1qZC+UM=
+	b=x6iIxW1jxq7tew2pMO208e4b9SwTC1QTkk5oZd57ZgjgS6X5VCP1ovVc72AfIcHOM
+	 Mt5bxC9/o4QKcpVx5X0XMTXp9s7PsCLVbxwZpmJJv8QQP8aBUWemIbeNKi6c8TaFR5
+	 6H75Mfw9ej7D8hE0bTC2sunZVKqrRymDa7GbexMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgFPPrD (ORCPT
+        id S1730672AbgFPPrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:47:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731538AbgFPPrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 11:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731887AbgFPPqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9846214DB;
-        Tue, 16 Jun 2020 15:46:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59FCA21475;
+        Tue, 16 Jun 2020 15:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322420;
-        bh=Cy0Pcw1eJIo5XdE8jhQZwIHhrSWVtsnsbrsGEpRIzio=;
+        s=default; t=1592322414;
+        bh=kWkYnOgyIZpYVEMaZD7avyMdh028gxcHAOd0VE+Y3yE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiEPnp7yHmPZeu5VSUCD9zXGpssBw6zGIxklCS4HCcd7+4Ht6bJ1+LNKG8gb5IF5x
-         scRfcI/d2gnKrjb0ZVtsvTH2ysSFaxWFLHWZBEtthL2CQhjfC2lo6sNimXTQJoLB6C
-         ng7blha3TkALEW9mc3LKk83dLtWtVGims1JGf7Ig=
+        b=MPawAMVgEpELnbQG78cNcwWancwPmk0hQdbcAh+BFN8v9w36u7Te6HyQEBp9CSnMb
+         UBh2Jh7KhgVDb4wwhl1mtwr+L++azzz9AfObqWtlfButu0Ffpps+EWwdNe4Mej2Io5
+         p14oNJFLxrUjqeoEZiLMfvnHsQEUB9YjpwFbP6y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        "Longpeng(Mike)" <longpeng2@huawei.com>
-Subject: [PATCH 5.7 094/163] crypto: virtio: Fix use-after-free in virtio_crypto_skcipher_finalize_req()
-Date:   Tue, 16 Jun 2020 17:34:28 +0200
-Message-Id: <20200616153111.334565319@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Stephan Mueller <smueller@chronox.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.7 092/163] crypto: drbg - fix error return code in drbg_alloc_state()
+Date:   Tue, 16 Jun 2020 17:34:26 +0200
+Message-Id: <20200616153111.242763285@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -65,71 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng(Mike) <longpeng2@huawei.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 8c855f0720ff006d75d0a2512c7f6c4f60ff60ee upstream.
+commit e0664ebcea6ac5e16da703409fb4bd61f8cd37d9 upstream.
 
-The system'll crash when the users insmod crypto/tcrypto.ko with mode=155
-( testing "authenc(hmac(sha1),cbc(aes))" ). It's caused by reuse the memory
-of request structure.
+Fix to return negative error code -ENOMEM from the kzalloc error handling
+case instead of 0, as done elsewhere in this function.
 
-In crypto_authenc_init_tfm(), the reqsize is set to:
-  [PART 1] sizeof(authenc_request_ctx) +
-  [PART 2] ictx->reqoff +
-  [PART 3] MAX(ahash part, skcipher part)
-and the 'PART 3' is used by both ahash and skcipher in turn.
-
-When the virtio_crypto driver finish skcipher req, it'll call ->complete
-callback(in crypto_finalize_skcipher_request) and then free its
-resources whose pointers are recorded in 'skcipher parts'.
-
-However, the ->complete is 'crypto_authenc_encrypt_done' in this case,
-it will use the 'ahash part' of the request and change its content,
-so virtio_crypto driver will get the wrong pointer after ->complete
-finish and mistakenly free some other's memory. So the system will crash
-when these memory will be used again.
-
-The resources which need to be cleaned up are not used any more. But the
-pointers of these resources may be changed in the function
-"crypto_finalize_skcipher_request". Thus release specific resources before
-calling this function.
-
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Reported-by: LABBE Corentin <clabbe@baylibre.com>
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
-Acked-by: Gonglei <arei.gonglei@huawei.com>
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-3-longpeng2@huawei.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Fixes: db07cd26ac6a ("crypto: drbg - add FIPS 140-2 CTRNG for noise source")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Reviewed-by: Stephan Mueller <smueller@chronox.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ crypto/drbg.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -578,10 +578,11 @@ static void virtio_crypto_skcipher_final
- 		scatterwalk_map_and_copy(req->iv, req->dst,
- 					 req->cryptlen - AES_BLOCK_SIZE,
- 					 AES_BLOCK_SIZE, 0);
--	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
--					   req, err);
- 	kzfree(vc_sym_req->iv);
- 	virtcrypto_clear_request(&vc_sym_req->base);
-+
-+	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
-+					   req, err);
- }
+--- a/crypto/drbg.c
++++ b/crypto/drbg.c
+@@ -1294,8 +1294,10 @@ static inline int drbg_alloc_state(struc
+ 	if (IS_ENABLED(CONFIG_CRYPTO_FIPS)) {
+ 		drbg->prev = kzalloc(drbg_sec_strength(drbg->core->flags),
+ 				     GFP_KERNEL);
+-		if (!drbg->prev)
++		if (!drbg->prev) {
++			ret = -ENOMEM;
+ 			goto fini;
++		}
+ 		drbg->fips_primed = false;
+ 	}
  
- static struct virtio_crypto_algo virtio_crypto_algs[] = { {
 
 
