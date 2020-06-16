@@ -2,172 +2,92 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4654C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51EE0208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58F620A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592307609;
+	bh=Y0Fm3RODkm2DHPjLeITM6HFypc3h8QJV26AcHv5bUkY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=M93AxRZzCCqnvM8xcSjgdPv57Xio5OJa6jmmKkCb0wY7EYCj9XeXnSVyTP6/elC9S
+	 6TFG9X9CHMQvSU5HP7/Krtz1YepQ1l/3XKjT78hPjmryFWCkJkOn1MaEfwjnGnUyTC
+	 loRklXlN3xSnB14nrr5t9C6eK9/IhXhdOXtEzBlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgFPLer (ORCPT
+        id S1728332AbgFPLkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:34:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54686 "EHLO mx2.suse.de"
+        Tue, 16 Jun 2020 07:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgFPLer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:34:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AE866AFE5;
-        Tue, 16 Jun 2020 11:34:48 +0000 (UTC)
-Date:   Tue, 16 Jun 2020 13:34:43 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     jim.cromie@gmail.com
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v2 13/24] dyndbg: combine flags & mask into a struct, use
- that
-Message-ID: <20200616113443.GB2238@alley>
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-14-jim.cromie@gmail.com>
- <20200615151414.GI31238@alley>
- <CAJfuBxyTsrsyMZFhET3yxM1APobY98ykBLuQ2LEhHKsOYtyjEg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfuBxyTsrsyMZFhET3yxM1APobY98ykBLuQ2LEhHKsOYtyjEg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727969AbgFPLkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 07:40:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDAF5207DD;
+        Tue, 16 Jun 2020 11:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592307607;
+        bh=Y0Fm3RODkm2DHPjLeITM6HFypc3h8QJV26AcHv5bUkY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Qmznpg/6nGtHOwn8ClZFHWnAJl8yE0b6zPA3dcX6mSSRICCkhxf56WKO+f8nPW4Zh
+         jV1IurwJmTZuE24Rg5KW9xF6N3vMBxWEQKSwfCnDeA2LJLyzG0sQpImEPnih7lU42g
+         otM+juCJQ7HC9umbOFMLKCEVbNYBvIfz+BuocTH8=
+Date:   Tue, 16 Jun 2020 12:40:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     alsa-devel@alsa-project.org, timur@kernel.org, tiwai@suse.com,
+        Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com,
+        Shengjiu Wang <shengjiu.wang@nxp.com>, perex@perex.cz,
+        festevam@gmail.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com>
+References: <034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com>
+Subject: Re: [PATCH v3] ASoC: fsl_ssi: Fix bclk calculation for mono channel
+Message-Id: <159230760496.48596.14192060058649440450.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-06-15 23:47:26, jim.cromie@gmail.com wrote:
-> On Mon, Jun 15, 2020 at 9:14 AM Petr Mladek <pmladek@suse.com> wrote:
-> >
-> > On Sat 2020-06-13 09:57:27, Jim Cromie wrote:
-> > > combine flags & mask into a struct, and replace those 2 parameters in
-> > > 3 functions: ddebug_change, ddebug_parse_flags, ddebug_read_flags,
-> > > altering the derefs in them accordingly.
-> > >
-> > > This simplifies the 3 function sigs, preparing for more changes.
-> > > We dont yet need mask from ddebug_read_flags, but will soon.
-> > > ---
-> > >  lib/dynamic_debug.c | 46 +++++++++++++++++++++++----------------------
-> > >  1 file changed, 24 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> > > index 93c627e9c094..8dc073a6e8a4 100644
-> > > --- a/lib/dynamic_debug.c
-> > > +++ b/lib/dynamic_debug.c
-> > > +struct flagsettings {
-> > > +     unsigned int flags;
-> > > +     unsigned int mask;
-> > > +};
-> >
-> > static int ddebug_change(const struct ddebug_query *query,
-> > > -                     unsigned int pflags, unsigned int mask)
-> > > +                      struct flagsettings *mods)
-> >
-> > > -static int ddebug_read_flags(const char *str, unsigned int *flags)
-> > > +static int ddebug_read_flags(const char *str, struct flagsettings *f)
-> >
-> > > -static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
-> > > -                            unsigned int *maskp)
-> > > +static int ddebug_parse_flags(const char *str, struct flagsettings *mods)
-> >
-> > What "mods" stands for, please?
-> >
-> modifying_flags, or modifiers.
-> the original flags & mask bundled together
-> ie the pfmlt in
->    echo +pfmlt > control
-
-Honestly, storing flags and mask is a hack that makes the code
-tricky like hell.
-
-IMHO, it would be much easier to define something like:
-
-struct flags_operation {
-	unsinged int flags;
-	enum flags_operation_type op;
-}
-
-Where the opration would be:
-
-enum flags_operation_type {
-	DD_FLAGS_SET,		/* for '=' */
-	DD_FLAGS_ADD,		/* for '+' */
-	DD_FLAGS_DEL,		/* for '-' */
-	DD_FLAGS_FILTER_MATCH,
-	DD_FLAGS_FILTER_NON_MATCH,
-};
-
-Then you could define
-
-     struct flags_operation fop_change;
-     struct flags_operation fop_filter;
-
-Then you could do in ddebug_change():
-
-	if (fop_filter) {
-		switch(fop_filter->op) {
-			case DD_FLAGS_FILTER_MATCH:
-				if ((dp->flags & fop_filter->flags) != fop_filter->flags)
-					continue;
-				break;
-			case: DD_FLAGS_FILTER_NON_MATCH:
-				if ((dp->flags & fop_filter->flags)
-					continue;
-				break;
-			default:
-				// warn error;
-		}
-	}
-
-	switch (fop_change->op) {
-		case DD_FLAGS_SET:
-			dp->flags = fop_change->flags;
-			break;
-		case DD_FLAGS_ADD:
-			dp->flags |= fop_change->flags;
-			break;
-		case DD_FLAGS_DEL:
-			dp->flgas &= ^(fop_change->flgas);
-			break;
-		default:
-			// error;
-	}
-
-
-It might be more lines. But the bit operations will become straightforward.
-and the code self-explaining,
-
-
-> does the above help ?
-> I could go with modifying_flags
-> keep in mind the name has to suit all + - = operations
+On Tue, 16 Jun 2020 10:53:48 +0800, Shengjiu Wang wrote:
+> For mono channel, SSI will switch to Normal mode.
 > 
-> I'll review all the new names. I recall you didnt like filterflags either,
-> so I wasnt sufficently clear there either.
-> Im mulling a better explanation.
+> In Normal mode and Network mode, the Word Length Control bits
+> control the word length divider in clock generator, which is
+> different with I2S Master mode (the word length is fixed to
+> 32bit), it should be the value of params_width(hw_params).
+> 
+> [...]
 
+Applied to
 
-The above would make the code manageable. Another question is the user
-interface.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-I still wonder if it is worth it.
-What is the motivation for this fitlering?
-Is it requested by users?
-Or is it just a prerequisite for the user-specific filters?
+Thanks!
 
-We need to be really careful. User interface is hard to change
-or remove later.
+[1/1] ASoC: fsl_ssi: Fix bclk calculation for mono channel
+      commit: ed1220df6e666500ebf58c4f2fccc681941646fb
 
-Best Regards,
-Petr
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
