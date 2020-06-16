@@ -2,120 +2,126 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EE3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 575EB2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592349742;
-	bh=Q7XqjDbI5KF1xwlA2pFU0ud6lF4J0reUpw77Uk5OM0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NDwT5G2C3jphCWRpZa00HSebf80pRGY8azH+aSKR4kzy0SFnnJVmIYg9NypQP6Ai+
-	 b05A8ZsYEuviXw6o9uXTwPzqErvrvpH/ENf1fDjWJw1B4wwHBD5Btis2BIQko6zszj
-	 dXZOn0Wqibwxiqmopa55UC6kco7egV5C0RdJkSVk=
+	by mail.kernel.org (Postfix) with ESMTP id 9BDCC2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgFPXWV (ORCPT
+        id S1726468AbgFPXXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40420 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 19:23:47 -0400
+Received: from mga12.intel.com ([192.55.52.136]:60344 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgFPXWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:22:21 -0400
-Received: from localhost (lfbn-ncy-1-150-120.w83-194.abo.wanadoo.fr [83.194.232.120])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A257207E8;
-        Tue, 16 Jun 2020 23:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592349740;
-        bh=Q7XqjDbI5KF1xwlA2pFU0ud6lF4J0reUpw77Uk5OM0c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZdGbq74tHPXO2Wt0cZq0o8vUmOKQNSUEuni9CHU3QPzO3yTtxrQQYLUdvmof/fKqd
-         8U6SDr9+WOFs8po3lanJsWlgt0Ov5uAC3U86UrsDUx86uzJNhHMkmdJODhfvy+kHkX
-         0TsL4eAqVwaiiyjeoT3SS8/1ysm8ksYEaq4ZCLfw=
-Date:   Wed, 17 Jun 2020 01:22:18 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        mtosatti@redhat.com, juri.lelli@redhat.com, abelits@marvell.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de
-Subject: Re: [Patch v1 2/3] PCI: prevent work_on_cpu's probe to execute on
- isolated CPUs
-Message-ID: <20200616232217.GB4914@lenoir>
-References: <20200610161226.424337-1-nitesh@redhat.com>
- <20200610161226.424337-3-nitesh@redhat.com>
+        id S1725849AbgFPXXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 19:23:47 -0400
+IronPort-SDR: EoqTxhD1OrOuvOAfwF5AtH5dP0W1+SwA3osSLgWAEhg7KejAYaQAfdIlZciYu43wxkvZQP30QH
+ avPFb2JwT7UQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 16:23:46 -0700
+IronPort-SDR: PUdSL9s9aHkzES9vhHisJzVKu+uTZCb7Oi6VKOJd77E027eK2Hl4S07EMQa0cGcGT0pSq7Rw33
+ qrXIWSr0CLkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,520,1583222400"; 
+   d="scan'208";a="383022347"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Jun 2020 16:23:46 -0700
+Date:   Tue, 16 Jun 2020 16:23:46 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        amd-gfx <amd-gfx@lists.freedesktop.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
+Message-ID: <20200616232345.GC15763@romley-ivt3.sc.intel.com>
+References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+ <1592008893-9388-13-git-send-email-fenghua.yu@intel.com>
+ <20200615075649.GK2497@hirez.programming.kicks-ass.net>
+ <20200615154854.GB13792@romley-ivt3.sc.intel.com>
+ <20200615160357.GA2531@hirez.programming.kicks-ass.net>
+ <20200615181259.GC13792@romley-ivt3.sc.intel.com>
+ <20200615183116.GD2531@hirez.programming.kicks-ass.net>
+ <20200615185529.GD13792@romley-ivt3.sc.intel.com>
+ <20200615190928.GJ2531@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610161226.424337-3-nitesh@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200615190928.GJ2531@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 12:12:25PM -0400, Nitesh Narayan Lal wrote:
-> From: Alex Belits <abelits@marvell.com>
+Hi, Peter,
+
+On Mon, Jun 15, 2020 at 09:09:28PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 15, 2020 at 11:55:29AM -0700, Fenghua Yu wrote:
 > 
-> pci_call_probe() prevents the nesting of work_on_cpu()
-> for a scenario where a VF device is probed from work_on_cpu()
-> of the Physical device.
-> This patch replaces the cpumask used in pci_call_probe()
-> from all online CPUs to only housekeeping CPUs. This is to
-> ensure that there are no additional latency overheads
-> caused due to the pinning of jobs on isolated CPUs.
+> > Or do you suggest to add a random new flag in struct thread_info instead
+> > of a TIF flag?
 > 
-> Signed-off-by: Alex Belits <abelits@marvell.com>
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  drivers/pci/pci-driver.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> Why thread_info? What's wrong with something simple like the below. It
+> takes a bit from the 'strictly current' flags word.
 > 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index da6510af1221..449466f71040 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -12,6 +12,7 @@
->  #include <linux/string.h>
->  #include <linux/slab.h>
->  #include <linux/sched.h>
-> +#include <linux/sched/isolation.h>
->  #include <linux/cpu.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/suspend.h>
-> @@ -333,6 +334,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
->  			  const struct pci_device_id *id)
->  {
->  	int error, node, cpu;
-> +	int hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
->  	struct drv_dev_and_id ddi = { drv, dev, id };
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index b62e6aaf28f0..fca830b97055 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -801,6 +801,9 @@ struct task_struct {
+>  	/* Stalled due to lack of memory */
+>  	unsigned			in_memstall:1;
+>  #endif
+> +#ifdef CONFIG_PCI_PASID
+> +	unsigned			has_valid_pasid:1;
+> +#endif
 >  
->  	/*
-> @@ -353,7 +355,8 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
->  	    pci_physfn_is_probed(dev))
->  		cpu = nr_cpu_ids;
->  	else
-> -		cpu = cpumask_any_and(cpumask_of_node(node), cpu_online_mask);
-> +		cpu = cpumask_any_and(cpumask_of_node(node),
-> +				      housekeeping_cpumask(hk_flags));
-
-Looks like cpumask_of_node() is based on online CPUs. So that all
-looks good. Thanks!
-
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-
-
+>  	unsigned long			atomic_flags; /* Flags requiring atomic access. */
 >  
->  	if (cpu < nr_cpu_ids)
->  		error = work_on_cpu(cpu, local_pci_probe, &ddi);
-> -- 
-> 2.18.4
-> 
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 142b23645d82..10b3891be99e 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -955,6 +955,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+>  	tsk->use_memdelay = 0;
+>  #endif
+>  
+> +#ifdef CONFIG_PCI_PASID
+> +	tsk->has_valid_pasid = 0;
+> +#endif
+> +
+>  #ifdef CONFIG_MEMCG
+>  	tsk->active_memcg = NULL;
+>  #endif
+
+Can I add "Signed-off-by: Peter Zijlstra <peterz@infradead.org>"
+to this patch? I will send this patch in the next version of the series.
+
+Thanks.
+
+-Fenghua
