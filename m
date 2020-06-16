@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92425C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8044EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 721AB2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF83207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323491;
-	bh=JaAgU929H/sHzVvkGs0E1ui40+lainALY9/ORBjgk5s=;
+	s=default; t=1592323494;
+	bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iMtsW4ayrk90zOiSb+n7R+uWvnOQzfkb5t3X1aYJ3uO3yho7DZjey33KukVrXP5Vn
-	 Wg32pFKXZ61TAejKn/xSz7zwLpwWCnf5jT9Yzl+KVzJiRi0JWMxskJhmb6FIVjFTVV
-	 /DEBpWR7No/UjHxunRCZ6+dPc2rS36Se9xm6JRXU=
+	b=rUJkb4jgGcYac6XknrXA7xMfqh0ach8o2EUzZdhRBWb29TTNrSzm8e/tZDYYA/9EE
+	 qN/33IJhllz81KIF8ygW1zJzRypIXSev2fRqOB+AmZSjM42YwNwTIC5ypsOSUvCCaq
+	 v8zkjZTUTKj0xaP3a3erS2XnRlGVnYK+S21S0V5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732504AbgFPPt0 (ORCPT
+        id S1732657AbgFPQEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:49:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44280 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731887AbgFPPtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:20 -0400
+        id S1731592AbgFPPtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B9382071A;
-        Tue, 16 Jun 2020 15:49:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C33D12071A;
+        Tue, 16 Jun 2020 15:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322559;
-        bh=JaAgU929H/sHzVvkGs0E1ui40+lainALY9/ORBjgk5s=;
+        s=default; t=1592322565;
+        bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJLoRLjFYkMx0oyqjpRC33eI2It6daH0NIolgW04DucBLIv2n0LvvrAS2ip8dYXqN
-         koEnl/mtVy/BH3Uy+XN94Idch1Q9tC5JXeiB1QXsPZkpQ7gCOOjo2NZ8vFytqSq+rp
-         qg03yPfBrjRG6Er7XgcegkiNOADpYcbsd1jwWewk=
+        b=UQJZjjO0TXslz2t29tNIzTTl4p2TwpUL/0w4cYiZRo4ApL+gsmW8U6F+MWmTR1HvJ
+         HWvdPz9lRIXpMxX0oLsUpx0wt1o9ZlX8QnYgTLuOtUr3hmTcxyX1OZQFEOiqgA73bf
+         ECAkZeFpy5lzHx4AN7b1ffnyo0jOZx19g9tFEHDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Fredrik Strupe <fredrik@strupe.net>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Dennis Kadioglu <denk@eclipso.email>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 016/161] ARM: 8977/1: ptrace: Fix mask for thumb breakpoint hook
-Date:   Tue, 16 Jun 2020 17:33:26 +0200
-Message-Id: <20200616153107.180362456@linuxfoundation.org>
+Subject: [PATCH 5.6 018/161] Input: synaptics - add a second working PNP_ID for Lenovo T470s
+Date:   Tue, 16 Jun 2020 17:33:28 +0200
+Message-Id: <20200616153107.278293080@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,51 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fredrik Strupe <fredrik@strupe.net>
+From: Dennis Kadioglu <denk@eclipso.email>
 
-[ Upstream commit 3866f217aaa81bf7165c7f27362eee5d7919c496 ]
+[ Upstream commit 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c ]
 
-call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
-and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
-(0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
-instructions will be masked out. This makes the function match 32-bit
-thumb instructions where the second half-word is equal to instr_val,
-regardless of the first half-word.
+The Lenovo Thinkpad T470s I own has a different touchpad with "LEN007a"
+instead of the already included PNP ID "LEN006c". However, my touchpad
+seems to work well without any problems using RMI. So this patch adds the
+other PNP ID.
 
-The result in this case is that all undefined 32-bit thumb instructions
-with the second half-word equal to 0xde01 (udf #1) work as breakpoints
-and will raise a SIGTRAP instead of a SIGILL, instead of just the one
-intended 16-bit instruction. An example of such an instruction is
-0xeaa0de01, which is unallocated according to Arm ARM and should raise a
-SIGILL, but instead raises a SIGTRAP.
-
-This patch fixes the issue by setting all the bits in instr_mask, which
-will still match the intended 16-bit thumb instruction (where the
-upper half is always 0), but not any 32-bit thumb instructions.
-
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Dennis Kadioglu <denk@eclipso.email>
+Link: https://lore.kernel.org/r/ff770543cd53ae818363c0fe86477965@mail.eclipso.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ptrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index b606cded90cd..4cc6a7eff635 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -219,8 +219,8 @@ static struct undef_hook arm_break_hook = {
- };
- 
- static struct undef_hook thumb_break_hook = {
--	.instr_mask	= 0xffff,
--	.instr_val	= 0xde01,
-+	.instr_mask	= 0xffffffff,
-+	.instr_val	= 0x0000de01,
- 	.cpsr_mask	= PSR_T_BIT,
- 	.cpsr_val	= PSR_T_BIT,
- 	.fn		= break_trap,
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 4d2036209b45..758dae8d6500 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -170,6 +170,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN005b", /* P50 */
+ 	"LEN005e", /* T560 */
+ 	"LEN006c", /* T470s */
++	"LEN007a", /* T470s */
+ 	"LEN0071", /* T480 */
+ 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
+ 	"LEN0073", /* X1 Carbon G5 (Elantech) */
 -- 
 2.25.1
 
