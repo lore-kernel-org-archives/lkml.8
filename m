@@ -2,110 +2,102 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E14C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA416C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17515206F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 923D02063A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:36:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="A+PJJH1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgFPBfK (ORCPT
+        id S1726314AbgFPBgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:35:10 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:51736 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725949AbgFPBfK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 21:35:10 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U.jHwZU_1592270980;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0U.jHwZU_1592270980)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 16 Jun 2020 09:29:48 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     kirill.shutemov@linux.intel.com, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: thp: remove debug_cow switch
-Date:   Tue, 16 Jun 2020 09:29:40 +0800
-Message-Id: <1592270980-116062-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 15 Jun 2020 21:36:44 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22558 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725891AbgFPBgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 21:36:43 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592271402; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=xMh92ChtsXia9yszVbB8XBW80SKYdVIfI1TvNqZjeKY=; b=A+PJJH1Xt1qKJdsdjwC/2GiQVbYTTb6JyPvP1WUxrbzo9IHtNKwUkUmxRUycqoD26ln1bRjI
+ yUH0UQqYXhPA2Y9ZWYl8Lc8mU/okoI8xJNYbrPcB4JdS1iqei+KljWZgldEbdR+Yg1okie1n
+ nMhjxQB6KiU6LjUFnCbaRC+QRkg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ee8221d8fe116ddd9ecd3e4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 01:36:29
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 694AEC43391; Tue, 16 Jun 2020 01:36:28 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B682C433C8;
+        Tue, 16 Jun 2020 01:36:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B682C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Tue, 16 Jun 2020 07:06:22 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Satya Tangirala <satyat@google.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [PATCH] f2fs: fix use-after-free when accessing
+ bio->bi_crypt_context
+Message-ID: <20200616013622.GC2916@codeaurora.org>
+References: <1592193588-21701-1-git-send-email-stummala@codeaurora.org>
+ <20200615050019.GA3100@sol.localdomain>
+ <20200615061633.GA23467@google.com>
+ <20200615095316.GB2916@codeaurora.org>
+ <20200615154720.GA902@sol.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615154720.GA902@sol.localdomain>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 3917c80280c93a7123f1a3a6dcdb10a3ea19737d ("thp: change CoW
-semantics for anon-THP"), the CoW page fault of THP has been rewritten,
-debug_cow is not used anymore.  So, just remove it.
+On Mon, Jun 15, 2020 at 08:47:20AM -0700, Eric Biggers wrote:
+> On Mon, Jun 15, 2020 at 03:23:16PM +0530, Sahitya Tummala wrote:
+> > > 
+> > > Should I fold this change into the original patch? Or keep it as a
+> > > separate patch when I send out the fscrypt/f2fs inline encryption
+> > > patches?
+> > 
+> > It may be good to keep it seperate as we already have the base FBE patches in
+> > several downstream kernels, so this fix can be applied easily. But I will
+> > leave it up to you to take a call on this.
+> > 
+> 
+> We should fold it in because the patch this fixes isn't applied upstream yet.
+> 
+> We'll need to submit this as a separate fix to the Android common kernels
+> because they already have a previous version of the inline encryption patchset.
+> (I assume that's where you have the code from.)  But that doesn't affect what we
+> do upstream.
 
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- include/linux/huge_mm.h |  7 -------
- mm/huge_memory.c        | 21 ---------------------
- 2 files changed, 28 deletions(-)
+Sure, no concerns from my side. It can be merged into the original series.
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 71f2077..b8d7c36 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -181,13 +181,6 @@ static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
- #define transparent_hugepage_use_zero_page()				\
- 	(transparent_hugepage_flags &					\
- 	 (1<<TRANSPARENT_HUGEPAGE_USE_ZERO_PAGE_FLAG))
--#ifdef CONFIG_DEBUG_VM
--#define transparent_hugepage_debug_cow()				\
--	(transparent_hugepage_flags &					\
--	 (1<<TRANSPARENT_HUGEPAGE_DEBUG_COW_FLAG))
--#else /* CONFIG_DEBUG_VM */
--#define transparent_hugepage_debug_cow() 0
--#endif /* CONFIG_DEBUG_VM */
- 
- extern unsigned long thp_get_unmapped_area(struct file *filp,
- 		unsigned long addr, unsigned long len, unsigned long pgoff,
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 78c84be..2f585d2 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -303,24 +303,6 @@ static ssize_t hpage_pmd_size_show(struct kobject *kobj,
- static struct kobj_attribute hpage_pmd_size_attr =
- 	__ATTR_RO(hpage_pmd_size);
- 
--#ifdef CONFIG_DEBUG_VM
--static ssize_t debug_cow_show(struct kobject *kobj,
--				struct kobj_attribute *attr, char *buf)
--{
--	return single_hugepage_flag_show(kobj, attr, buf,
--				TRANSPARENT_HUGEPAGE_DEBUG_COW_FLAG);
--}
--static ssize_t debug_cow_store(struct kobject *kobj,
--			       struct kobj_attribute *attr,
--			       const char *buf, size_t count)
--{
--	return single_hugepage_flag_store(kobj, attr, buf, count,
--				 TRANSPARENT_HUGEPAGE_DEBUG_COW_FLAG);
--}
--static struct kobj_attribute debug_cow_attr =
--	__ATTR(debug_cow, 0644, debug_cow_show, debug_cow_store);
--#endif /* CONFIG_DEBUG_VM */
--
- static struct attribute *hugepage_attr[] = {
- 	&enabled_attr.attr,
- 	&defrag_attr.attr,
-@@ -329,9 +311,6 @@ static ssize_t debug_cow_store(struct kobject *kobj,
- #ifdef CONFIG_SHMEM
- 	&shmem_enabled_attr.attr,
- #endif
--#ifdef CONFIG_DEBUG_VM
--	&debug_cow_attr.attr,
--#endif
- 	NULL,
- };
- 
+Thanks,
+
+> 
+> - Eric
+
 -- 
-1.8.3.1
-
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
