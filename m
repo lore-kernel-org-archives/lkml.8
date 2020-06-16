@@ -2,113 +2,89 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A763FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1962074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FFA2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="evAMvYAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgFPKUb (ORCPT
+        id S1728266AbgFPKU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:20:31 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:46915 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726052AbgFPKUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:20:31 -0400
-Received: from [192.168.0.6] (ip5f5af4df.dynamic.kabel-deutschland.de [95.90.244.223])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id DD048206442E6;
-        Tue, 16 Jun 2020 12:20:27 +0200 (CEST)
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: continue to init phy even when
- failed to disable ULP
-To:     Aaron Ma <aaron.ma@canonical.com>, jeffrey.t.kirsher@intel.com,
-        davem@davemloft.net, kuba@kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vitaly.lifshits@intel.com,
-        kai.heng.feng@canonical.com, sasha.neftin@intel.com
-References: <20200616100512.22512-1-aaron.ma@canonical.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <74391e62-7226-b0f8-d129-768b88f13160@molgen.mpg.de>
-Date:   Tue, 16 Jun 2020 12:20:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 16 Jun 2020 06:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgFPKU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:20:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D1FC08C5C2;
+        Tue, 16 Jun 2020 03:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=De04o2ksjI4LCRuUJymMZyN7SpLPPi/l5AwXKxXPHpw=; b=evAMvYAVePPjChIJ2pN2XCAlWZ
+        1O2wsKHasxMhOHyx5TznFldLZCX8vPlBGY60QLWagiJzwoZxhx8CCi9wdY6ZjHwgdG/MZbnJBxhUq
+        IeeO2W9J+DD6JzPXvPlBMJSkBLWE/is0yf7N85D5AjGTNQMLcQ9sdbxOTLRN/t3qTbgMBQ+wy7/zr
+        DpnPNINxsMR8FgICbMOitGU8JL8VuYZ8BVSfbevT6WYIUXMjZDLPxz+dnwwwCHYofGUm6168FjLGz
+        upqVRmpkCPXQBB/OJW9qQ0vbLCQPp9grblncarG6VQgBLjgm2tBcbZwdrdglE/FUnTRh9odWgJTJF
+        zPHgoeXg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jl8i4-0006g0-9z; Tue, 16 Jun 2020 10:20:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 29B2F3017B7;
+        Tue, 16 Jun 2020 12:20:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1453C203D5DB1; Tue, 16 Jun 2020 12:20:50 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:20:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Ju-Hyoung Lee <juhlee@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: Re: hv_hypercall_pg page permissios
+Message-ID: <20200616102050.GP2531@hirez.programming.kicks-ass.net>
+References: <20200407073830.GA29279@lst.de>
+ <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net>
+ <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <87y2ooiv5k.fsf@vitty.brq.redhat.com>
+ <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <87blljicjm.fsf@vitty.brq.redhat.com>
+ <20200616093341.GA26400@lst.de>
+ <20200616095549.GA27917@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200616100512.22512-1-aaron.ma@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616095549.GA27917@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Aaron,
+On Tue, Jun 16, 2020 at 11:55:49AM +0200, Christoph Hellwig wrote:
+> +	hv_hypercall_pg = __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START,
+> +			VMALLOC_END, GFP_KERNEL, PAGE_KERNEL_RX,
+> +			VM_FLUSH_RESET_PERMS, NUMA_NO_NODE, __func__);
 
-
-Thank you for your patch.
-
-(Rant: Some more fallout from the other patch, which nobody reverted.)
-
-Am 16.06.20 um 12:05 schrieb Aaron Ma:
-> After commit "e1000e: disable s0ix entry and exit flows for ME systems",
-> some ThinkPads always failed to disable ulp by ME.
-
-Please add the (short) commit hash from the master branch.
-
-s/ulp/ULP/
-
-Please list one ThinkPad as example.
-
-> commit "e1000e: Warn if disabling ULP failed" break out of init phy:
-
-1.  Please add the closing quote ".
-2.  Please add the commit hash.
-
-> error log:
-> [   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
-> [   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast Packet
-> [   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
-> 
-> When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
-> If continue to init phy like before, it can work as before.
-> iperf test result good too.
-> 
-> Chnage e_warn to e_dbg, in case it confuses.
-
-s/Chnage/Change/
-
-Please leave the level warning, and improve the warning message instead, 
-so a user knows what is going on.
-
-Could you please add a `Fixes:` tag and the URL to the bug report?
-
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> ---
->   drivers/net/ethernet/intel/e1000e/ich8lan.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> index f999cca37a8a..63405819eb83 100644
-> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> @@ -302,8 +302,7 @@ static s32 e1000_init_phy_workarounds_pchlan(struct e1000_hw *hw)
->   	hw->dev_spec.ich8lan.ulp_state = e1000_ulp_state_unknown;
->   	ret_val = e1000_disable_ulp_lpt_lp(hw, true);
->   	if (ret_val) {
-> -		e_warn("Failed to disable ULP\n");
-> -		goto out;
-> +		e_dbg("Failed to disable ULP\n");
->   	}
->   
->   	ret_val = hw->phy.ops.acquire(hw);
-> 
-
-Kind regards,
-
-Paul
+I think that's wrong, they seem to want to CALL into that page, and that
+doesn't unconditionally work for any page in the vmalloc range. This
+really ought to use module_alloc() to guarantees it gets a page in the
+correct range.
