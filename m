@@ -2,130 +2,113 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C0C20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V5Vs4PyX"
+	by mail.kernel.org (Postfix) with ESMTP id 4F45821532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323173;
+	bh=Q9VzjPAFTOrJwsOtNxPwztfgd+T3mqZj6+9goc1O0fw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iaqNPcQAKd1Z3DRdlI5T3ra7rjbvflMEwSoDTydFLOQ1puE9lF07xOJ+uOv/v2hqv
+	 Mt6liQL7WB5Z0Vim0fkFnnmlMGLvb727DZj41LYqVrq6DBOIMEkmEOis1jG7lE4CKt
+	 Zo6asUcVzW1gipwR5elNaIHRogR+1wVJNEmZm5rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732499AbgFPP72 (ORCPT
+        id S1732745AbgFPP7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:59:28 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54443 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733059AbgFPP7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:59:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592323162;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5Gc0Dg29WyIqBxMjGZGdoDeYitc04zw+8Uk/3lb0oUU=;
-        b=V5Vs4PyXpbdsRVxmf1xJlkr7RMs258mWsXbhL4IZc8wiLgOytxlqs/ytaKu5Y9zHaWtK7x
-        lk4l1t2a3rKgh1097PbMNvWJGj531cHF91F1SM4e91cCFstBdiDuutOrJ8QaAu89hs84gx
-        d38LQhRTydvyURfz5d8Oq8h3wOT83ZM=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-Ydg-R64OOJSvgKoAD65adw-1; Tue, 16 Jun 2020 11:59:18 -0400
-X-MC-Unique: Ydg-R64OOJSvgKoAD65adw-1
-Received: by mail-qk1-f200.google.com with SMTP id q82so2474855qke.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:59:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5Gc0Dg29WyIqBxMjGZGdoDeYitc04zw+8Uk/3lb0oUU=;
-        b=ncIrsoJgtcReaQH7PWCCuwsZCG3RQVlsnHkVjYijD80zscR+0bdZjH0/4cM55k7Rcl
-         Yiw5V/zNYpj5WRV3cByi169i2YVpWMg7kN7uoLSMk+tT4GHOe6cekJaIQrEuhxqS2kSD
-         Ok8P1IVGxJWFylWCYGOQbRjYDX2pBG7SWRB4FeVHemdfF7om0iZ/mWyqLQV1mP/JMQGd
-         tKXgmB4U1IfsU7/69fGy8VXorUsKvxOOOVGLyfQsgqM58iNUygPSRW+dekQRrK5+WtHN
-         QhnQPhi+lRzSnWIN4FaXfgYdD2RVtYX475WQJrhgP/8DZJcEqQv84d2DEbTTlMsHkz0f
-         VHAQ==
-X-Gm-Message-State: AOAM533PgT/8ZIjgrc4Cdo4wIZKeuof7b3MzhMDBLavhEKaJl+S27O7J
-        GbV7OlAQrHjNJBqpg125L6Z8KJIUe5feOpIO+lcV1iUmkjv695sktayloDB9LHp3Ec1hiQZg2ns
-        bFArCd7tNhACYtczeLliynuSf
-X-Received: by 2002:a37:6f02:: with SMTP id k2mr20702247qkc.129.1592323157178;
-        Tue, 16 Jun 2020 08:59:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy+CJxAHuYkrcTeCwjCPlS1h0Nvk5LsJIDdZuRwaKtc+dpfMVU5ZGkZ12CkR4olUnzdv9Abeg==
-X-Received: by 2002:a37:6f02:: with SMTP id k2mr20702225qkc.129.1592323156891;
-        Tue, 16 Jun 2020 08:59:16 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id 123sm154267qkj.56.2020.06.16.08.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 08:59:15 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 11:59:14 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 06/25] mm/arm64: Use mm_fault_accounting()
-Message-ID: <20200616155914.GB11838@xz-x1>
-References: <20200615221607.7764-1-peterx@redhat.com>
- <20200615221607.7764-7-peterx@redhat.com>
- <20200616074307.GA1637@willie-the-truck>
+        Tue, 16 Jun 2020 11:59:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732308AbgFPPxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D55208D5;
+        Tue, 16 Jun 2020 15:53:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322818;
+        bh=Q9VzjPAFTOrJwsOtNxPwztfgd+T3mqZj6+9goc1O0fw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aAPlqmXVxvIAw44IKmzBAMz1+1/UUd5PHHN+fMKN7zn+7p2vwlyhyX4EJ4sMxXJHn
+         0uW6IEnDRf4qRfdL94AIHN9rHbN2PvKyTPWAY/f8E/wzOWijZmO5J79GOqaKmTFCMa
+         46sZ5fIELkclJyfwda3x0yY4KZDprYlpvJbHTpeY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Gonglei <arei.gonglei@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        "Longpeng(Mike)" <longpeng2@huawei.com>
+Subject: [PATCH 5.6 098/161] crypto: virtio: Fix dest length calculation in __virtio_crypto_skcipher_do_req()
+Date:   Tue, 16 Jun 2020 17:34:48 +0200
+Message-Id: <20200616153111.045388591@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
+References: <20200616153106.402291280@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200616074307.GA1637@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Will,
+From: Longpeng(Mike) <longpeng2@huawei.com>
 
-On Tue, Jun 16, 2020 at 08:43:08AM +0100, Will Deacon wrote:
-> Please can you explain why it's ok to move the PERF_COUNT_SW_PAGE_FAULTS
-> update like this? Seems like a user-visible change to me, so some
-> justification would really help.
+commit d90ca42012db2863a9a30b564a2ace6016594bda upstream.
 
-Indeed this could be a functional change for PERF_COUNT_SW_PAGE_FAULTS on some
-archs, e.g., for arm64, PERF_COUNT_SW_PAGE_FAULTS previously will also contain
-accounting of severe errors where we go into the "no_context" path.  However if
-you see the other archs, it's not always true, for example, the xtensa arch
-only accounts the correctly handled faults (arch/xtensa/mm/fault.c).
+The src/dst length is not aligned with AES_BLOCK_SIZE(which is 16) in some
+testcases in tcrypto.ko.
 
-After I thought about this, I don't think it's extremely useful (or please
-correct me if I missed something important) to use PERF_COUNT_SW_PAGE_FAULTS
-for fatal error accountings among all those correct ones.  After all they are
-really extremely rare cases, and even if we got a sigbus for a process, we'll
-normally got something dumped in dmesg so if we really want to capture the
-error cases there should always be a better way (because by following things
-like dmesg we can not only know how many error faults triggered, but also on
-the details of the errors).
+For example, the src/dst length of one of cts(cbc(aes))'s testcase is 17, the
+crypto_virtio driver will set @src_data_len=16 but @dst_data_len=17 in this
+case and get a wrong at then end.
 
-IOW, my understanding of users of PERF_COUNT_SW_PAGE_FAULTS is that they want
-to trap normal/correct page faults, not really care about rare errors.
+  SRC: pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp (17 bytes)
+  EXP: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc pp (17 bytes)
+  DST: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 00 (pollute the last bytes)
+  (pp: plaintext  cc:ciphertext)
 
-Then when I went back to think PERF_COUNT_SW_PAGE_FAULTS, it's really about:
+Fix this issue by limit the length of dest buffer.
 
-  A=PERF_COUNT_SW_PAGE_FAULTS 
-  B=PERF_COUNT_SW_PAGE_FAULTS_MAJ
-  C=PERF_COUNT_SW_PAGE_FAULTS_MIN
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Cc: Gonglei <arei.gonglei@huawei.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200602070501.2023-4-longpeng2@huawei.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-And:
+---
+ drivers/crypto/virtio/virtio_crypto_algs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-  A=B+C
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -402,6 +402,7 @@ __virtio_crypto_skcipher_do_req(struct v
+ 		goto free;
+ 	}
+ 
++	dst_len = min_t(unsigned int, req->cryptlen, dst_len);
+ 	pr_debug("virtio_crypto: src_len: %u, dst_len: %llu\n",
+ 			req->cryptlen, dst_len);
+ 
 
-If that's the case (which is simple and clear), it's really helpful too that we
-unify this definition across all the architectures, then it'll also be easier
-for us to provide some helper like mm_fault_accounting() so that the accounting
-can be managed in the general code rather than in arch-specific ways.
-
-Thanks,
-
--- 
-Peter Xu
 
