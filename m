@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A0FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C57C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAB0207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54522071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323362;
-	bh=0C/mNTEOjZ2lmpONHhiVdH/VB/xNefd/mk9iWbnGayU=;
+	s=default; t=1592323366;
+	bh=bJ5vHl2H8/BvNDVhsIs4pfBDlyCaMBFtm0KMc8o1C+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MKxdHqxoTLiPp8w6oGwV4caGWDKdJ/M3rQ6lMmFxRrUQcoU/uJqnnPb7wxRg845jX
-	 ZLmtWYZaZuEGoSFTvXfP9/k7GIcAzs2Bir4JC1Iy2+v0At2XGsTKFzX9smamDBsiqU
-	 8hDZ5wun6ET0J2Odt48G3K4bTAC1wYzVOu/i4j6E=
+	b=UAiNG9lgeRAf6GV/EWOUi2Rr9gyUUTGB6hyBHLpp9tb0nwIoa1nn5dlL2XWDEmHIi
+	 eyIaCLaVyImsHtKd8cyvQ2ub/aSZa4j4GyLpVUq8R2qlDktn+3NPv3VEhB/mHDPq6o
+	 USvISMCUNU4RmuhJdnX8Cma6OR4DYRJ6d5XXBtyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733190AbgFPQCk (ORCPT
+        id S1732635AbgFPPvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47530 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732471AbgFPPvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:51:09 -0400
+        id S1732205AbgFPPuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E8F621501;
-        Tue, 16 Jun 2020 15:51:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B444207C4;
+        Tue, 16 Jun 2020 15:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322668;
-        bh=0C/mNTEOjZ2lmpONHhiVdH/VB/xNefd/mk9iWbnGayU=;
+        s=default; t=1592322650;
+        bh=bJ5vHl2H8/BvNDVhsIs4pfBDlyCaMBFtm0KMc8o1C+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXzIQmsk68pBl0oSkXuyTz+Sfx13GZo4WPOJWE6qD+XO6lVrSpuC3sb++3z07Y2OS
-         TnFtYY0H3xJNZKFRzoKMKlqQ397t7H23PQTMqHaaXhIiNy9PgfM9C3qFCxe0iGC6md
-         qQ+iuSAcGJy1eDMzMbj8HCekNxiTHfDIku5TX6tk=
+        b=s1fKUX3+M0Lq6ZSvmq3uanhrvCdcr5uJMgqez4iYxkkAdB7YROpJkCS1AsffQ2ilH
+         i7bapP6WkYq8zzlzMUs4njnN5ZsP3FVsCCgK159S5hqdO3CFJTdM9JXo6NDirYQBuO
+         6lGcmyVXtvIvVTReGsJZWSVHp2Y196ZPEinahk5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 057/161] KVM: x86/mmu: Set mmio_value to 0 if reserved #PF cant be generated
-Date:   Tue, 16 Jun 2020 17:34:07 +0200
-Message-Id: <20200616153109.092314231@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.6 050/161] x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs
+Date:   Tue, 16 Jun 2020 17:34:00 +0200
+Message-Id: <20200616153108.760510470@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,64 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Xiaochun Lee <lixc17@lenovo.com>
 
-commit 6129ed877d409037b79866327102c9dc59a302fe upstream.
+commit 1574051e52cb4b5b7f7509cfd729b76ca1117808 upstream.
 
-Set the mmio_value to '0' instead of simply clearing the present bit to
-squash a benign warning in kvm_mmu_set_mmio_spte_mask() that complains
-about the mmio_value overlapping the lower GFN mask on systems with 52
-bits of PA space.
+The Intel C620 Platform Controller Hub has MROM functions that have non-PCI
+registers (undocumented in the public spec) where BAR 0 is supposed to be,
+which results in messages like this:
 
-Opportunistically clean up the code and comments.
+  pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)
 
+Mark these MROM functions as having non-compliant BARs so we don't try to
+probe any of them.  There are no other BARs on these devices.
+
+See the Intel C620 Series Chipset Platform Controller Hub Datasheet,
+May 2019, Document Number 336067-007US, sec 2.1, 35.5, 35.6.
+
+[bhelgaas: commit log, add 0xa26d]
+Link: https://lore.kernel.org/r/1589513467-17070-1-git-send-email-lixiaochun.2888@163.com
+Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: stable@vger.kernel.org
-Fixes: d43e2675e96fc ("KVM: x86: only do L1TF workaround on affected processors")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200527084909.23492-1-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mmu/mmu.c |   27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+ arch/x86/pci/fixup.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -6132,25 +6132,16 @@ static void kvm_set_mmio_spte_mask(void)
- 	u64 mask;
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -572,6 +572,10 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IN
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26d, pci_invalid_bar);
  
- 	/*
--	 * Set the reserved bits and the present bit of an paging-structure
--	 * entry to generate page fault with PFER.RSV = 1.
-+	 * Set a reserved PA bit in MMIO SPTEs to generate page faults with
-+	 * PFEC.RSVD=1 on MMIO accesses.  64-bit PTEs (PAE, x86-64, and EPT
-+	 * paging) support a maximum of 52 bits of PA, i.e. if the CPU supports
-+	 * 52-bit physical addresses then there are no reserved PA bits in the
-+	 * PTEs and so the reserved PA approach must be disabled.
- 	 */
--
--	/*
--	 * Mask the uppermost physical address bit, which would be reserved as
--	 * long as the supported physical address width is less than 52.
--	 */
--	mask = 1ull << 51;
--
--	/* Set the present bit. */
--	mask |= 1ull;
--
--	/*
--	 * If reserved bit is not supported, clear the present bit to disable
--	 * mmio page fault.
--	 */
--	if (shadow_phys_bits == 52)
--		mask &= ~1ull;
-+	if (shadow_phys_bits < 52)
-+		mask = BIT_ULL(51) | PT_PRESENT_MASK;
-+	else
-+		mask = 0;
- 
- 	kvm_mmu_set_mmio_spte_mask(mask, mask, ACC_WRITE_MASK | ACC_USER_MASK);
- }
+ /*
+  * Device [1022:7808]
 
 
