@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8044EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A748BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF83207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801C22071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323494;
-	bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
+	s=default; t=1592323500;
+	bh=jHd1X1zusmajFRLzbO/kks6/nt/Ek1Ar51xZCouIZN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rUJkb4jgGcYac6XknrXA7xMfqh0ach8o2EUzZdhRBWb29TTNrSzm8e/tZDYYA/9EE
-	 qN/33IJhllz81KIF8ygW1zJzRypIXSev2fRqOB+AmZSjM42YwNwTIC5ypsOSUvCCaq
-	 v8zkjZTUTKj0xaP3a3erS2XnRlGVnYK+S21S0V5Y=
+	b=fBjLc9kCKLRt7I3WAPgB1dcCHnjm2EsEdos3cC/FFgYKom+bnkNkU5tib27EU7k9R
+	 KFP6FFPnKH0M9+r+eVONSEBW6iNH019st197AnPZ/X9otHb4BdnQhAfiuuhzZPFmkh
+	 CSK7wNLNYEyDJVnqy9jeZ+m+9OalVnnBkc+oQ6xU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732657AbgFPQEw (ORCPT
+        id S1732811AbgFPQE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:04:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:04:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731592AbgFPPtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:25 -0400
+        id S1731274AbgFPPtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C33D12071A;
-        Tue, 16 Jun 2020 15:49:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AD1320776;
+        Tue, 16 Jun 2020 15:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322565;
-        bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
+        s=default; t=1592322562;
+        bh=jHd1X1zusmajFRLzbO/kks6/nt/Ek1Ar51xZCouIZN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UQJZjjO0TXslz2t29tNIzTTl4p2TwpUL/0w4cYiZRo4ApL+gsmW8U6F+MWmTR1HvJ
-         HWvdPz9lRIXpMxX0oLsUpx0wt1o9ZlX8QnYgTLuOtUr3hmTcxyX1OZQFEOiqgA73bf
-         ECAkZeFpy5lzHx4AN7b1ffnyo0jOZx19g9tFEHDk=
+        b=cHXmdfYkXRdju1J66APkhvTlZapBczps6WmwHlc4gAz76wjx+rLdruRYNjfNx8Y28
+         +0eWQ5yQPbeJ977PphkmMg5DyvlcxOmEPQKbUgVB47Ny+LcVuXg7IlUf+0cMCbJtJa
+         +J6xak4BCZ615skxJ772Q/EPsctoRtDYorBjR1WY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dennis Kadioglu <denk@eclipso.email>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 018/161] Input: synaptics - add a second working PNP_ID for Lenovo T470s
-Date:   Tue, 16 Jun 2020 17:33:28 +0200
-Message-Id: <20200616153107.278293080@linuxfoundation.org>
+Subject: [PATCH 5.6 017/161] sched/fair: Dont NUMA balance for kthreads
+Date:   Tue, 16 Jun 2020 17:33:27 +0200
+Message-Id: <20200616153107.230078982@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,35 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dennis Kadioglu <denk@eclipso.email>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c ]
+[ Upstream commit 18f855e574d9799a0e7489f8ae6fd8447d0dd74a ]
 
-The Lenovo Thinkpad T470s I own has a different touchpad with "LEN007a"
-instead of the already included PNP ID "LEN006c". However, my touchpad
-seems to work well without any problems using RMI. So this patch adds the
-other PNP ID.
+Stefano reported a crash with using SQPOLL with io_uring:
 
-Signed-off-by: Dennis Kadioglu <denk@eclipso.email>
-Link: https://lore.kernel.org/r/ff770543cd53ae818363c0fe86477965@mail.eclipso.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+  BUG: kernel NULL pointer dereference, address: 00000000000003b0
+  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
+  RIP: 0010:task_numa_work+0x4f/0x2c0
+  Call Trace:
+   task_work_run+0x68/0xa0
+   io_sq_thread+0x252/0x3d0
+   kthread+0xf9/0x130
+   ret_from_fork+0x35/0x40
+
+which is task_numa_work() oopsing on current->mm being NULL.
+
+The task work is queued by task_tick_numa(), which checks if current->mm is
+NULL at the time of the call. But this state isn't necessarily persistent,
+if the kthread is using use_mm() to temporarily adopt the mm of a task.
+
+Change the task_tick_numa() check to exclude kernel threads in general,
+as it doesn't make sense to attempt ot balance for kthreads anyway.
+
+Reported-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index 4d2036209b45..758dae8d6500 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -170,6 +170,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"LEN005b", /* P50 */
- 	"LEN005e", /* T560 */
- 	"LEN006c", /* T470s */
-+	"LEN007a", /* T470s */
- 	"LEN0071", /* T480 */
- 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
- 	"LEN0073", /* X1 Carbon G5 (Elantech) */
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 603d3d3cbf77..efb15f0f464b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2682,7 +2682,7 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+ 	/*
+ 	 * We don't care about NUMA placement if we don't have memory.
+ 	 */
+-	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
++	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
+ 		return;
+ 
+ 	/*
 -- 
 2.25.1
 
