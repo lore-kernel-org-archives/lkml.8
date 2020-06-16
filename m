@@ -2,199 +2,221 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19545C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD5BE2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592330026;
-	bh=NGhqT6R58/mUxiOIu/9Dg6YdmOivf8svsiujhCR8FMM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ZpVkOlWvczpUmIE5ck+eMWPLvJJ7Uaexwp84S/RJRfc5DE53BniDJHb/8Bag/JgyH
-	 +7tKdOUTRGXL0HqSJIDLJjC6cci/QrooBFBjQmnVQiNzKnQzJD/ky0rPhkCFiwVtX2
-	 OEf/G9wS2h/5ooHh0KrmVfr29AJ/MsWLlkEWUx6w=
+	by mail.kernel.org (Postfix) with ESMTP id C3A0C20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:55:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="Ni0wHVus"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731042AbgFPRxp (ORCPT
+        id S1731126AbgFPRzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:53:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgFPRxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:53:43 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4088B20776;
-        Tue, 16 Jun 2020 17:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592330022;
-        bh=NGhqT6R58/mUxiOIu/9Dg6YdmOivf8svsiujhCR8FMM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=vc8umIQQbfsnY0Gu9cGb23+WkOuiIjEqp25PX8yT8h4XqxZ+aoQwvjljpyr73B80h
-         /tTIa4Oo4i2ecoTHsiS9LYhCIVqQLPF6B1SZPHxs6LOSc8PFW9ipEHWKS2SEyeJD8F
-         HETibqoISubWIKtFhQ/LM0UpJhrpwyU5hMTEoO1o=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3108E352264F; Tue, 16 Jun 2020 10:53:42 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 10:53:42 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, frederic@kernel.org
-Subject: Re: [PATCH 0/6] sched: TTWU, IPI, and assorted stuff
-Message-ID: <20200616175342.GF2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200615125654.678940605@infradead.org>
- <20200615162330.GF2723@paulmck-ThinkPad-P72>
- <20200615164048.GC2531@hirez.programming.kicks-ass.net>
- <20200615172149.GJ2723@paulmck-ThinkPad-P72>
- <20200615191158.GK2531@hirez.programming.kicks-ass.net>
- <20200616170410.GL2554@hirez.programming.kicks-ass.net>
- <20200616171721.GM2554@hirez.programming.kicks-ass.net>
+        Tue, 16 Jun 2020 13:55:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgFPRzE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:55:04 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69592C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:55:04 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b6so2557792wrs.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:55:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x6TeJ27Z/ufkTVSy5H2Hs8I8PEvzUkw/b06a5ar99hE=;
+        b=Ni0wHVusra0BeszNE1FbdZq3xiw577V9lcPBzEp9viNz3mzkFw7bJepz/1FNbd0zVU
+         c1OVCXOu4+VXtsRLvW+Ar61hh4iIbDzWsX42lFRybCScKSib/9e6vgaYHQ9piGanRxXV
+         NLd6nBAgfW7w5ZfXYAtJeoWVzBCaZAgiaEs/I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x6TeJ27Z/ufkTVSy5H2Hs8I8PEvzUkw/b06a5ar99hE=;
+        b=M5TVg4azC15zWduB8L9BSXKJCUuAf6wAUCjof9JvpS/LWFeuB4xlC9ond9MCEi0JeY
+         8JbEZ3TfInhqK/reXqM42aym+z23LYO0h0ADWRUarufjWNIWCIi2ECcGgOfa1p0PyB1H
+         X8lqkfhXZpRkHWsmcTW/mnXk0dZFvgOtLXqwA5T2mF0gdPYVsVeqpXPo0Sx677YbrRSK
+         BhbLeVROGRpGI3g1qieTtd/S+MC7vv0uE4GjjJxxKS2YxkRiUqTGHCeUuj7g8s6ccpeY
+         NJKm9Y0YfIRTImNFKybu0SWrt10Gbxj1J1KiTpwzB5ZgHdcsgvIVkcxhqiSFlV0WdGLG
+         fPjA==
+X-Gm-Message-State: AOAM533mtlB+z+HA9ejcbLAvztymMX0/GyP+8VJzufhzIbILI5i1l74B
+        bAd86lO9r7lgLVYlxh5RkP7PdI5mlCfVkJBsxyqN
+X-Google-Smtp-Source: ABdhPJyZsG53yUkvAS7hfPSTsF86BxVUykQ+gEEoGqay+9S63hUPcf1mzcNPs1iPOt4D5AP6L4ckXF/Nudy/JVNC9Wo=
+X-Received: by 2002:adf:edc8:: with SMTP id v8mr4137541wro.176.1592330103084;
+ Tue, 16 Jun 2020 10:55:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616171721.GM2554@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200616045108.GP75760@lianli.shorne-pla.net> <mhng-b86477b3-4134-4023-968e-532ca0b33125@palmerdabbelt-glaptop1>
+ <CANN689GkUUfpTn+fkjsC-a=RwGsxVwsg-QXKDnVe6zXLjvuZWA@mail.gmail.com>
+In-Reply-To: <CANN689GkUUfpTn+fkjsC-a=RwGsxVwsg-QXKDnVe6zXLjvuZWA@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Tue, 16 Jun 2020 10:54:51 -0700
+Message-ID: <CAOnJCUKDP=xr=ddFvaTW_1gux=jshycvxmb=CYtt_+jpN6-u4g@mail.gmail.com>
+Subject: Re: mm lock issue while booting Linux on 5.8-rc1 for RISC-V
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>, shorne@gmail.com,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Topel <bjorn.topel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 07:17:21PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 16, 2020 at 07:04:10PM +0200, Peter Zijlstra wrote:
-> > [19324.742887] BUG: kernel NULL pointer dereference, address: 0000000000000150
-> > [19324.744075] #PF: supervisor read access in kernel mode
-> > [19324.744919] #PF: error_code(0x0000) - not-present page
-> > [19324.745786] PGD 0 P4D 0
-> > [19324.746215] Oops: 0000 [#1] PREEMPT SMP PTI
-> > [19324.746948] CPU: 10 PID: 76 Comm: ksoftirqd/10 Tainted: G        W         5.8.0-rc1+ #8
-> > [19324.748080] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
-> > [19324.749372] RIP: 0010:check_preempt_wakeup+0xad/0x1a0
-> > [19324.750218] Code: d0 39 d0 7d 2c 83 ea 01 48 8b 9b 48 01 00 00 39 d0 75 f2 48 39 bb 50 01 00 00 74 1e 48 8b ad 48 01 00 00 48 8b 9b 48 01 00 00 <48> 8b bd 50 01 00 00 48 39 bb 50 01 00 00 75 e2 48 85 ff 74 dd e8
-> > [19324.753364] RSP: 0000:ffffb3cb40320f50 EFLAGS: 00010087
-> > [19324.754255] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffb400bce0
-> > [19324.755465] RDX: 0000000000000000 RSI: ffff93c1dbed5b00 RDI: ffff93c1df4a8380
-> > [19324.756682] RBP: 0000000000000000 R08: 0000000000000000 R09: ffff93c1df2e83b0
-> > [19324.757848] R10: 0000000000000001 R11: 0000000000000335 R12: 0000000000000001
-> > [19324.758453] smpboot: CPU 11 is now offline
-> > [19324.759099] R13: ffff93c1dcf48000 R14: ffff93c1df4a8340 R15: ffff93c1df4a8340
-> > [19324.761167] FS:  0000000000000000(0000) GS:ffff93c1df480000(0000) knlGS:0000000000000000
-> > [19324.762559] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [19324.763527] CR2: 0000000000000150 CR3: 000000001e40a000 CR4: 00000000000006e0
-> > [19324.764726] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > [19324.765929] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > [19324.767100] Call Trace:
-> > [19324.767516]  <IRQ>
-> > [19324.767875]  check_preempt_curr+0x62/0x90
-> > [19324.768586]  ttwu_do_wakeup.constprop.0+0xf/0x100
-> > [19324.769407]  sched_ttwu_pending+0xa9/0xe0
-> > [19324.770077]  __sysvec_call_function_single+0x28/0xe0
-> > [19324.770926]  asm_call_on_stack+0x12/0x20
-> > [19324.771594]  </IRQ>
-> > [19324.771951]  sysvec_call_function_single+0x94/0xd0
-> > [19324.772596]  asm_sysvec_call_function_single+0x12/0x20
-> > [19324.773254] RIP: 0010:_raw_spin_unlock_irqrestore+0x5/0x30
-> > [19324.774169] Code: e4 49 ff c3 90 c6 07 00 bf 01 00 00 00 e8 23 2d 53 ff 65 8b 05 cc 32 4b 4c 85 c0 74 01 c3 e8 b9 e4 49 ff c3 90 c6 07 00 56 9d <bf> 01 00 00 00 e8 01 2d 53 ff 65 8b 05 aa 32 4b 4c 85 c0 74 01 c3
-> > [19324.777267] RSP: 0000:ffffb3cb4030bd58 EFLAGS: 00000287
-> > [19324.777956] RAX: 0000000000000001 RBX: ffff93c1dbed5b00 RCX: ffff93c1dcd63400
-> > [19324.779015] RDX: 0000000000000000 RSI: 0000000000000287 RDI: ffff93c1dbed6284
-> > [19324.780067] RBP: 000000000000000a R08: 00001193646cd91c R09: ffff93c1df49c008
-> > [19324.781192] R10: ffffb3cb4030bdf8 R11: 000000000000032e R12: 0000000000000000
-> > [19324.782386] R13: 0000000000000287 R14: ffff93c1dbed6284 R15: ffff93c1df2e8340
-> > [19324.783565]  try_to_wake_up+0x232/0x530
-> > [19324.784057]  ? trace_raw_output_hrtimer_start+0x70/0x70
-> > [19324.784977]  call_timer_fn+0x28/0x150
-> > [19324.785606]  ? trace_raw_output_hrtimer_start+0x70/0x70
-> > [19324.786486]  run_timer_softirq+0x182/0x250
-> > [19324.787191]  ? set_next_entity+0x8b/0x1a0
-> > [19324.787867]  ? _raw_spin_unlock_irq+0xe/0x20
-> > [19324.788597]  ? finish_task_switch+0x7b/0x230
-> > [19324.789338]  __do_softirq+0xfc/0x32b
-> > [19324.789961]  ? smpboot_register_percpu_thread+0xd0/0xd0
-> > [19324.790904]  run_ksoftirqd+0x21/0x30
-> > [19324.791510]  smpboot_thread_fn+0x195/0x230
-> > [19324.792203]  kthread+0x13d/0x160
-> > [19324.792731]  ? kthread_create_worker_on_cpu+0x60/0x60
-> > [19324.793576]  ret_from_fork+0x22/0x30
-> > [19324.794186] Modules linked in:
-> > [19324.794729] CR2: 0000000000000150
-> 
-> OK, so above we run the IPI handler, while below we trigger the IPI
-> handler on the local CPU (something that'll make, for instance Power,
-> explode but -just-works- on x86). Both on CPU 10.
-> 
-> The question is, what actual order did this happen in, I expect the WARN
-> happened first, and then the NULL deref. Seeing how a NULL deref is
-> fatal and can't very well continue to produce a WARN. I expect they got
-> inverted by the magic gunk that is printk.
-> 
-> > [19324.795303] ------------[ cut here ]------------
-> > [19324.795304] WARNING: CPU: 10 PID: 76 at kernel/smp.c:138 __smp_call_single_queue+0x40/0x50
-> > [19324.795305] Modules linked in:
-> > [19324.795306] CPU: 10 PID: 76 Comm: ksoftirqd/10 Not tainted 5.8.0-rc1+ #8
-> > [19324.795307] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
-> > [19324.795307] RIP: 0010:__smp_call_single_queue+0x40/0x50
-> > [19324.795308] Code: c2 40 91 02 00 4c 89 e6 4c 89 e7 48 03 14 c5 e0 56 2d b4 e8 b2 3a 2f 00 84 c0 75 04 5d 41 5c c3 89 ef 5d 41 5c e9 40 af f9 ff <0f> 0b eb cd 66 66 2e 0f 1f 84 00 00 00 00 00 90 41 54 49 89 f4 55
-> > [19324.795309] RSP: 0000:ffffb3cb4030bd18 EFLAGS: 00010046
-> > [19324.795310] RAX: 000000000000000a RBX: 0000000000000000 RCX: 00000000ffffffff
-> > [19324.795310] RDX: 00000000000090aa RSI: ffffffffb420bc3f RDI: ffffffffb4232e3e
-> > [19324.795311] RBP: 000000000000000a R08: 00001193646cd91c R09: ffff93c1df49c008
-> > [19324.795312] R10: ffffb3cb4030bdf8 R11: 000000000000032e R12: ffff93c1dbed5b30
-> > [19324.795312] R13: ffff93c1df4a8340 R14: 000000000000000a R15: ffff93c1df2e8340
-> > [19324.795313] FS:  0000000000000000(0000) GS:ffff93c1df480000(0000) knlGS:0000000000000000
-> > [19324.795313] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [19324.795314] CR2: 00000000ffffffff CR3: 000000001e40a000 CR4: 00000000000006e0
-> > [19324.795315] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > [19324.795315] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > [19324.795316] Call Trace:
-> > [19324.795316]  ttwu_queue_wakelist+0xa4/0xc0
-> > [19324.795316]  try_to_wake_up+0x432/0x530
-> 
-> This is indeed WF_ON_CPU... it had to be, but how ?!
+On Tue, Jun 16, 2020 at 3:45 AM Michel Lespinasse <walken@google.com> wrote:
+>
+> I am also unable to reproduce the issue so far.
+>
+> I wanted to point to a few things in case this helps:
+> - Commit 42fc541404f2 was bisected as the cause. This commit changes
+> walk_page_range_novma() to use mmap_assert_locked() instead of
+> lockdep_assert_held()
+> - mmap_assert_locked() checks lockdep_assert_held(), but also checks
+> that the rwsem itself is locked.
+>
+> Now how could lockdep think the lock is held, but the lock itself is
+> not marked as locked ???
+>
+> I'm not sure if it helps at all, but a few commits earlier,
+> 0cc55a0213a0 introduces mmap_read_trylock_non_owner(), which is used
+> exclusively by stackmap, and does the opposite: it acquires the mmap
+> lock without telling lockdep about it. I can't see any smoking gun
+> linking this to our bug, but I thought it may be worth mentioning as
+> it involves the same suspects (stackmap and the difference between
+> owning the lock vs lockdep thinking we own the lock).
+>
+> I'm sorry, that's only how far I was able to go on this bug - I'm not
+> sure how to investigate it further as I can not reproduce the issue...
+>
+> On Tue, Jun 16, 2020 at 1:40 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> >
+> > On Mon, 15 Jun 2020 21:51:08 PDT (-0700), shorne@gmail.com wrote:
+> > > On Tue, Jun 16, 2020 at 06:57:47AM +0900, Stafford Horne wrote:
+> > >> On Mon, Jun 15, 2020 at 12:28:11AM -0700, Atish Patra wrote:
+> > >> > Hi,
+> > >> > I encountered the following issue while booting 5.8-rc1 on Qemu for RV64.
+> > >> > I added additional dump_stack and observed that it's happening in bpf free path.
+> > >> > It happens always if CONFIG_DEBUG_VM is enabled. VM_BUG_ON_MM is
+> > >> > compiled away without that.
+> > >> > ------------------------------------------------------------------------
+> > >> > forked to background, child pid 113
+> > >> > [   10.328850] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted
+> > >> > 5.8.0-rc1-dirty #732
+> > >> > [   10.331739] Workqueue: events bpf_prog_free_deferred
+> > >> > [   10.334133] Call Trace:
+> > >> > [   10.338039] [<ffffffe000202698>] walk_stackframe+0x0/0xa4
+> > >> > [   10.339988] [<ffffffe000202880>] show_stack+0x2e/0x3a
+> > >> > [   10.340902] [<ffffffe00047074c>] dump_stack+0x72/0x8c
+> > >> > [   10.341451] [<ffffffe0002db4ce>] mmap_assert_locked.part.13+0x14/0x1c
+> > >> > [   10.342131] [<ffffffe0002db330>] walk_page_range_novma+0x0/0x4e
+> > >> > [   10.342973] [<ffffffe000204f94>] set_direct_map_invalid_noflush+0x66/0x6e
+> > >> > [   10.343917] [<ffffffe0002e0706>] __vunmap+0xe8/0x212
+> > >> > [   10.344680] [<ffffffe0002e0882>] __vfree+0x22/0x6e
+> > >> > [   10.345270] [<ffffffe0002e0902>] vfree+0x34/0x56
+> > >> > [   10.345834] [<ffffffe00027d752>] __bpf_prog_free+0x2c/0x36
+> > >> > [   10.346529] [<ffffffe0002801a2>] bpf_prog_free_deferred+0x74/0x8a
+> > >> > [   10.347394] [<ffffffe000219c70>] process_one_work+0x13a/0x272
+> > >> > [   10.348239] [<ffffffe00021a4b4>] worker_thread+0x50/0x2e4
+> > >> > [   10.348900] [<ffffffe00021ed98>] kthread+0xfc/0x10a
+> > >> > [   10.349470] [<ffffffe0002013da>] ret_from_exception+0x0/0xc
+> > >> > [   10.354405] mm ffffffe001018600 mmap 0000000000000000 seqnum 0 task_size 0
+> > >> > [   10.354405] get_unmapped_area 0000000000000000
+> > >> > [   10.354405] mmap_base 0 mmap_legacy_base 0 highest_vm_end 0
+> > >> > [   10.354405] pgd ffffffe001074000 mm_users 2 mm_count 1
+> > >> > pgtables_bytes 8192 map_count 0
+> > >> > [   10.354405] hiwater_rss 0 hiwater_vm 0 total_vm 0 locked_vm 0
+> > >> > [   10.354405] pinned_vm 0 data_vm 0 exec_vm 0 stack_vm 0
+> > >> > [   10.354405] start_code ffffffe000200000 end_code ffffffe00084acc2
+> > >> > start_data 0 end_data ffffffe00106dfe4
+> > >> > [   10.354405] start_brk 0 brk ffffffe0010bd6d0 start_stack 0
+> > >> > [   10.354405] arg_start 0 arg_end 0 env_start 0 env_end 0
+> > >> > [   10.354405] binfmt 0000000000000000 flags 0 core_state 0000000000000000
+> > >> > [   10.354405] ioctx_table 0000000000000000
+> > >> > [   10.354405] exe_file 0000000000000000
+> > >> > [   10.354405] tlb_flush_pending 0
+> > >> > [   10.354405] def_flags: 0x0()
+> > >> > [   10.369325] ------------[ cut here ]------------
+> > >> > [   10.370763] kernel BUG at include/linux/mmap_lock.h:81!
+> > >> > [   10.375235] Kernel BUG [#1]
+> > >> > [   10.377198] Modules linked in:
+> > >> > [   10.378931] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted 5.8.0-rc1-dirty #732
+> > >> > [   10.380179] Workqueue: events bpf_prog_free_deferred
+> > >> > [   10.381270] epc: ffffffe0002db4d4 ra : ffffffe0002db4d4 sp : ffffffe3eaea7c70
+> > >> > [   10.382561]  gp : ffffffe00106d950 tp : ffffffe3ef752f80 t0 :
+> > >> > ffffffe0010836e8
+> > >> > [   10.383996]  t1 : 0000000000000064 t2 : 0000000000000000 s0 :
+> > >> > ffffffe3eaea7c90
+> > >> > [   10.385119]  s1 : ffffffe001018600 a0 : 0000000000000289 a1 :
+> > >> > 0000000000000020
+> > >> > [   10.386099]  a2 : 0000000000000005 a3 : 0000000000000000 a4 :
+> > >> > ffffffe001012758
+> > >> > [   10.387294]  a5 : 0000000000000000 a6 : 0000000000000102 a7 :
+> > >> > 0000000000000006
+> > >> > [   10.388265]  s2 : ffffffe3f00674c0 s3 : ffffffe00106e108 s4 :
+> > >> > ffffffe00106e100
+> > >> > [   10.389250]  s5 : ffffffe00106e908 s6 : 0000000000000000 s7 :
+> > >> > 6db6db6db6db6db7
+> > >> > [   10.390272]  s8 : 0000000000000001 s9 : ffffffe00021a4f8 s10:
+> > >> > ffffffffffffffff
+> > >> > [   10.391293]  s11: ffffffe3f0066600 t3 : 000000000001a7a8 t4 :
+> > >> > 000000000001a7a8
+> > >> > [   10.392314]  t5 : 0000000000000000 t6 : ffffffe00107b76b
+> > >> > [   10.393096] status: 0000000000000120 badaddr: 0000000000000000
+> > >> > cause: 0000000000000003
+> > >> > [   10.397755] ---[ end trace 861659596ac28841 ]---
+> > >> > ---------------------------------------------------------------------------------------------------
+> > >> >
+> > >> > I haven't had the chance to bisect to figure out which commit caused
+> > >> > the issue. Just wanted
+> > >> > to check if it is a known issue already.
+> > >>
+> > >> Hi Atish,
+> > >>
+> > >> Note, I am getting the same (just now) when booting v5.8-rc1 on OpenRISC.  If
+> > >> you have any updates please post back.  I will try to look into this today or
+> > >> tomorrow.
+> > >
+> > > I have bisected this to, 42fc541404f249778e752ab39c8bc25fcb2dbe1e:
+> > >
+> > >   mmap locking API: add mmap_assert_locked() and mmap_assert_write_locked()
+> > >
+> > > This should have just changed the existing lockdep api's but something has
+> > > changed.  I haven't had time to look at it yet.
+> > >
+> > > Ccing: Michel Lespinasse <walken@google.com>
+> >
+> > This isn't manifesting on boot for me, on either rc1 or that commit.  I'm
+> > running a simple buildroot-based userspace, so I doubt anything is triggering
+> > BPF.  I don't run the BPF selftests, as they're a bit of a pain (IIRC they
+> > don't cross compile and need LLVM) -- does anyone have a userspace I can use to
+> > trigger the bug?
+>
+I am also using buildroot based userspace but it's a bit bulky because
+of my config.
+You can access it from here:
+https://wdc.box.com/s/r8j0d5ynp5gr27n2wo124xi9t8fp0tls
 
-I confess to being similarly mystified.  :-/
+A defconfig build & boot in Qemu with above userspace is sufficient to
+trigger the bug.
 
-							Thanx, Paul
+FYI: I noticed the kernel bug message every time during ssh-key
+generation. Not sure if that is related.
 
-> > [19324.795317]  ? trace_raw_output_hrtimer_start+0x70/0x70
-> > [19324.795317]  call_timer_fn+0x28/0x150
-> > [19324.795318]  ? trace_raw_output_hrtimer_start+0x70/0x70
-> > [19324.795318]  run_timer_softirq+0x182/0x250
-> > [19324.795319]  ? set_next_entity+0x8b/0x1a0
-> > [19324.795319]  ? _raw_spin_unlock_irq+0xe/0x20
-> > [19324.795319]  ? finish_task_switch+0x7b/0x230
-> > [19324.795320]  __do_softirq+0xfc/0x32b
-> > [19324.795320]  ? smpboot_register_percpu_thread+0xd0/0xd0
-> > [19324.795321]  run_ksoftirqd+0x21/0x30
-> > [19324.795321]  smpboot_thread_fn+0x195/0x230
-> > [19324.795321]  kthread+0x13d/0x160
-> > [19324.795322]  ? kthread_create_worker_on_cpu+0x60/0x60
-> > [19324.795322]  ret_from_fork+0x22/0x30
-> > [19324.795323] ---[ end trace 851fe1f1f7a85d8b ]---
-> 
-> 
-> > [19324.828475] ---[ end trace 851fe1f1f7a85d8c ]---
-> > [19324.829250] RIP: 0010:check_preempt_wakeup+0xad/0x1a0
-> > [19324.830107] Code: d0 39 d0 7d 2c 83 ea 01 48 8b 9b 48 01 00 00 39 d0 75 f2 48 39 bb 50 01 00 00 74 1e 48 8b ad 48 01 00 00 48 8b 9b 48 01 00 00 <48> 8b bd 50 01 00 00 48 39 bb 50 01 00 00 75 e2 48 85 ff 74 dd e8
-> > [19324.833208] RSP: 0000:ffffb3cb40320f50 EFLAGS: 00010087
-> > [19324.834098] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffb400bce0
-> > [19324.835272] RDX: 0000000000000000 RSI: ffff93c1dbed5b00 RDI: ffff93c1df4a8380
-> > [19324.836466] RBP: 0000000000000000 R08: 0000000000000000 R09: ffff93c1df2e83b0
-> > [19324.837669] R10: 0000000000000001 R11: 0000000000000335 R12: 0000000000000001
-> > [19324.838867] R13: ffff93c1dcf48000 R14: ffff93c1df4a8340 R15: ffff93c1df4a8340
-> > [19324.840019] FS:  0000000000000000(0000) GS:ffff93c1df480000(0000) knlGS:0000000000000000
-> > [19324.841316] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [19324.842242] CR2: 0000000000000150 CR3: 000000001e40a000 CR4: 00000000000006e0
-> > [19324.843406] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > [19324.844568] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > [19324.845710] Kernel panic - not syncing: Fatal exception in interrupt
-> > [19324.846998] Kernel Offset: 0x32000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> > [19324.848713] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+>
+>
+> --
+> Michel "Walken" Lespinasse
+> A program is never fully debugged until the last user dies.
+
+
+
+-- 
+Regards,
+Atish
