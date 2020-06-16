@@ -2,77 +2,72 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F24BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 724962074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EEC2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgFPLrG (ORCPT
+        id S1727969AbgFPLvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:47:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41376 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgFPLrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:47:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7D1F7ADD3;
-        Tue, 16 Jun 2020 11:47:07 +0000 (UTC)
-Date:   Tue, 16 Jun 2020 13:47:02 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Jim Cromie <jim.cromie@gmail.com>
-Cc:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux@rasmusvillemoes.dk, Jonathan Corbet <corbet@lwn.net>,
-        Orson Zhai <orson.zhai@unisoc.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 18/24] dyndbg: allow negating flag-chars in modflags
-Message-ID: <20200616114702.GM31238@alley>
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-19-jim.cromie@gmail.com>
+        Tue, 16 Jun 2020 07:51:35 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51419 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgFPLvf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 07:51:35 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jlA7h-0007iF-UR; Tue, 16 Jun 2020 11:51:26 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] mtd: rawnand: qcom: fix incorrect masking operator, used & instead of |
+Date:   Tue, 16 Jun 2020 12:51:25 +0100
+Message-Id: <20200616115125.74298-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200613155738.2249399-19-jim.cromie@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 2020-06-13 09:57:32, Jim Cromie wrote:
-> Extend flags modifications to allow [PFMLTU] negating flags.
-> This allows control-queries like:
-> 
->   #> Q () { echo file inode.c $* > control } # to type less
->   #> Q -P	# same as +p
->   #> Q +U	# same as -u
->   #> Q u-P	# same as u+p
-> 
-> This allows flags in a callsite to be simultaneously set and cleared,
-> while still starting with the current flagstate (with +- ops).
-> 
-> Using filter-flags with negating-flags, you can select exactly the
-> flagstates you want, both required and prohibited.
-> 
-> Then with negating-flags in modflags, you can set and clear every flag
-> 
->   #> Q umfLT-Pmf  # select sites with u,m,f only. enable print, turn off m,f leave u
-> 
-> Its not an important feature, but it does fill out the logic.
-> and the patch is tiny, and feels more symmetrical.
+From: Colin Ian King <colin.king@canonical.com>
 
-I do not think that it is a good idea.
+Currently the expression (nand_ctrl | BAM_MODE_EN) is always true no
+matter the value of nand_ctrl because the incorrect masking operator
+is being used.  Fix this by using bit-wise & instead of |.
 
-Many people do not like perl because it allows to do the same thing
-many ways. The result is that the code is hard to read. There are too
-many coding styles and tricks to understand.
+Addresses-Coverity: ("Wrong operator used")
+Fixes: dd0c1fc8de12 ("mtd: rawnand: qcom: set BAM mode only if not set already")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/mtd/nand/raw/qcom_nandc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best Regards,
-Petr
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index a3ef4288be27..37d95532ba7e 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -2790,7 +2790,7 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
+ 		 * only if it is not in BAM mode. In most cases BAM
+ 		 * mode will be enabled in bootloader
+ 		 */
+-		if (!(nand_ctrl | BAM_MODE_EN))
++		if (!(nand_ctrl & BAM_MODE_EN))
+ 			nandc_write(nandc, NAND_CTRL, nand_ctrl | BAM_MODE_EN);
+ 	} else {
+ 		nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
+-- 
+2.27.0.rc0
+
