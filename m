@@ -2,53 +2,52 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB18C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23034C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF7520882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0205F20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324377;
-	bh=bBOGp/s6/QPgSVyXCfA7cetJ8me5h+oJ/UkLC/kJLwg=;
+	s=default; t=1592324378;
+	bh=9gmy1HztA2mjnSIrbqEUjMiWyJe09lRlOSUFVNxX+Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AwJzgYHQ9b0i6m3Fp7nONzbA/ew2HJ6CgSKU2v5T2+zyQDSxhGB1B1jVMejH37bZN
-	 u4w2EaCar+2eEaNu4zUb+jJb2cgzi5j/otnksSrQew6s7hQgOkH7aMKUntTRuO68b5
-	 PXvOS3CnYm/HHv+g4OTgCiUhtUy7UZz0HT3byhqI=
+	b=fj6FL/g7TyGO5COr5hedT+zGZse58nj4/ufVmiNX6NwrUnk3aH4Ft0WEkR2m0cr/C
+	 9GmTVMfc1BCiV2llwZRivMd9fUofLV7k0PyRuOTvIOk+2xB2kPn4bdEESZ5xB9O9my
+	 wC9HWNv+fToiJD2s0JjidMLDIqFlCcxa64OV1d+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbgFPQTf (ORCPT
+        id S1730260AbgFPPhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:19:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730266AbgFPPhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 11:37:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730243AbgFPPhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74C6F20C56;
-        Tue, 16 Jun 2020 15:37:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F9C20C56;
+        Tue, 16 Jun 2020 15:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321837;
-        bh=bBOGp/s6/QPgSVyXCfA7cetJ8me5h+oJ/UkLC/kJLwg=;
+        s=default; t=1592321831;
+        bh=9gmy1HztA2mjnSIrbqEUjMiWyJe09lRlOSUFVNxX+Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVwKj7l3TXRRtWB5S8nPlyqqpzAP9DOmcZ/eVz3oum3zx4/Vg2cZ9R9uDJBONhsi0
-         y66OoH4rVYO3S5LltplVwPSesMvryX1PGkiIb+mlaBgS0v6ed0L7vNz+rZI8BE8Svu
-         aMiKsCqdKF2fx1SB01/mfm5XrXIH9EAtGovmW1MQ=
+        b=Uxn8aP7J47Bd+G7xZgFeH4hWF9XGDALsG67PChTZSwh16DHTV5CvFFpMrSHhSXXU9
+         iYUbyjsmsc2wWYt4+OfgyTpezDWzp5ivciKJZxzToXmeDK5vTb0vCgDaHmycnFs8uc
+         yAESMHwK4e6J7XJH0WbMroRQfU7v/8BlSLhZxNE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/134] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-Date:   Tue, 16 Jun 2020 17:33:38 +0200
-Message-Id: <20200616153102.422165991@linuxfoundation.org>
+Subject: [PATCH 5.4 032/134] fanotify: fix ignore mask logic for events on child and on dir
+Date:   Tue, 16 Jun 2020 17:33:36 +0200
+Message-Id: <20200616153102.324231978@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,66 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
+[ Upstream commit 2f02fd3fa13e51713b630164f8a8e5b42de8283b ]
 
-fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-tb_hlist) without rcu_read_lock() will trigger a warning,
+The comments in fanotify_group_event_mask() say:
 
- net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
+  "If the event is on dir/child and this mark doesn't care about
+   events on dir/child, don't send it!"
 
- other info that might help us debug this:
+Specifically, mount and filesystem marks do not care about events
+on child, but they can still specify an ignore mask for those events.
+For example, a group that has:
+- A mount mark with mask 0 and ignore_mask FAN_OPEN
+- An inode mark on a directory with mask FAN_OPEN | FAN_OPEN_EXEC
+  with flag FAN_EVENT_ON_CHILD
 
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by proc01/115277:
-  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
+A child file open for exec would be reported to group with the FAN_OPEN
+event despite the fact that FAN_OPEN is in ignore mask of mount mark,
+because the mark iteration loop skips over non-inode marks for events
+on child when calculating the ignore mask.
 
- Call Trace:
-  dump_stack+0xf4/0x164 (unreliable)
-  lockdep_rcu_suspicious+0x140/0x164
-  fib_triestat_seq_show+0x750/0x880
-  seq_read+0x1a0/0x670
-  proc_reg_read+0x10c/0x1b0
-  __vfs_read+0x3c/0x70
-  vfs_read+0xac/0x170
-  ksys_read+0x7c/0x140
-  system_call+0x5c/0x68
+Move ignore mask calculation to the top of the iteration loop block
+before excluding marks for events on dir/child.
 
-Fix it by adding a pair of rcu_read_lock/unlock() and use
-cond_resched_rcu() to avoid the situation where walking of a large
-number of items  may prevent scheduling for a long time.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200524072441.18258-1-amir73il@gmail.com
+Reported-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/linux-fsdevel/20200521162443.GA26052@quack2.suse.cz/
+Fixes: 55bf882c7f13 "fanotify: fix merging marks masks with FAN_ONDIR"
+Fixes: b469e7e47c8a "fanotify: fix handling of events on child..."
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_trie.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/notify/fanotify/fanotify.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-index f12fa8da6127..1b851fd82613 100644
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2455,6 +2455,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
- 		   " %zd bytes, size of tnode: %zd bytes.\n",
- 		   LEAF_SIZE, TNODE_SIZE(0));
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index deb13f0a0f7d..d24548ed31b9 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -171,6 +171,10 @@ static u32 fanotify_group_event_mask(struct fsnotify_group *group,
+ 		if (!fsnotify_iter_should_report_type(iter_info, type))
+ 			continue;
+ 		mark = iter_info->marks[type];
++
++		/* Apply ignore mask regardless of ISDIR and ON_CHILD flags */
++		marks_ignored_mask |= mark->ignored_mask;
++
+ 		/*
+ 		 * If the event is on dir and this mark doesn't care about
+ 		 * events on dir, don't send it!
+@@ -188,7 +192,6 @@ static u32 fanotify_group_event_mask(struct fsnotify_group *group,
+ 			continue;
  
-+	rcu_read_lock();
- 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
- 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
- 		struct fib_table *tb;
-@@ -2474,7 +2475,9 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
- 			trie_show_usage(seq, t->stats);
- #endif
- 		}
-+		cond_resched_rcu();
+ 		marks_mask |= mark->mask;
+-		marks_ignored_mask |= mark->ignored_mask;
  	}
-+	rcu_read_unlock();
  
- 	return 0;
- }
+ 	test_mask = event_mask & marks_mask & ~marks_ignored_mask;
 -- 
 2.25.1
 
