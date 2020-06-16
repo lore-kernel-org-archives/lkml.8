@@ -2,111 +2,109 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2158520644
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D19420882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:41:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QO/3jZe8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgFPOlY (ORCPT
+        id S1729348AbgFPOla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:41:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:33644 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728501AbgFPOlY (ORCPT
+        Tue, 16 Jun 2020 10:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729291AbgFPOl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:41:24 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 624471C0BD2; Tue, 16 Jun 2020 16:41:22 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 16:41:22 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>, alexander.deucher@amd.com,
-        chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
-        Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-Message-ID: <20200616144122.GA18447@duo.ucw.cz>
-References: <20200519163234.226513-1-sashal@kernel.org>
- <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
- <20200616105112.GC1718@bug>
- <20200616132819.GP1931@sasha-vm>
+        Tue, 16 Jun 2020 10:41:28 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53175C06174E;
+        Tue, 16 Jun 2020 07:41:26 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id k8so14461876edq.4;
+        Tue, 16 Jun 2020 07:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=l/4v4uNfxj2Ra/ecZb6XFusYhNP32Q1YssrDECez5T4=;
+        b=QO/3jZe8jE3IbTNSTGc0+rbL0jw1MTZPmVlOJ94+3cRo4NQ1kqOUK/ObupR+A7ko5p
+         4i6uHenHQWFkQgv/imQlO0FaMCy7EpKNKR7iU+n6N5+Zbx6eB0c5Uef3A1hhsMc9kgci
+         +KXZ/2wkQS0I/qy3HydUV/T0apsK55J5UTvI2mr0pk2V0I2XhkHHOdyFlSpRMQZKOvvL
+         4DoBRO5c6mYpwQQ8fr4xSJJ7+v4Em4YNRrUpx6iCumxEmbdHTeqwgqrQjzOemNQt76Dc
+         Nj3aiUUaeGPRNb7BJSc4tzt9ORV6Wjq55/3GqeOcKjuL6ia4Hqi1fmAycF3LEIQwksm/
+         HzuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=l/4v4uNfxj2Ra/ecZb6XFusYhNP32Q1YssrDECez5T4=;
+        b=sDJY/CbHFTFlKkF3uyNgLXBAinj9V9Y0fe+5M/Uf4JsVx1wST5E4Rf8svUcQ4DU6zp
+         DQZfXuwxrv3biZ6d0pTZxgp3+Xm48xwqpm7wSEo60tXloI+jsuEuqUNPcarE8GTsxCg2
+         7zhlJyCJsi+EiVUftsayADe4p7RD9ssQHpDoS0dBaAxyG/qVBsl+kRyStPSSZnnI9IG/
+         zuR/bjnE3PCowTYKJ2jg4REW4umeB1ADGZwHLs3n8cFO8yjXTSu7csGYFvll+4BemAVF
+         vw2G/hZb2pDj/77oHUdEvf9o3G055HPZ/RTybSN4/0pUAtXMGO98wkp8yGXo99elBFrx
+         reFQ==
+X-Gm-Message-State: AOAM531p/rlYuqz4WphL42xKc7Hyg90OIqgpHOjR/ZRPXFnI1GrahYuO
+        KI0WCtcI4iPU91XPG//R7ngo6M/g
+X-Google-Smtp-Source: ABdhPJxAjfTQ5MsYKQ3ahtPWJqCQ3jUFi5p3FWQNFGkS2dhGlHlrMeRqBZxr7ozocCWUlKHfVjwT8g==
+X-Received: by 2002:a05:6402:8d1:: with SMTP id d17mr2761655edz.38.1592318484856;
+        Tue, 16 Jun 2020 07:41:24 -0700 (PDT)
+Received: from localhost.localdomain ([188.26.56.128])
+        by smtp.gmail.com with ESMTPSA id c17sm11264964eja.42.2020.06.16.07.41.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 07:41:24 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, joakim.tjernlund@infinera.com,
+        madalin.bucur@oss.nxp.com, fido_max@inbox.ru,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net 1/2] Revert "dpaa_eth: fix usage as DSA master, try 3"
+Date:   Tue, 16 Jun 2020 17:41:17 +0300
+Message-Id: <20200616144118.3902244-2-olteanv@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200616144118.3902244-1-olteanv@gmail.com>
+References: <20200616144118.3902244-1-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
-Content-Disposition: inline
-In-Reply-To: <20200616132819.GP1931@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
---BOKacYhQ+x31HxR3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This reverts commit 5d14c304bfc14b4fd052dc83d5224376b48f52f0.
 
-On Tue 2020-06-16 09:28:19, Sasha Levin wrote:
-> On Tue, Jun 16, 2020 at 12:51:13PM +0200, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > > The driver creates the /dev/dxg device, which can be opened by user=
- mode
-> > > > application and handles their ioctls. The IOCTL interface to the dr=
-iver
-> > > > is defined in dxgkmthk.h (Dxgkrnl Graphics Port Driver ioctl
-> > > > definitions). The interface matches the D3DKMT interface on Windows.
-> > > > Ioctls are implemented in ioctl.c.
-> > >=20
-> > > Echoing what others said, you're not making a DRM driver. The driver =
-should live outside
-> > > of the DRM code.
-> > >=20
-> >=20
-> > Actually, this sounds to me like "this should not be merged into linux =
-kernel". I mean,
-> > we already have DRM API on Linux. We don't want another one, do we?
->=20
-> This driver doesn't have any display functionality.
+The Fixes: tag was incorrect, and it was subsequently backported to the
+incorrect stable trees, breaking them.
 
-Graphics cards without displays connected are quite common. I may be
-wrong, but I believe we normally handle them using DRM...
+Reported-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > And at the very least... this misses API docs for /dev/dxg. Code can't =
-really
-> > be reviewed without that.
->=20
-> The docs live here: https://docs.microsoft.com/en-us/windows-hardware/dri=
-vers/ddi/d3dkmthk/
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index 2972244e6eb0..c4416a5f8816 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2914,7 +2914,7 @@ static int dpaa_eth_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Do this here, so we can be verbose early */
+-	SET_NETDEV_DEV(net_dev, dev->parent);
++	SET_NETDEV_DEV(net_dev, dev);
+ 	dev_set_drvdata(dev, net_dev);
+ 
+ 	priv = netdev_priv(net_dev);
+-- 
+2.25.1
 
-I don't see "/dev/dxg" being metioned there. Plus, kernel API
-documentation should really go to Documentation, and be suitably
-licensed.
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---BOKacYhQ+x31HxR3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXujaEgAKCRAw5/Bqldv6
-8q/JAKCQjRPnkrFqnsMWU0xDN/FHE1enzwCeMHA4YAkm0yQfrg+8eKiMWa/ARU8=
-=bHer
------END PGP SIGNATURE-----
-
---BOKacYhQ+x31HxR3--
