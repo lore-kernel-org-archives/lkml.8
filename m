@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F266DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34B020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D8320776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322435;
-	bh=AYsOaqkq44XXpdqfqJmtNh/V7JdxTloW2kI9UsMF6Go=;
+	s=default; t=1592322437;
+	bh=Ww/3zxU6fbSSh6OUodW4LyHhRVCSyKXuqOzIlIhcuJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rxsizFEaFfLIEFP/4aECIYGhaOgL3nNTbLwjPBMDUcbycGngmmJlft7BMkZw0CV3
-	 8aUCWmC1Ig33y2Zu0EZNLqqDWM6sJSDO/yuCtOiJXyivhx0KA20rVTiBwhMf+WaERG
-	 +JM0fyP6Yp/nJpstjzv1SvuS4Pj4ZVEHcrOBRYjE=
+	b=aymEKiCQCSAbJXpBaRoHh6hv4lj7aP33Ra0KmWC4V/D08ERONl94majAJrYHTN/qH
+	 Wh+YFRppvXjlEXSn71FAabXyDAqWATWL0cbN7vL4ymdFPH7uEidVVkYsdn2+SiKray
+	 xr+34xcD8cx15Xsh8ZaU6ZWpsAwsTjgIxEelDhy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732305AbgFPPrO (ORCPT
+        id S1731988AbgFPPrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:47:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:47:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731578AbgFPPrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:47:06 -0400
+        id S1732294AbgFPPrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2E5C2071A;
-        Tue, 16 Jun 2020 15:47:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 224BE21475;
+        Tue, 16 Jun 2020 15:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322425;
-        bh=AYsOaqkq44XXpdqfqJmtNh/V7JdxTloW2kI9UsMF6Go=;
+        s=default; t=1592322430;
+        bh=Ww/3zxU6fbSSh6OUodW4LyHhRVCSyKXuqOzIlIhcuJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ta4jhmyOX3IIvWSQ8OxHdzxBiJ6ONIY5S8xsI6PFacbiRxlVSnCX7l0ZpcH8zItKq
-         R8CqfU6/IZ9FEcL/oIjQkr1ECmRpGIuSuyPTo+mfS3sqL/VEa39PvLW4XpczDFuNkE
-         snrUgGnnENAL1BCVsJMYsZcIMSynG1LwGNE/8cFM=
+        b=N7YOepvPI6Cz7Uk7/oWLgovUDCIXOE45tXh7BC5tQtHFUgTYABpPrq+6V/5LDO7gm
+         vqX72KNbfuLoF4Z2rSdH95bi3fGvrE+hukeRrjyJ+Gcz6X4i9Jq7wniH2WKebyVp4p
+         kJfaf+X2W1bv4wHgVjNZ+/NOKWWq3qiPDq7R/eEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jue Wang <juew@google.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.7 096/163] x86/{mce,mm}: Unmap the entire page if the whole page is affected and poisoned
-Date:   Tue, 16 Jun 2020 17:34:30 +0200
-Message-Id: <20200616153111.429328810@linuxfoundation.org>
+        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.7 121/163] remoteproc: Fix and restore the parenting hierarchy for vdev
+Date:   Tue, 16 Jun 2020 17:34:55 +0200
+Message-Id: <20200616153112.607448077@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,145 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Luck <tony.luck@intel.com>
+From: Suman Anna <s-anna@ti.com>
 
-commit 17fae1294ad9d711b2c3dd0edef479d40c76a5e8 upstream.
+commit c774ad010873bb89dcc0cdcb1e96aef6664d8caf upstream.
 
-An interesting thing happened when a guest Linux instance took a machine
-check. The VMM unmapped the bad page from guest physical space and
-passed the machine check to the guest.
+The commit 086d08725d34 ("remoteproc: create vdev subdevice with specific
+dma memory pool") has introduced a new vdev subdevice for each vdev
+declared in the firmware resource table and made it as the parent for the
+created virtio rpmsg devices instead of the previous remoteproc device.
+This changed the overall parenting hierarchy for the rpmsg devices, which
+were children of virtio devices, and does not allow the corresponding
+rpmsg drivers to retrieve the parent rproc device through the
+rproc_get_by_child() API.
 
-Linux took all the normal actions to offline the page from the process
-that was using it. But then guest Linux crashed because it said there
-was a second machine check inside the kernel with this stack trace:
+Fix this by restoring the remoteproc device as the parent. The new vdev
+subdevice can continue to inherit the DMA attributes from the remoteproc's
+parent device (actual platform device).
 
-do_memory_failure
-    set_mce_nospec
-         set_memory_uc
-              _set_memory_uc
-                   change_page_attr_set_clr
-                        cpa_flush
-                             clflush_cache_range_opt
-
-This was odd, because a CLFLUSH instruction shouldn't raise a machine
-check (it isn't consuming the data). Further investigation showed that
-the VMM had passed in another machine check because is appeared that the
-guest was accessing the bad page.
-
-Fix is to check the scope of the poison by checking the MCi_MISC register.
-If the entire page is affected, then unmap the page. If only part of the
-page is affected, then mark the page as uncacheable.
-
-This assumes that VMMs will do the logical thing and pass in the "whole
-page scope" via the MCi_MISC register (since they unmapped the entire
-page).
-
-  [ bp: Adjust to x86/entry changes. ]
-
-Fixes: 284ce4011ba6 ("x86/memory_failure: Introduce {set, clear}_mce_nospec()")
-Reported-by: Jue Wang <juew@google.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Jue Wang <juew@google.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200520163546.GA7977@agluck-desk2.amr.corp.intel.com
+Cc: stable@vger.kernel.org
+Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Link: https://lore.kernel.org/r/20200420160600.10467-3-s-anna@ti.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/set_memory.h |   19 +++++++++++++------
- arch/x86/kernel/cpu/mce/core.c    |   11 +++++++++--
- include/linux/set_memory.h        |    2 +-
- 3 files changed, 23 insertions(+), 9 deletions(-)
+ drivers/remoteproc/remoteproc_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -86,28 +86,35 @@ int set_direct_map_default_noflush(struc
- extern int kernel_set_to_readonly;
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -517,7 +517,7 @@ static int rproc_handle_vdev(struct rpro
  
- #ifdef CONFIG_X86_64
--static inline int set_mce_nospec(unsigned long pfn)
-+/*
-+ * Prevent speculative access to the page by either unmapping
-+ * it (if we do not require access to any part of the page) or
-+ * marking it uncacheable (if we want to try to retrieve data
-+ * from non-poisoned lines in the page).
-+ */
-+static inline int set_mce_nospec(unsigned long pfn, bool unmap)
- {
- 	unsigned long decoy_addr;
- 	int rc;
- 
- 	/*
--	 * Mark the linear address as UC to make sure we don't log more
--	 * errors because of speculative access to the page.
- 	 * We would like to just call:
--	 *      set_memory_uc((unsigned long)pfn_to_kaddr(pfn), 1);
-+	 *      set_memory_XX((unsigned long)pfn_to_kaddr(pfn), 1);
- 	 * but doing that would radically increase the odds of a
- 	 * speculative access to the poison page because we'd have
- 	 * the virtual address of the kernel 1:1 mapping sitting
- 	 * around in registers.
- 	 * Instead we get tricky.  We create a non-canonical address
- 	 * that looks just like the one we want, but has bit 63 flipped.
--	 * This relies on set_memory_uc() properly sanitizing any __pa()
-+	 * This relies on set_memory_XX() properly sanitizing any __pa()
- 	 * results with __PHYSICAL_MASK or PTE_PFN_MASK.
- 	 */
- 	decoy_addr = (pfn << PAGE_SHIFT) + (PAGE_OFFSET ^ BIT(63));
- 
--	rc = set_memory_uc(decoy_addr, 1);
-+	if (unmap)
-+		rc = set_memory_np(decoy_addr, 1);
-+	else
-+		rc = set_memory_uc(decoy_addr, 1);
- 	if (rc)
- 		pr_warn("Could not invalidate pfn=0x%lx from 1:1 map\n", pfn);
- 	return rc;
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -529,6 +529,13 @@ bool mce_is_memory_error(struct mce *m)
- }
- EXPORT_SYMBOL_GPL(mce_is_memory_error);
- 
-+static bool whole_page(struct mce *m)
-+{
-+	if (!mca_cfg.ser || !(m->status & MCI_STATUS_MISCV))
-+		return true;
-+	return MCI_MISC_ADDR_LSB(m->misc) >= PAGE_SHIFT;
-+}
-+
- bool mce_is_correctable(struct mce *m)
- {
- 	if (m->cpuvendor == X86_VENDOR_AMD && m->status & MCI_STATUS_DEFERRED)
-@@ -600,7 +607,7 @@ static int uc_decode_notifier(struct not
- 
- 	pfn = mce->addr >> PAGE_SHIFT;
- 	if (!memory_failure(pfn, 0))
--		set_mce_nospec(pfn);
-+		set_mce_nospec(pfn, whole_page(mce));
- 
- 	return NOTIFY_OK;
- }
-@@ -1098,7 +1105,7 @@ static int do_memory_failure(struct mce
- 	if (ret)
- 		pr_err("Memory error not recovered");
- 	else
--		set_mce_nospec(m->addr >> PAGE_SHIFT);
-+		set_mce_nospec(m->addr >> PAGE_SHIFT, whole_page(m));
- 	return ret;
- }
- 
---- a/include/linux/set_memory.h
-+++ b/include/linux/set_memory.h
-@@ -26,7 +26,7 @@ static inline int set_direct_map_default
- #endif
- 
- #ifndef set_mce_nospec
--static inline int set_mce_nospec(unsigned long pfn)
-+static inline int set_mce_nospec(unsigned long pfn, bool unmap)
- {
- 	return 0;
- }
+ 	/* Initialise vdev subdevice */
+ 	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
+-	rvdev->dev.parent = rproc->dev.parent;
++	rvdev->dev.parent = &rproc->dev;
+ 	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
+ 	rvdev->dev.release = rproc_rvdev_release;
+ 	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
 
 
