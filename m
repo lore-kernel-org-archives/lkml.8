@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2539FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09739208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2085C20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324245;
-	bh=lMiw6z8M6Tmg7XUhbTCh6hOdFxHhL1CBBaI7l7SKsZY=;
+	s=default; t=1592324252;
+	bh=9kuZ9Z/CpB400aIu5hJrhqvJUq4xSkrb7iwrXF3uG+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7pTeO12H5ZSCFAzhq9fV3fdQP0ZmnAcybCQaN4vqz18ZcnFYLKkEgZJrcjpnxsKr
-	 BmkNpqXA/j5IfpiVwh5UiTSqpfjWfl/GKv1vGMt1Hf1V7orbKwU2RJgJYTpITQO0+E
-	 PvGVM+WDDO8bTPiFlOPyHG0onkP/VJookz3H9kNc=
+	b=bUW3Nxpdjd092MngpozTMrFzu3U7Dvo2hukmZBSXtTtJytYOuQmHAwSsqwq86j9wE
+	 PAMMdW2AAiisayQgipsBnJShw58Ng5OSsDlI4dO4jgcW5g6QcTIfxTnrOXxf3SUSdz
+	 WOUA/cjNdZ5+bHsNHOdMvkqEyc4QhVcKOHnhSaCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732422AbgFPQRX (ORCPT
+        id S1730640AbgFPQRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:17:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52798 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730296AbgFPPjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:25 -0400
+        id S1730069AbgFPPjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:39:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB0F20B1F;
-        Tue, 16 Jun 2020 15:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A15622145D;
+        Tue, 16 Jun 2020 15:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321964;
-        bh=lMiw6z8M6Tmg7XUhbTCh6hOdFxHhL1CBBaI7l7SKsZY=;
+        s=default; t=1592321962;
+        bh=9kuZ9Z/CpB400aIu5hJrhqvJUq4xSkrb7iwrXF3uG+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v4MYZeWF1AlnV3biyUDaL9VI8TeCQET7ucIK6xws3tARkOkN8sv0KTRI7RuKwcvdx
-         Q+q+GcssxiD6FdfupNVDRmJKen9DS51VsFEOP/KADIooiJSAYMtwJ3rWvoPrajKNXg
-         Fnn809nwEagwJpHKrxGXw8PS+SiqtlvegBmzjGNg=
+        b=RIwBwyNxQRp1hZszUwlGmbZJe3aJK5IUI3jPk4XdHLBR1gPT/07d2dOhadMTOhBq8
+         J4T4nSgagRzNo0NoS5NeFbJ0o8e6trVrbECuw2/wo9ucTkzCGiAzrRrefubn1mfYVQ
+         Vro+bKKavn1FFltlj+B4GbPOnNRtBp6ciaVce4h4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 076/134] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
-Date:   Tue, 16 Jun 2020 17:34:20 +0200
-Message-Id: <20200616153104.422759588@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 042/134] x86/speculation: PR_SPEC_FORCE_DISABLE enforcement for indirect branches.
+Date:   Tue, 16 Jun 2020 17:33:46 +0200
+Message-Id: <20200616153102.810413161@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,62 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-commit 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c upstream.
+commit 4d8df8cbb9156b0a0ab3f802b80cb5db57acc0bf upstream.
 
-Currently we set the tx/rx buffer to 0xff when NULL. This causes
-problems with some spi slaves where 0xff is a valid command. Looking
-at other drivers, the tx/rx buffer is usually set to 0x00 when NULL.
-Following this convention solves the issue.
+Currently, it is possible to enable indirect branch speculation even after
+it was force-disabled using the PR_SPEC_FORCE_DISABLE option. Moreover, the
+PR_GET_SPECULATION_CTRL command gives afterwards an incorrect result
+(force-disabled when it is in fact enabled). This also is inconsistent
+vs. STIBP and the documention which cleary states that
+PR_SPEC_FORCE_DISABLE cannot be undone.
 
-Fixes: fa236a7ef240 ("spi: bcm-qspi: Add Broadcom MSPI driver")
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+Fix this by actually enforcing force-disabled indirect branch
+speculation. PR_SPEC_ENABLE called after PR_SPEC_FORCE_DISABLE now fails
+with -EPERM as described in the documentation.
+
+Fixes: 9137bb27e60e ("x86/speculation: Add prctl() control for indirect branch speculation")
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200420190853.45614-6-kdasu.kdev@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-bcm-qspi.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/spi/spi-bcm-qspi.c
-+++ b/drivers/spi/spi-bcm-qspi.c
-@@ -670,7 +670,7 @@ static void read_from_hw(struct bcm_qspi
- 			if (buf)
- 				buf[tp.byte] = read_rxram_slot_u8(qspi, slot);
- 			dev_dbg(&qspi->pdev->dev, "RD %02x\n",
--				buf ? buf[tp.byte] : 0xff);
-+				buf ? buf[tp.byte] : 0x0);
- 		} else {
- 			u16 *buf = tp.trans->rx_buf;
- 
-@@ -678,7 +678,7 @@ static void read_from_hw(struct bcm_qspi
- 				buf[tp.byte / 2] = read_rxram_slot_u16(qspi,
- 								      slot);
- 			dev_dbg(&qspi->pdev->dev, "RD %04x\n",
--				buf ? buf[tp.byte] : 0xffff);
-+				buf ? buf[tp.byte / 2] : 0x0);
- 		}
- 
- 		update_qspi_trans_byte_count(qspi, &tp,
-@@ -733,13 +733,13 @@ static int write_to_hw(struct bcm_qspi *
- 	while (!tstatus && slot < MSPI_NUM_CDRAM) {
- 		if (tp.trans->bits_per_word <= 8) {
- 			const u8 *buf = tp.trans->tx_buf;
--			u8 val = buf ? buf[tp.byte] : 0xff;
-+			u8 val = buf ? buf[tp.byte] : 0x00;
- 
- 			write_txram_slot_u8(qspi, slot, val);
- 			dev_dbg(&qspi->pdev->dev, "WR %02x\n", val);
- 		} else {
- 			const u16 *buf = tp.trans->tx_buf;
--			u16 val = buf ? buf[tp.byte / 2] : 0xffff;
-+			u16 val = buf ? buf[tp.byte / 2] : 0x0000;
- 
- 			write_txram_slot_u16(qspi, slot, val);
- 			dev_dbg(&qspi->pdev->dev, "WR %04x\n", val);
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1261,11 +1261,14 @@ static int ib_prctl_set(struct task_stru
+ 			return 0;
+ 		/*
+ 		 * Indirect branch speculation is always disabled in strict
+-		 * mode.
++		 * mode. It can neither be enabled if it was force-disabled
++		 * by a  previous prctl call.
++
+ 		 */
+ 		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
+ 		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
+-		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED ||
++		    task_spec_ib_force_disable(task))
+ 			return -EPERM;
+ 		task_clear_spec_ib_disable(task);
+ 		task_update_spec_tif(task);
 
 
