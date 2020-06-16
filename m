@@ -7,91 +7,83 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BABC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F935C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39BB62098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068CC2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ceofJhQi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VK0MaGVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgFPLds (ORCPT
+        id S1728770AbgFPLeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
+        Tue, 16 Jun 2020 07:34:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728333AbgFPLc6 (ORCPT
+        with ESMTP id S1728522AbgFPLdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:32:58 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50BC6C08C5C9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:32:52 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id k13so11202283vsm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:32:52 -0700 (PDT)
+        Tue, 16 Jun 2020 07:33:44 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B1EC08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:33:44 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id q10so4715048vka.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:33:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1C4xlbOuF8hLryefQXY445HSGUPqVPlV2H+ODb1eYxA=;
-        b=ceofJhQisogT8djGC+30R6rH9kr18j8pEGv0o3E7GDSHGgQsSPhVHRc6HbNfK958xu
-         Itwe4tAW3ORMqnAngeF8gkzFFaOMZ+PuMRuNbeq1hm9SVEJcJNck70qMbwnLCKDIMlNK
-         /jgfIu08OHf/QouS/AlteiIEFOgmx33pDwImiI0lLCz+ZVTubelWtLR6UiwyA/uYTrPL
-         56pr8YjveJBuLa0t/dg3sUzoeT7Pms0qMYcEYTQvVfjf7+kznUMrxFnXAwL3Mvy4ajRD
-         ZW/bUsx8bXFvw78umR4r3LHiGZaV/Rg2LKkR8p3RWfvImjI/zmJOBvmLpVJxu6zHMuJ0
-         f0hQ==
+        bh=d3xurtsGxG5+pBj/Wd/EiagOHM+i8tFxNIlSk/FHDFA=;
+        b=VK0MaGVKyzGVAsortmOAkqQBfDxQ17xbC+E5ynMMCx+V6YoKoddQvXDG6GVU74fLDE
+         3AOFqiB9yyL/7Bx9YbSZLLalzmmfXNKl6UgP0RgUNX3H7O8go3qlIWEaicPbap/w/fXa
+         4Dhyg/QJIX3D4Sla8YWYe2UxMKRASkzm3vhhJ92d+92UAs26cKGtLdQHKIY+0/lLV17o
+         EXPHDXICY8O7sHOyRdGyfYzx8DP/K2SXD3XSK5Ng/Eqjth22KJy3v6SHvbp8TdknSgHv
+         DfOVaqgwFbXbUHUJLXtQCjdgXitPvvjeBqi3BmhG9GCsQleQY/b0GQ/ZXogtXQe8XA02
+         3SlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1C4xlbOuF8hLryefQXY445HSGUPqVPlV2H+ODb1eYxA=;
-        b=S5eFPwK52vfblOJzb5wy0dGqDgCv145Gp50xpWY8wsALOKEc2umrrcx1IllfurwkRS
-         mqdrfKbxGazaxjHzplqFXybfGct/o8J91cL3RRzG5l04cz8443XjaMa81YGHPyzbldX2
-         jXleXFy3WecHb9YAA/+eTvKnTOAF9CmRyIfUGdwuQj+fBgvveVGRUVf58J0tg/90ZTjh
-         GQFn00Rpq0veRTv36+fsnOB89jI/LYpWqcsYsqTa6mdehxFwPq/p5ILeFUG8l0Kc9Tqu
-         e+tAjfmJqDov3oEutQxUcyL1YUItECR+yxpipm676dnwL0RW32Zi7kJizFQG2DoTR8DM
-         Bj1Q==
-X-Gm-Message-State: AOAM532xu/1Bpj0XM7Dj6VlrBYzDT+X6v5VzzQwisfGLIDSfd0pC3IRy
-        YRMPM6asfZVIxKzJBQxES4+vQQd3kk5Vqyaxe2pu2A==
-X-Google-Smtp-Source: ABdhPJw63noGBljzHWsWI4sYYIst23+5lAqRC5OLkTcOQ4G7Dp0cAbxMHpwylGBv2AxyVk8ZHK1Du/uSYKkWqtndx84=
-X-Received: by 2002:a67:db88:: with SMTP id f8mr1115288vsk.165.1592307171958;
- Tue, 16 Jun 2020 04:32:51 -0700 (PDT)
+        bh=d3xurtsGxG5+pBj/Wd/EiagOHM+i8tFxNIlSk/FHDFA=;
+        b=STK7NvaD5jKz4qkuW8oJsIC0Q9DIRlWDjU+nHQzTY6UvRssQPl9X0RGlh3eJKQqK7P
+         GNRbx8MXCaoagCCjFgsZZObEPk14mqTjTUvox0L/AEC1XhMsSpQrDPXPnMWSJuvil+pZ
+         dpw+sUA7PrbGlkNFj5E/tXE1qjRxTXeYf7oxoYnDPs0QW94gdEsCw/QaHstahf04xX2L
+         t9wKYLzDlIbjOTxKkcGlDsTlWOBA9nFTeETJ7DYYI8Dn9Uc5VBKz56YKCBck7p5ZQsQ5
+         upfmROXOrZf4g9qZYzKKL9slYbOWxafW0w14qnkCprfkhU+vv1MdsuGk10uc5CT/P30k
+         PPzw==
+X-Gm-Message-State: AOAM533awIQdKd89HIZsxs3sasb08HuYiC2MnBFBaSW9cHmXhoggaY2W
+        3uh7LjbCYzjaEYJ7j24ONcohn2ZjAGGa1lZt3PGxEw==
+X-Google-Smtp-Source: ABdhPJwISf1vfOjyjum1tJCBaNteiqD3S1uRqKWFGycL6f89hwszildCgajIP6J3PoKnXdvffL4CBueNZTWeqBkPb0Y=
+X-Received: by 2002:ac5:cc44:: with SMTP id l4mr1143248vkm.43.1592307223208;
+ Tue, 16 Jun 2020 04:33:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591691846-7578-1-git-send-email-ppvk@codeaurora.org> <1591691846-7578-3-git-send-email-ppvk@codeaurora.org>
-In-Reply-To: <1591691846-7578-3-git-send-email-ppvk@codeaurora.org>
+References: <20200611132839.4515-1-ludovic.barre@st.com>
+In-Reply-To: <20200611132839.4515-1-ludovic.barre@st.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 16 Jun 2020 13:32:15 +0200
-Message-ID: <CAPDyKFr8Ge617QchXG1cMgZUvPZ+fRUpJamv173h1faz7-0baw@mail.gmail.com>
-Subject: Re: [PATCH V4 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW
- scaling strings
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+Date:   Tue, 16 Jun 2020 13:33:06 +0200
+Message-ID: <CAPDyKFpeEdvFWj98LRHtckVRzzz1TaHcYR5AFJSMujuRCDoVgw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: mmci: add sdio datactrl mask for sdmmc revisions
+To:     Ludovic Barre <ludovic.barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         DTML <devicetree@vger.kernel.org>,
-        linux-mmc-owner@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        matthias@chromium.org
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jun 2020 at 10:38, Pradeep P V K <ppvk@codeaurora.org> wrote:
+On Thu, 11 Jun 2020 at 15:28, Ludovic Barre <ludovic.barre@st.com> wrote:
 >
-> Add interconnect bandwidth scaling supported strings for qcom-sdhci
-> controller.
+> This patch adds datactrl_mask_sdio for sdmmc revisions.
+> sdmmc revisions used same bit of previous ST variant.
 >
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 
 Applied for next, thanks!
 
@@ -100,45 +92,29 @@ Uffe
 
 
 > ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  drivers/mmc/host/mmci.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index b8e1d2b..3b602fd 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -54,6 +54,21 @@ Required properties:
->  - qcom,dll-config: Chipset and Platform specific value. Use this field to
->         specify the DLL_CONFIG register value as per Hardware Programming Guide.
->
-> +Optional Properties:
-> +* Following bus parameters are required for interconnect bandwidth scaling:
-> +- interconnects: Pairs of phandles and interconnect provider specifier
-> +                to denote the edge source and destination ports of
-> +                the interconnect path.
-> +
-> +- interconnect-names: For sdhc, we have two main paths.
-> +               1. Data path : sdhc to ddr
-> +               2. Config path : cpu to sdhc
-> +               For Data interconnect path the name supposed to be
-> +               is "sdhc-ddr" and for config interconnect path it is
-> +               "cpu-sdhc".
-> +               Please refer to Documentation/devicetree/bindings/
-> +               interconnect/ for more details.
-> +
->  Example:
->
->         sdhc_1: sdhci@f9824900 {
-> @@ -71,6 +86,9 @@ Example:
->
->                 clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
->                 clock-names = "core", "iface";
-> +               interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
-> +                               <&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
-> +               interconnect-names = "sdhc-ddr","cpu-sdhc";
->
->                 qcom,dll-config = <0x000f642c>;
->                 qcom,ddr-config = <0x80040868>;
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index a69d6a0c2e15..b5a41a7ce165 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -267,6 +267,7 @@ static struct variant_data variant_stm32_sdmmc = {
+>         .datalength_bits        = 25,
+>         .datactrl_blocksz       = 14,
+>         .datactrl_any_blocksz   = true,
+> +       .datactrl_mask_sdio     = MCI_DPSM_ST_SDIOEN,
+>         .stm32_idmabsize_mask   = GENMASK(12, 5),
+>         .busy_timeout           = true,
+>         .busy_detect            = true,
+> @@ -292,6 +293,7 @@ static struct variant_data variant_stm32_sdmmcv2 = {
+>         .datalength_bits        = 25,
+>         .datactrl_blocksz       = 14,
+>         .datactrl_any_blocksz   = true,
+> +       .datactrl_mask_sdio     = MCI_DPSM_ST_SDIOEN,
+>         .stm32_idmabsize_mask   = GENMASK(16, 5),
+>         .dma_lli                = true,
+>         .busy_timeout           = true,
 > --
-> 1.9.1
+> 2.17.1
 >
