@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F300EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7839C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D919721501
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9102F21475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322498;
-	bh=FomWAMvBZFJTmk1DReGUtwHCxzmw3Dki2Cp2WZwd6Ks=;
+	s=default; t=1592322503;
+	bh=H4txh+m/T72GnqhxSQ7pKnezw+3II5d9HjbuICpVEBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dAYytYwCS/LBAMfXjzXe60U7fb0vjVOo05kYmmWqu54W0VlREcFfvNkIh0h4iBtWJ
-	 QT+lbPSNQxJA0QXvtrBQ6LfEbqtq1tXKkRIp+wkER0tc6e5VwaA/tDp1/r6ZY+1zII
-	 bEM0WFkYlsc1atVAqGPpY1y28ravG8iuTAPUHzpQ=
+	b=pOAStfmS2zBBy8U1z+iVA5uEjVIV6cbfM4UopudZEKswus3VXFPV+SI6M9Zn0tm3I
+	 2YFSP4FV0ART11wOrYRRkEWWg/TnJfqOIwihUSiM6J28SU07azcYHXLy3W9ghhaBXS
+	 tL5EcgqaXbhlBWOnTppkkXlh2bI2H3a3d0RDYNX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbgFPPsP (ORCPT
+        id S1732406AbgFPPsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:48:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42144 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:48:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732097AbgFPPsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:48:07 -0400
+        id S1732387AbgFPPsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:48:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B680D20776;
-        Tue, 16 Jun 2020 15:48:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A87820E65;
+        Tue, 16 Jun 2020 15:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322486;
-        bh=FomWAMvBZFJTmk1DReGUtwHCxzmw3Dki2Cp2WZwd6Ks=;
+        s=default; t=1592322488;
+        bh=H4txh+m/T72GnqhxSQ7pKnezw+3II5d9HjbuICpVEBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O/uLkyKeJOrbEswk1gyTZfQ3Cuhui8NneSW6ahu0l86Fn+K7XvQmi2QeiBPryuAVu
-         Ju15qYJDoTZwQ8TBEmvFIVR5Ws5S6G2l3BtD9z7jskDzg++hM60RZfIvjxgCyDHb1f
-         NHFP/W3AtBAacJmXN3driAggBfSFjW/1EHNVMhPc=
+        b=JYl5ZdOpVNutyfInft4vuPSE2b15DLYS9xdkHgvGCeU2eWENvi9BolWgnbZL6/DME
+         CDX793USzTnaRxkKOVZ1FBmXKa6wW2QzfRHqQ5CF+Co1R9QL/VdIGvbn6WCuYZGgoL
+         YrhtExEX8eJXgshCoa9nJSx0NO5tfJ+ajKi32I3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Matthew Riley <mattdr@google.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 5.7 123/163] EDAC/skx: Use the mcmtr register to retrieve close_pg/bank_xor_enable
-Date:   Tue, 16 Jun 2020 17:34:57 +0200
-Message-Id: <20200616153112.703060986@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.7 150/163] mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
+Date:   Tue, 16 Jun 2020 17:35:24 +0200
+Message-Id: <20200616153113.991221448@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,125 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-commit 1032095053b34d474aa20f2625d97dd306e0991b upstream.
+commit 9253d71011c349d5f5cc0cebdf68b4a80811b92d upstream.
 
-The skx_edac driver wrongly uses the mtr register to retrieve two fields
-close_pg and bank_xor_enable. Fix it by using the correct mcmtr register
-to get the two fields.
+Clear tuning_done flag while executing tuning to ensure vendor
+specific HS400 settings are applied properly when the controller
+is re-initialized in HS400 mode.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Reported-by: Matthew Riley <mattdr@google.com>
-Acked-by: Aristeu Rozanski <aris@redhat.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/20200515210146.1337-1-tony.luck@intel.com
+Without this, re-initialization of the qcom SDHC in HS400 mode fails
+while resuming the driver from runtime-suspend or system-suspend.
+
+Fixes: ff06ce417828 ("mmc: sdhci-msm: Add HS400 platform support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Link: https://lore.kernel.org/r/1590678838-18099-1-git-send-email-vbadigan@codeaurora.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/i10nm_base.c |    2 +-
- drivers/edac/skx_base.c   |   20 ++++++++------------
- drivers/edac/skx_common.c |    6 +++---
- drivers/edac/skx_common.h |    2 +-
- 4 files changed, 13 insertions(+), 17 deletions(-)
+ drivers/mmc/host/sdhci-msm.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/edac/i10nm_base.c
-+++ b/drivers/edac/i10nm_base.c
-@@ -161,7 +161,7 @@ static int i10nm_get_dimm_config(struct
- 				 mtr, mcddrtcfg, imc->mc, i, j);
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1130,6 +1130,12 @@ static int sdhci_msm_execute_tuning(stru
+ 	msm_host->use_cdr = true;
  
- 			if (IS_DIMM_PRESENT(mtr))
--				ndimms += skx_get_dimm_info(mtr, 0, dimm,
-+				ndimms += skx_get_dimm_info(mtr, 0, 0, dimm,
- 							    imc, i, j);
- 			else if (IS_NVDIMM_PRESENT(mcddrtcfg, j))
- 				ndimms += skx_get_nvdimm_info(dimm, imc, i, j,
---- a/drivers/edac/skx_base.c
-+++ b/drivers/edac/skx_base.c
-@@ -163,27 +163,23 @@ static const struct x86_cpu_id skx_cpuid
- };
- MODULE_DEVICE_TABLE(x86cpu, skx_cpuids);
- 
--#define SKX_GET_MTMTR(dev, reg) \
--	pci_read_config_dword((dev), 0x87c, &(reg))
--
--static bool skx_check_ecc(struct pci_dev *pdev)
-+static bool skx_check_ecc(u32 mcmtr)
- {
--	u32 mtmtr;
--
--	SKX_GET_MTMTR(pdev, mtmtr);
--
--	return !!GET_BITFIELD(mtmtr, 2, 2);
-+	return !!GET_BITFIELD(mcmtr, 2, 2);
- }
- 
- static int skx_get_dimm_config(struct mem_ctl_info *mci)
- {
- 	struct skx_pvt *pvt = mci->pvt_info;
-+	u32 mtr, mcmtr, amap, mcddrtcfg;
- 	struct skx_imc *imc = pvt->imc;
--	u32 mtr, amap, mcddrtcfg;
- 	struct dimm_info *dimm;
- 	int i, j;
- 	int ndimms;
- 
-+	/* Only the mcmtr on the first channel is effective */
-+	pci_read_config_dword(imc->chan[0].cdev, 0x87c, &mcmtr);
+ 	/*
++	 * Clear tuning_done flag before tuning to ensure proper
++	 * HS400 settings.
++	 */
++	msm_host->tuning_done = 0;
 +
- 	for (i = 0; i < SKX_NUM_CHANNELS; i++) {
- 		ndimms = 0;
- 		pci_read_config_dword(imc->chan[i].cdev, 0x8C, &amap);
-@@ -193,14 +189,14 @@ static int skx_get_dimm_config(struct me
- 			pci_read_config_dword(imc->chan[i].cdev,
- 					      0x80 + 4 * j, &mtr);
- 			if (IS_DIMM_PRESENT(mtr)) {
--				ndimms += skx_get_dimm_info(mtr, amap, dimm, imc, i, j);
-+				ndimms += skx_get_dimm_info(mtr, mcmtr, amap, dimm, imc, i, j);
- 			} else if (IS_NVDIMM_PRESENT(mcddrtcfg, j)) {
- 				ndimms += skx_get_nvdimm_info(dimm, imc, i, j,
- 							      EDAC_MOD_STR);
- 				nvdimm_count++;
- 			}
- 		}
--		if (ndimms && !skx_check_ecc(imc->chan[0].cdev)) {
-+		if (ndimms && !skx_check_ecc(mcmtr)) {
- 			skx_printk(KERN_ERR, "ECC is disabled on imc %d\n", imc->mc);
- 			return -ENODEV;
- 		}
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -304,7 +304,7 @@ static int skx_get_dimm_attr(u32 reg, in
- #define numrow(reg)	skx_get_dimm_attr(reg, 2, 4, 12, 1, 6, "rows")
- #define numcol(reg)	skx_get_dimm_attr(reg, 0, 1, 10, 0, 2, "cols")
- 
--int skx_get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
-+int skx_get_dimm_info(u32 mtr, u32 mcmtr, u32 amap, struct dimm_info *dimm,
- 		      struct skx_imc *imc, int chan, int dimmno)
- {
- 	int  banks = 16, ranks, rows, cols, npages;
-@@ -324,8 +324,8 @@ int skx_get_dimm_info(u32 mtr, u32 amap,
- 		 imc->mc, chan, dimmno, size, npages,
- 		 banks, 1 << ranks, rows, cols);
- 
--	imc->chan[chan].dimms[dimmno].close_pg = GET_BITFIELD(mtr, 0, 0);
--	imc->chan[chan].dimms[dimmno].bank_xor_enable = GET_BITFIELD(mtr, 9, 9);
-+	imc->chan[chan].dimms[dimmno].close_pg = GET_BITFIELD(mcmtr, 0, 0);
-+	imc->chan[chan].dimms[dimmno].bank_xor_enable = GET_BITFIELD(mcmtr, 9, 9);
- 	imc->chan[chan].dimms[dimmno].fine_grain_bank = GET_BITFIELD(amap, 0, 0);
- 	imc->chan[chan].dimms[dimmno].rowbits = rows;
- 	imc->chan[chan].dimms[dimmno].colbits = cols;
---- a/drivers/edac/skx_common.h
-+++ b/drivers/edac/skx_common.h
-@@ -128,7 +128,7 @@ int skx_get_all_bus_mappings(unsigned in
- 
- int skx_get_hi_lo(unsigned int did, int off[], u64 *tolm, u64 *tohm);
- 
--int skx_get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
-+int skx_get_dimm_info(u32 mtr, u32 mcmtr, u32 amap, struct dimm_info *dimm,
- 		      struct skx_imc *imc, int chan, int dimmno);
- 
- int skx_get_nvdimm_info(struct dimm_info *dimm, struct skx_imc *imc,
++	/*
+ 	 * For HS400 tuning in HS200 timing requires:
+ 	 * - select MCLK/2 in VENDOR_SPEC
+ 	 * - program MCLK to 400MHz (or nearest supported) in GCC
 
 
