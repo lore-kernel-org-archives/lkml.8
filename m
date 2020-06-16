@@ -2,118 +2,133 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1AFF20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FE820767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FEaeSamp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zrq7TkrI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgFPJxt (ORCPT
+        id S1728142AbgFPJyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:53:49 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55442 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgFPJxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:53:49 -0400
-Received: from zn.tnic (p200300ec2f0f4c0030193e5e894dac2c.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4c00:3019:3e5e:894d:ac2c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2DC321EC0284;
-        Tue, 16 Jun 2020 11:53:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592301228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=rOV5dWY1hwX8A8h8h/o4gakUbHaT5FDjfbK9K8CtYAY=;
-        b=FEaeSampGLvuc8K2hfxQPo9ZgKhy4pl/pjRca6n5d5/Aag6fc/HYoDA/NzTeUu3JGFE5xT
-        sJuNVYd7Vgg2ty1POhzUPlRaZO6jduNkIaBuhHXLfzmDCDOjIDyLdeZaKD8Yy61/J1EOdm
-        /AWKVT+edRBsTOTp3JAi1T6G7M1fRts=
-Date:   Tue, 16 Jun 2020 11:53:40 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     x86-ml <x86@kernel.org>, jpa@kernelbug.mail.kapsi.fi
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
-Message-ID: <20200616095340.GD13515@zn.tnic>
+        Tue, 16 Jun 2020 05:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgFPJym (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:54:42 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07411C08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:54:41 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j1so9255873pfe.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l9/ZHQGipIrOoq5y2llLzfpy6Wx+X9yAE1JveALeHdc=;
+        b=Zrq7TkrI6b0M48sbi6PdxOk9kKcWNUY6JdnA8vPenSSWIPTbMtZR0/46Legu3j0OSS
+         YnNL9TXbRkwz90ASeUFJ6Uy1a4XavE1gdm2FtW15G/G328pINz2Am0oyj5axkrSTRAzV
+         CON0wC5CK0nBtf8rUhP312tL2EXZV3Ze9RMRnQElpd58mF3TRmP+gswR92sxlHiwTN5H
+         FYagGbwhvYogIZNVRlEqC9d8FW1J5hgO6aJM3Abq5kv87hOPHE6xH4/eO3r61lFWPsR2
+         7Ke6S337xpp6SvcjG/U6yAKTFsyO9n6DBvlwyzLCHtdYI40slRlewewgdBy9st5wq7Zy
+         zcIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l9/ZHQGipIrOoq5y2llLzfpy6Wx+X9yAE1JveALeHdc=;
+        b=Rpkm+ZGijD/oAae9yDH0sD9qdUP9kryK52yesQ5LLhTtpTUm4Qi+/KhvSOqC3DFSaK
+         MQKB9aHk+2nv+fNtDf0JktK/XZVxffktx62E7YcM8R45ihqHyIbXe1NW1agPD3X6TCQ1
+         YnQXMTsDZ7VjzbE9RNin1qfaNMYNvspF3YsNtgROR2ZANtEGfrwtBt/8Pz48cL79pGlK
+         Z0QPZdjf3Qe5x0GpuYoGg4Vu4eZJfTWL0bHqPI9NdgZWIclhpg9cCImZuPCB+Qc2Nauh
+         Gp6s2v77zbkwmHubZoXXrAkD2ng0XEPRjGkLCChHD0Lm4kA0s5hxx3u4geISQweUwHgf
+         X24Q==
+X-Gm-Message-State: AOAM531OGk2lE7O6kONNSJfud89zTDyIzyJzE8gwAcMJv6rDXjXHUDXe
+        8w7jFFVn0nZg3tLu5ht/kou+mA==
+X-Google-Smtp-Source: ABdhPJwcFpKI9llvV/hiCbHlmggb6SvTCk47o//zCCLLDejPSv7SyKqdnPffI6cRjZSvsO7NBRr5Cg==
+X-Received: by 2002:a62:1704:: with SMTP id 4mr1358860pfx.290.1592301281329;
+        Tue, 16 Jun 2020 02:54:41 -0700 (PDT)
+Received: from localhost ([122.172.119.132])
+        by smtp.gmail.com with ESMTPSA id z186sm14155351pgb.93.2020.06.16.02.54.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 02:54:40 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 15:24:38 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     rjw@rjwysocki.net, rafael@kernel.org, arnd@arndb.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org
+Subject: Re: [PATCH 2/2] cpufreq: Specify default governor on command line
+Message-ID: <20200616095438.v7wywhfq5ealvyih@vireshk-i7>
+References: <20200615165554.228063-1-qperret@google.com>
+ <20200615165554.228063-3-qperret@google.com>
+ <20200616043143.obk5k3rv737j5dnd@vireshk-i7>
+ <20200616083107.GA122049@google.com>
+ <20200616092759.rjnk3lef4tedfust@vireshk-i7>
+ <20200616094802.GA139416@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200616094802.GA139416@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok,
+On 16-06-20, 10:48, Quentin Perret wrote:
+> ---8<---
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 0f05caedc320..a9219404e07f 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2340,6 +2340,11 @@ int cpufreq_register_governor(struct cpufreq_governor *governor)
+>  		list_add(&governor->governor_list, &cpufreq_governor_list);
+>  	}
+>  
+> +	if (!strncasecmp(cpufreq_param_governor, governor->name, CPUFREQ_NAME_LEN))
+> +		default_governor = governor;
+> +	else if (!default_governor && cpufreq_default_governor() == governor)
+> +		default_governor = cpufreq_default_governor();
 
-here's the fix first so that it goes in. I'll hammer on the test case later.
+Instead of the else part here, maybe just do this from
+cpufreq_core_init() only once, and so we will always have
+default_governor set.
 
----
-From: Petteri Aimonen <jpa@git.mail.kapsi.fi>
-
-Previously, kernel floating point code would run with the MXCSR control
-register value last set by userland code by the thread that was active
-on the CPU core just before kernel call. This could affect calculation
-results if rounding mode was changed, or a crash if a FPU/SIMD exception
-was unmasked.
-
-Restore MXCSR to the kernel's default value.
-
- [ bp: Carve out from a bigger patch by Petteri, add feature check. ]
-
-Signed-off-by: Petteri Aimonen <jpa@git.mail.kapsi.fi>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207979
----
- arch/x86/include/asm/fpu/internal.h | 5 +++++
- arch/x86/kernel/fpu/core.c          | 3 +++
- 2 files changed, 8 insertions(+)
-
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 42159f45bf9c..845e7481ab77 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -623,6 +623,11 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
-  * MXCSR and XCR definitions:
-  */
- 
-+static inline void ldmxcsr(u32 mxcsr)
-+{
-+	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
-+}
-+
- extern unsigned int mxcsr_feature_mask;
- 
- #define XCR_XFEATURE_ENABLED_MASK	0x00000000
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 06c818967bb6..f398fedc590a 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -101,6 +101,9 @@ void kernel_fpu_begin(void)
- 		copy_fpregs_to_fpstate(&current->thread.fpu);
- 	}
- 	__cpu_invalidate_fpregs_state();
-+
-+	if (boot_cpu_has(X86_FEATURE_XMM))
-+		ldmxcsr(MXCSR_DEFAULT);
- }
- EXPORT_SYMBOL_GPL(kernel_fpu_begin);
- 
--- 
-2.21.0
-
+> +
+>  	mutex_unlock(&cpufreq_governor_mutex);
+>  	return err;
+>  }
+> @@ -2368,6 +2373,8 @@ void cpufreq_unregister_governor(struct cpufreq_governor *governor)
+>  
+>  	mutex_lock(&cpufreq_governor_mutex);
+>  	list_del(&governor->governor_list);
+> +	if (governor == default_governor)
+> +		default_governor = cpufreq_default_governor();
+>  	mutex_unlock(&cpufreq_governor_mutex);
+>  }
+>  EXPORT_SYMBOL_GPL(cpufreq_unregister_governor);
+> --->8---
+> 
+> should do the trick. That removes the unnecessary reference count, and
+> feels like a good place to hook things -- that is how cpuidle does it
+> too IIRC.
+> 
+> I'll double check the locking/synchronization, but that shouldn't be too
+> bad (famous last words).
+> 
+> Cheers,
+> Quentin
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+viresh
