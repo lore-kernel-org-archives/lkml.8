@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25918C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0085C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41FE207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780A92071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323207;
-	bh=9p4Mo042Rqy4vJYBei02Cv/NT0DA2OR0anc2hVo4VZQ=;
+	s=default; t=1592323214;
+	bh=+z2rEzPrdmHOBWRCBOlmjBsTUF6O4EPLsLOg3tNTKG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7hbV44+AVovhn6MSY35V50NK6v8zsGGYbXkk1BFqUDhlYOEHbg9jl2IZAi8hqgff
-	 +5mxkel5s8qFXeJh0JHqKhcK2jB/Vx7cMStvEci7jrr+RfJoOEwkcCw2Nd0G82HyOi
-	 VexFUicw6c9aZLESXqcHfHDXn020mE3kSQ+ODjyU=
+	b=iMt6n66Y1sFUcJEYWMD9S0c0HAJY6tTu85wJWEWxqQ29WkkhyKkAu+VA4g0LymG3m
+	 lU4FCHWcgCLD4PWyGZbaOlP2+yl0dci1oelTdQSE6oSULPRfCr7z74MahqW/3L59f1
+	 A8pF4mNyTHlC19Up5bCUS7lRMqIdSpAnTRDRP850=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732828AbgFPPxA (ORCPT
+        id S1732905AbgFPQAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:53:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50582 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732426AbgFPPwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:51 -0400
+        id S1731797AbgFPPxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB316207C4;
-        Tue, 16 Jun 2020 15:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B212208D5;
+        Tue, 16 Jun 2020 15:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322771;
-        bh=9p4Mo042Rqy4vJYBei02Cv/NT0DA2OR0anc2hVo4VZQ=;
+        s=default; t=1592322783;
+        bh=+z2rEzPrdmHOBWRCBOlmjBsTUF6O4EPLsLOg3tNTKG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o2+WmjdWGZTGBVIqlYJ/vaULATE1YXSpk/95OoYQdEACHRG4/OtuqXcwS28COr0R8
-         1szj/ESt8EHjoHn0MGTNz6Pjl5C8CHWVpvProch1Xc3rsymcDXRPU0iG1DkNI/8G2k
-         +6fffkH7FfaNJ6ci58//4XFTsyX3XXx84dJpLZNs=
+        b=OUkPXvzgBblakl4kL+3cgjFzMZUrXrNg+sO3kur5Lxy4ySDIjqjgL0PoZwPTFNhBh
+         5iqe6ggppPQo+Qi6GYDCk55tyvqV0rV2ySiUTCB2frnq2dd6aRexMMXSvQg/O8mVxq
+         UOdGOFmW4l2+aphO9j56kfEtTCXF6q6CtDmrpAFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Breno Lima <breno.lima@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.6 067/161] watchdog: imx_sc_wdt: Fix reboot on crash
-Date:   Tue, 16 Jun 2020 17:34:17 +0200
-Message-Id: <20200616153109.572647627@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.6 072/161] ALSA: hda/realtek - add a pintbl quirk for several Lenovo machines
+Date:   Tue, 16 Jun 2020 17:34:22 +0200
+Message-Id: <20200616153109.808486710@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,49 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit e56d48e92b1017b6a8dbe64923a889283733fd96 upstream.
+commit 573fcbfd319ccef26caa3700320242accea7fd5c upstream.
 
-Currently when running the samples/watchdog/watchdog-simple.c
-application and forcing a kernel crash by doing:
-
-# ./watchdog-simple &
-# echo c > /proc/sysrq-trigger
-
-The system does not reboot as expected.
-
-Fix it by calling imx_sc_wdt_set_timeout() to configure the i.MX8QXP
-watchdog with a proper timeout.
+A couple of Lenovo ThinkCentre machines all have 2 front mics and they
+use the same codec alc623 and have the same pin config, so add a
+pintbl entry for those machines to apply the fixup
+ALC283_FIXUP_HEADSET_MIC.
 
 Cc: <stable@vger.kernel.org>
-Fixes: 986857acbc9a ("watchdog: imx_sc: Add i.MX system controller watchdog support")
-Reported-by: Breno Lima <breno.lima@nxp.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Breno Lima <breno.lima@nxp.com>
-Link: https://lore.kernel.org/r/20200412230122.5601-1-festevam@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20200608115541.9531-1-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/imx_sc_wdt.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/pci/hda/patch_realtek.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/watchdog/imx_sc_wdt.c
-+++ b/drivers/watchdog/imx_sc_wdt.c
-@@ -177,6 +177,11 @@ static int imx_sc_wdt_probe(struct platf
- 	wdog->timeout = DEFAULT_TIMEOUT;
- 
- 	watchdog_init_timeout(wdog, 0, dev);
-+
-+	ret = imx_sc_wdt_set_timeout(wdog, wdog->timeout);
-+	if (ret)
-+		return ret;
-+
- 	watchdog_stop_on_reboot(wdog);
- 	watchdog_stop_on_unregister(wdog);
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8124,6 +8124,12 @@ static const struct snd_hda_pin_quirk al
+ 		ALC225_STANDARD_PINS,
+ 		{0x12, 0xb7a60130},
+ 		{0x17, 0x90170110}),
++	SND_HDA_PIN_QUIRK(0x10ec0623, 0x17aa, "Lenovo", ALC283_FIXUP_HEADSET_MIC,
++		{0x14, 0x01014010},
++		{0x17, 0x90170120},
++		{0x18, 0x02a11030},
++		{0x19, 0x02a1103f},
++		{0x21, 0x0221101f}),
+ 	{}
+ };
  
 
 
