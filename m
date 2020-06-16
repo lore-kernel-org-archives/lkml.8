@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6544C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F201E2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50F02080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WRXFFBCd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CncR2ckP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgFPMhL (ORCPT
+        id S1728875AbgFPMhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 16 Jun 2020 08:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbgFPMhB (ORCPT
+        with ESMTP id S1728696AbgFPMhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:37:01 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67C3C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:37:00 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id p22so24612726ybg.21
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:37:00 -0700 (PDT)
+        Tue, 16 Jun 2020 08:37:04 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 192E6C08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:37:03 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id u48so16565868qth.17
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Vg6gGhm8RLyRRWmBBuD4VJ0tZVLjRg4UH9yY8TubE2E=;
-        b=WRXFFBCdZ47FzAZpzIxXUWHDlN7UP/JWuGhcc1uCfT2ttLAbgmyFck96Qb3vUynh01
-         b6sj2MC/YevG4uY9SdW6GChWtkXfcFgmKggOvGc+QLLEn2+nGSd2CSERQrzm7acRk2+/
-         N8qovJG84UH9PvJeKc87102igdLG0kVNh0Wl6lW26/v8J/exGnScK4twUf9c+ViqcqEC
-         PCOOzejLEseFrbREB66/jWdPUGCt1iAkxGvN9+PupXCusai4mm6B3n0LjyskeBxbvi+F
-         OoVw8hs8gTpFe2Wsvrj7OZRgwlhU/yLK/8PtKgBjzsB7oKkQF7ycYxC+rUsAltm6OsM0
-         Hxrg==
+        bh=1xZsTLo/mLSdGNuFOenJEIpuLskAW05lb+ykXWbx68A=;
+        b=CncR2ckPQIqp5hX5YHoZMyol22QiF7P7xoaQb3qSonwPZL3UAk/R+pHMvquKf0d87C
+         4YZEAN+A/0MfQW6Cj5+Dn3LTQI9iTt0CCX8n+UPUx8JSJIBYf8QHQrnI8BxRIgcNCYEK
+         oBT4xYNMu+rkP43syP7IpaH5gb/zHdMlwHH/fO5FshnUGbzQjBs7/tEj+msttR2IHW7w
+         IOj/nYGu84Kp9OIVPLiAGDGtM4Tk4PsW3YppKggvhSKUOR2wonQWz1P086/MwUqg+1BN
+         c864AG5GQzb45OfPrdlEpQ/A/Fi742H7XI60y9aNTI6g2cdJbuOJK3sZD0Ro5vpuS4YI
+         GTXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Vg6gGhm8RLyRRWmBBuD4VJ0tZVLjRg4UH9yY8TubE2E=;
-        b=sZpoiF+6OvyHKhqHEXEIj//kwZLVvAtn2/ZpRHm0+St9nWI706s9xAoICg9e97EIvG
-         FN7RadnmtUsW3S0/Wn3vZgUVxcjznbhyGh+7QV0LJvNvQ/C+cVEnhLtpjTsfYuUdsb5q
-         HXVjhOZmVAcq2q9R2eUv2voqlZoCOxSAyNJEx31/jH3FyF2oZhHYbGLwpqVceTWp2mjw
-         aUheVw63mcAgLrhtOC2iUW75maswCFcz5J7n0fjtFMmqS0cNfdA4klXNzRTFU0o+d0kH
-         iIhcMT8hRbjCnTakv3v9qAZIMrDePNFjGmCG9NsMcl5V8kC2epkqHgtdsgpjBw52vtBu
-         lrmg==
-X-Gm-Message-State: AOAM532T9ZZD3oFlNKsWza5/kZDfAbtLJv42eGh7zNGWo4+N58jLgJZc
-        93zDFRDZf+Dd6bTwDeEXKBza4Vs47w==
-X-Google-Smtp-Source: ABdhPJzXJ7N5NrCresOg2mK5Yb+hf1srFvLq45P0t4LgalRdR8cI7V4uzmtRzpyzoQDJ2xwybBjxJZIbdw==
-X-Received: by 2002:a25:df0b:: with SMTP id w11mr4044370ybg.449.1592311019895;
- Tue, 16 Jun 2020 05:36:59 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 14:36:24 +0200
+        bh=1xZsTLo/mLSdGNuFOenJEIpuLskAW05lb+ykXWbx68A=;
+        b=N8RAAr7vrw/swliLQ5qQeFCcps6QAYIl+N9+jo4JDhw7bDBRe8/9nXJ5ufOMz+8f7v
+         9uc/6K0LaQSHfxVEJL5ZGL55+4m4guakm9Um+1Cf8T8pF86hbfgBzTnaDCMVLd0AAlzs
+         yoqmdLzdN3ERdbtl3VHw6qemIx6WpB6Ol2UfaQ9BFhd+hnWukLjJvvgnlMkIKTmgL+mE
+         of2f2evdP1Y4DlD2ExA/I6pUyvi+56qy3tj868U9ZbEbkom44ev479vCmubp0oLVKxFN
+         QX6gi/aWCLppgzJiRqHx/VD9TkuPpFqTJRFaFX9d7rI0MCuu7akO54CxTmij97VTqj1b
+         CbLQ==
+X-Gm-Message-State: AOAM530GxabDhERNeN0u8vuQ6CmSAYgDCLPTcyOML94WJMh+HMiQ5vxW
+        zSrX02QNJSExO2MZHj7lYHQtTMI7gQ==
+X-Google-Smtp-Source: ABdhPJzlujLtRYSoGtbR364ja8ECJ+N0OhikaUYPJzj/NWlqKDE9gBHlud4ZlMQRSPu70L9TBAeZNvE5pA==
+X-Received: by 2002:a05:6214:14a6:: with SMTP id bo6mr1988177qvb.244.1592311022252;
+ Tue, 16 Jun 2020 05:37:02 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 14:36:25 +0200
 In-Reply-To: <20200616123625.188905-1-elver@google.com>
-Message-Id: <20200616123625.188905-4-elver@google.com>
+Message-Id: <20200616123625.188905-5-elver@google.com>
 Mime-Version: 1.0
 References: <20200616123625.188905-1-elver@google.com>
 X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH 3/4] kcsan: Remove existing special atomic rules
+Subject: [PATCH 4/4] kcsan: Add jiffies test to test suite
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com, paulmck@kernel.org
 Cc:     dvyukov@google.com, kasan-dev@googlegroups.com,
@@ -72,43 +72,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove existing special atomic rules from kcsan_is_atomic_special()
-because they are no longer needed. Since we rely on the compiler
-emitting instrumentation distinguishing volatile accesses, the rules
-have become redundant.
-
-Let's keep kcsan_is_atomic_special() around, so that we have an obvious
-place to add special rules should the need arise in future.
+Add a test that KCSAN nor the compiler gets confused about accesses to
+jiffies on different architectures.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- kernel/kcsan/atomic.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/kcsan/kcsan-test.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/kernel/kcsan/atomic.h b/kernel/kcsan/atomic.h
-index be9e625227f3..75fe701f4127 100644
---- a/kernel/kcsan/atomic.h
-+++ b/kernel/kcsan/atomic.h
-@@ -3,8 +3,7 @@
- #ifndef _KERNEL_KCSAN_ATOMIC_H
- #define _KERNEL_KCSAN_ATOMIC_H
- 
--#include <linux/jiffies.h>
--#include <linux/sched.h>
-+#include <linux/types.h>
- 
- /*
-  * Special rules for certain memory where concurrent conflicting accesses are
-@@ -13,8 +12,7 @@
-  */
- static bool kcsan_is_atomic_special(const volatile void *ptr)
- {
--	/* volatile globals that have been observed in data races. */
--	return ptr == &jiffies || ptr == &current->state;
-+	return false;
+diff --git a/kernel/kcsan/kcsan-test.c b/kernel/kcsan/kcsan-test.c
+index 3af420ad6ee7..fed6fcb5768c 100644
+--- a/kernel/kcsan/kcsan-test.c
++++ b/kernel/kcsan/kcsan-test.c
+@@ -366,6 +366,11 @@ static noinline void test_kernel_read_struct_zero_size(void)
+ 	kcsan_check_read(&test_struct.val[3], 0);
  }
  
- #endif /* _KERNEL_KCSAN_ATOMIC_H */
++static noinline void test_kernel_jiffies_reader(void)
++{
++	sink_value((long)jiffies);
++}
++
+ static noinline void test_kernel_seqlock_reader(void)
+ {
+ 	unsigned int seq;
+@@ -817,6 +822,23 @@ static void test_assert_exclusive_access_scoped(struct kunit *test)
+ 	KUNIT_EXPECT_TRUE(test, match_expect_inscope);
+ }
+ 
++/*
++ * jiffies is special (declared to be volatile) and its accesses are typically
++ * not marked; this test ensures that the compiler nor KCSAN gets confused about
++ * jiffies's declaration on different architectures.
++ */
++__no_kcsan
++static void test_jiffies_noreport(struct kunit *test)
++{
++	bool match_never = false;
++
++	begin_test_checks(test_kernel_jiffies_reader, test_kernel_jiffies_reader);
++	do {
++		match_never = report_available();
++	} while (!end_test_checks(match_never));
++	KUNIT_EXPECT_FALSE(test, match_never);
++}
++
+ /* Test that racing accesses in seqlock critical sections are not reported. */
+ __no_kcsan
+ static void test_seqlock_noreport(struct kunit *test)
+@@ -867,6 +889,7 @@ static struct kunit_case kcsan_test_cases[] = {
+ 	KCSAN_KUNIT_CASE(test_assert_exclusive_bits_nochange),
+ 	KCSAN_KUNIT_CASE(test_assert_exclusive_writer_scoped),
+ 	KCSAN_KUNIT_CASE(test_assert_exclusive_access_scoped),
++	KCSAN_KUNIT_CASE(test_jiffies_noreport),
+ 	KCSAN_KUNIT_CASE(test_seqlock_noreport),
+ 	{},
+ };
 -- 
 2.27.0.290.gba653c62da-goog
 
