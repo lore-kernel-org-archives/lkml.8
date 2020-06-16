@@ -2,379 +2,280 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB98BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A61A620882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8582520882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592324341;
+	bh=C46HhCPP2oW/e/dN088+OWJukLykerqswiW7knkBI0w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MDpvwlj2ADECNboaBlpYT40k/mkVxutRxCry7AQ2N0xbf5jIow478asoopMVQOGrd
+	 Y+8DyzKaD5hIv4CMxoOMF74OmLT3GnhTkNfpXokee/mrD3gChFdfzNH52AMQjmVAJl
+	 avTpnxJO4w2dMx5Xzw/abmIu2GCxURS20nJgKgvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbgFPQS7 (ORCPT
+        id S1732020AbgFPQS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:18:59 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:42744 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730337AbgFPPhi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:18:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730363AbgFPPhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 11:37:38 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 16 Jun 2020 21:06:56 +0530
-Received: from vbadigan-linux.qualcomm.com ([10.206.24.109])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 16 Jun 2020 21:06:53 +0530
-Received: by vbadigan-linux.qualcomm.com (Postfix, from userid 76677)
-        id 4AC854C6C; Tue, 16 Jun 2020 21:06:52 +0530 (IST)
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Subject: [PATCH V4 2/2] mmc: sdhci-msm: Use internal voltage control
-Date:   Tue, 16 Jun 2020 21:06:19 +0530
-Message-Id: <1592321779-28556-3-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1592321779-28556-1-git-send-email-vbadigan@codeaurora.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1592321779-28556-1-git-send-email-vbadigan@codeaurora.org>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E952214F1;
+        Tue, 16 Jun 2020 15:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592321857;
+        bh=C46HhCPP2oW/e/dN088+OWJukLykerqswiW7knkBI0w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ju6N7m+voc5x2pa+soXcrd98WNdyeNDVkgo08rfInURko1jijKwze91AxUvvX1h7l
+         mtc0MT/Iv6+kQDdsXfpv/U46lmEGSMzLi7fS4nqiZyDWLba8QUOMTv8szC21m+8fFH
+         LjkqRuSUdbUkslY/CNieVYXvhuVPTR8F/+1DEvjw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 041/134] x86/speculation: Avoid force-disabling IBPB based on STIBP and enhanced IBRS.
+Date:   Tue, 16 Jun 2020 17:33:45 +0200
+Message-Id: <20200616153102.763529826@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
+References: <20200616153100.633279950@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On qcom SD host controllers voltage switching be done after the HW
-is ready for it. The HW informs its readiness through power irq.
-The voltage switching should happen only then.
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-Use the internal voltage switching and then control the voltage
-switching using power irq.
+commit 21998a351512eba4ed5969006f0c55882d995ada upstream.
 
-IO-bus supply of eMMC would be kept always-on. So set the load
-for this supply to configure it in LPM when eMMC is suspend state
- and in HPM when eMMC is active.
+When STIBP is unavailable or enhanced IBRS is available, Linux
+force-disables the IBPB mitigation of Spectre-BTB even when simultaneous
+multithreading is disabled. While attempts to enable IBPB using
+prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, ...) fail with
+EPERM, the seccomp syscall (or its prctl(PR_SET_SECCOMP, ...) equivalent)
+which are used e.g. by Chromium or OpenSSH succeed with no errors but the
+application remains silently vulnerable to cross-process Spectre v2 attacks
+(classical BTB poisoning). At the same time the SYSFS reporting
+(/sys/devices/system/cpu/vulnerabilities/spectre_v2) displays that IBPB is
+conditionally enabled when in fact it is unconditionally disabled.
 
-Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
-Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+STIBP is useful only when SMT is enabled. When SMT is disabled and STIBP is
+unavailable, it makes no sense to force-disable also IBPB, because IBPB
+protects against cross-process Spectre-BTB attacks regardless of the SMT
+state. At the same time since missing STIBP was only observed on AMD CPUs,
+AMD does not recommend using STIBP, but recommends using IBPB, so disabling
+IBPB because of missing STIBP goes directly against AMD's advice:
+https://developer.amd.com/wp-content/resources/Architecture_Guidelines_Update_Indirect_Branch_Control.pdf
+
+Similarly, enhanced IBRS is designed to protect cross-core BTB poisoning
+and BTB-poisoning attacks from user space against kernel (and
+BTB-poisoning attacks from guest against hypervisor), it is not designed
+to prevent cross-process (or cross-VM) BTB poisoning between processes (or
+VMs) running on the same core. Therefore, even with enhanced IBRS it is
+necessary to flush the BTB during context-switches, so there is no reason
+to force disable IBPB when enhanced IBRS is available.
+
+Enable the prctl control of IBPB even when STIBP is unavailable or enhanced
+IBRS is available.
+
+Fixes: 7cc765a67d8e ("x86/speculation: Enable prctl mode for spectre_v2_user")
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mmc/host/sdhci-msm.c | 208 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 199 insertions(+), 9 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   87 +++++++++++++++++++++++++--------------------
+ 1 file changed, 50 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 15c42b059240..8297b2142748 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -37,7 +37,9 @@
- #define CORE_PWRCTL_IO_LOW	BIT(2)
- #define CORE_PWRCTL_IO_HIGH	BIT(3)
- #define CORE_PWRCTL_BUS_SUCCESS BIT(0)
-+#define CORE_PWRCTL_BUS_FAIL    BIT(1)
- #define CORE_PWRCTL_IO_SUCCESS	BIT(2)
-+#define CORE_PWRCTL_IO_FAIL     BIT(3)
- #define REQ_BUS_OFF		BIT(0)
- #define REQ_BUS_ON		BIT(1)
- #define REQ_IO_LOW		BIT(2)
-@@ -127,6 +129,9 @@
- /* Timeout value to avoid infinite waiting for pwr_irq */
- #define MSM_PWR_IRQ_TIMEOUT_MS 5000
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -581,7 +581,9 @@ early_param("nospectre_v1", nospectre_v1
+ static enum spectre_v2_mitigation spectre_v2_enabled __ro_after_init =
+ 	SPECTRE_V2_NONE;
  
-+/* Max load for eMMC Vdd-io supply */
-+#define MMC_VQMMC_MAX_LOAD_UA	325000
+-static enum spectre_v2_user_mitigation spectre_v2_user __ro_after_init =
++static enum spectre_v2_user_mitigation spectre_v2_user_stibp __ro_after_init =
++	SPECTRE_V2_USER_NONE;
++static enum spectre_v2_user_mitigation spectre_v2_user_ibpb __ro_after_init =
+ 	SPECTRE_V2_USER_NONE;
+ 
+ #ifdef CONFIG_RETPOLINE
+@@ -727,15 +729,6 @@ spectre_v2_user_select_mitigation(enum s
+ 		break;
+ 	}
+ 
+-	/*
+-	 * At this point, an STIBP mode other than "off" has been set.
+-	 * If STIBP support is not being forced, check if STIBP always-on
+-	 * is preferred.
+-	 */
+-	if (mode != SPECTRE_V2_USER_STRICT &&
+-	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
+-		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
+-
+ 	/* Initialize Indirect Branch Prediction Barrier */
+ 	if (boot_cpu_has(X86_FEATURE_IBPB)) {
+ 		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
+@@ -758,23 +751,36 @@ spectre_v2_user_select_mitigation(enum s
+ 		pr_info("mitigation: Enabling %s Indirect Branch Prediction Barrier\n",
+ 			static_key_enabled(&switch_mm_always_ibpb) ?
+ 			"always-on" : "conditional");
 +
- #define msm_host_readl(msm_host, host, offset) \
- 	msm_host->var_ops->msm_readl_relaxed(host, offset)
++		spectre_v2_user_ibpb = mode;
+ 	}
  
-@@ -278,6 +283,7 @@ struct sdhci_msm_host {
- 	bool uses_tassadar_dll;
- 	u32 dll_config;
- 	u32 ddr_config;
-+	bool vqmmc_enabled;
- };
+-	/* If enhanced IBRS is enabled no STIBP required */
+-	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
++	/*
++	 * If enhanced IBRS is enabled or SMT impossible, STIBP is not
++	 * required.
++	 */
++	if (!smt_possible || spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+ 		return;
  
- static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
-@@ -1346,6 +1352,88 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
- 		sdhci_msm_hs400(host, &mmc->ios);
+ 	/*
+-	 * If SMT is not possible or STIBP is not available clear the STIBP
+-	 * mode.
++	 * At this point, an STIBP mode other than "off" has been set.
++	 * If STIBP support is not being forced, check if STIBP always-on
++	 * is preferred.
++	 */
++	if (mode != SPECTRE_V2_USER_STRICT &&
++	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
++		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
++
++	/*
++	 * If STIBP is not available, clear the STIBP mode.
+ 	 */
+-	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
++	if (!boot_cpu_has(X86_FEATURE_STIBP))
+ 		mode = SPECTRE_V2_USER_NONE;
++
++	spectre_v2_user_stibp = mode;
++
+ set_mode:
+-	spectre_v2_user = mode;
+-	/* Only print the STIBP mode when SMT possible */
+-	if (smt_possible)
+-		pr_info("%s\n", spectre_v2_user_strings[mode]);
++	pr_info("%s\n", spectre_v2_user_strings[mode]);
  }
  
-+static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
-+{
-+	if (IS_ERR(mmc->supply.vmmc))
-+		return 0;
-+
-+	return mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
-+}
-+
-+static int msm_toggle_vqmmc(struct sdhci_msm_host *msm_host,
-+			      struct mmc_host *mmc, bool level)
-+{
-+	int ret;
-+	struct mmc_ios ios;
-+
-+	if (msm_host->vqmmc_enabled == level)
-+		return 0;
-+
-+	if (level) {
-+		/* Set the IO voltage regulator to default voltage level */
-+		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
-+			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
-+		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
-+			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
-+
-+		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
-+			ret = mmc_regulator_set_vqmmc(mmc, &ios);
-+			if (ret < 0) {
-+				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
-+					mmc_hostname(mmc), ret);
-+				goto out;
-+			}
-+		}
-+		ret = regulator_enable(mmc->supply.vqmmc);
-+	} else {
-+		ret = regulator_disable(mmc->supply.vqmmc);
-+	}
-+
-+	if (ret)
-+		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
-+			mmc_hostname(mmc), level ? "en":"dis", ret);
-+	else
-+		msm_host->vqmmc_enabled = level;
-+out:
-+	return ret;
-+}
-+
-+static int msm_config_vqmmc_mode(struct sdhci_msm_host *msm_host,
-+			      struct mmc_host *mmc, bool hpm)
-+{
-+	int load, ret;
-+
-+	load = hpm ? MMC_VQMMC_MAX_LOAD_UA : 0;
-+	ret = regulator_set_load(mmc->supply.vqmmc, load);
-+	if (ret)
-+		dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
-+			mmc_hostname(mmc), ret);
-+	return ret;
-+}
-+
-+static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
-+			      struct mmc_host *mmc, bool level)
-+{
-+	int ret;
-+	bool always_on;
-+
-+	if (IS_ERR(mmc->supply.vqmmc)		||
-+	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED))
-+		return 0;
-+	/*
-+	 * For eMMC don't turn off Vqmmc, Instead just configure it in LPM
-+	 * and HPM modes by setting the right amonut of load.
-+	 */
-+	always_on = mmc->card && mmc_card_mmc(mmc->card);
-+
-+	if (always_on)
-+		ret = msm_config_vqmmc_mode(msm_host, mmc, level);
-+	else
-+		ret = msm_toggle_vqmmc(msm_host, mmc, level);
-+
-+	return ret;
-+}
-+
- static inline void sdhci_msm_init_pwr_irq_wait(struct sdhci_msm_host *msm_host)
+ static const char * const spectre_v2_strings[] = {
+@@ -1007,7 +1013,7 @@ void cpu_bugs_smt_update(void)
  {
- 	init_waitqueue_head(&msm_host->pwr_irq_wait);
-@@ -1449,8 +1537,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+ 	mutex_lock(&spec_ctrl_mutex);
+ 
+-	switch (spectre_v2_user) {
++	switch (spectre_v2_user_stibp) {
+ 	case SPECTRE_V2_USER_NONE:
+ 		break;
+ 	case SPECTRE_V2_USER_STRICT:
+@@ -1250,14 +1256,16 @@ static int ib_prctl_set(struct task_stru
  {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	struct mmc_host *mmc = host->mmc;
- 	u32 irq_status, irq_ack = 0;
--	int retry = 10;
-+	int retry = 10, ret;
- 	u32 pwr_state = 0, io_level = 0;
- 	u32 config;
- 	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
-@@ -1488,21 +1577,42 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
- 	if (irq_status & CORE_PWRCTL_BUS_ON) {
- 		pwr_state = REQ_BUS_ON;
- 		io_level = REQ_IO_HIGH;
--		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
- 	}
- 	if (irq_status & CORE_PWRCTL_BUS_OFF) {
- 		pwr_state = REQ_BUS_OFF;
- 		io_level = REQ_IO_LOW;
--		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
- 	}
-+
-+	if (pwr_state) {
-+		ret = sdhci_msm_set_vmmc(mmc);
-+		if (!ret)
-+			ret = sdhci_msm_set_vqmmc(msm_host, mmc,
-+					pwr_state & REQ_BUS_ON);
-+		if (!ret)
-+			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
-+		else
-+			irq_ack |= CORE_PWRCTL_BUS_FAIL;
-+	}
-+
- 	/* Handle IO LOW/HIGH */
--	if (irq_status & CORE_PWRCTL_IO_LOW) {
-+	if (irq_status & CORE_PWRCTL_IO_LOW)
- 		io_level = REQ_IO_LOW;
--		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
+ 	switch (ctrl) {
+ 	case PR_SPEC_ENABLE:
+-		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
++		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
+ 			return 0;
+ 		/*
+ 		 * Indirect branch speculation is always disabled in strict
+ 		 * mode.
+ 		 */
+-		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
+-		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
++		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
+ 			return -EPERM;
+ 		task_clear_spec_ib_disable(task);
+ 		task_update_spec_tif(task);
+@@ -1268,10 +1276,12 @@ static int ib_prctl_set(struct task_stru
+ 		 * Indirect branch speculation is always allowed when
+ 		 * mitigation is force disabled.
+ 		 */
+-		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
++		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
+ 			return -EPERM;
+-		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
+-		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
++		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
+ 			return 0;
+ 		task_set_spec_ib_disable(task);
+ 		if (ctrl == PR_SPEC_FORCE_DISABLE)
+@@ -1302,7 +1312,8 @@ void arch_seccomp_spec_mitigate(struct t
+ {
+ 	if (ssb_mode == SPEC_STORE_BYPASS_SECCOMP)
+ 		ssb_prctl_set(task, PR_SPEC_FORCE_DISABLE);
+-	if (spectre_v2_user == SPECTRE_V2_USER_SECCOMP)
++	if (spectre_v2_user_ibpb == SPECTRE_V2_USER_SECCOMP ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP)
+ 		ib_prctl_set(task, PR_SPEC_FORCE_DISABLE);
+ }
+ #endif
+@@ -1333,22 +1344,24 @@ static int ib_prctl_get(struct task_stru
+ 	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2))
+ 		return PR_SPEC_NOT_AFFECTED;
+ 
+-	switch (spectre_v2_user) {
+-	case SPECTRE_V2_USER_NONE:
++	if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
+ 		return PR_SPEC_ENABLE;
+-	case SPECTRE_V2_USER_PRCTL:
+-	case SPECTRE_V2_USER_SECCOMP:
++	else if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
++		return PR_SPEC_DISABLE;
++	else if (spectre_v2_user_ibpb == SPECTRE_V2_USER_PRCTL ||
++	    spectre_v2_user_ibpb == SPECTRE_V2_USER_SECCOMP ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_PRCTL ||
++	    spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP) {
+ 		if (task_spec_ib_force_disable(task))
+ 			return PR_SPEC_PRCTL | PR_SPEC_FORCE_DISABLE;
+ 		if (task_spec_ib_disable(task))
+ 			return PR_SPEC_PRCTL | PR_SPEC_DISABLE;
+ 		return PR_SPEC_PRCTL | PR_SPEC_ENABLE;
+-	case SPECTRE_V2_USER_STRICT:
+-	case SPECTRE_V2_USER_STRICT_PREFERRED:
+-		return PR_SPEC_DISABLE;
+-	default:
++	} else
+ 		return PR_SPEC_NOT_AFFECTED;
 -	}
--	if (irq_status & CORE_PWRCTL_IO_HIGH) {
-+
-+	if (irq_status & CORE_PWRCTL_IO_HIGH)
- 		io_level = REQ_IO_HIGH;
-+
-+	if (io_level)
- 		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
-+
-+	if (io_level && !IS_ERR(mmc->supply.vqmmc) && !pwr_state) {
-+		ret = mmc_regulator_set_vqmmc(mmc, &mmc->ios);
-+		if (ret < 0) {
-+			dev_err(mmc_dev(mmc), "%s: IO_level setting failed(%d). signal_voltage: %d, vdd: %d irq_status: 0x%08x\n",
-+					mmc_hostname(mmc), ret,
-+					mmc->ios.signal_voltage, mmc->ios.vdd,
-+					irq_status);
-+			irq_ack |= CORE_PWRCTL_IO_FAIL;
-+		}
- 	}
- 
- 	/*
-@@ -1551,7 +1661,7 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
- 	if (io_level)
- 		msm_host->curr_io_level = io_level;
- 
--	pr_debug("%s: %s: Handled IRQ(%d), irq_status=0x%x, ack=0x%x\n",
-+	dev_dbg(mmc_dev(mmc), "%s: %s: Handled IRQ(%d), irq_status=0x%x, ack=0x%x\n",
- 		mmc_hostname(msm_host->mmc), __func__, irq, irq_status,
- 		irq_ack);
- }
-@@ -1881,6 +1991,80 @@ static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
- 	sdhci_reset(host, mask);
  }
  
-+static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
-+{
-+	int ret;
-+	struct mmc_host *mmc = msm_host->mmc;
-+
-+	ret = mmc_regulator_get_supply(msm_host->mmc);
-+	if (ret)
-+		return ret;
-+
-+	sdhci_msm_set_regulator_caps(msm_host);
-+	mmc->ios.power_mode = MMC_POWER_UNDEFINED;
-+
-+	return 0;
-+}
-+
-+static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
-+				      struct mmc_ios *ios)
-+{
-+	struct sdhci_host *host = mmc_priv(mmc);
-+	u16 ctrl, status;
-+
-+	/*
-+	 * Signal Voltage Switching is only applicable for Host Controllers
-+	 * v3.00 and above.
-+	 */
-+	if (host->version < SDHCI_SPEC_300)
-+		return 0;
-+
-+	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+
-+	switch (ios->signal_voltage) {
-+	case MMC_SIGNAL_VOLTAGE_330:
-+		if (!(host->flags & SDHCI_SIGNALING_330))
-+			return -EINVAL;
-+
-+		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
-+		ctrl &= ~SDHCI_CTRL_VDD_180;
-+		break;
-+	case MMC_SIGNAL_VOLTAGE_180:
-+		if (!(host->flags & SDHCI_SIGNALING_180))
-+			return -EINVAL;
-+
-+		/*
-+		 * Enable 1.8V Signal Enable in the Host Control2
-+		 * register
-+		 */
-+		ctrl |= SDHCI_CTRL_VDD_180;
-+		break;
-+	case MMC_SIGNAL_VOLTAGE_120:
-+		if (!(host->flags & SDHCI_SIGNALING_120))
-+			return -EINVAL;
-+		return 0;
-+	default:
-+		/* No signal voltage switch required */
-+		return 0;
-+	}
-+
-+	sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
-+
-+	/* Wait for 5ms */
-+	usleep_range(5000, 5500);
-+
-+	/* regulator output should be stable within 5 ms */
-+	status = ctrl & SDHCI_CTRL_VDD_180;
-+	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	if ((ctrl & SDHCI_CTRL_VDD_180) == status)
-+		return 0;
-+
-+	dev_warn(mmc_dev(mmc), "%s: Regulator output did not became stable\n",
-+		mmc_hostname(mmc));
-+
-+	return -EAGAIN;
-+}
-+
- #define DRIVER_NAME "sdhci_msm"
- #define SDHCI_MSM_DUMP(f, x...) \
- 	pr_err("%s: " DRIVER_NAME ": " f, mmc_hostname(host->mmc), ## x)
-@@ -1967,6 +2151,7 @@ void sdhci_msm_dump_vendor_regs(struct sdhci_host *host)
- 	.write_b = sdhci_msm_writeb,
- 	.irq	= sdhci_msm_cqe_irq,
- 	.dump_vendor_regs = sdhci_msm_dump_vendor_regs,
-+	.set_power = sdhci_set_power_noreg,
- };
+ int arch_prctl_spec_ctrl_get(struct task_struct *task, unsigned long which)
+@@ -1587,7 +1600,7 @@ static char *stibp_state(void)
+ 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+ 		return "";
  
- static const struct sdhci_pltfm_data sdhci_msm_pdata = {
-@@ -2181,6 +2366,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 	if (core_major == 1 && core_minor >= 0x49)
- 		msm_host->updated_ddr_cfg = true;
- 
-+	ret = sdhci_msm_register_vreg(msm_host);
-+	if (ret)
-+		goto clk_disable;
-+
- 	/*
- 	 * Power on reset state may trigger power irq if previous status of
- 	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
-@@ -2225,6 +2414,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 					 MSM_MMC_AUTOSUSPEND_DELAY_MS);
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 
-+	host->mmc_host_ops.start_signal_voltage_switch =
-+		sdhci_msm_start_signal_voltage_switch;
- 	host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
- 	if (of_property_read_bool(node, "supports-cqe"))
- 		ret = sdhci_msm_cqe_add_host(host, pdev);
-@@ -2232,7 +2423,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
- 		ret = sdhci_add_host(host);
- 	if (ret)
- 		goto pm_runtime_disable;
--	sdhci_msm_set_regulator_caps(msm_host);
- 
- 	pm_runtime_mark_last_busy(&pdev->dev);
- 	pm_runtime_put_autosuspend(&pdev->dev);
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+-	switch (spectre_v2_user) {
++	switch (spectre_v2_user_stibp) {
+ 	case SPECTRE_V2_USER_NONE:
+ 		return ", STIBP: disabled";
+ 	case SPECTRE_V2_USER_STRICT:
+
 
