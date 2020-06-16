@@ -2,91 +2,91 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF58C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E15212098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592318975;
-	bh=ovSysk6kOqKTv082hockt1TpSKGLzWO2f3kVdMiM78o=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Ot8D6dmsa25dVomfw035EA4dxdcRWzV/1acUxb2RpO30U9lwtvfmnt7qRZejC2vgg
-	 7eQuTzlIMXVEkD5MeEzMpJjRfYm3bEdN8ozCykaXTWjHCrktfnlPGtUHAG322Tav07
-	 c4Pf6UphrFGOM+Robg8am1PTb5O/79vS6PL/LKHE=
+	by mail.kernel.org (Postfix) with ESMTP id DE8EE20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:51:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Kts+k6eu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgFPOte (ORCPT
+        id S1729346AbgFPOvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:49:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbgFPOtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:49:33 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82ED0208B3;
-        Tue, 16 Jun 2020 14:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592318973;
-        bh=ovSysk6kOqKTv082hockt1TpSKGLzWO2f3kVdMiM78o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=loYJF9f7xfeyaBWVBmiXz3O8oEAEuwPE8LD1LEc01/05HTs9EHi54G2MNShbF+4x6
-         GzSFw2VZCxY5rpp+mqH0wnwRznSKF8IqqQP5JC2g7fzuum4louloudFhn08jJevpDG
-         Vel8U2AphFpDC2kHy71bI/PtRONOMefkJYCBStKs=
-Date:   Tue, 16 Jun 2020 09:54:52 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] drm/i915/selftests: Fix inconsistent IS_ERR and PTR_ERR
-Message-ID: <20200616145452.GA25291@embeddedor>
+        Tue, 16 Jun 2020 10:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgFPOvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:51:16 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF2E8C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 07:51:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c185so19381061qke.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 07:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WFLTgGJ5LOxQenKARdYfCrtk1t6VepdL6VzhUDlajMc=;
+        b=Kts+k6euY5oLtf5tmwXRNFGUhGHWkdA7OewYzlqCFmqsO+oP0gOkY9veTjBzlWEVYl
+         UORvYhTCJc2coOGYzHiOfO209HA2dXWViqq2uItkXW9GiBStJbWAuyqNnAzsi87QFenO
+         tVsl5e/8qY72GrV51aSGSGpp84hSGPA9tqRgdswktLogXcOb/mrl/DivaUgypINt6eJC
+         Pqh79vjuddjzhus+huIbYxGlzNM3acc/mdoRsswn+fU0cHTCXQ0FzIsresCNiQRRfdo/
+         e1LGh8lQMxzk4O9P8KReJAj6xsnscr8TBP1awTvFnHlZY5Y6XPgzfsP32D7wG+lIbvnw
+         kxfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WFLTgGJ5LOxQenKARdYfCrtk1t6VepdL6VzhUDlajMc=;
+        b=YagMvvKJwgZZ+YDkiKPRmbGHZpJNNvN3hO+PvTy4BXGSvqdk5UXNDCDAkw8y+AExXO
+         mZt6crl3xpn/8Lq4d2VXSPyXbh0bwsB4Oij1glmmYlZ/dtZCSiEk6ujKjBMVowSqTTWW
+         fg8jlrwua0GpHuB9iQyk6UIb7jGrf9i4IkTHEnMsk0Q03mRLu6itztD1n6NxtLSnrxA2
+         6pcvpppFvhdoWCiWcChthjMOGj0z+i2LHIO7+4+2HuvTmfPGdHcjmKSI8iJ+HNnayoiA
+         IVYJF5TzMMmNB4yQ8NfqeBB4Ja+jfxgQO8xByJxf4/txd+OOJF4RFzSyzj/Q9qbVH3Cj
+         QmGA==
+X-Gm-Message-State: AOAM533gC7CiITs8kp+Nnv4Jk1Aj/Gz7d0Wx2RMPdzf2TEtb3ZfQjRWj
+        Azu7M+gSYNNvCMpY7xm5efP8SQ==
+X-Google-Smtp-Source: ABdhPJxoUuTjR/HnDD2RiYFZgrfAUGyaCqz8mMZepgrb6ol93ORKtTjYRCMvmCGQ/4segqqcHUSyrA==
+X-Received: by 2002:a05:620a:1114:: with SMTP id o20mr21147059qkk.120.1592319073084;
+        Tue, 16 Jun 2020 07:51:13 -0700 (PDT)
+Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
+        by smtp.gmail.com with ESMTPSA id z19sm16357992qtz.81.2020.06.16.07.51.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 07:51:12 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 10:50:35 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH for v5.8 3/3] mm/memory: fix IO cost for anonymous page
+Message-ID: <20200616145035.GC616830@cmpxchg.org>
+References: <1592288204-27734-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592288204-27734-4-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1592288204-27734-4-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix inconsistent IS_ERR and PTR_ERR in live_timeslice_nopreempt().
+On Tue, Jun 16, 2020 at 03:16:44PM +0900, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> With synchronous IO swap device, swap-in is directly handled in fault
+> code. Since IO cost notation isn't added there, with synchronous IO swap
+> device, LRU balancing could be wrongly biased. Fix it to count it
+> in fault code.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-The proper pointer to be passed as argument to PTR_ERR() is ce.
-
-This bug was detected with the help of Coccinelle.
-
-Fixes: b72f02d78e4f ("drm/i915/gt: Prevent timeslicing into unpreemptable requests")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/i915/gt/selftest_lrc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/gt/selftest_lrc.c b/drivers/gpu/drm/i915/gt/selftest_lrc.c
-index 91543494f595..393339de0910 100644
---- a/drivers/gpu/drm/i915/gt/selftest_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/selftest_lrc.c
-@@ -1337,7 +1337,7 @@ static int live_timeslice_nopreempt(void *arg)
- 
- 		ce = intel_context_create(engine);
- 		if (IS_ERR(ce)) {
--			err = PTR_ERR(rq);
-+			err = PTR_ERR(ce);
- 			goto out_spin;
- 		}
- 
--- 
-2.27.0
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
