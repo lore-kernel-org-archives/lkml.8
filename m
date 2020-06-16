@@ -2,228 +2,270 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E00C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 711CE20739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDCF20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3CyqlsE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ktQHexPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgFPANf (ORCPT
+        id S1726557AbgFPAPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 20:13:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
+        Mon, 15 Jun 2020 20:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgFPANc (ORCPT
+        with ESMTP id S1725960AbgFPAPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 20:13:32 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC08C061A0E;
-        Mon, 15 Jun 2020 17:13:30 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id ec10so8682257qvb.5;
-        Mon, 15 Jun 2020 17:13:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZTUGRzffZE3wE+LOtM+s3kWQsBeq2NfQEIgXbaFHXAY=;
-        b=O3CyqlsE3J+h0Ik0qb2HO93WOSLCqfo4FBLcIyF0odLPVW7/b6TxQ1Tr5v6+FGC8VP
-         BIVhQAmQr3Ib9+KAEdz0sqQsdmwQgDLhTMQmrr3lwOt8K7pN1JmTlYW7rRv9FabCpV42
-         bo/FdQdBJiOT65YqB7N4SgzDv8t9HeVZD60O5U9zFD3r8F6RAglHjwimbhSb0Yk9HQtU
-         MmicrEsNUu/7wN8f+yNT6VR8BBfG6G4TJOIXvCQclRiXeQ0qZQ2lTlzq6hNJi7oHiSgJ
-         acGfVNnfg8aX+N5v94HU2vKoNzQSM7BdvVOagtXCdVrChTzLKtZZsc91v3q//NxCTNOm
-         t88g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZTUGRzffZE3wE+LOtM+s3kWQsBeq2NfQEIgXbaFHXAY=;
-        b=haJpphSO44LlZ30Wbf9bBHQ1d1fvOWqR9nNEwn7qvc/8OborckCAU7UPsxZ0+rNTYP
-         qDFiGdfs5WoL2tcj0gHJdvyVZIB+5il8t2agpwQl1cfrBimKUwaFvwJkKW475X1gez1i
-         7wKTTkfmvmKVE90g4xF2is0S9rpVEnBEL4MhkCaDR3EJ5a3tCbFXVQgm+W8c09tvyTcF
-         dDfykOocDotn7ZGDiKq5I9D+8XMlmerRHgJOS/wwqjGyvXBdYr/0KHORTYhck7ZTSSeS
-         Lwu0W9UKAROgw+j98ZQ2sYdNyR9Tll0qda9xa7xPKHeh0EpCHBzYwpSRJL1RF0kMs/lY
-         Ut5w==
-X-Gm-Message-State: AOAM530Wd2U8L9g9AstiMOqGrlgmUuscFxqkaKGgPIe1jGbMq/NgF4KH
-        h3AN8rra1jTvrMA4345X7wE=
-X-Google-Smtp-Source: ABdhPJws/I2Q5ujVxOnkzlV51br2jbRnVWoJ+cz5q6oXV7lombMlNYbBLDGKpGBmmADodCAYmFZ/2Q==
-X-Received: by 2002:a05:6214:5a4:: with SMTP id by4mr344508qvb.40.1592266409772;
-        Mon, 15 Jun 2020 17:13:29 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id c4sm12487620qko.118.2020.06.15.17.13.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 17:13:28 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id E0CCD27C0054;
-        Mon, 15 Jun 2020 20:13:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 15 Jun 2020 20:13:26 -0400
-X-ME-Sender: <xms:ow7oXrBDP5ADUF1gFMuvjWXOupBMBC3uL5Afyyq4cw_UOCMKUnCHNw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeiledgfedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepheefudejueffjeelkedtgeelleelgfffhffhvdehtdekveehjeeivdejgedu
-    udegnecukfhppedutddurdekiedrgeejrddujedvnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:ow7oXhgO9o8klL1wvrWkyEuk9yEoECAkpLdrAxlgehgfYNEwnwQECA>
-    <xmx:ow7oXmno7SE6Vzn_3V3qcaYpTStr5e0R3ftk28rTWO_Tv4bKAxHpBw>
-    <xmx:ow7oXty2ycSZsSBxEEEcR_o8SG_YzNEHPBIqdmpDNq2ve093E397gQ>
-    <xmx:pg7oXsyFwFdrm68sCYcOeHqJev-eD0gwbNrbGx1WpBwVsxT7BRVJgE98Q8o>
-Received: from localhost (unknown [101.86.47.172])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 873CD30614FA;
-        Mon, 15 Jun 2020 20:13:22 -0400 (EDT)
-Date:   Tue, 16 Jun 2020 08:13:19 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+a9fb1457d720a55d6dc5@syzkaller.appspotmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, allison@lohutok.net,
-        areber@redhat.com, aubrey.li@linux.intel.com,
-        Andrei Vagin <avagin@gmail.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Christian Brauner <christian@brauner.io>, cyphar@cyphar.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, guro@fb.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>, linmiaohe@huawei.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>, Ingo Molnar <mingo@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, sargun@sargun.me,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: possible deadlock in send_sigio
-Message-ID: <20200616001319.GA925161@tardis>
-References: <69818a6c-7025-8950-da4b-7fdc065d90d6@redhat.com>
- <CACT4Y+brpePBoR7EUwPiSvGAgo6bhvpKvLTiCaCfRSadzn6yRw@mail.gmail.com>
- <88c172af-46df-116e-6f22-b77f98803dcb@redhat.com>
- <20200611142214.GI2531@hirez.programming.kicks-ass.net>
- <b405aca6-a3b2-cf11-a482-2b4af1e548bd@redhat.com>
- <20200611235526.GC94665@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200612070101.GA879624@tardis>
- <20200615164902.GV8681@bombadil.infradead.org>
- <0c854a69-9b89-9e45-f2c1-e60e2a9d3f1c@redhat.com>
- <20200615204046.GW8681@bombadil.infradead.org>
+        Mon, 15 Jun 2020 20:15:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DCFC061A0E;
+        Mon, 15 Jun 2020 17:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=O3apYYix+Rn65JFO3L94llIwE+pqtFqkO/3PhpCAJAE=; b=ktQHexPKlD7JMXJsID2hNJ5+Ik
+        viM6WTvwWnUrWlW3V1j8qKxcdy8Nr+Fh7O8IfCTR5kDHOiMF71K6xibEM1cRJEvbDV3JZ42uCJx+U
+        uPRZr92n2AJjAXB9aeaPfSr00cMK9RkOp4N79w7wcIDuFqWZhFUdwkEuGzP+gcvvCUGmhMYPJopmc
+        54AauXvxo2VTcg+YoXj8voJGUZFZ38pYy9hCFu1HIvW8+v2kfffcH/vdYuQQ1caXrmMxOmlHZBxEv
+        6aCf0f509qR/PxIfMzLuZo/sWqeZjROtaPj8tGOLQnATXrN4ijXyczodJhz8vYVoHeWL4SO8HoxHi
+        WlqhcNwA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jkzG0-0006s9-Ua; Tue, 16 Jun 2020 00:15:16 +0000
+Subject: Re: [PATCH v2] docs: block: Create blk-mq documentation
+To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
+        axboe@kernel.dk, corbet@lwn.net, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com
+References: <20200605175536.19681-1-andrealmeid@collabora.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3fc90f94-c034-7508-3938-f24beddbc5f3@infradead.org>
+Date:   Mon, 15 Jun 2020 17:15:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
-Content-Disposition: inline
-In-Reply-To: <20200615204046.GW8681@bombadil.infradead.org>
+In-Reply-To: <20200605175536.19681-1-andrealmeid@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+I have a few more editing comments for you (below):
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 6/5/20 10:55 AM, André Almeida wrote:
+> Create a documentation providing a background and explanation around the
+> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
+> 
+> The reference for writing this documentation was the source code and
+> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+> Systems", by Axboe et al.
+> 
+> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+> ---
+> Changes from v1:
+> - Fixed typos
+> - Reworked blk_mq_hw_ctx
+> 
+> Hello,
+> 
+> This commit was tested using "make htmldocs" and the HTML output has
+> been verified.
+> 
+> Thanks,
+> 	André
+> ---
+>  Documentation/block/blk-mq.rst | 154 +++++++++++++++++++++++++++++++++
+>  Documentation/block/index.rst  |   1 +
+>  2 files changed, 155 insertions(+)
+>  create mode 100644 Documentation/block/blk-mq.rst
+> 
+> diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
+> new file mode 100644
+> index 000000000000..1f702adbc577
+> --- /dev/null
+> +++ b/Documentation/block/blk-mq.rst
+> @@ -0,0 +1,154 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +================================================
+> +Multi-Queue Block IO Queueing Mechanism (blk-mq)
+> +================================================
+> +
+> +The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
+> +devices to achieve a huge number of input/output operations per second (IOPS)
+> +through queueing and submitting IO requests to block devices simultaneously,
+> +benefiting from the parallelism offered by modern storage devices.
+> +
+> +Introduction
+> +============
+> +
+> +Background
+> +----------
+> +
+> +Magnetic hard disks have been the de facto standard from the beginning of the
+> +development of the kernel. The Block IO subsystem aimed to achieve the best
+> +performance possible for those devices with a high penalty when doing random
+> +access, and the bottleneck was the mechanical moving parts, a lot more slower
 
-Hi Matthew,
+                                                               a lot slower
+or                                                             much slower
 
-On Mon, Jun 15, 2020 at 01:40:46PM -0700, Matthew Wilcox wrote:
-> On Mon, Jun 15, 2020 at 01:13:51PM -0400, Waiman Long wrote:
-> > On 6/15/20 12:49 PM, Matthew Wilcox wrote:
-> > > On Fri, Jun 12, 2020 at 03:01:01PM +0800, Boqun Feng wrote:
-> > > > On the archs using QUEUED_RWLOCKS, read_lock() is not always a recu=
-rsive
-> > > > read lock, actually it's only recursive if in_interrupt() is true. =
-So
-> > > > change the annotation accordingly to catch more deadlocks.
-> > > [...]
-> > >=20
-> > > > +#ifdef CONFIG_LOCKDEP
-> > > > +/*
-> > > > + * read_lock() is recursive if:
-> > > > + * 1. We force lockdep think this way in selftests or
-> > > > + * 2. The implementation is not queued read/write lock or
-> > > > + * 3. The locker is at an in_interrupt() context.
-> > > > + */
-> > > > +static inline bool read_lock_is_recursive(void)
-> > > > +{
-> > > > +	return force_read_lock_recursive ||
-> > > > +	       !IS_ENABLED(CONFIG_QUEUED_RWLOCKS) ||
-> > > > +	       in_interrupt();
-> > > > +}
-> > > I'm a bit uncomfortable with having the _lockdep_ definition of wheth=
-er
-> > > a read lock is recursive depend on what the _implementation_ is.
-> > > The locking semantics should be the same, no matter which architecture
-> > > you're running on.  If we rely on read locks being recursive in common
-> > > code then we have a locking bug on architectures which don't use queu=
-ed
-> > > rwlocks.
-> > >=20
-> > > I don't know whether we should just tell the people who aren't using
-> > > queued rwlocks that they have a new requirement or whether we should
-> > > say that read locks are never recursive, but having this inconsistency
-> > > is not a good idea!
-> >=20
-> > Actually, qrwlock is more restrictive. It is possible that systems with
-> > qrwlock may hit deadlock which doesn't happens in other systems that use
-> > recursive rwlock. However, the current lockdep code doesn't detect those
-> > cases.
->=20
-> Oops.  I misread.  Still, my point stands; we should have the same
-> definition of how you're allowed to use locks from the lockdep point of
-> view, even if the underlying implementation won't deadlock on a particular
-> usage model.
->=20
+> +than any layer on the storage stack. One example of such optimization technique
+> +involves ordering read/write requests accordingly to the current position of
 
-I understand your point, but such a change will require us to notify
-almost every developer using rwlocks and help them to get their code
-right, and that requires time and work, while currently I want to focus
-on the correctness of the detection, and without that being merged, we
-don't have a way to detect those problems. So I think it's better that
-we have the detection reviewed and tested for a while (given that x86
-uses qrwlock, so it will get a lot chances for testing), after that we
-we have the confidence (and the tool) to educate people the "new"
-semantics of rwlock. So I'd like to keep this patch as it is for now.
+I would say                              according to
 
->=20
-> So I'd be happy with:
->=20
-> +	return lockdep_pretend_in_interrupt || in_interrupt();
->=20
-> to allow the test-suite to test that it works as expected, without
-> actually disabling interrupts while the testsuite runs.
+> +the hard disk head.
+> +
+> +However, with the development of Solid State Drives and Non-Volatile Memories
+> +without mechanical parts nor random access penalty and capable of performing
+> +high parallel access, the bottleneck of the stack had moved from the storage
+> +device to the operating system. In order to  take advantage of the parallelism
 
-I've used 'force_read_lock_recursive' for this purpose in this patch.
+drop one space                               ^^^^
 
-Regards,
-Boqun
+> +in those devices design, the multi-queue mechanism was introduced.
 
->=20
+            devices'
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+> +The former design had a single queue to store block IO requests with a single
+> +lock. That did not scale well in SMP systems due to dirty data in cache and the
+> +bottleneck of having a single lock for multiple processors. This setup also
+> +suffered with congestion when different processes (or the same process, moving
+> +to different CPUs) wanted to perform block IO. Instead of this, the blk-mq API
+> +spawns multiple queues with individual entry points local to the CPU, removing
+> +the need for a lock. A deeper explanation on how this works is covered in the
+> +following section (`Operation`_).
+> +
+> +Operation
+> +---------
+> +
+> +When the userspace performs IO to a block device (reading or writing a file,
+> +for instance), blk-mq takes action: it will store and manage IO requests to
+> +the block device, acting as middleware between the userspace (and a file
+> +system, if present) and the block device driver.
+> +
+> +blk-mq has two group of queues: software staging queues and hardware dispatch
+> +queues. When the request arrives at the block layer, it will try the shortest
+> +path possible: send it directly to the hardware queue. However, there are two
+> +cases that it might not do that: if there's an IO scheduler attached at the
+> +layer or if we want to try to merge requests. In both cases, requests will be
+> +sent to the software queue.
+> +
+> +Then, after the requests are processed by software queues, they will be placed
+> +at the hardware queue, a second stage queue were the hardware has direct access
+> +to process those requests. However, if the hardware does not have enough
+> +resources to accept more requests, blk-mq will places requests on a temporary
+> +queue, to be sent in the future, when the hardware is able.
+> +
+> +Software staging queues
+> +~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +The block IO subsystem adds requests (represented by struct
+> +:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
+> +sent directly to the driver. A request is a collection of BIOs. They arrived at
+> +the block layer through the data structure struct :c:type:`bio`. The block
+> +layer will then build a new structure from it, the struct :c:type:`request`
+> +that will be used to communicate with the device driver. Each queue has its
+> +own lock and the number of queues is defined by a per-CPU or per-node basis.
+> +
+> +The staging queue can be used to merge requests for adjacent sectors. For
+> +instance, requests for sector 3-6, 6-7, 7-9 can become one request for 3-9.
+> +Even if random access to SSDs and NVMs have the same time of response compared
+> +to sequential access, grouped requests for sequential access decreases the
+> +number of individual requests. This technique of merging requests is called
+> +plugging.
+> +
+> +Along with that, the requests can be reordered to ensure fairness of system
+> +resources (e.g. to ensure that no application suffers from starvation) and/or to
+> +improve IO performance, by an IO scheduler.
+> +
+> +IO Schedulers
+> +^^^^^^^^^^^^^
+> +
+> +There are several schedulers implemented by the block layer, each one following
+> +a heuristic to improve the IO performance. They are "pluggable" (as in plug
+> +and play), in the sense of they can be selected at run time using sysfs. You
+> +can read more about Linux's IO schedulers `here
+> +<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
+> +happens only between requests in the same queue, so it is not possible to merge
+> +requests from different queues, otherwise there would be cache trashing and a
+> +need to have a lock for each queue. After the scheduling, the requests are
+> +eligible to be sent to the hardware. One of the possible schedulers to be
+> +selected is the NOOP scheduler, the most straightforward one, that implements a
+> +simple FIFO, without performing any reordering. This is useful in the following
+> +scenarios: when scheduling will be performed in a next step somewhere in the
+> +stack, like block device controllers; the actual sector position of blocks are
+> +transparent for the host, meaning it hasn't enough information to take a proper
+> +decision; or the overhead of reordering is higher than the handicap of
+> +non-sequential accesses.
+> +
+> +Hardware dispatch queues
+> +~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +The hardware queues (represented by struct :c:type:`blk_mq_hw_ctx`) have a 1:1
+> +correspondence to the device driver's submission queues, and are the last step
+> +of the block layer submission code before the low level device driver taking
+> +ownership of the request. To run this queue, the block layer removes requests
+> +from the associated software queues and tries to dispatch to the hardware.
+> +
+> +If it's not possible to send the requests directly to hardware, they will be
+> +added to a linked list (:c:type:`hctx->dispatch`) of requests. Then,
+> +next time the block layer runs a queue, it will send the requests laying at the
+> +:c:type:`dispatch` list first, to ensure a fairness dispatch with those
+> +requests that were ready to be sent first. The number of hardware queues
+> +depends on the number of hardware contexts supported by the hardware and its
+> +device driver, but it will not be more than the number of cores of the system.
+> +There is no reordering at this stage, and each software queue has a set of
+> +hardware queues to send requests for.
+> +
+> +.. note::
+> +
+> +        Neither the block layer nor the device protocols guarantee
+> +        the order of completion of requests. This must be handled by
+> +        higher layers, like the filesystem.
+> +
+> +Tag-based completion
+> +~~~~~~~~~~~~~~~~~~~~
+> +
+> +In order to indicate which request has been completed, every request is
+> +identified by an integer, ranging from 0 to the dispatch queue size. This tag
+> +is generated by the block layer and later reused by the device driver, removing
+> +the need to create a redundant identifier. When a request is completed in the
+> +drive, the tag is sent back to the block layer to notify it of the finalization.
+> +This removes the need to do a linear search to find out which IO has been
+> +completed.
+> +
+> +Further reading
+> +---------------
+> +
+> +- `Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems <http://kernel.dk/blk-mq.pdf>`_
+> +
+> +- `NOOP scheduler <https://en.wikipedia.org/wiki/Noop_scheduler>`_
+> +
+> +- `Null block device driver <https://www.kernel.org/doc/html/latest/block/null_blk.html>`_
+> +
+> +Source code documentation
+> +=========================
+> +
+> +.. kernel-doc:: include/linux/blk-mq.h
+> +
+> +.. kernel-doc:: block/blk-mq.c
 
------BEGIN PGP SIGNATURE-----
+thanks.
+-- 
+~Randy
 
-iQEzBAABCAAdFiEEj5IosQTPz8XU1wRHSXnow7UH+rgFAl7oDpwACgkQSXnow7UH
-+ribmAf8CKbWou8H1eJ1D2OqhUl5Ni34wEsbB5ZWbbRZlSPQ5f1ZXE6Z4vdNzBCN
-0EJOhNHJUJ5SFNPEDRaxOFSd8ydTme1P3zT07Pw5cg5ZHmHIYsZ7k+hVUeA6JI5m
-s/O7Myv/3iJdnNWxNX7GkwGYfK9uTb1xSnimAbfswkl+VGAwgJeHCg7cz1gL3AAO
-VW/6H07EvKMH6Sq5ElVyjh/kApaXHX5LzX/3NjXI3lPsmpgMQMVhBtqp6+XKDIkL
-nsCI1AWtlriCp/B7CKNIfw9LPOCENnHqX0zvn/OoXF7/OeJgtt4ErBJisQkS2rQd
-LsMpoIEfqhsV1jabnT5NsELNKl3MIg==
-=gTso
------END PGP SIGNATURE-----
-
---Nq2Wo0NMKNjxTN9z--
