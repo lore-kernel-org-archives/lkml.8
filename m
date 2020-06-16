@@ -2,58 +2,69 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F293C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD2452080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454B02080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592320503;
+	bh=yrnL9UpX/a11nNq4rn8b+jxH1C651aqSlV/dcI4pLBY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cTjiXuRYmx3tHjhOSqVPQj5AImoHkxzFT67wa8oJ9x00VPJk/hi4+f2cqActAvwni
+	 2NzQ3QhI/t4YCCJocXYgY0n7kRHxLbYtih6XspN6/29zDb6BbTxmCd/fawIDlpfR6f
+	 sY1hGNpuC2p05X2lpIjT+e5jkw+aWPwMj3N4Suvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgFPPOQ (ORCPT
+        id S1729523AbgFPPPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:14:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgFPPOP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:14:15 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4561BC061573;
-        Tue, 16 Jun 2020 08:14:14 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jlDHn-00A1dX-5X; Tue, 16 Jun 2020 15:14:03 +0000
-Date:   Tue, 16 Jun 2020 16:14:03 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org
-Subject: Re: linux-next: build failures after merge of the vfs tree
-Message-ID: <20200616151403.GM23230@ZenIV.linux.org.uk>
-References: <20200616103330.2df51a58@canb.auug.org.au>
- <20200616103440.35a80b4b@canb.auug.org.au>
- <20200616010502.GA28834@gondor.apana.org.au>
- <20200616033849.GL23230@ZenIV.linux.org.uk>
- <20200616143807.GA1359@gondor.apana.org.au>
+        Tue, 16 Jun 2020 11:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728993AbgFPPPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:15:01 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1AF9207C3;
+        Tue, 16 Jun 2020 15:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592320501;
+        bh=yrnL9UpX/a11nNq4rn8b+jxH1C651aqSlV/dcI4pLBY=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=XrEjTEvUsw82hLvg+MOfNxODiSCJoS4iInjheBywZPBY3ZL7B0eyzWvm6snliU9ra
+         XWi5JbXfqTzHMnJpREBvuThJBHcBdNbroQuRCoTN3I46kRlDWzg/Gj4dfszbYFv92b
+         s9OAbqRr1jSV1W9wP2XvK2V75k/952SdyMdG5KPE=
+Date:   Tue, 16 Jun 2020 17:14:57 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        groeck@chromium.org, Nicolas Boichat <drinkcat@chromium.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] HID: usbhid: do not sleep when opening device
+In-Reply-To: <20200610043824.GA171503@dtor-ws>
+Message-ID: <nycvar.YFH.7.76.2006161714270.13242@cbobk.fhfr.pm>
+References: <20200610043824.GA171503@dtor-ws>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616143807.GA1359@gondor.apana.org.au>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 12:38:07AM +1000, Herbert Xu wrote:
-> On Tue, Jun 16, 2020 at 04:38:49AM +0100, Al Viro wrote:
-> >
-> > Folded and pushed
-> 
-> Thanks Al.  Here's another one that I just got, could you add this
-> one too?
+On Tue, 9 Jun 2020, Dmitry Torokhov wrote:
 
-Done...
+> usbhid tries to give the device 50 milliseconds to drain its queues when
+> opening the device, but dies it naively by simply sleeping in open handler,
+
+I've changed 'dies' to 'does' :) and applied, thanks Dmitry.
+
+-- 
+Jiri Kosina
+SUSE Labs
+
