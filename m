@@ -2,85 +2,144 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF698C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25008C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8540E2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:01:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aTaZlC3y"
+	by mail.kernel.org (Postfix) with ESMTP id 0CC6F207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731427AbgFPSBh (ORCPT
+        id S1731434AbgFPSDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:01:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730613AbgFPSBg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:01:36 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3CBC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 11:01:34 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0f4c001d7e5f403e90d72b.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4c00:1d7e:5f40:3e90:d72b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 91E8B1EC02C3;
-        Tue, 16 Jun 2020 20:01:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592330492;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=hqVl7foDxxfge5hzy354qD6wQeIWNCQs1gQEI+LCBC4=;
-        b=aTaZlC3yYdxaOyYbZFlqVO5L7S2UIRyNBYTwQS8QFNVUSCrH2nnR7Lt6gzM8FcZ4wQ42VX
-        d4snp0rckqJXFxjvwPUEvkHkl/FkEPxVHth2HwmZn7EGGU0Is5hwCaZ8LD9wWSpRnGWtEE
-        H7L0BgXHGlWfKVov0HK5y+oe3NXyfG8=
-Date:   Tue, 16 Jun 2020 20:01:23 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     x86-ml <x86@kernel.org>, jpa@kernelbug.mail.kapsi.fi,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
-Message-ID: <20200616180123.GL13515@zn.tnic>
-References: <20200616095340.GD13515@zn.tnic>
- <CALCETrWQJtv6f1zYnWSiPe7qFUx4znthbysVC9NJ-88YqP5-eg@mail.gmail.com>
+        Tue, 16 Jun 2020 14:03:02 -0400
+Received: from mga14.intel.com ([192.55.52.115]:64699 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730227AbgFPSDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 14:03:02 -0400
+IronPort-SDR: pq51X5kzM6/doZLcHTKwZaAyr3Hx8B1Dxd0HORsE3agSwf9x526QSPh3FhLjQwgowq3Qtch9TT
+ /ye25/yHN9TQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 11:03:01 -0700
+IronPort-SDR: i5JxT7iSzrz8FHuLv9kq/Edq7b/pZkFZFezLQqtdzink8tJqy314EMARWrFPyiWq4hOqnpJJfx
+ zo0NSeSH3hKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,519,1583222400"; 
+   d="scan'208";a="277005960"
+Received: from unknown (HELO intel.com) ([10.251.95.102])
+  by orsmga006.jf.intel.com with ESMTP; 16 Jun 2020 11:02:55 -0700
+Date:   Tue, 16 Jun 2020 21:02:54 +0300
+From:   Andi Shyti <andi.shyti@intel.com>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jarkko.nikula@linux.intel.com, aaron.ma@canonical.com,
+        admin@kryma.net, benjamin.tissoires@redhat.com,
+        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
+        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, vicamo.yang@canonical.com,
+        wsa@kernel.org
+Subject: Re: [PATCH v2] HID: i2c-hid: Use block reads when possible to save
+ power
+Message-ID: <20200616180254.GB1415@intel.intel>
+References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
+ <20200616154951.3050-1-sultan@kerneltoast.com>
+ <20200616164101.GY2428291@smile.fi.intel.com>
+ <20200616171854.GA1415@intel.intel>
+ <20200616173258.GA5266@sultan-book.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrWQJtv6f1zYnWSiPe7qFUx4znthbysVC9NJ-88YqP5-eg@mail.gmail.com>
+In-Reply-To: <20200616173258.GA5266@sultan-book.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:53:39AM -0700, Andy Lutomirski wrote:
-> On Tue, Jun 16, 2020 at 2:53 AM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > Ok,
-> >
-> > here's the fix first so that it goes in. I'll hammer on the test case later.
+Hi Sultan,
+
+> > > > so the only strategy available up until now has been to always retrieve
+> > > > the maximum possible report length over i2c, which can be quite
+> > > > inefficient. For devices that send reports in block read format, the i2c
+> > > > controller driver can read the payload length on the fly and terminate
+> > > > the i2c transaction early, resulting in considerable power savings.
+> > > > 
+> > > > On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
+> > > > touchpad causes psys power readings to go up by about 4W and hover there
+> > > > until I remove my finger. With this patch, my psys readings go from 4.7W
+> > > > down to 3.1W, yielding about 1.6W in savings. This is because my
+> > > > touchpad's max report length is 60 bytes, but all of the regular reports
+> > > > it sends for touch events are only 32 bytes, so the i2c transfer is
+> > > > roughly halved for the common case.
+> > > 
+> > > > +	/* Try to do a block read if the size fits in one byte */
+> > > > +	flags = size > 255 ? I2C_M_RD : I2C_M_RD | I2C_M_RECV_LEN;
+> > > 
+> > > AFAIR SMBus specification tells about 256. Why 255?
+> > > 
+> > > Andi, am I correct?
+> > 
+> > Actually the SMBUS 3.0 protocol from 2015[*] says 255:
+> > 
+> > "
+> > D.6 255 Bytes in Process Call
+> > 
+> > The maximum number of bytes allowed in the Block Write-Block Read
+> > Process Call (Section 6.5.8) was increased from 32 to 255.
+> > "
+> > 
+> > But why does it matter... I see the patch is detatching itself
+> > from smbus.
+> > 
+> > And, actually, I wonder if this is the right way to fix it, isn't
+> > it better to fix smbus instead?
 > 
-> Does the 32-bit case need FNINIT?
+> I think the best solution would be to modify the i2c api to allow passing in a
+> function pointer and a payload size length, to specify how to interpret the size
+> of the incoming payload, so the adapter could handle both the HID over i2c
+> transfer spec and SMBus block reads without needing to read more bytes than
+> needed.
 
-Pasting from IRC:
+Can't you do that by specifying the xfer function?
 
-I'm thinking if you'd need to reinit the FPU, then you need to do it for
-both, not only 32-bit or do you mean something else? Also, if you end up
-doing FNSAVE (old CPU) that one reinits state.
+When you use smbus_read/write in block or byte or whatever, smbus
+always checks if there is an xfer function specified and uses
+that.
 
-Whatever we decide doing, this should be a separate patch anyway.
+If it's not specified it uses the default smbus functions with
+the limitations that come with it.
 
-Thx.
+> For example, for an SMBus block read, the payload size is specified in the first
+> byte and it is limited to 32 bytes. However, for HID over i2c, the payload size
+> is specified in the first two bytes, and there are also some device quirks
+> involved to reinterpret the reported size.
 
--- 
-Regards/Gruss,
-    Boris.
+which is wrong. The 32 bytes limitation is outdated: in the link
+that I gave before (i.e.  this one [*]), the new SMBUS specifies
+255 maximum for read/write block.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> A nice solution would be to pass in how many bytes the i2c payload size can
+> contain, as well as a function pointer to evaluate the reported payload size in
+> a way that the caller wants. This would require modifying every i2c adapter
+> driver to add this functionality, but it would fix the efficiency problem faced
+> by i2c-hid and perhaps others.
+> 
+> > I have a patch ready that fixes the smbus transfer size, perhaps
+> > I should rebase, test and send it.
+> 
+> For the i2c-hid driver?
+
+No, sorry, for smbus.
+
+Now... here you are replacing "i2c_master_recv" with
+"i2c_transfer_buffer_flags". I do not really like this change,
+although I understand it's necessary, because we are bypassing
+the real issue that is that the smbus implementation is outdated.
+
+I have a patch for that that for a matter of time I never sent.
+
+Andi
