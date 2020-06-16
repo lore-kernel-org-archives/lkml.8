@@ -2,82 +2,89 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C92C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB64FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC080207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975C2207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ViUF8mzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgFPUyY (ORCPT
+        id S1729837AbgFPUzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:54:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:56944 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgFPUyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:54:23 -0400
-IronPort-SDR: uQW3NjMtTcEXpgU3ckazJ5bW1bnVmAQM85H+h8DjFYReFDAGgf+eYOCXGYRbw32zYcJxPZw5Co
- jyuAImuQY2Tg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 13:54:22 -0700
-IronPort-SDR: u937yhbBGU1fwPmrcamDGL0ED3Cdx5A9CcOhhryeXG+51Sr41aKXrbJd9S5OXnNU2KZOyICzwb
- f+VTLXxXpcZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,519,1583222400"; 
-   d="scan'208";a="277051194"
-Received: from gosinald-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.36.106])
-  by orsmga006.jf.intel.com with ESMTP; 16 Jun 2020 13:54:17 -0700
-Date:   Tue, 16 Jun 2020 23:54:15 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>, jens.wiklander@linaro.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: Re: [PATCHv8 0/3] optee: register drivers on optee bus
-Message-ID: <20200616205415.GD20943@linux.intel.com>
-References: <20200604175851.758-1-maxim.uvarov@linaro.org>
- <CAD8XO3YTz=xN2k5h8HsrYsLUgmC6dD57XbBj63e+3_xFF1H0rw@mail.gmail.com>
- <20200616204906.GB20943@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200616204906.GB20943@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Tue, 16 Jun 2020 16:55:50 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:33826 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726630AbgFPUzt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 16:55:49 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 4D28330D88D;
+        Tue, 16 Jun 2020 13:55:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 4D28330D88D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1592340948;
+        bh=3OXvA8PCBEsIpA3nCB4c0nzrfCkD8JiWghv65L3ox8A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ViUF8mzWpCVaY9qidj/hQmhK3bwcJK1jWitrwWgTDGlgsXQomrYhnyxsUFODUA5wT
+         unMHuxQEISgpY/v4ZgYkFwkPVNDwWd68GNq/aig5NTmFIdKVjWH3iXspafrgodghNI
+         727FL3C3/pFk9qRScIhfoyOXoeCay0LYYxSI1+U4=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E3EC114008B;
+        Tue, 16 Jun 2020 13:55:46 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 01/12] PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+Date:   Tue, 16 Jun 2020 16:55:08 -0400
+Message-Id: <20200616205533.3513-2-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200616205533.3513-1-james.quinlan@broadcom.com>
+References: <20200616205533.3513-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:49:13PM +0300, Jarkko Sakkinen wrote:
-> On Mon, Jun 15, 2020 at 05:32:40PM +0300, Maxim Uvarov wrote:
-> > ping.
-> > Patchset was reviewed and all comments are codeverd. Optee-os patches
-> > were merged. These kernel patches look like they are hanging
-> > somewhere...
-> > 
-> > Thanks,
-> > Maxim.
-> 
-> I'm checking them atm.
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-I'm a bit confused about the optee patches:
+Have PCIE_BRCMSTB depend on ARCH_BRCMSTB.  Also set the default value to
+ARCH_BRCMSTB.
 
-» scripts/get_maintainer.pl drivers/tee/
-Jens Wiklander <jens.wiklander@linaro.org> (maintainer:TEE SUBSYSTEM)
-tee-dev@lists.linaro.org (open list:TEE SUBSYSTEM)
-linux-kernel@vger.kernel.org (open list)
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/controller/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Before I can pick the two optee patches they both need ack/reviewed-by
-from Jens and also ack from him for me picking them, instead of him.
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index adddf21fa381..c165328d5fbb 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -262,9 +262,10 @@ config VMD
+ 
+ config PCIE_BRCMSTB
+ 	tristate "Broadcom Brcmstb PCIe host controller"
+-	depends on ARCH_BCM2835 || COMPILE_TEST
++	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
+ 	depends on OF
+ 	depends on PCI_MSI_IRQ_DOMAIN
++	default ARCH_BRCMSTB
+ 	help
+ 	  Say Y here to enable PCIe host controller support for
+ 	  Broadcom STB based SoCs, like the Raspberry Pi 4.
+-- 
+2.17.1
 
-/Jarkko
