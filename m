@@ -7,62 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C988C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FD9208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1F1208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323794;
-	bh=UGvNsIBI77475V/aFFDuzHClccitPkM+H/tfhf9NUJ4=;
+	s=default; t=1592323797;
+	bh=caW8/Y6VPKp5vVcWf/wLPLBPATAnCb5BJZT3tCjbtaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hau7iQvH20fc0+tB1tYu/yYstLHrF4QToOlB3WtXtfHLWujvq6sJRUc+dNZ3GSt1y
-	 q+rNmRq4G0a/QTihGmVj6xN2AjWIpLvhba/19G2Hj4ZIE6rkV0gsN91LpXwLsJn/kc
-	 whdxJRiWwIOaAMniPO70UmZe/4GZdle1F7VthQIE=
+	b=N1RIZJfgF5HCh2d3fpcMOdfnY0lLfMOg0qctJOMg9WR+pSJeBj3NsPkrrsxOwIhv/
+	 pxdxPlRaVyZdFxEtplwrqyRW9JqE6Pr5C7Y4J+gUeFJ/nwPxVsxQ7yWKGO+u60dj3d
+	 EcKkP5gs8Y71nxyb1p3QrFMrUIXadJR2AjRmm8to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbgFPPpK (ORCPT
+        id S1732036AbgFPPo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:44:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732014AbgFPPpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:45:04 -0400
+        id S1732032AbgFPPox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 103F6214F1;
-        Tue, 16 Jun 2020 15:45:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9596821475;
+        Tue, 16 Jun 2020 15:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322303;
-        bh=UGvNsIBI77475V/aFFDuzHClccitPkM+H/tfhf9NUJ4=;
+        s=default; t=1592322293;
+        bh=caW8/Y6VPKp5vVcWf/wLPLBPATAnCb5BJZT3tCjbtaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WFs1JyMW+Lj5qvjgW6+hud1sP1k7MZLDXp9kxh64nfPa/NCVRTwNDhcMKxudgfuU2
-         NbWPywI44B5nAJmc2ZTPTr+FH/6DhIAVWff81B+H+4E0qKZBvNEX1FezKxBQaRv6TS
-         KsZQmr1GhVhq8w9/JBWZMclmUj5hTp+oDXVn5YtE=
+        b=RHqLnRT2xkznXfDQRe7RzB0AZ6fBmN35IxG0qC1ZBC2AMW++ErW/dO4XJYwaJv800
+         YdIqA7EQDwEAMYpntLDcxwyP2ewy6/R21LW5klwvsgLxyDNewQFYRGMBUuUerOpp8g
+         MZYq2Neb7JM1eBSr/cwmOe1zztDUJU7yk4U94t+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 079/163] lib: fix bitmap_parse() on 64-bit big endian archs
-Date:   Tue, 16 Jun 2020 17:34:13 +0200
-Message-Id: <20200616153110.626629451@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        youling257@gmail.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.7 075/163] ACPI: PM: Avoid using power resources if there are none for D0
+Date:   Tue, 16 Jun 2020 17:34:09 +0200
+Message-Id: <20200616153110.443637495@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -75,70 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 81c4f4d924d5d009b5ed785a3e22b18d0f7b831f upstream.
+commit 956ad9d98b73f59e442cc119c98ba1e04e94fe6d upstream.
 
-Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not take into
-account order of halfwords on 64-bit big endian architectures.  As
-result (at least) Receive Packet Steering, IRQ affinity masks and
-runtime kernel test "test_bitmap" get broken on s390.
+As recently reported, some platforms provide a list of power
+resources for device power state D3hot, through the _PR3 object,
+but they do not provide a list of power resources for device power
+state D0.
 
-[andriy.shevchenko@linux.intel.com: convert infinite while loop to a for loop]
-  Link: http://lkml.kernel.org/r/20200609140535.87160-1-andriy.shevchenko@linux.intel.com
+Among other things, this causes acpi_device_get_power() to return
+D3hot as the current state of the device in question if all of the
+D3hot power resources are "on", because it sees the power_resources
+flag set and calls acpi_power_get_inferred_state() which finds that
+D3hot is the shallowest power state with all of the associated power
+resources turned "on", so that's what it returns.  Moreover, that
+value takes precedence over the acpi_dev_pm_explicit_get() return
+value, because it means a deeper power state.  The device may very
+well be in D0 physically at that point, however.
 
-Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Amritha Nambiar <amritha.nambiar@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Miklos Szeredi <mszeredi@redhat.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: "Tobin C . Harding" <tobin@kernel.org>
-Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1591634471-17647-1-git-send-email-agordeev@linux.ibm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Moreover, the presence of _PR3 without _PR0 for a given device
+means that only one D3-level power state can be supported by it.
+Namely, because there are no power resources to turn "off" when
+transitioning the device from D0 into D3cold (which should be
+supported since _PR3 is present), the evaluation of _PS3 should
+be sufficient to put it straight into D3cold, but this means that
+the effect of turning "on" the _PR3 power resources is unclear,
+so it is better to avoid doing that altogether.  Consequently,
+there is no practical way do distinguish D3cold from D3hot for
+the device in question and the power states of it can be labeled
+so that D3hot is the deepest supported one (and Linux assumes
+that putting a device into D3hot via ACPI may cause power to be
+removed from it anyway, for legacy reasons).
+
+To work around the problem described above modify the ACPI
+enumeration of devices so that power resources are only used
+for device power management if the list of D0 power resources
+is not empty and make it mart D3cold as supported only if that
+is the case and the D3hot list of power resources is not empty
+too.
+
+Fixes: ef85bdbec444 ("ACPI / scan: Consolidate extraction of power resources lists")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205057
+Link: https://lore.kernel.org/linux-acpi/20200603194659.185757-1-hdegoede@redhat.com/
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: youling257@gmail.com
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/bitmap.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/acpi/device_pm.c |    2 +-
+ drivers/acpi/scan.c      |   28 +++++++++++++++++++---------
+ 2 files changed, 20 insertions(+), 10 deletions(-)
 
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -740,8 +740,9 @@ int bitmap_parse(const char *start, unsi
- 	int chunks = BITS_TO_U32(nmaskbits);
- 	u32 *bitmap = (u32 *)maskp;
- 	int unset_bit;
-+	int chunk;
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -186,7 +186,7 @@ int acpi_device_set_power(struct acpi_de
+ 		 * possibly drop references to the power resources in use.
+ 		 */
+ 		state = ACPI_STATE_D3_HOT;
+-		/* If _PR3 is not available, use D3hot as the target state. */
++		/* If D3cold is not supported, use D3hot as the target state. */
+ 		if (!device->power.states[ACPI_STATE_D3_COLD].flags.valid)
+ 			target_state = state;
+ 	} else if (!device->power.states[state].flags.valid) {
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -919,12 +919,9 @@ static void acpi_bus_init_power_state(st
  
--	while (1) {
-+	for (chunk = 0; ; chunk++) {
- 		end = bitmap_find_region_reverse(start, end);
- 		if (start > end)
- 			break;
-@@ -749,7 +750,11 @@ int bitmap_parse(const char *start, unsi
- 		if (!chunks--)
- 			return -EOVERFLOW;
- 
--		end = bitmap_get_x32_reverse(start, end, bitmap++);
-+#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
-+		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk ^ 1]);
-+#else
-+		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk]);
-+#endif
- 		if (IS_ERR(end))
- 			return PTR_ERR(end);
+ 		if (buffer.length && package
+ 		    && package->type == ACPI_TYPE_PACKAGE
+-		    && package->package.count) {
+-			int err = acpi_extract_power_resources(package, 0,
+-							       &ps->resources);
+-			if (!err)
+-				device->power.flags.power_resources = 1;
+-		}
++		    && package->package.count)
++			acpi_extract_power_resources(package, 0, &ps->resources);
++
+ 		ACPI_FREE(buffer.pointer);
  	}
+ 
+@@ -971,14 +968,27 @@ static void acpi_bus_get_power_flags(str
+ 		acpi_bus_init_power_state(device, i);
+ 
+ 	INIT_LIST_HEAD(&device->power.states[ACPI_STATE_D3_COLD].resources);
+-	if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
+-		device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
+ 
+-	/* Set defaults for D0 and D3hot states (always valid) */
++	/* Set the defaults for D0 and D3hot (always supported). */
+ 	device->power.states[ACPI_STATE_D0].flags.valid = 1;
+ 	device->power.states[ACPI_STATE_D0].power = 100;
+ 	device->power.states[ACPI_STATE_D3_HOT].flags.valid = 1;
+ 
++	/*
++	 * Use power resources only if the D0 list of them is populated, because
++	 * some platforms may provide _PR3 only to indicate D3cold support and
++	 * in those cases the power resources list returned by it may be bogus.
++	 */
++	if (!list_empty(&device->power.states[ACPI_STATE_D0].resources)) {
++		device->power.flags.power_resources = 1;
++		/*
++		 * D3cold is supported if the D3hot list of power resources is
++		 * not empty.
++		 */
++		if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
++			device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
++	}
++
+ 	if (acpi_bus_init_power(device))
+ 		device->flags.power_manageable = 0;
+ }
 
 
