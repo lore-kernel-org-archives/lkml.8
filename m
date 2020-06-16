@@ -2,165 +2,133 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35653C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A078C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1202E2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F89208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FDxXN5LN"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="kdsn5tjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgFPMLA (ORCPT
+        id S1728314AbgFPMMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40912 "EHLO
+        Tue, 16 Jun 2020 08:12:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgFPMK7 (ORCPT
+        with ESMTP id S1725775AbgFPMMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:10:59 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A240C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:10:59 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q25so2829368wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:10:58 -0700 (PDT)
+        Tue, 16 Jun 2020 08:12:49 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 162DBC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:12:48 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h5so20540374wrc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:12:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=date:from:to:cc:subject:message-id:mail-followup-to:references
          :mime-version:content-disposition:in-reply-to;
-        bh=5QWjCps9FQO9o//U7Sgj6WRAuJJOpmMo6AsQMUTmG1I=;
-        b=FDxXN5LNMQhJ+U0Lbq6FL19TnObJXisz0N6E5K81GMnjKG7EeF+tQDAYsgtjlv3k9j
-         IvIzjcQoJM74t0X6StRdDHj06/FHTN9r/gtA7/R6eJicd3XRUrtXx5Ymiz/ATd+LroLA
-         sRLA8+1uGBypwIpt7WFzdzF3fkQ4CAlYxyeRg=
+        bh=Q6OsjkJk4pboo5l2xvILBNUm3B6366KdViVmWJQJc1w=;
+        b=kdsn5tjdB6ktRJ9mmWCnOQ9CfEMUqcxAszDkUfimcaluXzI0gXdq+3lGnL2wowHLuJ
+         XVwwdLvjpzcwXu8CBc8dnkftrxJ1N7+/Y46OkIHUxelWqtxbn8YE5rj6g16lNDhVb/7G
+         XCprtIPsYY1SGOmOrKUjp11REFjEEO+9rO8Qg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to;
-        bh=5QWjCps9FQO9o//U7Sgj6WRAuJJOpmMo6AsQMUTmG1I=;
-        b=D6Dr9af/Kyzpi8y7oeIj+N9PFb+PkC8xzApa07v0aAHF67pBbYZgFIBfVu5X2hRr6P
-         sH9PMKf/xNpPme5GIpB2DAnZD3zXksvgJlFp+ASYnm6NCFupdXbCD4UnTl+vzSgvGDov
-         E4YZ6ADS2ltoGbWfSfMPZqs/UJ+vqLKwL0vg8DsTQA2QuT66FII/4OHe1FHT0yer7gqN
-         AtSbNPYr4ldGb+7F+L5d90H53aE5maJQ37AefzqXetMFM+R6RAVuVRN1J16Rp0Y+d9ya
-         TF4n4alQSRjmBRt8K43Du2k64S81hTqma1aDFWZXNFfATN5sbaGc0bvHMmyt+L7sGFeo
-         7KMg==
-X-Gm-Message-State: AOAM530jhbq7KX61i6JKGxoNRUnq8YZHZqKYSHMLV7zf5ZcqfbV647O0
-        6V0LlYM3a8JM3yp2hLGzELH4SA==
-X-Google-Smtp-Source: ABdhPJzr5tEYt0yBuPjN1sXIbPUe6J1xRlewI7i+jrZI2ek42MJkm+CWMwjQCfntoJ1csgCZhjRLEQ==
-X-Received: by 2002:a7b:cd10:: with SMTP id f16mr2984082wmj.149.1592309457330;
-        Tue, 16 Jun 2020 05:10:57 -0700 (PDT)
+        bh=Q6OsjkJk4pboo5l2xvILBNUm3B6366KdViVmWJQJc1w=;
+        b=YGfcku/GjSN7cPrItXOkhWEMwdgw8ywnhwzxC6UCkTPgLJIz2OmE4wusv4ZCxTln9D
+         D3/qY4Imj6elmXfZJhi2bzHQm1b2EVhNvLMhRKBn626ccEmiZhMARN+H7+rwW7pX+dMo
+         5z+ov/wwUsU6LU3UdpjuevOMhTJPdQ6y0ScanUkKo7MFeceEjh6Pj7sslS6JJ79hgVIr
+         IOLUV1GP3WkZDbiNQUFWs5FcaFIZc0xki5dbchANPGayDvbRsvjKLHghvt4uOzR+vf6T
+         D1jXDKYFtdzkTXtJKUtB/TIPQys6FFbzhhohZUjAKsVWdwJN0EkKX/YqM8NcGQAcfTKy
+         tRhA==
+X-Gm-Message-State: AOAM533BSxpzKkQL29P4M+DkHZit/Ln1a45LR6YbM5Km3WOHlRD4faaJ
+        KhzzJK7V39DVKpoy+kgnT0ndylcx1ls=
+X-Google-Smtp-Source: ABdhPJwE/rveo96P37ip4JED1ZrNUfLnxqMG17ohOhxH9h34F9ic/IEpoM6pzw55iAcxdQcPOHNGsQ==
+X-Received: by 2002:adf:a396:: with SMTP id l22mr2758118wrb.24.1592309566724;
+        Tue, 16 Jun 2020 05:12:46 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id z16sm28964586wrm.70.2020.06.16.05.10.56
+        by smtp.gmail.com with ESMTPSA id q11sm29162628wrv.67.2020.06.16.05.12.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 05:10:56 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 14:10:54 +0200
+        Tue, 16 Jun 2020 05:12:46 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 14:12:44 +0200
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu, wu000273@umn.edu,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] drm/bridge: fix reference count leaks due to
- pm_runtime_get_sync()
-Message-ID: <20200616121054.GM20149@phenom.ffwll.local>
-Mail-Followup-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu, wu000273@umn.edu,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20200614024005.125578-1-pakki001@umn.edu>
- <20200614134655.GA5960@pendragon.ideasonboard.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH 0/6] remove deprecated i2c_new_device API
+Message-ID: <20200616121244.GN20149@phenom.ffwll.local>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200614134655.GA5960@pendragon.ideasonboard.com>
+In-Reply-To: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
 X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 14, 2020 at 04:46:55PM +0300, Laurent Pinchart wrote:
-> Hi Aditya,
-> 
-> (CC'ing Rafael)
-> 
-> Thank you for the patch.
-> 
-> On Sat, Jun 13, 2020 at 09:40:05PM -0500, Aditya Pakki wrote:
-> > On calling pm_runtime_get_sync() the reference count of the device
-> > is incremented. In case of failure, decrement the
-> > reference count before returning the error.
-> > 
-> > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> 
-> I've seen lots of similar patches recently. Instead of mass-patching the
-> drivers this way, shouldn't pm_runtime_get_sync() (and similar
-> functions) decrease the refcount on their failure path ? That would
-> require patching drivers that already handle this issue, but I believe
-> that would cause less churn, and more importantly, avoid the issue once
-> and for good for new code.
+On Mon, Jun 15, 2020 at 09:58:09AM +0200, Wolfram Sang wrote:
+> I want to remove the above API this cycle, and just a few patches have
+> not made it into 5.8-rc1. They have been reviewed and most had been
+> promised to get into linux-next, but well, things happen. So, I hope it
+> is okay for everyone to collect them like this and push them via I2C for
+> 5.8-rc2.
 
-Yeah the current interface looks rather dodgy, generally drivers aren't
-expected to clean up if the first function failed.
+for the drm side of things:
 
-Rafael and Greg, what's your take on this here? See patch below and
-Laurent's comment above.
--Daniel
-
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 > 
-> > ---
-> >  drivers/gpu/drm/bridge/cdns-dsi.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/cdns-dsi.c b/drivers/gpu/drm/bridge/cdns-dsi.c
-> > index 69c3892caee5..583cb8547106 100644
-> > --- a/drivers/gpu/drm/bridge/cdns-dsi.c
-> > +++ b/drivers/gpu/drm/bridge/cdns-dsi.c
-> > @@ -788,8 +788,10 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
-> >  	u32 tmp, reg_wakeup, div;
-> >  	int nlanes;
-> >  
-> > -	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
-> > +	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0)) {
-> > +		pm_runtime_put(dsi->base.dev);
-> >  		return;
-> > +	}
-> >  
-> >  	mode = &bridge->encoder->crtc->state->adjusted_mode;
-> >  	nlanes = output->dev->lanes;
-> > @@ -1028,8 +1030,10 @@ static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
-> >  	int ret, i, tx_len, rx_len;
-> >  
-> >  	ret = pm_runtime_get_sync(host->dev);
-> > -	if (ret < 0)
-> > +	if (ret < 0) {
-> > +		pm_runtime_put(host->dev);
-> >  		return ret;
-> > +	}
-> >  
-> >  	cdns_dsi_init_link(dsi);
-> >  
+> One minor exception is the media documentation patch which I simply have
+> missed so far, but it is trivial.
+> 
+> And then, finally, there is the removal of the old API as the final
+> patch. Phew, that's been a long ride.
+> 
+> I am open for comments, of course.
+> 
+> Happy hacking,
+> 
+>    Wolfram
+> 
+> 
+> Wolfram Sang (6):
+>   drm: encoder_slave: fix refcouting error for modules
+>   drm: encoder_slave: use new I2C API
+>   x86/platform/intel-mid: convert to use i2c_new_client_device()
+>   video: backlight: tosa_lcd: convert to use i2c_new_client_device()
+>   Documentation: media: convert to use i2c_new_client_device()
+>   i2c: remove deprecated i2c_new_device API
+> 
+>  .../driver-api/media/v4l2-subdev.rst          |  2 +-
+>  .../userspace-api/media/conf_nitpick.py       |  2 +-
+>  arch/x86/platform/intel-mid/sfi.c             |  4 +--
+>  drivers/gpu/drm/drm_encoder_slave.c           | 15 ++++-------
+>  drivers/i2c/i2c-core-base.c                   | 25 -------------------
+>  drivers/video/backlight/tosa_lcd.c            |  4 +--
+>  include/linux/i2c.h                           |  8 +++---
+>  7 files changed, 14 insertions(+), 46 deletions(-)
 > 
 > -- 
-> Regards,
+> 2.27.0
 > 
-> Laurent Pinchart
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
 Daniel Vetter
