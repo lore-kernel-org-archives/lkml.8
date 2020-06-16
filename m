@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDBD21475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E3021527
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321865;
-	bh=dC7qEY8RWldK5Tu4/BHmKfll+FauoIDgIQY9R1Du2LQ=;
+	s=default; t=1592321869;
+	bh=2souSL7wUqJV7CFj5gHSHcYp9MqYWOL8FgY3TjLkAOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYPImoHCpn92wtEFzfL6zj/AqDorXXU2CIOTaGjJx/hoOCt7MTS+ewRnJWQRPGLjb
-	 BFyQudnaJbeKNpRdFD3WpH2SxWr4ACqQZIwg0M5a5cQaTHZfIZHFCdMgUwD3UydhWX
-	 A9zdaJaS4CBxQx8lL06L6iXDtfMak6qM8q0xlHhs=
+	b=zt4pHOeZaQbpmBdo6fx7pTq7d3v3Sw4H1EYOYNMN9CpfBwN8sc06AGbRk1Q5a5ekN
+	 YL0DyklZxlcHKDbn6WIs/0gNVczIuZjviiXMW+7d9IeiSrOFsneCtY184MJDwY4Tqj
+	 3VvRs2CBLPwtQCEqxwXM0q4OGLAgh0+oj4EZ6A74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgFPPhn (ORCPT
+        id S1730414AbgFPPhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:37:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49336 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730341AbgFPPhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:41 -0400
+        id S1730038AbgFPPho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1E4D20C56;
-        Tue, 16 Jun 2020 15:37:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521E421473;
+        Tue, 16 Jun 2020 15:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321860;
-        bh=dC7qEY8RWldK5Tu4/BHmKfll+FauoIDgIQY9R1Du2LQ=;
+        s=default; t=1592321862;
+        bh=2souSL7wUqJV7CFj5gHSHcYp9MqYWOL8FgY3TjLkAOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUlf1cO4W3qxLyVbYDP6/guI1Ai/lAoRRJhRZ0q7y15B3aZ66gq/UV0FQdVJTAURr
-         nX9rR1/pHCfnYcNOQo4qcTMw0HwrPH5Tk5V0Ol4VP2cAE2AojLZetQflYKMrmzN+Nk
-         356SjhcrZ4+hKKJLF29IYT3uHUG/2CZe49FX7t+I=
+        b=eLbUlbELl9n/G/h3IsZdpxUS0e8kVl6e6zawYxAfi3lDbOQJPkDvwB6/o4IivNQGq
+         4fY/TGYUw+vWe3gHIvttnR15+buRiCUyg7DwumyYu0sAlWH12dIZEwbggrI0UBWoAy
+         tmPg4hHcQbo47Ii9eOV9WSaYcNdrMPTRQShQ2g+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 013/134] csky: Fixup abiv2 syscall_trace break a4 & a5
-Date:   Tue, 16 Jun 2020 17:33:17 +0200
-Message-Id: <20200616153101.327933348@linuxfoundation.org>
+Subject: [PATCH 5.4 014/134] gfs2: Even more gfs2_find_jhead fixes
+Date:   Tue, 16 Jun 2020 17:33:18 +0200
+Message-Id: <20200616153101.375360447@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,50 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit e0bbb53843b5fdfe464b099217e3b9d97e8a75d7 ]
+[ Upstream commit 20be493b787cd581c9fffad7fcd6bfbe6af1050c ]
 
-Current implementation could destory a4 & a5 when strace, so we need to get them
-from pt_regs by SAVE_ALL.
+Fix several issues in the previous gfs2_find_jhead fix:
+* When updating @blocks_submitted, @block refers to the first block block not
+  submitted yet, not the last block submitted, so fix an off-by-one error.
+* We want to ensure that @blocks_submitted is far enough ahead of @blocks_read
+  to guarantee that there is in-flight I/O.  Otherwise, we'll eventually end up
+  waiting for pages that haven't been submitted, yet.
+* It's much easier to compare the number of blocks added with the number of
+  blocks submitted to limit the maximum bio size.
+* Even with bio chaining, we can keep adding blocks until we reach the maximum
+  bio size, as long as we stop at a page boundary.  This simplifies the logic.
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Reviewed-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/abiv2/inc/abi/entry.h | 2 ++
- arch/csky/kernel/entry.S        | 6 ++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ fs/gfs2/lops.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
-index 9023828ede97..ac8f65a3e75a 100644
---- a/arch/csky/abiv2/inc/abi/entry.h
-+++ b/arch/csky/abiv2/inc/abi/entry.h
-@@ -13,6 +13,8 @@
- #define LSAVE_A1	28
- #define LSAVE_A2	32
- #define LSAVE_A3	36
-+#define LSAVE_A4	40
-+#define LSAVE_A5	44
+diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
+index 8303b44a5068..d2ed4dc4434c 100644
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -504,12 +504,12 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
+ 	unsigned int bsize = sdp->sd_sb.sb_bsize, off;
+ 	unsigned int bsize_shift = sdp->sd_sb.sb_bsize_shift;
+ 	unsigned int shift = PAGE_SHIFT - bsize_shift;
+-	unsigned int max_bio_size = 2 * 1024 * 1024;
++	unsigned int max_blocks = 2 * 1024 * 1024 >> bsize_shift;
+ 	struct gfs2_journal_extent *je;
+ 	int sz, ret = 0;
+ 	struct bio *bio = NULL;
+ 	struct page *page = NULL;
+-	bool bio_chained = false, done = false;
++	bool done = false;
+ 	errseq_t since;
  
- #define KSPTOUSP
- #define USPTOKSP
-diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
-index 65c55f22532a..4349528fbf38 100644
---- a/arch/csky/kernel/entry.S
-+++ b/arch/csky/kernel/entry.S
-@@ -170,8 +170,10 @@ csky_syscall_trace:
- 	ldw	a3, (sp, LSAVE_A3)
- #if defined(__CSKYABIV2__)
- 	subi	sp, 8
--	stw	r5, (sp, 0x4)
--	stw	r4, (sp, 0x0)
-+	ldw	r9, (sp, LSAVE_A4)
-+	stw	r9, (sp, 0x0)
-+	ldw	r9, (sp, LSAVE_A5)
-+	stw	r9, (sp, 0x4)
- #else
- 	ldw	r6, (sp, LSAVE_A4)
- 	ldw	r7, (sp, LSAVE_A5)
+ 	memset(head, 0, sizeof(*head));
+@@ -532,10 +532,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
+ 				off = 0;
+ 			}
+ 
+-			if (!bio || (bio_chained && !off) ||
+-			    bio->bi_iter.bi_size >= max_bio_size) {
+-				/* start new bio */
+-			} else {
++			if (bio && (off || block < blocks_submitted + max_blocks)) {
+ 				sector_t sector = dblock << sdp->sd_fsb2bb_shift;
+ 
+ 				if (bio_end_sector(bio) == sector) {
+@@ -548,19 +545,17 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
+ 						(PAGE_SIZE - off) >> bsize_shift;
+ 
+ 					bio = gfs2_chain_bio(bio, blocks);
+-					bio_chained = true;
+ 					goto add_block_to_new_bio;
+ 				}
+ 			}
+ 
+ 			if (bio) {
+-				blocks_submitted = block + 1;
++				blocks_submitted = block;
+ 				submit_bio(bio);
+ 			}
+ 
+ 			bio = gfs2_log_alloc_bio(sdp, dblock, gfs2_end_log_read);
+ 			bio->bi_opf = REQ_OP_READ;
+-			bio_chained = false;
+ add_block_to_new_bio:
+ 			sz = bio_add_page(bio, page, bsize, off);
+ 			BUG_ON(sz != bsize);
+@@ -568,7 +563,7 @@ block_added:
+ 			off += bsize;
+ 			if (off == PAGE_SIZE)
+ 				page = NULL;
+-			if (blocks_submitted < 2 * max_bio_size >> bsize_shift) {
++			if (blocks_submitted <= blocks_read + max_blocks) {
+ 				/* Keep at least one bio in flight */
+ 				continue;
+ 			}
 -- 
 2.25.1
 
