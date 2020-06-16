@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33117C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851EDC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 163582071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE022098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322377;
-	bh=oluWiXeVGv0Ky+tN6UzP0UolWQyFZV9ATfA0OJh9XxE=;
+	s=default; t=1592322383;
+	bh=na2xOGjmbKeSW1QL4qIHXsFaPB5RgUOVliuVQ9YY+lE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WWjHfnpF9pwCQhDRalpXX5jayh49309gXdJXBbBOmBAfX+e8qJqsD5oDFkMEnFjfp
-	 YpmgcNYnsAYXSIM/g7lPWDNvW+RGyeIMxYmJ5+HitEbr3i9WhK7gzdl0WDYu1io+l6
-	 QBuD7nHs90FHF2LF2dTl2RFzbQHjAdFD1JJBZfsA=
+	b=tUJragMGQeoA/p/QJs0Finx+6TukVsdUMuvj86ZKxoENYHNFoD+JZCdoYrCHkzGwL
+	 0qlayW6qPLfC2lL2QFCvj3bqan9HCBuOAz3IfHq4yDuoUPC4EA3Mw9i+DLYjJwPJsI
+	 NNBTrc3AAtJ6puQtJFCbevJXtGL1J3ZSIdqKNFso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732187AbgFPPqP (ORCPT
+        id S1731607AbgFPPqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37952 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732163AbgFPPqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:10 -0400
+        id S1732179AbgFPPqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F08E92071A;
-        Tue, 16 Jun 2020 15:46:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F36942071A;
+        Tue, 16 Jun 2020 15:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322368;
-        bh=oluWiXeVGv0Ky+tN6UzP0UolWQyFZV9ATfA0OJh9XxE=;
+        s=default; t=1592322373;
+        bh=na2xOGjmbKeSW1QL4qIHXsFaPB5RgUOVliuVQ9YY+lE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ofJ9MneWClrgcTAIk3gSvc1/ZR1LPFCsHooSBxLOk+58tfIAQQstvGesOs0cZglml
-         3Civ+V4S0O38qWLDkE1XPKYPJoBNYkvadG8THqk9vYOXRvwpaCXIzm0Tk52Z98O6gE
-         3q7ZhHAeksUwIQA4dj1/UEVis4Wuve1fn6Lt9em4=
+        b=M2MPwlgbu3IGpV+nuAg8FZYcHYgaBewQ/ePJoDc0oKPj4DhzKxsntCHIZSos1hjB+
+         IWLhk3SDlwh8514XwzQJyDQh/to/tFPnCmy9KM0ul1e9DChkRswO2B/Wq++gvZgFvu
+         SQfItB1N7UXDW27cJHtGdHATwRm2FiJlwB4Us5qs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 105/163] net: cadence: macb: disable NAPI on error
-Date:   Tue, 16 Jun 2020 17:34:39 +0200
-Message-Id: <20200616153111.847797629@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 089/163] gup: document and work around "COW can break either way" issue
+Date:   Tue, 16 Jun 2020 17:34:23 +0200
+Message-Id: <20200616153111.107980948@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,96 +65,232 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 014406babc1f5f887a08737566b5b356c7018242 ]
+commit 17839856fd588f4ab6b789f482ed3ffd7c403e1f upstream.
 
-When the PHY is not working, the macb driver crash on a second try to
-setup it.
-[   78.545994] macb e000b000.ethernet eth0: Could not attach PHY (-19)
-ifconfig: SIOCSIFFLAGS: No such device
-[   78.655457] ------------[ cut here ]------------
-[   78.656014] kernel BUG at /linux-next/include/linux/netdevice.h:521!
-[   78.656504] Internal error: Oops - BUG: 0 [#1] SMP ARM
-[   78.657079] Modules linked in:
-[   78.657795] CPU: 0 PID: 122 Comm: ifconfig Not tainted 5.7.0-next-20200609 #1
-[   78.658202] Hardware name: Xilinx Zynq Platform
-[   78.659632] PC is at macb_open+0x220/0x294
-[   78.660160] LR is at 0x0
-[   78.660373] pc : [<c0b0a634>]    lr : [<00000000>]    psr: 60000013
-[   78.660716] sp : c89ffd70  ip : c8a28800  fp : c199bac0
-[   78.661040] r10: 00000000  r9 : c8838540  r8 : c8838568
-[   78.661362] r7 : 00000001  r6 : c8838000  r5 : c883c000  r4 : 00000000
-[   78.661724] r3 : 00000010  r2 : 00000000  r1 : 00000000  r0 : 00000000
-[   78.662187] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-[   78.662635] Control: 10c5387d  Table: 08b64059  DAC: 00000051
-[   78.663035] Process ifconfig (pid: 122, stack limit = 0x(ptrval))
-[   78.663476] Stack: (0xc89ffd70 to 0xc8a00000)
-[   78.664121] fd60:                                     00000000 c89fe000 c8838000 c89fe000
-[   78.664866] fd80: 00000000 c11ff9ac c8838028 00000000 00000000 c0de6f2c 00000001 c1804eec
-[   78.665579] fda0: c19b8178 c8838000 00000000 ca760866 c8838000 00000001 00001043 c89fe000
-[   78.666355] fdc0: 00001002 c0de72f4 c89fe000 c0de8dc0 00008914 c89fe000 c199bac0 ca760866
-[   78.667111] fde0: c89ffddc c8838000 00001002 00000000 c8838138 c881010c 00008914 c0de7364
-[   78.667862] fe00: 00000000 c89ffe70 c89fe000 ffffffff c881010c c0e8bd48 00000003 00000000
-[   78.668601] fe20: c8838000 c8810100 39c1118f 00039c11 c89a0960 00001043 00000000 000a26d0
-[   78.669343] fe40: b6f43000 ca760866 c89a0960 00000051 befe6c50 00008914 c8b2a3c0 befe6c50
-[   78.670086] fe60: 00000003 ee610500 00000000 c0e8ef58 30687465 00000000 00000000 00000000
-[   78.670865] fe80: 00001043 00000000 000a26d0 b6f43000 c89a0600 ee40ae7c c8870d00 c0ddabf4
-[   78.671593] fea0: c89ffeec c0ddabf4 c89ffeec c199bac0 00008913 c0ddac48 c89ffeec c89fe000
-[   78.672324] fec0: befe6c50 ca760866 befe6c50 00008914 c89fe000 befe6c50 c8b2a3c0 c0dc00e4
-[   78.673088] fee0: c89a0480 00000201 00000cc0 30687465 00000000 00000000 00000000 00001002
-[   78.673822] ff00: 00000000 000a26d0 b6f43000 ca760866 00008914 c8b2a3c0 000a0ec4 c8b2a3c0
-[   78.674576] ff20: befe6c50 c04b21bc 000d5004 00000817 c89a0480 c0315f94 00000000 00000003
-[   78.675415] ff40: c19a2bc8 c8a3cc00 c89fe000 00000255 00000000 00000000 00000000 000d5000
-[   78.676182] ff60: 000f6000 c180b2a0 00000817 c0315e64 000d5004 c89fffb0 b6ec0c30 ca760866
-[   78.676928] ff80: 00000000 000b609b befe6c50 000a0ec4 00000036 c03002c4 c89fe000 00000036
-[   78.677673] ffa0: 00000000 c03000c0 000b609b befe6c50 00000003 00008914 befe6c50 000b609b
-[   78.678415] ffc0: 000b609b befe6c50 000a0ec4 00000036 befe6e0c befe6f1a 000d5150 00000000
-[   78.679154] ffe0: 000d41e4 befe6bf4 00019648 b6e4509c 20000010 00000003 00000000 00000000
-[   78.681059] [<c0b0a634>] (macb_open) from [<c0de6f2c>] (__dev_open+0xd0/0x154)
-[   78.681571] [<c0de6f2c>] (__dev_open) from [<c0de72f4>] (__dev_change_flags+0x16c/0x1c4)
-[   78.682015] [<c0de72f4>] (__dev_change_flags) from [<c0de7364>] (dev_change_flags+0x18/0x48)
-[   78.682493] [<c0de7364>] (dev_change_flags) from [<c0e8bd48>] (devinet_ioctl+0x5e4/0x75c)
-[   78.682945] [<c0e8bd48>] (devinet_ioctl) from [<c0e8ef58>] (inet_ioctl+0x1f0/0x3b4)
-[   78.683381] [<c0e8ef58>] (inet_ioctl) from [<c0dc00e4>] (sock_ioctl+0x39c/0x664)
-[   78.683818] [<c0dc00e4>] (sock_ioctl) from [<c04b21bc>] (ksys_ioctl+0x2d8/0x9c0)
-[   78.684343] [<c04b21bc>] (ksys_ioctl) from [<c03000c0>] (ret_fast_syscall+0x0/0x54)
-[   78.684789] Exception stack(0xc89fffa8 to 0xc89ffff0)
-[   78.685346] ffa0:                   000b609b befe6c50 00000003 00008914 befe6c50 000b609b
-[   78.686106] ffc0: 000b609b befe6c50 000a0ec4 00000036 befe6e0c befe6f1a 000d5150 00000000
-[   78.686710] ffe0: 000d41e4 befe6bf4 00019648 b6e4509c
-[   78.687582] Code: 9a000003 e5983078 e3130001 1affffef (e7f001f2)
-[   78.688788] ---[ end trace e3f2f6ab69754eae ]---
+Doing a "get_user_pages()" on a copy-on-write page for reading can be
+ambiguous: the page can be COW'ed at any time afterwards, and the
+direction of a COW event isn't defined.
 
-This is due to NAPI left enabled if macb_phylink_connect() fail.
+Yes, whoever writes to it will generally do the COW, but if the thread
+that did the get_user_pages() unmapped the page before the write (and
+that could happen due to memory pressure in addition to any outright
+action), the writer could also just take over the old page instead.
 
-Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+End result: the get_user_pages() call might result in a page pointer
+that is no longer associated with the original VM, and is associated
+with - and controlled by - another VM having taken it over instead.
+
+So when doing a get_user_pages() on a COW mapping, the only really safe
+thing to do would be to break the COW when getting the page, even when
+only getting it for reading.
+
+At the same time, some users simply don't even care.
+
+For example, the perf code wants to look up the page not because it
+cares about the page, but because the code simply wants to look up the
+physical address of the access for informational purposes, and doesn't
+really care about races when a page might be unmapped and remapped
+elsewhere.
+
+This adds logic to force a COW event by setting FOLL_WRITE on any
+copy-on-write mapping when FOLL_GET (or FOLL_PIN) is used to get a page
+pointer as a result.
+
+The current semantics end up being:
+
+ - __get_user_pages_fast(): no change. If you don't ask for a write,
+   you won't break COW. You'd better know what you're doing.
+
+ - get_user_pages_fast(): the fast-case "look it up in the page tables
+   without anything getting mmap_sem" now refuses to follow a read-only
+   page, since it might need COW breaking.  Which happens in the slow
+   path - the fast path doesn't know if the memory might be COW or not.
+
+ - get_user_pages() (including the slow-path fallback for gup_fast()):
+   for a COW mapping, turn on FOLL_WRITE for FOLL_GET/FOLL_PIN, with
+   very similar semantics to FOLL_FORCE.
+
+If it turns out that we want finer granularity (ie "only break COW when
+it might actually matter" - things like the zero page are special and
+don't need to be broken) we might need to push these semantics deeper
+into the lookup fault path.  So if people care enough, it's possible
+that we might end up adding a new internal FOLL_BREAK_COW flag to go
+with the internal FOLL_COW flag we already have for tracking "I had a
+COW".
+
+Alternatively, if it turns out that different callers might want to
+explicitly control the forced COW break behavior, we might even want to
+make such a flag visible to the users of get_user_pages() instead of
+using the above default semantics.
+
+But for now, this is mostly commentary on the issue (this commit message
+being a lot bigger than the patch, and that patch in turn is almost all
+comments), with that minimal "enable COW breaking early" logic using the
+existing FOLL_WRITE behavior.
+
+[ It might be worth noting that we've always had this ambiguity, and it
+  could arguably be seen as a user-space issue.
+
+  You only get private COW mappings that could break either way in
+  situations where user space is doing cooperative things (ie fork()
+  before an execve() etc), but it _is_ surprising and very subtle, and
+  fork() is supposed to give you independent address spaces.
+
+  So let's treat this as a kernel issue and make the semantics of
+  get_user_pages() easier to understand. Note that obviously a true
+  shared mapping will still get a page that can change under us, so this
+  does _not_ mean that get_user_pages() somehow returns any "stable"
+  page ]
+
+Reported-by: Jann Horn <jannh@google.com>
+Tested-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Kirill Shutemov <kirill@shutemov.name>
+Acked-by: Jan Kara <jack@suse.cz>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/cadence/macb_main.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -2558,13 +2558,16 @@ static int macb_open(struct net_device *
+---
+ drivers/gpu/drm/i915/gem/i915_gem_userptr.c |    8 +++++
+ mm/gup.c                                    |   44 ++++++++++++++++++++++++----
+ mm/huge_memory.c                            |    7 +---
+ 3 files changed, 49 insertions(+), 10 deletions(-)
+
+--- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
+@@ -598,6 +598,14 @@ static int i915_gem_userptr_get_pages(st
+ 				      GFP_KERNEL |
+ 				      __GFP_NORETRY |
+ 				      __GFP_NOWARN);
++		/*
++		 * Using __get_user_pages_fast() with a read-only
++		 * access is questionable. A read-only page may be
++		 * COW-broken, and then this might end up giving
++		 * the wrong side of the COW..
++		 *
++		 * We may or may not care.
++		 */
+ 		if (pvec) /* defer to worker if malloc fails */
+ 			pinned = __get_user_pages_fast(obj->userptr.ptr,
+ 						       num_pages,
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -382,13 +382,22 @@ static int follow_pfn_pte(struct vm_area
+ }
  
- 	err = macb_phylink_connect(bp);
- 	if (err)
--		goto pm_exit;
-+		goto napi_exit;
+ /*
+- * FOLL_FORCE can write to even unwritable pte's, but only
+- * after we've gone through a COW cycle and they are dirty.
++ * FOLL_FORCE or a forced COW break can write even to unwritable pte's,
++ * but only after we've gone through a COW cycle and they are dirty.
+  */
+ static inline bool can_follow_write_pte(pte_t pte, unsigned int flags)
+ {
+-	return pte_write(pte) ||
+-		((flags & FOLL_FORCE) && (flags & FOLL_COW) && pte_dirty(pte));
++	return pte_write(pte) || ((flags & FOLL_COW) && pte_dirty(pte));
++}
++
++/*
++ * A (separate) COW fault might break the page the other way and
++ * get_user_pages() would return the page from what is now the wrong
++ * VM. So we need to force a COW break at GUP time even for reads.
++ */
++static inline bool should_force_cow_break(struct vm_area_struct *vma, unsigned int flags)
++{
++	return is_cow_mapping(vma->vm_flags) && (flags & (FOLL_GET | FOLL_PIN));
+ }
  
- 	netif_tx_start_all_queues(dev);
+ static struct page *follow_page_pte(struct vm_area_struct *vma,
+@@ -1066,9 +1075,11 @@ static long __get_user_pages(struct task
+ 				goto out;
+ 			}
+ 			if (is_vm_hugetlb_page(vma)) {
++				if (should_force_cow_break(vma, foll_flags))
++					foll_flags |= FOLL_WRITE;
+ 				i = follow_hugetlb_page(mm, vma, pages, vmas,
+ 						&start, &nr_pages, i,
+-						gup_flags, locked);
++						foll_flags, locked);
+ 				if (locked && *locked == 0) {
+ 					/*
+ 					 * We've got a VM_FAULT_RETRY
+@@ -1082,6 +1093,10 @@ static long __get_user_pages(struct task
+ 				continue;
+ 			}
+ 		}
++
++		if (should_force_cow_break(vma, foll_flags))
++			foll_flags |= FOLL_WRITE;
++
+ retry:
+ 		/*
+ 		 * If we have a pending SIGKILL, don't keep faulting pages and
+@@ -2674,6 +2689,10 @@ static bool gup_fast_permitted(unsigned
+  *
+  * If the architecture does not support this function, simply return with no
+  * pages pinned.
++ *
++ * Careful, careful! COW breaking can go either way, so a non-write
++ * access can get ambiguous page results. If you call this function without
++ * 'write' set, you'd better be sure that you're ok with that ambiguity.
+  */
+ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+ 			  struct page **pages)
+@@ -2709,6 +2728,12 @@ int __get_user_pages_fast(unsigned long
+ 	 *
+ 	 * We do not adopt an rcu_read_lock(.) here as we also want to
+ 	 * block IPIs that come from THPs splitting.
++	 *
++	 * NOTE! We allow read-only gup_fast() here, but you'd better be
++	 * careful about possible COW pages. You'll get _a_ COW page, but
++	 * not necessarily the one you intended to get depending on what
++	 * COW event happens after this. COW may break the page copy in a
++	 * random direction.
+ 	 */
  
- 	if (bp->ptp_info)
- 		bp->ptp_info->ptp_init(dev);
+ 	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP) &&
+@@ -2766,10 +2791,17 @@ static int internal_get_user_pages_fast(
+ 	if (unlikely(!access_ok((void __user *)start, len)))
+ 		return -EFAULT;
  
-+napi_exit:
-+	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
-+		napi_disable(&queue->napi);
- pm_exit:
- 	if (err) {
- 		pm_runtime_put_sync(&bp->pdev->dev);
++	/*
++	 * The FAST_GUP case requires FOLL_WRITE even for pure reads,
++	 * because get_user_pages() may need to cause an early COW in
++	 * order to avoid confusing the normal COW routines. So only
++	 * targets that are already writable are safe to do by just
++	 * looking at the page tables.
++	 */
+ 	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP) &&
+ 	    gup_fast_permitted(start, end)) {
+ 		local_irq_disable();
+-		gup_pgd_range(addr, end, gup_flags, pages, &nr_pinned);
++		gup_pgd_range(addr, end, gup_flags | FOLL_WRITE, pages, &nr_pinned);
+ 		local_irq_enable();
+ 		ret = nr_pinned;
+ 	}
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1515,13 +1515,12 @@ out_unlock:
+ }
+ 
+ /*
+- * FOLL_FORCE can write to even unwritable pmd's, but only
+- * after we've gone through a COW cycle and they are dirty.
++ * FOLL_FORCE or a forced COW break can write even to unwritable pmd's,
++ * but only after we've gone through a COW cycle and they are dirty.
+  */
+ static inline bool can_follow_write_pmd(pmd_t pmd, unsigned int flags)
+ {
+-	return pmd_write(pmd) ||
+-	       ((flags & FOLL_FORCE) && (flags & FOLL_COW) && pmd_dirty(pmd));
++	return pmd_write(pmd) || ((flags & FOLL_COW) && pmd_dirty(pmd));
+ }
+ 
+ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
 
 
