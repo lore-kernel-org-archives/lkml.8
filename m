@@ -2,129 +2,94 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC73620786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6RGY3u1"
+	by mail.kernel.org (Postfix) with ESMTP id 80FD820786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgFPJWc (ORCPT
+        id S1728215AbgFPJWn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgFPJWI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:22:08 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5F1C03E97C
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:22:05 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id n188so4625113vkc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o6euDOY6oMlwJphirnftZK239m7I7dONOkGXOBDE+vU=;
-        b=F6RGY3u1eJHXOCkxT4S6ZQmyRcayoZV15ojB+VbxpgXjmicLw4N5nTEFG5Bx6XxzkZ
-         7C8vnOJlf6qDCgpmJaHxfQkxCcqyTvNp7+x95Eu4QAVHaYYPeSZ+LpmzXCbyiEi0No4V
-         zgkZHksKMfvzTDB6/nuVoeB4mv2sE8q18LKEtBlApAp9q445UoZv0Um6Nu1PC4ZgB+VQ
-         4gP2ZFLz5NJy0VqhK/DocxMwsOQ2g4K7/+UiGGWG3UHLQp5Pv2IvoWXZuOkETAADNLTk
-         895z2Mlfwc+8uMDdvJlzda2sBIczZr3b9Gs3rd6DWajdl1YXr0a831Shx7Lqbpuck7fP
-         6dWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o6euDOY6oMlwJphirnftZK239m7I7dONOkGXOBDE+vU=;
-        b=eShRzuMHskxdK/7JCfnOTxvkBSd7sS4C0G5v7xtdFk/PidsSbcXM87I37Lm0KGAd+k
-         HZfcRwvzHecvCx1svWiIb5v231rLHgYfOvd6aCjxfvonL8Fm9Fo20GamItaWRj8FDl60
-         V8hWbn9QQeYCd5Xclhlx4hMmcTdAjPL5lnpvX30J4Ni2KN6lrsnZRXOmZlLdikHoCnmz
-         A9yhY1T/PLqsHfG7ATOq3jDYfnGRMBOEBIAmtjlKguMCBYQv6pBz1g83xbD4djcb0+Lz
-         XR4v0K94iH5NiTWhhkGKayf6ir357j1Xm7oCS66RFIPiLB6OLpzH9UnGFSYaJtchOBT/
-         w/Ig==
-X-Gm-Message-State: AOAM530gv/tKPHnnSGxMrPwYrDLqn6D7Ir4DyrcEJ8JySj982bEBkwX5
-        sxB4na/owqJXO/Yq1NLujfZ4ZRE85gWismesSRx3cA==
-X-Google-Smtp-Source: ABdhPJx4g5jlxzibMSqCinB5QGUdXtaI/4SZQcjRun7bXCIPO5lQ1nNKPjmPF9UNMEBAB+iY7EfUZtiooEYHoixTD2k=
-X-Received: by 2002:a1f:c103:: with SMTP id r3mr822640vkf.25.1592299324309;
- Tue, 16 Jun 2020 02:22:04 -0700 (PDT)
+        Tue, 16 Jun 2020 05:22:43 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56734 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgFPJWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:22:42 -0400
+IronPort-SDR: XCKym7EzRp63osPBzxA4JzRCX9Dg48YGyKPECGc1XJrV0jtuPFunRmWSO0jgxo5vu8ZWYPSDAX
+ i4lUbd/jcMVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 02:22:42 -0700
+IronPort-SDR: eA0x/VqDskuTKgeLmngYdGcDDDgAJQjFs934NzqW4ZS6C6/H5Wt318GMQheZZoPShHoGfAz0Xh
+ ohx8FnggmGhg==
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="449736538"
+Received: from jlahtine-desk.ger.corp.intel.com (HELO localhost) ([10.251.94.207])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 02:22:39 -0700
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200604015317.31389-1-thara.gopinath@linaro.org> <20200604015317.31389-3-thara.gopinath@linaro.org>
-In-Reply-To: <20200604015317.31389-3-thara.gopinath@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 16 Jun 2020 11:21:27 +0200
-Message-ID: <CAPDyKFqxV20Fv2X7wJ5zKa_csDgSBL5KN9HtrA6+EFpgYPhxyg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/6] soc: qcom: rpmhpd: Introduce function to retrieve
- power domain performance state count
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200616093912.4dffcc71@canb.auug.org.au>
+References: <20200616093912.4dffcc71@canb.auug.org.au>
+Subject: Re: linux-next: build failure after merge of the drm-intel-fixes tree
+From:   Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+To:     DRI <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Date:   Tue, 16 Jun 2020 12:22:36 +0300
+Message-ID: <159229935689.7727.9085291204498542933@jlahtine-desk.ger.corp.intel.com>
+User-Agent: alot/0.8.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 at 03:53, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->
-> Populate .get_performance_state_count in genpd ops to retrieve the count of
-> performance states supported by a rpmh power domain.
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Quoting Stephen Rothwell (2020-06-16 02:39:12)
+> Hi all,
+> 
+> After merging the drm-intel-fixes tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> In file included from drivers/gpu/drm/i915/gt/intel_lrc.c:5972:
+> drivers/gpu/drm/i915/gt/selftest_lrc.c: In function 'live_timeslice_nopreempt':
+> drivers/gpu/drm/i915/gt/selftest_lrc.c:1333:3: error: too few arguments to function 'engine_heartbeat_disable'
+>  1333 |   engine_heartbeat_disable(engine);
+>       |   ^~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/i915/gt/selftest_lrc.c:54:13: note: declared here
+>    54 | static void engine_heartbeat_disable(struct intel_engine_cs *engine,
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/i915/gt/selftest_lrc.c:1402:3: error: too few arguments to function 'engine_heartbeat_enable'
+>  1402 |   engine_heartbeat_enable(engine);
+>       |   ^~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/i915/gt/selftest_lrc.c:64:13: note: declared here
+>    64 | static void engine_heartbeat_enable(struct intel_engine_cs *engine,
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Caused by commit
+> 
+>   04dc41776145 ("drm/i915/gt: Prevent timeslicing into unpreemptable requests")
+> 
+> I have reverted that commit for today.
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Thanks for reporting. I had my drm-intel-fixes build tree configured
+without selftests. I've now corrected that and added a missing dependency
+patch.
 
-Kind regards
-Uffe
+Regards, Joonas
 
-
-> ---
->  drivers/soc/qcom/rpmhpd.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-> index e72426221a69..a9c597143525 100644
-> --- a/drivers/soc/qcom/rpmhpd.c
-> +++ b/drivers/soc/qcom/rpmhpd.c
-> @@ -362,6 +362,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
->         return dev_pm_opp_get_level(opp);
->  }
->
-> +static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
-> +{
-> +       struct rpmhpd *pd = domain_to_rpmhpd(domain);
-> +
-> +       return pd->level_count;
-> +}
-> +
->  static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
->  {
->         int i;
-> @@ -450,6 +457,7 @@ static int rpmhpd_probe(struct platform_device *pdev)
->                 rpmhpds[i]->pd.power_on = rpmhpd_power_on;
->                 rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
->                 rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
-> +               rpmhpds[i]->pd.get_performance_state_count = rpmhpd_performance_states_count;
->                 pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
->
->                 data->domains[i] = &rpmhpds[i]->pd;
-> --
-> 2.20.1
->
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
