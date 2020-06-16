@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D524DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA0FD215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142D2207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322748;
-	bh=qPXtMOTdflutZMIJ3Kxe+EfHyqUsxZqyhk7CaUbd0Do=;
+	s=default; t=1592322753;
+	bh=aeJVDlEjSdLDLdlvppBsDFafIzMahO0CTxavjubEvs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G3kuQTG1/Sohz7PM4xsoXCdDrBYM4AMiZm8FdAEbzXeuTsWMscJPPJREB9Y1jfLz1
-	 jNBPXrpDxiOoDQrwRvK38An2SOJFGY0D3bZWw8A8trkSilDgnc0qmIKOqPAO3CUySx
-	 /RU8qkcijJklYAhRUS/Kw211xHyGhx3URctfWR8E=
+	b=2r2OUV8xdW5DQn9g3T/YR+wjweuUlL/CO2B4sUAqzzwOwKMtqk8s7ROfHCO8MwgtP
+	 RFeVOhwcDv+aVk0/FhLsmGeH38vqqMLs5yxrWn+aDzS4XEwLAUPA8ckpDOOyHRccW7
+	 4aQjpWFy8/9P/ICYOZr0ZIPadUJhofdWxcZ7UWYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732732AbgFPPw0 (ORCPT
+        id S1732536AbgFPPwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:52:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49220 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:52:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732754AbgFPPwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:08 -0400
+        id S1732759AbgFPPwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:52:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5507321534;
-        Tue, 16 Jun 2020 15:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66FB0207C4;
+        Tue, 16 Jun 2020 15:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322727;
-        bh=qPXtMOTdflutZMIJ3Kxe+EfHyqUsxZqyhk7CaUbd0Do=;
+        s=default; t=1592322732;
+        bh=aeJVDlEjSdLDLdlvppBsDFafIzMahO0CTxavjubEvs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XmKHDL6qNNsELrXIC1SUIYi639P6tcGLaWejb8f8J3NRwLwMdeLoWyOGnnZjtE74o
-         J5JwYorXyGtmf1q2sxcnkPAOfmFTOScen9mEJ5MZ5mLWnJmjBy+s9yBk3KVxt5nQGf
-         H7mLfha/n4s/VayBotdpWQElT3ytIInMlmXboo50=
+        b=VT2QgVsPIZJYYzprm8rVRCtlG6/5m1ebPmZ61sQC0RzE74Lvacxg8hZRvEZWJGrxu
+         k2U9Za7ulPjcvl9J36hpWN/aHnXrOgAhqwujtZTniVHqZsD3qN/jK6xPmwRBUIhX6x
+         iaNe64r4d6mAH3t9OhV1d78RuCjmpUC89to/G3ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 5.6 081/161] arm64: acpi: fix UBSAN warning
-Date:   Tue, 16 Jun 2020 17:34:31 +0200
-Message-Id: <20200616153110.235892960@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
+        Steve French <smfrench@gmail.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.6 065/161] smb3: add indatalen that can be a non-zero value to calculation of credit charge in smb2 ioctl
+Date:   Tue, 16 Jun 2020 17:34:15 +0200
+Message-Id: <20200616153109.474849450@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -62,76 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Namjae Jeon <namjae.jeon@samsung.com>
 
-commit a194c33f45f83068ef13bf1d16e26d4ca3ecc098 upstream.
+commit ebf57440ec59a36e1fc5fe91e31d66ae0d1662d0 upstream.
 
-Will reported a UBSAN warning:
+Some of tests in xfstests failed with cifsd kernel server since commit
+e80ddeb2f70e. cifsd kernel server validates credit charge from client
+by calculating it base on max((InputCount + OutputCount) and
+(MaxInputResponse + MaxOutputResponse)) according to specification.
 
-UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
-member access within null pointer of type 'struct acpi_madt_generic_interrupt'
-CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc6-00124-g96bc42ff0a82 #1
-Call trace:
- dump_backtrace+0x0/0x384
- show_stack+0x28/0x38
- dump_stack+0xec/0x174
- handle_null_ptr_deref+0x134/0x174
- __ubsan_handle_type_mismatch_v1+0x84/0xa4
- acpi_parse_gic_cpu_interface+0x60/0xe8
- acpi_parse_entries_array+0x288/0x498
- acpi_table_parse_entries_array+0x178/0x1b4
- acpi_table_parse_madt+0xa4/0x110
- acpi_parse_and_init_cpus+0x38/0x100
- smp_init_cpus+0x74/0x258
- setup_arch+0x350/0x3ec
- start_kernel+0x98/0x6f4
+MS-SMB2 specification describe credit charge calculation of smb2 ioctl :
 
-This is from the use of the ACPI_OFFSET in
-arch/arm64/include/asm/acpi.h. Replace its use with offsetof from
-include/linux/stddef.h which should implement the same logic using
-__builtin_offsetof, so that UBSAN wont warn.
+If Connection.SupportsMultiCredit is TRUE, the server MUST validate
+CreditCharge based on the maximum of (InputCount + OutputCount) and
+(MaxInputResponse + MaxOutputResponse), as specified in section 3.3.5.2.5.
+If the validation fails, it MUST fail the IOCTL request with
+STATUS_INVALID_PARAMETER.
 
-Reported-by: Will Deacon <will@kernel.org>
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/lkml/20200521100952.GA5360@willie-the-truck/
-Link: https://lore.kernel.org/r/20200608203818.189423-1-ndesaulniers@google.com
-Signed-off-by: Will Deacon <will@kernel.org>
+This patch add indatalen that can be a non-zero value to calculation of
+credit charge in SMB2_ioctl_init().
+
+Fixes: e80ddeb2f70e ("smb3: fix incorrect number of credits when ioctl
+MaxOutputResponse > 64K")
+Cc: Stable <stable@vger.kernel.org>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Cc: Steve French <smfrench@gmail.com>
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/acpi.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/cifs/smb2pdu.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -12,6 +12,7 @@
- #include <linux/efi.h>
- #include <linux/memblock.h>
- #include <linux/psci.h>
-+#include <linux/stddef.h>
- 
- #include <asm/cputype.h>
- #include <asm/io.h>
-@@ -31,14 +32,14 @@
-  * is therefore used to delimit the MADT GICC structure minimum length
-  * appropriately.
-  */
--#define ACPI_MADT_GICC_MIN_LENGTH   ACPI_OFFSET(  \
-+#define ACPI_MADT_GICC_MIN_LENGTH   offsetof(  \
- 	struct acpi_madt_generic_interrupt, efficiency_class)
- 
- #define BAD_MADT_GICC_ENTRY(entry, end)					\
- 	(!(entry) || (entry)->header.length < ACPI_MADT_GICC_MIN_LENGTH || \
- 	(unsigned long)(entry) + (entry)->header.length > (end))
- 
--#define ACPI_MADT_GICC_SPE  (ACPI_OFFSET(struct acpi_madt_generic_interrupt, \
-+#define ACPI_MADT_GICC_SPE  (offsetof(struct acpi_madt_generic_interrupt, \
- 	spe_interrupt) + sizeof(u16))
- 
- /* Basic configuration for ACPI */
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -2868,7 +2868,9 @@ SMB2_ioctl_init(struct cifs_tcon *tcon,
+ 	 * response size smaller.
+ 	 */
+ 	req->MaxOutputResponse = cpu_to_le32(max_response_size);
+-	req->sync_hdr.CreditCharge = cpu_to_le16(DIV_ROUND_UP(max_response_size, SMB2_MAX_BUFFER_SIZE));
++	req->sync_hdr.CreditCharge =
++		cpu_to_le16(DIV_ROUND_UP(max(indatalen, max_response_size),
++					 SMB2_MAX_BUFFER_SIZE));
+ 	if (is_fsctl)
+ 		req->Flags = cpu_to_le32(SMB2_0_IOCTL_IS_FSCTL);
+ 	else
 
 
