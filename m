@@ -2,91 +2,74 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5010BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDA720767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="baBP6LaR"
+	by mail.kernel.org (Postfix) with ESMTP id 05669206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgFPIUs (ORCPT
+        id S1727852AbgFPIVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgFPIUq (ORCPT
+        Tue, 16 Jun 2020 04:21:42 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44789 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgFPIVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:20:46 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80C7FC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:20:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=v6Kvrp5YxuyE3OJwdnbigwu/+C45nCnzYkGt6Fojw88=; b=baBP6LaRRx2Up9n+9WmJ8N8s8s
-        2KtsEvci5rCKwB48U7G2BX757UAP2/Xg9OYvJMvMmx3quRdEe2OTW3e8eUUIWokI74WT8dGRd9wtZ
-        5e+oH8qXbV4YA3YS7LenFNzN1vJSPblLYQWDGvxmHJJWQ7C74v12CNZrsUQCRV5hb8ZtcwwUWVkR5
-        XgVhleAlugPl4S3Eef/1p/3tEuQV+QMcXqVQsvcI8pbfYdhNm5ONU50EQZGzSJsK7Bk8snfh9+Obr
-        LEfceChZaWqed0rqt+E/GkvORRDGE/r0q2xqWVm0AwJIvHzdiRXgYZOpISvkRp8D7wstNp90qpboA
-        3Anv67+w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jl6pE-0003eU-4Z; Tue, 16 Jun 2020 08:20:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D734430018A;
-        Tue, 16 Jun 2020 10:20:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 672A72B9CA588; Tue, 16 Jun 2020 10:20:03 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 10:20:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        luca abeni <luca.abeni@santannapisa.it>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: WARNING in enqueue_task_dl
-Message-ID: <20200616082003.GM2531@hirez.programming.kicks-ass.net>
-References: <000000000000b5e346057af4da06@google.com>
- <alpine.DEB.2.21.1811190921190.9459@nanos.tec.linutronix.de>
- <20181119130718.69eddf46@luca64>
- <20181119125241.GC9761@hirez.programming.kicks-ass.net>
- <20181119134349.GA2119@localhost.localdomain>
- <20181119153201.GB2119@localhost.localdomain>
- <a9d18394-250b-98e4-e66d-57622dbaf247@redhat.com>
- <CACT4Y+bcug1SpLS6RfpJ8gTVm0vXm_S_1s_BG9n=zrEVdaffFw@mail.gmail.com>
- <20190724044516.GA643@sol.localdomain>
- <20200616065359.ugoismxzpkkkkwjp@beryllium.lan>
+        Tue, 16 Jun 2020 04:21:42 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jl6qX-0004KJ-Aq; Tue, 16 Jun 2020 08:21:29 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/i915: fix a couple of spelling mistakes in kernel parameter help text
+Date:   Tue, 16 Jun 2020 09:21:29 +0100
+Message-Id: <20200616082129.65517-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616065359.ugoismxzpkkkkwjp@beryllium.lan>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 08:53:59AM +0200, Daniel Wagner wrote:
-> I've tested this patch against 5.8-rc1. Without the fix, after around 2 hours
-> the warning was triggered by the reproducer. With the patch, it survived
-> roughly 12 hours without the warning.
-> 
-> Tested-by: Daniel Wagner <dwagner@suse.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-Thanks, have it now.
+There are a couple of spelling mistakes in kernel parameter help text,
+namely "helpfull" and "paramters".  Fix them.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/i915/i915_params.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/i915_params.c b/drivers/gpu/drm/i915/i915_params.c
+index a7b61e6ec508..8d8db9ff0a48 100644
+--- a/drivers/gpu/drm/i915/i915_params.c
++++ b/drivers/gpu/drm/i915/i915_params.c
+@@ -99,8 +99,8 @@ i915_param_named_unsafe(enable_psr, int, 0400,
+ 
+ i915_param_named(psr_safest_params, bool, 0400,
+ 	"Replace PSR VBT parameters by the safest and not optimal ones. This "
+-	"is helpfull to detect if PSR issues are related to bad values set in "
+-	" VBT. (0=use VBT paramters, 1=use safest parameters)");
++	"is helpful to detect if PSR issues are related to bad values set in "
++	" VBT. (0=use VBT parameters, 1=use safest parameters)");
+ 
+ i915_param_named_unsafe(force_probe, charp, 0400,
+ 	"Force probe the driver for specified devices. "
+-- 
+2.27.0.rc0
+
