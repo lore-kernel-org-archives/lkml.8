@@ -2,199 +2,281 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6314BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE19208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DE82085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:05:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="k29jLcX3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QtXDE+mH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgFPVEA (ORCPT
+        id S1729256AbgFPVFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:04:00 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.33]:37375 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727819AbgFPVEA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:04:00 -0400
-X-Greylist: delayed 1226 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 17:03:58 EDT
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 7DC212A21D
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 15:43:30 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id lIQcj1JOCwgQAlIQcjZBV0; Tue, 16 Jun 2020 15:43:30 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4gjPgXFKplWxMqxF9YMfEwKeebRBloQjuvM6PrACOtE=; b=k29jLcX34kiM1HnU5n6R+JPjxA
-        jTUi9goLBTBlTMOo5xw195MntYlkcd4OwA94lJtcJaHXgycENO2CsWnfGlb3MjNiF0vhI13AuJkPP
-        IdcTfIPnR/Jxv62/3Whwe3Lvg3fJZxVXAl9as1zTBYziGSLD4ssClyIM5KIShQ7U2nRUp6l5I8M54
-        kmQ4UKhxZsxyQDRj7jMHGNweLKw63L30z8CjdL1XrnBx6uqE/ufD9PJhgcyDNPjKeRyzN9h5gQWKt
-        MHqvmGqSVdEH2ZjYL7y3gGvItbZWEcgwYBAnGxnxDiNaENrqZXr5lMy2OY7kcaSywbW88R+ULrAwJ
-        NGKUhEkg==;
-Received: from [189.207.59.248] (port=39216 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jlIQc-002YEU-57; Tue, 16 Jun 2020 15:43:30 -0500
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20200609012233.GA3371@embeddedor> <202006101427.68A436C@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Subject: Re: [PATCH v2] overflow.h: Add flex_array_size() helper
-Message-ID: <fd198a2b-9a79-b7b7-3cee-5856cffc88af@embeddedor.com>
-Date:   Tue, 16 Jun 2020 15:48:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 16 Jun 2020 17:05:05 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:44392 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726630AbgFPVFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 17:05:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592341502; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=IMNNo1BqQ1o0gHuNsl/LI5YBXnEGtDooQJTtyr/egAU=;
+ b=QtXDE+mHR+rWv9Mp43y1WDFBEJJ/QVJ0rhAY96BydOCDVy64EmJEqacm2vaPq+nzGKT6c2UV
+ B9uXsS+mh8jmbN+487LPSdesiq6pEedzGIbcmhj6JaoqwGb7tqT3e85qh0TXRz/u1ok210k2
+ 23Y9PCC3VmbCV6CKu/NBLPW2c94=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ee933fd117610c7ff2678e6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 21:05:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 77EDEC43395; Tue, 16 Jun 2020 21:05:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3197CC433C9;
+        Tue, 16 Jun 2020 21:05:00 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <202006101427.68A436C@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.207.59.248
-X-Source-L: No
-X-Exim-ID: 1jlIQc-002YEU-57
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.7]) [189.207.59.248]:39216
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 17 Jun 2020 02:35:00 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v6 4/5] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+In-Reply-To: <20200615172553.GU4525@google.com>
+References: <20200605213332.609-1-sibis@codeaurora.org>
+ <20200605213332.609-5-sibis@codeaurora.org>
+ <20200615172553.GU4525@google.com>
+Message-ID: <e21f85d64d72ec637c10dae93e8323bb@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey Matthias,
+Thanks for taking time to review
+the series.
 
-
-On 6/10/20 16:38, Kees Cook wrote:
-
->> -#define struct_size(p, member, n)					\
->> -	__ab_c_size(n,							\
->> +#define struct_size(p, member, count)					\
->> +	__ab_c_size(count,							\
->>  		    sizeof(*(p)->member) + __must_be_array((p)->member),\
->>  		    sizeof(*(p)))
+On 2020-06-15 22:55, Matthias Kaehlcke wrote:
+> Hi Sibi,
 > 
-> I like the "count" change -- "n" can be seen as either count or bytes,
-> so I like this being distinctly "count".
+> On Sat, Jun 06, 2020 at 03:03:31AM +0530, Sibi Sankar wrote:
+>> Add support to parse optional OPP table attached to the cpu node when
+>> the OPP bandwidth values are populated. This allows for scaling of
+>> DDR/L3 bandwidth levels with frequency change.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>> 
+>> v6:
+>>  * Add global flag to distinguish between voltage update and opp add.
+>>    Use the same flag before trying to scale ddr/l3 bw [Viresh]
+>>  * Use dev_pm_opp_find_freq_ceil to grab all opps [Viresh]
+>>  * Move dev_pm_opp_of_find_icc_paths into probe [Viresh]
+>> 
+>> v5:
+>>  * Use dev_pm_opp_adjust_voltage instead [Viresh]
+>>  * Misc cleanup
+>> 
+>> v4:
+>>  * Split fast switch disable into another patch [Lukasz]
+>> 
+>>  drivers/cpufreq/qcom-cpufreq-hw.c | 82 
+>> ++++++++++++++++++++++++++++++-
+>>  1 file changed, 80 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c 
+>> b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> index fc92a8842e252..8fa6ab6e0e4b6 100644
+>> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> @@ -6,6 +6,7 @@
+>>  #include <linux/bitfield.h>
+>>  #include <linux/cpufreq.h>
+>>  #include <linux/init.h>
+>> +#include <linux/interconnect.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of_address.h>
+>> @@ -30,6 +31,48 @@
+>> 
+>>  static unsigned long cpu_hw_rate, xo_rate;
+>>  static struct platform_device *global_pdev;
+>> +static bool icc_scaling_enabled;
 > 
+> It seem you rely on 'icc_scaling_enabled' to be initialized to 'false'.
+> This works during the first initialization, but not if the 'device' is
+> unbound/rebound. In theory things shouldn't be different in a succesive
 
-Yep. :)
+yes it shouldn't but sure I'll set
+it to false along the way.
 
->>  
->> +/**
->> + * flex_array_size() - Calculate size, in bytes, of a flexible array member
->> + * within an enclosing structure. Read on for more details.
->> + *
->> + * @p: Pointer to the structure.
->> + * @member: Name of the flexible array member.
->> + * @count: Number of elements in the array.
->> + *
->> + * Calculates size, in bytes, of a flexible array @member of @count elements
->> + * within structure @p.
->> + *
->> + * Return: number of bytes needed or SIZE_MAX on overflow.
->> + */
->> +#define flex_array_size(p, member, count)					\
->> +	array_size(count,							\
->> +		    sizeof(*(p)->member) + __must_be_array((p)->member))
+> initialization, however for robustness the variable should be 
+> explicitly
+> set to 'false' somewhere in the code path (_probe(), _read_lut(), ...).
+
+> 
+>> +static int qcom_cpufreq_set_bw(struct cpufreq_policy *policy,
+>> +			       unsigned long freq_khz)
+>> +{
+>> +	unsigned long freq_hz = freq_khz * 1000;
+>> +	struct dev_pm_opp *opp;
+>> +	struct device *dev;
+>> +	int ret;
 >> +
->>  #endif /* __LINUX_OVERFLOW_H */
+>> +	dev = get_cpu_device(policy->cpu);
+>> +	if (!dev)
+>> +		return -ENODEV;
+>> +
+>> +	opp = dev_pm_opp_find_freq_exact(dev, freq_hz, true);
+>> +	if (IS_ERR(opp))
+>> +		return PTR_ERR(opp);
+>> +
+>> +	ret = dev_pm_opp_set_bw(dev, opp);
+>> +	dev_pm_opp_put(opp);
+>> +	return ret;
+>> +}
+>> +
+>> +static int qcom_cpufreq_update_opp(struct device *cpu_dev,
+>> +				   unsigned long freq_khz,
+>> +				   unsigned long volt)
+>> +{
+>> +	unsigned long freq_hz = freq_khz * 1000;
+>> +	int ret;
+>> +
+>> +	/* Skip voltage update if the opp table is not available */
+>> +	if (!icc_scaling_enabled)
+>> +		return dev_pm_opp_add(cpu_dev, freq_hz, volt);
+>> +
+>> +	ret = dev_pm_opp_adjust_voltage(cpu_dev, freq_hz, volt, volt, volt);
+>> +	if (ret) {
+>> +		dev_err(cpu_dev, "Voltage update failed freq=%ld\n", freq_khz);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return dev_pm_opp_enable(cpu_dev, freq_hz);
+>> +}
+>> 
+>>  static int qcom_cpufreq_hw_target_index(struct cpufreq_policy 
+>> *policy,
+>>  					unsigned int index)
+>> @@ -39,6 +82,9 @@ static int qcom_cpufreq_hw_target_index(struct 
+>> cpufreq_policy *policy,
+>> 
+>>  	writel_relaxed(index, perf_state_reg);
+>> 
+>> +	if (icc_scaling_enabled)
+>> +		qcom_cpufreq_set_bw(policy, freq);
+>> +
+>>  	arch_set_freq_scale(policy->related_cpus, freq,
+>>  			    policy->cpuinfo.max_freq);
+>>  	return 0;
+>> @@ -89,11 +135,31 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>>  	u32 data, src, lval, i, core_count, prev_freq = 0, freq;
+>>  	u32 volt;
+>>  	struct cpufreq_frequency_table	*table;
+>> +	struct dev_pm_opp *opp;
+>> +	unsigned long rate;
+>> +	int ret;
+>> 
+>>  	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+>>  	if (!table)
+>>  		return -ENOMEM;
+>> 
+>> +	ret = dev_pm_opp_of_add_table(cpu_dev);
+>> +	if (!ret) {
+>> +		/* Disable all opps and cross-validate against LUT */
 > 
-> I like it! You mentioned off-list that maybe this could be named
-> sizeof_flex_array() (like sizeof_field(), etc), and that does seem
-> attractive. As you also mentioned, it begs the question of renaming
-> struct_size() to sizeof_struct().
-> 
-> Looking back through the thread[1], it seems the name came from Linus[2],
-> and was more related to the existing array_size() helper.
-> 
-> So, how about this, as a convention we can use to make a choice:
-> 
-> For things that are strictly constant in size, we can use sizeof_*. For
-> things that have a dynamic component, we'll use *_size(). So, this patch
-> is correct as-is.
-> 
+> nit: IIUC the cross-validation doesn't happen in this branch, so the
+> comment is a bit misleading. Maybe change it to "Disable all opps to
+> cross-validate against the LUT {below,later}".
 
-I like the idea. I haven't thought it in terms of dynamic and constant size,
-but it sounds sensible.
+sure will re-word it.
 
-> Acked-by: Kees Cook <keescook@chromium.org>
 > 
-> (I wonder who's tree this should go via?)
+>> +		icc_scaling_enabled = true;
+>> +		for (rate = 0; ; rate++) {
+>> +			opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
+>> +			if (IS_ERR(opp))
+>> +				break;
+>> +
+>> +			dev_pm_opp_put(opp);
+>> +			dev_pm_opp_disable(cpu_dev, rate);
+>> +		}
+>> +	} else if (ret != -ENODEV) {
+>> +		dev_err(cpu_dev, "Invalid opp table in device tree\n");
+>> +		return ret;
+>> +	}
+>> +
+>>  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>>  		data = readl_relaxed(base + REG_FREQ_LUT +
+>>  				      i * LUT_ROW_SIZE);
+>> @@ -112,7 +178,7 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>> 
+>>  		if (freq != prev_freq && core_count != LUT_TURBO_IND) {
+>>  			table[i].frequency = freq;
+>> -			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
+>> +			qcom_cpufreq_update_opp(cpu_dev, freq, volt);
 > 
+> This is the cross-validation mentioned above, right? Shouldn't it 
+> include
+> a check of the return value?
 
-Yours? :)
+Yes, this is the cross-validation step,
+we adjust the voltage if opp-tables are
+present/added successfully and enable
+them, else we would just do a add opp.
+We don't want to exit early on a single
+opp failure. We will error out a bit
+later if the opp-count ends up to be
+zero.
 
-> -Kees
 > 
-> [1] https://lore.kernel.org/lkml/20180507113902.GC18116@bombadil.infradead.org/
-> [2] https://lore.kernel.org/lkml/CA+55aFy8DSRoUvtiuu5w+XGOK6tYvtJGBH-i8i-y7aiUD2EGLA@mail.gmail.com/
+>>  			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
+>>  				freq, core_count);
+>>  		} else if (core_count == LUT_TURBO_IND) {
+>> @@ -133,7 +199,8 @@ static int qcom_cpufreq_hw_read_lut(struct device 
+>> *cpu_dev,
+>>  			if (prev->frequency == CPUFREQ_ENTRY_INVALID) {
+>>  				prev->frequency = prev_freq;
+>>  				prev->flags = CPUFREQ_BOOST_FREQ;
+>> -				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
+>> +				qcom_cpufreq_update_opp(cpu_dev, prev_freq,
+>> +							volt);
 > 
+> ditto
+> 
+> nit: with the updated max line length it isn't necessary anymore to 
+> break
+> this into multiple lines
+> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl?h=v5.8-rc1#n54),
+> though the coding style still has the old limit.
 
---
-Gustavo
+yeah I'll expand it.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
