@@ -2,103 +2,92 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EACFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDEB208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:19:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="OrKn1J/Y"
+	by mail.kernel.org (Postfix) with ESMTP id D1F1A2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgFPVT5 (ORCPT
+        id S1726424AbgFPVUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgFPVTz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:19:55 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D93C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 14:19:55 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id o4so5015349lfi.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 14:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FRy69Tr1lrzT8zds2VU/VZdOzqvBMrrIUosFDbrbqYk=;
-        b=OrKn1J/YXVkBXkTK+W7wBt2OgMnRjARIx1z+sp6X+NpilDwscgB74/2zyNQjoGO83C
-         Po5xkD0NA1YHaJBLKqKNDl5MdzR7NqmJ053cNWBy6PAsFtOHCYhhczooB69oojOWOS65
-         MVzltCXrkTJ/4Pl7Cw/hxBjsqOOBICjArU7WAHHo1ZKXI2XKwrWnonSKFcTSBRUUzZSZ
-         cEp0tYl8/ipUspfMjYzBVSa1WxmxP5Ea5Lk8fm3zWvqwCiNFry2Q63p53UXd9m1+lMpm
-         a0OhBph9IMUXnQmS/0ohaTPQSZ1759sI6/GhGFOjDhcq0XjSVU+R9De2V4Pbgsl1iOv0
-         TYVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FRy69Tr1lrzT8zds2VU/VZdOzqvBMrrIUosFDbrbqYk=;
-        b=h+sjMq8e0O/BsI0h/iFKNpoxPF78pVPVfK7hJp0RvRtTyEbYPYiepMzXQbTUbnE108
-         FUwVYPbyt29C+bj6YF7txYe88W3nUjPQ6ropLwVySWdbhSRX9rmRVCRCRJOQpLCgpTi8
-         EPvluTrl/efAtPz11fz3iKs6JrBAfWS3nevjBRppKEtixWBRag3pu/fXWeeWtInebcx/
-         HH5lNThbc3fsdkeCd6CQFouYHjr3t9iN/c3dbUQqTjha/yylNyMvjinufrZeqtb6ynz+
-         Fi4KimIhTUDdCl7KgcSUBe6XLdAI9VlYmAT2Yx3FrLK0JjaBaTgXnn+UbtdkpBCN2wU/
-         wA7w==
-X-Gm-Message-State: AOAM533fViDstFnYnjo8vuNTGBjy0kDItJYeUdqDw4jhdO1FNwc2zJVL
-        CCqB60Qi+3SMAvF/UWCnzGZlK99fytDm+UbuS1/uBu4ZqQ==
-X-Google-Smtp-Source: ABdhPJy5WUFWcij5N1NZJDUAAkVRefbSmpmU21wBc/qGQZzwGk/P0kbbAhMyjb3QNYYPemSqCxFqVgLETRYcl4ZXQNs=
-X-Received: by 2002:ac2:43a5:: with SMTP id t5mr2582865lfl.197.1592342394044;
- Tue, 16 Jun 2020 14:19:54 -0700 (PDT)
+        Tue, 16 Jun 2020 17:20:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55911 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFPVUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 17:20:09 -0400
+IronPort-SDR: HuHeWNLP+q7mLuCg4JkjW2t2orvKQGysuL4FkjDGp6xRpebp8GuNq3Xbv8WIDYP2NmcNNnzp7Y
+ I4TuZTiI11NQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 14:20:08 -0700
+IronPort-SDR: pd8IGOukXezEe3OY+umSJxFmYOhb3VRSZ/EyUl9sEMKboWL0vnbtrFgjG6ZL96JVxSERcHCp2P
+ AKWJL2AN9TDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,519,1583222400"; 
+   d="scan'208";a="291203371"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by orsmga002.jf.intel.com with ESMTP; 16 Jun 2020 14:20:08 -0700
+Received: from orsmsx156.amr.corp.intel.com (10.22.240.22) by
+ ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 16 Jun 2020 14:20:08 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.199]) by
+ ORSMSX156.amr.corp.intel.com ([169.254.8.32]) with mapi id 14.03.0439.000;
+ Tue, 16 Jun 2020 14:20:08 -0700
+From:   "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Greg Thelen <gthelen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] e1000e: add ifdef to avoid dead code
+Thread-Topic: [PATCH] e1000e: add ifdef to avoid dead code
+Thread-Index: AQHWQhKmTMhQGPWEEkalMgzeJC4tg6jbzRAA///16rA=
+Date:   Tue, 16 Jun 2020 21:20:07 +0000
+Message-ID: <61CC2BC414934749BD9F5BF3D5D940449871E142@ORSMSX112.amr.corp.intel.com>
+References: <20200614061122.35928-1-gthelen@google.com>
+ <b88dc544-9f1b-75af-244e-9967ffeacf0e@gmail.com>
+In-Reply-To: <b88dc544-9f1b-75af-244e-9967ffeacf0e@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CAHk-=whfuea587g8rh2DeLFFGYxiVuh-bzq22osJwz3q4SOfmA@mail.gmail.com>
- <CAEJqkgi3w+zvMkRBP4VtAewX1UJxrVNRQ03MtRN_yH-PwOOScQ@mail.gmail.com> <20200616203741.GA13437@zn.tnic>
-In-Reply-To: <20200616203741.GA13437@zn.tnic>
-From:   Gabriel C <nix.or.die@googlemail.com>
-Date:   Tue, 16 Jun 2020 23:19:27 +0200
-Message-ID: <CAEJqkghK8cjtsKUGn0bJ8nurzu2saNcVOAKJ43BtmgANWMY38Q@mail.gmail.com>
-Subject: Re: Linux 5.8-rc1
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Di., 16. Juni 2020 um 22:37 Uhr schrieb Borislav Petkov <bp@alien8.de>:
->
-> On Tue, Jun 16, 2020 at 10:11:46PM +0200, Gabriel C wrote:
-> > I didn't look closer at that but from the error, it seems to be,
-> > some missing -fstack-protector* vs -fno-stack-protector* checks
-> > somewhere.
->
-> Can you give exact .config?
->
-> Also, what compiler exactly?
-
-Sure, config and compiler information uploaded to there:
-
-http://crazy.dev.frugalware.org/kernel/
-
-
->
-> I have
->
-> CONFIG_CC_HAS_SANE_STACKPROTECTOR=y
-> CONFIG_KEXEC_FILE=y
-> CONFIG_HAVE_STACKPROTECTOR=y
-> CONFIG_CC_HAS_STACKPROTECTOR_NONE=y
-> CONFIG_STACKPROTECTOR=y
-> CONFIG_STACKPROTECTOR_STRONG=y
->
-> here and gcc9 builds it fine.
-
-I have gcc 9.2.1 20200215.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBFcmljIER1bWF6ZXQgPGVyaWMu
+ZHVtYXpldEBnbWFpbC5jb20+DQo+IE9uIDYvMTMvMjAgMTE6MTEgUE0sIEdyZWcgVGhlbGVuIHdy
+b3RlOg0KPiA+IENvbW1pdCBlMDg2YmEyZmNjZGEgKCJlMTAwMGU6IGRpc2FibGUgczBpeCBlbnRy
+eSBhbmQgZXhpdCBmbG93cyBmb3IgTUUNCj4gPiBzeXN0ZW1zIikgYWRkZWQgZTEwMDBlX2NoZWNr
+X21lKCkgYnV0IGl0J3Mgb25seSBjYWxsZWQgZnJvbQ0KPiA+IENPTkZJR19QTV9TTEVFUCBwcm90
+ZWN0ZWQgY29kZS4gIFRodXMgYnVpbGRzIHdpdGhvdXQgQ09ORklHX1BNX1NMRUVQDQo+ID4gc2Vl
+Og0KPiA+ICAgZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvZTEwMDBlL25ldGRldi5jOjEzNzox
+Mzogd2FybmluZzoNCj4gPiAnZTEwMDBlX2NoZWNrX21lJyBkZWZpbmVkIGJ1dCBub3QgdXNlZCBb
+LVd1bnVzZWQtZnVuY3Rpb25dDQo+ID4NCj4gPiBBZGQgQ09ORklHX1BNX1NMRUVQIGlmZGVmIGd1
+YXJkIHRvIGF2b2lkIGRlYWQgY29kZS4NCj4gPg0KPiA+IEZpeGVzOiBlMDg2YmEyZmNjZGEgKCJl
+MTAwMGU6IGRpc2FibGUgczBpeCBlbnRyeSBhbmQgZXhpdCBmbG93cyBmb3IgTUUNCj4gPiBzeXN0
+ZW1zIikNCj4gPiBTaWduZWQtb2ZmLWJ5OiBHcmVnIFRoZWxlbiA8Z3RoZWxlbkBnb29nbGUuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9lMTAwMGUvbmV0ZGV2
+LmMgfCAyICsrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gDQo+IFJl
+dmlld2VkLWJ5OiBFcmljIER1bWF6ZXQgPGVkdW1hemV0QGdvb2dsZS5jb20+DQpbS2lyc2hlciwg
+SmVmZnJleSBUXSANCg0KVGhpcyBwYXRjaCBpcyBub3QgbmVjZXNzYXJ5LCBhZnRlciBBcm5kJ3Mg
+cGF0Y2guICBIZXJlIGlzIGhpcyBwYXRjaDoNCmh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9w
+cm9qZWN0L2ludGVsLXdpcmVkLWxhbi9wYXRjaC8yMDIwMDUyNzEzNDcxNi45NDgxNDgtMS1hcm5k
+QGFybmRiLmRlLw0KIGFuZCBJIHdpbGwgYmUgcHVzaGluZyBpdCB0byBEYXZlJ3MgbmV0IHRyZWUg
+bGF0ZXIgdG9uaWdodC4NCg==
