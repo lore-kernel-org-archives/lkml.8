@@ -6,132 +6,136 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C50C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2D91207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A495D2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fAwR1eMp"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="F9a7/MkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgFPXwO (ORCPT
+        id S1726515AbgFPXza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbgFPXwN (ORCPT
+        Tue, 16 Jun 2020 19:55:30 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:14513 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgFPXz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:52:13 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC81C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:52:13 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id v14so358416pgl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6ZttGvOU85rV7DwxVDB2QehNWH/NdI5i83PeBcspPK0=;
-        b=fAwR1eMp65J4O5xV+kC6VagulZrCE6RG+VzybQXOKZwY+uLDA/CyOvVYODBP2hPP6m
-         sLp7XSOx3zpPtFugWnUnel7pBvyCxpikm7sAPYUUUznr+dtheBk5xVxvwchuBk/hkeAu
-         t14JCZkk3EIHMQMvpFtR7yYjJQ8KRxB1F8doQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6ZttGvOU85rV7DwxVDB2QehNWH/NdI5i83PeBcspPK0=;
-        b=pe2BIxD5w5dt/ntiLUMARzsPESWwX5MGxNaXODL46KT3OHq2FA2TjoujCgCAqvl2AV
-         Qn9oFZ7go6EUYGJil2NilyWbkPDMzRP+d6b3cRvzzTWYp1CdXhDO6SN7cqsjKjZCh+no
-         YUhh6hL/cwF21RZkIYwr5yWXiaxnApFx4zy0MdBgwCCHcqAHdBJRJZndYJGlmK8cqHNo
-         T/IR8kE+PSZRFtMEfX+0GEUhmNMJeb/MhpRyVeLu42lTKn8V3+tLOw0TqgSHVsnuqmcR
-         N7/mTypts4w3eL6bhetKWUpz2i9nIrh8sYp+mBx7I0tIDTjr9zUTRs7htNc2KFiAzkGT
-         3Rmw==
-X-Gm-Message-State: AOAM531oVFvxcEwCi3mcmmMVaqJt13JQTke+bvd2e1c6MzylM2Gq5RVj
-        gNSbNDQ3KPJQUAd+aJcvZyWzjA==
-X-Google-Smtp-Source: ABdhPJy8SUzbo7FQSLKRI4RDlQECIGeeur1vAtuTCdtv/vc46sTyJmjtzwunu9fyKZyoo/dihQjpAQ==
-X-Received: by 2002:a62:1d8e:: with SMTP id d136mr4074897pfd.323.1592351532598;
-        Tue, 16 Jun 2020 16:52:12 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c2sm14988615pgk.77.2020.06.16.16.52.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 16:52:11 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 16:52:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-Message-ID: <202006161642.A5F50ED07@keescook>
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
- <202006141120.96FF8C5@keescook>
- <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
+        Tue, 16 Jun 2020 19:55:26 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200616235523epoutp01a924fb4baeb7f761d0bae1ed53e21299~ZK3S01UNM0503105031epoutp01c
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:55:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200616235523epoutp01a924fb4baeb7f761d0bae1ed53e21299~ZK3S01UNM0503105031epoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592351723;
+        bh=4sYeuz6oTyLESXYSHQYd1K6SYgV3Ls6fZ7EpG0pJeps=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=F9a7/MkQPlg3eS1Z7j7+r91xeScwzC+Z+Ck9pR3bprEncc0AIMWLYX6zObosyKCL+
+         thd+anpsqwDsYoKkWuYco3nzSa1ZR1uRLAk/ADks38wb06gwlL8gMQX92QMR8+C9jv
+         NV+K6P77x+P0ac7eeq6P+n6ePHvaYgy6Jgu4GvYA=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200616235522epcas1p3a5e6bad98ad3ab436708af0228225d5a~ZK3STCd2W1844018440epcas1p3k;
+        Tue, 16 Jun 2020 23:55:22 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 49mlST6lxRzMqYkV; Tue, 16 Jun
+        2020 23:55:21 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A5.A4.18978.9EB59EE5; Wed, 17 Jun 2020 08:55:21 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200616235521epcas1p4ef4e7efcbba7993ac48cd591847242f3~ZK3Qz-73w1469514695epcas1p4W;
+        Tue, 16 Jun 2020 23:55:21 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200616235521epsmtrp224b573225d469cefc46781246e610619~ZK3QwNfOt1745117451epsmtrp2a;
+        Tue, 16 Jun 2020 23:55:21 +0000 (GMT)
+X-AuditID: b6c32a35-5edff70000004a22-0e-5ee95be9406a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        35.1E.08303.9EB59EE5; Wed, 17 Jun 2020 08:55:21 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200616235521epsmtip21a1734ccd7807787c6e4ced0577a59bc~ZK3Qk5b5v1384013840epsmtip2W;
+        Tue, 16 Jun 2020 23:55:21 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200616021808.5222-1-kohada.t2@gmail.com>
+Subject: RE: [PATCH v3] exfat: remove EXFAT_SB_DIRTY flag
+Date:   Wed, 17 Jun 2020 08:55:21 +0900
+Message-ID: <000001d64439$98345740$c89d05c0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHQ7uoMIC2a8IFxA0TaCcr40cOytAJGtMGMqNRTlqA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmvu7L6JdxBmeazSx+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
+        MXp83iQXwBaVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
+        lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK
+        0MDAyBSoMiEn4+MK44ITbBU9i08wNjBuYO1i5OSQEDCR+Pivi72LkYtDSGAHo8Spt++hnE+M
+        EkdW/mGCcD4zSuy/0MMM03Lk8zQWiMQuRom7W08wQjgvGSWObuhkA6liE9CV+PdnP5gtIqAn
+        cfLkdTaQImaBRiaJ5Se+gI3iFLCQ6H39BMjm4BAWsJRYeF0ZJMwioCpx+kgjC4jNCxQ+PmcH
+        G4QtKHFy5hOwOLOAvMT2t3OgLlKQ+Pl0GSvELiuJ71+3MUHUiEjM7mxjBtkrITCXQ6JjeRMT
+        RIOLxPcj3xghbGGJV8e3sEPYUhKf3+1lA7lHQqBa4uN+qPkdjBIvvttC2MYSN9eDAo8DaL6m
+        xPpd+hBhRYmdv+cyQqzlk3j3tYcVYgqvREebEESJqkTfpcNQB0hLdLV/YJ/AqDQLyWOzkDw2
+        C8kDsxCWLWBkWcUollpQnJueWmxYYIgc15sYwclUy3QH48S3H/QOMTJxMB5ilOBgVhLhdf79
+        Ik6INyWxsiq1KD++qDQntfgQoykwqCcyS4km5wPTeV5JvKGpkbGxsYWJmbmZqbGSOK+4zIU4
+        IYH0xJLU7NTUgtQimD4mDk6pBqY75Xnd3RuneDqJ3VJZMzvz2z5u7cslcoZbVxxqLbedu8tq
+        CX9FFGN+G4fmEbWw12elFaa8YDp19GqM8wStRv6lC39GcDvyv77CLn+n+MBGx8VHf/ks+Ds/
+        mX3K1hmKa93b47y6Sow41DkSxY68Wb9HbetKvQ8rpcMcz+9W0zZfEMRnLv/C6YOQYK1/1Acu
+        Z24Wv/6VT441PRM3ru645Klzsch+94tVszlY4rPSw1aGtQk8U8vOPX5L9YbhvFd/Gl8+Cmc9
+        wJN3XivT3CbZS6g3d468xoTbJ1zb+47vVl8v9cgn8Or/xI/LX01oD3ZI0PmwainHpkaN2Zle
+        SRuz996ovJdhwyAmblZ+7oGOohJLcUaioRZzUXEiAFjwmdwvBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42LZdlhJXvdl9Ms4g9+zeC1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
+        MXp83iQXwBbFZZOSmpNZllqkb5fAlfFxhXHBCbaKnsUnGBsYN7B2MXJySAiYSBz5PI2li5GL
+        Q0hgB6PE6vtvGSES0hLHTpxh7mLkALKFJQ4fLoaoec4o8ejuDLAaNgFdiX9/9rOB2CICehIn
+        T15nAyliFmhmkvj2bAkzREcno8Tsqe0sIFWcAhYSva+fgE0VFrCUWHhdGSTMIqAqcfpII1gJ
+        L1D4+JwdbBC2oMTJmU9YQMqZgRa0bQTbyywgL7H97RxmiDsVJH4+XcYKcYOVxPev25ggakQk
+        Zne2MU9gFJ6FZNIshEmzkEyahaRjASPLKkbJ1ILi3PTcYsMCo7zUcr3ixNzi0rx0veT83E2M
+        4JjS0trBuGfVB71DjEwcjIcYJTiYlUR4nX+/iBPiTUmsrEotyo8vKs1JLT7EKM3BoiTO+3XW
+        wjghgfTEktTs1NSC1CKYLBMHp1QDk7X4EsF/sr+90+bmBr7Izz/1oaNQ/cV3jj/l0vUrbvDI
+        vWuNMcubIWla5+eTn+lfHlBedUJC8/4icQeVF/d4zeqW/Zsx6+C511fMH95xvF3wI/xeeIDj
+        z3Pz0z8KW00qNeyJepDw6qpp/szEX/9ef3CKOXWw08en3Xs6y1WFjbPnvN49m2f612tSQnt/
+        bdt0TEJm9WMOibk5PepGjowbMhY9UXCZXeJ4LXOfSMbie26/yh0TN36d8sN474yMzc/aftz1
+        4L1ZFbPh/BR5pT/M/B/Dlb6oZrWZ7XCWFje/e8jk6Jz8xb2Wv33rup0zJ5yLzJMrOtzklCnw
+        JXfOktNlJzJTml0seK0Ysxcd9XM6oMRSnJFoqMVcVJwIAIYgz4YYAwAA
+X-CMS-MailID: 20200616235521epcas1p4ef4e7efcbba7993ac48cd591847242f3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200616021816epcas1p44b0833f14bbad0e25cc0efb27fb2ebd3
+References: <CGME20200616021816epcas1p44b0833f14bbad0e25cc0efb27fb2ebd3@epcas1p4.samsung.com>
+        <20200616021808.5222-1-kohada.t2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 07:07:34PM +0000, Bird, Tim wrote:
-> From: Kees Cook <keescook@chromium.org>
-> > Note: making the plan line required differs from TAP13 and TAP14. I
-> > think it's the right choice, but we should be clear.
+> remove EXFAT_SB_DIRTY flag and related codes.
 > 
-> [...]
-> With regards to making it optional or not, I don't have a strong
-> preference.  The extra info seems helpful in some circumstances.
-> I don't know if it's too onerous to make it a requirement or not.
-> I'd prefer if it was always there (either at the beginning or the end),
-> but if there is some situation where it's quite difficult to calculate,
-> then it would be best not to mandate it. I can't think of any impossible
-> situations at the moment.
+> This flag is set/reset in exfat_put_super()/exfat_sync_fs() to avoid sync_blockdev().
+> However ...
+> - exfat_put_super():
+> Before calling this, the VFS has already called sync_filesystem(), so sync is never performed here.
+> - exfat_sync_fs():
+> After calling this, the VFS calls sync_blockdev(), so, it is meaningless to check EXFAT_SB_DIRTY or to
+> bypass sync_blockdev() here.
+> Not only that, but in some cases can't clear VOL_DIRTY.
+> ex:
+> VOL_DIRTY is set when rmdir starts, but when non-empty-dir is detected, return error without setting
+> EXFAT_SB_DIRTY.
+> If performe 'sync' in this state, VOL_DIRTY will not be cleared.
+There is still a problem if system reboot or device is unplugged when sync is not called yet.
+I will remove this mention in the patch.
 
-I think we should require one of:
-
-- starting plan line
-- ending plan line
-- ending with something that indicates "I'm done, but I have no idea how
-  many tests actually ran" (Maybe "1..?")
-
-To me, the point of the plan line is to be able to say "this test did,
-in fact, finish". So even if some test can't even count how many tests
-it _ran_, it can at least say "I am now finished".
-
-> > TAP13/14 makes description optional, are we making it required (I think
-> > we should). There seems to be a TAP13/14 "convention" of starting
-> > <description> with "- ", which I'm on the fence about it. It does make
-> > parsing maybe a little easier.
-> 
-> I would like the description to be required.
-> I don't have a strong opinion on the dash.  I'm OK with either one (dash
-> or no dash), but we should make kselftest and KUnit consistent.
-
-I find the dash to be distracting -- it doesn't help me scan it, and it
-doesn't help a parser (which only needs to find "#").
-
-> > > Differences between kernel test result format and TAP13:
-> > >  - in KTAP the "# SKIP" directive is placed after the description on
-> > >    the test result line
-
-I sent a bunch of clean-ups for kselftest.h recently[1], but it looks
-like we'll need more for adding "description" to skip (right now it only
-prints the SKIP reason).
-
-[1] https://lore.kernel.org/lkml/20200611224028.3275174-1-keescook@chromium.org/
-
-> > Yes Documentation/*.rst Not sure on name yet, but where do kselftest
-> > docs live? :)
-> Documentation/dev-tools/kselftest.rst
-> 
-> I'll put this at: Documentation/dev-tools/test-results-format.rst
-
-Sounds good!
-
--- 
-Kees Cook
