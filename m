@@ -2,265 +2,98 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5390C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F367E20810
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7AD2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uHxHjpK0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XGsna6YY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbgFPTom (ORCPT
+        id S1731406AbgFPTpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:44:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730630AbgFPTol (ORCPT
+        Tue, 16 Jun 2020 15:45:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56791 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730630AbgFPTpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:44:41 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 144E0C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 12:44:41 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id 10so9989385pfx.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 12:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F56cyQheS9nDNFVlJ/4WRy+BhlNATC6O3TmssNhkL8A=;
-        b=uHxHjpK07EclsDuBvONLo5rOiIEiZ7kgMocY8DSr//2va03wpG+ak4dmbrGqDbBNII
-         N72Ok6sGKSnHUPLF6LEuGQp9waCtBlAOfkWzpSVxKG7Q3u7EAbUCHnNGQA98fmbahdb7
-         rBn1qsfzkJOJoyZ7NHi+K9qTsKRUaa9DeqxzR5Na7wTt1AKNY38/Mf+/Q711iFcTKD8x
-         Xy+T4ntp9VsDiXqKcAt47xvJN43gyrYQchLCLNOWhlxL7J8VWZQGkweNqQ8vu0Lmztzx
-         8yO/PGPmvsWRrdNenpIjpHwvjmY80jqrdlG57llDMuf0tQ4NFUCXQ9pSLG8CFRLq4vEz
-         hidw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F56cyQheS9nDNFVlJ/4WRy+BhlNATC6O3TmssNhkL8A=;
-        b=oVeW5w5KJfsR73Fp8ZgsMkykRT7GJ3QsShWsYtgfUHRtHbtKw37y4IuzpZgEtWd+hg
-         BkNuYxJWm6s1yDiPP75+wBXidBp+vFaUVBrS/PKlEVtMZEVQOzXfDi7g9g5s75NSzgVB
-         TN15vBlfaYMi/oepWPFNvbUHLY90zi6xRuOqI4tSKPODNOpkpFUCK9G+4fjVtwOgPHcC
-         v69+KBATmOVNk9wZrB9Pd77F/jgKJ/maAuuwP0cw4jroKT6D/CbsRmzu6MWFhUeDjzRc
-         PaUtn8zdp3O49D13RNErRGjKJpELsuHc3I5WGuR0Npx3BwJWXiPzk3Zr7T/8W9mhpSCf
-         diNg==
-X-Gm-Message-State: AOAM530JIpm5CpQlc4cNFMluAIB4EXfet5jYG/32i7Drb+XQNX4yWu0D
-        6XscLZUJlJdFBp/MXJOjpyXr2mYQL7/cx3lFPJGinw==
-X-Google-Smtp-Source: ABdhPJzbS6ysZyKv26dphua26KNlY3fp+PQBcQtAfJn5B628lO3AluGA8zYw0WwEue4n6eXYt/vitciHV97AwELV9J4=
-X-Received: by 2002:a63:d04b:: with SMTP id s11mr3140205pgi.384.1592336680021;
- Tue, 16 Jun 2020 12:44:40 -0700 (PDT)
+        Tue, 16 Jun 2020 15:45:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592336705;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gyqueuFjC37VTOe25MsKub4gwfM3sfG08StS+6GkW5Y=;
+        b=XGsna6YYQ6p6k6+PMAOtWlC0hioU3mU5/dQm9cyPdCxaDX9igEMn5dlGvVzVkBfvmJSZ2k
+        iXLNJzba0ZMXfX6J//y+1DgJRxGYOkJ0I2zTeU8kPPAdpRCAp6gamhwJq83TnFHYNMc/wM
+        qLq6vta4EPLMMDKbvx1830RbjWazWb8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-321-6vyUyC-aPkWpBITbqg5EYQ-1; Tue, 16 Jun 2020 15:45:00 -0400
+X-MC-Unique: 6vyUyC-aPkWpBITbqg5EYQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CD5D835BB8;
+        Tue, 16 Jun 2020 19:44:55 +0000 (UTC)
+Received: from krava (unknown [10.40.193.177])
+        by smtp.corp.redhat.com (Postfix) with SMTP id EFA577CAB9;
+        Tue, 16 Jun 2020 19:44:51 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 21:44:51 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@elte.hu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ziqian SUN <zsun@redhat.com>, Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH -tip V6 0/6] kprobes: Fixes mutex, rcu-list warnings and
+ cleanups
+Message-ID: <20200616194451.GA2210496@krava>
+References: <158927054236.27680.18209720730136003586.stgit@devnote2>
+ <20200527234941.a15490ee50669812df8183dc@kernel.org>
+ <20200614153728.GA2009260@krava>
+ <20200616150122.4a71d56d@oasis.local.home>
 MIME-Version: 1.0
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
- <202006141120.96FF8C5@keescook> <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <7161fadb-45ba-c4c0-8bbb-cb47d2dd0265@redhat.com> <CY4PR13MB11755F5A6879CA3FFD005426FD9D0@CY4PR13MB1175.namprd13.prod.outlook.com>
-In-Reply-To: <CY4PR13MB11755F5A6879CA3FFD005426FD9D0@CY4PR13MB1175.namprd13.prod.outlook.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 16 Jun 2020 12:44:28 -0700
-Message-ID: <CAFd5g454n4ZPgCdWaAxezFueG47TztqBx4L7x4oYwgPAR3BZNA@mail.gmail.com>
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616150122.4a71d56d@oasis.local.home>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 9:42 AM Bird, Tim <Tim.Bird@sony.com> wrote:
+On Tue, Jun 16, 2020 at 03:01:22PM -0400, Steven Rostedt wrote:
+> On Sun, 14 Jun 2020 17:37:28 +0200
+> Jiri Olsa <jolsa@redhat.com> wrote:
+> 
+> > On Wed, May 27, 2020 at 11:49:41PM +0900, Masami Hiramatsu wrote:
+> > > (Oops, I missed Jiri in loop.)
+> > > 
+> > > Hi Ingo,
+> > > 
+> > > Could you take this series?
+> > > These are not adding any feature, but fixing real bugs.  
+> > 
+> > Hi,
+> > I still can't see this being pulled in, did I miss it?
+> > 
+> 
+> I'm getting a pull request ready for -rc2. I can pull these in with that.
 
-Apologies for taking so long to get to this. I have been busy with
-some stuff internally at Google.
+that'd be awesome, thanks!
 
-> > -----Original Message-----
-> > From: Paolo Bonzini <pbonzini@redhat.com>
-> >
-> > On 15/06/20 21:07, Bird, Tim wrote:
-> > >> Note: making the plan line required differs from TAP13 and TAP14. I
-> > >> think it's the right choice, but we should be clear.
-> >
-> > As an aside, where is TAP14?
-> By TAP14, I was referring to the current, undocumented, KUnit
-> conventions.
+jirka
 
-Not so. TAP14 is the proposed next version of TAP13:
-
-https://github.com/TestAnything/testanything.github.io/pull/36
-https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md
-
-Based on the discussion, it seems like most of the things we wanted
-from TAP14 would probably make it in if TAP ever accepts another pull
-request.
-
-Our only real extension is how we print out a violated exception/assertion.
-
-> > > With regards to making it optional or not, I don't have a strong
-> > > preference.  The extra info seems helpful in some circumstances.
-> > > I don't know if it's too onerous to make it a requirement or not.
-> > > I'd prefer if it was always there (either at the beginning or the end),
-> > > but if there is some situation where it's quite difficult to calculate,
-> > > then it would be best not to mandate it. I can't think of any impossible
-> > > situations at the moment.
-> >
-> > I think making the plan mandatory is a good idea.  "Late plans" work
-> > very well for cases where you cannot know in advance the number of tests
-> > (for example in filters that produce TAP from other output), and provide
-> > an additional safety net.
-> >
-> > >> "Bail out!" to be moved to "optional" elements, since it may not appear.
-> > >> And we should clarify TAP13 and TAP14's language to say it should only
-> > >> appear when the test is aborting without running later tests -- for this
-> > >> reason, I think the optional "description" following "Bail out!" should
-> > >> be made required. I.e. it must be: "Bail out! $reason"
-> > >
-> > > I'll make sure this is listed as optional.
-> > > I like adding a mandatory reason.
-> >
-> > +1.
-> >
-> > >> TAP13/14 makes description optional, are we making it required (I think
-> > >> we should). There seems to be a TAP13/14 "convention" of starting
-> > >> <description> with "- ", which I'm on the fence about it. It does make
-> > >> parsing maybe a little easier.
-> > >
-> > > I would like the description to be required.
-> > > I don't have a strong opinion on the dash.  I'm OK with either one (dash
-> > > or no dash), but we should make kselftest and KUnit consistent.
-> >
-> > I think no mandatory dash is better (or even mandatory no-dash!).  We
-> > can suggest removing it when formatting TAP output.
->
-> My personal preference is to have the dash.  I think it's more human readable.
-> I note that the TAP spec has examples of result lines both with and without
-> the dash, so even the spec is ambiguous on this.   I think not mandating it
-> either way is probably best.  For regex parsers, it's easy to ignore with '[-]?'
-> outside the pattern groups that grab the number and description.
-
-I don't think we care, because we don't use it.
-
-> >
-> > >>> Finally, it is possible to use a test directive to indicate another
-> > >>> possible outcome for a test: that it was skipped.  To report that
-> > >>> a test case was skipped, the result line should start with the
-> > >>> result "not ok", and the directive "# SKIP" should be placed after
-> > >>> the test description. (Note that this deviates from the TAP13
-> > >>> specification).
-> >
-> > How so?  The description comes first, but there can be a description of
-> > the directive.
-> None of the examples of skips in the TAP13 spec have a test descriptions before
-> the '# SKIP' directive.  But maybe I read too much into the examples. There is a
-> format example, and a list of items in a result line that both have the test description
-> before the directive.  So maybe I read this wrong.
->
-> >
-> >      not ok 4 - Summarized correctly # TODO Not written yet
-> >
-> > >>> It is usually helpful if a diagnostic message is emitted to explain
-> > >>> the reasons for the skip.  If the message is a single line and is
-> > >>> short, the diagnostic message may be placed after the '# SKIP'
-> > >>> directive on the same line as the test result.  However, if it is
-> > >>> not on the test result line, it should precede the test line (see
-> > >>> diagnostic data, next).
-> > >>>
-> > >>> Bail out!
-> > >>> ---------
-> > >>> If a line in the test output starts with 'Bail out!', it indicates
-> > >>> that the test was aborted for some reason.  It indicates that
-> > >>> the test is unable to proceed, and no additional tests will be
-> > >>> performed.
-> > >>>
-> > >>> This can be used at the very beginning of a test, or anywhere in the
-> > >>> middle of the test, to indicate that the test can not continue.
-> > >>
-> > >> I think the required syntax should be:
-> > >>
-> > >> Bail out! <reason>
-> > >>
-> > >> And to make it clear that this is optionally used to indicate an early
-> > >> abort. (Though with a leading plan line, a parser should be able to
-> > >> determine this on its own.)
-> >
-> > True.  However, "Bail out!" allow to distinguish issues with the harness
-> > (such as ENOSPC) from test aborts.
-> >
-> > >>>  - TODO directive
-> > >>
-> > >> Agreed: SKIP should cover everything TODO does.
-> >
-> > XFAIL/XPASS are different from SKIP.  I personally don't have a need for
-> > them, but kselftests includes XFAIL/XPASS exit codes and they aren't
-> > reflected into selftests/kselftest/runner.sh.
-> >
-> > Likewise, kselftest.h has ksft_inc_xfail_cnt but not
-> > ksft_test_result_xfail/ksft_test_result_xpass.
-> >
-> > It's important to notice in the spec that the TODO directive inverts the
-> > direction of ok/not-ok (i.e. XFAIL, the "good" result, is represented by
-> > "not ok # TODO").
->
-> The TAP13 spec is not explicit about the result for TODO (and only provides
-> one example), but the text *does* say a TODO can represent a bug to be fixed.
-> This makes it the equivalent of XFAIL.  I hadn't noticed this before.  Thanks.
->
-> >
-> > >>>  - test identifier
-> > >>>     - multiple parts, separated by ':'
-> > >>
-> > >> This is interesting... is the goal to be able to report test status over
-> > >> time by name?
-> >
-> > What about "/" instead?
-> In my experience, / is used in a lot of test descriptions (when quoting
-> file paths) (not in kselftest, but in lots of other tests).  Both Fuego
-> and KernelCI use colons, and that's what kselftest already uses,
-> so it seems like a good choice.
->
-> >
-> > >>> Finally,
-> > >>>   - Should a SKIP result be 'ok' (TAP13 spec) or 'not ok' (current kselftest practice)?
-> > >>> See https://testanything.org/tap-version-13-specification.html
-> > >>
-> > >> Oh! I totally missed this. Uhm. I think "not ok" makes sense to me "it
-> > >> did not run successfully". ... but ... Uhhh ... how do XFAIL and SKIP
-> > >> relate? Neither SKIP nor XFAIL count toward failure, though, so both
-> > >> should be "ok"? I guess we should change it to "ok".
-> >
-> > See above for XFAIL.
-> >
-> > I initially raised the issue with "SKIP" because I have a lot of tests
-> > that depend on hardware availability---for example, a test that does not
-> > run on some processor kinds (e.g. on AMD, or old Intel)---and for those
-> > SKIP should be considered a success.
-> >
-> > Paolo
-> >
-> > > I have the same initial impression.  In my mind, a skip is "not ok", since
-> > > the test didn't run. However, a SKIP and should be treated differently
-> > > from either "ok" or "not ok" by the results interpreter, so I don't think it
-> > > matters.  Originally I was averse to changing the SKIP result to "ok"
-> > > (as suggested by Paulo Bonzini [1]), but I checked and it's pretty trivial to
-> > > change the parser in Fuego, and it would make the kernel results format
-> > > match the TAP13 spec.  I don't see a strong reason for us to be different
-> > > from TAP13 here.
-> > >
-> > > I raised this issue on our automated testing conference call last week
-> > > (which includes people from the CKI, Fuego, KernelCI and LKFT projects), and
-> > > so people should be chiming in if their parser will have a problem with this change.)
-> > >
-> > > [1]  https://lkml.kernel.org/lkml/20200610154447.15826-1-pbonzini@redhat.com/T/
-> > >
-> > > Thanks very much for the feedback.
-> > >  -- Tim
-> > >
->
