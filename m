@@ -2,54 +2,52 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ED0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA06C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A907208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0958208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324059;
-	bh=6YdPTTXXDwj2dgnMH6G/oFCnlD2ssGIfMkM8JLEItE4=;
+	s=default; t=1592324063;
+	bh=s4jSCyrUMmdQJIoeCOcOl+KOd/yopV34FZ0iqG0c5/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OKsXipdTJmvfqWu6YhzEFrzCT7FgEOa75mnTzoIfuz8P04ghG97OMRqBl7nxCD22D
-	 c3hdUnxcR7dW/TWVxtNVcIiG5wt5CYArdmjQw+4ewoVl57is3By3hbtdCFMNH40OLd
-	 PO1S2weA/egKW/dFGwt3fJU47wUpknlirh2+6sLI=
+	b=yzBJD5Zx1f8pVsdlJLzd0fega5c7+hOlP3OLZTd/qb3A24ocYMQR2ZQaLlK9GRDin
+	 8Cpfj0+ZAyKYaOnCTSUzgLaHrvZtM/xUt4KVAc4D0UZ5kDtYprHvEoO+VSQ4FYrZ+t
+	 xKKUkGAqccKXTuO/WRqjua/fShrPXtgGBzneOubw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbgFPQOR (ORCPT
+        id S1730471AbgFPPms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:14:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60016 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730495AbgFPPmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:55 -0400
+        id S1730941AbgFPPmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 903E9208E4;
-        Tue, 16 Jun 2020 15:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B57B208D5;
+        Tue, 16 Jun 2020 15:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322175;
-        bh=6YdPTTXXDwj2dgnMH6G/oFCnlD2ssGIfMkM8JLEItE4=;
+        s=default; t=1592322162;
+        bh=s4jSCyrUMmdQJIoeCOcOl+KOd/yopV34FZ0iqG0c5/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=drp/L1EbEHzXKREk5WQWhEpCGqQ7CQgb6onbLyndv7qacwrotjS8URQVZ7yt5tKaJ
-         afsYF1AHxAQzp8RUJISvr4njAj2js7Q4xxMEv1FTqi6C0PVCLQcuEEh3e5boSShGoS
-         rNoDXfsQKJfjcHObre/2X9Am1qdke+w/Y77RhBA4=
+        b=DMRoCtRVdczc7W3qfOLMfCpwfzHkUagw/93iUPiEu8LYzOfgLliVqthuIcwUnfOkJ
+         7l2+IwhIMj4RvazXqJnzmfZOUmH9Pvg7AcjkW0m283yS6UdVO+RszXZI/Ucza2sUsd
+         95V0tlP0e9mfFB9eUCK46uWsrbwPgVd3fxyVH0Q8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 022/163] ASoC: SOF: imx8: Fix randbuild error
-Date:   Tue, 16 Jun 2020 17:33:16 +0200
-Message-Id: <20200616153107.951781958@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 006/163] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Tue, 16 Jun 2020 17:33:00 +0200
+Message-Id: <20200616153107.168487187@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -62,50 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit fe17e6cdc0fefca96ba9659be4b2b07487cbf0c5 ]
+[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
 
-when do randconfig like this:
-CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
-CONFIG_SND_SOC_SOF_IMX8=y
-CONFIG_SND_SOC_SOF_OF=y
-CONFIG_IMX_DSP=m
-CONFIG_IMX_SCU=y
+When proxy mode is enabled the vxlan device might reply to Neighbor
+Solicitation (NS) messages on behalf of remote hosts.
 
-there is a link error:
+In case the NS message includes the "Source link-layer address" option
+[1], the vxlan device will use the specified address as the link-layer
+destination address in its reply.
 
-sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
-imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
 
-Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
 
-Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/20200409071832.2039-2-daniel.baluta@oss.nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
+
+Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/sof/imx/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/vxlan.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-index bae4f7bf5f75..812749064ca8 100644
---- a/sound/soc/sof/imx/Kconfig
-+++ b/sound/soc/sof/imx/Kconfig
-@@ -14,7 +14,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
- config SND_SOC_SOF_IMX8_SUPPORT
- 	bool "SOF support for i.MX8"
- 	depends on IMX_SCU
--	depends on IMX_DSP
-+	select IMX_DSP
- 	help
- 	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
- 	  Say Y if you have such a device.
--- 
-2.25.1
-
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1924,6 +1924,10 @@ static struct sk_buff *vxlan_na_create(s
+ 	ns_olen = request->len - skb_network_offset(request) -
+ 		sizeof(struct ipv6hdr) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return NULL;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 
 
