@@ -2,194 +2,145 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB89C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C7D20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB3C208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="J6XPEGEo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADu0zGoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgFPOmr (ORCPT
+        id S1729611AbgFPOmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:42:47 -0400
-Received: from mail-eopbgr80085.outbound.protection.outlook.com ([40.107.8.85]:17632
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728250AbgFPOmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:42:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VO9AfAEVLOuy5nVOWwPX5Pi9yPOavQclDznTljSoUMbKDigh+/UhjUDpKoeRznaIkm90YI+DlLRhqr0ewwB5E6oOpmxapjAOJmERRkIXgOxwEVxrOlTPSTt8gN8PfT+qROXWlKfCBM4eXhwQNiKlkepqK5VDmFMO8PK4DfFURdtbLnBgzBgxdre17wqYrhwr5KEVJBSgKbE9RaHPmpXO/SRO9yku5ZC3tFJ147ykcxVqH+lLGlXxImAaElAUmQZy+BsJSLdWpZfusDuIik386Jr+0sP8YVOzF1ahTyjabcZPixhoZefZPtMzOw7gbKMlK13bJZoQgaIcM/4ixPvDBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oLRyrQ5y3g95W+DVI2Tw8ZLxJDEixDdn2uDjAiK/u+E=;
- b=amL6XL/VaXS6ayn28d5cwInxQ6eH6re/9e2ikOi1NgrWSXnAG0iVAAinsj0jE6gLn/wzlQGAmu3L8b56EVKkjVTNgwD0k9ENr01IYi4ZoU8GWJuQpUYy7dXY1affNqIFy0Vflg5zK9My3XsN+Zaz48ZWzUoOKXhTTCHZp16A7KR/AFPO95R7E3gNuAVCMPkFHB0rMgeFDX3Ui+Yk8e+AdgxZvar+k6Zt1VGLPsKAw6PBA/c2zIsXPTyzYyzS4vBO2PX8peag2QNsIQcDxc/MMVaDblSuumZCHsxbaF7ssZMVhcK+d/1WeclCkmaD4sCIlUOtKZnrZTFYj2afpHKm8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oLRyrQ5y3g95W+DVI2Tw8ZLxJDEixDdn2uDjAiK/u+E=;
- b=J6XPEGEoIjlHUmVr2IQ3LGmmJlPvGXstqfp3HWSrMihMA1i31C7+sl8dlLRsTi4aK+65qVCZHhW+oPmG8o+vfBO203fDXA+MrSk1MaSlYSkbAZ6D3Eh689r6T+xr7MYeCyVTZ0yjxDu35bfaLuO1PtcmL6q8l+WDNCikNCTDCZs=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6623.eurprd04.prod.outlook.com (2603:10a6:803:125::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Tue, 16 Jun
- 2020 14:42:40 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3088.028; Tue, 16 Jun 2020
- 14:42:40 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, robin.murphy@arm.com,
-        matthias.schiffer@ew.tq-group.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] spi: introduce fallback to pio
-Date:   Wed, 17 Jun 2020 06:42:08 +0800
-Message-Id: <1592347329-28363-2-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592347329-28363-1-git-send-email-yibin.gong@nxp.com>
-References: <1592347329-28363-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0163.apcprd06.prod.outlook.com
- (2603:1096:1:1e::17) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Tue, 16 Jun 2020 10:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729439AbgFPOmw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:42:52 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350FAC061573;
+        Tue, 16 Jun 2020 07:42:52 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q19so23899565lji.2;
+        Tue, 16 Jun 2020 07:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7P3LB8iTbLRgQbcq6lDOMzujkFPYmAYJeuZvysUa6f8=;
+        b=ADu0zGoccAnnbS99Om04LkeJDNXA9DWDossI9TySgkmvs4J+DKTT+JIKZhXaNnLmzb
+         WYkPFt34tOPuseJUbTM9ZtB0PVi2e8Lg5Vq+I+SmmjoIEWeoJ/ENydWUc+3MRck84qBS
+         Mt47n2z23tQ7aa4Auo68bD0WRYVpc3d6gO9WJVuDK3/npnE7AjX2H6H+QXUq0uKZbQkS
+         au8u0ny2N/inXli/Z62DboR5qtqj22jwvK4fsmPI4aw51bGA9i+PqxLh8yktJbNQeZ58
+         hqSnFS8KIvknbjw6c2d6jiBFYnqKFnRjTgHBxEZrbSAPQ0v0nfaj/+i5M2JRPYzGM9ZR
+         dMDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7P3LB8iTbLRgQbcq6lDOMzujkFPYmAYJeuZvysUa6f8=;
+        b=cHtLyN4zWZT+HQIpI+960kS6wX0iD4Rc7knH/TOy68gpz7ocoLl9ezXbq+g+wOomgY
+         m0jN9905XK67NnLetX5EBe8A8u1ZXgKcmsHHykKxZbpLJF/l3qu4IB6NUlDMq/7xZwMk
+         4PQlm0vMA7kT68jCRj4IFK0nXkE2Odolqv3VYKa/MCUQBi2GkvoIksz5FW8zHMzvRNBk
+         5up348ZL/3oWwQO5fFeAYDCmx9D7XavryZ9F7VdE3R/nyYDuSmgkO5nhUDjR9dlX98/u
+         JbfPMcNY5iL0q6xNpoNSXBVZ2MoDnJdliGIoMols+rEPPaUodKz7VHeYdeTssHFOXPxb
+         w3HQ==
+X-Gm-Message-State: AOAM533rDiB/sb+gX6irZEk7x9fEJDDDw4OjE0ECMXBGh9XKxD6ORGu0
+        1dXJnA834tEokVS9Tpwi6MOiMpZs
+X-Google-Smtp-Source: ABdhPJzHbxcWgrsUxt3jCoFrHkDiV/PhurwVcFvaIIZXLxdiCSoHFpT/VAaQTPgjgct7v0/18fPXbQ==
+X-Received: by 2002:a2e:b892:: with SMTP id r18mr1720077ljp.319.1592318570363;
+        Tue, 16 Jun 2020 07:42:50 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id z15sm4451503ljo.102.2020.06.16.07.42.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 07:42:49 -0700 (PDT)
+Subject: Re: [PATCH v7 2/6] drm/of: Make drm_of_find_panel_or_bridge() to
+ check graph's presence
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200614172234.8856-1-digetx@gmail.com>
+ <20200614172234.8856-3-digetx@gmail.com>
+ <20200616012652.GG1629@pendragon.ideasonboard.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4f0bb2e8-3522-4a3e-4ebd-32f9d5bc2da5@gmail.com>
+Date:   Tue, 16 Jun 2020 17:42:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR06CA0163.apcprd06.prod.outlook.com (2603:1096:1:1e::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.21 via Frontend Transport; Tue, 16 Jun 2020 14:42:37 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8d1c0c6d-7af3-43e0-716a-08d812038564
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6623:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB6623CFDE18707C4C952E852B899D0@VE1PR04MB6623.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 04362AC73B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9tyLrxoD6X4Uki2YDB/S9E7XkCtrsJFonUsPgIP9DkZA3S9bUXSNRcNSn2czdQEmVUaaW/Gizcp6zsHQvAsFjhdqPSSxfh4Hru29d5t2Oo5MbwOcIV0lbVMX0gVdrb50LOb4UqNR9am2qdkGcExicTlTw1dmIceIvRenf0ZOvcaSPTlvUZAanCCsYCfoKZqFufFGRzas+m6wpLWr41GZPqztpgY0FtVgtjDzbdxJ2BTDSxIEx3TO0Wt0WDaQ40KjLGocHkx3xv/KzWp+Kv8ydE3SoHWbklPqZj8+m82SYqqCWoq0Y2nmzotMn0nL54BkHSa2F9jAyxPzWGDqdkBd1w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(8936002)(6512007)(6506007)(66946007)(66556008)(8676002)(4326008)(66476007)(498600001)(186003)(16526019)(86362001)(2906002)(83380400001)(6486002)(26005)(52116002)(36756003)(5660300002)(7416002)(2616005)(6666004)(956004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: QFkYbXSzftPozic39eAceOOx3vLBtRUbARB77WCM0nAVOJA64Ci5vPtYX9Njo5L+5Vu7jJMSrSABNdaEEF5ZHgIO5V7i67yMsS32jQ7KTlhuOjJ8j7bVve6OpC/9uPswJUD/Vrg4i1e2sKFPDRx8C3bSvMyaJ98cCEGcBCdi1N19JcJGximBjCO/s3l5m+B2feIf9t5yC6w+YgUjm3z62cWoHgF+KS8t8iTXyCxP69igXoHy5qzOE9tEZtFWqpjRYtM0EL++1fOVA6PkZmPuUJPeTL5tzvLUmDQHDGbGZdyxcKb/9SYNl0zVdu+O2kjOZ1FDN3GHMe8Ao6Vd+0w7OgGBqF+R8j7np5uSGS7bdEN5Oopot3yignM7Dd6Tabo1Zdv3GGRXax0mU+xkfI5HvgyKLbvD31CqQfmz4wcOkdg+xzEIGz0AAJCVwc+UkJ+KxgRVWSJa5Di8HpjAPWvk2dQzhrZR9kwB2V4s2YdJHrs=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d1c0c6d-7af3-43e0-716a-08d812038564
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2020 14:42:40.8547
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M/7tG3bokG7qyP3RGzTbBm6VLEqB5hXrVNb8ckXGUgGJCb95iX9N4zWSAjwJILTEBQxARnExiHKGtoIs3tYuDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6623
+In-Reply-To: <20200616012652.GG1629@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add fallback to pio mode in case dma transfer failed with error status
-SPI_TRANS_FAIL_NO_START.
-If spi client driver want to enable this feature please set xfer->error in
-the proper place such as dmaengine_prep_slave_sg() failure detect(but no
-any data put into spi bus yet). Besides, add master->fallback checking in
-its can_dma() so that spi core could switch to pio next time. Please refer
-to spi-imx.c.
+16.06.2020 04:26, Laurent Pinchart пишет:
+> Hi Dmitry,
+> 
+> Thank you for the patch.
+> 
+> On Sun, Jun 14, 2020 at 08:22:30PM +0300, Dmitry Osipenko wrote:
+>> When graph isn't defined in a device-tree, the of_graph_get_remote_node()
+>> prints a noisy error message, telling that port node is not found. This is
+>> undesirable behaviour in our case because absence of a panel/bridge graph
+>> is a valid case. Let's check presence of the local port in a device-tree
+>> before proceeding with parsing the graph.
+>>
+>> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/gpu/drm/drm_of.c | 13 ++++++++++++-
+>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+>> index b50b44e76279..e0652c38f357 100644
+>> --- a/drivers/gpu/drm/drm_of.c
+>> +++ b/drivers/gpu/drm/drm_of.c
+>> @@ -239,13 +239,24 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
+>>  				struct drm_bridge **bridge)
+>>  {
+>>  	int ret = -EPROBE_DEFER;
+>> -	struct device_node *remote;
+>> +	struct device_node *local, *remote;
+>>  
+>>  	if (!panel && !bridge)
+>>  		return -EINVAL;
+>>  	if (panel)
+>>  		*panel = NULL;
+>>  
+>> +	/*
+>> +	 * of_graph_get_remote_node() produces a noisy error message if port
+>> +	 * node isn't found and the absence of the port is a legit case here,
+>> +	 * so at first we silently check presence of the local port.
+>> +	 */
+>> +	local = of_graph_get_local_port(np);
+>> +	if (!local)
+>> +		return -ENODEV;
+>> +
+>> +	of_node_put(local);
+>> +
+> 
+> The code looks fine, but you may want to take into account my proposal
+> in 1/7 to instead create a of_graph_has_port() function. The could would
+> be simpler here.
+> 
+>>  	remote = of_graph_get_remote_node(np, port, endpoint);
+>>  	if (!remote)
+>>  		return -ENODEV;
+> 
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- drivers/spi/spi.c       | 12 ++++++++++++
- include/linux/spi/spi.h |  7 +++++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 8158e28..6fa5659 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -982,6 +982,8 @@ static int __spi_unmap_msg(struct spi_controller *ctlr, struct spi_message *msg)
- 		spi_unmap_buf(ctlr, tx_dev, &xfer->tx_sg, DMA_TO_DEVICE);
- 	}
- 
-+	ctlr->cur_msg_mapped = false;
-+
- 	return 0;
- }
- #else /* !CONFIG_HAS_DMA */
-@@ -1234,8 +1236,17 @@ static int spi_transfer_one_message(struct spi_controller *ctlr,
- 		if (xfer->tx_buf || xfer->rx_buf) {
- 			reinit_completion(&ctlr->xfer_completion);
- 
-+fallback_pio:
- 			ret = ctlr->transfer_one(ctlr, msg->spi, xfer);
- 			if (ret < 0) {
-+				if (ctlr->cur_msg_mapped &&
-+				   (xfer->error & SPI_TRANS_FAIL_NO_START)) {
-+					__spi_unmap_msg(ctlr, msg);
-+					ctlr->fallback = true;
-+					xfer->error &= ~SPI_TRANS_FAIL_NO_START;
-+					goto fallback_pio;
-+				}
-+
- 				SPI_STATISTICS_INCREMENT_FIELD(statm,
- 							       errors);
- 				SPI_STATISTICS_INCREMENT_FIELD(stats,
-@@ -1693,6 +1704,7 @@ void spi_finalize_current_message(struct spi_controller *ctlr)
- 	spin_lock_irqsave(&ctlr->queue_lock, flags);
- 	ctlr->cur_msg = NULL;
- 	ctlr->cur_msg_prepared = false;
-+	ctlr->fallback = false;
- 	kthread_queue_work(&ctlr->kworker, &ctlr->pump_messages);
- 	spin_unlock_irqrestore(&ctlr->queue_lock, flags);
- 
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index aac57b5..b4917df 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -447,6 +447,8 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
-  *	If the driver does not set this, the SPI core takes the snapshot as
-  *	close to the driver hand-over as possible.
-  * @irq_flags: Interrupt enable state during PTP system timestamping
-+ * @fallback: fallback to pio if dma transfer return failure with
-+ *	SPI_TRANS_FAIL_NO_START.
-  *
-  * Each SPI controller can communicate with one or more @spi_device
-  * children.  These make a small bus, sharing MOSI, MISO and SCK signals
-@@ -602,6 +604,7 @@ struct spi_controller {
- 	bool				auto_runtime_pm;
- 	bool                            cur_msg_prepared;
- 	bool				cur_msg_mapped;
-+	bool                            fallback;
- 	struct completion               xfer_completion;
- 	size_t				max_dma_len;
- 
-@@ -847,6 +850,7 @@ extern void spi_res_release(struct spi_controller *ctlr,
-  *	back unset and they need the better resolution.
-  * @timestamped_post: See above. The reason why both exist is that these
-  *	booleans are also used to keep state in the core SPI logic.
-+ * @error: Error status logged by spi controller driver.
-  *
-  * SPI transfers always write the same number of bytes as they read.
-  * Protocol drivers should always provide @rx_buf and/or @tx_buf.
-@@ -940,6 +944,9 @@ struct spi_transfer {
- 	bool		timestamped;
- 
- 	struct list_head transfer_list;
-+
-+#define SPI_TRANS_FAIL_NO_START	BIT(0)
-+	u16		error;
- };
- 
- /**
--- 
-2.7.4
-
+I like yours proposals and will prepare v8 based on them, thanks!
