@@ -2,125 +2,112 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA94C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42014C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91E15207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F02520734
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ok+zdHUC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hFT1xUBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgFPMaD (ORCPT
+        id S1728483AbgFPMbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:30:03 -0400
-Received: from mail-vi1eur05on2081.outbound.protection.outlook.com ([40.107.21.81]:6078
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726052AbgFPMaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:30:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W0m8UEHBgp3aj0ky4izuhQbbZYLArDkrEK1hfp7g7nwtE17xwomgjBBsdGdQphNSvOXCxWw13+5Bf2V9k6FTBj9eua8gXvnOQ0V0yOleFDmTNnM+8YILEck+hP0fXoTi+3nssqScTM56rA9uf6Tl54+6D+Dj4BsSygj6o5lLKwPPGXE8895DqxQfmlji3rBk3rHwLIqRB/sWoycUKSqrzayo0XIv9Lkuf4nfm1cJcqBRKlenFCqMIbVaxEYEsgN6SrltCNvLKi6v6+bA+YvcGWXX9PQCFPGNpSWaiKG2TjqpK3I15rtNb3eJLPE91/zExSD2RGk4fAZbLtpMaRad5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0sVxqG14Wz23Ve98PNOWs+hUDuulFT7sSBxtQCOvTBI=;
- b=b1EI6XqgNGREBN1IU2guzfL3/2prttrxq1shTNW4FKjTVuEAievoiw41PJy4HnGYp5/s7kKyb+mY/sRQCNqIck1BM8Ydyvq5Rftsu15+fSyCibW0bHUysg+PbDPJfDg/hengnHu9kBblHaJ6pYnEEd06TqQZiOn8/dtxhZ9ZLUSet00aLd+7DmF+VGR+lhHOmSr99qgoLEUGr1emeLpB3Naq7xO55uKbrgkKJiB6ngl2pnyfbPK8kzA6qoGdWADt1mZ278LR24DJBOjB6ZJbRnVnT2c9pnrYFlgBeQiCNETqFeUrfD3LXamxV0ntbxnHr4QGQ2p2iFuH1+SvpcvnQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0sVxqG14Wz23Ve98PNOWs+hUDuulFT7sSBxtQCOvTBI=;
- b=Ok+zdHUCj3sf5n0Ki5oPL7F4QXgOxkFp3V+yI82fUlSVix8LBUC9MdslQNBwvi92i6BnZkwK+IBLmp1sz6Y2ykNPcAWrs9r949FI03g+XK5SG82BBQskS3E5nlHDWtzA4tAqsOKyWixhgOYZheq6gWMQh7rqlPHrcs4P0ychRG4=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6509.eurprd04.prod.outlook.com (2603:10a6:803:125::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Tue, 16 Jun
- 2020 12:29:57 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3088.028; Tue, 16 Jun 2020
- 12:29:57 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Thread-Topic: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Thread-Index: AQHWP6z7CX2etPvPnk+oddH8JEW5FKjTbHIAgADDYUCAAJUwgIAACjoQgAA5dICAAOmA8IADsXmAgAANH1CAAASJgIAACZlAgAAGaACAAAKk4IAAAtQAgAC2bzCAAIkpAIAAAgdAgAAFkYCAAB+kcA==
-Date:   Tue, 16 Jun 2020 12:29:57 +0000
-Message-ID: <VE1PR04MB66381A584159BEF5450B4CCD899D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20200615123553.GP4447@sirena.org.uk>
- <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615133905.GV4447@sirena.org.uk>
- <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615143622.GX4447@sirena.org.uk>
- <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615145556.GY4447@sirena.org.uk>
- <VE1PR04MB66380FD8FB7FCE79AF4B6CD4899D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200616095948.GJ4447@sirena.org.uk>
- <VE1PR04MB66387499F9AF80A68F720529899D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200616102659.GK4447@sirena.org.uk>
-In-Reply-To: <20200616102659.GK4447@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8ae0c9ac-8def-4235-d4ed-08d811f0fb28
-x-ms-traffictypediagnostic: VE1PR04MB6509:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB65092A75F2428B61091A09B3899D0@VE1PR04MB6509.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 04362AC73B
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8E1xpVG9oy3KT4LZIStHjaKOL6rGKB55gaNj/rvCKYgOp+nHpLggikJE7hj9Ak2hH4AR0cSA65UchE0eGDK0Mo1q0m9Ylne0oB3/9NySnXwXfJnjY8vI3eoK11a05Cq3ji8BmdJe/yR5GNtM9KW9CIg5wP7dZgoC400mOb6/jA97QX7r+1yh6Lz6tB8iJCvkdtyejWEqT4mujrqyPXy0xlK7Uym3z0Mohvod1CuU7F3jrR5DEROCmoKphu2BxjTV+onOExnSdUcOhGRrMtO3b7GIzeE4VOy2OPvLIXvu/ZAndMICTZe5abnOhAxNysPt
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(7416002)(6506007)(7696005)(9686003)(71200400001)(33656002)(66556008)(64756008)(76116006)(54906003)(55016002)(86362001)(4744005)(6916009)(66476007)(66946007)(66446008)(186003)(52536014)(5660300002)(8676002)(83380400001)(4326008)(498600001)(2906002)(26005)(8936002)(53546011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: FoGBSC5YrHU2pEFKAno/aB7yV3Qz3NWuvrQ6zJTlAxS28majXcctRPgQWy1xDs5S7s1JJ2FhcS3DFFk3YuJAYnbiQ+gEReltXKFNy64xzLFLA9txV1KUFGiIn/Mx0lZa8O6ii60PYg5EeKJs6yoQpkhnDe5wZ2ACsmdLUqQSUEHVL9Nnab2yx6+ZXeRcmLeYjxT5r/RegH60/5vek/NEWc/ivL6KgK3eSEBWv8M5Qtbjg35cCScjvG/LzfQatj75vK0xKMd7h6zjfVsNU4aDZJdAIR65viV6GjWkkBuyq9e3ojtMqzlWcUwjBI34IqgiLgQvzarstzZ5Sy2CFgzfgDtlJFhX5f16efzc9WZHQUIuthz12YBPQLzR1AxSdgVZeJf/sGJpl+k4HHU+gSPziedB9pnwz1MRaSycs3luWNtCGqFZGaFRvy+ragZ0WbkduechhwGWGuY9xmPHHLl6Oo6OWd+23oiUoL4qR+DfyvtZRgTT8MMW2zWImzkgidaA
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Jun 2020 08:31:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48764 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgFPMa7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 08:30:59 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05GCUmVc063733;
+        Tue, 16 Jun 2020 07:30:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592310648;
+        bh=8Qx/5mQW/ObYotai4BueB40LH/bmL06FeT6kWL8joj4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hFT1xUBQp1Ur1V5JkzJqVwfO1OXTUz2gJaefj2439LQtzY37HZTA8N8EZK6JZEPcj
+         ZpOjvxyf3hMsunjCM/Pkf26TZoxTFxoaSQMrvzJJGXHyW67B9t4OFZSBl3pvls/cAr
+         V7iu73M05z3xXo+bVMpYfH35A/oPUQj0WNdfinyI=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05GCUm6W018956;
+        Tue, 16 Jun 2020 07:30:48 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 16
+ Jun 2020 07:30:47 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 16 Jun 2020 07:30:47 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05GCUjC9103134;
+        Tue, 16 Jun 2020 07:30:46 -0500
+Subject: Re: [PATCH] drm/panel-simple: fix connector type for LogicPD Type28
+ Display
+To:     Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>
+CC:     DRI mailing list <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        stable <stable@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+References: <20200615131934.12440-1-aford173@gmail.com>
+ <CAOMZO5Bw5qSDirAKBTRcu4_nDafDcfDGpuNRDyuLZs9Zc=HsQA@mail.gmail.com>
+ <CAHCN7x+=xjFTy6J4Ej61U2jXTez2rLrt=KtEOzbvV7Tzq6XoPQ@mail.gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <0df0bf28-dbf7-4d1e-06f0-d545df8dc2d5@ti.com>
+Date:   Tue, 16 Jun 2020 15:30:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ae0c9ac-8def-4235-d4ed-08d811f0fb28
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 12:29:57.2158
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HpA2Ue4y7Pkz2HbLjEd4LRDBGRg69ZoBNfDcWDwrHOUMUDEp1Pg5/zi3RLrfz18hb57eNNNNXBBd7TDvWMX6XA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6509
+In-Reply-To: <CAHCN7x+=xjFTy6J4Ej61U2jXTez2rLrt=KtEOzbvV7Tzq6XoPQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/16 18:27 Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Jun 16, 2020 at 10:13:08AM +0000, Robin Gong wrote:
-> > So rename to SPI_TRANS_DMA_FAIL? I think at least DMA is MUST for
-> > fallback case...
->=20
-> This is not purely for DMA, it's just about the failure having occurred b=
-efore the
-> transfer started.  How about _FAIL_NO_START?
-Okay, I'll use SPI_TRANS_FAIL_NO_START in v2. Thanks Mark for your kind sup=
-port :)
+On 15/06/2020 17:53, Adam Ford wrote:
+> On Mon, Jun 15, 2020 at 9:46 AM Fabio Estevam <festevam@gmail.com> wrote:
+>>
+>> On Mon, Jun 15, 2020 at 10:19 AM Adam Ford <aford173@gmail.com> wrote:
+>>>
+>>> The LogicPD Type28 display used by several Logic PD products has not
+>>> worked since v5.5.
+>>
+>> Maybe you could tell which commit exactly and then put a Fixes tag?
+> 
+> I honestly don't know.  I reached out to the omap mailing list,
+> because I noted this issue. Tomi V from TI responded with a link that
+> he posted which fixes this for another display.
+> 
+> https://www.mail-archive.com/dri-devel@lists.freedesktop.org/msg312208.html
+> 
+> I tested that patch and it worked for a different LCD, so I did the
+> same thing to the Logic PD Type 28 display as well.
+> 
+> My patch and commit message were modeled after his, and his commit
+> CC's stable with a note about being required for v5.5+
+> 
+> I added him to the CC list, so maybe he knows which hash needs to be
+> referenced from a fixes tag.  I was hoping to not have to go back and
+> bisect if it's not required, but I will if necessary.
+
+No, I didn't check when exactly it broke. connector_type was added in v5.5, and my patch applies to 
+v5.5, so I set that as stable version. But the WARN comes from panel bridge. Possibly 
+89958b7cd9555a5d82556cc9a1f4c62fffda6f96 is the one that adds requirement to have connector_type.
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
