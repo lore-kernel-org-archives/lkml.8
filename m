@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D20C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6028208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DAC72098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="P50FTVBO"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JpKpN0ZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbgFPUzy (ORCPT
+        id S1730202AbgFPUz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:55:54 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:33856 "EHLO
+        Tue, 16 Jun 2020 16:55:58 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:33918 "EHLO
         rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729782AbgFPUzu (ORCPT
+        by vger.kernel.org with ESMTP id S1730021AbgFPUzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:55:50 -0400
+        Tue, 16 Jun 2020 16:55:55 -0400
 Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id C88EC30C411;
-        Tue, 16 Jun 2020 13:55:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com C88EC30C411
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 35D8930D8B7;
+        Tue, 16 Jun 2020 13:55:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 35D8930D8B7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1592340949;
-        bh=E+oR6RUpkd74pPU6ifizwLK9TZk6TKCJeZjFJcFRzhU=;
+        s=dkimrelay; t=1592340954;
+        bh=iwvBHnllAMckovF6ltNCNQi+jMXHwnBrRf5LtKVSL+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P50FTVBO/zMIXbpuFhLWBQyyxqB6Ez7qcHg2PyDMIUTBvbicO3MBn8YVoFTTHxhoM
-         RBWPLfTCyCLIvr08m3yurRLhq3MwXv6uaaafhHqvVzoVdCSUIXaStm9O4CRr/eVNaC
-         tmX2OtKj+IWrgddEP+43cogwIodYgi4yaKsKyA1Y=
+        b=JpKpN0ZXUambetVFefff+oQ7DYZU3K5oOX6ybdJ/2MwFFImCbX+7ZxPcj1V/Tk802
+         MmMXokb0vA44qgwkj8TcOYgTN5wS9iuk9JYwUxuJHIyCIdrkNC9YbQkGg3FOmpypDi
+         Dbwv9hiwPDrAl4YOHuK7/LFTODcKoqI9UFhXoSPQ=
 Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 4E0CD14008C;
-        Tue, 16 Jun 2020 13:55:48 -0700 (PDT)
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 014A914008E;
+        Tue, 16 Jun 2020 13:55:52 -0700 (PDT)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
 Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 02/12] ata: ahci_brcm: Fix use of BCM7216 reset controller
-Date:   Tue, 16 Jun 2020 16:55:09 -0400
-Message-Id: <20200616205533.3513-3-james.quinlan@broadcom.com>
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 05/12] PCI: brcmstb: Add suspend and resume pm_ops
+Date:   Tue, 16 Jun 2020 16:55:12 -0400
+Message-Id: <20200616205533.3513-6-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200616205533.3513-1-james.quinlan@broadcom.com>
 References: <20200616205533.3513-1-james.quinlan@broadcom.com>
@@ -61,57 +64,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jim Quinlan <jquinlan@broadcom.com>
 
-A reset controller "rescal" is shared between the AHCI driver and the PCIe
-driver for the BrcmSTB 7216 chip.  The code is modified to allow this
-sharing and to deassert() properly.
+Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
+and resume.  Now the PCIe driver may do so as well.
 
 Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-
-Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller
-name")
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/ata/ahci_brcm.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 6853dbb4131d..d6115bc04b09 100644
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index b7a222fde3c4..7c148eb65170 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -979,6 +979,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+ 	brcm_pcie_bridge_sw_init_set(pcie, 1);
+ }
+ 
++static int brcm_pcie_suspend(struct device *dev)
++{
++	struct brcm_pcie *pcie = dev_get_drvdata(dev);
++
++	brcm_pcie_turn_off(pcie);
++	clk_disable_unprepare(pcie->clk);
++
++	return 0;
++}
++
++static int brcm_pcie_resume(struct device *dev)
++{
++	struct brcm_pcie *pcie = dev_get_drvdata(dev);
++	void __iomem *base;
++	u32 tmp;
++	int ret;
++
++	base = pcie->base;
++	clk_prepare_enable(pcie->clk);
++
++	/* Take bridge out of reset so we can access the SERDES reg */
++	brcm_pcie_bridge_sw_init_set(pcie, 0);
++
++	/* SERDES_IDDQ = 0 */
++	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++	u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
++	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++
++	/* wait for serdes to be stable */
++	udelay(100);
++
++	ret = brcm_pcie_setup(pcie);
++	if (ret)
++		return ret;
++
++	if (pcie->msi)
++		brcm_msi_set_regs(pcie->msi);
++
++	return 0;
++}
++
+ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
  {
- 	const struct of_device_id *of_id;
- 	struct device *dev = &pdev->dev;
--	const char *reset_name = NULL;
- 	struct brcm_ahci_priv *priv;
- 	struct ahci_host_priv *hpriv;
- 	struct resource *res;
-@@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 	brcm_msi_remove(pcie);
+@@ -1110,12 +1151,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
  
- 	/* Reset is optional depending on platform and named differently */
- 	if (priv->version == BRCM_SATA_BCM7216)
--		reset_name = "rescal";
-+		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
- 	else
--		reset_name = "ahci";
-+		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
+ MODULE_DEVICE_TABLE(of, brcm_pcie_match);
  
--	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
- 	if (IS_ERR(priv->rcdev))
- 		return PTR_ERR(priv->rcdev);
- 
-@@ -479,10 +477,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
--	if (priv->version == BRCM_SATA_BCM7216)
--		ret = reset_control_reset(priv->rcdev);
--	else
--		ret = reset_control_deassert(priv->rcdev);
-+	ret = reset_control_deassert(priv->rcdev);
- 	if (ret)
- 		return ret;
- 
++static const struct dev_pm_ops brcm_pcie_pm_ops = {
++	.suspend_noirq = brcm_pcie_suspend,
++	.resume_noirq = brcm_pcie_resume,
++};
++
+ static struct platform_driver brcm_pcie_driver = {
+ 	.probe = brcm_pcie_probe,
+ 	.remove = brcm_pcie_remove,
+ 	.driver = {
+ 		.name = "brcm-pcie",
+ 		.of_match_table = brcm_pcie_match,
++		.pm = &brcm_pcie_pm_ops,
+ 	},
+ };
+ module_platform_driver(brcm_pcie_driver);
 -- 
 2.17.1
 
