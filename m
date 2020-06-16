@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F61C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 962D0214F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2FC2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322392;
-	bh=OWTCT5TGO+j2Z/dlv3pknWTmKUwEHdX83YtwpWOdZO0=;
+	s=default; t=1592322396;
+	bh=b+3dapOenMoKzHmz4ZMKrtxot/1gdSwrklB994ycXnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1BxQkJ05uaITD2udC4kgruwm73JlNIGIG0EYMtJH75pD79Qn+RsVWBmzp+VEP4y0+
-	 M1FjIKGVsV/ziVMAcNulzZwKY6LljcXRqg38CP+CDm+xz4I8YGfEeksEoi5Ag3acyQ
-	 jzsK+df75Xv6ylPIr61cK1HN1VOPG+BGMmRUxOno=
+	b=KJWn1t8CsQorLJlizkRiO0ImewJmC8WrWVVxYUI3itbT7LESyqF2SWB6tL24aMacb
+	 MDewDPNMpe7gv4Qmn/SJR7QvSZm4kUkeXBUYQ2uF7P2eNtJoG8akjXWjtdNWs5hbV3
+	 XbLcQZQPDriXsUPPNV6TnXHRL9DB4TvAQdbFQEyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgFPPqa (ORCPT
+        id S1731426AbgFPPqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38354 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732192AbgFPPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:21 -0400
+        id S1732200AbgFPPqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A614A20776;
-        Tue, 16 Jun 2020 15:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDBB2071A;
+        Tue, 16 Jun 2020 15:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322381;
-        bh=OWTCT5TGO+j2Z/dlv3pknWTmKUwEHdX83YtwpWOdZO0=;
+        s=default; t=1592322383;
+        bh=b+3dapOenMoKzHmz4ZMKrtxot/1gdSwrklB994ycXnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pou+RKa+vJajRU7w+Zz8x8KlIxbRfWcuTY20iWGtY2jhD2LUy8DIp0OM2odo1UQpI
-         u+u/Bh5FgEth8QbPN15guN17WhoBVvLmcsdQIJF42Z0FSzA6yrM+RJlpbKJ2fC5e3H
-         9W75Q0b+u4VyxPJXyZb2uQ6LWJYlGkTTpTlztFd8=
+        b=J1+8+YDAJ6YFPwPJTXGOMdenbbmg5OCATE9yW7ymlYQk2QuFXQgZkBovGJJVOb5Nb
+         YZtOiCc7nTT7CjoIuUjz1jLX4OozNnBEMs2qH/oqQT6D5zHGppZ46r4cRBZ7TOp+Md
+         LepR5indOQjJvnmls5njcHCxmIJl486qHpzv8sG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 109/163] ionic: wait on queue start until after IFF_UP
-Date:   Tue, 16 Jun 2020 17:34:43 +0200
-Message-Id: <20200616153112.027507395@linuxfoundation.org>
+Subject: [PATCH 5.7 110/163] mptcp: fix races between shutdown and recvmsg
+Date:   Tue, 16 Jun 2020 17:34:44 +0200
+Message-Id: <20200616153112.075696293@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,52 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit 976ee3b21119dcf5c6d96233d688a1453f29fa83 ]
+[ Upstream commit 5969856ae8ce29c9d523a1a6145cbd9e87f7046c ]
 
-The netif_running() test looks at __LINK_STATE_START which
-gets set before ndo_open() is called, there is a window of
-time between that and when the queues are actually ready to
-be run.  If ionic_check_link_status() notices that the link is
-up very soon after netif_running() becomes true, it might try
-to run the queues before they are ready, causing all manner of
-potential issues.  Since the netdev->flags IFF_UP isn't set
-until after ndo_open() returns, we can wait for that before
-we allow ionic_check_link_status() to start the queues.
+The msk sk_shutdown flag is set by a workqueue, possibly
+introducing some delay in user-space notification. If the last
+subflow carries some data with the fin packet, the user space
+can wake-up before RCV_SHUTDOWN is set. If it executes unblocking
+recvmsg(), it may return with an error instead of eof.
 
-On the way back to close, __LINK_STATE_START is cleared before
-calling ndo_stop(), and IFF_UP is cleared after.  Both of
-these need to be true in order to safely stop the queues
-from ionic_check_link_status().
+Address the issue explicitly checking for eof in recvmsg(), when
+no data is found.
 
-Fixes: 49d3b493673a ("ionic: disable the queues on link down")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Fixes: 59832e246515 ("mptcp: subflow: check parent mptcp socket on subflow state change")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_lif.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/protocol.c |   45 ++++++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -105,7 +105,7 @@ static void ionic_link_status_check(stru
- 			netif_carrier_on(netdev);
- 		}
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -357,6 +357,27 @@ void mptcp_subflow_eof(struct sock *sk)
+ 		sock_hold(sk);
+ }
  
--		if (netif_running(lif->netdev))
-+		if (lif->netdev->flags & IFF_UP && netif_running(lif->netdev))
- 			ionic_start_queues(lif);
- 	} else {
- 		if (netif_carrier_ok(netdev)) {
-@@ -113,7 +113,7 @@ static void ionic_link_status_check(stru
- 			netif_carrier_off(netdev);
- 		}
++static void mptcp_check_for_eof(struct mptcp_sock *msk)
++{
++	struct mptcp_subflow_context *subflow;
++	struct sock *sk = (struct sock *)msk;
++	int receivers = 0;
++
++	mptcp_for_each_subflow(msk, subflow)
++		receivers += !subflow->rx_eof;
++
++	if (!receivers && !(sk->sk_shutdown & RCV_SHUTDOWN)) {
++		/* hopefully temporary hack: propagate shutdown status
++		 * to msk, when all subflows agree on it
++		 */
++		sk->sk_shutdown |= RCV_SHUTDOWN;
++
++		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
++		set_bit(MPTCP_DATA_READY, &msk->flags);
++		sk->sk_data_ready(sk);
++	}
++}
++
+ static void mptcp_stop_timer(struct sock *sk)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+@@ -933,6 +954,9 @@ fallback:
+ 				break;
+ 			}
  
--		if (netif_running(lif->netdev))
-+		if (lif->netdev->flags & IFF_UP && netif_running(lif->netdev))
- 			ionic_stop_queues(lif);
- 	}
++			if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
++				mptcp_check_for_eof(msk);
++
+ 			if (sk->sk_shutdown & RCV_SHUTDOWN)
+ 				break;
  
+@@ -1070,27 +1094,6 @@ static unsigned int mptcp_sync_mss(struc
+ 	return 0;
+ }
+ 
+-static void mptcp_check_for_eof(struct mptcp_sock *msk)
+-{
+-	struct mptcp_subflow_context *subflow;
+-	struct sock *sk = (struct sock *)msk;
+-	int receivers = 0;
+-
+-	mptcp_for_each_subflow(msk, subflow)
+-		receivers += !subflow->rx_eof;
+-
+-	if (!receivers && !(sk->sk_shutdown & RCV_SHUTDOWN)) {
+-		/* hopefully temporary hack: propagate shutdown status
+-		 * to msk, when all subflows agree on it
+-		 */
+-		sk->sk_shutdown |= RCV_SHUTDOWN;
+-
+-		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
+-		set_bit(MPTCP_DATA_READY, &msk->flags);
+-		sk->sk_data_ready(sk);
+-	}
+-}
+-
+ static void mptcp_worker(struct work_struct *work)
+ {
+ 	struct mptcp_sock *msk = container_of(work, struct mptcp_sock, work);
 
 
