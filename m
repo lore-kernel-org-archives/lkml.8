@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5883C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44E9521527
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE374207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322948;
-	bh=9LsHXU5o/B/7oKH7E4oU4W40c3T/IVPg5ovlaMl8Eac=;
+	s=default; t=1592322950;
+	bh=FFSxGwBGfMCiFQduasCBES4XmyOFzA/eJW0MOePvNZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktLy8b1/EzwGxGOfXs1MfqAJKU+bi1xpwszPoBNhRXLBlIVXYpF/QSCf3rRMtHqPC
-	 JD1CV8wd7/fbIYNZ4kocGx9zTENOQBP+0wsrJYOAClvYOzWNbVuNcHlqG4ZCdx/psU
-	 3fyiJYwxP3YySHh9o0i/MRzBMcwWyPfbGV5Nsow0=
+	b=Tvqecs5pKG14SgjB2G9JLBqdXef4wE9jkm51DK6VTE+X4iNXM0nE/PwrgEKTdlCrY
+	 isKwBTjUZG1wJ6oQ5X3yLOHHjNKXDUMl8AwE+sac2bNxMGvMV7uzeBU9kqdiNH/V0x
+	 ND04DTbHeStQnaby2RxMb7kfkZTkHSbVM3R4nHEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733116AbgFPPzq (ORCPT
+        id S1732887AbgFPPzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55942 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:55:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730949AbgFPPzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:43 -0400
+        id S1733085AbgFPPzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE93207C4;
-        Tue, 16 Jun 2020 15:55:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89299207C4;
+        Tue, 16 Jun 2020 15:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322942;
-        bh=9LsHXU5o/B/7oKH7E4oU4W40c3T/IVPg5ovlaMl8Eac=;
+        s=default; t=1592322935;
+        bh=FFSxGwBGfMCiFQduasCBES4XmyOFzA/eJW0MOePvNZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wkFQwRUkC7MCopPAV+n88s3hH9vMH96mjAHKczyD/8wJ82kPrQP/nKk0XCZSBRuCg
-         7Th363cKGQKcXzlS4vbw/1aUFHpkOGhVHu6IdnK6UawuOIHY4px90kwO5HWunLu8DW
-         EL8oOQllu5L0qe2wMBm1rWqyL+mvRtc3juR3V/ZU=
+        b=uXuw0ArzZtGVjpgat6pkWKzJoWO3bHbaIQjKnOXducIVV51QMHNisRxU9tl9ezVK0
+         AyOtrYztgrT9znONp4MvTsV/7F572lc3T9P00A2h0RZ/9gGq8B6gqiB5oQVTdVQQDt
+         SoBHsBtQgarxvk1MznOluPZFL4sKavuzL89sYaYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
-        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.6 133/161] scsi: megaraid_sas: TM command refire leads to controller firmware crash
-Date:   Tue, 16 Jun 2020 17:35:23 +0200
-Message-Id: <20200616153112.691440839@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dominik Mierzejewski <dominik@greysector.net>,
+        Mattia Dongili <malattia@linux.it>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.6 159/161] platform/x86: sony-laptop: Make resuming thermal profile safer
+Date:   Tue, 16 Jun 2020 17:35:49 +0200
+Message-Id: <20200616153113.952867377@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,55 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Saxena <sumit.saxena@broadcom.com>
+From: Mattia Dongili <malattia@linux.it>
 
-commit 6fd8525a70221c26823b1c7e912fb21f218fb0c5 upstream.
+commit 476d60b1b4c8a2b14a53ef9b772058f35e604661 upstream.
 
-When TM command times out, driver invokes the controller reset. Post reset,
-driver re-fires pended TM commands which leads to firmware crash.
+The thermal handle object may fail initialization when the module is
+loaded in the first place. Avoid attempting to use it on resume then.
 
-Post controller reset, return pended TM commands back to OS.
-
-Link: https://lore.kernel.org/r/20200508085242.23406-1-chandrakanth.patil@broadcom.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Chandrakanth Patil <chandrakanth.patil@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer objects for ASL create_field() operator")
+Reported-by: Dominik Mierzejewski <dominik@greysector.net>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207491
+Signed-off-by: Mattia Dongili <malattia@linux.it>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/megaraid/megaraid_sas_fusion.c |    7 ++++++-
+ drivers/platform/x86/sony-laptop.c |    7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -4238,6 +4238,7 @@ void megasas_refire_mgmt_cmd(struct mega
- 	struct fusion_context *fusion;
- 	struct megasas_cmd *cmd_mfi;
- 	union MEGASAS_REQUEST_DESCRIPTOR_UNION *req_desc;
-+	struct MPI2_RAID_SCSI_IO_REQUEST *scsi_io_req;
- 	u16 smid;
- 	bool refire_cmd = 0;
- 	u8 result;
-@@ -4305,6 +4306,11 @@ void megasas_refire_mgmt_cmd(struct mega
- 			result = COMPLETE_CMD;
- 		}
- 
-+		scsi_io_req = (struct MPI2_RAID_SCSI_IO_REQUEST *)
-+				cmd_fusion->io_request;
-+		if (scsi_io_req->Function == MPI2_FUNCTION_SCSI_TASK_MGMT)
-+			result = RETURN_CMD;
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -2288,7 +2288,12 @@ static void sony_nc_thermal_cleanup(stru
+ #ifdef CONFIG_PM_SLEEP
+ static void sony_nc_thermal_resume(void)
+ {
+-	unsigned int status = sony_nc_thermal_mode_get();
++	int status;
 +
- 		switch (result) {
- 		case REFIRE_CMD:
- 			megasas_fire_cmd_fusion(instance, req_desc);
-@@ -4533,7 +4539,6 @@ megasas_issue_tm(struct megasas_instance
- 	if (!timeleft) {
- 		dev_err(&instance->pdev->dev,
- 			"task mgmt type 0x%x timed out\n", type);
--		cmd_mfi->flags |= DRV_DCMD_SKIP_REFIRE;
- 		mutex_unlock(&instance->reset_mutex);
- 		rc = megasas_reset_fusion(instance->host, MFI_IO_TIMEOUT_OCR);
- 		mutex_lock(&instance->reset_mutex);
++	if (!th_handle)
++		return;
++
++	status = sony_nc_thermal_mode_get();
+ 
+ 	if (status != th_handle->mode)
+ 		sony_nc_thermal_mode_set(th_handle->mode);
 
 
