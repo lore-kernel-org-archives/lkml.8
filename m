@@ -2,208 +2,184 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A054C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E528208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391F02085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:13:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="g6zCQtb1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRdD0rCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgFPVNS (ORCPT
+        id S1726276AbgFPVNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:13:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
+        Tue, 16 Jun 2020 17:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgFPVNR (ORCPT
+        with ESMTP id S1725773AbgFPVNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:13:17 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37188C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 14:13:17 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ga6so2021343pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 14:13:17 -0700 (PDT)
+        Tue, 16 Jun 2020 17:13:38 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A7BC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 14:13:37 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id q2so148633vsr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 14:13:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=eqEyb6JQUaVvUerJGlNUxsrnO2s/SjrzdS9NtiPOeYo=;
-        b=g6zCQtb1WWtXnfW4lrEfAQterYlqGC+qzWbEDOKWIv0NGjz9l6EEUTZT4gJDW3+dm/
-         jAky84uduB/j4JURdB4IZE7r4mqAIkdv49wcpUU4CiKisBZQqJrpYrx1NFFYznrl+9BI
-         aZQn4KnFjY341j/bwx6nWPjr01h0+bU/gSCyL7NrzL425xz3u5Z4j3HPi1f1I/fXEd6u
-         S96nkQ/d4HJ6cFF1dPP7aUkIC04jHD6rbpaZoCr6UafwOcfi/6KLjw65d+wSqtv/UEP1
-         nxtbnnX7dZPCS4htwAKfNvqmCaYCgjjYhsQLMEccQtT6DDw+wQb0qVBBFqHNlFNYsxYK
-         6Yuw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X0rMkiop0+pruLh0Yl4qvTvDnfP83BWucM9LZrNczAw=;
+        b=LRdD0rCjrSL9JaaL0kHwdPx0M+nkvoO/8C892/SEoqI4UtOAwS2vVtEepad05HhUU8
+         m2m0yDAwLoNo6ORezqjQ7rOlOjqifjAfGJgCG8HwyFTy4mv+M46M6cFBDVfPhDGs1Zyt
+         4xZdlt3gWUPPNHnHNr3/JhLeXoOrU+9CI3aPe5ieEeYonz4inwVW8vHjPLuBE1cLd5df
+         3WGPaoqq/QpbM4Q/LSeFt6itsktKKdBT03aYrkPQ3ekG8URvAhZCf59ov/i2DZb1SNkF
+         eEQXvHmEDOpsAdyibdcwVhXxuSpMcoKVd2goW26v344s5fztOzrpJS+JywrD74ifRd+a
+         KDNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=eqEyb6JQUaVvUerJGlNUxsrnO2s/SjrzdS9NtiPOeYo=;
-        b=T6D3e+k5WUG6vTqs+s/E1Xyn+4oNYZIZSTMn/IAXUWbGdjJbkyZaFdYaCf+HAQAQfg
-         M6B4BqoKMhUj3xXBZ5JBCvSZTmenI1wylfzOqWoHeUJnLgoBeAtC2T4hZK4/+o32nmd6
-         JkH0kFO3TEztQMHUe3xY3tR3ONd3n3+BszOphSJu5RQ+e18ehmvcpA2bHh8yIEeuLxE5
-         xs0PqMpj0ZweVDzN5bYJ+IjT++7JwLP86bvnbV33Ncl7l49HzLtmXQaHeaLrn/Hnxjhe
-         9+b5fVHaXtKurHfKF6W108LeRX3B6ITZYO7JTjGjTtwXPb50DgUC1hjb8S/E6rDB7Tf+
-         2b4w==
-X-Gm-Message-State: AOAM532CHzmtpwRwIlZEOZxQWfb6ZWmBzOt1WY3RY+niqOA5Dd+O+24g
-        Z/lOf+ZQK+mSDaqnXuO+f7VsAg==
-X-Google-Smtp-Source: ABdhPJy69Z2QgDcdZTYpebC8ze5IvfOADkMTD+75F8SeFWRv4Ch+M+gwBX/zyw6HkQzCVDsLgMTKjA==
-X-Received: by 2002:a17:90a:ee14:: with SMTP id e20mr4899331pjy.55.1592341996543;
-        Tue, 16 Jun 2020 14:13:16 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:2854:eba6:e44d:d731? ([2601:646:c200:1ef2:2854:eba6:e44d:d731])
-        by smtp.gmail.com with ESMTPSA id 8sm3282064pja.0.2020.06.16.14.13.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 14:13:15 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 4/8] seccomp: Implement constant action bitmaps
-Date:   Tue, 16 Jun 2020 14:13:14 -0700
-Message-Id: <CE2F8139-4549-46CC-ABDB-3429361847A2@amacapital.net>
-References: <CAG48ez2HrPLhby31PUFb4f=iM60USA4NYRE6AjE8pPQ+ctm60g@mail.gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "zhujianwei (C)" <zhujianwei7@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Hehuazhen <hehuazhen@huawei.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-In-Reply-To: <CAG48ez2HrPLhby31PUFb4f=iM60USA4NYRE6AjE8pPQ+ctm60g@mail.gmail.com>
-To:     Jann Horn <jannh@google.com>
-X-Mailer: iPhone Mail (17F80)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X0rMkiop0+pruLh0Yl4qvTvDnfP83BWucM9LZrNczAw=;
+        b=I7NRIEW8prh3S6kBbWittaqdItBqpnxLlQRYKBtovqzwLOgLdwPf2KvbRDtDoVGPh3
+         VXFEF88+u0Lee3y7CCGGKeIVACPIDAENSbv0lfEUUY9dp5GRZ4Wj7MltsBpGZcSkwF6S
+         ME9Lv4UmqDemym09iJ2+z4Q0fVzL1T6Vmd9a8uJ9P3n+FAxMsPRjfVwu25j07gQp+2Zp
+         GmSNBP1hdZ4GxcuZt4Nx03VqA67itew7G0dfoIRlGtSiRq+s1ZPmjoHzrmYfpxBytBsa
+         V+RwBH1Hxluk+y6qGCNKZCVBkKq4Gr+sahhpb1U7JlCVxplHfJsVJWKzn34J/qGqi3yf
+         JdDw==
+X-Gm-Message-State: AOAM532+KZc9g9xLCkWaLhH8Pxno4yT2M8eQxc1stZ5VULbJfffrervg
+        1fv90dJOndaxpX4dty0f/k4SmjoGclgEZvBqUGM=
+X-Google-Smtp-Source: ABdhPJxChHzc2yaVqH9Es+Pc3yCaZLNjBvLc3EzAyBWiKNdl6kHaxrdGGhVBZa67D+PxbQYUP7jPXoIsbp3UjculvcE=
+X-Received: by 2002:a67:f918:: with SMTP id t24mr3400638vsq.18.1592342017019;
+ Tue, 16 Jun 2020 14:13:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200613155738.2249399-1-jim.cromie@gmail.com>
+ <20200613155738.2249399-21-jim.cromie@gmail.com> <20200616134507.GO31238@alley>
+In-Reply-To: <20200616134507.GO31238@alley>
+From:   jim.cromie@gmail.com
+Date:   Tue, 16 Jun 2020 15:13:10 -0600
+Message-ID: <CAJfuBxxvejGJtyQfcPmG7i6p6NAESjTuBPHeGDUwTVkg9_JfzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 20/24] dyndbg: WIP towards debug-print-class based
+ callsite controls
+To:     Petr Mladek <pmladek@suse.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+hi Petr,
+
+On Tue, Jun 16, 2020 at 7:45 AM Petr Mladek <pmladek@suse.com> wrote:
+>
+> On Sat 2020-06-13 09:57:34, Jim Cromie wrote:
+> > There are *lots* of ad-hoc debug printing solutions in kernel,
+> > this is a 1st attempt at providing a common mechanism for many of them.
+>
+> I agree that it might make sense to provide some common mechanism.
+>
+>
+> > Basically, there are 2 styles of debug printing:
+> > - levels, with increasing verbosity, 1-10 forex
+> > - bits/flags, independently controlling separate groups of dprints
+> >
+> > This patch does bits/flags only.
+> >
+> > proposed API:
+> >
+> > Usage model is for a module developer to create N exclusive subsets of
+> > pr_debug()s by changing some of them to pr_debug_n(1,) .. pr_debug_n(N,).
+> > Each callsite must be a single print-class, with 0 default.
+> >
+> > No multi-type classification ala pr_debug_M(1|2, ...) is contemplated.
+> >
+> >   Qfoo() { echo module foo $* >/proc/dynamic_debug/control }
+> >   Qfoo +p             # all groups, including default 0
+> >   Qfoo mflags 1 +p    # only group 1
+> >   Qfoo mflags 12 +p   # TBD[1]: groups 1 or 2
+> >   Qfoo mflags 0 +p    # ignored atm TBD[2]
+> >   Qfoo mflags af +p   # TBD[3]: groups a or f (10 or 15)
+>
+> My problem with this approach is that it is too generic. Each class
+> would have different meaning in each subsystem.
+>
+
+I think generic is a feature.
+
+subsystem and module are the organizational level
+where print-classes would be sensibly defined.
+Thats why I required a module query-term with mflags,
+ so that no mflags query could operate on all the callsites.
+I might go further to prohibit a wildcard in the module query-term value,
+so its absolutely locked in to a specific module.
+
+maybe there would be consensus about having 1 or 2 kernel-wide print-classes,
+but other than something akin to stdin, stdout, stderr, I cant think
+of what it would look like.
 
 
-> On Jun 16, 2020, at 11:36 AM, Jann Horn <jannh@google.com> wrote:
->=20
-> =EF=BB=BFOn Tue, Jun 16, 2020 at 5:49 PM Kees Cook <keescook@chromium.org>=
- wrote:
->>> On Tue, Jun 16, 2020 at 02:14:47PM +0200, Jann Horn wrote:
->>> Wouldn't it be simpler to use a function that can run a subset of
->>> seccomp cBPF and bails out on anything that indicates that a syscall's
->>> handling is complex or on instructions it doesn't understand? For
->>> syscalls that have a fixed policy, a typical seccomp filter doesn't
->>> even use any of the BPF_ALU ops, the scratch space, or the X register;
->>> it just uses something like the following set of operations, which is
->>> easy to emulate without much code:
->>>=20
->>> BPF_LD | BPF_W | BPF_ABS
->>> BPF_JMP | BPF_JEQ | BPF_K
->>> BPF_JMP | BPF_JGE | BPF_K
->>> BPF_JMP | BPF_JGT | BPF_K
->>> BPF_JMP | BPF_JA
->>> BPF_RET | BPF_K
->>=20
->> Initially, I started down this path. It needed a bit of plumbing into
->> BPF to better control the lifetime of the cBPF "saved original filter"
->> (normally used by CHECKPOINT_RESTORE uses)
->=20
-> I don't think you need that? When a filter is added, you can compute
-> the results of the added individual filter, and then merge the state.
->=20
->> and then I needed to keep
->> making exceptions (same list you have: ALU, X register, scratch, etc)
->> in the name of avoiding too much complexity in the emulator. I decided
->> I'd rather reuse the existing infrastructure to actually execute the
->> filter (no cBPF copy needed to be saved, no separate code, and full
->> instruction coverage).
->=20
-> If you really think that this bit of emulation is so bad, you could
-> also make a copy of the BPF filter in which you replace all load
-> instructions from syscall arguments with "return NON_CONSTANT_RESULT",
-> and then run that through the normal BPF infrastructure.
->=20
->>> Something like (completely untested):
-> [...]
->> I didn't actually finish going down the emulator path (I stopped right
->> around the time I verified that libseccomp does use BPF_ALU -- though
->> only BPF_AND), so I didn't actually evaluate the filter contents for othe=
-r
->> filter builders (i.e. Chrome).
->>=20
->> But, if BPF_ALU | BPF_AND were added to your code above, it would cover
->> everything libseccomp generates (which covers a lot of the seccomp
->> filters, e.g. systemd, docker). I just felt funny about an "incomplete"
->> emulator.
->>=20
->> Though now you've got me looking. It seems this is the core
->> of Chrome's BPF instruction generation:
->> https://github.com/chromium/chromium/blob/master/sandbox/linux/bpf_dsl/po=
-licy_compiler.cc
->> It also uses ALU|AND, but adds JMP|JSET.
->>=20
->> So... that's only 2 more instructions to cover what I think are likely
->> the two largest seccomp instruction generators.
->>=20
->>> That way, you won't need any of this complicated architecture-specific s=
-tuff.
->>=20
->> There are two arch-specific needs, and using a cBPF-subset emulator
->> just gets rid of the local TLB flush. The other part is distinguishing
->> the archs. Neither requirement is onerous (TLB flush usually just
->> needs little more than an extern, arch is already documented in the
->> per-arch syscall_get_arch()).
->=20
-> But it's also somewhat layer-breaking and reliant on very specific
-> assumptions. Normal kernel code doesn't mess around with page table
-> magic, outside of very specific low-level things. And your method
-> would break if the fixed-value members were not all packed together at
-> the start of the structure.
->=20
->=20
-> And from a hardening perspective: The more code we add that fiddles
-> around with PTEs directly, rather than going through higher-level
-> abstractions, the higher the chance that something gets horribly
-> screwed up. For example, this bit from your patch looks *really*
-> suspect:
->=20
-> +                       preempt_disable();
-> +                       set_pte_at(&init_mm, vaddr, ptep,
-> pte_mkold(*(READ_ONCE(ptep))));
-> +                       local_flush_tlb_kernel_range(vaddr, vaddr + PAGE_S=
-IZE);
-> +                       preempt_enable();
->=20
-> First off, that set_pte_at() is just a memory write; I don't see why
-> you put it inside a preempt_disable() region.
-> But more importantly, sticking a local TLB flush inside a
-> preempt_disable() region with nothing else in there looks really
-> shady. How is that supposed to work? If we migrate from CPU0 to CPU1
-> directly before this region, and then from CPU1 back to CPU0 directly
-> afterwards, the local TLB flush will have no effect.
+
+> It might help to replace any existing variants. But it would be hard
+> for developers debugging the code. They would need to study/remember
+> the meaning of these groups for particular subsystems. They would
+> need to set different values for different messages.
+>
+> Could you please provide more details about the potential users?
+
+Ive ccd Stanimir, who wanted HI MID LOW classifications on some of his
+debug prints.
+Im doing the simplest possible thing that might work for him.
+
+> Would be possible to find some common patterns and common
+> meaning of the groups?
+
+probably should start with anti-patterns.
+
+KISAP - simple as possible
+I offer exclusive classes only, no this or that.
+prclass = 0 is reserved for every current use.
+
+If module authors think they need many  print-classes, rethink.
+control output exposes whole structure of code,
+file and function names are chosen to convey organization,
+a small set of queries will recreate most arbitrary print-classes
+
+use the echo >control interface only.
+I briefly thought about checking module debug parameters,
+that now sounds like madness
+
+Any chunk of code with N pr-debug* callsites, however badly architected,
+can be completely controlled by N separate queries.
+for better code, its much smaller.
 
 
-Indeed.
+ISTM the only sane way to allow external modules to control their own
+dynamic debug callsites is to expose ddebug_exec_queries,
+and let them issue the callsite modifications they want.
 
-With my x86/mm maintainer hat on, this is highly questionable. Either the re=
-al API should be used, or there should be a sane API. The former will have r=
-eally atrocious performance, and the latter would need some thought. Basical=
-ly, if you pin entire process to one CPU, you can clear the dirty bit, flush=
-, do some magic, and read it back. This is only valid if you have a short en=
-ough operation that running with preemption off is reasonable.  Otherwise yo=
-u need to arrange to flush when you schedule in, which could be done with a v=
-oluntary preemption style or with scheduler hooks.
+then, they can map any updates to their debug-flags storage
+onto a pair of on-off queries for each bit.
 
-I=E2=80=99m not convinced this is worthwhile.=
+Lastly, Id note that exclusive classes doesnt mean levels (debug++, debug--)
+cant be handled.
+we could reserve pr-classes 1-9 to mean all inclusive below N.
+
+Or that meaning could be handled by merely issuing the fill-in activations.
+In the module that wants debug levels
+
+  echo module foo mflags 4 >control
+auto generates same query 3 more times, with mflags 3 flags 2 mflags:1
+
+
+
+>
+> Best Regards,
+> Petr
