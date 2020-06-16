@@ -2,110 +2,107 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C11DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 565A4207C4
+	by mail.kernel.org (Postfix) with ESMTP id E9695207C4
 	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322966;
-	bh=vW18VRNYV9BtNXSDwWxZYN38v2KsWgMa+JvycMWRHYU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L1UU4fZjSG9hfIqSiZpVngPVBZKBI4dPLCthL8WikmvhWgm9UdJoBglWqH+FXMcju
-	 bxS69NdF36HKP//r8R4Ah4oPiS/ys74CIBKs7gAPYVKXX2cZwPOm4m7+VEGkVoTh/K
-	 hjBm8jZQxC20e4ux3gm3ywPwj2DqL+p17ImEEk84=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rix2pl7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733147AbgFPP4E (ORCPT
+        id S1733141AbgFPP4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733130AbgFPPz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 16 Jun 2020 11:56:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60548 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733132AbgFPPz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592322956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GMvFt9x/GME+tYUTng0QoYKwCh/XoVUUjz+YXccVf9k=;
+        b=Rix2pl7O64W4uD1zXV3b8GB/hQEG/jiMJ/dnB1avC8mVxFsaDtckW9Xon74ExM1FicfEf1
+        4olhmdwo4cCqoq7yDX2zd4cJkTLPvqjIJ3SZE0F7iIaG1rTIV87AHehTB9hWaJD13WOEet
+        AXxuZQgWmLU8NpjiyeEJAsHAbb0uHfk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-240-Vc28Lxq8P5CWEsmSzSE5_g-1; Tue, 16 Jun 2020 11:55:52 -0400
+X-MC-Unique: Vc28Lxq8P5CWEsmSzSE5_g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D2D6207C4;
-        Tue, 16 Jun 2020 15:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322955;
-        bh=vW18VRNYV9BtNXSDwWxZYN38v2KsWgMa+JvycMWRHYU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gPB46nckNhqd/dvqngGPBDC9cNnUCirxXKV0pmIkloREgGUtO1fcKw/ypJFbAbhwJ
-         kUl/tXuP1ONmZQLlk8x+CrEdzcQYMlrj+oFv4E3xgdlBkM0sJVM+VNWwdihhsK+Uve
-         Mmn7rhJZT5Jtl2f1rZ0J3hopawdmhzRcDAmJacxg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 128/161] KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
-Date:   Tue, 16 Jun 2020 17:35:18 +0200
-Message-Id: <20200616153112.459145837@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
-References: <20200616153106.402291280@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2B8DE918;
+        Tue, 16 Jun 2020 15:55:50 +0000 (UTC)
+Received: from x2.localnet (ovpn-113-82.phx2.redhat.com [10.3.113.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 845DE60C05;
+        Tue, 16 Jun 2020 15:55:44 +0000 (UTC)
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Paul Moore <paul@paul-moore.com>, Mimi Zohar <zohar@linux.ibm.com>,
+        rgb@redhat.com, linux-integrity@vger.kernel.org,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] integrity: Add errno field in audit message
+Date:   Tue, 16 Jun 2020 11:55:42 -0400
+Message-ID: <1717101.NiBDiG0Zly@x2>
+Organization: Red Hat
+In-Reply-To: <958966b6-9972-051f-a7d5-cd6d1beb3244@linux.microsoft.com>
+References: <20200611000400.3771-1-nramas@linux.microsoft.com> <6643272.rC52FQZPYE@x2> <958966b6-9972-051f-a7d5-cd6d1beb3244@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Tuesday, June 16, 2020 11:43:31 AM EDT Lakshmi Ramasubramanian wrote:
+> On 6/16/20 8:29 AM, Steve Grubb wrote:
+> >>>>> The idea is a good idea, but you're assuming that "result" is always
+> >>>>> errno.  That was probably true originally, but isn't now.  For
+> >>>>> example, ima_appraise_measurement() calls xattr_verify(), which
+> >>>>> compares the security.ima hash with the calculated file hash.  On
+> >>>>> failure, it returns the result of memcmp().  Each and every code path
+> >>>>> will need to be checked.
+> >>>> 
+> >>>> Good catch Mimi.
+> >>>> 
+> >>>> Instead of "errno" should we just use "result" and log the value given
+> >>>> in the result parameter?
+> >>> 
+> >>> That would likely collide with another field of the same name which is
+> >>> the
+> >>> operation's results. If it really is errno, the name is fine. It's
+> >>> generic
+> >>> enough that it can be reused on other events if that mattered.
+> >> 
+> >> Steve, what is the historical reason why we have both "res" and
+> >> "result" for indicating a boolean success/fail?  I'm just curious how
+> >> we ended up this way, and who may still be using "result".
+> > 
+> > I think its pam and some other user space things did this. But because of
+> > mixed machines in datacenters supporting multiple versions of OS, we have
+> > to leave result alone. It has to be 0,1 or success/fail. We cannot use
+> > it for errno.
+> 
+> As Mimi had pointed out, since the value passed in result parameter is
+> not always an error code, "errno" is not an appropriate name.
+> 
+> Can we add a new field, say, "op_result" to report the result of the
+> specified operation?
 
-commit 2ebac8bb3c2d35f5135466490fc8eeaf3f3e2d37 upstream.
+Sure. But since it is errno sometimes, how would we know when to translate 
+it?
 
-Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
-when determining whether a nested VM-Exit should be reflected into L1 or
-handled by KVM in L0.
+-Steve
 
-For better or worse, the switch statement in nested_vmx_exit_reflected()
-currently defaults to "true", i.e. reflects any nested VM-Exit without
-dedicated logic.  Because the case statements only contain the basic
-exit reason, any VM-Exit with modifier bits set will be reflected to L1,
-even if KVM intended to handle it in L0.
-
-Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
-i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
-L1, as "failed VM-Entry" is the only modifier that KVM can currently
-encounter.  The SMM modifiers will never be generated as KVM doesn't
-support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
-as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
-enter an enclave in a KVM guest (L1 or L2).
-
-Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200227174430.26371-1-sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/kvm/vmx/nested.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5562,7 +5562,7 @@ bool nested_vmx_exit_reflected(struct kv
- 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
- 				KVM_ISA_VMX);
- 
--	switch (exit_reason) {
-+	switch ((u16)exit_reason) {
- 	case EXIT_REASON_EXCEPTION_NMI:
- 		if (is_nmi(intr_info))
- 			return false;
 
 
