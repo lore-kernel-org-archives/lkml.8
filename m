@@ -2,111 +2,114 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F738C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14F6E206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:09:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJHlkngF"
+	by mail.kernel.org (Postfix) with ESMTP id 986CC206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbgFPOJp (ORCPT
+        id S1729589AbgFPOJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:09:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729050AbgFPOJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:09:40 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5707BC061573;
-        Tue, 16 Jun 2020 07:09:40 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id p187so4840445vkf.0;
-        Tue, 16 Jun 2020 07:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=kvkbSZZ2ghPvtr7g+4DwKKTOPHzQ+JkuiYjOoBKXQ1E=;
-        b=MJHlkngFT133npieWpyoGh0urU3iWbGas7CJZrtMJerpGuJtXJBloYvzE44huOfDvE
-         a+B2I1EBIwegx2wV251qk0dxjJ99+TVLMAqauve8tcZ/Czgrah7MQQ9zWAcV9Tfi1xha
-         368bEbvhG4rwhmCGX8rOyR5bixzGVSwmAMPwD6QW2bTSIQh9lUvIM33As4HJz19uN1Br
-         HJp2wwAzWFPjN5Re7TByc9JQSxrZvwsUW3K2FdN4eakM9unoII1EBeAVH+SxY6FAnGxd
-         GwnXUnN4QQOVPAAy+h7We3R1u3lxfmC3vixsKANC95sKfUVVE+mFs+DQdYIE/Cezz8YZ
-         W4Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=kvkbSZZ2ghPvtr7g+4DwKKTOPHzQ+JkuiYjOoBKXQ1E=;
-        b=teF1W9dg+PfqGbk34fqDmfqhGa2We0QBrjBA0Wt2YuE+6ZoRLr2qtXxQK++RN12DFV
-         1MkV7ZKkHtlHC5m+1ZW4O8CV4CsJB8b8gEP2ZUuVCNCeFS1Y2BiL+f8ex6DnM0fgOy2T
-         qfDx0Ah1dbFEfHCyH9n2BPz4dnRjhl/Da53eqFLe2rB/FYmv3oUF7pbe4704WMvQawgB
-         Ozl9BVkEwJQWNUJaqfTPbGM/NI1Qeb7r5jmwl6A2XhOmYQYp4IS7gLh6BBDN+mKk6Hyv
-         O/2Gb8O1eu8vMfs5LV/84zDNCvTKvPKjytME/sAIWT09N54KUfZa9btD81eAHE281hlu
-         OHGg==
-X-Gm-Message-State: AOAM532qgNBH/iyy4DKw9tnbgja9vkzjRyq64FKr48tie17uiyyvVYyt
-        CtLfCWGOTEfZpYBUIYvRYDQuafvwBvD5Vm+9RJViEw==
-X-Google-Smtp-Source: ABdhPJze8O6g9fE6ltSX85adg2jK4puYbKO8MUJwujXYHUy4P5RhKum5p0M5dGxwTqPtL4ATGFihpSZvv1m1jjx+STY=
-X-Received: by 2002:a1f:9094:: with SMTP id s142mr1776422vkd.6.1592316579576;
- Tue, 16 Jun 2020 07:09:39 -0700 (PDT)
+        Tue, 16 Jun 2020 10:09:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42810 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728869AbgFPOJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:09:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5ACE0ABE4;
+        Tue, 16 Jun 2020 14:09:57 +0000 (UTC)
+Message-ID: <d3346d7cb9655eb111b4126d72a08499c6254fef.camel@suse.de>
+Subject: Re: [PATCH v4 4/5] dm: pci: Assign controller device node to root
+ bridge
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Simon Glass <sjg@chromium.org>
+Cc:     Matthias Brugger <mbrugger@suse.com>,
+        U-Boot Mailing List <u-boot@lists.denx.de>,
+        Bin Meng <bmeng.cn@gmail.com>, Marek Vasut <marex@denx.de>,
+        lk <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>
+Date:   Tue, 16 Jun 2020 16:09:49 +0200
+In-Reply-To: <CAPnjgZ2jarQArKN=0h0mNnxE7gAL0juvGhMxMF4a0CehqxWcRw@mail.gmail.com>
+References: <20200612164632.25648-1-nsaenzjulienne@suse.de>
+         <20200612164632.25648-5-nsaenzjulienne@suse.de>
+         <CAPnjgZ2jarQArKN=0h0mNnxE7gAL0juvGhMxMF4a0CehqxWcRw@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-hRzj0/dqG4z0PRQp4I9N"
+User-Agent: Evolution 3.36.3 
 MIME-Version: 1.0
-References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com> <20200616121244.GN20149@phenom.ffwll.local>
-In-Reply-To: <20200616121244.GN20149@phenom.ffwll.local>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Tue, 16 Jun 2020 15:05:58 +0100
-Message-ID: <CACvgo52PaW97cxMeGhbpD4FUVy5BRAunaCxX3106OOAZm6x67A@mail.gmail.com>
-Subject: Re: [PATCH 0/6] remove deprecated i2c_new_device API
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org,
-        linux-fbdev <linux-fbdev@vger.kernel.org>, x86@kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-On Tue, 16 Jun 2020 at 13:12, Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Mon, Jun 15, 2020 at 09:58:09AM +0200, Wolfram Sang wrote:
-> > I want to remove the above API this cycle, and just a few patches have
-> > not made it into 5.8-rc1. They have been reviewed and most had been
-> > promised to get into linux-next, but well, things happen. So, I hope it
-> > is okay for everyone to collect them like this and push them via I2C for
-> > 5.8-rc2.
->
-> for the drm side of things:
->
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> >
-> > One minor exception is the media documentation patch which I simply have
-> > missed so far, but it is trivial.
-> >
-> > And then, finally, there is the removal of the old API as the final
-> > patch. Phew, that's been a long ride.
-> >
-> > I am open for comments, of course.
-> >
-> > Happy hacking,
-> >
-> >    Wolfram
-> >
-> >
-> > Wolfram Sang (6):
-> >   drm: encoder_slave: fix refcouting error for modules
-> >   drm: encoder_slave: use new I2C API
+--=-hRzj0/dqG4z0PRQp4I9N
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The first two are in drm-misc-next and are to be expected with the 5.9
-merge window. As long as that doesn't cause major nuisance proceed as
-you prefer.
+On Tue, 2020-06-16 at 07:43 -0600, Simon Glass wrote:
+> Hi Nicolas,
+>=20
+> On Fri, 12 Jun 2020 at 10:47, Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > There is no distinction in DT between the PCI controller device and the
+> > root bridge, whereas such distinction exists from dm's perspective. Mak=
+e
+> > sure the root bridge ofnode is assigned to the controller's platform
+> > device node.
+> >=20
+> > This permits setups like this to work correctly:
+> >=20
+> >         pcie {
+> >                 compatible =3D "...";
+> >                 ...
+> >                 dev {
+> >                         reg =3D <0 0 0 0 0>;
+> >                         ...
+> >                 };
+> >         };
+> >=20
+> > Without this the dev node is assigned to the root bridge and the
+> > actual device search starts one level lower than expected.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/pci/pci-uclass.c | 15 ++++++++++++++-
+> >  1 file changed, 14 insertions(+), 1 deletion(-)
+>=20
+> Can you update the tests to handle this case please?
 
--Emil
+I'd be glad to, but I'm not familiar with the test FW in u-booy, coud give =
+me
+some pointers on where/how to test this?
+
+Regards,
+Nicolas
+
+
+--=-hRzj0/dqG4z0PRQp4I9N
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7o0q0ACgkQlfZmHno8
+x/6vIAgAinbtz9aWXY9OMZDE68tOQOYWeDK5wVp7zlk4hA1VI1QmdSWkZ0KV6f+r
+GV+XxzmIAvxhv/G50aP5kqKy7KxB7oWTHCI4usPn3614DBKkxTrpshmmb+QiTCIM
+ugTFiw34xaKlSh4MVsiUSp4R737RR5GoX+iajIsLNpITw875SPNn6GdzyL/KWm80
+2ho2ptk0k+7o/2BXJpJ4BBcXgBBt74TZ7V/u4+LDbt1ZmRW5EGnxggl4W0vxed4n
+xULWrW1ipAI+7E/BDNibGEb8cVbaKBcrDg4hdKBKZWLkavJctCwoWfCXGiNOvPM6
+u4lYBsRWWCjDXmjx+rU+UGiVQqDVSw==
+=cIdv
+-----END PGP SIGNATURE-----
+
+--=-hRzj0/dqG4z0PRQp4I9N--
+
