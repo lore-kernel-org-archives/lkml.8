@@ -2,93 +2,123 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED79C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 786132070C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018172070C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgFPEIh (ORCPT
+        id S1726399AbgFPEMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 00:08:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:58900 "EHLO foss.arm.com"
+        Tue, 16 Jun 2020 00:12:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20881 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgFPEIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 00:08:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 002E51F1;
-        Mon, 15 Jun 2020 21:08:36 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.80.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2DADD3F6CF;
-        Mon, 15 Jun 2020 21:08:34 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        id S1725306AbgFPEMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 00:12:42 -0400
+IronPort-SDR: azkz42pmzjJNVomHBQni75AIbvEm6GebXS1hdT/aaEZlR1INHXpKvksPcF4Lb0Ok1PEkkXVFJ9
+ 4qz7fhKDnWVA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 21:12:41 -0700
+IronPort-SDR: IXD4AL4Jjd2MH8vUmUSaUN97ck/r1Lp/XMeXh0JcSPbLuvpxtKVyhGeT8ut/mZHybqrYFaM3ff
+ /AGzDfdAQGcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,517,1583222400"; 
+   d="scan'208";a="261298471"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Jun 2020 21:12:39 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/pgtable: Move extern zero_pfn outside __HAVE_COLOR_ZERO_PAGE
-Date:   Tue, 16 Jun 2020 09:38:18 +0530
-Message-Id: <1592280498-15442-1-git-send-email-anshuman.khandual@arm.com>
+Cc:     trix@redhat.com, bhu@redhat.com, mtosatti@redhat.com,
+        gregkh@linuxfoundation.org, Xu Yilun <yilun.xu@intel.com>
+Subject: [PATCH v7 0/7] Add interrupt support to FPGA DFL drivers
+Date:   Tue, 16 Jun 2020 12:08:41 +0800
+Message-Id: <1592280528-6350-1-git-send-email-yilun.xu@intel.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zero_pfn variable is required whether __HAVE_COLOR_ZERO_PAGE is enabled
-or not. Also it should not really be declared individually in all functions
-where it gets used. Just move the declaration outside, which also makes it
-available for other potential users.
+This patchset add interrupt support to FPGA DFL drivers.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Applies on 5.8-rc1. If the earlier motivation was to hide zero_pfn from
-general visibility, we could just put in a comment and update the commit
-message that my_zero_pfn() should always be used rather than zero_pfn.
-Build tested on many platforms and boot tested on arm64, x86.
+With these patches, DFL driver will parse and assign interrupt resources
+for enumerated feature devices and their sub features.
 
- include/linux/pgtable.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+This patchset also introduces a set of APIs for user to monitor DFL
+interrupts. Three sub features (DFL FME error, DFL AFU error and user
+interrupt) drivers now support these APIs.
 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 32b6c52d41b9..078e9864abca 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1020,10 +1020,11 @@ extern void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
- extern void untrack_pfn_moved(struct vm_area_struct *vma);
- #endif
- 
-+extern unsigned long zero_pfn;
-+
- #ifdef __HAVE_COLOR_ZERO_PAGE
- static inline int is_zero_pfn(unsigned long pfn)
- {
--	extern unsigned long zero_pfn;
- 	unsigned long offset_from_zero_pfn = pfn - zero_pfn;
- 	return offset_from_zero_pfn <= (zero_page_mask >> PAGE_SHIFT);
- }
-@@ -1033,13 +1034,11 @@ static inline int is_zero_pfn(unsigned long pfn)
- #else
- static inline int is_zero_pfn(unsigned long pfn)
- {
--	extern unsigned long zero_pfn;
- 	return pfn == zero_pfn;
- }
- 
- static inline unsigned long my_zero_pfn(unsigned long addr)
- {
--	extern unsigned long zero_pfn;
- 	return zero_pfn;
- }
- #endif
+Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+          driver, and add interrupt parsing and assignment for feature
+          sub devices.
+Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+Patch #3: DFL framework change. Add helper functions for feature sub
+          device drivers to handle interrupt and notify users.
+Patch #4: Add interrupt support for AFU error reporting sub feature.
+Patch #5: Add interrupt support for FME global error reporting sub
+          feature.
+Patch #6: Add interrupt support for a new sub feature, to handle user
+          interrupts implemented in AFU.
+Patch #7: Documentation for DFL interrupt handling.
+
+Main changes from v1:
+ - Early validating irq table for each feature in parse_feature_irq()
+   in Patch #1.
+ - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
+   instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for
+   DFL_FPGA_FME/PORT_XXX_SET_IRQ param
+
+Main changes from v2:
+ - put parse_feature_irqs() inside create_feature_instance().
+ - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
+ - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
+
+Main changes from v3:
+ - rebased to 5.7-rc1.
+ - fail the dfl enumeration when irq parsing error happens.
+ - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
+   drivers.
+
+Main changes from v4:
+ - Minor fixes for Hao's comments.
+
+Main changes from v5:
+ - Remove unnecessary type casting in Patch #1 & #3.
+ - Minor fixes for Moritz's comments.
+
+Main changes from v6:
+ - Add the header file <linux/interrupt.h> for Patch #1, to fix build
+   error on ARCH=xtensa
+ - Minor fixes in Patch #2 & #3.
+
+Xu Yilun (7):
+  fpga: dfl: parse interrupt info for feature devices on enumeration
+  fpga: dfl: pci: add irq info for feature devices enumeration
+  fpga: dfl: introduce interrupt trigger setting API
+  fpga: dfl: afu: add interrupt support for port error reporting
+  fpga: dfl: fme: add interrupt support for global error reporting
+  fpga: dfl: afu: add AFU interrupt support
+  Documentation: fpga: dfl: add descriptions for interrupt related
+    interfaces.
+
+ Documentation/fpga/dfl.rst    |  19 +++
+ drivers/fpga/dfl-afu-error.c  |  17 +++
+ drivers/fpga/dfl-afu-main.c   |  32 +++++
+ drivers/fpga/dfl-fme-error.c  |  18 +++
+ drivers/fpga/dfl-fme-main.c   |   6 +
+ drivers/fpga/dfl-pci.c        |  76 +++++++++--
+ drivers/fpga/dfl.c            | 310 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/fpga/dfl.h            |  57 ++++++++
+ include/uapi/linux/fpga-dfl.h |  82 +++++++++++
+ 9 files changed, 608 insertions(+), 9 deletions(-)
+
 -- 
-2.20.1
+2.7.4
 
