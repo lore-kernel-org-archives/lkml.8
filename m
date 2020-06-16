@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96933C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76916C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78ACC20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5874A208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324275;
-	bh=wvUPej3zM+ZC3yYLDBwGVQF0xVeG3yGO+0KB/2ilLpM=;
+	s=default; t=1592324282;
+	bh=yPmakgyZf3oG9P+PmWrdeHlR5ZNMhUmeT1qM0Vy9QHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B21APRZ8AIpbbd941du3cwTKf49yfHPYA/BR63cux9U7JKsLJfmbg0ztsaFTA+R77
-	 z5JbwKVQlvHT9C/DRDMF5ZaE2b7kBW0ONG1Cd8agz5XZmhmVJcvFNIi3KvCteREPQU
-	 CrvgleldnNF5GZOoDcEa7tew18R25X35Wt/kpzVw=
+	b=H4mZlfhbsbufx6eTplDHIFPZJtsxhMODby3/FYeAl7f9lrb9scm/dny9ivrTIu6RF
+	 dmHRi9S2I/kI4GOXc++9y4+gt/pZqZBIaYLHvJ0Cmh5K+0GnboQKbHb3Vy50jnCDtH
+	 rTi9P18E0XduRgK+cwyJERwx/Jq8vEERKJurRUVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732551AbgFPQRx (ORCPT
+        id S1730717AbgFPPii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51580 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730778AbgFPPir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:47 -0400
+        id S1730703AbgFPPif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E09092145D;
-        Tue, 16 Jun 2020 15:38:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2367F20B1F;
+        Tue, 16 Jun 2020 15:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321927;
-        bh=wvUPej3zM+ZC3yYLDBwGVQF0xVeG3yGO+0KB/2ilLpM=;
+        s=default; t=1592321914;
+        bh=yPmakgyZf3oG9P+PmWrdeHlR5ZNMhUmeT1qM0Vy9QHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUqcnjATBjr1NfAzhj/6aNCPJA5CZmzoIobNmVUConc1syOjR0q1Ar5hhZ/U+QPAZ
-         YfykSQlgyhuC8k0X+gBPMtYJrN0JXUtMIl9IVmS3vcDPIO8NW6+eRkz80zrmxM0j5s
-         4+z6xreoPufvjsjN4F5rr9XwsjhDXNMt8VLN0eyE=
+        b=wsYsd9LQTpGxjpzpNvQtCMsuxzcCKXoybMqZOXekscT6zKN+jBfEg25aHEtdpJPKL
+         7Pnde8q8B3XQauxHB998n2ywXwEWdzvXWmCDPK9PjhYYufgBV3S/SEhefQdZz1SQnb
+         A0Gh2FAHh+acbeALw5xLcpJFjdayEmJ7mmHreANg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 069/134] spi: dw: Fix controller unregister order
-Date:   Tue, 16 Jun 2020 17:34:13 +0200
-Message-Id: <20200616153104.081888338@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 064/134] ACPI: GED: add support for _Exx / _Lxx handler methods
+Date:   Tue, 16 Jun 2020 17:34:08 +0200
+Message-Id: <20200616153103.838898964@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,65 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit ca8b19d61e3fce5d2d7790cde27a0b57bcb3f341 upstream.
+commit ea6f3af4c5e63f6981c0b0ab8ebec438e2d5ef40 upstream.
 
-The Designware SPI driver uses devm_spi_register_controller() on bind.
-As a consequence, on unbind, __device_release_driver() first invokes
-dw_spi_remove_host() before unregistering the SPI controller via
-devres_release_all().
+Per the ACPI spec, interrupts in the range [0, 255] may be handled
+in AML using individual methods whose naming is based on the format
+_Exx or _Lxx, where xx is the hex representation of the interrupt
+index.
 
-This order is incorrect:  dw_spi_remove_host() shuts down the chip,
-rendering the SPI bus inaccessible even though the SPI controller is
-still registered.  When the SPI controller is subsequently unregistered,
-it unbinds all its slave devices.  Because their drivers cannot access
-the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
-in an improper state.
+Add support for this missing feature to our ACPI GED driver.
 
-As a rule, devm_spi_register_controller() must not be used if the
-->remove() hook performs teardown steps which shall be performed after
-unregistering the controller and specifically after unbinding of slaves.
-
-Fix by reverting to the non-devm variant of spi_register_controller().
-
-An alternative approach would be to use device-managed functions for all
-steps in dw_spi_remove_host(), e.g. by calling devm_add_action_or_reset()
-on probe.  However that approach would add more LoC to the driver and
-it wouldn't lend itself as well to backporting to stable.
-
-Fixes: 04f421e7b0b1 ("spi: dw: use managed resources")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org # v3.14+
-Cc: Baruch Siach <baruch@tkos.co.il>
-Link: https://lore.kernel.org/r/3fff8cb8ae44a9893840d0688be15bb88c090a14.1590408496.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: v4.9+ <stable@vger.kernel.org> # v4.9+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-dw.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/acpi/evged.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -532,7 +532,7 @@ int dw_spi_add_host(struct device *dev,
- 		}
+--- a/drivers/acpi/evged.c
++++ b/drivers/acpi/evged.c
+@@ -79,6 +79,8 @@ static acpi_status acpi_ged_request_inte
+ 	struct resource r;
+ 	struct acpi_resource_irq *p = &ares->data.irq;
+ 	struct acpi_resource_extended_irq *pext = &ares->data.extended_irq;
++	char ev_name[5];
++	u8 trigger;
+ 
+ 	if (ares->type == ACPI_RESOURCE_TYPE_END_TAG)
+ 		return AE_OK;
+@@ -87,14 +89,28 @@ static acpi_status acpi_ged_request_inte
+ 		dev_err(dev, "unable to parse IRQ resource\n");
+ 		return AE_ERROR;
  	}
+-	if (ares->type == ACPI_RESOURCE_TYPE_IRQ)
++	if (ares->type == ACPI_RESOURCE_TYPE_IRQ) {
+ 		gsi = p->interrupts[0];
+-	else
++		trigger = p->triggering;
++	} else {
+ 		gsi = pext->interrupts[0];
++		trigger = p->triggering;
++	}
  
--	ret = devm_spi_register_controller(dev, master);
-+	ret = spi_register_controller(master);
- 	if (ret) {
- 		dev_err(&master->dev, "problem registering spi master\n");
- 		goto err_dma_exit;
-@@ -556,6 +556,8 @@ void dw_spi_remove_host(struct dw_spi *d
- {
- 	dw_spi_debugfs_remove(dws);
+ 	irq = r.start;
  
-+	spi_unregister_controller(dws->master);
+-	if (ACPI_FAILURE(acpi_get_handle(handle, "_EVT", &evt_handle))) {
++	switch (gsi) {
++	case 0 ... 255:
++		sprintf(ev_name, "_%c%02hhX",
++			trigger == ACPI_EDGE_SENSITIVE ? 'E' : 'L', gsi);
 +
- 	if (dws->dma_ops && dws->dma_ops->dma_exit)
- 		dws->dma_ops->dma_exit(dws);
- 
++		if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
++			break;
++		/* fall through */
++	default:
++		if (ACPI_SUCCESS(acpi_get_handle(handle, "_EVT", &evt_handle)))
++			break;
++
+ 		dev_err(dev, "cannot locate _EVT method\n");
+ 		return AE_ERROR;
+ 	}
 
 
