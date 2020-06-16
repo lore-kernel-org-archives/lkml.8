@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E047C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A042C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFBC214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11B7208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322057;
-	bh=L+ZIDbk7gGh2d8y06TrWjfNNB4BOtBVD11yTKaLw7C0=;
+	s=default; t=1592322060;
+	bh=N2fVI1JDeAb55G6+FUaty4ijhd6xjY1FQoh6aCeXreg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mKtdxx6dczicMsqU04sLE2IRt9rCC6qF+g7L9GMqvV4tQXFCtiWJ4Y3zp4M1z8aeU
-	 Gms04W9c1nXA96MbPxErfecyvqN1nxoho/SAaaj118zC8zKuJjNVb/G1hv7XpcmPKr
-	 Rt8u8OmjMNVlMW898WUwJb9G04z2jAold3Ms3kVU=
+	b=QKHHLbHcAI9JSXD3oPPGiHEJKww1gaPfjZjgSsWFd1cTycjrl1Ohb1jL/5RlBj1gC
+	 yu+qV5A4z86c9Q3jWlG9HlcpzxCuIn1yV4qtESXZjZIOpOQuurUa4ZhaHNUmsn1BIq
+	 Mnrrd6lpALYs2duB9pwQ1ljAiuF6W5RsDAex+a+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731330AbgFPPk4 (ORCPT
+        id S1731344AbgFPPk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:40:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55890 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731301AbgFPPkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:40:53 -0400
+        id S1731326AbgFPPk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C25C4208D5;
-        Tue, 16 Jun 2020 15:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F9C721475;
+        Tue, 16 Jun 2020 15:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322053;
-        bh=L+ZIDbk7gGh2d8y06TrWjfNNB4BOtBVD11yTKaLw7C0=;
+        s=default; t=1592322055;
+        bh=N2fVI1JDeAb55G6+FUaty4ijhd6xjY1FQoh6aCeXreg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POet3Sg+MvZAQ50ERy/i8eUjMR/Rk57cZXkt3sGj0FAuEVuaeqmtP4qe3zwHY2Cgh
-         0eWp0/1GcxctTP1xFRiyEtPgHJxdthtV0bmXNT6hIL2qwPa6OegwiY4BFBcTOXCCxI
-         xzsFXMYH6ieBR5z/MSHmqkvUn1sgZP9WStU28YU0=
+        b=Rj/5dtpeEu57LOK3K9HMz1li4W+dWFPyOAINhK4GKrtw35EKRIpw+tyMSh0GnulmH
+         hsPCmsU8ggpmRa0g9EL2GBTPgvjvrRBDnX5Gi6O0RCyZF8MiA+LJuKeAXd9STl+bX9
+         aF/KbTU5S2jT9n+VTCJkydr+KIcMh+mFPWhuxV+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-        syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 5.4 118/134] Smack: slab-out-of-bounds in vsscanf
-Date:   Tue, 16 Jun 2020 17:35:02 +0200
-Message-Id: <20200616153106.437144871@linuxfoundation.org>
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 119/134] drm/vkms: Hold gem object while still in-use
+Date:   Tue, 16 Jun 2020 17:35:03 +0200
+Message-Id: <20200616153106.483679065@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,45 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Casey Schaufler <casey@schaufler-ca.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-commit 84e99e58e8d1e26f04c097f4266e431a33987f36 upstream.
+commit 0ea2ea42b31abc1141f2fd3911f952a97d401fcb upstream.
 
-Add barrier to soob. Return -EOVERFLOW if the buffer
-is exceeded.
+We need to keep the reference to the drm_gem_object
+until the last access by vkms_dumb_create.
 
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Reported-by: syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Therefore, the put the object after it is used.
+
+This fixes a use-after-free issue reported by syzbot.
+
+While here, change vkms_gem_create() symbol to static.
+
+Reported-and-tested-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200427214405.13069-1-ezequiel@collabora.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/smack/smackfs.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/vkms/vkms_drv.h |    5 -----
+ drivers/gpu/drm/vkms/vkms_gem.c |   11 ++++++-----
+ 2 files changed, 6 insertions(+), 10 deletions(-)
 
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -878,11 +878,21 @@ static ssize_t smk_set_cipso(struct file
- 	else
- 		rule += strlen(skp->smk_known) + 1;
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -121,11 +121,6 @@ struct drm_plane *vkms_plane_init(struct
+ 				  enum drm_plane_type type, int index);
  
-+	if (rule > data + count) {
-+		rc = -EOVERFLOW;
-+		goto out;
-+	}
-+
- 	ret = sscanf(rule, "%d", &maplevel);
- 	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
- 		goto out;
+ /* Gem stuff */
+-struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+-				       struct drm_file *file,
+-				       u32 *handle,
+-				       u64 size);
+-
+ vm_fault_t vkms_gem_fault(struct vm_fault *vmf);
  
- 	rule += SMK_DIGITLEN;
-+	if (rule > data + count) {
-+		rc = -EOVERFLOW;
-+		goto out;
-+	}
+ int vkms_dumb_create(struct drm_file *file, struct drm_device *dev,
+--- a/drivers/gpu/drm/vkms/vkms_gem.c
++++ b/drivers/gpu/drm/vkms/vkms_gem.c
+@@ -95,10 +95,10 @@ vm_fault_t vkms_gem_fault(struct vm_faul
+ 	return ret;
+ }
+ 
+-struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+-				       struct drm_file *file,
+-				       u32 *handle,
+-				       u64 size)
++static struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
++					      struct drm_file *file,
++					      u32 *handle,
++					      u64 size)
+ {
+ 	struct vkms_gem_object *obj;
+ 	int ret;
+@@ -111,7 +111,6 @@ struct drm_gem_object *vkms_gem_create(s
+ 		return ERR_CAST(obj);
+ 
+ 	ret = drm_gem_handle_create(file, &obj->gem, handle);
+-	drm_gem_object_put_unlocked(&obj->gem);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
+@@ -140,6 +139,8 @@ int vkms_dumb_create(struct drm_file *fi
+ 	args->size = gem_obj->size;
+ 	args->pitch = pitch;
+ 
++	drm_gem_object_put_unlocked(gem_obj);
 +
- 	ret = sscanf(rule, "%d", &catlen);
- 	if (ret != 1 || catlen > SMACK_CIPSO_MAXCATNUM)
- 		goto out;
+ 	DRM_DEBUG_DRIVER("Created object of size %lld\n", size);
+ 
+ 	return 0;
 
 
