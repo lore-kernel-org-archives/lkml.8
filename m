@@ -2,281 +2,140 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2635C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCED8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B46B320739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9FE20739
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tGwUKJJP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iMCa5KT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgFPI3G (ORCPT
+        id S1727995AbgFPI3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34872 "EHLO
+        Tue, 16 Jun 2020 04:29:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgFPI3F (ORCPT
+        with ESMTP id S1727870AbgFPI3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:29:05 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCA2C05BD43;
-        Tue, 16 Jun 2020 01:29:05 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id u8so1097479pje.4;
-        Tue, 16 Jun 2020 01:29:05 -0700 (PDT)
+        Tue, 16 Jun 2020 04:29:13 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E04C03E97C
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:29:12 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 9so22430150ljv.5
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=ee7JBA4N+BXx5f1zTvLNBRShtRkjIFThGXMYifBNrAc=;
-        b=tGwUKJJP8WXY/P5hsPZn8pNVezAGaIgdZt9w3AW6VLNxdX7DYTJzHzl0q+G1bZtnWe
-         S0mVgam1f+VxKz/ei3gUKeGEDJDnmM0LqIOzN7pUynBKXv3XPIZOeUkF8mu8zbV6Z5ZN
-         vzeIVjJm7Ej4BiybplDSWMhXvJj6/NQxr6k6REuKykFZ2YeLGMj+Umq0R2o3jqUeS8kY
-         dx7Pxq3mWNeGLEuT1SUHhZNpmCh7qgSaK4ubN4aPsEqM6dOE5aBHcddvpWXuJOH/L9qO
-         etFha9VDAnKVp5CXgXaLva3YdxlZ0tjL7rPPfyHKOgQigLI5QmDivClue/BZmgx3143F
-         ECEA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iUa26xbgXJeW35l3tPgw/qFl/EH6eao+CWqtytwfzpQ=;
+        b=iMCa5KT2ALytLHCboqE4ka0Vk2yBe2jHv5q9UFQVadNvRX3zx00OIPajzJCVE19Yft
+         NeN7/m9OMHOktHEjg4ng9Rgq+NvUIt1DxbCKPzNuvMctWuZ6RWKtXcxCp5LE2kIhwbzk
+         1BOutYp1/+XG6uSXw5UjGgRbXfnLdvJ3J+jL9zoo2aBgRHrQjh4S4jFjwS7ur6ydhC38
+         bhCOgGLsvhkV8PYh8xKJSsdhZy2EXyW7Cp+/EjD0irhb0/GBJo//2qP1Yq9AsS4UI3/n
+         b+fyFAzy5mzEU8RTsFITTmVbZMWJw/oWGoSg1oStrROaTzMkjmT27u1BV+nJ8tK7aeR9
+         EH9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=ee7JBA4N+BXx5f1zTvLNBRShtRkjIFThGXMYifBNrAc=;
-        b=BtFVB5EdJ7vxJ1WDHI1A7Hg21GAM5JNC4Vigmt6pNKoPbrly2Gqmr9xNKiBty806Nb
-         +dN6lO2vVU6soW7B0MU/X6udM/gEV1igoY1MggC0k5ikm9s3Z6x7huxPxXARZhPPx4d4
-         sG5f8c9vAn80pUxpiqMRzCWVmXEVQmwmSQ7qCeiONkslr1CumHrJKfSIyOa1/gKTiGsw
-         PEBKWmGSryPIMwU1bqxdDOTbNEkz9/PR0NLZQSsylses/TEkM1DZjijtYb8xJvAD9nG/
-         ZC+uZSJxYqT39j6IFIQK1oI1Oh0MBiTLFhXXNUGP++88hdgFY6r9F7pZxvjgNUzbBClX
-         y0NA==
-X-Gm-Message-State: AOAM530wI5Lkhp2Ue7rhQsLdubVYsZWpBaBMC9Zd8Nh863Nl0iP6k0Tc
-        kocpqubtmuGu7wmPmXBNxMA=
-X-Google-Smtp-Source: ABdhPJxZ7GjAo9cEG+DKSwmk6ezNz2ThkIxVV9sLpydZFwKkYVTF7DD9MUfHJUGy0ONZje6FX9MIVA==
-X-Received: by 2002:a17:90a:1ad0:: with SMTP id p74mr1840055pjp.117.1592296144709;
-        Tue, 16 Jun 2020 01:29:04 -0700 (PDT)
-Received: from VM_111_229_centos ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id y136sm15944180pfg.55.2020.06.16.01.29.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 01:29:04 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 16:28:56 +0800
-From:   YangYuxi <yx.atom1@gmail.com>
-To:     wensong@linux-vs.org, horms@verge.net.au, ja@ssi.bg,
-        pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-kernel@vger.kernel.org, yx.atom1@gmail.com
-Subject: [PATCH] ipvs: avoid drop first packet by reusing conntrack
-Message-ID: <20200616082856.GA22668@VM_111_229_centos>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iUa26xbgXJeW35l3tPgw/qFl/EH6eao+CWqtytwfzpQ=;
+        b=E86JoHKdaYwKwqpM4SooCh2UfnQe7SEnzphaiFui+TtiJ2wy9swEwCHSFxvNKM93DT
+         YI2DcVHy77yYjIuPEAtHAkw/KzSWMwiaNsbIcyBTWlKFQGwTVbG2TwtpNLkZm9PpXBW4
+         uzgzs80H6UcLdUuYvLJbK3Lm3dCfasY5PrxvCakQR1V9QNWt4WR9FEtyfNk0voX2vIio
+         Sw6UM29bME+jAm9b1f5zrtmDiG2OcpksUnvbezoLR/vrBJb9Q+Y1Jh95QcGLXKre4O9E
+         PNrBvH6RxsV0dNppj/U60VTGMIeYkOe++TdD9eNh5F5tjg5XylAgalwuvgiR51VqtYad
+         JqvA==
+X-Gm-Message-State: AOAM5323S2vhHM8ie57c3rGooe6TekwS4xqvLzuzICqeqM72bZliGJtv
+        Faa2sf42gTljMJuFwtEGyC5qfA==
+X-Google-Smtp-Source: ABdhPJyxAvXQd0bbF0EOVrxP5P6EeKTwx53AuI93eQUjvSBO15+WDlfO8iO2KrF0+EN/zJdjr4qivw==
+X-Received: by 2002:a2e:45d6:: with SMTP id s205mr907846lja.101.1592296150212;
+        Tue, 16 Jun 2020 01:29:10 -0700 (PDT)
+Received: from jade (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
+        by smtp.gmail.com with ESMTPSA id s9sm4247916ljc.43.2020.06.16.01.29.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 01:29:09 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 10:29:07 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: Re: [PATCHv8 0/3] optee: register drivers on optee bus
+Message-ID: <20200616082907.GA2305431@jade>
+References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+ <CAD8XO3YTz=xN2k5h8HsrYsLUgmC6dD57XbBj63e+3_xFF1H0rw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAD8XO3YTz=xN2k5h8HsrYsLUgmC6dD57XbBj63e+3_xFF1H0rw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 'commit f719e3754ee2 ("ipvs: drop first packet to
-redirect conntrack")', when a new TCP connection meet
-the conditions that need reschedule, the first syn packet
-is dropped, this cause one second latency for the new
-connection, more discussion about this problem can easy
-search from google, such as:
+Hi Maxim and Jarkko,
 
-1)One second connection delay in masque
-https://marc.info/?t=151683118100004&r=1&w=2
+On Mon, Jun 15, 2020 at 05:32:40PM +0300, Maxim Uvarov wrote:
+> ping.
+> Patchset was reviewed and all comments are codeverd. Optee-os patches
+> were merged. These kernel patches look like they are hanging
+> somewhere...
 
-2)IPVS low throughput #70747
-https://github.com/kubernetes/kubernetes/issues/70747
+I'm almost OK with this patchset, except that
+Documentation/ABI/testing/sysfs-bus-optee-devices needs to be updated
+for the new kernel version and TEE mailing list which we're changing right
+now.
 
-3)Apache Bench can fill up ipvs service proxy in seconds #544
-https://github.com/cloudnativelabs/kube-router/issues/544
+The last patch touches files I'm not maintainer of. That patch depends
+on the previous patches so it makes sense to keep them together.  If a
+TPM device driver maintainer would ack that patch I can take it via my
+tree. Or we can do it the other way around (with a v9 patchset),
+whichever is preferred.
 
-4)Additional 1s latency in `host -> service IP -> pod`
-https://github.com/kubernetes/kubernetes/issues/90854
+Cheers,
+Jens
 
-5)kube-proxy ipvs conn_reuse_mode setting causes errors
-with high load from single client
-https://github.com/kubernetes/kubernetes/issues/81775
-
-The root cause is when the old session is expired, the
-conntrack related to the session is dropped by
-ip_vs_conn_drop_conntrack. The code is as follows:
-```
-static void ip_vs_conn_expire(struct timer_list *t)
-{
-...
-
-     if ((cp->flags & IP_VS_CONN_F_NFCT) &&
-         !(cp->flags & IP_VS_CONN_F_ONE_PACKET)) {
-             /* Do not access conntracks during subsys cleanup
-              * because nf_conntrack_find_get can not be used after
-              * conntrack cleanup for the net.
-              */
-             smp_rmb();
-             if (ipvs->enable)
-                     ip_vs_conn_drop_conntrack(cp);
-     }
-...
-}
-```
-As shown in the code, only when condition (cp->flags & IP_VS_CONN_F_NFCT)
-is true, the function ip_vs_conn_drop_conntrack will be called.
-
-So we optimize this by following steps (Administrators
-can choose the following optimization by setting
-net.ipv4.vs.conn_reuse_old_conntrack=1):
-1) erase the IP_VS_CONN_F_NFCT flag (it is safely because
-   no packets will use the old session)
-2) call ip_vs_conn_expire_now to release the old session,
-   then the related conntrack will not be dropped
-3) then ipvs unnecessary to drop the first syn packet, it
-   just continue to pass the syn packet to the next process,
-   create a new ipvs session, and the new session will related
-   to the old conntrack(which is reopened by conntrack as a new
-   one), the next whole things is just as normal as that the old
-   session isn't used to exist.
-
-The above processing has no problems except for passive FTP,
-for passive FTP situation, ipvs can judging from
-condition (atomic_read(&cp->n_control)) and condition (cp->control).
-So, for other conditions(means not FTP), ipvs should give users
-the right to choose，they can choose a high performance one processing
-logical by setting net.ipv4.vs.conn_reuse_old_conntrack=1. It is necessary
-because most business scenarios (such as kubernetes) are very sensitive
-to TCP short connection latency.
-
-This patch has been verified on our thousands of kubernets
-node servers on Tencent Inc.
-
-Signed-off-by: YangYuxi <yx.atom1@gmail.com>
----
- Documentation/networking/ipvs-sysctl.rst | 23 +++++++++++++++++++++++
- include/net/ip_vs.h                      | 11 +++++++++++
- net/netfilter/ipvs/ip_vs_core.c          | 11 +++++++++--
- net/netfilter/ipvs/ip_vs_ctl.c           |  2 ++
- 4 files changed, 45 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/networking/ipvs-sysctl.rst b/Documentation/networking/ipvs-sysctl.rst
-index be36c4600e8f..1c8eac824d2b 100644
---- a/Documentation/networking/ipvs-sysctl.rst
-+++ b/Documentation/networking/ipvs-sysctl.rst
-@@ -50,6 +50,29 @@ conn_reuse_mode - INTEGER
- 	balancer in Direct Routing mode. This bit helps on adding new
- 	real servers to a very busy cluster.
- 
-+conn_reuse_old_conntrack - BOOLEAN
-+	- 0 - disabled
-+	- not 0 - enabled (default)
-+
-+	If set, when a new TCP syn packet hit an old ipvs connection
-+	table and need reschedule to a new dest: if
-+		1) the packet use conntrack
-+		2) the old ipvs connection table is not a master control
-+		   connection (E.g the command connection of passived FTP)
-+		3) the old ipvs connection table been not controlled by any
-+		   connections (E.g the data connection of passived FTP)
-+	ipvs Will not release the old conntrack, just let the conntrack
-+	reopen the old session as it is a new one. This is an optimization
-+	option selectable by the system administrator.
-+
-+	If not set, when a new TCP syn packet hit an old ipvs connection
-+	table and need reschedule to a new dest: if
-+		1) the packet use conntrack
-+	ipvs just drop this syn packet, expire the old connection by timer.
-+	This will cause the client tcp syn to retransmit.
-+
-+	Only has effect when conn_reuse_mode not 0.
-+
- conntrack - BOOLEAN
- 	- 0 - disabled (default)
- 	- not 0 - enabled
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 83be2d93b407..052fa87d2a44 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -928,6 +928,7 @@ struct netns_ipvs {
- 	int			sysctl_pmtu_disc;
- 	int			sysctl_backup_only;
- 	int			sysctl_conn_reuse_mode;
-+	int			sysctl_conn_reuse_old_conntrack;
- 	int			sysctl_schedule_icmp;
- 	int			sysctl_ignore_tunneled;
- 
-@@ -1049,6 +1050,11 @@ static inline int sysctl_conn_reuse_mode(struct netns_ipvs *ipvs)
- 	return ipvs->sysctl_conn_reuse_mode;
- }
- 
-+static inline int sysctl_conn_reuse_old_conntrack(struct netns_ipvs *ipvs)
-+{
-+	return ipvs->sysctl_conn_reuse_old_conntrack;
-+}
-+
- static inline int sysctl_schedule_icmp(struct netns_ipvs *ipvs)
- {
- 	return ipvs->sysctl_schedule_icmp;
-@@ -1136,6 +1142,11 @@ static inline int sysctl_conn_reuse_mode(struct netns_ipvs *ipvs)
- 	return 1;
- }
- 
-+static inline int sysctl_conn_reuse_old_conntrack(struct netns_ipvs *ipvs)
-+{
-+	return 1;
-+}
-+
- static inline int sysctl_schedule_icmp(struct netns_ipvs *ipvs)
- {
- 	return 0;
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index aa6a603a2425..d1e9af6b5792 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -2066,7 +2066,7 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
- 
- 	conn_reuse_mode = sysctl_conn_reuse_mode(ipvs);
- 	if (conn_reuse_mode && !iph.fragoffs && is_new_conn(skb, &iph) && cp) {
--		bool uses_ct = false, resched = false;
-+		bool uses_ct = false, resched = false, drop = false;
- 
- 		if (unlikely(sysctl_expire_nodest_conn(ipvs)) && cp->dest &&
- 		    unlikely(!atomic_read(&cp->dest->weight))) {
-@@ -2086,10 +2086,17 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
- 		}
- 
- 		if (resched) {
-+			if (uses_ct) {
-+				if (unlikely(!atomic_read(&cp->n_control) && !cp->control) &&
-+				    likely(sysctl_conn_reuse_old_conntrack(ipvs)))
-+					cp->flags &= ~IP_VS_CONN_F_NFCT;
-+				else
-+					drop = true;
-+			}
- 			if (!atomic_read(&cp->n_control))
- 				ip_vs_conn_expire_now(cp);
- 			__ip_vs_conn_put(cp);
--			if (uses_ct)
-+			if (drop)
- 				return NF_DROP;
- 			cp = NULL;
- 		}
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 412656c34f20..eeb87994c21f 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -4049,7 +4049,9 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
- 	tbl[idx++].data = &ipvs->sysctl_pmtu_disc;
- 	tbl[idx++].data = &ipvs->sysctl_backup_only;
- 	ipvs->sysctl_conn_reuse_mode = 1;
-+	ipvs->sysctl_conn_reuse_old_conntrack = 1;
- 	tbl[idx++].data = &ipvs->sysctl_conn_reuse_mode;
-+	tbl[idx++].data = &ipvs->sysctl_conn_reuse_old_conntrack;
- 	tbl[idx++].data = &ipvs->sysctl_schedule_icmp;
- 	tbl[idx++].data = &ipvs->sysctl_ignore_tunneled;
- 
--- 
-1.8.3.1
-
+> 
+> Thanks,
+> Maxim.
+> 
+> On Thu, 4 Jun 2020 at 20:58, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+> >
+> > v8: - fix v7 check.
+> > v7: - check return value of dev_set_name() (Jarkko Sakkinen)
+> > v6: - description, comments, patches reorder and destroy workqueue (Sumit Garg)
+> > v5: - removed pr_err and fix typos in description (Jarkko Sakkinen)
+> >     - added missed kfree in optee_open()
+> > v4: - sysfs entry is optee-ta-uuid (Jerome Forissier, Sumit Garg)
+> >     - added Documentation/ABI/testing/sysfs-bus-optee-devices (Greg Kroah-Hartman)
+> > v3: - support tee-suppicant restart (Jens Wiklander)
+> >     - description and comments (Jarkko Sakkinen)
+> >     - do not name optee drivers by index in sysfs (Sumit Garg)
+> > v2: - write TEE with capital letters.
+> >     - declare __optee_enumerate_device() as static.
+> >
+> > Maxim Uvarov (3):
+> >   optee: use uuid for sysfs driver entry
+> >   optee: enable support for multi-stage bus enumeration
+> >   tpm_ftpm_tee: register driver on TEE bus
+> >
+> >  .../ABI/testing/sysfs-bus-optee-devices       |  8 +++
+> >  MAINTAINERS                                   |  1 +
+> >  drivers/char/tpm/tpm_ftpm_tee.c               | 70 ++++++++++++++++---
+> >  drivers/tee/optee/core.c                      | 27 ++++++-
+> >  drivers/tee/optee/device.c                    | 38 +++++-----
+> >  drivers/tee/optee/optee_private.h             | 10 ++-
+> >  6 files changed, 119 insertions(+), 35 deletions(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> >
+> > --
+> > 2.17.1
+> >
