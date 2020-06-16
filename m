@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25606C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C460CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00BEC2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75192071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323739;
-	bh=IjT3crjofXBEWl5YFK02GjcaGpsi+bu/BrXFmNZ2GZo=;
+	s=default; t=1592323743;
+	bh=338AucczY2mLow4d9IdceneS8Dm9fzEUvS1ZacGLH8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tb+xe7Z3q/Ugtx9QUKuUTzTzPcVocEQ3PZeuR7RmfDfzFwjPfgKaUelSq3ya8sTsU
-	 WoaVGAB7wPo7hXZq/0Ipn67N5MtkYr0m8+M0WX+qTvSgKjECnt7emvojqMee3FuU3Y
-	 u8Fw9fN2w3j3DmQcbHINlxldr9WnONyKfJNkLcAQ=
+	b=DAd/cI9C5fXWsdoHDE5G5+CLur/RakNO6Y5Wi39rSLS8jirtDVVjDBVnMruNcOEJo
+	 /aMmjii2XJLO0NkOdoYg6uZs0bG3p2OgHARgz0vx1e/AG2XGKx2L7mgziP+/1R7W+1
+	 QVFi2MJIY6/31yCP4r7a0wsG4OBAyuBnbH2AukC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730899AbgFPPpk (ORCPT
+        id S1732351AbgFPQJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:45:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:09:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731071AbgFPPpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:45:34 -0400
+        id S1732106AbgFPPpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20B162071A;
-        Tue, 16 Jun 2020 15:45:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FBFC21473;
+        Tue, 16 Jun 2020 15:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322334;
-        bh=IjT3crjofXBEWl5YFK02GjcaGpsi+bu/BrXFmNZ2GZo=;
+        s=default; t=1592322339;
+        bh=338AucczY2mLow4d9IdceneS8Dm9fzEUvS1ZacGLH8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHUaJKIt4J/+X4FhtPbe8o26OdH9WLEfFPIKbeCR2xz3CkDrPO9opAjXI7cVkUjXr
-         OehfOmZ99f75cqxiDASqx23j2AKJE1Iwc/RxCIZSUkxqV02HayJXKSaZ1/kKUyLHal
-         1QxRxWH8adMdswwh6FWuwwk04g9ll9jEaNhyaofo=
+        b=EsRJaYhPVZ6bfapUbC1lGmIH1YAn+A30Fg2wjXlrttWnLH4Sd2fUU05ShqLzuj0WK
+         PbVrLz60WDKssCtnyVwARpjESzF86s+vD2FfGynLB/TE0M9BAnR61lzE5aJSvnCDK6
+         1VMiiJiQt5jp4N7fYwG6PEfWopb+zvniygYc29Ts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.7 061/163] serial: imx: Initialize lock for non-registered console
-Date:   Tue, 16 Jun 2020 17:33:55 +0200
-Message-Id: <20200616153109.772076964@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 063/163] ALSA: es1688: Add the missed snd_card_free()
+Date:   Tue, 16 Jun 2020 17:33:57 +0200
+Message-Id: <20200616153109.863722643@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,43 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 8f065acec7573672dd15916e31d1e9b2e785566c upstream.
+commit d9b8fbf15d05350b36081eddafcf7b15aa1add50 upstream.
 
-The commit a3cb39d258ef
-("serial: core: Allow detach and attach serial device for console")
-changed a bit logic behind lock initialization since for most of the console
-driver it's supposed to have lock already initialized even if console is not
-enabled. However, it's not the case for Freescale IMX console.
+snd_es968_pnp_detect() misses a snd_card_free() in a failed path.
+Add the missed function call to fix it.
 
-Initialize lock explicitly in the ->probe().
-
-Note, there is still an open question should or shouldn't not this driver
-register console properly.
-
-Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20200525105952.13744-1-andriy.shevchenko@linux.intel.com
+Fixes: a20971b201ac ("ALSA: Merge es1688 and es968 drivers")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603092459.1424093-1-hslester96@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/imx.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/isa/es1688/es1688.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -2398,6 +2398,9 @@ static int imx_uart_probe(struct platfor
- 		}
+--- a/sound/isa/es1688/es1688.c
++++ b/sound/isa/es1688/es1688.c
+@@ -267,8 +267,10 @@ static int snd_es968_pnp_detect(struct p
+ 		return error;
  	}
- 
-+	/* We need to initialize lock even for non-registered console */
-+	spin_lock_init(&sport->port.lock);
-+
- 	imx_uart_ports[sport->port.line] = sport;
- 
- 	platform_set_drvdata(pdev, sport);
+ 	error = snd_es1688_probe(card, dev);
+-	if (error < 0)
++	if (error < 0) {
++		snd_card_free(card);
+ 		return error;
++	}
+ 	pnp_set_card_drvdata(pcard, card);
+ 	snd_es968_pnp_is_probed = 1;
+ 	return 0;
 
 
