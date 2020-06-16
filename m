@@ -2,78 +2,115 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E976C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BE9C433DF
 	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB2A207C4
+	by mail.kernel.org (Postfix) with ESMTP id C0B33207C4
 	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592323090;
-	bh=L7HAS4sYz0Q0M+EaHokWTKwpor0s3bgHozek18pK5LY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=EOIDX1ccp0mGAfCtFq0TpOdOUbGTfQ380CHi8U8d86vlqjgapbftwnixheU5t4K1k
-	 7Bf/Dmvx2DK1PpYINvJgAndEsBrOmotiZ2i1KrGf/XfqdvreqzLgtVGa1i1y7ivSjc
-	 MAv69DhyFu5nEfB110UqgwX97f9QNEWhXwZDsAfY=
+	bh=dRzrmPTneQJ2RejTL0DG0atWQiNUcoX1ztdDbR2Xwcg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CS/pZMso8eVIMb1zpj/VxufL/RUVfDuZ71S67D9U/llyjDTtHnLQ0sKZPdYssBLKA
+	 C7WfTZDCCmhWOy5swCNuag52VqYdnw/uI+DBfzCobrrFRUhpRyZkyQ8LmzHRCktXyS
+	 5HCRe3qxSthC2smiLjA/3yBoXe7RFvQHpZJVmW9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgFPP6I (ORCPT
+        id S1733120AbgFPP6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733119AbgFPP6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 11:58:04 -0400
-Received: from localhost.localdomain (unknown [42.120.72.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from mail.kernel.org ([198.145.29.99]:54024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732996AbgFPPyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9ADA21548;
-        Tue, 16 Jun 2020 15:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC076207C4;
+        Tue, 16 Jun 2020 15:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592323084;
-        bh=L7HAS4sYz0Q0M+EaHokWTKwpor0s3bgHozek18pK5LY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AuOpr7G3+Fh9kTygW02K/pdHhG0lP5NrT3swgnodY5YTjhLi6ow3Y1S3k66sWESZ/
-         RP1goGarTA+IuSP+K765jpDunyR1Ns6xKyskcRjY5NEQqnRznAxXKesdm0b01twqRG
-         EseNQ8zymopKcK248UAlBjPE8fpWH14y3pKaQ334=
-From:   guoren@kernel.org
-To:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
-        anup@brainfault.org, zong.li@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, tycho@tycho.ws, nickhu@andestech.com
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH 0/3] riscv: Enable LOCKDEP
-Date:   Tue, 16 Jun 2020 15:56:58 +0000
-Message-Id: <1592323021-98541-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        s=default; t=1592322877;
+        bh=dRzrmPTneQJ2RejTL0DG0atWQiNUcoX1ztdDbR2Xwcg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qus1zGqJHjaKhsIcr1CBmlN1Xn2Y+71KeuCT1GLTlO8h4ap67XHirzcraJOD3Qpck
+         Y45VeDupXbN/STK30+i8QULb36HPD24O841Lm9SKaqDSfiZkPE7soPIxOd6moycuMx
+         m1x7rt20KbL4hLrikM83PRj4PeyaToa9ZQOFP+WM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
+Subject: [PATCH 5.6 139/161] ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
+Date:   Tue, 16 Jun 2020 17:35:29 +0200
+Message-Id: <20200616153112.982858975@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
+References: <20200616153106.402291280@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-Lockdep is needed by proving the spinlocks and rwlocks. To suupport
-it, we need fixup TRACE_IRQFLAGS_SUPPORT in kernel/entry.S. This
-patch follow Documentation/irqflags-tracing.txt.
+commit e4ff08a4d727146bb6717a39a8d399d834654345 upstream.
 
-And there are 2 bugs block the lockdep implementation.
+Write out of slab bounds. We should check epid.
 
-Guo Ren (2):
-  riscv: Fixup static_obj() fail
-  riscv: Enable LOCKDEP_SUPPORT & fixup TRACE_IRQFLAGS_SUPPORT
+The case reported by syzbot:
+https://lore.kernel.org/linux-usb/0000000000006ac55b05a1c05d72@google.com
+BUG: KASAN: use-after-free in htc_process_conn_rsp
+drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
+BUG: KASAN: use-after-free in ath9k_htc_rx_msg+0xa25/0xaf0
+drivers/net/wireless/ath/ath9k/htc_hst.c:443
+Write of size 2 at addr ffff8881cea291f0 by task swapper/1/0
 
-Zong Li (1):
-  riscv: Fixup lockdep_assert_held with wrong param cpu_running
+Call Trace:
+ htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131
+[inline]
+ath9k_htc_rx_msg+0xa25/0xaf0
+drivers/net/wireless/ath/ath9k/htc_hst.c:443
+ath9k_hif_usb_reg_in_cb+0x1ba/0x630
+drivers/net/wireless/ath/ath9k/hif_usb.c:718
+__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+expire_timers kernel/time/timer.c:1449 [inline]
+__run_timers kernel/time/timer.c:1773 [inline]
+__run_timers kernel/time/timer.c:1740 [inline]
+run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
 
- arch/riscv/Kconfig              |  3 +++
- arch/riscv/kernel/entry.S       | 41 ++++++++++++++++++++++++++++++++++++++++-
- arch/riscv/kernel/smpboot.c     |  1 -
- arch/riscv/kernel/vmlinux.lds.S |  2 +-
- 4 files changed, 44 insertions(+), 3 deletions(-)
+Reported-and-tested-by: syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200404041838.10426-4-hqjagain@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--- 
-2.7.4
+---
+ drivers/net/wireless/ath/ath9k/htc_hst.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/net/wireless/ath/ath9k/htc_hst.c
++++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
+@@ -113,6 +113,9 @@ static void htc_process_conn_rsp(struct
+ 
+ 	if (svc_rspmsg->status == HTC_SERVICE_SUCCESS) {
+ 		epid = svc_rspmsg->endpoint_id;
++		if (epid < 0 || epid >= ENDPOINT_MAX)
++			return;
++
+ 		service_id = be16_to_cpu(svc_rspmsg->service_id);
+ 		max_msglen = be16_to_cpu(svc_rspmsg->max_msg_len);
+ 		endpoint = &target->endpoint[epid];
+
 
