@@ -2,51 +2,60 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8754FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACD4208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA9A208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324016;
-	bh=Lq0rzd8/VWyjqzu7gI6W77XhrAJW8U6FGO1gnHwgDWU=;
+	s=default; t=1592324019;
+	bh=a7avgGW8Pb6mY9ujyM5PSFtctNJTkJfibtYp4fwY5Z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KzML65T5cvY2AHxNoxacLFcPmJcAK6WzmEghq5Yupi2oNuePozGgUdFjnGF0G4tTV
-	 Yfs8FTDQvzXYDc1xdG2yLggAd+HEz4iQTF7GTlcoPtLYXHct/8+46HahhnxphyBRM6
-	 HmGU9Tyf0uDGBPGYwDJLQq2tqwXz2OVyL38mTMRo=
+	b=iQaIDj+/YvQx79YV7pqYvYnOahdMPrAkr/B14zfaq4lC0cLW15qJepC9HBsqhyKfH
+	 1RJ+Hw5mmhWU6fL7uWCEi847FvLtlREXmMuJy/785Kvdy8GlTnWnPjqo4Y7zqgPgkh
+	 PSm2UGcnsDtVEAYBLYkYe0SlWCSgKgllBcC9/LYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbgFPQNe (ORCPT
+        id S1731777AbgFPPnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:13:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60926 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:43:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731790AbgFPPn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:26 -0400
+        id S1731059AbgFPPnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:43:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BF8B208D5;
-        Tue, 16 Jun 2020 15:43:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54F39214DB;
+        Tue, 16 Jun 2020 15:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322205;
-        bh=Lq0rzd8/VWyjqzu7gI6W77XhrAJW8U6FGO1gnHwgDWU=;
+        s=default; t=1592322187;
+        bh=a7avgGW8Pb6mY9ujyM5PSFtctNJTkJfibtYp4fwY5Z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXBJENzjc1NnWmnXtEcVy5nsZEBDMXzwKNxqD0IBH3CsHZ6hjytFm/pq5kwf8AX5k
-         yd8iM2gJH8oROfUrbQbD6bgmcuCco4WOoP0COFIXYIuEdCMQe9VtXOMCaIJkSBL6cV
-         DRJkA9wwznJ/mrTKQuIWkozAJVSpWvPxIc3d/yok=
+        b=hbMn/HK3HwUwyu8SqmgW66n3wKtT7TyJplyDEUI1y9Cz3HZC8due/lrPOUTd419EE
+         LFZRs4NE3vCCbBkOG9oOe0mLlxob7MMRcSvhUFTSxG8LJ1jYErAR6Rf9UxR0hXNwVW
+         2yzDoN/Eu58160YGppnibVe70AQO/KwJcTpCK3M8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hill Ma <maahiuzeon@gmail.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.7 041/163] x86/reboot/quirks: Add MacBook6,1 reboot quirk
-Date:   Tue, 16 Jun 2020 17:33:35 +0200
-Message-Id: <20200616153108.833570456@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Alistair Delva <adelva@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Bob Haarman <inglorion@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <ak@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: [PATCH 5.7 035/163] x86_64: Fix jiffies ODR violation
+Date:   Tue, 16 Jun 2020 17:33:29 +0200
+Message-Id: <20200616153108.543251819@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,39 +68,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hill Ma <maahiuzeon@gmail.com>
+From: Bob Haarman <inglorion@google.com>
 
-commit 140fd4ac78d385e6c8e6a5757585f6c707085f87 upstream.
+commit d8ad6d39c35d2b44b3d48b787df7f3359381dcbf upstream.
 
-On MacBook6,1 reboot would hang unless parameter reboot=pci is added.
-Make it automatic.
+'jiffies' and 'jiffies_64' are meant to alias (two different symbols that
+share the same address).  Most architectures make the symbols alias to the
+same address via a linker script assignment in their
+arch/<arch>/kernel/vmlinux.lds.S:
 
-Signed-off-by: Hill Ma <maahiuzeon@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
+jiffies = jiffies_64;
+
+which is effectively a definition of jiffies.
+
+jiffies and jiffies_64 are both forward declared for all architectures in
+include/linux/jiffies.h. jiffies_64 is defined in kernel/time/timer.c.
+
+x86_64 was peculiar in that it wasn't doing the above linker script
+assignment, but rather was:
+1. defining jiffies in arch/x86/kernel/time.c instead via the linker script.
+2. overriding the symbol jiffies_64 from kernel/time/timer.c in
+arch/x86/kernel/vmlinux.lds.s via 'jiffies_64 = jiffies;'.
+
+As Fangrui notes:
+
+  In LLD, symbol assignments in linker scripts override definitions in
+  object files. GNU ld appears to have the same behavior. It would
+  probably make sense for LLD to error "duplicate symbol" but GNU ld
+  is unlikely to adopt for compatibility reasons.
+
+This results in an ODR violation (UB), which seems to have survived
+thus far. Where it becomes harmful is when;
+
+1. -fno-semantic-interposition is used:
+
+As Fangrui notes:
+
+  Clang after LLVM commit 5b22bcc2b70d
+  ("[X86][ELF] Prefer to lower MC_GlobalAddress operands to .Lfoo$local")
+  defaults to -fno-semantic-interposition similar semantics which help
+  -fpic/-fPIC code avoid GOT/PLT when the referenced symbol is defined
+  within the same translation unit. Unlike GCC
+  -fno-semantic-interposition, Clang emits such relocations referencing
+  local symbols for non-pic code as well.
+
+This causes references to jiffies to refer to '.Ljiffies$local' when
+jiffies is defined in the same translation unit. Likewise, references to
+jiffies_64 become references to '.Ljiffies_64$local' in translation units
+that define jiffies_64.  Because these differ from the names used in the
+linker script, they will not be rewritten to alias one another.
+
+2. Full LTO
+
+Full LTO effectively treats all source files as one translation
+unit, causing these local references to be produced everywhere.  When
+the linker processes the linker script, there are no longer any
+references to jiffies_64' anywhere to replace with 'jiffies'.  And
+thus '.Ljiffies$local' and '.Ljiffies_64$local' no longer alias
+at all.
+
+In the process of porting patches enabling Full LTO from arm64 to x86_64,
+spooky bugs have been observed where the kernel appeared to boot, but init
+doesn't get scheduled.
+
+Avoid the ODR violation by matching other architectures and define jiffies
+only by linker script.  For -fno-semantic-interposition + Full LTO, there
+is no longer a global definition of jiffies for the compiler to produce a
+local symbol which the linker script won't ensure aliases to jiffies_64.
+
+Fixes: 40747ffa5aa8 ("asmlinkage: Make jiffies visible")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Alistair Delva <adelva@google.com>
+Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
+Debugged-by: Sami Tolvanen <samitolvanen@google.com>
+Suggested-by: Fangrui Song <maskray@google.com>
+Signed-off-by: Bob Haarman <inglorion@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot on
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200425200641.GA1554@cslab.localdomain
+Link: https://github.com/ClangBuiltLinux/linux/issues/852
+Link: https://lkml.kernel.org/r/20200602193100.229287-1-inglorion@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/reboot.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kernel/time.c        |    4 ----
+ arch/x86/kernel/vmlinux.lds.S |    4 ++--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -197,6 +197,14 @@ static const struct dmi_system_id reboot
- 			DMI_MATCH(DMI_PRODUCT_NAME, "MacBook5"),
- 		},
- 	},
-+	{	/* Handle problems with rebooting on Apple MacBook6,1 */
-+		.callback = set_pci_reboot,
-+		.ident = "Apple MacBook6,1",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MacBook6,1"),
-+		},
-+	},
- 	{	/* Handle problems with rebooting on Apple MacBookPro5 */
- 		.callback = set_pci_reboot,
- 		.ident = "Apple MacBookPro5",
+--- a/arch/x86/kernel/time.c
++++ b/arch/x86/kernel/time.c
+@@ -25,10 +25,6 @@
+ #include <asm/hpet.h>
+ #include <asm/time.h>
+ 
+-#ifdef CONFIG_X86_64
+-__visible volatile unsigned long jiffies __cacheline_aligned_in_smp = INITIAL_JIFFIES;
+-#endif
+-
+ unsigned long profile_pc(struct pt_regs *regs)
+ {
+ 	unsigned long pc = instruction_pointer(regs);
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -40,13 +40,13 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
+ #ifdef CONFIG_X86_32
+ OUTPUT_ARCH(i386)
+ ENTRY(phys_startup_32)
+-jiffies = jiffies_64;
+ #else
+ OUTPUT_ARCH(i386:x86-64)
+ ENTRY(phys_startup_64)
+-jiffies_64 = jiffies;
+ #endif
+ 
++jiffies = jiffies_64;
++
+ #if defined(CONFIG_X86_64)
+ /*
+  * On 64-bit, align RODATA to 2MB so we retain large page mappings for
 
 
