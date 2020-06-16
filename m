@@ -2,88 +2,95 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AADC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC25C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F35C2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:14:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gt9Hi1QP"
+	by mail.kernel.org (Postfix) with ESMTP id E8E4D20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592302474;
+	bh=UXfCyP+Xp14GVhxH+a3ULCFKGys2vq8CRdRVm47yCYM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jGCKbeL5XXX76z2aD0fSpqoCElePt1xbCMv07CqYPZtOX45Q+axisTdlrbcHIn6IT
+	 8xtXusfaoMILJsfn++cvZLS8yam73H4nRncLq1MOr8uknlI2uxjd+ExYeVIDcbeuwV
+	 nSChaCMyIAQGP4bfxcZpBUKMlVd58kkdD2QBlZ5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgFPKO1 (ORCPT
+        id S1728377AbgFPKOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgFPKOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:14:23 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AB6C08C5C2;
-        Tue, 16 Jun 2020 03:14:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YMNjtPkUP07OueOokG4fk77Nq73HNsl0a5WlXwfxR7g=; b=gt9Hi1QPxBoutmH3mi4JL7iRs
-        9UF/thJLliLHe2KCL9wnfKBJralaec4Mbl2VsPihwkzCQOgFNlypT0Oyt23nVPBmvqaGb1PH/Lqoq
-        PfomGQH7b5VGWIERc+e2TjJgdNHm1dPXs6NF6/JIaU67DyERIXPqD8xqSifOM8+guWOHmhs5McZB/
-        8KfHWhdncf/InaezM7VcgbomwexiC/OAUZXYSvwONUFHFHQcFM9uSgVA6xtViHYIyzFsE4X2PP+DQ
-        P414SVMD2c1o2/n37q3hIhNza3GW8pHA7Bx0ROgiun69ldGDuUXPUL1WoZNDL97XeYcUP0rI8GziU
-        M0yhbJgMQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57860)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jl8bS-0002HY-1X; Tue, 16 Jun 2020 11:14:02 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jl8bN-00022E-SX; Tue, 16 Jun 2020 11:13:57 +0100
-Date:   Tue, 16 Jun 2020 11:13:57 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
-        robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH v3 1/3] net: phy: mscc: move shared probe code into a
- helper
-Message-ID: <20200616101357.GM1551@shell.armlinux.org.uk>
-References: <20200615144501.1140870-1-heiko@sntech.de>
- <20200615.181129.570239999533845176.davem@davemloft.net>
- <20200615.181225.2016760272076151342.davem@davemloft.net>
- <1656001.WqWBulSbu3@diego>
+        Tue, 16 Jun 2020 06:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726052AbgFPKO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:14:29 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CED320734;
+        Tue, 16 Jun 2020 10:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592302468;
+        bh=UXfCyP+Xp14GVhxH+a3ULCFKGys2vq8CRdRVm47yCYM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0eSIpaJLvTtQWq2UAwb171QD2F/yQpSdGBSMbkC+lgOZvbJMUk9IQqDZ/SKOaN5gx
+         CLRBqlNUq9cW4p8PCIjD3iJXa63eMNdQUGsOdqs2yiXgNLPt1QiCrOE6uP4h/dQe/H
+         t1ObfSKLy5Ky2aJ4sqp0lRgJ4++Pny4n1pxboa9Y=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 3/4] tools/bootconfig: Fix to return 0 if succeeded to show the bootconfig
+Date:   Tue, 16 Jun 2020 19:14:25 +0900
+Message-Id: <159230246566.65555.11891772258543514487.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159230243779.65555.11413773790099102781.stgit@devnote2>
+References: <159230243779.65555.11413773790099102781.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1656001.WqWBulSbu3@diego>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:10:27AM +0200, Heiko Stübner wrote:
-> > 
-> > You also need to provide a proper header posting when you repost this series
-> > after fixing this bug.
-> 
-> not sure I understand what you mean with "header posting" here.
+Fix bootconfig to return 0 if succeeded to show the bootconfig
+in initrd. Without this fix, "bootconfig INITRD" command
+returns !0 even if the command succeeded to show the bootconfig.
 
-David is requesting that you send a "0/N" email summarising the purpose
-of the patch series and any other relevant information to the series as
-a whole.  The subsequent patches should be threaded to the 0/N email.
+Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+  Changes in v2:
+   - Use goto for better reading.
+---
+ tools/bootconfig/main.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-The 0/N email should also contain the overall diffstat for the series.
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 21896a6675fd..e0878f5f74b1 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -207,11 +207,13 @@ int show_xbc(const char *path)
+ 	}
+ 
+ 	ret = load_xbc_from_initrd(fd, &buf);
+-	if (ret < 0)
++	if (ret < 0) {
+ 		pr_err("Failed to load a boot config from initrd: %d\n", ret);
+-	else
+-		xbc_show_compact_tree();
+-
++		goto out;
++	}
++	xbc_show_compact_tree();
++	ret = 0;
++out:
+ 	close(fd);
+ 	free(buf);
+ 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
