@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD091C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9205021527
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F72F21532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322895;
-	bh=PRtKI226GCmxGgDq0+MCPNMMXwrc1tNBGw1jldleWlc=;
+	s=default; t=1592322898;
+	bh=LUaGMoUbjdbFQRmoKpjS+1KFdgYIxUgQbBO85tMnjrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fM5fWtmNtnhe1piXBjvlQ521CKeC6rcMidDUwoV/077K8l7XKDYPrvT/dWDwOxjL7
-	 pglpmSAXfShNFv+AIrNYlLd5FUXH1zleuHugZvyEL6sq15U6Pb8kLEf5wPg+9Yzh9w
-	 KnVEzFnwDuSiadRXDc/PxlNhB/xf+QFaWmT9n8vo=
+	b=uADTRtf6fGAqzckjyX35UmeiYkc3RprCJVLtacybn6ceBPIJ6ykz7IuIWv/Ml32Ox
+	 Xzn8nL8jYhhmTa6ZUQcT9nBWuamoVoZp2fnEfQgNRDFTyg3h2gf8XFg2+6bi9H3c5d
+	 f4D4/EBQGKnygMUifC6oLOtGM+KCC6mSU2DBoZDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733026AbgFPPyy (ORCPT
+        id S1733033AbgFPPy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:54:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54336 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733017AbgFPPyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:47 -0400
+        id S1732553AbgFPPyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE11021532;
-        Tue, 16 Jun 2020 15:54:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033012158C;
+        Tue, 16 Jun 2020 15:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322887;
-        bh=PRtKI226GCmxGgDq0+MCPNMMXwrc1tNBGw1jldleWlc=;
+        s=default; t=1592322892;
+        bh=LUaGMoUbjdbFQRmoKpjS+1KFdgYIxUgQbBO85tMnjrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=giifqjT5Wlk77m7zg+OrCDEXpJtpWSoltyE8b86GOIpMFHQDQaDIFABShbQ7V0tvg
-         r3SkQRm7jYMaMH6mml0Zjc/B0oIwAp8X2NnaJA6U7RVrW7WkH50LJS3aeHz6d85X/t
-         Fo9rZ8VWxs2UIWBdpzS9pVTekW7YAC/wGHdPs1vU=
+        b=PliDeAK+YJNlWt/o2kDLeLs7Fh9lherSnog45q7dR+boE59IKD73g6NUHA/+dKzdJ
+         6kkT5fCOAYVIfHA7p/ovwYDDKOVQCZD9ty9kR9JLdW9dX6oeddwL4oRX4Xr6kuXCFY
+         jQ/bwysTrFT1kWEDqe0HZvk9+es8UP7flCQiWPmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
-Subject: [PATCH 5.6 143/161] drm/vkms: Hold gem object while still in-use
-Date:   Tue, 16 Jun 2020 17:35:33 +0200
-Message-Id: <20200616153113.164835858@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 145/161] fat: dont allow to mount if the FAT length == 0
+Date:   Tue, 16 Jun 2020 17:35:35 +0200
+Message-Id: <20200616153113.251317880@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,78 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 
-commit 0ea2ea42b31abc1141f2fd3911f952a97d401fcb upstream.
+commit b1b65750b8db67834482f758fc385bfa7560d228 upstream.
 
-We need to keep the reference to the drm_gem_object
-until the last access by vkms_dumb_create.
+If FAT length == 0, the image doesn't have any data. And it can be the
+cause of overlapping the root dir and FAT entries.
 
-Therefore, the put the object after it is used.
+Also Windows treats it as invalid format.
 
-This fixes a use-after-free issue reported by syzbot.
-
-While here, change vkms_gem_create() symbol to static.
-
-Reported-and-tested-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200427214405.13069-1-ezequiel@collabora.com
+Reported-by: syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Link: http://lkml.kernel.org/r/87r1wz8mrd.fsf@mail.parknet.co.jp
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vkms/vkms_drv.h |    5 -----
- drivers/gpu/drm/vkms/vkms_gem.c |   11 ++++++-----
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ fs/fat/inode.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -121,11 +121,6 @@ struct drm_plane *vkms_plane_init(struct
- 				  enum drm_plane_type type, int index);
+--- a/fs/fat/inode.c
++++ b/fs/fat/inode.c
+@@ -1520,6 +1520,12 @@ static int fat_read_bpb(struct super_blo
+ 		goto out;
+ 	}
  
- /* Gem stuff */
--struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
--				       struct drm_file *file,
--				       u32 *handle,
--				       u64 size);
--
- vm_fault_t vkms_gem_fault(struct vm_fault *vmf);
- 
- int vkms_dumb_create(struct drm_file *file, struct drm_device *dev,
---- a/drivers/gpu/drm/vkms/vkms_gem.c
-+++ b/drivers/gpu/drm/vkms/vkms_gem.c
-@@ -97,10 +97,10 @@ vm_fault_t vkms_gem_fault(struct vm_faul
- 	return ret;
- }
- 
--struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
--				       struct drm_file *file,
--				       u32 *handle,
--				       u64 size)
-+static struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
-+					      struct drm_file *file,
-+					      u32 *handle,
-+					      u64 size)
- {
- 	struct vkms_gem_object *obj;
- 	int ret;
-@@ -113,7 +113,6 @@ struct drm_gem_object *vkms_gem_create(s
- 		return ERR_CAST(obj);
- 
- 	ret = drm_gem_handle_create(file, &obj->gem, handle);
--	drm_gem_object_put_unlocked(&obj->gem);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
-@@ -142,6 +141,8 @@ int vkms_dumb_create(struct drm_file *fi
- 	args->size = gem_obj->size;
- 	args->pitch = pitch;
- 
-+	drm_gem_object_put_unlocked(gem_obj);
++	if (bpb->fat_fat_length == 0 && bpb->fat32_length == 0) {
++		if (!silent)
++			fat_msg(sb, KERN_ERR, "bogus number of FAT sectors");
++		goto out;
++	}
 +
- 	DRM_DEBUG_DRIVER("Created object of size %lld\n", size);
+ 	error = 0;
  
- 	return 0;
+ out:
 
 
