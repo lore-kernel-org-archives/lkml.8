@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E24C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0B72071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED284208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323728;
-	bh=6mb25FkOw5ohSnBP7pmFf8WZ6p6jKa0VhuRgbk7vP94=;
+	s=default; t=1592323733;
+	bh=hGX29h/XEmSvwgUH6YsyVe/7+5yKRFxO/MI5vqy7xRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2MliJ2NJJHLMEkyW4WpSpPPsBdyBkYRhk5Cex0cpHI+Zrp6qnsAWAyDinZTTtuQ8i
-	 7oEEdJrbzELjvSpz/6BOlwfzLxVKgr3YJgPNBx5FYD7FvgjKQhPg0FMaRjcHRl5Laj
-	 xRnRnSjsOVVteKLYKx/50NWFduz9kQRb4fbYfQxc=
+	b=aa0EWNuQGxI9KgLovq6iFHdouqwkUPMjnFnvScta+3yyWsElYAiavOCsGy/uOwjY4
+	 KS/hKdCokB4SgMI2n/S4Y3//3vMwmjMKh/f3x8wZOMGBUAxIkFdMnDpPYNZxXSbngO
+	 37lu8fiXQfwFm/qvoz0GmWHSSYOdcYvXgkwDq1Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbgFPQIn (ORCPT
+        id S1732141AbgFPPp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:08:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37786 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731296AbgFPPqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:04 -0400
+        id S1732128AbgFPPpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9B972071A;
-        Tue, 16 Jun 2020 15:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33F1C21473;
+        Tue, 16 Jun 2020 15:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322363;
-        bh=6mb25FkOw5ohSnBP7pmFf8WZ6p6jKa0VhuRgbk7vP94=;
+        s=default; t=1592322352;
+        bh=hGX29h/XEmSvwgUH6YsyVe/7+5yKRFxO/MI5vqy7xRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MHCYIsZGljt4EZ+glEWDPfatCwpCQvQINp/e0uP0m+WP9UaE5/YjSRV73OkTzUXJ1
-         u6nuQ9JrbB0DV65hs+Z/xUvb+UKndkBMFHxcfH9wkfmw9SauZywutjhDk49ND3nbVY
-         A2Lp9THiHr+Xy3GofPHN+DMw5KPCNEoLJ3dU7wg0=
+        b=WF0sy2QEztuv1XK0GXLXdOBKjkhBJ49E5n40xXkcel8LohmhMg8fbt00Q6HOLtcFh
+         n+7v1krBiIDSXhlSMpNpU3zbYHdf5eEavLmvQ5WNdPLJbJXEgDSpk73CFHHBdMAfxL
+         t/OSsPOFbQlB/1ls4bKnYKUy5Pm1gJd0nPSuilvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shay Drory <shayd@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.7 103/163] net/mlx5: Fix fatal error handling during device load
-Date:   Tue, 16 Jun 2020 17:34:37 +0200
-Message-Id: <20200616153111.753324589@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 099/163] dccp: Fix possible memleak in dccp_init and dccp_fini
+Date:   Tue, 16 Jun 2020 17:34:33 +0200
+Message-Id: <20200616153111.567487534@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,54 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shay Drory <shayd@mellanox.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit b6e0b6bebe0732d5cac51f0791f269d2413b8980 ]
+[ Upstream commit c96b6acc8f89a4a7f6258dfe1d077654c11415be ]
 
-Currently, in case of fatal error during mlx5_load_one(), we cannot
-enter error state until mlx5_load_one() is finished, what can take
-several minutes until commands will get timeouts, because these commands
-can't be processed due to the fatal error.
-Fix it by setting dev->state as MLX5_DEVICE_STATE_INTERNAL_ERROR before
-requesting the lock.
+There are some memory leaks in dccp_init() and dccp_fini().
 
-Fixes: c1d4d2e92ad6 ("net/mlx5: Avoid calling sleeping function by the health poll thread")
-Signed-off-by: Shay Drory <shayd@mellanox.com>
-Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+In dccp_fini() and the error handling path in dccp_init(), free lhash2
+is missing. Add inet_hashinfo2_free_mod() to do it.
+
+If inet_hashinfo2_init_mod() failed in dccp_init(),
+percpu_counter_destroy() should be called to destroy dccp_orphan_count.
+It need to goto out_free_percpu when inet_hashinfo2_init_mod() failed.
+
+Fixes: c92c81df93df ("net: dccp: fix kernel crash on module load")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/health.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ include/net/inet_hashtables.h |    6 ++++++
+ net/dccp/proto.c              |    7 +++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
-@@ -193,15 +193,23 @@ static bool reset_fw_if_needed(struct ml
+--- a/include/net/inet_hashtables.h
++++ b/include/net/inet_hashtables.h
+@@ -185,6 +185,12 @@ static inline spinlock_t *inet_ehash_loc
  
- void mlx5_enter_error_state(struct mlx5_core_dev *dev, bool force)
- {
-+	bool err_detected = false;
+ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo);
+ 
++static inline void inet_hashinfo2_free_mod(struct inet_hashinfo *h)
++{
++	kfree(h->lhash2);
++	h->lhash2 = NULL;
++}
 +
-+	/* Mark the device as fatal in order to abort FW commands */
-+	if ((check_fatal_sensors(dev) || force) &&
-+	    dev->state == MLX5_DEVICE_STATE_UP) {
-+		dev->state = MLX5_DEVICE_STATE_INTERNAL_ERROR;
-+		err_detected = true;
-+	}
- 	mutex_lock(&dev->intf_state_mutex);
--	if (dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
--		goto unlock;
-+	if (!err_detected && dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
-+		goto unlock;/* a previous error is still being handled */
- 	if (dev->state == MLX5_DEVICE_STATE_UNINITIALIZED) {
- 		dev->state = MLX5_DEVICE_STATE_INTERNAL_ERROR;
- 		goto unlock;
- 	}
+ static inline void inet_ehash_locks_free(struct inet_hashinfo *hashinfo)
+ {
+ 	kvfree(hashinfo->ehash_locks);
+--- a/net/dccp/proto.c
++++ b/net/dccp/proto.c
+@@ -1139,14 +1139,14 @@ static int __init dccp_init(void)
+ 	inet_hashinfo_init(&dccp_hashinfo);
+ 	rc = inet_hashinfo2_init_mod(&dccp_hashinfo);
+ 	if (rc)
+-		goto out_fail;
++		goto out_free_percpu;
+ 	rc = -ENOBUFS;
+ 	dccp_hashinfo.bind_bucket_cachep =
+ 		kmem_cache_create("dccp_bind_bucket",
+ 				  sizeof(struct inet_bind_bucket), 0,
+ 				  SLAB_HWCACHE_ALIGN, NULL);
+ 	if (!dccp_hashinfo.bind_bucket_cachep)
+-		goto out_free_percpu;
++		goto out_free_hashinfo2;
  
--	if (check_fatal_sensors(dev) || force) {
-+	if (check_fatal_sensors(dev) || force) { /* protected state setting */
- 		dev->state = MLX5_DEVICE_STATE_INTERNAL_ERROR;
- 		mlx5_cmd_flush(dev);
- 	}
+ 	/*
+ 	 * Size and allocate the main established and bind bucket
+@@ -1242,6 +1242,8 @@ out_free_dccp_ehash:
+ 	free_pages((unsigned long)dccp_hashinfo.ehash, ehash_order);
+ out_free_bind_bucket_cachep:
+ 	kmem_cache_destroy(dccp_hashinfo.bind_bucket_cachep);
++out_free_hashinfo2:
++	inet_hashinfo2_free_mod(&dccp_hashinfo);
+ out_free_percpu:
+ 	percpu_counter_destroy(&dccp_orphan_count);
+ out_fail:
+@@ -1265,6 +1267,7 @@ static void __exit dccp_fini(void)
+ 	kmem_cache_destroy(dccp_hashinfo.bind_bucket_cachep);
+ 	dccp_ackvec_exit();
+ 	dccp_sysctl_exit();
++	inet_hashinfo2_free_mod(&dccp_hashinfo);
+ 	percpu_counter_destroy(&dccp_orphan_count);
+ }
+ 
 
 
