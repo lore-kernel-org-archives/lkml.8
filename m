@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B36C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B6AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D059214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635EF214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322195;
-	bh=/QZGYAIN0gqiUx3t1SdQE7QFaFXH/0pTMIPJFFxdUFk=;
+	s=default; t=1592322200;
+	bh=6qGzqDRgQtxS+q1RhS4XN3NgSBMUArCOh0uuf57KmI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rS6Wt+MQzX/C3GHxCZNB3tMAJNgHKJzlpwwJlhm138F0VYbaW3jFrcf5UA+gwJY+k
-	 U1UwAnCmyH+32TarncV/+Lub7/MNMGj72Gv4lbIW5Zz+hvAr5M5zRSIl8yHX927Qhu
-	 0NoMT5gYgd6z1rRf0huXsHmJ3YLsH7wig+2OdW/U=
+	b=fGlU2WZpVrUqWwynM0fF4fy0fIDNhsHJyZIvQD3yNCOLoXv4P6eLNPZf7DHK1CWvw
+	 yOZDCuq5SKLhM0aBcuLSHtAYZ7lnjriSta1iiszbJLtl+lNQNGxefdgpyKajg4fdf3
+	 tLuwPgyc0TQZsKWY68/JgvT2oLEaaXhgUgi3zqYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbgFPPnN (ORCPT
+        id S1731099AbgFPPnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60098 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:43:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731734AbgFPPm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:58 -0400
+        id S1731713AbgFPPnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:43:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EAA421475;
-        Tue, 16 Jun 2020 15:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9A8208E4;
+        Tue, 16 Jun 2020 15:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322177;
-        bh=/QZGYAIN0gqiUx3t1SdQE7QFaFXH/0pTMIPJFFxdUFk=;
+        s=default; t=1592322182;
+        bh=6qGzqDRgQtxS+q1RhS4XN3NgSBMUArCOh0uuf57KmI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ttxRQosSvGQHw3wKCuZoAq4q8rVArTD5E+cyXUC1qwYs84kaPh8G1qhtsa8Ouo9LW
-         n9p6wn8/Y3YUEXp6y9OO+YdYSLjvUQEx6tPqET23r9G4cUD3Rk7uia17slSGGSlLJb
-         GV5wTP5BHJdFQJ2KkjdaqBW7OErEThhODeWNxGHY=
+        b=WBvsozOsNwxH7zhjRee1wZ+XZVZ7Z/uT3EL3TwiDHhkzBv0r1pm0uW1gsVJc3Upx9
+         cjcM1z/Wy7Jb/izB0+gRkRxFWK1DLSNDC1cKJA/vUZ7JKH3/yFq9KbZRTX6KkbCwCS
+         KvUZRi84ZiLJ5yj1OWDzjOWLMnfK2k10PVOE1xR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.7 031/163] KVM: x86: only do L1TF workaround on affected processors
-Date:   Tue, 16 Jun 2020 17:33:25 +0200
-Message-Id: <20200616153108.362285898@linuxfoundation.org>
+        stable@vger.kernel.org, Avi Kivity <avi@scylladb.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.7 033/163] aio: fix async fsync creds
+Date:   Tue, 16 Jun 2020 17:33:27 +0200
+Message-Id: <20200616153108.456489455@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -58,76 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit d43e2675e96fc6ae1a633b6a69d296394448cc32 upstream.
+commit 530f32fc370fd1431ea9802dbc53ab5601dfccdb upstream.
 
-KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
-in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
-in an L1TF attack.  This works as long as there are 5 free bits between
-MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
-access triggers a reserved-bit-set page fault.
+Avi Kivity reports that on fuse filesystems running in a user namespace
+asyncronous fsync fails with EOVERFLOW.
 
-The bit positions however were computed wrongly for AMD processors that have
-encryption support.  In this case, x86_phys_bits is reduced (for example
-from 48 to 43, to account for the C bit at position 47 and four bits used
-internally to store the SEV ASID and other stuff) while x86_cache_bits in
-would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
-and bit 51 are set.  Then low_phys_bits would also cover some of the
-bits that are set in the shadow_mmio_value, terribly confusing the gfn
-caching mechanism.
+The reason is that f_ops->fsync() is called with the creds of the kthread
+performing aio work instead of the creds of the process originally
+submitting IOCB_CMD_FSYNC.
 
-To fix this, avoid splitting gfns as long as the processor does not have
-the L1TF bug (which includes all AMD processors).  When there is no
-splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
-the overlap.  This fixes "npt=0" operation on EPYC processors.
+Fuse sends the creds of the caller in the request header and it needs to
+translate the uid and gid into the server's user namespace.  Since the
+kthread is running in init_user_ns, the translation will fail and the
+operation returns an error.
 
-Thanks to Maxim Levitsky for bisecting this bug.
+It can be argued that fsync doesn't actually need any creds, but just
+zeroing out those fields in the header (as with requests that currently
+don't take creds) is a backward compatibility risk.
 
-Cc: stable@vger.kernel.org
-Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Instead of working around this issue in fuse, solve the core of the problem
+by calling the filesystem with the proper creds.
+
+Reported-by: Avi Kivity <avi@scylladb.com>
+Tested-by: Giuseppe Scrivano <gscrivan@redhat.com>
+Fixes: c9582eb0ff7d ("fuse: Fail all requests with invalid uids or gids")
+Cc: stable@vger.kernel.org  # 4.18+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mmu/mmu.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ fs/aio.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -335,6 +335,8 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio
- {
- 	BUG_ON((u64)(unsigned)access_mask != access_mask);
- 	BUG_ON((mmio_mask & mmio_value) != mmio_value);
-+	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
-+	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
- 	shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
- 	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
- 	shadow_mmio_access_mask = access_mask;
-@@ -583,16 +585,15 @@ static void kvm_mmu_reset_all_pte_masks(
- 	 * the most significant bits of legal physical address space.
- 	 */
- 	shadow_nonpresent_or_rsvd_mask = 0;
--	low_phys_bits = boot_cpu_data.x86_cache_bits;
--	if (boot_cpu_data.x86_cache_bits <
--	    52 - shadow_nonpresent_or_rsvd_mask_len) {
-+	low_phys_bits = boot_cpu_data.x86_phys_bits;
-+	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
-+	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
-+			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
-+		low_phys_bits = boot_cpu_data.x86_cache_bits
-+			- shadow_nonpresent_or_rsvd_mask_len;
- 		shadow_nonpresent_or_rsvd_mask =
--			rsvd_bits(boot_cpu_data.x86_cache_bits -
--				  shadow_nonpresent_or_rsvd_mask_len,
--				  boot_cpu_data.x86_cache_bits - 1);
--		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
--	} else
--		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
-+			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
-+	}
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -176,6 +176,7 @@ struct fsync_iocb {
+ 	struct file		*file;
+ 	struct work_struct	work;
+ 	bool			datasync;
++	struct cred		*creds;
+ };
  
- 	shadow_nonpresent_or_rsvd_lower_gfn_mask =
- 		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
+ struct poll_iocb {
+@@ -1589,8 +1590,11 @@ static int aio_write(struct kiocb *req,
+ static void aio_fsync_work(struct work_struct *work)
+ {
+ 	struct aio_kiocb *iocb = container_of(work, struct aio_kiocb, fsync.work);
++	const struct cred *old_cred = override_creds(iocb->fsync.creds);
+ 
+ 	iocb->ki_res.res = vfs_fsync(iocb->fsync.file, iocb->fsync.datasync);
++	revert_creds(old_cred);
++	put_cred(iocb->fsync.creds);
+ 	iocb_put(iocb);
+ }
+ 
+@@ -1604,6 +1608,10 @@ static int aio_fsync(struct fsync_iocb *
+ 	if (unlikely(!req->file->f_op->fsync))
+ 		return -EINVAL;
+ 
++	req->creds = prepare_creds();
++	if (!req->creds)
++		return -ENOMEM;
++
+ 	req->datasync = datasync;
+ 	INIT_WORK(&req->work, aio_fsync_work);
+ 	schedule_work(&req->work);
 
 
