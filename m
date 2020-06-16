@@ -2,52 +2,51 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A100DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2550B21475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B85121475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322187;
-	bh=2Mo54ugFbT/ZJzn0u2QHp9SXo5vCmvmm19JLQlDWKx8=;
+	s=default; t=1592322193;
+	bh=GYKceUWiKTWd7buFEwn0Zq8KbhSyUZuX2hidA0mNV9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NfGWxcKkmGCmnM+x16UCWK6Ab6mbUbKmR8z8EYMNYOy6gPAFSxJsKX0pQBoHTOYt7
-	 Ml+Fpsq2Ii3d2KPJ83ZmhNtJIsTquOHac12ZbfC0/GlL7Yxn3RA19by1nnRLLG79fn
-	 W2Fc3xdZ6c8ltspQY0Dz2aJIT1qaI3puj+JbgtZY=
+	b=GpHihAIj06tuzUaIvFMdgeYCUpDA06UVV0YIi/X50lrEBwUL6aVfiRxm8ncu9MNYD
+	 zuKC9lCD6Q7DjBHmV/Vjj3fjRSWCpgfVdSMAiVYH02TyrMP5TqtLP1p0ivfQ6ckrSa
+	 oPMiRBoZQfVLyFP6iX39L/EkU2IWdqnKKJ+MTMZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731738AbgFPPnF (ORCPT
+        id S1731745AbgFPPnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59878 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729862AbgFPPmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:50 -0400
+        id S1730511AbgFPPnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:43:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8170B208D5;
-        Tue, 16 Jun 2020 15:42:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 748E320C56;
+        Tue, 16 Jun 2020 15:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322170;
-        bh=2Mo54ugFbT/ZJzn0u2QHp9SXo5vCmvmm19JLQlDWKx8=;
+        s=default; t=1592322180;
+        bh=GYKceUWiKTWd7buFEwn0Zq8KbhSyUZuX2hidA0mNV9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lFUBO1VT1Cydf1yR1mble8E7GW9qBBrO4KpXhVn6At1dhHx8NhIHlpUrOomTWCaiP
-         O6CcvROhKA8sW5CnaAPB0fZVcZ8ooqbJYbEziHeIi8crx5Wj9QRAf8HFS9N1ERmGwO
-         uEk0NBd+CTr4/f27UCmxNmeovrQB0DkuYZnBDDS0=
+        b=kqoOMXbBBNrgkGuWOwSDLhd1h8ucAs7nTHzDfEmqHo5nVcfuoCHToGKr/6q+/ASbH
+         OIFeAwDxUZjo5Vi91Y4hIEOtbru1ibD/4aLnW5duSTvm6iQwCHOclnNOmW70etRXKu
+         vXMHV9eLgfYLpHeq6013ZO4rSyaU6naXQ9VIwDbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geliang Tang <geliangtang@gmail.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 009/163] mptcp: bugfix for RM_ADDR option parsing
-Date:   Tue, 16 Jun 2020 17:33:03 +0200
-Message-Id: <20200616153107.310913641@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 032/163] PCI/PM: Adjust pcie_wait_for_link_delay() for caller delay
+Date:   Tue, 16 Jun 2020 17:33:26 +0200
+Message-Id: <20200616153108.409749996@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,41 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geliang Tang <geliangtang@gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 8e60eed6b38e464e8c9d68f9caecafaa554dffe0 ]
+[ Upstream commit f044baaff1eb7ae5aa7a36f1b7ad5bd8eeb672c4 ]
 
-In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
-"Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
+The caller of pcie_wait_for_link_delay() specifies the time to wait after
+the link becomes active.  When the downstream port doesn't support link
+active reporting, obviously we can't tell when the link becomes active, so
+we waited the worst-case time (1000 ms) plus 100 ms, ignoring the delay
+from the caller.
 
-  +-------+-------+---------------+
-  |Subtype|(resvd)|   Address ID  |
-  +-------+-------+---------------+
-  |               |
- ptr            ptr+1
+Instead, wait for 1000 ms + the delay from the caller.
 
-We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
-will fix this bug.
-
-Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 4827d63891b6 ("PCI/PM: Add pcie_wait_for_link_delay()")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mptcp/options.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -273,6 +273,8 @@ static void mptcp_parse_option(const str
- 		if (opsize != TCPOLEN_MPTCP_RM_ADDR_BASE)
- 			break;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 595fcf59843f..6d3234f75692 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4673,10 +4673,10 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
  
-+		ptr++;
-+
- 		mp_opt->rm_addr = 1;
- 		mp_opt->rm_id = *ptr++;
- 		pr_debug("RM_ADDR: id=%d", mp_opt->rm_id);
+ 	/*
+ 	 * Some controllers might not implement link active reporting. In this
+-	 * case, we wait for 1000 + 100 ms.
++	 * case, we wait for 1000 ms + any delay requested by the caller.
+ 	 */
+ 	if (!pdev->link_active_reporting) {
+-		msleep(1100);
++		msleep(timeout + delay);
+ 		return true;
+ 	}
+ 
+-- 
+2.25.1
+
 
 
