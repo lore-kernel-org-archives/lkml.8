@@ -2,98 +2,108 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C5FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE78C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6988C20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B20220707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:22:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="llObE3WJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgFPJUe (ORCPT
+        id S1728151AbgFPJWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:20:34 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55440 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726052AbgFPJUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:20:30 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0DB4DAF247A6438F2798;
-        Tue, 16 Jun 2020 17:20:28 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 16 Jun 2020 17:20:17 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <rjw@rjwysocki.net>, <lenb@kernel.org>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <guohanjun@huawei.com>, <wangxiongfeng2@huawei.com>
-Subject: [PATCH 2/2] ACPI: sysfs: add missing newlines when printing module parameters
-Date:   Tue, 16 Jun 2020 17:14:09 +0800
-Message-ID: <1592298849-41530-3-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
-In-Reply-To: <1592298849-41530-1-git-send-email-wangxiongfeng2@huawei.com>
-References: <1592298849-41530-1-git-send-email-wangxiongfeng2@huawei.com>
+        Tue, 16 Jun 2020 05:22:10 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56990 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgFPJWG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:22:06 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05G9LlZk184942;
+        Tue, 16 Jun 2020 09:21:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=JY/T5f/hGcowMJ8VD+RE1SJlbLsBJv3+IyXnug6dOUc=;
+ b=llObE3WJ2nelnhLBBguVo3vAXmGeWpNUmBaYxduyzQYQBJWNPAkaTHC/hHoIUAjO1K3J
+ cOUesEEx6ssPsM441xOJHHZras2jPC/RQNyMD77nrEISP/ed7e6UrY5WX0q/SkBck8Mm
+ hHEv6l3lKrzzBxBwMt+xg3pvfXOEoAzXX1IQoBjJmrgZUgqIiF6pu9ZMQO6ONElpIS7m
+ R5Pl60R25Rcwx5J81bU1aNzC4DwQ+n76u35RvXsMdwKHERtEjakprPM63c+zFNCl3YpW
+ 1hmMRh2syv3M6wyRqXXJO7JcAb38KjrYaQoEAh2Pa3mWWytevlR2gUplcd6uVuq4xyXn Ag== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31p6s25nnj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 16 Jun 2020 09:21:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05G9J2uL194221;
+        Tue, 16 Jun 2020 09:19:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 31p6dg1r3h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 09:19:58 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05G9JvaT004028;
+        Tue, 16 Jun 2020 09:19:57 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 16 Jun 2020 02:19:57 -0700
+Date:   Tue, 16 Jun 2020 12:19:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Eduardo Valentin <edubezval@gmail.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] thermal: ti-soc-thermal: Fix reversed condition in
+ ti_thermal_expose_sensor()
+Message-ID: <20200616091949.GA11940@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160068
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ clxscore=1011 mlxscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 cotscore=-2147483648 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006160069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add newlines for several module parameters printed by sysfs.
+This condition is reversed and will cause breakage.
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Fixes: 7440f518dad9 ("thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/acpi/sysfs.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-index 3a89909..6ad142d 100644
---- a/drivers/acpi/sysfs.c
-+++ b/drivers/acpi/sysfs.c
-@@ -214,7 +214,7 @@ static int param_set_trace_method_name(const char *val,
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index 85776db4bf34..2ce4b19f312a 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -169,7 +169,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
  
- static int param_get_trace_method_name(char *buffer, const struct kernel_param *kp)
- {
--	return scnprintf(buffer, PAGE_SIZE, "%s", acpi_gbl_trace_method_name);
-+	return scnprintf(buffer, PAGE_SIZE, "%s\n", acpi_gbl_trace_method_name);
- }
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
  
- static const struct kernel_param_ops param_ops_trace_method = {
-@@ -271,15 +271,15 @@ static int param_set_trace_state(const char *val,
- static int param_get_trace_state(char *buffer, const struct kernel_param *kp)
- {
- 	if (!(acpi_gbl_trace_flags & ACPI_TRACE_ENABLED))
--		return sprintf(buffer, "disable");
-+		return sprintf(buffer, "disable\n");
- 	else {
- 		if (acpi_gbl_trace_method_name) {
- 			if (acpi_gbl_trace_flags & ACPI_TRACE_ONESHOT)
--				return sprintf(buffer, "method-once");
-+				return sprintf(buffer, "method-once\n");
- 			else
--				return sprintf(buffer, "method");
-+				return sprintf(buffer, "method\n");
- 		} else
--			return sprintf(buffer, "enable");
-+			return sprintf(buffer, "enable\n");
- 	}
- 	return 0;
- }
-@@ -302,7 +302,7 @@ static int param_get_acpica_version(char *buffer,
- {
- 	int result;
+-	if (!IS_ERR_OR_NULL(data))
++	if (IS_ERR_OR_NULL(data))
+ 		data = ti_thermal_build_data(bgp, id);
  
--	result = sprintf(buffer, "%x", ACPI_CA_VERSION);
-+	result = sprintf(buffer, "%x\n", ACPI_CA_VERSION);
- 
- 	return result;
- }
+ 	if (!data)
 -- 
-1.7.12.4
+2.27.0
 
