@@ -2,54 +2,52 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1443EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C47C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE8EB208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D140A208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324003;
-	bh=XntC1FNYkP+J2zrvMQnq4mbbNnvaGrMS1ILo3IOE6Ac=;
+	s=default; t=1592324006;
+	bh=NfyeYBv3Ytqvwx2GLkdolh2/BfKmm02Zfnl6JpkxPis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N+VaKnItNeAU4DJYAnJPOpQjGIoKiqfVtrsgJEiGqKtNznJf0n9j4SDON0yCD6Xlg
-	 TPYb2feXp4IOPAg/PD4DDSN1HwyDlFkwPNweyNwBgyEdGj2JkiDyI8ILAmqbFRB9Rq
-	 Ered0uFHsks77roMzb6Jt8LfIaUgymIKxMzFkGGM=
+	b=wEwU+baH7MG8bGzkCYxVRl3wmIvdQYjoOLaKpmT/yRuTKqwEuTOa4YgmhSfhrS2mE
+	 /0Qs9SGuhHAe0+VVkKLXncNhicVvcWbVQgBtFeiR2HASr6G8lrSLbO0egGABGxyW44
+	 Amsh/lRlnwIl6GNhrC483YTLM72pdG7PI810jSiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731803AbgFPPn3 (ORCPT
+        id S1731793AbgFPPn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60832 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:43:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731781AbgFPPnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:23 -0400
+        id S1731770AbgFPPnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:43:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B741721475;
-        Tue, 16 Jun 2020 15:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDBC208E4;
+        Tue, 16 Jun 2020 15:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322203;
-        bh=XntC1FNYkP+J2zrvMQnq4mbbNnvaGrMS1ILo3IOE6Ac=;
+        s=default; t=1592322200;
+        bh=NfyeYBv3Ytqvwx2GLkdolh2/BfKmm02Zfnl6JpkxPis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oCtKYej2tCJJLbulqCDBNnQRhTTcVUbYLj9f0uqiggQPK7bKD6e/dRkZRkSLRhDFg
-         3/I10Zrp/GPgIuzJyhQndaZSfiHwRmn5XmwpjrPxnG+fLlAXr+y7TY8GHaOmvLZejP
-         2tI8AYqQcfer8LmM7lhkV//u/hlV0mvCFmW9+AxM=
+        b=SCHvxmg2SOE1LaOBvu8hpFshDNcgzsDIRXP9BHqP0urIiWvzxcOrbcOCaJrYiEmoi
+         5xv8FMM0BP5c2A8vXoj+l5ywJIKO1MshaPbEGDC8W6rfwYX/AlerSJCNcE1ID9ztf/
+         Woi/wonQoJ1Oj2Q0h+Tc6p7RRxnMDKyBnpdYlrU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 023/163] ASoC: SOF: imx: fix undefined reference issue
-Date:   Tue, 16 Jun 2020 17:33:17 +0200
-Message-Id: <20200616153107.998878026@linuxfoundation.org>
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.7 040/163] x86/speculation: PR_SPEC_FORCE_DISABLE enforcement for indirect branches.
+Date:   Tue, 16 Jun 2020 17:33:34 +0200
+Message-Id: <20200616153108.786415469@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -62,66 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-[ Upstream commit cb0312f61c3e95c71ec8955a94d42bf7eb5ba617 ]
+commit 4d8df8cbb9156b0a0ab3f802b80cb5db57acc0bf upstream.
 
-make.cross ARCH=mips allyesconfig fails with the following error:
+Currently, it is possible to enable indirect branch speculation even after
+it was force-disabled using the PR_SPEC_FORCE_DISABLE option. Moreover, the
+PR_GET_SPECULATION_CTRL command gives afterwards an incorrect result
+(force-disabled when it is in fact enabled). This also is inconsistent
+vs. STIBP and the documention which cleary states that
+PR_SPEC_FORCE_DISABLE cannot be undone.
 
-sound/soc/sof/sof-of-dev.o:(.data.sof_of_imx8qxp_desc+0x40): undefined
-reference to `sof_imx8x_ops'.
+Fix this by actually enforcing force-disabled indirect branch
+speculation. PR_SPEC_ENABLE called after PR_SPEC_FORCE_DISABLE now fails
+with -EPERM as described in the documentation.
 
-This seems to be a Makefile order issue, solve by using the same
-structure as for Intel platforms.
+Fixes: 9137bb27e60e ("x86/speculation: Add prctl() control for indirect branch speculation")
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF
-dependency")
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/20200409071832.2039-3-daniel.baluta@oss.nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/imx/Kconfig | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-index 812749064ca8..9586635cf8ab 100644
---- a/sound/soc/sof/imx/Kconfig
-+++ b/sound/soc/sof/imx/Kconfig
-@@ -11,17 +11,26 @@ config SND_SOC_SOF_IMX_TOPLEVEL
- 
- if SND_SOC_SOF_IMX_TOPLEVEL
- 
-+config SND_SOC_SOF_IMX_OF
-+	def_tristate SND_SOC_SOF_OF
-+	select SND_SOC_SOF_IMX8 if SND_SOC_SOF_IMX8_SUPPORT
-+	help
-+	  This option is not user-selectable but automagically handled by
-+	  'select' statements at a higher level
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1268,11 +1268,14 @@ static int ib_prctl_set(struct task_stru
+ 			return 0;
+ 		/*
+ 		 * Indirect branch speculation is always disabled in strict
+-		 * mode.
++		 * mode. It can neither be enabled if it was force-disabled
++		 * by a  previous prctl call.
 +
- config SND_SOC_SOF_IMX8_SUPPORT
- 	bool "SOF support for i.MX8"
--	depends on IMX_SCU
--	select IMX_DSP
- 	help
- 	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
- 	  Say Y if you have such a device.
- 	  If unsure select "N".
- 
- config SND_SOC_SOF_IMX8
--	def_tristate SND_SOC_SOF_OF
--	depends on SND_SOC_SOF_IMX8_SUPPORT
-+	tristate
-+	depends on IMX_SCU
-+	select IMX_DSP
-+	help
-+	  This option is not user-selectable but automagically handled by
-+	  'select' statements at a higher level
- 
- endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
--- 
-2.25.1
-
+ 		 */
+ 		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
+ 		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
+-		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
++		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED ||
++		    task_spec_ib_force_disable(task))
+ 			return -EPERM;
+ 		task_clear_spec_ib_disable(task);
+ 		task_update_spec_tif(task);
 
 
