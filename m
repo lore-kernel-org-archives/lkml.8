@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89927C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA95207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2052166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323129;
-	bh=CrzTrc5c9xnViH8P/PW4MxiFG+LWf+qeo9pyDB6PFo0=;
+	s=default; t=1592323132;
+	bh=ZCiPAtOxuxnCByGA3BqQ7UHBlJxuFSZWp1aLpHrCBmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N9N7vUbuGzBRdXDkBRCc9QroZjWaqEUUdkqMbVnvHIPyWXL5CBQtd6j2joJn1C8TQ
-	 P2heLrhbpYIu4De1w8qRV3Wp6g7Lw2oqjXw68sxIxDJYigc7+fYzzpaTzNXJxrq4zA
-	 hf/Ju9Cu5KAfhBNO8N+MVlEW4+Yrtk1a/hgIlFN0=
+	b=JqIN8iolT8xkFAhWRHPwQ2GbMJhiSrH5lcrPUMfduKHx9BdaVU46twCLWKLNpP3S+
+	 oNNADyk5NJuvgWJIIb5ytsOgiQtlWMYYmQ2AZDrLqipfn+rsiTQ7Q/LZqynHZL5qbh
+	 J7/z+X8F9CgZLuoJgljcrf3YmlZC8NG/ydmYw+dI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732953AbgFPPyO (ORCPT
+        id S1733162AbgFPP6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:54:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732945AbgFPPyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:08 -0400
+        id S1732951AbgFPPyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52A7D208D5;
-        Tue, 16 Jun 2020 15:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 267B2208D5;
+        Tue, 16 Jun 2020 15:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322848;
-        bh=CrzTrc5c9xnViH8P/PW4MxiFG+LWf+qeo9pyDB6PFo0=;
+        s=default; t=1592322853;
+        bh=ZCiPAtOxuxnCByGA3BqQ7UHBlJxuFSZWp1aLpHrCBmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9/70D/1Mo8Kh7roos1OlkpFN5TDNvnT/2O23MULA6dCNy/vXcbfQCmAX1KMor1IP
-         Qo7WbrDvVbOKbuTethWg19NcbrCDxTXjxg+HGwch4iNsD6GzREUkxCvSoGnYMR1AYS
-         EdgdR7HGLeb910JInd1wp6Y4wEmqbbQrWWkVtPV0=
+        b=XoiXWLYGa1/HamWkRaDgOYQ80QGtcwoQIe4v/giXgfv/S1hGRfAKsHmPfS4FpEL6G
+         rd9ezX34MFSt3lK6hKqpBcpD3ZQkTElGT451J8C4Yybh3IBq9I29dX36eloMeMPbmQ
+         0mRSPq30RYMZV5tT8CvCA7Q0QWA+TDqhAWDrvPd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 126/161] KVM: nSVM: fix condition for filtering async PF
-Date:   Tue, 16 Jun 2020 17:35:16 +0200
-Message-Id: <20200616153112.364158492@linuxfoundation.org>
+        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Gonglei <arei.gonglei@huawei.com>,
+        "Longpeng(Mike)" <longpeng2@huawei.com>
+Subject: [PATCH 5.6 100/161] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
+Date:   Tue, 16 Jun 2020 17:34:50 +0200
+Message-Id: <20200616153111.123452358@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,36 +65,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Longpeng(Mike) <longpeng2@huawei.com>
 
-commit a3535be731c2a343912578465021f50937f7b099 upstream.
+commit b02989f37fc5e865ceeee9070907e4493b3a21e2 upstream.
 
-Async page faults have to be trapped in the host (L1 in this case),
-since the APF reason was passed from L0 to L1 and stored in the L1 APF
-data page.  This was completely reversed: the page faults were passed
-to the guest, a L2 hypervisor.
+The system will crash when the users insmod crypto/tcrypt.ko with mode=38
+( testing "cts(cbc(aes))" ).
 
+Usually the next entry of one sg will be @sg@ + 1, but if this sg element
+is part of a chained scatterlist, it could jump to the start of a new
+scatterlist array. Fix it by sg_next() on calculation of src/dst
+scatterlist.
+
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Reported-by: LABBE Corentin <clabbe@baylibre.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
 Cc: stable@vger.kernel.org
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
+Signed-off-by: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200602070501.2023-2-longpeng2@huawei.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/virtio/virtio_crypto_algs.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -3236,8 +3236,8 @@ static int nested_svm_exit_special(struc
- 			return NESTED_EXIT_HOST;
- 		break;
- 	case SVM_EXIT_EXCP_BASE + PF_VECTOR:
--		/* When we're shadowing, trap PFs, but not async PF */
--		if (!npt_enabled && svm->vcpu.arch.apf.host_apf_reason == 0)
-+		/* Trap async PF even if not shadowing */
-+		if (!npt_enabled || svm->vcpu.arch.apf.host_apf_reason)
- 			return NESTED_EXIT_HOST;
- 		break;
- 	default:
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -350,13 +350,18 @@ __virtio_crypto_skcipher_do_req(struct v
+ 	int err;
+ 	unsigned long flags;
+ 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
+-	int i;
+ 	u64 dst_len;
+ 	unsigned int num_out = 0, num_in = 0;
+ 	int sg_total;
+ 	uint8_t *iv;
++	struct scatterlist *sg;
+ 
+ 	src_nents = sg_nents_for_len(req->src, req->cryptlen);
++	if (src_nents < 0) {
++		pr_err("Invalid number of src SG.\n");
++		return src_nents;
++	}
++
+ 	dst_nents = sg_nents(req->dst);
+ 
+ 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
+@@ -443,12 +448,12 @@ __virtio_crypto_skcipher_do_req(struct v
+ 	vc_sym_req->iv = iv;
+ 
+ 	/* Source data */
+-	for (i = 0; i < src_nents; i++)
+-		sgs[num_out++] = &req->src[i];
++	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
++		sgs[num_out++] = sg;
+ 
+ 	/* Destination data */
+-	for (i = 0; i < dst_nents; i++)
+-		sgs[num_out + num_in++] = &req->dst[i];
++	for (sg = req->dst; sg; sg = sg_next(sg))
++		sgs[num_out + num_in++] = sg;
+ 
+ 	/* Status */
+ 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
 
 
