@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F598C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6718C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E61F21527
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C71321532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322860;
-	bh=D9yr1XlJJZE4sCwWQfGJZumeH5LuhoRdpZObk6ppYp4=;
+	s=default; t=1592322864;
+	bh=TW9JezX4flra15yeNwYJVoO40qkjcL7U7ogEwc1jMaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BLi/0hq5FdpZNRizugSZcXfY3Q8+2m50gHlVy6x+uZlHxopY2ulfwTBDhDFbL4tKm
-	 srXFCJqyJf0ivhFp0HL/76lkk3jDxWKVy7qLSBJRo6MVoJxaUqkaVdurZCtSHlm3hu
-	 lFxTLVUqPj7bncRpNuwyQsqpsNTnKWIu0VRqlpDk=
+	b=UPyaFugCgsLwT/McQcbEw3us8VDxAsI3yX22RW0+Wt6tNQD38wFXa1XZLm6cKYu5U
+	 Rf7jAPgEmu0oExcP+Hf/qpLo9e6GAsvdZhr9p2UG3Q47omVSxAdlN/VbjoT+QjtrD1
+	 lv26/40av5BrGWHaPx+4j5tvaLg3XALp5a0KJLec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732968AbgFPPyS (ORCPT
+        id S1732403AbgFPPyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:54:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732939AbgFPPyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:04 -0400
+        id S1731739AbgFPPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EAA021527;
-        Tue, 16 Jun 2020 15:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B73C521532;
+        Tue, 16 Jun 2020 15:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322843;
-        bh=D9yr1XlJJZE4sCwWQfGJZumeH5LuhoRdpZObk6ppYp4=;
+        s=default; t=1592322851;
+        bh=TW9JezX4flra15yeNwYJVoO40qkjcL7U7ogEwc1jMaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0bPNesk/21qLRn5V2iLB6ZNlzuBenxoA7Zvd5EDwzinNhbWUDs7MoPCKf6/sOeHF
-         OP+RFWfntxgKFFwIS40O+B7DhAbf+p0LSP4gyTh0m/ERdErwaBzkA7HfL5zcrVcyWd
-         lreqOVqZJ0Lv6du7tCIIgCWMp5fjq9n6cYDmBMSY=
+        b=J8UkGgs/UNJgauMpl++MUycFxEs5kjIx8nr4ppTYwUm2kXrc4cEHdX8gGm6ngQsjc
+         wUe92PGZoapcj1YcXqE4NQQJTEP1ch1OV/YKRjTCQS8oIPa9ZZft+PYm9oVcX1QN/q
+         RROBmB/KLmIGQtvln2lMwR9WjSCeWtP8ohJyqqn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-        KarimAllah Raslan <karahmed@amazon.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 125/161] KVM: nVMX: Skip IBPB when switching between vmcs01 and vmcs02
-Date:   Tue, 16 Jun 2020 17:35:15 +0200
-Message-Id: <20200616153112.316849879@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 127/161] KVM: nSVM: leave ASID aside in copy_vmcb_control_area
+Date:   Tue, 16 Jun 2020 17:35:17 +0200
+Message-Id: <20200616153112.411554722@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,105 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 5c911beff20aa8639e7a1f28988736c13e03ed54 upstream.
+commit 6c0238c4a62b3a0b1201aeb7e33a4636d552a436 upstream.
 
-Skip the Indirect Branch Prediction Barrier that is triggered on a VMCS
-switch when running with spectre_v2_user=on/auto if the switch is
-between two VMCSes in the same guest, i.e. between vmcs01 and vmcs02.
-The IBPB is intended to prevent one guest from attacking another, which
-is unnecessary in the nested case as it's the same guest from KVM's
-perspective.
+Restoring the ASID from the hsave area on VMEXIT is wrong, because its
+value depends on the handling of TLB flushes.  Just skipping the field in
+copy_vmcb_control_area will do.
 
-This all but eliminates the overhead observed for nested VMX transitions
-when running with CONFIG_RETPOLINE=y and spectre_v2_user=on/auto, which
-can be significant, e.g. roughly 3x on current systems.
-
-Reported-by: Alexander Graf <graf@amazon.com>
-Cc: KarimAllah Raslan <karahmed@amazon.de>
 Cc: stable@vger.kernel.org
-Fixes: 15d45071523d ("KVM/x86: Add IBPB support")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200501163117.4655-1-sean.j.christopherson@intel.com>
-[Invert direction of bool argument. - Paolo]
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    2 +-
- arch/x86/kvm/vmx/vmx.c    |   18 ++++++++++++++----
- arch/x86/kvm/vmx/vmx.h    |    3 ++-
- 3 files changed, 17 insertions(+), 6 deletions(-)
+ arch/x86/kvm/svm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -303,7 +303,7 @@ static void vmx_switch_vmcs(struct kvm_v
- 	cpu = get_cpu();
- 	prev = vmx->loaded_vmcs;
- 	vmx->loaded_vmcs = vmcs;
--	vmx_vcpu_load_vmcs(vcpu, cpu);
-+	vmx_vcpu_load_vmcs(vcpu, cpu, prev);
- 	vmx_sync_vmcs_host_state(vmx, prev);
- 	put_cpu();
- 
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1314,10 +1314,12 @@ after_clear_sn:
- 		pi_set_on(pi_desc);
- }
- 
--void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
-+void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
-+			struct loaded_vmcs *buddy)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	bool already_loaded = vmx->loaded_vmcs->cpu == cpu;
-+	struct vmcs *prev;
- 
- 	if (!already_loaded) {
- 		loaded_vmcs_clear(vmx->loaded_vmcs);
-@@ -1336,10 +1338,18 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu
- 		local_irq_enable();
- 	}
- 
--	if (per_cpu(current_vmcs, cpu) != vmx->loaded_vmcs->vmcs) {
-+	prev = per_cpu(current_vmcs, cpu);
-+	if (prev != vmx->loaded_vmcs->vmcs) {
- 		per_cpu(current_vmcs, cpu) = vmx->loaded_vmcs->vmcs;
- 		vmcs_load(vmx->loaded_vmcs->vmcs);
--		indirect_branch_prediction_barrier();
-+
-+		/*
-+		 * No indirect branch prediction barrier needed when switching
-+		 * the active VMCS within a guest, e.g. on nested VM-Enter.
-+		 * The L1 VMM can protect itself with retpolines, IBPB or IBRS.
-+		 */
-+		if (!buddy || WARN_ON_ONCE(buddy->vmcs != prev))
-+			indirect_branch_prediction_barrier();
- 	}
- 
- 	if (!already_loaded) {
-@@ -1376,7 +1386,7 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 
--	vmx_vcpu_load_vmcs(vcpu, cpu);
-+	vmx_vcpu_load_vmcs(vcpu, cpu, NULL);
- 
- 	vmx_vcpu_pi_load(vcpu, cpu);
- 
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -320,7 +320,8 @@ struct kvm_vmx {
- };
- 
- bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
--void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu);
-+void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
-+			struct loaded_vmcs *buddy);
- void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
- int allocate_vpid(void);
- void free_vpid(int vpid);
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3326,7 +3326,7 @@ static inline void copy_vmcb_control_are
+ 	dst->iopm_base_pa         = from->iopm_base_pa;
+ 	dst->msrpm_base_pa        = from->msrpm_base_pa;
+ 	dst->tsc_offset           = from->tsc_offset;
+-	dst->asid                 = from->asid;
++	/* asid not copied, it is handled manually for svm->vmcb.  */
+ 	dst->tlb_ctl              = from->tlb_ctl;
+ 	dst->int_ctl              = from->int_ctl;
+ 	dst->int_vector           = from->int_vector;
 
 
