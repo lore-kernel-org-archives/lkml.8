@@ -2,202 +2,150 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B756DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B28C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9289220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD5C20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqHsDB8j"
+	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="hKFrUgYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgFPRVB (ORCPT
+        id S1728044AbgFPRWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32808 "EHLO
+        Tue, 16 Jun 2020 13:22:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgFPRVB (ORCPT
+        with ESMTP id S1726573AbgFPRWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:21:01 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB5FC061573;
-        Tue, 16 Jun 2020 10:21:00 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u25so5740896lfm.1;
-        Tue, 16 Jun 2020 10:21:00 -0700 (PDT)
+        Tue, 16 Jun 2020 13:22:14 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE36C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:22:13 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id m2so1903936pjv.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:22:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xz/J2mfr4ZLz3Nv4ZC1hfD6KYzp10cq3v/xXkiMhBe8=;
-        b=cqHsDB8jT5NZgtLBCl9w/wds8fgGQCEFg8oiukWotf2MWoE6K9YydrTOlKgqicTIjp
-         EqGYEo7mNBJEekdGbZ3z59MFYyxh31iTIOFqIMwIfJPZ+qDxEpmOBniiCzPvjQIyrfFh
-         T68Fes70FKWOaAM+bttpvi0zxIkqnkGTn83KU1U/TknuX75OiJs6jWPra7MdtsIZr/Jd
-         roT0oNld+8+cam/01kba37cbkdc+FbEjg9724IcKGnlKQLBPAlXtUODBVRMb2/5mVedI
-         e4M355vTl3X0TSBi2d5+9y4BOXQhTqsq7bPXb4dfSPmNg3CjycHAYs2qWSqZoBO/7qH+
-         AW9w==
+        d=posk.io; s=google;
+        h=message-id:subject:from:to:cc:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Sg/l1Ul6wGSxeQbBBb5/INh9eMgEt3ykLkKdZi4iJn4=;
+        b=hKFrUgYByjkxKwed0H1PGi1+PXeo2r91NOJD7FCaYMI0Qr679cw9MWOYpGeNcQgLUg
+         dBDJG/iQpqsKeo/aCqMJI/b3//FUjvyiWDc2vi181M0V8e+/qltScG24hFufbGS4SvzA
+         MoCOfOhJSp+DrnL2OPFac7sNyYmZgQ7NR6MmBq4mNjClREeQrFFl33aNl9TLE3SldnF/
+         WmWKZBVM3sd7PM9cYG18g4tiOxY8L+e2ss3IxapEJKSdd76rVQ1x7AUX4rGAtYqIuTOA
+         HECb//9NFwdVBEou4z7TaPjhABgC0JPUtxBjkA0fW5kGOEBP1b5UcNuEO02CDxW56FbE
+         QGsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xz/J2mfr4ZLz3Nv4ZC1hfD6KYzp10cq3v/xXkiMhBe8=;
-        b=MEjH9Nyp0BnvZLDDKA1j0UYHPTYlkqz/UQq+AdtSrd5PiSQcFtLnijS3xkJ9F6YWGP
-         kj2LCoJMj06ZF+viy2oliqXXBTeftCGiQSfvowDs4BOCPfwh5N3/S15W91bZDj8Kzrfw
-         1c/Bofp7jcLSeRne4g/Z1HbyoUQPFv7NnNuC4D8vQukh95sP0OLFzYoEHf91rxWwcVWe
-         X+6WhrTPsFyy8swcfRBtq11j8emBJwllRgEpXcuuNVjJpkiIUKB2Rrzhu6oss/p7JDDW
-         8x3r1jDQviV5i4C2epGgXILEIrru8KtfLvzxWSgKNiSfIjGwg7wJDPdQx2B/u6gk4CYy
-         S6Fw==
-X-Gm-Message-State: AOAM530c5TpMYgOAHk6Oca+OjiE7xGdKMTFDv9knkOVkMChJgVv/17oo
-        QyiCyeY6wVDWCQUEgl1r6os=
-X-Google-Smtp-Source: ABdhPJwmRS1Y2/ri0XsSXCFuEMSpKb0CsVkzRMi5+vL2Z292q2XEKJgXhlValE8FdhA4+4/xgOJBFg==
-X-Received: by 2002:ac2:4c23:: with SMTP id u3mr1127081lfq.84.1592328058834;
-        Tue, 16 Jun 2020 10:20:58 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id s18sm5353810ljj.63.2020.06.16.10.20.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 10:20:58 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] 180 degrees rotation support for NVIDIA Tegra DRM
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Derek Basehore <dbasehore@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>, linux-tegra@vger.kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-References: <20200614200121.14147-1-digetx@gmail.com>
- <CACvgo51QuXMgWhFk4C=3rGvUZDX1_W0RZtVb5RtRPiHTpMebWQ@mail.gmail.com>
- <8f789ef5-bebf-c869-784d-afda70fc1fb8@gmail.com>
- <CACvgo50oSMbgXw1vHwVT4hhGe6g3YzKQEohCLJdfDq+0UaN1jw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <646b3f37-0f72-7f3b-388f-f71dbcdd5c84@gmail.com>
-Date:   Tue, 16 Jun 2020 20:20:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=Sg/l1Ul6wGSxeQbBBb5/INh9eMgEt3ykLkKdZi4iJn4=;
+        b=jJvXfG9lBpti+Nq2haQli9l1T4qQBPFALhyC7h26TpgSGGGHGFVp4NdR+/as7TIjhU
+         Vjnemy2Wuya8kU91zVwGvsgaKQ9kVkUBy6tNHHgEcRgU82b2PhCNDdthPz2IoKrWJURr
+         jDKw3TCmvNfDSlJR8SRx5gxerOR2gEuD1DjoOvxBCIjyI155SYvsqZlt8w5xnXn1zjkX
+         Z0NZkvVgQ1zSIwiMCpn4ZL3arekmNBRWfTotANNi6yALfXe/BssqbH0YB/lddQq2soLJ
+         XjH0ePTLv2H7ls0jCwWq5sZD+8S/3jT6hZ8m4gG5cgRZ3XIhzw/c6lh/5lfqgFgVXoax
+         6Ayw==
+X-Gm-Message-State: AOAM532h3IpPVqNNYetdib7YlZsXM3Yu1wErsZSRS07GvLdWrITB3bus
+        FSi96X7j8onhl9PBAiPpS3zV/r6u5Jy8mg==
+X-Google-Smtp-Source: ABdhPJxIuP/+EH5l+UbxW8yn3CflnN/U3twgipvpqkJzJjNSCTrH9bNIUXaYrwO87SGHYMwdhBp9lQ==
+X-Received: by 2002:a17:902:b690:: with SMTP id c16mr2632726pls.273.1592328133143;
+        Tue, 16 Jun 2020 10:22:13 -0700 (PDT)
+Received: from posk-x1c (c-73-202-129-89.hsd1.ca.comcast.net. [73.202.129.89])
+        by smtp.gmail.com with ESMTPSA id z140sm18375179pfc.135.2020.06.16.10.22.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 10:22:12 -0700 (PDT)
+Message-ID: <f2997cb9e52d0c2b88e6c5d3818a9331ba45ea5c.camel@posk.io>
+Subject: [RFC PATCH 0/3 v2] futex: introduce FUTEX_SWAP operation
+From:   Peter Oskolkov <posk@posk.io>
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Peter Oskolkov <posk@google.com>, avagin@google.com,
+        "pjt@google.com" <pjt@google.com>, Ben Segall <bsegall@google.com>
+Date:   Tue, 16 Jun 2020 10:22:11 -0700
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <CACvgo50oSMbgXw1vHwVT4hhGe6g3YzKQEohCLJdfDq+0UaN1jw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.06.2020 18:48, Emil Velikov пишет:
-> On Tue, 16 Jun 2020 at 12:40, Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> 16.06.2020 01:26, Emil Velikov пишет:
->>> Hi Dmitry,
->>>
->>> On Mon, 15 Jun 2020 at 08:28, Dmitry Osipenko <digetx@gmail.com> wrote:
->>>>
->>>> Hello!
->>>>
->>>> This series adds 180° display plane rotation support to the NVIDIA Tegra
->>>> DRM driver which is needed for devices that have display panel physically
->>>> mounted upside-down, like Nexus 7 tablet device for example [1]. Since
->>>> DRM panel rotation is a new thing for a userspace, currently only
->>>> Opentegra Xorg driver handles the rotated display panel [2], but this
->>>> is good enough for the start.
->>>>
->>>> Note that later on it should be possible to implement a transparent 180°
->>>> display rotation for Tegra DRM driver which will remove the need to have
->>>> a bleeding edge userspace that knows how to rotate display planes and I'm
->>>> slowly working on it. For the starter we can go with the minimal rotation
->>>> support, so it's not a blocker.
->>>>
->>>> This series is based on the work that was made by Derek Basehore for the
->>>> Mediatek driver [3], his patch is included into this patchset. I added
->>>> my tested-by tag to the Derek's patch.
->>>>
->>>> Please review and apply, thanks in advance!
->>>>
->>>> [1] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200607154327.18589-3-digetx@gmail.com/
->>>> [2] https://github.com/grate-driver/xf86-video-opentegra/commit/28eb20a3959bbe5bc3a3b67e55977093fd5114ca
->>>> [3] https://lkml.org/lkml/2020/3/5/1119
->>>>
->>>> Changelog:
->>>>
->>>> v2: - Dropped "drm/panel: Set display info in panel attach" patch, which
->>>>       turned out to be obsolete now.
->>>>
->>>>     - Renamed the cover-latter, hopefully this will fix the bouncing emails.
->>>>
->>>> Derek Basehore (1):
->>>>   drm/panel: Add helper for reading DT rotation
->>>>
->>>> Dmitry Osipenko (4):
->>>>   drm/panel: lvds: Set up panel orientation
->>>
->>> IMHO it's perfectly reasonable to report the panel orientation to
->>> userspace, which can apply plane rotation as needed.
->>>
->>> Although I see that this series, alike Derek's, has a couple of issues:
->>>  - only a single panel driver is updated
->>>  - rotation is _not_ listed as supported property, in said panel
->>> driver device-tree bindings
->>>
->>> My personal inclination is that we should aim for a comprehensive solution:
->>>  - wire all panel drivers, as currently documented (quick grep list below)
->>>  - document and wire-up the lvds and boe panels - as proposed by you
->>> and Derek respectively
->>>
->>> HTH
->>> Emil
->>>
->>> Documentation/devicetree/bindings/display/himax,hx8357d.txt:2
->>> Documentation/devicetree/bindings/display/ilitek,ili9225.txt:2
->>> Documentation/devicetree/bindings/display/ilitek,ili9341.txt:2
->>> Documentation/devicetree/bindings/display/ilitek,ili9486.yaml:2
->>> Documentation/devicetree/bindings/display/multi-inno,mi0283qt.txt:2
->>> Documentation/devicetree/bindings/display/panel/panel-common.yaml:2
->>> Documentation/devicetree/bindings/display/sitronix,st7586.txt:1
->>> Documentation/devicetree/bindings/display/sitronix,st7735r.yaml:2
->>
->> Rotation is a common DT panel property that is described in the
->> panel-common.yaml.
-> The property was introduced almost exclusively for tiny drm panels.
-> Those ones are a bit different from the rest (in panel/) -
-> MIPI-DBI/SPI w/o (not connected at least) an actual GPU.
-> 
-> To make it a bit better, the rotation is seemingly performed in the
-> tiny driver itself ouch.
-> 
->> This property is supported by all panel bindings
->> because these bindings inherent the common properties from the
->> panel-common.yaml.
->>
-> Seems like that was an unintentional change with the conversion to YAML.
-> Beforehand only a few selected panels had rotation. Upon closer look -
-> some panels do have follow-up fixes, to remove/limit the implicit
-> inclusion.
+From 7b091e46de4f9227b5a943e6d78283564e8c1c72 Mon Sep 17 00:00:00 2001
+From: Peter Oskolkov <posk@google.com>
+Date: Tue, 16 Jun 2020 10:13:58 -0700
+Subject: [RFC PATCH 0/3 v2] futex: introduce FUTEX_SWAP operation
 
-Interesting.. my understanding that the rotation property is supposed to
-be a generic property which represents physical orientation of a display
-panel and hence it should be applicable to all panels.
+This is an RFC!
 
-> Sam seems like you've done most of the YAML conversion. IMHO it would
-> make sense to revisit the patches and inherit common properties only
-> as applicable.
-> 
->> I don't think that it makes sense to wire up rotation property to all
->> panel drivers at once because those drivers will be untested, at least I
->> don't know anything about those other panels and can't test them. It
->> will be much better to support the rotation on by as-needed basis for
->> each panel driver individually.
-> 
-> How about CCing the author and reviewer asking them to test the patch?
-> The only place where the patches might cause an issue is with tiny,
-> although patches would still be appreciated.
+As Paul Turner presented at LPC in 2013 ...
+- pdf: http://pdxplumbers.osuosl.org/2013/ocw//system/presentations/1653/original/LPC%20-%20User%20Threading.pdf
+- video: https://www.youtube.com/watch?v=KXuZi9aeGTw
 
-There are quite a lot of panel drivers and I'm a bit doubtful that at
-least half of devices that use those panels have any real use for the
-rotation property. I could write the patches.. but in the end it could
-be a wasted effort if nobody needs it, so I'd prefer not to do it.
+... Google has developed an M:N userspace threading subsystem backed
+by Google-private SwitchTo Linux Kernel API (page 17 in the pdf referenced
+above). This subsystem provides latency-sensitive services at Google with
+fine-grained user-space control/scheduling over what is running when,
+and this subsystem is used widely internally (called schedulers or fibers).
+
+This RFC patchset is the first step to open-source this work. As explained
+in the linked pdf and video, SwitchTo API has three core operations: wait,
+resume, and swap (=switch). So this patchset adds a FUTEX_SWAP operation
+that, in addition to FUTEX_WAIT and FUTEX_WAKE, will provide a foundation
+on top of which user-space threading libraries can be built.
+
+Another common use case for FUTEX_SWAP is message passing a-la RPC
+between tasks: task/thread T1 prepares a message,
+wakes T2 to work on it, and waits for the results; when T2 is done, it
+wakes T1 and waits for more work to arrive. Currently the simplest
+way to implement this is
+
+a. T1: futex-wake T2, futex-wait
+b. T2: wakes, does what it has been woken to do
+c. T2: futex-wake T1, futex-wait
+
+With FUTEX_SWAP, steps a and c above can be reduced to one futex operation
+that runs 5-10 times faster.
+
+Patches in this patchset:
+
+Patch 1: introduce FUTEX_SWAP futex operation that,
+         internally, does wake + wait. The purpose of this patch is
+         to work out the API.
+Patch 2: a first rough attempt to make FUTEX_SWAP faster than
+         what wake + wait can do.
+Patch 3: a selftest that can also be used to benchmark FUTEX_SWAP vs
+         FUTEX_WAKE + FUTEX_WAIT.
+
+v2: fix undefined symbol error ifndef CONFIG_SMP.
+
+Peter Oskolkov (3):
+  futex: introduce FUTEX_SWAP operation
+  futex, sched: add wake_up_swap, use in FUTEX_SWAP
+  selftests/futex: add futex_swap selftest
+
+ include/linux/sched.h                         |   1 +
+ include/uapi/linux/futex.h                    |   2 +
+ kernel/futex.c                                |  96 ++++++--
+ kernel/sched/core.c                           |   5 +
+ kernel/sched/fair.c                           |   3 +
+ kernel/sched/sched.h                          |   3 +-
+ .../selftests/futex/functional/.gitignore     |   1 +
+ .../selftests/futex/functional/Makefile       |   1 +
+ .../selftests/futex/functional/futex_swap.c   | 209 ++++++++++++++++++
+ .../selftests/futex/include/futextest.h       |  19 ++
+ 10 files changed, 323 insertions(+), 17 deletions(-)
+ create mode 100644 tools/testing/selftests/futex/functional/futex_swap.c
+
+--
+2.25.1
+
+
