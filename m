@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E421FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21262071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C70F207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323258;
-	bh=lMiw6z8M6Tmg7XUhbTCh6hOdFxHhL1CBBaI7l7SKsZY=;
+	s=default; t=1592323263;
+	bh=ImD1zoy+Fx0CsZrmk+QIEfgyjaPXOBH8d6zBqOiEGqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uwUtiXzlrlHiC7M6nOFEvbYBYeJ2ZebVspK1+NHYFvc/kQ9IJGND7rBn8r3oXFqT9
-	 Up0KjodNh8naArchtqsK0hBQ9r0TSg9698Tzxgyic6Ip8QNs5ESmsRLXhKlzs1tHO1
-	 MrwReYgSvKjs3ya2EB0ZFb3lMQT60Eq4ikhugGU8=
+	b=EQeQLwlCMlDjCHcu18DYd/GiTE6f7mZ7dTvOdTlTfritRY+QfIihY3FdLj7vr4JD5
+	 coilimuIPYMYHlhf7h5vzzKbjtBhqxgUk9DkWExB/X6VGZduq5tT/+WprHAX/Hls+/
+	 kRqF0UJmTPiS28UcDpp99DlTpKPW1YxWqdi2grDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732959AbgFPQA4 (ORCPT
+        id S1732818AbgFPQA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:00:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50220 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:00:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732792AbgFPPwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:39 -0400
+        id S1732787AbgFPPwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:52:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37CBD207C4;
-        Tue, 16 Jun 2020 15:52:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEEC0208D5;
+        Tue, 16 Jun 2020 15:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322758;
-        bh=lMiw6z8M6Tmg7XUhbTCh6hOdFxHhL1CBBaI7l7SKsZY=;
+        s=default; t=1592322756;
+        bh=ImD1zoy+Fx0CsZrmk+QIEfgyjaPXOBH8d6zBqOiEGqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEW1g9n2pix0dhXmy4ZZ9Em5zYDA6XzzxdVNjE6DeLrUOciBkdYsbT1i2VulpvPvi
-         +LOQLUtxWwToTNwihuDUknhYcn2Kt/hWySr5NrFLCKrgVZJBdYJUubnrn1ND65uNiI
-         BfvedPshWtkv9MUDx+MIVWaE3j4m998At8ThC3Ic=
+        b=eCNvlJT1j+sEKy+nd47kQpf9iOMiuXkVFWzdTMZ5ik78JLm5+wv08xzAYhnhjFUyh
+         Z6jjdfz9j4KgTZJjFjl328ZyP22ZWo6iJm1GtUZgmPs06TTQIYzIXif4FywjFsjKPh
+         WefNDB0w+xA92IfZbYfSIETHPdzN89Xb9dI74NlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         Kamal Dasu <kdasu.kdev@gmail.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.6 092/161] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
-Date:   Tue, 16 Jun 2020 17:34:42 +0200
-Message-Id: <20200616153110.760822504@linuxfoundation.org>
+Subject: [PATCH 5.6 091/161] spi: bcm-qspi: Handle clock probe deferral
+Date:   Tue, 16 Jun 2020 17:34:41 +0200
+Message-Id: <20200616153110.713624489@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,62 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c upstream.
+commit 0392727c261bab65a35cd4f82ee9459bc237591d upstream.
 
-Currently we set the tx/rx buffer to 0xff when NULL. This causes
-problems with some spi slaves where 0xff is a valid command. Looking
-at other drivers, the tx/rx buffer is usually set to 0x00 when NULL.
-Following this convention solves the issue.
+The clock provider may not be ready by the time spi-bcm-qspi gets
+probed, handle probe deferral using devm_clk_get_optional().
 
-Fixes: fa236a7ef240 ("spi: bcm-qspi: Add Broadcom MSPI driver")
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200420190853.45614-6-kdasu.kdev@gmail.com
+Link: https://lore.kernel.org/r/20200420190853.45614-2-kdasu.kdev@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-bcm-qspi.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/spi/spi-bcm-qspi.c |   12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 --- a/drivers/spi/spi-bcm-qspi.c
 +++ b/drivers/spi/spi-bcm-qspi.c
-@@ -670,7 +670,7 @@ static void read_from_hw(struct bcm_qspi
- 			if (buf)
- 				buf[tp.byte] = read_rxram_slot_u8(qspi, slot);
- 			dev_dbg(&qspi->pdev->dev, "RD %02x\n",
--				buf ? buf[tp.byte] : 0xff);
-+				buf ? buf[tp.byte] : 0x0);
- 		} else {
- 			u16 *buf = tp.trans->rx_buf;
+@@ -1222,6 +1222,11 @@ int bcm_qspi_probe(struct platform_devic
+ 	}
  
-@@ -678,7 +678,7 @@ static void read_from_hw(struct bcm_qspi
- 				buf[tp.byte / 2] = read_rxram_slot_u16(qspi,
- 								      slot);
- 			dev_dbg(&qspi->pdev->dev, "RD %04x\n",
--				buf ? buf[tp.byte] : 0xffff);
-+				buf ? buf[tp.byte / 2] : 0x0);
- 		}
+ 	qspi = spi_master_get_devdata(master);
++
++	qspi->clk = devm_clk_get_optional(&pdev->dev, NULL);
++	if (IS_ERR(qspi->clk))
++		return PTR_ERR(qspi->clk);
++
+ 	qspi->pdev = pdev;
+ 	qspi->trans_pos.trans = NULL;
+ 	qspi->trans_pos.byte = 0;
+@@ -1335,13 +1340,6 @@ int bcm_qspi_probe(struct platform_devic
+ 		qspi->soc_intc = NULL;
+ 	}
  
- 		update_qspi_trans_byte_count(qspi, &tp,
-@@ -733,13 +733,13 @@ static int write_to_hw(struct bcm_qspi *
- 	while (!tstatus && slot < MSPI_NUM_CDRAM) {
- 		if (tp.trans->bits_per_word <= 8) {
- 			const u8 *buf = tp.trans->tx_buf;
--			u8 val = buf ? buf[tp.byte] : 0xff;
-+			u8 val = buf ? buf[tp.byte] : 0x00;
- 
- 			write_txram_slot_u8(qspi, slot, val);
- 			dev_dbg(&qspi->pdev->dev, "WR %02x\n", val);
- 		} else {
- 			const u16 *buf = tp.trans->tx_buf;
--			u16 val = buf ? buf[tp.byte / 2] : 0xffff;
-+			u16 val = buf ? buf[tp.byte / 2] : 0x0000;
- 
- 			write_txram_slot_u16(qspi, slot, val);
- 			dev_dbg(&qspi->pdev->dev, "WR %04x\n", val);
+-	qspi->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(qspi->clk)) {
+-		dev_warn(dev, "unable to get clock\n");
+-		ret = PTR_ERR(qspi->clk);
+-		goto qspi_probe_err;
+-	}
+-
+ 	ret = clk_prepare_enable(qspi->clk);
+ 	if (ret) {
+ 		dev_err(dev, "failed to prepare clock\n");
 
 
