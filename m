@@ -2,110 +2,150 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C70A208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD42208B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FrdhN4Xb"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="yrmCzq2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbgFPQxI (ORCPT
+        id S1730660AbgFPQxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
+        Tue, 16 Jun 2020 12:53:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729771AbgFPQxG (ORCPT
+        with ESMTP id S1730614AbgFPQxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:53:06 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B17C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:53:06 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t8so3135464ilm.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:53:06 -0700 (PDT)
+        Tue, 16 Jun 2020 12:53:52 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A212C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:53:52 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q11so21540043wrp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:53:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=35fJVpimnPIUIwkluAKTPDeW39MIuCPNhgYXzeFLeCI=;
-        b=FrdhN4XbBCzcjxgqatMcyw636L7XhrL/fbg/YYPrrAO7BMtJXMQTeIHZqJZRz9REyE
-         jNx/O+9nb5urZAYd5dXGI4W2wdlubrf6P2pf3Obm8CYuYngCyOqavnX112jiFHocm8qb
-         Z47p7BdD8hWjBkKEpY1rTtoQOYwOpvws8Q/lQ3cLFda/nTem+nAKnskDIONifD6PrYlL
-         Y85Fl/Vj05mZigg5G87IV2BIR5S93gtHcjPZveSZw68S9yCXfhpdwL3EtxWThKtKSZl6
-         WSGNnOuy8YmwP2rp2pGKCgxttgReEIKZqiBn/f8s/GF4rHCTR0LE3wYA0LU5zj8ljPNs
-         NOaw==
+        bh=Js4gbZUvytBR2hfvID1R/9oSc5bd7gjbU9gzR8H2bqI=;
+        b=yrmCzq2Dz3cI/kFHGmaBOhcEKFyToGa51RWjILeHP2431FA9BcWSE2Xxl5mj4Kn6Bo
+         keFN3eAgMf3/eDUkkETk7DLpLwUOzBfDAO4l4RGPfDQXD8TiY+H5RK9FctzOjieiF7SF
+         8574AXU2FWGbFaq/PWnyfm0NEXznF9ANT32Pvu+HNV+dIS4BAecYiw0D4jO8NetCL3z2
+         GnaO8PqHB2EubnJ3oVQ9DSENhWAtJnQEaQryjJPnXjSDnWLpT331w9yuYZm7p7seapiF
+         US/o/tmZq3oN2rQGPPn7sGY7BP7d+44Z519+KpiPMDr8ZY+38DVi8RHN4frPsdyh8zHK
+         bSCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=35fJVpimnPIUIwkluAKTPDeW39MIuCPNhgYXzeFLeCI=;
-        b=dSr9RAn49DGnw4Z/YGoksfJCdZi1XLVSU7dJ3YvkenO3I/sD1Bu0UiHGxpWfXPDqpa
-         1JegcSctQRxa30aWl8ngo32vbBv0khB0UGMkjQNIXmktdsCZ1Y9h3dbhPAabAp9LWXf0
-         x68qZoJGBCSolnFnd7xd/7pGNkNqJ0JZJwCdjcgAsv3jGiWsD7jhTA+BaFXfKwWUMdqP
-         XbphQsRGMA8xhxIEy0cCfo1vd/xwemRIJxDXlvhlGceNZDknBwOZ7wHPK1en+sSK8wFN
-         sQBUS86dKEcG7H8jJY6PGnzMTzAZ58B+GGlv3fFuJSTWcdHjRhyR7OlvsQS9CJtj09lK
-         9LVA==
-X-Gm-Message-State: AOAM532ShLLJ1VxVk8y0MZqGH6NDCfrs9R7Evf/4/Y/NQC/u5IYskgXh
-        x7peqGgCZgjexJY/EnyA/OOsjThzsb8TEwUv353X0yNbLuM=
-X-Google-Smtp-Source: ABdhPJwH3LniTJNmavisyNTcdSi95okyd/Pkfo1xifTdxT8dZZTARF4tN4WcB5PUfmX0LvB95lJY5m/qnwlN8UsUCms=
-X-Received: by 2002:a05:6e02:1208:: with SMTP id a8mr4162289ilq.118.1592326385013;
- Tue, 16 Jun 2020 09:53:05 -0700 (PDT)
+        bh=Js4gbZUvytBR2hfvID1R/9oSc5bd7gjbU9gzR8H2bqI=;
+        b=F761Al7oOOCkoJ7sxCFWPW+PUqgly0ck+Dx382FkNqP2oJU5XESpmXWEvT6jq/bvkM
+         1mvqf0XuwzfTf8x6xT6AZdY4zYJcFDzYIqdrIamfnCqPD9T56kVIK9UuudjSYatA4aGg
+         GsXJ0zpte0Mp/cguOsbGTe0pUYV3UfFTngCarxGphXa3F5StUqcIXDsy5KDvS3Lh+b+f
+         xqez0+B0G4rtQlZ1WLQEP8QR/9ziXaUGMk3aVtCUFxv+CgSWCmwPRaLDEKCd7kbj55rb
+         OK45mND2vPsCJFEykOgdVs63+iEsFbBlMB2JFlEwV/AZjIHYDcS90x5Mgcmzx7pCxKZ0
+         JLJw==
+X-Gm-Message-State: AOAM5330GXYb4F2l9OF5ABSVs5ecBvc3dL9IUwp47t64byeMhqNdZMEn
+        Fs/KPJ9guTHJFxlMm9k9jyNQ2j5MxUQsG5PpaYVJLQ==
+X-Google-Smtp-Source: ABdhPJx1Duy2nyWKcMBsMsweJwXW6wkg/x2SGCm7c80oNOMrjc0csEexVTzCSAvCaFJ8mWaS/+IlTiDWjD8QPokwm64=
+X-Received: by 2002:adf:ea11:: with SMTP id q17mr3896934wrm.75.1592326430754;
+ Tue, 16 Jun 2020 09:53:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616161427.375651-1-vkuznets@redhat.com> <CALMp9eSWXGQkOOzSrALfZDMj5JHSH=CsK1wKfdj2x2jtV4XJsw@mail.gmail.com>
- <87366vhscx.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87366vhscx.fsf@vitty.brq.redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 16 Jun 2020 09:52:54 -0700
-Message-ID: <CALMp9eQ1qe4w5FojzgsUHKpD=zXqen_D6bBg4-vfHa03BdomGA@mail.gmail.com>
-Subject: Re: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated MSRs
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200616095340.GD13515@zn.tnic>
+In-Reply-To: <20200616095340.GD13515@zn.tnic>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Tue, 16 Jun 2020 09:53:39 -0700
+Message-ID: <CALCETrWQJtv6f1zYnWSiPe7qFUx4znthbysVC9NJ-88YqP5-eg@mail.gmail.com>
+Subject: Re: [PATCH] x86/fpu: Reset MXCSR to default in kernel_fpu_begin()
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86-ml <x86@kernel.org>, jpa@kernelbug.mail.kapsi.fi,
+        Dave Hansen <dave.hansen@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 9:45 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+On Tue, Jun 16, 2020 at 2:53 AM Borislav Petkov <bp@alien8.de> wrote:
 >
-> Jim Mattson <jmattson@google.com> writes:
+> Ok,
 >
-> > On Tue, Jun 16, 2020 at 9:14 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >>
-> >> state_test/smm_test selftests are failing on AMD with:
-> >> "Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
-> >>
-> >> MSR_IA32_PERF_CAPABILITIES is an emulated MSR indeed but only on Intel,
-> >> make svm_has_emulated_msr() skip it so it is not returned by
-> >> KVM_GET_MSR_INDEX_LIST.
-> >
-> > Do we need to support this MSR under SVM for cross-vendor migration?
-> > Or, have we given up on that?
->
-> To be honest I'm not sure about the status of cross-vendor migration in
-> general and PMU implications in particular, hope Paolo/Sean can shed
-> some light. In this particular case my shallow understanding is that
-> MSR_IA32_PERF_CAPABILITIES has only one known feature bit which unlocks
-> an MSR range with additional counters. If the feature bit is not set
-> this, I guess, can easily be migrated (basically, let's allow writing
-> '0' there on AMD and return '0' on read). But what if the feature was
-> enabled? We'll have to support the new MSR range and do something with
-> it after migration (run intel_pmu in fully emulated mode?).
->
-> Anyway, the immediate issue I'm trying to fix here is: whatever is
-> returned by KVM_GET_MSR_INDEX_LIST can be successfully queried with
-> KVM_GET_MSRS as some userspaces count on that.
+> here's the fix first so that it goes in. I'll hammer on the test case later.
 
-That's a nice property. Is it documented somewhere?
+Does the 32-bit case need FNINIT?
 
-Reviewed-by: Jim Mattson <jmattson@google.com>
+>
+> ---
+> From: Petteri Aimonen <jpa@git.mail.kapsi.fi>
+>
+> Previously, kernel floating point code would run with the MXCSR control
+> register value last set by userland code by the thread that was active
+> on the CPU core just before kernel call. This could affect calculation
+> results if rounding mode was changed, or a crash if a FPU/SIMD exception
+> was unmasked.
+>
+> Restore MXCSR to the kernel's default value.
+>
+>  [ bp: Carve out from a bigger patch by Petteri, add feature check. ]
+>
+> Signed-off-by: Petteri Aimonen <jpa@git.mail.kapsi.fi>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=207979
+> ---
+>  arch/x86/include/asm/fpu/internal.h | 5 +++++
+>  arch/x86/kernel/fpu/core.c          | 3 +++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+> index 42159f45bf9c..845e7481ab77 100644
+> --- a/arch/x86/include/asm/fpu/internal.h
+> +++ b/arch/x86/include/asm/fpu/internal.h
+> @@ -623,6 +623,11 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
+>   * MXCSR and XCR definitions:
+>   */
+>
+> +static inline void ldmxcsr(u32 mxcsr)
+> +{
+> +       asm volatile("ldmxcsr %0" :: "m" (mxcsr));
+> +}
+> +
+>  extern unsigned int mxcsr_feature_mask;
+>
+>  #define XCR_XFEATURE_ENABLED_MASK      0x00000000
+> diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+> index 06c818967bb6..f398fedc590a 100644
+> --- a/arch/x86/kernel/fpu/core.c
+> +++ b/arch/x86/kernel/fpu/core.c
+> @@ -101,6 +101,9 @@ void kernel_fpu_begin(void)
+>                 copy_fpregs_to_fpstate(&current->thread.fpu);
+>         }
+>         __cpu_invalidate_fpregs_state();
+> +
+> +       if (boot_cpu_has(X86_FEATURE_XMM))
+> +               ldmxcsr(MXCSR_DEFAULT);
+>  }
+>  EXPORT_SYMBOL_GPL(kernel_fpu_begin);
+>
+> --
+> 2.21.0
+>
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
+
+
+
+-- 
+Andy Lutomirski
+AMA Capital Management, LLC
