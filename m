@@ -2,54 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55768C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48774C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 354A621473
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFD721473
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322564;
-	bh=iI/BZKi97QLx0JPtrtFK7ox1FG7npbhQVMDwhtTaRYU=;
+	s=default; t=1592322571;
+	bh=Z3DGRWOMQLerGZ/bOAAQDfRxRmJUKGSB4aII1yOLWlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=haJeoZnG5IdzC8keubcZKm39ArXu8OWAl384zDN3U3qbyg4AMSu42yAG6eAIaZCfw
-	 KxPSw/qBZc6Ej4PYDOJGKKCPA+Kl6dMwhtj8olDBnxzqi0jY3t11qhhEL5hrBV5igW
-	 vNrce6L4fbRyiD20fzSud/ZRAkZTxmYcKf5Bllyo=
+	b=xDLpXDeNklGg1dhrQzLYntcgJlUNFwdwwmj1Bln8vnG1LSWdFf1bzAxgYGecWI+lC
+	 k0235sl9e0VNWrw/743SLWC8wASHO6aRgs8EuW4LbTrIOEkOrsbQMsgKM1Z39OCUe8
+	 UYImsFu0zWJICcKjDMWP3GQef7iLRRH82K1z5bcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732492AbgFPPtP (ORCPT
+        id S1732512AbgFPPt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43918 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:49:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732239AbgFPPtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:07 -0400
+        id S1731979AbgFPPtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E2D82071A;
-        Tue, 16 Jun 2020 15:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E886A21475;
+        Tue, 16 Jun 2020 15:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322547;
-        bh=iI/BZKi97QLx0JPtrtFK7ox1FG7npbhQVMDwhtTaRYU=;
+        s=default; t=1592322557;
+        bh=Z3DGRWOMQLerGZ/bOAAQDfRxRmJUKGSB4aII1yOLWlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=orGxxcIqeisw8vPeXV0vd/2TOz9AM9sevoofGtlA3BNz7icEouOwhSPQz7ZAfSULl
-         bDPNkHVS+vLxlHVR7l8CVtKHjFZKxIrJ8sGl8lD9pJhxjAPEw1AidGFS6uxSVe7vJY
-         Cnd4MnfMgMrEKmqK1x+Dtqd0yQqZYwFD6mvlSMS0=
+        b=gKFSLVWuqE7qpQifmsqIbF4MkAePxsI46F1D7J3898894IsXfnHa4n7EC0v8FYTBd
+         FZpZ2AQVYMn74y5csOgrQCkF9JC0tGcE1S79Kkmc5/YTLNHu0DDhJflyav/eKGbBW5
+         ri2XUTFnCXHG/qLraPQfWRS0usDMfSNxXUdTIb/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com,
-        Jon Maloy <jmaloy@redhat.com>,
-        Tuong Lien <tuong.t.lien@dektech.com.au>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 011/161] tipc: fix NULL pointer dereference in streaming
-Date:   Tue, 16 Jun 2020 17:33:21 +0200
-Message-Id: <20200616153106.955581775@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 015/161] Input: axp20x-pek - always register interrupt handlers
+Date:   Tue, 16 Jun 2020 17:33:25 +0200
+Message-Id: <20200616153107.133312146@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -62,91 +61,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuong Lien <tuong.t.lien@dektech.com.au>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 5e9eeccc58f3e6bcc99b929670665d2ce047e9c9 ]
+[ Upstream commit 9747070c11d6ae021ed7a8e96e2950ed46cd53a9 ]
 
-syzbot found the following crash:
+On some X86 devices we do not register an input-device, because the
+power-button is also handled by the soc_button_array (GPIO) input driver,
+and we want to avoid reporting power-button presses to userspace twice.
 
-general protection fault, probably for non-canonical address 0xdffffc0000000019: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000000c8-0x00000000000000cf]
-CPU: 1 PID: 7060 Comm: syz-executor394 Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__tipc_sendstream+0xbde/0x11f0 net/tipc/socket.c:1591
-Code: 00 00 00 00 48 39 5c 24 28 48 0f 44 d8 e8 fa 3e db f9 48 b8 00 00 00 00 00 fc ff df 48 8d bb c8 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e2 04 00 00 48 8b 9b c8 00 00 00 48 b8 00 00 00
-RSP: 0018:ffffc90003ef7818 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8797fd9d
-RDX: 0000000000000019 RSI: ffffffff8797fde6 RDI: 00000000000000c8
-RBP: ffff888099848040 R08: ffff88809a5f6440 R09: fffffbfff1860b4c
-R10: ffffffff8c305a5f R11: fffffbfff1860b4b R12: ffff88809984857e
-R13: 0000000000000000 R14: ffff888086aa4000 R15: 0000000000000000
-FS:  00000000009b4880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000140 CR3: 00000000a7fdf000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- tipc_sendstream+0x4c/0x70 net/tipc/socket.c:1533
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x32f/0x810 net/socket.c:2352
- ___sys_sendmsg+0x100/0x170 net/socket.c:2406
- __sys_sendmmsg+0x195/0x480 net/socket.c:2496
- __do_sys_sendmmsg net/socket.c:2525 [inline]
- __se_sys_sendmmsg net/socket.c:2522 [inline]
- __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2522
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x440199
-...
+Sofar when we did this we also did not register our interrupt handlers,
+since those were only necessary to report input events.
 
-This bug was bisected to commit 0a3e060f340d ("tipc: add test for Nagle
-algorithm effectiveness"). However, it is not the case, the trouble was
-from the base in the case of zero data length message sending, we would
-unexpectedly make an empty 'txq' queue after the 'tipc_msg_append()' in
-Nagle mode.
+But on at least 2 device models the Medion Akoya E1239T and the GPD win,
+the GPIO pin used by the soc_button_array driver for the power-button
+cannot wakeup the system from suspend. Why this does not work is not clear,
+I've tried comparing the value of all relevant registers on the Cherry
+Trail SoC, with those from models where this does work. I've checked:
+PMC registers: FUNC_DIS, FUNC_DIS2, SOIX_WAKE_EN, D3_STS_0, D3_STS_1,
+D3_STDBY_STS_0, D3_STDBY_STS_1; PMC ACPI I/O regs: PM1_STS_EN, GPE0a_EN
+and they all have identical contents in the working and non working cases.
+I suspect that the firmware either sets some unknown register to a value
+causing this, or that it turns off a power-plane which is necessary for
+GPIO wakeups to work during suspend.
 
-A similar crash can be generated even without the bisected patch but at
-the link layer when it accesses the empty queue.
+What does work on the Medion Akoya E1239T is letting the AXP288 wakeup
+the system on a power-button press (the GPD win has a different PMIC).
 
-We solve the issues by building at least one buffer to go with socket's
-header and an optional data section that may be empty like what we had
-with the 'tipc_msg_build()'.
+Move the registering of the power-button press/release interrupt-handler
+from axp20x_pek_probe_input_device() to axp20x_pek_probe() so that the
+PMIC will wakeup the system on a power-button press, even if we do not
+register an input device.
 
-Note: the previous commit 4c21daae3dbc ("tipc: Fix NULL pointer
-dereference in __tipc_sendstream()") is obsoleted by this one since the
-'txq' will be never empty and the check of 'skb != NULL' is unnecessary
-but it is safe anyway.
-
-Reported-by: syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com
-Fixes: c0bceb97db9e ("tipc: add smart nagle feature")
-Acked-by: Jon Maloy <jmaloy@redhat.com>
-Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://lore.kernel.org/r/20200426155757.297087-1-hdegoede@redhat.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/msg.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/misc/axp20x-pek.c | 72 +++++++++++++++++----------------
+ 1 file changed, 37 insertions(+), 35 deletions(-)
 
---- a/net/tipc/msg.c
-+++ b/net/tipc/msg.c
-@@ -221,7 +221,7 @@ int tipc_msg_append(struct tipc_msg *_hd
- 	accounted = skb ? msg_blocks(buf_msg(skb)) : 0;
- 	total = accounted;
+diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+index c8f87df93a50..9c6386b2af33 100644
+--- a/drivers/input/misc/axp20x-pek.c
++++ b/drivers/input/misc/axp20x-pek.c
+@@ -205,8 +205,11 @@ ATTRIBUTE_GROUPS(axp20x);
  
--	while (rem) {
-+	do {
- 		if (!skb || skb->len >= mss) {
- 			prev = skb;
- 			skb = tipc_buf_acquire(mss, GFP_KERNEL);
-@@ -249,7 +249,7 @@ int tipc_msg_append(struct tipc_msg *_hd
- 		skb_put(skb, cpy);
- 		rem -= cpy;
- 		total += msg_blocks(hdr) - curr;
+ static irqreturn_t axp20x_pek_irq(int irq, void *pwr)
+ {
+-	struct input_dev *idev = pwr;
+-	struct axp20x_pek *axp20x_pek = input_get_drvdata(idev);
++	struct axp20x_pek *axp20x_pek = pwr;
++	struct input_dev *idev = axp20x_pek->input;
++
++	if (!idev)
++		return IRQ_HANDLED;
+ 
+ 	/*
+ 	 * The power-button is connected to ground so a falling edge (dbf)
+@@ -225,22 +228,9 @@ static irqreturn_t axp20x_pek_irq(int irq, void *pwr)
+ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
+ 					 struct platform_device *pdev)
+ {
+-	struct axp20x_dev *axp20x = axp20x_pek->axp20x;
+ 	struct input_dev *idev;
+ 	int error;
+ 
+-	axp20x_pek->irq_dbr = platform_get_irq_byname(pdev, "PEK_DBR");
+-	if (axp20x_pek->irq_dbr < 0)
+-		return axp20x_pek->irq_dbr;
+-	axp20x_pek->irq_dbr = regmap_irq_get_virq(axp20x->regmap_irqc,
+-						  axp20x_pek->irq_dbr);
+-
+-	axp20x_pek->irq_dbf = platform_get_irq_byname(pdev, "PEK_DBF");
+-	if (axp20x_pek->irq_dbf < 0)
+-		return axp20x_pek->irq_dbf;
+-	axp20x_pek->irq_dbf = regmap_irq_get_virq(axp20x->regmap_irqc,
+-						  axp20x_pek->irq_dbf);
+-
+ 	axp20x_pek->input = devm_input_allocate_device(&pdev->dev);
+ 	if (!axp20x_pek->input)
+ 		return -ENOMEM;
+@@ -255,24 +245,6 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
+ 
+ 	input_set_drvdata(idev, axp20x_pek);
+ 
+-	error = devm_request_any_context_irq(&pdev->dev, axp20x_pek->irq_dbr,
+-					     axp20x_pek_irq, 0,
+-					     "axp20x-pek-dbr", idev);
+-	if (error < 0) {
+-		dev_err(&pdev->dev, "Failed to request dbr IRQ#%d: %d\n",
+-			axp20x_pek->irq_dbr, error);
+-		return error;
 -	}
-+	} while (rem);
- 	return total - accounted;
+-
+-	error = devm_request_any_context_irq(&pdev->dev, axp20x_pek->irq_dbf,
+-					  axp20x_pek_irq, 0,
+-					  "axp20x-pek-dbf", idev);
+-	if (error < 0) {
+-		dev_err(&pdev->dev, "Failed to request dbf IRQ#%d: %d\n",
+-			axp20x_pek->irq_dbf, error);
+-		return error;
+-	}
+-
+ 	error = input_register_device(idev);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "Can't register input device: %d\n",
+@@ -280,8 +252,6 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
+ 		return error;
+ 	}
+ 
+-	device_init_wakeup(&pdev->dev, true);
+-
+ 	return 0;
  }
  
+@@ -339,6 +309,18 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+ 
+ 	axp20x_pek->axp20x = dev_get_drvdata(pdev->dev.parent);
+ 
++	axp20x_pek->irq_dbr = platform_get_irq_byname(pdev, "PEK_DBR");
++	if (axp20x_pek->irq_dbr < 0)
++		return axp20x_pek->irq_dbr;
++	axp20x_pek->irq_dbr = regmap_irq_get_virq(
++			axp20x_pek->axp20x->regmap_irqc, axp20x_pek->irq_dbr);
++
++	axp20x_pek->irq_dbf = platform_get_irq_byname(pdev, "PEK_DBF");
++	if (axp20x_pek->irq_dbf < 0)
++		return axp20x_pek->irq_dbf;
++	axp20x_pek->irq_dbf = regmap_irq_get_virq(
++			axp20x_pek->axp20x->regmap_irqc, axp20x_pek->irq_dbf);
++
+ 	if (axp20x_pek_should_register_input(axp20x_pek, pdev)) {
+ 		error = axp20x_pek_probe_input_device(axp20x_pek, pdev);
+ 		if (error)
+@@ -347,6 +329,26 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+ 
+ 	axp20x_pek->info = (struct axp20x_info *)match->driver_data;
+ 
++	error = devm_request_any_context_irq(&pdev->dev, axp20x_pek->irq_dbr,
++					     axp20x_pek_irq, 0,
++					     "axp20x-pek-dbr", axp20x_pek);
++	if (error < 0) {
++		dev_err(&pdev->dev, "Failed to request dbr IRQ#%d: %d\n",
++			axp20x_pek->irq_dbr, error);
++		return error;
++	}
++
++	error = devm_request_any_context_irq(&pdev->dev, axp20x_pek->irq_dbf,
++					  axp20x_pek_irq, 0,
++					  "axp20x-pek-dbf", axp20x_pek);
++	if (error < 0) {
++		dev_err(&pdev->dev, "Failed to request dbf IRQ#%d: %d\n",
++			axp20x_pek->irq_dbf, error);
++		return error;
++	}
++
++	device_init_wakeup(&pdev->dev, true);
++
+ 	platform_set_drvdata(pdev, axp20x_pek);
+ 
+ 	return 0;
+-- 
+2.25.1
+
 
 
