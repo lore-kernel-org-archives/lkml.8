@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7925EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E930208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2392098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323666;
-	bh=hNqsT/ZksuoAUV5wXP1oPVvBuiiQkkr1eY9eKN7FN6w=;
+	s=default; t=1592323668;
+	bh=ehGZLwBStwiNoBJPxCADAHxsq8vyqACAuHk60HMadMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FUuOnsZ7/BfYZnEeTmWCw0yzAb2c7roTi3Q/T6Wm5DqM5QAcElt9TVHievWB6/FtJ
-	 ycmiyInM3GsVVm+uuFoPfw7JKBSHgj606nzNCQyRlFc3JooJmLmH37Lb5R5IxPttJ5
-	 VQv6PjEMW9/KmhV9ahkKRX7j3veuXmrxnLLw9bhk=
+	b=QFfsP3cBksTnvCo2Kr4qBw8tl5sxH6OFzvOsJeX/GWHEF4nux6iw1LmRJgEkZNZJz
+	 dHczXT2o/8cBxrZFb8dBIm7Joyt79Suy6KPMu6tUuhbTUzLd9kAxALjxPzqps+Jcp/
+	 BKgbnY5MKicfQzM47cXnxsIkwo8gVYc6KAcISv/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732227AbgFPPqt (ORCPT
+        id S1731155AbgFPPqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39152 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729867AbgFPPqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:46 -0400
+        id S1730243AbgFPPqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F7E92071A;
-        Tue, 16 Jun 2020 15:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 732C821473;
+        Tue, 16 Jun 2020 15:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322404;
-        bh=hNqsT/ZksuoAUV5wXP1oPVvBuiiQkkr1eY9eKN7FN6w=;
+        s=default; t=1592322402;
+        bh=ehGZLwBStwiNoBJPxCADAHxsq8vyqACAuHk60HMadMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gG1kqQ3AR73Yvs9VEhKjxtKSzk6Hy1haIkPMfL2HwtPit12nEvZ2txTcknVfchQxF
-         etH23SmZgtd2TdWqrmYInbfVpneeAzVLcCp/ozkAI56soLvF8Hr8YCS4DCP4aVdczS
-         kzjmtVNNiv1HJOnIsTlhtNIK4juJoMDJt5krWLOs=
+        b=I68xg1G8p43b1DoxY5CDv4moflDLmILwosULffkwatPdT+Apws4oqglblxhKS2qSA
+         737jSVMbG2NNODiOSyYCEKDG540W3k/ApXb/6+08ZQPl1zgBvluD5i+lHkyvUwxqNn
+         aGGB4wTo33uFyYtWy9NL07UEfvk/rS+B5lIjWRIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, butt3rflyh4ck <butterflyhuangxx@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH 5.7 117/163] exfat: fix memory leak in exfat_parse_param()
-Date:   Tue, 16 Jun 2020 17:34:51 +0200
-Message-Id: <20200616153112.410137542@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.7 090/163] crypto: cavium/nitrox - Fix nitrox_get_first_device() when ndevlist is fully iterated
+Date:   Tue, 16 Jun 2020 17:34:24 +0200
+Message-Id: <20200616153111.154908502@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,86 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit f341a7d8dcc4e3d01544d7bc145633f062ef6249 upstream.
+commit 320bdbd816156f9ca07e5fed7bfb449f2908dda7 upstream.
 
-butt3rflyh4ck reported memory leak found by syzkaller.
+When a list is completely iterated with 'list_for_each_entry(x, ...)', x is
+not NULL at the end.
 
-A param->string held by exfat_mount_options.
+While at it, remove a useless initialization of the ndev variable. It
+is overridden by 'list_for_each_entry'.
 
-BUG: memory leak
-
-unreferenced object 0xffff88801972e090 (size 8):
-  comm "syz-executor.2", pid 16298, jiffies 4295172466 (age 14.060s)
-  hex dump (first 8 bytes):
-    6b 6f 69 38 2d 75 00 00                          koi8-u..
-  backtrace:
-    [<000000005bfe35d6>] kstrdup+0x36/0x70 mm/util.c:60
-    [<0000000018ed3277>] exfat_parse_param+0x160/0x5e0
-fs/exfat/super.c:276
-    [<000000007680462b>] vfs_parse_fs_param+0x2b4/0x610
-fs/fs_context.c:147
-    [<0000000097c027f2>] vfs_parse_fs_string+0xe6/0x150
-fs/fs_context.c:191
-    [<00000000371bf78f>] generic_parse_monolithic+0x16f/0x1f0
-fs/fs_context.c:231
-    [<000000005ce5eb1b>] do_new_mount fs/namespace.c:2812 [inline]
-    [<000000005ce5eb1b>] do_mount+0x12bb/0x1b30 fs/namespace.c:3141
-    [<00000000b642040c>] __do_sys_mount fs/namespace.c:3350 [inline]
-    [<00000000b642040c>] __se_sys_mount fs/namespace.c:3327 [inline]
-    [<00000000b642040c>] __x64_sys_mount+0x18f/0x230 fs/namespace.c:3327
-    [<000000003b024e98>] do_syscall_64+0xf6/0x7d0
-arch/x86/entry/common.c:295
-    [<00000000ce2b698c>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-exfat_free() should call exfat_free_iocharset(), to prevent a leak
-in case we fail after parsing iocharset= but before calling
-get_tree_bdev().
-
-Additionally, there's no point copying param->string in
-exfat_parse_param() - just steal it, leaving NULL in param->string.
-That's independent from the leak or fix thereof - it's simply
-avoiding an extra copy.
-
-Fixes: 719c1e182916 ("exfat: add super block operations")
-Cc: stable@vger.kernel.org # v5.7
-Reported-by: butt3rflyh4ck <butterflyhuangxx@gmail.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+Fixes: f2663872f073 ("crypto: cavium - Register the CNN55XX supported crypto algorithms.")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exfat/super.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/crypto/cavium/nitrox/nitrox_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -273,9 +273,8 @@ static int exfat_parse_param(struct fs_c
- 		break;
- 	case Opt_charset:
- 		exfat_free_iocharset(sbi);
--		opts->iocharset = kstrdup(param->string, GFP_KERNEL);
--		if (!opts->iocharset)
--			return -ENOMEM;
-+		opts->iocharset = param->string;
-+		param->string = NULL;
- 		break;
- 	case Opt_errors:
- 		opts->errors = result.uint_32;
-@@ -630,7 +629,12 @@ static int exfat_get_tree(struct fs_cont
+--- a/drivers/crypto/cavium/nitrox/nitrox_main.c
++++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
+@@ -278,7 +278,7 @@ static void nitrox_remove_from_devlist(s
  
- static void exfat_free(struct fs_context *fc)
+ struct nitrox_device *nitrox_get_first_device(void)
  {
--	kfree(fc->s_fs_info);
-+	struct exfat_sb_info *sbi = fc->s_fs_info;
-+
-+	if (sbi) {
-+		exfat_free_iocharset(sbi);
-+		kfree(sbi);
-+	}
- }
+-	struct nitrox_device *ndev = NULL;
++	struct nitrox_device *ndev;
  
- static const struct fs_context_operations exfat_context_ops = {
+ 	mutex_lock(&devlist_lock);
+ 	list_for_each_entry(ndev, &ndevlist, list) {
+@@ -286,7 +286,7 @@ struct nitrox_device *nitrox_get_first_d
+ 			break;
+ 	}
+ 	mutex_unlock(&devlist_lock);
+-	if (!ndev)
++	if (&ndev->list == &ndevlist)
+ 		return NULL;
+ 
+ 	refcount_inc(&ndev->refcnt);
 
 
