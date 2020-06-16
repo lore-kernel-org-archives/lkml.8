@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F61C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97327C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2FC2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7014B21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322396;
-	bh=b+3dapOenMoKzHmz4ZMKrtxot/1gdSwrklB994ycXnE=;
+	s=default; t=1592322399;
+	bh=lC0Nos0Z2xN682tVmoX7eeKjh3ClUl7Mw27xlR7HuUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KJWn1t8CsQorLJlizkRiO0ImewJmC8WrWVVxYUI3itbT7LESyqF2SWB6tL24aMacb
-	 MDewDPNMpe7gv4Qmn/SJR7QvSZm4kUkeXBUYQ2uF7P2eNtJoG8akjXWjtdNWs5hbV3
-	 XbLcQZQPDriXsUPPNV6TnXHRL9DB4TvAQdbFQEyI=
+	b=f4uqa/QeAQT0IohcNsiwkDpNfYeBIkaGwaO2rCxHyvU6RT1QpRH/hz9tDNin4SIrk
+	 98lmuxVfBwpzMzfiz7aBOYxSAGMgl2WbRHUET9h7kLI05wVyDmYK9HhzS5rocLesWc
+	 U1Or8GstId2/Kmrudj29D/w0k+A0kIs7wEsJ2JTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbgFPPqe (ORCPT
+        id S1730675AbgFPPqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38484 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732200AbgFPPqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:24 -0400
+        id S1732200AbgFPPqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CDBB2071A;
-        Tue, 16 Jun 2020 15:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A88F5214F1;
+        Tue, 16 Jun 2020 15:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322383;
-        bh=b+3dapOenMoKzHmz4ZMKrtxot/1gdSwrklB994ycXnE=;
+        s=default; t=1592322394;
+        bh=lC0Nos0Z2xN682tVmoX7eeKjh3ClUl7Mw27xlR7HuUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J1+8+YDAJ6YFPwPJTXGOMdenbbmg5OCATE9yW7ymlYQk2QuFXQgZkBovGJJVOb5Nb
-         YZtOiCc7nTT7CjoIuUjz1jLX4OozNnBEMs2qH/oqQT6D5zHGppZ46r4cRBZ7TOp+Md
-         LepR5indOQjJvnmls5njcHCxmIJl486qHpzv8sG8=
+        b=EsFpV+mQTJObZa2B0eQiJZh9sG9R6gTu8gtbspsSldCot4Tt2E2JSpXgME2a/dXIj
+         J4GXc0vWEdAA86efBJuGv2HkdlRgxwqCQy+6hJcK8SKnTMqvwWchyOwkuGaD2ai8oc
+         8IcwVp4hGsq3f0iS+1R1QBgyqWsQ/hmKXPOtVFhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 110/163] mptcp: fix races between shutdown and recvmsg
-Date:   Tue, 16 Jun 2020 17:34:44 +0200
-Message-Id: <20200616153112.075696293@linuxfoundation.org>
+        stable@vger.kernel.org, Oz Shlomo <ozsh@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.7 114/163] net/mlx5e: CT: Fix ipv6 nat header rewrite actions
+Date:   Tue, 16 Jun 2020 17:34:48 +0200
+Message-Id: <20200616153112.265339373@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,95 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Oz Shlomo <ozsh@mellanox.com>
 
-[ Upstream commit 5969856ae8ce29c9d523a1a6145cbd9e87f7046c ]
+[ Upstream commit 0d156f2deda8675c29fa2b8b5ed9b374370e47f2 ]
 
-The msk sk_shutdown flag is set by a workqueue, possibly
-introducing some delay in user-space notification. If the last
-subflow carries some data with the fin packet, the user space
-can wake-up before RCV_SHUTDOWN is set. If it executes unblocking
-recvmsg(), it may return with an error instead of eof.
+Set the ipv6 word fields according to the hardware definitions.
 
-Address the issue explicitly checking for eof in recvmsg(), when
-no data is found.
-
-Fixes: 59832e246515 ("mptcp: subflow: check parent mptcp socket on subflow state change")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ac991b48d43c ("net/mlx5e: CT: Offload established flows")
+Signed-off-by: Oz Shlomo <ozsh@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |   45 ++++++++++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -357,6 +357,27 @@ void mptcp_subflow_eof(struct sock *sk)
- 		sock_hold(sk);
- }
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
+@@ -320,21 +320,21 @@ mlx5_tc_ct_parse_mangle_to_mod_act(struc
  
-+static void mptcp_check_for_eof(struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	int receivers = 0;
-+
-+	mptcp_for_each_subflow(msk, subflow)
-+		receivers += !subflow->rx_eof;
-+
-+	if (!receivers && !(sk->sk_shutdown & RCV_SHUTDOWN)) {
-+		/* hopefully temporary hack: propagate shutdown status
-+		 * to msk, when all subflows agree on it
-+		 */
-+		sk->sk_shutdown |= RCV_SHUTDOWN;
-+
-+		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
-+		set_bit(MPTCP_DATA_READY, &msk->flags);
-+		sk->sk_data_ready(sk);
-+	}
-+}
-+
- static void mptcp_stop_timer(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk = inet_csk(sk);
-@@ -933,6 +954,9 @@ fallback:
- 				break;
- 			}
- 
-+			if (test_and_clear_bit(MPTCP_WORK_EOF, &msk->flags))
-+				mptcp_check_for_eof(msk);
-+
- 			if (sk->sk_shutdown & RCV_SHUTDOWN)
- 				break;
- 
-@@ -1070,27 +1094,6 @@ static unsigned int mptcp_sync_mss(struc
- 	return 0;
- }
- 
--static void mptcp_check_for_eof(struct mptcp_sock *msk)
--{
--	struct mptcp_subflow_context *subflow;
--	struct sock *sk = (struct sock *)msk;
--	int receivers = 0;
--
--	mptcp_for_each_subflow(msk, subflow)
--		receivers += !subflow->rx_eof;
--
--	if (!receivers && !(sk->sk_shutdown & RCV_SHUTDOWN)) {
--		/* hopefully temporary hack: propagate shutdown status
--		 * to msk, when all subflows agree on it
--		 */
--		sk->sk_shutdown |= RCV_SHUTDOWN;
--
--		smp_mb__before_atomic(); /* SHUTDOWN must be visible first */
--		set_bit(MPTCP_DATA_READY, &msk->flags);
--		sk->sk_data_ready(sk);
--	}
--}
--
- static void mptcp_worker(struct work_struct *work)
- {
- 	struct mptcp_sock *msk = container_of(work, struct mptcp_sock, work);
+ 	case FLOW_ACT_MANGLE_HDR_TYPE_IP6:
+ 		MLX5_SET(set_action_in, modact, length, 0);
+-		if (offset == offsetof(struct ipv6hdr, saddr))
++		if (offset == offsetof(struct ipv6hdr, saddr) + 12)
+ 			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_31_0;
+-		else if (offset == offsetof(struct ipv6hdr, saddr) + 4)
+-			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_63_32;
+ 		else if (offset == offsetof(struct ipv6hdr, saddr) + 8)
++			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_63_32;
++		else if (offset == offsetof(struct ipv6hdr, saddr) + 4)
+ 			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_95_64;
+-		else if (offset == offsetof(struct ipv6hdr, saddr) + 12)
++		else if (offset == offsetof(struct ipv6hdr, saddr))
+ 			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_127_96;
+-		else if (offset == offsetof(struct ipv6hdr, daddr))
++		else if (offset == offsetof(struct ipv6hdr, daddr) + 12)
+ 			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_31_0;
+-		else if (offset == offsetof(struct ipv6hdr, daddr) + 4)
+-			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_63_32;
+ 		else if (offset == offsetof(struct ipv6hdr, daddr) + 8)
++			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_63_32;
++		else if (offset == offsetof(struct ipv6hdr, daddr) + 4)
+ 			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_95_64;
+-		else if (offset == offsetof(struct ipv6hdr, daddr) + 12)
++		else if (offset == offsetof(struct ipv6hdr, daddr))
+ 			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_127_96;
+ 		else
+ 			return -EOPNOTSUPP;
 
 
