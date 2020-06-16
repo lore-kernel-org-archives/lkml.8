@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14468C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD07208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CB8208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TvS+lpRe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gy3NOO0T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731695AbgFPUPq (ORCPT
+        id S1731719AbgFPUPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60022 "EHLO
+        Tue, 16 Jun 2020 16:15:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731463AbgFPUPm (ORCPT
+        with ESMTP id S1731679AbgFPUPp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:15:42 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BACC0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:15:41 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id y13so23092283eju.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:15:41 -0700 (PDT)
+        Tue, 16 Jun 2020 16:15:45 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 868B9C061794
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:15:43 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id m21so97276eds.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:15:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gW9cbjjRPD6R6Z7AF3iL+tqbW8lQcn4mBsQDieJZv9Y=;
-        b=TvS+lpRerMK7Vh9j8U/PXM8SvfVymFr6pX9tI7Shj29sprrHvMvzGEFsqWa8uXWTkR
-         fOVEMyyl0EL25CtoL9PLNJS1BNdetkq7c5E9CpjAA8Ih08ptnMxWahoK/yYrRPsxaf7o
-         vBtX/zJSXErob5isSOg8B063lsyxaN10ZtQ8oRHs25gZjXwJ8ISzStb9G2xesomdiiE/
-         qfpNMoTc28Z7YRuPZC3AwKvAfV69ApepJGlGKe2hvVdJkGJlQeqpdZNYrkpbfFG74gxm
-         hvQFytLZ7F2UwRii9qRLXt/bFCBm8/g695mr1gVqnG03s8/Fb42CuQL+VlLhNmbecWtl
-         Ga5Q==
+        bh=AZqdoAEGz2z2dhDjwXWaMZ24wdl6oc5L+Rca1tEh8dc=;
+        b=gy3NOO0TVFbQO8JeVz50/yi9A6AS7UoNAvAWS0yUYYqBasL4KYmzd6LX0YSCcoYzih
+         WZAXIMLWxXdlpY/bvSoQGSycZqpuRHWIneQo9OcdzFjNUomCLSSqIOPp+mszgZqoPk58
+         11vlXMHdE8MlJ4HgS2M268UOIQg/vg94l2gEPrHYgzwAlfNPcT+aLo+uzZqgkLwSOejQ
+         7pTvUWtbeRhK8owv8gttck7ySAvgy2te3vvK1RRACY0AitSSke1l+HqJN1XmObrNj9pk
+         9Gt8EA3JTwxuKVwPRdbirVeQDhKiVXmFX2yjEqB5roJ5YX8jD5XeOYouqsyg4Mbq/taa
+         zXVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=gW9cbjjRPD6R6Z7AF3iL+tqbW8lQcn4mBsQDieJZv9Y=;
-        b=FAzt/JzebtPI05qU0OYt2eKQGYDNAwtPlOEU6TY1YtnddIqKWFtJ8NdxFkCfOdUAD7
-         KHpaDGOW5l4AX+QKsSOii8TA1ziMiUPXRRjpo/KuSCqS2aykEslkPr+3nO/o1GdB4kIK
-         3XrF6+3trHGuoSd/Lyjkh70fViQxeDrxqjgZR5DLPCfPQc2cu3tWbd1Eyhp9nLXVz0pE
-         KY+vaa0fwhsKhKHJc/u+fksKtXMD/Ts+LUFfQmr4DHseoCt5mIKxMjMJcS/mOmvrGzXk
-         jnvQLrOe7S/T/hcFMHJAnxgFtTdc+C18Q23K5sZApHeQa2Ev9bWtFaOPbS9lvkm85iJS
-         5wkA==
-X-Gm-Message-State: AOAM531rRcrnFg0tHzngxL945TVUmiDIMN7KnkJmILWIv1i8IFgtgjkH
-        CjjTOVtmHlaJgG5fGYr+GCMlbg==
-X-Google-Smtp-Source: ABdhPJzgXkbMUwl8DMfZ408p8n1EGyMsTX1YMSgHzEF6jce2krk5jx3jQ+aRMOjy2tB0tYG6LH3ywA==
-X-Received: by 2002:a17:906:7253:: with SMTP id n19mr4557425ejk.31.1592338539978;
-        Tue, 16 Jun 2020 13:15:39 -0700 (PDT)
+        bh=AZqdoAEGz2z2dhDjwXWaMZ24wdl6oc5L+Rca1tEh8dc=;
+        b=raF3bcDrstnQ3CdA06cd0HoYELiKataWINYzKlYHszvWYTp+cQEzjpM0nfuG7zdGaQ
+         myFqr3ODFr/MBd1VwAXwB90XCRpPyWewj4qPnaM6i4yGy635aagORxPJq3rpsVMvAy2f
+         U4vbRYStVqaD2gJ4J3mA8ARmDR3vR352eooblEJbERNBV5lqpjaPJpHT2XMpdJQ80gO9
+         qM93NOgh2PWUF1y+tZiyc5vfqbIbjIEvpKz9bMgddB0iJWSPC0TMyjmS7CaLVeIHssGn
+         K91dgPgJU9WHMXNw3iKSS+JeBvpT32NI0RB5sOJpgpehc5HcMQwwqap6d+r1j90yAmWT
+         1f4w==
+X-Gm-Message-State: AOAM530qDJrV810O2Psmk0st9p6wmHtW2NYJSFp9bpGRJ6hFSL//rPdL
+        S5IyyHCn/+Bpc6u8Mmp7wRzf/0D+7yjM6Q==
+X-Google-Smtp-Source: ABdhPJxIsyuMwyfFK+YWY/8UN0ykI79Dmd+IfHF88uSKNdHy2vmbGNi43R1JVapD/sonJonUkmDEIg==
+X-Received: by 2002:aa7:da8c:: with SMTP id q12mr4234503eds.385.1592338542217;
+        Tue, 16 Jun 2020 13:15:42 -0700 (PDT)
 Received: from localhost.localdomain (212-5-158-38.ip.btc-net.bg. [212.5.158.38])
-        by smtp.gmail.com with ESMTPSA id b14sm11602658ejq.105.2020.06.16.13.15.38
+        by smtp.gmail.com with ESMTPSA id b14sm11602658ejq.105.2020.06.16.13.15.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 13:15:39 -0700 (PDT)
+        Tue, 16 Jun 2020 13:15:41 -0700 (PDT)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org
@@ -66,9 +66,9 @@ Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Maheshwar Ajja <majja@codeaurora.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 3/4] v4l2-ctrl: Add control for intra only decode
-Date:   Tue, 16 Jun 2020 23:14:45 +0300
-Message-Id: <20200616201446.15996-4-stanimir.varbanov@linaro.org>
+Subject: [PATCH v2 4/4] venus: vdec: Add support for decode intra frames only
+Date:   Tue, 16 Jun 2020 23:14:46 +0300
+Message-Id: <20200616201446.15996-5-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200616201446.15996-1-stanimir.varbanov@linaro.org>
 References: <20200616201446.15996-1-stanimir.varbanov@linaro.org>
@@ -77,70 +77,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a new decoder control to instruct the decoders to
-produce on its output intra frames only. Usually in this mode
-decoders might lower the count of output decoder buffers and
-hence reduce memory usage.
+Adds support in the decoder for intra frames only decode. The
+implementation in the Venus use HFI property for thumbnail
+generation to lower memory usage and when the control is enabled
+the number of decoder output buffers for progressive stream
+will be one (for interlace two). We assume that the client will
+queue on the decoder input intra frames only but this is not
+mandatory. If the client queue non-intra frames on decoder input
+they will be returned on decoder output with an error.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- .../userspace-api/media/v4l/ext-ctrls-codec.rst          | 9 +++++++++
- drivers/media/v4l2-core/v4l2-ctrls.c                     | 2 ++
- include/uapi/linux/v4l2-controls.h                       | 1 +
- 3 files changed, 12 insertions(+)
+ drivers/media/platform/qcom/venus/core.h       | 1 +
+ drivers/media/platform/qcom/venus/vdec.c       | 7 +++++++
+ drivers/media/platform/qcom/venus/vdec_ctrls.c | 9 ++++++++-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index b9d3f7ae6486..d7f34596f95b 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -652,6 +652,15 @@ enum v4l2_mpeg_video_bitrate_mode -
-     otherwise the decoder expects a single frame in per buffer.
-     Applicable to the decoder, all codecs.
+diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+index 1bac30d4cf50..b9a3b9ca6ae1 100644
+--- a/drivers/media/platform/qcom/venus/core.h
++++ b/drivers/media/platform/qcom/venus/core.h
+@@ -191,6 +191,7 @@ struct vdec_controls {
+ 	u32 post_loop_deb_mode;
+ 	u32 profile;
+ 	u32 level;
++	bool intra_only;
+ };
  
-+``V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY (boolean)``
-+    If enabled the decoder should start decoding only intra frames. The
-+    decoder consume first input buffer for progressive stream (or first
-+    two buffers for interlace). Decoder might not allocate more output
-+    buffers than it is required to consume one input frame. Usually the
-+    decoder input buffers will contain only intra frames but it is not
-+    mandatory. This control could be used for thumbnails generation.
-+    Applicable to the decoder, all codecs.
+ struct venc_controls {
+diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+index 7c4c483d5438..aa68cefcae96 100644
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -625,6 +625,13 @@ static int vdec_set_properties(struct venus_inst *inst)
+ 			return ret;
+ 	}
+ 
++	if (ctr->intra_only) {
++		ptype = HFI_PROPERTY_PARAM_VDEC_THUMBNAIL_MODE;
++		ret = hfi_session_set_property(inst, ptype, &en);
++		if (ret)
++			return ret;
++	}
 +
- ``V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE (boolean)``
-     Enable writing sample aspect ratio in the Video Usability
-     Information. Applicable to the H264 encoder.
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index bc00d02e411f..2b1fb8dcd360 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -846,6 +846,7 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:			return "H264 MB Level Rate Control";
- 	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:			return "Sequence Header Mode";
- 	case V4L2_CID_MPEG_VIDEO_MAX_REF_PIC:			return "Max Number of Reference Pics";
-+	case V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY:	return "Decode intra frames only";
- 	case V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP:		return "H263 I-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP:		return "H263 P-Frame QP Value";
- 	case V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP:		return "H263 B-Frame QP Value";
-@@ -1197,6 +1198,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE:
- 	case V4L2_CID_MPEG_VIDEO_MPEG4_QPEL:
- 	case V4L2_CID_MPEG_VIDEO_REPEAT_SEQ_HEADER:
-+	case V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY:
- 	case V4L2_CID_WIDE_DYNAMIC_RANGE:
- 	case V4L2_CID_IMAGE_STABILIZATION:
- 	case V4L2_CID_RDS_RECEPTION:
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 0f7e4388dcce..c64471e64aa7 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -744,6 +744,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
- #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
- #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
- #define V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY		(V4L2_CID_MPEG_BASE + 645)
-+#define V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY	(V4L2_CID_MPEG_BASE + 646)
+ 	return 0;
+ }
  
- /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
- #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+diff --git a/drivers/media/platform/qcom/venus/vdec_ctrls.c b/drivers/media/platform/qcom/venus/vdec_ctrls.c
+index 3a963cbd342a..96ca8d9dd22e 100644
+--- a/drivers/media/platform/qcom/venus/vdec_ctrls.c
++++ b/drivers/media/platform/qcom/venus/vdec_ctrls.c
+@@ -28,6 +28,9 @@ static int vdec_op_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	case V4L2_CID_MPEG_VIDEO_MPEG4_LEVEL:
+ 		ctr->level = ctrl->val;
+ 		break;
++	case V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY:
++		ctr->intra_only = ctrl->val;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -86,7 +89,7 @@ int vdec_ctrl_init(struct venus_inst *inst)
+ 	struct v4l2_ctrl *ctrl;
+ 	int ret;
+ 
+-	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 7);
++	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 8);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -141,6 +144,10 @@ int vdec_ctrl_init(struct venus_inst *inst)
+ 	if (ctrl)
+ 		ctrl->flags |= V4L2_CTRL_FLAG_VOLATILE;
+ 
++	v4l2_ctrl_new_std(&inst->ctrl_handler, &vdec_ctrl_ops,
++			  V4L2_CID_MPEG_VIDEO_DECODE_INTRA_FRAMES_ONLY,
++			  0, 1, 1, 0);
++
+ 	ret = inst->ctrl_handler.error;
+ 	if (ret) {
+ 		v4l2_ctrl_handler_free(&inst->ctrl_handler);
 -- 
 2.17.1
 
