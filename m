@@ -2,52 +2,58 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9943C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8475421475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC3D21527
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321973;
-	bh=0JERohV4x/Bj7qeK8SMYNWYmz3BUXkYI0JZHeSB8q1g=;
+	s=default; t=1592321977;
+	bh=QmE2oagzGzBT6yjswqscQUYQAHfcNAFmEQ61WuPLDRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O7cjSMJ2FWHBLyz7Lxqm9xWahB/DgyjYpJaIyI5MrE+5TKAmmL5EJBmJTp6W9h2Cm
-	 b9PSvEBt9PljHNJ+sUJqe+wfx7YtxbLFsAIL5fvKxxT9bH10nGDFjnipgTvcWC7xB0
-	 sbrenECieyvadrLWfNp6T4EtlKUJcQqnNdnZbQCc=
+	b=RBsxHYMlJ/mzsCTqMn3/JqEyFDX5uX+V5+d2DGwS4l0hs0rvF8LNOflCzIxh2u20x
+	 eA7ttshvBeqQBzHYthn62PHsK354U2mVUjLKkxI4S+zhvuwCprW3jNJYMuO/U+x248
+	 jH1cYceczQcduojAiVxA0ddrj4w4dYlgVaoW+Zfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgFPPjc (ORCPT
+        id S1730982AbgFPPjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:39:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:39:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730049AbgFPPjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:20 -0400
+        id S1729937AbgFPPjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:39:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F30D92145D;
-        Tue, 16 Jun 2020 15:39:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C348620B1F;
+        Tue, 16 Jun 2020 15:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321959;
-        bh=0JERohV4x/Bj7qeK8SMYNWYmz3BUXkYI0JZHeSB8q1g=;
+        s=default; t=1592321972;
+        bh=QmE2oagzGzBT6yjswqscQUYQAHfcNAFmEQ61WuPLDRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GugU6MYBufF1kdcSDFGIeb/ov/1UmQrhHdWoXYw3Lg3HEh9N7q08oIwaypd2aF+Nr
-         5lP2ooXKJ7ybfcZkZhXY9lM5Hk147Vrx0odSmwDpfL9xgrJcbai5X2wH2Dzt+JG6Xl
-         NZPc3MjYUhqV50RTZkCY5Vt7vRp+zaxCrIgwOeog=
+        b=TO1uIuc/ZGhxXv4SX/h8/UeCXw6N3la0I3NH6nJfsGs/GaL4FhCwjfNj/S0lZMkwz
+         fZb7B7d/g3Q155ckaALlSq9vRmxQDERaHPi3+MAJRSZMvYIa5vkVscn/zxsd9NMceu
+         Gxa4RTpI6Gf9KTn62OL36gUN3vaM9FLCTJTPb218=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 5.4 051/134] efi/efivars: Add missing kobject_put() in sysfs entry creation error path
-Date:   Tue, 16 Jun 2020 17:33:55 +0200
-Message-Id: <20200616153103.228376763@linuxfoundation.org>
+        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Gonglei <arei.gonglei@huawei.com>,
+        "Longpeng(Mike)" <longpeng2@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 087/134] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
+Date:   Tue, 16 Jun 2020 17:34:31 +0200
+Message-Id: <20200616153104.949860321@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,36 +66,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Longpeng(Mike) <longpeng2@huawei.com>
 
-commit d8bd8c6e2cfab8b78b537715255be8d7557791c0 upstream.
+[ Upstream commit b02989f37fc5e865ceeee9070907e4493b3a21e2 ]
 
-The documentation provided by kobject_init_and_add() clearly spells out
-the need to call kobject_put() on the kobject if an error is returned.
-Add this missing call to the error path.
+The system will crash when the users insmod crypto/tcrypt.ko with mode=38
+( testing "cts(cbc(aes))" ).
 
-Cc: <stable@vger.kernel.org>
-Reported-by: 亿一 <teroincn@gmail.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Usually the next entry of one sg will be @sg@ + 1, but if this sg element
+is part of a chained scatterlist, it could jump to the start of a new
+scatterlist array. Fix it by sg_next() on calculation of src/dst
+scatterlist.
 
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Reported-by: LABBE Corentin <clabbe@baylibre.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
+Signed-off-by: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200602070501.2023-2-longpeng2@huawei.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/efivars.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/virtio/virtio_crypto_algs.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -522,8 +522,10 @@ efivar_create_sysfs_entry(struct efivar_
- 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
- 				   NULL, "%s", short_name);
- 	kfree(short_name);
--	if (ret)
-+	if (ret) {
-+		kobject_put(&new_var->kobj);
- 		return ret;
-+	}
+diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
+index fea55b5da8b5..3b37d0150814 100644
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -353,13 +353,18 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
+ 	int err;
+ 	unsigned long flags;
+ 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
+-	int i;
+ 	u64 dst_len;
+ 	unsigned int num_out = 0, num_in = 0;
+ 	int sg_total;
+ 	uint8_t *iv;
++	struct scatterlist *sg;
  
- 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
- 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
+ 	src_nents = sg_nents_for_len(req->src, req->nbytes);
++	if (src_nents < 0) {
++		pr_err("Invalid number of src SG.\n");
++		return src_nents;
++	}
++
+ 	dst_nents = sg_nents(req->dst);
+ 
+ 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
+@@ -445,12 +450,12 @@ __virtio_crypto_ablkcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
+ 	vc_sym_req->iv = iv;
+ 
+ 	/* Source data */
+-	for (i = 0; i < src_nents; i++)
+-		sgs[num_out++] = &req->src[i];
++	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
++		sgs[num_out++] = sg;
+ 
+ 	/* Destination data */
+-	for (i = 0; i < dst_nents; i++)
+-		sgs[num_out + num_in++] = &req->dst[i];
++	for (sg = req->dst; sg; sg = sg_next(sg))
++		sgs[num_out + num_in++] = sg;
+ 
+ 	/* Status */
+ 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
+-- 
+2.25.1
+
 
 
