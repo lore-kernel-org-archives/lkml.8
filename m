@@ -2,244 +2,217 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D05542074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:54:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YOLSQ/hH"
+	by mail.kernel.org (Postfix) with ESMTP id 41E662074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgFPGyk (ORCPT
+        id S1727066AbgFPGz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgFPGyj (ORCPT
+        Tue, 16 Jun 2020 02:55:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8238 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725710AbgFPGz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:54:39 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2325C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:54:37 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h5so19532999wrc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZEPVAfPR98ffU4HcJ8n3O8Rs7VWQME5L+qY7xcPu2Q8=;
-        b=YOLSQ/hHlyuz2FCheCDZnw7IDNAt7C64qby+01Mik/jYlMiCkM9fd013FSkvy6giKR
-         visuSburUxrjaqyExw+hBUK//ffRx0/pjslvGves3L7lq0ZTGMttXCJcZJy1B/8+142G
-         OMPJUxKWNpTMFJFTC4wyT27oZ0EvzaSQe8nTY4G6lpAh5kMOT/pP81OqWJaeCH9uFoC1
-         XUN4MIWbzy4G1FMhHGK49n0wlPJZ7Fp2u5Gw1VGVZHmkZ+FPsvxDWcf9e65ZT57/g5OU
-         fEhRH16WcE1MKwvhd8lpRY1T6D2lwGlv1GxZFlI0acMntyVLG2Y+FV8Uv7QsNhA6Ya7Q
-         g4bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZEPVAfPR98ffU4HcJ8n3O8Rs7VWQME5L+qY7xcPu2Q8=;
-        b=Lr0B0fZYC9WC6guqPywo0u+BqApHpY/A79AxpH3E6uaThFbZNCUfl9/FxhK8Oofaof
-         t2+x8X/CybALx5m0BSqFwxFntn3SyfDFlR8W8x6Osw5iJj5ErO58GJPWwUYRfxnPufDT
-         Qkcid4kczqO1yIyj56JPhfvRPlEupC/BMaz8XsiFHESFC1DkcjKU74LYBtybOFRw6rr5
-         98JXgLBd2lUtthDJ61vHqK9JvrPHIs2YenD/P26O0ihykavODnpv7dlumQfbzsWnddDE
-         FHdJzCs0IxjKVTWV4cj37A6mBO6FIfCvr0BmVlAHEY1F/H6Tdnc2S7G4up2SuGddugu3
-         y/8w==
-X-Gm-Message-State: AOAM533gqWYqBSpVc/lYdhBuC7bCgq+J+ymvlSPF7PXKtsVDxVr5zodo
-        SsXYvVOHur6ERvg/mRrM1gJ8fQ==
-X-Google-Smtp-Source: ABdhPJxI0GVoVyQ/MRgIv7AiXuVqi6L+3wuLe52/Bl06xZTxe35y0eMPzlD2ew8Wb+5/cLTvsbP//Q==
-X-Received: by 2002:adf:f552:: with SMTP id j18mr1318126wrp.279.1592290476475;
-        Mon, 15 Jun 2020 23:54:36 -0700 (PDT)
-Received: from vingu-book ([2a01:e0a:f:6020:5592:7b9c:f9d9:6edb])
-        by smtp.gmail.com with ESMTPSA id g187sm2682245wma.17.2020.06.15.23.54.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jun 2020 23:54:35 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 08:54:32 +0200
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [LKP] [sched/fair] 070f5e860e: reaim.jobs_per_min -10.5%
- regression
-Message-ID: <20200616065432.GA18401@vingu-book>
-References: <20200319023819.GO11705@shao2-debian>
- <20200612110616.20264-1-hdanton@sina.com>
- <90f4036d-bb16-af67-8776-a2cbe67dfe7f@linux.intel.com>
- <20200615081041.GA16990@vingu-book>
- <d60343e9-b3a0-bdc7-84f4-e8c912f92c46@linux.intel.com>
+        Tue, 16 Jun 2020 02:55:26 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05G6W6jt105647;
+        Tue, 16 Jun 2020 02:55:24 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5ev7t0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 02:55:23 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05G6WNkn106293;
+        Tue, 16 Jun 2020 02:55:23 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5ev7t0f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 02:55:23 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05G6o54M026008;
+        Tue, 16 Jun 2020 06:55:21 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31mpe84u31-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 06:55:21 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05G6tIR49109774
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 06:55:19 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D95744C058;
+        Tue, 16 Jun 2020 06:55:18 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5BE134C040;
+        Tue, 16 Jun 2020 06:55:18 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.20.221])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jun 2020 06:55:18 +0000 (GMT)
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+ <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <74b6cf8a-d5a6-e0bf-f1c1-e453af133614@de.ibm.com>
+Date:   Tue, 16 Jun 2020 08:55:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d60343e9-b3a0-bdc7-84f4-e8c912f92c46@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_11:2020-06-15,2020-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ adultscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 malwarescore=0
+ suspectscore=0 bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006160043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Xing,
 
-Le mardi 16 juin 2020 à 11:17:16 (+0800), Xing Zhengjun a écrit :
+On 15.06.20 14:39, Pierre Morel wrote:
+> An architecture protecting the guest memory against unauthorized host
+> access may want to enforce VIRTIO I/O device protection through the
+> use of VIRTIO_F_IOMMU_PLATFORM.
 > 
+> Let's give a chance to the architecture to accept or not devices
+> without VIRTIO_F_IOMMU_PLATFORM.
 > 
-> On 6/15/2020 4:10 PM, Vincent Guittot wrote:
-> > Hi Xing,
-> > 
-> > Le lundi 15 juin 2020 à 15:26:59 (+0800), Xing Zhengjun a écrit :
-> > > 
-> > > 
-> > > On 6/12/2020 7:06 PM, Hillf Danton wrote:
-> > > > 
-> > > > On Fri, 12 Jun 2020 14:36:49 +0800 Xing Zhengjun wrote:
-> > 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 
-...
 
-> > 
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+Shouldnt we maybe add a pr_warn if that happens to help the admins to understand what is going on?
+
+
+> ---
+>  arch/s390/mm/init.c     | 6 ++++++
+>  drivers/virtio/virtio.c | 9 +++++++++
+>  include/linux/virtio.h  | 2 ++
+>  3 files changed, 17 insertions(+)
 > 
-> I apply the patch based on v5.7, the test result is as the following:
-
-TBH, I didn't expect that the results would still be bad, so i wonder if the threshold are
-the root problem.
-
-Could you run tests with the patch below that removes condition with runnable_avg ?
-I just want to make sure that those 2 conditions are the root cause.
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index da3e5b54715b..f5774d0af059 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8210,10 +8210,6 @@ group_has_capacity(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
-        if (sgs->sum_nr_running < sgs->group_weight)
-                return true;
-
--       if ((sgs->group_capacity * imbalance_pct) <
--                       (sgs->group_runnable * 100))
--               return false;
--
-        if ((sgs->group_capacity * 100) >
-                        (sgs->group_util * imbalance_pct))
-                return true;
-@@ -8239,10 +8235,6 @@ group_is_overloaded(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
-                        (sgs->group_util * imbalance_pct))
-                return true;
-
--       if ((sgs->group_capacity * imbalance_pct) <
--                       (sgs->group_runnable * 100))
--               return true;
--
-        return false;
- }
-
-
-
-Thanks.
-Vincent
-
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 87b2d024e75a..3f04ad09650f 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -46,6 +46,7 @@
+>  #include <asm/kasan.h>
+>  #include <asm/dma-mapping.h>
+>  #include <asm/uv.h>
+> +#include <linux/virtio.h>
+>  
+>  pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>  
+> @@ -162,6 +163,11 @@ bool force_dma_unencrypted(struct device *dev)
+>  	return is_prot_virt_guest();
+>  }
+>  
+> +int arch_needs_iommu_platform(struct virtio_device *dev) 
+> +{
+> +	return is_prot_virt_guest();
+> +}
+> +
+>  /* protected virtualization */
+>  static void pv_init(void)
+>  {
+> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> index a977e32a88f2..30091089bee8 100644
+> --- a/drivers/virtio/virtio.c
+> +++ b/drivers/virtio/virtio.c
+> @@ -167,6 +167,11 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
+>  }
+>  EXPORT_SYMBOL_GPL(virtio_add_status);
+>  
+> +int __weak arch_needs_iommu_platform(struct virtio_device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+>  int virtio_finalize_features(struct virtio_device *dev)
+>  {
+>  	int ret = dev->config->finalize_features(dev);
+> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
+>  	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+>  		return 0;
+>  
+> +	if (arch_needs_iommu_platform(dev) &&
+> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+> +		return -EIO;
+> +
+>  	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
+>  	status = dev->config->get_status(dev);
+>  	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> index a493eac08393..2c46b310c38c 100644
+> --- a/include/linux/virtio.h
+> +++ b/include/linux/virtio.h
+> @@ -195,4 +195,6 @@ void unregister_virtio_driver(struct virtio_driver *drv);
+>  #define module_virtio_driver(__virtio_driver) \
+>  	module_driver(__virtio_driver, register_virtio_driver, \
+>  			unregister_virtio_driver)
+> +
+> +int arch_needs_iommu_platform(struct virtio_device *dev);
+>  #endif /* _LINUX_VIRTIO_H */
 > 
-> =========================================================================================
-> tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
-> 
-> lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
-> 
-> commit:
->   9f68395333ad7f5bfe2f83473fed363d4229f11c
->   070f5e860ee2bf588c99ef7b4c202451faa48236
->   v5.7
->   3e1643da53f3fc7414cfa3ad2a16ab2a164b7f4d (the test patch)
-> 
-> 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7
-> 3e1643da53f3fc7414cfa3ad2a1
-> ---------------- --------------------------- ---------------------------
-> ---------------------------
->          %stddev     %change         %stddev     %change %stddev     %change
-> %stddev
->              \          |                \          |                \
-> |                \
->       0.69           -10.3%       0.62            -9.1%       0.62
-> -7.1%       0.64        reaim.child_systime
->       0.62            -1.0%       0.61            +0.5%       0.62
-> +1.3%       0.63        reaim.child_utime
->      66870           -10.0%      60187            -7.6%      61787
-> -6.1%      62807        reaim.jobs_per_min
->      16717           -10.0%      15046            -7.6%      15446
-> -6.1%      15701        reaim.jobs_per_min_child
->      97.84            -1.1%      96.75            -0.4%      97.43
-> -0.5%      97.34        reaim.jti
->      72000           -10.8%      64216            -8.3%      66000
-> -5.7%      67885        reaim.max_jobs_per_min
->       0.36           +10.6%       0.40            +7.8%       0.39
-> +6.9%       0.38        reaim.parent_time
->       1.58 ±  2%     +71.0%       2.70 ±  2%     +26.9%       2.01 ± 2%
-> +32.5%       2.09 ±  6%  reaim.std_dev_percent
->       0.00 ±  5%    +110.4%       0.01 ±  3%     +48.8%       0.01 ± 7%
-> +61.7%       0.01 ±  8%  reaim.std_dev_time
->      50800            -2.4%      49600            -1.6%      50000
-> -1.3%      50133        reaim.workload
-> 
-> 
-> > > 
-> > > =========================================================================================
-> > > tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
-> > > 
-> > > lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
-> > > 
-> > > commit:
-> > >    9f68395333ad7f5bfe2f83473fed363d4229f11c
-> > >    070f5e860ee2bf588c99ef7b4c202451faa48236
-> > >    v5.7
-> > >    6b33257768b8dd3982054885ea310871be2cfe0b (Hillf's patch)
-> > > 
-> > > 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7
-> > > 6b33257768b8dd3982054885ea3
-> > > ---------------- --------------------------- ---------------------------
-> > > ---------------------------
-> > >           %stddev     %change         %stddev     %change %stddev     %change
-> > > %stddev
-> > >               \          |                \          |                \
-> > > |                \
-> > >        0.69           -10.3%       0.62            -9.1%       0.62
-> > > -10.1%       0.62        reaim.child_systime
-> > >        0.62            -1.0%       0.61            +0.5%       0.62
-> > > +0.3%       0.62        reaim.child_utime
-> > >       66870           -10.0%      60187            -7.6%      61787
-> > > -8.3%      61305        reaim.jobs_per_min
-> > >       16717           -10.0%      15046            -7.6%      15446
-> > > -8.3%      15326        reaim.jobs_per_min_child
-> > >       97.84            -1.1%      96.75            -0.4%      97.43
-> > > -0.5%      97.37        reaim.jti
-> > >       72000           -10.8%      64216            -8.3%      66000
-> > > -8.3%      66000        reaim.max_jobs_per_min
-> > >        0.36           +10.6%       0.40            +7.8%       0.39
-> > > +9.4%       0.39        reaim.parent_time
-> > >        1.58 ±  2%     +71.0%       2.70 ±  2%     +26.9%       2.01 ± 2%
-> > > +33.2%       2.11        reaim.std_dev_percent
-> > >        0.00 ±  5%    +110.4%       0.01 ±  3%     +48.8%       0.01 ± 7%
-> > > +65.3%       0.01 ±  3%  reaim.std_dev_time
-> > >       50800            -2.4%      49600            -1.6%      50000
-> > > -1.8%      49866        reaim.workload
-> > > 
-> > > 
-> > > 
-> > > -- 
-> > > Zhengjun Xing
-> 
-> -- 
-> Zhengjun Xing
