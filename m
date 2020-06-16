@@ -2,166 +2,110 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89654C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3161C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61FFF208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F78208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="acRvEnLA"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jsmUsgFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731521AbgFPUS6 (ORCPT
+        id S1731623AbgFPUUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730725AbgFPUS5 (ORCPT
+        Tue, 16 Jun 2020 16:20:09 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18888 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgFPUUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:18:57 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6A2C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:18:57 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id g5so16990894otg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:18:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=5OcMZK0pIGG+xHLzfApAVvfMiSRe3c77ecNoi1ZxYsc=;
-        b=acRvEnLAKUl45yhbSb5Acwnee3bW4VJQVY1BLJ2hsepfm6/dj+FoLtbkSd4s+dJnhB
-         jpAs08a6XpEPDpdSekXGPRNJ0uNyM+wFVUwEasiIdzcG5hp01rqI/aq4Irorf2QqwI7u
-         wemXPg7vMZvPip+snIpyPE/zinPNWeh18ch96GYLSaVxD4MzcM3oCnQVEy4Eil2mpqxQ
-         WgZSNnS0kd0HzZnPTt5svSXHbOFyjW1M41wT+dRee2fI9dtx71rduUQB00Q0VRQ2udZG
-         PeECt8Bw+dfaxAJmAXRclNQVSalnP5Lkb3H3DtBEDIezd8jOdg2T72b6uGYLdxSEAC07
-         FBiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=5OcMZK0pIGG+xHLzfApAVvfMiSRe3c77ecNoi1ZxYsc=;
-        b=PTZdxN+BpONkvNGUewjUTNlTUrOkOZFiVpiss5ZwaEmiEMrWyAbotbEUOD53HF6Yoo
-         5ZlTxGVFHnnSN1TuWEyuRQJz80E5rAphGMvaYPk1aPTkF/7ChY1OLI/QanWWN0LJPQeQ
-         9G3YIdUN/jgyKKtu8aFauyXh7ZUPh38uBcnB9fRH0GrlymKpJVYh3vYylSvDyQHwAuqH
-         W67TPRd6wKdZXZ6GwW8JF6+D8j3y4Q5kduvMXGpeohPo3+s/ScwW+KbONfX5Iia07jO0
-         zHvkAd2Uc8CCZHYM3VbpwsSJoSXluZ2C4w7wFAIKsW4MffXDGTcAR3urMWejfXqnSrYN
-         W/zA==
-X-Gm-Message-State: AOAM531L9OQwu7ioDncvkvnr2D91+aFkvHD2Nk11KVnqq0udWQWSgSKk
-        zDASZDI+ud8sq8Wi0ni+GW/e2A==
-X-Google-Smtp-Source: ABdhPJzSqLU4z7tKM4zTa37oGY9FKrc/afCUXskGLirSHGMztvd7XlkWk5gSy8MKJ5BKXnpv1OIqgQ==
-X-Received: by 2002:a05:6830:4a2:: with SMTP id l2mr3812104otd.10.1592338735936;
-        Tue, 16 Jun 2020 13:18:55 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id 94sm4268169otb.47.2020.06.16.13.18.54
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Tue, 16 Jun 2020 13:18:54 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 13:18:40 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     akpm@linux-foundation.org, alex.shi@linux.alibaba.com,
-        hughd@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        liwang@redhat.com, mgorman@techsingularity.net,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm, compaction: make capture control handling safe
- wrt interrupts
-In-Reply-To: <20200616082649.27173-1-vbabka@suse.cz>
-Message-ID: <alpine.LSU.2.11.2006161316230.1119@eggly.anvils>
-References: <b17acf5b-5e8a-3edf-5a64-603bf6177312@suse.cz> <20200616082649.27173-1-vbabka@suse.cz>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Tue, 16 Jun 2020 16:20:08 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee929460000>; Tue, 16 Jun 2020 13:19:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Jun 2020 13:20:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 16 Jun 2020 13:20:07 -0700
+Received: from [10.26.75.222] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jun
+ 2020 20:20:05 +0000
+Subject: Re: [PATCH 5.4 000/131] 5.4.47-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200616172616.044174583@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <dcc826f2-a9c9-4870-f1da-76bda0bb767b@nvidia.com>
+Date:   Tue, 16 Jun 2020 21:20:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20200616172616.044174583@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592338758; bh=wn/uQcO0/lI7I/tJ3A3dP8S9I67Ph+r5VwJNVID9FNk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jsmUsgFLnlXsphgNgWVyvUyFpJqyM655AzTRmkKOp2e6qq0uXYnmZyYTS8Edqmltb
+         h8ECjsSrp2+n+tsmzOmR4s/1f+4UjgFOBHQr+vR15QZBXr/tARoWH9OQCRbRmUTMTb
+         R2E0Ao2ipbTsfB4nZ1GNmTaQHURLhzg5J0D+f7uTL/EhSLP3YaRhUBTjIXytJbkwZU
+         mLid0pmh1qi7SZJblRBweD8S3RHqWkMs0cgIL9TOKiuRA2OM79WotN+Fg0DxLTD3VW
+         fuHoxvsynv9dIk0REmgrSJAHxxHA6tp1gqZXcxM8PEWL8g2tYleMIYGJiiDJ8xQeJ2
+         N4GIT87k51tSQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020, Vlastimil Babka wrote:
+On 16/06/2020 18:27, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.47 release.
+> There are 131 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 18 Jun 2020 17:25:49 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.47-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-> Hugh reports:
-> 
-> =====
-> While stressing compaction, one run oopsed on NULL capc->cc in
-> __free_one_page()'s task_capc(zone): compact_zone_order() had been
-> interrupted, and a page was being freed in the return from interrupt.
-> 
-> Though you would not expect it from the source, both gccs I was using
-> (a 4.8.1 and a 7.5.0) had chosen to compile compact_zone_order() with
-> the ".cc = &cc" implemented by mov %rbx,-0xb0(%rbp) immediately before
-> callq compact_zone - long after the "current->capture_control = &capc".
-> An interrupt in between those finds capc->cc NULL (zeroed by an earlier
-> rep stos).
-> 
-> This could presumably be fixed by a barrier() before setting
-> current->capture_control in compact_zone_order(); but would also need
-> more care on return from compact_zone(), in order not to risk leaking
-> a page captured by interrupt just before capture_control is reset.
-> 
-> Maybe that is the preferable fix, but I felt safer for task_capc() to
-> exclude the rather surprising possibility of capture at interrupt time.
-> =====
-> 
-> I have checked that gcc10 also behaves the same.
-> 
-> The advantage of fix in compact_zone_order() is that we don't add another
-> test in the page freeing hot path, and that it might prevent future problems
-> if we stop exposing pointers to unitialized structures in current task.
-> 
-> So this patch implements the suggestion for compact_zone_order() with barrier()
-> (and WRITE_ONCE() to prevent store tearing) for setting
-> current->capture_control, and prevents page leaking with WRITE_ONCE/READ_ONCE
-> in the proper order.
-> 
-> Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
-> Cc: stable@vger.kernel.org # 5.1+
-> Reported-by: Hugh Dickins <hughd@google.com>
-> Suggested-by: Hugh Dickins <hughd@google.com>
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-Acked-by: Hugh Dickins <hughd@google.com>
+All tests are passing for Tegra ...
 
-> ---
->  mm/compaction.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index fd988b7e5f2b..86375605faa9 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -2316,15 +2316,26 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
->  		.page = NULL,
->  	};
->  
-> -	current->capture_control = &capc;
-> +	/*
-> +	 * Make sure the structs are really initialized before we expose the
-> +	 * capture control, in case we are interrupted and the interrupt handler
-> +	 * frees a page.
-> +	 */
-> +	barrier();
-> +	WRITE_ONCE(current->capture_control, &capc);
->  
->  	ret = compact_zone(&cc, &capc);
->  
->  	VM_BUG_ON(!list_empty(&cc.freepages));
->  	VM_BUG_ON(!list_empty(&cc.migratepages));
->  
-> -	*capture = capc.page;
-> -	current->capture_control = NULL;
-> +	/*
-> +	 * Make sure we hide capture control first before we read the captured
-> +	 * page pointer, otherwise an interrupt could free and capture a page
-> +	 * and we would leak it.
-> +	 */
-> +	WRITE_ONCE(current->capture_control, NULL);
-> +	*capture = READ_ONCE(capc.page);
->  
->  	return ret;
->  }
-> -- 
-> 2.27.0
+Test results for stable-v5.4:
+    11 builds:	11 pass, 0 fail
+    26 boots:	26 pass, 0 fail
+    56 tests:	56 pass, 0 fail
+
+Linux version:	5.4.47-rc2-ga7debb64f8b4
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
