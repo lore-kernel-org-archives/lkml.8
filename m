@@ -2,89 +2,98 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7316EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B807D20A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5857D20B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgFPLxC (ORCPT
+        id S1728333AbgFPLzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:53:02 -0400
-Received: from smtp.asem.it ([151.1.184.197]:53186 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726306AbgFPLxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:53:01 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000321165.MSG 
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:52:58 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 16
- Jun 2020 13:52:56 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 16 Jun 2020 13:52:56 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH 1/1] media: pci: dt3155: fix spelling mistake
-Date:   Tue, 16 Jun 2020 13:52:55 +0200
-Message-ID: <20200616115255.6280-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
+        Tue, 16 Jun 2020 07:55:04 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:44277 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726261AbgFPLzE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 07:55:04 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0U.mfflQ_1592308495;
+Received: from 30.27.116.240(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U.mfflQ_1592308495)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 16 Jun 2020 19:54:57 +0800
+Subject: Re: [PATCH v4 6/7] KVM: MIPS: clean up redundant 'kvm_run' parameters
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Huacai Chen <chenhuacai@gmail.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>, paulus@ozlabs.org,
+        mpe@ellerman.id.au,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org, hpa@zytor.com,
+        Marc Zyngier <maz@kernel.org>, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, Peter Xu <peterx@redhat.com>,
+        thuth@redhat.com, kvm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        kvmarm@lists.cs.columbia.edu,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-7-tianjia.zhang@linux.alibaba.com>
+ <CAAhV-H7kpKUfQoWid6GSNL5+4hTTroGyL83EaW6yZwS2+Ti9kA@mail.gmail.com>
+ <37246a25-c4dc-7757-3f5c-d46870a4f186@linux.alibaba.com>
+ <30c2ac06-1a7e-2f85-fbe1-e9dc25bf2ae2@redhat.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <5f0d01ad-d299-083b-70e4-995ad7596fbd@linux.alibaba.com>
+Date:   Tue, 16 Jun 2020 19:54:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090203.5EE8B299.0039,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+In-Reply-To: <30c2ac06-1a7e-2f85-fbe1-e9dc25bf2ae2@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo: "TRIGER" --> "TRIGGER"
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- drivers/media/pci/dt3155/dt3155.c | 2 +-
- drivers/media/pci/dt3155/dt3155.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/dt3155/dt3155.c b/drivers/media/pci/dt3155/dt3155.c
-index 82581aa5a2a3..ef8d5c9cfffe 100644
---- a/drivers/media/pci/dt3155/dt3155.c
-+++ b/drivers/media/pci/dt3155/dt3155.c
-@@ -426,7 +426,7 @@ static int dt3155_init_board(struct dt3155_priv *pd)
- 	iowrite32(FIFO_EN | SRST, pd->regs + CSR1);
- 	iowrite32(0xEEEEEE01, pd->regs + EVEN_PIXEL_FMT);
- 	iowrite32(0xEEEEEE01, pd->regs + ODD_PIXEL_FMT);
--	iowrite32(0x00000020, pd->regs + FIFO_TRIGER);
-+	iowrite32(0x00000020, pd->regs + FIFO_TRIGGER);
- 	iowrite32(0x00000103, pd->regs + XFER_MODE);
- 	iowrite32(0, pd->regs + RETRY_WAIT_CNT);
- 	iowrite32(0, pd->regs + INT_CSR);
-diff --git a/drivers/media/pci/dt3155/dt3155.h b/drivers/media/pci/dt3155/dt3155.h
-index 43d32b8d5feb..c9ce79cb5566 100644
---- a/drivers/media/pci/dt3155/dt3155.h
-+++ b/drivers/media/pci/dt3155/dt3155.h
-@@ -31,7 +31,7 @@
- #define ODD_DMA_STRIDE	 0x24
- #define EVEN_PIXEL_FMT	 0x30
- #define ODD_PIXEL_FMT	 0x34
--#define FIFO_TRIGER	 0x38
-+#define FIFO_TRIGGER	 0x38
- #define XFER_MODE	 0x3C
- #define CSR1		 0x40
- #define RETRY_WAIT_CNT	 0x44
--- 
-2.17.1
+On 2020/5/29 17:48, Paolo Bonzini wrote:
+> On 27/05/20 08:24, Tianjia Zhang wrote:
+>>>>
+>>>>
+>>
+>> Hi Huacai,
+>>
+>> These two patches(6/7 and 7/7) should be merged into the tree of the
+>> mips architecture separately. At present, there seems to be no good way
+>> to merge the whole architecture patchs.
+>>
+>> For this series of patches, some architectures have been merged, some
+>> need to update the patch.
+> 
+> Hi Tianjia, I will take care of this during the merge window.
+> 
+> Thanks,
+> 
+> Paolo
+> 
 
+Hi Paolo,
+
+The following individual patch is the v5 version of 5/7 in this group of 
+patches.
+
+https://lkml.org/lkml/2020/5/28/106
+([v5] KVM: PPC: clean up redundant kvm_run parameters in assembly)
+
+Thanks and best,
+Tianjia
