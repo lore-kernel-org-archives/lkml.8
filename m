@@ -2,124 +2,105 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B28C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C89C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D43A6207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4D62074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:14:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aIIoFqiw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PxiUvWl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgFPGOM (ORCPT
+        id S1727881AbgFPGOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:14:12 -0400
+        Tue, 16 Jun 2020 02:14:20 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgFPGNo (ORCPT
+        with ESMTP id S1727071AbgFPGNn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:13:44 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31496C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:44 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id 35so2581767ple.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:44 -0700 (PDT)
+        Tue, 16 Jun 2020 02:13:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F31C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:43 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l10so19383769wrr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=h4JqKpoTJwOLVa4Di6JSd/Ph+43PAaMLhE3KrwrB/cQ=;
-        b=aIIoFqiwCuM3dby19TgymneGR+eeoT1Wxy2TPpRkJqUdrynkdRP8+CNDZi8knMQXSA
-         f6Bnkylgm0SyUXod2iE5akD5Gq/nK9BJ96sFopeuj+cDyIrPembwe8QM5m9mgdTOvT/p
-         95P3wC7lRmPEoi2hm5fpeVSFDjBKYxmhYTmzVw3juKPimfKhaq0XCfwXn9MoK/NPKS8v
-         fgds0I21HWcIzLuqkAxiS2DAXTEESOnA37rEYOfIy2DG1XAnGRh/eAXCdqoPN1mDr2EJ
-         gAtL26MemRtwwpZCy39jr2cpC4DNJ+Q5ORFGwo52pyKJV0BZ9VXCJSBmyLvzLfGUCnLK
-         4aVA==
+        bh=6mpvPq9LvxOPLoQsBoTj25U6plJEiyM73+Tb9BB7RNE=;
+        b=PxiUvWl6HJcJqUfGhCkE2MTdSHLpRyXF10WKIR5wM/tWE9ayQpWDK5+QsLgjLHEZtS
+         Q4CZyz9GV2Rm7JvMWhSDpAj6RI5lRaDJw7tE16OXXegh3PEkWE4LDS6iZDtRLS3MAsJj
+         jPhkf+eOXNwP5e3ORbU5jFaerl2ZRKrVFoYP9R5Ler5Qikycz2CQsMHYEcu42SUuUhQ7
+         2+eStlEH9tgH3PrsfcCDL5BYUaBwAAiLRgaWddWO50jd25VKjeVAJBzmlxPhyKI27J8j
+         ILyAp6Mea3zRlABTrCF7h5PraxOkeyOoTvsqdaFNveeCG3TpIFuABCTFuDfSSQcPtlym
+         uiQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=h4JqKpoTJwOLVa4Di6JSd/Ph+43PAaMLhE3KrwrB/cQ=;
-        b=gpWVloo9ksOSDyBiDvDkSwMn76BT4EhuflTyGsxp/3nz/6VueML8tO9Yz30AnbnpDe
-         IivVC/72inRWMjbcCOkMBtA2wkG0qmBTc4dk2Y1Ft2hGM7ZazmnRCjxjlll11zi/iRln
-         HfF6HkchsdRx92YOI7DAPUaFyUAJmVAe4xfeuSm2ncAucs8SMIbC+heYq/+FD32w/7u/
-         uwiEl0KXUQqqZjXlY/M0oPsz/Wdlk0flnKaQo04JFwMG2hx5aL2qd2gvUK2Kb+9/iu0p
-         BWqecPiWVUCLpw/LBLlEKT73TRPKNJRtGCmG5UpkHKzG++kT689E585r4WBblaNjLA3M
-         ipEQ==
-X-Gm-Message-State: AOAM530ywnVAa9ZmXByvqDBb5r6aeemMjQX32iXrzEWKVf3AxytUcOjS
-        Xz7pcYXRWgMKOW0gcCfIxdQJpeGaUpg=
-X-Google-Smtp-Source: ABdhPJwzygD/WHkWLyQJ6iGsnCwTqfRIFtsc++PcBZQkjKRMfUmeu8vpzS8kFNaT35Xwy6HpTPU4IQ==
-X-Received: by 2002:a17:90b:46ca:: with SMTP id jx10mr1362107pjb.3.1592288023527;
-        Mon, 15 Jun 2020 23:13:43 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id i26sm15642032pfo.0.2020.06.15.23.13.42
+        bh=6mpvPq9LvxOPLoQsBoTj25U6plJEiyM73+Tb9BB7RNE=;
+        b=etlZFklUdDI2QADiUmJyYi9rWwW38onz2rpmy2TotOKOhKfgmzeVdlI91gLTzrCdPS
+         suyprjj7XigdY92k4LGva3TOLwM2wAxddiDCynTj7BPeuHyyUz4J9NkWBJDA/3Wmi3Lc
+         rWqFZ5APdRA+coGa+rurXJFodA0ksnq/8qRgUnL77JLC2hd6255Zeiu9l5w7a6r+P/Ri
+         4sjf+Pk1AepWasjQLHZ8IOHTGLY7jZjSAY7bsqGydFXSW6Z8lfvA1uN15YT4s9j7hVxM
+         vmype61ea3G42d7XxRIPfMzYUOqv775mkPBp6oF9NYH5twX5gC29IdkXeenSLFP5PuPe
+         qJmw==
+X-Gm-Message-State: AOAM5315p5kH4rnx2T43V+kksKjoMb6EPzqhqi8zsO7wIpkErB0xNsfx
+        WPmyB8U+eTA59c1iEYXzu2DlQRKy2j0=
+X-Google-Smtp-Source: ABdhPJyXr+exHYzgTsT//mRndtyEIrrG1KiVetfcizvzB5A3q7Zbz5pUQESE22z+WdI5olw3gYC+TQ==
+X-Received: by 2002:adf:97d3:: with SMTP id t19mr1336341wrb.116.1592288021582;
+        Mon, 15 Jun 2020 23:13:41 -0700 (PDT)
+Received: from ODED-MAIN.localdomain ([87.71.142.251])
+        by smtp.gmail.com with ESMTPSA id s2sm2354963wmh.15.2020.06.15.23.13.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 23:13:43 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: [RFC][PATCH 1/5] irq: irqdomain: Export irq_domain_update_bus_token
-Date:   Tue, 16 Jun 2020 06:13:34 +0000
-Message-Id: <20200616061338.109499-2-john.stultz@linaro.org>
+        Mon, 15 Jun 2020 23:13:40 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 5/7] uapi/habanalabs: fix some comments
+Date:   Tue, 16 Jun 2020 09:13:25 +0300
+Message-Id: <20200616061327.12006-5-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616061338.109499-1-john.stultz@linaro.org>
-References: <20200616061338.109499-1-john.stultz@linaro.org>
+In-Reply-To: <20200616061327.12006-1-oded.gabbay@gmail.com>
+References: <20200616061327.12006-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add export for irq_domain_update_bus_token() so that
-we can allow drivers like the qcom-pdc driver to be
-loadable as a module.
+MAP/UNMAP are done also for device memory.
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: iommu@lists.linux-foundation.org
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- kernel/irq/irqdomain.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/uapi/misc/habanalabs.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index a4c2c915511d..ca974d965fda 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -281,6 +281,7 @@ void irq_domain_update_bus_token(struct irq_domain *domain,
+diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+index f6267a8d7416..f218d1c62c62 100644
+--- a/include/uapi/misc/habanalabs.h
++++ b/include/uapi/misc/habanalabs.h
+@@ -530,13 +530,13 @@ union hl_wait_cs_args {
+ 	struct hl_wait_cs_out out;
+ };
  
- 	mutex_unlock(&irq_domain_mutex);
- }
-+EXPORT_SYMBOL_GPL(irq_domain_update_bus_token);
+-/* Opcode to alloc device memory */
++/* Opcode to allocate device memory */
+ #define HL_MEM_OP_ALLOC			0
+ /* Opcode to free previously allocated device memory */
+ #define HL_MEM_OP_FREE			1
+-/* Opcode to map host memory */
++/* Opcode to map host and device memory */
+ #define HL_MEM_OP_MAP			2
+-/* Opcode to unmap previously mapped host memory */
++/* Opcode to unmap previously mapped host and device memory */
+ #define HL_MEM_OP_UNMAP			3
  
- /**
-  * irq_domain_add_simple() - Register an irq_domain and optionally map a range of irqs
+ /* Memory flags */
 -- 
 2.17.1
 
