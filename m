@@ -7,116 +7,185 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7631BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F6F207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B472074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592294023;
-	bh=R6gjrNu6udhcMvwI8G7NyjY7QsOLzDo0ytkfJbT0sQQ=;
+	s=default; t=1592294109;
+	bh=8FPZO3O3J5yEXOHRALaLJwubp6h2AwWSBchtYuoch88=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XpaEf5SYONwMhlJ2xUHHJmZl6pq8EIylMj3S90goy6TAkUMOyogaeuvR6dLvAcy71
-	 sM+5AtzIUx2SlIGyBDH3B/f0w5NEN8oXF5TgKdNvfnLjgCCEueL6qJoVlzoUWn1Z43
-	 s8rMm6ujVC/zFhOvM1FHS1GAFN7skef8BQELk5Dg=
+	b=TllNpoApK3Q70OExeVwhwUftprkBk1+kp0r/H1r9yW++SsXIqX+1Rj4sj2xAZ86VJ
+	 8ZB0mI2vq0HRYn9afhxHvZPA+faAg5UShpT4ljUk6sD48AfpP+hLq8cp9cvTZFwAKx
+	 g8hyPRbKRs1CbumfB1TPHEdAbbMFpqjLIXyrnaSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgFPHxm (ORCPT
+        id S1726506AbgFPHzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:53:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 03:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgFPHxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:53:41 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1725896AbgFPHzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 03:55:07 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5B6F2074D;
-        Tue, 16 Jun 2020 07:53:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B13206D7;
+        Tue, 16 Jun 2020 07:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592294021;
-        bh=R6gjrNu6udhcMvwI8G7NyjY7QsOLzDo0ytkfJbT0sQQ=;
+        s=default; t=1592294107;
+        bh=8FPZO3O3J5yEXOHRALaLJwubp6h2AwWSBchtYuoch88=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oFYI8c63G/btvujMLJczMKbzpu/RCp3di3UlsywdDZoxjO+rrmrrYsWAp31Ld5or4
-         oc/RCW8ZgTpaE5WlXM1CAXV4ls71l1AiXzMKyCxb6QbEQmSfbcs1eGKdoDTC5eArTU
-         ibGvrYcQWoP9JUafy7u7RG04K665i+nq/hxfe/7s=
-Date:   Tue, 16 Jun 2020 16:53:37 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] tools/bootconfig: Fix to return 0 if succeeded to
- show the bootconfig
-Message-Id: <20200616165337.f73e9b787098cc681b21c4b4@kernel.org>
-In-Reply-To: <20200615151442.028c2876@oasis.local.home>
-References: <159197538852.80267.10091816844311950396.stgit@devnote2>
-        <159197541534.80267.9851345208191438725.stgit@devnote2>
-        <20200615151442.028c2876@oasis.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        b=MkI/+np2dDimaPbgKZ2S6bxxT/H0/5Kcu+KB+40UE7gA4X81MXbwvAb+4UIfSw+i+
+         YJF+ofTwhDTe1xdbZsK8RIVHZdjUn6mBzG7VFvqL0uOFjsRtQJzSC+taURiTbC9zbn
+         QZdzj2cHtUF8b4PLo98a8+0YvyaMtPAqmhmdgVbI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jl6Qz-003LKN-Dg; Tue, 16 Jun 2020 08:55:05 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Tue, 16 Jun 2020 08:55:05 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org, will@kernel.org
+Subject: Re: [RFC][PATCH 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
+ loadable as a permenent module
+In-Reply-To: <20200616061338.109499-6-john.stultz@linaro.org>
+References: <20200616061338.109499-1-john.stultz@linaro.org>
+ <20200616061338.109499-6-john.stultz@linaro.org>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <0be86735238a0f8b0c25934e2ed39eee@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: john.stultz@linaro.org, linux-kernel@vger.kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, joro@8bytes.org, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, ilina@codeaurora.org, saravanak@google.com, tkjos@google.com, gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org, will@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 15:14:42 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi John,
 
-> On Sat, 13 Jun 2020 00:23:35 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > Fix bootconfig to return 0 if succeeded to show the bootconfig
-> > in initrd. Without this fix, "bootconfig INITRD" command
-> > returns !0 even if the command succeeded to show the bootconfig.
-> > 
-> > Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  tools/bootconfig/main.c |    4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-> > index 21896a6675fd..ff2cc9520e10 100644
-> > --- a/tools/bootconfig/main.c
-> > +++ b/tools/bootconfig/main.c
-> > @@ -209,8 +209,10 @@ int show_xbc(const char *path)
-> >  	ret = load_xbc_from_initrd(fd, &buf);
-> >  	if (ret < 0)
-> >  		pr_err("Failed to load a boot config from initrd: %d\n", ret);
-> > -	else
-> > +	else {
-> >  		xbc_show_compact_tree();
-> > +		ret = 0;
-> > +	}
-> 
-> Usually for the above, I think goto is cleaner. As it is strange to
-> have a successful case as the "else" condition. Not to mention, if you
-> add brackets for one side of the else, it is usually recommended to add
-> them for the other side.
-> 
-> But in this case I think it would read better to have:
-> 
-> 
-> 	if (ret < 0) {
-> 		pr_err(...);
-> 		goto out;
-> 	}
-> 	xbc_show_compact_tree();
-> 	ret = 0;
-> out:
++Will for the SMMU part.
 
-Agreed. OK, I'll update it.
-
-Thank you!
-
-> 	
-> >  
-> >  	close(fd);
-> >  	free(buf);
+On 2020-06-16 07:13, John Stultz wrote:
+> Allow the qcom_scm driver to be loadable as a
+> permenent module.
 > 
-> -- Steve
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Lina Iyer <ilina@codeaurora.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: iommu@lists.linux-foundation.org
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/firmware/Kconfig    | 2 +-
+>  drivers/firmware/Makefile   | 3 ++-
+>  drivers/firmware/qcom_scm.c | 4 ++++
+>  drivers/iommu/Kconfig       | 2 ++
+>  4 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index fbd785dd0513..9e533a462bf4 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -236,7 +236,7 @@ config INTEL_STRATIX10_RSU
+>  	  Say Y here if you want Intel RSU support.
+> 
+>  config QCOM_SCM
+> -	bool
+> +	tristate "Qcom SCM driver"
+>  	depends on ARM || ARM64
+>  	select RESET_CONTROLLER
+> 
+> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+> index 99510be9f5ed..cf24d674216b 100644
+> --- a/drivers/firmware/Makefile
+> +++ b/drivers/firmware/Makefile
+> @@ -17,7 +17,8 @@ obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
+>  obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
+>  obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
+>  obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
+> -obj-$(CONFIG_QCOM_SCM)		+= qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
+> +obj-$(CONFIG_QCOM_SCM)		+= qcom-scm.o
+> +qcom-scm-objs += qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
+>  obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
+>  obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
+>  obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 0e7233a20f34..b5e88bf66975 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -1155,6 +1155,7 @@ static const struct of_device_id 
+> qcom_scm_dt_match[] = {
+>  	{ .compatible = "qcom,scm" },
+>  	{}
+>  };
+> +MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
+> 
+>  static struct platform_driver qcom_scm_driver = {
+>  	.driver = {
+> @@ -1170,3 +1171,6 @@ static int __init qcom_scm_init(void)
+>  	return platform_driver_register(&qcom_scm_driver);
+>  }
+>  subsys_initcall(qcom_scm_init);
+> +
+> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. SCM driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index b510f67dfa49..714893535dd2 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
+>  config ARM_SMMU
+>  	tristate "ARM Ltd. System MMU (SMMU) Support"
+>  	depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && 
+> MMU
+> +	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
 
+This looks a bit ugly. Could you explain why we need this at the SMMU 
+level? I'd have expected the dependency to flow the other way around...
 
+>  	select IOMMU_API
+>  	select IOMMU_IO_PGTABLE_LPAE
+>  	select ARM_DMA_USE_IOMMU if ARM
+> @@ -500,6 +501,7 @@ config QCOM_IOMMU
+>  	# Note: iommu drivers cannot (yet?) be built as modules
+>  	bool "Qualcomm IOMMU Support"
+>  	depends on ARCH_QCOM || (COMPILE_TEST && !GENERIC_ATOMIC64)
+> +	depends on QCOM_SCM=y
+>  	select IOMMU_API
+>  	select IOMMU_IO_PGTABLE_LPAE
+>  	select ARM_DMA_USE_IOMMU
+
+Thanks,
+
+         M.
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Jazz is not dead. It just smells funny...
