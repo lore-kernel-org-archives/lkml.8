@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDD3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF565C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFB36208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9741C2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323609;
-	bh=dyqp+Fnlnyi5NeHTmMqL6I3YbaA5yLh7dj/yLkB9YR8=;
+	s=default; t=1592323621;
+	bh=mDDX03FzmPFI8VsvJmpXLYbjW3UZIUMBjMhepZSu4DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vd/RcGUwGVt2OBiaC6/Y8z1p0mLDw931Fc6Y7FhX6XTx1X/YCMHLoMt1zulqI27tI
-	 jdKDkbW1aV0U8sWQyweWFYE7RstiAfVN7SZWyASOTlPlGpzumO1rGl/QaGNtRK59ji
-	 6aFepZmm6fyHkt1G7M16rYNAxizFemZzDPALToMQ=
+	b=aEUM2LBMT/j7KzxMDMJY2gWZ7HK27pRn6QG939I74onW2sAwRP2uyh+w0hnQW4sB1
+	 pFSbJwIGGypHg+yrjGQ/gUDG1Djg2Tjclgh6VpU1l2htjZGdmam4T68/xuP3KfpoP8
+	 lS2Xp8zlI8lNzCWpVRNe5Ff4qikOSqfpYtzXGPzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732966AbgFPQGs (ORCPT
+        id S1732143AbgFPQHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:06:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41122 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:07:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732354AbgFPPrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:47:39 -0400
+        id S1732325AbgFPPrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A24920776;
-        Tue, 16 Jun 2020 15:47:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BDCD2071A;
+        Tue, 16 Jun 2020 15:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322458;
-        bh=dyqp+Fnlnyi5NeHTmMqL6I3YbaA5yLh7dj/yLkB9YR8=;
+        s=default; t=1592322443;
+        bh=mDDX03FzmPFI8VsvJmpXLYbjW3UZIUMBjMhepZSu4DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r7xws0yn4ghR/pp8YZLdYivxZCgWKO7MnvZYorhH+KaJ7b5okWn4RF1i7ov3briv5
-         bXUJQvBAh042DnsPaIMbqpFP9nyaSHe3SmaY2gzJeLJYQ6sxMO6LbfA8UHoV8aefK+
-         F79UzgySrx948+CA4WvitBmApfNyf1aoC/XoxpnM=
+        b=bKR1lKR5BgLIuYnZKUnLEdA+v2PVbv203POs6+sRgAnXST5R9SgI3kMNEjpBS+JEp
+         8nVd+6Uxsx89JYXvspRa2U0qyFENmsZNWZBcvK6FQtdHy4cBmRAARCbLHrYmK34jfD
+         fCqo/YDOq1rgnDP94wqlHayh7cyWZv7O0MR/KKpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.7 122/163] cpufreq: Fix up cpufreq_boost_set_sw()
-Date:   Tue, 16 Jun 2020 17:34:56 +0200
-Message-Id: <20200616153112.655066932@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.7 134/163] KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
+Date:   Tue, 16 Jun 2020 17:35:08 +0200
+Message-Id: <20200616153113.228643512@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -62,66 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 552abb884e97d26589964e5a8c7e736f852f95f0 upstream.
+commit 3204be4109ad681523e3461ce64454c79278450a upstream.
 
-After commit 18c49926c4bf ("cpufreq: Add QoS requests for userspace
-constraints") the return value of freq_qos_update_request(), that can
-be 1, passed by cpufreq_boost_set_sw() to its caller sometimes
-confuses the latter, which only expects to see 0 or negative error
-codes, so notice that cpufreq_boost_set_sw() can return an error code
-(which should not be -EINVAL for that matter) as soon as the first
-policy without a frequency table is found (because either all policies
-have a frequency table or none of them have it) and rework it to meet
-its caller's expectations.
+AArch32 CP1x registers are overlayed on their AArch64 counterparts
+in the vcpu struct. This leads to an interesting problem as they
+are stored in their CPU-local format, and thus a CP1x register
+doesn't "hit" the lower 32bit portion of the AArch64 register on
+a BE host.
 
-Fixes: 18c49926c4bf ("cpufreq: Add QoS requests for userspace constraints")
-Reported-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+To workaround this unfortunate situation, introduce a bias trick
+in the vcpu_cp1x() accessors which picks the correct half of the
+64bit register.
+
+Cc: stable@vger.kernel.org
+Reported-by: James Morse <james.morse@arm.com>
+Tested-by: James Morse <james.morse@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/kvm_host.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
- static int cpufreq_boost_set_sw(int state)
- {
- 	struct cpufreq_policy *policy;
--	int ret = -EINVAL;
- 
- 	for_each_active_policy(policy) {
-+		int ret;
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -405,8 +405,10 @@ void vcpu_write_sys_reg(struct kvm_vcpu
+  * CP14 and CP15 live in the same array, as they are backed by the
+  * same system registers.
+  */
+-#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r)])
+-#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r)])
++#define CPx_BIAS		IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)
 +
- 		if (!policy->freq_table)
--			continue;
-+			return -ENXIO;
++#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
++#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
  
- 		ret = cpufreq_frequency_table_cpuinfo(policy,
- 						      policy->freq_table);
- 		if (ret) {
- 			pr_err("%s: Policy frequency update failed\n",
- 			       __func__);
--			break;
-+			return ret;
- 		}
- 
- 		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
- 		if (ret < 0)
--			break;
-+			return ret;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- int cpufreq_boost_trigger_state(int state)
+ struct kvm_vm_stat {
+ 	ulong remote_tlb_flush;
 
 
