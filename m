@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51828C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B89C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2910D207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3BB207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323052;
-	bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
+	s=default; t=1592323060;
+	bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1zEZ8isg6s/ixB/GoFiMwj2W3FFI+dvzNohdyGtc5DwR5gxZkrhQyTLO1uSReQucT
-	 G/YDgpeQGL4qzfRiYJ9sY+ic2JhuryZuBB/+UFbCZ9I6Sq6XL1YFOv1jRX7IxtXHYI
-	 0FjEFuTJS7IxVjhCXa6uum/onFpsKWXxGBRugYIo=
+	b=UMFWNBaHYuu5rOn8a6O6wMQT58cctGjuyP1wUjJzfX36v3a7kEhDCVxg8O5aQQb4f
+	 CnAZ7THBO7bOJNIJTzOkuHxuDeUbXd+PRAmXpXXSjGx76z/JtzkGMCfmsldnueEkHg
+	 NzEB/VHOC8/hW7ZpxG35eLKKZSbgjmCoeX6Vf7l0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733050AbgFPP5a (ORCPT
+        id S1733102AbgFPP5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:57:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:57:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733072AbgFPPzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:16 -0400
+        id S1729857AbgFPPzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FB6420882;
-        Tue, 16 Jun 2020 15:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEF9B21534;
+        Tue, 16 Jun 2020 15:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322916;
-        bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
+        s=default; t=1592322900;
+        bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TgybsE6sn2ommR1orGC4g7tf0xl+TXI3hpEo4EdziMB7sy0g23f1H8WVa0p61XIVW
-         yvv62tuHE7uUqvpB8BOX52M2k0kH5WT1C0mk3FHIod5bg4pAPFEc92dGTQi9ReNjwa
-         oFk0jLeEn91UPjNAKB1nwUc9DYrQlCVQF15fE3R4=
+        b=SvSsfckEcy72OhEFbHK5hZefHXmnXv1WlQyIeMJIKRZmlXpTGjMBUSxh1euuzo1kz
+         SBJp7ZPeXyLM+iv4oTAxgmQFb/x9eeDrLwvORaWIgQhoiB9FxMRs1I3+Tu3ODeUUOH
+         +VbFd4j7e33pPFv6hOTYzbI7arBAFBAoo4U03/Uw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.6 153/161] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node description
-Date:   Tue, 16 Jun 2020 17:35:43 +0200
-Message-Id: <20200616153113.630441414@linuxfoundation.org>
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 130/161] KVM: MIPS: Fix VPN2_MASK definition for variable cpu_vmbits
+Date:   Tue, 16 Jun 2020 17:35:20 +0200
+Message-Id: <20200616153112.548923697@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,34 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+From: Xing Li <lixing@loongson.cn>
 
-commit a1af7f36c70369b971ee1cf679dd68368dad23f0 upstream.
+commit 5816c76dea116a458f1932eefe064e35403248eb upstream.
 
-Remove non-removable and mmc-ddr-1_8v properties from the sdmmc0
-node which come probably from an unchecked copy/paste.
+If a CPU support more than 32bit vmbits (which is true for 64bit CPUs),
+VPN2_MASK set to fixed 0xffffe000 will lead to a wrong EntryHi in some
+functions such as _kvm_mips_host_tlb_inv().
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Fixes:42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
-Cc: stable@vger.kernel.org # 4.19 and later
-Link: https://lore.kernel.org/r/20200401221504.41196-1-ludovic.desroches@microchip.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+The cpu_vmbits definition of 32bit CPU in cpu-features.h is 31, so we
+still use the old definition.
+
+Cc: Stable <stable@vger.kernel.org>
+Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+Signed-off-by: Xing Li <lixing@loongson.cn>
+[Huacai: Improve commit messages]
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Message-Id: <1590220602-3547-3-git-send-email-chenhc@lemote.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 --
- 1 file changed, 2 deletions(-)
+ arch/mips/include/asm/kvm_host.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -125,8 +125,6 @@
- 			bus-width = <8>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
--			non-removable;
--			mmc-ddr-1_8v;
- 			status = "okay";
- 		};
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -274,7 +274,11 @@ enum emulation_result {
+ #define MIPS3_PG_SHIFT		6
+ #define MIPS3_PG_FRAME		0x3fffffc0
  
++#if defined(CONFIG_64BIT)
++#define VPN2_MASK		GENMASK(cpu_vmbits - 1, 13)
++#else
+ #define VPN2_MASK		0xffffe000
++#endif
+ #define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
+ #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
+ #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
 
 
