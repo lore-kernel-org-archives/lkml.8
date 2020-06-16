@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D780AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84542C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF7EA20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5463420776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322446;
-	bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
+	s=default; t=1592322450;
+	bh=9LsHXU5o/B/7oKH7E4oU4W40c3T/IVPg5ovlaMl8Eac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKuEPB/MGi6DSofuWwGbH8RKkAORPpZIo11EuIhWzmGBknQ9yh5UyEo0+7nItscFa
-	 XEGO66QW4asYmDTT8fPTpKUEHWks0Gbu0ZIdWH8oNiWnvCn8DJ23NEJ4Q4E1Vk7vxx
-	 itEOCFwqnFuBwVRpplTFmb79jebe7BFy8ulUr0Dg=
+	b=PRNRifhfb8H6/xKdbWx3dAR5mmDKChdsAU5sqzPEIvNCLYjZrcpv1+BSgBeWIUmDp
+	 yDAwT8E3ugxzuCh5wHgFRfB8pjk1xn21pwhyIoyQ2aQN7LBltF14oSIfMxOK/LgXnh
+	 J6JnlDHOaoes4KwDG8iHg0ECyvLxRLXVJFCHS2BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732332AbgFPPrY (ORCPT
+        id S1732340AbgFPPr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:47:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40352 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732317AbgFPPrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:47:18 -0400
+        id S1732317AbgFPPr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BC3820E65;
-        Tue, 16 Jun 2020 15:47:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21D562071A;
+        Tue, 16 Jun 2020 15:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322437;
-        bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
+        s=default; t=1592322445;
+        bh=9LsHXU5o/B/7oKH7E4oU4W40c3T/IVPg5ovlaMl8Eac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B9QivGj4rlFN5/RxL5TAjXTPEGclN6xzRt96a8SwwXamI7+Fbh7ZiMAXfqBpgvZ2m
-         QuR5YX+w99/k6mAHnjcH+CRCdlXRpaFjiTBgVYireStRh5fpdwQkbFCS27tjvmNjmC
-         TXIqd1+Zb+UXaJNrg/YPyQFXb2tNscCJFMfxU7yc=
+        b=Ys7Wq3e6x+KpryrOgOjzevKmYK4FDhVjGDL6EM3hitRVWFiSBNkXLWsUOykNS0NwM
+         kiRjF/LbfU6DDjr57J+o9WyY8/Bj9CPqI8Sb52t4GQBfjQvdH6l6y9bUPMZULLunoG
+         fZsAV9zawDif6IDDU4IpW/T89Vumky+YG6vlXlFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.7 132/163] KVM: MIPS: Fix VPN2_MASK definition for variable cpu_vmbits
-Date:   Tue, 16 Jun 2020 17:35:06 +0200
-Message-Id: <20200616153113.136106158@linuxfoundation.org>
+        stable@vger.kernel.org, Sumit Saxena <sumit.saxena@broadcom.com>,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.7 135/163] scsi: megaraid_sas: TM command refire leads to controller firmware crash
+Date:   Tue, 16 Jun 2020 17:35:09 +0200
+Message-Id: <20200616153113.276456720@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,43 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xing Li <lixing@loongson.cn>
+From: Sumit Saxena <sumit.saxena@broadcom.com>
 
-commit 5816c76dea116a458f1932eefe064e35403248eb upstream.
+commit 6fd8525a70221c26823b1c7e912fb21f218fb0c5 upstream.
 
-If a CPU support more than 32bit vmbits (which is true for 64bit CPUs),
-VPN2_MASK set to fixed 0xffffe000 will lead to a wrong EntryHi in some
-functions such as _kvm_mips_host_tlb_inv().
+When TM command times out, driver invokes the controller reset. Post reset,
+driver re-fires pended TM commands which leads to firmware crash.
 
-The cpu_vmbits definition of 32bit CPU in cpu-features.h is 31, so we
-still use the old definition.
+Post controller reset, return pended TM commands back to OS.
 
-Cc: Stable <stable@vger.kernel.org>
-Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
-Signed-off-by: Xing Li <lixing@loongson.cn>
-[Huacai: Improve commit messages]
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Message-Id: <1590220602-3547-3-git-send-email-chenhc@lemote.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://lore.kernel.org/r/20200508085242.23406-1-chandrakanth.patil@broadcom.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/kvm_host.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -274,7 +274,11 @@ enum emulation_result {
- #define MIPS3_PG_SHIFT		6
- #define MIPS3_PG_FRAME		0x3fffffc0
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -4238,6 +4238,7 @@ void megasas_refire_mgmt_cmd(struct mega
+ 	struct fusion_context *fusion;
+ 	struct megasas_cmd *cmd_mfi;
+ 	union MEGASAS_REQUEST_DESCRIPTOR_UNION *req_desc;
++	struct MPI2_RAID_SCSI_IO_REQUEST *scsi_io_req;
+ 	u16 smid;
+ 	bool refire_cmd = 0;
+ 	u8 result;
+@@ -4305,6 +4306,11 @@ void megasas_refire_mgmt_cmd(struct mega
+ 			result = COMPLETE_CMD;
+ 		}
  
-+#if defined(CONFIG_64BIT)
-+#define VPN2_MASK		GENMASK(cpu_vmbits - 1, 13)
-+#else
- #define VPN2_MASK		0xffffe000
-+#endif
- #define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
- #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
- #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
++		scsi_io_req = (struct MPI2_RAID_SCSI_IO_REQUEST *)
++				cmd_fusion->io_request;
++		if (scsi_io_req->Function == MPI2_FUNCTION_SCSI_TASK_MGMT)
++			result = RETURN_CMD;
++
+ 		switch (result) {
+ 		case REFIRE_CMD:
+ 			megasas_fire_cmd_fusion(instance, req_desc);
+@@ -4533,7 +4539,6 @@ megasas_issue_tm(struct megasas_instance
+ 	if (!timeleft) {
+ 		dev_err(&instance->pdev->dev,
+ 			"task mgmt type 0x%x timed out\n", type);
+-		cmd_mfi->flags |= DRV_DCMD_SKIP_REFIRE;
+ 		mutex_unlock(&instance->reset_mutex);
+ 		rc = megasas_reset_fusion(instance->host, MFI_IO_TIMEOUT_OCR);
+ 		mutex_lock(&instance->reset_mutex);
 
 
