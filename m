@@ -2,124 +2,126 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD51C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0167F208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F804208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SKbzkvZ8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="W1sBeQ80";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MYUprjVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbgFPPd5 (ORCPT
+        id S1729590AbgFPPec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:33:57 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45313 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728448AbgFPPd4 (ORCPT
+        Tue, 16 Jun 2020 11:34:32 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42028 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728448AbgFPPec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:33:56 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GFD1Et005397;
-        Tue, 16 Jun 2020 17:33:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=ywECLfS8RJnUvCXHRDqenH4W2P5mGI7YRrQh1zdXSqs=;
- b=SKbzkvZ8Sh8AH5bW88BqONOypCrZFZCdlCxIv5kAzNuKFlU+HOUcNMI/OqCgpZraSC6Y
- 6/jibWFEnMfpx+LCOJD2IEtbKiNRFSDWq13MmFX0TdF1aPS/lPX2/gAzvc6JXjTXkYjF
- cLbYGA/zbJI7uw3SrKaYGTMycWh9OObAYos44B+jqFs1RZW9pJJoqRPyrfV+M+5jGujZ
- sxeKePJ8Mi/VK5O2MY+oHQ//6Ey9NhhBC2sKNYUQhQjJ0GdrAe78wvcYNUbVkIZyXbjm
- Vg8fQbwcA/ypu5Hl9oW+qtwrMlOHRpcZZ+EyuA2kkFQJdJZwxXbH5sZBZTeG+RrryVo2 pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mmjw05cy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 17:33:41 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 075B010002A;
-        Tue, 16 Jun 2020 17:33:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E90032C890A;
-        Tue, 16 Jun 2020 17:33:40 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG6NODE3.st.com (10.75.127.18)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jun 2020 17:33:40
- +0200
-From:   Patrick Delaunay <patrick.delaunay@st.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Patrick Delaunay <patrick.delaunay@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] ARM: dts: stm32: cosmetic update in stm32mp15-pinctrl.dtsi
-Date:   Tue, 16 Jun 2020 17:33:29 +0200
-Message-ID: <20200616153329.15148-1-patrick.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG6NODE3.st.com
- (10.75.127.18)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
+        Tue, 16 Jun 2020 11:34:32 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id C71AB8EE1E9;
+        Tue, 16 Jun 2020 08:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1592321671;
+        bh=ajob1nvDrla9Bt+f3LFtU00Hic0WFbZIYozt4cm3MGM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=W1sBeQ80o/S7QYGmkg7NPKLODl9DIayewfvNHRL0KXkV4cKwIIId31zNmJSXEAOn8
+         PmIczVXVyJ+XHkmj/F4XEVAvG601VQw6E+e3d1SlKbqVhn8CvXKJZo57Nbz5w9m9k9
+         Fk0B2hGn7EnmgCplAjGFyBu8ncCam1gBtEW7wy9I=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id e-XsTU0ZWdDv; Tue, 16 Jun 2020 08:34:30 -0700 (PDT)
+Received: from jarvis (unknown [216.116.10.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 4FE348EE188;
+        Tue, 16 Jun 2020 08:34:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1592321670;
+        bh=ajob1nvDrla9Bt+f3LFtU00Hic0WFbZIYozt4cm3MGM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=MYUprjVWr66NFNYQM4jxBy/5blzUQem+8Me7nmbSL8D6xUxpHQ1bYjYJWGDOSQFMP
+         0TrdM6NHXmZUCNnf60cYcNDgiCRbFbF2pklcj6OPtPybkwoQ7Zez969xlVSVJzMk5+
+         XhrYEFkvrYKP8ysOE/5zvYdq13fP6HbGfoQDNx8k=
+Message-ID: <1592321667.4394.5.camel@HansenPartnership.com>
+Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Chris Boot <bootc@boo.tc>
+Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux1394-devel@lists.sourceforge.net" 
+        <linux1394-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>
+Date:   Tue, 16 Jun 2020 08:34:27 -0700
+In-Reply-To: <SN4PR0401MB35982D889857E3C03E96E49D9B9D0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com>
+         <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet>
+         <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc>
+         <alpine.LNX.2.22.394.2006150919110.8@nippy.intranet>
+         <8da0c285-d707-a3d2-063e-472af5cc560f@boo.tc>
+         <alpine.LNX.2.22.394.2006161929380.8@nippy.intranet>
+         <8cbab988-fba7-8e27-7faf-9f7aa36ca235@acm.org>
+         <SN4PR0401MB35982D889857E3C03E96E49D9B9D0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use tabs where possible and remove multiple blanks lines.
+On Tue, 2020-06-16 at 14:13 +0000, Johannes Thumshirn wrote:
+> On 16/06/2020 16:09, Bart Van Assche wrote:
+> > On 2020-06-16 02:42, Finn Thain wrote:
+> > > Martin said, "I'd appreciate a patch to remove it"
+> > > 
+> > > And Bart said, "do you want to keep this driver in the kernel
+> > > tree?"
+> > > 
+> > > AFAICT both comments are quite ambiguous. I don't see an
+> > > actionable request, just an expression of interest from people
+> > > doing their jobs.
+> > > 
+> > > Note well: there is no pay check associated with having a
+> > > MAINTAINERS file 
+> > > entry.
+> > 
+> > Hi Finn,
+> > 
+> > As far as I know the sbp driver only has had one user ever and that
+> > user is no longer user the sbp driver. So why to keep it in the
+> > kernel tree? Restoring a kernel driver can be easy - the first step
+> > is a "git revert".
+> 
+> Why not move the driver to drivers/staging for 2 or 3 kernel releases
+> and if noone steps up, delete it?
 
-Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
----
+Because that's pretty much the worst of all worlds: If the driver is
+simply going orphaned it can stay where it is to avoid confusion.  If
+it's being removed, it's better to remove it from where it is because
+that makes the patch to restore it easy to find.
 
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Chris, the thing is this: if this driver has just one user on a stable
+distro who complains about its removal six months to two years from
+now, Linus will descend on us from a great height (which won't matter
+to you, since you'll be long gone).  This makes everyone very wary of
+outright removal.  If you're really, really sure it has no users, it
+can be deleted, but if there's the slightest chance it has just one, it
+should get orphaned.
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 7eb858732d6d..7d351757f2f8 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -210,8 +210,8 @@
- 				 <STM32_PINMUX('E', 2, ANALOG)>, /* ETH_RGMII_TXD3 */
- 				 <STM32_PINMUX('B', 11, ANALOG)>, /* ETH_RGMII_TX_CTL */
- 				 <STM32_PINMUX('C', 1, ANALOG)>, /* ETH_MDC */
--			         <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
--			         <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RGMII_RXD0 */
-+				 <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
-+				 <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RGMII_RXD0 */
- 				 <STM32_PINMUX('C', 5, ANALOG)>, /* ETH_RGMII_RXD1 */
- 				 <STM32_PINMUX('H', 6, ANALOG)>, /* ETH_RGMII_RXD2 */
- 				 <STM32_PINMUX('H', 7, ANALOG)>, /* ETH_RGMII_RXD3 */
-@@ -453,7 +453,7 @@
- 	i2c5_pins_b: i2c5-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('D', 0, AF4)>, /* I2C5_SCL */
--			         <STM32_PINMUX('D', 1, AF4)>; /* I2C5_SDA */
-+				 <STM32_PINMUX('D', 1, AF4)>; /* I2C5_SDA */
- 			bias-disable;
- 			drive-open-drain;
- 			slew-rate = <0>;
-@@ -463,7 +463,7 @@
- 	i2c5_sleep_pins_b: i2c5-sleep-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('D', 0, ANALOG)>, /* I2C5_SCL */
--			         <STM32_PINMUX('D', 1, ANALOG)>; /* I2C5_SDA */
-+				 <STM32_PINMUX('D', 1, ANALOG)>; /* I2C5_SDA */
- 		};
- 	};
- 
-@@ -1072,7 +1072,6 @@
- 		};
- 	};
- 
--
- 	sai2a_pins_b: sai2a-1 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('I', 6, AF10)>,	/* SAI2_SD_A */
--- 
-2.17.1
+James
 
