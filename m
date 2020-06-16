@@ -4,55 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C467DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC71C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8D1520C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964C821475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322127;
-	bh=/kRiTW22n/YRbsgjLnLEa2C3qdhKObbL67ODnHqlvm8=;
+	s=default; t=1592322131;
+	bh=xHNThwycT2mB04bLrAmNaSzszSiGQNOOjv31QwYQJNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltvnjp4il8wNmjenRuQH7ugL6lZJU/YvXv1DvHZjzsDxmhYAYhteiIFlkdUIMQSVS
-	 4Gyd1c1Ee1baTPm6qmnGCLDKVHfLEAj1Dz2tXjxx8pM451D8CUi72Hwf6afGRC4tr/
-	 6f/ehG3hvc2woNggLrzEszcWGMfYup/xaYgg5j4c=
+	b=mX67dwIwD4DFrCx2nFF5qW3rMUZ9IINUCbV65krz3AIXCSTsxf+MvIaXa5XapCvWK
+	 LEKwt1I9X0hMOMOycJ6yEFgTJQbx6YhNAPBksBIZOT9Z1Qlu/Ieanl+DmUyGc3ysSh
+	 rwt18GdPUivNObkSINd3Fj04dLlBwvoE2POke51Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731613AbgFPPmG (ORCPT
+        id S1729966AbgFPPmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:42:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729835AbgFPPmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:01 -0400
+        id S1731602AbgFPPmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B205521475;
-        Tue, 16 Jun 2020 15:42:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2419C21475;
+        Tue, 16 Jun 2020 15:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322121;
-        bh=/kRiTW22n/YRbsgjLnLEa2C3qdhKObbL67ODnHqlvm8=;
+        s=default; t=1592322123;
+        bh=xHNThwycT2mB04bLrAmNaSzszSiGQNOOjv31QwYQJNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LkvhTyQVXIW2ZStXnQdUbXW9A7V4n32L4ODaqyrzQ/j+1apaCzFjNcGQ28bj1kRT5
-         sXV971lUyqQG9c9VxBBtxlLDzHUgaSM1GlB/NVijNE2hWUCiYF1nkTRbeE7tg8OPLj
-         REjH4btucLw4IRGWXQ7kPPm+PVxpWsAXpUC20/6I=
+        b=r+xILbgysp1/GD/8B8JUIZV9BtiBuP2PKRu9y2N6VAwM1WIkpB6b9+nqbEBJeAQRz
+         U5HbXliivQelR06jFDDfmhGTRhiD/zEz0hjRBbR3DMXl+Rpjgqxo5mIj3LYDkmF97m
+         57slOmOIn+HCIM4APGS9H9BJ84R1ecw4WorkfayU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+21f04f481f449c8db840@syzkaller.appspotmail.com,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Shaochun Chen <cscnull@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 001/163] ipv6: fix IPV6_ADDRFORM operation logic
-Date:   Tue, 16 Jun 2020 17:32:55 +0200
-Message-Id: <20200616153106.925316548@linuxfoundation.org>
+Subject: [PATCH 5.7 010/163] genetlink: fix memory leaks in genl_family_rcv_msg_dumpit()
+Date:   Tue, 16 Jun 2020 17:33:04 +0200
+Message-Id: <20200616153107.358375030@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,77 +67,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 79a1f0ccdbb4ad700590f61b00525b390cb53905 ]
+[ Upstream commit c36f05559104b66bcd7f617e931e38c680227b74 ]
 
-Socket option IPV6_ADDRFORM supports UDP/UDPLITE and TCP at present.
-Previously the checking logic looks like:
-if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
-	do_some_check;
-else if (sk->sk_protocol != IPPROTO_TCP)
-	break;
+There are two kinds of memory leaks in genl_family_rcv_msg_dumpit():
 
-After commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation"), TCP
-was blocked as the logic changed to:
-if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
-	do_some_check;
-else if (sk->sk_protocol == IPPROTO_TCP)
-	do_some_check;
-	break;
-else
-	break;
+1. Before we call ops->start(), whenever an error happens, we forget
+   to free the memory allocated in genl_family_rcv_msg_dumpit().
 
-Then after commit 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
-UDP/UDPLITE were blocked as the logic changed to:
-if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
-	do_some_check;
-if (sk->sk_protocol == IPPROTO_TCP)
-	do_some_check;
+2. When ops->start() fails, the 'info' has been already installed on
+   the per socket control block, so we should not free it here. More
+   importantly, nlk->cb_running is still false at this point, so
+   netlink_sock_destruct() cannot free it either.
 
-if (sk->sk_protocol != IPPROTO_TCP)
-	break;
+The first kind of memory leaks is easier to resolve, but the second
+one requires some deeper thoughts.
 
-Fix it by using Eric's code and simply remove the break in TCP check, which
-looks like:
-if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
-	do_some_check;
-else if (sk->sk_protocol == IPPROTO_TCP)
-	do_some_check;
-else
-	break;
+After reviewing how netfilter handles this, the most elegant solution
+I find is just to use a similar way to allocate the memory, that is,
+moving memory allocations from caller into ops->start(). With this,
+we can solve both kinds of memory leaks: for 1), no memory allocation
+happens before ops->start(); for 2), ops->start() handles its own
+failures and 'info' is installed to the socket control block only
+when success. The only ugliness here is we have to pass all local
+variables on stack via a struct, but this is not hard to understand.
 
-Fixes: 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Alternatively, we can introduce a ops->free() to solve this too,
+but it is overkill as only genetlink has this problem so far.
+
+Fixes: 1927f41a22a0 ("net: genetlink: introduce dump info struct to be available during dumpit op")
+Reported-by: syzbot+21f04f481f449c8db840@syzkaller.appspotmail.com
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Jiri Pirko <jiri@mellanox.com>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: Shaochun Chen <cscnull@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ipv6_sockglue.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ net/netlink/genetlink.c |   94 +++++++++++++++++++++++++++++-------------------
+ 1 file changed, 58 insertions(+), 36 deletions(-)
 
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -183,14 +183,15 @@ static int do_ipv6_setsockopt(struct soc
- 					retv = -EBUSY;
- 					break;
- 				}
--			}
--			if (sk->sk_protocol == IPPROTO_TCP &&
--			    sk->sk_prot != &tcpv6_prot) {
--				retv = -EBUSY;
-+			} else if (sk->sk_protocol == IPPROTO_TCP) {
-+				if (sk->sk_prot != &tcpv6_prot) {
-+					retv = -EBUSY;
-+					break;
-+				}
-+			} else {
- 				break;
- 			}
--			if (sk->sk_protocol != IPPROTO_TCP)
--				break;
+--- a/net/netlink/genetlink.c
++++ b/net/netlink/genetlink.c
+@@ -513,15 +513,58 @@ static void genl_family_rcv_msg_attrs_fr
+ 		kfree(attrbuf);
+ }
+ 
+-static int genl_lock_start(struct netlink_callback *cb)
++struct genl_start_context {
++	const struct genl_family *family;
++	struct nlmsghdr *nlh;
++	struct netlink_ext_ack *extack;
++	const struct genl_ops *ops;
++	int hdrlen;
++};
 +
- 			if (sk->sk_state != TCP_ESTABLISHED) {
- 				retv = -ENOTCONN;
- 				break;
++static int genl_start(struct netlink_callback *cb)
+ {
+-	const struct genl_ops *ops = genl_dumpit_info(cb)->ops;
++	struct genl_start_context *ctx = cb->data;
++	const struct genl_ops *ops = ctx->ops;
++	struct genl_dumpit_info *info;
++	struct nlattr **attrs = NULL;
+ 	int rc = 0;
+ 
++	if (ops->validate & GENL_DONT_VALIDATE_DUMP)
++		goto no_attrs;
++
++	if (ctx->nlh->nlmsg_len < nlmsg_msg_size(ctx->hdrlen))
++		return -EINVAL;
++
++	attrs = genl_family_rcv_msg_attrs_parse(ctx->family, ctx->nlh, ctx->extack,
++						ops, ctx->hdrlen,
++						GENL_DONT_VALIDATE_DUMP_STRICT,
++						true);
++	if (IS_ERR(attrs))
++		return PTR_ERR(attrs);
++
++no_attrs:
++	info = genl_dumpit_info_alloc();
++	if (!info) {
++		kfree(attrs);
++		return -ENOMEM;
++	}
++	info->family = ctx->family;
++	info->ops = ops;
++	info->attrs = attrs;
++
++	cb->data = info;
+ 	if (ops->start) {
+-		genl_lock();
++		if (!ctx->family->parallel_ops)
++			genl_lock();
+ 		rc = ops->start(cb);
+-		genl_unlock();
++		if (!ctx->family->parallel_ops)
++			genl_unlock();
++	}
++
++	if (rc) {
++		kfree(attrs);
++		genl_dumpit_info_free(info);
++		cb->data = NULL;
+ 	}
+ 	return rc;
+ }
+@@ -548,7 +591,7 @@ static int genl_lock_done(struct netlink
+ 		rc = ops->done(cb);
+ 		genl_unlock();
+ 	}
+-	genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
++	genl_family_rcv_msg_attrs_free(info->family, info->attrs, false);
+ 	genl_dumpit_info_free(info);
+ 	return rc;
+ }
+@@ -573,43 +616,23 @@ static int genl_family_rcv_msg_dumpit(co
+ 				      const struct genl_ops *ops,
+ 				      int hdrlen, struct net *net)
+ {
+-	struct genl_dumpit_info *info;
+-	struct nlattr **attrs = NULL;
++	struct genl_start_context ctx;
+ 	int err;
+ 
+ 	if (!ops->dumpit)
+ 		return -EOPNOTSUPP;
+ 
+-	if (ops->validate & GENL_DONT_VALIDATE_DUMP)
+-		goto no_attrs;
+-
+-	if (nlh->nlmsg_len < nlmsg_msg_size(hdrlen))
+-		return -EINVAL;
+-
+-	attrs = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
+-						ops, hdrlen,
+-						GENL_DONT_VALIDATE_DUMP_STRICT,
+-						true);
+-	if (IS_ERR(attrs))
+-		return PTR_ERR(attrs);
+-
+-no_attrs:
+-	/* Allocate dumpit info. It is going to be freed by done() callback. */
+-	info = genl_dumpit_info_alloc();
+-	if (!info) {
+-		genl_family_rcv_msg_attrs_free(family, attrs, true);
+-		return -ENOMEM;
+-	}
+-
+-	info->family = family;
+-	info->ops = ops;
+-	info->attrs = attrs;
++	ctx.family = family;
++	ctx.nlh = nlh;
++	ctx.extack = extack;
++	ctx.ops = ops;
++	ctx.hdrlen = hdrlen;
+ 
+ 	if (!family->parallel_ops) {
+ 		struct netlink_dump_control c = {
+ 			.module = family->module,
+-			.data = info,
+-			.start = genl_lock_start,
++			.data = &ctx,
++			.start = genl_start,
+ 			.dump = genl_lock_dumpit,
+ 			.done = genl_lock_done,
+ 		};
+@@ -617,12 +640,11 @@ no_attrs:
+ 		genl_unlock();
+ 		err = __netlink_dump_start(net->genl_sock, skb, nlh, &c);
+ 		genl_lock();
+-
+ 	} else {
+ 		struct netlink_dump_control c = {
+ 			.module = family->module,
+-			.data = info,
+-			.start = ops->start,
++			.data = &ctx,
++			.start = genl_start,
+ 			.dump = ops->dumpit,
+ 			.done = genl_parallel_done,
+ 		};
 
 
