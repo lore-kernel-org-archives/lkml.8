@@ -2,99 +2,123 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC67F21532
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11A6208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592322916;
+	bh=xYS3Tx+6c+n0PX+mjHLsEGNYvp72fAS6iv1Z56pfdd0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=p41NnKX3YDHJsth35nyDhI+SCRdSUW0pQ7XT46zvmkzDKh9Q+c5e2Ng2hIk16nkWJ
+	 jrdDr1wb7niZOpYg0Pa0pY5mUFZCvlEeTID67T3rQi/1GyuEh+IyHfUfQRPHEX26ob
+	 CZBlod12h3gstjFHl9ddnhPR2onsQFi644SbFjEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733061AbgFPPzJ convert rfc822-to-8bit (ORCPT
+        id S1732832AbgFPPzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:55:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733047AbgFPPzD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:03 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA81DC061573;
-        Tue, 16 Jun 2020 08:55:03 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jlDvR-0001r7-MW; Tue, 16 Jun 2020 17:55:01 +0200
-Date:   Tue, 16 Jun 2020 17:55:01 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Stephen Berman <stephen.berman@gmx.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-Message-ID: <20200616155501.psduxnisltitodme@linutronix.de>
-References: <87imfyh6yx.fsf@gmx.net>
- <87wo4dligz.fsf@gmx.net>
- <20200612110122.jossn5zrktcvpbpm@linutronix.de>
- <87tuzdrgm5.fsf@gmx.net>
- <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
- <874krcsquv.fsf@gmx.net>
- <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
- <87tuzbh482.fsf@gmx.net>
- <20200616073827.vysntufld3ves666@linutronix.de>
- <87o8pjh1i0.fsf@gmx.net>
+        Tue, 16 Jun 2020 11:55:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733057AbgFPPzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E3BE21527;
+        Tue, 16 Jun 2020 15:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322908;
+        bh=xYS3Tx+6c+n0PX+mjHLsEGNYvp72fAS6iv1Z56pfdd0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Sz85KmjgQOop/348UlRfVaJS+manF5QLR2t7xG8Fkck1aEfsRgVXIKwacjeAPNX5H
+         Ah5nU6rb78Cvmx3IjK15rktnMh6yYtPr+/cTB0FKbCFSYHt6R7Es5Uand/L9SgLdP7
+         7Ce5Fk+5y4NPlaCLH4a//O3307rQi9cII4yZEF+s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.6 150/161] mmc: mmci_sdmmc: fix DMA API warning overlapping mappings
+Date:   Tue, 16 Jun 2020 17:35:40 +0200
+Message-Id: <20200616153113.486051214@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
+References: <20200616153106.402291280@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <87o8pjh1i0.fsf@gmx.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-16 10:13:27 [+0200], Stephen Berman wrote:
-> Yes, thanks, that did it.  Trace attached.
+From: Ludovic Barre <ludovic.barre@st.com>
 
-So TZ10 is a temperature sensor of some kind on your motherboard. In
-your v5.6 dmesg there is:
-| thermal LNXTHERM:00: registered as thermal_zone0
-| ACPI: Thermal Zone [TZ10] (17 C)
+commit fe8d33bd33d527dee3155d2bccd714a655f37334 upstream.
 
-So. In /sys/class/thermal/thermal_zone0/device/path you should also see
-TZ10. And /sys/class/thermal/thermal_zone0/temp should show the actual
-value.
-This comes from the "thermal" module.
+Turning on CONFIG_DMA_API_DEBUG_SG results in the following warning:
+WARNING: CPU: 1 PID: 20 at kernel/dma/debug.c:500 add_dma_entry+0x16c/0x17c
+DMA-API: exceeded 7 overlapping mappings of cacheline 0x031d2645
+Modules linked in:
+CPU: 1 PID: 20 Comm: kworker/1:1 Not tainted 5.5.0-rc2-00021-gdeda30999c2b-dirty #49
+Hardware name: STM32 (Device Tree Support)
+Workqueue: events_freezable mmc_rescan
+[<c03138c0>] (unwind_backtrace) from [<c030d760>] (show_stack+0x10/0x14)
+[<c030d760>] (show_stack) from [<c0f2eb28>] (dump_stack+0xc0/0xd4)
+[<c0f2eb28>] (dump_stack) from [<c034a14c>] (__warn+0xd0/0xf8)
+[<c034a14c>] (__warn) from [<c034a530>] (warn_slowpath_fmt+0x94/0xb8)
+[<c034a530>] (warn_slowpath_fmt) from [<c03bca0c>] (add_dma_entry+0x16c/0x17c)
+[<c03bca0c>] (add_dma_entry) from [<c03bdf54>] (debug_dma_map_sg+0xe4/0x3d4)
+[<c03bdf54>] (debug_dma_map_sg) from [<c0d09244>] (sdmmc_idma_prep_data+0x94/0xf8)
+[<c0d09244>] (sdmmc_idma_prep_data) from [<c0d05a2c>] (mmci_prep_data+0x2c/0xb0)
+[<c0d05a2c>] (mmci_prep_data) from [<c0d073ec>] (mmci_start_data+0x134/0x2f0)
+[<c0d073ec>] (mmci_start_data) from [<c0d078d0>] (mmci_request+0xe8/0x154)
+[<c0d078d0>] (mmci_request) from [<c0cecb44>] (mmc_start_request+0x94/0xbc)
 
-Looking at the trace, might query the temperature every second which
-somehow results in "Dispatching Notify on". I don't understand how it
-gets from reading of the temperature to the notify part, maybe it is
-part of the ACPI…
+DMA api debug brings to light leaking dma-mappings, dma_map_sg and
+dma_unmap_sg are not correctly balanced.
 
-However. Could you please make sure that the thermal module is not
-loaded at system startup? Adding
-    thermal.off=1
+If a request is prepared, the dma_map/unmap are done in asynchronous call
+pre_req (prep_data) and post_req (unprep_data). In this case the
+dma-mapping is right balanced.
 
-to the kernel commandline should do the trick. And you should see
-   thermal control disabled
+But if the request was not prepared, the data->host_cookie is define to
+zero and the dma_map/unmap must be done in the request.  The dma_map is
+called by mmci_dma_start (prep_data), but there is no dma_unmap in this
+case.
 
-in dmesg. That means your thermal_zone0 with TZ10 does not show up in
-/sys and nothing should schedule the work-items. This in turn should
-allow you to shutdown your system without the delay.
+This patch adds dma_unmap_sg when the dma is finalized and the data cookie
+is zero (request not prepared).
 
-If this works, could you please try to load the module with tzp=300?
-If you add this
- 	thermal.tzp=300
-  
-to the kernel commandline then it should do the trick. You can verify it
-by
-   cat /sys/module/thermal/parameters/tzp 
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Link: https://lore.kernel.org/r/20200526155103.12514-2-ludovic.barre@st.com
+Fixes: 46b723dd867d ("mmc: mmci: add stm32 sdmmc variant")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This should change the polling interval from what ACPI says to 30secs.
-This should ensure that you don't have so many worker waiting. So you
-should also be able to shutdown the system.
+---
+ drivers/mmc/host/mmci_stm32_sdmmc.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-> Steve Berman
+--- a/drivers/mmc/host/mmci_stm32_sdmmc.c
++++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+@@ -162,6 +162,9 @@ static int sdmmc_idma_start(struct mmci_
+ static void sdmmc_idma_finalize(struct mmci_host *host, struct mmc_data *data)
+ {
+ 	writel_relaxed(0, host->base + MMCI_STM32_IDMACTRLR);
++
++	if (!data->host_cookie)
++		sdmmc_idma_unprep_data(host, data, 0);
+ }
+ 
+ static void mmci_sdmmc_set_clkreg(struct mmci_host *host, unsigned int desired)
 
-Sebastian
+
