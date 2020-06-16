@@ -2,132 +2,164 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF06AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28A82074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2123C206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vzILdiTc"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oqBp/vmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgFPBSC (ORCPT
+        id S1726695AbgFPBVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgFPBR6 (ORCPT
+        Mon, 15 Jun 2020 21:21:38 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39142 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgFPBVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 21:17:58 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173F3C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 18:17:57 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id f16so23261604ybp.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 18:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=kh7TdnSzjMmv55tOoFOguM4fQKcmXvzqJelRJT/2fHA=;
-        b=vzILdiTcV8zGZvfxPJjrCDkaIiDK8KCwgVW5sP5e/czfC9CFBD+4ikfLr1nNZiLCG4
-         yExyajLI5z2tPj5jVUXTZlmBhGBcd6BGVc1XxIDjdNS3taX9qDYcvZx28CMqEi9ygJgA
-         MWL6ea5rsIGkxxLvlq7vvECQtGR9tvELA1ucICg5NNO8B8aWbqA2h64ZsHzjXsnB1YQW
-         4b2MdI3q0G8zF3rBfgke02muupsh2/pTPE8RoaCWeIK9EoWZZ89jLrd6Hi0IDaGyOVQO
-         vuDTYNL7FXPLpo9k/VkK76GyxrbKc0NHqjiyuMipoIOah7pHfFDxwNZAF35HnrttIiGX
-         Sfow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=kh7TdnSzjMmv55tOoFOguM4fQKcmXvzqJelRJT/2fHA=;
-        b=e5JuSQqQ6msoZT51tmWS5WM/ZFugRBE0LB7xHnI8Ace4losFWI0w48RKbE98bnafMj
-         xEqIBjFt6BP2xZTjgIOWgzK/LGYqVbLEoORgk2xLzXZr78zpv90uC5ddS8sPNsnx7smj
-         My0UZrEmSEbuHTdgz898pW7S++8DLy+MAyQp8Cihf2vv32t9PHz4pYGPHIswXHq4pDex
-         BYt+9bvhOpHcx48+cshCzgnYamAr5EcmN8jPMyDYMgHp0S704nsR0/mr3/4rSKNP3oHv
-         8tJBZ7BPx4hmnrO9wDTT1Hcw9f5fwSKNxxkqI6bpHvSMZdZhtCiCnKT6B0y+liZjDzFx
-         PpAA==
-X-Gm-Message-State: AOAM532nPjbZHzdYSRvydH9KhkIEg1zzS31kyqbuhD6sqISxhweEO2zS
-        6rimgz9A4z5in5CWuNyklen3y57rIvdl
-X-Google-Smtp-Source: ABdhPJxAth06oSMz+frpUoX8kGWlQJ8aihUMBynZvrDOTpUM1ErZyuW821epnFDUXXRGd/C8nOzICVaMXji/
-X-Received: by 2002:a25:9746:: with SMTP id h6mr429416ybo.409.1592270276282;
- Mon, 15 Jun 2020 18:17:56 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 18:17:42 -0700
-In-Reply-To: <20200616011742.138975-1-rajatja@google.com>
-Message-Id: <20200616011742.138975-4-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200616011742.138975-1-rajatja@google.com>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH 4/4] pci: export untrusted attribute in sysfs
-From:   Rajat Jain <rajatja@google.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com
-Cc:     Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 15 Jun 2020 21:21:37 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9A07EF9;
+        Tue, 16 Jun 2020 03:21:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1592270493;
+        bh=aU7Ie58MknMsKT63S1TAPowl2F0d9L67fIBN7nnNeCU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oqBp/vmvjePb+UU+aL9IUh9VMoMIgzFHAKicc4Y8Rtms2g7h6hai8Qx1MkBekOApM
+         qz9wVCBn79JofxFEQ7hK2q/0lGteR+LCQA4SZ+fXEBzGHsIfMi8OquHLfWGNBsu3TX
+         DfgIr2MEOeyP3Dt+Qtqp4chPxPmKNobuFNKH1B9w=
+Date:   Tue, 16 Jun 2020 04:21:11 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/6] of_graph: add of_graph_get_local_port()
+Message-ID: <20200616012111.GE1629@pendragon.ideasonboard.com>
+References: <20200614172234.8856-1-digetx@gmail.com>
+ <20200614172234.8856-2-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200614172234.8856-2-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is needed to allow the userspace to determine when an untrusted
-device has been added, and thus allowing it to bind the driver manually
-to it, if it so wishes. This is being done as part of the approach
-discussed at https://lkml.org/lkml/2020/6/9/1331
+Hi Dmitry,
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
- drivers/pci/pci-sysfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thank you for the patch.
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6d78df981d41a..574e9c613ba26 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -50,6 +50,7 @@ pci_config_attr(subsystem_device, "0x%04x\n");
- pci_config_attr(revision, "0x%02x\n");
- pci_config_attr(class, "0x%06x\n");
- pci_config_attr(irq, "%u\n");
-+pci_config_attr(untrusted, "%u\n");
- 
- static ssize_t broken_parity_status_show(struct device *dev,
- 					 struct device_attribute *attr,
-@@ -608,6 +609,7 @@ static struct attribute *pci_dev_attrs[] = {
- #endif
- 	&dev_attr_driver_override.attr,
- 	&dev_attr_ari_enabled.attr,
-+	&dev_attr_untrusted.attr,
- 	NULL,
- };
- 
+On Sun, Jun 14, 2020 at 08:22:29PM +0300, Dmitry Osipenko wrote:
+> In some case, like a DRM display code for example, it's useful to silently
+> check whether port node exists at all in a device-tree before proceeding
+> with parsing the graph.
+> 
+> This patch adds of_graph_get_local_port() which returns pointer to a local
+> port node, or NULL if graph isn't specified in a device-tree for a given
+> device node.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/of/property.c    | 32 +++++++++++++++++++++++---------
+>  include/linux/of_graph.h |  7 +++++++
+>  2 files changed, 30 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 1f2086f4e7ce..05c5f619b8bb 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -608,15 +608,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+>  	 * parent port node.
+>  	 */
+>  	if (!prev) {
+> -		struct device_node *node;
+> -
+> -		node = of_get_child_by_name(parent, "ports");
+> -		if (node)
+> -			parent = node;
+> -
+> -		port = of_get_child_by_name(parent, "port");
+> -		of_node_put(node);
+> -
+> +		port = of_graph_get_local_port(parent);
+>  		if (!port) {
+>  			pr_err("graph: no port node found in %pOF\n", parent);
+>  			return NULL;
+> @@ -765,6 +757,28 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+>  }
+>  EXPORT_SYMBOL(of_graph_get_remote_port);
+>  
+> +/**
+> + * of_graph_get_local_port() - get local port node
+> + * @node: pointer to a local endpoint device_node
+> + *
+> + * Return: First local port node associated with local endpoint node linked
+> + *	   to @node. Use of_node_put() on it when done.
+> + */
+> +struct device_node *of_graph_get_local_port(const struct device_node *node)
+> +{
+> +	struct device_node *ports, *port;
+> +
+> +	ports = of_get_child_by_name(node, "ports");
+> +	if (ports)
+> +		node = ports;
+> +
+> +	port = of_get_child_by_name(node, "port");
+> +	of_node_put(ports);
+> +
+> +	return port;
+
+The implementation doesn't seem to match the documentation. If node is a
+pointer to an endpoint, it should not have any ports child.
+
+> +}
+> +EXPORT_SYMBOL(of_graph_get_local_port);
+> +
+>  int of_graph_get_endpoint_count(const struct device_node *np)
+>  {
+>  	struct device_node *endpoint;
+> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+> index 01038a6aade0..1fdeb72c7765 100644
+> --- a/include/linux/of_graph.h
+> +++ b/include/linux/of_graph.h
+> @@ -54,6 +54,7 @@ struct device_node *of_graph_get_remote_port_parent(
+>  struct device_node *of_graph_get_remote_port(const struct device_node *node);
+>  struct device_node *of_graph_get_remote_node(const struct device_node *node,
+>  					     u32 port, u32 endpoint);
+> +struct device_node *of_graph_get_local_port(const struct device_node *node);
+>  #else
+>  
+>  static inline int of_graph_parse_endpoint(const struct device_node *node,
+> @@ -116,6 +117,12 @@ static inline struct device_node *of_graph_get_remote_node(
+>  	return NULL;
+>  }
+>  
+> +static inline struct device_node *of_graph_get_local_port(
+> +					const struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +
+>  #endif /* CONFIG_OF */
+>  
+>  #endif /* __LINUX_OF_GRAPH_H */
+> -- 
+> 2.26.0
+> 
+
 -- 
-2.27.0.290.gba653c62da-goog
+Regards,
 
+Laurent Pinchart
