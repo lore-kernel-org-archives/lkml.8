@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D117C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA34DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5085520B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB3C20C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321832;
-	bh=wO96Syrd3Y+CQYFKAlkerJFStFL475pUlPCVcms5cC0=;
+	s=default; t=1592321833;
+	bh=17kbZ1WrKBdQWj2NDXfl3kg9/sIviW/uMiZRiZRnHHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlPuaO6e9+v1F0JzEQ2c5Egi2V+/PGJLAYXTHOYisNv4WZ71Fa1Jtia480m1zaGSE
-	 /+yURKf4CGT6JcUHxm3Tr6DSZFFdkVhM84qM+BIAiAnUeKGP8eajQUvgQO40p5hHtx
-	 lN2+MGptQVuwSv3l1UrgSm1VCf2nda4KXRvuf+Hs=
+	b=vtzgItlBZXRSruQldlmkUqiuemqXOgXXEUbZGiPik+a6+UT7ISLjTVralAmgIN5RR
+	 pmo4mCBmIrEjR/vNBWdDItvYSmfH5MhldM+LGUUo+Cyix5zSp9VU7+KNLsfDj52WhJ
+	 wEHatyCHUrQVF76tZtcfuDCn1x3Y16ahu47uCedk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgFPPhK (ORCPT
+        id S1729833AbgFPPhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:37:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730195AbgFPPhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:05 -0400
+        id S1730214AbgFPPhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDC3F20C56;
-        Tue, 16 Jun 2020 15:37:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE2BC20B1F;
+        Tue, 16 Jun 2020 15:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321824;
-        bh=wO96Syrd3Y+CQYFKAlkerJFStFL475pUlPCVcms5cC0=;
+        s=default; t=1592321829;
+        bh=17kbZ1WrKBdQWj2NDXfl3kg9/sIviW/uMiZRiZRnHHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xg3Fp0utWisbhEbwRV3AK/OTm2q31Ov/tHOuR6ybMW3oovLM2c0FC6+L/DnKEmTzw
-         yQp8Nq/NVAkvQegdR3IEqWCYOLWr8JCufQTMgitrSWbGv5usUtWJ0WX20cRTIBgEfZ
-         qOT9K9cLvDpxHBCWNin23UCtyf1gjjcNmpw7M5ZE=
+        b=zuUCAoHEfFhKZykU8R/hYUUyWFXJtqx48STDakGVCekHbc+gtnk0Q1ywU/Okhawxa
+         c0ZQ6oy2LixETzjJhUeTJTLexHHA80CKdUG4/DUH8q7cTGibVqNBfe21uBA4tUB+ue
+         aGWLro4YIcoPzJAKJY9TKd2XGwJFKN9ZMmsuMpbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 029/134] perf probe: Accept the instance number of kretprobe event
-Date:   Tue, 16 Jun 2020 17:33:33 +0200
-Message-Id: <20200616153102.169724260@linuxfoundation.org>
+Subject: [PATCH 5.4 031/134] selftests: fix flower parent qdisc
+Date:   Tue, 16 Jun 2020 17:33:35 +0200
+Message-Id: <20200616153102.276252634@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -63,68 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit c6aab66a728b6518772c74bd9dff66e1a1c652fd ]
+[ Upstream commit 0531b0357ba37464e5c0033e1b7c69bbf5ecd8fb ]
 
-Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number
-on kprobe_events") introduced to show the instance number of kretprobe
-events, the length of the 1st format of the kprobe event will not 1, but
-it can be longer.  This caused a parser error in perf-probe.
+Flower tests used to create ingress filter with specified parent qdisc
+"parent ffff:" but dump them on "ingress". With recent commit that fixed
+tcm_parent handling in dump those are not considered same parent anymore,
+which causes iproute2 tc to emit additional "parent ffff:" in first line of
+filter dump output. The change in output causes filter match in tests to
+fail.
 
-Skip the length check the 1st format of the kprobe event to accept this
-instance number.
+Prevent parent qdisc output when dumping filters in flower tests by always
+correctly specifying "ingress" parent both when creating and dumping
+filters.
 
-Without this fix:
-
-  # perf probe -a vfs_read%return
-  Added new event:
-    probe:vfs_read__return (on vfs_read%return)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:vfs_read__return -aR sleep 1
-
-  # perf probe -l
-  Semantic error :Failed to parse event name: r16:probe/vfs_read__return
-    Error: Failed to show event list.
-
-And with this fixes:
-
-  # perf probe -a vfs_read%return
-  ...
-  # perf probe -l
-    probe:vfs_read__return (on vfs_read%return)
-
-Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
-Reported-by: Yuxuan Shui <yshuiv7@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Yuxuan Shui <yshuiv7@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207587
-Link: http://lore.kernel.org/lkml/158877535215.26469.1113127926699134067.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: a7df4870d79b ("net_sched: fix tcm_parent in tc filter dump")
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-event.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../selftests/tc-testing/tc-tests/filters/tests.json        | 6 +++---
+ tools/testing/selftests/tc-testing/tdc_batch.py             | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 91cab5f669d2..92b07be0b48b 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1757,8 +1757,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
- 	fmt1_str = strtok_r(argv0_str, ":", &fmt);
- 	fmt2_str = strtok_r(NULL, "/", &fmt);
- 	fmt3_str = strtok_r(NULL, " \t", &fmt);
--	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
--	    || fmt3_str == NULL) {
-+	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
- 		semantic_error("Failed to parse event name: %s\n", argv[0]);
- 		ret = -EINVAL;
- 		goto out;
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
+index 0f89cd50a94b..152ffa45e857 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
+@@ -54,7 +54,7 @@
+         "setup": [
+             "$TC qdisc add dev $DEV2 ingress"
+         ],
+-        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 parent ffff: handle 0xffffffff flower action ok",
++        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 ingress handle 0xffffffff flower action ok",
+         "expExitCode": "0",
+         "verifyCmd": "$TC filter show dev $DEV2 ingress",
+         "matchPattern": "filter protocol ip pref 1 flower.*handle 0xffffffff",
+@@ -99,9 +99,9 @@
+         },
+         "setup": [
+             "$TC qdisc add dev $DEV2 ingress",
+-            "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
++            "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
+         ],
+-        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
++        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
+         "expExitCode": "2",
+         "verifyCmd": "$TC -s filter show dev $DEV2 ingress",
+         "matchPattern": "filter protocol ip pref 1 flower chain 0 handle",
+diff --git a/tools/testing/selftests/tc-testing/tdc_batch.py b/tools/testing/selftests/tc-testing/tdc_batch.py
+index 6a2bd2cf528e..995f66ce43eb 100755
+--- a/tools/testing/selftests/tc-testing/tdc_batch.py
++++ b/tools/testing/selftests/tc-testing/tdc_batch.py
+@@ -72,21 +72,21 @@ mac_prefix = args.mac_prefix
+ 
+ def format_add_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter add dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter add dev {} {} protocol ip ingress handle {} "
+             " flower {} src_mac {} dst_mac {} action drop {}".format(
+                 device, prio, handle, skip, src_mac, dst_mac, share_action))
+ 
+ 
+ def format_rep_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter replace dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter replace dev {} {} protocol ip ingress handle {} "
+             " flower {} src_mac {} dst_mac {} action drop {}".format(
+                 device, prio, handle, skip, src_mac, dst_mac, share_action))
+ 
+ 
+ def format_del_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter del dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter del dev {} {} protocol ip ingress handle {} "
+             "flower".format(device, prio, handle))
+ 
+ 
 -- 
 2.25.1
 
