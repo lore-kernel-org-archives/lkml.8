@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A485EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02CC521475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B2D20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322542;
-	bh=FFSxGwBGfMCiFQduasCBES4XmyOFzA/eJW0MOePvNZM=;
+	s=default; t=1592322548;
+	bh=D08phPmLPEFAjRBvb1bT7wlfUFoPD9T/je8totMLYVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNzEkB2gnv0RZ+yD/4UkErf1TFjLdUOEBYxc61hkFDJtaaaTxFypAaPEAnkjsmrXu
-	 yD22JO985W2UFyb1jBzLLcMCvzUwXn77QTn/rwv/TWYDMpt9iucEi9rfrUuumMFFS5
-	 phWkp2C4kkRGQLX10aAf3W+ceuzAIpBXWPgUcjC0=
+	b=mzeLwEaXqurMGjNBKRexqQ2Bg01qPHpMmz89u+gpzRtqV/RNfUja8tK3XUURJK+h1
+	 IB7QBHLWielKvjRYLd4Zhj/+AAn87bMSjPeHqOc6cmNcLpOdKQWrbEjiiPkrNS5vas
+	 R5hXpmwmgPKuoAT3L+k79/wojH73IzNeIMkjkz2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731341AbgFPPtA (ORCPT
+        id S1732477AbgFPPtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:49:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43656 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731831AbgFPPs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:48:57 -0400
+        id S1731956AbgFPPtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744662071A;
-        Tue, 16 Jun 2020 15:48:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 094AD20776;
+        Tue, 16 Jun 2020 15:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322537;
-        bh=FFSxGwBGfMCiFQduasCBES4XmyOFzA/eJW0MOePvNZM=;
+        s=default; t=1592322539;
+        bh=D08phPmLPEFAjRBvb1bT7wlfUFoPD9T/je8totMLYVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LJ6/26a8FvXnRPo/DMMK/peY+wzrxCtI6jrThuHJ0XeYjf+N1ioTB712mqSP8D/pw
-         9+C65RoU8TjmibG1Quex4/+1fi7KwsNdpmEcN7YMRUzP4hIXt57tF/DOXCZLABTJF5
-         sEE4WC/sU2bpTrw9HlYsN8doSpLDMzBJsOO/OEZA=
+        b=Hsx8OGv34LX+YpgEyihUoRG1zfGfxsDS35eD+75YvN8QxDQU2giakHItbntj9lroA
+         jhtEHQbFG+SvEqV0guJjp+Y62p5bRynLVbunV0dNZDUli+7fmkwU4xXqRYKNCuOP/R
+         NXy+MtvOvfKyOxZvHr6aKtJOLBHKnIn8RAH0MImo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominik Mierzejewski <dominik@greysector.net>,
-        Mattia Dongili <malattia@linux.it>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.7 161/163] platform/x86: sony-laptop: Make resuming thermal profile safer
-Date:   Tue, 16 Jun 2020 17:35:35 +0200
-Message-Id: <20200616153114.518926366@linuxfoundation.org>
+        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.7 152/163] mmc: mmci_sdmmc: fix DMA API warning overlapping mappings
+Date:   Tue, 16 Jun 2020 17:35:26 +0200
+Message-Id: <20200616153114.087442710@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,39 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattia Dongili <malattia@linux.it>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-commit 476d60b1b4c8a2b14a53ef9b772058f35e604661 upstream.
+commit fe8d33bd33d527dee3155d2bccd714a655f37334 upstream.
 
-The thermal handle object may fail initialization when the module is
-loaded in the first place. Avoid attempting to use it on resume then.
+Turning on CONFIG_DMA_API_DEBUG_SG results in the following warning:
+WARNING: CPU: 1 PID: 20 at kernel/dma/debug.c:500 add_dma_entry+0x16c/0x17c
+DMA-API: exceeded 7 overlapping mappings of cacheline 0x031d2645
+Modules linked in:
+CPU: 1 PID: 20 Comm: kworker/1:1 Not tainted 5.5.0-rc2-00021-gdeda30999c2b-dirty #49
+Hardware name: STM32 (Device Tree Support)
+Workqueue: events_freezable mmc_rescan
+[<c03138c0>] (unwind_backtrace) from [<c030d760>] (show_stack+0x10/0x14)
+[<c030d760>] (show_stack) from [<c0f2eb28>] (dump_stack+0xc0/0xd4)
+[<c0f2eb28>] (dump_stack) from [<c034a14c>] (__warn+0xd0/0xf8)
+[<c034a14c>] (__warn) from [<c034a530>] (warn_slowpath_fmt+0x94/0xb8)
+[<c034a530>] (warn_slowpath_fmt) from [<c03bca0c>] (add_dma_entry+0x16c/0x17c)
+[<c03bca0c>] (add_dma_entry) from [<c03bdf54>] (debug_dma_map_sg+0xe4/0x3d4)
+[<c03bdf54>] (debug_dma_map_sg) from [<c0d09244>] (sdmmc_idma_prep_data+0x94/0xf8)
+[<c0d09244>] (sdmmc_idma_prep_data) from [<c0d05a2c>] (mmci_prep_data+0x2c/0xb0)
+[<c0d05a2c>] (mmci_prep_data) from [<c0d073ec>] (mmci_start_data+0x134/0x2f0)
+[<c0d073ec>] (mmci_start_data) from [<c0d078d0>] (mmci_request+0xe8/0x154)
+[<c0d078d0>] (mmci_request) from [<c0cecb44>] (mmc_start_request+0x94/0xbc)
 
-Fixes: 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer objects for ASL create_field() operator")
-Reported-by: Dominik Mierzejewski <dominik@greysector.net>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207491
-Signed-off-by: Mattia Dongili <malattia@linux.it>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+DMA api debug brings to light leaking dma-mappings, dma_map_sg and
+dma_unmap_sg are not correctly balanced.
+
+If a request is prepared, the dma_map/unmap are done in asynchronous call
+pre_req (prep_data) and post_req (unprep_data). In this case the
+dma-mapping is right balanced.
+
+But if the request was not prepared, the data->host_cookie is define to
+zero and the dma_map/unmap must be done in the request.  The dma_map is
+called by mmci_dma_start (prep_data), but there is no dma_unmap in this
+case.
+
+This patch adds dma_unmap_sg when the dma is finalized and the data cookie
+is zero (request not prepared).
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Link: https://lore.kernel.org/r/20200526155103.12514-2-ludovic.barre@st.com
+Fixes: 46b723dd867d ("mmc: mmci: add stm32 sdmmc variant")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/sony-laptop.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/mmc/host/mmci_stm32_sdmmc.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -2288,7 +2288,12 @@ static void sony_nc_thermal_cleanup(stru
- #ifdef CONFIG_PM_SLEEP
- static void sony_nc_thermal_resume(void)
+--- a/drivers/mmc/host/mmci_stm32_sdmmc.c
++++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+@@ -188,6 +188,9 @@ static int sdmmc_idma_start(struct mmci_
+ static void sdmmc_idma_finalize(struct mmci_host *host, struct mmc_data *data)
  {
--	unsigned int status = sony_nc_thermal_mode_get();
-+	int status;
+ 	writel_relaxed(0, host->base + MMCI_STM32_IDMACTRLR);
 +
-+	if (!th_handle)
-+		return;
-+
-+	status = sony_nc_thermal_mode_get();
++	if (!data->host_cookie)
++		sdmmc_idma_unprep_data(host, data, 0);
+ }
  
- 	if (status != th_handle->mode)
- 		sony_nc_thermal_mode_set(th_handle->mode);
+ static void mmci_sdmmc_set_clkreg(struct mmci_host *host, unsigned int desired)
 
 
