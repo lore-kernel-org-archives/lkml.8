@@ -5,250 +5,289 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1511C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE67BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B96D92074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BB82074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3PA5nmN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNIctA3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgFPGNf (ORCPT
+        id S1727044AbgFPGNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:13:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42128 "EHLO
+        Tue, 16 Jun 2020 02:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgFPGNf (ORCPT
+        with ESMTP id S1725775AbgFPGNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:13:35 -0400
+        Tue, 16 Jun 2020 02:13:38 -0400
 Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E59C05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id p5so19383020wrw.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF7FC05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:37 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h5so19434889wrc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=OyojEj1EmfCUdaz4s7DeoXx+cQ/+q0SxYxTCw3S324g=;
-        b=c3PA5nmNMyc3gXzLAAKfereIoiN6lO/yKOc/5eh7JGw59dTxCDaIhxloJRwjEsH1tT
-         OTBtViCRP4Qf/Km0Rp5EwR/PRh4271i0bFv/v6AIGnLjLWuV//mWs1xW5qj2zZeb4+tJ
-         qlgnzpp8nbJJbnFdLXKSmq+WpKaWsDpelhROTrhVzDEpP90hQ0dxiOL2wnEZ6TvZUUPn
-         wjo3Ghh9Ffw94YNNLHvgX0Etj4/FYB1Y5RwZFPo3e5z0dRui9ZhlmsRJLsOW4DJdcsrK
-         vofL15nZL0pagloXQpQW8HD9a/EilUFaVUIf61NeChuHjTLX8A6Uky6S9gHiPCG1+y+Q
-         82RQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=3E9VSoUOLHhugazwFio3UAs9OvlKnm9aFTThDmcTgz8=;
+        b=cNIctA3MdrGgqkHjXnHy0qQc1xxBQx+qOmpE7RSSHODs4sn8NUUnaoWrt4n30dU3Qo
+         FM0gHLp5n1Q8EXgvoXweMhqeNPhZjiRfC66JrAjx5v1YOekeAzTzdOUrLT/lqKkTAmw0
+         BX4lHim+q6T50HbOm0nIdQoRbKHULQ7bVkrNcPYkK0wqCZIadXPvWCgX+slPp/71cymn
+         zyDvVvc7gVc7OXgM2BiW4Z7reWM+Sl3++kO7VN4JTs+SM9VC5qRMpUyQtY46wJAJc3oH
+         r6QXWTb8mlTqLPiSghNHLbl9gS4eacnRTaBF6GQX2iyIhpM4M/P8YeqBBnR4wH4seoJM
+         PN0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OyojEj1EmfCUdaz4s7DeoXx+cQ/+q0SxYxTCw3S324g=;
-        b=t5lkaMdq2l8Bs1fKtDnPmluB8N0s1fWMCU2IcYIhvMrUBUwCQgf7yDjMcAs2Qz3qOi
-         FjTbS7KTp9FTPrpXh0nOJXQrYXnbMaeZgX8rC5uMp0tvc/QDGc9pWP/iToe8xspmnpUf
-         Yxyvv1EKNP9Z/4fWi3lPoKWVVuGwCaIie4D81Hmm87YW2aEG9KjxU44cWR23IChksBk7
-         cRG1A2KOmbelWtoElLpR0cblUQL07kA/FZKVl3ZsR/29jpFPocvNNii57dE4CDNDIS3C
-         ASgDZgQnOYcT0T6UKjgX7lUQ85p08ivHmbJHvy8+0A3hwK57c/1+uBL5rdnb6+KTk4tB
-         GPgw==
-X-Gm-Message-State: AOAM5303rH64EycCrr0bdXjC35WWThpryHkeXxHls5wd00srlB0USeUz
-        cKmk17knQXrhOKGGfjUCxX2P3vache0=
-X-Google-Smtp-Source: ABdhPJz9dC1C9N1yEDc3aoaGGp5Rt+y0IOf3qqeP6DI0FluaP4fQI4Fz2+0qm0eZmRuXbV+ofDtIJQ==
-X-Received: by 2002:adf:f68d:: with SMTP id v13mr1154370wrp.291.1592288011795;
-        Mon, 15 Jun 2020 23:13:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=3E9VSoUOLHhugazwFio3UAs9OvlKnm9aFTThDmcTgz8=;
+        b=P1wSP0tqsFGCn8o9OtRO+d7DxAsRB/GotzihK9V9ZkvlT1YHo0+wbobMNkGSUAHV0j
+         W245Mbcz47UXM3hoqwFEjWrVvaQ0gviqGsRvOoxmOHqd26UxWAI00mewIi2MDmN4NGtH
+         D121kOu2miDBIIZ9d5u91eks7HRmW6f8qMSf8YOqMuDPJanQTNn+kd1nXeCquqi2L2U2
+         oA3t9mou/Inl+9vSO/DE91BfpzhVM0Xt8f6NIKk/ckQAQ46tF+rn5Nl0WWMdsRZQKKHN
+         UxqfDOZcgTm0s2xvIVVYdn1p/hlCIbacmaYXSyW1ZlReS6FRTG9RjIGLeW25JnRxAcxj
+         tNmw==
+X-Gm-Message-State: AOAM531abXAJdctDmg+WYD3vCq4f/uRRD098U/ulTD+mrdJLg3JRWCyT
+        H/70rDYL9FXqAIT2PtdNmrybHNAyt7c=
+X-Google-Smtp-Source: ABdhPJzMixjYzAd4b/oGpgFZ+vrG4UBuUIu70ofxtEW8MzRZI0JFlruwgOtXidiQan5gGKTpKyBU0w==
+X-Received: by 2002:a5d:6750:: with SMTP id l16mr1227350wrw.295.1592288016039;
+        Mon, 15 Jun 2020 23:13:36 -0700 (PDT)
 Received: from ODED-MAIN.localdomain ([87.71.142.251])
-        by smtp.gmail.com with ESMTPSA id s2sm2354963wmh.15.2020.06.15.23.13.30
+        by smtp.gmail.com with ESMTPSA id s2sm2354963wmh.15.2020.06.15.23.13.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 23:13:30 -0700 (PDT)
+        Mon, 15 Jun 2020 23:13:35 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 1/7] habanalabs: remove rate limiters from GAUDI
-Date:   Tue, 16 Jun 2020 09:13:21 +0300
-Message-Id: <20200616061327.12006-1-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org, Ofir Bitton <obitton@habana.ai>
+Subject: [PATCH 2/7] habanalabs: Use pending CS amount per ASIC
+Date:   Tue, 16 Jun 2020 09:13:22 +0300
+Message-Id: <20200616061327.12006-2-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200616061327.12006-1-oded.gabbay@gmail.com>
+References: <20200616061327.12006-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We no longer need to initialize the rate limiters in GAUDI A1.
+From: Ofir Bitton <obitton@habana.ai>
 
+Training schemes requires much more concurrent command submissions than
+inference does. In addition, training command submissions can be completed
+in a non serialized manner. Hence, we add support in which each ASIC will
+be able to configure the amount of concurrent pending command submissions,
+rather than use a predefined amount. This change will enhance performance
+by allowing the user to add more concurrent work without waiting for the
+previous work to be completed.
+
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/gaudi/gaudi.c    | 126 +----------------------
- drivers/misc/habanalabs/habanalabs_drv.c |   1 -
- 2 files changed, 1 insertion(+), 126 deletions(-)
+ drivers/misc/habanalabs/command_submission.c |  6 ++++--
+ drivers/misc/habanalabs/context.c            | 14 +++++++++++---
+ drivers/misc/habanalabs/gaudi/gaudi.c        |  2 ++
+ drivers/misc/habanalabs/gaudi/gaudiP.h       |  6 ++++++
+ drivers/misc/habanalabs/goya/goya.c          |  2 ++
+ drivers/misc/habanalabs/goya/goyaP.h         |  6 ++++++
+ drivers/misc/habanalabs/habanalabs.h         |  9 +++++----
+ drivers/misc/habanalabs/hw_queue.c           |  2 +-
+ 8 files changed, 37 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+index f82974a916c3..e156803f4a99 100644
+--- a/drivers/misc/habanalabs/command_submission.c
++++ b/drivers/misc/habanalabs/command_submission.c
+@@ -405,7 +405,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
+ 	spin_lock(&ctx->cs_lock);
+ 
+ 	cs_cmpl->cs_seq = ctx->cs_sequence;
+-	other = ctx->cs_pending[cs_cmpl->cs_seq & (HL_MAX_PENDING_CS - 1)];
++	other = ctx->cs_pending[cs_cmpl->cs_seq &
++				(hdev->asic_prop.max_pending_cs - 1)];
+ 	if ((other) && (!dma_fence_is_signaled(other))) {
+ 		spin_unlock(&ctx->cs_lock);
+ 		dev_dbg(hdev->dev,
+@@ -419,7 +420,8 @@ static int allocate_cs(struct hl_device *hdev, struct hl_ctx *ctx,
+ 
+ 	cs->sequence = cs_cmpl->cs_seq;
+ 
+-	ctx->cs_pending[cs_cmpl->cs_seq & (HL_MAX_PENDING_CS - 1)] =
++	ctx->cs_pending[cs_cmpl->cs_seq &
++			(hdev->asic_prop.max_pending_cs - 1)] =
+ 							&cs_cmpl->base_fence;
+ 	ctx->cs_sequence++;
+ 
+diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
+index ec92b3506b1f..1b96fefa4a65 100644
+--- a/drivers/misc/habanalabs/context.c
++++ b/drivers/misc/habanalabs/context.c
+@@ -22,9 +22,11 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
+ 	 * to this function unless the ref count is 0
+ 	 */
+ 
+-	for (i = 0 ; i < HL_MAX_PENDING_CS ; i++)
++	for (i = 0 ; i < hdev->asic_prop.max_pending_cs ; i++)
+ 		dma_fence_put(ctx->cs_pending[i]);
+ 
++	kfree(ctx->cs_pending);
++
+ 	if (ctx->asid != HL_KERNEL_ASID_ID) {
+ 		/* The engines are stopped as there is no executing CS, but the
+ 		 * Coresight might be still working by accessing addresses
+@@ -126,6 +128,11 @@ int hl_ctx_init(struct hl_device *hdev, struct hl_ctx *ctx, bool is_kernel_ctx)
+ 	spin_lock_init(&ctx->cs_lock);
+ 	atomic_set(&ctx->thread_ctx_switch_token, 1);
+ 	ctx->thread_ctx_switch_wait_token = 0;
++	ctx->cs_pending = kcalloc(hdev->asic_prop.max_pending_cs,
++				sizeof(struct dma_fence *),
++				GFP_KERNEL);
++	if (!ctx->cs_pending)
++		return -ENOMEM;
+ 
+ 	if (is_kernel_ctx) {
+ 		ctx->asid = HL_KERNEL_ASID_ID; /* Kernel driver gets ASID 0 */
+@@ -170,6 +177,7 @@ int hl_ctx_put(struct hl_ctx *ctx)
+ 
+ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
+ {
++	struct asic_fixed_properties *asic_prop = &ctx->hdev->asic_prop;
+ 	struct dma_fence *fence;
+ 
+ 	spin_lock(&ctx->cs_lock);
+@@ -179,13 +187,13 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	if (seq + HL_MAX_PENDING_CS < ctx->cs_sequence) {
++	if (seq + asic_prop->max_pending_cs < ctx->cs_sequence) {
+ 		spin_unlock(&ctx->cs_lock);
+ 		return NULL;
+ 	}
+ 
+ 	fence = dma_fence_get(
+-			ctx->cs_pending[seq & (HL_MAX_PENDING_CS - 1)]);
++			ctx->cs_pending[seq & (asic_prop->max_pending_cs - 1)]);
+ 	spin_unlock(&ctx->cs_lock);
+ 
+ 	return fence;
 diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index 61f88e9884ce..4d69727bb53b 100644
+index 4d69727bb53b..35e9080f6976 100644
 --- a/drivers/misc/habanalabs/gaudi/gaudi.c
 +++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -1638,8 +1638,8 @@ static void gaudi_init_hbm_cred(struct hl_device *hdev)
- 	uint32_t hbm0_wr, hbm1_wr, hbm0_rd, hbm1_rd;
+@@ -429,6 +429,8 @@ static int gaudi_get_fixed_properties(struct hl_device *hdev)
+ 	strncpy(prop->armcp_info.card_name, GAUDI_DEFAULT_CARD_NAME,
+ 					CARD_NAME_MAX_LEN);
  
- 	hbm0_wr = 0x33333333;
--	hbm1_wr = 0x33333333;
- 	hbm0_rd = 0x77777777;
-+	hbm1_wr = 0x55555555;
- 	hbm1_rd = 0xDDDDDDDD;
- 
- 	WREG32(mmDMA_IF_E_N_HBM0_WR_CRED_CNT, hbm0_wr);
-@@ -1689,125 +1689,6 @@ static void gaudi_init_hbm_cred(struct hl_device *hdev)
- 			(1 << DMA_IF_HBM_CRED_EN_WRITE_CREDIT_EN_SHIFT));
++	prop->max_pending_cs = GAUDI_MAX_PENDING_CS;
++
+ 	return 0;
  }
  
--static void gaudi_init_rate_limiter(struct hl_device *hdev)
--{
--	u32 nr, nf, od, sat, rst, timeout;
--	u64 freq;
--
--	nr = RREG32(mmPSOC_HBM_PLL_NR);
--	nf = RREG32(mmPSOC_HBM_PLL_NF);
--	od = RREG32(mmPSOC_HBM_PLL_OD);
--	freq = (50 * (nf + 1)) / ((nr + 1) * (od + 1));
--
--	dev_dbg(hdev->dev, "HBM frequency is %lluMHz\n", freq);
--
--	/* Configuration is for five (5) DDMA channels */
--	if (freq == 800) {
--		sat = 4;
--		rst = 11;
--		timeout = 15;
--	} else if (freq == 900) {
--		sat = 4;
--		rst = 15;
--		timeout = 16;
--	} else if (freq == 950) {
--		sat = 4;
--		rst = 15;
--		timeout = 15;
--	} else {
--		dev_warn(hdev->dev,
--			"unsupported HBM frequency %lluMHz, no rate-limiters\n",
--			freq);
--		return;
--	}
--
--	WREG32(mmDMA_IF_W_S_DOWN_RSP_MID_WGHT_0, 0x111);
--	WREG32(mmDMA_IF_W_S_DOWN_RSP_MID_WGHT_1, 0x111);
--	WREG32(mmDMA_IF_E_S_DOWN_RSP_MID_WGHT_0, 0x111);
--	WREG32(mmDMA_IF_E_S_DOWN_RSP_MID_WGHT_1, 0x111);
--	WREG32(mmDMA_IF_W_N_DOWN_RSP_MID_WGHT_0, 0x111);
--	WREG32(mmDMA_IF_W_N_DOWN_RSP_MID_WGHT_1, 0x111);
--	WREG32(mmDMA_IF_E_N_DOWN_RSP_MID_WGHT_0, 0x111);
--	WREG32(mmDMA_IF_E_N_DOWN_RSP_MID_WGHT_1, 0x111);
--
--	if (!hdev->rl_enable) {
--		dev_info(hdev->dev, "Rate limiters disabled\n");
--		return;
--	}
--
--	WREG32(mmDMA_IF_W_S_DOWN_CH0_RL_HBM_SAT, sat);
--	WREG32(mmDMA_IF_W_S_DOWN_CH1_RL_HBM_SAT, sat);
--	WREG32(mmDMA_IF_E_S_DOWN_CH0_RL_HBM_SAT, sat);
--	WREG32(mmDMA_IF_E_S_DOWN_CH1_RL_HBM_SAT, sat);
--	WREG32(mmDMA_IF_W_N_DOWN_CH0_RL_HBM_SAT, sat);
--	WREG32(mmDMA_IF_W_N_DOWN_CH1_RL_HBM_SAT, sat);
--	WREG32(mmDMA_IF_E_N_DOWN_CH0_RL_HBM_SAT, sat);
--	WREG32(mmDMA_IF_E_N_DOWN_CH1_RL_HBM_SAT, sat);
--
--	WREG32(mmDMA_IF_W_S_DOWN_CH0_RL_HBM_RST, rst);
--	WREG32(mmDMA_IF_W_S_DOWN_CH1_RL_HBM_RST, rst);
--	WREG32(mmDMA_IF_E_S_DOWN_CH0_RL_HBM_RST, rst);
--	WREG32(mmDMA_IF_E_S_DOWN_CH1_RL_HBM_RST, rst);
--	WREG32(mmDMA_IF_W_N_DOWN_CH0_RL_HBM_RST, rst);
--	WREG32(mmDMA_IF_W_N_DOWN_CH1_RL_HBM_RST, rst);
--	WREG32(mmDMA_IF_E_N_DOWN_CH0_RL_HBM_RST, rst);
--	WREG32(mmDMA_IF_E_N_DOWN_CH1_RL_HBM_RST, rst);
--
--	WREG32(mmDMA_IF_W_S_DOWN_CH0_RL_HBM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_W_S_DOWN_CH1_RL_HBM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_E_S_DOWN_CH0_RL_HBM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_E_S_DOWN_CH1_RL_HBM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_W_N_DOWN_CH0_RL_HBM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_W_N_DOWN_CH1_RL_HBM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_E_N_DOWN_CH0_RL_HBM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_E_N_DOWN_CH1_RL_HBM_TIMEOUT, timeout);
--
--	WREG32(mmDMA_IF_W_S_DOWN_CH0_RL_HBM_EN, 1);
--	WREG32(mmDMA_IF_W_S_DOWN_CH1_RL_HBM_EN, 1);
--	WREG32(mmDMA_IF_E_S_DOWN_CH0_RL_HBM_EN, 1);
--	WREG32(mmDMA_IF_E_S_DOWN_CH1_RL_HBM_EN, 1);
--	WREG32(mmDMA_IF_W_N_DOWN_CH0_RL_HBM_EN, 1);
--	WREG32(mmDMA_IF_W_N_DOWN_CH1_RL_HBM_EN, 1);
--	WREG32(mmDMA_IF_E_N_DOWN_CH0_RL_HBM_EN, 1);
--	WREG32(mmDMA_IF_E_N_DOWN_CH1_RL_HBM_EN, 1);
--
--	WREG32(mmDMA_IF_W_S_DOWN_CH0_RL_SRAM_SAT, sat);
--	WREG32(mmDMA_IF_W_S_DOWN_CH1_RL_SRAM_SAT, sat);
--	WREG32(mmDMA_IF_E_S_DOWN_CH0_RL_SRAM_SAT, sat);
--	WREG32(mmDMA_IF_E_S_DOWN_CH1_RL_SRAM_SAT, sat);
--	WREG32(mmDMA_IF_W_N_DOWN_CH0_RL_SRAM_SAT, sat);
--	WREG32(mmDMA_IF_W_N_DOWN_CH1_RL_SRAM_SAT, sat);
--	WREG32(mmDMA_IF_E_N_DOWN_CH0_RL_SRAM_SAT, sat);
--	WREG32(mmDMA_IF_E_N_DOWN_CH1_RL_SRAM_SAT, sat);
--
--	WREG32(mmDMA_IF_W_S_DOWN_CH0_RL_SRAM_RST, rst);
--	WREG32(mmDMA_IF_W_S_DOWN_CH1_RL_SRAM_RST, rst);
--	WREG32(mmDMA_IF_E_S_DOWN_CH0_RL_SRAM_RST, rst);
--	WREG32(mmDMA_IF_E_S_DOWN_CH1_RL_SRAM_RST, rst);
--	WREG32(mmDMA_IF_W_N_DOWN_CH0_RL_SRAM_RST, rst);
--	WREG32(mmDMA_IF_W_N_DOWN_CH1_RL_SRAM_RST, rst);
--	WREG32(mmDMA_IF_E_N_DOWN_CH0_RL_SRAM_RST, rst);
--	WREG32(mmDMA_IF_E_N_DOWN_CH1_RL_SRAM_RST, rst);
--
--	WREG32(mmDMA_IF_W_S_DOWN_CH0_RL_SRAM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_W_S_DOWN_CH1_RL_SRAM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_E_S_DOWN_CH0_RL_SRAM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_E_S_DOWN_CH1_RL_SRAM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_W_N_DOWN_CH0_RL_SRAM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_W_N_DOWN_CH1_RL_SRAM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_E_N_DOWN_CH0_RL_SRAM_TIMEOUT, timeout);
--	WREG32(mmDMA_IF_E_N_DOWN_CH1_RL_SRAM_TIMEOUT, timeout);
--
--	WREG32(mmDMA_IF_W_S_DOWN_CH0_RL_SRAM_EN, 1);
--	WREG32(mmDMA_IF_W_S_DOWN_CH1_RL_SRAM_EN, 1);
--	WREG32(mmDMA_IF_E_S_DOWN_CH0_RL_SRAM_EN, 1);
--	WREG32(mmDMA_IF_E_S_DOWN_CH1_RL_SRAM_EN, 1);
--	WREG32(mmDMA_IF_W_N_DOWN_CH0_RL_SRAM_EN, 1);
--	WREG32(mmDMA_IF_W_N_DOWN_CH1_RL_SRAM_EN, 1);
--	WREG32(mmDMA_IF_E_N_DOWN_CH0_RL_SRAM_EN, 1);
--	WREG32(mmDMA_IF_E_N_DOWN_CH1_RL_SRAM_EN, 1);
--}
--
- static void gaudi_init_golden_registers(struct hl_device *hdev)
- {
- 	u32 tpc_offset;
-@@ -1817,8 +1698,6 @@ static void gaudi_init_golden_registers(struct hl_device *hdev)
+diff --git a/drivers/misc/habanalabs/gaudi/gaudiP.h b/drivers/misc/habanalabs/gaudi/gaudiP.h
+index a46530d375fa..76c3f840e05a 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudiP.h
++++ b/drivers/misc/habanalabs/gaudi/gaudiP.h
+@@ -57,6 +57,12 @@
  
- 	gaudi_init_hbm_cred(hdev);
+ #define GAUDI_DEFAULT_CARD_NAME		"HL2000"
  
--	gaudi_init_rate_limiter(hdev);
--
- 	gaudi_disable_clock_gating(hdev);
++#define GAUDI_MAX_PENDING_CS		1024
++
++#if !IS_MAX_PENDING_CS_VALID(GAUDI_MAX_PENDING_CS)
++#error "GAUDI_MAX_PENDING_CS must be power of 2 and greater than 1"
++#endif
++
+ #define PCI_DMA_NUMBER_OF_CHNLS		3
+ #define HBM_DMA_NUMBER_OF_CHNLS		5
+ #define DMA_NUMBER_OF_CHNLS		(PCI_DMA_NUMBER_OF_CHNLS + \
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 0d2952bb58df..e872099a3f7a 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -426,6 +426,8 @@ void goya_get_fixed_properties(struct hl_device *hdev)
  
- 	for (tpc_id = 0, tpc_offset = 0;
-@@ -1839,9 +1718,6 @@ static void gaudi_init_golden_registers(struct hl_device *hdev)
- 	WREG32(mmMME1_CTRL_EUS_ROLLUP_CNT_ADD, 3);
- 	WREG32(mmMME2_CTRL_EUS_ROLLUP_CNT_ADD, 3);
- 	WREG32(mmMME3_CTRL_EUS_ROLLUP_CNT_ADD, 3);
--
--	/* WA for H3-2081 */
--	WREG32(mmPCIE_WRAP_MAX_OUTSTAND, 0x10ff);
+ 	strncpy(prop->armcp_info.card_name, GOYA_DEFAULT_CARD_NAME,
+ 		CARD_NAME_MAX_LEN);
++
++	prop->max_pending_cs = GOYA_MAX_PENDING_CS;
  }
  
- static void gaudi_init_pci_dma_qman(struct hl_device *hdev, int dma_id,
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index 8652c7e5d7f1..f38664b03865 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -238,7 +238,6 @@ static void set_driver_behavior_per_device(struct hl_device *hdev)
- 	hdev->axi_drain = 0;
- 	hdev->sram_scrambler_enable = 1;
- 	hdev->dram_scrambler_enable = 1;
--	hdev->rl_enable = 1;
- 	hdev->bmc_enable = 1;
- 	hdev->hard_reset_on_fw_events = 1;
- }
+ /*
+diff --git a/drivers/misc/habanalabs/goya/goyaP.h b/drivers/misc/habanalabs/goya/goyaP.h
+index d36f8d90c9c9..9d8a1761252d 100644
+--- a/drivers/misc/habanalabs/goya/goyaP.h
++++ b/drivers/misc/habanalabs/goya/goyaP.h
+@@ -57,6 +57,12 @@
+ 
+ #define GOYA_DEFAULT_CARD_NAME		"HL1000"
+ 
++#define GOYA_MAX_PENDING_CS		64
++
++#if !IS_MAX_PENDING_CS_VALID(GOYA_MAX_PENDING_CS)
++#error "GOYA_MAX_PENDING_CS must be power of 2 and greater than 1"
++#endif
++
+ /* DRAM Memory Map */
+ 
+ #define CPU_FW_IMAGE_SIZE		0x10000000	/* 256MB */
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 1ecdcf8b763a..64d9b2dd3e19 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -42,9 +42,6 @@
+ 
+ #define HL_MAX_QUEUES			128
+ 
+-/* MUST BE POWER OF 2 and larger than 1 */
+-#define HL_MAX_PENDING_CS		64
+-
+ #define HL_IDLE_BUSY_TS_ARR_SIZE	4096
+ 
+ /* Memory */
+@@ -61,6 +58,9 @@
+ 
+ #define HL_MAX_SOB_VAL			(1 << 15)
+ 
++#define IS_POWER_OF_2(n)		(n != 0 && ((n & (n - 1)) == 0))
++#define IS_MAX_PENDING_CS_VALID(n)	(IS_POWER_OF_2(n) && (n > 1))
++
+ /**
+  * struct pgt_info - MMU hop page info.
+  * @node: hash linked-list node for the pgts shadow hash of pgts.
+@@ -285,6 +285,7 @@ struct asic_fixed_properties {
+ 	u32				high_pll;
+ 	u32				cb_pool_cb_cnt;
+ 	u32				cb_pool_cb_size;
++	u32				max_pending_cs;
+ 	u8				tpc_enabled_mask;
+ 	u8				completion_queues_count;
+ };
+@@ -782,7 +783,7 @@ struct hl_ctx {
+ 	struct hl_fpriv		*hpriv;
+ 	struct hl_device	*hdev;
+ 	struct kref		refcount;
+-	struct dma_fence	*cs_pending[HL_MAX_PENDING_CS];
++	struct dma_fence	**cs_pending;
+ 	struct hl_va_range	*host_va_range;
+ 	struct hl_va_range	*host_huge_va_range;
+ 	struct hl_va_range	*dram_va_range;
+diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
+index f4434b39ef1b..29b96d24edc2 100644
+--- a/drivers/misc/habanalabs/hw_queue.c
++++ b/drivers/misc/habanalabs/hw_queue.c
+@@ -376,7 +376,7 @@ static void hw_queue_schedule_job(struct hl_cs_job *job)
+ 	 * write address offset in the SM block (QMAN LBW message).
+ 	 * The write address offset is calculated as "COMP_OFFSET << 2".
+ 	 */
+-	offset = job->cs->sequence & (HL_MAX_PENDING_CS - 1);
++	offset = job->cs->sequence & (hdev->asic_prop.max_pending_cs - 1);
+ 	ctl = ((offset << BD_CTL_COMP_OFFSET_SHIFT) & BD_CTL_COMP_OFFSET_MASK) |
+ 		((q->pi << BD_CTL_COMP_DATA_SHIFT) & BD_CTL_COMP_DATA_MASK);
+ 
 -- 
 2.17.1
 
