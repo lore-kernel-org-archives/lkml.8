@@ -2,175 +2,126 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5032DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53537C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9AE2078D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:04:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mhkQFSPq"
+	by mail.kernel.org (Postfix) with ESMTP id 2BD5E208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592337955;
+	bh=9S2l7F1bJLuoWduI/Oax+k4EarI3OHINr4Tj9mZDTh4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ebBF0iXqykkmLbMqJZgSU8sDssc95h0gYchc/hie/ph/ySMH2En/zS8809TbqtOFy
+	 EmODrP5+EZ1RLmJCUTnZWprrsar0Z4MRpkZLrD45rr/ek9i8/t+OpEZkNxyJrVRTcp
+	 362r3S/ADOzLMOcfRm9VWsgNlvVzCh8/8GRdc/PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbgFPUED (ORCPT
+        id S1731342AbgFPUFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731513AbgFPUEB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:04:01 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFB1C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:04:00 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id h10so42695pgq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PcKcTI71/72Z5LusZBKeuvf2zDZMH6lCdqMCjtZxjwc=;
-        b=mhkQFSPqCeGpOT0cbLkwdiGHPXeN7e9QIZLrglRjXTVOQifhguxDV02anrCqwxtl7h
-         4N48CTPDGYlTGp6UphGBwN+Y5IPbJEI4OPBTBxvoImbA96C64tRGa1diHs+he0JiOfQH
-         QGSm/1M4IBXVEaqOpIwXn8e1IQrEw5hfTRTGxaO6X8kIydnz+Vpy6l5ycOLnV5TmDK5d
-         aLt1CQ+yDvEdhwTmhqd3X126epigpwW/ypD1cHwWEC6Vzjs90XQdyoweV9FI/25F0CuQ
-         ttV3D3Yp/VdEd8bV7cH6uJUJpG08MqUEtyA7qqsFYHCYocWWlw+8vGgr+AMhjC9maPIv
-         mbpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PcKcTI71/72Z5LusZBKeuvf2zDZMH6lCdqMCjtZxjwc=;
-        b=CwefbmgiYMbsJkUgQtHA2e6A7OrNFn6aJ+TK6EBaBE2RNTdGR1BciiQMQZuBSbEiPD
-         k86fNBCcwaxb8hRqax2XOK2oVN+IcYpvnc6SOR4sAjG6SEjcMm5DKOrI2nQ2r8FKX1rI
-         Lw+YzFSn/me0U2rsqj7LodCUJed9ve3MVjcZjCBJlDmY1SKqc0tHKR8ebiGbM9bAgWuf
-         tTVVw+WfiQ91nBGAWBJaU+rvrz5tt4XSnV/1OqSyXJKO9OxbUqAfxhFuI05dk6fvkeIH
-         fIT+e5JrXiUtbD2ULshM4lB6GQH5EPiW27Z1v80vGxE0E+qsVrT+FnrUDvsycdh4tZns
-         HTsA==
-X-Gm-Message-State: AOAM532LsBqJ95S0PweJRiMAirX2N08ublFLDiMTW2hettJSV8uhPW37
-        nY0L+2MZWb3wDTOtU/0mAs8SmUvGBwZpK7tdeYM+4g==
-X-Google-Smtp-Source: ABdhPJw8ocFg3s1TY82EK5borDAuqQjIW4etwVrp+zuqvsNl5PYp2Dxf8c3z8vk9md9yQDxs5xkUIFheF5n3JER+IdU=
-X-Received: by 2002:a63:d04b:: with SMTP id s11mr3190992pgi.384.1592337839520;
- Tue, 16 Jun 2020 13:03:59 -0700 (PDT)
+        Tue, 16 Jun 2020 16:05:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728144AbgFPUFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 16:05:52 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8410208B3;
+        Tue, 16 Jun 2020 20:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592337952;
+        bh=9S2l7F1bJLuoWduI/Oax+k4EarI3OHINr4Tj9mZDTh4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CUS/ORZplp+jgX29dZTDOoF6PiKCnPuGsSd+bWgZfVCW4LxzpyoJ0P877fMuf1jM/
+         3jiT/99zbk9Z1n0wx1uoDpjOR7Eqst7K4YAAjt17ofPAS6BecitS1kk6Ik4WajzSZv
+         2khhiUurye85ZDXpUUJRwzq9/vpE/RZisXaA5OxQ=
+Date:   Tue, 16 Jun 2020 15:05:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de
+Subject: Re: [Patch v1 2/3] PCI: prevent work_on_cpu's probe to execute on
+ isolated CPUs
+Message-ID: <20200616200550.GA1977307@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
- <CABVgOSkrKHs_uWLZ++_fBC_mfe3RgDxmCvnkcyn1P_wjXTV9Og@mail.gmail.com> <CY4PR13MB11756803217A9D20456E826FFD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
-In-Reply-To: <CY4PR13MB11756803217A9D20456E826FFD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 16 Jun 2020 13:03:48 -0700
-Message-ID: <CAFd5g458XTDftQAOm-K4Squ5-ZuZnZcFdVUG0JtUWF56cODOVg@mail.gmail.com>
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     David Gow <davidgow@google.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610161226.424337-3-nitesh@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:34 AM Bird, Tim <Tim.Bird@sony.com> wrote:
->
-> > -----Original Message-----
-> > From: David Gow <davidgow@google.com>
-> >
-> > On Thu, Jun 11, 2020 at 2:11 AM Bird, Tim <Tim.Bird@sony.com> wrote:
-[...]
-> > KUnit is currently outputting "TAP version 14", as we were hoping some
-> > of our changes would get into the TAP14 spec. (Any comments, Brendan?)
-> > Maybe this should end up saying "KTAP version 1" or something?
->
-> I don't know if this will break any existing results parsers or not.
-> I hesitate to use "TAP version 14", as TAP appears to be a dormant
-> initiative at the moment, and there's no guarantee that the kernel's
-> changes will get adopted into an official spec.
+"git log --oneline drivers/pci/pci-driver.c" tells you that the
+subject should be something like:
 
-We were using "TAP version 14" since the "extensions" we are using
-were all proposed among the TAP people to go into the next version of
-TAP. Based on discussions among them they seem to like the subtest
-stuff:
+  PCI: Restrict probe functions to housekeeping CPUs
 
-https://github.com/TestAnything/testanything.github.io/pull/36
+On Wed, Jun 10, 2020 at 12:12:25PM -0400, Nitesh Narayan Lal wrote:
+> From: Alex Belits <abelits@marvell.com>
+> 
+> pci_call_probe() prevents the nesting of work_on_cpu()
+> for a scenario where a VF device is probed from work_on_cpu()
+> of the Physical device.
+> This patch replaces the cpumask used in pci_call_probe()
+> from all online CPUs to only housekeeping CPUs. This is to
+> ensure that there are no additional latency overheads
+> caused due to the pinning of jobs on isolated CPUs.
 
-Anyway, I can still appreciate that they might change their minds.
+s/Physical/PF/ (since you used "VF" earlier, this should match that)
 
-> If we are a strict super-set of TAP, then I suppose we could just
-> start using TAP version 14, and unilaterally declare that our changes
-> make a new spec.  But since we don't control the web site this feels
-> like a hostile takeover.
+s/This patch replaces/Replace the/
 
-I just thought it was okay because it was already in their proposed
-TAP14 spec, but yeah, if we just decide amongst ourselves to use it,
-we should probably do something else.
+Please rewrap this to fill a 75 column line (so it doesn't overflow 80
+columns when "git log" adds 4 spaces).
 
-> I'm most comfortable with calling our thing KTAP, and just
-> referencing TAP as inspiration.  I don't have a strong opinion on
+This should be two paragraphs; add a blank line between them.
 
-I am cool with that.
+> Signed-off-by: Alex Belits <abelits@marvell.com>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
 
-> KTAP vs TAP, but I do feel strongly that kselftest and kunit should use the
-> same version line (if we can get them to use the same conventions).
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Yeah, I agree: it would be better if there was just one version of
-(K)TAP in the kernel.
-
-> > > Test plan line
-> > > --------------
-> > > The test plan indicates the number of individual test cases intended to
-> > > be executed by the test. It always starts with "1.." and is followed
-> > > by the number of tests cases.  In the example above, 1..1", indicates
-> > > that this test reports only 1 test case.
-> > >
-> > > The test plan line can be placed in two locations:
-> > >  * the second line of test output, when the number of test cases is known
-> > >    in advance
-> > >  * as the last line of test output, when the number of test cases is not
-> > >    known in advance.
-> > >
-> > > Most often, the number of test cases is known in advance, and the test plan
-> > > line appears as the second line of test output, immediately following
-> > > the output version line.  The number of test cases might not be known
-> > > in advance if the number of tests is calculated from runtime data.
-> > > In this case, the test plan line is emitted as the last line of test
-> > > output.
-> >
-> > KUnit is currently including the test plan line only for subtests, as
-> > the current version doesn't actually know how many test suites will
-> > run in advance.
-> > This is something there's work underway to fix, though.
-> Sounds good.  You can just put the line at the bottom if it's
-> obnoxious to calculate ahead of time.
-
-I thought that is not in the TAP spec?
-
-I kind of like printing out ahead of time how many tests we expect to
-run, so if we crash we know how many tests weren't run.
-
-In any case, until we get the change in that David is referencing, we
-cannot print out the test plan for the "super test" before or after
-because KUnit doesn't know when it is "done". So moving it to the
-bottom doesn't really help us.
-
-> Does this mean that KUnit treats each sub-test as an individual test case
-> of the "super-test"?
-
-Yes.
-
-At the top level, we have all test suites. Each subtest in TAP is a
-test suite in KUnit. Each case in each subtest in TAP is a test case
-in KUnit.
-
-> In results summaries for a super-test, are all sub-test cases counted,
-> or just the list of sub-tests?
-
-Just the sub-tests. Each subtest is responsible for counting it's own cases:
-
-https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#subtests
-
-Cheers
+> ---
+>  drivers/pci/pci-driver.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index da6510af1221..449466f71040 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/string.h>
+>  #include <linux/slab.h>
+>  #include <linux/sched.h>
+> +#include <linux/sched/isolation.h>
+>  #include <linux/cpu.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/suspend.h>
+> @@ -333,6 +334,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+>  			  const struct pci_device_id *id)
+>  {
+>  	int error, node, cpu;
+> +	int hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
+>  	struct drv_dev_and_id ddi = { drv, dev, id };
+>  
+>  	/*
+> @@ -353,7 +355,8 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+>  	    pci_physfn_is_probed(dev))
+>  		cpu = nr_cpu_ids;
+>  	else
+> -		cpu = cpumask_any_and(cpumask_of_node(node), cpu_online_mask);
+> +		cpu = cpumask_any_and(cpumask_of_node(node),
+> +				      housekeeping_cpumask(hk_flags));
+>  
+>  	if (cpu < nr_cpu_ids)
+>  		error = work_on_cpu(cpu, local_pci_probe, &ddi);
+> -- 
+> 2.18.4
+> 
