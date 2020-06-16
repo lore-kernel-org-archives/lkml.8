@@ -2,91 +2,108 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B97B207D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B56206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgFPBAG (ORCPT
+        id S1726703AbgFPBFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:00:06 -0400
-Received: from mga14.intel.com ([192.55.52.115]:49269 "EHLO mga14.intel.com"
+        Mon, 15 Jun 2020 21:05:24 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:50594 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbgFPBAG (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 21:00:06 -0400
-IronPort-SDR: uaJChRE/DjNPX6dkt1XG5rLJeV8zFAYjFhjMnPOpqq+exQqfEVfXefJ+XERi7edxyv4Kuo7bNe
- IXSXGQX573ow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 18:00:03 -0700
-IronPort-SDR: E4i51lK6Nnfius5or4vA0k8B+UlwlkpyeAfovOKQavxW0WzkdYhSuhtWbgskWoGSdk9aPGYy73
- tT/hLaq3rh5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,516,1583222400"; 
-   d="scan'208";a="382712297"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2020 18:00:00 -0700
-Subject: Re: [PATCH 0/2] Update CascadelakeX and SkylakeX events list
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200603021818.27028-1-yao.jin@linux.intel.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <911b4132-d1a1-f3c4-a2ed-2fcfe9a28fc6@linux.intel.com>
-Date:   Tue, 16 Jun 2020 08:59:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1726369AbgFPBFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 21:05:24 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jl02A-0005jD-Qw; Tue, 16 Jun 2020 11:05:03 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 16 Jun 2020 11:05:02 +1000
+Date:   Tue, 16 Jun 2020 11:05:02 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org
+Subject: Re: linux-next: build failures after merge of the vfs tree
+Message-ID: <20200616010502.GA28834@gondor.apana.org.au>
+References: <20200616103330.2df51a58@canb.auug.org.au>
+ <20200616103440.35a80b4b@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200603021818.27028-1-yao.jin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616103440.35a80b4b@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andi,
+On Tue, Jun 16, 2020 at 10:34:40AM +1000, Stephen Rothwell wrote:
+> [Just adding Herbert to cc]
+> 
+> On Tue, 16 Jun 2020 10:33:30 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> > 
+> > After merging the vfs tree, today's linux-next build (x86_64 allmodconfig)
+> > failed like this:
 
-Can I get an ACK for this patchset?
+Thanks Stephen, here is an incremental patch to fix these up.
 
-Thanks
-Jin Yao
+---8<---
+Because linux/uio.h included crypto/hash.h a number of header
+files that should have been included weren't.  This patch adds
+linux/slab.h where kmalloc/kfree are used, as well as a forward
+declaration in linux/socket.h for struct file.
 
-On 6/3/2020 10:18 AM, Jin Yao wrote:
-> This patchset updates CascadelakeX events to v1.08 and
-> updates SkylakeX events to v1.21.
-> 
-> The events have been tested on CascadelakeX and SkylakeX
-> servers with latest perf/core branch.
-> 
-> Jin Yao (2):
->    perf vendor events: Update CascadelakeX events to v1.08
->    perf vendor events: Update SkylakeX events to v1.21
-> 
->   .../arch/x86/cascadelakex/cache.json          |   28 +-
->   .../arch/x86/cascadelakex/clx-metrics.json    |  153 +-
->   .../arch/x86/cascadelakex/frontend.json       |   34 +
->   .../arch/x86/cascadelakex/memory.json         |  704 ++---
->   .../arch/x86/cascadelakex/other.json          | 1100 ++++----
->   .../arch/x86/cascadelakex/pipeline.json       |   10 -
->   .../arch/x86/cascadelakex/uncore-other.json   |   21 +
->   .../pmu-events/arch/x86/skylakex/cache.json   | 2348 +++++++++--------
->   .../arch/x86/skylakex/floating-point.json     |   96 +-
->   .../arch/x86/skylakex/frontend.json           |  656 ++---
->   .../pmu-events/arch/x86/skylakex/memory.json  | 1977 +++++++-------
->   .../pmu-events/arch/x86/skylakex/other.json   |  172 +-
->   .../arch/x86/skylakex/pipeline.json           | 1206 +++++----
->   .../arch/x86/skylakex/skx-metrics.json        |  141 +-
->   .../arch/x86/skylakex/uncore-memory.json      |   26 +-
->   .../arch/x86/skylakex/uncore-other.json       |  730 ++++-
->   .../arch/x86/skylakex/virtual-memory.json     |  358 +--
->   17 files changed, 5198 insertions(+), 4562 deletions(-)
-> 
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 	f0187db056dc ("iov_iter: Move unnecessary inclusion of...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/drivers/dma/st_fdma.c b/drivers/dma/st_fdma.c
+index 67087dbe2f9f..962b6e05287b 100644
+--- a/drivers/dma/st_fdma.c
++++ b/drivers/dma/st_fdma.c
+@@ -15,6 +15,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/interrupt.h>
+ #include <linux/remoteproc.h>
++#include <linux/slab.h>
+ 
+ #include "st_fdma.h"
+ 
+diff --git a/drivers/dma/uniphier-xdmac.c b/drivers/dma/uniphier-xdmac.c
+index 7b2f8a8c2d31..16b19654873d 100644
+--- a/drivers/dma/uniphier-xdmac.c
++++ b/drivers/dma/uniphier-xdmac.c
+@@ -12,6 +12,7 @@
+ #include <linux/of.h>
+ #include <linux/of_dma.h>
+ #include <linux/platform_device.h>
++#include <linux/slab.h>
+ 
+ #include "dmaengine.h"
+ #include "virt-dma.h"
+diff --git a/include/linux/socket.h b/include/linux/socket.h
+index 04d2bc97f497..e9cb30d8cbfb 100644
+--- a/include/linux/socket.h
++++ b/include/linux/socket.h
+@@ -10,6 +10,7 @@
+ #include <linux/compiler.h>		/* __user			*/
+ #include <uapi/linux/socket.h>
+ 
++struct file;
+ struct pid;
+ struct cred;
+ struct socket;
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
