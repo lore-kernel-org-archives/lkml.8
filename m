@@ -2,185 +2,241 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F41C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8352C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F122082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895D7208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:24:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BquU+tpQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpIFTC7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbgFPPWk (ORCPT
+        id S1729616AbgFPPYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:22:40 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:47596 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728919AbgFPPWk (ORCPT
+        Tue, 16 Jun 2020 11:24:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43878 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728861AbgFPPYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:22:40 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7571620B4780;
-        Tue, 16 Jun 2020 08:22:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7571620B4780
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1592320959;
-        bh=bYENIh5GedrqWYBC1j3ZP9ozD3HNqpdatcHseK3/Bhc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BquU+tpQEmnqTALGYHLqisl8YefG8C6psRehVL+11NSxeC/A+i+j/KRlONbn42HyY
-         S8zxr2Sg1B4Ckll8k8yTThERyNooYDF7lEiDulR4/3JiIMzOBAo5HIyUgfOSBCWK/L
-         0xyZbVWkbDN0oiDppCGPKDblFxZ7zLFCwpnyETOU=
-Date:   Tue, 16 Jun 2020 10:22:28 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Matthew Garrett <mjg59@google.com>,
-        Peter Jones <pjones@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200616152228.GA1409697@sequoia>
-References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
- <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
+        Tue, 16 Jun 2020 11:24:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592321062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QCt56TgF5Tw5yluNgtWn5zzCa00ineAmOgTzmQ5THbs=;
+        b=KpIFTC7OT9kHswMp43KnY194WMhmGuNMAP2d+/M9EIwhKEQQGGY39KhBX4ryzI3o3Fdw6z
+        C8bWHp5zOJsYXEaHLmsGSpo6vCfKlgoGkWRclvspCGDmA8qyEBKYgbUL+WvWy6VYGJec/w
+        dbhQgzV6fuqzqm32h4dLS8fzEzXAz98=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-6Zy_LUz4NfOwreYe1GF3Qw-1; Tue, 16 Jun 2020 11:24:20 -0400
+X-MC-Unique: 6Zy_LUz4NfOwreYe1GF3Qw-1
+Received: by mail-qk1-f200.google.com with SMTP id l6so17067305qkk.14
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:24:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QCt56TgF5Tw5yluNgtWn5zzCa00ineAmOgTzmQ5THbs=;
+        b=fWk2Ugrvi8Dh3Z/zugftoLRa8MpXa2wiMa6lFWD4ge7n+TgRwxvC/dF/2XcQb3xxMN
+         TwyduUlgmOQJRUjoI57bhiAhZtSCvXUdV/WL3BigPl/B5rRTj5/UVbXP+NpENVtjfrgG
+         /Pchn1KoUIOe1ZLKSWG3wkrcasCqOhXQMN+7jCk4EJXy3/VEk8KEifCNsVuACyB5Hry5
+         FoU/TEWyoFV1Di/uCB7caeCRAWRSLHlRLrGCOXBs29qslj4yR4FWduRtKuNpqhp44KIc
+         Q7v+vmDezQQ4uYhy7Rf5wjaYYj/aF+XpPND8F8fPTUgMwsR/bQO72xXUO0BSKy/qPCh3
+         UO8g==
+X-Gm-Message-State: AOAM532KigouwwKMFoNBfNI3GYf+kjZAq4++MQYkdrKMUR0NxdGEg6HL
+        CySXTyxL+oudHphJk3ww9Y96ce4oHF52X5Uxlc5t2UrvkOcOrCCR3+2x2aTqnBZvRq62B8hRuyq
+        NKlxadVhlXh0xNmXWJK4uJOxjcnF0/2IC3h9vTBz6
+X-Received: by 2002:ac8:6f79:: with SMTP id u25mr21947988qtv.183.1592321059656;
+        Tue, 16 Jun 2020 08:24:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyFMDdrqK/OlOW77u7x1PWyKbJBzCxu+e2KyoDT0Uqm3C6a8PEU1QsN17lAMeGw4S6IidaoGZ0gOCmD+8ixV1g=
+X-Received: by 2002:ac8:6f79:: with SMTP id u25mr21947954qtv.183.1592321059329;
+ Tue, 16 Jun 2020 08:24:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
+References: <20200610113515.1497099-1-mst@redhat.com> <20200610113515.1497099-4-mst@redhat.com>
+ <CAJaqyWdGKh5gSTndGuVPyJSgt3jfjfW4xNCrJ2tQ9f+mD8=sMQ@mail.gmail.com>
+ <20200610111147-mutt-send-email-mst@kernel.org> <CAJaqyWe6d19hFAbpqaQqOPuQQmBQyevyF4sTVkaXKhD729XDkw@mail.gmail.com>
+ <20200611072702-mutt-send-email-mst@kernel.org> <26bef3f07277b028034c019e456b4f236078c5fb.camel@redhat.com>
+In-Reply-To: <26bef3f07277b028034c019e456b4f236078c5fb.camel@redhat.com>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Tue, 16 Jun 2020 17:23:43 +0200
+Message-ID: <CAJaqyWeX7knekVPcsZ2+AAf8zvZhPvt46fZncAsLhwYJ3eUa1g@mail.gmail.com>
+Subject: Re: [PATCH RFC v7 03/14] vhost: use batched get_vq_desc version
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-16 11:08:38, Ard Biesheuvel wrote:
-> (cc Matthew and Peter)
+On Mon, Jun 15, 2020 at 6:05 PM Eugenio P=C3=A9rez <eperezma@redhat.com> wr=
+ote:
+>
+> On Thu, 2020-06-11 at 07:30 -0400, Michael S. Tsirkin wrote:
+> > On Wed, Jun 10, 2020 at 06:18:32PM +0200, Eugenio Perez Martin wrote:
+> > > On Wed, Jun 10, 2020 at 5:13 PM Michael S. Tsirkin <mst@redhat.com> w=
+rote:
+> > > > On Wed, Jun 10, 2020 at 02:37:50PM +0200, Eugenio Perez Martin wrot=
+e:
+> > > > > > +/* This function returns a value > 0 if a descriptor was found=
+, or 0 if none were found.
+> > > > > > + * A negative code is returned on error. */
+> > > > > > +static int fetch_descs(struct vhost_virtqueue *vq)
+> > > > > > +{
+> > > > > > +       int ret;
+> > > > > > +
+> > > > > > +       if (unlikely(vq->first_desc >=3D vq->ndescs)) {
+> > > > > > +               vq->first_desc =3D 0;
+> > > > > > +               vq->ndescs =3D 0;
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       if (vq->ndescs)
+> > > > > > +               return 1;
+> > > > > > +
+> > > > > > +       for (ret =3D 1;
+> > > > > > +            ret > 0 && vq->ndescs <=3D vhost_vq_num_batch_desc=
+s(vq);
+> > > > > > +            ret =3D fetch_buf(vq))
+> > > > > > +               ;
+> > > > >
+> > > > > (Expanding comment in V6):
+> > > > >
+> > > > > We get an infinite loop this way:
+> > > > > * vq->ndescs =3D=3D 0, so we call fetch_buf() here
+> > > > > * fetch_buf gets less than vhost_vq_num_batch_descs(vq); descript=
+ors. ret =3D 1
+> > > > > * This loop calls again fetch_buf, but vq->ndescs > 0 (and avail_=
+vq =3D=3D
+> > > > > last_avail_vq), so it just return 1
+> > > >
+> > > > That's what
+> > > >          [PATCH RFC v7 08/14] fixup! vhost: use batched get_vq_desc=
+ version
+> > > > is supposed to fix.
+> > > >
+> > >
+> > > Sorry, I forgot to include that fixup.
+> > >
+> > > With it I don't see CPU stalls, but with that version latency has
+> > > increased a lot and I see packet lost:
+> > > + ping -c 5 10.200.0.1
+> > > PING 10.200.0.1 (10.200.0.1) 56(84) bytes of data.
+> > > > From 10.200.0.2 icmp_seq=3D1 Destination Host Unreachable
+> > > > From 10.200.0.2 icmp_seq=3D2 Destination Host Unreachable
+> > > > From 10.200.0.2 icmp_seq=3D3 Destination Host Unreachable
+> > > 64 bytes from 10.200.0.1: icmp_seq=3D5 ttl=3D64 time=3D6848 ms
+> > >
+> > > --- 10.200.0.1 ping statistics ---
+> > > 5 packets transmitted, 1 received, +3 errors, 80% packet loss, time 7=
+6ms
+> > > rtt min/avg/max/mdev =3D 6848.316/6848.316/6848.316/0.000 ms, pipe 4
+> > > --
+> > >
+> > > I cannot even use netperf.
+> >
+> > OK so that's the bug to try to find and fix I think.
+> >
+> >
+> > > If I modify with my proposed version:
+> > > + ping -c 5 10.200.0.1
+> > > PING 10.200.0.1 (10.200.0.1) 56(84) bytes of data.
+> > > 64 bytes from 10.200.0.1: icmp_seq=3D1 ttl=3D64 time=3D7.07 ms
+> > > 64 bytes from 10.200.0.1: icmp_seq=3D2 ttl=3D64 time=3D0.358 ms
+> > > 64 bytes from 10.200.0.1: icmp_seq=3D3 ttl=3D64 time=3D5.35 ms
+> > > 64 bytes from 10.200.0.1: icmp_seq=3D4 ttl=3D64 time=3D2.27 ms
+> > > 64 bytes from 10.200.0.1: icmp_seq=3D5 ttl=3D64 time=3D0.426 ms
+> >
+> > Not sure which version this is.
+> >
+> > > [root@localhost ~]# netperf -H 10.200.0.1 -p 12865 -l 10 -t TCP_STREA=
+M
+> > > MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to
+> > > 10.200.0.1 () port 0 AF_INET
+> > > Recv   Send    Send
+> > > Socket Socket  Message  Elapsed
+> > > Size   Size    Size     Time     Throughput
+> > > bytes  bytes   bytes    secs.    10^6bits/sec
+> > >
+> > > 131072  16384  16384    10.01    4742.36
+> > > [root@localhost ~]# netperf -H 10.200.0.1 -p 12865 -l 10 -t UDP_STREA=
+M
+> > > MIGRATED UDP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to
+> > > 10.200.0.1 () port 0 AF_INET
+> > > Socket  Message  Elapsed      Messages
+> > > Size    Size     Time         Okay Errors   Throughput
+> > > bytes   bytes    secs            #      #   10^6bits/sec
+> > >
+> > > 212992   65507   10.00        9214      0     482.83
+> > > 212992           10.00        9214            482.83
+> > >
+> > > I will compare with the non-batch version for reference, but the
+> > > difference between the two is noticeable. Maybe it's worth finding a
+> > > good value for the if() inside fetch_buf?
+> > >
+> > > Thanks!
+> > >
+> >
+> > I don't think it's performance, I think it's a bug somewhere,
+> > e.g. maybe we corrupt a packet, or stall the queue, or
+> > something like this.
+> >
+> > Let's do this, I will squash the fixups and post v8 so you can bisect
+> > and then debug cleanly.
+>
+> Ok, so if we apply the patch proposed in v7 08/14 (Or the version 8 of th=
+e patchset sent), this is what happens:
+>
+> 1. Userland (virtio_test in my case) introduces just one buffer in vq, an=
+d it kicks
+> 2. vhost module reaches fetch_descs, called from vhost_get_vq_desc. From =
+there we call fetch_buf in a for loop.
+> 3. The first time we call fetch_buf, it returns properly one buffer. Howe=
+ver, the second time we call it, it returns 0
+> because vq->avail_idx =3D=3D vq->last_avail_idx and vq->avail_idx =3D=3D =
+last_avail_idx code path.
+> 4. fetch_descs assign ret =3D 0, so it returns 0. vhost_get_vq_desc will =
+goto err, and it will signal no new buffer
+> (returning vq->num).
+>
+> So to fix it and maintain the batching maybe we could return vq->ndescs i=
+n case ret =3D=3D 0:
+>
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index c0dfb5e3d2af..5993d4f34ca9 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -2315,7 +2327,8 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+>
+>         /* On success we expect some descs */
+>         BUG_ON(ret > 0 && !vq->ndescs);
+> -       return ret;
+> +       return ret ?: vq->ndescs;
+>  }
+>
+>  /* Reverse the effects of fetch_descs */
+> --
+>
+> Another possibility could be to return different codes from fetch_buf, bu=
+t I find the suggested modification easier.
+>
+> What do you think?
+>
+> Thanks!
+>
+
+Hi!
+
+I can send a proposed RFC v9 in case it is more convenient for you.
 
 Thanks!
 
-> On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
-> >
-> > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-> > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-> > TCG_PCClientPCREvent event log header. Also require that
-> > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
-> >
-> > The TCG PC Client Platform Firmware Profile Specification section 9.1
-> > (Family "2.0", Level 00 Revision 1.04) states:
-> >
-> >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
-> >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
-> >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
-> >
-> > Section 9.4.5.1 provides this description of
-> > TCG_EfiSpecIdEvent.numberOfAlgorithms:
-> >
-> >  The number of Hash algorithms in the digestSizes field. This field MUST
-> >  be set to a value of 0x01 or greater.
-> >
-> > Enforce these restrictions, as required by the above specification, in
-> > order to better identify and ignore invalid sequences of bytes at the
-> > end of an otherwise valid TPM2 event log. Firmware doesn't always have
-> > the means necessary to inform the kernel of the actual event log size so
-> > the kernel's event log parsing code should be stringent when parsing the
-> > event log for resiliency against firmware bugs. This is true, for
-> > example, when firmware passes the event log to the kernel via a reserved
-> > memory region described in device tree.
-> >
-> 
-> When does this happen? Do we have code in mainline that does this?
-
-We do. POWER and some ARM firmware that pass the firmware event log via
-"linux,sml-base" and "linux,sml-size" properties:
-
- https://open-power.github.io/skiboot/doc/device-tree/tpm.html
-
-The "linux,sml-size" property is the size of the memory region dedicated
-to the firmware event log and not the size of the firmware event log
-itself.
-
-tpm_read_log_of() in drivers/char/tpm/eventlog/of.c is where this
-property is used. At the end of that function, log->bios_event_log_end
-is pointing at the end of the reserved memory region. That's typically
-0x10000 bytes offset from "linux,sml-base", depending on what's defined
-in the device tree source.
-
-I suspect that ACPI event log support may be implemented similarly, from
-skimming tpm_read_log_acpi() and the TCG ACPI Specification, but I don't
-know for sure.
-
-
-Anyways, you wouldn't know from reading __calc_tpm2_event_size() but the
-only thing allowing the kernel's event log parser to work on these
-systems that don't inform the kernel of the actual firmware event log
-size is the following conditional and assignment in
-__calc_tpm2_event_size():
-
-	if (event_type == 0 && event_field->event_size == 0)
-		size = 0;
-
-If that wasn't there, __calc_tpm2_event_size() would think that a 16
-byte sequence of zeroes was a valid event.
-
-> > Prior to this patch, a single bit set in the offset corresponding to
-> > either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
-> > after the last valid event log entry, could confuse the parser into
-> > thinking that an additional entry is present in the event log. This
-> > patch raises the bar on how difficult it is for stale memory to confuse
-> > the kernel's event log parser but there's still a reliance on firmware
-> > to properly initialize the remainder of the memory region reserved for
-> > the event log as the parser cannot be expected to detect a stale but
-> > otherwise properly formatted firmware event log entry.
-> >
-> > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > ---
-> 
-> I am all for stringent checks, but this could potentially break
-> measured boot on systems that are working fine today, right?
-
-Yes, I think there is some risk in breaking existing systems that aren't
-conforming to the spec. I'm no expert in this area so I can't say how
-high the risk is. I think __calc_tpm2_event_size() is only used for
-exposing the TPM2 firmware event log to userspace and then attestation
-services make use of it from there. Breakage would cause the kernel to
-not fully expose the firmware event log to userspace via
-/sys/kernel/security/tpm*/binary_bios_measurements and that could result
-in attestation failures that cause these systems to be marked as
-untrusted.
-
-I'm not in a hurry to get this merged and welcome as much feedback as
-possible on the risks involved as well as my understanding of the TCG PC
-Client Platform Firmware Profile Specification.
-
-Tyler
-
-> 
-> >  include/linux/tpm_eventlog.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-> > index 4f8c90c93c29..d83eb9fd5614 100644
-> > --- a/include/linux/tpm_eventlog.h
-> > +++ b/include/linux/tpm_eventlog.h
-> > @@ -201,7 +201,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
-> >         efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
-> >
-> >         /* Check if event is malformed. */
-> > -       if (count > efispecid->num_algs) {
-> > +       if (!efispecid->num_algs || count != efispecid->num_algs) {
-> >                 size = 0;
-> >                 goto out;
-> >         }
-> > --
-> > 2.25.1
-> >
