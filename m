@@ -7,169 +7,146 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCFF20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2C72067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B4jkvwbw"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KdHZt9Na"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731205AbgFPR3q (ORCPT
+        id S1730590AbgFPRbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:29:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50085 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729272AbgFPR3o (ORCPT
+        Tue, 16 Jun 2020 13:31:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728271AbgFPRbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:29:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592328582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=6E+BuqZiYekSOGZeHg3md2zYUVt6LXHKGPnXtAebADA=;
-        b=B4jkvwbwtHbIxFo9zAMqimCMNdTDFuxNVx/cgZLMXXOrzM89Sk2jsF4TYQ+7H5aR49dt9L
-        xNCyNHWEhfLFzUrJellGTzjuj73Bag9WXF+UDmia7sDJjQGxoy9EislKqXDErmrm3ZfPlm
-        lBSFoctSWN7cw8U3lzo/UDot8m9XEkw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-QIJ9HqGhPHanu7JBBfOShg-1; Tue, 16 Jun 2020 13:29:37 -0400
-X-MC-Unique: QIJ9HqGhPHanu7JBBfOShg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2E50E93A;
-        Tue, 16 Jun 2020 17:29:36 +0000 (UTC)
-Received: from [10.10.115.60] (ovpn-115-60.rdu2.redhat.com [10.10.115.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C350360C47;
-        Tue, 16 Jun 2020 17:29:35 +0000 (UTC)
-Subject: Re: [Patch v1] i40e: limit the msix vectors based on housekeeping
- CPUs
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, frederic@kernel.org,
-        mtosatti@redhat.com, sassmann@redhat.com,
-        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
-        jlelli@redhat.com
-References: <20200615202125.27831-1-nitesh@redhat.com>
- <20200615202125.27831-2-nitesh@redhat.com>
- <20200616080309.GA21210@infradead.org>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <c4672c15-5165-715e-a09b-e7f8b170665f@redhat.com>
-Date:   Tue, 16 Jun 2020 13:29:34 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 16 Jun 2020 13:31:19 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1277BC06174E
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:31:19 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s135so8852303pgs.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JFUWo+MiY48XJWPPKzfAjnu7zovw2GjrlHd1LDatkUI=;
+        b=KdHZt9Na9H2BvVy4TnqAAM6MCsluX1/DOyZOojU/LueEC1VqedufyiYouMxUonuloa
+         qCxaZeN2wznLC5bjslm2E85yu/5eg6LRBqJFk98+T6gpYG6Va5hU2sK5Txf+yUeCZiOx
+         knmvHOxbRkTaU53TifRPzsiJwHHmw4aWT2y2g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=JFUWo+MiY48XJWPPKzfAjnu7zovw2GjrlHd1LDatkUI=;
+        b=rkGtACNjKHj1BZ4qFg3dTTMtO32bMF3MbqRpxdusihp0unq/8pRCDW1PaWXReETyiB
+         kwY1U4lLORg6ESU25hk/Rx+HLpHJZMf6iAZELw17Ub9zkaPbHZIOwaMTScXceWtKwaKh
+         KuJ303Hi//CJYCiPXxCn8AFeAdOS7eB61x4bHafg08Fz+q9zVQ15t5I2be/1v2ozysLB
+         D7RegIMZE+6PHDqS05YP7Lighd6FAF+Jyt9hRaxP5a6K2GSatt0CDZT3PB2BURkq3trb
+         usHJpO8ABabetxiiQ8ebMwfq4ru8RC3ikbBthdbzGPnxXr5YYH5+roV3KerhDCb1+Vat
+         p7yQ==
+X-Gm-Message-State: AOAM533bh9QgRC3zeTSUKIyDE+GFbiPAAjm+n5bgvB+TxECrv6dya02J
+        DaEXUe1LepzendVYJVGNF4/9+g==
+X-Google-Smtp-Source: ABdhPJzT7jGgfpqMJ9IgTO3dypfg2xkVIHIazHYWCSMbgrj0Tdr5MxSlXhaWEouSjhLb0Sfk2BKE4Q==
+X-Received: by 2002:a63:7a56:: with SMTP id j22mr2326669pgn.293.1592328678209;
+        Tue, 16 Jun 2020 10:31:18 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id c2sm17615493pfi.71.2020.06.16.10.31.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 10:31:17 -0700 (PDT)
+Subject: Re: [PATCH v3 2/4] spi: bcm63xx-spi: allow building for BMIPS
+To:     Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200616070223.3401282-1-noltari@gmail.com>
+ <20200616070223.3401282-3-noltari@gmail.com>
+ <20200616170724.GT4447@sirena.org.uk>
+ <a6edd50d-db3f-8988-157c-ff66e2fd474a@gmail.com>
+ <20200616172534.GU4447@sirena.org.uk>
+From:   Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAG0MEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPokB
+ xAQQAQgArgUCXnQoOxcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFrZXktdXNh
+ Z2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2RpbmdAcGdw
+ LmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29tLmNvbQUb
+ AwAAAAMWAgEFHgEAAAAEFQgJCgAKCRCBMbXEKbxmoHaNB/4p5GXw2Xlk4r2J0MsUAZE4Gnfc
+ C4DtilufOGVR1K0/WhROYemyCAP+xuBj8bnQDBtZwB5ED37q4/p8DSmCnkEBjM5Cz12EZQzs
+ utQgCV1UIgzryoiDZSF2XLslzF9LOSaOiNzpBvwEYNTZ+koEW+AOHEAgS6SbV2Hob8Zc32xF
+ oQdKGwbSwcV8hS2YLL37VxKr2h8ZTtuTmhDNqxuKPzZuoAL61/4i8+BTyVZC4gUL/EUu7pG2
+ rbwhg/s8TyQWWeBz18Xiw5K148TXT0LeErmTsJSPQFMqZ6AR/nuJDQzhIUiLeq/hvBs1BIQf
+ REqNMShEnnMJfHjd8RFnGpdPk+hKuQENBFPAG8EBCACsa+9aKnvtPjGAnO1mn1hHKUBxVML2
+ C3HQaDp5iT8Q8A0ab1OS4akj75P8iXYfZOMVA0Lt65taiFtiPT7pOZ/yc/5WbKhsPE9dwysr
+ vHjHL2gP4q5vZV/RJduwzx8v9KrMZsVZlKbvcvUvgZmjG9gjPSLssTFhJfa7lhUtowFof0fA
+ q3Zy+vsy5OtEe1xs5kiahdPb2DZSegXW7DFg15GFlj+VG9WSRjSUOKk+4PCDdKl8cy0LJs+r
+ W4CzBB2ARsfNGwRfAJHU4Xeki4a3gje1ISEf+TVxqqLQGWqNsZQ6SS7jjELaB/VlTbrsUEGR
+ 1XfIn/sqeskSeQwJiFLeQgj3ABEBAAGJAkEEGAECASsFAlPAG8IFGwwAAADAXSAEGQEIAAYF
+ AlPAG8EACgkQk2AGqJgvD1UNFQgAlpN5/qGxQARKeUYOkL7KYvZFl3MAnH2VeNTiGFoVzKHO
+ e7LIwmp3eZ6GYvGyoNG8cOKrIPvXDYGdzzfwxVnDSnAE92dv+H05yanSUv/2HBIZa/LhrPmV
+ hXKgD27XhQjOHRg0a7qOvSKx38skBsderAnBZazfLw9OukSnrxXqW/5pe3mBHTeUkQC8hHUD
+ Cngkn95nnLXaBAhKnRfzFqX1iGENYRH3Zgtis7ZvodzZLfWUC6nN8LDyWZmw/U9HPUaYX8qY
+ MP0n039vwh6GFZCqsFCMyOfYrZeS83vkecAwcoVh8dlHdke0rnZk/VytXtMe1u2uc9dUOr68
+ 7hA+Z0L5IQAKCRCBMbXEKbxmoLoHCACXeRGHuijOmOkbyOk7x6fkIG1OXcb46kokr2ptDLN0
+ Ky4nQrWp7XBk9ls/9j5W2apKCcTEHONK2312uMUEryWI9BlqWnawyVL1LtyxLLpwwsXVq5m5
+ sBkSqma2ldqBu2BHXZg6jntF5vzcXkqG3DCJZ2hOldFPH+czRwe2OOsiY42E/w7NUyaN6b8H
+ rw1j77+q3QXldOw/bON361EusWHdbhcRwu3WWFiY2ZslH+Xr69VtYAoMC1xtDxIvZ96ps9ZX
+ pUPJUqHJr8QSrTG1/zioQH7j/4iMJ07MMPeQNkmj4kGQOdTcsFfDhYLDdCE5dj5WeE6fYRxE
+ Q3up0ArDSP1L
+Message-ID: <ea904b53-3f6f-da28-39f8-f811f432395a@broadcom.com>
+Date:   Tue, 16 Jun 2020 10:31:16 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200616080309.GA21210@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="9pf3HR7urvluqd3fEc2wdAjWaYVg7sq93"
+In-Reply-To: <20200616172534.GU4447@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---9pf3HR7urvluqd3fEc2wdAjWaYVg7sq93
-Content-Type: multipart/mixed; boundary="pygA5TskcUUjF4hRdVL9B6oCkba2moAGC"
-
---pygA5TskcUUjF4hRdVL9B6oCkba2moAGC
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
 
 
-On 6/16/20 4:03 AM, Christoph Hellwig wrote:
-> On Mon, Jun 15, 2020 at 04:21:25PM -0400, Nitesh Narayan Lal wrote:
->> +=09hk_flags =3D HK_FLAG_DOMAIN | HK_FLAG_WQ;
->> +=09mask =3D housekeeping_cpumask(hk_flags);
->> +=09cpus =3D cpumask_weight(mask);
-> Code like this has no business inside a driver.  Please provide a
-> proper core API for it instead.=20
+On 6/16/2020 10:25 AM, Mark Brown wrote:
+> On Tue, Jun 16, 2020 at 10:15:15AM -0700, Florian Fainelli wrote:
+>> On 6/16/2020 10:07 AM, Mark Brown wrote:
+> 
+>>> Please do not submit new versions of already applied patches, please
+>>> submit incremental updates to the existing code.  Modifying existing
+>>> commits creates problems for other users building on top of those
+>>> commits so it's best practice to only change pubished git commits if
+>>> absolutely essential.
+> 
+>> In Alvaro's defense, you applied the patches despite me requesting that
+>> specific changes be made (use the optional reset control API variant).
+> 
+> I applied only the two patches that you'd acked, not the reset patches
+> which had problems.
 
-Ok, I will think of a better way of doing this.
+Indeed, sorry for not reading your commit message properly, I believe I
+request that before, cannot the "applied" response just reply with the
+patches *applied* and not *all* part of the series?
 
->  Also please wire up
-> pci_alloc_irq_vectors* to use this API as well.
+> 
+>> Having a FAQ entry about what your expectations as a subsystem
+>> maintainer are (ala netdev-FAQ.rst) could save you time along the way.
+> 
+> Incremental updates are the default AFAICT?
+> 
 
-Understood, I will include this in a separate patch.
-
->
---=20
-Thanks
-Nitesh
-
-
---pygA5TskcUUjF4hRdVL9B6oCkba2moAGC--
-
---9pf3HR7urvluqd3fEc2wdAjWaYVg7sq93
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl7pAX4ACgkQo4ZA3AYy
-ozlB8BAAr0wVuZ22i8/2x2XiCgP38/k6U4DmriO+C50tuS4jP4L9EXQm1FIzPqAV
-pxDNOmpD5zzsfgyd0b/y71/RSTZAHcaOMNNjHpU3uZeNbo1Leox7Fx7SPFBSwt7n
-2ZvrDOJzQ9UqtOmSIxle1MEWdeOUZ6/KQI041Cdiszdy5SEuhDQkqZgKnMAVlR7k
-pmxojWpL9VJI6/ndAV7ud7uCnPXCqyTQ+k+dQ7xbwxykDwlvrsaZ4aMLjk57KzaV
-EBcLRPRU0uex6lpqGqPHFePw1fNbO3ALHWXnZhv7DuJUDXfpyRCyX1HCGPt2QF1N
-Hs5wkOnQ1Z++Q/b+5TX6CvJlEgAh18CLZKTWfv+pAr4iqkjAHjBJHkBtXhVgBRvY
-nNCrpyXO5kyaK407VIBmKToP4Ccf+G+98l/h+E5Hg7g9uq7jObCDQsR521Fm5IYI
-iuhOsg0X78FI5vT+PXAqVa9VQvt/RQhs1V5x8urd01TEMqhH1QnktgnEGNfwf9a2
-sDBc05u43LGKiA2On+515RCQ7pr+25Sdw2r7psqbft3Nu9stQDnnTECe4xtLHa6u
-sGgE7PKGyWmtrvAvDYv5SWwoGmDjghpap5kXMwB+QAZaMKq5JTvAgP9o/wZNX6UA
-znFoMER8EXA3ypG7prGCdUvagRPO27+W6PgBD2rFId+53prCPUQ=
-=Y7Ep
------END PGP SIGNATURE-----
-
---9pf3HR7urvluqd3fEc2wdAjWaYVg7sq93--
-
+It really depends if the maintainer is willing to rewrite his tree
+history, some people do, some people do not, especially if nothing has
+been submitted to Linus yet.
+-- 
+Florian
