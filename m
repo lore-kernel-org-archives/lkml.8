@@ -2,51 +2,54 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66819C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C0320882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404CF20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324309;
-	bh=+1D9kExDD3bEf33XbVDEMg9hH0GZgEy1vDz5bhWcY/Q=;
+	s=default; t=1592324327;
+	bh=YMKDqWtYCpqzdmD2LyOrKcgSvCsg4dURgUkOnX/J7vQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBcKGZHwfT1AnDwktG+dSqfDnYJ3ta8aaRizckvJr+CqbOBwmdkMe36gqGPCJiI1+
-	 irifAcAsPd1lnGHbUPrAq9MfjCpNTNs2n3DSQu5gb+5TEpMr74BY5zlUwzdGl4oJc/
-	 /dcfB4vk0Mrv49P+HkhgLaXg/ZW2w093CO6Obu6A=
+	b=Cr70KTLjlIvWUd2foBxUZa0OEn2hM8qkLBJw/XbIZKvNp1shk0QO3b91Ymzq2F6vM
+	 atJPMN0FLTTVEJlQfevC2gXRzxC8Rp9c3Bt99Jkktqe96dj9rLxgvczir/Yf82WX0N
+	 Wy/n5Qk/Tn7DQjFSCrRSwbakFN1pKa3Fo1lUMaxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731832AbgFPQSY (ORCPT
+        id S1732171AbgFPQSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50506 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730593AbgFPPiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:14 -0400
+        id S1730436AbgFPPhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56B30214DB;
-        Tue, 16 Jun 2020 15:38:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D67DD20B1F;
+        Tue, 16 Jun 2020 15:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321893;
-        bh=+1D9kExDD3bEf33XbVDEMg9hH0GZgEy1vDz5bhWcY/Q=;
+        s=default; t=1592321873;
+        bh=YMKDqWtYCpqzdmD2LyOrKcgSvCsg4dURgUkOnX/J7vQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HmoQFxWu4H6kiq8DEZ2O2bXXXfiakAavN5JtdEiTRvmgDuRWDCgfGaYT0YXa+XKE5
-         cqKAwnBM3fNqWqeOAnOphZs9KNwpLkuSsRWKGVe/mlGPxrVP9+kX7OkTzIYQglpzvD
-         QArCVKb1g1HRq+375DWTV8LQH9asL1rVSJW0nrzs=
+        b=2K1PGzqIgcjEP7rGhp8DqL4uWN8+xbA9gL6jEJ0pDawKAbo/UksbuuU8VCCNfNaGI
+         Hf9JE3us/Ol2s1sOZGsr4rqns6BTwa1FPfT3W3sbqsfAinV1nvibJ/JgtUXVYCGIpr
+         L+TJRZHILH+c9mOJeAXwc5V7VI/U4hlCB2WTKG0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 057/134] ALSA: hda/realtek - add a pintbl quirk for several Lenovo machines
-Date:   Tue, 16 Jun 2020 17:34:01 +0200
-Message-Id: <20200616153103.506479809@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 018/134] ASoC: SOF: imx: fix undefined reference issue
+Date:   Tue, 16 Jun 2020 17:33:22 +0200
+Message-Id: <20200616153101.577939137@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,39 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-commit 573fcbfd319ccef26caa3700320242accea7fd5c upstream.
+[ Upstream commit cb0312f61c3e95c71ec8955a94d42bf7eb5ba617 ]
 
-A couple of Lenovo ThinkCentre machines all have 2 front mics and they
-use the same codec alc623 and have the same pin config, so add a
-pintbl entry for those machines to apply the fixup
-ALC283_FIXUP_HEADSET_MIC.
+make.cross ARCH=mips allyesconfig fails with the following error:
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200608115541.9531-1-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+sound/soc/sof/sof-of-dev.o:(.data.sof_of_imx8qxp_desc+0x40): undefined
+reference to `sof_imx8x_ops'.
 
+This seems to be a Makefile order issue, solve by using the same
+structure as for Intel platforms.
+
+Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF
+dependency")
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20200409071832.2039-3-daniel.baluta@oss.nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/sof/imx/Kconfig | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -8156,6 +8156,12 @@ static const struct snd_hda_pin_quirk al
- 		ALC225_STANDARD_PINS,
- 		{0x12, 0xb7a60130},
- 		{0x17, 0x90170110}),
-+	SND_HDA_PIN_QUIRK(0x10ec0623, 0x17aa, "Lenovo", ALC283_FIXUP_HEADSET_MIC,
-+		{0x14, 0x01014010},
-+		{0x17, 0x90170120},
-+		{0x18, 0x02a11030},
-+		{0x19, 0x02a1103f},
-+		{0x21, 0x0221101f}),
- 	{}
- };
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index b4f0426685c4..d44bbbf24735 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -11,17 +11,26 @@ config SND_SOC_SOF_IMX_TOPLEVEL
  
+ if SND_SOC_SOF_IMX_TOPLEVEL
+ 
++config SND_SOC_SOF_IMX_OF
++	def_tristate SND_SOC_SOF_OF
++	select SND_SOC_SOF_IMX8 if SND_SOC_SOF_IMX8_SUPPORT
++	help
++	  This option is not user-selectable but automagically handled by
++	  'select' statements at a higher level
++
+ config SND_SOC_SOF_IMX8_SUPPORT
+ 	bool "SOF support for i.MX8"
+-	depends on IMX_SCU
+-	select IMX_DSP
+ 	help
+           This adds support for Sound Open Firmware for NXP i.MX8 platforms
+           Say Y if you have such a device.
+           If unsure select "N".
+ 
+ config SND_SOC_SOF_IMX8
+-	def_tristate SND_SOC_SOF_OF
+-	depends on SND_SOC_SOF_IMX8_SUPPORT
++	tristate
++	depends on IMX_SCU
++	select IMX_DSP
++	help
++	  This option is not user-selectable but automagically handled by
++	  'select' statements at a higher level
+ 
+ endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
+-- 
+2.25.1
+
 
 
