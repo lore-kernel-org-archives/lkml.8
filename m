@@ -2,101 +2,99 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B018EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A36AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F61720B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4069420B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fbajd8JY"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="xdXpHbJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgFPNuh (ORCPT
+        id S1729057AbgFPNun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56482 "EHLO
+        Tue, 16 Jun 2020 09:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbgFPNub (ORCPT
+        with ESMTP id S1728557AbgFPNul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:50:31 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D054CC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:50:30 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y13so953783lfe.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:50:30 -0700 (PDT)
+        Tue, 16 Jun 2020 09:50:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4CBC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:50:41 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id g12so8415019pll.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:50:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wklf5cduJTJAJSagxCZumX6yp4Hs/DNK3FMK6q52ulU=;
-        b=fbajd8JY6EU5T65vTAox3j3j/UZcRkLsWmnhWNiGEKqmgtMSBIZ4ORKA9QXN6dbr+V
-         d+j0MQ4OtwlRLwIqF7P/NZdBisemn4F3q3QIV/dc2262ECub3QuRhmQvRp4JfB5919eW
-         ffnaGL7TAi+pGAKfxrKkweuqA9OXyj0AYY3ijtQcMHthw00h1WdiaFZmY7O6bBR+m1lw
-         Qe3tEjhG0OZpa8YfSbpVo7l6c9kl+h7sivrB+YchfuxuswK9UdLKYMbmgwcHGvzxmKXw
-         doqOOzoqUmgsqYdUKLCP6OA9BAcd2MWT/tRyL6eY27z15I149Jf6QOUWniEmaWV2vpdx
-         x1yg==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wKgw8yL2fG/OFCaOWETgOyQMdJ8jj68sdqGzhJZN1iE=;
+        b=xdXpHbJm9xexh+go+YRBMq+GBe0v63E86PTybh8kJwGw2Rn6NiU60+Z9J3i10hlVDb
+         MuHwzp+3aGRK8R38H8fnfe6cMOLV1G/si5W0984JkNpB1m1RpA8PFCbPSTOKsuLP/p7F
+         hyK0JAyaKmzgMzJI21ZCzdtiulDl5OHuZuQm8gRL0FRT3JmbaplpTOF5sJ75xLWvLH8v
+         lD62Ty0mSSoOzoHlZL6TDx2h3ZbZzyclm9cNKXORJBqd9bz+c8xvg09AEIVUZUwBPY4e
+         9F1eLVUEGi9cza4aYmh4sN/qS+fQPISnFI4dgHI/r/cxFjCILIXGZv9BhcsZ47dO9eb1
+         Vxxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wklf5cduJTJAJSagxCZumX6yp4Hs/DNK3FMK6q52ulU=;
-        b=HgzN8ThYbedZTeA62p5RuHXGOujxnX2esK3hl4ATceHusVJlzNdYSFNm9KeWEN0ZO/
-         3POYVArVDdRl5troBnWi1p2uDKG9JhEWtoLsx5C/vvk+PoTOUWabcxyVI8T7sqXxQe21
-         1GB33UtqW3XBxCxnuIqFcNCzkoPoPUaY6kawUKzaArVkzur4amttQCJZbFuqyasVXtGn
-         nGEgB2P+kNUdXJWE+TgSjvGKK4/Mc+KhIeIRGayn3AjRbtYrhNmwulcH6S0REPj5XBwj
-         Kj10jnC0ht8KDvjhr1delb35SnvxmE57j2atfAALHji3Khb+WPIef7VjRkD+DgmK7Sgw
-         Cfuw==
-X-Gm-Message-State: AOAM533Iy4MS89w2kKAm7sgYtWR5uDQqO+HY3og9nl3qLzNdB2X2WE1Z
-        wNpuStKCHkb0qVJvdhXgQTGjnuwL9IZ1QhcV5WDSK5swuc8=
-X-Google-Smtp-Source: ABdhPJx9KyXZK7Z/6zNonFouOfo1+V9/FZ8bo3GzemYuTqETrcc2CZb22ALh+Gf2oItWAbfviIDofbV5tiP7NBW5AWU=
-X-Received: by 2002:ac2:41d4:: with SMTP id d20mr1812062lfi.204.1592315429181;
- Tue, 16 Jun 2020 06:50:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wKgw8yL2fG/OFCaOWETgOyQMdJ8jj68sdqGzhJZN1iE=;
+        b=I05oVkMaaT05pnz3cppI0ocMll07tmG9WNjmTuseGJ8TGARZyj259BxCGxgWAToH24
+         x1/1PocG5mAP1mvyLOzznwUWuKXJANXUF5cua7Ni6vg7ddqI0lRcqkTTvTtXfyaQjV8Z
+         nTlFQZzOlegcrrJduws7pLwNuw+HRiUpJhAWkQDNosZqq5g0NrgnMrNZRxM1Jq2JRJoS
+         +puQBE87zE7CjwBy4tG5zPU1PdxWGna8WuZPy0D3NBwksR5aGwvP3xhnXwM6O01VI1ZH
+         KYaMwKAOfqyJHC4Uo/zowxNKWkwAoVL5xhvpWURWsx66p5nvQ771ce6lrzBWbzWNyiOH
+         uzVA==
+X-Gm-Message-State: AOAM532DAPIo4DVWvFu47xnrPfv1VqioLZsMiLQuN6qDat2npCG0hM3M
+        He+0PqcyT89BE6BQAXWHOflRuA==
+X-Google-Smtp-Source: ABdhPJxQ/bgAkHjSLUQ1Ge4GhONjafEz01dOHSVJ60W/OI87vJ+Tvg9OgrgCGPeXcFaKuZxwykc9Tw==
+X-Received: by 2002:a17:90a:260e:: with SMTP id l14mr2969872pje.76.1592315440653;
+        Tue, 16 Jun 2020 06:50:40 -0700 (PDT)
+Received: from localhost.localdomain (118-171-140-99.dynamic-ip.hinet.net. [118.171.140.99])
+        by smtp.gmail.com with ESMTPSA id y81sm17451102pfb.33.2020.06.16.06.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 06:50:39 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: mt6358: Remove BROKEN dependency
+Date:   Tue, 16 Jun 2020 21:50:30 +0800
+Message-Id: <20200616135030.1163660-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1591253979-29067-1-git-send-email-sumit.garg@linaro.org> <20200615201907.GE5416@linux.intel.com>
-In-Reply-To: <20200615201907.GE5416@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 16 Jun 2020 19:20:17 +0530
-Message-ID: <CAFA6WYOpXmdabrpbyJqeknkwv1NeD4+tp95zP+si23SSXDwJdQ@mail.gmail.com>
-Subject: Re: [PATCH v2] Documentation: tee: Document TEE kernel interface
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Maxim Uvarov <maxim.uvarov@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        op-tee@lists.trustedfirmware.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 at 01:49, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Thu, Jun 04, 2020 at 12:29:39PM +0530, Sumit Garg wrote:
-> > Update documentation with TEE bus infrastructure which provides an
-> > interface for kernel client drivers to communicate with corresponding
-> > Trusted Application.
-> >
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
->
-> Please at least broadly describe the update in the commit message.
->
+The MFD part is merged into v5.8-rc1, thus remove BROKEN dependency.
 
-How about following additional info to the above commit description?
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Brief description of changes:
-- Add a section to describe TEE kernel interface along with a TEE
-client driver example snippet.
-- Add a sub-section for OP-TEE driver to describe OP-TEE specific
-device enumeration.
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index c398e90e0e73..f60eeaae7afd 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -694,7 +694,7 @@ config REGULATOR_MT6323
+ 
+ config REGULATOR_MT6358
+ 	tristate "MediaTek MT6358 PMIC"
+-	depends on MFD_MT6397 && BROKEN
++	depends on MFD_MT6397
+ 	help
+ 	  Say y here to select this option to enable the power regulator of
+ 	  MediaTek MT6358 PMIC.
+-- 
+2.25.1
 
--Sumit
-
-> /Jarkko
