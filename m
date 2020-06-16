@@ -2,98 +2,108 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F011C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59EB6207BC
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6978D20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592303836;
-	bh=z6LDz9/G5pNcQFXdInSqegrHVHuPT3Kls9SWQAPqUyE=;
+	s=default; t=1592304012;
+	bh=7dldRWO7gGRPlZ/8sV26jPzle1h5yQEqABWokXqyW38=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lK+UE9N1j4/VT/+LJTLUNVAG/btF6aanaQvF/G05PLkE1xP++6MnReK9BrkKWnsg8
-	 O2IaEOj/B3l9+wJXKB1Q4arPsmqhB4EEJ353EKmzvXdA/0wY8tbt5IZeXtDtYLLWLO
-	 UcqE4hKO4TKOL8TzH9q7/pI6m1aM6AQmi3RkPOe0=
+	b=R7aQ7nRB83yMRZXQ42e2Lj3VwMIvYEjaEhbh9jSgMB7n3ma/7LZJxSg27e6/CiKCn
+	 FQ/pLYJJkcubfmXPyl2KOh9qoSR3Pb2U3y8J1M1/twCluF+qZcAkF7wtXOQ7FVA6pI
+	 V2lTzh1arpK21biNYCuzyVl3zsEZWzBHOwsQusm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgFPKhP (ORCPT
+        id S1728386AbgFPKkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:37:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55596 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 06:40:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgFPKhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:37:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725775AbgFPKj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:39:59 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BFF620734;
-        Tue, 16 Jun 2020 10:37:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA0320786;
+        Tue, 16 Jun 2020 10:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592303831;
-        bh=z6LDz9/G5pNcQFXdInSqegrHVHuPT3Kls9SWQAPqUyE=;
+        s=default; t=1592303998;
+        bh=7dldRWO7gGRPlZ/8sV26jPzle1h5yQEqABWokXqyW38=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1ivXZbzIEFoy6gy+3lznnGcBN8Tcq5DHKexhF0Wx44juizRN06sl0AESZb+Ay4joU
-         d9AtCdIMcLYsb1iT1VVMSY7cHVBKXr0EUBsnQm61HbdqQNZipQoUtcqy7h69T5ps7d
-         Qv5BWWrT+7nPW6Ac+78DvZQQ8uUIxlvFxDIf+eIs=
-Date:   Tue, 16 Jun 2020 12:37:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Manali Shukla (manashuk)" <manashuk@cisco.com>
-Cc:     Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
+        b=s3YG0XKIGUKezsbFPu+LsttzfENLcVz6uOAgoe8u3j2JVe5uZvas/7wxHmBbu6K9t
+         ALdsxYeae+Xo/DSQ0UB0LtxZzXhGyfjKzGlO9MCz7WZaFInHWsgW/aTqaIQ1kR92IS
+         kp6WqPseGrtvHr9CykwXRzc0VOenTXqXbSlzpie0=
+Date:   Tue, 16 Jun 2020 11:39:56 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        Aristeu Rozanski Filho <arozansk@redhat.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Russ Anderson <rja@hpe.com>, Tony Luck <tony.luck@intel.com>
-Subject: Re: [ PATCH stable v4.19] EDAC: Drop per-memory controller buses
-Message-ID: <20200616103706.GA2653240@kroah.com>
-References: <20200312052201.49456-1-manashuk@cisco.com>
- <20200317102249.GC1130294@kroah.com>
- <5D56C6A7-B076-47BB-9016-7BD54DFE71E7@cisco.com>
- <20200405180605.GC17324@zn.tnic>
- <994FAF5C-B773-4B09-8C08-91E22ECDB8A9@cisco.com>
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfram Sang <wsa@kernel.org>, kernel@pengutronix.de
+Subject: Re: [PATCH v2 3/3] genirq: Do not test disabled IRQs with DEBUG_SHIRQ
+Message-ID: <20200616103956.GL4447@sirena.org.uk>
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+ <1592208439-17594-3-git-send-email-krzk@kernel.org>
+ <20200615120844.GL4447@sirena.org.uk>
+ <CAJKOXPfEpLN9jS11WW367Na3Ukfi8p3urKDcJoafg9dHuCDSUA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/0D4jGRsNl8cPNu/"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <994FAF5C-B773-4B09-8C08-91E22ECDB8A9@cisco.com>
+In-Reply-To: <CAJKOXPfEpLN9jS11WW367Na3Ukfi8p3urKDcJoafg9dHuCDSUA@mail.gmail.com>
+X-Cookie: Offer may end without notice.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 07:26:01PM +0000, Manali Shukla (manashuk) wrote:
-> > On 05/04/20, 11:36 PM, "Borislav Petkov" <bp@suse.de> wrote:
-> 
-> >    On Sun, Apr 05, 2020 at 06:01:21PM +0000, Manali Shukla (manashuk) wrote:
-> >> With this patch , we are removing per-MC bus, this removes dependency on value of max number of controllers (EDAC_MAX_MCS) which is hardcoded to 2 * MAX_NUMNODES  in all stable versions of kernel. 
->  >> On two nodes system MAX_NUMNODES value is ‘1’ , so value of max number of memory controller becomes ‘2’, this patch fixes this issue when there are only 2 nodes on the system and number of memory controllers are more than ‘2'
->     
->  > You basically repeated what you had written already.
->     
->  >  But what is this fixing? Some platform of yours or what? Why does it
->  > need to go to stable?
->     
-> Certain MIPS platform can have 2 nodes and number of memory controllers can be more than '2' .
-> 
-> for above condition, if
-> #define EDAC_MAX_MCS 2 * MAX_NUMNODES,
-> it fails in this function edac_mc_add_mc_with_groups
-> in below condition
-> if (mci->mc_idx >= EDAC_MAX_MCS) {
-> pr_warn_once("Too many memory controllers: %d\n", mci->mc_idx);
-> return -ENODEV;
-> }
-> That is why this fix is needed.
 
-What fix?
+--/0D4jGRsNl8cPNu/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I see no patch in this email, nor do I see a git commit id anywhere :(
+On Tue, Jun 16, 2020 at 12:11:17PM +0200, Krzysztof Kozlowski wrote:
+> On Mon, Jun 15, 2020 at 01:08:44PM +0100, Mark Brown wrote:
+> > On Mon, Jun 15, 2020 at 10:07:19AM +0200, Krzysztof Kozlowski wrote:
+> > > Testing events during freeing of disabled shared interrupts
+> > > (CONFIG_DEBUG_SHIRQ) leads to false positives.  The driver disabled
+> > > interrupts on purpose to be sure that they will not fire during device
+> > > removal.
 
-Totally confused,
+> > Surely the whole issue with shared IRQs that's being tested for here is
+> > that when the interrupt is shared some other device connected to the
+> > same interrupt line may trigger an interrupt regardless of what's going
+> > on with this device?
 
-greg k-h
+> Yes. However if that device disabled the interrupt, it should not be
+> fired for other users. In such case the testing does not point to a
+> real issue.
+
+To be honest I'd say that if you're disabling a shared interrupt that's
+a bit of an issue regardless of anything else that's going on, it'll
+disrupt other devices connected to it.
+
+--/0D4jGRsNl8cPNu/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ooXsACgkQJNaLcl1U
+h9DoHgf+JwvDuPobncELlcEI/vWSGXCrDuPyH/+FJU0Ji63DjRavjk3dt7UI1UsD
+m70QleSoyhqku2gmsEnWKgRz08Y3KD8XCX6L/LwqmB2GKuZLlV2qHdgr6UkJ1UQ1
+XOF2w75Vip+CnBp6AlVuEGyJ9k32y6VGDXyAe8nkFZU1teHMEZ2BPv8ZwrtHIgjs
+/Mq6GUrSDXYSWkDD1AhLBG+ZjuCWm/UBy5anxCbAcnlIADxHVfLLzL58CPtOYNpy
+03RoSphUoITpHPlTssE5VGdByMnxY7116n0XbiCsP6+mVmm/KU9FpHwOYN5qmFWS
+hFrkjmbsmqNIpLXjzKQBxAiyDk5G0g==
+=x0XR
+-----END PGP SIGNATURE-----
+
+--/0D4jGRsNl8cPNu/--
