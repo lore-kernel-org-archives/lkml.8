@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F253C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E64C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B04E20FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B0B20FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgFPMXr (ORCPT
+        id S1729356AbgFPMXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:23:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42714 "EHLO
+        Tue, 16 Jun 2020 08:23:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728909AbgFPMWF (ORCPT
+        with ESMTP id S1728875AbgFPMWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:22:05 -0400
+        Tue, 16 Jun 2020 08:22:02 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA3AC08C5C5;
-        Tue, 16 Jun 2020 05:22:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C02FC08C5C2;
+        Tue, 16 Jun 2020 05:22:01 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbJ-0004iW-8a; Tue, 16 Jun 2020 14:22:01 +0200
+        id 1jlAbD-0004ez-OP; Tue, 16 Jun 2020 14:21:55 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 13F5C1C06FE;
-        Tue, 16 Jun 2020 14:21:54 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:53 -0000
-From:   "tip-bot2 for Marcelo Tosatti" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 616581C07B4;
+        Tue, 16 Jun 2020 14:21:51 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:51 -0000
+From:   "tip-bot2 for Luca Abeni" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] kthread: Switch to cpu_possible_mask
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
+Subject: [tip: sched/core] sched/deadline: Implement fallback mechanism for !fit case
+Cc:     Luca Abeni <luca.abeni@santannapisa.it>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200527142909.23372-2-frederic@kernel.org>
-References: <20200527142909.23372-2-frederic@kernel.org>
+        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200520134243.19352-6-dietmar.eggemann@arm.com>
+References: <20200520134243.19352-6-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
-Message-ID: <159231011385.16989.15305912016989181408.tip-bot2@tip-bot2>
+Message-ID: <159231011120.16989.2193698782650296357.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,51 +61,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     043eb8e1051143a24811e6f35c276e35ae8247b6
-Gitweb:        https://git.kernel.org/tip/043eb8e1051143a24811e6f35c276e35ae8247b6
-Author:        Marcelo Tosatti <mtosatti@redhat.com>
-AuthorDate:    Wed, 27 May 2020 16:29:08 +02:00
+Commit-ID:     23e71d8ba42933bff12e453858fd68c073bc5258
+Gitweb:        https://git.kernel.org/tip/23e71d8ba42933bff12e453858fd68c073bc5258
+Author:        Luca Abeni <luca.abeni@santannapisa.it>
+AuthorDate:    Wed, 20 May 2020 15:42:43 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:03 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:05 +02:00
 
-kthread: Switch to cpu_possible_mask
+sched/deadline: Implement fallback mechanism for !fit case
 
-Next patch will switch unbound kernel threads mask to
-housekeeping_cpumask(), a subset of cpu_possible_mask. So in order to
-ease bisection, lets first switch kthreads default affinity from
-cpu_all_mask to cpu_possible_mask.
+When a task has a runtime that cannot be served within the scheduling
+deadline by any of the idle CPU (later_mask) the task is doomed to miss
+its deadline.
 
-It looks safe to do so as cpu_possible_mask seem to be initialized
-at setup_arch() time, way before kthreadd is created.
+This can happen since the SCHED_DEADLINE admission control guarantees
+only bounded tardiness and not the hard respect of all deadlines.
+In this case try to select the idle CPU with the largest CPU capacity
+to minimize tardiness.
 
-Suggested-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+Favor task_cpu(p) if it has max capacity of !fitting CPUs so that
+find_later_rq() can potentially still return it (most likely cache-hot)
+early.
+
+Signed-off-by: Luca Abeni <luca.abeni@santannapisa.it>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200527142909.23372-2-frederic@kernel.org
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Link: https://lkml.kernel.org/r/20200520134243.19352-6-dietmar.eggemann@arm.com
 ---
- kernel/kthread.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sched/cpudeadline.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 8e3d2d7..b86d37c 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -383,7 +383,7 @@ struct task_struct *__kthread_create_on_node(int (*threadfn)(void *data),
- 		 * The kernel thread should not inherit these properties.
- 		 */
- 		sched_setscheduler_nocheck(task, SCHED_NORMAL, &param);
--		set_cpus_allowed_ptr(task, cpu_all_mask);
-+		set_cpus_allowed_ptr(task, cpu_possible_mask);
- 	}
- 	kfree(create);
- 	return task;
-@@ -608,7 +608,7 @@ int kthreadd(void *unused)
- 	/* Setup a clean context for our children to inherit. */
- 	set_task_comm(tsk, "kthreadd");
- 	ignore_signals(tsk);
--	set_cpus_allowed_ptr(tsk, cpu_all_mask);
-+	set_cpus_allowed_ptr(tsk, cpu_possible_mask);
- 	set_mems_allowed(node_states[N_MEMORY]);
+diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
+index 8630f2a..8cb06c8 100644
+--- a/kernel/sched/cpudeadline.c
++++ b/kernel/sched/cpudeadline.c
+@@ -121,19 +121,31 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
  
- 	current->flags |= PF_NOFREEZE;
+ 	if (later_mask &&
+ 	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
+-		int cpu;
++		unsigned long cap, max_cap = 0;
++		int cpu, max_cpu = -1;
+ 
+ 		if (!static_branch_unlikely(&sched_asym_cpucapacity))
+ 			return 1;
+ 
+ 		/* Ensure the capacity of the CPUs fits the task. */
+ 		for_each_cpu(cpu, later_mask) {
+-			if (!dl_task_fits_capacity(p, cpu))
++			if (!dl_task_fits_capacity(p, cpu)) {
+ 				cpumask_clear_cpu(cpu, later_mask);
++
++				cap = capacity_orig_of(cpu);
++
++				if (cap > max_cap ||
++				    (cpu == task_cpu(p) && cap == max_cap)) {
++					max_cap = cap;
++					max_cpu = cpu;
++				}
++			}
+ 		}
+ 
+-		if (!cpumask_empty(later_mask))
+-			return 1;
++		if (cpumask_empty(later_mask))
++			cpumask_set_cpu(max_cpu, later_mask);
++
++		return 1;
+ 	} else {
+ 		int best_cpu = cpudl_maximum(cp);
+ 
