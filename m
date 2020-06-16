@@ -2,132 +2,77 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9942C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64838C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE656208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:43:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fanpFU30"
+	by mail.kernel.org (Postfix) with ESMTP id 3BD3E20810
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592336587;
+	bh=4opddBx1OaE34iQ/v5+Xpl7I6itVGPI8xn9MndRWZ3U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=U3mYIFW9UsTNDrw45KmoV+LDF7V/zxwVoA+13lbnpTBucgxy32c/tJSGRmZdJQqG+
+	 nWFHZPJlV2xKqs6S4nZFd7KxoTrHffI1ftT/l3myi5LcT3qPq7ldni+stjFEWMsIZq
+	 BcLFAwJUmaQWVAn8yqyFbieMYEas8UV8AZbn4WQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbgFPTnC (ORCPT
+        id S1731234AbgFPTnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:43:02 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16648 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728144AbgFPTnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:43:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee920940000>; Tue, 16 Jun 2020 12:42:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 16 Jun 2020 12:43:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 16 Jun 2020 12:43:01 -0700
-Received: from [10.26.75.222] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jun
- 2020 19:42:53 +0000
-Subject: Re: [PATCH] ASoC: tegra: Fix reference count leaks.
-To:     <wu000273@umn.edu>, <kjlu@umn.edu>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Ben Dooks" <ben.dooks@codethink.co.uk>,
-        Edward Cragg <edward.cragg@codethink.co.uk>,
-        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200613204422.24484-1-wu000273@umn.edu>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <9492fa91-067b-f74f-1a52-a2622d8f28d6@nvidia.com>
-Date:   Tue, 16 Jun 2020 20:42:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200613204422.24484-1-wu000273@umn.edu>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Tue, 16 Jun 2020 15:43:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728144AbgFPTnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 15:43:05 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB99C208C3;
+        Tue, 16 Jun 2020 19:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592336585;
+        bh=4opddBx1OaE34iQ/v5+Xpl7I6itVGPI8xn9MndRWZ3U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zZn0AlQAZEerM5YU025XmSMmwOjA1q5/ZWfpj9XaIvSPU63Tq6hdqwVRc5CtXUVVR
+         pMNXT4aMqpj2GSENieOni8xfcTAzWN28ku+hf2rz998z/l1Xi/mMCePv3Pbg8PWu+N
+         reE5D3WTgC3m+Sd4QbvHA4fd31flQqI8pjt6gAhU=
+Date:   Tue, 16 Jun 2020 12:43:04 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/8xx: use pmd_off() to access a PMD entry in
+ pte_update()
+Message-Id: <20200616124304.bbe36933fcd48c5f467f4be9@linux-foundation.org>
+In-Reply-To: <20200615092229.23142-1-rppt@kernel.org>
+References: <20200615092229.23142-1-rppt@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592336532; bh=Dp/0r6Nw2uRw3rP0FQK/EUznQLmj2KVDZ1kdtwhRPqg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fanpFU3012dPk+RxNw8Z8OH9a8yVg3Ep2EZFgySPCXu7I7bateQDqSJXuqeMK5XXM
-         b7ltzhNCUAFQ8kjhZVL73eUgCoRh2ze1h/gKVYGUmvPjwmNO4+LMqe5hLv+WOOXIP0
-         rfFqnxn1y3pd9GuzXpP4Fqpbg+YD3DQvt+FaPJgxy7MEOdHnExRlZwiZ9p5vIgz2Hj
-         vuy3qreGl0kkuJXyEIxd21POD/SvJPIIOsVmjyJleSeY6GBbfZxR6OTFhJPENrRQ05
-         c2LxeDWz8GsTOVXRiw43JYE8vYMaHMZ+GoaawdaJOxFOcVR1XAxzezJQvJjA40L/fV
-         0V4lObTvqbCeg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 15 Jun 2020 12:22:29 +0300 Mike Rapoport <rppt@kernel.org> wrote:
 
-On 13/06/2020 21:44, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count if pm_runtime_put is not called in
-> error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+> The pte_update() implementation for PPC_8xx unfolds page table from the PGD
+> level to access a PMD entry. Since 8xx has only 2-level page table this can
+> be simplified with pmd_off() shortcut.
 > 
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> Replace explicit unfolding with pmd_off() and drop defines of pgd_index()
+> and pgd_offset() that are no longer needed.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
->  sound/soc/tegra/tegra30_ahub.c | 4 +++-
->  sound/soc/tegra/tegra30_i2s.c  | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
-> index 635eacbd28d4..156e3b9d613c 100644
-> --- a/sound/soc/tegra/tegra30_ahub.c
-> +++ b/sound/soc/tegra/tegra30_ahub.c
-> @@ -643,8 +643,10 @@ static int tegra30_ahub_resume(struct device *dev)
->  	int ret;
->  
->  	ret = pm_runtime_get_sync(dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put(dev);
->  		return ret;
-> +	}
->  	ret = regcache_sync(ahub->regmap_ahub);
->  	ret |= regcache_sync(ahub->regmap_apbif);
->  	pm_runtime_put(dev);
-> diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
-> index d59882ec48f1..db5a8587bfa4 100644
-> --- a/sound/soc/tegra/tegra30_i2s.c
-> +++ b/sound/soc/tegra/tegra30_i2s.c
-> @@ -567,8 +567,10 @@ static int tegra30_i2s_resume(struct device *dev)
->  	int ret;
->  
->  	ret = pm_runtime_get_sync(dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put(dev);
->  		return ret;
-> +	}
->  	ret = regcache_sync(i2s->regmap);
->  	pm_runtime_put(dev);
+> I think it's powerpc material, but I won't mind if Andrew picks it up :)
 
-Thanks.
-
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+Via the powerpc tree would be better, please.
