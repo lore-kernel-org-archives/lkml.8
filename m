@@ -2,113 +2,133 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F30C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE39C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 378A82078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592301592;
-	bh=H00RGJq5KezVcrQ/vGzLRXHsGQa2G3LnLHyCG7559QU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y5scbeie5dXCBO/irE5MhCnuisZGI0G9Q8xLizV+y21tBCP4vHuuCQ9babngwmmk8
-	 Z+s5fjSPGst+csPwk7gVrmfv58yZxjTI268EvS7jGATQz5YVL/YkMPr+9jr6vQqcZh
-	 e3p5j8RuW/b4mTE+BMW89Yv6AV0hnzqvnWMdq8Gg=
+	by mail.kernel.org (Postfix) with ESMTP id B3E4A207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgFPJ7v (ORCPT
+        id S1728152AbgFPKAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbgFPJ7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:59:50 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 16 Jun 2020 06:00:36 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:36112 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgFPKAf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:00:35 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E8DC13C057C;
+        Tue, 16 Jun 2020 12:00:32 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id l2OxJuY85Oae; Tue, 16 Jun 2020 12:00:27 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CA0720767;
-        Tue, 16 Jun 2020 09:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592301590;
-        bh=H00RGJq5KezVcrQ/vGzLRXHsGQa2G3LnLHyCG7559QU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s35iCxf2ApOcJZGyTnKb4vFHqFOY/SexyqbRTgxWkYLnGAD85dUn2XN6AYZkK4Yms
-         bl62nwah75Ax2duvcU+bVe2CmlysoY32l9chot9A7Qr1u4UA5fiP/m2ZlZQO/ik3av
-         tMj/TY1ARiyudeRqXH3l8XqEFpJspJfUFi6ej97w=
-Date:   Tue, 16 Jun 2020 10:59:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
-Message-ID: <20200616095948.GJ4447@sirena.org.uk>
-References: <20200612141611.GI5396@sirena.org.uk>
- <VE1PR04MB6638B43E3AC83286946DABCD899F0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615123553.GP4447@sirena.org.uk>
- <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615133905.GV4447@sirena.org.uk>
- <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615143622.GX4447@sirena.org.uk>
- <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200615145556.GY4447@sirena.org.uk>
- <VE1PR04MB66380FD8FB7FCE79AF4B6CD4899D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 26ABB3C0579;
+        Tue, 16 Jun 2020 12:00:26 +0200 (CEST)
+Received: from vmlxhi-110.adit-jv.com (10.72.93.196) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 16 Jun
+ 2020 12:00:25 +0200
+From:   Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Steve Longerbeam <steve_longerbeam@mentor.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Michael Rodin <mrodin@de.adit-jv.com>, <efriedrich@de.adit-jv.com>,
+        <erosca@de.adit-jv.com>
+Subject: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for ENUM/GET/SET INPUT
+Date:   Tue, 16 Jun 2020 12:00:15 +0200
+Message-ID: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6xTM0kUsJcaNctaW"
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB66380FD8FB7FCE79AF4B6CD4899D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.72.93.196]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Steve Longerbeam <steve_longerbeam@mentor.com>
 
---6xTM0kUsJcaNctaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
+ioctls for use via v4l2 subdevice node.
 
-On Tue, Jun 16, 2020 at 02:03:40AM +0000, Robin Gong wrote:
-> On 2020/06/15 22:56 Mark Brown <broonie@kernel.org> wrote:=20
+This commit should probably not be pushed upstream, because the (old)
+idea of video inputs conflicts with the newer concept of establishing
+media links between src->sink pads.
 
->         struct list_head transfer_list;
-> +
-> +#define        SPI_TRANS_DMA_PREP_FAIL BIT(3)  /* prepare dma failed */
-> +       u16             flags;
+However it might make sense for some subdevices to support enum/get/set
+inputs. One example would be the analog front end subdevice for the
+ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
+can be done without requiring the implementation of media entities that
+would define the analog source for which to establish a media link.
 
-I'd just make this a generic flag for failures before we start
-interacting with the hardware rather than specifically this one error
-case.  Otherwise this looks fine.
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+---
+ drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
+ include/media/v4l2-subdev.h           | 11 +++++++++++
+ 2 files changed, 20 insertions(+)
 
---6xTM0kUsJcaNctaW
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+index 6b989fe..73fbfe9 100644
+--- a/drivers/media/v4l2-core/v4l2-subdev.c
++++ b/drivers/media/v4l2-core/v4l2-subdev.c
+@@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
+ 			return -ENOTTY;
+ 		return v4l2_querymenu(vfh->ctrl_handler, arg);
+ 
++	case VIDIOC_ENUMINPUT:
++		return v4l2_subdev_call(sd, video, enuminput, arg);
++
++	case VIDIOC_G_INPUT:
++		return v4l2_subdev_call(sd, video, g_input, arg);
++
++	case VIDIOC_S_INPUT:
++		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
++
+ 	case VIDIOC_G_CTRL:
+ 		if (!vfh->ctrl_handler)
+ 			return -ENOTTY;
+diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+index f7fe78a..6e1a9cd 100644
+--- a/include/media/v4l2-subdev.h
++++ b/include/media/v4l2-subdev.h
+@@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
+  * @g_input_status: get input status. Same as the status field in the
+  *	&struct &v4l2_input
+  *
++ * @enuminput: enumerate inputs. Should return the same input status as
++ *      @g_input_status if the passed input index is the currently active
++ *      input.
++ *
++ * @g_input: returns the currently active input index.
++ *
++ * @s_input: set the active input.
++ *
+  * @s_stream: used to notify the driver that a video stream will start or has
+  *	stopped.
+  *
+@@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
+ 	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
+ 	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
+ 	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
++	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
++	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
++	int (*s_input)(struct v4l2_subdev *sd, u32 index);
+ 	int (*s_stream)(struct v4l2_subdev *sd, int enable);
+ 	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
+ 	int (*g_frame_interval)(struct v4l2_subdev *sd,
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7omBMACgkQJNaLcl1U
-h9CvpQf+Nxs8GAzGWD8q5WQ5Yfk5Dd+UDwg0tf7+zdTr05h6hiN4THe7qjTZBk6+
-MC0R19TGfmpOaqHJY8nh3Nr2HY2QUv+ceTtIYVmwxpG+oE9TTE1v5WQTzOTQ5HMV
-yq8qU6g8Tfa1uB6BLAchJMy2lBvU/mjNqRnDY4ONnr5qkrmmKgQZycDnilH3ICEy
-VVS2cenoNIUooeyGwBCFOO8GnxfPhYtO3P5CLZvFPmg6OEdq0qIbluxYksdknKiR
-cBMORkKWR3BEZwuCx2R6xjUk17zxIpc5Km7XmjrZXSSitzONPcMjcaqVq4mtuNAU
-5hztHr9mzDtIlWqoD8uLxSczu7wlVg==
-=AZSa
------END PGP SIGNATURE-----
-
---6xTM0kUsJcaNctaW--
