@@ -2,274 +2,166 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49272C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89654C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B26208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FFF208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:18:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rAxw4zi0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="acRvEnLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731737AbgFPUP6 (ORCPT
+        id S1731521AbgFPUS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60012 "EHLO
+        Tue, 16 Jun 2020 16:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731645AbgFPUPj (ORCPT
+        with ESMTP id S1730725AbgFPUS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:15:39 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D46C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:15:38 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o15so23050132ejm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:15:38 -0700 (PDT)
+        Tue, 16 Jun 2020 16:18:57 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6A2C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:18:57 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id g5so16990894otg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:18:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=l53FcUBXaXLsNwgF2kGygWkBGpRAyHzlKoeXvC/PqGA=;
-        b=rAxw4zi0hLcxHYTInF92hJRCjCBbw+BklYODRAJ21O8G7VkpRU/GTSeDLJJEqLcnbs
-         ipQtZ4RT2rgM2QszCTKAwS+Q/IBUOouTa68FQ4/WjUVH7C/+7+R9fvMqfisdfakolmrd
-         9+pVRXLDmdjzZ0oKHpqbpMK4M3a6ZoJlXQqaxImAfJyn+UNqe0ZOgjiL0zWfC9BLiwcS
-         ZD3uzVwpSl2zjW1vE8jAGTQKAL6IEFbFqIZgzFIGNv8WHxJ0eTpijAY1niSYvawDJX8F
-         JUSjUZ6IVbm38w2CDj8RE6nsXhB5xEANK1T3WnDgZ1kQGjfyMTHao32ZlnQK1S/mqtin
-         0MFQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=5OcMZK0pIGG+xHLzfApAVvfMiSRe3c77ecNoi1ZxYsc=;
+        b=acRvEnLAKUl45yhbSb5Acwnee3bW4VJQVY1BLJ2hsepfm6/dj+FoLtbkSd4s+dJnhB
+         jpAs08a6XpEPDpdSekXGPRNJ0uNyM+wFVUwEasiIdzcG5hp01rqI/aq4Irorf2QqwI7u
+         wemXPg7vMZvPip+snIpyPE/zinPNWeh18ch96GYLSaVxD4MzcM3oCnQVEy4Eil2mpqxQ
+         WgZSNnS0kd0HzZnPTt5svSXHbOFyjW1M41wT+dRee2fI9dtx71rduUQB00Q0VRQ2udZG
+         PeECt8Bw+dfaxAJmAXRclNQVSalnP5Lkb3H3DtBEDIezd8jOdg2T72b6uGYLdxSEAC07
+         FBiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=l53FcUBXaXLsNwgF2kGygWkBGpRAyHzlKoeXvC/PqGA=;
-        b=nXoNf0ivsxuezHMbF1aKTyYDH1WrQ0FpF8AUwGB9SyIbO/Kkp0oSicpM19q108C60c
-         Bq1XPpqfrjSFSAxP+spAcZMp4VlhGj4VXS5uy2X1IImp6sFuQ1keP0EQ92/93SdDs9nc
-         P6wTl+iWTuaN+EOPeO7+vwpQEsQ7gbEMJA3612QtumblMnTrcJvO8EcG3iO3O8I3IMk+
-         If9njcWNnIZecXVedzgP/8OygKeom/jRHMVVZCn77wAjqPzoODmDVfWYT19vYcLQi0lZ
-         OtiA87GacwjWS9lTtJrz3qtNMa77oTY8Ru/lXcwV2i5aNaKR1LeliFIXLePvs6tPU35t
-         SzAQ==
-X-Gm-Message-State: AOAM533U2dAord6hbRBy2wrTF9OxthhE3GVXk9HfXMsYcKq7JMZyhH4n
-        L2m6F+sRa3yviC8i+Owh4rn1rQ==
-X-Google-Smtp-Source: ABdhPJyC48lSDgSusZjdt7wuW3QqHCOrlYimc3jhj7e/M/SEHRc420ooTefdfmy/P4U8y1k3DVVwmA==
-X-Received: by 2002:a17:906:f2d9:: with SMTP id gz25mr4644585ejb.467.1592338537663;
-        Tue, 16 Jun 2020 13:15:37 -0700 (PDT)
-Received: from localhost.localdomain (212-5-158-38.ip.btc-net.bg. [212.5.158.38])
-        by smtp.gmail.com with ESMTPSA id b14sm11602658ejq.105.2020.06.16.13.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 13:15:37 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maheshwar Ajja <majja@codeaurora.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 2/4] venus: venc: Add support for constant quality control
-Date:   Tue, 16 Jun 2020 23:14:44 +0300
-Message-Id: <20200616201446.15996-3-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616201446.15996-1-stanimir.varbanov@linaro.org>
-References: <20200616201446.15996-1-stanimir.varbanov@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=5OcMZK0pIGG+xHLzfApAVvfMiSRe3c77ecNoi1ZxYsc=;
+        b=PTZdxN+BpONkvNGUewjUTNlTUrOkOZFiVpiss5ZwaEmiEMrWyAbotbEUOD53HF6Yoo
+         5ZlTxGVFHnnSN1TuWEyuRQJz80E5rAphGMvaYPk1aPTkF/7ChY1OLI/QanWWN0LJPQeQ
+         9G3YIdUN/jgyKKtu8aFauyXh7ZUPh38uBcnB9fRH0GrlymKpJVYh3vYylSvDyQHwAuqH
+         W67TPRd6wKdZXZ6GwW8JF6+D8j3y4Q5kduvMXGpeohPo3+s/ScwW+KbONfX5Iia07jO0
+         zHvkAd2Uc8CCZHYM3VbpwsSJoSXluZ2C4w7wFAIKsW4MffXDGTcAR3urMWejfXqnSrYN
+         W/zA==
+X-Gm-Message-State: AOAM531L9OQwu7ioDncvkvnr2D91+aFkvHD2Nk11KVnqq0udWQWSgSKk
+        zDASZDI+ud8sq8Wi0ni+GW/e2A==
+X-Google-Smtp-Source: ABdhPJzSqLU4z7tKM4zTa37oGY9FKrc/afCUXskGLirSHGMztvd7XlkWk5gSy8MKJ5BKXnpv1OIqgQ==
+X-Received: by 2002:a05:6830:4a2:: with SMTP id l2mr3812104otd.10.1592338735936;
+        Tue, 16 Jun 2020 13:18:55 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 94sm4268169otb.47.2020.06.16.13.18.54
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Tue, 16 Jun 2020 13:18:54 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 13:18:40 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Vlastimil Babka <vbabka@suse.cz>
+cc:     akpm@linux-foundation.org, alex.shi@linux.alibaba.com,
+        hughd@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        liwang@redhat.com, mgorman@techsingularity.net,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, compaction: make capture control handling safe
+ wrt interrupts
+In-Reply-To: <20200616082649.27173-1-vbabka@suse.cz>
+Message-ID: <alpine.LSU.2.11.2006161316230.1119@eggly.anvils>
+References: <b17acf5b-5e8a-3edf-5a64-603bf6177312@suse.cz> <20200616082649.27173-1-vbabka@suse.cz>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds implementation of V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY v4l
-control when the bitrate mode is CQ.
+On Tue, 16 Jun 2020, Vlastimil Babka wrote:
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/core.h      |  1 +
- drivers/media/platform/qcom/venus/hfi_cmds.c  | 37 ++++++++++++++++++-
- .../media/platform/qcom/venus/hfi_helper.h    | 10 ++++-
- drivers/media/platform/qcom/venus/venc.c      | 14 ++++++-
- .../media/platform/qcom/venus/venc_ctrls.c    |  8 +++-
- 5 files changed, 66 insertions(+), 4 deletions(-)
+> Hugh reports:
+> 
+> =====
+> While stressing compaction, one run oopsed on NULL capc->cc in
+> __free_one_page()'s task_capc(zone): compact_zone_order() had been
+> interrupted, and a page was being freed in the return from interrupt.
+> 
+> Though you would not expect it from the source, both gccs I was using
+> (a 4.8.1 and a 7.5.0) had chosen to compile compact_zone_order() with
+> the ".cc = &cc" implemented by mov %rbx,-0xb0(%rbp) immediately before
+> callq compact_zone - long after the "current->capture_control = &capc".
+> An interrupt in between those finds capc->cc NULL (zeroed by an earlier
+> rep stos).
+> 
+> This could presumably be fixed by a barrier() before setting
+> current->capture_control in compact_zone_order(); but would also need
+> more care on return from compact_zone(), in order not to risk leaking
+> a page captured by interrupt just before capture_control is reset.
+> 
+> Maybe that is the preferable fix, but I felt safer for task_capc() to
+> exclude the rather surprising possibility of capture at interrupt time.
+> =====
+> 
+> I have checked that gcc10 also behaves the same.
+> 
+> The advantage of fix in compact_zone_order() is that we don't add another
+> test in the page freeing hot path, and that it might prevent future problems
+> if we stop exposing pointers to unitialized structures in current task.
+> 
+> So this patch implements the suggestion for compact_zone_order() with barrier()
+> (and WRITE_ONCE() to prevent store tearing) for setting
+> current->capture_control, and prevents page leaking with WRITE_ONCE/READ_ONCE
+> in the proper order.
+> 
+> Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
+> Cc: stable@vger.kernel.org # 5.1+
+> Reported-by: Hugh Dickins <hughd@google.com>
+> Suggested-by: Hugh Dickins <hughd@google.com>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 7118612673c9..1bac30d4cf50 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -201,6 +201,7 @@ struct venc_controls {
- 	u32 bitrate;
- 	u32 bitrate_peak;
- 	u32 rc_enable;
-+	u32 const_quality;
- 
- 	u32 h264_i_period;
- 	u32 h264_entropy_mode;
-diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
-index c67e412f8201..7022368c1e63 100644
---- a/drivers/media/platform/qcom/venus/hfi_cmds.c
-+++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
-@@ -640,6 +640,7 @@ static int pkt_session_set_property_1x(struct hfi_session_set_property_pkt *pkt,
- 		case HFI_RATE_CONTROL_CBR_VFR:
- 		case HFI_RATE_CONTROL_VBR_CFR:
- 		case HFI_RATE_CONTROL_VBR_VFR:
-+		case HFI_RATE_CONTROL_CQ:
- 			break;
- 		default:
- 			ret = -EINVAL;
-@@ -1218,6 +1219,37 @@ pkt_session_set_property_4xx(struct hfi_session_set_property_pkt *pkt,
- 	return 0;
- }
- 
-+static int
-+pkt_session_set_property_6xx(struct hfi_session_set_property_pkt *pkt,
-+			     void *cookie, u32 ptype, void *pdata)
-+{
-+	void *prop_data;
-+
-+	if (!pkt || !cookie || !pdata)
-+		return -EINVAL;
-+
-+	prop_data = &pkt->data[1];
-+
-+	pkt->shdr.hdr.size = sizeof(*pkt);
-+	pkt->shdr.hdr.pkt_type = HFI_CMD_SESSION_SET_PROPERTY;
-+	pkt->shdr.session_id = hash32_ptr(cookie);
-+	pkt->num_properties = 1;
-+	pkt->data[0] = ptype;
-+
-+	switch (ptype) {
-+	case HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY: {
-+		struct hfi_heic_frame_quality *in = pdata, *cq = prop_data;
-+
-+		cq->frame_quality = in->frame_quality;
-+		pkt->shdr.hdr.size += sizeof(u32) + sizeof(*cq);
-+		break;
-+	} default:
-+		return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
-+	}
-+
-+	return 0;
-+}
-+
- int pkt_session_get_property(struct hfi_session_get_property_pkt *pkt,
- 			     void *cookie, u32 ptype)
- {
-@@ -1236,7 +1268,10 @@ int pkt_session_set_property(struct hfi_session_set_property_pkt *pkt,
- 	if (hfi_ver == HFI_VERSION_3XX)
- 		return pkt_session_set_property_3xx(pkt, cookie, ptype, pdata);
- 
--	return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
-+	if (hfi_ver == HFI_VERSION_4XX)
-+		return pkt_session_set_property_4xx(pkt, cookie, ptype, pdata);
-+
-+	return pkt_session_set_property_6xx(pkt, cookie, ptype, pdata);
- }
- 
- void pkt_set_version(enum hfi_version version)
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index f6613df1d16b..758c70ac26fd 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -231,6 +231,7 @@
- #define HFI_RATE_CONTROL_VBR_CFR		0x1000003
- #define HFI_RATE_CONTROL_CBR_VFR		0x1000004
- #define HFI_RATE_CONTROL_CBR_CFR		0x1000005
-+#define HFI_RATE_CONTROL_CQ			0x1000008
- 
- #define HFI_VIDEO_CODEC_H264			0x00000002
- #define HFI_VIDEO_CODEC_H263			0x00000004
-@@ -504,6 +505,7 @@
- #define HFI_PROPERTY_CONFIG_VENC_HIER_P_ENH_LAYER		0x200600b
- #define HFI_PROPERTY_CONFIG_VENC_LTRPERIOD			0x200600c
- #define HFI_PROPERTY_CONFIG_VENC_PERF_MODE			0x200600e
-+#define HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY			0x2006014
- 
- /*
-  * HFI_PROPERTY_PARAM_VPE_COMMON_START
-@@ -520,7 +522,8 @@
- enum hfi_version {
- 	HFI_VERSION_1XX,
- 	HFI_VERSION_3XX,
--	HFI_VERSION_4XX
-+	HFI_VERSION_4XX,
-+	HFI_VERSION_6XX,
- };
- 
- struct hfi_buffer_info {
-@@ -725,6 +728,11 @@ struct hfi_quality_vs_speed {
- 	u32 quality_vs_speed;
- };
- 
-+struct hfi_heic_frame_quality {
-+	u32 frame_quality;
-+	u32 reserved[3];
-+};
-+
- struct hfi_quantization {
- 	u32 qp_i;
- 	u32 qp_p;
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index feed648550d1..802d608a00f9 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -740,14 +740,26 @@ static int venc_set_properties(struct venus_inst *inst)
- 		rate_control = HFI_RATE_CONTROL_OFF;
- 	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_VBR)
- 		rate_control = HFI_RATE_CONTROL_VBR_CFR;
--	else
-+	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_CBR)
- 		rate_control = HFI_RATE_CONTROL_CBR_CFR;
-+	else if (ctr->bitrate_mode == V4L2_MPEG_VIDEO_BITRATE_MODE_CQ)
-+		rate_control = HFI_RATE_CONTROL_CQ;
- 
- 	ptype = HFI_PROPERTY_PARAM_VENC_RATE_CONTROL;
- 	ret = hfi_session_set_property(inst, ptype, &rate_control);
- 	if (ret)
- 		return ret;
- 
-+	if (rate_control == HFI_RATE_CONTROL_CQ && ctr->const_quality) {
-+		struct hfi_heic_frame_quality quality = {};
-+
-+		ptype = HFI_PROPERTY_CONFIG_HEIC_FRAME_QUALITY;
-+		quality.frame_quality = ctr->const_quality;
-+		ret = hfi_session_set_property(inst, ptype, &quality);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (!ctr->bitrate)
- 		bitrate = 64000;
- 	else
-diff --git a/drivers/media/platform/qcom/venus/venc_ctrls.c b/drivers/media/platform/qcom/venus/venc_ctrls.c
-index 8362dde7949e..97a1e821c07e 100644
---- a/drivers/media/platform/qcom/venus/venc_ctrls.c
-+++ b/drivers/media/platform/qcom/venus/venc_ctrls.c
-@@ -202,6 +202,9 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
- 		ctr->rc_enable = ctrl->val;
- 		break;
-+	case V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY:
-+		ctr->const_quality = ctrl->val;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -217,7 +220,7 @@ int venc_ctrl_init(struct venus_inst *inst)
- {
- 	int ret;
- 
--	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 31);
-+	ret = v4l2_ctrl_handler_init(&inst->ctrl_handler, 32);
- 	if (ret)
- 		return ret;
- 
-@@ -357,6 +360,9 @@ int venc_ctrl_init(struct venus_inst *inst)
- 	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
- 			  V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE, 0, 1, 1, 1);
- 
-+	v4l2_ctrl_new_std(&inst->ctrl_handler, &venc_ctrl_ops,
-+			  V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY, 0, 100, 1, 0);
-+
- 	ret = inst->ctrl_handler.error;
- 	if (ret)
- 		goto err;
--- 
-2.17.1
+Acked-by: Hugh Dickins <hughd@google.com>
 
+> ---
+>  mm/compaction.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index fd988b7e5f2b..86375605faa9 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -2316,15 +2316,26 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
+>  		.page = NULL,
+>  	};
+>  
+> -	current->capture_control = &capc;
+> +	/*
+> +	 * Make sure the structs are really initialized before we expose the
+> +	 * capture control, in case we are interrupted and the interrupt handler
+> +	 * frees a page.
+> +	 */
+> +	barrier();
+> +	WRITE_ONCE(current->capture_control, &capc);
+>  
+>  	ret = compact_zone(&cc, &capc);
+>  
+>  	VM_BUG_ON(!list_empty(&cc.freepages));
+>  	VM_BUG_ON(!list_empty(&cc.migratepages));
+>  
+> -	*capture = capc.page;
+> -	current->capture_control = NULL;
+> +	/*
+> +	 * Make sure we hide capture control first before we read the captured
+> +	 * page pointer, otherwise an interrupt could free and capture a page
+> +	 * and we would leak it.
+> +	 */
+> +	WRITE_ONCE(current->capture_control, NULL);
+> +	*capture = READ_ONCE(capc.page);
+>  
+>  	return ret;
+>  }
+> -- 
+> 2.27.0
