@@ -2,141 +2,180 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF36C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B72C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE4620882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="W/psw7rJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2906E20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592324370;
+	bh=+utZ7Z+nOSUxMZ2H/E3rSN3fEYGP+BDM+gAtwi9Zr48=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w1SHhfhxsoJTaSI9RKjIULYZVweOWuVbFE1UhEcm/pHbRpIdDB5DomW+qrMgWgj+o
+	 RHtHWm0rHz6HpleVkPPwSE6Kl/TaOThnwnPRRDdcki7GQKFfqajHSwlS32NfAmQ5YR
+	 uZEsscQlQ5zV7dR5ZWWn1E6i2bR/Gag1qHnhYozI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732515AbgFPQTX (ORCPT
+        id S1730013AbgFPPh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731894AbgFPQTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:19:10 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF06C0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:19:10 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id n6so16409980otl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fiWLJlRK7hIrVJhqrA73kDSLrIv9Ym+IMHSkrLmFVXs=;
-        b=W/psw7rJjjj0igh5USfHJFwAvdGtWgwMOOIfoxPkytUdSSQAdFOH/bfQIqrUsIOuzv
-         a9Vl2sPr7U6gMv9WtD5uCoRamUoj0WIOZ/n0nICz5buDFIt1jLDFuvkvAOZuebZGPj4r
-         Jn2sggqqK9sb1MI3Um3GNHKq17xFRhWCG166HdQLYSHMEk2FY5ACBBZ5hN2lGun81Qyi
-         GJENDCD6oY3Wj4DPdEsHzNRbtcAkvwi4zjzLFGU1+ft+jy2FY0geCnqGSH6Q4MrxLAjz
-         HCQPdEi04N1sqR64Sbg1vccPjTualudux+UTkyybTF1we4OWenyu+uqGY2pczphBKFNF
-         WhEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fiWLJlRK7hIrVJhqrA73kDSLrIv9Ym+IMHSkrLmFVXs=;
-        b=aeS9eyuGxhiJZnDfKYll2MyBqkXk8vgoPaOe3qwiBcpmg/z4NBblFOcWaL4V0s+dDg
-         OOPpd0+Z8ckRxU0MHrUsv4/B6NQNr0YqZxi8GGSyLJzjAfNcl/HydoqvRD5yrZwsjrMg
-         JPX++UbmDlztCBlSN9H3Dd1ieXGP7OoNs3O+2KeCDe8V94Td4QJgwoxKGVF2YIRoKSPz
-         8NsPSwwLeQKeQ3r33qab321NMNXtqJTx3nZqykV24PhUyuciQEYM/3445oNBd4ymhQZe
-         rTdJ7pN8NjiokOhsxvGXS0L6FVaFxCWaCjhU4dIYf9qFtX7l4giYiGiYo1oVUIaS+nRZ
-         HrNw==
-X-Gm-Message-State: AOAM533AS+qJ3+Jgkr5e3Jb2eZdS1HoyO3ZhuwZMKlENe8y6DyW/VCS6
-        3OBW8MOuwV/NwtgqmqxM1sCM1h7TOABpxA==
-X-Google-Smtp-Source: ABdhPJwJLUo+s/3zvXyuzd5xR5zRDZ7iEWewkVzWg80Un1dA516CGEOvT/txqHhK+aWdjAw3vd97RA==
-X-Received: by 2002:a05:6830:1d1:: with SMTP id r17mr3101139ota.19.1592324348502;
-        Tue, 16 Jun 2020 09:19:08 -0700 (PDT)
-Received: from cisco ([2601:282:902:b340:f5b5:cc36:51c:a840])
-        by smtp.gmail.com with ESMTPSA id k84sm4256949oia.3.2020.06.16.09.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 09:19:07 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 10:18:59 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
+        Tue, 16 Jun 2020 11:37:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729824AbgFPPh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97A2D214F1;
+        Tue, 16 Jun 2020 15:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592321845;
+        bh=+utZ7Z+nOSUxMZ2H/E3rSN3fEYGP+BDM+gAtwi9Zr48=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n5M7sNbvONEp/K4VdHKgG1e4iMqlgkbSbO5zQAvKCs/cvK+segxuIbycMN1nIhrny
+         kAkoTTxWlkHbWqrNexuNLt8E9Z/L3Gu7a1ojWBu8IR8QR9JolyY7HAPZwIsNcFR6bj
+         JQoI9dyhD7zGd5P9EnIo1O3N1T211TzQihrBf2RY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 10/11] seccomp: Switch addfd to Extensible Argument
- ioctl
-Message-ID: <20200616161859.GL2893648@cisco>
-References: <20200616032524.460144-1-keescook@chromium.org>
- <20200616032524.460144-11-keescook@chromium.org>
- <20200616145546.GH2893648@cisco>
- <202006160904.A30F2C5B9E@keescook>
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 037/134] sctp: fix refcount bug in sctp_wfree
+Date:   Tue, 16 Jun 2020 17:33:41 +0200
+Message-Id: <20200616153102.562131944@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
+References: <20200616153100.633279950@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006160904.A30F2C5B9E@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:05:29AM -0700, Kees Cook wrote:
-> On Tue, Jun 16, 2020 at 08:55:46AM -0600, Tycho Andersen wrote:
-> > On Mon, Jun 15, 2020 at 08:25:23PM -0700, Kees Cook wrote:
-> > > This patch is based on discussions[1] with Sargun Dhillon, Christian
-> > > Brauner, and David Laight. Instead of building size into the addfd
-> > > structure, make it a function of the ioctl command (which is how sizes are
-> > > normally passed to ioctls). To support forward and backward compatibility,
-> > > just mask out the direction and size, and match everything. The size (and
-> > > any future direction) checks are done along with copy_struct_from_user()
-> > > logic. Also update the selftests to check size bounds.
-> > > 
-> > > [1] https://lore.kernel.org/lkml/20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  include/uapi/linux/seccomp.h                  |  2 -
-> > >  kernel/seccomp.c                              | 21 ++++++----
-> > >  tools/testing/selftests/seccomp/seccomp_bpf.c | 40 ++++++++++++++++---
-> > >  3 files changed, 49 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> > > index c347160378e5..473a61695ac3 100644
-> > > --- a/include/uapi/linux/seccomp.h
-> > > +++ b/include/uapi/linux/seccomp.h
-> > > @@ -118,7 +118,6 @@ struct seccomp_notif_resp {
-> > >  
-> > >  /**
-> > >   * struct seccomp_notif_addfd
-> > > - * @size: The size of the seccomp_notif_addfd structure
-> > >   * @id: The ID of the seccomp notification
-> > >   * @flags: SECCOMP_ADDFD_FLAG_*
-> > >   * @srcfd: The local fd number
-> > > @@ -126,7 +125,6 @@ struct seccomp_notif_resp {
-> > >   * @newfd_flags: The O_* flags the remote FD should have applied
-> > >   */
-> > >  struct seccomp_notif_addfd {
-> > > -	__u64 size;
-> > 
-> > Huh? Won't this break builds?
-> 
-> Only if they use addfd without this patch? :) Are you saying I should
-> collapse this patch into the main addfd and test patches?
+From: Qiujun Huang <hqjagain@gmail.com>
 
-Oh, derp, I see :) Yeah, maybe that would be good.
+[ Upstream commit 5c3e82fe159622e46e91458c1a6509c321a62820 ]
 
-Tycho
+We should iterate over the datamsgs to move
+all chunks(skbs) to newsk.
+
+The following case cause the bug:
+for the trouble SKB, it was in outq->transmitted list
+
+sctp_outq_sack
+        sctp_check_transmitted
+                SKB was moved to outq->sacked list
+        then throw away the sack queue
+                SKB was deleted from outq->sacked
+(but it was held by datamsg at sctp_datamsg_to_asoc
+So, sctp_wfree was not called here)
+
+then migrate happened
+
+        sctp_for_each_tx_datachunk(
+        sctp_clear_owner_w);
+        sctp_assoc_migrate();
+        sctp_for_each_tx_datachunk(
+        sctp_set_owner_w);
+SKB was not in the outq, and was not changed to newsk
+
+finally
+
+__sctp_outq_teardown
+        sctp_chunk_put (for another skb)
+                sctp_datamsg_put
+                        __kfree_skb(msg->frag_list)
+                                sctp_wfree (for SKB)
+	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
+
+Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <mleitner@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/sctp/socket.c | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
+
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index ffd3262b7a41..58fe6556cdf5 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -147,29 +147,44 @@ static void sctp_clear_owner_w(struct sctp_chunk *chunk)
+ 	skb_orphan(chunk->skb);
+ }
+ 
++#define traverse_and_process()	\
++do {				\
++	msg = chunk->msg;	\
++	if (msg == prev_msg)	\
++		continue;	\
++	list_for_each_entry(c, &msg->chunks, frag_list) {	\
++		if ((clear && asoc->base.sk == c->skb->sk) ||	\
++		    (!clear && asoc->base.sk != c->skb->sk))	\
++			cb(c);	\
++	}			\
++	prev_msg = msg;		\
++} while (0)
++
+ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
++				       bool clear,
+ 				       void (*cb)(struct sctp_chunk *))
+ 
+ {
++	struct sctp_datamsg *msg, *prev_msg = NULL;
+ 	struct sctp_outq *q = &asoc->outqueue;
++	struct sctp_chunk *chunk, *c;
+ 	struct sctp_transport *t;
+-	struct sctp_chunk *chunk;
+ 
+ 	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
+ 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
+-			cb(chunk);
++			traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->sacked, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
+-		cb(chunk);
++		traverse_and_process();
+ 
+ 	list_for_each_entry(chunk, &q->out_chunk_list, list)
+-		cb(chunk);
++		traverse_and_process();
+ }
+ 
+ static void sctp_for_each_rx_skb(struct sctp_association *asoc, struct sock *sk,
+@@ -9461,9 +9476,9 @@ static int sctp_sock_migrate(struct sock *oldsk, struct sock *newsk,
+ 	 * paths won't try to lock it and then oldsk.
+ 	 */
+ 	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
+-	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
++	sctp_for_each_tx_datachunk(assoc, true, sctp_clear_owner_w);
+ 	sctp_assoc_migrate(assoc, newsk);
+-	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
++	sctp_for_each_tx_datachunk(assoc, false, sctp_set_owner_w);
+ 
+ 	/* If the association on the newsk is already closed before accept()
+ 	 * is called, set RCV_SHUTDOWN flag.
+-- 
+2.25.1
+
+
+
