@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E64C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74219C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B0B20FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA1F20FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgFPMXx (ORCPT
+        id S1729373AbgFPMXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
+        Tue, 16 Jun 2020 08:23:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728875AbgFPMWC (ORCPT
+        with ESMTP id S1728876AbgFPMWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 08:22:02 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C02FC08C5C2;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E983C08C5C3;
         Tue, 16 Jun 2020 05:22:01 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbD-0004ez-OP; Tue, 16 Jun 2020 14:21:55 +0200
+        id 1jlAbE-0004fs-Iy; Tue, 16 Jun 2020 14:21:56 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 616581C07B4;
-        Tue, 16 Jun 2020 14:21:51 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:51 -0000
-From:   "tip-bot2 for Luca Abeni" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 59C711C0823;
+        Tue, 16 Jun 2020 14:21:52 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:52 -0000
+From:   "tip-bot2 for Dietmar Eggemann" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/deadline: Implement fallback mechanism for !fit case
-Cc:     Luca Abeni <luca.abeni@santannapisa.it>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+Subject: [tip: sched/core] sched/deadline: Add dl_bw_capacity()
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200520134243.19352-6-dietmar.eggemann@arm.com>
-References: <20200520134243.19352-6-dietmar.eggemann@arm.com>
+In-Reply-To: <20200520134243.19352-3-dietmar.eggemann@arm.com>
+References: <20200520134243.19352-3-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
-Message-ID: <159231011120.16989.2193698782650296357.tip-bot2@tip-bot2>
+Message-ID: <159231011211.16989.3507232109054333136.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,74 +60,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     23e71d8ba42933bff12e453858fd68c073bc5258
-Gitweb:        https://git.kernel.org/tip/23e71d8ba42933bff12e453858fd68c073bc5258
-Author:        Luca Abeni <luca.abeni@santannapisa.it>
-AuthorDate:    Wed, 20 May 2020 15:42:43 +02:00
+Commit-ID:     fc9dc698472aa460a8b3b036d9b1d0b751f12f58
+Gitweb:        https://git.kernel.org/tip/fc9dc698472aa460a8b3b036d9b1d0b751f12f58
+Author:        Dietmar Eggemann <dietmar.eggemann@arm.com>
+AuthorDate:    Wed, 20 May 2020 15:42:40 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Mon, 15 Jun 2020 14:10:05 +02:00
 
-sched/deadline: Implement fallback mechanism for !fit case
+sched/deadline: Add dl_bw_capacity()
 
-When a task has a runtime that cannot be served within the scheduling
-deadline by any of the idle CPU (later_mask) the task is doomed to miss
-its deadline.
+Capacity-aware SCHED_DEADLINE Admission Control (AC) needs root domain
+(rd) CPU capacity sum.
 
-This can happen since the SCHED_DEADLINE admission control guarantees
-only bounded tardiness and not the hard respect of all deadlines.
-In this case try to select the idle CPU with the largest CPU capacity
-to minimize tardiness.
+Introduce dl_bw_capacity() which for a symmetric rd w/ a CPU capacity
+of SCHED_CAPACITY_SCALE simply relies on dl_bw_cpus() to return #CPUs
+multiplied by SCHED_CAPACITY_SCALE.
 
-Favor task_cpu(p) if it has max capacity of !fitting CPUs so that
-find_later_rq() can potentially still return it (most likely cache-hot)
-early.
+For an asymmetric rd or a CPU capacity < SCHED_CAPACITY_SCALE it
+computes the CPU capacity sum over rd span and cpu_active_mask.
 
-Signed-off-by: Luca Abeni <luca.abeni@santannapisa.it>
+A 'XXX Fix:' comment was added to highlight that if 'rq->rd ==
+def_root_domain' AC should be performed against the capacity of the
+CPU the task is running on rather the rd CPU capacity sum. This
+issue already exists w/o capacity awareness.
+
 Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Juri Lelli <juri.lelli@redhat.com>
-Link: https://lkml.kernel.org/r/20200520134243.19352-6-dietmar.eggemann@arm.com
+Link: https://lkml.kernel.org/r/20200520134243.19352-3-dietmar.eggemann@arm.com
 ---
- kernel/sched/cpudeadline.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ kernel/sched/deadline.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-index 8630f2a..8cb06c8 100644
---- a/kernel/sched/cpudeadline.c
-+++ b/kernel/sched/cpudeadline.c
-@@ -121,19 +121,31 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ec90265..01f474a 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -69,6 +69,34 @@ static inline int dl_bw_cpus(int i)
  
- 	if (later_mask &&
- 	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
--		int cpu;
-+		unsigned long cap, max_cap = 0;
-+		int cpu, max_cpu = -1;
- 
- 		if (!static_branch_unlikely(&sched_asym_cpucapacity))
- 			return 1;
- 
- 		/* Ensure the capacity of the CPUs fits the task. */
- 		for_each_cpu(cpu, later_mask) {
--			if (!dl_task_fits_capacity(p, cpu))
-+			if (!dl_task_fits_capacity(p, cpu)) {
- 				cpumask_clear_cpu(cpu, later_mask);
+ 	return cpus;
+ }
 +
-+				cap = capacity_orig_of(cpu);
++static inline unsigned long __dl_bw_capacity(int i)
++{
++	struct root_domain *rd = cpu_rq(i)->rd;
++	unsigned long cap = 0;
 +
-+				if (cap > max_cap ||
-+				    (cpu == task_cpu(p) && cap == max_cap)) {
-+					max_cap = cap;
-+					max_cpu = cpu;
-+				}
-+			}
- 		}
- 
--		if (!cpumask_empty(later_mask))
--			return 1;
-+		if (cpumask_empty(later_mask))
-+			cpumask_set_cpu(max_cpu, later_mask);
++	RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held(),
++			 "sched RCU must be held");
 +
-+		return 1;
- 	} else {
- 		int best_cpu = cpudl_maximum(cp);
++	for_each_cpu_and(i, rd->span, cpu_active_mask)
++		cap += capacity_orig_of(i);
++
++	return cap;
++}
++
++/*
++ * XXX Fix: If 'rq->rd == def_root_domain' perform AC against capacity
++ * of the CPU the task is running on rather rd's \Sum CPU capacity.
++ */
++static inline unsigned long dl_bw_capacity(int i)
++{
++	if (!static_branch_unlikely(&sched_asym_cpucapacity) &&
++	    capacity_orig_of(i) == SCHED_CAPACITY_SCALE) {
++		return dl_bw_cpus(i) << SCHED_CAPACITY_SHIFT;
++	} else {
++		return __dl_bw_capacity(i);
++	}
++}
+ #else
+ static inline struct dl_bw *dl_bw_of(int i)
+ {
+@@ -79,6 +107,11 @@ static inline int dl_bw_cpus(int i)
+ {
+ 	return 1;
+ }
++
++static inline unsigned long dl_bw_capacity(int i)
++{
++	return SCHED_CAPACITY_SCALE;
++}
+ #endif
  
+ static inline
