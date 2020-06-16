@@ -2,84 +2,124 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9292FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E23E20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFE120786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgFPHdQ (ORCPT
+        id S1727769AbgFPHdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:33:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:46469 "EHLO mga05.intel.com"
+        Tue, 16 Jun 2020 03:33:24 -0400
+Received: from mga09.intel.com ([134.134.136.24]:62741 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgFPHdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:33:15 -0400
-IronPort-SDR: 9kO8yEa9bIv+qkGyLCqMoy7mM6gWrOGfpzfNyEfyNy6xK8twKZpIhThI53k9WskcXxbs9F+kTa
- ONK/mXCd6BZg==
+        id S1727103AbgFPHdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 03:33:23 -0400
+IronPort-SDR: VgcmTZp4U8HSVbfVR2APRA4sgv6thiF1jC45+yw/6hkYvZnJZltgUyfLSJvtdlptx7xV67fQTL
+ 2qSaGRen7mSw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 00:33:14 -0700
-IronPort-SDR: hFfb1kQV9mwaaKEDADpV9dTlNpLO4oG7L2F/uMb2dPpJGRWjNvR24A0jI3DhxCOr0cWiJN6ER6
- 1Tkv++9zrW8Q==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 00:33:23 -0700
+IronPort-SDR: ZBYIUwjIujUX2qz9Msx/5mblCk6MtE/FTrDqW3NppZfi00tP3HBiULLZTVtVjDOl46Wqw90jfT
+ 91HBstN4BxLA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="476339274"
-Received: from lxy-dell.sh.intel.com ([10.239.159.21])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Jun 2020 00:33:10 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH] KVM: X86: Fix MSR range of APIC registers in X2APIC mode
-Date:   Tue, 16 Jun 2020 15:33:07 +0800
-Message-Id: <20200616073307.16440-1-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.18.2
+   d="scan'208";a="261347211"
+Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Jun 2020 00:33:21 -0700
+From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] PCI/MSI: Forward MSI-X vector enable error code in pci_alloc_irq_vectors_affinity()
+Date:   Tue, 16 Jun 2020 09:33:16 +0200
+Message-Id: <20200616073318.20229-1-piotr.stankiewicz@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
+References: <20200609091148.32749-1-piotr.stankiewicz@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only MSR address range 0x800 through 0x8ff is architecturally reserved
-and dedicated for accessing APIC registers in x2APIC mode.
+When debugging an issue where I was asking the PCI machinery to enable a
+set of MSI-X vectors, without falling back on MSI, I ran across a
+behaviour which seems odd. The pci_alloc_irq_vectors_affinity() will
+always return -ENOSPC on failure, when allocating MSI-X vectors only,
+whereas with MSI fallback it will forward any error returned by
+__pci_enable_msi_range(). This is a confusing behaviour, so have the
+pci_alloc_irq_vectors_affinity() forward the error code from
+__pci_enable_msix_range() when appropriate.
 
-Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/kvm/x86.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/msi.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 00c88c2f34e4..29d9b078ce69 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2856,7 +2856,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		return kvm_mtrr_set_msr(vcpu, msr, data);
- 	case MSR_IA32_APICBASE:
- 		return kvm_set_apic_base(vcpu, msr_info);
--	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
-+	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
- 		return kvm_x2apic_msr_write(vcpu, msr, data);
- 	case MSR_IA32_TSCDEADLINE:
- 		kvm_set_lapic_tscdeadline_msr(vcpu, data);
-@@ -3196,7 +3196,7 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_IA32_APICBASE:
- 		msr_info->data = kvm_get_apic_base(vcpu);
- 		break;
--	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
-+	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
- 		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
- 	case MSR_IA32_TSCDEADLINE:
- 		msr_info->data = kvm_get_lapic_tscdeadline_msr(vcpu);
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 6b43a5455c7a..cade9be68b09 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -1191,8 +1191,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 				   struct irq_affinity *affd)
+ {
+ 	struct irq_affinity msi_default_affd = {0};
+-	int msix_vecs = -ENOSPC;
+-	int msi_vecs = -ENOSPC;
++	int nvecs = -ENOSPC;
+ 
+ 	if (flags & PCI_IRQ_AFFINITY) {
+ 		if (!affd)
+@@ -1203,17 +1202,16 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 	}
+ 
+ 	if (flags & PCI_IRQ_MSIX) {
+-		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
+-						    max_vecs, affd, flags);
+-		if (msix_vecs > 0)
+-			return msix_vecs;
++		nvecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
++						affd, flags);
++		if (nvecs > 0)
++			return nvecs;
+ 	}
+ 
+ 	if (flags & PCI_IRQ_MSI) {
+-		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
+-						  affd);
+-		if (msi_vecs > 0)
+-			return msi_vecs;
++		nvecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
++		if (nvecs > 0)
++			return nvecs;
+ 	}
+ 
+ 	/* use legacy IRQ if allowed */
+@@ -1231,9 +1229,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 		}
+ 	}
+ 
+-	if (msix_vecs == -ENOSPC)
+-		return -ENOSPC;
+-	return msi_vecs;
++	return nvecs;
+ }
+ EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+ 
 -- 
-2.18.2
+2.17.2
 
