@@ -2,153 +2,213 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA113C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D17C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABEE2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21BE20FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="VwytIP2N";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="KuTgu9Us"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFVl4b3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgFPMiq (ORCPT
+        id S1728326AbgFPMkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:38:46 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:33098 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFPMip (ORCPT
+        Tue, 16 Jun 2020 08:40:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726306AbgFPMkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:38:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592311124; x=1623847124;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=U+9VhUwFy/5HR4hwxG4PNOQPyJwk2BxA+0mQ8zMjLr8=;
-  b=VwytIP2NufZtmmkqGXF8kMVTR2yVcEdGT/fK0CRP4c0NEHD0Av9RT8Bk
-   biL/VA/u8VJ/HpSgAN2rxXfm+LME6EoDWDUBY3K2U9qonpKW+9Z9IsBL7
-   ZzHahmUFgBbx8CD6UqMHFnQQnq/yJ/7PMOBisGZ397P1PDpYvJapDTQTf
-   Tp5K/kYldSwUAx4gMONU4Q4KQNYU13rXYiyumyyLkIB2yo96s4qF8IIfo
-   GtOAffCqOXJeFGayvWI0uC/YJCmuJ73q867VFrnRDSg6Os90IVcOULhVM
-   phGTUxtx5ihoTIoYJblvhbbjLh9Fj67hz+W7pOF00kVWqRkvzGqbTFxY3
-   g==;
-IronPort-SDR: dpYdwH23FtvuA6F7Gc0eS41l3Qx+00t19uvwDiz7M04Js67HOCNvMUy7hrRSrGqSyII1netvKL
- CGe7VtC2c9bXkNr3UX8bTINncn4AOynREMlYYg9LC/ueMxphqbw6Pw+DkFY/YPQq+XeeBwpaAL
- +CvlIEFqVJ2WwGdakHZjy1TLeTNmh4oUuCmb3fZqH/vnjbL2tDT+B+ScCZwvS/VFvCMKrsl4LP
- jvDojXLmQrG1tQ9WQKLeXC7ZYBEwfkSZ1B+Yb26UHm/jsBo3DqIAPqn3BFrpqlK9NXJtvu/QfN
- IIw=
-X-IronPort-AV: E=Sophos;i="5.73,518,1583164800"; 
-   d="scan'208";a="140390456"
-Received: from mail-co1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.52])
-  by ob1.hgst.iphmx.com with ESMTP; 16 Jun 2020 20:38:43 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c2CawvVh8V/0zCIkLHsO9mN49p3LyPr/f+SKzHMXABaxgcnEg7sn7/972gaE53JtS29sfSArGrBi0OB8oN2iRtDJwUMXafqlSN7Up2Hu//YDF+mFtEg046Vll5WR0PFUfFCRiALOeboL3+AMeEmAc+vQdjzFfXp7iW+7wWU+KAjNp27gZ12IzXwQTIrAp80eF6M5Nxv5cNNZHoigqYDp6Cgy9uS4AXK/0N3KdfgdmNb3E+brWMzUemXPbNDqEcz8CnDkjrhnMwUzNoNDneYF5JmYDnFw8FGW91oZKDLjtY9N1gUMBCAXsdsTDS6PbCXhfpUxvISS1odYOduJEmoJKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U+9VhUwFy/5HR4hwxG4PNOQPyJwk2BxA+0mQ8zMjLr8=;
- b=T7T6cwVr2hq9/J5KH3eruqacFSIdhVvhXRubRwEYGWF+28TxZeyPab2WWdsDv+OhqQ+rWAzSqP6Y9ccMjHb5BTETx196cYDPjQAPqYGqkli428DI5s2izuKqAZvV+VvxY2v2vyDMjEHfYShThZNEVdgIOppjgvMDbVIH+d9n6q1KqlsaQDKX5+AlqzBHZPBIfVs0RxaV6Nn5yOGD6+gLxh7odSSoJb2ZIEPouJCszSk2X0wgSS0iAh4KsFqrKnOXE0/4Hl2ivWBIK2EVkCsDwlGiZVl7d2s7N9Wjj9ixpk4rW1DTpGeqpAPgYAFCh+4WeZ/q5LyM/nYpSk0sqqPyww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Tue, 16 Jun 2020 08:40:52 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985CFC08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:40:52 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id i74so19117633oib.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:40:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U+9VhUwFy/5HR4hwxG4PNOQPyJwk2BxA+0mQ8zMjLr8=;
- b=KuTgu9UsI8g97ejmqtJYpbCZwC7yGhJ63QI+ntHQMBiJx/o9kgBXaiWEr3vmugNGn69ixCX/qama3KI6b/gZaZbzD5Imosjcgw1gtq+5CEFGdiCIYTjL4odiFx0ddQ50H2SmpG+VV7jS1riKjm9InUEjpbuC90rBgbiJb8SDlZI=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN2PR04MB2174.namprd04.prod.outlook.com (2603:10b6:804:10::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Tue, 16 Jun
- 2020 12:38:41 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3109.021; Tue, 16 Jun 2020
- 12:38:41 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
-CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
-        "cc.chou@mediatek.com" <cc.chou@mediatek.com>,
-        "chaotian.jing@mediatek.com" <chaotian.jing@mediatek.com>
-Subject: RE: [PATCH] scsi: ufs-mediatek: Make ufs_mtk_wait_link_state as
- static function
-Thread-Topic: [PATCH] scsi: ufs-mediatek: Make ufs_mtk_wait_link_state as
- static function
-Thread-Index: AQHWQ8O5SdGwpLWeBk+lZ+eDkpyrJKjbLmyA
-Date:   Tue, 16 Jun 2020 12:38:41 +0000
-Message-ID: <SN6PR04MB4640FC505DFE6CB567A488ABFC9D0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200616095120.14570-1-stanley.chu@mediatek.com>
-In-Reply-To: <20200616095120.14570-1-stanley.chu@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mediatek.com; dkim=none (message not signed)
- header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 94a0dc61-0c75-4b29-af7a-08d811f23394
-x-ms-traffictypediagnostic: SN2PR04MB2174:
-x-microsoft-antispam-prvs: <SN2PR04MB2174A89167296B2C60DEC817FC9D0@SN2PR04MB2174.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2201;
-x-forefront-prvs: 04362AC73B
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dwc07w1enTjrX3Gkwd81rBW7krBtdCw6CHbCx+n49WFZUQLCskSWLdcFfpDploxrkKFmo2GuvKpkbxGEsUrDnioXKD6B1MNqwzhHhBRAekGLYlXFtog6l1iFSvLquQuoTFG8HXRA0bSFVsvP2XhmoyFj8mBg9hjKzWJqYwRsEZtRXcZicJpaTfRWhE5+LQM65bBBRk6KDTLEi2PrhFVEf47E+0SS8rD6uAjtUXJc/r8+eBe4nw381ZptFeKaYxoJeAwvxFxxb2SyAVo9T0Uk6x4x9vvMLwEliTk++03QrwxNB0PosWnBThP5xTPcjo9v5AunZz5m7z0mpjL0TMNkjw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66946007)(7416002)(66476007)(33656002)(4326008)(8676002)(66446008)(64756008)(66556008)(86362001)(76116006)(4744005)(71200400001)(83380400001)(186003)(55016002)(2906002)(6506007)(8936002)(26005)(110136005)(54906003)(9686003)(52536014)(7696005)(498600001)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: cUCuCw0b/wlMaozCcl1oMW0oRT7qMj1sAsbQFB5djgwuDSEkCLczTzsUitRjWlWXdYObkvzhc1IiP4hwwE+rH1avR0THnar/6A+fmifuUnh+MCz7GSqQU/AIIftlFe/4bqH4w5A+eQ1PuML47kXnMrXXdjfbJ88xymdchfToKXQMA4R33DSHWXNtBx7GKArYBYFOOv4UybaTna8bZH9a1XAA4JamplQONr/Btp08VTpPetyTVAO7zqgpVvLG1fNE+cVfbEs+6kQwKFjh/mLNZD05b1MppyYTzUXICSj+B8YbjlHLh09h1Xc6tqPvbhh/0Gobgi22pQIrYe3Ydo/Ykn4UWmRNeXwoVSFakzMs8H6Xy9xq6eXA/n9neJilu4dMJaEU6rY3smKRO8mm+DBEMuXgnvixul66R54ZuNDFp8xiCPgxknywIuaFBKOIGOHQybsTHp7CSmBDhNahDfuxgd6k3jOuHNLfDzE+LHKG1Zc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yRuEYGWYbCpgbt9WyvifXrnW7xoF05jSYdHgJjfemG4=;
+        b=CFVl4b3RIYqk3FRdV+rogfziBje3cFPovLts/hRAcvgo3K7kfBpqVKQ0qGaQ4Fl1eK
+         TTnbb+/CNR/h9GUaPp0AMkwc/xXfk1gQRbcW3xIszBscuzjOXp2DEGd8nTuovsQi3/iv
+         J4y0PedCS7O0sKr1Y/0euYNNhtYXmrPdlpmByzTbLO1CjlSsSKgALBAXrSmiXmT4pksL
+         n6Aj/ms2lrvMjyTKqYqOrFr4pawYIO0j0x8ohPs10SvNJ2gBZk/sfK+bhLB4CpcNZpFv
+         8ZyzgvVLlvyOUnpORdott8eQTlCVe6KudWdtPSP0aR+qEquv4b0SUfQyeuXDrj1n9w47
+         SJbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yRuEYGWYbCpgbt9WyvifXrnW7xoF05jSYdHgJjfemG4=;
+        b=LLJJCZJOoAY1wmeAs/ufssXHX7HXsFR6ZLuQgTpgBzIxiobBWcRnE93s+Ggqjim2yN
+         yq66gNrbaJkn3JEWC3h1489Kw+sRbyZXsxS2xzLdifcf/ATOKeM95oNnhtAbKU3hAjRQ
+         kKgVob4XtUBc5C15lIg2lIWe9OJ0bVoyKdLWdauHD6LXJXtt6+QodVjnE41Y+jYff2cB
+         /GqEZiTQqxYn03c9G3daGhtFFkDFrDwUkeyNM0hZHcQT7N7ipE21BF/YxZROnvoKG2sm
+         6dyW6Nqk415mbauEVhVI1Nm5sb/6r2Sh121z8QrEIbu72zkx4K4ZERNDjAUlPpitBN3R
+         EWZg==
+X-Gm-Message-State: AOAM530g110waez383JdjnYZGR3GYyb5afaWHWYACrySsQvjVdA/1Yum
+        SeqU3iL4kaLh9J+Yk8gocqJUuPI2U85rKE3o8GxwAA==
+X-Google-Smtp-Source: ABdhPJw1HIcntem/ur3nYuYQnYfdpeq3LaH9w6z+uVXnvPpWXi7NcZfGZ06MIquL/3rMm6i3W0PzTlBfRGVBUlNtAcQ=
+X-Received: by 2002:a05:6808:a96:: with SMTP id q22mr3251821oij.76.1592311251656;
+ Tue, 16 Jun 2020 05:40:51 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94a0dc61-0c75-4b29-af7a-08d811f23394
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 12:38:41.6865
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HA4xaXES7BzCDfJNkeZ7UBJFopIFBj7rsk8j05D6nvuC9ORLbYWxAbekRdt8JsCgbK9wHJaGRsxUWdkmoDftQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR04MB2174
+References: <316a5cf9-ca71-6506-bf8b-e79ded9055b2@codeaurora.org>
+In-Reply-To: <316a5cf9-ca71-6506-bf8b-e79ded9055b2@codeaurora.org>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Tue, 16 Jun 2020 18:10:40 +0530
+Message-ID: <CAO_48GEa2B+a8XbaqurvRPZswRQGWq82YqUr4uotvyQKjPQuFQ@mail.gmail.com>
+Subject: Re: [PATCH] dmabuf: use spinlock to access dmabuf->name
+To:     Charan Teja Kalla <charante@codeaurora.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>, vinmenon@codeaurora.org,
+        "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Daniel, Chris,
 
+On Thu, 11 Jun 2020 at 19:10, Charan Teja Kalla <charante@codeaurora.org> wrote:
+>
+> There exists a sleep-while-atomic bug while accessing the dmabuf->name
+> under mutex in the dmabuffs_dname(). This is caused from the SELinux
+> permissions checks on a process where it tries to validate the inherited
+> files from fork() by traversing them through iterate_fd() (which
+> traverse files under spin_lock) and call
+> match_file(security/selinux/hooks.c) where the permission checks happen.
+> This audit information is logged using dump_common_audit_data() where it
+> calls d_path() to get the file path name. If the file check happen on
+> the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex to
+> access dmabuf->name. The flow will be like below:
+> flush_unauthorized_files()
+>   iterate_fd()
+>     spin_lock() --> Start of the atomic section.
+>       match_file()
+>         file_has_perm()
+>           avc_has_perm()
+>             avc_audit()
+>               slow_avc_audit()
+>                 common_lsm_audit()
+>                   dump_common_audit_data()
+>                     audit_log_d_path()
+>                       d_path()
+>                         dmabuffs_dname()
+>                           mutex_lock()--> Sleep while atomic.
+>
+> Call trace captured (on 4.19 kernels) is below:
+> ___might_sleep+0x204/0x208
+> __might_sleep+0x50/0x88
+> __mutex_lock_common+0x5c/0x1068
+> __mutex_lock_common+0x5c/0x1068
+> mutex_lock_nested+0x40/0x50
+> dmabuffs_dname+0xa0/0x170
+> d_path+0x84/0x290
+> audit_log_d_path+0x74/0x130
+> common_lsm_audit+0x334/0x6e8
+> slow_avc_audit+0xb8/0xf8
+> avc_has_perm+0x154/0x218
+> file_has_perm+0x70/0x180
+> match_file+0x60/0x78
+> iterate_fd+0x128/0x168
+> selinux_bprm_committing_creds+0x178/0x248
+> security_bprm_committing_creds+0x30/0x48
+> install_exec_creds+0x1c/0x68
+> load_elf_binary+0x3a4/0x14e0
+> search_binary_handler+0xb0/0x1e0
+>
+> So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
+Any objections to this change? This changes protection only for
+dmabuf->name field, but I'd request either of you to review it,
+please?
+>
+> Cc: <stable@vger.kernel.org> [5.3+]
+> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+> ---
+>  drivers/dma-buf/dma-buf.c | 13 +++++++------
+>  include/linux/dma-buf.h   |  1 +
+>  2 files changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index 01ce125..2e0456c 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+>         size_t ret = 0;
+>
+>         dmabuf = dentry->d_fsdata;
+> -       dma_resv_lock(dmabuf->resv, NULL);
+> +       spin_lock(&dmabuf->name_lock);
+>         if (dmabuf->name)
+>                 ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+> -       dma_resv_unlock(dmabuf->resv);
+> +       spin_unlock(&dmabuf->name_lock);
+>
+>         return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+>                              dentry->d_name.name, ret > 0 ? name : "");
+> @@ -335,7 +335,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+>         if (IS_ERR(name))
+>                 return PTR_ERR(name);
+>
+> -       dma_resv_lock(dmabuf->resv, NULL);
+> +       spin_lock(&dmabuf->name_lock);
+>         if (!list_empty(&dmabuf->attachments)) {
+>                 ret = -EBUSY;
+>                 kfree(name);
+> @@ -345,7 +345,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+>         dmabuf->name = name;
+>
+>  out_unlock:
+> -       dma_resv_unlock(dmabuf->resv);
+> +       spin_unlock(&dmabuf->name_lock);
+>         return ret;
+>  }
+>
+> @@ -405,10 +405,10 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+>         /* Don't count the temporary reference taken inside procfs seq_show */
+>         seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
+>         seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
+> -       dma_resv_lock(dmabuf->resv, NULL);
+> +       spin_lock(&dmabuf->name_lock);
+>         if (dmabuf->name)
+>                 seq_printf(m, "name:\t%s\n", dmabuf->name);
+> -       dma_resv_unlock(dmabuf->resv);
+> +       spin_unlock(&dmabuf->name_lock);
+>  }
+>
+>  static const struct file_operations dma_buf_fops = {
+> @@ -546,6 +546,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+>         dmabuf->size = exp_info->size;
+>         dmabuf->exp_name = exp_info->exp_name;
+>         dmabuf->owner = exp_info->owner;
+> +       spin_lock_init(&dmabuf->name_lock);
+>         init_waitqueue_head(&dmabuf->poll);
+>         dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
+>         dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
+> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+> index ab0c156..93108fd 100644
+> --- a/include/linux/dma-buf.h
+> +++ b/include/linux/dma-buf.h
+> @@ -311,6 +311,7 @@ struct dma_buf {
+>         void *vmap_ptr;
+>         const char *exp_name;
+>         const char *name;
+> +       spinlock_t name_lock;
+>         struct module *owner;
+>         struct list_head list_node;
+>         void *priv;
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
-=20
->=20
-> Fix build warning reported by kernel test robot:
-> Make ufs_mtk_wait_link_state() as static functon.
->=20
-> Warning:
-> >> drivers/scsi/ufs/ufs-mediatek.c:181:5: warning: no previous prototype
-> >> for 'ufs_mtk_wait_link_state' [-Wmissing-prototypes]
->=20
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Best,
+Sumit.
