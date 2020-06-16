@@ -2,181 +2,282 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9362CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6162A20FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A97A2100A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lMyV++gP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FiMajHQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgFPNQL (ORCPT
+        id S1728787AbgFPNRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51172 "EHLO
+        Tue, 16 Jun 2020 09:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbgFPNQL (ORCPT
+        with ESMTP id S1725843AbgFPNRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:16:11 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5BCC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:16:11 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r15so3016840wmh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:16:10 -0700 (PDT)
+        Tue, 16 Jun 2020 09:17:22 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D8CC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:17:20 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id t6so15854595otk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:17:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9NeQqiMAuFvxtrOzPp09+0hkReargQ3L4b3prwQqFWs=;
-        b=lMyV++gPByIjhuuvn2wsK/E6klL79fbVx4ACxXxrHnu5At/8lS+6vpLTCO+WumvCb1
-         Btd4DCv1THnwBCG4id7qSDcH0KTr8RGBM5STEozGGKPTVPzbXhsaJf5fGrSIgHEBynR6
-         osWj5fyj4mQ1L5xGJVdkwJbuY4v1377rcu5Jq4sLk6859fcrU2fks+W6cDGJWjiN+naa
-         qPVu58rW8dbILiK6yl0uJWaPVKLFH5WStAXktelK95uejdkKJQce6ZH8lDI9q1TvmM+g
-         MmMS8mqTXaWgdtojc8ytx09R4ArfAHysepVCuNQwQfD/38aR+4SbqhONnPt16lRyzEFp
-         8SJg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rzMbHCBVqOXYNcr+qlbWYXnu4pNfFFS2FAbZ34pmgSc=;
+        b=FiMajHQm7L6DE7XhIjtgClVw9dM6cFiUMth6qMwoC0Emy3gOzr89rNweEqq8RXT2rm
+         pOgmOB4uLk0vlKKD5iVRMmwYIBZGPwAHQZI+Dviz/nlvIE+3qu6k6FVURyqCv9s7P6aS
+         Zzk9wgbThOGRYsnJ0OSaaZL0J6mVMCZGcrofs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9NeQqiMAuFvxtrOzPp09+0hkReargQ3L4b3prwQqFWs=;
-        b=IiV8y9o/4RYLkrfXL6qQ+qguCLPMt9R8j2WqmVpdNpi84Ty7KLtexR6Z5JJPGjMR54
-         OGd6jM/7QMzzEtPHbvkhC3h5imFE+nw7dS9WmLYDU8lZNkh/A+YTjejkxpbGJ40F5hci
-         sSshctet7C7ZU5BgOzC4MIR/qpKfaJtNlmRUR45efH0BLWzB0FXw15WTf/wBtH3P6Fah
-         OsUzp6cjdQ9DnpZlRE3lmf/1h5Jy+4nQ/u9eXNwS33iqO6ubwBe8dIceWy/BVyDxP7T8
-         VlHJ4ECoHlYyq89pMxNHsMdyAmIrO3CrfrsrOug0CK58bVRV8gvMZevhcLRiXuYMoC16
-         QStg==
-X-Gm-Message-State: AOAM530mt5SxKY2t5AWbecBiTqoK6Ys1knEbx3FOUPkSdiiu1JDkb5yg
-        Gud2ScoDL0pscjvTCTgxEtUqiQ==
-X-Google-Smtp-Source: ABdhPJxXm+YEBOebjFL0T7eNx99jr7/JaArOdawU3v9M4AnaQqFhb5wqOc3kZdhNeoyRmtq7vpK93Q==
-X-Received: by 2002:a1c:541d:: with SMTP id i29mr3214543wmb.73.1592313369700;
-        Tue, 16 Jun 2020 06:16:09 -0700 (PDT)
-Received: from dell ([109.180.115.156])
-        by smtp.gmail.com with ESMTPSA id d2sm29670942wrs.95.2020.06.16.06.16.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 06:16:08 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 14:16:07 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH] dt-bindings: mfd: Add bindings for the Mediatek MT6360
- PMIC
-Message-ID: <20200616131607.GQ2608702@dell>
-References: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rzMbHCBVqOXYNcr+qlbWYXnu4pNfFFS2FAbZ34pmgSc=;
+        b=nO5B1C52mKTqM/k3YVC6vwmhKRXAtBVYfA7W0BkUiA8nrkk4/VosnwlmPgBpnm3hJd
+         0CLoNVfU3iN1CgK2rDgdLeNSDsJJ+y+6Vs9lpyPZ+12YX+iYFr+t+UreanfZ34TZoxQe
+         1X14jLc4SkZtP4MsCkLR4qTDCDdihmOWYjIjydzEhLO6wSA09pUj3iqAu6nZYPiLoojU
+         FBmYifRC72Om3y8jWGGZTe5lPf+K4dNz9NgBvvDlKgMO2qwc8eHhXfR8eC5GtU/V19Jz
+         td1m352Tm6hTrJ7/3OWE/JY1nUW64XnKcQdbqBN3ivaSqE4UQWaOqNUHaT+TBjLbKKBa
+         /cNA==
+X-Gm-Message-State: AOAM531nGBPvEFGW0rkv5kqXAAAtN+ePOIRmf1xRGW1WSiP+bqvRwhOW
+        7VrR8p1/ErNnlJpwSmg1EvU5NqPnQlM=
+X-Google-Smtp-Source: ABdhPJwJdXVehjO2tA6uF11OLFiTkkjsu5YifeTxcf7IRC52jUTM98ZVQOQLzNpQdso3ZsvWoy879Q==
+X-Received: by 2002:a9d:204f:: with SMTP id n73mr2263435ota.342.1592313438321;
+        Tue, 16 Jun 2020 06:17:18 -0700 (PDT)
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com. [209.85.161.49])
+        by smtp.gmail.com with ESMTPSA id c23sm4040861otd.7.2020.06.16.06.17.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 06:17:17 -0700 (PDT)
+Received: by mail-oo1-f49.google.com with SMTP id v1so4073675ooh.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:17:16 -0700 (PDT)
+X-Received: by 2002:a4a:6156:: with SMTP id u22mr2286731ooe.50.1592313436257;
+ Tue, 16 Jun 2020 06:17:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
+References: <20200520082723.96136-1-acourbot@chromium.org> <20200520082723.96136-3-acourbot@chromium.org>
+ <1591613234.18435.8.camel@mtksdaap41>
+In-Reply-To: <1591613234.18435.8.camel@mtksdaap41>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Tue, 16 Jun 2020 22:17:03 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MVFyvoGjNE4xVPTBQzZibQSOuiEgBynror3CAo1W2dkxw@mail.gmail.com>
+Message-ID: <CAPBb6MVFyvoGjNE4xVPTBQzZibQSOuiEgBynror3CAo1W2dkxw@mail.gmail.com>
+Subject: Re: [PATCH 02/10] media: mtk-vcodec: add SCP firmware ops
+To:     Tiffany Lin <tiffany.lin@mediatek.com>
+Cc:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Rui Wang <gtk_ruiwang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020, Gene Chen wrote:
+On Mon, Jun 8, 2020 at 7:47 PM Tiffany Lin <tiffany.lin@mediatek.com> wrote:
+>
+> On Wed, 2020-05-20 at 17:27 +0900, Alexandre Courbot wrote:
+> > From: Yunfei Dong <yunfei.dong@mediatek.com>
+> >
+> > Add support for communicating with the SCP firmware, which will be used
+> > by MT8183.
+> >
+> > Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+> > [acourbot: refactor, cleanup and split]
+> > Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
+> > Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> > ---
+> >  drivers/media/platform/Kconfig                |  2 +
+> >  .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  3 +
+> >  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  3 +
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 56 +++++++++++++++++++
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  2 +
+> >  5 files changed, 66 insertions(+)
+> >
+> > diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> > index c57ee78fa99d..9b11dd6b1ef3 100644
+> > --- a/drivers/media/platform/Kconfig
+> > +++ b/drivers/media/platform/Kconfig
+> > @@ -256,6 +256,8 @@ config VIDEO_MEDIATEK_VCODEC
+> >       select VIDEOBUF2_DMA_CONTIG
+> >       select V4L2_MEM2MEM_DEV
+> >       select VIDEO_MEDIATEK_VPU
+> > +     select MTK_SCP
+> > +     default n
+> >       help
+> >           Mediatek video codec driver provides HW capability to
+> >           encode and decode in a range of video formats
+> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> > index 4f07a5fcce7f..5b5765b98e57 100644
+> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> > @@ -225,6 +225,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+> >       if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
+> >                                 &rproc_phandle)) {
+> >               fw_type = VPU;
+> > +     } else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
+> > +                                      &rproc_phandle)) {
+> > +             fw_type = SCP;
+> >       } else {
+> >               mtk_v4l2_err("Could not get vdec IPI device");
+> >               return -ENODEV;
+> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+> > index 4340ea10afd0..42530cd01a30 100644
+> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+> > @@ -233,6 +233,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+> >       if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
+> >                                 &rproc_phandle)) {
+> >               fw_type = VPU;
+> > +     } else if (!of_property_read_u32(pdev->dev.of_node, "mediatek,scp",
+> > +                                      &rproc_phandle)) {
+> > +             fw_type = SCP;
+> >       } else {
+> >               mtk_v4l2_err("Could not get venc IPI device");
+> >               return -ENODEV;
+> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
+> > index 967bb100a990..f2a62ea62fc6 100644
+> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
+> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
+> > @@ -19,6 +19,7 @@ struct mtk_vcodec_fw {
+> >       enum mtk_vcodec_fw_type type;
+> >       const struct mtk_vcodec_fw_ops *ops;
+> >       struct platform_device *pdev;
+> > +     struct mtk_scp *scp;
+> >  };
+> >
+> >  static int mtk_vcodec_vpu_load_firmware(struct mtk_vcodec_fw *fw)
+> > @@ -71,6 +72,48 @@ static const struct mtk_vcodec_fw_ops mtk_vcodec_vpu_msg = {
+> >       .ipi_send = mtk_vcodec_vpu_ipi_send,
+> >  };
+> >
+> > +static int mtk_vcodec_scp_load_firmware(struct mtk_vcodec_fw *fw)
+> > +{
+> > +     return rproc_boot(scp_get_rproc(fw->scp));
+>
+>
+> Does rproc_boot and scp_get_rproc depend on the other kernel module?
+> where are they defineded?
 
-> From: Gene Chen <gene_chen@richtek.com>
-> 
-> Add devicetree binding document support Mediatek MT6360 PMIC
+rproc_boot() is part of the remoteproc subsystem. scp_get_rproc() is
+part of the mtk_scp driver, which is present upstream. This patch also
+adds a dependency on MTK_SCP in Kconfig, which ensures both functions
+are available.
 
-This should have been submitted with the driver.
-
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> ---
->  Documentation/devicetree/bindings/mfd/mt6360.txt | 53 ++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mt6360.txt b/Documentation/devicetree/bindings/mfd/mt6360.txt
-> new file mode 100644
-> index 0000000..e25b5c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mt6360.txt
-> @@ -0,0 +1,53 @@
-> +MediaTek MT6360 Multifunction Device Driver
-
-No such thing as an MFD (we made it up!).
-
-Please describe the device.
-
-> +MT6360 is a multifunction device with the following sub modules:
-
-As above.  MFD is a Linuxisum which is not allowed in DT.
-
-> +- ADC
-> +- Battery Charger/OTG boost
-> +- Flash LED/RGB LED/moonlight LED
-> +- 2-channel Buck
-> +- 6-channel LDO
-> +- USB_PD
-> +
-> +It is interfaced to host controller using I2C interface.
-> +This document describes the binding for MFD device and its sub module.
-
-As above.  This sentence should be at the top in any case.
-
-> +Required properties:
-> +- compatible:	Must be "mediatek,mt6360_pmu"
-
-No '_'s in DT.
-
-> +- reg:			Specifies the I2C slave address of PMIC block, Must be <0x34>
-> +- interrupts:	I2C device IRQ line connected to the main SoC.
-> +
-> +Optional subnodes:
-> +- ADC
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_adc"
-> +- battery charger/OTG boost
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_chg"
-> +- Flash LED/RGB LED/moonlight LED
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_led"
-> +- 2-channel Buck
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_pmic"
-> +- 6-channel LDO
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_ldo"
-> +- USB_PD
-> +	Required properties:
-> +		- compatible: "mediatek,mt6360_tcpc"
-
-No '_'s.  Must be '-'.
-
-> +Example:
-> +
-> +	#include <dt-bindings/usb/pd.h>
-> +
-> +	pmu: mt6360_pmu@34 {
-> +		status = "ok";
-
-"okay" is more common I think.
-
-Should be at the bottom if not omitted altogether.
-
-> +		compatible = "mediatek,mt6360_pmu";
-> +		reg = <0x34>;
-> +		wakeup-source;
-> +		interrupts-extended = <&gpio26 0 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "IRQB";
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>
+> > +}
+> > +
+> > +static unsigned int mtk_vcodec_scp_get_vdec_capa(struct mtk_vcodec_fw *fw)
+> > +{
+> > +     return scp_get_vdec_hw_capa(fw->scp);
+> > +}
+> > +
+> > +static unsigned int mtk_vcodec_scp_get_venc_capa(struct mtk_vcodec_fw *fw)
+> > +{
+> > +     return scp_get_venc_hw_capa(fw->scp);
+> > +}
+> > +
+> > +static void *mtk_vcodec_vpu_scp_dm_addr(struct mtk_vcodec_fw *fw,
+> > +                                     u32 dtcm_dmem_addr)
+> > +{
+> > +     return scp_mapping_dm_addr(fw->scp, dtcm_dmem_addr);
+> > +}
+> > +
+> > +static int mtk_vcodec_scp_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
+> > +             mtk_vcodec_ipi_handler handler, const char *name, void *priv)
+> > +{
+> > +     return scp_ipi_register(fw->scp, id, handler, priv);
+> > +}
+> > +
+> > +static int mtk_vcodec_scp_ipi_send(struct mtk_vcodec_fw *fw, int id, void *buf,
+> > +             unsigned int len, unsigned int wait)
+> > +{
+> > +     return scp_ipi_send(fw->scp, id, buf, len, wait);
+> > +}
+> > +
+> > +static const struct mtk_vcodec_fw_ops mtk_vcodec_rproc_msg = {
+> > +     .load_firmware = mtk_vcodec_scp_load_firmware,
+> > +     .get_vdec_capa = mtk_vcodec_scp_get_vdec_capa,
+> > +     .get_venc_capa = mtk_vcodec_scp_get_venc_capa,
+> > +     .map_dm_addr = mtk_vcodec_vpu_scp_dm_addr,
+> > +     .ipi_register = mtk_vcodec_scp_set_ipi_register,
+> > +     .ipi_send = mtk_vcodec_scp_ipi_send,
+> > +};
+> > +
+> >  static void mtk_vcodec_reset_handler(void *priv)
+> >  {
+> >       struct mtk_vcodec_dev *dev = priv;
+> > @@ -94,6 +137,7 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
+> >       const struct mtk_vcodec_fw_ops *ops;
+> >       struct mtk_vcodec_fw *fw;
+> >       struct platform_device *fw_pdev = NULL;
+> > +     struct mtk_scp *scp = NULL;
+> >
+> >       switch (type) {
+> >       case VPU:
+> > @@ -106,6 +150,14 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
+> >               vpu_wdt_reg_handler(fw_pdev, mtk_vcodec_reset_handler,
+> >                                   dev, rst_id);
+> >               break;
+> > +     case SCP:
+> > +             ops = &mtk_vcodec_rproc_msg;
+> > +             scp = scp_get(dev->plat_dev);
+> > +             if (!scp) {
+> > +                     mtk_v4l2_err("could not get vdec scp handle");
+> > +                     return ERR_PTR(-EPROBE_DEFER);
+> > +             }
+> > +             break;
+> >       default:
+> >               mtk_v4l2_err("invalid vcodec fw type");
+> >               return ERR_PTR(-EINVAL);
+> > @@ -118,6 +170,7 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
+> >       fw->type = type;
+> >       fw->ops = ops;
+> >       fw->pdev = fw_pdev;
+> > +     fw->scp = scp;
+> >
+> >       return fw;
+> >  }
+> > @@ -129,6 +182,9 @@ void mtk_vcodec_fw_release(struct mtk_vcodec_fw *fw)
+> >       case VPU:
+> >               put_device(&fw->pdev->dev);
+> >               break;
+> > +     case SCP:
+> > +             scp_put(fw->scp);
+> > +             break;
+> >       }
+> >  }
+> >  EXPORT_SYMBOL_GPL(mtk_vcodec_fw_release);
+> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
+> > index ff25b0c19f74..ced1b6a10e07 100644
+> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
+> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
+> > @@ -4,6 +4,7 @@
+> >  #define _MTK_VCODEC_FW_H_
+> >
+> >  #include <linux/remoteproc.h>
+> > +#include <linux/remoteproc/mtk_scp.h>
+> >
+> >  #include "../mtk-vpu/mtk_vpu.h"
+> >
+> > @@ -11,6 +12,7 @@ struct mtk_vcodec_dev;
+> >
+> >  enum mtk_vcodec_fw_type {
+> >       VPU,
+> > +     SCP,
+> >  };
+> >
+> >  struct mtk_vcodec_fw;
+>
