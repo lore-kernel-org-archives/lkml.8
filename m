@@ -2,51 +2,55 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3179DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28688C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14E582098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0654021501
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324234;
-	bh=tm5emzIZe1eyeA5dlv4d4lUnsTh7XE+ZpULMTA+WaiU=;
+	s=default; t=1592324238;
+	bh=tGu9iAfYSAIXV7Z+xfgVDc5pMnkYJe7lF1Y+08DJt5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AcOcWYgnmjL9B+9n9QJo3877i/fjSn88c9efxZegqadKF6ytkg9RVBnSo8WqyG4Gn
-	 nULFlH5baPr4EKjtydx44UtDXHzOVr6bjg/WtpHZioZwB6xtL+uCOmy4iopNbIXWIe
-	 oOYcK2mtxXEzgzk+34FhCrbsM89rNtJ3sOV9wiiw=
+	b=OJQ9Zlrw28B33K4SDoxdb71RoU0VDq6xAv06dIpu+v08m0lfs9QEjDDrX68ZiHpSq
+	 uf3QL/rwIFxb2SLAX9chXNrvn0xc1GKHyRybhtKoo3Ux6Mz+BimyQqXK2TeMNXL7Yr
+	 vwymABFwkMHuJm1+6aPL/8ZB3SFhB9GZesEI8VkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbgFPPj1 (ORCPT
+        id S1731618AbgFPQRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730885AbgFPPjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:14 -0400
+        id S1730928AbgFPPj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:39:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7163D2145D;
-        Tue, 16 Jun 2020 15:39:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D759C20B1F;
+        Tue, 16 Jun 2020 15:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321953;
-        bh=tm5emzIZe1eyeA5dlv4d4lUnsTh7XE+ZpULMTA+WaiU=;
+        s=default; t=1592321967;
+        bh=tGu9iAfYSAIXV7Z+xfgVDc5pMnkYJe7lF1Y+08DJt5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MAAdpPdnQs5eD0hXCh9dneJFsOnAkysJWmB2K7+vPWtkXxWxyEUEf73obSQn2xMkd
-         vFQ+4Z/FOuI3U9VP8sWO5Bo1rH261qV0QM+cuejlLRqC6yATSZdy7acKwZSlpSkJ//
-         0S5V/Jsyuqu6MIyVq9arbGam5qNacpF5jr9MqrRQ=
+        b=OwG5SGDUhN7Lpl4PEV0JfpQVEh0FF9Q+ovPxxv6xsSXUv6tpeSRd/JDb3jU3jQZQF
+         m2KX069dbfNk+y3RbD+S6+Si4e9CQU1OF2V1+H1T9XYEb2I2fyP3nMlJmKlwfsv7Lm
+         znlcp6/ZAUQd9v9kLjPyzN/T1tyE4YnrWz5GHtac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Dobias <dobias@2n.cz>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 049/134] ASoC: max9867: fix volume controls
-Date:   Tue, 16 Jun 2020 17:33:53 +0200
-Message-Id: <20200616153103.139324893@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Franck LENORMAND <franck.lenormand@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 085/134] firmware: imx: scu: Fix corruption of header
+Date:   Tue, 16 Jun 2020 17:34:29 +0200
+Message-Id: <20200616153104.851059822@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,42 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Dobias <dobias@2n.cz>
+From: Franck LENORMAND <franck.lenormand@nxp.com>
 
-commit 8ba4dc3cff8cbe2c571063a5fd7116e8bde563ca upstream.
+[ Upstream commit f5f27b79eab80de0287c243a22169e4876b08d5e ]
 
-The xmax values for Master Playback Volume and Mic Boost
-Capture Volume are specified incorrectly (one greater)
-which results in the wrong dB gain being shown to the user
-in the case of Master Playback Volume.
+The header of the message to send can be changed if the
+response is longer than the request:
+ - 1st word, the header is sent
+ - the remaining words of the message are sent
+ - the response is received asynchronously during the
+   execution of the loop, changing the size field in
+   the header
+ - the for loop test the termination condition using
+   the corrupted header
 
-Signed-off-by: Pavel Dobias <dobias@2n.cz>
+It is the case for the API build_info which has just a
+header as request but 3 words in response.
+
+This issue is fixed storing the header locally instead of
+using a pointer on it.
+
+Fixes: edbee095fafb (firmware: imx: add SCU firmware driver support)
+
+Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200515120757.24669-1-dobias@2n.cz
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/max9867.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/firmware/imx/imx-scu.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/sound/soc/codecs/max9867.c
-+++ b/sound/soc/codecs/max9867.c
-@@ -46,13 +46,13 @@ static const SNDRV_CTL_TLVD_DECLARE_DB_R
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index a92adb9fdad6..e48d971ffb61 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -158,7 +158,7 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
  
- static const struct snd_kcontrol_new max9867_snd_controls[] = {
- 	SOC_DOUBLE_R_TLV("Master Playback Volume", MAX9867_LEFTVOL,
--			MAX9867_RIGHTVOL, 0, 41, 1, max9867_master_tlv),
-+			MAX9867_RIGHTVOL, 0, 40, 1, max9867_master_tlv),
- 	SOC_DOUBLE_R_TLV("Line Capture Volume", MAX9867_LEFTLINELVL,
- 			MAX9867_RIGHTLINELVL, 0, 15, 1, max9867_line_tlv),
- 	SOC_DOUBLE_R_TLV("Mic Capture Volume", MAX9867_LEFTMICGAIN,
- 			MAX9867_RIGHTMICGAIN, 0, 20, 1, max9867_mic_tlv),
- 	SOC_DOUBLE_R_TLV("Mic Boost Capture Volume", MAX9867_LEFTMICGAIN,
--			MAX9867_RIGHTMICGAIN, 5, 4, 0, max9867_micboost_tlv),
-+			MAX9867_RIGHTMICGAIN, 5, 3, 0, max9867_micboost_tlv),
- 	SOC_SINGLE("Digital Sidetone Volume", MAX9867_SIDETONE, 0, 31, 1),
- 	SOC_SINGLE_TLV("Digital Playback Volume", MAX9867_DACLEVEL, 0, 15, 1,
- 			max9867_dac_tlv),
+ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ {
+-	struct imx_sc_rpc_msg *hdr = msg;
++	struct imx_sc_rpc_msg hdr = *(struct imx_sc_rpc_msg *)msg;
+ 	struct imx_sc_chan *sc_chan;
+ 	u32 *data = msg;
+ 	int ret;
+@@ -166,13 +166,13 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ 	int i;
+ 
+ 	/* Check size */
+-	if (hdr->size > IMX_SC_RPC_MAX_MSG)
++	if (hdr.size > IMX_SC_RPC_MAX_MSG)
+ 		return -EINVAL;
+ 
+-	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr->svc,
+-		hdr->func, hdr->size);
++	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr.svc,
++		hdr.func, hdr.size);
+ 
+-	size = sc_ipc->fast_ipc ? 1 : hdr->size;
++	size = sc_ipc->fast_ipc ? 1 : hdr.size;
+ 	for (i = 0; i < size; i++) {
+ 		sc_chan = &sc_ipc->chans[i % 4];
+ 
+-- 
+2.25.1
+
 
 
