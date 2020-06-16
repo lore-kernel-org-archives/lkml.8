@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D317207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89016207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323395;
-	bh=j7OcEmK8XA4y3KDzPwvCTXJWkrh36DMJPbqCnvQSD6Q=;
+	s=default; t=1592323398;
+	bh=XntC1FNYkP+J2zrvMQnq4mbbNnvaGrMS1ILo3IOE6Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d12raSdCHBgXXqPcrWkz599gp3p24VbsudPqeMF4Y/srynhV+8EF9L6443xJRi9sT
-	 boovTiJwQ8fG8A+fjwp1TbUxvt5rOsBRAMd1MbXECi0AQv7FUDi0WYINlbwyzsRCQJ
-	 YxVnmJ2ImD3lYIN1x8VVu9hw5Zb8h2fu23eZ02Q8=
+	b=zpELkYY8rVwY9IktSA3Z9MJ6hr1Oas7/kRUxgzW9QhVxJ3vNnhkUGy7VfPTVj0jJ3
+	 E3+nbofi33F4RoaZ0lD2TEyxqb/2ZQg838FuW6SoENP6EyXU1Qp3hm6hMGiqeBhJwM
+	 sDiS3/TkJ1Z6SJ5m1euw+OgaOUroldUnThwrsSHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733202AbgFPQDN (ORCPT
+        id S1733210AbgFPQDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46064 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:03:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731603AbgFPPuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:50:22 -0400
+        id S1732599AbgFPPuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1F7E208D5;
-        Tue, 16 Jun 2020 15:50:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0150208B8;
+        Tue, 16 Jun 2020 15:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322622;
-        bh=j7OcEmK8XA4y3KDzPwvCTXJWkrh36DMJPbqCnvQSD6Q=;
+        s=default; t=1592322619;
+        bh=XntC1FNYkP+J2zrvMQnq4mbbNnvaGrMS1ILo3IOE6Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwPZDAdG/SKFzbXuO9yW/EIwfkbmhlVaPbLwA2rAM2nEcjGtkTI+Ecf5KfB8mO/dy
-         A2RfAspG2I4eBfyX8a9RJ/zEFrV6gydZjkUC5tBJyFfyZuSQv0YtXvehqOU71n8bM4
-         rhzwwC00V8Jpj0PiOU35OwQ6Bl845RfHev3K6u50=
+        b=iOkcW3BKP7VzUvcUos+s1PzDR2ReSWaTnS08FYoF7zWWg4QppG9RsSWGPxlTxsKAU
+         8PgbfMeAn5Y0G7t2RWiM+xvMeSoYeAATmBovW+nBFabIOzMHhGrig7SrZOerZ4+Him
+         BnajNSHExiEu6SGyzT5GfjS381JiQf5XBexsskUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 040/161] PCI/PM: Adjust pcie_wait_for_link_delay() for caller delay
-Date:   Tue, 16 Jun 2020 17:33:50 +0200
-Message-Id: <20200616153108.286969525@linuxfoundation.org>
+Subject: [PATCH 5.6 031/161] ASoC: SOF: imx: fix undefined reference issue
+Date:   Tue, 16 Jun 2020 17:33:41 +0200
+Message-Id: <20200616153107.871999768@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,42 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit f044baaff1eb7ae5aa7a36f1b7ad5bd8eeb672c4 ]
+[ Upstream commit cb0312f61c3e95c71ec8955a94d42bf7eb5ba617 ]
 
-The caller of pcie_wait_for_link_delay() specifies the time to wait after
-the link becomes active.  When the downstream port doesn't support link
-active reporting, obviously we can't tell when the link becomes active, so
-we waited the worst-case time (1000 ms) plus 100 ms, ignoring the delay
-from the caller.
+make.cross ARCH=mips allyesconfig fails with the following error:
 
-Instead, wait for 1000 ms + the delay from the caller.
+sound/soc/sof/sof-of-dev.o:(.data.sof_of_imx8qxp_desc+0x40): undefined
+reference to `sof_imx8x_ops'.
 
-Fixes: 4827d63891b6 ("PCI/PM: Add pcie_wait_for_link_delay()")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+This seems to be a Makefile order issue, solve by using the same
+structure as for Intel platforms.
+
+Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF
+dependency")
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20200409071832.2039-3-daniel.baluta@oss.nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/sof/imx/Kconfig | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d828ca835a98..fe9fbb74ce72 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4616,10 +4616,10 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index 812749064ca8..9586635cf8ab 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -11,17 +11,26 @@ config SND_SOC_SOF_IMX_TOPLEVEL
  
- 	/*
- 	 * Some controllers might not implement link active reporting. In this
--	 * case, we wait for 1000 + 100 ms.
-+	 * case, we wait for 1000 ms + any delay requested by the caller.
- 	 */
- 	if (!pdev->link_active_reporting) {
--		msleep(1100);
-+		msleep(timeout + delay);
- 		return true;
- 	}
+ if SND_SOC_SOF_IMX_TOPLEVEL
  
++config SND_SOC_SOF_IMX_OF
++	def_tristate SND_SOC_SOF_OF
++	select SND_SOC_SOF_IMX8 if SND_SOC_SOF_IMX8_SUPPORT
++	help
++	  This option is not user-selectable but automagically handled by
++	  'select' statements at a higher level
++
+ config SND_SOC_SOF_IMX8_SUPPORT
+ 	bool "SOF support for i.MX8"
+-	depends on IMX_SCU
+-	select IMX_DSP
+ 	help
+ 	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
+ 	  Say Y if you have such a device.
+ 	  If unsure select "N".
+ 
+ config SND_SOC_SOF_IMX8
+-	def_tristate SND_SOC_SOF_OF
+-	depends on SND_SOC_SOF_IMX8_SUPPORT
++	tristate
++	depends on IMX_SCU
++	select IMX_DSP
++	help
++	  This option is not user-selectable but automagically handled by
++	  'select' statements at a higher level
+ 
+ endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
 -- 
 2.25.1
 
