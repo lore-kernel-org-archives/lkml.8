@@ -2,116 +2,79 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD7320B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592349624;
-	bh=tiK4KMdA62onp2wByWby+/bwJDYFvHk4Oek1Xrw3dFA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=VCvABBPG1bbZ77vJhF/Tw31gMyhkgeeJ+jnPzEpLI+14DzRcHFrfay9okEboAJyNr
-	 mgYpsev21/NkDjHbgE4RDE3vleK8cmXtDGtAznbybu0vUjXml6OzZIlg2KkJRD6n41
-	 ZlIjBIzE4d37yNhvjs1PAos6Bbc2ihmzytKwLMVI=
+	by mail.kernel.org (Postfix) with ESMTP id C496F207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TjLBhP6F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgFPXUW (ORCPT
+        id S1726534AbgFPXVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39738 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 19:21:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:42775 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgFPXUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:20:21 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725849AbgFPXVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 19:21:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B618A207DD;
-        Tue, 16 Jun 2020 23:20:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592349621;
-        bh=tiK4KMdA62onp2wByWby+/bwJDYFvHk4Oek1Xrw3dFA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=D7HZDgKlntaC82ZPfQik/dwZOJzJT8jigSpJ6AyIV8lHA6Cg/pM1zhcrNrtBna2A7
-         kwoDrlCmjaOCGTlzlQzpNBUXNCxV/ZBZyNFuk9Yb6KlzTl7Us1ydVRQaEVUwryEqso
-         wVt0aaNxTPk4+CMop//V+SdFwLsaSU0gEfDhcg3E=
-Date:   Tue, 16 Jun 2020 18:20:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
-        james.morse@arm.com, lenb@kernel.org, tony.luck@intel.com,
-        dan.carpenter@oracle.com, zhangliguang@linux.alibaba.com,
-        andriy.shevchenko@linux.intel.com, wangkefeng.wang@huawei.com,
-        jroedel@suse.de, yangyicong@hisilicon.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
-Subject: Re: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
- controller errors
-Message-ID: <20200616232019.GA1987909@bjorn-Precision-5520>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49mkj62czzz9sRR;
+        Wed, 17 Jun 2020 09:21:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1592349675;
+        bh=YglC3d1qIVwIT/vjXu+XckyVGaLr6tr684jtKcQd7wA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=TjLBhP6F5nvAq3REnn28vPAfAN4v2wNRC3IswZSOd3M1v2oMLUr3ZaarOk/kGkbNe
+         l2bXoy7UF17GYKU2mlwqnp3A3sJGbG69OHzkz9w4kk9DKZrGXU3iRShzRVFHnw36Kc
+         mlXGwtKpTsiUvUPcXeTZ/OH288mn4G1fwqul/FaDegm2WRnMaxF58Hs4pWGuM53BCx
+         kbDgoRiGGj0QirPmEdKWaFCoYE+6QuWoHcp++BilPwisIW/Ss3Hqh9cmqu1R88H2Ne
+         UHpEVFkkOZbaao2+YIa/+rvxgw7yOfB+lMNLRib3Za/8phJL6Y13Y8EbdWImFgTtit
+         c//M/lvPC+WIQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/8xx: use pmd_off() to access a PMD entry in pte_update()
+In-Reply-To: <20200616124304.bbe36933fcd48c5f467f4be9@linux-foundation.org>
+References: <20200615092229.23142-1-rppt@kernel.org> <20200616124304.bbe36933fcd48c5f467f4be9@linux-foundation.org>
+Date:   Wed, 17 Jun 2020 09:21:42 +1000
+Message-ID: <87o8piegvt.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615101552.802-3-shiju.jose@huawei.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 11:15:52AM +0100, Shiju Jose wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> The HiSilicon HIP PCIe controller is capable of handling errors
-> on root port and perform port reset separately at each root port.
-> 
-> Add error handling driver for HIP PCIe controller to log
-> and report recoverable errors. Perform root port reset and restore
-> link status after the recovery.
-> 
-> Following are some of the PCIe controller's recoverable errors
-> 1. completion transmission timeout error.
-> 2. CRS retry counter over the threshold error.
-> 3. ECC 2 bit errors
-> 4. AXI bresponse/rresponse errors etc.
+Andrew Morton <akpm@linux-foundation.org> writes:
+> On Mon, 15 Jun 2020 12:22:29 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+>
+>> From: Mike Rapoport <rppt@linux.ibm.com>
+>> 
+>> The pte_update() implementation for PPC_8xx unfolds page table from the PGD
+>> level to access a PMD entry. Since 8xx has only 2-level page table this can
+>> be simplified with pmd_off() shortcut.
+>> 
+>> Replace explicit unfolding with pmd_off() and drop defines of pgd_index()
+>> and pgd_offset() that are no longer needed.
+>> 
+>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>> ---
+>> 
+>> I think it's powerpc material, but I won't mind if Andrew picks it up :)
+>
+> Via the powerpc tree would be better, please.
 
-> +static int hisi_pcie_notify_error(struct notifier_block *nb,
-> +				  unsigned long event, void *data)
-> +{
-> +	struct acpi_hest_generic_data *gdata = data;
-> +	const struct hisi_pcie_error_data *error_data =
-> +				acpi_hest_get_payload(gdata);
-> +	struct hisi_pcie_error_private *priv =
-> +			container_of(nb, struct hisi_pcie_error_private, nb);
-> +	struct platform_device *pdev = priv->pdev;
-> +	struct device *dev = &pdev->dev;
-> +	u8 socket;
-> +
-> +	if (device_property_read_u8(dev, "socket", &socket))
-> +		return NOTIFY_DONE;
-> +
-> +	if (!guid_equal((guid_t *)gdata->section_type, &hisi_pcie_sec_type) ||
-> +	    error_data->socket_id != socket)
-> +		return NOTIFY_DONE;
+I'll take it into next for v5.9, unless there's a reason it needs to go
+into v5.8.
 
-I think you have to verify the GUID first before you can even safely
-extract a struct hisi_pcie_error_private from the payload:
-
-  if (!guid_equal(...))
-    return NOTIFY_DONE;
-
-  priv = container_of(nb, struct hisi_pcie_error_private, nb);
-  pdev = priv->pdev;
-  dev = &pdev->dev;
-
-  if (device_property_read_u8(dev, "socket", &socket))
-    return NOTIFY_DONE;
-
-  if (error_data->socket_id != socket)
-    return NOTIFY_DONE;
-
-> +	hisi_pcie_handle_error(pdev, error_data);
-> +
-> +	return NOTIFY_OK;
-> +}
+cheers
