@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93733C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E96E208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5472098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323276;
-	bh=eb0ZO+abAnKsh6kJbOHN1sf7otsMIXGioG5btf64/nE=;
+	s=default; t=1592323279;
+	bh=S6WExwVSGNJ/dpy97J+ZO2L8QMT/TxVuJmTZabPgTMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVScWt1y90VpE37n/c2f+MBuQ3nMdw12LYhKy0tuhIZMSwR1GUVkGQZ6erB1gfg/h
-	 v64emuYGWCZTb0Vrezo6bEqshr8vYIU5fVSk4XahMzCpIGXUZkAjEKc/UbJF2ivIXf
-	 fe/kPSMEBqxoCgHhpoRvmpjjCjoNJ5AYt969bjRU=
+	b=hvHWVxq+I7WwKrGSqArcvKFYDviXC0yaK7aI5ma+AuwQhnR8X92uZqzMlbRUYbV7f
+	 elpBO2/JNBGGk4XEwW6jeOXX71+aDL2Dl094cl6dmL9qkbF0Azpndrf9YXvBNCEGQM
+	 2cjp7Ab4FUuvVt5olXUzpQouds0z+GyoeR7xc7xM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732976AbgFPQBO (ORCPT
+        id S1732714AbgFPPwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:52:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731912AbgFPPw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:26 -0400
+        id S1732732AbgFPPwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:52:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68BB7207C4;
-        Tue, 16 Jun 2020 15:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982FD207C4;
+        Tue, 16 Jun 2020 15:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322745;
-        bh=eb0ZO+abAnKsh6kJbOHN1sf7otsMIXGioG5btf64/nE=;
+        s=default; t=1592322720;
+        bh=S6WExwVSGNJ/dpy97J+ZO2L8QMT/TxVuJmTZabPgTMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i6ytk/H2gzjDz9XsMbDwkCFQQs7oOau6iXCYJLPJzMm5K8N5cSqUbz+2bue6OZ+2G
-         zFgfiDvbIU5wg4uFSA3J9uDGdhzpjGCd59jjJek1K37WT3OX8/9V/Y8qBYIC7j7VGB
-         LtnLsQbn85eOlk33gEWaAoQcikpqE9McrgEH2zKY=
+        b=xWYKwdoP3+MrF/aM+AC+ckHi0u5wG1vlPtA3iEwcQRlGH+ZRe+qvMGOXNdjWpQJxU
+         I9NczlyfFd14UAlF0xRQVxoRsFkn4FXF5Ux2bXP6YIVy5nZQ5DT7tVlnvurmYykcla
+         lRBi8xe+HE1zilKZbWhcRZERQnhvJydQh3W8+yQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tsuchiya Yuto <kitakar@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.6 087/161] spi: pxa2xx: Fix controller unregister order
-Date:   Tue, 16 Jun 2020 17:34:37 +0200
-Message-Id: <20200616153110.515431407@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.6 078/161] ACPI: CPPC: Fix reference count leak in acpi_cppc_processor_probe()
+Date:   Tue, 16 Jun 2020 17:34:28 +0200
+Message-Id: <20200616153110.096495471@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,72 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit 32e5b57232c0411e7dea96625c415510430ac079 upstream.
+commit 4d8be4bc94f74bb7d096e1c2e44457b530d5a170 upstream.
 
-The PXA2xx SPI driver uses devm_spi_register_controller() on bind.
-As a consequence, on unbind, __device_release_driver() first invokes
-pxa2xx_spi_remove() before unregistering the SPI controller via
-devres_release_all().
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-This order is incorrect:  pxa2xx_spi_remove() disables the chip,
-rendering the SPI bus inaccessible even though the SPI controller is
-still registered.  When the SPI controller is subsequently unregistered,
-it unbinds all its slave devices.  Because their drivers cannot access
-the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
-in an improper state.
-
-As a rule, devm_spi_register_controller() must not be used if the
-->remove() hook performs teardown steps which shall be performed after
-unregistering the controller and specifically after unbinding of slaves.
-
-Fix by reverting to the non-devm variant of spi_register_controller().
-
-An alternative approach would be to use device-managed functions for all
-steps in pxa2xx_spi_remove(), e.g. by calling devm_add_action_or_reset()
-on probe.  However that approach would add more LoC to the driver and
-it wouldn't lend itself as well to backporting to stable.
-
-The improper use of devm_spi_register_controller() was introduced in 2013
-by commit a807fcd090d6 ("spi: pxa2xx: use devm_spi_register_master()"),
-but all earlier versions of the driver going back to 2006 were likewise
-broken because they invoked spi_unregister_master() at the end of
-pxa2xx_spi_remove(), rather than at the beginning.
-
-Fixes: e0c9905e87ac ("[PATCH] SPI: add PXA2xx SSP SPI Driver")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org # v2.6.17+
-Cc: Tsuchiya Yuto <kitakar@gmail.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206403#c1
-Link: https://lore.kernel.org/r/834c446b1cf3284d2660f1bee1ebe3e737cd02a9.1590408496.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 158c998ea44b ("ACPI / CPPC: add sysfs support to compute delivered performance")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-pxa2xx.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/acpi/cppc_acpi.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1879,7 +1879,7 @@ static int pxa2xx_spi_probe(struct platf
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -865,6 +865,7 @@ int acpi_cppc_processor_probe(struct acp
+ 			"acpi_cppc");
+ 	if (ret) {
+ 		per_cpu(cpc_desc_ptr, pr->id) = NULL;
++		kobject_put(&cpc_ptr->kobj);
+ 		goto out_free;
+ 	}
  
- 	/* Register with the SPI framework */
- 	platform_set_drvdata(pdev, drv_data);
--	status = devm_spi_register_controller(&pdev->dev, controller);
-+	status = spi_register_controller(controller);
- 	if (status != 0) {
- 		dev_err(&pdev->dev, "problem registering spi controller\n");
- 		goto out_error_pm_runtime_enabled;
-@@ -1915,6 +1915,8 @@ static int pxa2xx_spi_remove(struct plat
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 
-+	spi_unregister_controller(drv_data->controller);
-+
- 	/* Disable the SSP at the peripheral and SOC level */
- 	pxa2xx_spi_write(drv_data, SSCR0, 0);
- 	clk_disable_unprepare(ssp->clk);
 
 
