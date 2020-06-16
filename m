@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B10C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96933C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1B5220882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78ACC20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324266;
-	bh=+eTaB3DunXf0dfxF8RjyOnRTQDPp0qInF/gYdu3xS0c=;
+	s=default; t=1592324275;
+	bh=wvUPej3zM+ZC3yYLDBwGVQF0xVeG3yGO+0KB/2ilLpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNfbUOEk8cV1r/hiFyJq8VUbNI6FFXdZ494jRhzuQ4jNGyIeO/Q7cX4l0z7Vn5jMW
-	 sJb+fsfP7GySMifT1ZY+ChZL8noH/rIGwbRcovFDPJWG18WVe7sj21/LTa5KgagJh0
-	 QMcgXIPFrqgEWlYvQ+/sTmPOEyztkCZi+JjcpA7c=
+	b=B21APRZ8AIpbbd941du3cwTKf49yfHPYA/BR63cux9U7JKsLJfmbg0ztsaFTA+R77
+	 z5JbwKVQlvHT9C/DRDMF5ZaE2b7kBW0ONG1Cd8agz5XZmhmVJcvFNIi3KvCteREPQU
+	 CrvgleldnNF5GZOoDcEa7tew18R25X35Wt/kpzVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731509AbgFPQRo (ORCPT
+        id S1732551AbgFPQRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:17:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:17:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbgFPPjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:06 -0400
+        id S1730778AbgFPPir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D07C20B1F;
-        Tue, 16 Jun 2020 15:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E09092145D;
+        Tue, 16 Jun 2020 15:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321946;
-        bh=+eTaB3DunXf0dfxF8RjyOnRTQDPp0qInF/gYdu3xS0c=;
+        s=default; t=1592321927;
+        bh=wvUPej3zM+ZC3yYLDBwGVQF0xVeG3yGO+0KB/2ilLpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=liW+AVVQ4mOp0L/+eG/LLY3DCnGRGuzQXbGQJt2ixne1gC1lxOZUB+iRVuOTJu/F5
-         ggmLg4tPzI9gxtrHyIS8VWEIm1Rmbl6zAnjP6xhuIbFuEfyR7PJGfGlnWPdFP06XL2
-         OCJODTHedelt5xGIOii1WheXnx7eCrtOPfMF/5OY=
+        b=DUqcnjATBjr1NfAzhj/6aNCPJA5CZmzoIobNmVUConc1syOjR0q1Ar5hhZ/U+QPAZ
+         YfykSQlgyhuC8k0X+gBPMtYJrN0JXUtMIl9IVmS3vcDPIO8NW6+eRkz80zrmxM0j5s
+         4+z6xreoPufvjsjN4F5rr9XwsjhDXNMt8VLN0eyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 046/134] KVM: x86: respect singlestep when emulating instruction
-Date:   Tue, 16 Jun 2020 17:33:50 +0200
-Message-Id: <20200616153102.997527401@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 069/134] spi: dw: Fix controller unregister order
+Date:   Tue, 16 Jun 2020 17:34:13 +0200
+Message-Id: <20200616153104.081888338@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,43 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Franciosi <felipe@nutanix.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 384dea1c9183880be183cfaae161d99aafd16df6 upstream.
+commit ca8b19d61e3fce5d2d7790cde27a0b57bcb3f341 upstream.
 
-When userspace configures KVM_GUESTDBG_SINGLESTEP, KVM will manage the
-presence of X86_EFLAGS_TF via kvm_set/get_rflags on vcpus. The actual
-rflag bit is therefore hidden from callers.
+The Designware SPI driver uses devm_spi_register_controller() on bind.
+As a consequence, on unbind, __device_release_driver() first invokes
+dw_spi_remove_host() before unregistering the SPI controller via
+devres_release_all().
 
-That includes init_emulate_ctxt() which uses the value returned from
-kvm_get_flags() to set ctxt->tf. As a result, x86_emulate_instruction()
-will skip a single step, leaving singlestep_rip stale and not returning
-to userspace.
+This order is incorrect:  dw_spi_remove_host() shuts down the chip,
+rendering the SPI bus inaccessible even though the SPI controller is
+still registered.  When the SPI controller is subsequently unregistered,
+it unbinds all its slave devices.  Because their drivers cannot access
+the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
+in an improper state.
 
-This resolves the issue by observing the vcpu guest_debug configuration
-alongside ctxt->tf in x86_emulate_instruction(), performing the single
-step if set.
+As a rule, devm_spi_register_controller() must not be used if the
+->remove() hook performs teardown steps which shall be performed after
+unregistering the controller and specifically after unbinding of slaves.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
-Message-Id: <20200519081048.8204-1-felipe@nutanix.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fix by reverting to the non-devm variant of spi_register_controller().
+
+An alternative approach would be to use device-managed functions for all
+steps in dw_spi_remove_host(), e.g. by calling devm_add_action_or_reset()
+on probe.  However that approach would add more LoC to the driver and
+it wouldn't lend itself as well to backporting to stable.
+
+Fixes: 04f421e7b0b1 ("spi: dw: use managed resources")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v3.14+
+Cc: Baruch Siach <baruch@tkos.co.il>
+Link: https://lore.kernel.org/r/3fff8cb8ae44a9893840d0688be15bb88c090a14.1590408496.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-dw.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6833,7 +6833,7 @@ restart:
- 		if (!ctxt->have_exception ||
- 		    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
- 			kvm_rip_write(vcpu, ctxt->eip);
--			if (r && ctxt->tf)
-+			if (r && (ctxt->tf || (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)))
- 				r = kvm_vcpu_do_singlestep(vcpu);
- 			__kvm_set_rflags(vcpu, ctxt->eflags);
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -532,7 +532,7 @@ int dw_spi_add_host(struct device *dev,
  		}
+ 	}
+ 
+-	ret = devm_spi_register_controller(dev, master);
++	ret = spi_register_controller(master);
+ 	if (ret) {
+ 		dev_err(&master->dev, "problem registering spi master\n");
+ 		goto err_dma_exit;
+@@ -556,6 +556,8 @@ void dw_spi_remove_host(struct dw_spi *d
+ {
+ 	dw_spi_debugfs_remove(dws);
+ 
++	spi_unregister_controller(dws->master);
++
+ 	if (dws->dma_ops && dws->dma_ops->dma_exit)
+ 		dws->dma_ops->dma_exit(dws);
+ 
 
 
