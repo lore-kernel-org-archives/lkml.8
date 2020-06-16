@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56783C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1081121532
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1E321532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322933;
-	bh=Qhi5KkPSXLeHybOGv76Qt/SYPAaz5EEHzGOkFjbQqds=;
+	s=default; t=1592322938;
+	bh=Xur/2ps7vCdybjS3oNBWCqE5T1fBUF+bZqPQ5Ga/7Nw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQwnG3XpUbd9bKGVa2QO2P5apcCg1A8q9baLzUuIozRgULhQZAqk+hzG3i1MOksn/
-	 X/BY/guT04OVtjXe1cANdI54DnUov8mwjpW7NXf0A8L7T+isgUMc2Q7+LU8YbjSWoT
-	 T6n0d3IEBxaWExVr6rppekr2+2Dia9wFMMFpalN8=
+	b=pwjO8ZPzRs3GQTvIDmxAbwlfqMoEViUjI/pTnyVjvLZ1hq+Negws/Elztyr0IINS+
+	 eTdDjkKKTSWgm4xWQHD8J6X3ZTqH0Bo43nHqhQGjCHgcRnnOTKrpHfZdIv4W5JyRdS
+	 VFn8g07Rao0kJ1xY7oe1DjIAQsXZSR/CITV1lu9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732114AbgFPPzb (ORCPT
+        id S1733090AbgFPPzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:55:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:55:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733051AbgFPPzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:05 -0400
+        id S1733082AbgFPPz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1298D21527;
-        Tue, 16 Jun 2020 15:55:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D70DE207C4;
+        Tue, 16 Jun 2020 15:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322905;
-        bh=Qhi5KkPSXLeHybOGv76Qt/SYPAaz5EEHzGOkFjbQqds=;
+        s=default; t=1592322929;
+        bh=Xur/2ps7vCdybjS3oNBWCqE5T1fBUF+bZqPQ5Ga/7Nw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l/axVOy4/qHQXF5ST/8C9N+pcqIMEQoQDLCSDagnK0va1x6ijqryGcFZoNUM/1OKh
-         QixDVZT+nrb9Ip56s+xVbdtCXvP+UuJ+YNRRiwr/T8vvnS4opQ++anuZ7gCmqaeZvQ
-         U1HTiSlQbFDBHIhE54nXsGH0RH8YFLBDGvtBdd9Y=
+        b=APUyUx3kiFysd/1v8kCaQftFxYcHwaQoTHk+i0NG7zCTuXEOxlmV3jSxTajktz+IF
+         c/jn4fQUch51IKfY98u/7ppgjpQ64fSXZ4rTKsoeXfyVN7NhobzS6cJ2sykxVlDBxp
+         IwNdK228IxfVeXgvAPF7EHizfL6xkO7IBFS603Tk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.6 149/161] mmc: sdhci-of-at91: fix CALCR register being rewritten
-Date:   Tue, 16 Jun 2020 17:35:39 +0200
-Message-Id: <20200616153113.438513088@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH 5.6 131/161] KVM: arm64: Stop writing aarch32s CSSELR into ACTLR
+Date:   Tue, 16 Jun 2020 17:35:21 +0200
+Message-Id: <20200616153112.595821051@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,41 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: James Morse <james.morse@arm.com>
 
-commit dbdea70f71d672c12bc4454e7c258a8f78194d74 upstream.
+commit 7c582bf4ed84f3eb58bdd1f63024a14c17551e7d upstream.
 
-When enabling calibration at reset, the CALCR register was completely
-rewritten. This may cause certain bits being deleted unintentedly.
-Fix by issuing a read-modify-write operation.
+aarch32 has pairs of registers to access the high and low parts of 64bit
+registers. KVM has a union of 64bit sys_regs[] and 32bit copro[]. The
+32bit accessors read the high or low part of the 64bit sys_reg[] value
+through the union.
 
-Fixes: 727d836a375a ("mmc: sdhci-of-at91: add DT property to enable calibration on full reset")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Link: https://lore.kernel.org/r/20200527105659.142560-1-eugen.hristev@microchip.com
+Both sys_reg_descs[] and cp15_regs[] list access_csselr() as the accessor
+for CSSELR{,_EL1}. access_csselr() is only aware of the 64bit sys_regs[],
+and expects r->reg to be 'CSSELR_EL1' in the enum, index 2 of the 64bit
+array.
+
+cp15_regs[] uses the 32bit copro[] alias of sys_regs[]. Here CSSELR is
+c0_CSSELR which is the same location in sys_reg[]. r->reg is 'c0_CSSELR',
+index 4 in the 32bit array.
+
+access_csselr() uses the 32bit r->reg value to access the 64bit array,
+so reads and write the wrong value. sys_regs[4], is ACTLR_EL1, which
+is subsequently save/restored when we enter the guest.
+
+ACTLR_EL1 is supposed to be read-only for the guest. This register
+only affects execution at EL1, and the host's value is restored before
+we return to host EL1.
+
+Convert the 32bit register index back to the 64bit version.
+
+Suggested-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200529150656.7339-2-james.morse@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-at91.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/kvm/sys_regs.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -136,9 +136,12 @@ static void sdhci_at91_reset(struct sdhc
- 	    || mmc_gpio_get_cd(host->mmc) >= 0)
- 		sdhci_at91_set_force_card_detect(host);
- 
--	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL))
--		sdhci_writel(host, SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
-+	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL)) {
-+		u32 calcr = sdhci_readl(host, SDMMC_CALCR);
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1280,10 +1280,16 @@ static bool access_clidr(struct kvm_vcpu
+ static bool access_csselr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+ 			  const struct sys_reg_desc *r)
+ {
++	int reg = r->reg;
 +
-+		sdhci_writel(host, calcr | SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
- 			     SDMMC_CALCR);
-+	}
++	/* See the 32bit mapping in kvm_host.h */
++	if (p->is_aarch32)
++		reg = r->reg / 2;
++
+ 	if (p->is_write)
+-		vcpu_write_sys_reg(vcpu, p->regval, r->reg);
++		vcpu_write_sys_reg(vcpu, p->regval, reg);
+ 	else
+-		p->regval = vcpu_read_sys_reg(vcpu, r->reg);
++		p->regval = vcpu_read_sys_reg(vcpu, reg);
+ 	return true;
  }
  
- static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
 
 
