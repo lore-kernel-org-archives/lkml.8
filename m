@@ -2,92 +2,99 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A2AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EF32082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98530208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592332561;
-	bh=y5nipqECzRoU0upBSu9r4jZKgeIM1+hGBnUU069dVTU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=T7UNSSNnhfTfWlzCbxhHUy78uFJzI772GWLWUEIghoDC/x6KKsFDY9Ccyr4YoMnXr
-	 5odJ9x0sEc0noHhUzBh5olWCOWvjkbWyKEZ3KRVa1Vr3cEEUE3JptmG8cIAYA8TrDe
-	 9kvXD3kgCL7NOWfsjCW2Q3Juom+ukukRCjhU3LSY=
+	s=default; t=1592332566;
+	bh=ygQw5Actl08lZMVXKCgVgtsSty25n+2zY0/omqxOYLQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=avUygRqFScJy6RUivHhJF2ZWzbzG0kwRGgSGfsDoOMd5Zi4OjjK7q0i4EClWze+sT
+	 IvccEJhJTQRSFMyGz/46DOiZY4yZpKcfzDHDYye/ZA0ISSnCfBEe2NQCm9ca4nDzB+
+	 t6j/m6f/n+RMZrf9v/0SvI81NF1R68jgPNod93Xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgFPSf7 (ORCPT
+        id S1729403AbgFPSgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:35:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33688 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 14:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgFPSf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:35:59 -0400
-Received: from embeddedor (unknown [189.207.59.248])
+        id S1725896AbgFPSgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 14:36:04 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0073207C4;
-        Tue, 16 Jun 2020 18:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 055CF2082F;
+        Tue, 16 Jun 2020 18:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592332559;
-        bh=y5nipqECzRoU0upBSu9r4jZKgeIM1+hGBnUU069dVTU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JDmkMEOWAhQ7AopfAInYXgz4LrmM6R6SfOlUn6T5HWcnpZ5wtgnhOhzjlb+vVllTH
-         Bvp417BwY893bUo7we2fj4lA+GxtHQ4ljtYv5mMtWswzjkppH67GBT7ZUNgEtXM5kb
-         SqepgiO91quswbCdIZ+Ojr6n65t/0P1/o9uzw4wo=
-Date:   Tue, 16 Jun 2020 13:41:18 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] reiserfs: bitmap: Assign array_size() to a variable
-Message-ID: <20200616184118.GA1917@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        s=default; t=1592332564;
+        bh=ygQw5Actl08lZMVXKCgVgtsSty25n+2zY0/omqxOYLQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tj/iyfELOQfWQKfZYRlE+bdGM9rpxcBcCT5k+18bsKLbIcMYvt0geXm/Y2GCZ6gHl
+         /pcjFwHd0tgR6+tSlfAbCRQaMGOS5Bx3jJ7ihplGFAa4kLKlCutasfZAl2vU8IGyja
+         VnyuM91jARusgdgYCClFkpGRHOjtZdG+lshXmLVo=
+Date:   Tue, 16 Jun 2020 11:36:01 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     js1304@gmail.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH for v5.8 2/3] mm/swap: fix for
+ "mm: workingset: age nonresident information alongside anonymous pages"
+Message-Id: <20200616113601.a8ab80635b6434efe43d2ffc@linux-foundation.org>
+In-Reply-To: <1592288204-27734-3-git-send-email-iamjoonsoo.kim@lge.com>
+References: <1592288204-27734-1-git-send-email-iamjoonsoo.kim@lge.com>
+        <1592288204-27734-3-git-send-email-iamjoonsoo.kim@lge.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Assign array_size() to variable _size_ and use it in both vmalloc()
-and memset(). These sorts of multiplication factors need to be wrapped
-in array_size().
+On Tue, 16 Jun 2020 15:16:43 +0900 js1304@gmail.com wrote:
 
-This issue was found with the help of Coccinelle and, audited and fixed
-manually.
+> Subject: [PATCH for v5.8 2/3] mm/swap: fix for "mm: workingset: age nonresident information alongside anonymous pages"
 
-Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/reiserfs/bitmap.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+I'm having trouble locating such a patch.
 
-diff --git a/fs/reiserfs/bitmap.c b/fs/reiserfs/bitmap.c
-index bf708ac287b4..3ca601893d2e 100644
---- a/fs/reiserfs/bitmap.c
-+++ b/fs/reiserfs/bitmap.c
-@@ -1455,12 +1455,13 @@ int reiserfs_init_bitmap_cache(struct super_block *sb)
- {
- 	struct reiserfs_bitmap_info *bitmap;
- 	unsigned int bmap_nr = reiserfs_bmap_count(sb);
-+	size_t size = array_size(bmap_nr, sizeof(*bitmap));
- 
--	bitmap = vmalloc(array_size(bmap_nr, sizeof(*bitmap)));
-+	bitmap = vmalloc(size);
- 	if (bitmap == NULL)
- 		return -ENOMEM;
- 
--	memset(bitmap, 0xff, sizeof(*bitmap) * bmap_nr);
-+	memset(bitmap, 0xff, size);
- 
- 	SB_AP_BITMAP(sb) = bitmap;
- 
--- 
-2.27.0
+> Non-file-lru page could also be activated in mark_page_accessed()
+> and we need to count this activation for nonresident_age.
+> 
+> Note that it's better for this patch to be squashed into the patch
+> "mm: workingset: age nonresident information alongside anonymous pages".
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> ---
+>  mm/swap.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 667133d..c5d5114 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -443,8 +443,7 @@ void mark_page_accessed(struct page *page)
+>  		else
+>  			__lru_cache_activate_page(page);
+>  		ClearPageReferenced(page);
+> -		if (page_is_file_lru(page))
+> -			workingset_activation(page);
+> +		workingset_activation(page);
+>  	}
+>  	if (page_is_idle(page))
+>  		clear_page_idle(page);
+
+AFAICT this patch Fixes: a528910e12ec7ee ("mm: thrash detection-based file
+cache sizing")?
 
