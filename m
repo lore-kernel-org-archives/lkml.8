@@ -2,87 +2,103 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4567C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D7220882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:32:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592325168;
-	bh=v1NEVGl2JZ+x6Y+VmJrgJFlKm7OXUpbzQ/E9bGRWjFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MxybMMdSsdUcWxVDvu6UgOvUuyrin28pi31c6w1rkR/C1LNpIPDTNPoVgftI5/6GP
-	 G2t2AuY7vyAmnx2YVMirf8tMU9it2Pl18TzhOsUmOvHiUZ7ByOg+cFI+a4BDffHhzr
-	 fHMNFycv5Ik1SVhWMoiZ7RIj8OOhP73EPMoAuWgk=
+	by mail.kernel.org (Postfix) with ESMTP id 73C29208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730837AbgFPQcr (ORCPT
+        id S1730959AbgFPQcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:32:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33742 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:32:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:22596 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730588AbgFPQcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:32:46 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71BD620882;
-        Tue, 16 Jun 2020 16:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592325166;
-        bh=v1NEVGl2JZ+x6Y+VmJrgJFlKm7OXUpbzQ/E9bGRWjFQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=khGHiJvcszZgXVCQrXtmKy8FXo7lOoT75j/6La/xCYBoAOLJN1hPDEyaIJR5HnaRT
-         sqHPvhlOFObJWLZkJwgHKl22dEpyHhpuGCDP5vsMzbL7TaBLKJhd/0qJr6T39obBAq
-         TPMUrPJxB7A3wi3RPTHF1GKB013UktuhDufa6KEc=
-Date:   Tue, 16 Jun 2020 22:02:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Viresh Kumar <vireshk@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 00/11] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-Message-ID: <20200616163242.GO2324254@vkoul-mobl>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200602092734.6oekfmilbpx54y64@mobilestation>
+        id S1730588AbgFPQcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:32:53 -0400
+IronPort-SDR: WOq2sdQ2x/P0CmEBDU7B6XQKw7kfmNpPBypUoQZ3tXOccacJ95edRNGo1Umf/nRJgFHmXscBii
+ 7tHvbdWF7aug==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 09:32:52 -0700
+IronPort-SDR: /ufzMPhmSvZHJPN0HXfB/setWDjkZcQFuZwxb2zVxNxOudFCcXKRN1XF9XqiYp7FCrc8lhdo1w
+ fZ9FgJpRA1eQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="317270789"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Jun 2020 09:32:50 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jlEW4-00DsCM-L6; Tue, 16 Jun 2020 19:32:52 +0300
+Date:   Tue, 16 Jun 2020 19:32:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH v3 2/3] ARM: bcm2835: Switch to use %ptT
+Message-ID: <20200616163252.GX2428291@smile.fi.intel.com>
+References: <20200415170046.33374-1-andriy.shevchenko@linux.intel.com>
+ <20200415170046.33374-3-andriy.shevchenko@linux.intel.com>
+ <5551ac7d9c7ba7df2b44832af49b3744869b34ef.camel@suse.de>
+ <20200616161346.GW2428291@smile.fi.intel.com>
+ <cabeb88787e032d0b241369884720b410142f72b.camel@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602092734.6oekfmilbpx54y64@mobilestation>
+In-Reply-To: <cabeb88787e032d0b241369884720b410142f72b.camel@suse.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Serge,
-
-On 02-06-20, 12:27, Serge Semin wrote:
-> Vinod, Viresh
+On Tue, Jun 16, 2020 at 06:22:17PM +0200, Nicolas Saenz Julienne wrote:
+> On Tue, 2020-06-16 at 19:13 +0300, Andy Shevchenko wrote:
+> > On Tue, Jun 16, 2020 at 05:53:23PM +0200, Nicolas Saenz Julienne wrote:
+> > > On Wed, 2020-04-15 at 20:00 +0300, Andy Shevchenko wrote:
+> > > > Use %ptT instead of open coded variant to print content of
+> > > > time64_t type in human readable format.
+> > > > 
+> > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > ---
+> > > 
+> > > as originally reported by Stefan Wahren, this patch is likely to be the
+> > > cause
+> > > for a regression on RPi3b+ 32bit mode (multi_v7_defconfig,
+> > > 5.8.0-rc1-00019-ga5dc8300df75):
+> > > 
+> > > [    3.759892] raspberrypi-firmware soc:firmware: Attached to firmware from
+> > > 18446744073709048425-02-19T15:52:16
+> > > 
+> > > Whereas the same doesn't seem to happen in 64bit mode:
+> > > 
+> > > [    1.584126] raspberrypi-firmware soc:firmware: Attached to firmware from
+> > > 2020-02-12T12:39:27
+> > 
+> > Had you chance to run test_printf on that machine and see if it reports any
+> > failure?
+> > If no, can you provide a raw date which makes this happen?
+> > 
+> > Ah, I think I have an idea what is going on... stay tuned!
+> > 
+> > Does below fix it?
 > 
-> Andy's finished his review. So all the patches of the series (except one rather
-> decorative, which we have different opinion of) are tagged by him. Since merge
-> window is about to be opened please consider to merge the series in. I'll really
-> need it to be in the kernel to provide the noLLP-problem fix for the Dw APB SSI
-> in 5.8.
+> Yes :)
 
-Sorry it was too late for 5.8.. merge window is closed now, i will
-review it shortly
+Patch has been just sent. I hope it can go via printk tree, because MAINTAINERS keeps silent for this file.
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+
