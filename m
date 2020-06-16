@@ -2,93 +2,110 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056A1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D96D92137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M6kPmDoz"
+	by mail.kernel.org (Postfix) with ESMTP id 1799D20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592313695;
+	bh=NzmkbhpV6gQ0cqf7U1NrQrUNv6zLElTT90CV/gT2kXo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CzMWOS1lLoJlq1HuHHy2pQKPBk2x44oYpqjZeCBfIYDtAuJe2a+KY37UUxOhreOJ+
+	 6fqMkLdwcGwgzIWngZtMxfMtdCCGHQzYt3GNad18Ab0huZf5/6PkJCXceRWKACzKdN
+	 MxASiF6TTOoNd6G+nsR/S1qdj04VByKuTYYWg12s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgFPNT1 (ORCPT
+        id S1728707AbgFPNVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:19:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgFPNT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:19:26 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9ED2C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QOrBjLsZOcLkb+bVnZ9gACcB3pi6tQLW9rAEtEDmuaA=; b=M6kPmDoznMBMoy9sJaehnjwn7/
-        8k247TpaB/vcK26oIp+04os2EFFKkmHeQHAC0H5WKmruH744IYoJAqTVGJ+9kWK76nqBzxva6nm+M
-        H985uOOFcDHZaS+6VWM+jUa7qrlCu3Akfjxj1/S38FQH3jfcvAT+uramkCt55q2bulbYEhukm+aN/
-        bXw/hj1QYm2HkdcbVuAsYk193WNLwrnw6SCpfTGyergO7maAL/C1nIS+S199bKx+XrBaZZCc1rrlS
-        U48CJi6LxQkeQ91HMWq/QnoxCrZnC2InKwIfbtWTe2dX4JhEFg38bSE7gwGYoNbmlIrqcAqy+H3Kj
-        2tIahr6g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlBUp-0004JR-Cb; Tue, 16 Jun 2020 13:19:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 16 Jun 2020 09:21:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbgFPNVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 09:21:33 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4AB86301A32;
-        Tue, 16 Jun 2020 15:19:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3315C29C11D62; Tue, 16 Jun 2020 15:19:21 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 15:19:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] compiler_attributes.h: Support no_sanitize_undefined
- check with GCC 4
-Message-ID: <20200616131921.GV2531@hirez.programming.kicks-ass.net>
-References: <202006160328.6MfJNuqX%lkp@intel.com>
- <20200615231529.GA119644@google.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1472D206F1;
+        Tue, 16 Jun 2020 13:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592313692;
+        bh=NzmkbhpV6gQ0cqf7U1NrQrUNv6zLElTT90CV/gT2kXo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ofTlfOUw8BPhx2Iu5uPfykNaA7iGUrhxxKy/hPpiDlwfnFVJh00fKYFJlUK9WaU7g
+         wWH/Kw5fsg5b0N0Iee63zhTBNEd4mQraUaXU3u+9ASbhkS64YuHwRgqAi0NryX6IRJ
+         YgEi0dom95iZDI/5Z8TMtN4r7+AjR9G/CHQGGiOM=
+Date:   Tue, 16 Jun 2020 09:21:30 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Ville Syrj??l?? <ville.syrjala@linux.intel.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        "Ursulin, Tvrtko" <tvrtko.ursulin@intel.com>,
+        linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        haiyangz@microsoft.com, LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        spronovo@microsoft.com, wei.liu@kernel.org,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        iourit@microsoft.com, kys@microsoft.com
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+Message-ID: <20200616132130.GO1931@sasha-vm>
+References: <20200519163234.226513-1-sashal@kernel.org>
+ <CAPM=9txZpiCGkv3jiBC1F8pTe4A2pqWpQDyjRBXk2roFqw+0+Q@mail.gmail.com>
+ <CAPM=9tx4wh-Lk6Dffsdh-7mYvXx+GX2AxhrGqFgyN8-AWJvP6A@mail.gmail.com>
+ <20200616105156.GE1718@bug>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200615231529.GA119644@google.com>
+In-Reply-To: <20200616105156.GE1718@bug>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 01:15:29AM +0200, Marco Elver wrote:
-> UBSAN is supported since GCC 4.9, which unfortunately did not yet have
-> __has_attribute(). To work around, the __GCC4_has_attribute workaround
-> requires defining which compiler version supports the given attribute.
-> 
-> In the case of no_sanitize_undefined, it is the first version that
-> supports UBSAN, which is GCC 4.9.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
-> 
-> Doing a 'make W=1' with GCC 4.9 and the provided config fixes the build
-> robot's report.
-> 
-> Peter: Feel free to either squash this patch into the one adding
-> __no_sanitize_undefined or apply on top.
+On Tue, Jun 16, 2020 at 12:51:56PM +0200, Pavel Machek wrote:
+>> > Having said that, I hit one stumbling block:
+>> > "Further, at this time there are no presentation integration. "
+>> >
+>> > If we upstream this driver as-is into some hyperv specific place, and
+>> > you decide to add presentation integration this is more than likely
+>> > going to mean you will want to interact with dma-bufs and dma-fences.
+>> > If the driver is hidden away in a hyperv place it's likely we won't
+>> > even notice that feature landing until it's too late.
+>> >
+>> > I would like to see a coherent plan for presentation support (not
+>> > code, just an architectural diagram), because I think when you
+>> > contemplate how that works it will change the picture of how this
+>> > driver looks and intergrates into the rest of the Linux graphics
+>> > ecosystem.
+>> >
+>> > As-is I'd rather this didn't land under my purview, since I don't see
+>> > the value this adds to the Linux ecosystem at all, and I think it's
+>> > important when putting a burden on upstream that you provide some
+>> > value.
+>>
+>> I also have another concern from a legal standpoint I'd rather not
+>> review the ioctl part of this. I'd probably request under DRI
+>> developers abstain as well.
+>>
+>> This is a Windows kernel API being smashed into a Linux driver. I don't want to be
+>> tainted by knowledge of an API that I've no idea of the legal status of derived works.
+>> (it this all covered patent wise under OIN?)
+>
+>If you can't look onto it, perhaps it is not suitable to merge into kernel...?
+>
+>What would be legal requirements so this is "safe to look at"? We should really
+>require submitter to meet them...
 
-Yeah, argh! So I only saw this thread now, even though I'd already
-pushed out x86/entry to tip last night due to getting:
+Could you walk me through your view on what the function of the
+"Signed-off-by" tag is?
 
-301805 N + Jun 16 kernel test rob (5.8K) [peterz-queue:x86/entry] BUILD SUCCESS 8e8bb06d199a5aa7a534aa3b3fc0abbbc11ca438
-
-Why that thing is claiming SUCCESS when it introduces a build error I
-don't know.
-
-Anyway, let me go push this thing on top.
+-- 
+Thanks,
+Sasha
