@@ -2,62 +2,76 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAFA120776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD2D206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O7ZcDqNU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7vSd3CZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgFPAWi (ORCPT
+        id S1726615AbgFPAY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 20:22:38 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:35802 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725960AbgFPAWg (ORCPT
+        Mon, 15 Jun 2020 20:24:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgFPAY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 20:22:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592266956; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=Mx3uyslVkwrYk9S4RNuEP4zAhRekk8MfjkBR3eyltiE=; b=O7ZcDqNUKZ7OunISyx0dfV91rVVWczmhnDGtAjlo9iM5A8WWIvSqkjyqTCVAeBVxgLmtEiAe
- fAeR4ymPziPiJQ+wj//9AG9oxu5Pznx00nB1sicRmiFIXljRz45paOc+8ZcxwrOZU9ldd7F/
- 63XbQQ2TEPAN07boyv4Ve688q0E=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5ee810cbe144dd5115e9e34d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 00:22:35
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 61AE9C433CB; Tue, 16 Jun 2020 00:22:35 +0000 (UTC)
-Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4BBD9C433CA;
-        Tue, 16 Jun 2020 00:22:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4BBD9C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     swboyd@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        sam@ravnborg.org, seanpaul@chromium.org, robdclark@gmail.com,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org
-Subject: [PATCH v1] arm64: dts: qcom: sc7180: Add Display Port dt node
-Date:   Mon, 15 Jun 2020 17:22:15 -0700
-Message-Id: <20200616002215.32207-1-tanmay@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
+        Mon, 15 Jun 2020 20:24:56 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE313C061A0E;
+        Mon, 15 Jun 2020 17:24:56 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d8so7568417plo.12;
+        Mon, 15 Jun 2020 17:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SQQn2jlA4WN6yItqYwtJlJhnirXU5nk3dC97lktwFFs=;
+        b=E7vSd3CZltYffnJ7e8tAxU0uw5ZDpC3HRtz0oW/qdGBd10OaymT+3z69oQd+S3+sbV
+         MKvgk1WlOI3vxOv6bL51lraUpt1u+opItPIa76J6jW90yuVgJpMbW0Yqpl+Q8QFA1Aeg
+         Q8DJIKMtr/iNv2tqHxSPVRAPMyIKr2utOHA0L8MsiFaeKAlfRavDCQwae3GiBoEAEpTv
+         659uwvCy+f1w0tro+fYuoWMOmvtMLmR4Q8xg/LPOrZPv9ZB5t8T/btLKLEf8UD2EmNOw
+         lDJipkjqJrQCrVIkk/q51g9zoCHztEbHJMlaIO8gEIuGeKPiwhXxFNcAM5/Su/rIwCVw
+         XsOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SQQn2jlA4WN6yItqYwtJlJhnirXU5nk3dC97lktwFFs=;
+        b=OUd5Kdxhl0E3wh6B1w2xy6lh6RUHjZHv86z0h6KWWNvPpkX8jKdt72Ul/k5m8ixDK6
+         7PclPevEFgdyINtBdkclqxT8Dn0vOF49+ECcXPuVvUmspn608Ah3ESMTyAxIhckQgVHX
+         q7ji5abkLvY58YUpjro6/Jdru1D9goicYCEnPh0GutcmfVchLdji+AiPhw5FCiYRX/gD
+         ZHhjPB8DzTdCFLHNYh1kzGvx4PMYMmcBW5o9JvSJeZd1O9JlkEDVFqsIiOFq4Cnc5M2i
+         nzYhPKTOkDH/0sejeoiKwkC4/mQdX9qqieec/yEdGP6k58NUXXr3I/54cWhg6/wOZkdF
+         qwMw==
+X-Gm-Message-State: AOAM5337b2jbyRh16MoRT57vgO7UL1jAv4W0idVlfWQOCLBRnC/GFHxZ
+        QqArB+AsUxFdSGaxuaniYGQ=
+X-Google-Smtp-Source: ABdhPJw+7z3R7gPDdo94HqqLnkvUzcTSeGhVAeQYtwKJjQiB+OFVDEa+d1QJF1Jaz7sKQ/DGs/OYfw==
+X-Received: by 2002:a17:90a:c905:: with SMTP id v5mr219611pjt.39.1592267096165;
+        Mon, 15 Jun 2020 17:24:56 -0700 (PDT)
+Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:b8ad:8a8d:fa4d:221e])
+        by smtp.gmail.com with ESMTPSA id n4sm536619pjt.48.2020.06.15.17.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 17:24:55 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] exfat: remove EXFAT_SB_DIRTY flag
+Date:   Tue, 16 Jun 2020 09:24:49 +0900
+Message-Id: <20200616002450.2522-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,103 +79,315 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable DP driver for sc7180.
+remove EXFAT_SB_DIRTY flag and related codes.
 
-This change depends-on following series:
-https://patchwork.freedesktop.org/series/78247/
-and https://patchwork.freedesktop.org/patch/351990/
+This flag is set/reset in exfat_put_super()/exfat_sync_fs()
+to avoid sync_blockdev().
+However ...
+- exfat_put_super():
+Before calling this, the VFS has already called sync_filesystem(),
+so sync is never performed here.
+- exfat_sync_fs():
+After calling this, the VFS calls sync_blockdev(), so, it is meaningless
+to check EXFAT_SB_DIRTY or to bypass sync_blockdev() here.
+Not only that, but in some cases can't clear VOL_DIRTY.
+ex:
+VOL_DIRTY is set when rmdir starts, but when non-empty-dir is detected,
+return error without setting EXFAT_SB_DIRTY.
+If performe 'sync' in this state, VOL_DIRTY will not be cleared.
 
-Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+Remove the EXFAT_SB_DIRTY check to ensure synchronization.
+And, remove the code related to the flag.
+
+Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 58 ++++++++++++++++++++++++++--
- 1 file changed, 54 insertions(+), 4 deletions(-)
+Changes in v2:
+ - exfat_sync_fs() avoids synchronous processing when wait=0
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 998f101ad623..989960d2200b 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1557,10 +1557,19 @@ ports {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
+ fs/exfat/balloc.c   |  4 ++--
+ fs/exfat/dir.c      | 16 ++++++++--------
+ fs/exfat/exfat_fs.h |  5 +----
+ fs/exfat/fatent.c   |  7 ++-----
+ fs/exfat/misc.c     |  3 +--
+ fs/exfat/namei.c    | 12 ++++++------
+ fs/exfat/super.c    | 14 ++++++--------
+ 7 files changed, 26 insertions(+), 35 deletions(-)
+
+diff --git a/fs/exfat/balloc.c b/fs/exfat/balloc.c
+index 4055eb00ea9b..a987919686c0 100644
+--- a/fs/exfat/balloc.c
++++ b/fs/exfat/balloc.c
+@@ -158,7 +158,7 @@ int exfat_set_bitmap(struct inode *inode, unsigned int clu)
+ 	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
  
-+					port@1 {
-+						reg = <1>;
-+						dpu_intf1_out: endpoint {
-+							remote-endpoint =
-+								 <&dsi0_in>;
-+						};
-+					};
-+
- 					port@0 {
- 						reg = <0>;
--						dpu_intf1_out: endpoint {
--							remote-endpoint = <&dsi0_in>;
-+						dpu_intf0_out: endpoint {
-+							remote-endpoint =
-+								 <&dp_in>;
- 						};
- 					};
- 				};
-@@ -1634,6 +1643,47 @@ dsi_phy: dsi-phy@ae94400 {
- 			};
- 		};
+ 	set_bit_le(b, sbi->vol_amap[i]->b_data);
+-	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
++	exfat_update_bh(sbi->vol_amap[i], IS_DIRSYNC(inode));
+ 	return 0;
+ }
  
-+		msm_dp: displayport-controller@ae90000{
-+			status = "ok";
-+			cell-index = <0>;
-+			compatible = "qcom,dp-display";
+@@ -180,7 +180,7 @@ void exfat_clear_bitmap(struct inode *inode, unsigned int clu)
+ 	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
+ 
+ 	clear_bit_le(b, sbi->vol_amap[i]->b_data);
+-	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
++	exfat_update_bh(sbi->vol_amap[i], IS_DIRSYNC(inode));
+ 
+ 	if (opts->discard) {
+ 		int ret_discard;
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 8e775bd5d523..02acbb6ddf02 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -470,7 +470,7 @@ int exfat_init_dir_entry(struct inode *inode, struct exfat_chain *p_dir,
+ 			&ep->dentry.file.access_date,
+ 			NULL);
+ 
+-	exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
++	exfat_update_bh(bh, IS_DIRSYNC(inode));
+ 	brelse(bh);
+ 
+ 	ep = exfat_get_dentry(sb, p_dir, entry + 1, &bh, &sector);
+@@ -480,7 +480,7 @@ int exfat_init_dir_entry(struct inode *inode, struct exfat_chain *p_dir,
+ 	exfat_init_stream_entry(ep,
+ 		(type == TYPE_FILE) ? ALLOC_FAT_CHAIN : ALLOC_NO_FAT_CHAIN,
+ 		start_clu, size);
+-	exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
++	exfat_update_bh(bh, IS_DIRSYNC(inode));
+ 	brelse(bh);
+ 
+ 	return 0;
+@@ -516,7 +516,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
+ 	}
+ 
+ 	fep->dentry.file.checksum = cpu_to_le16(chksum);
+-	exfat_update_bh(sb, fbh, IS_DIRSYNC(inode));
++	exfat_update_bh(fbh, IS_DIRSYNC(inode));
+ release_fbh:
+ 	brelse(fbh);
+ 	return ret;
+@@ -538,7 +538,7 @@ int exfat_init_ext_entry(struct inode *inode, struct exfat_chain *p_dir,
+ 		return -EIO;
+ 
+ 	ep->dentry.file.num_ext = (unsigned char)(num_entries - 1);
+-	exfat_update_bh(sb, bh, sync);
++	exfat_update_bh(bh, sync);
+ 	brelse(bh);
+ 
+ 	ep = exfat_get_dentry(sb, p_dir, entry + 1, &bh, &sector);
+@@ -547,7 +547,7 @@ int exfat_init_ext_entry(struct inode *inode, struct exfat_chain *p_dir,
+ 
+ 	ep->dentry.stream.name_len = p_uniname->name_len;
+ 	ep->dentry.stream.name_hash = cpu_to_le16(p_uniname->name_hash);
+-	exfat_update_bh(sb, bh, sync);
++	exfat_update_bh(bh, sync);
+ 	brelse(bh);
+ 
+ 	for (i = EXFAT_FIRST_CLUSTER; i < num_entries; i++) {
+@@ -556,7 +556,7 @@ int exfat_init_ext_entry(struct inode *inode, struct exfat_chain *p_dir,
+ 			return -EIO;
+ 
+ 		exfat_init_name_entry(ep, uniname);
+-		exfat_update_bh(sb, bh, sync);
++		exfat_update_bh(bh, sync);
+ 		brelse(bh);
+ 		uniname += EXFAT_FILE_NAME_LEN;
+ 	}
+@@ -580,7 +580,7 @@ int exfat_remove_entries(struct inode *inode, struct exfat_chain *p_dir,
+ 			return -EIO;
+ 
+ 		exfat_set_entry_type(ep, TYPE_DELETED);
+-		exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
++		exfat_update_bh(bh, IS_DIRSYNC(inode));
+ 		brelse(bh);
+ 	}
+ 
+@@ -610,7 +610,7 @@ void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
+ 
+ 	for (i = 0; i < es->num_bh; i++) {
+ 		if (es->modified)
+-			exfat_update_bh(es->sb, es->bh[i], sync);
++			exfat_update_bh(es->bh[i], sync);
+ 		brelse(es->bh[i]);
+ 	}
+ 	kfree(es);
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 595f3117f492..84664024e51e 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -13,8 +13,6 @@
+ #define EXFAT_SUPER_MAGIC       0x2011BAB0UL
+ #define EXFAT_ROOT_INO		1
+ 
+-#define EXFAT_SB_DIRTY		0
+-
+ #define EXFAT_CLUSTERS_UNTRACKED (~0u)
+ 
+ /*
+@@ -238,7 +236,6 @@ struct exfat_sb_info {
+ 	unsigned int clu_srch_ptr; /* cluster search pointer */
+ 	unsigned int used_clusters; /* number of used clusters */
+ 
+-	unsigned long s_state;
+ 	struct mutex s_lock; /* superblock lock */
+ 	struct exfat_mount_options options;
+ 	struct nls_table *nls_io; /* Charset used for input and display */
+@@ -514,7 +511,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ 		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
+ u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
+ u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
+-void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
++void exfat_update_bh(struct buffer_head *bh, int sync);
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+ 		unsigned int size, unsigned char flags);
+ void exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec);
+diff --git a/fs/exfat/fatent.c b/fs/exfat/fatent.c
+index 4e5c5c9c0f2d..82ee8246c080 100644
+--- a/fs/exfat/fatent.c
++++ b/fs/exfat/fatent.c
+@@ -75,7 +75,7 @@ int exfat_ent_set(struct super_block *sb, unsigned int loc,
+ 
+ 	fat_entry = (__le32 *)&(bh->b_data[off]);
+ 	*fat_entry = cpu_to_le32(content);
+-	exfat_update_bh(sb, bh, sb->s_flags & SB_SYNCHRONOUS);
++	exfat_update_bh(bh, sb->s_flags & SB_SYNCHRONOUS);
+ 	exfat_mirror_bh(sb, sec, bh);
+ 	brelse(bh);
+ 	return 0;
+@@ -174,7 +174,6 @@ int exfat_free_cluster(struct inode *inode, struct exfat_chain *p_chain)
+ 		return -EIO;
+ 	}
+ 
+-	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
+ 	clu = p_chain->dir;
+ 
+ 	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
+@@ -274,7 +273,7 @@ int exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
+ 			goto release_bhs;
+ 		}
+ 		memset(bhs[n]->b_data, 0, sb->s_blocksize);
+-		exfat_update_bh(sb, bhs[n], 0);
++		exfat_update_bh(bhs[n], 0);
+ 
+ 		n++;
+ 		blknr++;
+@@ -358,8 +357,6 @@ int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
+ 		}
+ 	}
+ 
+-	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
+-
+ 	p_chain->dir = EXFAT_EOF_CLUSTER;
+ 
+ 	while ((new_clu = exfat_find_free_bitmap(sb, hint_clu)) !=
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index 17d41f3d3709..8a3dde59052b 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -163,9 +163,8 @@ u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type)
+ 	return chksum;
+ }
+ 
+-void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync)
++void exfat_update_bh(struct buffer_head *bh, int sync)
+ {
+-	set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(sb)->s_state);
+ 	set_buffer_uptodate(bh);
+ 	mark_buffer_dirty(bh);
+ 
+diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+index edd8023865a0..5eef2217fcf2 100644
+--- a/fs/exfat/namei.c
++++ b/fs/exfat/namei.c
+@@ -387,7 +387,7 @@ static int exfat_find_empty_entry(struct inode *inode,
+ 			ep->dentry.stream.valid_size = cpu_to_le64(size);
+ 			ep->dentry.stream.size = ep->dentry.stream.valid_size;
+ 			ep->dentry.stream.flags = p_dir->flags;
+-			exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
++			exfat_update_bh(bh, IS_DIRSYNC(inode));
+ 			brelse(bh);
+ 			if (exfat_update_dir_chksum(inode, &(ei->dir),
+ 			    ei->entry))
+@@ -1071,7 +1071,7 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
+ 			epnew->dentry.file.attr |= cpu_to_le16(ATTR_ARCHIVE);
+ 			ei->attr |= ATTR_ARCHIVE;
+ 		}
+-		exfat_update_bh(sb, new_bh, sync);
++		exfat_update_bh(new_bh, sync);
+ 		brelse(old_bh);
+ 		brelse(new_bh);
+ 
+@@ -1087,7 +1087,7 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
+ 		}
+ 
+ 		memcpy(epnew, epold, DENTRY_SIZE);
+-		exfat_update_bh(sb, new_bh, sync);
++		exfat_update_bh(new_bh, sync);
+ 		brelse(old_bh);
+ 		brelse(new_bh);
+ 
+@@ -1104,7 +1104,7 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
+ 			epold->dentry.file.attr |= cpu_to_le16(ATTR_ARCHIVE);
+ 			ei->attr |= ATTR_ARCHIVE;
+ 		}
+-		exfat_update_bh(sb, old_bh, sync);
++		exfat_update_bh(old_bh, sync);
+ 		brelse(old_bh);
+ 		ret = exfat_init_ext_entry(inode, p_dir, oldentry,
+ 			num_new_entries, p_uniname);
+@@ -1159,7 +1159,7 @@ static int exfat_move_file(struct inode *inode, struct exfat_chain *p_olddir,
+ 		epnew->dentry.file.attr |= cpu_to_le16(ATTR_ARCHIVE);
+ 		ei->attr |= ATTR_ARCHIVE;
+ 	}
+-	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
++	exfat_update_bh(new_bh, IS_DIRSYNC(inode));
+ 	brelse(mov_bh);
+ 	brelse(new_bh);
+ 
+@@ -1175,7 +1175,7 @@ static int exfat_move_file(struct inode *inode, struct exfat_chain *p_olddir,
+ 	}
+ 
+ 	memcpy(epnew, epmov, DENTRY_SIZE);
+-	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
++	exfat_update_bh(new_bh, IS_DIRSYNC(inode));
+ 	brelse(mov_bh);
+ 	brelse(new_bh);
+ 
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index e650e65536f8..49804d369b51 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -45,9 +45,6 @@ static void exfat_put_super(struct super_block *sb)
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+ 
+ 	mutex_lock(&sbi->s_lock);
+-	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state))
+-		sync_blockdev(sb->s_bdev);
+-	exfat_set_vol_flags(sb, VOL_CLEAN);
+ 	exfat_free_bitmap(sbi);
+ 	brelse(sbi->boot_bh);
+ 	mutex_unlock(&sbi->s_lock);
+@@ -60,13 +57,14 @@ static int exfat_sync_fs(struct super_block *sb, int wait)
+ 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+ 	int err = 0;
+ 
++	if (!wait)
++		return;
 +
-+			reg = <0 0xae90000 0 0x1400>;
-+			reg-names = "dp_controller";
-+
-+			interrupt-parent = <&mdss>;
-+			interrupts = <12 0>;
-+
-+			clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
-+				 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
-+				 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
-+				 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
-+				 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-+			clock-names = "core_aux", "ctrl_link",
-+				      "ctrl_link_iface", "stream_pixel",
-+				      "pixel_rcg";
-+			#clock-cells = <1>;
-+
-+			data-lanes = <0 1>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				port@0 {
-+					reg = <0>;
-+					dp_in: endpoint {
-+						remote-endpoint =
-+							 <&dpu_intf0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					dp_out: endpoint { };
-+				};
-+			};
-+		};
-+
- 		dispcc: clock-controller@af00000 {
- 			compatible = "qcom,sc7180-dispcc";
- 			reg = <0 0x0af00000 0 0x200000>;
-@@ -1641,8 +1691,8 @@ dispcc: clock-controller@af00000 {
- 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
- 				 <&dsi_phy 0>,
- 				 <&dsi_phy 1>,
--				 <0>,
--				 <0>;
-+				 <&msm_dp 0>,
-+				 <&msm_dp 1>;
- 			clock-names = "bi_tcxo",
- 				      "gcc_disp_gpll0_clk_src",
- 				      "dsi0_phy_pll_out_byteclk",
+ 	/* If there are some dirty buffers in the bdev inode */
+ 	mutex_lock(&sbi->s_lock);
+-	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state)) {
+-		sync_blockdev(sb->s_bdev);
+-		if (exfat_set_vol_flags(sb, VOL_CLEAN))
+-			err = -EIO;
+-	}
++	sync_blockdev(sb->s_bdev);
++	if (exfat_set_vol_flags(sb, VOL_CLEAN))
++		err = -EIO;
+ 	mutex_unlock(&sbi->s_lock);
+ 	return err;
+ }
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.25.1
 
