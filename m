@@ -2,139 +2,100 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89927C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2052166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F3C208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323132;
-	bh=ZCiPAtOxuxnCByGA3BqQ7UHBlJxuFSZWp1aLpHrCBmI=;
+	s=default; t=1592323135;
+	bh=C4CZ/M9ITZrqQHLFJzKFmKmEbF1OrOch6eNdkBtZKo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JqIN8iolT8xkFAhWRHPwQ2GbMJhiSrH5lcrPUMfduKHx9BdaVU46twCLWKLNpP3S+
-	 oNNADyk5NJuvgWJIIb5ytsOgiQtlWMYYmQ2AZDrLqipfn+rsiTQ7Q/LZqynHZL5qbh
-	 J7/z+X8F9CgZLuoJgljcrf3YmlZC8NG/ydmYw+dI=
+	b=pDGiwyeY4xIDKAJiw/G0LAesQfeAPmDMD/3+YERV1eZ5kWb8lYFkXQ/vTnYgRAxxS
+	 n2YScyacMkxD0zx2Hi6ax/sKVQmEa3JtWYfVbuKGY08Yht0EmyokcTeQP0gCFuCW0t
+	 AQ2hvLWg7hK2RyrudaMUU1O/G1ST4MhfTpJObhFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733162AbgFPP6u (ORCPT
+        id S1732150AbgFPP6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732951AbgFPPyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732987AbgFPP6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:58:50 -0400
+Received: from localhost.localdomain (unknown [42.120.72.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 267B2208D5;
-        Tue, 16 Jun 2020 15:54:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A8921532;
+        Tue, 16 Jun 2020 15:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322853;
-        bh=ZCiPAtOxuxnCByGA3BqQ7UHBlJxuFSZWp1aLpHrCBmI=;
+        s=default; t=1592323130;
+        bh=C4CZ/M9ITZrqQHLFJzKFmKmEbF1OrOch6eNdkBtZKo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XoiXWLYGa1/HamWkRaDgOYQ80QGtcwoQIe4v/giXgfv/S1hGRfAKsHmPfS4FpEL6G
-         rd9ezX34MFSt3lK6hKqpBcpD3ZQkTElGT451J8C4Yybh3IBq9I29dX36eloMeMPbmQ
-         0mRSPq30RYMZV5tT8CvCA7Q0QWA+TDqhAWDrvPd4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Gonglei <arei.gonglei@huawei.com>,
-        "Longpeng(Mike)" <longpeng2@huawei.com>
-Subject: [PATCH 5.6 100/161] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
-Date:   Tue, 16 Jun 2020 17:34:50 +0200
-Message-Id: <20200616153111.123452358@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
-References: <20200616153106.402291280@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=OHhYXXsUhHGHDykZTfCvAdGgbVkI7HvEcIZvSccWYS1yOEDsbXt0MjUosEgu2kIt4
+         24DQy+XHV035E7/Jov7mSVRbbU7YP8RoClK7lcj83D/w4l8X57NLRQESNvudXe3577
+         ErkyBquNey8XWFOa4or523Rwo31chDsDVemah7vI=
+From:   guoren@kernel.org
+To:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
+        anup@brainfault.org, zong.li@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, tycho@tycho.ws, nickhu@andestech.com
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH 2/3] riscv: Fixup lockdep_assert_held with wrong param cpu_running
+Date:   Tue, 16 Jun 2020 15:57:00 +0000
+Message-Id: <1592323021-98541-3-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592323021-98541-1-git-send-email-guoren@kernel.org>
+References: <1592323021-98541-1-git-send-email-guoren@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng(Mike) <longpeng2@huawei.com>
+From: Zong Li <zong.li@sifive.com>
 
-commit b02989f37fc5e865ceeee9070907e4493b3a21e2 upstream.
+The cpu_running is not a lock-class, it lacks the dep_map member in
+completion. It causes the error as follow:
 
-The system will crash when the users insmod crypto/tcrypt.ko with mode=38
-( testing "cts(cbc(aes))" ).
+arch/riscv/kernel/smpboot.c: In function '__cpu_up':
+./include/linux/lockdep.h:364:52: error: 'struct completion' has no member named 'dep_map'
+  364 | #define lockdep_is_held(lock)  lock_is_held(&(lock)->dep_map)
+      |                                                    ^~
+./include/asm-generic/bug.h:113:25: note: in definition of macro 'WARN_ON'
+  113 |  int __ret_warn_on = !!(condition);    \
+      |                         ^~~~~~~~~
+./include/linux/lockdep.h:390:27: note: in expansion of macro 'lockdep_is_held'
+  390 |   WARN_ON(debug_locks && !lockdep_is_held(l)); \
+      |                           ^~~~~~~~~~~~~~~
+arch/riscv/kernel/smpboot.c:118:2: note: in expansion of macro 'lockdep_assert_held'
+  118 |  lockdep_assert_held(&cpu_running);
 
-Usually the next entry of one sg will be @sg@ + 1, but if this sg element
-is part of a chained scatterlist, it could jump to the start of a new
-scatterlist array. Fix it by sg_next() on calculation of src/dst
-scatterlist.
+There are a lot of archs which use cpu_running in smpboot.c (arm,
+arm64, openrisc, xtensa, s390, x86, mips), but none of them try
+lockdep_assert_held(&cpu_running.wait.lock). So Just remove it.
 
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Reported-by: LABBE Corentin <clabbe@baylibre.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
-Signed-off-by: Gonglei <arei.gonglei@huawei.com>
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-2-longpeng2@huawei.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Zong Li <zong.li@sifive.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ arch/riscv/kernel/smpboot.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -350,13 +350,18 @@ __virtio_crypto_skcipher_do_req(struct v
- 	int err;
- 	unsigned long flags;
- 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
--	int i;
- 	u64 dst_len;
- 	unsigned int num_out = 0, num_in = 0;
- 	int sg_total;
- 	uint8_t *iv;
-+	struct scatterlist *sg;
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index 4e99227..defc4e1 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -121,7 +121,6 @@ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
  
- 	src_nents = sg_nents_for_len(req->src, req->cryptlen);
-+	if (src_nents < 0) {
-+		pr_err("Invalid number of src SG.\n");
-+		return src_nents;
-+	}
-+
- 	dst_nents = sg_nents(req->dst);
+ 	ret = start_secondary_cpu(cpu, tidle);
+ 	if (!ret) {
+-		lockdep_assert_held(&cpu_running);
+ 		wait_for_completion_timeout(&cpu_running,
+ 					    msecs_to_jiffies(1000));
  
- 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
-@@ -443,12 +448,12 @@ __virtio_crypto_skcipher_do_req(struct v
- 	vc_sym_req->iv = iv;
- 
- 	/* Source data */
--	for (i = 0; i < src_nents; i++)
--		sgs[num_out++] = &req->src[i];
-+	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
-+		sgs[num_out++] = sg;
- 
- 	/* Destination data */
--	for (i = 0; i < dst_nents; i++)
--		sgs[num_out + num_in++] = &req->dst[i];
-+	for (sg = req->dst; sg; sg = sg_next(sg))
-+		sgs[num_out + num_in++] = sg;
- 
- 	/* Status */
- 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
-
+-- 
+2.7.4
 
