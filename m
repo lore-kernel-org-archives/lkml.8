@@ -2,97 +2,98 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB658C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE74BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3FD3208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322214;
-	bh=him64+DPIChEX82ZwANJeJdiaQwo04Fo1rdBgwYSfcI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Li/FXL6lUx8U7EE/K1C1rRVnSfHj6FBnzGC1O3neoeVjrtbwJqVmJoKFeOArOUtSG
-	 Q5IA+fkqzJD9IaDFM/xeQZyCn9PeMXX2Nb/IV+r++hZwzVCgQeltcr7zzMQdLYuE6t
-	 W6VFmuO42PYB33yWjUmuW8JkZijRI4UlP9dr+67s=
+	by mail.kernel.org (Postfix) with ESMTP id CB439208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UHO6ZtVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731816AbgFPPnc (ORCPT
+        id S1731826AbgFPPni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 16 Jun 2020 11:43:38 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:54540 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731812AbgFPPnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 11:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731807AbgFPPnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8216E208D5;
-        Tue, 16 Jun 2020 15:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C084620B4780;
+        Tue, 16 Jun 2020 08:43:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C084620B4780
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1592322211;
-        bh=him64+DPIChEX82ZwANJeJdiaQwo04Fo1rdBgwYSfcI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TJYjg66j7J5arRzP/BCzPRQ2IoETgJb5ktnLHz40lU3tdYxw5uAqB4QSa6a6hZtOc
-         Y4IoZ8ZkTUlo1/ziWEBGD6crjWwlpnIHZiyI8PP3l6OW4RzZ8cHYZYmKmi58oc4l2c
-         t8b615UckBfWQ8ZFg3gc6wCKruV4ziEdOHCZItVQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.7 043/163] perf/x86/intel: Add more available bits for OFFCORE_RESPONSE of Intel Tremont
-Date:   Tue, 16 Jun 2020 17:33:37 +0200
-Message-Id: <20200616153108.927441902@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
-References: <20200616153106.849127260@linuxfoundation.org>
-User-Agent: quilt/0.66
+        bh=RynDn+a/ofKU7OdV/8LbyELxOuKAdSPTNjMGDzeL//0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UHO6ZtVxj39eqvlVM44GPhHNLb5TrHlvXCgGPBbLz/yR2e0oli1hzCERttTv4pLZG
+         uNRmbxDkaMjDoGJUVqiKyWCeGuNs3whJthdOoaC+Iz8bdBslIpnJIAteXKKgrkY1H3
+         OeL14WdFa3WSwXF68arcCq2glFGGQDE9Mm/LqXq0=
+Subject: Re: [PATCH 1/2] integrity: Add errno field in audit message
+To:     Steve Grubb <sgrubb@redhat.com>, Paul Moore <paul@paul-moore.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, rgb@redhat.com,
+        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+References: <20200611000400.3771-1-nramas@linux.microsoft.com>
+ <8800031.dr63W5FlUW@x2>
+ <CAHC9VhT6JSLBD-JMfQbn9eUsUg=juznRz41DTOaia-=WhrAAuA@mail.gmail.com>
+ <6643272.rC52FQZPYE@x2>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <958966b6-9972-051f-a7d5-cd6d1beb3244@linux.microsoft.com>
+Date:   Tue, 16 Jun 2020 08:43:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <6643272.rC52FQZPYE@x2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On 6/16/20 8:29 AM, Steve Grubb wrote:
 
-commit 0813c40556fce1eeefb996e020cc5339e0b84137 upstream.
+>>>>> The idea is a good idea, but you're assuming that "result" is always
+>>>>> errno.  That was probably true originally, but isn't now.  For
+>>>>> example, ima_appraise_measurement() calls xattr_verify(), which
+>>>>> compares the security.ima hash with the calculated file hash.  On
+>>>>> failure, it returns the result of memcmp().  Each and every code path
+>>>>> will need to be checked.
+>>>>
+>>>> Good catch Mimi.
+>>>>
+>>>> Instead of "errno" should we just use "result" and log the value given
+>>>> in the result parameter?
+>>>
+>>> That would likely collide with another field of the same name which is
+>>> the
+>>> operation's results. If it really is errno, the name is fine. It's
+>>> generic
+>>> enough that it can be reused on other events if that mattered.
+>>
+>> Steve, what is the historical reason why we have both "res" and
+>> "result" for indicating a boolean success/fail?  I'm just curious how
+>> we ended up this way, and who may still be using "result".
+> 
+> I think its pam and some other user space things did this. But because of
+> mixed machines in datacenters supporting multiple versions of OS, we have to
+> leave result alone. It has to be 0,1 or success/fail. We cannot use it for
+> errno.
 
-The mask in the extra_regs for Intel Tremont need to be extended to
-allow more defined bits.
+As Mimi had pointed out, since the value passed in result parameter is 
+not always an error code, "errno" is not an appropriate name.
 
-"Outstanding Requests" (bit 63) is only available on MSR_OFFCORE_RSP0;
+Can we add a new field, say, "op_result" to report the result of the 
+specified operation?
 
-Fixes: 6daeb8737f8a ("perf/x86/intel: Add Tremont core PMU support")
-Reported-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200501125442.7030-1-kan.liang@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/events/intel/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -1892,8 +1892,8 @@ static __initconst const u64 tnt_hw_cach
- 
- static struct extra_reg intel_tnt_extra_regs[] __read_mostly = {
- 	/* must define OFFCORE_RSP_X first, see intel_fixup_er() */
--	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0xffffff9fffull, RSP_0),
--	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xffffff9fffull, RSP_1),
-+	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x800ff0ffffff9fffull, RSP_0),
-+	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xff0ffffff9fffull, RSP_1),
- 	EVENT_EXTRA_END
- };
- 
+thanks,
+  -lakshmi
 
 
