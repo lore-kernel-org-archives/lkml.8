@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2856BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD478C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 088C821556
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4407208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323028;
-	bh=rD/bwrRxEpefQW38GRQL6xrFKiUVHbl4w5atnj3+/nA=;
+	s=default; t=1592323032;
+	bh=d97WpFy+5OREEuxVaheOyuxtpt3chE+sXqbZmAI3iho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nltNU/JMp4GP8pN+zeeLe6/7SPsEGYpz/Sjymy3WfKOXtCwNp1ZqrBqVHbqAVTwzN
-	 tLVv7Sq6lXws7zajAyF5OTFJwInWcpfs7yL0M9ASZ76vj2djNUGAlNKGHcjj4QIvEq
-	 1jrXWqNC5BhuJ/J+qs8KlLGYdTkIZaQCcbZkRw9w=
+	b=p3gKyb4l8MFQLfpCbUm8KqlwTqQh2X8pQJvIVOkMyXjUWTWwsMqrFGfc/hmqqCsoA
+	 LDouZlpXHHXydPvKkCIpHaY4H40ltH1gBP3qihdtDOd4Z/E7ICpQCQe71sk3YbP2/X
+	 i9h+qjvT9MaozAWxEaubEHDmp8jI6GwsUmOC4yw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbgFPPz1 (ORCPT
+        id S1732460AbgFPP5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55060 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733047AbgFPPzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:10 -0400
+        id S1732857AbgFPPz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20EB0208D5;
-        Tue, 16 Jun 2020 15:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 282F1216C4;
+        Tue, 16 Jun 2020 15:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322910;
-        bh=rD/bwrRxEpefQW38GRQL6xrFKiUVHbl4w5atnj3+/nA=;
+        s=default; t=1592322926;
+        bh=d97WpFy+5OREEuxVaheOyuxtpt3chE+sXqbZmAI3iho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CIxqqQgVSkrk+5fzIpTgvJ3gEAAc52ga7GaTa+rpUslbRmbSew4P1I7mQGxX1AEGH
-         tj3r0BZCPlAMFCMzi5mH5vlcKrBNu8U1IRl93MyiL+4+1JXOZNzOVvoKU/IyPriIK4
-         jaqsDRImlkwexJ7i845cBWIpP/d3v4JYZ51i80mE=
+        b=jsq//8UHfo42HZA+84ukwwiKu4sgizIgr+sDiVJwCoxutDqqOCRhvTcXQHshFrdmu
+         d2dChZHd+lgNTLWUAcfvN9AuEE436EUIry2+zypZBYXOh6Ji6H6dJGqi0Dn77H+5zn
+         QEvTT/mbd4nqMXRpS1SJlwsP1uI9IlcimatRuV9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.6 151/161] mmc: tmio: Further fixup runtime PM management at remove
-Date:   Tue, 16 Jun 2020 17:35:41 +0200
-Message-Id: <20200616153113.534402978@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 5.6 157/161] xen/pvcalls-back: test for errors when calling backend_connect()
+Date:   Tue, 16 Jun 2020 17:35:47 +0200
+Message-Id: <20200616153113.827943075@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,60 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Juergen Gross <jgross@suse.com>
 
-commit 4bd784411aca022622e484eb262f5a0540ae732c upstream.
+commit c8d70a29d6bbc956013f3401f92a4431a9385a3c upstream.
 
-Before calling tmio_mmc_host_probe(), the caller is required to enable
-clocks for its device, as to make it accessible when reading/writing
-registers during probe.
+backend_connect() can fail, so switch the device to connected only if
+no error occurred.
 
-Therefore, the responsibility to disable these clocks, in the error path of
-->probe() and during ->remove(), is better managed outside
-tmio_mmc_host_remove(). As a matter of fact, callers of
-tmio_mmc_host_remove() already expects this to be the behaviour.
-
-However, there's a problem with tmio_mmc_host_remove() when the Kconfig
-option, CONFIG_PM, is set. More precisely, tmio_mmc_host_remove() may then
-disable the clock via runtime PM, which leads to clock enable/disable
-imbalance problems, when the caller of tmio_mmc_host_remove() also tries to
-disable the same clocks.
-
-To solve the problem, let's make sure tmio_mmc_host_remove() leaves the
-device with clocks enabled, but also make sure to disable the IRQs, as we
-normally do at ->runtime_suspend().
-
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 0a9c75c2c7258f2 ("xen/pvcalls: xenbus state handling")
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200519152434.6867-1-ulf.hansson@linaro.org
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Link: https://lore.kernel.org/r/20200511074231.19794-1-jgross@suse.com
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/tmio_mmc_core.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/xen/pvcalls-back.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -1286,12 +1286,14 @@ void tmio_mmc_host_remove(struct tmio_mm
- 	cancel_work_sync(&host->done);
- 	cancel_delayed_work_sync(&host->delayed_reset_work);
- 	tmio_mmc_release_dma(host);
-+	tmio_mmc_disable_mmc_irqs(host, TMIO_MASK_ALL);
- 
--	pm_runtime_dont_use_autosuspend(&pdev->dev);
- 	if (host->native_hotplug)
- 		pm_runtime_put_noidle(&pdev->dev);
--	pm_runtime_put_sync(&pdev->dev);
-+
- 	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_dont_use_autosuspend(&pdev->dev);
-+	pm_runtime_put_noidle(&pdev->dev);
- }
- EXPORT_SYMBOL_GPL(tmio_mmc_host_remove);
- 
+--- a/drivers/xen/pvcalls-back.c
++++ b/drivers/xen/pvcalls-back.c
+@@ -1087,7 +1087,8 @@ static void set_backend_state(struct xen
+ 		case XenbusStateInitialised:
+ 			switch (state) {
+ 			case XenbusStateConnected:
+-				backend_connect(dev);
++				if (backend_connect(dev))
++					return;
+ 				xenbus_switch_state(dev, XenbusStateConnected);
+ 				break;
+ 			case XenbusStateClosing:
 
 
