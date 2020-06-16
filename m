@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C47FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B9D20FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19AAA20C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbgFPMY2 (ORCPT
+        id S1729463AbgFPMYV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42648 "EHLO
+        Tue, 16 Jun 2020 08:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728517AbgFPMVy (ORCPT
+        with ESMTP id S1728640AbgFPMVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:21:54 -0400
+        Tue, 16 Jun 2020 08:21:55 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920DCC08C5C3;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD75C08C5C6;
         Tue, 16 Jun 2020 05:21:54 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAb6-0004bd-1S; Tue, 16 Jun 2020 14:21:48 +0200
+        id 1jlAb4-0004aR-OY; Tue, 16 Jun 2020 14:21:46 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A34081C0475;
-        Tue, 16 Jun 2020 14:21:47 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:47 -0000
-From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 444A91C0478;
+        Tue, 16 Jun 2020 14:21:46 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:46 -0000
+From:   "tip-bot2 for Roman Sudarikov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] ftrace: Add perf text poke events for ftrace trampolines
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+Subject: [tip: perf/core] perf/x86/intel/uncore: Expose an Uncore unit to PMON mapping
+Cc:     Alexander Antonov <alexander.antonov@linux.intel.com>,
+        Roman Sudarikov <roman.sudarikov@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200512121922.8997-9-adrian.hunter@intel.com>
-References: <20200512121922.8997-9-adrian.hunter@intel.com>
+In-Reply-To: <20200601083543.30011-2-alexander.antonov@linux.intel.com>
+References: <20200601083543.30011-2-alexander.antonov@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159231010740.16989.5134348688413119974.tip-bot2@tip-bot2>
+Message-ID: <159231010609.16989.6525389884153038879.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -59,72 +62,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     548e1f6c76e1eb80ba29edd4286b9b9f2c37f5bf
-Gitweb:        https://git.kernel.org/tip/548e1f6c76e1eb80ba29edd4286b9b9f2c37f5bf
-Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Tue, 12 May 2020 15:19:15 +03:00
+Commit-ID:     19a39819818dee57e363bd44bd096e2e940a456b
+Gitweb:        https://git.kernel.org/tip/19a39819818dee57e363bd44bd096e2e940a456b
+Author:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
+AuthorDate:    Mon, 01 Jun 2020 11:35:41 +03:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:09:50 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:09:51 +02:00
 
-ftrace: Add perf text poke events for ftrace trampolines
+perf/x86/intel/uncore: Expose an Uncore unit to PMON mapping
 
-Add perf text poke events for ftrace trampolines when created and when
-freed.
+Each Uncore unit type, by its nature, can be mapped to its own context -
+which platform component each PMON block of that type is supposed to
+monitor.
 
-There can be 3 text_poke events for ftrace trampolines:
+Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
+significant changes in the integrated I/O (IIO) architecture. The new
+solution introduces IIO stacks which are responsible for managing traffic
+between the PCIe domain and the Mesh domain. Each IIO stack has its own
+PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
+or various built-in accelerators. IIO PMON blocks allow concurrent
+monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
 
-1. NULL -> trampoline
-   By ftrace_update_trampoline() when !ops->trampoline
-   Trampoline created
+Software is supposed to program required perf counters within each IIO
+stack and gather performance data. The tricky thing here is that IIO PMON
+reports data per IIO stack but users have no idea what IIO stacks are -
+they only know devices which are connected to the platform.
 
-2. [e.g. on x86] CALL rel32 -> CALL rel32
-   By arch_ftrace_update_trampoline() when ops->trampoline and
-                        ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
-   [e.g. on x86] via text_poke_bp() which generates text poke events
-   Trampoline-called function target updated
+Understanding IIO stack concept to find which IIO stack that particular
+IO device is connected to, or to identify an IIO PMON block to program
+for monitoring specific IIO stack assumes a lot of implicit knowledge
+about given Intel server platform architecture.
 
-3. trampoline -> NULL
-   By ftrace_trampoline_free() when ops->trampoline and
-                 ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP
-   Trampoline freed
+Usage example:
+    ls /sys/devices/uncore_<type>_<pmu_idx>/die*
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Alexander Antonov <alexander.antonov@linux.intel.com>
+Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200512121922.8997-9-adrian.hunter@intel.com
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200601083543.30011-2-alexander.antonov@linux.intel.com
 ---
- kernel/trace/ftrace.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/x86/events/intel/uncore.c |  8 ++++++++
+ arch/x86/events/intel/uncore.h | 12 ++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 2baaf77..d6bba73 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2791,6 +2791,13 @@ static void ftrace_trampoline_free(struct ftrace_ops *ops)
- {
- 	if (ops && (ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP) &&
- 	    ops->trampoline) {
-+		/*
-+		 * Record the text poke event before the ksymbol unregister
-+		 * event.
-+		 */
-+		perf_event_text_poke((void *)ops->trampoline,
-+				     (void *)ops->trampoline,
-+				     ops->trampoline_size, NULL, 0);
- 		perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL,
- 				   ops->trampoline, ops->trampoline_size,
- 				   true, FTRACE_TRAMPOLINE_SYM);
-@@ -6816,6 +6823,13 @@ static void ftrace_update_trampoline(struct ftrace_ops *ops)
- 		perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL,
- 				   ops->trampoline, ops->trampoline_size, false,
- 				   FTRACE_TRAMPOLINE_SYM);
-+		/*
-+		 * Record the perf text poke event after the ksymbol register
-+		 * event.
-+		 */
-+		perf_event_text_poke((void *)ops->trampoline, NULL, 0,
-+				     (void *)ops->trampoline,
-+				     ops->trampoline_size);
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index cbe32d5..49255e6 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -846,10 +846,12 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
+ 			.read		= uncore_pmu_event_read,
+ 			.module		= THIS_MODULE,
+ 			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
++			.attr_update	= pmu->type->attr_update,
+ 		};
+ 	} else {
+ 		pmu->pmu = *pmu->type->pmu;
+ 		pmu->pmu.attr_groups = pmu->type->attr_groups;
++		pmu->pmu.attr_update = pmu->type->attr_update;
  	}
- }
  
+ 	if (pmu->type->num_boxes == 1) {
+@@ -890,6 +892,9 @@ static void uncore_type_exit(struct intel_uncore_type *type)
+ 	struct intel_uncore_pmu *pmu = type->pmus;
+ 	int i;
+ 
++	if (type->cleanup_mapping)
++		type->cleanup_mapping(type);
++
+ 	if (pmu) {
+ 		for (i = 0; i < type->num_boxes; i++, pmu++) {
+ 			uncore_pmu_unregister(pmu);
+@@ -957,6 +962,9 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
+ 
+ 	type->pmu_group = &uncore_pmu_attr_group;
+ 
++	if (type->set_mapping)
++		type->set_mapping(type);
++
+ 	return 0;
+ 
+ err:
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 7859ac0..7caba06 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -73,7 +73,19 @@ struct intel_uncore_type {
+ 	struct uncore_event_desc *event_descs;
+ 	struct freerunning_counters *freerunning;
+ 	const struct attribute_group *attr_groups[4];
++	const struct attribute_group **attr_update;
+ 	struct pmu *pmu; /* for custom pmu ops */
++	/*
++	 * Uncore PMU would store relevant platform topology configuration here
++	 * to identify which platform component each PMON block of that type is
++	 * supposed to monitor.
++	 */
++	u64 *topology;
++	/*
++	 * Optional callbacks for managing mapping of Uncore units to PMONs
++	 */
++	int (*set_mapping)(struct intel_uncore_type *type);
++	void (*cleanup_mapping)(struct intel_uncore_type *type);
+ };
+ 
+ #define pmu_group attr_groups[0]
