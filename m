@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3099BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EDDC433E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 114D121475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520C921475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322244;
-	bh=haZufumXIivprfu8VoTRQ4JkgkKWPzkC5c1Tw18T4LE=;
+	s=default; t=1592322252;
+	bh=AU8kPO1hPe5EGPaST5+To5lYsboUwNEV7+7aWvUfdVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IBIHsOKGM3/auszeHd+RG3Jw7I/JChclBvobMOkW5KhkPBtc5lX3d53GXTwvECErn
-	 swcAwTfqfnIUvelMA5m0x7xdVPpWvR62C36Z6aKK90Q30NcbxoElSuyMiBXqot1u6B
-	 csOlSkNeVWPVzHOzDfYHpS0cPXoZps/0q5k/vF3k=
+	b=qdJ3dtX/L0fps3GVek/48Tbbv3MEyK786YLPGdFENF+rX9pZBx8Ykrlrfja2T09hG
+	 YVnT4XMT1rlmdARZSaRbwovy7GS0z0kMzXBJLZ1O+icyOjUja5HSarVTTKuEXUm0VV
+	 tOHPxruuOZ8IUTX+XN127ril8hBwjqfzrsIkefeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731899AbgFPPoC (ORCPT
+        id S1731941AbgFPPoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33512 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731861AbgFPPnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:52 -0400
+        id S1731902AbgFPPoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAE14208E4;
-        Tue, 16 Jun 2020 15:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71901208E4;
+        Tue, 16 Jun 2020 15:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322231;
-        bh=haZufumXIivprfu8VoTRQ4JkgkKWPzkC5c1Tw18T4LE=;
+        s=default; t=1592322244;
+        bh=AU8kPO1hPe5EGPaST5+To5lYsboUwNEV7+7aWvUfdVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ecaak1kPskQaEN9eNgnkPUkVIjmWzrCabd54QhiYyZI4TNynz1lzec8neNGVa/v5o
-         MkOckr+OKo4I5e3X8nQhEsbwWtngMbxlPF2/HIxW1OTN2D1kNM82jdjyW42XyXAsjE
-         LMD5nqZepVYGczlhO04/FDD6Ak6GJ1Z6LI0/lWQs=
+        b=t2ASHxiMGEE92BdGsHqaCMtbAr9q2ttgTAFrSlpqcsid4nSvJq0gvKqhIa3eCP0OK
+         PN6bYNzU1uioFVB+funV3yI/iOO75G7eS1iprwhxAGyjSrMgefLxu8cfGRuMDGmg8q
+         Ha3D8WdtNQjMBnwg7wAjUh0C6t4+8Py5GJOcXFW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 024/163] spi: dw: Fix native CS being unset
-Date:   Tue, 16 Jun 2020 17:33:18 +0200
-Message-Id: <20200616153108.047634478@linuxfoundation.org>
+Subject: [PATCH 5.7 026/163] smack: avoid unused sip variable warning
+Date:   Tue, 16 Jun 2020 17:33:20 +0200
+Message-Id: <20200616153108.134501400@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -64,76 +60,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9aea644ca17b94f82ad7fa767cbc4509642f4420 ]
+From: Arnd Bergmann <arnd@arndb.de>
 
-Commit 6e0a32d6f376 ("spi: dw: Fix default polarity of native
-chipselect") attempted to fix the problem when GPIO active-high
-chip-select is utilized to communicate with some SPI slave. It fixed
-the problem, but broke the normal native CS support. At the same time
-the reversion commit ada9e3fcc175 ("spi: dw: Correct handling of native
-chipselect") didn't solve the problem either, since it just inverted
-the set_cs() polarity perception without taking into account that
-CS-high might be applicable. Here is what is done to finally fix the
-problem.
+[ Upstream commit 00720f0e7f288d29681d265c23b22bb0f0f4e5b4 ]
 
-DW SPI controller demands any native CS being set in order to proceed
-with data transfer. So in order to activate the SPI communications we
-must set any bit in the Slave Select DW SPI controller register no
-matter whether the platform requests the GPIO- or native CS. Preferably
-it should be the bit corresponding to the SPI slave CS number. But
-currently the dw_spi_set_cs() method activates the chip-select
-only if the second argument is false. Since the second argument of the
-set_cs callback is expected to be a boolean with "is-high" semantics
-(actual chip-select pin state value), the bit in the DW SPI Slave
-Select register will be set only if SPI core requests the driver
-to set the CS in the low state. So this will work for active-low
-GPIO-based CS case, and won't work for active-high CS setting
-the bit when SPI core actually needs to deactivate the CS.
+The mix of IS_ENABLED() and #ifdef checks has left a combination
+that causes a warning about an unused variable:
 
-This commit fixes the problem for all described cases. So no matter
-whether an SPI slave needs GPIO- or native-based CS with active-high
-or low signal the corresponding bit will be set in SER.
+security/smack/smack_lsm.c: In function 'smack_socket_connect':
+security/smack/smack_lsm.c:2838:24: error: unused variable 'sip' [-Werror=unused-variable]
+ 2838 |   struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Fixes: ada9e3fcc175 ("spi: dw: Correct handling of native chipselect")
-Fixes: 6e0a32d6f376 ("spi: dw: Fix default polarity of native chipselect")
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Change the code to use C-style checks consistently so the compiler
+can handle it correctly.
 
-Link: https://lore.kernel.org/r/20200515104758.6934-5-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 87fbfffcc89b ("broken ping to ipv6 linklocal addresses on debian buster")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ security/smack/smack.h     |  6 ------
+ security/smack/smack_lsm.c | 25 ++++++++-----------------
+ 2 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 31e3f866d11a..6c2d8df50507 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -128,12 +128,20 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
- {
- 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
- 	struct chip_data *chip = spi_get_ctldata(spi);
-+	bool cs_high = !!(spi->mode & SPI_CS_HIGH);
+diff --git a/security/smack/smack.h b/security/smack/smack.h
+index 62529f382942..335d2411abe4 100644
+--- a/security/smack/smack.h
++++ b/security/smack/smack.h
+@@ -148,7 +148,6 @@ struct smk_net4addr {
+ 	struct smack_known	*smk_label;	/* label */
+ };
  
- 	/* Chip select logic is inverted from spi_set_cs() */
- 	if (chip && chip->cs_control)
- 		chip->cs_control(!enable);
+-#if IS_ENABLED(CONFIG_IPV6)
+ /*
+  * An entry in the table identifying IPv6 hosts.
+  */
+@@ -159,9 +158,7 @@ struct smk_net6addr {
+ 	int			smk_masks;	/* mask size */
+ 	struct smack_known	*smk_label;	/* label */
+ };
+-#endif /* CONFIG_IPV6 */
  
--	if (!enable)
-+	/*
-+	 * DW SPI controller demands any native CS being set in order to
-+	 * proceed with data transfer. So in order to activate the SPI
-+	 * communications we must set a corresponding bit in the Slave
-+	 * Enable register no matter whether the SPI core is configured to
-+	 * support active-high or active-low CS level.
-+	 */
-+	if (cs_high == enable)
- 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
- 	else if (dws->cs_override)
- 		dw_writel(dws, DW_SPI_SER, 0);
+-#ifdef SMACK_IPV6_PORT_LABELING
+ /*
+  * An entry in the table identifying ports.
+  */
+@@ -174,7 +171,6 @@ struct smk_port_label {
+ 	short			smk_sock_type;	/* Socket type */
+ 	short			smk_can_reuse;
+ };
+-#endif /* SMACK_IPV6_PORT_LABELING */
+ 
+ struct smack_known_list_elem {
+ 	struct list_head	list;
+@@ -335,9 +331,7 @@ extern struct smack_known smack_known_web;
+ extern struct mutex	smack_known_lock;
+ extern struct list_head smack_known_list;
+ extern struct list_head smk_net4addr_list;
+-#if IS_ENABLED(CONFIG_IPV6)
+ extern struct list_head smk_net6addr_list;
+-#endif /* CONFIG_IPV6 */
+ 
+ extern struct mutex     smack_onlycap_lock;
+ extern struct list_head smack_onlycap_list;
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 8c61d175e195..14bf2f4aea3b 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -50,10 +50,8 @@
+ #define SMK_RECEIVING	1
+ #define SMK_SENDING	2
+ 
+-#ifdef SMACK_IPV6_PORT_LABELING
+-DEFINE_MUTEX(smack_ipv6_lock);
++static DEFINE_MUTEX(smack_ipv6_lock);
+ static LIST_HEAD(smk_ipv6_port_list);
+-#endif
+ static struct kmem_cache *smack_inode_cache;
+ struct kmem_cache *smack_rule_cache;
+ int smack_enabled;
+@@ -2320,7 +2318,6 @@ static struct smack_known *smack_ipv4host_label(struct sockaddr_in *sip)
+ 	return NULL;
+ }
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ /*
+  * smk_ipv6_localhost - Check for local ipv6 host address
+  * @sip: the address
+@@ -2388,7 +2385,6 @@ static struct smack_known *smack_ipv6host_label(struct sockaddr_in6 *sip)
+ 
+ 	return NULL;
+ }
+-#endif /* CONFIG_IPV6 */
+ 
+ /**
+  * smack_netlabel - Set the secattr on a socket
+@@ -2477,7 +2473,6 @@ static int smack_netlabel_send(struct sock *sk, struct sockaddr_in *sap)
+ 	return smack_netlabel(sk, sk_lbl);
+ }
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ /**
+  * smk_ipv6_check - check Smack access
+  * @subject: subject Smack label
+@@ -2510,7 +2505,6 @@ static int smk_ipv6_check(struct smack_known *subject,
+ 	rc = smk_bu_note("IPv6 check", subject, object, MAY_WRITE, rc);
+ 	return rc;
+ }
+-#endif /* CONFIG_IPV6 */
+ 
+ #ifdef SMACK_IPV6_PORT_LABELING
+ /**
+@@ -2599,6 +2593,7 @@ static void smk_ipv6_port_label(struct socket *sock, struct sockaddr *address)
+ 	mutex_unlock(&smack_ipv6_lock);
+ 	return;
+ }
++#endif
+ 
+ /**
+  * smk_ipv6_port_check - check Smack port access
+@@ -2661,7 +2656,6 @@ static int smk_ipv6_port_check(struct sock *sk, struct sockaddr_in6 *address,
+ 
+ 	return smk_ipv6_check(skp, object, address, act);
+ }
+-#endif /* SMACK_IPV6_PORT_LABELING */
+ 
+ /**
+  * smack_inode_setsecurity - set smack xattrs
+@@ -2836,24 +2830,21 @@ static int smack_socket_connect(struct socket *sock, struct sockaddr *sap,
+ 		return 0;
+ 	if (IS_ENABLED(CONFIG_IPV6) && sap->sa_family == AF_INET6) {
+ 		struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
+-#ifdef SMACK_IPV6_SECMARK_LABELING
+-		struct smack_known *rsp;
+-#endif
++		struct smack_known *rsp = NULL;
+ 
+ 		if (addrlen < SIN6_LEN_RFC2133)
+ 			return 0;
+-#ifdef SMACK_IPV6_SECMARK_LABELING
+-		rsp = smack_ipv6host_label(sip);
++		if (__is_defined(SMACK_IPV6_SECMARK_LABELING))
++			rsp = smack_ipv6host_label(sip);
+ 		if (rsp != NULL) {
+ 			struct socket_smack *ssp = sock->sk->sk_security;
+ 
+ 			rc = smk_ipv6_check(ssp->smk_out, rsp, sip,
+ 					    SMK_CONNECTING);
+ 		}
+-#endif
+-#ifdef SMACK_IPV6_PORT_LABELING
+-		rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
+-#endif
++		if (__is_defined(SMACK_IPV6_PORT_LABELING))
++			rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
++
+ 		return rc;
+ 	}
+ 	if (sap->sa_family != AF_INET || addrlen < sizeof(struct sockaddr_in))
 -- 
 2.25.1
 
