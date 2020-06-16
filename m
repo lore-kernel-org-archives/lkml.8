@@ -2,123 +2,170 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA980C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2741BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C641320B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27C4208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nDIBdjVm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D5zdUtAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgFPLdg (ORCPT
+        id S1728731AbgFPLdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728666AbgFPLdd (ORCPT
+        Tue, 16 Jun 2020 07:33:50 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60337 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728440AbgFPLc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:33:33 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FCBC08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:33:32 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id o2so11225850vsr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:33:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z4+Iz5hXHc4KqHs/Siy+ZWN5Iucm03GbQ2VElO3GIbE=;
-        b=nDIBdjVmKagHvZo44/5GnMutd+R9LOzqdj7KoKAjZCeARsNRBWF+9cGFnYMjSfV7Vs
-         r4303MeB7Zgsz3BHhUBei2NxgJ77BYTNOA6KEqwV2dziFSfcZeH/37omrb/OhrA2FVhN
-         iVNLxGGtaXs8BSbxMcqI1p1jIEB5fmqAanfN0b/EtI8ut38Sql4N/26QCNTV3WypKHL7
-         Zt940MpjDG13b3XlCEGfJ5u6HOdKds0M50x4KT+fPeZ+d5gjJmO3/4sxjcS67kQrPfUf
-         wAagBLnmntF9pcPlTMGp34+8QiVEPqy3ZyRCeSFCk6rky6z01YGR03XLjBKgUcGL6oXy
-         h9+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z4+Iz5hXHc4KqHs/Siy+ZWN5Iucm03GbQ2VElO3GIbE=;
-        b=JWutJ3S5qLlbZQNArjLGxi1Zl4JNQfTZKZEPe9PuXk549pJkhx6RfC7ZHi4U9dQQZ9
-         bibIH4WriG6DzQSbCZTJpL5BapuKv1Vowxpy8lubZTL/xr2i/edHI1knyHT967+Lkx5g
-         nADkZW0aUoSRRulmuNivVnG/qLcQxx5UgZ8BVDoS8d4A5CkqD508wUTSAK05DThkv0gQ
-         V5Bl09hVjE67bq43PGcv1MoOHCceJ+d31jGd50gq8wUIChrkotl0jhqiEOj+j1F7oc3i
-         6Bnejh2S+p2/ngWKi6c72z46BlkSYqAOJOErfMLIlwJnhzkWlD4fvqyilnxYazruc93V
-         ZUfQ==
-X-Gm-Message-State: AOAM531d+RVmN2oDQ4J5KqUnE1W5msI8WcPLSIx3cmdA/HiCwa2GSu4p
-        yH4+84IuWpq/EJRreA0To3OFY2D5R4mlbyUUFVbQgg==
-X-Google-Smtp-Source: ABdhPJyGZERfhW1QKFPZ5+rChUj0a55YKn9tZGUbhrD+eRw5UOrhMGu/7HPk1pqELV9Q/H4lqZhJMwIGM2yDSPP9sLo=
-X-Received: by 2002:a67:903:: with SMTP id 3mr1156423vsj.191.1592307212063;
- Tue, 16 Jun 2020 04:33:32 -0700 (PDT)
+        Tue, 16 Jun 2020 07:32:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592307178;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5HmXip2NqxtzCfW1WJOah2yPReQyknfAoLWFvpY0/7Q=;
+        b=D5zdUtAGxmSDT0mEHEaY6cbwq6/7RZTydi4U6Lp4O9t4FQOGxru9s5JtXDDer9paSLj03F
+        KiqsN24vRWuGdhU/koeqorlPodf2qlOh2BXCQ4tN20wNX9Bo3e0n4j4GcL+Orsqcq7AdH2
+        EioJpyKE+xJ49drTSU7eioLExoxS/zQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-3VCy-tjwNyqpwFUWggKbJw-1; Tue, 16 Jun 2020 07:32:55 -0400
+X-MC-Unique: 3VCy-tjwNyqpwFUWggKbJw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2087D100961C;
+        Tue, 16 Jun 2020 11:32:54 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 007EC6FDD1;
+        Tue, 16 Jun 2020 11:32:52 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH v5] x86/split_lock: Sanitize userspace and guest error output
+Date:   Tue, 16 Jun 2020 07:32:50 -0400
+Message-Id: <20200616113250.2061-1-prarit@redhat.com>
 MIME-Version: 1.0
-References: <20200608162226.3259186-1-hslester96@gmail.com>
-In-Reply-To: <20200608162226.3259186-1-hslester96@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 16 Jun 2020 13:32:55 +0200
-Message-ID: <CAPDyKFrrrydrUaOVGB+VTgLSGMn41JO+ughhza_BzGPE7wm_yw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-of-arasan: Add missed checks for devm_clk_register()
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jun 2020 at 18:22, Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> These functions do not check the return value of devm_clk_register():
->   - sdhci_arasan_register_sdcardclk()
->   - sdhci_arasan_register_sampleclk()
->
-> Therefore, add the missed checks to fix them.
->
-> Fixes: c390f2110adf1 ("mmc: sdhci-of-arasan: Add ability to export card clock")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+There are two problems with kernel messages in fatal mode that were found
+during testing of guests and userspace programs.
 
-Applied for next, thanks!
+The first is that no kernel message is output when the split lock detector
+is triggered with a userspace program.  As a result the userspace process
+dies from receiving SIGBUS with no indication to the user of what caused
+the process to die.
 
-Kind regards
-Uffe
+The second problem is that only the first triggering guest causes a kernel
+message to be output because the message is output with pr_warn_once().
+This also results in a loss of information to the user.
 
+While fixing these I noticed that the same message was being output
+three times so I'm cleaning that up too.
 
-> ---
->  drivers/mmc/host/sdhci-of-arasan.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index db9b544465cd..fb26e743e1fd 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -1299,6 +1299,8 @@ sdhci_arasan_register_sdcardclk(struct sdhci_arasan_data *sdhci_arasan,
->         clk_data->sdcardclk_hw.init = &sdcardclk_init;
->         clk_data->sdcardclk =
->                 devm_clk_register(dev, &clk_data->sdcardclk_hw);
-> +       if (IS_ERR(clk_data->sdcardclk))
-> +               return PTR_ERR(clk_data->sdcardclk);
->         clk_data->sdcardclk_hw.init = NULL;
->
->         ret = of_clk_add_provider(np, of_clk_src_simple_get,
-> @@ -1349,6 +1351,8 @@ sdhci_arasan_register_sampleclk(struct sdhci_arasan_data *sdhci_arasan,
->         clk_data->sampleclk_hw.init = &sampleclk_init;
->         clk_data->sampleclk =
->                 devm_clk_register(dev, &clk_data->sampleclk_hw);
-> +       if (IS_ERR(clk_data->sampleclk))
-> +               return PTR_ERR(clk_data->sampleclk);
->         clk_data->sampleclk_hw.init = NULL;
->
->         ret = of_clk_add_provider(np, of_clk_src_simple_get,
-> --
-> 2.26.2
->
+Fix fatal mode output, and use consistent messages for fatal and
+warn modes for both userspace and guests.
+
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+---
+v2: Do not output a message if CPL 3 Alignment Check is turned on (xiaoyao.li)
+v3: refactor code (sean.j.christopherson)
+v4: Fix Sign off (sean.j.christopherson)
+v5: Fix Sign off (sean.j.christopherson)
+
+ arch/x86/kernel/cpu/intel.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 63926c94eb5f..3a373f0be674 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1074,11 +1074,14 @@ static void split_lock_init(void)
+ 	split_lock_verify_msr(sld_state != sld_off);
+ }
+ 
+-static void split_lock_warn(unsigned long ip)
++static bool handle_split_lock(unsigned long ip)
+ {
+-	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
++	pr_warn("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+ 			    current->comm, current->pid, ip);
+ 
++	if (sld_state != sld_warn)
++		return false;
++
+ 	/*
+ 	 * Disable the split lock detection for this task so it can make
+ 	 * progress and set TIF_SLD so the detection is re-enabled via
+@@ -1086,18 +1089,13 @@ static void split_lock_warn(unsigned long ip)
+ 	 */
+ 	sld_update_msr(false);
+ 	set_tsk_thread_flag(current, TIF_SLD);
++	return true;
+ }
+ 
+ bool handle_guest_split_lock(unsigned long ip)
+ {
+-	if (sld_state == sld_warn) {
+-		split_lock_warn(ip);
++	if (handle_split_lock(ip))
+ 		return true;
+-	}
+-
+-	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
+-		     current->comm, current->pid,
+-		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
+ 
+ 	current->thread.error_code = 0;
+ 	current->thread.trap_nr = X86_TRAP_AC;
+@@ -1108,10 +1106,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
+ 
+ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+ {
+-	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
++	if (regs->flags & X86_EFLAGS_AC)
+ 		return false;
+-	split_lock_warn(regs->ip);
+-	return true;
++
++	return handle_split_lock(regs->ip);
+ }
+ 
+ /*
+-- 
+2.21.3
+
