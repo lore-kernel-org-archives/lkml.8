@@ -2,86 +2,88 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C165BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5427CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 952EB2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:09:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lpzj/LxP"
+	by mail.kernel.org (Postfix) with ESMTP id 29FFC20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592294991;
+	bh=TnNFsF8rztMoV7W+U/CQlvlezHaw2ZFT7+kO9FpTDWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GtWDdOdKo9GU17zHp6Q4hoUlNYj4wvydp9bTVD4ztyTt5H0oUE7JbvIzNeuw64+yo
+	 QwuWXpJmvZOscRqB3ZgpeoM7oJBSrQDFg5bCL1O+PjaSLHHTeav2Y4ay9vVMLsF9TH
+	 erRnsjVTAItUyMqkCTaDtCjBW+vmslOx3Hyhumno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgFPIJB (ORCPT
+        id S1726879AbgFPIJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:09:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20740 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725710AbgFPIJA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:09:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592294939;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0lNFuwmVizYLxWwU92PSfYVlqBtEwsiUDHr4aylkwW0=;
-        b=Lpzj/LxPGv0xl3GYVuxS+q8BMexUxywiQIUVrXL+qlJsxgyy2qc57T0Vzqf2fybty86uv2
-        DvX25oGYGBjwWDTdRvwMmTBfzlhnPHcgcBG5Nlj2cuxp/u/UWti2PJd7Ql2WVlZhSO/Irz
-        TxHOku5JG5Xv6mvG2RTnGp2MisWI6JQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-2FzjiqL7O4qN4k74nylQvQ-1; Tue, 16 Jun 2020 04:08:55 -0400
-X-MC-Unique: 2FzjiqL7O4qN4k74nylQvQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 16 Jun 2020 04:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726471AbgFPIJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 04:09:49 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6547C803308;
-        Tue, 16 Jun 2020 08:08:53 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1980219C79;
-        Tue, 16 Jun 2020 08:08:53 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 78459833B1;
-        Tue, 16 Jun 2020 08:08:52 +0000 (UTC)
-Date:   Tue, 16 Jun 2020 04:08:52 -0400 (EDT)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Cyril Hrubis <chrubis@suse.cz>,
-        kernel test robot <rong.a.chen@intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>, ltp@lists.linux.it,
-        Serge Hallyn <serge@hallyn.com>
-Message-ID: <348139455.16141709.1592294932212.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20200615213843.2ojgm3ob7kp3qq6a@wittgenstein>
-References: <20200615085836.GR12456@shao2-debian> <20200615091850.GA3373@yuki.lan> <1101600340.15989438.1592229781375.JavaMail.zimbra@redhat.com> <20200615213843.2ojgm3ob7kp3qq6a@wittgenstein>
-Subject: Re: [LTP] 303cc571d1: ltp.setns01.fail
+        by mail.kernel.org (Postfix) with ESMTPSA id ABAC92074D;
+        Tue, 16 Jun 2020 08:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592294989;
+        bh=TnNFsF8rztMoV7W+U/CQlvlezHaw2ZFT7+kO9FpTDWE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=viRklBegqqywEYiYzNSXsGc8i5P/MH/1pw+nn1RxFX1qYLkF4ibTQ5JNh9s/GbQ+d
+         HRFUXVuX0MpPHDVzbRCXACR5ypEnQNDL5PXMG16JMftXBVyQiAtwzS6q1kOo8NJNI4
+         hwf57hO8chn7zeL76FmzW9gFJM3V7sd2DGuW9J1s=
+Date:   Tue, 16 Jun 2020 09:20:19 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>
+Cc:     bvanassche@acm.org, dledford@redhat.com, jgg@ziepe.ca,
+        linux-rdma@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2] IB/srpt: Remove WARN_ON from srpt_cm_req_recv
+Message-ID: <20200616062019.GA2141420@unreal>
+References: <20200616011715.140197-1-jingxiangfeng@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.17.25, 10.4.195.3]
-Thread-Topic: 303cc571d1: ltp.setns01.fail
-Thread-Index: nYZtIeM5D1sw8KRcMGIO9za2Kof/yw==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616011715.140197-1-jingxiangfeng@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 16, 2020 at 09:17:15AM +0800, Jing Xiangfeng wrote:
+> It's easy to show that sdev and req are always valid,
+> so we remove unnecessary WARN_ON.
 
+So show it in the commit message, please.
 
------ Original Message -----
-> I'll send a pr for this to Linus this week (or next since I'm on
-> vacation this week) and get this fixed. Thanks for spotting this. What's
-> the Reported-by: line format that LTP uses?
-
-I'm not sure we ever used one, it's usually various CI systems that
-reference LTP. This thread has been started by kernel test robot:
-  Reported-by: kernel test robot <rong.a.chen@intel.com>
-
+>
+> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> ---
+>  drivers/infiniband/ulp/srpt/ib_srpt.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> index ef7fcd3..0fa65c6 100644
+> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
+> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> @@ -2156,9 +2156,6 @@ static int srpt_cm_req_recv(struct srpt_device *const sdev,
+>
+>  	WARN_ON_ONCE(irqs_disabled());
+>
+> -	if (WARN_ON(!sdev || !req))
+> -		return -EINVAL;
+> -
+>  	it_iu_len = be32_to_cpu(req->req_it_iu_len);
+>
+>  	pr_info("Received SRP_LOGIN_REQ with i_port_id %pI6, t_port_id %pI6 and it_iu_len %d on port %d (guid=%pI6); pkey %#04x\n",
+> --
+> 1.8.3.1
+>
+>
