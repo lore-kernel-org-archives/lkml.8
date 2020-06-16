@@ -2,193 +2,263 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4776C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C23C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9037620776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F17F206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 04:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592282631;
-	bh=0vuss71wdq1FpQI0FDOdHdelFKNR2eYtS42myYNEQNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yM2N6tHptPUk2cDy6jIJQaCNNJe+IUUfiLxXMGl1s2C/iQRQg5b2PuH4dXVix52VY
-	 cG89IJ1QBQ5PTugU9v62h5B9CjdX6TNaELruSkojUAyiZ7r1fFRRb/eBQoAmcmROhW
-	 jhdgbYLBNx6wFVu2c/mCXAkWlgV5nuQdq2owRaT8=
+	s=default; t=1592282798;
+	bh=5gDFn5P6wSFQJ52Xxmdb7V5k+gomrQfYAQ0eF53nfTY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Iv7pTLkU4eQ7jMk8goy7KC3rHiNFYzFeZGgYOPQHQ5XhXGrjFXmma4BUZZd7r2SSc
+	 II2cVVJjg0Y3KV/QcfQKxzZjR0rBCNQSGrT4bsCE3KjLa82nrBlt9g1UYXU5+51mJP
+	 g1enVwRkhQ0lujhHaFX9hfxqtK+CXGEUWzB/HpoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgFPEnu (ORCPT
+        id S1726476AbgFPEqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 00:43:50 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35656 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgFPEnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 00:43:50 -0400
-Received: by mail-io1-f67.google.com with SMTP id s18so232476ioe.2;
-        Mon, 15 Jun 2020 21:43:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LmzMHIvmvF58EZXJmekpQXD5nDdYxi6HKu1Pmlrtz+M=;
-        b=TXTHuxx/oqrxWKTqdzUByAoR+HU6GCBTzgrUQrRnqfnDEryP0pPNyTw6C18JbfWx3i
-         SbHWG2TyliSR11c/7b6W++YTGaS8KEkyCohbPl7bdkLxjm6j/SW77fODh5NnR4yVBfvL
-         rWBcHImSZNPDnXuUE4D0qPlWiH/qgJCgxHlri00DNltoCN9Rp0Rq/i7I8iMckH0urO6P
-         1c97aiy95KXbYvUHDKaytID/9tpJklKJHcNvL8yLODfaWtniffC1z2fbSzAElJpbl57D
-         iy+XlfvhjUVLcYUCpvysJKvg6piTYfNxhPKe3kmHw0tYGdhS6E9OGI0It/f1JMydw5lI
-         KCYA==
-X-Gm-Message-State: AOAM532k6GDni5IP25GA10i6wC9rSPTYltFdYIP4JpZv+poXTRMMHpm9
-        WJp2+mWl2Sp/XINzpUeG8wQ=
-X-Google-Smtp-Source: ABdhPJztXkJFcZT+mRv8x6WbAlQ2+knDwMSuXZBCslzSxlJCr1fZCeslAJy3cbCICzu0QKi5U0suaQ==
-X-Received: by 2002:a6b:8dd5:: with SMTP id p204mr864149iod.33.1592282628930;
-        Mon, 15 Jun 2020 21:43:48 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id r17sm9235940ilc.33.2020.06.15.21.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 21:43:48 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 21:43:47 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 5/5] fpga manager: xilinx-spi: check INIT_B pin during
- write_init
-Message-ID: <20200616044347.GB46300@epycbox.lan>
-References: <20200611211144.9421-1-luca@lucaceresoli.net>
- <20200611211144.9421-5-luca@lucaceresoli.net>
+        Tue, 16 Jun 2020 00:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgFPEqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 00:46:36 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30832206DB;
+        Tue, 16 Jun 2020 04:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592282795;
+        bh=5gDFn5P6wSFQJ52Xxmdb7V5k+gomrQfYAQ0eF53nfTY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=j2EUkj+5fc5oNgZty0JRoIvCT4uUByj46uBNiu3fYdU4Mj5hWCWIi61uE7Vx1JMEF
+         Bo4AjH3jovQ5+l3YW2chKZ2amQK929DDzb+SjgpuoO50RX9DxZv6s4W0iwBphGVcMO
+         XYoi9sl/MY7ITxeAv3+7XzX6MpFhEEIuhmRAgNB0=
+Date:   Mon, 15 Jun 2020 23:51:55 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [GIT PULL v2] flexible-array member conversion patches for 5.8-rc2
+Message-ID: <20200616045155.GA2728@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200611211144.9421-5-luca@lucaceresoli.net>
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
+Hi Linus,
 
-On Thu, Jun 11, 2020 at 11:11:44PM +0200, Luca Ceresoli wrote:
-> The INIT_B reports the status during startup and after the end of the
-> programming process. However the current driver completely ignores it.
-> 
-> Check the pin status during startup to make sure programming is never
-> started too early and also to detect any hardware issues in the FPGA
-> connection.
-> 
-> This is optional for backward compatibility. If INIT_B is not passed by
-> device tree, just fallback to the old udelays.
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  drivers/fpga/xilinx-spi.c | 54 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 53 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-> index 799ae04301be..2710a15ed16b 100644
-> --- a/drivers/fpga/xilinx-spi.c
-> +++ b/drivers/fpga/xilinx-spi.c
-> @@ -23,6 +23,7 @@
->  struct xilinx_spi_conf {
->  	struct spi_device *spi;
->  	struct gpio_desc *prog_b;
-> +	struct gpio_desc *init_b;
->  	struct gpio_desc *done;
->  };
->  
-> @@ -36,11 +37,44 @@ static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
->  	return FPGA_MGR_STATE_UNKNOWN;
->  }
->  
-> +/**
-> + * wait_for_init_b - wait for the INIT_B pin to have a given state, or wait
-> + * a given delay if the pin is unavailable
-> + *
-> + * @mgr        The FPGA manager object
-> + * @value      Value INIT_B to wait for (1 = asserted = low)
-> + * @act_udelay Delay to wait if the INIT_B pin is not available
-> + *
-> + * Returns 0 when the pin reached the given state or -ETIMEDOUT if too much
-> + * time passed waiting for that. If there is no INIT_B, always return 0.
-> + */
-> +static int wait_for_init_b(struct fpga_manager *mgr, int value,
-> +			   unsigned long backup_udelay)
-> +{
-> +	struct xilinx_spi_conf *conf = mgr->priv;
-> +	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
-> +
-> +	if (conf->init_b) {
-> +		while (time_before(jiffies, timeout)) {
-> +			/* dump_state(conf, "wait for init_d .."); */
-> +			if (gpiod_get_value(conf->init_b) == value)
-> +				return 0;
-> +			usleep_range(100, 400);
-> +		}
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	udelay(backup_udelay);
-> +
-> +	return 0;
-> +}
-> +
->  static int xilinx_spi_write_init(struct fpga_manager *mgr,
->  				 struct fpga_image_info *info,
->  				 const char *buf, size_t count)
->  {
->  	struct xilinx_spi_conf *conf = mgr->priv;
-> +	int err;
->  
->  	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
->  		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-> @@ -49,10 +83,21 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
->  
->  	gpiod_set_value(conf->prog_b, 1);
->  
-> -	udelay(1); /* min is 500 ns */
-> +	err = wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
-> +	if (err) {
-> +		dev_err(&mgr->dev, "INIT_B pin did not go low\n");
-> +		gpiod_set_value(conf->prog_b, 0);
-> +		return err;
-> +	}
->  
->  	gpiod_set_value(conf->prog_b, 0);
->  
-> +	err = wait_for_init_b(mgr, 0, 0);
-> +	if (err) {
-> +		dev_err(&mgr->dev, "INIT_B pin did not go high\n");
-> +		return err;
-> +	}
-> +
->  	if (gpiod_get_value(conf->done)) {
->  		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
->  		return -EIO;
-> @@ -154,6 +199,13 @@ static int xilinx_spi_probe(struct spi_device *spi)
->  		return PTR_ERR(conf->prog_b);
->  	}
->  
-> +	conf->init_b = devm_gpiod_get_optional(&spi->dev, "init_b", GPIOD_IN);
-> +	if (IS_ERR(conf->init_b)) {
-> +		dev_err(&spi->dev, "Failed to get INIT_B gpio: %ld\n",
-> +			PTR_ERR(conf->init_b));
-> +		return PTR_ERR(conf->init_b);
-> +	}
-> +
->  	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
->  	if (IS_ERR(conf->done)) {
->  		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
-> -- 
-> 2.27.0
-> 
+v2 of today's pull request. I considerably reduced the size of the changelog
+text for all the patches, while at the same time, pointing people to where
+they can read further details about the changes, in case they want/need to.
 
-Series looks good, will apply to for-next.
+I also reduced the size and modified the commit message for the pull request.
+It no longer contains the part about the one-element arrays.
 
-Thanks,
-Moritz
+Thanks
+--
+Gustavo
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flex-array-conversions-5.8-rc2
+
+for you to fetch changes up to 76fafbfffb447d2a5a95d5a9486b0217c00f9785:
+
+  w1: Replace zero-length array with flexible-array (2020-06-15 23:08:32 -0500)
+
+----------------------------------------------------------------
+flexible-array member conversion patches for 5.8-rc2
+
+Hi Linus,
+
+Please, pull the following patches that replace zero-length arrays with
+flexible-array members.
+
+Notice that all of these patches have been baking in linux-next for
+two development cycles now.
+
+There is a regular need in the kernel to provide a way to declare having a
+dynamically sized set of trailing elements in a structure. Kernel code should
+always use “flexible array members”[1] for these cases. The older style of
+one-element or zero-length arrays should no longer be used[2].
+
+C99 introduced “flexible array members”, which lacks a numeric size for the
+array declaration entirely:
+
+struct something {
+        size_t count;
+        struct foo items[];
+};
+
+This is the way the kernel expects dynamically sized trailing elements to be
+declared. It allows the compiler to generate errors when the flexible array
+does not occur last in the structure, which helps to prevent some kind of
+undefined behavior[3] bugs from being inadvertently introduced to the codebase.
+It also allows the compiler to correctly analyze array sizes (via sizeof(),
+CONFIG_FORTIFY_SOURCE, and CONFIG_UBSAN_BOUNDS). For instance, there is no
+mechanism that warns us that the following application of the sizeof() operator
+to a zero-length array always results in zero:
+
+struct something {
+        size_t count;
+        struct foo items[0];
+};
+
+struct something *instance;
+
+instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
+instance->count = count;
+
+size = sizeof(instance->items) * instance->count;
+memcpy(instance->items, source, size);
+
+At the last line of code above, size turns out to be zero, when one might have
+thought it represents the total size in bytes of the dynamic memory recently
+allocated for the trailing array items. Here are a couple examples of this
+issue[4][5]. Instead, flexible array members have incomplete type, and so the
+sizeof() operator may not be applied[6], so any misuse of such operators will
+be immediately noticed at build time.
+
+The cleanest and least error-prone way to implement this is through the use of
+a flexible array member:
+
+struct something {
+        size_t count;
+        struct foo items[];
+};
+
+struct something *instance;
+
+instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
+instance->count = count;
+
+size = sizeof(instance->items[0]) * instance->count;
+memcpy(instance->items, source, size);
+
+Thanks
+--
+Gustavo
+
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://github.com/KSPP/linux/issues/21
+[3] https://git.kernel.org/linus/76497732932f15e7323dc805e8ea8dc11bb587cf
+[4] https://git.kernel.org/linus/f2cd32a443da694ac4e28fbf4ac6f9d5cc63a539
+[5] https://git.kernel.org/linus/ab91c2a89f86be2898cee208d492816ec238b2cf
+[6] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (41):
+      firmware: dmi-sysfs: Replace zero-length array with flexible-array member
+      firmware: google: memconsole: Replace zero-length array with flexible-array member
+      firmware: google: vpd: Replace zero-length array with flexible-array member
+      aio: Replace zero-length array with flexible-array
+      ARM: tegra: Replace zero-length array with flexible-array
+      dmaengine: Replace zero-length array with flexible-array
+      can: peak_canfd: Replace zero-length array with flexible-array
+      can: Replace zero-length array with flexible-array
+      crypto: Replace zero-length array with flexible-array
+      drbd: Replace zero-length array with flexible-array
+      drm/edid: Replace zero-length array with flexible-array
+      cb710: Replace zero-length array with flexible-array
+      firewire: ohci: Replace zero-length array with flexible-array
+      FS-Cache: Replace zero-length array with flexible-array
+      ia64: kernel: unwind_i.h: Replace zero-length array with flexible-array
+      samples: mei: Replace zero-length array with flexible-array
+      ibft: Replace zero-length array with flexible-array
+      jffs2: Replace zero-length array with flexible-array
+      KVM: Replace zero-length array with flexible-array
+      kexec: Replace zero-length array with flexible-array
+      keys: encrypted-type: Replace zero-length array with flexible-array
+      kprobes: Replace zero-length array with flexible-array
+      libata: Replace zero-length array with flexible-array
+      tools/testing/nvdimm: Replace zero-length array with flexible-array
+      block: Replace zero-length array with flexible-array
+      oprofile: Replace zero-length array with flexible-array
+      firmware: pcdp: Replace zero-length array with flexible-array
+      media: pwc: Replace zero-length array with flexible-array
+      rapidio: Replace zero-length array with flexible-array
+      RxRPC: Replace zero-length array with flexible-array
+      phy: samsung: Replace zero-length array with flexible-array
+      sctp: Replace zero-length array with flexible-array
+      ima: Replace zero-length array with flexible-array
+      ASoC: SOF: Replace zero-length array with flexible-array
+      Squashfs: Replace zero-length array with flexible-array
+      stm class: Replace zero-length array with flexible-array
+      dmaengine: tegra-apb: Replace zero-length array with flexible-array
+      tifm: Replace zero-length array with flexible-array
+      soc: ti: Replace zero-length array with flexible-array
+      tracing/probe: Replace zero-length array with flexible-array
+      w1: Replace zero-length array with flexible-array
+
+ arch/ia64/kernel/unwind_i.h                   |  2 +-
+ block/partitions/ldm.h                        |  2 +-
+ drivers/amba/tegra-ahb.c                      |  2 +-
+ drivers/block/drbd/drbd_int.h                 |  2 +-
+ drivers/block/drbd/drbd_protocol.h            |  8 +++---
+ drivers/crypto/chelsio/chcr_crypto.h          |  8 +++---
+ drivers/dma/milbeaut-hdmac.c                  |  2 +-
+ drivers/dma/milbeaut-xdmac.c                  |  2 +-
+ drivers/dma/moxart-dma.c                      |  2 +-
+ drivers/dma/tegra20-apb-dma.c                 |  2 +-
+ drivers/dma/ti/edma.c                         |  2 +-
+ drivers/dma/ti/k3-udma.c                      |  2 +-
+ drivers/dma/timb_dma.c                        |  2 +-
+ drivers/firewire/core-cdev.c                  |  2 +-
+ drivers/firewire/core-transaction.c           |  2 +-
+ drivers/firewire/core.h                       |  2 +-
+ drivers/firewire/nosy.c                       |  2 +-
+ drivers/firewire/ohci.c                       |  2 +-
+ drivers/firmware/dmi-sysfs.c                  |  2 +-
+ drivers/firmware/google/memconsole-coreboot.c |  2 +-
+ drivers/firmware/google/vpd.c                 |  2 +-
+ drivers/firmware/iscsi_ibft.c                 |  2 +-
+ drivers/firmware/pcdp.h                       |  2 +-
+ drivers/hwtracing/stm/policy.c                |  2 +-
+ drivers/hwtracing/stm/stm.h                   |  4 +--
+ drivers/media/usb/pwc/pwc.h                   |  2 +-
+ drivers/net/can/peak_canfd/peak_pciefd_main.c |  4 +--
+ drivers/oprofile/cpu_buffer.h                 |  2 +-
+ drivers/phy/samsung/phy-samsung-usb2.h        |  2 +-
+ drivers/rapidio/rio-scan.c                    |  2 +-
+ drivers/soc/ti/knav_qmss.h                    |  2 +-
+ drivers/w1/w1_netlink.h                       |  4 +--
+ fs/aio.c                                      |  2 +-
+ fs/jffs2/nodelist.h                           |  2 +-
+ fs/jffs2/summary.h                            |  4 +--
+ fs/squashfs/squashfs_fs.h                     | 16 ++++++------
+ include/drm/drm_displayid.h                   |  2 +-
+ include/keys/encrypted-type.h                 |  2 +-
+ include/keys/rxrpc-type.h                     |  4 +--
+ include/linux/can/skb.h                       |  2 +-
+ include/linux/cb710.h                         |  2 +-
+ include/linux/dmaengine.h                     |  4 +--
+ include/linux/fscache-cache.h                 |  2 +-
+ include/linux/kexec.h                         |  2 +-
+ include/linux/kprobes.h                       |  2 +-
+ include/linux/kvm_host.h                      |  2 +-
+ include/linux/libata.h                        |  2 +-
+ include/linux/sctp.h                          | 36 +++++++++++++--------------
+ include/linux/tifm.h                          |  2 +-
+ kernel/trace/trace_probe.h                    |  2 +-
+ samples/mei/mei-amt-version.c                 |  2 +-
+ security/integrity/integrity.h                |  4 +--
+ sound/soc/sof/probe.h                         |  8 +++---
+ tools/testing/nvdimm/test/nfit_test.h         |  6 ++---
+ 54 files changed, 96 insertions(+), 96 deletions(-)
