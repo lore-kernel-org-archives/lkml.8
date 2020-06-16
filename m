@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA15C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EEBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E68BE207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EEA207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323199;
-	bh=0JERohV4x/Bj7qeK8SMYNWYmz3BUXkYI0JZHeSB8q1g=;
+	s=default; t=1592323204;
+	bh=hGX29h/XEmSvwgUH6YsyVe/7+5yKRFxO/MI5vqy7xRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xk2jJztGqj7yOPHSw/r4qUV33DlwqLmBvqYuaHz4Oi+pFXRmDv2X+STUMRpAJxqfI
-	 3UIs3FdiPjfJiSjm6WWOOe9R8T86rq7++V48sPKTA2GzjdDZaAFOkMOMDdyJHfs9AG
-	 ip0JA/w8FrbsbzN0be/++10mM3CSEX3gNY5npQsc=
+	b=hoCmKq+kDWqg/5g7ySrPkITK1rCwagU+GyezgQrfsvMpAuHWzTTxcshMhp3t4LESz
+	 xpAoZBNQ6QXMblehhyFJ+v16J3BuLhuRsPB30zNJQFNPlonJ55REobVP+T2TgDo+wl
+	 vvs7YC8hZrRinzQpCmyrJShU3CPA1EFb9cNYXQHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732558AbgFPPxL (ORCPT
+        id S1732467AbgFPQAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:00:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732836AbgFPPxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:53:06 -0400
+        id S1732482AbgFPPxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDA8F208D5;
-        Tue, 16 Jun 2020 15:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C25D208D5;
+        Tue, 16 Jun 2020 15:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322786;
-        bh=0JERohV4x/Bj7qeK8SMYNWYmz3BUXkYI0JZHeSB8q1g=;
+        s=default; t=1592322791;
+        bh=hGX29h/XEmSvwgUH6YsyVe/7+5yKRFxO/MI5vqy7xRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oMqYSVWB6rLVrFaIkmY/G9tfKk/4KNttlwc/A6Z0rnWRhI2rUVMDN6u/kmImtLr8B
-         wVVcAk3s9eN7/z/lt8OoCl1jKH7rvhHvrnrHTNtRavdQMokW9MMeSgQqEFPFYom+Ga
-         Q6n8xe2EHu8VRvqt1gVlttK/eoa7idWTjMJzDi/I=
+        b=TrnJ/+vMR3pG7u50rvNA+Ci3PLBYaUCL9EZHvJtzQlz8ok+93rUY/6i45dA4dCCsK
+         buGgPjo85EY/jbffobwlyveQtGH7zcrh0He8wc7JS4bLja3GnQ6XLCJ8vJ6z+1stGR
+         gTsZ4lkLbJ0IizCkkVhcW+bwtgWrqL18ImSA198w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 5.6 063/161] efi/efivars: Add missing kobject_put() in sysfs entry creation error path
-Date:   Tue, 16 Jun 2020 17:34:13 +0200
-Message-Id: <20200616153109.379226863@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 106/161] dccp: Fix possible memleak in dccp_init and dccp_fini
+Date:   Tue, 16 Jun 2020 17:34:56 +0200
+Message-Id: <20200616153111.408318496@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,36 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Wang Hai <wanghai38@huawei.com>
 
-commit d8bd8c6e2cfab8b78b537715255be8d7557791c0 upstream.
+[ Upstream commit c96b6acc8f89a4a7f6258dfe1d077654c11415be ]
 
-The documentation provided by kobject_init_and_add() clearly spells out
-the need to call kobject_put() on the kobject if an error is returned.
-Add this missing call to the error path.
+There are some memory leaks in dccp_init() and dccp_fini().
 
-Cc: <stable@vger.kernel.org>
-Reported-by: 亿一 <teroincn@gmail.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+In dccp_fini() and the error handling path in dccp_init(), free lhash2
+is missing. Add inet_hashinfo2_free_mod() to do it.
+
+If inet_hashinfo2_init_mod() failed in dccp_init(),
+percpu_counter_destroy() should be called to destroy dccp_orphan_count.
+It need to goto out_free_percpu when inet_hashinfo2_init_mod() failed.
+
+Fixes: c92c81df93df ("net: dccp: fix kernel crash on module load")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/firmware/efi/efivars.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/net/inet_hashtables.h |    6 ++++++
+ net/dccp/proto.c              |    7 +++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -522,8 +522,10 @@ efivar_create_sysfs_entry(struct efivar_
- 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
- 				   NULL, "%s", short_name);
- 	kfree(short_name);
--	if (ret)
-+	if (ret) {
-+		kobject_put(&new_var->kobj);
- 		return ret;
-+	}
+--- a/include/net/inet_hashtables.h
++++ b/include/net/inet_hashtables.h
+@@ -185,6 +185,12 @@ static inline spinlock_t *inet_ehash_loc
  
- 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
- 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
+ int inet_ehash_locks_alloc(struct inet_hashinfo *hashinfo);
+ 
++static inline void inet_hashinfo2_free_mod(struct inet_hashinfo *h)
++{
++	kfree(h->lhash2);
++	h->lhash2 = NULL;
++}
++
+ static inline void inet_ehash_locks_free(struct inet_hashinfo *hashinfo)
+ {
+ 	kvfree(hashinfo->ehash_locks);
+--- a/net/dccp/proto.c
++++ b/net/dccp/proto.c
+@@ -1139,14 +1139,14 @@ static int __init dccp_init(void)
+ 	inet_hashinfo_init(&dccp_hashinfo);
+ 	rc = inet_hashinfo2_init_mod(&dccp_hashinfo);
+ 	if (rc)
+-		goto out_fail;
++		goto out_free_percpu;
+ 	rc = -ENOBUFS;
+ 	dccp_hashinfo.bind_bucket_cachep =
+ 		kmem_cache_create("dccp_bind_bucket",
+ 				  sizeof(struct inet_bind_bucket), 0,
+ 				  SLAB_HWCACHE_ALIGN, NULL);
+ 	if (!dccp_hashinfo.bind_bucket_cachep)
+-		goto out_free_percpu;
++		goto out_free_hashinfo2;
+ 
+ 	/*
+ 	 * Size and allocate the main established and bind bucket
+@@ -1242,6 +1242,8 @@ out_free_dccp_ehash:
+ 	free_pages((unsigned long)dccp_hashinfo.ehash, ehash_order);
+ out_free_bind_bucket_cachep:
+ 	kmem_cache_destroy(dccp_hashinfo.bind_bucket_cachep);
++out_free_hashinfo2:
++	inet_hashinfo2_free_mod(&dccp_hashinfo);
+ out_free_percpu:
+ 	percpu_counter_destroy(&dccp_orphan_count);
+ out_fail:
+@@ -1265,6 +1267,7 @@ static void __exit dccp_fini(void)
+ 	kmem_cache_destroy(dccp_hashinfo.bind_bucket_cachep);
+ 	dccp_ackvec_exit();
+ 	dccp_sysctl_exit();
++	inet_hashinfo2_free_mod(&dccp_hashinfo);
+ 	percpu_counter_destroy(&dccp_orphan_count);
+ }
+ 
 
 
