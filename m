@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7978CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C467DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57965214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D1520C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322125;
-	bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
+	s=default; t=1592322127;
+	bh=/kRiTW22n/YRbsgjLnLEa2C3qdhKObbL67ODnHqlvm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DrgPJLCVoEAPH0MRZ2YiR+KbqXO36zFhGfowCODaMoDOWgnYPSMxtlpBTrRIy9W9t
-	 nWF4+nmmhO8M3lBGLTBBYmpfZ21l/LRxPq+dYx0ZKzcDl1mLaHwPrglupdNaYl2s0H
-	 q6h7hMOmT53E+w6CDn39eQLYCvZ7/Ii8oyz7PYKM=
+	b=ltvnjp4il8wNmjenRuQH7ugL6lZJU/YvXv1DvHZjzsDxmhYAYhteiIFlkdUIMQSVS
+	 4Gyd1c1Ee1baTPm6qmnGCLDKVHfLEAj1Dz2tXjxx8pM451D8CUi72Hwf6afGRC4tr/
+	 6f/ehG3hvc2woNggLrzEszcWGMfYup/xaYgg5j4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731599AbgFPPmD (ORCPT
+        id S1731613AbgFPPmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:42:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58174 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731573AbgFPPl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:59 -0400
+        id S1729835AbgFPPmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37C7720C56;
-        Tue, 16 Jun 2020 15:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B205521475;
+        Tue, 16 Jun 2020 15:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322118;
-        bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
+        s=default; t=1592322121;
+        bh=/kRiTW22n/YRbsgjLnLEa2C3qdhKObbL67ODnHqlvm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmGqvV/wEAH3fvmH4XQzvclCB6VVJe+m9zimiXs1ourjcfGzLHS0+uOx5hHPd8RvY
-         ntpYs35+fvloW/r1uwMu33srHsz2Om3Ne7/M/J3gFgG/KGFwmlo+ZZXawcfKBzRn6U
-         0wVDO7y7xJa3qETp+12eHrU9RXF7oPrZ8uxwypc0=
+        b=LkvhTyQVXIW2ZStXnQdUbXW9A7V4n32L4ODaqyrzQ/j+1apaCzFjNcGQ28bj1kRT5
+         sXV971lUyqQG9c9VxBBtxlLDzHUgaSM1GlB/NVijNE2hWUCiYF1nkTRbeE7tg8OPLj
+         REjH4btucLw4IRGWXQ7kPPm+PVxpWsAXpUC20/6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 107/134] KVM: MIPS: Fix VPN2_MASK definition for variable cpu_vmbits
-Date:   Tue, 16 Jun 2020 17:34:51 +0200
-Message-Id: <20200616153105.911183925@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 001/163] ipv6: fix IPV6_ADDRFORM operation logic
+Date:   Tue, 16 Jun 2020 17:32:55 +0200
+Message-Id: <20200616153106.925316548@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
-References: <20200616153100.633279950@linuxfoundation.org>
+In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
+References: <20200616153106.849127260@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,43 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xing Li <lixing@loongson.cn>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit 5816c76dea116a458f1932eefe064e35403248eb upstream.
+[ Upstream commit 79a1f0ccdbb4ad700590f61b00525b390cb53905 ]
 
-If a CPU support more than 32bit vmbits (which is true for 64bit CPUs),
-VPN2_MASK set to fixed 0xffffe000 will lead to a wrong EntryHi in some
-functions such as _kvm_mips_host_tlb_inv().
+Socket option IPV6_ADDRFORM supports UDP/UDPLITE and TCP at present.
+Previously the checking logic looks like:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol != IPPROTO_TCP)
+	break;
 
-The cpu_vmbits definition of 32bit CPU in cpu-features.h is 31, so we
-still use the old definition.
+After commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation"), TCP
+was blocked as the logic changed to:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
+	break;
+else
+	break;
 
-Cc: Stable <stable@vger.kernel.org>
-Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
-Signed-off-by: Xing Li <lixing@loongson.cn>
-[Huacai: Improve commit messages]
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Message-Id: <1590220602-3547-3-git-send-email-chenhc@lemote.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Then after commit 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
+UDP/UDPLITE were blocked as the logic changed to:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
+
+if (sk->sk_protocol != IPPROTO_TCP)
+	break;
+
+Fix it by using Eric's code and simply remove the break in TCP check, which
+looks like:
+if (sk->sk_protocol == IPPROTO_UDP || sk->sk_protocol == IPPROTO_UDPLITE)
+	do_some_check;
+else if (sk->sk_protocol == IPPROTO_TCP)
+	do_some_check;
+else
+	break;
+
+Fixes: 82c9ae440857 ("ipv6: fix restrict IPV6_ADDRFORM operation")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/mips/include/asm/kvm_host.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv6/ipv6_sockglue.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -274,7 +274,11 @@ enum emulation_result {
- #define MIPS3_PG_SHIFT		6
- #define MIPS3_PG_FRAME		0x3fffffc0
- 
-+#if defined(CONFIG_64BIT)
-+#define VPN2_MASK		GENMASK(cpu_vmbits - 1, 13)
-+#else
- #define VPN2_MASK		0xffffe000
-+#endif
- #define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
- #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
- #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -183,14 +183,15 @@ static int do_ipv6_setsockopt(struct soc
+ 					retv = -EBUSY;
+ 					break;
+ 				}
+-			}
+-			if (sk->sk_protocol == IPPROTO_TCP &&
+-			    sk->sk_prot != &tcpv6_prot) {
+-				retv = -EBUSY;
++			} else if (sk->sk_protocol == IPPROTO_TCP) {
++				if (sk->sk_prot != &tcpv6_prot) {
++					retv = -EBUSY;
++					break;
++				}
++			} else {
+ 				break;
+ 			}
+-			if (sk->sk_protocol != IPPROTO_TCP)
+-				break;
++
+ 			if (sk->sk_state != TCP_ESTABLISHED) {
+ 				retv = -ENOTCONN;
+ 				break;
 
 
