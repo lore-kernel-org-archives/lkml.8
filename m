@@ -2,80 +2,122 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A12FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACB32098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9918120C09
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fivDMkIp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dB3COtTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgFPRHG (ORCPT
+        id S1730851AbgFPRHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        Tue, 16 Jun 2020 13:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729193AbgFPRHF (ORCPT
+        with ESMTP id S1729193AbgFPRHH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:07:05 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D99FC061573;
-        Tue, 16 Jun 2020 10:07:05 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q11so21582985wrp.3;
-        Tue, 16 Jun 2020 10:07:05 -0700 (PDT)
+        Tue, 16 Jun 2020 13:07:07 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1239C061573;
+        Tue, 16 Jun 2020 10:07:07 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id m7so8658220plt.5;
+        Tue, 16 Jun 2020 10:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=XMRBF1iQXQfH8W0ohSSsJlVWNTVQ83/Rjd5oppXCtLI=;
-        b=fivDMkIpU7zc1RLCtNnjZu694XM1KnvZyMTP4oijXbaExASqH0Oa3tHON1Oqyv9G3g
-         qUhYNAnl6KORNi2nzVGi5fpj36Oibrg8Ztjk7odIHBRn1QUIogqFOoilx3AB7DrnN2ZH
-         1cCM8HKluGPQCeBi6Z1UvyFgxcRHKgbFG4KDqgvMdl8RtwYvpFLGXFgfzzRX5T2bYDft
-         d2ybxqYbn/wxEO5ULepxUI5kxC9qoTQcBBrNNV6mFBKOR9S3CQfWIcmI/vq7wje8cMG6
-         5a+3vK/VPNoNX2vrFc9KqxKGOGPcAJQx9VZGR74wEuhi1prQjeASf0/XYWAWSRHQxYpE
-         RZeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=XMRBF1iQXQfH8W0ohSSsJlVWNTVQ83/Rjd5oppXCtLI=;
-        b=VK9PnzjxqZuHxMuupwWbjPjqrGiMlNajsHg6cVeYhioT6F5s966Jp4vXr4FaVOYIFl
-         jvvgVQcGSQVRLcwRGWJAosqPiJhKIXKl+weFVQgCfiw/OczoZtrnU70PeqK+8OG9nkx/
-         tyMPPwxEDXtolVn4CP+Zex0m50RhQaKziohjr8TYVvsPrhqe/j7NIofdJFM3F9HX5pk7
-         +IorN3YuvWkZu11EdLng5MVOPwMX6/MS7ksEDscrd/pFcxAhMoYkwHyPA3URCayCyI5R
-         N2+qvACF+fW7yRLo0UNnMSQ3pHYziOU6ZexdadyPSQHERa9RAZkThnVkuL8rlZhXDqNu
-         Hy0w==
-X-Gm-Message-State: AOAM532IgwTDIJ/0jKSLCrMzufw7cLXmyLk3NRc3FcWWKbgbTt9bmjgT
-        yUQi63+ySi96HvgqVC3N9f4=
-X-Google-Smtp-Source: ABdhPJyRfWOKefA3MT1NqEbsEMU8JAdkdhU0tJ2NJpjEQ182ORyfFqdpipoj8k/8d8CeY3edcuA+2g==
-X-Received: by 2002:adf:e751:: with SMTP id c17mr3882788wrn.134.1592327224273;
-        Tue, 16 Jun 2020 10:07:04 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id u4sm5008813wmb.48.2020.06.16.10.07.01
+        bh=B6d6CGEYd2au422VYT+qYE5czSsHIupr+gBwXSuKf/w=;
+        b=dB3COtTv6MBbNqdGY4hFN3pr5nOaKtTi1R3XnKOfVFMIxD9yrlNr+K5lmq86pplVyy
+         hNFDwU+prdbJk7vBRsb2m9OMyZWz9aSlWYkmR4nRV+SbTP4HSCVsJ4Q8zxWby8oHL0/j
+         iqAw5iqJrLxgYwGHKiY293h69fZZ8FfZ55yHe1VgO3cvC2RAHmuPuWN/aw1L3DbHn39N
+         mOe4/gJxtbA32RBQ4bYqxFrjKyqWDiE5kUOGKnV6AGfySFE1N6z2y4QKrU5iFamX3Qcu
+         dQ9YLtZRZlDoQXwTWQ0o7gXrRT4RqjoUSuRrDERcGM3B+5qarFVqyrA1nYkVU5c4mpii
+         2lEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=B6d6CGEYd2au422VYT+qYE5czSsHIupr+gBwXSuKf/w=;
+        b=N7eIp7KmkwEHvu+DSX/TffEC9Gxrvz52eZ/zay08ofRh0ACsnmbqnFnMUNJrGyvcuA
+         pTT1Mlsm9VTG0P6WiCuLEeih/KvfHw11PyzhZO+MOt3vFBiFCR+ZA4FehUajg4IFlBGA
+         3Caqagg/uWOK9mBbQ457C6CB+a0Q5LxioP+5TE/eDB4D00hyp8AZB4EaImDDiCKAALZC
+         UPn3sQDJKNE932L1TURMKpLwiQAbv+fGWOWKZs3xzgTxRx9ainDDtzW2BwDLyJeJLljU
+         NtoNnZSdGL8Zu3W+29xX5C564JvCdB2Dhr2qMEb+/MJL5vBjbNIu5rtwk8Qvfga83lxy
+         rHXw==
+X-Gm-Message-State: AOAM530OEbWXTN9qek3KYrX1MOaJkqSYuRANa3UiyGWdo12qkCWm3B5w
+        CicQT+0M9pIf71mmEgLH7QubLVog
+X-Google-Smtp-Source: ABdhPJyalKuAMRATrmCSrFMW4owR7JnNtxnAIzWpoMCTN49+kE59akWgzv55sQ1NVK2XCJIvDOrXmQ==
+X-Received: by 2002:a17:90b:4d10:: with SMTP id mw16mr3685098pjb.143.1592327226866;
+        Tue, 16 Jun 2020 10:07:06 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o207sm18082861pfd.56.2020.06.16.10.07.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 10:07:03 -0700 (PDT)
-Subject: Re: [PATCH v3 3/4] spi: bcm63xx-hsspi: add reset support
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        broonie@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200616070223.3401282-1-noltari@gmail.com>
- <20200616070223.3401282-4-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <fb07654a-048d-c428-545a-f5cb87cc9acc@gmail.com>
-Date:   Tue, 16 Jun 2020 10:07:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Tue, 16 Jun 2020 10:07:06 -0700 (PDT)
+Subject: Re: [PATCH 5.4 000/134] 5.4.47-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200616153100.633279950@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <b9e8fbc5-9a25-723c-1ea5-09bc7f1cee89@roeck-us.net>
+Date:   Tue, 16 Jun 2020 10:07:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200616070223.3401282-4-noltari@gmail.com>
+In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -84,16 +126,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/16/2020 12:02 AM, Álvaro Fernández Rojas wrote:
-> bcm63xx arch resets the HSSPI controller at early boot. However, bmips arch
-> needs to perform a reset when probing the driver.
+On 6/16/20 8:33 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.47 release.
+> There are 134 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
+> Responses should be made by Thu, 18 Jun 2020 15:30:25 +0000.
+> Anything received after that time might be too late.
+> 
 
-Same comment as patch #1.
--- 
-Florian
+We should see see lots of failures along the line of
+
+ERROR: "imx_sc_misc_set_control" [sound/soc/sof/imx/snd-sof-imx8.ko] undefined!
+ERROR: "imx_scu_get_handle" [sound/soc/sof/imx/snd-sof-imx8.ko] undefined!
+ERROR: "imx_sc_pm_cpu_start" [sound/soc/sof/imx/snd-sof-imx8.ko] undefined!
+
+for several architectures. This will affect 5.4.y, 5.6.y, and 5.7.y.
+
+I say "should" because my builders didn't catch up yet, but a quick sanity
+check suggests that the problem is still there. alpha:allmodconfig, for
+example, reports dependency issues.
+
+WARNING: unmet direct dependencies detected for SND_SOC_SOF_IMX8
+  Depends on [n]: SOUND [=m] && !UML && SND [=m] && SND_SOC [=m] && SND_SOC_SOF_TOPLEVEL [=y] && SND_SOC_SOF_IMX_TOPLEVEL [=y] && IMX_SCU
+  Selected by [m]:
+  - SND_SOC_SOF_IMX_OF [=m] && SOUND [=m] && !UML && SND [=m] && SND_SOC [=m] && SND_SOC_SOF_TOPLEVEL [=y] && SND_SOC_SOF_IMX_TOPLEVEL [=y] && SND_SOC_SOF_IMX8_SUPPORT [=y]
+
+Guenter
