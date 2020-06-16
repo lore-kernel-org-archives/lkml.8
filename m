@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5161AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7B2208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE5C2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323679;
-	bh=JMlBOiZ+vCeIqMWFevpV9y3+A1JmqSlgaldOXzG2dsY=;
+	s=default; t=1592323688;
+	bh=ZBnV5sxUwynEG5lSAIADmzfkPNAJRl5QKE8Qtn7F+yA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ruwqXAbUgR+FzwiFUtKVf79JJ+fAU94WXccnmrHa+3BgmV83pLN0aEjZFPLXyhcUR
-	 36/1ha0W+ngKGKfxWX/oYJ1+dM9t1OdS3Osew+KDf/zikCCUx/QQyaNvQglYsKFAAy
-	 XfucDLujxjK5gBlhlOT/b4pFrUWKRj/mtsIYP76w=
+	b=qCPvL8E1em2NrpHaVDMuSyJleByw8WeoFJuS6E0bb+qGQe9/grJMXuouN/ovnV1zd
+	 Zs6UJXpsQGYdCdQD0QHBnKOSQnJeD/UDsjK0ExrtmNKjx01BDTDL8heBH+Az+9bRYV
+	 ZMyUU4o32VZUfhxILPzFUEzpdrirCgscq3kr1Wt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732493AbgFPQH5 (ORCPT
+        id S1732594AbgFPQIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38924 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732216AbgFPPqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:37 -0400
+        id S1731789AbgFPPq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5538820776;
-        Tue, 16 Jun 2020 15:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDCA620776;
+        Tue, 16 Jun 2020 15:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322396;
-        bh=JMlBOiZ+vCeIqMWFevpV9y3+A1JmqSlgaldOXzG2dsY=;
+        s=default; t=1592322386;
+        bh=ZBnV5sxUwynEG5lSAIADmzfkPNAJRl5QKE8Qtn7F+yA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vf6xSHM577ciPFz67LuUyGpHOgD2jqicayJix/gx+rNBnIV9B2yu100VYaW+8olaF
-         dwFCV5dZjq+7yOgQKUdDec5+1Yn5o2TwafY5/0IR+MUXxzQTxjwzL248xgqGrnmG9T
-         F65tLOGTQJJ5vU688w7Sh4+d8/niEKNhQWjsB5Gs=
+        b=Z3DUOK7rGxbLDWGs6uiiMD+jPjtEGj05Dx++BE/awa961sjllfQ2g/gjtnPbmcoJk
+         +BbE8s9neDPrcLdMCV8hTqlcn2CYbBo371dpe9iWPqPk5H1qBOOQafA9T59tnrUR48
+         uFy2FOSCEAQHRi/5PoIZHiVvAo0FgoHpBJpN4hm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        syzbot+61958888b1c60361a791@syzkaller.appspotmail.com
-Subject: [PATCH 5.7 115/163] ovl: fix out of bounds access warning in ovl_check_fb_len()
-Date:   Tue, 16 Jun 2020 17:34:49 +0200
-Message-Id: <20200616153112.311331992@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 111/163] net: ethernet: ti: ale: fix allmulti for nu type ale
+Date:   Tue, 16 Jun 2020 17:34:45 +0200
+Message-Id: <20200616153112.122979967@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,43 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-commit 522f6e6cba6880a038e2bd88e10390b84cd3febd upstream.
+[ Upstream commit bc139119a1708ae3db1ebb379630f286e28d06e8 ]
 
-syzbot reported out of bounds memory access from open_by_handle_at()
-with a crafted file handle that looks like this:
+On AM65xx MCU CPSW2G NUSS and 66AK2E/L NUSS allmulti setting does not allow
+unregistered mcast packets to pass.
 
-  { .handle_bytes = 2, .handle_type = OVL_FILEID_V1 }
+This happens, because ALE VLAN entries on these SoCs do not contain port
+masks for reg/unreg mcast packets, but instead store indexes of
+ALE_VLAN_MASK_MUXx_REG registers which intended for store port masks for
+reg/unreg mcast packets.
+This path was missed by commit 9d1f6447274f ("net: ethernet: ti: ale: fix
+seeing unreg mcast packets with promisc and allmulti disabled").
 
-handle_bytes gets rounded down to 0 and we end up calling:
-  ovl_check_fh_len(fh, 0) => ovl_check_fb_len(fh + 3, -3)
+Hence, fix it by taking into account ALE type in cpsw_ale_set_allmulti().
 
-But fh buffer is only 2 bytes long, so accessing struct ovl_fb at
-fh + 3 is illegal.
-
-Fixes: cbe7fba8edfc ("ovl: make sure that real fid is 32bit aligned in memory")
-Reported-and-tested-by: syzbot+61958888b1c60361a791@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org> # v5.5
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 9d1f6447274f ("net: ethernet: ti: ale: fix seeing unreg mcast packets with promisc and allmulti disabled")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/overlayfs/overlayfs.h |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/ti/cpsw_ale.c |   49 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 40 insertions(+), 9 deletions(-)
 
---- a/fs/overlayfs/overlayfs.h
-+++ b/fs/overlayfs/overlayfs.h
-@@ -355,6 +355,9 @@ int ovl_check_fb_len(struct ovl_fb *fb,
- 
- static inline int ovl_check_fh_len(struct ovl_fh *fh, int fh_len)
- {
-+	if (fh_len < sizeof(struct ovl_fh))
-+		return -EINVAL;
-+
- 	return ovl_check_fb_len(&fh->fb, fh_len - OVL_FH_WIRE_OFFSET);
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -604,10 +604,44 @@ void cpsw_ale_set_unreg_mcast(struct cps
+ 	}
  }
  
++static void cpsw_ale_vlan_set_unreg_mcast(struct cpsw_ale *ale, u32 *ale_entry,
++					  int allmulti)
++{
++	int unreg_mcast;
++
++	unreg_mcast =
++		cpsw_ale_get_vlan_unreg_mcast(ale_entry,
++					      ale->vlan_field_bits);
++	if (allmulti)
++		unreg_mcast |= ALE_PORT_HOST;
++	else
++		unreg_mcast &= ~ALE_PORT_HOST;
++	cpsw_ale_set_vlan_unreg_mcast(ale_entry, unreg_mcast,
++				      ale->vlan_field_bits);
++}
++
++static void
++cpsw_ale_vlan_set_unreg_mcast_idx(struct cpsw_ale *ale, u32 *ale_entry,
++				  int allmulti)
++{
++	int unreg_mcast;
++	int idx;
++
++	idx = cpsw_ale_get_vlan_unreg_mcast_idx(ale_entry);
++
++	unreg_mcast = readl(ale->params.ale_regs + ALE_VLAN_MASK_MUX(idx));
++
++	if (allmulti)
++		unreg_mcast |= ALE_PORT_HOST;
++	else
++		unreg_mcast &= ~ALE_PORT_HOST;
++
++	writel(unreg_mcast, ale->params.ale_regs + ALE_VLAN_MASK_MUX(idx));
++}
++
+ void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port)
+ {
+ 	u32 ale_entry[ALE_ENTRY_WORDS];
+-	int unreg_mcast = 0;
+ 	int type, idx;
+ 
+ 	for (idx = 0; idx < ale->params.ale_entries; idx++) {
+@@ -624,15 +658,12 @@ void cpsw_ale_set_allmulti(struct cpsw_a
+ 		if (port != -1 && !(vlan_members & BIT(port)))
+ 			continue;
+ 
+-		unreg_mcast =
+-			cpsw_ale_get_vlan_unreg_mcast(ale_entry,
+-						      ale->vlan_field_bits);
+-		if (allmulti)
+-			unreg_mcast |= ALE_PORT_HOST;
++		if (!ale->params.nu_switch_ale)
++			cpsw_ale_vlan_set_unreg_mcast(ale, ale_entry, allmulti);
+ 		else
+-			unreg_mcast &= ~ALE_PORT_HOST;
+-		cpsw_ale_set_vlan_unreg_mcast(ale_entry, unreg_mcast,
+-					      ale->vlan_field_bits);
++			cpsw_ale_vlan_set_unreg_mcast_idx(ale, ale_entry,
++							  allmulti);
++
+ 		cpsw_ale_write(ale, idx, ale_entry);
+ 	}
+ }
 
 
