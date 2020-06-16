@@ -2,143 +2,125 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78451C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA94C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D497207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E15207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:30:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YLyaUimn"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ok+zdHUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgFPM3B (ORCPT
+        id S1728727AbgFPMaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:29:01 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32415 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726261AbgFPM3A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:29:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592310538;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=67GIuCamd4MgSsvesfvqYg7CyR/yaU34h6Ys25meAe0=;
-        b=YLyaUimnSgPa84m4KXj0OjczvmDjb8tcLayO2Ygu3E/Z+fmfw0A7fOGMKFG+qRT0/s+y/L
-        jHmbZyuPKpm4W3UqgGbWI9/6dw7oXYehRWaegryqdvXQwCpLMWRD3FfrLXMbRQMtNNdvuI
-        5Hu9mdfPvDnoZ5C7pRWA8LXDjCtIntI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-wuG3kYVvOVG4mvlBtbhxKA-1; Tue, 16 Jun 2020 08:28:55 -0400
-X-MC-Unique: wuG3kYVvOVG4mvlBtbhxKA-1
-Received: by mail-wm1-f72.google.com with SMTP id t145so1186168wmt.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:28:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=67GIuCamd4MgSsvesfvqYg7CyR/yaU34h6Ys25meAe0=;
-        b=EfLHiIdzijEL1i4rFxfCjT9rWGSnqlJ3LFCjkXXrp57VihyLpsGExubopwqCblCeC4
-         d2S2J1OIYzmGCoIGSNs351nYVlGFFJODL5Cyh/Llqcrc2Rr5j2wJqu9YvYmqYriVSq1S
-         KhcVkITV5jrdbdFWONID5oRgZSl7b1R3W51xTOtTuqvv+8vskUG3COEjZb9h2brB3hF6
-         n1AxnKCdm+3lySlncsl1JtZsvPWnFT8dkXTQDiB4aB/CVTPcblqGpOvUJeJxptvismv/
-         BILPPXanL5QFP5X4rxFcYEdVU+/v+ha9Bh//FVOeBil9PyVafMGvv93p2dF4oBTvEdDM
-         lY0Q==
-X-Gm-Message-State: AOAM532pPnsNjSxsu1R13CjDEO/yL8YEUqf+/Uw0n4Q1eiqnxW3WgJZP
-        XXzJDetVtIvsUISKj4eU78BmLoR00fhTmuBDP2mrrldiQh7UZgvlOzuYI5nEWlRtjr9mwcC8hxh
-        CThMTXbUchOH1ghhkGgDlTM4O
-X-Received: by 2002:a5d:4f81:: with SMTP id d1mr2971493wru.95.1592310533566;
-        Tue, 16 Jun 2020 05:28:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzNsomDYYUeDLHsz6oPtzv9ic6c3G/8BovSOHkTiki/aC+lDX9Zjg+2kCJO168r708tABUNrw==
-X-Received: by 2002:a5d:4f81:: with SMTP id d1mr2971469wru.95.1592310533343;
-        Tue, 16 Jun 2020 05:28:53 -0700 (PDT)
-Received: from [192.168.178.58] ([151.30.88.161])
-        by smtp.gmail.com with ESMTPSA id z206sm3745314wmg.30.2020.06.16.05.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 05:28:52 -0700 (PDT)
-Subject: Re: [kvm-unit-tests PATCH] x86: pmu: Test full-width counter writes
- support
-To:     Thomas Huth <thuth@redhat.com>, Like Xu <like.xu@linux.intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200529074347.124619-1-like.xu@linux.intel.com>
- <20200529074347.124619-4-like.xu@linux.intel.com>
- <b1a5472b-f7d0-82b0-e753-dabf81254488@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1272fbd7-3ff1-5eac-e9e2-78b824fbc4e0@redhat.com>
-Date:   Tue, 16 Jun 2020 14:28:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <b1a5472b-f7d0-82b0-e753-dabf81254488@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 16 Jun 2020 08:30:03 -0400
+Received: from mail-vi1eur05on2081.outbound.protection.outlook.com ([40.107.21.81]:6078
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726052AbgFPMaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 08:30:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W0m8UEHBgp3aj0ky4izuhQbbZYLArDkrEK1hfp7g7nwtE17xwomgjBBsdGdQphNSvOXCxWw13+5Bf2V9k6FTBj9eua8gXvnOQ0V0yOleFDmTNnM+8YILEck+hP0fXoTi+3nssqScTM56rA9uf6Tl54+6D+Dj4BsSygj6o5lLKwPPGXE8895DqxQfmlji3rBk3rHwLIqRB/sWoycUKSqrzayo0XIv9Lkuf4nfm1cJcqBRKlenFCqMIbVaxEYEsgN6SrltCNvLKi6v6+bA+YvcGWXX9PQCFPGNpSWaiKG2TjqpK3I15rtNb3eJLPE91/zExSD2RGk4fAZbLtpMaRad5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0sVxqG14Wz23Ve98PNOWs+hUDuulFT7sSBxtQCOvTBI=;
+ b=b1EI6XqgNGREBN1IU2guzfL3/2prttrxq1shTNW4FKjTVuEAievoiw41PJy4HnGYp5/s7kKyb+mY/sRQCNqIck1BM8Ydyvq5Rftsu15+fSyCibW0bHUysg+PbDPJfDg/hengnHu9kBblHaJ6pYnEEd06TqQZiOn8/dtxhZ9ZLUSet00aLd+7DmF+VGR+lhHOmSr99qgoLEUGr1emeLpB3Naq7xO55uKbrgkKJiB6ngl2pnyfbPK8kzA6qoGdWADt1mZ278LR24DJBOjB6ZJbRnVnT2c9pnrYFlgBeQiCNETqFeUrfD3LXamxV0ntbxnHr4QGQ2p2iFuH1+SvpcvnQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0sVxqG14Wz23Ve98PNOWs+hUDuulFT7sSBxtQCOvTBI=;
+ b=Ok+zdHUCj3sf5n0Ki5oPL7F4QXgOxkFp3V+yI82fUlSVix8LBUC9MdslQNBwvi92i6BnZkwK+IBLmp1sz6Y2ykNPcAWrs9r949FI03g+XK5SG82BBQskS3E5nlHDWtzA4tAqsOKyWixhgOYZheq6gWMQh7rqlPHrcs4P0ychRG4=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6509.eurprd04.prod.outlook.com (2603:10a6:803:125::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Tue, 16 Jun
+ 2020 12:29:57 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3088.028; Tue, 16 Jun 2020
+ 12:29:57 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Thread-Topic: [PATCH v1 RFC 1/2] spi: introduce fallback to pio
+Thread-Index: AQHWP6z7CX2etPvPnk+oddH8JEW5FKjTbHIAgADDYUCAAJUwgIAACjoQgAA5dICAAOmA8IADsXmAgAANH1CAAASJgIAACZlAgAAGaACAAAKk4IAAAtQAgAC2bzCAAIkpAIAAAgdAgAAFkYCAAB+kcA==
+Date:   Tue, 16 Jun 2020 12:29:57 +0000
+Message-ID: <VE1PR04MB66381A584159BEF5450B4CCD899D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20200615123553.GP4447@sirena.org.uk>
+ <VE1PR04MB6638C65257F41072C3D61583899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615133905.GV4447@sirena.org.uk>
+ <VE1PR04MB6638793C00742D5BA72F8AC2899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615143622.GX4447@sirena.org.uk>
+ <VE1PR04MB6638D0C9FE0289FFE13ABA49899C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200615145556.GY4447@sirena.org.uk>
+ <VE1PR04MB66380FD8FB7FCE79AF4B6CD4899D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200616095948.GJ4447@sirena.org.uk>
+ <VE1PR04MB66387499F9AF80A68F720529899D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200616102659.GK4447@sirena.org.uk>
+In-Reply-To: <20200616102659.GK4447@sirena.org.uk>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8ae0c9ac-8def-4235-d4ed-08d811f0fb28
+x-ms-traffictypediagnostic: VE1PR04MB6509:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB65092A75F2428B61091A09B3899D0@VE1PR04MB6509.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 04362AC73B
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8E1xpVG9oy3KT4LZIStHjaKOL6rGKB55gaNj/rvCKYgOp+nHpLggikJE7hj9Ak2hH4AR0cSA65UchE0eGDK0Mo1q0m9Ylne0oB3/9NySnXwXfJnjY8vI3eoK11a05Cq3ji8BmdJe/yR5GNtM9KW9CIg5wP7dZgoC400mOb6/jA97QX7r+1yh6Lz6tB8iJCvkdtyejWEqT4mujrqyPXy0xlK7Uym3z0Mohvod1CuU7F3jrR5DEROCmoKphu2BxjTV+onOExnSdUcOhGRrMtO3b7GIzeE4VOy2OPvLIXvu/ZAndMICTZe5abnOhAxNysPt
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(7416002)(6506007)(7696005)(9686003)(71200400001)(33656002)(66556008)(64756008)(76116006)(54906003)(55016002)(86362001)(4744005)(6916009)(66476007)(66946007)(66446008)(186003)(52536014)(5660300002)(8676002)(83380400001)(4326008)(498600001)(2906002)(26005)(8936002)(53546011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: FoGBSC5YrHU2pEFKAno/aB7yV3Qz3NWuvrQ6zJTlAxS28majXcctRPgQWy1xDs5S7s1JJ2FhcS3DFFk3YuJAYnbiQ+gEReltXKFNy64xzLFLA9txV1KUFGiIn/Mx0lZa8O6ii60PYg5EeKJs6yoQpkhnDe5wZ2ACsmdLUqQSUEHVL9Nnab2yx6+ZXeRcmLeYjxT5r/RegH60/5vek/NEWc/ivL6KgK3eSEBWv8M5Qtbjg35cCScjvG/LzfQatj75vK0xKMd7h6zjfVsNU4aDZJdAIR65viV6GjWkkBuyq9e3ojtMqzlWcUwjBI34IqgiLgQvzarstzZ5Sy2CFgzfgDtlJFhX5f16efzc9WZHQUIuthz12YBPQLzR1AxSdgVZeJf/sGJpl+k4HHU+gSPziedB9pnwz1MRaSycs3luWNtCGqFZGaFRvy+ragZ0WbkduechhwGWGuY9xmPHHLl6Oo6OWd+23oiUoL4qR+DfyvtZRgTT8MMW2zWImzkgidaA
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ae0c9ac-8def-4235-d4ed-08d811f0fb28
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 12:29:57.2158
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HpA2Ue4y7Pkz2HbLjEd4LRDBGRg69ZoBNfDcWDwrHOUMUDEp1Pg5/zi3RLrfz18hb57eNNNNXBBd7TDvWMX6XA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6509
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/06/20 12:49, Thomas Huth wrote:
-> On 29/05/2020 09.43, Like Xu wrote:
->> When the full-width writes capability is set, use the alternative MSR
->> range to write larger sign counter values (up to GP counter width).
->>
->> Signed-off-by: Like Xu <like.xu@linux.intel.com>
->> ---
->>  lib/x86/msr.h |   1 +
->>  x86/pmu.c     | 125 ++++++++++++++++++++++++++++++++++++++++----------
->>  2 files changed, 102 insertions(+), 24 deletions(-)
-> [...]
->> @@ -452,6 +468,66 @@ static void check_running_counter_wrmsr(void)
->>  	report_prefix_pop();
->>  }
->>  
->> +static void check_counters(void)
->> +{
->> +	check_gp_counters();
->> +	check_fixed_counters();
->> +	check_rdpmc();
->> +	check_counters_many();
->> +	check_counter_overflow();
->> +	check_gp_counter_cmask();
->> +	check_running_counter_wrmsr();
->> +}
->> +
->> +static void do_unsupported_width_counter_write(void *index)
->> +{
->> +	wrmsr(MSR_IA32_PMC0 + *((int *) index), 0xffffff0123456789ull);
->> +}
->> +
->> +static void  check_gp_counters_write_width(void)
->> +{
->> +	u64 val_64 = 0xffffff0123456789ull;
->> +	u64 val_32 = val_64 & ((1ul << 32) - 1);
->  Hi,
-> 
-> this broke compilation on 32-bit hosts:
-> 
->  https://travis-ci.com/github/huth/kvm-unit-tests/jobs/349654654#L710
-> 
-> Fix should be easy, I guess - either use 1ull or specify the mask
-> 0xffffffff directly.
-
-Or
-
-u64 val_32 = (u64)(u32) val_64;
-
-I'll send a patch.
-
-Paolo
-
+On 2020/06/16 18:27 Mark Brown <broonie@kernel.org> wrote:
+> On Tue, Jun 16, 2020 at 10:13:08AM +0000, Robin Gong wrote:
+> > So rename to SPI_TRANS_DMA_FAIL? I think at least DMA is MUST for
+> > fallback case...
+>=20
+> This is not purely for DMA, it's just about the failure having occurred b=
+efore the
+> transfer started.  How about _FAIL_NO_START?
+Okay, I'll use SPI_TRANS_FAIL_NO_START in v2. Thanks Mark for your kind sup=
+port :)
