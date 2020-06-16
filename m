@@ -2,156 +2,103 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F344C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F895C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C7520B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:17:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKp61PCm"
+	by mail.kernel.org (Postfix) with ESMTP id 7825020B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgFPRRn (ORCPT
+        id S1728822AbgFPRTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbgFPRRl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:17:41 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BC9C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:17:41 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id c8so22822287iob.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/vHq52omWlog0YiKhxrpQ9eFFCo1rr88pNsfYob/7tk=;
-        b=kKp61PCmH0YJN59e08g6UWRGA2qPc2SQu2edP+4uWaU5v7dgwA8n2GmMeiSkMb9ev9
-         m7KYESJwHaOcgOrlwbtrLKEP8297fuw8T29I7zFhfjVku208u21q7zo92p0esqHZ9WB/
-         Z9nyiM49patEAHIfL+EYVlJ3U/I7KCcPI/LTTN+xIK4zXU+8+tUMtCL9xRMehHuiavSN
-         nwzKymid8grfAPP+tXu5wJSH55j5DSGeVvq7rH98XqaTl3TJ3yHO0wGGWObRWaEQRPbh
-         aieg2VomUmwc1mBtmISvHA6uB8G9qcxiuitfXLNfqeLkZl7mDRvOUTrJ87Y0QhecJ6mV
-         lKog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/vHq52omWlog0YiKhxrpQ9eFFCo1rr88pNsfYob/7tk=;
-        b=QPbXAU8qyhYSuQnWvk1uvhOorKtosNPua+oPnGccx6HMawsHjSoRyQ9VHly3Azdi8s
-         to6/BzmLMORvVlIcJoWpINzm+Nmxa4H6vV7/qRW1uYVEMT1W4UNx5gI9FXIUHjlMUbCV
-         2bEgJiDdJe/y9Wyh+wiTK5x+P2j3Y23QnSLUZK022MWsMncuWKNAF459kiRhksYnq1Lv
-         irzrdM7K1ECgIytta/X73hdgRcdrlzZQe+ijVjysudKh4UUpxyVJirUWJNLl6CfB0BIy
-         LI38LziG8tvJxK8w9JsbeUC8sKyuQHnXk3iyWAQWucWmimnAUCaDVH3WM35ffdYCcGEP
-         +fhg==
-X-Gm-Message-State: AOAM531/0441pP9FXM2OH6mECynML5YausqxHbbEjLDMSXrI07DygKCk
-        kDggQjCBgTGi6rWzzYr+gXvX5Pz/yu99ZF5qIXdQ+Wk=
-X-Google-Smtp-Source: ABdhPJyif4kUv+iTsQe9xrQHAp5uKjBBJLgDKtVWMJdUjE3F6koyRxNVPEAu+D3aptg4+KCfe14VtIEhdmro3/813rI=
-X-Received: by 2002:a02:896:: with SMTP id 144mr15829689jac.126.1592327860458;
- Tue, 16 Jun 2020 10:17:40 -0700 (PDT)
+        Tue, 16 Jun 2020 13:19:02 -0400
+Received: from mga11.intel.com ([192.55.52.93]:36599 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726630AbgFPRTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:19:01 -0400
+IronPort-SDR: Kb2nRk8r/1qvENrJmyPawleHqzB4tdft2mApEndQCe9uxR06KPXcNV8ZkvpsoUhbXz4NCPIkQi
+ TQ/jBTZp9hDg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 10:19:00 -0700
+IronPort-SDR: HPPTnoVMM9cF4ZrV3z6gERadUOEYz01w9Pc8K1U0rwqGA/pHFooWfUooLD5cImk7Tkjn3gqczO
+ P9u1ee/Ft3xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="298984794"
+Received: from unknown (HELO intel.com) ([10.251.95.102])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Jun 2020 10:18:54 -0700
+Date:   Tue, 16 Jun 2020 20:18:54 +0300
+From:   Andi Shyti <andi.shyti@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
+        jarkko.nikula@linux.intel.com, aaron.ma@canonical.com,
+        admin@kryma.net, benjamin.tissoires@redhat.com,
+        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
+        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, vicamo.yang@canonical.com,
+        wsa@kernel.org
+Subject: Re: [PATCH v2] HID: i2c-hid: Use block reads when possible to save
+ power
+Message-ID: <20200616171854.GA1415@intel.intel>
+References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
+ <20200616154951.3050-1-sultan@kerneltoast.com>
+ <20200616164101.GY2428291@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20200616142315.375918-1-brgerst@gmail.com> <20200616142315.375918-2-brgerst@gmail.com>
- <CALCETrXUjM9g2e5v7chFXWoadvUO_7cqhGvuFn2s7YVpyff__Q@mail.gmail.com>
-In-Reply-To: <CALCETrXUjM9g2e5v7chFXWoadvUO_7cqhGvuFn2s7YVpyff__Q@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Tue, 16 Jun 2020 13:17:29 -0400
-Message-ID: <CAMzpN2jA3rdfCA-UYGEtRPrYCChK1wzHfVUhbrHiqGL3iL4PBA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/x32: Use __x64 prefix for X32 compat syscalls
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616164101.GY2428291@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:49 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Tue, Jun 16, 2020 at 7:23 AM Brian Gerst <brgerst@gmail.com> wrote:
-> >
-> > The ABI prefix for syscalls specifies the argument register mapping, so
-> > there is no specific reason to continue using the __x32 prefix for the
-> > compat syscalls.  This change will allow using native syscalls in the X32
-> > specific portion of the syscall table.
->
-> Okay, I realize that the x86 syscall machinery is held together by
-> duct tape and a lot of luck, but:
->
-> >
-> > Signed-off-by: Brian Gerst <brgerst@gmail.com>
-> > ---
-> >  arch/x86/entry/syscall_x32.c           |  8 +++-----
-> >  arch/x86/include/asm/syscall_wrapper.h | 10 +++++-----
-> >  2 files changed, 8 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/arch/x86/entry/syscall_x32.c b/arch/x86/entry/syscall_x32.c
-> > index 3d8d70d3896c..f993e6254043 100644
-> > --- a/arch/x86/entry/syscall_x32.c
-> > +++ b/arch/x86/entry/syscall_x32.c
-> > @@ -9,15 +9,13 @@
-> >  #include <asm/syscall.h>
-> >
-> >  #define __SYSCALL_64(nr, sym)
-> > +#define __SYSCALL_COMMON(nr, sym) __SYSCALL_X32(nr, sym)
-> >
-> > -#define __SYSCALL_X32(nr, sym) extern long __x32_##sym(const struct pt_regs *);
-> > -#define __SYSCALL_COMMON(nr, sym) extern long __x64_##sym(const struct pt_regs *);
-> > +#define __SYSCALL_X32(nr, sym) extern long __x64_##sym(const struct pt_regs *);
-> >  #include <asm/syscalls_64.h>
-> >  #undef __SYSCALL_X32
-> > -#undef __SYSCALL_COMMON
-> >
-> > -#define __SYSCALL_X32(nr, sym) [nr] = __x32_##sym,
-> > -#define __SYSCALL_COMMON(nr, sym) [nr] = __x64_##sym,
-> > +#define __SYSCALL_X32(nr, sym) [nr] = __x64_##sym,
-> >
-> >  asmlinkage const sys_call_ptr_t x32_sys_call_table[__NR_x32_syscall_max+1] = {
-> >         /*
-> > diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-> > index a84333adeef2..267fae9904ff 100644
-> > --- a/arch/x86/include/asm/syscall_wrapper.h
-> > +++ b/arch/x86/include/asm/syscall_wrapper.h
-> > @@ -17,7 +17,7 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
-> >   * __x64_sys_*()         - 64-bit native syscall
-> >   * __ia32_sys_*()        - 32-bit native syscall or common compat syscall
-> >   * __ia32_compat_sys_*() - 32-bit compat syscall
->
-> On a 64-bit kernel, an "ia32" compat syscall is __ia32_compat_sys_*, but...
->
-> > - * __x32_compat_sys_*()  - 64-bit X32 compat syscall
-> > + * __x64_compat_sys_*()  - 64-bit X32 compat syscall
->
-> Now an x32 compat syscall is __x64_compat?  This seems nonsensical.
+Hi Andy,
 
-Again, think of it as how the registers are mapped, not which syscall
-table it belongs to.  X32 and X64 are identical in that regard.
+> > so the only strategy available up until now has been to always retrieve
+> > the maximum possible report length over i2c, which can be quite
+> > inefficient. For devices that send reports in block read format, the i2c
+> > controller driver can read the payload length on the fly and terminate
+> > the i2c transaction early, resulting in considerable power savings.
+> > 
+> > On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
+> > touchpad causes psys power readings to go up by about 4W and hover there
+> > until I remove my finger. With this patch, my psys readings go from 4.7W
+> > down to 3.1W, yielding about 1.6W in savings. This is because my
+> > touchpad's max report length is 60 bytes, but all of the regular reports
+> > it sends for touch events are only 32 bytes, so the i2c transfer is
+> > roughly halved for the common case.
+> 
+> > +	/* Try to do a block read if the size fits in one byte */
+> > +	flags = size > 255 ? I2C_M_RD : I2C_M_RD | I2C_M_RECV_LEN;
+> 
+> AFAIR SMBus specification tells about 256. Why 255?
+> 
+> Andi, am I correct?
 
-> I'm also a bit confused as to how this is even necessary for your
-> other patch.
+Actually the SMBUS 3.0 protocol from 2015[*] says 255:
 
-This came out of discussion on Cristoph's patch to combine compat
-execve*() into the native version:
-https://lore.kernel.org/lkml/20200615141239.GA12951@lst.de/
+"
+D.6 255 Bytes in Process Call
 
-The bottom line is that marking a syscall as X32-only in the syscall
-table forces an __x32 prefix even if it's not a "compat" syscall.
-This causes a link failure.  This is just another quirk caused by how
-X32 was designed.  The solution is to make the prefix consistent for
-the whole table.  The other alternative is to use __x32 for all the
-common syscalls.
+The maximum number of bytes allowed in the Block Write-Block Read
+Process Call (Section 6.5.8) was increased from 32 to 255.
+"
 
-The second patch isn't really necessary, but it makes more sense to
-not have a compat syscall with no corresponding native version.
+But why does it matter... I see the patch is detatching itself
+from smbus.
 
---
-Brian Gerst
+And, actually, I wonder if this is the right way to fix it, isn't
+it better to fix smbus instead?
+
+I have a patch ready that fixes the smbus transfer size, perhaps
+I should rebase, test and send it.
+
+Andi
+
+[*] http://smbus.org/specs/SMBus_3_0_20141220.pdf
