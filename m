@@ -2,148 +2,139 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3437C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6902C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B64AE206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB2520739
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:25:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b1kHUj6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgFPIYY (ORCPT
+        id S1726833AbgFPIZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:24:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17944 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726064AbgFPIYX (ORCPT
+        Tue, 16 Jun 2020 04:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgFPIZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:24:23 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05G84Qji018983;
-        Tue, 16 Jun 2020 04:24:16 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7ndvy2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 04:24:15 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05G8LeBB022057;
-        Tue, 16 Jun 2020 08:24:13 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7vy52-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 08:24:13 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05G8OBxM3735988
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 08:24:11 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 717AFAE04D;
-        Tue, 16 Jun 2020 08:24:11 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 093F9AE057;
-        Tue, 16 Jun 2020 08:24:11 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.166.233])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Jun 2020 08:24:10 +0000 (GMT)
-Subject: Re: [PATCH V2] powerpc/pseries/svm: Drop unused align argument in
- alloc_shared_lppaca() function
-To:     Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20200612142953.135408-1-sathnaga@linux.vnet.ibm.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <8dea738c-daf7-d327-b9b9-ce1eb053dcec@linux.ibm.com>
-Date:   Tue, 16 Jun 2020 10:24:10 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Tue, 16 Jun 2020 04:25:55 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DC4C05BD43
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:25:55 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r7so19807298wro.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:25:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=07xCk+5jY+yVjJJU7xq7mzkwYJS7vzdNmZHffvaVIG8=;
+        b=b1kHUj6wycATLgHP2T0yk5ebuvDbaMh0SHv3EO3P7pDMzuuXYJW6HMZWVpdQwLm/Z8
+         N0+Yhsobpl7IGNJo9+dWe4cEtOoZZCT4nYLv0qGZy0ySdTxrPx5OgavRJKJDt971Lo9q
+         3s4UDyoO68dySXB/GkSTL3MHwb+qU5Lg33s/SWZJr6+oTvfYvSLL/+x1RpNttp92KZmx
+         6P624mEVTjnrfy+JPMnh7G3eK7RrpJDCsati3oVWCROJZWv3LcHjB4ztn0h1+Fn5rm15
+         jPgq9oBlOUjehpGuIJK49SgqFnYEMq6+OQR9MXDHtvLI4XlA1botlXrUcJFMSoPBH5Se
+         PZzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=07xCk+5jY+yVjJJU7xq7mzkwYJS7vzdNmZHffvaVIG8=;
+        b=GgvoIdabueWUYALKtdAm8AC39mkVxkQsNvNtxhtAHu5EnCS7Suzl6Kzv1w6QzEWm3B
+         fw4d4tY91yw0mdRf8wiRxideGFCyvd4ewDSLrD5JjRV9D9p2KzsVQSY3UY53bdCD5yts
+         4ilYz9K6P90X4JUJ/5UxzK/7EhbLJuamQ8hGVTZUKiGl69LM+LQKhYEeu+mRp5S7Nz8M
+         6ehbXlgxqcKV8HbTu3/lSqbmoDmUuhHzTUsXJ6SgcKpuB3uF19gzLmEXkRLqb7IW73fg
+         ZTC4PhhskZHmmqhTU9GRjhSFLPBiCQTW+ASMSKsAFTCSxEmBzSsUPCTWOwWIXYoXnZHj
+         ZEng==
+X-Gm-Message-State: AOAM533SkUwFfmhjbjvh/eKBZQnnkrPkKiJDvLmBQF4GWnMNuDcYc0we
+        i33aw2JbRnw5BI2VD/bDKmphuiEg6Q4=
+X-Google-Smtp-Source: ABdhPJytHRSw6ChmgjBP9/wCUUzXDWwYWr9dZzrImrRXHR2ZbA+g8UxpOzP42Rf7/PPunUINB/NuTA==
+X-Received: by 2002:adf:8b55:: with SMTP id v21mr1850235wra.187.1592295953987;
+        Tue, 16 Jun 2020 01:25:53 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id q5sm27940039wrm.62.2020.06.16.01.25.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 01:25:53 -0700 (PDT)
+Subject: Re: [RESENDx2][PATCH] sound: qcom: Kconfig: Tweak dependencies on
+ SND_SOC_SDM845
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Cc:     Rohit kumar <rohitkr@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+References: <20200616063417.110263-1-john.stultz@linaro.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <8f7f563b-fae7-e25e-33f2-18c608c338e6@linaro.org>
+Date:   Tue, 16 Jun 2020 09:25:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200612142953.135408-1-sathnaga@linux.vnet.ibm.com>
+In-Reply-To: <20200616063417.110263-1-john.stultz@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-16_02:2020-06-15,2020-06-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 impostorscore=0 malwarescore=0
- cotscore=-2147483648 priorityscore=1501 lowpriorityscore=0 phishscore=0
- spamscore=0 mlxscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006160058
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 12/06/2020 à 16:29, Satheesh Rajendran a écrit :
-> Argument "align" in alloc_shared_lppaca() was unused inside the
-> function. Let's drop it and update code comment for page alignment.
+
+
+On 16/06/2020 07:34, John Stultz wrote:
+> CROS_EC isn't strictly required for audio to work
+> on other SDM845 platforms (like the Dragonboard 845c).
 > 
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> Cc: Ram Pai <linuxram@us.ibm.com>
-> Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-> Cc: Laurent Dufour <ldufour@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> So lets remove the dependency and select the related
+> CROS_EC options if CROS_EC is already enabled.
 
-Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
+Sorry John, totally missed this one out!
 
-> Signed-off-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+> 
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Rohit kumar <rohitkr@codeaurora.org>
+> Cc: Patrick Lai <plai@codeaurora.org>
+> Cc: Banajit Goswami <bgoswami@codeaurora.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > ---
+>   sound/soc/qcom/Kconfig | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> V2:
-> Added reviewed by Thiago.
-> Dropped align argument as per Michael suggest.
-> Modified commit msg.
-> 
-> V1: http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200609113909.17236-1-sathnaga@linux.vnet.ibm.com/
-> ---
->   arch/powerpc/kernel/paca.c | 12 +++++++++---
->   1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-> index 8d96169c597e..a174d64d9b4d 100644
-> --- a/arch/powerpc/kernel/paca.c
-> +++ b/arch/powerpc/kernel/paca.c
-> @@ -57,8 +57,8 @@ static void *__init alloc_paca_data(unsigned long size, unsigned long align,
+> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+> index f51b28d1b94d..0434f2c7d746 100644
+> --- a/sound/soc/qcom/Kconfig
+> +++ b/sound/soc/qcom/Kconfig
+> @@ -99,12 +99,12 @@ config SND_SOC_MSM8996
 >   
->   #define LPPACA_SIZE 0x400
->   
-> -static void *__init alloc_shared_lppaca(unsigned long size, unsigned long align,
-> -					unsigned long limit, int cpu)
-> +static void *__init alloc_shared_lppaca(unsigned long size, unsigned long limit,
-> +					int cpu)
->   {
->   	size_t shared_lppaca_total_size = PAGE_ALIGN(nr_cpu_ids * LPPACA_SIZE);
->   	static unsigned long shared_lppaca_size;
-> @@ -68,6 +68,12 @@ static void *__init alloc_shared_lppaca(unsigned long size, unsigned long align,
->   	if (!shared_lppaca) {
->   		memblock_set_bottom_up(true);
->   
-> +		/* See Documentation/powerpc/ultravisor.rst for mode details
-> +		 *
-> +		 * UV/HV data share is in PAGE granularity, In order to
-> +		 * minimize the number of pages shared and maximize the
-> +		 * use of a page, let's use page align.
-> +		 */
->   		shared_lppaca =
->   			memblock_alloc_try_nid(shared_lppaca_total_size,
->   					       PAGE_SIZE, MEMBLOCK_LOW_LIMIT,
-> @@ -122,7 +128,7 @@ static struct lppaca * __init new_lppaca(int cpu, unsigned long limit)
->   		return NULL;
->   
->   	if (is_secure_guest())
-> -		lp = alloc_shared_lppaca(LPPACA_SIZE, 0x400, limit, cpu);
-> +		lp = alloc_shared_lppaca(LPPACA_SIZE, limit, cpu);
->   	else
->   		lp = alloc_paca_data(LPPACA_SIZE, 0x400, limit, cpu);
->   
-> 
+>   config SND_SOC_SDM845
+>   	tristate "SoC Machine driver for SDM845 boards"
+> -	depends on QCOM_APR && CROS_EC && I2C && SOUNDWIRE
+> +	depends on QCOM_APR && I2C && SOUNDWIRE
+>   	select SND_SOC_QDSP6
+>   	select SND_SOC_QCOM_COMMON
+>   	select SND_SOC_RT5663
+>   	select SND_SOC_MAX98927
+> -	select SND_SOC_CROS_EC_CODEC
+> +	select SND_SOC_CROS_EC_CODEC if CROS_EC
 
+Isn't "imply SND_SOC_CROS_EC_CODEC" better option here?
+
+--srini
+
+>   	help
+>   	  To add support for audio on Qualcomm Technologies Inc.
+>   	  SDM845 SoC-based systems.
+> 
