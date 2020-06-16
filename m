@@ -2,104 +2,107 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B876C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C781CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F362221527
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322821;
-	bh=WnTyGsaaTwpglz9AY7FVbY8tX7Y+mXaO6yC61jXM2eM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y4IJ1jHX2DTHX9zwAl8eAhBz16Svj8Zh1SdKs8SjxOr2YpR1aCXMHkERAWqRGai4l
-	 beWIZkIOsZToRN6zF3i9j+raNw453FumnKHad3AZcpYeQXKNXPZGmIHKIu3TTzuODu
-	 6X9+5wtb3PuexqkWyRpoMBXQi5HKtHYV1Dwx2qRk=
+	by mail.kernel.org (Postfix) with ESMTP id AC7C4208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732889AbgFPPxj (ORCPT
+        id S1732893AbgFPPxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:53:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51760 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:53:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18167 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729166AbgFPPxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:53:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81579208D5;
-        Tue, 16 Jun 2020 15:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322810;
-        bh=WnTyGsaaTwpglz9AY7FVbY8tX7Y+mXaO6yC61jXM2eM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvKYFsrQ4WOaYKDMxTyvnLK7mk6LgvgnfNglGoPh3yM7c5ZaumshuS0V3sWV55GYK
-         J58a06867tOsH5My262TEHNiT0Icf/Wp3VHbECO55kz1/RZFfK8Mt09MhKc9IBquNK
-         rjUpHwi45nnRQ5XLyyIl72uzhO+WPZC+brkZiUlo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 113/161] net: macb: Only disable NAPI on the actual error path
-Date:   Tue, 16 Jun 2020 17:35:03 +0200
-Message-Id: <20200616153111.738712796@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
-References: <20200616153106.402291280@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1732872AbgFPPxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:31 -0400
+IronPort-SDR: +GX5zpiKg9S70I6vLwu+9LKaHWE1FICZvpwX5a88odMu1LNRaOBQaDftpfDB7l72wXaQUp+wpB
+ AggKvKFV2nYQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 08:53:31 -0700
+IronPort-SDR: 32dYBv2owofkmcFcC7+eD2fGm3/30Ysrb7wMsXvpee2tni0E9LmWtycV6fkzvVYPdHFs1wWz6G
+ BQ3nJS/V03GQ==
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="308499265"
+Received: from smtp.ostc.intel.com ([10.54.29.231])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 08:53:31 -0700
+Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
+        by smtp.ostc.intel.com (Postfix) with ESMTP id 638986367;
+        Tue, 16 Jun 2020 08:53:31 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 08:53:31 -0700
+From:   mark gross <mgross@linux.intel.com>
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] doc: x86/speculation: length of underlines
+Message-ID: <20200616155331.GA28297@mtg-dev.jf.intel.com>
+Reply-To: mgross@linux.intel.com
+References: <20200615203645.11545-1-xypron.glpk@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615203645.11545-1-xypron.glpk@gmx.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
++1
+reviewed-by: Mark Gross<mgross@linux.intel.com>
 
-[ Upstream commit 939a5bf7c9b7a1ad9c5d3481c93766a522773531 ]
+Thanks!
 
-A recent change added a disable to NAPI into macb_open, this was
-intended to only happen on the error path but accidentally applies
-to all paths. This causes NAPI to be disabled on the success path, which
-leads to the network to no longer functioning.
-
-Fixes: 014406babc1f ("net: cadence: macb: disable NAPI on error")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Tested-by: Corentin Labbe <clabbe@baylibre.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/cadence/macb_main.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -2552,15 +2552,14 @@ static int macb_open(struct net_device *
- 	if (bp->ptp_info)
- 		bp->ptp_info->ptp_init(dev);
- 
-+	return 0;
-+
- napi_exit:
- 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
- 		napi_disable(&queue->napi);
- pm_exit:
--	if (err) {
--		pm_runtime_put_sync(&bp->pdev->dev);
--		return err;
--	}
--	return 0;
-+	pm_runtime_put_sync(&bp->pdev->dev);
-+	return err;
- }
- 
- static int macb_close(struct net_device *dev)
+--mark
 
 
+On Mon, Jun 15, 2020 at 10:36:45PM +0200, Heinrich Schuchardt wrote:
+> The lengths of underlines must match the titles to avoid build warnings.
+> 
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> ---
+>  .../hw-vuln/special-register-buffer-data-sampling.rst       | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
+> index 47b1b3afac99..3b1ce68d2456 100644
+> --- a/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
+> +++ b/Documentation/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst
+> @@ -14,7 +14,7 @@ to the core through the special register mechanism that is susceptible
+>  to MDS attacks.
+> 
+>  Affected processors
+> ---------------------
+> +-------------------
+>  Core models (desktop, mobile, Xeon-E3) that implement RDRAND and/or RDSEED may
+>  be affected.
+> 
+> @@ -59,7 +59,7 @@ executed on another core or sibling thread using MDS techniques.
+> 
+> 
+>  Mitigation mechanism
+> --------------------
+> +--------------------
+>  Intel will release microcode updates that modify the RDRAND, RDSEED, and
+>  EGETKEY instructions to overwrite secret special register data in the shared
+>  staging buffer before the secret data can be accessed by another logical
+> @@ -118,7 +118,7 @@ with the option "srbds=".  The option for this is:
+>    ============= =============================================================
+> 
+>  SRBDS System Information
+> ------------------------
+> +------------------------
+>  The Linux kernel provides vulnerability status information through sysfs.  For
+>  SRBDS this can be accessed by the following sysfs file:
+>  /sys/devices/system/cpu/vulnerabilities/srbds
+> --
+> 2.27.0
+> 
