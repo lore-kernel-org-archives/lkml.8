@@ -2,119 +2,157 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B436CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E3120707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8277020707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:29:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wPEIR5HB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f9UhGvPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgFPJ2E (ORCPT
+        id S1728070AbgFPJ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:28:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFPJ2D (ORCPT
+        Tue, 16 Jun 2020 05:29:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31772 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725843AbgFPJ3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:28:03 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88914C05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:28:02 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bh7so8119934plb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:28:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XdcE3h12ioGr+7hsW5IVLEYOXezdbxNAFqbfrmJLRSE=;
-        b=wPEIR5HB/ax8TnnqwOu3J6pC5s+9o0t3fzwRMbe0RIKWhsaPFHD1lqrV2tFTrsClYy
-         fXJkkXXdUZRoLueisJyweahorxY75fMc3H0ThyA1LxjDI73N17olVG41cQQCKCdd0O+h
-         r7CUz9eI4ZVzMpTIFpSxI0mIPvhl8qO85r/XMjg22vS3Ov3d8uAg7JEEGXGLqFjbB4jM
-         +jLlfrPxEuG6Ujf7eDhe/obXkCYuFKN6vvjJFb7tzS1cRU7lDb/sEr2/4Fm9k7wR0Jez
-         0SBvCXqtCJGTsyc0ZpZhkEPxr1q62rjUaEbuxcB+tb+lozLn/3eymIlUzcXcG3n+Gnye
-         0aRw==
+        Tue, 16 Jun 2020 05:29:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592299779;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=w27PppGCNHa7BlqB4ZmBJJKBjKDuXsEEjvN7xI5y/wY=;
+        b=f9UhGvPhZPB3NFWEx7qgkmiuRDi09eOM5p2E9k3BLaB3nVuFiSVLCA7/G/rp8dlUM0Osu4
+        vogan1aywmtAAEoQCvNY+th5PfbLI2atXnCkmMf8DyjBvkf1wwq/XXBiwEZO+BHlsF9pK1
+        Q1rKpYwS39PzoT02H+QvL65BgDZeTI4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-501-FaA1qR56OCWHhYSP1STpGw-1; Tue, 16 Jun 2020 05:29:38 -0400
+X-MC-Unique: FaA1qR56OCWHhYSP1STpGw-1
+Received: by mail-ej1-f70.google.com with SMTP id a20so9135839ejt.19
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:29:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XdcE3h12ioGr+7hsW5IVLEYOXezdbxNAFqbfrmJLRSE=;
-        b=LDJ1wS3F+SeNSDSVwiA6ZBnlPwtpYg68/LQKDgVVvBx9e0p+tVnPZwhPQekAAxN7jC
-         8bjNI/uVvwoE1T3RQ74d+q0UjgOFCGcXHiO/nJUwpTJHxjn2yIoSLXEgzfqXRjv7cjDc
-         +dTanKbXVzUQ+5rQl6Q5wnMkGF3bqBNRifycYMKjFXinsHT365nw14pVWwbsNxozwv92
-         hphzjgCXiZY5Hk46zeElml9/DiO6cR8W2GIpYFSrxBXoLsyEp6xuhrEp+PJKIyXHS8Hr
-         ixiwDq9/mMC09IG3vKJly/gs0w/Atmx27gTBfCvqNOH8Y2GYEeciKde8m+u5GTuiEuXf
-         ONsQ==
-X-Gm-Message-State: AOAM5315AwfLJfQ+kUhj8q5lsmqG8l1GFqmykaziwsFVtFkxdfTsybdG
-        JcX8Ke1QxjbdMoOrlk1kjze66w==
-X-Google-Smtp-Source: ABdhPJwsq5ESQOf7eSEAjznxqn8WuPCsn7fjszcUwCqSP6x8q4k9NAQZ5Lzj/jzTj5RJh+yG7ZljTA==
-X-Received: by 2002:a17:90a:39ce:: with SMTP id k14mr1903225pjf.39.1592299681986;
-        Tue, 16 Jun 2020 02:28:01 -0700 (PDT)
-Received: from localhost ([122.172.119.132])
-        by smtp.gmail.com with ESMTPSA id n4sm17088638pfq.9.2020.06.16.02.28.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 02:28:01 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 14:57:59 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Quentin Perret <qperret@google.com>
-Cc:     rjw@rjwysocki.net, rafael@kernel.org, arnd@arndb.de,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org
-Subject: Re: [PATCH 2/2] cpufreq: Specify default governor on command line
-Message-ID: <20200616092759.rjnk3lef4tedfust@vireshk-i7>
-References: <20200615165554.228063-1-qperret@google.com>
- <20200615165554.228063-3-qperret@google.com>
- <20200616043143.obk5k3rv737j5dnd@vireshk-i7>
- <20200616083107.GA122049@google.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=w27PppGCNHa7BlqB4ZmBJJKBjKDuXsEEjvN7xI5y/wY=;
+        b=lewu9r9bHeynuddv2pu4mAmqOtE3YbPqc5vps8pZgVAU3/mxye/iffM3oviXqck4Nl
+         Me78nlZx2LUlG5oH7hCyxBDNu7LwoSfS6JtNT0U1tRFCRshYNdYeSPXN77E9IyiqrOXx
+         fLAmj5B7KWuKVNprU26JP/ESU5vHOODXfpH0K03FgX7ZseI6DrO4WYDn+B8pxDt0WlWB
+         pOYz9sN0I9L5SBEweEqbT42eBlfQ7VHbWulpVBfw8Duntp1i16tLLemv8fUtRI67+Mbu
+         pgJubF/dLrgcJXQ3x3P2iIV4B2/W7fJWGknX4OR2iWS4oAaMGBL2QQgBrSlE5KY6pFtZ
+         mJvg==
+X-Gm-Message-State: AOAM531nPHi9uhnM6SiWxwZ7tdYhzAcnK3gGJgQ3HSlZPupfNjIZfTbn
+        jyx0c654Q5m1olhx4PuFyZjTbqVYnDQxwrcrwlXGmuJc6CRLooI7G3Q43RqQfPzsXlhOPOO/Fsn
+        hpugE+3dLD3ptsCUk41iVi2cH
+X-Received: by 2002:a50:a661:: with SMTP id d88mr1750436edc.34.1592299775724;
+        Tue, 16 Jun 2020 02:29:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx7r8cYFV60rjN5o4yKdkb8nWDxUEa81BhQvUY5yHr8NVP+hKyKpOqlSIbnDs5cmA4czkq4Yg==
+X-Received: by 2002:a50:a661:: with SMTP id d88mr1750417edc.34.1592299775484;
+        Tue, 16 Jun 2020 02:29:35 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id b26sm10694420eju.6.2020.06.16.02.29.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 02:29:34 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>, Christoph Hellwig <hch@lst.de>
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Ju-Hyoung Lee <juhlee@microsoft.com>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: RE: hv_hypercall_pg page permissios
+In-Reply-To: <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+References: <20200407073830.GA29279@lst.de> <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net> <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <87y2ooiv5k.fsf@vitty.brq.redhat.com> <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+Date:   Tue, 16 Jun 2020 11:29:33 +0200
+Message-ID: <87blljicjm.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616083107.GA122049@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-06-20, 09:31, Quentin Perret wrote:
-> Right, so the reason I avoided cpufreq_core_init() was because it is
-> called at core_initcall() time, which means I can't really assume the
-> governors have been loaded by that time. By waiting for the driver to
-> probe before detecting the default gov, we get that nice ordering. But
-> yes, it feels odd to have it here :/
-> 
-> Thinking about it more, the natural fit for this would rather be the
-> register/unregister path for governors directly. If that sounds good to
-> you (?) I'll try to move it there in v2.
+Dexuan Cui <decui@microsoft.com> writes:
 
-There is another problem here which we need to look at. Any governor
-which is built as a module and isn't currently used, should be allowed
-to unload. And this needs to be tested by you as well, should be easy
-enough.
+>> From: linux-hyperv-owner@vger.kernel.org
+>> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Dexuan Cui
+>> Sent: Monday, June 15, 2020 10:42 AM
+>> > >
+>> > > Hi hch,
+>> > > The patch is merged into the mainine recently, but unluckily we noticed
+>> > > a warning with CONFIG_DEBUG_WX=y
+>> > >
+>> > > Should we revert this patch, or figure out a way to ask the DEBUG_WX
+>> > > code to ignore this page?
+>> >
+>> > Are you sure it is hv_hypercall_pg?
+>> Yes, 100% sure. I printed the value of hv_hypercall_pg and and it matched the
+>> address in the warning line " x86/mm: Found insecure W+X mapping at
+>> address".
+>
+> I did this experiment:
+>   1. export vmalloc_exec and ptdump_walk_pgd_level_checkwx.
+>   2. write a test module that calls them.
+>   3. It turns out that every call of vmalloc_exec() triggers such a warning.
+>
+> vmalloc_exec() uses PAGE_KERNEL_EXEC, which is defined as
+>    (__PP|__RW|   0|___A|   0|___D|   0|___G)
+>
+> It looks the logic in note_page() is: for_each_RW_page, if the NX bit is unset,
+> then report the page as an insecure W+X mapping. IMO this explains the
+> warning?
 
-With the current implementation, you take a reference to the default
-governor when the driver is registered and drop it only when the
-driver goes away. Which means we won't be able to unload the module of
-the governor even if it isn't used. Which is wrong. The solution I
-proposed had the same issue as well.
+Yea, bummer.
 
-You need to figure out a way where we don't need to keep holding the
-module hostage even when it isn't used. I see two ways at least for
-the same:
+it seems we need something like PAGE_KERNEL_READONLY_EXEC but we don't
+seem to have one on x86. Hypercall page is special in a way that the
+guest doesn't need to write there at all. vmalloc_exec() seems to have
+only one other user on x86: module_alloc() and it has other needs. On
+ARM, alloc_insn_page() does the following:
 
-- Do that from the existing place: cpufreq_init_policy().
+arch/arm64/kernel/probes/kprobes.c:     page = vmalloc_exec(PAGE_SIZE);
+arch/arm64/kernel/probes/kprobes.c-     if (page) {
+arch/arm64/kernel/probes/kprobes.c-             set_memory_ro((unsigned long)page, 1);
+arch/arm64/kernel/probes/kprobes.c-             set_vm_flush_reset_perms(page);
+arch/arm64/kernel/probes/kprobes.c-     }
 
-- And I think this can be done from governor-register/unregister as
-  well.
+What if we do the same? (almost untested):
 
-Second one sounds good, if it is feasible to do that.
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index e2137070386a..31aadfea589b 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -23,6 +23,7 @@
+ #include <linux/kernel.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/syscore_ops.h>
++#include <linux/set_memory.h>
+ #include <clocksource/hyperv_timer.h>
+ 
+ void *hv_hypercall_pg;
+@@ -383,6 +384,8 @@ void __init hyperv_init(void)
+                wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+                goto remove_cpuhp_state;
+        }
++       set_memory_ro((unsigned long)hv_hypercall_pg, 1);
++       set_vm_flush_reset_perms(hv_hypercall_pg);
+ 
+        rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+        hypercall_msr.enable = 1;
 
 -- 
-viresh
+Vitaly
+
