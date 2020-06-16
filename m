@@ -2,52 +2,51 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F83AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C57C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5182071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE292071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323349;
-	bh=u5N459dcvBlfL8RvNPYveLVl7hbu5p0YY7+pQOJb8UA=;
+	s=default; t=1592323352;
+	bh=tm5emzIZe1eyeA5dlv4d4lUnsTh7XE+ZpULMTA+WaiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LkADEorNK310wggloS1MOM7MdttZrllziywEry9vVHs1HcNBkTeDyUpzlcyot1u3q
-	 IXeNETKFR73s1RCfTUcgFepkPPidnY4bnkDvA5SBA0DR6PLvEZCpWer0Gz+JNgu/Or
-	 2I+7MdXdE+m388KmfjfcCNbr4+Ozre2LZTPPxIco=
+	b=FJli4K8feimZBN38toxRpq/58cfvB/au1+E/TrV7k15Lj9cC+AeES6MG5cecnIQO+
+	 qUcsbI5mYEPyZVBA7gpJSSPvjnuy7fix7ZO2J4aOZzMATeTn3rMIATBq8e10cRpePb
+	 +A1G0HO7sQfNKxtLeV6iwVAedLHwm0yopxjQkAjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733184AbgFPQCY (ORCPT
+        id S1732915AbgFPQCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48060 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:02:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732502AbgFPPv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:51:29 -0400
+        id S1732496AbgFPPvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:51:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE9E214DB;
-        Tue, 16 Jun 2020 15:51:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1080C214DB;
+        Tue, 16 Jun 2020 15:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322689;
-        bh=u5N459dcvBlfL8RvNPYveLVl7hbu5p0YY7+pQOJb8UA=;
+        s=default; t=1592322681;
+        bh=tm5emzIZe1eyeA5dlv4d4lUnsTh7XE+ZpULMTA+WaiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FTWO9F7PdfNt1Jo7z5UHh+j4VGSd7JUbcNUz9hqn2tbkVW/pELVWRm6Fdq1gbLEWP
-         SCGTbSxAm1amlLLe0fCED68KT6rhNYYOTN1eUtBajt/gT8liZLyRVwnT18C3yz4ROJ
-         0D8zynBxcR6gebBXTJe6BCOErIT0JZcaNDPc15oE=
+        b=upHbOABkb5iRfPHIo1+hLOhUhT2KznMXtTqCfjsyQ4K+dJLMNNVnHHgUfVu05oN9b
+         rxmLOaJjaFzArhP2PQcgJ5wbmUlNpzaDKY71gzG4P5cq44NhKMzNeef9CbeM0JXqwU
+         cmZ7P1lZ70fdTzHfZyS1YYPxueR3ApONiI0ivMu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 035/161] RDMA/uverbs: Make the event_queue fds return POLLERR when disassociated
-Date:   Tue, 16 Jun 2020 17:33:45 +0200
-Message-Id: <20200616153108.060622517@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Dobias <dobias@2n.cz>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.6 061/161] ASoC: max9867: fix volume controls
+Date:   Tue, 16 Jun 2020 17:34:11 +0200
+Message-Id: <20200616153109.282503835@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,40 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Pavel Dobias <dobias@2n.cz>
 
-[ Upstream commit eb356e6dc15a30af604f052cd0e170450193c254 ]
+commit 8ba4dc3cff8cbe2c571063a5fd7116e8bde563ca upstream.
 
-If is_closed is set, and the event list is empty, then read() will return
--EIO without blocking. After setting is_closed in
-ib_uverbs_free_event_queue(), we do trigger a wake_up on the poll_wait,
-but the fops->poll() function does not check it, so poll will continue to
-sleep on an empty list.
+The xmax values for Master Playback Volume and Mic Boost
+Capture Volume are specified incorrectly (one greater)
+which results in the wrong dB gain being shown to the user
+in the case of Master Playback Volume.
 
-Fixes: 14e23bd6d221 ("RDMA/core: Fix locking in ib_uverbs_event_read")
-Link: https://lore.kernel.org/r/0-v1-ace813388969+48859-uverbs_poll_fix%25jgg@mellanox.com
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Pavel Dobias <dobias@2n.cz>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200515120757.24669-1-dobias@2n.cz
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/core/uverbs_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/codecs/max9867.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index 1bab8de14757..b94572e9c24f 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -296,6 +296,8 @@ static __poll_t ib_uverbs_event_poll(struct ib_uverbs_event_queue *ev_queue,
- 	spin_lock_irq(&ev_queue->lock);
- 	if (!list_empty(&ev_queue->event_list))
- 		pollflags = EPOLLIN | EPOLLRDNORM;
-+	else if (ev_queue->is_closed)
-+		pollflags = EPOLLERR;
- 	spin_unlock_irq(&ev_queue->lock);
+--- a/sound/soc/codecs/max9867.c
++++ b/sound/soc/codecs/max9867.c
+@@ -46,13 +46,13 @@ static const SNDRV_CTL_TLVD_DECLARE_DB_R
  
- 	return pollflags;
--- 
-2.25.1
-
+ static const struct snd_kcontrol_new max9867_snd_controls[] = {
+ 	SOC_DOUBLE_R_TLV("Master Playback Volume", MAX9867_LEFTVOL,
+-			MAX9867_RIGHTVOL, 0, 41, 1, max9867_master_tlv),
++			MAX9867_RIGHTVOL, 0, 40, 1, max9867_master_tlv),
+ 	SOC_DOUBLE_R_TLV("Line Capture Volume", MAX9867_LEFTLINELVL,
+ 			MAX9867_RIGHTLINELVL, 0, 15, 1, max9867_line_tlv),
+ 	SOC_DOUBLE_R_TLV("Mic Capture Volume", MAX9867_LEFTMICGAIN,
+ 			MAX9867_RIGHTMICGAIN, 0, 20, 1, max9867_mic_tlv),
+ 	SOC_DOUBLE_R_TLV("Mic Boost Capture Volume", MAX9867_LEFTMICGAIN,
+-			MAX9867_RIGHTMICGAIN, 5, 4, 0, max9867_micboost_tlv),
++			MAX9867_RIGHTMICGAIN, 5, 3, 0, max9867_micboost_tlv),
+ 	SOC_SINGLE("Digital Sidetone Volume", MAX9867_SIDETONE, 0, 31, 1),
+ 	SOC_SINGLE_TLV("Digital Playback Volume", MAX9867_DACLEVEL, 0, 15, 1,
+ 			max9867_dac_tlv),
 
 
