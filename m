@@ -2,82 +2,94 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B03C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8355AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0C620739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:20:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="zwqQ/g3X"
+	by mail.kernel.org (Postfix) with ESMTP id 64135207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbgFPWU4 (ORCPT
+        id S1726381AbgFPWVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:20:56 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:39715 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgFPWU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:20:56 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id b14129e7;
-        Tue, 16 Jun 2020 22:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=RQicizWyLHOE2iCPPK+/7SOXm9U=; b=zwqQ/g
-        3Xq/tR7g2fHoBQXiJS3CWnnxoDeJkGT47tGoxmHOECjg2pvQJPYNo/Ejq0CvHM1o
-        NCmge4rzYj7J/eHj9zJSeCG2eCkYQL9HaXTBeZrPxQo/3F7GTUifv5/bO4a4v1Ud
-        tX/Z6mwcr0ATqWjJ5YOhLIS4J3U4wYUmcvjLJYoTjsmMdQqd2L5YBxtCdTOUFHKq
-        mTD5KglvYfKuW154UJWyquve3RxyAMu6/S9EDsGIU4oyJc7XHMpgyuPBZdABo96n
-        hzaxhz0tYYJKgIhXTZEKROYDp4gxesLOTbEKAPzbpWOQ+zn5bn7B9Bm251JldpEA
-        sspq8gtWfQRzWYpw==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 86c41781 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 16 Jun 2020 22:02:52 +0000 (UTC)
-Received: by mail-io1-f41.google.com with SMTP id y5so363070iob.12;
-        Tue, 16 Jun 2020 15:20:53 -0700 (PDT)
-X-Gm-Message-State: AOAM531ciYCogHcehdyvkF/zUX9H3htBgXM5v4q+IUrAQuVcj3yfD3j8
-        iGpaLijqzXNdCQn2yewxtt+WsVcL9wzULYt4FHs=
-X-Google-Smtp-Source: ABdhPJzh/Fg/J98wbBnb2dT30/tZcvAhpbVxMckFzIR66mY0R34JuTMP4lkUQFiOJY295tUKmsjnNdvjO8f57XidyrQ=
-X-Received: by 2002:a05:6638:216f:: with SMTP id p15mr28530779jak.86.1592346052223;
- Tue, 16 Jun 2020 15:20:52 -0700 (PDT)
+        Tue, 16 Jun 2020 18:21:10 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6347 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725790AbgFPWVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:21:09 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 272BA9D6BAD4017319D4;
+        Wed, 17 Jun 2020 06:21:07 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.203.10) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 17 Jun 2020 06:20:58 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <nsaenzjulienne@suse.de>, <steve.capper@arm.com>,
+        <rppt@linux.ibm.com>, <akpm@linux-foundation.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
+Date:   Wed, 17 Jun 2020 10:19:24 +1200
+Message-ID: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-References: <CAHmME9rmAznrAmEQTOaLeMM82iMFTfCNfpxDGXw4CJjuVEF_gQ@mail.gmail.com>
- <20200615104332.901519-1-Jason@zx2c4.com>
-In-Reply-To: <20200615104332.901519-1-Jason@zx2c4.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 16 Jun 2020 16:20:41 -0600
-X-Gmail-Original-Message-ID: <CAHmME9oemScgo2mg8fzqtJCbKJfu-op0WvG5RcpBCS1hHNmpZw@mail.gmail.com>
-Message-ID: <CAHmME9oemScgo2mg8fzqtJCbKJfu-op0WvG5RcpBCS1hHNmpZw@mail.gmail.com>
-Subject: Re: [PATCH] acpi: disallow loading configfs acpi tables when locked down
-To:     Len Brown <lenb@kernel.org>, rjw@rjwysocki.net
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.203.10]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael, Len,
+hugetlb_cma_reserve() is called at the wrong place. numa_init has not been
+done yet. so all reserved memory will be located at node0.
 
-Looks like I should have CC'd you on this patch. This is probably
-something we should get into 5.8-rc2, so that it can then get put into
-stable kernels, as some people think this is security sensitive.
-Bigger picture is this:
+Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ -v2: add Fixes tag according to Matthias Brugger's comment
 
-https://data.zx2c4.com/american-unsigned-language-2.gif
-https://data.zx2c4.com/american-unsigned-language-2-fedora-5.8.png
+ arch/arm64/mm/init.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Also, somebody mentioned to me that Microsoft's ACPI implementation
-disallows writes to system memory as a security mitigation. I haven't
-looked at what that actually entails, but I wonder if entirely
-disabling support for ACPI_ADR_SPACE_SYSTEM_MEMORY would be sensible.
-I haven't looked at too many DSDTs. Would that break real hardware, or
-does nobody do that? Alternatively, the range of acceptable addresses
-for SystemMemory could exclude kernel memory. Would that break
-anything? Have you heard about Microsoft's mitigation to know more
-details on what they figured out they could safely restrict without
-breaking hardware? Either way, food for thought I suppose.
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index e631e6425165..41914b483d54 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
+ 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+ 
+ 	dma_contiguous_reserve(arm64_dma32_phys_limit);
+-
+-#ifdef CONFIG_ARM64_4K_PAGES
+-	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+-#endif
+-
+ }
+ 
+ void __init bootmem_init(void)
+@@ -424,6 +419,11 @@ void __init bootmem_init(void)
+ 	min_low_pfn = min;
+ 
+ 	arm64_numa_init();
++
++#ifdef CONFIG_ARM64_4K_PAGES
++	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
++#endif
++
+ 	/*
+ 	 * Sparsemem tries to allocate bootmem in memory_present(), so must be
+ 	 * done after the fixed reservations.
+-- 
+2.23.0
 
-Jason
+
