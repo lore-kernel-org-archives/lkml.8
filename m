@@ -2,118 +2,105 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17730C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F9320679
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E721120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cDN3DzBN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R71t+nJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgFPOxQ (ORCPT
+        id S1729576AbgFPOxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:53:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38074 "EHLO
+        Tue, 16 Jun 2020 10:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729005AbgFPOxO (ORCPT
+        with ESMTP id S1729005AbgFPOxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:53:14 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88B7C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 07:53:14 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id cv17so9576641qvb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 07:53:14 -0700 (PDT)
+        Tue, 16 Jun 2020 10:53:48 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD08C061573;
+        Tue, 16 Jun 2020 07:53:47 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id m2so1705119pjv.2;
+        Tue, 16 Jun 2020 07:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H9Q21GJcnralnv81ky+DYZCuyhzGkXe+xlvLrhcRUVI=;
-        b=cDN3DzBNq5d3CrdALYsiOTFh73YRcI8lQ7uTSznJPv8dAJPnHjJPQR57lcTVwcL/Fu
-         tV3NTbV5GNoBVgT5Y9FK7M+PwBjksAzlKvZZnxf+Qkd/PqTbrIdNSIbQI4xY6GgG5IkN
-         2i29pdJFycDxjY2QVTv0QiEB95VIbTnGIGt0UTkJ1Csd3R+WgZXFN5sle6nrM8u0InPD
-         03ylAeGN5+aJZmvaChOTyf6V/AGcN+wyw9nUErW3py9ORSzNIR2Kd+m+VbjIZ7U5Y8CF
-         +bk0T6Aw1wPbeMExKzclzBgPz36VephSSjSjX1HFVeLmX9lSoGuhN4yVL+U6sHPpHMa8
-         lzug==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UoptLBBgAk/std92D5cqMRyl+scwvvQ9fYGAtvKkiyI=;
+        b=R71t+nJNQ2Dd7ooQZUTFArV6914oWMKXYFLPE0IrHug8N99lM+lc8etWGAsw8eo0gG
+         aUToVkUwR+VGxgmLsqmv78tDmENaxd04BJhlFIRmMmGVDTzbpnp9w0JefmoHmtqXIzyd
+         Ts7sOaaWNUDNtNsXhwvHO8MV/AajsYtowQuCs6KM89/ryIUBmXOCA0tgf7biBfbrhCOj
+         QFK/Lmh46KICRF8vdR/i+VHEbUE5Zul0J/PMj9Fkr+N2NluK7UMn5LX1t1Cs70+leqev
+         YDSn5MwYjVtygxIUruou1uuo8FapWO3WJPxb12sLrY/PPdgWUCfKNrm7paDl+9lVzUIk
+         vmkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H9Q21GJcnralnv81ky+DYZCuyhzGkXe+xlvLrhcRUVI=;
-        b=DeQArmK/f7+N2KOizcQz+a12f7Dw2+G8ohdzzh9OWfUkyismNK3ZUqjDIzxwb3N1uB
-         Xin41MKDrq8mkOv67lBLDMS7M2I4yCIct58R0j+0g0gltfCwdYSNK1y2ifsmi/g1yrWM
-         bX3FOmJ4sMr2HaII1yB+oTmlYkxTzvNh2ID++uakZ82LRGR0kviF8aTN/KTk+Nh1ywGw
-         zBrIBGKlHbKfL3FrA7WUNFv6V8xBSVEcOpccNgzCBZWq0SExRCvSnuziXwNh+mXXWZC2
-         aMv3cQLk+E0mmcQVdynMmSEcwThtGdWByT3qXxDYrzjqa+m3AsVgjF9jcxFzw12HVbZq
-         9VQA==
-X-Gm-Message-State: AOAM531XSCs6d+k/E88+s9tex/7fRF8x7ArhBMNvW1+67OGmCBXbUZSR
-        LscdDu1rMsdsyUqY3Beo1sobLw==
-X-Google-Smtp-Source: ABdhPJzP5DGSQb5Sh+luEoCiwZvsmX+7FP3MYwRCXpBsltvvGKDh3l1qc0mmf+FYXhbSQFkMBoXxZQ==
-X-Received: by 2002:a0c:e9cd:: with SMTP id q13mr2731630qvo.23.1592319193724;
-        Tue, 16 Jun 2020 07:53:13 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id g9sm14433034qtq.66.2020.06.16.07.53.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 07:53:13 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jlCxc-0096j7-MB; Tue, 16 Jun 2020 11:53:12 -0300
-Date:   Tue, 16 Jun 2020 11:53:12 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        linux-media@vger.kernel.org,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200616145312.GC6578@ziepe.ca>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch>
- <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
- <20200611083430.GD20149@phenom.ffwll.local>
- <20200611141515.GW6578@ziepe.ca>
- <20200616120719.GL20149@phenom.ffwll.local>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UoptLBBgAk/std92D5cqMRyl+scwvvQ9fYGAtvKkiyI=;
+        b=Bmz1gePnzKB8uU/zpBnaIKpOoI5cwZX35m26mpLRGcQ0LVnfvKW4aiySK0urJOHkdt
+         XlvRMvYhMosH9AzTkulKDn/kgaCajAXDHe9FGBhvRAxq0HrtondJvM8JP4eoHATVxYv6
+         zcNfuqqJI5w+1gRhR2LZJTw9rFHwRRVKE/NlOho0SB7uZzkInKrJ09KR6uBqUc5BoZYQ
+         mBxWJbB4tYX8tGjwJzuJkPcUxuGm/u48CjrvIbk42ZXmuVy8BwYYiIXEcOLFAxOHTFO/
+         VbkjV2zuQAweXhJDAqg7Mz0MiIQfW94Rlp5+FiG/jlmnHe5uDa0+F+qT4f0f6EgvkzuV
+         P3Tg==
+X-Gm-Message-State: AOAM5328LxAqycsZtqV677qW4n5w2oQm1VMSv97usKGLZEUEpA6VeiGn
+        UittSuv2R4Kfwf1mE9YK5cY8py1E
+X-Google-Smtp-Source: ABdhPJycihT/ot/1nv31K2gqbVmj4sNnebfZ9RGjX+AIgMRHoaH3+MHJzTrk/ETFMJ0oTxejXtDACg==
+X-Received: by 2002:a17:90a:39ce:: with SMTP id k14mr3184517pjf.39.1592319226546;
+        Tue, 16 Jun 2020 07:53:46 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id b5sm2850077pjz.34.2020.06.16.07.53.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 07:53:45 -0700 (PDT)
+Subject: Re: [PATCH] e1000e: add ifdef to avoid dead code
+To:     Greg Thelen <gthelen@google.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vitaly Lifshits <vitaly.lifshits@intel.com>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200614061122.35928-1-gthelen@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <b88dc544-9f1b-75af-244e-9967ffeacf0e@gmail.com>
+Date:   Tue, 16 Jun 2020 07:53:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616120719.GL20149@phenom.ffwll.local>
+In-Reply-To: <20200614061122.35928-1-gthelen@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 02:07:19PM +0200, Daniel Vetter wrote:
-> > > I've pinged a bunch of armsoc gpu driver people and ask them how much this
-> > > hurts, so that we have a clear answer. On x86 I don't think we have much
-> > > of a choice on this, with userptr in amd and i915 and hmm work in nouveau
-> > > (but nouveau I think doesn't use dma_fence in there). 
-> > 
-> > Right, nor will RDMA ODP. 
+
+
+On 6/13/20 11:11 PM, Greg Thelen wrote:
+> Commit e086ba2fccda ("e1000e: disable s0ix entry and exit flows for ME
+> systems") added e1000e_check_me() but it's only called from
+> CONFIG_PM_SLEEP protected code.  Thus builds without CONFIG_PM_SLEEP
+> see:
+>   drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warning: 'e1000e_check_me' defined but not used [-Wunused-function]
 > 
-> Hm, what's the context here? I thought RDMA side you really don't want
-> dma_fence in mmu_notifiers, so not clear to me what you're agreeing on
-> here.
+> Add CONFIG_PM_SLEEP ifdef guard to avoid dead code.
+> 
+> Fixes: e086ba2fccda ("e1000e: disable s0ix entry and exit flows for ME systems")
+> Signed-off-by: Greg Thelen <gthelen@google.com>
+> ---
+>  drivers/net/ethernet/intel/e1000e/netdev.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-rdma does not use dma_fence at all, and though it is hard to tell, I
-didn't notice a dma_fence in the nouveau invalidation call path.
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 
-At the very least I think there should be some big warning that
-dma_fence in notifiers should be avoided.
-
-Ie it is strange that the new totally-not-a-gpu drivers use dma_fence,
-they surely don't have the same constraints as the existing GPU world,
-and it would be annoying to see dma_fence notifiers spring up in them
-
-Jason
+Thanks Greg
