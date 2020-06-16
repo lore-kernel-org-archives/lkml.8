@@ -2,147 +2,272 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A680EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDFF207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CqEJtGrN";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="e/lm9yrY"
+	by mail.kernel.org (Postfix) with ESMTP id A0422208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgFPNxo (ORCPT
+        id S1729012AbgFPNyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:53:44 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37572 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726306AbgFPNxn (ORCPT
+        Tue, 16 Jun 2020 09:54:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47588 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728553AbgFPNyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:53:43 -0400
-Received: from mailhost.synopsys.com (us03-mailhost2.synopsys.com [10.4.17.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1A3294005F;
-        Tue, 16 Jun 2020 13:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1592315622; bh=Afj37ZNuiqZR4L+HLifkOl2X3F6GKiMEzyVc4gdfv0M=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=CqEJtGrN6sD+sf8Scf8JAWqRIRpWhzuHCdVkq+SmUl7qL7yleXCKuGhO8djsSgkek
-         Jpe7K5VUTt64qi+PvwakM1SzV4ZiEjy7PXWwx+1lcv+PYXTH7mM73P/p/k0RTQxki8
-         kakFZxme3d03M+53Oh6M4RvzMvWBdByIOBtKpWRSAK02NrEgsQ5ND5xT6vzOO1rzLx
-         VDTc66g53ytlcXrTwGWgCD9VmzZxBNLjXzrcBBkrm6xYv4R4b3HXwzkyfo85C3ju82
-         wFqVL3G/Wjzpp2pAfxrkTHSbet7nsCT1uHuMgdgyvdtAnAvTJwUFKKL5ilHCZuOC83
-         tepkmbl0C9rvw==
-Received: from o365relay-in.synopsys.com (sv2-o365relay1.synopsys.com [10.202.1.137])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 9CD2DA0081;
-        Tue, 16 Jun 2020 13:53:40 +0000 (UTC)
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 3BE60400C5;
-        Tue, 16 Jun 2020 13:53:40 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=hminas@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="e/lm9yrY";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S5+GE2Rhi1woRPS5tqjKQeV2gKCtoGH4i5bCcKtut3bg1SE9QBAk8I1gZoXNZIUbMB31taOVJuMzxg1z7uIx/Cy+BTj8PGA8luCet4NKbWkgURU+mIojzIcEonCQRGOEYAOGxJ86lLkCzBnXYlWfbcDHO7FHhLYl6JO7h72U5SgDABZZt2kl7ZjRSxLt0bKc1t5Q57rnngIkUVRjqCt8rM8DYEC/kscQi9m9Xulgo1lFcmJT+Evh+Q3B+JeNMV6CUgMrd25Djrma9mdoos9y+X+4xdMgqsK+cKUIEpfBHP6YcogMiI3VaPZlfYgp+U0drEBPdsTWFfe6yrw2fuyu1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Afj37ZNuiqZR4L+HLifkOl2X3F6GKiMEzyVc4gdfv0M=;
- b=fgeSAEbIcsAlkI6rkdzc8pFjZGS9efuN32FJNPYFvfOfjgE7GCePXHzniqDZtGi4ZUceXnGZyJzoL88wDb5r8nRSD0XXepcwVo2I2iy8fr/QtADITFn9D1/U/0YaxMO2AE2Q2QqU/SnbDHmzQAE47i9Stvn44qf3sZ2FzVEz0xV0Q0RglkcQgB1cqoQDz7ybdXtd0t1pr2l3uXIDBNg0ywIoeXkTEgjaUFJNgjC2QpyY2f4vK5MniD1gxYs1EaB0dAN6z9N8sVqag2HCdTUl+z6L8b+Q6JF5XscoLhLvJa6OoxUyh/kUAOi4Cj8mAxVEs6Zf5IyrcPLKKZODLRnfEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Afj37ZNuiqZR4L+HLifkOl2X3F6GKiMEzyVc4gdfv0M=;
- b=e/lm9yrYYDQmHN+8llRiDfJZPVeI2h0QFUZAjd6gsT37goFRKUMsB8WW/y97ynXjX4vbv8TtezKMlODyAJO93FChuocrj0h64oYvDwUQU/KOYXNmKnEFX6V0ynayatRL/Tm2YhubN5ZI+Bc/LU/GeKhvna28HpDnRrvnV076S9M=
-Received: from CY4PR12MB1432.namprd12.prod.outlook.com (2603:10b6:903:44::11)
- by CY4PR12MB1384.namprd12.prod.outlook.com (2603:10b6:903:3d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Tue, 16 Jun
- 2020 13:53:37 +0000
-Received: from CY4PR12MB1432.namprd12.prod.outlook.com
- ([fe80::3cb9:e2f2:a4ff:14bd]) by CY4PR12MB1432.namprd12.prod.outlook.com
- ([fe80::3cb9:e2f2:a4ff:14bd%10]) with mapi id 15.20.3088.029; Tue, 16 Jun
- 2020 13:53:37 +0000
-X-SNPS-Relay: synopsys.com
-From:   Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Query]usb: dwc2: suspend/resume support for
- DWC2_POWER_DOWN_PARAM_NONE case
-Thread-Topic: [Query]usb: dwc2: suspend/resume support for
- DWC2_POWER_DOWN_PARAM_NONE case
-Thread-Index: AQHWQ7z/Xja2HTKcEkyRv/tIUExMH6jbQ5UA
-Date:   Tue, 16 Jun 2020 13:53:37 +0000
-Message-ID: <65502475-28b0-6a27-4494-d642192a599a@synopsys.com>
-References: <20200616164712.67bf105c@xhacker.debian>
-In-Reply-To: <20200616164712.67bf105c@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Tue, 16 Jun 2020 09:54:45 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 94B84260D8D
+Subject: Re: [PATCH v2] docs: block: Create blk-mq documentation
+To:     Dongli Zhang <dongli.zhang@oracle.com>, axboe@kernel.dk,
+        corbet@lwn.net, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com, rdunlap@infradead.org
+References: <20200605175536.19681-1-andrealmeid@collabora.com>
+ <c249992b-a7c6-b6d9-3edb-143255141da2@oracle.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <ecb3447f-5dfb-d60a-bfaa-3cbdfd85025e@collabora.com>
+Date:   Tue, 16 Jun 2020 10:54:29 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
-authentication-results: synaptics.com; dkim=none (message not signed)
- header.d=none;synaptics.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [37.252.92.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1f583b59-b8ec-4d0f-716e-08d811fcab6d
-x-ms-traffictypediagnostic: CY4PR12MB1384:
-x-microsoft-antispam-prvs: <CY4PR12MB138496BCFFDBBB0B7F24677FA79D0@CY4PR12MB1384.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 04362AC73B
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MBez7K5GAhSuLUc3/8CmAuFwLNqJkvAR7MokeZucQSQ0qP1xslJqrXHSBwt+bTGphkqYNV0yMXgw5YfxxrlGnlcTnF+EN/Ex2pwKGfJnreaa3+YAQmo1KZBMCA/d9QjvRUUkp2OizDvOYm+jfJ5gguwiNtio8OcJ/MJvWr9+41Fo7FAG9VgA5NKnmA4HGJqvmtRKrzcmRV3TJNI//xqBaFog4S/VdRMMuRyRkg4r+tA+6ut9xaUt7TwSCGE+P4+QA7LosCeEPVPHHPEnGUFJuPV0uNFIJc1lXfYz0jkkq1Qw5e6MtT9mXGqu1Ow0ETyLf9INH6TZuUCyPWEk4KaBrc9QIQZWocdzmHr+5MGYWrjtDfFUuh/YVEzAibPamjfx
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1432.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(346002)(376002)(39860400002)(366004)(316002)(31686004)(8936002)(8676002)(4326008)(54906003)(71200400001)(4744005)(2616005)(110136005)(5660300002)(26005)(53546011)(6506007)(186003)(83380400001)(36756003)(91956017)(76116006)(66946007)(31696002)(64756008)(66476007)(66556008)(6512007)(6486002)(86362001)(15650500001)(478600001)(2906002)(66446008)(43740500002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: vctXaha0he26OwUgb0ChdFjw85JGFcWNJT4G6xIP+B+lQ/ZqhNje2CDKrPXGS/0oQdmSo6+e8mnYNHyc5rrhQ1UdQuwXaJigJrvHN3W3wBZRMqD42ADQTc+GwxyyLAM/vtMWvd6eTZfbor9+tBus3A/tnGF1lN5MYwF+Chj1fF3noVXgf7wWSRUJ2ioPFn2xc+yRJOgutR+TFdC7pY30Nc8UBNoE/8MXDJpmGM9sSxdd2HBPmdXxgwBHuesjUO6V4sjLe/qby0EF+Mzeg6P6Bb5cuGqw+lmYK+oRJlusIZw6ZdPxYR3wgnsI7vUDFN3RJb9qglHyCF6shiGFTBWxWdqdqv36R1BRWhNLjnNqMtYrXmqBic8RS5ATp4ABtll0dQNWVI2lF4X70payKW8LIrwRaaxWftopIVHtKS+3ZCmxfNfN9Zbmm/opzuLJ51uYb70+pPiNZhqu1GPALPtoz1tk/06mydDWFBVRSjjM/iQ=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <47E3780A2CBD7B4CA68AB6441E497E77@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f583b59-b8ec-4d0f-716e-08d811fcab6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 13:53:37.7502
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bhdQOc9lcexnIlQqSNIOYv10TzoPCcEOO8ABewvIJN4IW5e9UjUx3tfqmhYPmsQSysJRsEEVnNHH+GVq60xKZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1384
+In-Reply-To: <c249992b-a7c6-b6d9-3edb-143255141da2@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmlzaGVuZywNCg0KT24gNi8xNi8yMDIwIDE6MDMgUE0sIEppc2hlbmcgWmhhbmcgd3JvdGU6
-DQo+IEhpLA0KPiANCj4gQWZ0ZXIgcmVhZGluZyBjdXJyZW50IGR3YzIgY29kZSwgSSBnb3QgYW4g
-aW1wcmVzc2lvbiB0aGF0IHJlc3VtZSBmcm9tIHN1c3BlbmQNCj4gdG8gcmFtIGlzbid0IHN1cHBv
-cnRlZCBmb3IgRFdDMl9QT1dFUl9ET1dOX1BBUkFNX05PTkUgY2FzZSwgcmlnaHQ/IEluIGZhY3QN
-CidyYW0nIERvIHlvdSBtZWFuIG9uIHN1c3BlbmQgc2F2ZSByZWdpc3RlcnMgaW4gUkFNPw0KSWYg
-eWVzLCB0aGVuIGluIGNhc2Ugd2hlbiBwb3dlcl9kb3duIGlzIF9OT05FIHRoZW4gbm8gYW55IHJl
-Z2lzdGVyIA0Kc2F2aW5nL3Jlc3RvcmluZyB0by9mcm9tIFJBTSBzaG91bGQgYmUgcGVyZm9ybWlu
-Zy4NCj4gd2UgZG8gc2VlIHVzYiBkZXZpY2UgY2FuJ3QgcmVzdW1lIHByb3Blcmx5IHdpdGggRFdD
-Ml9QT1dFUl9ET1dOX1BBUkFNX05PTkUgY2FzZS4NCj4gDQpJZiB5b3Ugc2VlIGFueSBpc3N1ZSBv
-biByZXN1bWUgaW4gbWVudGlvbmVkIGNhc2UgdGhlbiBtb3JlIHByb2JhYmx5IGlzIA0Kc29tZSBh
-bm90aGVyIGlzc3VlIHdoaWNoIGNhbiBkZWJ1Z2dlZC4NCg0KPiBJZiB0aGUgaW1wcmVzc2lvbiBp
-cyB0cnVlLCB3aGF0J3MgdGhlIHByb3BlciB0ZWNobmljYWwgZGlyZWN0aW9uPyBBZGQNCj4gZHdj
-Ml9ob3N0X2VudGVyX3N1c3BlbmQoKSBhcyBkd2MyX2hvc3RfZW50ZXJfaGliZXJuYXRpb24oKQ0K
-PiBhbmQNCj4gZHdjMl9ob3N0X2V4aXRfc3VzcGVuZCgpIGFzIGR3YzJfaG9zdF9leGl0X2hpYmVy
-bmF0aW9uKCk/DQo+IA0KPiBUaGFua3MgaW4gYWR2YW5jZSwNCj4gSmlzaGVuZw0KPiANClRoYW5r
-cywNCk1pbmFzDQo=
+On 6/5/20 8:45 PM, Dongli Zhang wrote:
+> Hi André,
+> 
+> On 6/5/20 10:55 AM, André Almeida wrote:
+>> Create a documentation providing a background and explanation around the
+>> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
+>>
+>> The reference for writing this documentation was the source code and
+>> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+>> Systems", by Axboe et al.
+>>
+>> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+>> ---
+>> Changes from v1:
+>> - Fixed typos
+>> - Reworked blk_mq_hw_ctx
+>>
+>> Hello,
+>>
+>> This commit was tested using "make htmldocs" and the HTML output has
+>> been verified.
+>>
+>> Thanks,
+>> 	André
+>> ---
+>>  Documentation/block/blk-mq.rst | 154 +++++++++++++++++++++++++++++++++
+>>  Documentation/block/index.rst  |   1 +
+>>  2 files changed, 155 insertions(+)
+>>  create mode 100644 Documentation/block/blk-mq.rst
+>>
+>> diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
+>> new file mode 100644
+>> index 000000000000..1f702adbc577
+>> --- /dev/null
+>> +++ b/Documentation/block/blk-mq.rst
+>> @@ -0,0 +1,154 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +================================================
+>> +Multi-Queue Block IO Queueing Mechanism (blk-mq)
+>> +================================================
+>> +
+>> +The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
+>> +devices to achieve a huge number of input/output operations per second (IOPS)
+>> +through queueing and submitting IO requests to block devices simultaneously,
+>> +benefiting from the parallelism offered by modern storage devices.
+>> +
+>> +Introduction
+>> +============
+>> +
+>> +Background
+>> +----------
+>> +
+>> +Magnetic hard disks have been the de facto standard from the beginning of the
+>> +development of the kernel. The Block IO subsystem aimed to achieve the best
+>> +performance possible for those devices with a high penalty when doing random
+>> +access, and the bottleneck was the mechanical moving parts, a lot more slower
+>> +than any layer on the storage stack. One example of such optimization technique
+>> +involves ordering read/write requests accordingly to the current position of
+>> +the hard disk head.
+>> +
+>> +However, with the development of Solid State Drives and Non-Volatile Memories
+>> +without mechanical parts nor random access penalty and capable of performing
+>> +high parallel access, the bottleneck of the stack had moved from the storage
+>> +device to the operating system. In order to  take advantage of the parallelism
+>> +in those devices design, the multi-queue mechanism was introduced.
+>> +
+>> +The former design had a single queue to store block IO requests with a single
+>> +lock. That did not scale well in SMP systems due to dirty data in cache and the
+>> +bottleneck of having a single lock for multiple processors. This setup also
+>> +suffered with congestion when different processes (or the same process, moving
+>> +to different CPUs) wanted to perform block IO. Instead of this, the blk-mq API
+>> +spawns multiple queues with individual entry points local to the CPU, removing
+>> +the need for a lock. A deeper explanation on how this works is covered in the
+>> +following section (`Operation`_).
+>> +
+>> +Operation
+>> +---------
+>> +
+>> +When the userspace performs IO to a block device (reading or writing a file,
+>> +for instance), blk-mq takes action: it will store and manage IO requests to
+>> +the block device, acting as middleware between the userspace (and a file
+>> +system, if present) and the block device driver.
+>> +
+>> +blk-mq has two group of queues: software staging queues and hardware dispatch
+>> +queues. When the request arrives at the block layer, it will try the shortest
+>> +path possible: send it directly to the hardware queue. However, there are two
+>> +cases that it might not do that: if there's an IO scheduler attached at the
+>> +layer or if we want to try to merge requests. In both cases, requests will be
+>> +sent to the software queue.
+>> +
+>> +Then, after the requests are processed by software queues, they will be placed
+>> +at the hardware queue, a second stage queue were the hardware has direct access
+>> +to process those requests. However, if the hardware does not have enough
+>> +resources to accept more requests, blk-mq will places requests on a temporary
+>> +queue, to be sent in the future, when the hardware is able.
+>> +
+>> +Software staging queues
+>> +~~~~~~~~~~~~~~~~~~~~~~~
+>> +
+>> +The block IO subsystem adds requests (represented by struct
+>> +:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
+>> +sent directly to the driver. A request is a collection of BIOs. They arrived at
+>> +the block layer through the data structure struct :c:type:`bio`. The block
+>> +layer will then build a new structure from it, the struct :c:type:`request`
+>> +that will be used to communicate with the device driver. Each queue has its
+>> +own lock and the number of queues is defined by a per-CPU or per-node basis.
+>> +
+>> +The staging queue can be used to merge requests for adjacent sectors. For
+>> +instance, requests for sector 3-6, 6-7, 7-9 can become one request for 3-9.
+>> +Even if random access to SSDs and NVMs have the same time of response compared
+>> +to sequential access, grouped requests for sequential access decreases the
+>> +number of individual requests. This technique of merging requests is called
+>> +plugging.
+>> +
+>> +Along with that, the requests can be reordered to ensure fairness of system
+>> +resources (e.g. to ensure that no application suffers from starvation) and/or to
+>> +improve IO performance, by an IO scheduler.
+>> +
+>> +IO Schedulers
+>> +^^^^^^^^^^^^^
+>> +
+>> +There are several schedulers implemented by the block layer, each one following
+>> +a heuristic to improve the IO performance. They are "pluggable" (as in plug
+>> +and play), in the sense of they can be selected at run time using sysfs. You
+>> +can read more about Linux's IO schedulers `here
+>> +<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
+>> +happens only between requests in the same queue, so it is not possible to merge
+>> +requests from different queues, otherwise there would be cache trashing and a
+>> +need to have a lock for each queue. After the scheduling, the requests are
+>> +eligible to be sent to the hardware. One of the possible schedulers to be
+>> +selected is the NOOP scheduler, the most straightforward one, that implements a
+>> +simple FIFO, without performing any reordering. This is useful in the following
+>> +scenarios: when scheduling will be performed in a next step somewhere in the
+>> +stack, like block device controllers; the actual sector position of blocks are
+>> +transparent for the host, meaning it hasn't enough information to take a proper
+>> +decision; or the overhead of reordering is higher than the handicap of
+>> +non-sequential accesses.
+>> +
+>> +Hardware dispatch queues
+>> +~~~~~~~~~~~~~~~~~~~~~~~~
+>> +
+>> +The hardware queues (represented by struct :c:type:`blk_mq_hw_ctx`) have a 1:1
+>> +correspondence to the device driver's submission queues, and are the last step
+> 
+> I am not clear with the definition of "submission queues". Is it the device
+> queue with DMA ring buffer?
+> 
+
+Yes, the memory area where hardware can perform DMA and access requests.
+
+> If it is the DMA ring buffer, multiple blk_mq_hw_ctx would map to the same DMA
+> ring buffer, e.g., multiple nvme namespaces would share the same tagset. This is
+> not 1:1 any longer.
+>
+
+I see, thanks for the feedback. What do you think about this version:
+
+The hardware queues (represented by struct :c:type:`blk_mq_hw_ctx`) is a
+struct used by device drivers to map the to the device submission queues
+(or device DMA ring buffer), and are the last step ...
+
+
+>> +of the block layer submission code before the low level device driver taking
+>> +ownership of the request. To run this queue, the block layer removes requests
+>> +from the associated software queues and tries to dispatch to the hardware.
+>> +
+>> +If it's not possible to send the requests directly to hardware, they will be
+>> +added to a linked list (:c:type:`hctx->dispatch`) of requests. Then,
+>> +next time the block layer runs a queue, it will send the requests laying at the
+>> +:c:type:`dispatch` list first, to ensure a fairness dispatch with those
+>> +requests that were ready to be sent first. The number of hardware queues
+>> +depends on the number of hardware contexts supported by the hardware and its
+>> +device driver, but it will not be more than the number of cores of the system.
+>> +There is no reordering at this stage, and each software queue has a set of
+>> +hardware queues to send requests for.
+>> +
+>> +.. note::
+>> +
+>> +        Neither the block layer nor the device protocols guarantee
+>> +        the order of completion of requests. This must be handled by
+>> +        higher layers, like the filesystem.
+>> +
+>> +Tag-based completion
+>> +~~~~~~~~~~~~~~~~~~~~
+>> +
+>> +In order to indicate which request has been completed, every request is
+>> +identified by an integer, ranging from 0 to the dispatch queue size. This tag
+>> +is generated by the block layer and later reused by the device driver, removing
+>> +the need to create a redundant identifier. When a request is completed in the
+>> +drive, the tag is sent back to the block layer to notify it of the finalization.
+>> +This removes the need to do a linear search to find out which IO has been
+>> +completed.
+> 
+> Assume I am a beginner and does not know about blk-mq well. What I expect is to
+> expand this sections to explain the usage of sbitmap to manage tags, e.g., like
+> the comments in block/blk-mq-tag.c or block/blk-mq-tag.h.
+> 
+> In addition, I would be interested in that percpu-refcount is used to track the
+> lifecycle of requests.
+> 
+> I have no idea how much detail is required for a kernel doc. The is just the
+> feedback from me by assuming the audience is beginner :)
+> 
+
+Indeed, it would be good to have this kind of information available. We
+can easily include comments in source files given that they are in
+kernel-doc format, just using `kernel-doc:: block/blk-mq-tag.c`.
+However, as I see, there's some useful information that need to be
+converted to kernel-doc before being ready to show up here in the
+documentation.
+
+So, while I agree with you, I think this can be a next step for block
+documentation: update, format and expand blk-mq-tag comments, then add
+them in this file.
+
+> Thank you very much!
+> 
+> Dongli Zhang
+> 
+
+Thanks for the feedback :)
+
+André
