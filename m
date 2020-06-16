@@ -2,63 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4802C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD027C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98F16208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B3C208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322155;
-	bh=ttmHvu1rWbM1jMNTQNCdm7y1CzJeneuypIIqL8V6Ia8=;
+	s=default; t=1592322157;
+	bh=C0AQZmqKYDSYCAAADdcgii1JJGtRlmPQWuBiuYvQsMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kHzyy9SR9L0VRIr8GbZTkzRvBs7zttH1fMSD8Ym65/8lUh4P8CLiqzd57CyakKUBF
-	 2lXdEE8dxMz6n2dumyUhOLBb+F/WfyDdjfpttsvKGn79IknyWmJvWNv5rLaTY1RJWq
-	 O3v4a/VjCptL1VT4V9ybTF9Pq54PSWc3b1NGupko=
+	b=lC5QDa/17NLpR8KN2/66kGr8bdJT1HhzG0E4syGNoDn0nr2WzXEvz7a1JpSPHuntL
+	 /Il1gwKJeBSKkLJMmwSeVXMSeCa/0u0y9TfwMOnDBGAnYivc53cy8+IJCVTWspR68u
+	 Qo9nuFW+iMHL4mj7w9w/nUDjEAENb7Zssxe9IU+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731689AbgFPPme (ORCPT
+        id S1730968AbgFPPmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:42:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58896 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731658AbgFPPmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:22 -0400
+        id S1731673AbgFPPma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37D09208E4;
-        Tue, 16 Jun 2020 15:42:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25811208D5;
+        Tue, 16 Jun 2020 15:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322141;
-        bh=ttmHvu1rWbM1jMNTQNCdm7y1CzJeneuypIIqL8V6Ia8=;
+        s=default; t=1592322149;
+        bh=C0AQZmqKYDSYCAAADdcgii1JJGtRlmPQWuBiuYvQsMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AlYC7Q2ITOwQBebf7dCuWkl8qGY9cngkclUn9qVMO/7ryixTrPHkl55U2pjdgiFiE
-         yp+CTawZmLxcECKN22FGAOVyqD0uXEFwCgy8tLKTY+HMIyehoweNl1gIz/GKpaufOh
-         KJ2rklGjRoO7mGXMIghKtNDvSQv7iJ0gbvwm4Dx8=
+        b=GPQV/t+WU58DRWBsueYJCGyw1ArQvPoDm0JF5tvezcaEZLDm+jtrazi+qIzf5ZLP+
+         npc2o38Oz74gVf3U6q6QecRtkfd/JFydP2aLOKYIn4aeyEW+bKBsAb27gZwzNlBbio
+         cdzx3+blNp5Znd2zGSADKl7tsE/Qg3rjPd++cy80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eric Biggers <ebiggers@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 017/163] mm: add kvfree_sensitive() for freeing sensitive data objects
-Date:   Tue, 16 Jun 2020 17:33:11 +0200
-Message-Id: <20200616153107.695662068@linuxfoundation.org>
+        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 002/163] mlxsw: core: Use different get_trend() callbacks for different thermal zones
+Date:   Tue, 16 Jun 2020 17:32:56 +0200
+Message-Id: <20200616153106.972677549@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -71,161 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit d4eaa2837851db2bfed572898bfc17f9a9f9151e ]
+[ Upstream commit 2dc2f760052da4925482ecdcdc5c94d4a599153c ]
 
-For kvmalloc'ed data object that contains sensitive information like
-cryptographic keys, we need to make sure that the buffer is always cleared
-before freeing it.  Using memset() alone for buffer clearing may not
-provide certainty as the compiler may compile it away.  To be sure, the
-special memzero_explicit() has to be used.
+The driver registers three different types of thermal zones: For the
+ASIC itself, for port modules and for gearboxes.
 
-This patch introduces a new kvfree_sensitive() for freeing those sensitive
-data objects allocated by kvmalloc().  The relevant places where
-kvfree_sensitive() can be used are modified to use it.
+Currently, all three types use the same get_trend() callback which does
+not work correctly for the ASIC thermal zone. The callback assumes that
+the device data is of type 'struct mlxsw_thermal_module', whereas for
+the ASIC thermal zone 'struct mlxsw_thermal' is passed as device data.
 
-Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Acked-by: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Link: http://lkml.kernel.org/r/20200407200318.11711-1-longman@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by using one get_trend() callback for the ASIC thermal zone and
+another for the other two types.
+
+Fixes: 6f73862fabd9 ("mlxsw: core: Add the hottest thermal zone detection")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/mm.h       |  1 +
- mm/util.c                | 18 ++++++++++++++++++
- security/keys/internal.h | 11 -----------
- security/keys/keyctl.c   | 16 +++++-----------
- 4 files changed, 24 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c |   23 +++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index f3fe7371855c..465e8ad671f8 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -781,6 +781,7 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
- }
- 
- extern void kvfree(const void *addr);
-+extern void kvfree_sensitive(const void *addr, size_t len);
- 
- /*
-  * Mapcount of compound page as a whole, does not include mapped sub-pages.
-diff --git a/mm/util.c b/mm/util.c
-index 988d11e6c17c..dc1c877d5481 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -604,6 +604,24 @@ void kvfree(const void *addr)
- }
- EXPORT_SYMBOL(kvfree);
- 
-+/**
-+ * kvfree_sensitive - Free a data object containing sensitive information.
-+ * @addr: address of the data object to be freed.
-+ * @len: length of the data object.
-+ *
-+ * Use the special memzero_explicit() function to clear the content of a
-+ * kvmalloc'ed object containing sensitive data to make sure that the
-+ * compiler won't optimize out the data clearing.
-+ */
-+void kvfree_sensitive(const void *addr, size_t len)
-+{
-+	if (likely(!ZERO_OR_NULL_PTR(addr))) {
-+		memzero_explicit((void *)addr, len);
-+		kvfree(addr);
-+	}
-+}
-+EXPORT_SYMBOL(kvfree_sensitive);
-+
- static inline void *__page_rmapping(struct page *page)
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+@@ -391,8 +391,7 @@ static int mlxsw_thermal_set_trip_hyst(s
+ static int mlxsw_thermal_trend_get(struct thermal_zone_device *tzdev,
+ 				   int trip, enum thermal_trend *trend)
  {
- 	unsigned long mapping;
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 6d0ca48ae9a5..153d35c20d3d 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -350,15 +350,4 @@ static inline void key_check(const struct key *key)
- #define key_check(key) do {} while(0)
+-	struct mlxsw_thermal_module *tz = tzdev->devdata;
+-	struct mlxsw_thermal *thermal = tz->parent;
++	struct mlxsw_thermal *thermal = tzdev->devdata;
  
- #endif
--
--/*
-- * Helper function to clear and free a kvmalloc'ed memory object.
-- */
--static inline void __kvzfree(const void *addr, size_t len)
--{
--	if (addr) {
--		memset((void *)addr, 0, len);
--		kvfree(addr);
--	}
--}
- #endif /* _INTERNAL_H */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 5e01192e222a..edde63a63007 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -142,10 +142,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
- 
- 	key_ref_put(keyring_ref);
-  error3:
--	if (payload) {
--		memzero_explicit(payload, plen);
--		kvfree(payload);
--	}
-+	kvfree_sensitive(payload, plen);
-  error2:
- 	kfree(description);
-  error:
-@@ -360,7 +357,7 @@ long keyctl_update_key(key_serial_t id,
- 
- 	key_ref_put(key_ref);
- error2:
--	__kvzfree(payload, plen);
-+	kvfree_sensitive(payload, plen);
- error:
- 	return ret;
+ 	if (trip < 0 || trip >= MLXSW_THERMAL_NUM_TRIPS)
+ 		return -EINVAL;
+@@ -593,6 +592,22 @@ mlxsw_thermal_module_trip_hyst_set(struc
+ 	return 0;
  }
-@@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 		 */
- 		if (ret > key_data_len) {
- 			if (unlikely(key_data))
--				__kvzfree(key_data, key_data_len);
-+				kvfree_sensitive(key_data, key_data_len);
- 			key_data_len = ret;
- 			continue;	/* Allocate buffer */
- 		}
-@@ -923,7 +920,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 			ret = -EFAULT;
- 		break;
- 	}
--	__kvzfree(key_data, key_data_len);
-+	kvfree_sensitive(key_data, key_data_len);
  
- key_put_out:
- 	key_put(key);
-@@ -1225,10 +1222,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
- 		keyctl_change_reqkey_auth(NULL);
++static int mlxsw_thermal_module_trend_get(struct thermal_zone_device *tzdev,
++					  int trip, enum thermal_trend *trend)
++{
++	struct mlxsw_thermal_module *tz = tzdev->devdata;
++	struct mlxsw_thermal *thermal = tz->parent;
++
++	if (trip < 0 || trip >= MLXSW_THERMAL_NUM_TRIPS)
++		return -EINVAL;
++
++	if (tzdev == thermal->tz_highest_dev)
++		return 1;
++
++	*trend = THERMAL_TREND_STABLE;
++	return 0;
++}
++
+ static struct thermal_zone_device_ops mlxsw_thermal_module_ops = {
+ 	.bind		= mlxsw_thermal_module_bind,
+ 	.unbind		= mlxsw_thermal_module_unbind,
+@@ -604,7 +619,7 @@ static struct thermal_zone_device_ops ml
+ 	.set_trip_temp	= mlxsw_thermal_module_trip_temp_set,
+ 	.get_trip_hyst	= mlxsw_thermal_module_trip_hyst_get,
+ 	.set_trip_hyst	= mlxsw_thermal_module_trip_hyst_set,
+-	.get_trend	= mlxsw_thermal_trend_get,
++	.get_trend	= mlxsw_thermal_module_trend_get,
+ };
  
- error2:
--	if (payload) {
--		memzero_explicit(payload, plen);
--		kvfree(payload);
--	}
-+	kvfree_sensitive(payload, plen);
- error:
- 	return ret;
- }
--- 
-2.25.1
-
+ static int mlxsw_thermal_gearbox_temp_get(struct thermal_zone_device *tzdev,
+@@ -643,7 +658,7 @@ static struct thermal_zone_device_ops ml
+ 	.set_trip_temp	= mlxsw_thermal_module_trip_temp_set,
+ 	.get_trip_hyst	= mlxsw_thermal_module_trip_hyst_get,
+ 	.set_trip_hyst	= mlxsw_thermal_module_trip_hyst_set,
+-	.get_trend	= mlxsw_thermal_trend_get,
++	.get_trend	= mlxsw_thermal_module_trend_get,
+ };
+ 
+ static int mlxsw_thermal_get_max_state(struct thermal_cooling_device *cdev,
 
 
