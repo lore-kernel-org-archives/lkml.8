@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C70F207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9BC207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323263;
-	bh=ImD1zoy+Fx0CsZrmk+QIEfgyjaPXOBH8d6zBqOiEGqI=;
+	s=default; t=1592323272;
+	bh=xGuCdumdCJT2WPa2goTh3ru2pazbuwDH84OieTAPy34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EQeQLwlCMlDjCHcu18DYd/GiTE6f7mZ7dTvOdTlTfritRY+QfIihY3FdLj7vr4JD5
-	 coilimuIPYMYHlhf7h5vzzKbjtBhqxgUk9DkWExB/X6VGZduq5tT/+WprHAX/Hls+/
-	 kRqF0UJmTPiS28UcDpp99DlTpKPW1YxWqdi2grDs=
+	b=sgcJmZS+Hdyz1qXxwCdDGjD/KxuQ++tzjbpjAh/Ja7LMDlH2Cg94jnfxq5rJH/6T+
+	 RwGgGiDzF+AS4K3nkAPntfUiDytB5nrXvAVjhzlvr6CLg+2Hvn/WJ5bDDz0gVL2UfH
+	 mNtkIXnIWZGuLDKj3U9PMCsdcnfN4m8JzkcZOGLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732818AbgFPQA7 (ORCPT
+        id S1732052AbgFPQBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:00:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732787AbgFPPwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:36 -0400
+        id S1732008AbgFPPw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:52:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEEC0208D5;
-        Tue, 16 Jun 2020 15:52:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8BE321527;
+        Tue, 16 Jun 2020 15:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322756;
-        bh=ImD1zoy+Fx0CsZrmk+QIEfgyjaPXOBH8d6zBqOiEGqI=;
+        s=default; t=1592322748;
+        bh=xGuCdumdCJT2WPa2goTh3ru2pazbuwDH84OieTAPy34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCNvlJT1j+sEKy+nd47kQpf9iOMiuXkVFWzdTMZ5ik78JLm5+wv08xzAYhnhjFUyh
-         Z6jjdfz9j4KgTZJjFjl328ZyP22ZWo6iJm1GtUZgmPs06TTQIYzIXif4FywjFsjKPh
-         WefNDB0w+xA92IfZbYfSIETHPdzN89Xb9dI74NlM=
+        b=qKUahZUM7MI7Xk3z2gUygnk3fedpGAD9xsAcY+VthRl4MSpEM6ZD4qDXCqfgs1yW/
+         mFry9atgnwlv+xkoZ9gE7/3EZ69+5rzy5RBiNpdp5Af0WE0v4PssbBHlUNCdRL6fsz
+         NuqrMRVrDG1R6971c4QH7aOUA+W+mTCVRawm5UNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.6 091/161] spi: bcm-qspi: Handle clock probe deferral
-Date:   Tue, 16 Jun 2020 17:34:41 +0200
-Message-Id: <20200616153110.713624489@linuxfoundation.org>
+Subject: [PATCH 5.6 088/161] spi: pxa2xx: Fix runtime PM ref imbalance on probe error
+Date:   Tue, 16 Jun 2020 17:34:38 +0200
+Message-Id: <20200616153110.564418252@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,51 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 0392727c261bab65a35cd4f82ee9459bc237591d upstream.
+commit 65e318e17358a3fd4fcb5a69d89b14016dee2f06 upstream.
 
-The clock provider may not be ready by the time spi-bcm-qspi gets
-probed, handle probe deferral using devm_clk_get_optional().
+The PXA2xx SPI driver releases a runtime PM ref in the probe error path
+even though it hasn't acquired a ref earlier.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200420190853.45614-2-kdasu.kdev@gmail.com
+Apparently commit e2b714afee32 ("spi: pxa2xx: Disable runtime PM if
+controller registration fails") sought to copy-paste the invocation of
+pm_runtime_disable() from pxa2xx_spi_remove(), but erroneously copied
+the call to pm_runtime_put_noidle() as well.  Drop it.
+
+Fixes: e2b714afee32 ("spi: pxa2xx: Disable runtime PM if controller registration fails")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.17+
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Link: https://lore.kernel.org/r/58b2ac6942ca1f91aaeeafe512144bc5343e1d84.1590408496.git.lukas@wunner.de
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-bcm-qspi.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/spi/spi-pxa2xx.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/spi/spi-bcm-qspi.c
-+++ b/drivers/spi/spi-bcm-qspi.c
-@@ -1222,6 +1222,11 @@ int bcm_qspi_probe(struct platform_devic
- 	}
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1888,7 +1888,6 @@ static int pxa2xx_spi_probe(struct platf
+ 	return status;
  
- 	qspi = spi_master_get_devdata(master);
-+
-+	qspi->clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	if (IS_ERR(qspi->clk))
-+		return PTR_ERR(qspi->clk);
-+
- 	qspi->pdev = pdev;
- 	qspi->trans_pos.trans = NULL;
- 	qspi->trans_pos.byte = 0;
-@@ -1335,13 +1340,6 @@ int bcm_qspi_probe(struct platform_devic
- 		qspi->soc_intc = NULL;
- 	}
+ out_error_pm_runtime_enabled:
+-	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
  
--	qspi->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(qspi->clk)) {
--		dev_warn(dev, "unable to get clock\n");
--		ret = PTR_ERR(qspi->clk);
--		goto qspi_probe_err;
--	}
--
- 	ret = clk_prepare_enable(qspi->clk);
- 	if (ret) {
- 		dev_err(dev, "failed to prepare clock\n");
+ out_error_clock_enabled:
 
 
