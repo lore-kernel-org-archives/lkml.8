@@ -2,53 +2,51 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E483C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AA0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1305921475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2FE820C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321886;
-	bh=+/l/HKb94QJ1fLl/aY9Ci1ZVow5m6nAWV0fLci86yno=;
+	s=default; t=1592321887;
+	bh=Lq0rzd8/VWyjqzu7gI6W77XhrAJW8U6FGO1gnHwgDWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAgQhPeJH4tmsb22dQ3GXn+OW7zCn+rsm5NibUXDZFhkFv02Y1Olej0ZFBb0SP123
-	 dBn6K/UKNH0c1xNt1LOBS6Cs2W51DxmwvfpwQtrYJ9aV0y/jEAYeBDt1fDPatDonML
-	 TJ5HpNcroEl2XAwivnxMWDpMTuYak9njY2ildWVg=
+	b=U9FBqmXDSvsUWUA09S0xcumfZkX5HCY/pUTBSzj9T7D+v5izUMSjd1fcY8ofMhhvQ
+	 IpmSx3s9F4MSLi6x2OWFua//b44vwcv3Td/22h/8rtxAyMtYd8T8oANLexJH/hbM0w
+	 EsX8zWg6AFLHeGeJOyAKLMeuGrdRHyCm7iqLkE+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbgFPPiE (ORCPT
+        id S1730540AbgFPPiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:38:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49874 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:38:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730464AbgFPPh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:56 -0400
+        id S1730487AbgFPPh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A9802145D;
-        Tue, 16 Jun 2020 15:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA91C20B1F;
+        Tue, 16 Jun 2020 15:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321875;
-        bh=+/l/HKb94QJ1fLl/aY9Ci1ZVow5m6nAWV0fLci86yno=;
+        s=default; t=1592321878;
+        bh=Lq0rzd8/VWyjqzu7gI6W77XhrAJW8U6FGO1gnHwgDWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NeDMx25ZQIH8D5w+BPKQwsOcabVhIBhtZIYkc94JShrxMgwYxdAm3mGoDCXJBXiSL
-         1INTJ3fWe05yph54X/3HFZDfIIXVI4A1I2A0Y/Fxo8YZI5dM4PwomFDimYQJ0al8sh
-         A+UrW+hbMt/u6YYTdvOSJciVEnGWhoQq/cePlctE=
+        b=bGG14uTMZUUgiGEr7jgkex61hPHlMHAxE3WNNPkW64uwxrP9W1gq7ZxwsPWl0O4OS
+         SjNevqU0cP620kdp9/qYAOOEzfJLk+M+pWJq//5JZ0csV8tpp3YE7LrhC4r2JAV4hN
+         KlMDpT3JHrl2xR9eob+M8Y4NKl0W4xbDPK0WZIBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Shyti <andi@etezian.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 009/134] Input: mms114 - fix handling of mms345l
-Date:   Tue, 16 Jun 2020 17:33:13 +0200
-Message-Id: <20200616153101.128744865@linuxfoundation.org>
+        stable@vger.kernel.org, Hill Ma <maahiuzeon@gmail.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 5.4 043/134] x86/reboot/quirks: Add MacBook6,1 reboot quirk
+Date:   Tue, 16 Jun 2020 17:33:47 +0200
+Message-Id: <20200616153102.858974098@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,70 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Hill Ma <maahiuzeon@gmail.com>
 
-[ Upstream commit 3f8f770575d911c989043d8f0fb8dec96360c41c ]
+commit 140fd4ac78d385e6c8e6a5757585f6c707085f87 upstream.
 
-MMS345L is another first generation touch screen from Melfas,
-which uses the same registers as MMS152.
+On MacBook6,1 reboot would hang unless parameter reboot=pci is added.
+Make it automatic.
 
-However, using I2C_M_NOSTART for it causes errors when reading:
+Signed-off-by: Hill Ma <maahiuzeon@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200425200641.GA1554@cslab.localdomain
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-	i2c i2c-0: sendbytes: NAK bailout.
-	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
-
-The driver works fine as soon as I2C_M_NOSTART is removed.
-
-Reviewed-by: Andi Shyti <andi@etezian.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200405170904.61512-1-stephan@gerhold.net
-[dtor: removed separate mms345l handling, made everyone use standard
-transfer mode, propagated the 10bit addressing flag to the read part of the
-transfer as well.]
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/mms114.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ arch/x86/kernel/reboot.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-index a5ab774da4cc..fca908ba4841 100644
---- a/drivers/input/touchscreen/mms114.c
-+++ b/drivers/input/touchscreen/mms114.c
-@@ -91,15 +91,15 @@ static int __mms114_read_reg(struct mms114_data *data, unsigned int reg,
- 	if (reg <= MMS114_MODE_CONTROL && reg + len > MMS114_MODE_CONTROL)
- 		BUG();
- 
--	/* Write register: use repeated start */
-+	/* Write register */
- 	xfer[0].addr = client->addr;
--	xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
-+	xfer[0].flags = client->flags & I2C_M_TEN;
- 	xfer[0].len = 1;
- 	xfer[0].buf = &buf;
- 
- 	/* Read data */
- 	xfer[1].addr = client->addr;
--	xfer[1].flags = I2C_M_RD;
-+	xfer[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
- 	xfer[1].len = len;
- 	xfer[1].buf = val;
- 
-@@ -428,10 +428,8 @@ static int mms114_probe(struct i2c_client *client,
- 	const void *match_data;
- 	int error;
- 
--	if (!i2c_check_functionality(client->adapter,
--				I2C_FUNC_PROTOCOL_MANGLING)) {
--		dev_err(&client->dev,
--			"Need i2c bus that supports protocol mangling\n");
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-+		dev_err(&client->dev, "Not supported I2C adapter\n");
- 		return -ENODEV;
- 	}
- 
--- 
-2.25.1
-
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -197,6 +197,14 @@ static const struct dmi_system_id reboot
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "MacBook5"),
+ 		},
+ 	},
++	{	/* Handle problems with rebooting on Apple MacBook6,1 */
++		.callback = set_pci_reboot,
++		.ident = "Apple MacBook6,1",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MacBook6,1"),
++		},
++	},
+ 	{	/* Handle problems with rebooting on Apple MacBookPro5 */
+ 		.callback = set_pci_reboot,
+ 		.ident = "Apple MacBookPro5",
 
 
