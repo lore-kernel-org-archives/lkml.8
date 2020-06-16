@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA30C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F34C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C76D208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5D1208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322097;
-	bh=HYWquZViGbGdIcbesak3htJvfn2PAB/KpqgGhH9wMTg=;
+	s=default; t=1592322101;
+	bh=d97WpFy+5OREEuxVaheOyuxtpt3chE+sXqbZmAI3iho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glhJhemSRhCdxijqFMiboVfV7YeSit0GufnE5pq2h1xQBwfTzVWHs0xXHBAVTgJG3
-	 p17yFescDnjcKgi2OGpPLBDDBwicMmkcc5Oz3dbqUzfjbYbb/+vBXXaC6DxSaxUGTS
-	 1ErI/QIm84Z3Dmy0k4j/et+JMyw1qDUHdM4vtv4U=
+	b=kOSAnL7U3F4dGEVAASxZ8w0IOzgMriPpOlZvADLFEzAAygR0Nmaot4iF/CSN/k8wI
+	 pemFO3AiEPvorejiHJtFHmRgMJ6Za7/LMD8K2kEN7p2YIEr0ru9obDdCbKToqYlfJM
+	 wKj6LP1eLyGdNLR0dKv9Prd7A24H81Kt3roNsc50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbgFPPlf (ORCPT
+        id S1730707AbgFPPlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:41:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57260 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:41:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731455AbgFPPla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:30 -0400
+        id S1730575AbgFPPld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 880BF207C4;
-        Tue, 16 Jun 2020 15:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F631208E4;
+        Tue, 16 Jun 2020 15:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322090;
-        bh=HYWquZViGbGdIcbesak3htJvfn2PAB/KpqgGhH9wMTg=;
+        s=default; t=1592322092;
+        bh=d97WpFy+5OREEuxVaheOyuxtpt3chE+sXqbZmAI3iho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBwjvy4kp6nlS02TSlLoWSEI9bLSibWoPWczE9AF/AyvAWWZzMVZDnj2e9D0OX/9R
-         2MwgGf8fysEVe1jM89Qqu+3ShbR0swawjV0Dm0vxucQH4VNYGlRJB7WlvxhqoFuIz2
-         xqNoekOj/qdrtYHW+YtHLXfrNsuTGEvRo/OEOQfE=
+        b=SctYqyZ3sqWsg1If4Z1gnMOJRfC/ZKNYKRS+8cROMMn0TdKwnXrET33o0C5415HPg
+         UDS5QaBYHjV6fI4+alEP8DAH5BlNYUPAxu9WdbUmJrDY+XUUC8rD5EXXJtk+nJnWyX
+         XR8wF2JRZSDCW6WUUXuH6iRblZcp1PqUtGnooIKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
-        Jiri Kosina <jkosina@suse.cz>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 131/134] block/floppy: fix contended case in floppy_queue_rq()
-Date:   Tue, 16 Jun 2020 17:35:15 +0200
-Message-Id: <20200616153107.061913864@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 5.4 132/134] xen/pvcalls-back: test for errors when calling backend_connect()
+Date:   Tue, 16 Jun 2020 17:35:16 +0200
+Message-Id: <20200616153107.109738183@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,69 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Juergen Gross <jgross@suse.com>
 
-commit 263c61581a38d0a5ad1f5f4a9143b27d68caeffd upstream.
+commit c8d70a29d6bbc956013f3401f92a4431a9385a3c upstream.
 
-Since the switch of floppy driver to blk-mq, the contended (fdc_busy) case
-in floppy_queue_rq() is not handled correctly.
+backend_connect() can fail, so switch the device to connected only if
+no error occurred.
 
-In case we reach floppy_queue_rq() with fdc_busy set (i.e. with the floppy
-locked due to another request still being in-flight), we put the request
-on the list of requests and return BLK_STS_OK to the block core, without
-actually scheduling delayed work / doing further processing of the
-request. This means that processing of this request is postponed until
-another request comes and passess uncontended.
-
-Which in some cases might actually never happen and we keep waiting
-indefinitely. The simple testcase is
-
-	for i in `seq 1 2000`; do echo -en $i '\r'; blkid --info /dev/fd0 2> /dev/null; done
-
-run in quemu. That reliably causes blkid eventually indefinitely hanging
-in __floppy_read_block_0() waiting for completion, as the BIO callback
-never happens, and no further IO is ever submitted on the (non-existent)
-floppy device. This was observed reliably on qemu-emulated device.
-
-Fix that by not queuing the request in the contended case, and return
-BLK_STS_RESOURCE instead, so that blk core handles the request
-rescheduling and let it pass properly non-contended later.
-
-Fixes: a9f38e1dec107a ("floppy: convert to blk-mq")
+Fixes: 0a9c75c2c7258f2 ("xen/pvcalls: xenbus state handling")
 Cc: stable@vger.kernel.org
-Tested-by: Libor Pechacek <lpechacek@suse.cz>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Link: https://lore.kernel.org/r/20200511074231.19794-1-jgross@suse.com
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/floppy.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/xen/pvcalls-back.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2902,17 +2902,17 @@ static blk_status_t floppy_queue_rq(stru
- 		 (unsigned long long) current_req->cmd_flags))
- 		return BLK_STS_IOERR;
- 
--	spin_lock_irq(&floppy_lock);
--	list_add_tail(&bd->rq->queuelist, &floppy_reqs);
--	spin_unlock_irq(&floppy_lock);
--
- 	if (test_and_set_bit(0, &fdc_busy)) {
- 		/* fdc busy, this new request will be treated when the
- 		   current one is done */
- 		is_alive(__func__, "old request running");
--		return BLK_STS_OK;
-+		return BLK_STS_RESOURCE;
- 	}
- 
-+	spin_lock_irq(&floppy_lock);
-+	list_add_tail(&bd->rq->queuelist, &floppy_reqs);
-+	spin_unlock_irq(&floppy_lock);
-+
- 	command_status = FD_COMMAND_NONE;
- 	__reschedule_timeout(MAXTIMEOUT, "fd_request");
- 	set_fdc(0);
+--- a/drivers/xen/pvcalls-back.c
++++ b/drivers/xen/pvcalls-back.c
+@@ -1087,7 +1087,8 @@ static void set_backend_state(struct xen
+ 		case XenbusStateInitialised:
+ 			switch (state) {
+ 			case XenbusStateConnected:
+-				backend_connect(dev);
++				if (backend_connect(dev))
++					return;
+ 				xenbus_switch_state(dev, XenbusStateConnected);
+ 				break;
+ 			case XenbusStateClosing:
 
 
