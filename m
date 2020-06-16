@@ -2,109 +2,91 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C60FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A87C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3FC2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:29:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GJwhOaQi"
+	by mail.kernel.org (Postfix) with ESMTP id 486A2206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592325063;
+	bh=W7Pho91Xm+elkwKelH3qLZlOsIt8PfgFxIc/P+UvK3c=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=vimRECSe62VJ2qhT26Ez4mYJmlvyB2GBZ95ag9uMlGwSJcUM3mHSPXxSx5giljQbB
+	 7iBeOqzYxkyyvjo7UcLfSwdIWmXRJpePR3hUChHJcUzkB1bwMkKgCFQUUpirR4wzrd
+	 uRJqeb8VAD2x7LV4Gx1W8xmODJh9N0tcBJWZdwhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbgFPQ3d (ORCPT
+        id S1730009AbgFPQbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:29:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20480 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729167AbgFPQ3c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:29:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592324971;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=ERS+2jm6G8eP/qULDs3m7N2SVMVdN3wgBEZ1bGF0bCo=;
-        b=GJwhOaQikhXtysH/NS7mbXP9OfTntFuj1SJnUQRfI4GDpXUxFW8wMghEkv/mtyEXMbnkW6
-        XQHY2uBiYm1NgD4YpTjR6giU8bP//agf6gouM9YjV0kggyqLi8RFOSpkSFTJy70jTJzGMK
-        YyQssgs5enAo+J2EPi3v4z6l+6d2K8Y=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-zNuL0vdFNUqbkyb_V-IyEA-1; Tue, 16 Jun 2020 12:29:28 -0400
-X-MC-Unique: zNuL0vdFNUqbkyb_V-IyEA-1
-Received: by mail-qk1-f199.google.com with SMTP id a6so17229786qka.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:29:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ERS+2jm6G8eP/qULDs3m7N2SVMVdN3wgBEZ1bGF0bCo=;
-        b=Ht1updz+t5OkFY3Wg7VvZGvBpL25TU4uF1KQZnz+9t61ujY5v7rFVVc6X9OmisJ2qd
-         KPQHcU0Z/5NA3yjVs+0AIs+56qkDxvOm4isOzAxS7qL0XhU/IbPWGluggd8As9ehhmmT
-         74w62XOZTElnRNzm7FN4AdxUPAsfSXqDa0LcVdRAtWmErW3Mll5r34eqKag31IrDsMG3
-         4tLDaVDs8W00NHfO6ZtCcmJ5apXK6mpfLlGqw/8dOrV1dyPCzZr2jDo0WOdd/WfvHKxZ
-         uvqL46usTgTNHV93y/qbgNH/tEecUDPijTvbklg66TSWvVNJoIJHB/2aW7R4VsLdIIQE
-         2DKA==
-X-Gm-Message-State: AOAM533lkGrqzHf7seZHvkbQ+Zlj0LwMXcs+41ZtUhhXXI7doTrL/Mp0
-        Si/bgdchkovYeicoYU+DXnbsmDJEKKjMlZd7YVMbO4HdstTkDpGWVW1DsNyr9yvuky7zlCoUMa9
-        l0BkZe9z6EdQJZ3DWT7DDfPCp
-X-Received: by 2002:a0c:8d46:: with SMTP id s6mr3143588qvb.241.1592324968288;
-        Tue, 16 Jun 2020 09:29:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwPiCjs+KhSMorb/vjtXy68V8lc6ZAVuWB3rMp3H4SFEqGWmHFi/pfLbhMXeynTHXZQduXSUA==
-X-Received: by 2002:a0c:8d46:: with SMTP id s6mr3143579qvb.241.1592324968089;
-        Tue, 16 Jun 2020 09:29:28 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id s42sm16386942qtk.14.2020.06.16.09.29.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 09:29:27 -0700 (PDT)
-From:   trix@redhat.com
-To:     hirofumi@mail.parknet.co.jp
-Cc:     linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH] fat: add a check to fat_add_new_entries
-Date:   Tue, 16 Jun 2020 09:29:22 -0700
-Message-Id: <20200616162922.26168-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Tue, 16 Jun 2020 12:31:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729167AbgFPQbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:31:01 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E428E20679;
+        Tue, 16 Jun 2020 16:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592325060;
+        bh=W7Pho91Xm+elkwKelH3qLZlOsIt8PfgFxIc/P+UvK3c=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=2O0qAGA8Ilp58adA/TcAICjKIT9bf2cAlJwFNWeobF0GQvp2UTWV57Fhvtuec+bTa
+         ONT2kmCDxsx5ZvUIAN9NSAtLHNna+MiB2MKgrEmHK5SX6vLN/yNFnSzyUqIboF6JVz
+         a9dOhoiBTWb8PWpGmOzIz6fYxsX6ObO+4uwCvMvo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C95843521103; Tue, 16 Jun 2020 09:31:00 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 09:31:00 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, frederic@kernel.org
+Subject: Re: [PATCH 0/6] sched: TTWU, IPI, and assorted stuff
+Message-ID: <20200616163100.GA5370@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200615125654.678940605@infradead.org>
+ <20200615162330.GF2723@paulmck-ThinkPad-P72>
+ <20200615164048.GC2531@hirez.programming.kicks-ass.net>
+ <20200615172149.GJ2723@paulmck-ThinkPad-P72>
+ <20200615191158.GK2531@hirez.programming.kicks-ass.net>
+ <20200615195522.GL2723@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615195522.GL2723@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On Mon, Jun 15, 2020 at 12:55:22PM -0700, Paul E. McKenney wrote:
+> On Mon, Jun 15, 2020 at 09:11:58PM +0200, Peter Zijlstra wrote:
+> > On Mon, Jun 15, 2020 at 10:21:49AM -0700, Paul E. McKenney wrote:
+> > > On Mon, Jun 15, 2020 at 06:40:48PM +0200, Peter Zijlstra wrote:
+> > 
+> > > > Thanks! I've got 16*TREE03 running since this morning, so far so nothing :/
+> > > > (FWIW that's 16/9 times overcommit, idle time fluctuates around 10%).
+> > > 
+> > > My large system as large remote memory latencies, as in the better part
+> > > of a microsecond.  My small system is old (Haswell).  So, just to grasp
+> > > at the obvious straw, do you have access to a multisocket Haswell system?
+> > 
+> > I've been running this on a 4 socket haswell ex.
+> 
+> OK, I officially have no idea, then!
 
-Clang static analysis reports a possible null pointer dereference
+Ah, are you overcommitting?  None of my Haswell runs did any overcommit.
 
-fs/fat/dir.c:1255:9: warning: Dereference of undefined pointer value [core.NullDereference]
-        memset(bhs[n]->b_data + copy, 0, sb->s_blocksize - copy);
-               ^~~~~~~~~~~~~~
+Also, any failures in the meantime?
 
-This is because setting of bhs[n] depends on the inner loop executing.
+Any debug/tracing/whatever that I could add to my runs?
 
-So add a check that the inner loop will be executed.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- fs/fat/dir.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/fs/fat/dir.c b/fs/fat/dir.c
-index b4ddf48fa444..3eea540486cb 100644
---- a/fs/fat/dir.c
-+++ b/fs/fat/dir.c
-@@ -1228,6 +1228,13 @@ static int fat_add_new_entries(struct inode *dir, void *slots, int nr_slots,
- 	do {
- 		start_blknr = blknr = fat_clus_to_blknr(sbi, cluster[i]);
- 		last_blknr = start_blknr + sbi->sec_per_clus;
-+
-+		/* overflow */
-+		if (unlikely(last_blknr <= start_blknr)) {
-+			err = -ENOMEM;
-+			goto error_nomem;
-+		}
-+
- 		while (blknr < last_blknr) {
- 			bhs[n] = sb_getblk(sb, blknr);
- 			if (!bhs[n]) {
--- 
-2.18.1
-
+							Thanx, Paul
