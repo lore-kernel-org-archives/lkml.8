@@ -2,263 +2,324 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D477A20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FB62085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KfKVNYLi"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="inn1lpkd";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Z3EM5dUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbgFPUiw (ORCPT
+        id S1728860AbgFPUlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbgFPUiv (ORCPT
+        Tue, 16 Jun 2020 16:41:05 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:34364 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726464AbgFPUlD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:38:51 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D293C0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:38:51 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id s88so2167917pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=wpW7WQOPePDKMe4iZDKX0l11TokFWfmINzOLwuMIeCc=;
-        b=KfKVNYLiedCg1CnE06VLMC/PwK175OV5P5PHufSzCNh0nJ7KEXIUIU4wZkS/KMerT0
-         AbGvvBi0Yh6Yrxp20lOX+VF9h0OFkiXx2H7Xd1XbC6EX2nRfu36kfoVOpqEKG1vXwVl8
-         uKWii7dd1i8zzTsxssgv8F7xVl/wDR61ycV7k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wpW7WQOPePDKMe4iZDKX0l11TokFWfmINzOLwuMIeCc=;
-        b=hXUsJTUhM9iKvZwEzdkoUHDNXn2vT5A4RI+/SXZuuH7TivlojkkLoCo7hAUs9N8maE
-         sCcxcSyEp9AotwuYLa/N7AoKjlUaSac/JSaPYjfd0sqeWyKEHBAk4hVGvpiPungWh2u0
-         R/YuGZxfqRnNGsBVgQlHn7e5L3rYOAL5YxnJ2H9MAofXdgVOrlFaWom2U7fCaNWl1dUP
-         lHUcEgxLZmlF0Nj03/03b08N6prTK6MwfUxbuzaTQ/zWrJyElENJeEzAodXAczoXo7xD
-         yoCS21ci3qpcwEox3QiErRDq+YGwbfmP72Je/FDhirJ9RFGSQ3lH1m0YyQk147vcXRzL
-         DB3w==
-X-Gm-Message-State: AOAM531Ze7yHdzVEuOcabf4tKHaZdZ/hLMaX5cOgUvi4XsxfB40wmoB7
-        CFfuSBpliOcsyl3E5tIKfXWnJQ==
-X-Google-Smtp-Source: ABdhPJwY/p64B3ltGSHrZiAknPCYjQKtsT/wlseuFxUfBLRtgL2hch0z3uFzCPdDbvEx7sCnip96AQ==
-X-Received: by 2002:a17:902:9f90:: with SMTP id g16mr3672533plq.146.1592339930938;
-        Tue, 16 Jun 2020 13:38:50 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id t22sm3187788pjy.32.2020.06.16.13.38.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 13:38:50 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 13:38:49 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200616203849.GY4525@google.com>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
- <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
- <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com>
- <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
- <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
- <20200615194239.GW4525@google.com>
- <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
+        Tue, 16 Jun 2020 16:41:03 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 05GKegHa004352;
+        Tue, 16 Jun 2020 13:40:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=r9iR/Z+s6iv91NrQf4m3Zpjz9qMXVHMl0Yv2cbninHg=;
+ b=inn1lpkdDQ7mt8Qfb6WH+IsdmAUJcq87H4f1YY7CLvRhElyjJ3U/T7vbaYHAiYThE1Aj
+ M9irHTtf6SbCrKDg8/iQ98zX+MYyT92y9vXa/kBCorzicWfn17+lUD8qygJTQ8RoziaU
+ FUD4WH3X55qfndqZ3Me6vyawM11HTzz6w/0= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 31pv0htudw-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 16 Jun 2020 13:40:43 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 16 Jun 2020 13:40:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FwUGPLfV0IJne6QhZ6D+axkZo/OjAwvRqFHU6BtFqELPKLC3ixdLLgECBQrY0JxN2OJ+WOCQHaChjXmj1kEo6ef5NQx6gCgbNSmontu7ANRtmxtsOtLFM+UX+o+X4Kz4htTNEFrU0cIE0oXLp1O4ExB12UDRoNIx+8jO+8JYbVQ7WvjN9ieWTBUuu2sDy+1B3VwyU+pbh49yy9YHAb6w4pGRn1V92pxr1bQWHpy9UApnOQAjF9ejFWxz83f0C5Q2jDr5V8vx/fqrn7hggwbk6tuVbGYZRc0MgKujWxBRUev93/5MuTuc76xKmAXHHiAYt8tX0A/15Ov1j5m9HOt3YQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r9iR/Z+s6iv91NrQf4m3Zpjz9qMXVHMl0Yv2cbninHg=;
+ b=dgAF7+tM/xX6qbpgJPbavOeTHBWyNYMDLSWwsAPaOLPrmAMnzQIA1NolXVlZrA3NVa2CGYieLaoqiZzQN14jdH9pZhBNrnPl0xmSDnRC+1M3t8PaLv+mW68hcv/ER0lXf2r15BDq1Sj8DE75IgnQ3fLmhVVNWhLcdPERYXHXue3xTSBV6jEPKizMvh5MrFa3sPw1+A1tc/y0BdoP8xxGfgTP3h5Xwz4MsxrpfIUIIUgYNVlPadO8pGuakCpy/fsrGQ+eBx2mgsZ6Q1AK9EarqsgZQHulzydlj2jCT0Jzt4ui8hs6KQtDRcRfsKCH6XF6Z9ggS8kWQTQ2UAku24uGFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r9iR/Z+s6iv91NrQf4m3Zpjz9qMXVHMl0Yv2cbninHg=;
+ b=Z3EM5dUr89raYey+wKYHEHOyPXPwlmdDqzlHQYrduMI66aaNTxjbRpzYCpI0ZiCt9o95d3df7LlLuYArMwh42XOApBP4vaAFUn4v0FQQZrrd5o1CU1/ZNZM1m+f/x8YQaWcARdMZMUN0SXKf6uNyezXtLaN3Hf1xhV9wWJb4/Rw=
+Authentication-Results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB2997.namprd15.prod.outlook.com (2603:10b6:a03:b0::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.25; Tue, 16 Jun
+ 2020 20:40:28 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.3088.028; Tue, 16 Jun 2020
+ 20:40:28 +0000
+Subject: Re: [PATCH bpf-next 4/4] bpf: Add selftests for local_storage
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Florent Revest <revest@chromium.org>
+References: <20200526163336.63653-1-kpsingh@chromium.org>
+ <20200526163336.63653-5-kpsingh@chromium.org>
+ <CAEf4BzY0=Hh3O6qeD=2sMWpQRpHpizxH+nEA0hD0khPf3VAbhA@mail.gmail.com>
+ <20200616155433.GA11971@google.com>
+ <CAEf4BzZm86BQqhfVHfm7aKvwK-UXC7679DsJe8xQqYR8eUUwAQ@mail.gmail.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <eb5e9c81-237a-d2d0-6bc6-26b1d5590a00@fb.com>
+Date:   Tue, 16 Jun 2020 13:40:26 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
+In-Reply-To: <CAEf4BzZm86BQqhfVHfm7aKvwK-UXC7679DsJe8xQqYR8eUUwAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: BYAPR05CA0079.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::20) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3f8fcb0e-387d-e902-9f6b-1fde9d6ae404@codeaurora.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2620:10d:c085:21d6::1860] (2620:10d:c090:400::5:4028) by BYAPR05CA0079.namprd05.prod.outlook.com (2603:10b6:a03:e0::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.9 via Frontend Transport; Tue, 16 Jun 2020 20:40:27 +0000
+X-Originating-IP: [2620:10d:c090:400::5:4028]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ba335b5b-cc20-4e3a-21e5-08d812358136
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2997:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB299701A78D322DA805A951D5D39D0@BYAPR15MB2997.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 04362AC73B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Fpsbbe8zCOnmcy00roWWWiMQYHyLWKO+jMCWNPJIl+xb7ZN9QP6y2GKzsX6Nl8lBOvzGLlxivgshwWIPGEoKfKmv+ZBdmY0NS7EGZZOogeq/Ywo3cN/vI1n1ISERf5Mj6xv5Cj1TOIjVs77CNzRfh/4RkSj2lobLWi4fTFlzHq6rCCGQ/1CvPySvqBKpQI0zHpma3Scz0DVqFfq7E8oMBF8zsOcZ06HrA0WCCZiep1aIqQtfk51x7kflt9Wxan3C7Ed47Hx1wu5Fwvan5wS9fH65EaWhjt7myG2hCZvbtod2hoMQ46u7qhiVi/H95KERb+8+ZrNjHgN92o/OlvWrkXOgNHJhjI+Cu05SyhaehU9WaB8BooMrNty8LK8rZL0y
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(6486002)(83380400001)(7416002)(16526019)(8676002)(498600001)(8936002)(110136005)(54906003)(31686004)(186003)(4326008)(52116002)(31696002)(53546011)(2616005)(86362001)(66946007)(2906002)(66476007)(36756003)(66556008)(5660300002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: UtoKOjmnH1Z7GHQkBAnZO2RqFsEbz9ovUvExCMFZ1/MXZcDqHz+sMP1QHjufm0X/x9tWhkqUBdOGn7lVZLfqWWjlvRFZevMqfH2X4yNL9SLkqKr9EpwjKQUb/tRWppd6zCX/1LvcDx7bPn4cjgPIKUrpeXvcOJdnIVU+tvi4HJDbnjuzlzMxu2FccNFCbs4+gyMoe2JAvPLtIx07iKaDypYwNlI/0gFPTvgU2VYG/EjscN6k1Ikuax1qdXa5RbPvBwiYPr9k3eHU61JoAwM1LOIGIti6cP7kcNcbQtvioRCv8hGM4tUmqZnAV1LhfLrNE37yT5d8/mKFt65p1iImhNrbCjg7L69FJvTx0otORcG7eJhe09HaReY/2Wtjoqh5pJQByxxmUnbPsSOPk6yBKtno2TOtlmiBuj/H+Rh90mwZxJHI+0rmKkHwKCWOlaK7tuPGSEHW+cW/pDfC/Yhzv/yXjAneSMn+3Uew+Jznn1zVAqAuu9xzIwlHIcD2IWuJyuAMHasuS0l0O/qAR57NiA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba335b5b-cc20-4e3a-21e5-08d812358136
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2020 20:40:28.6418
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GFoiah6/hnmi8QJ00CrnoTvDVhJquwa/volfvbgUJh6CdufPcMp3mYF786ndWJCW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2997
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_13:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ priorityscore=1501 clxscore=1011 malwarescore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 suspectscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 bulkscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160144
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:22:47AM +0530, Sandeep Maheswaram (Temp) wrote:
-> 
-> On 6/16/2020 1:12 AM, Matthias Kaehlcke wrote:
-> > On Thu, Jun 04, 2020 at 04:16:31AM -0700, Stephen Boyd wrote:
-> > > Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
-> > > > On 6/3/2020 11:06 PM, Stephen Boyd wrote:
-> > > > > Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
-> > > > > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > index 1dfd024..d33ae86 100644
-> > > > > > --- a/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
-> > > > > >           return 0;
-> > > > > >    }
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * dwc3_qcom_interconnect_init() - Get interconnect path handles
-> > > > > > + * @qcom:                      Pointer to the concerned usb core.
-> > > > > > + *
-> > > > > > + */
-> > > > > > +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
-> > > > > > +{
-> > > > > > +       struct device *dev = qcom->dev;
-> > > > > > +       int ret;
-> > > > > > +
-> > > > > > +       if (!device_is_bound(&qcom->dwc3->dev))
-> > > > > > +               return -EPROBE_DEFER;
-> > > > > How is this supposed to work? I see that this was added in an earlier
-> > > > > revision of this patch series but there isn't any mention of why
-> > > > > device_is_bound() is used here. It would be great if there was a comment
-> > > > > detailing why this is necessary. It sounds like maximum_speed is
-> > > > > important?
-> > > > > 
-> > > > > Furthermore, dwc3_qcom_interconnect_init() is called by
-> > > > > dwc3_qcom_probe() which is the function that registers the device for
-> > > > > qcom->dwc3->dev. If that device doesn't probe between the time it is
-> > > > > registered by dwc3_qcom_probe() and this function is called then we'll
-> > > > > fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
-> > > > > qcom->dwc3->dev device from the platform bus because we call
-> > > > > of_platform_depopulate() on the error path of dwc3_qcom_probe().
-> > > > > 
-> > > > > So isn't this whole thing racy and can potentially lead us to a driver
-> > > > > probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
-> > > > > and we're trying to time it just right so that driver for dwc3 binds
-> > > > > before we setup interconnects? I don't know if dwc3 can communicate to
-> > > > > the wrapper but that would be more of a direct way to do this. Or maybe
-> > > > > the wrapper should try to read the DT property for maximum speed and
-> > > > > fallback to a worst case high bandwidth value if it can't figure it out
-> > > > > itself without help from dwc3 core.
-> > > > > 
-> > > > This was added in V4 to address comments from Matthias in V3
-> > > > 
-> > > > https://patchwork.kernel.org/patch/11148587/
-> > > > 
-> > > Yes, that why I said:
-> > > 
-> > > "I see that this was added in an earlier
-> > >   revision of this patch series but there isn't any mention of why
-> > >   device_is_bound() is used here. It would be great if there was a comment
-> > >   detailing why this is necessary. It sounds like maximum_speed is
-> > >   important?"
-> > > 
-> > > Can you please respond to the rest of my email?
-> > I agree with Stephen that using device_is_bound() isn't a good option
-> > in this case, when I suggested it I wasn't looking at the big picture
-> > of how probing the core driver is triggered, sorry about that.
-> > 
-> > Reading the speed from the DT with usb_get_maximum_speed() as Stephen
-> > suggests would be an option, the inconvenient is that we then
-> > essentially require the property to be defined, while the core driver
-> > gets a suitable value from hardware registers. Not sure if the wrapper
-> > driver could read from the same registers.
-> > 
-> > One option could be to poll device_is_bound() for 100 ms (or so), with
-> > sleeps between polls. It's not elegant but would probably work if we
-> > don't find a better solution.
-> if (np)
->         ret = dwc3_qcom_of_register_core(pdev);
->     else
->         ret = dwc3_qcom_acpi_register_core(pdev);
-> 
->     if (ret) {
->         dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
->         goto depopulate;
->     }
-> 
->     ret = dwc3_qcom_interconnect_init(qcom);
->     if (ret)
->         goto depopulate;
-> 
->     qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
-> 
-> Before calling dwc3_qcom_interconnect_init we are checking
-> 
->     if (ret) {
->         dev_err(dev, "failed to register DWC3 Core, err=%d\n", ret);
->         goto depopulate;
->     }
-> 
-> Doesn't  this condition confirm the core driver is probed?
 
-Not really:
+On 6/16/20 12:25 PM, Andrii Nakryiko wrote:
+> On Tue, Jun 16, 2020 at 8:54 AM KP Singh <kpsingh@chromium.org> wrote:
+>> On 01-Jun 13:29, Andrii Nakryiko wrote:
+>>> On Tue, May 26, 2020 at 9:34 AM KP Singh <kpsingh@chromium.org> wrote:
+>>>> From: KP Singh <kpsingh@google.com>
+>>>>
+>>>> inode_local_storage:
+>>>>
+>>>> * Hook to the file_open and inode_unlink LSM hooks.
+>>>> * Create and unlink a temporary file.
+>>>> * Store some information in the inode's bpf_local_storage during
+>>>>    file_open.
+>>>> * Verify that this information exists when the file is unlinked.
+>>>>
+>>>> sk_local_storage:
+>>>>
+>>>> * Hook to the socket_post_create and socket_bind LSM hooks.
+>>>> * Open and bind a socket and set the sk_storage in the
+>>>>    socket_post_create hook using the start_server helper.
+>>>> * Verify if the information is set in the socket_bind hook.
+>>>>
+>>>> Signed-off-by: KP Singh <kpsingh@google.com>
+>>>> ---
+>>>>   .../bpf/prog_tests/test_local_storage.c       |  60 ++++++++
+>>>>   .../selftests/bpf/progs/local_storage.c       | 139 ++++++++++++++++++
+>>>>   2 files changed, 199 insertions(+)
+>>>>   create mode 100644 tools/testing/selftests/bpf/prog_tests/test_local_storage.c
+>>>>   create mode 100644 tools/testing/selftests/bpf/progs/local_storage.c
+>>>>
+>>> [...]
+>>>
+>>>> +struct dummy_storage {
+>>>> +       __u32 value;
+>>>> +};
+>>>> +
+>>>> +struct {
+>>>> +       __uint(type, BPF_MAP_TYPE_INODE_STORAGE);
+>>>> +       __uint(map_flags, BPF_F_NO_PREALLOC);
+>>>> +       __type(key, int);
+>>>> +       __type(value, struct dummy_storage);
+>>>> +} inode_storage_map SEC(".maps");
+>>>> +
+>>>> +struct {
+>>>> +       __uint(type, BPF_MAP_TYPE_SK_STORAGE);
+>>>> +       __uint(map_flags, BPF_F_NO_PREALLOC | BPF_F_CLONE);
+>>>> +       __type(key, int);
+>>>> +       __type(value, struct dummy_storage);
+>>>> +} sk_storage_map SEC(".maps");
+>>>> +
+>>>> +/* Using vmlinux.h causes the generated BTF to be so big that the object
+>>>> + * load fails at btf__load.
+>>>> + */
+>>> That's first time I hear about such issue. Do you have an error log
+>>> from verifier?
+>> Here's what I get when I do the following change.
+>>
+>> --- a/tools/testing/selftests/bpf/progs/local_storage.c
+>> +++ b/tools/testing/selftests/bpf/progs/local_storage.c
+>> @@ -4,8 +4,8 @@
+>>    * Copyright 2020 Google LLC.
+>>    */
+>>
+>> +#include "vmlinux.h"
+>>   #include <errno.h>
+>> -#include <linux/bpf.h>
+>>   #include <stdbool.h>
+>>   #include <bpf/bpf_helpers.h>
+>>   #include <bpf/bpf_tracing.h>
+>> @@ -37,24 +37,6 @@ struct {
+>>          __type(value, struct dummy_storage);
+>>   } sk_storage_map SEC(".maps");
+>>
+>> -/* Using vmlinux.h causes the generated BTF to be so big that the object
+>> - * load fails at btf__load.
+>> - */
+>> -struct sock {} __attribute__((preserve_access_index));
+>> -struct sockaddr {} __attribute__((preserve_access_index));
+>> -struct socket {
+>> -       struct sock *sk;
+>> -} __attribute__((preserve_access_index));
+>> -
+>> -struct inode {} __attribute__((preserve_access_index));
+>> -struct dentry {
+>> -       struct inode *d_inode;
+>> -} __attribute__((preserve_access_index));
+>> -struct file {
+>> -       struct inode *f_inode;
+>> -} __attribute__((preserve_access_index));
+>>
+>> ./test_progs -t test_local_storage
+>> libbpf: Error loading BTF: Invalid argument(22)
+>> libbpf: magic: 0xeb9f
+>> version: 1
+>> flags: 0x0
+>> hdr_len: 24
+>> type_off: 0
+>> type_len: 4488
+>> str_off: 4488
+>> str_len: 3012
+>> btf_total_size: 7524
+>>
+>> [1] STRUCT (anon) size=32 vlen=4
+>>          type type_id=2 bits_offset=0
+>>          map_flags type_id=6 bits_offset=64
+>>          key type_id=8 bits_offset=128
+>>          value type_id=9 bits_offset=192
+>> [2] PTR (anon) type_id=4
+>> [3] INT int size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
+>> [4] ARRAY (anon) type_id=3 index_type_id=5 nr_elems=28
+>> [5] INT __ARRAY_SIZE_TYPE__ size=4 bits_offset=0 nr_bits=32 encoding=(none)
+>> [6] PTR (anon) type_id=7
+>> [7] ARRAY (anon) type_id=3 index_type_id=5 nr_elems=1
+>> [8] PTR (anon) type_id=3
+>> [9] PTR (anon) type_id=10
+>> [10] STRUCT dummy_storage size=4 vlen=1
+>>          value type_id=11 bits_offset=0
+>> [11] TYPEDEF __u32 type_id=12
+>>
+>>    [... More BTF Dump ...]
+>>
+>> [91] TYPEDEF wait_queue_head_t type_id=175
+>>
+>>    [... More BTF Dump ...]
+>>
+>> [173] FWD super_block struct
+>> [174] FWD vfsmount struct
+>> [175] FWD wait_queue_head struct
+>> [106] STRUCT socket_wq size=128 vlen=4
+>>          wait type_id=91 bits_offset=0 Invalid member
+>>
+>> libbpf: Error loading .BTF into kernel: -22.
+>> libbpf: map 'inode_storage_map': failed to create: Invalid argument(-22)
+>> libbpf: failed to load object 'local_storage'
+>> libbpf: failed to load BPF skeleton 'local_storage': -22
+>> test_test_local_storage:FAIL:skel_load lsm skeleton failed
+>> #81 test_local_storage:FAIL
+>>
+>> The failiure is in:
+>>
+>> [106] STRUCT socket_wq size=128 vlen=4
+>>          wait type_id=91 bits_offset=0 Invalid member
+>>
+>>> Clang is smart enough to trim down used types to only those that are
+>>> actually necessary, so too big BTF shouldn't be a thing. But let's try
+>>> to dig into this and fix whatever issue it is, before giving up :)
+>>>
+>> I was wrong about the size being an issue. The verifier thinks the BTF
+>> is invalid and more specificially it thinks that the socket_wq's
+>> member with type_id=91, i.e. typedef wait_queue_head_t is invalid. Am
+>> I missing some toolchain patches?
+>>
+> It is invalid BTF in the sense that we have a struct, embedding a
+> struct, which is only defined as a forward declaration. There is not
+> enough information and such situation would have caused compilation
+> error, because it's impossible to determine the size of the outer
+> struct.
+>
+> Yonghong, it seems like Clang is pruning types too aggressively here?
+> We should keep types that are embedded, even if they are not used
+> directly by user code. Could you please take a look?
 
-// called under the hood by of_platform_populate()
-static int really_probe(struct device *dev, struct device_driver *drv)
-{
-	...
+Sure. Will take a look shortly.
 
-	if (dev->bus->probe) {
-		ret = dev->bus->probe(dev);
-		if (ret)
-			goto probe_failed;
-	} else if (drv->probe) {
-		ret = drv->probe(dev);
-	        if (ret)
-	       		goto probe_failed;
-        }
-
-	...
-
-probe_failed:
-	...
-
-	/*
-         * Ignore errors returned by ->probe so that the next driver can try
-         * its luck.
-         */
-        ret = 0;
-
-	...
-
-	return ret;
-}
-
-As a result of_platform_populate() in dwc3_qcom_of_register_core()
-returns 0 even when probing the device failed:
-
-[    0.244339] dwc3-qcom a6f8800.usb: DBG: populate
-[    0.244772] dwc3 a600000.dwc3: DBG: dwc3_probe
-[    0.245237] dwc3 a600000.dwc3: DBG: dwc3_probe err: -517
-[    0.245264] dwc3-qcom a6f8800.usb: DBG: populate (done)
-[    0.245317] dwc3-qcom a6f8800.usb: DBG: dwc3_qcom_interconnect_init() failed: -517
-
-Probe fails because the interconnect stuff isn't ready yet, otherwise
-it could access invalid data.
-
-A later _populate() is successful and the probing of the core is done
-synchronously, i.e. after _populate() the core driver is fully
-initialized:
-
-[    3.898106] dwc3-qcom a6f8800.usb: DBG: populate
-[    3.908356] dwc3 a600000.dwc3: DBG: dwc3_probe
-[    4.205104] dwc3 a600000.dwc3: DBG: dwc3_probe (done)
-[    4.210305] dwc3-qcom a6f8800.usb: DBG: populate (done)
-
-The synchronous probing in _populate() suggests that using device_is_bound()
-would actually be a valid option, either the core device was successfully
-probed or not, there should be no race.
-
-I sent a patch that adds this check to dwc3_qcom_of_register_core(), which
-is less confusing and makes clear that the core device is valid unless
-this function returns an error:
-
-  https://lore.kernel.org/patchwork/patch/1257279/
-
-It might make sense to add your "driver core:Export the symbol
-device_is_bound" patch, mine and this one to a single series.
-
-Thanks
-
-Matthias
+>
+>
+>
+>> - KP
+>>
+>>
+>>>> +struct sock {} __attribute__((preserve_access_index));
+>>>> +struct sockaddr {} __attribute__((preserve_access_index));
+>>>> +struct socket {
+>>>> +       struct sock *sk;
+>>>> +} __attribute__((preserve_access_index));
+>>>> +
+>>>> +struct inode {} __attribute__((preserve_access_index));
+>>>> +struct dentry {
+>>>> +       struct inode *d_inode;
+>>>> +} __attribute__((preserve_access_index));
+>>>> +struct file {
+>>>> +       struct inode *f_inode;
+>>>> +} __attribute__((preserve_access_index));
+>>>> +
+>>>> +
+>>> [...]
