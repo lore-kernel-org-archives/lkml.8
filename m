@@ -2,244 +2,144 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0481FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E060920739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F07C2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="VwwU5aVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbgFPOEK (ORCPT
+        id S1729342AbgFPOEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:04:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6345 "EHLO huawei.com"
+        Tue, 16 Jun 2020 10:04:12 -0400
+Received: from mail-co1nam11on2089.outbound.protection.outlook.com ([40.107.220.89]:22262
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728980AbgFPOEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:04:05 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AABFE974DBF50C8407E0;
-        Tue, 16 Jun 2020 22:03:57 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 16 Jun 2020 22:03:51 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <will@kernel.org>, <robin.murphy@arm.com>
-CC:     <joro@8bytes.org>, <trivial@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <maz@kernel.org>,
-        "John Garry" <john.garry@huawei.com>
-Subject: [PATCH RFC v2 3/4] iommu/arm-smmu-v3: Always issue a CMD_SYNC per batch
-Date:   Tue, 16 Jun 2020 21:59:52 +0800
-Message-ID: <1592315993-164290-4-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1592315993-164290-1-git-send-email-john.garry@huawei.com>
-References: <1592315993-164290-1-git-send-email-john.garry@huawei.com>
-MIME-Version: 1.0
+        id S1728809AbgFPOEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:04:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OIXtWWtteDbzqGtxZkzLdf9jZcWwoS+boSmJZjU2kTUU8kwBOXteg5LUgccM/Xax2f6rvwKxOyuuNZtnwenv6ZxjUQv2z5evgZcSzD8NcMbaunH8sbm61VLGCU5JLwa6ig+94jJxxr6r5tlCzcbTrSpcVVeQBOLMUqVJANeBeUCWa9vWt/R54PxV3AUeMxSL40j6MZxGNtEq+Js92CWKP5fjM5b8qOd2LnAunyHvaCHZrljfBJCdmlEkLxB99b7J4SuHzkv3NbP9X5zc/D+v14hls12SDnekbwZAkDUAba4SYZVtU0253yIEJOQavVADQJYkKjY3tzo61SaL5xMeUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3EuoTMmc8y+6eZzzuYKW/xuo4nAOk0fa1sbLT7moZAk=;
+ b=jcY5Dq3O0ShE6P3Xf+kIdcDEGfxr0AkLndnFeduRP9orUXV0MUoR0cxUGJ+ME4IOocTNgdoFOAwnEw076Sokyf3Brq/wlvU51AcHJgKumwfvCbJ1mfo0sEDy+oTles1KIdWVBduJ+NYD+0o2BDeORHYs+BEBnhwqXk1+3vWAkeD6xQWPzCOsFklQ2AvU9uakflCJH3xJVYxy0oCqqM1T3WwVeuwB33hGNTEDi44KbGKQlCGxZm49sFZ3z0NQi9awugaO4WIYPCcUmjXo0X30nkESInqBw62gV7kK5eDlOX9k8aBI1T3sXdJtjyx1DGOo2VngvBb6DJitK6uUD+vpQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3EuoTMmc8y+6eZzzuYKW/xuo4nAOk0fa1sbLT7moZAk=;
+ b=VwwU5aVG7in61OnrE+0Vxli4zysRtdOv0l+LsYIVzk88B5oQqQm6fC0/R6IObl+y+Ph6/41CpKhLsc5wfyd0gXDmHAa95HNmHvZLsO/58CshN6qIepBXaXlghCvJ4VwqKACpRIFHz46OFDT/ySQrPtAuhz+9COP7yjx84vB9oos=
+Authentication-Results: sifive.com; dkim=none (message not signed)
+ header.d=none;sifive.com; dmarc=none action=none header.from=sifive.com;
+Received: from BN6PR1301MB2020.namprd13.prod.outlook.com
+ (2603:10b6:405:34::34) by BN6PR13MB0866.namprd13.prod.outlook.com
+ (2603:10b6:404:4::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.13; Tue, 16 Jun
+ 2020 14:04:00 +0000
+Received: from BN6PR1301MB2020.namprd13.prod.outlook.com
+ ([fe80::68f2:768a:7a8b:e790]) by BN6PR1301MB2020.namprd13.prod.outlook.com
+ ([fe80::68f2:768a:7a8b:e790%7]) with mapi id 15.20.3109.018; Tue, 16 Jun 2020
+ 14:04:00 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     colin.king@canonical.com, aou@eecs.berkeley.edu,
+        david.abdurachmanov@gmail.com, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH] RISC-V: Don't allow write+exec only page mapping request in mmap
+Date:   Tue, 16 Jun 2020 19:33:06 +0530
+Message-Id: <1592316186-1420-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+X-ClientProxiedBy: SG2PR0401CA0008.apcprd04.prod.outlook.com
+ (2603:1096:3:1::18) To BN6PR1301MB2020.namprd13.prod.outlook.com
+ (2603:10b6:405:34::34)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from osubuntu003.open-silicon.com (159.117.144.156) by SG2PR0401CA0008.apcprd04.prod.outlook.com (2603:1096:3:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.22 via Frontend Transport; Tue, 16 Jun 2020 14:03:57 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [159.117.144.156]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 20302512-843b-47f7-b815-08d811fe1e2c
+X-MS-TrafficTypeDiagnostic: BN6PR13MB0866:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR13MB086697033160FF574A85F7188C9D0@BN6PR13MB0866.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 04362AC73B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: m/W1Rt0S2egAN6uiZeT1ceL90ITJekJr/gC50u/lxxk9Z1pgrx4Vlloh7WdzD2xuzd0Jjqx5QRk9ab7+wOuWHiyQnOb9tkajY3HAP28GdQiZE3csmOH2G28YmQN98Fb1oUl1Z5Vo3VSbfoRSl/evyfIHigEdbKzP+eisUSXMfqN7/rJ7Mv7bTyt2V9lEhPR19598edpcIdRbI2iEaaCMoxkmKle++NLTBXtNCOb+aWxgyxivdE5NsVqYIpA+zaMgydVXdzdeL0N7GOuN2hw334Oj55hgbUCvxehsVy0ni7OvV3CC6Zt8WvK4XmbvN0A+l4JI3f+TS8E0HKrJjgI+BNkTqV06nqRWSQUknQLrg1362aB7DdNZWDjdZt9crDLFC71IGTXxfg0b2IQESqpRbA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1301MB2020.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39840400004)(376002)(366004)(396003)(346002)(52116002)(8936002)(6666004)(26005)(6486002)(86362001)(6512007)(2906002)(316002)(8676002)(4326008)(478600001)(966005)(36756003)(5660300002)(83380400001)(107886003)(956004)(16526019)(186003)(66556008)(6506007)(44832011)(2616005)(66946007)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: i23e5WdMWwyJkd5Y4dEL+qEz6AjYUtGCzc+lqWq+vVCrkF1YBkssyglKjZ5ic2YROsiq1uQtvVdckX+LqOyR9Fii/NVoeMmqpfwgABcg5lULiMus5IUZTzComXRGmNU2soKg9W1ar10c+ggbIzaGV80ZKmFHX+muJqUM3Pyc0Iwx29WhRsQX+9roMN/wckFl7WGs3kCZti4lS8hdK4EtnFMZmFmn1AhgY8BZqwY3MTF6duTZiAV9rKg633qsNsphI+f1KQLIxTTUxqR1og3bpdEnsWsyUNgaYi7zU52C6ItHI4uViWtUjmy373snZbGSihtIG7fMaDFxODfF9poNWd4MUc5UOshPY/X5sMZkznVWopfV3FdjBj1GKzQaOoGDD0u5KIlEQNySMULTJB5kxyqRc7hlXQxgtyEmklNNz+dowAik/QlO4xPR05jzXcwGYlgSMDZ37nMp0+j2ubP2eXyAB7daJAawCLayhDFGEdU=
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20302512-843b-47f7-b815-08d811fe1e2c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2020 14:04:00.2495
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Pk7MlXFFsQl/Dhk/PKBYsNl2jDOVLCQEjK4GDkase2jpQfLt1Vr3zN8OaZVLggWxqj8cjkZpdaFv+QEb5sVfsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR13MB0866
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To ensure that a CPU does not send more than a permitted amount of commands
-to the cmdq, ensure that each batch includes a CMD_SYNC. When issuing a
-CMD_SYNC, we always wait for the consumption of its batch of commands - as
-such, we guarantee that any CPU will not issue more than its permitted
-amount.
+As per the table 4.2 of the RISC-V instruction set manual[0], the PTE
+permission bit combination of "write+exec only" is invalid and reserved
+for future use. Hence, don't allow such mapping request in mmap call.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
+An issue is been reported by David Abdurachmanov, that while running
+stress-ng with "sysbadaddr" argument, RCU stalls are observed on RISC-V
+specific kernel.
+
+This issue arises when the stress-sysbadaddr request for pages with
+"write+exec only" permission bits and then passes the address obtain
+from this mmap call to various system call. For the riscv kernel, the
+mmap call should fail for this particular combination of permission bits
+since it's not valid.
+
+[0]: https://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-161.pdf
+
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
 ---
- drivers/iommu/arm-smmu-v3.c | 87 +++++++++++++++++--------------------
- 1 file changed, 40 insertions(+), 47 deletions(-)
+ arch/riscv/kernel/sys_riscv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index c3562dc35d45..36648163364c 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -1373,11 +1373,15 @@ static void arm_smmu_cmdq_write_entries(struct arm_smmu_cmdq *cmdq, u64 *cmds,
-  * - Command insertion is totally ordered, so if two CPUs each race to
-  *   insert their own list of commands then all of the commands from one
-  *   CPU will appear before any of the commands from the other CPU.
-+ *
-+ * - A CMD_SYNC is always inserted, ensuring that any CPU does not issue
-+ *   more than the permitted amount commands at once.
-  */
- static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
--				       u64 *cmds, int n, bool sync)
-+				       u64 *cmds, int n)
+diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
+index f3619f5..12f8a7f 100644
+--- a/arch/riscv/kernel/sys_riscv.c
++++ b/arch/riscv/kernel/sys_riscv.c
+@@ -8,6 +8,7 @@
+ #include <linux/syscalls.h>
+ #include <asm/unistd.h>
+ #include <asm/cacheflush.h>
++#include <asm-generic/mman-common.h>
+ 
+ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+ 			   unsigned long prot, unsigned long flags,
+@@ -16,6 +17,11 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
  {
- 	u64 cmd_sync[CMDQ_ENT_DWORDS];
-+	const int sync = 1;
- 	u32 prod;
- 	unsigned long flags;
- 	bool owner;
-@@ -1419,19 +1423,18 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
- 	 * Dependency ordering from the cmpxchg() loop above.
- 	 */
- 	arm_smmu_cmdq_write_entries(cmdq, cmds, llq.prod, n);
--	if (sync) {
--		prod = queue_inc_prod_n(&llq, n);
--		arm_smmu_cmdq_build_sync_cmd(cmd_sync, smmu, prod);
--		queue_write(Q_ENT(&cmdq->q, prod), cmd_sync, CMDQ_ENT_DWORDS);
- 
--		/*
--		 * In order to determine completion of our CMD_SYNC, we must
--		 * ensure that the queue can't wrap twice without us noticing.
--		 * We achieve that by taking the cmdq lock as shared before
--		 * marking our slot as valid.
--		 */
--		arm_smmu_cmdq_shared_lock(cmdq);
--	}
-+	prod = queue_inc_prod_n(&llq, n);
-+	arm_smmu_cmdq_build_sync_cmd(cmd_sync, smmu, prod);
-+	queue_write(Q_ENT(&cmdq->q, prod), cmd_sync, CMDQ_ENT_DWORDS);
-+
-+	/*
-+	 * In order to determine completion of our CMD_SYNC, we must
-+	 * ensure that the queue can't wrap twice without us noticing.
-+	 * We achieve that by taking the cmdq lock as shared before
-+	 * marking our slot as valid.
-+	 */
-+	arm_smmu_cmdq_shared_lock(cmdq);
- 
- 	/* 3. Mark our slots as valid, ensuring commands are visible first */
- 	dma_wmb();
-@@ -1468,26 +1471,22 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
- 		atomic_set_release(&cmdq->owner_prod, prod);
- 	}
- 
--	/* 5. If we are inserting a CMD_SYNC, we must wait for it to complete */
--	if (sync) {
--		llq.prod = queue_inc_prod_n(&llq, n);
--		ret = arm_smmu_cmdq_poll_until_sync(smmu, &llq);
--		if (ret) {
--			dev_err_ratelimited(smmu->dev,
--					    "CMD_SYNC timeout at 0x%08x [hwprod 0x%08x, hwcons 0x%08x]\n",
--					    llq.prod,
--					    readl_relaxed(cmdq->q.prod_reg),
--					    readl_relaxed(cmdq->q.cons_reg));
--		}
-+	/* 5. Since we always insert a CMD_SYNC, we must wait for it to complete */
-+	llq.prod = queue_inc_prod_n(&llq, n);
-+	ret = arm_smmu_cmdq_poll_until_sync(smmu, &llq);
-+	if (ret) {
-+		dev_err_ratelimited(smmu->dev, "CMD_SYNC timeout at 0x%08x [hwprod 0x%08x, hwcons 0x%08x]\n",
-+				    llq.prod, readl_relaxed(cmdq->q.prod_reg),
-+				    readl_relaxed(cmdq->q.cons_reg));
-+	}
- 
--		/*
--		 * Try to unlock the cmdq lock. This will fail if we're the last
--		 * reader, in which case we can safely update cmdq->q.llq.cons
--		 */
--		if (!arm_smmu_cmdq_shared_tryunlock(cmdq)) {
--			WRITE_ONCE(cmdq->q.llq.cons, llq.cons);
--			arm_smmu_cmdq_shared_unlock(cmdq);
--		}
-+	/*
-+	 * Try to unlock the cmdq lock. This will fail if we're the last reader,
-+	 * in which case we can safely update cmdq->q.llq.cons
-+	 */
-+	if (!arm_smmu_cmdq_shared_tryunlock(cmdq)) {
-+		WRITE_ONCE(cmdq->q.llq.cons, llq.cons);
-+		arm_smmu_cmdq_shared_unlock(cmdq);
- 	}
- 
- 	local_irq_restore(flags);
-@@ -1505,12 +1504,7 @@ static int arm_smmu_cmdq_issue_cmd(struct arm_smmu_device *smmu,
+ 	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
  		return -EINVAL;
- 	}
- 
--	return arm_smmu_cmdq_issue_cmdlist(smmu, cmd, 1, false);
--}
--
--static int arm_smmu_cmdq_issue_sync(struct arm_smmu_device *smmu)
--{
--	return arm_smmu_cmdq_issue_cmdlist(smmu, NULL, 0, true);
-+	return arm_smmu_cmdq_issue_cmdlist(smmu, cmd, 1);
- }
- 
- static void arm_smmu_cmdq_batch_add(struct arm_smmu_device *smmu,
-@@ -1521,7 +1515,7 @@ static void arm_smmu_cmdq_batch_add(struct arm_smmu_device *smmu,
- 	struct arm_smmu_ll_queue *llq = &q->q.llq;
- 
- 	if (cmds->num == llq->max_cmd_per_batch) {
--		arm_smmu_cmdq_issue_cmdlist(smmu, cmds->cmds, cmds->num, false);
-+		arm_smmu_cmdq_issue_cmdlist(smmu, cmds->cmds, cmds->num);
- 		cmds->num = 0;
- 	}
- 	arm_smmu_cmdq_build_cmd(&cmds->cmds[cmds->num * CMDQ_ENT_DWORDS], cmd);
-@@ -1531,7 +1525,7 @@ static void arm_smmu_cmdq_batch_add(struct arm_smmu_device *smmu,
- static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
- 				      struct arm_smmu_cmdq_batch *cmds)
- {
--	return arm_smmu_cmdq_issue_cmdlist(smmu, cmds->cmds, cmds->num, true);
-+	return arm_smmu_cmdq_issue_cmdlist(smmu, cmds->cmds, cmds->num);
- }
- 
- /* Context descriptor manipulation functions */
-@@ -1803,7 +1797,6 @@ static void arm_smmu_sync_ste_for_sid(struct arm_smmu_device *smmu, u32 sid)
- 	};
- 
- 	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
--	arm_smmu_cmdq_issue_sync(smmu);
- }
- 
- static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
-@@ -2197,17 +2190,20 @@ arm_smmu_atc_inv_to_cmd(int ssid, unsigned long iova, size_t size,
- 
- static int arm_smmu_atc_inv_master(struct arm_smmu_master *master)
- {
--	int i;
-+	int i, ret = 0;
- 	struct arm_smmu_cmdq_ent cmd;
- 
- 	arm_smmu_atc_inv_to_cmd(0, 0, 0, &cmd);
- 
- 	for (i = 0; i < master->num_sids; i++) {
-+		int rc;
 +
- 		cmd.atc.sid = master->sids[i];
--		arm_smmu_cmdq_issue_cmd(master->smmu, &cmd);
-+		rc = arm_smmu_cmdq_issue_cmd(master->smmu, &cmd);
-+		ret = ret ? :  rc;
- 	}
- 
--	return arm_smmu_cmdq_issue_sync(master->smmu);
-+	return ret;
++	if ((prot & PROT_WRITE) && (prot & PROT_EXEC))
++		if (unlikely(!(prot & PROT_READ)))
++			return -EINVAL;
++
+ 	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
+ 			       offset >> (PAGE_SHIFT - page_shift_offset));
  }
- 
- static int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
-@@ -2280,7 +2276,6 @@ static void arm_smmu_tlb_inv_context(void *cookie)
- 	 * careful, 007.
- 	 */
- 	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
--	arm_smmu_cmdq_issue_sync(smmu);
- 	arm_smmu_atc_inv_domain(smmu_domain, 0, 0, 0);
- }
- 
-@@ -3650,7 +3645,6 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
- 	/* Invalidate any cached configuration */
- 	cmd.opcode = CMDQ_OP_CFGI_ALL;
- 	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
--	arm_smmu_cmdq_issue_sync(smmu);
- 
- 	/* Invalidate any stale TLB entries */
- 	if (smmu->features & ARM_SMMU_FEAT_HYP) {
-@@ -3660,7 +3654,6 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
- 
- 	cmd.opcode = CMDQ_OP_TLBI_NSNH_ALL;
- 	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
--	arm_smmu_cmdq_issue_sync(smmu);
- 
- 	/* Event queue */
- 	writeq_relaxed(smmu->evtq.q.q_base, smmu->base + ARM_SMMU_EVTQ_BASE);
 -- 
-2.26.2
+2.7.4
 
