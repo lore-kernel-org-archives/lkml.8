@@ -2,109 +2,89 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D32EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D432206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apsKMJBN"
+	by mail.kernel.org (Postfix) with ESMTP id 232B7206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgFPBuw (ORCPT
+        id S1726419AbgFPBvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgFPBuu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 21:50:50 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28FDC061A0E;
-        Mon, 15 Jun 2020 18:50:49 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id n2so7652863pld.13;
-        Mon, 15 Jun 2020 18:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7VA1crYBpyDM52CpMnnLPBWe4Gv8lDrqZmEiV/H49WQ=;
-        b=apsKMJBNubzRb5VfKkwlTGzIW30DhAXetU7+QX6ZMS+t6UZee5AcuxkRbRg9wjbv/I
-         MYTCxXmW4u8qoG8P/tEstRaJNbSZMzHrHPxHIiH7iujv1r2oEKhYVrRZTIhSjUkcxdKQ
-         uvgGCyob7ixnZZX13282HZ49p91GO7NLKnYXVkOO04LKLWFepkDkj1ItV1eYviN6G+Pv
-         FZ+axQQDM/rnxAqUgIHNg10axVSotPCB8rCJIx3Q+gF4cbEkw4TOqsInh+91FvEh8gdJ
-         qpXlV1n6/JBD5TNN/LDsUBG6dyX6U0JBB1MJq34RocmBnI8v2ZGcLQwhkf0FPmmnpryQ
-         rnwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7VA1crYBpyDM52CpMnnLPBWe4Gv8lDrqZmEiV/H49WQ=;
-        b=FBtrBAdv3LMf1Jl0omjAeJDlXN5ZqUyO6wo3FQhPYqrCgXx9PD95RVTKK59hoCufb6
-         DowrsBFnDE/iti1uhkG+bvIrN9bUEZ0IKhliS4OhyhefkritaUvlyw8DZWPheNlLtB0w
-         M52CfiY6m31OiojeB9P8NfxrFlbdPYbztYJ/pZNPt0z5QclMWa8I7XH3shCG/5YqVQZs
-         wBkdGABDuKPdkMmteju7mf/EZCwFOJCeThYuy0wZOvCROes37n5rMApX6WT68l6BQpu/
-         l2Yag9RYM597Jel+15r+lK7UJkxOERRGfKA3LqzMgFgNiPFSfe/y0tJJ/t8ysHKI73dI
-         tiOQ==
-X-Gm-Message-State: AOAM533ba6EfPWn4W6XC22imdAoLmCTLZBeVTYLZkvUcZrcU4GBna6yh
-        bzZx3plZ0UX8w0l3+z39S4Swd/5g0A==
-X-Google-Smtp-Source: ABdhPJyeOaUhju+BDLTm1Ft539XgRC2rQTPXd/LOFaBWCs9fxyyGDPH26OGuzMGWzsBVPMiQ39vILw==
-X-Received: by 2002:a17:90a:c717:: with SMTP id o23mr490537pjt.195.1592272249044;
-        Mon, 15 Jun 2020 18:50:49 -0700 (PDT)
-Received: from localhost (98.86.92.34.bc.googleusercontent.com. [34.92.86.98])
-        by smtp.gmail.com with ESMTPSA id n3sm12435211pgq.30.2020.06.15.18.50.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 18:50:48 -0700 (PDT)
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        Jacky Hu <hengqing.hu@gmail.com>
-Subject: [PATCH] pinctrl: amd: fix npins for uart0 in kerncz_groups
-Date:   Tue, 16 Jun 2020 09:50:24 +0800
-Message-Id: <20200616015024.287683-1-hengqing.hu@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 15 Jun 2020 21:51:33 -0400
+Received: from mga04.intel.com ([192.55.52.120]:18586 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbgFPBvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 21:51:32 -0400
+IronPort-SDR: Iog+5KIJ7x7HcREwl57FJ6AWPpylwiXjMeEm8xrRrCdC1MrSI31ReS+GBQTVqbKY+7Jb+hHj7O
+ lazIXsh81a0g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 18:51:31 -0700
+IronPort-SDR: MhTL47sbS+pRc/kLZQKHQ0AQ/M0ggkjhNBL+Z0Cal3rc4x4rO0tukFSHpVcJA3lhdBbyc3DpB6
+ i/ucjTf5/PWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,517,1583222400"; 
+   d="scan'208";a="276757754"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga006.jf.intel.com with ESMTP; 15 Jun 2020 18:51:31 -0700
+Date:   Mon, 15 Jun 2020 18:51:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v3] x86/split_lock: Sanitize userspace and guest error
+ output
+Message-ID: <20200616015131.GA26491@linux.intel.com>
+References: <20200615113900.35697-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615113900.35697-1-prarit@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uart0_pins is defined as:
-static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
+On Mon, Jun 15, 2020 at 07:39:00AM -0400, Prarit Bhargava wrote:
+> There are two problems with kernel messages in fatal mode that were found
+> during testing of guests and userspace programs.
+> 
+> The first is that no kernel message is output when the split lock detector
+> is triggered with a userspace program.  As a result the userspace process
+> dies from receiving SIGBUS with no indication to the user of what caused
+> the process to die.
+> 
+> The second problem is that only the first triggering guest causes a kernel
+> message to be output because the message is output with pr_warn_once().
+> This also results in a loss of information to the user.
+> 
+> While fixing these I noticed that the same message was being output
+> three times so I'm cleaning that up too.
+> 
+> Fix fatal mode output, and use consistent messages for fatal and
+> warn modes for both userspace and guests.
+> 
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-which npins is wronly specified as 9 later
-	{
-		.name = "uart0",
-		.pins = uart0_pins,
-		.npins = 9,
-	},
+This needs a Co-developed-by for me, and your SOB should come last, e.g.
 
-npins should be 5 instead of 9 according to the definition.
+  Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com> 
+  Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+  Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
----
- drivers/pinctrl/pinctrl-amd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index 3e5760f1a715..d4a192df5fab 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -252,7 +252,7 @@ static const struct amd_pingroup kerncz_groups[] = {
- 	{
- 		.name = "uart0",
- 		.pins = uart0_pins,
--		.npins = 9,
-+		.npins = 5,
- 	},
- 	{
- 		.name = "uart1",
--- 
-2.27.0
-
+See "12) When to use Acked-by:, Cc:, and Co-developed-by:" in
+Documentation/process/submitting-patches.rst for more details.
