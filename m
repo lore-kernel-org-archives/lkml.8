@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B89C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D169C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3BB207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4816F207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323060;
-	bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
+	s=default; t=1592323071;
+	bh=elelhq3eXzJEGg4KEYfrGqUEE7Xby74bH5YIvlict1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UMFWNBaHYuu5rOn8a6O6wMQT58cctGjuyP1wUjJzfX36v3a7kEhDCVxg8O5aQQb4f
-	 CnAZ7THBO7bOJNIJTzOkuHxuDeUbXd+PRAmXpXXSjGx76z/JtzkGMCfmsldnueEkHg
-	 NzEB/VHOC8/hW7ZpxG35eLKKZSbgjmCoeX6Vf7l0=
+	b=OXfIjKQMpv1pb2XfgVpO8xZtQKYKVSAlIpInEfsxurE4NRxIX3jdC2pwgnsX2Pqtz
+	 OD7KR8oI0jcnwYsRJn+/q7DvRIXoC+yOrnKqaBTutJrGJCQL17L6mcFnn+yhTTrbyk
+	 +mdkONN7uMKF5wqz3LDHq4kfQgsjPMy/XkYkhXWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733102AbgFPP5j (ORCPT
+        id S1732540AbgFPP5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54752 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729857AbgFPPzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:00 -0400
+        id S1730423AbgFPPyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEF9B21534;
-        Tue, 16 Jun 2020 15:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4955C21532;
+        Tue, 16 Jun 2020 15:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322900;
-        bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
+        s=default; t=1592322889;
+        bh=elelhq3eXzJEGg4KEYfrGqUEE7Xby74bH5YIvlict1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SvSsfckEcy72OhEFbHK5hZefHXmnXv1WlQyIeMJIKRZmlXpTGjMBUSxh1euuzo1kz
-         SBJp7ZPeXyLM+iv4oTAxgmQFb/x9eeDrLwvORaWIgQhoiB9FxMRs1I3+Tu3ODeUUOH
-         +VbFd4j7e33pPFv6hOTYzbI7arBAFBAoo4U03/Uw=
+        b=yXyF449tJr2hxn0uv4m07PG6vhgcG6sN3fssFIbxOqM+CZKiO9IZNcpMN8NSoNsNX
+         rp4Y55CuWXlQpZyEbBNwsDFoVS1SLFY9HzDuxDGSnz9tPL8Mdi6klMsO4FCRDc+fDP
+         RkT8HAmjBct9KIAI5MHJRv/EUhvIKBH5UCGgsZGk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 130/161] KVM: MIPS: Fix VPN2_MASK definition for variable cpu_vmbits
-Date:   Tue, 16 Jun 2020 17:35:20 +0200
-Message-Id: <20200616153112.548923697@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 144/161] mm/slub: fix a memory leak in sysfs_slab_add()
+Date:   Tue, 16 Jun 2020 17:35:34 +0200
+Message-Id: <20200616153113.210430028@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,43 +65,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xing Li <lixing@loongson.cn>
+From: Wang Hai <wanghai38@huawei.com>
 
-commit 5816c76dea116a458f1932eefe064e35403248eb upstream.
+commit dde3c6b72a16c2db826f54b2d49bdea26c3534a2 upstream.
 
-If a CPU support more than 32bit vmbits (which is true for 64bit CPUs),
-VPN2_MASK set to fixed 0xffffe000 will lead to a wrong EntryHi in some
-functions such as _kvm_mips_host_tlb_inv().
+syzkaller reports for memory leak when kobject_init_and_add() returns an
+error in the function sysfs_slab_add() [1]
 
-The cpu_vmbits definition of 32bit CPU in cpu-features.h is 31, so we
-still use the old definition.
+When this happened, the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
-Cc: Stable <stable@vger.kernel.org>
-Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
-Signed-off-by: Xing Li <lixing@loongson.cn>
-[Huacai: Improve commit messages]
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Message-Id: <1590220602-3547-3-git-send-email-chenhc@lemote.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails.
+
+[1]
+  BUG: memory leak
+  unreferenced object 0xffff8880a6d4be88 (size 8):
+  comm "syz-executor.3", pid 946, jiffies 4295772514 (age 18.396s)
+  hex dump (first 8 bytes):
+    70 69 64 5f 33 00 ff ff                          pid_3...
+  backtrace:
+     kstrdup+0x35/0x70 mm/util.c:60
+     kstrdup_const+0x3d/0x50 mm/util.c:82
+     kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
+     kobject_set_name_vargs+0x55/0x130 lib/kobject.c:289
+     kobject_add_varg lib/kobject.c:384 [inline]
+     kobject_init_and_add+0xd8/0x170 lib/kobject.c:473
+     sysfs_slab_add+0x1d8/0x290 mm/slub.c:5811
+     __kmem_cache_create+0x50a/0x570 mm/slub.c:4384
+     create_cache+0x113/0x1e0 mm/slab_common.c:407
+     kmem_cache_create_usercopy+0x1a1/0x260 mm/slab_common.c:505
+     kmem_cache_create+0xd/0x10 mm/slab_common.c:564
+     create_pid_cachep kernel/pid_namespace.c:54 [inline]
+     create_pid_namespace kernel/pid_namespace.c:96 [inline]
+     copy_pid_ns+0x77c/0x8f0 kernel/pid_namespace.c:148
+     create_new_namespaces+0x26b/0xa30 kernel/nsproxy.c:95
+     unshare_nsproxy_namespaces+0xa7/0x1e0 kernel/nsproxy.c:229
+     ksys_unshare+0x3d2/0x770 kernel/fork.c:2969
+     __do_sys_unshare kernel/fork.c:3037 [inline]
+     __se_sys_unshare kernel/fork.c:3035 [inline]
+     __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3035
+     do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
+
+Fixes: 80da026a8e5d ("mm/slub: fix slab double-free in case of duplicate sysfs filename")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Link: http://lkml.kernel.org/r/20200602115033.1054-1-wanghai38@huawei.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/kvm_host.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ mm/slub.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -274,7 +274,11 @@ enum emulation_result {
- #define MIPS3_PG_SHIFT		6
- #define MIPS3_PG_FRAME		0x3fffffc0
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5778,8 +5778,10 @@ static int sysfs_slab_add(struct kmem_ca
  
-+#if defined(CONFIG_64BIT)
-+#define VPN2_MASK		GENMASK(cpu_vmbits - 1, 13)
-+#else
- #define VPN2_MASK		0xffffe000
-+#endif
- #define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
- #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
- #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
+ 	s->kobj.kset = kset;
+ 	err = kobject_init_and_add(&s->kobj, &slab_ktype, NULL, "%s", name);
+-	if (err)
++	if (err) {
++		kobject_put(&s->kobj);
+ 		goto out;
++	}
+ 
+ 	err = sysfs_create_group(&s->kobj, &slab_attr_group);
+ 	if (err)
 
 
