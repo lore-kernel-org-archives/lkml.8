@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B98C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBD8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D29C20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C160207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323157;
-	bh=jPK7r6XngKm+9s3k8RkKbP+GQdmiG3cPPA1jpmH2QwM=;
+	s=default; t=1592323163;
+	bh=jekqzddmXorLFHyyC5EL7qj8S8lyLz0vDRMB0nadoCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7lru0m8d+zwAFW5tRPhx0BpRvCEge/riAmPMvoxtlgUV5vDhqkMbEz3eSt0+H0EB
-	 WjXLxpdgVQZUVQnsKWY6Zg0cDy7Uz8YhthkgP+MmQv6kKNBMqLlBqMtRA7n5NBtsUV
-	 htkYXNZwoiYk7fKpSBJGKC2j5DVrv/WdpsXLFw34=
+	b=GdEJv8j3FSJiHP3L7zybHU97RDp9zXesP3FLSeYJJ1+4JyNnAKBrvgm/MUBMrBJaA
+	 Nt5S6boIv5I2A1tQmU4gmlG/LJDJyQqLWUPywfrM2/4NasE4tnL+69Eay3Snf6NC4r
+	 SyqwcOVMPDSO8IUQ3aOPOhudYxNVScs0NgalrrV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732188AbgFPP7Q (ORCPT
+        id S1732190AbgFPP7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:59:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52378 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:59:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbgFPPxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:53:48 -0400
+        id S1732891AbgFPPxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10008208D5;
-        Tue, 16 Jun 2020 15:53:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1311E207C4;
+        Tue, 16 Jun 2020 15:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322828;
-        bh=jPK7r6XngKm+9s3k8RkKbP+GQdmiG3cPPA1jpmH2QwM=;
+        s=default; t=1592322820;
+        bh=jekqzddmXorLFHyyC5EL7qj8S8lyLz0vDRMB0nadoCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ReFib/ryGVGrpzGnwdecTVP4vx0ei3P/IUAfywBFw6/QGknwHq8WwtR4HOOgkpjtV
-         sitXxewYR0TM8sqAp/vEZ7+fFZhvOQSjj99Qqpcg3hvbcCyMc57q6tdyuM0kYfd4l8
-         qxdZOXaBH123ZN88yZ/vq2GsiPYVTemaCtg/sUQ4=
+        b=tjPwPXyw0dNtlZKqKTKA4ElVkdl8sdPV4tp+5GmEFtYD0YcTfnUWzzgph9Lc9nQ8C
+         MIXvrQ+tiwENeexkVmdei2b5o/iNH9dTiPy51rg43kzVw30Ox0/rPxByYamjTXPphh
+         pfFe4ac+EldnXk46yTOVlwK6p2lE7DYR7gIW5v8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.6 119/161] remoteproc: Fix and restore the parenting hierarchy for vdev
-Date:   Tue, 16 Jun 2020 17:35:09 +0200
-Message-Id: <20200616153112.025804793@linuxfoundation.org>
+        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.6 116/161] ovl: initialize error in ovl_copy_xattr
+Date:   Tue, 16 Jun 2020 17:35:06 +0200
+Message-Id: <20200616153111.882703317@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,46 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+From: Yuxuan Shui <yshuiv7@gmail.com>
 
-commit c774ad010873bb89dcc0cdcb1e96aef6664d8caf upstream.
+commit 520da69d265a91c6536c63851cbb8a53946974f0 upstream.
 
-The commit 086d08725d34 ("remoteproc: create vdev subdevice with specific
-dma memory pool") has introduced a new vdev subdevice for each vdev
-declared in the firmware resource table and made it as the parent for the
-created virtio rpmsg devices instead of the previous remoteproc device.
-This changed the overall parenting hierarchy for the rpmsg devices, which
-were children of virtio devices, and does not allow the corresponding
-rpmsg drivers to retrieve the parent rproc device through the
-rproc_get_by_child() API.
+In ovl_copy_xattr, if all the xattrs to be copied are overlayfs private
+xattrs, the copy loop will terminate without assigning anything to the
+error variable, thus returning an uninitialized value.
 
-Fix this by restoring the remoteproc device as the parent. The new vdev
-subdevice can continue to inherit the DMA attributes from the remoteproc's
-parent device (actual platform device).
+If ovl_copy_xattr is called from ovl_clear_empty, this uninitialized error
+value is put into a pointer by ERR_PTR(), causing potential invalid memory
+accesses down the line.
 
-Cc: stable@vger.kernel.org
-Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Link: https://lore.kernel.org/r/20200420160600.10467-3-s-anna@ti.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This commit initialize error with 0. This is the correct value because when
+there's no xattr to copy, because all xattrs are private, ovl_copy_xattr
+should succeed.
+
+This bug is discovered with the help of INIT_STACK_ALL and clang.
+
+Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1050405
+Fixes: 0956254a2d5b ("ovl: don't copy up opaqueness")
+Cc: stable@vger.kernel.org # v4.8
+Signed-off-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/remoteproc/remoteproc_core.c |    2 +-
+ fs/overlayfs/copy_up.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -510,7 +510,7 @@ static int rproc_handle_vdev(struct rpro
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -40,7 +40,7 @@ int ovl_copy_xattr(struct dentry *old, s
+ {
+ 	ssize_t list_size, size, value_size = 0;
+ 	char *buf, *name, *value = NULL;
+-	int uninitialized_var(error);
++	int error = 0;
+ 	size_t slen;
  
- 	/* Initialise vdev subdevice */
- 	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
--	rvdev->dev.parent = rproc->dev.parent;
-+	rvdev->dev.parent = &rproc->dev;
- 	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
- 	rvdev->dev.release = rproc_rvdev_release;
- 	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
+ 	if (!(old->d_inode->i_opflags & IOP_XATTR) ||
 
 
