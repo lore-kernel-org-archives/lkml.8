@@ -2,180 +2,258 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FF8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A550C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB9720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED8420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:39:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g2dio5Eq"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Lvx2fP3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgFPHjT (ORCPT
+        id S1727111AbgFPHj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:39:19 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47363 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725979AbgFPHjO (ORCPT
+        Tue, 16 Jun 2020 03:39:26 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:30637 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgFPHjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:39:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592293152;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=zxMCs5UaubMRFDksIF0VDXgJcHRKzq9k34IcsX1pgTw=;
-        b=g2dio5Equ+Fieyt5q1Kpx8GCwLfFH7w3Ln9XkqRSXYt5MMvWjl+dtkZfQVFW1vrf48Vltk
-        bVnVIF71N1Oy0/zTcu3uc3ZbV2/5L3gMP9Rd0+5sge4tTHpirpJdx3NiCD/sBxrA22MbDF
-        vK3EWjjzlMereg5M36flOW4UBeGzy+c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-T70Kk-fZOX-H-jUG_1sPiw-1; Tue, 16 Jun 2020 03:39:10 -0400
-X-MC-Unique: T70Kk-fZOX-H-jUG_1sPiw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A85C1100F60;
-        Tue, 16 Jun 2020 07:39:09 +0000 (UTC)
-Received: from [10.36.114.106] (ovpn-114-106.ams2.redhat.com [10.36.114.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 13E3F5D9CD;
-        Tue, 16 Jun 2020 07:39:07 +0000 (UTC)
-Subject: Re: [PATCH] mm/pgtable: Move extern zero_pfn outside
- __HAVE_COLOR_ZERO_PAGE
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1592280498-15442-1-git-send-email-anshuman.khandual@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <f55dff2d-d32e-8de1-0177-e6ba713e0cd9@redhat.com>
-Date:   Tue, 16 Jun 2020 09:39:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 16 Jun 2020 03:39:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1592293163; x=1623829163;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ilTa35w3nYRqNuCqUjaoGWBZdGeyxteYiG74oO+q4mc=;
+  b=Lvx2fP3I+h0OVlfE+kFBMm1gwQwglQTRLFIc5OZe17kZeGo4whisg707
+   ZxhCXFXr5xcteorXTdkP9dNo4zbEwEoag0KaxikhZcfgTUJDExpWuXDXa
+   jHcJsWOD+QKhs60PJtQALt5PQAYYDPdQHjP5i6K/2Xj027EL56hDMyHks
+   s=;
+IronPort-SDR: MbKL3Asaee6b/iTwb/DWNKNmWDZ1PLZCCGdiBaFzv1uOxyEtnwGqoiitYynsVye+KgavQJq+Pl
+ qaFjtDREcDjg==
+X-IronPort-AV: E=Sophos;i="5.73,518,1583193600"; 
+   d="scan'208";a="37852701"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c300ac87.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 16 Jun 2020 07:39:18 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c300ac87.us-west-2.amazon.com (Postfix) with ESMTPS id D441BA2702;
+        Tue, 16 Jun 2020 07:39:15 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 16 Jun 2020 07:39:15 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.248) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 16 Jun 2020 07:38:54 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <david@redhat.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v12 0/8] Implement Data Access Monitoring-based Memory Operation Schemes
+Date:   Tue, 16 Jun 2020 09:38:20 +0200
+Message-ID: <20200616073828.16509-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1592280498-15442-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Originating-IP: [10.43.162.248]
+X-ClientProxiedBy: EX13D22UWC004.ant.amazon.com (10.43.162.198) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.06.20 06:08, Anshuman Khandual wrote:
-> zero_pfn variable is required whether __HAVE_COLOR_ZERO_PAGE is enabled
+From: SeongJae Park <sjpark@amazon.de>
 
-Why is that relevant for this patch?
+DAMON[1] can be used as a primitive for data access awared memory management
+optimizations.  For that, users who want such optimizations should run DAMON,
+read the monitoring results, analyze it, plan a new memory management scheme,
+and apply the new scheme by themselves.  Such efforts will be inevitable for
+some complicated optimizations.
 
-> or not. Also it should not really be declared individually in all functions
-> where it gets used. Just move the declaration outside, which also makes it
-> available for other potential users.
+However, in many other cases, the users would simply want the system to apply a
+memory management action to a memory region of a specific size having a
+specific access frequency for a specific time.  For example, "page out a memory
+region larger than 100 MiB keeping only rare accesses more than 2 minutes", or
+"Do not use THP for a memory region larger than 2 MiB rarely accessed for more
+than 1 seconds".
 
-So, all you're essentially doing is exposing zero_pfn in pgtable.h now.
+This RFC patchset makes DAMON to handle such data access monitoring-based
+operation schemes.  With this change, users can do the data access aware
+optimizations by simply specifying their schemes to DAMON.
 
-If everybody should just use my_zero_pfn(), I don't really see the
-benefit of this patch, sorry.
+[1] https://lore.kernel.org/linux-mm/20200608114047.26589-1-sjpark@amazon.com/
 
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> Applies on 5.8-rc1. If the earlier motivation was to hide zero_pfn from
-> general visibility, we could just put in a comment and update the commit
-> message that my_zero_pfn() should always be used rather than zero_pfn.
-> Build tested on many platforms and boot tested on arm64, x86.
-> 
->  include/linux/pgtable.h | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index 32b6c52d41b9..078e9864abca 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -1020,10 +1020,11 @@ extern void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
->  extern void untrack_pfn_moved(struct vm_area_struct *vma);
->  #endif
->  
-> +extern unsigned long zero_pfn;
-> +
->  #ifdef __HAVE_COLOR_ZERO_PAGE
->  static inline int is_zero_pfn(unsigned long pfn)
->  {
-> -	extern unsigned long zero_pfn;
->  	unsigned long offset_from_zero_pfn = pfn - zero_pfn;
->  	return offset_from_zero_pfn <= (zero_page_mask >> PAGE_SHIFT);
->  }
-> @@ -1033,13 +1034,11 @@ static inline int is_zero_pfn(unsigned long pfn)
->  #else
->  static inline int is_zero_pfn(unsigned long pfn)
->  {
-> -	extern unsigned long zero_pfn;
->  	return pfn == zero_pfn;
->  }
->  
->  static inline unsigned long my_zero_pfn(unsigned long addr)
->  {
-> -	extern unsigned long zero_pfn;
->  	return zero_pfn;
->  }
->  #endif
-> 
 
+Evaluations
+===========
+
+We evaluated DAMON's overhead, monitoring quality and usefulness using 25
+realistic workloads on my QEMU/KVM based virtual machine running a kernel that
+this patchset is applied.
+
+DAMON is lightweight. It increases system memory usage by only -0.25% and
+consumes less than 1% CPU time in most case. It slows target workloads down by
+only 0.94%.
+
+DAMON is accurate and useful for memory management optimizations. An
+experimental DAMON-based operation scheme for THP, ‘ethp’, removes 31.29% of
+THP memory overheads while preserving 60.64% of THP speedup. Another
+experimental DAMON-based ‘proactive reclamation’ implementation, ‘prcl’,
+reduces 87.95% of residential sets and 29.52% of system memory footprint while
+incurring only 2.15% runtime overhead in the best case (parsec3/freqmine).
+
+NOTE that the experimentail THP optimization and proactive reclamation are not
+for production, just only for proof of concepts.
+
+Please refer to the official document[1] or "Documentation/admin-guide/mm: Add
+a document for DAMON" patch in the latest DAMON patchset for detailed
+evaluation setup and results.
+
+[1] https://damonitor.github.io/doc/html/latest-damos
+
+
+More Information
+================
+
+We prepared a showcase web site[1] that you can get more information.  There
+are
+
+- the official documentations[2],
+- the heatmap format dynamic access pattern of various realistic workloads for
+  heap area[3], mmap()-ed area[4], and stack[5] area,
+- the dynamic working set size distribution[6] and chronological working set
+  size changes[7], and
+- the latest performance test results[8].
+
+[1] https://damonitor.github.io/_index
+[2] https://damonitor.github.io/doc/html/latest-damos
+[3] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.0.html
+[4] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.html
+[5] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.2.html
+[6] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.html
+[7] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.html
+[8] https://damonitor.github.io/test/result/perf/latest/html/index.html
+
+
+Baseline and Complete Git Tree
+==============================
+
+
+The patches are based on the v5.7 plus v16 DAMON patchset[1] and Minchan's
+``do_madvise()`` patch[2], which retrieved from linux-next/master and slightly
+modified for backporting on v5.7.  You can also clone the complete git tree:
+
+    $ git clone git://github.com/sjp38/linux -b damos/rfc/v12
+
+The web is also available:
+https://github.com/sjp38/linux/releases/tag/damos/rfc/v12
+
+There are a couple of trees for entire DAMON patchset series that future
+features are included.  The first one[3] contains the changes for latest
+release, while the other one[4] contains the changes for next release.
+
+[1] https://lore.kernel.org/linux-mm/20200615161927.12637-1-sjpark@amazon.com/
+[2] https://lore.kernel.org/linux-mm/20200302193630.68771-2-minchan@kernel.org/
+[3] https://github.com/sjp38/linux/tree/damon/master
+[4] https://github.com/sjp38/linux/tree/damon/next
+
+
+Sequence Of Patches
+===================
+
+The 1st patch allows DAMON to reuse ``madvise()`` code for the actions.  The
+2nd patch accounts age of each region.  The 3rd patch implements the handling
+of the schemes in DAMON and exports a kernel space programming interface for
+it.  The 4th patch implements a debugfs interface for the privileged people and
+user programs.  The 5th patch implements schemes statistics feature for easier
+tuning of the schemes and runtime access pattern analysis.  The 6th patche adds
+selftests for these changes, and the 7th patch adds human friendly schemes
+support to the user space tool for DAMON.  Finally, the 8th patch documents
+this new feature in the document.
+
+
+Patch History
+=============
+
+Changes from RFC v11
+(https://lore.kernel.org/linux-mm/20200609065320.12941-1-sjpark@amazon.com/)
+ - Refine the commit messages (David Hildenbrand)
+ - Clean up debugfs code
+
+Changes from RFC v10
+(https://lore.kernel.org/linux-mm/20200603071138.8152-1-sjpark@amazon.com/)
+ - Fix the wrong error handling for schemes debugfs file
+ - Handle the schemes stats from the user space tool
+ - Remove the schemes implementation plan from the document
+
+Changes from RFC v9
+(https://lore.kernel.org/linux-mm/20200526075702.27339-1-sjpark@amazon.com/)
+ - Rebase on v5.7
+ - Fix wrong comments and documents for schemes apply conditions
+
+Changes from RFC v8
+(https://lore.kernel.org/linux-mm/20200512115343.27699-1-sjpark@amazon.com/)
+ - Rewrite the document (Stefan Nuernberger)
+ - Make 'damon_for_each_*' argument order consistent (Leonard Foerster)
+ - Implement statistics for schemes
+ - Avoid races between debugfs readers and writers
+ - Reset age for only significant access frequency changes
+ - Add kernel-doc comments in damon.h
+
+Changes from RFC v7
+(https://lore.kernel.org/linux-mm/20200429124540.32232-1-sjpark@amazon.com/)
+ - Rebase on DAMON v11 patchset
+ - Add documentation
+
+Please refer to RFC v7 for previous history
+
+SeongJae Park (8):
+  mm/madvise: Export do_madvise() to external GPL modules
+  mm/damon: Account age of target regions
+  mm/damon: Implement data access monitoring-based operation schemes
+  mm/damon/schemes: Implement a debugfs interface
+  mm/damon/schemes: Implement statistics feature
+  mm/damon/selftests: Add 'schemes' debugfs tests
+  damon/tools: Support more human friendly 'schemes' control
+  Documentation/admin-guide/mm: Document DAMON-based operation schemes
+
+ Documentation/admin-guide/mm/damon/guide.rst  |  35 ++
+ Documentation/admin-guide/mm/damon/plans.rst  |  23 +-
+ Documentation/admin-guide/mm/damon/usage.rst  | 127 ++++++-
+ include/linux/damon.h                         |  66 ++++
+ mm/damon.c                                    | 347 +++++++++++++++++-
+ mm/madvise.c                                  |   1 +
+ tools/damon/_convert_damos.py                 | 128 +++++++
+ tools/damon/_damon.py                         | 146 ++++++++
+ tools/damon/damo                              |   7 +
+ tools/damon/record.py                         | 139 +------
+ tools/damon/schemes.py                        | 109 ++++++
+ .../testing/selftests/damon/debugfs_attrs.sh  |  29 ++
+ 12 files changed, 995 insertions(+), 162 deletions(-)
+ create mode 100755 tools/damon/_convert_damos.py
+ create mode 100644 tools/damon/_damon.py
+ create mode 100644 tools/damon/schemes.py
 
 -- 
-Thanks,
-
-David / dhildenb
+2.17.1
 
