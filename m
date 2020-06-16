@@ -2,113 +2,105 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B32CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B8C2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592273169;
-	bh=Gidjz2z413BnEyhZQWUEtTYIY1LtOHmUnhXr+gU3mQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BTRxo3bL9O8uXLam8gyvRsQ8Z4EImEyQmaknACs/DSXVcyI+Cw/a58NZLTlNAcN8B
-	 frZtIeAxjwfF6zn2LWt7hCijucmDkCtFA7R3l+Y8/y+XX65mWQfoKwdoriF4YdYXXC
-	 0HCL2jTFuA0rDDH808cwa4SbfjvTEZC6E6u/v8LE=
+	by mail.kernel.org (Postfix) with ESMTP id 3D0172071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:07:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="okB8LYmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgFPCGH (ORCPT
+        id S1726520AbgFPCH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 22:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbgFPCGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 22:06:07 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CFDE2071A;
-        Tue, 16 Jun 2020 02:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592273166;
-        bh=Gidjz2z413BnEyhZQWUEtTYIY1LtOHmUnhXr+gU3mQQ=;
+        Mon, 15 Jun 2020 22:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgFPCH5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 22:07:57 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF09EC061A0E;
+        Mon, 15 Jun 2020 19:07:56 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F1E75F9;
+        Tue, 16 Jun 2020 04:07:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1592273275;
+        bh=xYElGteoaj0H9zLGTP6RnYkFontC7H09EZpYQcLGUtM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aIXJ9QSTWXOIDT5DKeikMaFmDuKcapcRJd6o2Gq9Gj7RNCD4PHKf11UOPTa0MqmlB
-         X9VXuDPd/WT7JY0catw6qiw7eOZ8k+PJ3ymhIBy6qbMZcsE6QC1qYGfjnc6YV5rIty
-         ZoiXgWecJakQ2oz1ChwRZCh5Wld6trGBD6kjUvV0=
-Date:   Mon, 15 Jun 2020 21:11:26 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] flexible-array member conversion patches for 5.8-rc2
-Message-ID: <20200616021126.GK10051@embeddedor>
-References: <20200615203917.GA15876@embeddedor>
- <CAHk-=wiSQV3nxTkQwO55qaLsW9CdkROFqwc1S6RX3PXe8ONPaQ@mail.gmail.com>
+        b=okB8LYmHYqilwBUAYyvrfQ8bW0QAZyYKM6eyUYx/nrm21scB5YMBKSQYZ1vtTbfyG
+         3aB2gQ73t4FEa5lDTz9s5RTQ1UDF7/TRujuLWEr0X3HErtSH3HRtE6/WK3lgf1mFXW
+         mzAhcKHvXnUVNu8akz1Y2/cdsrgG/Dm+PsjrCjmo=
+Date:   Tue, 16 Jun 2020 05:07:32 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     wu000273@umn.edu
+Cc:     kjlu@umn.edu,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: vsp1: Fix a reference count leak.
+Message-ID: <20200616020732.GK1629@pendragon.ideasonboard.com>
+References: <20200613232357.18155-1-wu000273@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiSQV3nxTkQwO55qaLsW9CdkROFqwc1S6RX3PXe8ONPaQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200613232357.18155-1-wu000273@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 04:07:28PM -0700, Linus Torvalds wrote:
-> On Mon, Jun 15, 2020 at 1:34 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > flexible-array member conversion patches for 5.8-rc2
+Hi Qiushi,
+
+(CC'ing Rafael and Geert)
+
+Thank you for the patch.
+
+On Sat, Jun 13, 2020 at 06:23:57PM -0500, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
 > 
-> Gaah. I merged this, and even spent some time trying to make the merge
-> message look better, and then when I started looking at the end
-> result, I ended up unpulling it.
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code, causing incorrect ref count if
+> pm_runtime_put_noidle() is not called in error handling paths.
+> Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
 > 
-> It's all been recently rebased, which I might be willing to ignore for
-> something like this, but all these one-liner patches then come with a
-> boiler-plate commit message that is something like 50 lines long and
-> is actively misleading as it talks about "this tree-wide patch" and
-> just repeats the generic issues that were presented (better) in the
-> merge message anyway.
+> Fixes: 1e6af546ee66 ("[media] v4l: vsp1: Implement runtime PM support")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+
+https://lore.kernel.org/dri-devel/20200614134655.GA5960@pendragon.ideasonboard.com/
+
+I really wonder if mass-patching all drivers is the best way forward.
+
+> ---
+>  drivers/media/platform/vsp1/vsp1_drv.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> The individual commit messages literally add nothing specific to that
-> commit AT ALL except for the very first line, which is also
-> boiler-plate but at least mentions the subsystem.
-> 
-> End result: when I do "git log" after having merged this, the result
-> is basically two *thousand* lines of repeated noise.
-> 
-> Some repetition is fine. But 2000 lines of repeated boiler-plate makes
-> me go "that's actively detrimental to any use of 'git log'" and I
-> undid my pull.
-> 
+> diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+> index c650e45bb0ad..222c9e1261a0 100644
+> --- a/drivers/media/platform/vsp1/vsp1_drv.c
+> +++ b/drivers/media/platform/vsp1/vsp1_drv.c
+> @@ -846,8 +846,10 @@ static int vsp1_probe(struct platform_device *pdev)
+>  	pm_runtime_enable(&pdev->dev);
+>  
+>  	ret = pm_runtime_get_sync(&pdev->dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(&pdev->dev);
+>  		goto done;
+> +	}
+>  
+>  	vsp1->version = vsp1_read(vsp1, VI6_IP_VERSION);
+>  	pm_runtime_put_sync(&pdev->dev);
 
-Yep, you're right. We made the mistake of not having something to point
-people to, from the beginning; which we are trying to fix by adding the
-following documentation to deprecated.rst:
+-- 
+Regards,
 
-https://lore.kernel.org/lkml/20200608213711.GA22271@embeddedor/
-
-That's the reason why the log for these sorts of patches ended up being
-so repetitive: as a way to compensate for not having proper documentation
-in place from the beginning.
-
-And yes, it was my mistake not to remove part of the log from the changelog
-text when I turned the treewide patch into separate per-subsystem patches
---for they to be properly tested by the 0-day CI Kernel Test Service.
-
-I will modify the changelog text of the separate patches and send you the
-pull-request once again.
-
-BTW, the commit message is the exact same text we are planning to add to
-the deprecated.rst file, which will be used for both zero-length and
-one-element array conversions. It might be better to to remove the part
-for the one-element arrays, in this case.
-
-Thanks
---
-Gustavo
+Laurent Pinchart
