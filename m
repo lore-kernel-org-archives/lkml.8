@@ -2,103 +2,186 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE27B206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PdXRsKHo"
+	by mail.kernel.org (Postfix) with ESMTP id 2B783206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgFPIBQ (ORCPT
+        id S1727017AbgFPIB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:01:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgFPIBQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:01:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0006DC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:01:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u26so1668433wmn.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XCQQkMTQ5i0LzzLAqMYj0ZlgAAMCYhAeRgmSTuVWpiU=;
-        b=PdXRsKHo2oCz/8hxGQBkQV8rA1aKo0OTp0h9+96o15ErtKc6f16Dd3ycbRN9NSfsOq
-         iti334NTjzMW1HZaX5zFGaJPnp6eF9xhGXLsQL4EQsl4xP5777sVMLoWyyIMEtKY7bHo
-         pBIXbAprivzwyVYgJ+fMg56w16n3AvK+BoNuzfWnOJrfxn08Un9j3nB9uC+X5G6w6V3O
-         QcYaHk+fX6PRb7luMATq9n1ffCWBohaF5fA9MilLPGdpyIJev2j06pnn7rvrYHpJ/jra
-         j/bVTWH81cmWaMMambEOSwqklgHbl1Q3BbMPe9+vR2FYZGrIygWRrEwBFt3r68FoRxA6
-         AVYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XCQQkMTQ5i0LzzLAqMYj0ZlgAAMCYhAeRgmSTuVWpiU=;
-        b=aDsdexk/Wxn0mDw9SOAt3dsjkSfEFugVL6vsLzsD6NzrubM1sE3YIz4aFJo4uka2h3
-         f8i+axeTz62qMcGCCdywyofMw9UTwFxqis2ANeyjl1nJqE5HuLxVnSeRfoSS7rOH0jWy
-         /ff/sK4QnsPgECeznFRD3dnSusHtBkgZsio1kLEVvurIgUJH6SAiBPqADab5gLM5HiZI
-         AFRtX7PkvzLgEECxYaIQ9hrS9s2W8ePdNvZgihxJlyJwUgEVclcV/9DiLrn0Z92O11n+
-         +fxddqqlgEF65r+OW7+2otw2rLLm014itwIibRKlY6nIEoPcLp84/uhDn8tfNVYzkIws
-         kLqA==
-X-Gm-Message-State: AOAM530FWjN+/Q3LEv+V5SPRh8huI+o0COtdiq6w/oy+Wo2SgxJGOI8O
-        FEQ3jP9WlAHvGjNT7JcPtud9eg==
-X-Google-Smtp-Source: ABdhPJwtczraf1q3fNGZhkclduNYNYI8K+xijJ86be2Gc7A4wCaDONGmmmpE6dQq3Anyi1FZCmAJ1w==
-X-Received: by 2002:a1c:6509:: with SMTP id z9mr1993858wmb.144.1592294474761;
-        Tue, 16 Jun 2020 01:01:14 -0700 (PDT)
-Received: from dell ([109.180.115.156])
-        by smtp.gmail.com with ESMTPSA id j16sm33254269wre.21.2020.06.16.01.01.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 01:01:14 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:01:12 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     s.nawrocki@samsung.com, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v2 1/4] mfd: arizona: Remove BUG_ON usage
-Message-ID: <20200616080112.GH2608702@dell>
-References: <20200615135323.15215-1-ckeepax@opensource.cirrus.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615135323.15215-1-ckeepax@opensource.cirrus.com>
+        Tue, 16 Jun 2020 04:01:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54670 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726405AbgFPIB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 04:01:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BED06AD87;
+        Tue, 16 Jun 2020 08:01:57 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 10:01:52 +0200
+Message-ID: <s5himfr30cv.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     tiwai@suse.com, Jaroslav Kysela <perex@perex.cz>,
+        =?UTF-8?B?TWljaGE=?= =?UTF-8?B?xYIgTWlyb3PFgmF3?= 
+        <mirq-linux@rere.qmqm.pl>, Wenwen Wang <wenwen@cs.uga.edu>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kailang Yang <kailang@realtek.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Tomas Espeleta <tomas.espeleta@gmail.com>,
+        Thomas Hebb <tommyhebb@gmail.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH 1/2] ALSA: hda: Make codec controlled LED support more generic
+In-Reply-To: <20200616044702.17570-1-kai.heng.feng@canonical.com>
+References: <20200616044702.17570-1-kai.heng.feng@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020, Charles Keepax wrote:
-
-> BUG_ON macros are generally frowned upon when the issue isn't super
-> critical, the kernel can certainly carry on with the 32k clock on the
-> CODEC in a bad state so change the BUG_ON to a WARN_ON.
+On Tue, 16 Jun 2020 06:46:58 +0200,
+Kai-Heng Feng wrote:
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Currently, only HDA codec GPIO controlled LED class is supported, and
+> only via platform specific quirk.
+> 
+> There are systems that control LED via COEF instead of GPIO, and to
+> support those systems, move the LED class registration to
+> snd_hda_gen_add_micmute_led(), so all systems can facilitate the same
+> interface.
+
+This will result in creating the led cdev always when the mic-mute LED
+feature is used, not only for HP but also for Dell and Huawei.
+Is this the intended result?
+
+
+thanks,
+
+Takashi
+
+> 
+> In addition to that, add LED_CORE_SUSPENDRESUME flag since some systems
+> don't restore the LED properly after suspend.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
+>  sound/pci/hda/hda_generic.c   | 28 ++++++++++++++++++++++++++++
+>  sound/pci/hda/patch_realtek.c | 30 ------------------------------
+>  2 files changed, 28 insertions(+), 30 deletions(-)
 > 
-> No changes since v1.
+> diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+> index f4e9d9445e18..4242407734c0 100644
+> --- a/sound/pci/hda/hda_generic.c
+> +++ b/sound/pci/hda/hda_generic.c
+> @@ -4006,6 +4006,28 @@ static const struct snd_kcontrol_new micmute_led_mode_ctl = {
+>   *
+>   * Returns 0 if the hook is established or a negative error code.
+>   */
+> +
+> +#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+> +static int micmute_led_set(struct led_classdev *led_cdev,
+> +			   enum led_brightness brightness)
+> +{
+> +	struct hda_codec *codec = dev_to_hda_codec(led_cdev->dev->parent);
+> +	struct hda_gen_spec *spec = codec->spec;
+> +
+> +	spec->micmute_led.led_mode = !brightness;
+> +	call_micmute_led_update(codec);
+> +	return 0;
+> +}
+> +
+> +static struct led_classdev micmute_led_cdev = {
+> +	.name = "hda::micmute",
+> +	.max_brightness = 1,
+> +	.brightness_set_blocking = micmute_led_set,
+> +	.default_trigger = "audio-micmute",
+> +	.flags = LED_CORE_SUSPENDRESUME,
+> +};
+> +#endif
+> +
+>  int snd_hda_gen_add_micmute_led(struct hda_codec *codec,
+>  				void (*hook)(struct hda_codec *))
+>  {
+> @@ -4019,6 +4041,12 @@ int snd_hda_gen_add_micmute_led(struct hda_codec *codec,
+>  	spec->cap_sync_hook = update_micmute_led;
+>  	if (!snd_hda_gen_add_kctl(spec, NULL, &micmute_led_mode_ctl))
+>  		return -ENOMEM;
+> +
+> +#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+> +	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> +	if (devm_led_classdev_register(&codec->core.dev, &micmute_led_cdev))
+> +		codec_warn(codec, "failed to register micmute LED\n");
+> +#endif
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(snd_hda_gen_add_micmute_led);
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index 6d73f8beadb6..cead44a6c6cd 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -4109,26 +4109,6 @@ static void alc_gpio_micmute_update(struct hda_codec *codec)
+>  			    spec->gen.micmute_led.led_value);
+>  }
+>  
+> -#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+> -static int micmute_led_set(struct led_classdev *led_cdev,
+> -			   enum led_brightness brightness)
+> -{
+> -	struct hda_codec *codec = dev_to_hda_codec(led_cdev->dev->parent);
+> -	struct alc_spec *spec = codec->spec;
+> -
+> -	alc_update_gpio_led(codec, spec->gpio_mic_led_mask,
+> -			    spec->micmute_led_polarity, !!brightness);
+> -	return 0;
+> -}
+> -
+> -static struct led_classdev micmute_led_cdev = {
+> -	.name = "hda::micmute",
+> -	.max_brightness = 1,
+> -	.brightness_set_blocking = micmute_led_set,
+> -	.default_trigger = "audio-micmute",
+> -};
+> -#endif
+> -
+>  /* setup mute and mic-mute GPIO bits, add hooks appropriately */
+>  static void alc_fixup_hp_gpio_led(struct hda_codec *codec,
+>  				  int action,
+> @@ -4136,9 +4116,6 @@ static void alc_fixup_hp_gpio_led(struct hda_codec *codec,
+>  				  unsigned int micmute_mask)
+>  {
+>  	struct alc_spec *spec = codec->spec;
+> -#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+> -	int err;
+> -#endif
+>  
+>  	alc_fixup_gpio(codec, action, mute_mask | micmute_mask);
+>  
+> @@ -4151,13 +4128,6 @@ static void alc_fixup_hp_gpio_led(struct hda_codec *codec,
+>  	if (micmute_mask) {
+>  		spec->gpio_mic_led_mask = micmute_mask;
+>  		snd_hda_gen_add_micmute_led(codec, alc_gpio_micmute_update);
+> -
+> -#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+> -		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> -		err = devm_led_classdev_register(&codec->core.dev, &micmute_led_cdev);
+> -		if (err)
+> -			codec_warn(codec, "failed to register micmute LED\n");
+> -#endif
+>  	}
+>  }
+>  
+> -- 
+> 2.17.1
 > 
-> Thanks,
-> Charles
-> 
->  drivers/mfd/arizona-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Applied, thanks.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
