@@ -2,99 +2,71 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9EAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B32C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E01C120739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D3820739
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgFPKu5 (ORCPT
+        id S1728558AbgFPKvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:50:57 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:53312 "EHLO
+        Tue, 16 Jun 2020 06:51:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53412 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgFPKu5 (ORCPT
+        with ESMTP id S1728049AbgFPKvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:50:57 -0400
+        Tue, 16 Jun 2020 06:51:23 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1B0FC1C0BD2; Tue, 16 Jun 2020 12:50:56 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:50:45 +0200
+        id 81F591C0BD2; Tue, 16 Jun 2020 12:51:21 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:51:13 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Merlijn Wajer <merlijn@wizzup.org>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Beno??t Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mark Gross <mgross@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
-        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>
-Subject: Re: [PATCH 1/2] Input: add `SW_MACHINE_COVER`
-Message-ID: <20200616105045.GB1718@bug>
-References: <20200612125402.18393-1-merlijn@wizzup.org>
- <20200612125402.18393-2-merlijn@wizzup.org>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Sasha Levin <sashal@kernel.org>, alexander.deucher@amd.com,
+        chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
+        Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+Message-ID: <20200616105112.GC1718@bug>
+References: <20200519163234.226513-1-sashal@kernel.org>
+ <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200612125402.18393-2-merlijn@wizzup.org>
+In-Reply-To: <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-06-12 14:53:58, Merlijn Wajer wrote:
-> This event code represents the state of a removable cover of a device.
-> Value 0 means that the cover is open or removed, value 1 means that the
-> cover is closed.
+Hi!
+
+> > The driver creates the /dev/dxg device, which can be opened by user mode
+> > application and handles their ioctls. The IOCTL interface to the driver
+> > is defined in dxgkmthk.h (Dxgkrnl Graphics Port Driver ioctl
+> > definitions). The interface matches the D3DKMT interface on Windows.
+> > Ioctls are implemented in ioctl.c.
 > 
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com> Acked-by: Tony Lindgren 
-> <tony@atomide.com> Signed-off-by: Merlijn Wajer <merlijn@wizzup.org> ---
+> Echoing what others said, you're not making a DRM driver. The driver should live outside 
+> of the DRM code.
+> 
 
-Dmitry, can we get some kind of comment here, or better yet can we get you to apply this?
+Actually, this sounds to me like "this should not be merged into linux kernel". I mean,
+we already have DRM API on Linux. We don't want another one, do we?
 
-Thanks,
+And at the very least... this misses API docs for /dev/dxg. Code can't really 
+be reviewed without that.
+
+Best regards,
 										Pavel
-> +++ b/include/linux/mod_devicetable.h
-> @@ -318,7 +318,7 @@ struct pcmcia_device_id {
->  #define INPUT_DEVICE_ID_LED_MAX		0x0f
->  #define INPUT_DEVICE_ID_SND_MAX		0x07
->  #define INPUT_DEVICE_ID_FF_MAX		0x7f
-> -#define INPUT_DEVICE_ID_SW_MAX		0x0f
-> +#define INPUT_DEVICE_ID_SW_MAX		0x10
->  #define INPUT_DEVICE_ID_PROP_MAX	0x1f
->  
->  #define INPUT_DEVICE_ID_MATCH_BUS	1
-> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> index b6a835d37826..0c2e27d28e0a 100644
-> --- a/include/uapi/linux/input-event-codes.h
-> +++ b/include/uapi/linux/input-event-codes.h
-> @@ -888,7 +888,8 @@
->  #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
->  #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
->  #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
-> -#define SW_MAX			0x0f
-> +#define SW_MACHINE_COVER	0x10  /* set = cover closed */
-> +#define SW_MAX			0x10
->  #define SW_CNT			(SW_MAX+1)
->  
->  /*
-> -- 
-> 2.24.1
 
 -- 
 (english) http://www.livejournal.com/~pavelmachek
