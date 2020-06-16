@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0085C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 780A92071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E36920776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323214;
-	bh=+z2rEzPrdmHOBWRCBOlmjBsTUF6O4EPLsLOg3tNTKG4=;
+	s=default; t=1592323216;
+	bh=8oOdO8G5uDNdbKO90o2ZU39T1Bp6Ti8hqZkMXc9pX6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iMt6n66Y1sFUcJEYWMD9S0c0HAJY6tTu85wJWEWxqQ29WkkhyKkAu+VA4g0LymG3m
-	 lU4FCHWcgCLD4PWyGZbaOlP2+yl0dci1oelTdQSE6oSULPRfCr7z74MahqW/3L59f1
-	 A8pF4mNyTHlC19Up5bCUS7lRMqIdSpAnTRDRP850=
+	b=Z6NgkbQb+8Z639z/PlRPLnqjNutA7xid3L4xJeaLr+76TJ+XGvuEFsLyZptaEptoE
+	 nzxAJV0MgooZpH8xOTZCngJQAQU/KodV5DQo7u5K9Olk69/uSr9txTPxZJVFC2QDEP
+	 uPuPx1lj23zUHcP6HEYFGBwYfXbveZqS//GlRRyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732905AbgFPQAL (ORCPT
+        id S1733040AbgFPQAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:00:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:00:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731797AbgFPPxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:53:03 -0400
+        id S1731804AbgFPPw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:52:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B212208D5;
-        Tue, 16 Jun 2020 15:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB99208D5;
+        Tue, 16 Jun 2020 15:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322783;
-        bh=+z2rEzPrdmHOBWRCBOlmjBsTUF6O4EPLsLOg3tNTKG4=;
+        s=default; t=1592322778;
+        bh=8oOdO8G5uDNdbKO90o2ZU39T1Bp6Ti8hqZkMXc9pX6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUkPXvzgBblakl4kL+3cgjFzMZUrXrNg+sO3kur5Lxy4ySDIjqjgL0PoZwPTFNhBh
-         5iqe6ggppPQo+Qi6GYDCk55tyvqV0rV2ySiUTCB2frnq2dd6aRexMMXSvQg/O8mVxq
-         UOdGOFmW4l2+aphO9j56kfEtTCXF6q6CtDmrpAFY=
+        b=FeDG7ke8Bh7tmkLlahGfBUbKgiokZkHX/6DQIc0Sm/0R7mXhzjQ28Y7OSpWsG7Nbk
+         8pGoWj3fZvsbOrTyDJoDZiAzw2ZUXzRpgUTgzJ8OP3ZU0Ad2Wv/6uZJ0IzT0zA7Zuz
+         JCfJdz60GY0lzHpkv31j1yFlChc2iwzqtj44fVjo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 072/161] ALSA: hda/realtek - add a pintbl quirk for several Lenovo machines
-Date:   Tue, 16 Jun 2020 17:34:22 +0200
-Message-Id: <20200616153109.808486710@linuxfoundation.org>
+Subject: [PATCH 5.6 070/161] ALSA: fireface: fix configuration error for nominal sampling transfer frequency
+Date:   Tue, 16 Jun 2020 17:34:20 +0200
+Message-Id: <20200616153109.713755288@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,39 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 573fcbfd319ccef26caa3700320242accea7fd5c upstream.
+commit bbd6aac3ae15bef762af03bf62e35ace5c4292bd upstream.
 
-A couple of Lenovo ThinkCentre machines all have 2 front mics and they
-use the same codec alc623 and have the same pin config, so add a
-pintbl entry for those machines to apply the fixup
-ALC283_FIXUP_HEADSET_MIC.
+128000 and 192000 are congruence modulo 32000, thus it's wrong to
+distinguish them as multiple of 32000 and 48000 by modulo 32000 at
+first.
+
+Additionally, used condition statement to detect quadruple speed can
+cause missing bit flag.
+
+Furthermore, counter to ensure the configuration is wrong and it
+causes false positive.
+
+This commit fixes the above three bugs.
 
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200608115541.9531-1-hui.wang@canonical.com
+Fixes: 60aec494b389 ("ALSA: fireface: support allocate_resources operation in latter protocol")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200510074301.116224-2-o-takashi@sakamocchi.jp
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/firewire/fireface/ff-protocol-latter.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -8124,6 +8124,12 @@ static const struct snd_hda_pin_quirk al
- 		ALC225_STANDARD_PINS,
- 		{0x12, 0xb7a60130},
- 		{0x17, 0x90170110}),
-+	SND_HDA_PIN_QUIRK(0x10ec0623, 0x17aa, "Lenovo", ALC283_FIXUP_HEADSET_MIC,
-+		{0x14, 0x01014010},
-+		{0x17, 0x90170120},
-+		{0x18, 0x02a11030},
-+		{0x19, 0x02a1103f},
-+		{0x21, 0x0221101f}),
- 	{}
- };
+--- a/sound/firewire/fireface/ff-protocol-latter.c
++++ b/sound/firewire/fireface/ff-protocol-latter.c
+@@ -107,18 +107,18 @@ static int latter_allocate_resources(str
+ 	int err;
  
+ 	// Set the number of data blocks transferred in a second.
+-	if (rate % 32000 == 0)
+-		code = 0x00;
++	if (rate % 48000 == 0)
++		code = 0x04;
+ 	else if (rate % 44100 == 0)
+ 		code = 0x02;
+-	else if (rate % 48000 == 0)
+-		code = 0x04;
++	else if (rate % 32000 == 0)
++		code = 0x00;
+ 	else
+ 		return -EINVAL;
+ 
+ 	if (rate >= 64000 && rate < 128000)
+ 		code |= 0x08;
+-	else if (rate >= 128000 && rate < 192000)
++	else if (rate >= 128000)
+ 		code |= 0x10;
+ 
+ 	reg = cpu_to_le32(code);
+@@ -140,7 +140,7 @@ static int latter_allocate_resources(str
+ 		if (curr_rate == rate)
+ 			break;
+ 	}
+-	if (count == 10)
++	if (count > 10)
+ 		return -ETIMEDOUT;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(amdtp_rate_table); ++i) {
 
 
