@@ -2,131 +2,111 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4223C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBD6207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:32:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A+imL3Xu"
+	by mail.kernel.org (Postfix) with ESMTP id A7617207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:34:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgFPXcC (ORCPT
+        id S1726518AbgFPXen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgFPXcC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:32:02 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BBFDC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:32:02 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id a3so121965oid.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jZR76zTcu1z7oLJO1oPo6x5h1/7W/tIAc9DNWun2Jro=;
-        b=A+imL3Xumi3VRZIxUfyQtYqL4SA7G7E/2giwMRBcbO409QXLbYKBmCEsGUcJqa4TAY
-         HU+A+AmsENld/FcXObD2qTY0vt+cbLiaGJm9qbyZw0vkmsaJ7NDYQPWy1JEpm6ihyqYo
-         pS10I8MeABTV+7Z6yUApqXhNqxg3tpLAJIdzw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jZR76zTcu1z7oLJO1oPo6x5h1/7W/tIAc9DNWun2Jro=;
-        b=O0/ewYqTeGguQu1s2mCwa49LLl26mEgNuD85kwjLZL8VLAnEswgsZEiJYTNTGBsCgX
-         ha+HW9OIwzLQa1BkMub1jHLCECKTy7RJqbzD+rFteRgWdoZJBAl3LkVM3pK8QME4Q+At
-         1dB7i8Ua2HKeDcSMudM7H9gW8UT3RMlUWbbsI+QzuEn2FYQL4MAJzUtZ0YS7edSBjmn/
-         qMYIpB6lLvh+UWmaxQoOf1yG+9K/afsbzkKYE/NKsTHPOzNjJOZInHAiimhCWAnajaRQ
-         EtH6d6hKY7Z96HCAaBAqWNz2qtRAnykZ4v6zJuR2h7kLw6qsJChqtAsvBVg2dDecxtdr
-         jx7Q==
-X-Gm-Message-State: AOAM531We052TExNgh1A9LccFOwKVeOyTCKsipW/jqDPgF65eLIYCC1O
-        bknq2kYFWshIiTfz78W5bOuPWtEfB4PW/l1soO74nQ==
-X-Google-Smtp-Source: ABdhPJwe8HlKioFRvrB52wPJ2kMSEumu6r/YnRkn+Sg0kQa3w4uatWgIq71dkjgVv5uf+tX4zvqmniNxH4IY0WgJjkk=
-X-Received: by 2002:a05:6808:aa3:: with SMTP id r3mr5645675oij.170.1592350321223;
- Tue, 16 Jun 2020 16:32:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200612164632.25648-1-nsaenzjulienne@suse.de>
- <20200612164632.25648-5-nsaenzjulienne@suse.de> <CAPnjgZ2jarQArKN=0h0mNnxE7gAL0juvGhMxMF4a0CehqxWcRw@mail.gmail.com>
- <d3346d7cb9655eb111b4126d72a08499c6254fef.camel@suse.de>
-In-Reply-To: <d3346d7cb9655eb111b4126d72a08499c6254fef.camel@suse.de>
-From:   Simon Glass <sjg@chromium.org>
-Date:   Tue, 16 Jun 2020 17:31:49 -0600
-Message-ID: <CAPnjgZ3PwTWBQ2Vi4=Sc7JB699TrSxr=PAJupL_3POhJ00qSsA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] dm: pci: Assign controller device node to root bridge
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Matthias Brugger <mbrugger@suse.com>,
-        U-Boot Mailing List <u-boot@lists.denx.de>,
-        Bin Meng <bmeng.cn@gmail.com>, Marek Vasut <marex@denx.de>,
-        lk <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 16 Jun 2020 19:34:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:5561 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbgFPXen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 19:34:43 -0400
+IronPort-SDR: Q3lCzCmsvOyQjxZq4aEWANwiXcNctE4BYgVhcXSKVqjgnvgJx24PEHtzqMNoFLBtfJpxyRDi/1
+ UIoLHGIOcOSQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 16:34:41 -0700
+IronPort-SDR: mHBuZHT7G3NXc4C9bzIjlpbl4PNJ+ctSzQEtESukSXFhEqD7gGKqzXGXXC7kyJV0CVEYzNJUFJ
+ mEFnDnUi4/qQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,520,1583222400"; 
+   d="scan'208";a="263155658"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Jun 2020 16:34:40 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, adrian.hunter@intel.com,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [RESEND v5 1/2] dt-bindings: phy: intel: Add Keem Bay eMMC PHY bindings
+Date:   Wed, 17 Jun 2020 07:32:51 +0800
+Message-Id: <20200616233252.15619-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200616233252.15619-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+References: <20200616233252.15619-1-wan.ahmad.zainie.wan.mohamad@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+Binding description for Intel Keem Bay eMMC PHY.
 
-On Tue, 16 Jun 2020 at 08:09, Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> On Tue, 2020-06-16 at 07:43 -0600, Simon Glass wrote:
-> > Hi Nicolas,
-> >
-> > On Fri, 12 Jun 2020 at 10:47, Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> > > There is no distinction in DT between the PCI controller device and the
-> > > root bridge, whereas such distinction exists from dm's perspective. Make
-> > > sure the root bridge ofnode is assigned to the controller's platform
-> > > device node.
-> > >
-> > > This permits setups like this to work correctly:
-> > >
-> > >         pcie {
-> > >                 compatible = "...";
-> > >                 ...
-> > >                 dev {
-> > >                         reg = <0 0 0 0 0>;
-> > >                         ...
-> > >                 };
-> > >         };
-> > >
-> > > Without this the dev node is assigned to the root bridge and the
-> > > actual device search starts one level lower than expected.
-> > >
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > ---
-> > >  drivers/pci/pci-uclass.c | 15 ++++++++++++++-
-> > >  1 file changed, 14 insertions(+), 1 deletion(-)
-> >
-> > Can you update the tests to handle this case please?
->
-> I'd be glad to, but I'm not familiar with the test FW in u-booy, coud give me
-> some pointers on where/how to test this?
->
+Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+---
+ .../bindings/phy/intel,keembay-emmc-phy.yaml  | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
 
-Yes it is at test/dm/pci.c and the device tree is test.dts
+diff --git a/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+new file mode 100644
+index 000000000000..4cbbd3887c13
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/intel,keembay-emmc-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Intel Keem Bay eMMC PHY bindings
++
++maintainers:
++  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
++
++properties:
++  compatible:
++    const: intel,keembay-emmc-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: emmcclk
++
++  "#phy-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - "#phy-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    phy@20290000 {
++          compatible = "intel,keembay-emmc-phy";
++          reg = <0x20290000 0x54>;
++          clocks = <&emmc>;
++          clock-names = "emmcclk";
++          #phy-cells = <0>;
++    };
+-- 
+2.17.1
 
-'make qcheck' to run all tests. To run one test, build for sandbox and
-then something like
-
-u-boot -T -c "ut dm pci_swapcase"
-
-for example.
-
-You can perhaps use an existing PCI controller in test.dts but feel
-free to add one more if you need it for your test. Make sure that you
-don't break other tests.
-
-Regards,
-Simon
