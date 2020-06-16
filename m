@@ -2,216 +2,119 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560C0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE89C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAFA2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6FC206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgFPLzu convert rfc822-to-8bit (ORCPT
+        id S1728628AbgFPL4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:55:50 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2314 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726606AbgFPLzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:55:49 -0400
-Received: from lhreml721-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 2814CC90EE61F6B939E3;
-        Tue, 16 Jun 2020 12:55:47 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml721-chm.china.huawei.com (10.201.108.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 16 Jun 2020 12:55:46 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
- Tue, 16 Jun 2020 12:55:46 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-        "jroedel@suse.de" <jroedel@suse.de>,
-        yangyicong <yangyicong@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
- controller errors
-Thread-Topic: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
- controller errors
-Thread-Index: AQHWQv5GPLiMMOPNiU6kqnJ8IzwlUKjZgnyAgAFqP0D///4fgIAAHHEA
-Date:   Tue, 16 Jun 2020 11:55:46 +0000
-Message-ID: <997bd6a17f54433dbdd2c43155682bdd@huawei.com>
-References: <20200615101552.802-3-shiju.jose@huawei.com>
- <20200615120053.GZ2428291@smile.fi.intel.com>
- <51550b510d1e40479bf4fce47443747c@huawei.com>
- <20200616093041.GQ2428291@smile.fi.intel.com>
-In-Reply-To: <20200616093041.GQ2428291@smile.fi.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.82.233]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 16 Jun 2020 07:56:05 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51479 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgFPL4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 07:56:03 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jlAC8-00082K-My; Tue, 16 Jun 2020 11:56:00 +0000
+Subject: Re: [PATCH] drm/i915/display: fix missing null check on allocated dsb
+ object
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Animesh Manna <animesh.manna@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@intel.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200616114221.73971-1-colin.king@canonical.com>
+ <20200616115459.GN4151@kadam>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <45e8594c-14e5-ba67-9708-1b72fa2c51d3@canonical.com>
+Date:   Tue, 16 Jun 2020 12:56:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200616115459.GN4151@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
->-----Original Message-----
->From: linux-acpi-owner@vger.kernel.org [mailto:linux-acpi-
->owner@vger.kernel.org] On Behalf Of Andy Shevchenko
->Sent: 16 June 2020 10:31
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
->james.morse@arm.com; lenb@kernel.org; tony.luck@intel.com;
->dan.carpenter@oracle.com; zhangliguang@linux.alibaba.com; Wangkefeng
->(OS Kernel Lab) <wangkefeng.wang@huawei.com>; jroedel@suse.de;
->yangyicong <yangyicong@huawei.com>; Jonathan Cameron
-><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->Linuxarm <linuxarm@huawei.com>
->Subject: Re: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
->controller errors
->
->On Tue, Jun 16, 2020 at 09:12:56AM +0000, Shiju Jose wrote:
->> >-----Original Message-----
->> >From: Andy Shevchenko [mailto:andriy.shevchenko@linux.intel.com]
->> >Sent: 15 June 2020 13:01
->> >To: Shiju Jose <shiju.jose@huawei.com>
->> >Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->> >kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
->> >james.morse@arm.com; lenb@kernel.org; tony.luck@intel.com;
->> >dan.carpenter@oracle.com; zhangliguang@linux.alibaba.com; Wangkefeng
->> >(OS Kernel Lab) <wangkefeng.wang@huawei.com>; jroedel@suse.de;
->> >yangyicong <yangyicong@huawei.com>; Jonathan Cameron
->> ><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>
->> >Subject: Re: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP
->> >PCIe controller errors
->> >
->> >On Mon, Jun 15, 2020 at 11:15:52AM +0100, Shiju Jose wrote:
->
->...
->
->> >bits.h ?
+On 16/06/2020 12:54, Dan Carpenter wrote:
+> On Tue, Jun 16, 2020 at 12:42:21PM +0100, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
 >>
->> Ok. I think bits.h was already included through some other .h files.
->
->You have direct users of the header here.
->The rule of thumb is to include all headers of which you have direct users.
->Some exceptions of course can be applied, but for generic headers like bits.h
->there are only bitops.h or bitmap.h that guarantee inclusion of the
->mentioned macros / definitions.
->
->I don't see any header of the same domain in the list.
-
-Ok.
->
->...
->
->> >> +#define HISI_PCIE_CORE_PORT_ID(v)        (((v) % 8) << 1)
->> >
->> >% -> & ?
->> (((v) % 8) << 1) is correct. We can make bit operation instead.
->
->y % x is usually being used when we consume y / x or in cases when y is
->advanced and we need to keep it under some threshold.
->
->Here it's not obvious to me, and usual pattern is to use bitwise operations.
->
->In any case some clarification is needed.
-We want (v % 8) * 2 here to get the core port id, a numerical value but not a bit mask.
-Maybe you want us to use ((v) & 7) << 1? 
-please point it out if I understand wrong.
-
->
->...
->
->> >> +struct hisi_pcie_error_private {
->> >> +	struct notifier_block	nb;
->> >> +	struct platform_device	*pdev;
->> >
->> >Do you really need platform device? Isn't struct device * enough?
->> We need platform device as the error recovery device is a platform
->> device, which provides us the "RST" reset method.
->
->Can't you derive platform device from struct device pointer?
->I really didn't see an evidence you need to keep it like this.
->
->And in probably single case you may derive it, no?
-
-We will check by making this change.
-
->
->> >> +};
->
->...
->
->> >> +static char *hisi_pcie_sub_module_name(u8 id) {
->> >> +	switch (id) {
->> >> +	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
->> >> +	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
->> >> +	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
->> >> +	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
->> >> +	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
->> >> +	}
->> >
->> >match_string() ?
+>> Currently there is no null check for a failed memory allocation
+>> on the dsb object and without this a null pointer dereference
+>> error can occur. Fix this by adding a null check.
 >>
->> match_string() does not work here because we need sub module id ->
->> string conversion.
->
->Why? Are you using non-sequential (a.k.a. sparse) values?
-These are the sequential values.
-I mean in this case we do not have the third parameter to the match_string(),
-string to match with the strings in the array,
-we just have the value for the sub module id.
-Can you suggest some example of match_string()
-for the similar case?
+>> Note: added a drm_err message in keeping with the error message style
+>> in the function.
+> 
+> Don't give in to peer pressure!  That's like being a lemming when Disney
+> film makers come to push you off the cliff to create the 1958 nature
+> film "White Wilderness".
 
->
->
-...
->...
->
->> >> +	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
->> >> +		if (edata->val_bits &
->> >> +				BIT_ULL(HISI_PCIE_LOCAL_VALID_ERR_MISC
->> >+ i))
->> >
->> >for_each_set_bit() ?
->>
->> Can't use for_each_set_bit() here because edata->val_bits contains
->> valid bits for other fields of the error data as well, those need to printed
->separately.
->
->So, I don't get why.
->
->You have at least two possibilities:
->1/ use bitwise & to drop non-related bits (maybe in temporary variable) 2/
->use for_each_set_bit_from()
+:-)
 
-Ok. I think  for_each_set_bit_from() may be better.
->
->
-
-Thanks,
-Shiju
+> 
+> regards,
+> dan carpenter
+> 
 
