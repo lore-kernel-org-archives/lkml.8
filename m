@@ -6,85 +6,60 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B642AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F420C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB6820B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0616D20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgFPKwM (ORCPT
+        id S1728632AbgFPKwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:52:12 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:53542 "EHLO
+        Tue, 16 Jun 2020 06:52:36 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53586 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728435AbgFPKwL (ORCPT
+        with ESMTP id S1728168AbgFPKwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:52:11 -0400
+        Tue, 16 Jun 2020 06:52:35 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C6A1E1C0BD2; Tue, 16 Jun 2020 12:52:09 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:51:56 +0200
+        id 7B9DD1C0BD2; Tue, 16 Jun 2020 12:52:33 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:52:24 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Ville Syrj??l?? <ville.syrjala@linux.intel.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        "Ursulin, Tvrtko" <tvrtko.ursulin@intel.com>,
-        linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        haiyangz@microsoft.com, LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        spronovo@microsoft.com, wei.liu@kernel.org,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        iourit@microsoft.com, kys@microsoft.com
-Subject: Re: [RFC PATCH 0/4] DirectX on Linux
-Message-ID: <20200616105156.GE1718@bug>
-References: <20200519163234.226513-1-sashal@kernel.org>
- <CAPM=9txZpiCGkv3jiBC1F8pTe4A2pqWpQDyjRBXk2roFqw+0+Q@mail.gmail.com>
- <CAPM=9tx4wh-Lk6Dffsdh-7mYvXx+GX2AxhrGqFgyN8-AWJvP6A@mail.gmail.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Pali Roh??r <pali@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@proceq.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] power: supply: bq27xxx_battery: Notify about all
+ battery changes
+Message-ID: <20200616105224.GF1718@bug>
+References: <20200525141200.17199-1-krzk@kernel.org>
+ <fc59bcd5-1868-8c7a-9fc9-67ad70b477f4@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPM=9tx4wh-Lk6Dffsdh-7mYvXx+GX2AxhrGqFgyN8-AWJvP6A@mail.gmail.com>
+In-Reply-To: <fc59bcd5-1868-8c7a-9fc9-67ad70b477f4@ti.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Having said that, I hit one stumbling block:
-> > "Further, at this time there are no presentation integration. "
-> >
-> > If we upstream this driver as-is into some hyperv specific place, and
-> > you decide to add presentation integration this is more than likely
-> > going to mean you will want to interact with dma-bufs and dma-fences.
-> > If the driver is hidden away in a hyperv place it's likely we won't
-> > even notice that feature landing until it's too late.
-> >
-> > I would like to see a coherent plan for presentation support (not
-> > code, just an architectural diagram), because I think when you
-> > contemplate how that works it will change the picture of how this
-> > driver looks and intergrates into the rest of the Linux graphics
-> > ecosystem.
-> >
-> > As-is I'd rather this didn't land under my purview, since I don't see
-> > the value this adds to the Linux ecosystem at all, and I think it's
-> > important when putting a burden on upstream that you provide some
-> > value.
+On Tue 2020-05-26 21:24:39, Andrew F. Davis wrote:
+> On 5/25/20 10:11 AM, Krzysztof Kozlowski wrote:
+> > All battery related data could be important for user-space.  For example
+> > time-to-full could be shown to user on the screen or health could be
+> > monitored for any issues.  Instead of comparing few selected old/new
+> > values, just check if anything changed in the cache.
+> > 
 > 
-> I also have another concern from a legal standpoint I'd rather not
-> review the ioctl part of this. I'd probably request under DRI
-> developers abstain as well.
 > 
-> This is a Windows kernel API being smashed into a Linux driver. I don't want to be 
-> tainted by knowledge of an API that I've no idea of the legal status of derived works. 
-> (it this all covered patent wise under OIN?)
+> At least some value will change every time we poll the battery, are we
+> okay with having power_supply_changed() called every time?
 
-If you can't look onto it, perhaps it is not suitable to merge into kernel...?
-
-What would be legal requirements so this is "safe to look at"? We should really
-require submitter to meet them...
+I believe that's very bad idea. AFAICT that would wake up userspace every
+5 seconds, eating power in unexpected way, and without easy ability of opting
+out. IOW a regression.
 
 									Pavel
 -- 
