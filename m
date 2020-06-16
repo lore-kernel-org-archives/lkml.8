@@ -2,151 +2,126 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52694C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9736C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B8F20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/mEjXMa"
+	by mail.kernel.org (Postfix) with ESMTP id 8162320734
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592301957;
+	bh=ZcJv80BBphhL9dsiZLQAxcJsEcYvxcWwY/2tPUIeg9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wIaKp6Lp5Ic3EAzxAzsj5fpVknJ5DveOnZIiI5f+emypSvmm1Mmkq+THHw6CUz2PX
+	 /49E5rNVYxZFSqsBiNcsWnP3W34/oefZCSrs/JzlwxmtIWSf6EbzshxwGX7P38NZRF
+	 zwvG9cZ1IvUiTtwovWaVYArp6uZqYn4b+sKqxoDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgFPKE7 (ORCPT
+        id S1728353AbgFPKF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:04:59 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59228 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726052AbgFPKE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:04:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592301897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=J0xCvBNxBr8ailwkBNv83wqSIDs01QXxn0Xd5jhE5ZA=;
-        b=E/mEjXMaAs4On/JozJmPit32UdsRf8+py/zD+KdniTYi2mPqaW9wK7SV9afd1B8sjjObiG
-        oQoDYCIJGSmaNkzVLce50n2NCpAzg07MdZC9hw3OkfM2PhVVzm7BPhfvUWw+XUZZvQ4no8
-        Jgj64tohzNpQ0FBx/vWmeD6qDbHZ4ig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-yuOTUWTyMKumWDSPOVgMmw-1; Tue, 16 Jun 2020 06:04:55 -0400
-X-MC-Unique: yuOTUWTyMKumWDSPOVgMmw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 16 Jun 2020 06:05:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728264AbgFPKFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:05:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE5E3101C2C0;
-        Tue, 16 Jun 2020 10:04:53 +0000 (UTC)
-Received: from [10.36.114.106] (ovpn-114-106.ams2.redhat.com [10.36.114.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 42C685D9D5;
-        Tue, 16 Jun 2020 10:04:52 +0000 (UTC)
-Subject: Re: [PATCH] mm/pgtable: Move extern zero_pfn outside
- __HAVE_COLOR_ZERO_PAGE
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1592280498-15442-1-git-send-email-anshuman.khandual@arm.com>
- <f55dff2d-d32e-8de1-0177-e6ba713e0cd9@redhat.com>
- <19858112-8f10-493c-9873-84f2000b00b0@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <4ca94b8c-4817-828f-5452-aff547bc61f1@redhat.com>
-Date:   Tue, 16 Jun 2020 12:04:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 510AB20786;
+        Tue, 16 Jun 2020 10:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592301952;
+        bh=ZcJv80BBphhL9dsiZLQAxcJsEcYvxcWwY/2tPUIeg9U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jVloEpjfOnhzioZ4fF/B0l2qj2Rwsuyw0OyA0ryXZvRyiQ+0WHpTn8esgX5cv72Fl
+         n4UUmv3JWN0gRVPbPiMulJJ/XoE5rm5TFSHqmUdT839HYDAclFSmjTv3qXafO+oEOZ
+         wUwjnij5VmeJCx1jT+5rKg+htgGR0s+kivmzGGok=
+Date:   Tue, 16 Jun 2020 12:05:47 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Gao, Nian" <nian.gao@siemens.com>
+Cc:     "Johan@kernel.org" <Johan@kernel.org>,
+        "linux-sub@vger.kernel.org" <linux-sub@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Kiszka, Jan" <jan.kiszka@siemens.com>
+Subject: Re: [PATCH] USB: Serial: option: add a Longcheer device id
+Message-ID: <20200616100547.GC2614426@kroah.com>
+References: <838b462ac2da46dc832e841ec5850d45@siemens.com>
 MIME-Version: 1.0
-In-Reply-To: <19858112-8f10-493c-9873-84f2000b00b0@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <838b462ac2da46dc832e841ec5850d45@siemens.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.06.20 11:48, Anshuman Khandual wrote:
+On Tue, Jun 16, 2020 at 07:55:10AM +0000, Gao, Nian wrote:
+> >From 9220e0828f70a34c968e32d34e13281a4ff54b08 Mon Sep 17 00:00:00 2001
+> From: Gao Nian <nian.gao@siemens.com>
+> Date: Tue, 16 Jun 2020 15:13:48 +0800
+> Subject: [PATCH] USB: Serial: option: add a Longcheer device id
 > 
+> Add a Longcheer device-id entry which specifically enables
+> U9300C TD-LTE module.
 > 
-> On 06/16/2020 01:09 PM, David Hildenbrand wrote:
->> On 16.06.20 06:08, Anshuman Khandual wrote:
->>> zero_pfn variable is required whether __HAVE_COLOR_ZERO_PAGE is enabled
->>
->> Why is that relevant for this patch?
+> Signed-off-by: Gao Nian <nian.gao@siemens.com>
+> ---
+> drivers/usb/serial/option.c | 4 ++++
+> 1 file changed, 4 insertions(+)
 > 
-> That just states how it is organized right now wrt __HAVE_COLOR_ZERO_PAGE.
-> 
->>
->>> or not. Also it should not really be declared individually in all functions
->>> where it gets used. Just move the declaration outside, which also makes it
->>> available for other potential users.
->>
->> So, all you're essentially doing is exposing zero_pfn in pgtable.h now.
-> 
-> Right, but it just happens in the process of consolidating three different
-> instances of 'extern unsigned long zero_pfn' in the same file which are
-> redundant.
-> 
->>
->> If everybody should just use my_zero_pfn(), I don't really see the
->> benefit of this patch, sorry.
-> 
-> It consolidates redundant declarations and reduces code. We could just have
-> a comment for zero_pfn stating that it should not be used directly.
+> diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+> index 254a8bbeea67..6fd92431d2c9 100644
+> --- a/drivers/usb/serial/option.c
+> +++ b/drivers/usb/serial/option.c
+> @@ -394,6 +394,9 @@ static void option_instat_callback(struct urb *urb);
+> /* iBall 3.5G connect wireless modem */
+> #define IBALL_3_5G_CONNECT                                  0x9605
+> +/* LONGSUNG U9300C TD-LTE wireless modem */
+> +#define LONGSUNG_U9300C                         0x9b3c
+> +
+> /* Zoom */
+> #define ZOOM_PRODUCT_4597                                  0x9607
+> @@ -1845,6 +1848,7 @@ static const struct usb_device_id option_ids[] = {
+>              .driver_info = RSVD(4) },
+>            { USB_DEVICE(LONGCHEER_VENDOR_ID, ZOOM_PRODUCT_4597) },
+>            { USB_DEVICE(LONGCHEER_VENDOR_ID, IBALL_3_5G_CONNECT) },
+> +          { USB_DEVICE(LONGCHEER_VENDOR_ID, LONGSUNG_U9300C) },
+>            { USB_DEVICE(HAIER_VENDOR_ID, HAIER_PRODUCT_CE100) },
+>            { USB_DEVICE_AND_INTERFACE_INFO(HAIER_VENDOR_ID, HAIER_PRODUCT_CE81B, 0xff, 0xff, 0xff) },
+>            /* Pirelli  */
+> --
+> 2.25.1
 > 
 
-... or just leave it as is and have self-documenting code.
+Hi,
 
--- 
-Thanks,
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-David / dhildenb
+You are receiving this message because of the following common error(s)
+as indicated below:
 
+- Your patch is malformed (tabs converted to spaces, linewrapped, etc.)
+  and can not be applied.  Please read the file,
+  Documentation/email-clients.txt in order to fix this.
+
+- Your patch was attached, please place it inline so that it can be
+  applied directly from the email message itself.
+
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
