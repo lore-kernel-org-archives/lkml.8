@@ -2,334 +2,176 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA3732085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0445B2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592347576;
+	bh=ZAs7GT5Hxz71cY/X1yUf6UmpNbaDaFyhGT9dvQA8WSg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=BpF96o0SlJIm57zxNSAV+WmC/nnxp06iwIZSh8E9zmE9zT/KlqEjpWpnpVNl8Riu8
+	 7MscnlQ+YYPU8df9kCEQG+YWAmtSwT0KjPj46583HhZm67LwsPDUNI0kjI9SDJqVSz
+	 Rzb+NDCDTZm/8NXLJkqAEm7G8NlLGjyt7R0xLk2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgFPWoQ (ORCPT
+        id S1726509AbgFPWqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:44:16 -0400
-Received: from v6.sk ([167.172.42.174]:48726 "EHLO v6.sk"
+        Tue, 16 Jun 2020 18:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgFPWoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:44:12 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id D54A061634;
-        Tue, 16 Jun 2020 22:44:10 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Russell King <linux+etnaviv@arlinux.org.uk>,
-        Christian Geiner <christian.gmeiner@gmail.com>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v5 2/2] mfd: ene-kb3930: Add driver for ENE KB3930 Embedded Controller
-Date:   Wed, 17 Jun 2020 00:44:04 +0200
-Message-Id: <20200616224404.994285-3-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200616224404.994285-1-lkundrak@v3.sk>
-References: <20200616224404.994285-1-lkundrak@v3.sk>
+        id S1725941AbgFPWqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:46:14 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7327C207E8;
+        Tue, 16 Jun 2020 22:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592347573;
+        bh=ZAs7GT5Hxz71cY/X1yUf6UmpNbaDaFyhGT9dvQA8WSg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tOtTUn6i9JsmvvjEEcLkyE+BYqlTRTvJf4uHci8yqejVU0er62cLvJj2gbUOPAzfJ
+         up5vztwPIEe0amz4UFOILuMoruoFTt4kWOB+2IIa/cvjIXlldniAsFFGvq04+wnYVS
+         XN6RxJJynwG497vXF3GeNuZyE8Of68agP6gaGGiI=
+Date:   Tue, 16 Jun 2020 17:51:32 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] ath10k: wmi: Use struct_size() helper in
+ ath10k_wmi_alloc_skb()
+Message-ID: <20200616225132.GA19873@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver provides access to the EC RAM of said embedded controller
-attached to the I2C bus as well as optionally supporting its slightly weird
-power-off/restart protocol.
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes. Also, remove unnecessary
+variable _len_.
 
-A particular implementation of the EC firmware can be identified by a
-model byte. If this driver identifies the Dell Ariel platform, it
-registers the appropriate cells.
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Changes since v3:
-- Clarify that the power-off function is provided by this driver while
-  LEDS_ARIEL is necessary to drive the leds in Kconfig help text
-- s/kb3930_power_off/kb3930_pm_power_off/, s/global_kb3930/kb3930_power_off/
-- Don't fail with -EEXIST with more than one instance
-- s/ret < 0/ret/ for devm_mfd_add_devices() return value
-- Drop a \n between struct i2c_driver and module_i2c_driver()
+ drivers/net/wireless/ath/ath10k/wmi.c | 32 +++++++--------------------
+ 1 file changed, 8 insertions(+), 24 deletions(-)
 
-Changes since v2:
-- Sort the includes
-- s/EC_MODEL_ID/EC_MODEL/
-- Add a couple of clarifying comments
-- Use #defines for values used in poweroff routine
-- Remove priority from a restart notifier block
-- s/priv/ddata/
-- s/ec_ram/ram_regmap/ for the regmap name
-- Fix the error handling when getting off gpios was not successful
-- Remove a useless dev_info at the end of probe()
-- Use i2c probe_new() callback, drop i2c_device_id
-- Modify the logic in checking the model ID
-
- drivers/mfd/Kconfig      |  11 ++
- drivers/mfd/Makefile     |   1 +
- drivers/mfd/ene-kb3930.c | 211 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 223 insertions(+)
- create mode 100644 drivers/mfd/ene-kb3930.c
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index a37d7d1713820..7569f1d1703e3 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -398,6 +398,17 @@ config MFD_DLN2
- 	  etc. must be enabled in order to use the functionality of
- 	  the device.
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index a81a1ab2de19..b89681394a15 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -6551,7 +6551,7 @@ static struct sk_buff *ath10k_wmi_op_gen_init(struct ath10k *ar)
+ 	struct wmi_init_cmd *cmd;
+ 	struct sk_buff *buf;
+ 	struct wmi_resource_config config = {};
+-	u32 len, val;
++	u32 val;
  
-+config MFD_ENE_KB3930
-+	tristate "ENE KB3930 Embedded Controller support"
-+	depends on I2C
-+	depends on MACH_MMP3_DT || COMPILE_TEST
-+	select MFD_CORE
-+	help
-+	  This adds support for the power-off functionality and access to
-+	  the registers that control LEDS and USB port power on ENE KB3930
-+	  Embedded Controller. To use the LED functionality LEDS_ARIEL must
-+	  be enabled.
-+
- config MFD_EXYNOS_LPASS
- 	tristate "Samsung Exynos SoC Low Power Audio Subsystem"
- 	depends on ARCH_EXYNOS || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9367a92f795a6..11085a6968398 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
- obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
- obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
- obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
-+obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
- obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
- obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
+ 	config.num_vdevs = __cpu_to_le32(TARGET_NUM_VDEVS);
+ 	config.num_peers = __cpu_to_le32(TARGET_NUM_PEERS);
+@@ -6603,10 +6603,7 @@ static struct sk_buff *ath10k_wmi_op_gen_init(struct ath10k *ar)
+ 	config.num_msdu_desc = __cpu_to_le32(TARGET_NUM_MSDU_DESC);
+ 	config.max_frag_entries = __cpu_to_le32(TARGET_MAX_FRAG_ENTRIES);
  
-diff --git a/drivers/mfd/ene-kb3930.c b/drivers/mfd/ene-kb3930.c
-new file mode 100644
-index 0000000000000..75eced148ce53
---- /dev/null
-+++ b/drivers/mfd/ene-kb3930.c
-@@ -0,0 +1,211 @@
-+// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
-+/*
-+ * ENE KB3930 Embedded Controller Driver
-+ *
-+ * Copyright (C) 2020 Lubomir Rintel
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/mfd/core.h>
-+#include <linux/module.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+
-+/* I2C registers that are multiplexing access to the EC RAM. */
-+enum {
-+	EC_DATA_IN	= 0x00,
-+	EC_RAM_OUT	= 0x80,
-+	EC_RAM_IN	= 0x81,
-+};
-+
-+/* EC RAM registers. */
-+enum {
-+	EC_MODEL	= 0x30,
-+	EC_VERSION_MAJ	= 0x31,
-+	EC_VERSION_MIN	= 0x32,
-+};
-+
-+struct kb3930 {
-+	struct i2c_client *client;
-+	struct regmap *ram_regmap;
-+	struct gpio_descs *off_gpios;
-+};
-+
-+struct kb3930 *kb3930_power_off;
-+
-+#define EC_GPIO_WAVE		0
-+#define EC_GPIO_OFF_MODE	1
-+
-+#define EC_OFF_MODE_REBOOT	0
-+#define EC_OFF_MODE_POWER	1
-+
-+static void kb3930_off(struct kb3930 *ddata, int off_mode)
-+{
-+	gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_OFF_MODE],
-+			       off_mode);
-+
-+	/*
-+	 * The EC initiates a shutdown when it detects a 10 MHz wave, inspecting the
-+	 * other GPIO pin to decide whether it's supposed to turn the power off or
-+	 * reset the board.
-+	 */
-+	while (1) {
-+		mdelay(50);
-+		gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_WAVE], 0);
-+		mdelay(50);
-+		gpiod_direction_output(ddata->off_gpios->desc[EC_GPIO_WAVE], 1);
-+	}
-+}
-+
-+static int kb3930_restart(struct notifier_block *this,
-+			  unsigned long mode, void *cmd)
-+{
-+	kb3930_off(kb3930_power_off, EC_OFF_MODE_REBOOT);
-+	return NOTIFY_DONE;
-+}
-+
-+static void kb3930_pm_power_off(void)
-+{
-+	kb3930_off(kb3930_power_off, EC_OFF_MODE_POWER);
-+}
-+
-+static struct notifier_block kb3930_restart_nb = {
-+	.notifier_call = kb3930_restart,
-+};
-+
-+static const struct mfd_cell ariel_ec_cells[] = {
-+	{ .name = "dell-wyse-ariel-led", },
-+	{ .name = "dell-wyse-ariel-power", },
-+};
-+
-+static int kb3930_ec_ram_reg_write(void *context, unsigned int reg,
-+				   unsigned int val)
-+{
-+	struct kb3930 *ddata = context;
-+
-+	return i2c_smbus_write_word_data(ddata->client, EC_RAM_OUT,
-+					 (val << 8) | reg);
-+}
-+
-+static int kb3930_ec_ram_reg_read(void *context, unsigned int reg,
-+				  unsigned int *val)
-+{
-+	struct kb3930 *ddata = context;
-+	int ret;
-+
-+	ret = i2c_smbus_write_word_data(ddata->client, EC_RAM_IN, reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = i2c_smbus_read_word_data(ddata->client, EC_DATA_IN);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = ret >> 8;
-+	return 0;
-+}
-+
-+static const struct regmap_config kb3930_ram_regmap_config = {
-+	.name = "ec_ram",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.reg_stride = 1,
-+	.max_register = 0xff,
-+	.reg_write = kb3930_ec_ram_reg_write,
-+	.reg_read = kb3930_ec_ram_reg_read,
-+	.fast_io = false,
-+};
-+
-+static int kb3930_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct device_node *np = dev->of_node;
-+	struct kb3930 *ddata;
-+	unsigned int model;
-+	int ret;
-+
-+	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	kb3930_power_off = ddata;
-+	ddata->client = client;
-+	i2c_set_clientdata(client, ddata);
-+
-+	ddata->ram_regmap = devm_regmap_init(dev, NULL, ddata,
-+					     &kb3930_ram_regmap_config);
-+	if (IS_ERR(ddata->ram_regmap))
-+		return PTR_ERR(ddata->ram_regmap);
-+
-+	ret = regmap_read(ddata->ram_regmap, EC_MODEL, &model);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Currently we only support the cells present on Dell Ariel model. */
-+	if (model != 'J') {
-+		dev_err(dev, "unknown board model: %02x\n", model);
-+		return -ENODEV;
-+	}
-+
-+	/* These are the cells valid for model == 'J' only. */
-+	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
-+				   ariel_ec_cells,
-+				   ARRAY_SIZE(ariel_ec_cells),
-+				   NULL, 0, NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (of_property_read_bool(np, "system-power-controller")) {
-+		ddata->off_gpios =
-+			devm_gpiod_get_array_optional(dev, "off", GPIOD_IN);
-+		if (IS_ERR(ddata->off_gpios))
-+			return PTR_ERR(ddata->off_gpios);
-+		if (ddata->off_gpios->ndescs < 2) {
-+			dev_err(dev, "invalid off-gpios property\n");
-+			return -EINVAL;
-+		}
-+	}
-+	if (ddata->off_gpios) {
-+		register_restart_handler(&kb3930_restart_nb);
-+		if (pm_power_off == NULL)
-+			pm_power_off = kb3930_pm_power_off;
-+	}
-+
-+	return 0;
-+}
-+
-+static int kb3930_remove(struct i2c_client *client)
-+{
-+	struct kb3930 *ddata = i2c_get_clientdata(client);
-+
-+	if (ddata->off_gpios) {
-+		if (pm_power_off == kb3930_pm_power_off)
-+			pm_power_off = NULL;
-+		unregister_restart_handler(&kb3930_restart_nb);
-+	}
-+	kb3930_power_off = NULL;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id kb3930_dt_ids[] = {
-+	{ .compatible = "ene,kb3930" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, kb3930_dt_ids);
-+
-+static struct i2c_driver kb3930_driver = {
-+	.probe_new = kb3930_probe,
-+	.remove = kb3930_remove,
-+	.driver = {
-+		.name = "ene-kb3930",
-+		.of_match_table = of_match_ptr(kb3930_dt_ids),
-+	},
-+};
-+module_i2c_driver(kb3930_driver);
-+
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-+MODULE_DESCRIPTION("ENE KB3930 Embedded Controller Driver");
-+MODULE_LICENSE("Dual BSD/GPL");
+-	len = sizeof(*cmd) +
+-	      (sizeof(struct host_memory_chunk) * ar->wmi.num_mem_chunks);
+-
+-	buf = ath10k_wmi_alloc_skb(ar, len);
++	buf = ath10k_wmi_alloc_skb(ar, struct_size(cmd, mem_chunks.items, ar->wmi.num_mem_chunks));
+ 	if (!buf)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -6624,7 +6621,7 @@ static struct sk_buff *ath10k_wmi_10_1_op_gen_init(struct ath10k *ar)
+ 	struct wmi_init_cmd_10x *cmd;
+ 	struct sk_buff *buf;
+ 	struct wmi_resource_config_10x config = {};
+-	u32 len, val;
++	u32 val;
+ 
+ 	config.num_vdevs = __cpu_to_le32(TARGET_10X_NUM_VDEVS);
+ 	config.num_peers = __cpu_to_le32(TARGET_10X_NUM_PEERS);
+@@ -6668,10 +6665,7 @@ static struct sk_buff *ath10k_wmi_10_1_op_gen_init(struct ath10k *ar)
+ 	config.num_msdu_desc = __cpu_to_le32(TARGET_10X_NUM_MSDU_DESC);
+ 	config.max_frag_entries = __cpu_to_le32(TARGET_10X_MAX_FRAG_ENTRIES);
+ 
+-	len = sizeof(*cmd) +
+-	      (sizeof(struct host_memory_chunk) * ar->wmi.num_mem_chunks);
+-
+-	buf = ath10k_wmi_alloc_skb(ar, len);
++	buf = ath10k_wmi_alloc_skb(ar, struct_size(cmd, mem_chunks.items, ar->wmi.num_mem_chunks));
+ 	if (!buf)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -6689,7 +6683,7 @@ static struct sk_buff *ath10k_wmi_10_2_op_gen_init(struct ath10k *ar)
+ 	struct wmi_init_cmd_10_2 *cmd;
+ 	struct sk_buff *buf;
+ 	struct wmi_resource_config_10x config = {};
+-	u32 len, val, features;
++	u32 val, features;
+ 
+ 	config.num_vdevs = __cpu_to_le32(TARGET_10X_NUM_VDEVS);
+ 	config.num_peer_keys = __cpu_to_le32(TARGET_10X_NUM_PEER_KEYS);
+@@ -6741,10 +6735,7 @@ static struct sk_buff *ath10k_wmi_10_2_op_gen_init(struct ath10k *ar)
+ 	config.num_msdu_desc = __cpu_to_le32(TARGET_10X_NUM_MSDU_DESC);
+ 	config.max_frag_entries = __cpu_to_le32(TARGET_10X_MAX_FRAG_ENTRIES);
+ 
+-	len = sizeof(*cmd) +
+-	      (sizeof(struct host_memory_chunk) * ar->wmi.num_mem_chunks);
+-
+-	buf = ath10k_wmi_alloc_skb(ar, len);
++	buf = ath10k_wmi_alloc_skb(ar, struct_size(cmd, mem_chunks.items, ar->wmi.num_mem_chunks));
+ 	if (!buf)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -6776,7 +6767,6 @@ static struct sk_buff *ath10k_wmi_10_4_op_gen_init(struct ath10k *ar)
+ 	struct wmi_init_cmd_10_4 *cmd;
+ 	struct sk_buff *buf;
+ 	struct wmi_resource_config_10_4 config = {};
+-	u32 len;
+ 
+ 	config.num_vdevs = __cpu_to_le32(ar->max_num_vdevs);
+ 	config.num_peers = __cpu_to_le32(ar->max_num_peers);
+@@ -6838,10 +6828,7 @@ static struct sk_buff *ath10k_wmi_10_4_op_gen_init(struct ath10k *ar)
+ 	config.iphdr_pad_config = __cpu_to_le32(TARGET_10_4_IPHDR_PAD_CONFIG);
+ 	config.qwrap_config = __cpu_to_le32(TARGET_10_4_QWRAP_CONFIG);
+ 
+-	len = sizeof(*cmd) +
+-	      (sizeof(struct host_memory_chunk) * ar->wmi.num_mem_chunks);
+-
+-	buf = ath10k_wmi_alloc_skb(ar, len);
++	buf = ath10k_wmi_alloc_skb(ar, struct_size(cmd, mem_chunks.items, ar->wmi.num_mem_chunks));
+ 	if (!buf)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -7549,12 +7536,9 @@ ath10k_wmi_op_gen_scan_chan_list(struct ath10k *ar,
+ 	struct sk_buff *skb;
+ 	struct wmi_channel_arg *ch;
+ 	struct wmi_channel *ci;
+-	int len;
+ 	int i;
+ 
+-	len = sizeof(*cmd) + arg->n_channels * sizeof(struct wmi_channel);
+-
+-	skb = ath10k_wmi_alloc_skb(ar, len);
++	skb = ath10k_wmi_alloc_skb(ar, struct_size(cmd, chan_info, arg->n_channels));
+ 	if (!skb)
+ 		return ERR_PTR(-EINVAL);
+ 
 -- 
-2.26.2
+2.27.0
 
