@@ -2,210 +2,112 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01917C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71135C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C32902080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422942080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dmqZ1Nz+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MnzDLWcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgFPUsY (ORCPT
+        id S1729627AbgFPUs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36858 "EHLO
+        Tue, 16 Jun 2020 16:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgFPUsX (ORCPT
+        with ESMTP id S1728144AbgFPUs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:48:23 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A69C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:48:23 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id ne5so1978139pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:48:23 -0700 (PDT)
+        Tue, 16 Jun 2020 16:48:58 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA89C06174E
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:48:58 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y17so8937957plb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:48:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=m2P9idazAxka1hZIUUZvV63ZK5j25rtNzd8Y+2LJOUI=;
-        b=dmqZ1Nz+wl49hQajWMxFTtvFc+HUS5of9sr8Afyt97qYujziKI/PXkO33Fja18iB6Z
-         3cT9dp8n3YAC7dmHar6jK8yJ+Aqg40a5HS1z0XCqnBzUJbmo5NoKWoeA7Onv6QL8he/M
-         80F81qAiruwvfN7CYnVJHqTFL/3e2fBRE/3ymNgWlwJos8Hxjj5s/K3vRrYVJNJp2MvG
-         mkLpf8PpHI0Phb9qK/Sp03KD7EE9FIT0kfhtYo2Fi81/XZeIJV8lt8EB2xW36B5i8fLX
-         3SP/Pi4l9PyB4D08WBo87QSqdiV/3/L52sFQe6szmhRIvxVudaWArCMgvDvkJLXYhl49
-         I24w==
+         :content-disposition:in-reply-to;
+        bh=nA38ms2uzE+ajHN4rTksYykHuk1GjbJIu9tKcx5MOhg=;
+        b=MnzDLWcOISl371mXt6Ags8GR066pVOClRhnToFqbXpLSS9aPwHtXSCutNTSqwajaM+
+         sLvpR+Ivu35ckuxbPZsKGOuOP/z+WXMiDmyvddTpLfk2O7hN1F7tOiIFcWnhrJhFarrl
+         6XB+n2IJhv2+sKG8aQir3lnq6nslyCC6mmFT8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m2P9idazAxka1hZIUUZvV63ZK5j25rtNzd8Y+2LJOUI=;
-        b=JKHcDmmYmL/cIEpnA2m+Ob5tGLiXVlT62SyYZH/Zqbpee9QRQ6rpmc0H2glxNjs8aH
-         CgSZGUAbThRIdNNWo6B8fcPO6wKV9BLAoPuPmvwCS0uPetkROZ+HKOl/3LbE2sfvLABt
-         LaMZmvEBcwPfsLl2H6k4I9EbNTN5HFvvPzpUwHadOf4iVNypdHg+UzjOQnPcPgR2O7sv
-         TbrBMKW8bat9Nwee4acHgwixkMX7/Gj4XMZD02ZYXm+EeUXEpDFG167sfkH74wCoCe2R
-         JIXJDiOUcsHpoBB8+zVP5beZgPvmPpCvQTlJpZyp/bbAN9hPvIBsInC4ZqcOnyKKOpFD
-         +9fw==
-X-Gm-Message-State: AOAM532eIjWrV/rYc26NruYhO15EscTtOd1MdV6C48IU80GfFS6KH/OB
-        jsM7DlYUAKg84Rv0AIXZuJfWMA==
-X-Google-Smtp-Source: ABdhPJwuYwwPV8Rupxbl+dxr6M+lp9Ae0HvkzcOMrO5ohV18T1DBfOeCRj2MGVXdOYCIVaIKOz2WQA==
-X-Received: by 2002:a17:90a:68ca:: with SMTP id q10mr4861572pjj.120.1592340502384;
-        Tue, 16 Jun 2020 13:48:22 -0700 (PDT)
-Received: from google.com ([2620:15c:2cb:1:e90c:8e54:c2b4:29e7])
-        by smtp.gmail.com with ESMTPSA id m14sm15310095pgn.83.2020.06.16.13.48.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 13:48:21 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 13:48:17 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-Message-ID: <20200616204817.GA212825@google.com>
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=nA38ms2uzE+ajHN4rTksYykHuk1GjbJIu9tKcx5MOhg=;
+        b=d+0otTvZvlVVsGDNa3+OWk05KtqWvm86qetnw4VHoDzEr5yYZcEkNkw+nhhSAOxfRo
+         eImRi3l5dwOcc8tQIPFe+vtF45T0LVt8usfsgUveSZ9+om8iRTbr46/AiKlh2YHjxYel
+         lAbKyr3xLtxDs4nJxwirTr91FhoU8xyEV/EE03nHqBgNlTt8xrrCMKkj4zabo97bXHvn
+         1aErf2Jn2jXHz7P3PapdICNgQpbpsuej/TaHsa087z2ee+tmIGcNuFrof4H29qvIhHtg
+         hAqw48jMal4PdahqyzMN9CiZDldbO6YRw2TmKlIizrS9nv2SJj3DcpIbNC2NqRbB17tY
+         uKrQ==
+X-Gm-Message-State: AOAM5334J7iM9cLKoVIBTM7izG0F6sqJ0Wu1+WNH3+3pl5aLci09rm7f
+        O7AyllUskrp92GjD85vc5skXrg==
+X-Google-Smtp-Source: ABdhPJxOcw99TrdviCnuRM3FcM2K6qA7B/TiKfR0o/09FFN1um1MjQFAARC1qL3y1wUsGAHOXjoDxw==
+X-Received: by 2002:a17:90a:7409:: with SMTP id a9mr4527105pjg.107.1592340538167;
+        Tue, 16 Jun 2020 13:48:58 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w18sm7604075pgj.31.2020.06.16.13.48.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 13:48:57 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 13:48:49 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>, rafael@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH] driver core:Export the symbol device_is_bound
+Message-ID: <20200616204849.GZ4525@google.com>
+References: <1591123192-565-1-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
+In-Reply-To: <1591123192-565-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 06:11:06PM +0000, Bird, Tim wrote:
-> Some months ago I started work on a document to formalize how
-> kselftest implements the TAP specification.  However, I didn't finish
-> that work.  Maybe it's time to do so now.
+On Wed, Jun 03, 2020 at 12:09:52AM +0530, Sandeep Maheswaram wrote:
+> Export the symbol device_is_bound so that it can be used by the modules.
+> This change was suggested to solve the allmodconfig build error on adding
+> the patch https://lore.kernel.org/patchwork/patch/1218628/
+
+nit: the last two lines aren't particularly interesting in the commit log,
+this could be mentioned below '---'.
+
+It might make sense to group the two patches in a series, which would make
+the dependency more evident.
+
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  drivers/base/dd.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> kselftest has developed a few differences from the original
-> TAP specification, and  some extensions that I believe are worth
-> documenting.
-> 
-> Essentially, we have created our own KTAP (kernel TAP)
-> format.  I think it is worth documenting our conventions, in order to
-> keep everyone on the same page.
-> 
-> Below is a partially completed document on my understanding
-> of KTAP, based on examination of some of the kselftest test
-> output.  I have not reconciled this with the kunit output format,
-> which I believe has some differences (which maybe we should
-> resolve before we get too far into this).
-> 
-> I submit the document now, before it is finished, because a patch
-> was recently introduced to alter one of the result conventions
-> (from SKIP='not ok' to SKIP='ok').
-> 
-> See the document include inline below
-> 
-> ====== start of ktap-doc-rfc.txt ======
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 9a1d940..65d16ce 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -337,6 +337,7 @@ bool device_is_bound(struct device *dev)
+>  {
+>  	return dev->p && klist_node_attached(&dev->p->knode_driver);
+>  }
+> +EXPORT_SYMBOL_GPL(device_is_bound);
+>  
+>  static void driver_bound(struct device *dev)
+>  {
 
-[...]
-
-> --- from here on is not-yet-organized material
-> 
-> Tip:
->  - don't change the test plan based on skipped tests.
->    - it is better to report that a test case was skipped, than to
->      not report it
->    - that is, don't adjust the number of test cases based on skipped
->      tests
-> 
-> Other things to mention:
-> TAP13 elements not used:
->  - yaml for diagnostic messages
-
-We talked about this before, but I would like some way to get failed
-expectation/assertion information in the test in a consistent machine
-parsible way. Currently we do the following:
-
-    # Subtest: example
-    1..1
-    # example_simple_test: initializing
-    # example_simple_test: EXPECTATION FAILED at lib/kunit/kunit-example-test.c:29
-    Expected 1 + 1 == 3, but
-        1 + 1 == 2
-        3 == 3
-    not ok 1 - example_simple_test
-not ok 5 - example
-
-Technically not TAP compliant, but no one seems to mind. I am okay with
-keeping it the way it is, but if we don't want it in the KTAP spec, we
-will need some kind of recourse.
-
->    - reason: try to keep things line-based, since output from other things
->    may be interspersed with messages from the test itself
->  - TODO directive
-
-Is this more of stating a fact or desire? We don't use TODO either, but
-it looks like it could be useful.
-
-> KTAP Extensions beyond TAP13:
->  - nesting
->    - via indentation
->      - indentation makes it easier for humans to read
->  - test identifier
->     - multiple parts, separated by ':'
-
-Can you elabroate on this more? I am not sure what you mean.
-
->  - summary lines
->    - can be skipped by CI systems that do their own calculations
-> 
-> Other notes:
->  - automatic assignment of result status based on exit code
-> 
-> Tips:
->  - do NOT describe the result in the test line
->    - the test case description should be the same whether the test
->      succeeds or fails
->    - use diagnostic lines to describe or explain results, if this is
->      desirable
->  - test numbers are considered harmful
->    - test harnesses should use the test description as the identifier
->    - test numbers change when testcases are added or removed
->      - which means that results can't be compared between different
->        versions of the test
->  - recommendations for diagnostic messages:
->    - reason for failure
->    - reason for skip
->    - diagnostic data should always preceding the result line
->      - problem: harness may emit result before test can do assessment
->        to determine reason for result
->      - this is what the kernel uses
-> 
-> Differences between kernel test result format and TAP13:
->  - in KTAP the "# SKIP" directive is placed after the description on
->    the test result line
-> 
-> ====== start of ktap-doc-rfc.txt ======
-> OK - that's the end of the RFC doc.
-> 
-> Here are a few questions:
->  - is this document desired or not?
->     - is it too long or too short?
->  - if the document is desired, where should it be placed?
-
-I like it. I don't think we can rely on the TAP people updating their
-stuff based on my interactions with them. So having a spec which is
-actually maintained would be nice.
-
-Maybe in Documentation/dev-tools/ ?
-
->    I assume somewhere under Documentation, and put into
->    .rst format. Suggestions for a name and location are welcome.
->  - is this document accurate?
->    I think KUNIT does a few things differently than this description.
->    - is the intent to have kunit and kselftest have the same output format?
->       if so, then these should be rationalized.
-
-Yeah, I think it would be nice if all test frameworks/libraries for the
-kernel output tests in the same language.
-
-Cheers
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
