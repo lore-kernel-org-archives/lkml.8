@@ -2,112 +2,88 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C85EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AADC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 557B720734
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592302465;
-	bh=GTN2W44fV0EEOZQw/F7oMAo0E/9r651b3C7FjfRxfE4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VoZuXFhos9s+TRevV5++ZjO1ulb1yaaWKxxUXxDHtTydNi35uRsqa2vp6+i322Oem
-	 LJArqXX+yp7gh5oDKpsNu9bT1QiYxPzC4hNnvuKPtGlrLC7hDBsbNf43DucYB5KWez
-	 d5LOnt8rYwZyzXG7koKcOEMFSWBqxURQfWDQuUgQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3F35C2078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:14:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gt9Hi1QP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgFPKOW (ORCPT
+        id S1728346AbgFPKO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbgFPKOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:14:20 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 545FB20786;
-        Tue, 16 Jun 2020 10:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592302460;
-        bh=GTN2W44fV0EEOZQw/F7oMAo0E/9r651b3C7FjfRxfE4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B7h1ItQbnqLrL4u/C1WuUM+qht0ykMxVALs6sb430/NAWytseW9GPa0Cc6fX3S/zv
-         iCICx3XlgvUOaG52MZ3wrTyCmFFaG0JnOS2zwzzUtr6UITQNnwEsfCnMkUdqFbTgW1
-         PnluV9dMZQrIXI7sndwHDUj60Xb5y1JZCQJ+5qRI=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/4] tools/bootconfig: Fix to use correct quotes for value
-Date:   Tue, 16 Jun 2020 19:14:17 +0900
-Message-Id: <159230245697.65555.12444299015852932304.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159230243779.65555.11413773790099102781.stgit@devnote2>
-References: <159230243779.65555.11413773790099102781.stgit@devnote2>
-User-Agent: StGit/0.19
+        Tue, 16 Jun 2020 06:14:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgFPKOX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:14:23 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AB6C08C5C2;
+        Tue, 16 Jun 2020 03:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YMNjtPkUP07OueOokG4fk77Nq73HNsl0a5WlXwfxR7g=; b=gt9Hi1QPxBoutmH3mi4JL7iRs
+        9UF/thJLliLHe2KCL9wnfKBJralaec4Mbl2VsPihwkzCQOgFNlypT0Oyt23nVPBmvqaGb1PH/Lqoq
+        PfomGQH7b5VGWIERc+e2TjJgdNHm1dPXs6NF6/JIaU67DyERIXPqD8xqSifOM8+guWOHmhs5McZB/
+        8KfHWhdncf/InaezM7VcgbomwexiC/OAUZXYSvwONUFHFHQcFM9uSgVA6xtViHYIyzFsE4X2PP+DQ
+        P414SVMD2c1o2/n37q3hIhNza3GW8pHA7Bx0ROgiun69ldGDuUXPUL1WoZNDL97XeYcUP0rI8GziU
+        M0yhbJgMQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57860)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jl8bS-0002HY-1X; Tue, 16 Jun 2020 11:14:02 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jl8bN-00022E-SX; Tue, 16 Jun 2020 11:13:57 +0100
+Date:   Tue, 16 Jun 2020 11:13:57 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
+        robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH v3 1/3] net: phy: mscc: move shared probe code into a
+ helper
+Message-ID: <20200616101357.GM1551@shell.armlinux.org.uk>
+References: <20200615144501.1140870-1-heiko@sntech.de>
+ <20200615.181129.570239999533845176.davem@davemloft.net>
+ <20200615.181225.2016760272076151342.davem@davemloft.net>
+ <1656001.WqWBulSbu3@diego>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1656001.WqWBulSbu3@diego>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix bootconfig tool to select double or single quotes
-correctly according to the value.
+On Tue, Jun 16, 2020 at 11:10:27AM +0200, Heiko Stübner wrote:
+> > 
+> > You also need to provide a proper header posting when you repost this series
+> > after fixing this bug.
+> 
+> not sure I understand what you mean with "header posting" here.
 
-If a bootconfig value includes a double quote character,
-we must use single-quotes to quote that value.
+David is requesting that you send a "0/N" email summarising the purpose
+of the patch series and any other relevant information to the series as
+a whole.  The subsequent patches should be threaded to the 0/N email.
 
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
-  Changes in v2:
-   - Fix patch description.
----
- tools/bootconfig/main.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+The 0/N email should also contain the overall diffstat for the series.
 
-diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-index 0efaf45f7367..21896a6675fd 100644
---- a/tools/bootconfig/main.c
-+++ b/tools/bootconfig/main.c
-@@ -14,13 +14,18 @@
- #include <linux/kernel.h>
- #include <linux/bootconfig.h>
- 
--static int xbc_show_array(struct xbc_node *node)
-+static int xbc_show_value(struct xbc_node *node)
- {
- 	const char *val;
-+	char q;
- 	int i = 0;
- 
- 	xbc_array_for_each_value(node, val) {
--		printf("\"%s\"%s", val, node->next ? ", " : ";\n");
-+		if (strchr(val, '"'))
-+			q = '\'';
-+		else
-+			q = '"';
-+		printf("%c%s%c%s", q, val, q, node->next ? ", " : ";\n");
- 		i++;
- 	}
- 	return i;
-@@ -48,10 +53,7 @@ static void xbc_show_compact_tree(void)
- 			continue;
- 		} else if (cnode && xbc_node_is_value(cnode)) {
- 			printf("%s = ", xbc_node_get_data(node));
--			if (cnode->next)
--				xbc_show_array(cnode);
--			else
--				printf("\"%s\";\n", xbc_node_get_data(cnode));
-+			xbc_show_value(cnode);
- 		} else {
- 			printf("%s;\n", xbc_node_get_data(node));
- 		}
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
