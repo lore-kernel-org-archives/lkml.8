@@ -2,99 +2,118 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4301CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B43C42071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE2820707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVXqvcoY"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="IUT/rnTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgFPMAx (ORCPT
+        id S1728547AbgFPMBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgFPMAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:00:52 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4903BC08C5C2;
-        Tue, 16 Jun 2020 05:00:52 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q19so23202403lji.2;
-        Tue, 16 Jun 2020 05:00:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QSDz1CcTlXHevMdT17dfagrIIYP8BvIZ7bez+W8TR/I=;
-        b=oVXqvcoYIkCXNR7wL6n3vOVqa4vsvz555GXgN3SvQbk++DqCfyY3ihS6C44FTj/1l6
-         oxmN6rQSl/0N9Rs3GD1cLcFTRNOKZVrFi+4MTLxT4A2/TIruex3OouFYhG8DGyT0KOei
-         Egd1CQ9keFWRBVCIckvgZJkqKf+CloQ3UDJ82KcY8QsjVL5gnReCpUBL/e/CbpjQs1IB
-         8i7oNBfAdR0pwujcU3YFsnbfNvsFqW8GB4um9FicmqKBkBg+cjmgG00mhPHH06pjiOMn
-         Yh7v9I+PaSONtPPasNP/XArF6pxddi6OvJDr7wTny6RMQ7M6/XNYqeMBP+Vd+B4k5NLy
-         MlIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QSDz1CcTlXHevMdT17dfagrIIYP8BvIZ7bez+W8TR/I=;
-        b=Ec6xqW6fCdV5BRUROYAof+dWucvox0XxNn1JOZokn7nFsqD+r1lDqyEBRFMZ/G+Srj
-         QL2m6+fXLxak2r6TERz0a1SVWrvQQQLSEJ7/OI41B53gthOgJDWTtZQB7tNETMUPc7j1
-         eV+T4dZ5hB12gacpr5ypIZToU2+P96MggM4Yu/vFx2aIPtOT2nEr880ESKYNZNiTfdcF
-         HISCWlhCF9421z6gLifIgWexHZxMJUmn85rzUx6JZOYtCRxHIzN7ZaqOqE+rLggOl0uI
-         r1I/3OPn01PPEbDnX4fuRVVx8D5AMNaJKDT9ExkeW60FiYJh31v1Ms9I070qjAFt6ld/
-         duYw==
-X-Gm-Message-State: AOAM530S/pBbXTp82v2wm/Mp15GSDNxGvfKEFc9znFJ3DSHuUE96Remb
-        VNQfZj3uQgxFT48zaPTk6gM=
-X-Google-Smtp-Source: ABdhPJwuQbHaMDqXb3iB07dLDs9sxQLsnHPublzf3ks7pGsQG6s9Bp48XpLM+JQKBc+w1SQqlJh7Iw==
-X-Received: by 2002:a2e:98d4:: with SMTP id s20mr1343979ljj.83.1592308850862;
-        Tue, 16 Jun 2020 05:00:50 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id i22sm4343234ljb.21.2020.06.16.05.00.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 05:00:50 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] 180 degrees rotation support for NVIDIA Tegra DRM
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Derek Basehore <dbasehore@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>, linux-tegra@vger.kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-References: <20200614200121.14147-1-digetx@gmail.com>
- <CACvgo51QuXMgWhFk4C=3rGvUZDX1_W0RZtVb5RtRPiHTpMebWQ@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e6b50ec8-08f9-a15e-6aa5-2ca306613e97@gmail.com>
-Date:   Tue, 16 Jun 2020 15:00:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 16 Jun 2020 08:01:25 -0400
+Received: from mail-bn8nam12on2065.outbound.protection.outlook.com ([40.107.237.65]:34211
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbgFPMBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 08:01:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n7eoQXLlP1TnBTpNHv/ipNIKuK+zzOL05VDzXmPwFF+Zw/OmHjXC4R32MibIQZJJc1xkaJ7883HhxFzfaPbcQNz+J8LJtY/7yZwo9IUw3jDvGwqds2OslKa/f6IoFgmslehixg/rix6ROP2T3FNXEvxKlFuiLG04Mf1/jLw6r0x7lDR8E379HFpbN4ObQi8LmemBfWUFCA+NYRVIDKI/wm1zUrPNBbj/VohivJqf/rEs6m17NrmcpwlxT1GOcTwekxhSUF5f1uuv62VzUPuGEU7cv+BTYqdZO3VoikRf2nndF3ZcaA9UHbE89B66usJN6Q7aLB+isnHrT8flYVc2og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jQUwghQBIlyWOgMEomySlhHigzb9LkGY0gigbDBTZBU=;
+ b=If0U1SfdhC3IGAQVZV7YRCdOHiNWDPFc9vkIvFVVsNwRCMBJaSpwICqZYCT3Ky8DzS4wfYlwyojpGOZIKRPT6AcXNer9OHdVe6vMwXS9bx/mbN9dIX3Kxe87XSnAXRkJj0H83bqSbiLJQN65jMXhZQY2gIjGZNcLzFobz0d0MG8Z3Ojl4xVchamkX4Y+95qyONzJ+IXrB9SZ115W8m9SNS7pbjXkj800wnExkzgwm7BB/wGXj7F12XrS2ll8zmy42qKCx5LLOMIS7KOr2/UQ2Z2WiPsznMs7bjGDBq2cIEHP6h1nQe9LUd1k42xdmYozSonbX0THxg2/azvm8LCWqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jQUwghQBIlyWOgMEomySlhHigzb9LkGY0gigbDBTZBU=;
+ b=IUT/rnThefE03c6LEPQIe5DdFLJQHUdti9ylSYhFL4tsrMpG1GiF1kGIMIslyk70IIYw7LB52iHrdkzUbrPQsDLajqAHUnipmjajFF6ZaKzSZSs9+cGxGfOJTLVKNUCgK8nHTR9ylQ28/0BVukPegXjQyLc9VSH5wS/jCT5KgZ0=
+Authentication-Results: sifive.com; dkim=none (message not signed)
+ header.d=none;sifive.com; dmarc=none action=none header.from=sifive.com;
+Received: from BN6PR1301MB2020.namprd13.prod.outlook.com
+ (2603:10b6:405:34::34) by BN6PR13MB1409.namprd13.prod.outlook.com
+ (2603:10b6:404:111::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.13; Tue, 16 Jun
+ 2020 12:01:22 +0000
+Received: from BN6PR1301MB2020.namprd13.prod.outlook.com
+ ([fe80::68f2:768a:7a8b:e790]) by BN6PR1301MB2020.namprd13.prod.outlook.com
+ ([fe80::68f2:768a:7a8b:e790%7]) with mapi id 15.20.3109.018; Tue, 16 Jun 2020
+ 12:01:21 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com, robh+dt@kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sachin.ghadi@sifive.com
+Cc:     aou@eecs.berkeley.edu, bmeng.cn@gmail.com, green.wan@sifive.com,
+        atish.patra@wdc.com, anup@brainfault.org, alistair.francis@wdc.com,
+        lollivier@baylibre.com, deepa.kernel@gmail.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH 0/3] Dynamic CPU frequency switching for the HiFive
+Date:   Tue, 16 Jun 2020 17:31:01 +0530
+Message-Id: <1592308864-30205-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0019.apcprd02.prod.outlook.com
+ (2603:1096:3:17::31) To BN6PR1301MB2020.namprd13.prod.outlook.com
+ (2603:10b6:405:34::34)
 MIME-Version: 1.0
-In-Reply-To: <CACvgo51QuXMgWhFk4C=3rGvUZDX1_W0RZtVb5RtRPiHTpMebWQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from osubuntu003.open-silicon.com (159.117.144.156) by SG2PR02CA0019.apcprd02.prod.outlook.com (2603:1096:3:17::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3088.25 via Frontend Transport; Tue, 16 Jun 2020 12:01:16 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [159.117.144.156]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f7c8d9cb-70f9-4207-e0c9-08d811ecfc00
+X-MS-TrafficTypeDiagnostic: BN6PR13MB1409:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR13MB14090BAA12AE6157626B78668C9D0@BN6PR13MB1409.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 04362AC73B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: W0ZUbZ1YMHYY+MmLxuXkMkNnkHl2kqTegYpXpOfRPrH4Ms3yFh1n88gB6xRtS08iIno2rVHEMQ3b0G2/H5mTqSHtfec/aWqOpsu8Bwc+ObvwsrAO1vsQS0WRvToyZFCtFJAMFI81x7ylHUp04ZNlzzihYkIE21Hcaqm257oiRmGiU/unKiyvm4nWwlfJ4DGMJ+Yf8I84mdHg15+vQDADropRz/jjzz/trvTifH8yRI8nEVvfnwekF18bnlRlg1P88hAw8EPN4NK2VPZJkScfil9z72Ao2rDh4r7C89SwbSQhl8GjCIHh7cbqU/hmsZQACHo3pOQfZTTVvr0PTGQTdw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1301MB2020.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(366004)(136003)(39850400004)(396003)(346002)(376002)(2616005)(6506007)(52116002)(956004)(4744005)(6486002)(36756003)(6666004)(4326008)(6512007)(8676002)(107886003)(44832011)(6636002)(7416002)(8936002)(478600001)(86362001)(5660300002)(16526019)(186003)(2906002)(26005)(83380400001)(316002)(66946007)(66556008)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ctUQnQMzXXtqOiqoU9ViZnaGTnXWf4N3ki9QiI6suue3QPgl9Pu8Y/INKSZ78y9SQKIbfTG0EeWiX1gbN1fzNPA4NRKYwTzgsWSU0NgL9DyhFfT3DNBezu1aum/Y2luU4kyjvhoNU9nxPVPftUMTuBzDKaZWt3aqPvk1lkBmy/bz1+QWnIGA2gcwPtLu4PlVqIGsHS6sbjCxGBxsKx/ct7GaO7NlO/uqgfJxxSeVqnf9N/bZmCfSJHipGsEj2xjmxH0AcAWxvkiaDKKgkyEd5BmCXihcK6Ts5orFC4hoad+t+mHKuQN0e4XzJgDNbJyBqt/A9C9wh4EVf02W6k8iO5iFg1LcFvYPeSDLqFW8f6NGQSkhuSq2pgyJiH77aH6wy2Pfm0K9hPzMSeLG2rOgFTM+PqIG2DKbEmOSvCk3OFnz3CpxB1l0miU+7KNc9z1Lm9hELfBT2+IrwvVVUmSBcwswUwgT0P0Hx51Mq90ycGw=
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7c8d9cb-70f9-4207-e0c9-08d811ecfc00
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2020 12:01:21.8071
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QVHoh2vXRrZA3hHT59bViQwou2jvOcNcW/CyyRH17WXjyguABKcjyurpKFEYpV2mRFT4JSV9UvWo12mFEtEfHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR13MB1409
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.06.2020 01:26, Emil Velikov пишет:
-...
-> Although I see that this series, alike Derek's, has a couple of issues:
->  - only a single panel driver is updated
+The patch series adds the support for dynamic CPU frequency switching
+for FU540-C000 SoC on the HiFive Unleashed board. All the patches are
+based on Paul Walmsley's work.
 
-I'll separate this series into two patchsets.
+This series is based on Linux v5.7 and tested on HiFive unleashed board.
 
-One will add orientation support to the panel drivers and I'll include
-the Derek's tv101wum-nl6 patch, so it will be two panel drivers \o/ :)
+Yash Shah (3):
+  riscv: defconfig, Kconfig: enable CPU power management
+  riscv: dts: fu540-c000: define hart clocks
+  riscv: dts: HiFive Unleashed: define a default set of CPU OPPs
 
-The other will add reflection-x support to the Tegra driver.
+ arch/riscv/Kconfig                                 |  8 +++++
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi         |  5 +++
+ .../riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 38 ++++++++++++++++++++++
+ arch/riscv/configs/defconfig                       |  5 +++
+ 4 files changed, 56 insertions(+)
+
+-- 
+2.7.4
+
