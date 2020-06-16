@@ -2,176 +2,167 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE6EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02EA9208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:16:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VwXlS1g8"
+	by mail.kernel.org (Postfix) with ESMTP id AA40D20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgFPSQd (ORCPT
+        id S1729731AbgFPSRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgFPSQc (ORCPT
+        Tue, 16 Jun 2020 14:17:15 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54697 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgFPSRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:16:32 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB92AC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 11:16:32 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id d4so2293681otk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 11:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qcuAK03LOqO5mTPh575e+XVmEJ631aNvRC62w67+4Es=;
-        b=VwXlS1g8JndYAbL6AkbODMzW9aRCCeCGS0qDzu9RlCSgpRk4sUz1xBpcwv3bWNtcPB
-         W5PbX2EDusVm2vo3oUJSBM4wom1W/b3YCDLBAfKfoGGI9EC2NuLeh4tg7aiN4QaJJUbi
-         a1vhJXJJ02M2DXWZ5xxm1S/yEeNog5tFnNQmKawPyccleEVlnq2MkNWb/BXT30lb4oSh
-         qnEDSuE/QLwmUe2FJM+olU2Jipye8MCJbU7d5AMO8s5QufzyKU2y7qVm3ocuMb+ahVrI
-         5EgNpM2mbvKXkj1x10zQh0QhEK2v/1Lww3KG8+vNLaoGZBEP1u8nVQwBYPE0ePKD9Akj
-         0hog==
+        Tue, 16 Jun 2020 14:17:14 -0400
+Received: by mail-pj1-f65.google.com with SMTP id u8so1788790pje.4;
+        Tue, 16 Jun 2020 11:17:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qcuAK03LOqO5mTPh575e+XVmEJ631aNvRC62w67+4Es=;
-        b=kI2vzLlJ12+Etb5tkZoHREHSv8egqJ54KbWMDdsXatsOK19i+PKJTIBNsjySIFpIdD
-         tJs38Hxf5az1ohUMk34hr5/IU9yOsNRBY1k00SNAYxwsUcMN+5aZGYIX5rBb6XLDQK87
-         FBQQw3i0LTfJ2aHWOajnVzM30y4malzwag3a3vU5uW8Ah7kDfV4S1b7vw1cMTcy31e7p
-         +lBLPIYUaPy/ATpSJ9Dl+qVKaFyGSSdp137cpSN/JcFNRF9KmjEr3wK3x95vdUVlCx/2
-         6nFWQwROg6/W6bYP9KOGbkcD4DvZ6GNyjHbz4BJo8HtDG8KAncvcriqn5qpar2bRjGbb
-         ALMQ==
-X-Gm-Message-State: AOAM5308RU/Nwm1OryARtLOWhP6rnsAD+v3ODuTLPflhCM3rm8o9lCmb
-        ADwOibZnTx4AZXIZOEKVBtsJi/sg
-X-Google-Smtp-Source: ABdhPJwoE+mTtd0wmJ6Kg/2ki2jL/MPCf6DRi0jct0cmYlu66QwZ4K5VQV/Otr0QY9SFijmmPVCXBw==
-X-Received: by 2002:a9d:604e:: with SMTP id v14mr3605300otj.39.1592331391962;
-        Tue, 16 Jun 2020 11:16:31 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id k84sm4329177oia.3.2020.06.16.11.16.31
+        bh=yolgGMb95dP+gYToCtafiZ644tKzzstcDIk6VxrD4LE=;
+        b=Kn6eTqtIZ3jx0IszbGtnukfg23ZHGI2ovLTySePpnDfYfI3aiLmxZlw40TbyfBnlUY
+         36IJh5zOvTqtFAEO9W/MGFTswJBMsY7Sa3F6lE2n3RDg/my5W7vmbI3190QkYUBcckOR
+         EOh4WiNvMOvYp4ePJeQRwa97HMmCEN8HBhQDS7uxe6F8UGbV/RkTaBHaq5BuwktHDEE0
+         hSuyRbxMNNNjXXLgB2emh1FmpPynEoGa9yb134t/XCUKvwVN/HBWa135/H3QNTIRlbjw
+         cL6GzhvSkH8FE0kU5TsSWxv2dQYfNUPEDLo3VKsa32inysmCO7VnnVLeoEizvDN9z3tT
+         YL3w==
+X-Gm-Message-State: AOAM533EJXdtlObaVlW4/dzN1AuY32OXNp+MvUHCiCbv29o5sw+3gsA0
+        H7cdMogxShOVKFEii+cOF6IWqRDE
+X-Google-Smtp-Source: ABdhPJx1AQB9zeLGAW1c7WR2NXgeldh76+fn8duRjngXlIl06QWFuNVYlkuSaMtPkTpu+HGNWQ71UA==
+X-Received: by 2002:a17:90a:64c9:: with SMTP id i9mr4079798pjm.135.1592331433306;
+        Tue, 16 Jun 2020 11:17:13 -0700 (PDT)
+Received: from sultan-box.localdomain ([89.45.90.111])
+        by smtp.gmail.com with ESMTPSA id y7sm3216854pjm.54.2020.06.16.11.17.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 11:16:31 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 11:16:30 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v5 01/13] powerpc: Remove Xilinx PPC405/PPC440 support
-Message-ID: <20200616181630.GA3403678@ubuntu-n2-xlarge-x86>
-References: <cover.1590079968.git.christophe.leroy@csgroup.eu>
- <8c593895e2cb57d232d85ce4d8c3a1aa7f0869cc.1590079968.git.christophe.leroy@csgroup.eu>
- <20200616002720.GA1307277@ubuntu-n2-xlarge-x86>
- <68503e5e-7456-b81c-e43d-27cb331a4b72@xilinx.com>
+        Tue, 16 Jun 2020 11:17:12 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 11:17:09 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Andi Shyti <andi.shyti@intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jarkko.nikula@linux.intel.com, aaron.ma@canonical.com,
+        admin@kryma.net, benjamin.tissoires@redhat.com,
+        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
+        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, vicamo.yang@canonical.com,
+        wsa@kernel.org
+Subject: Re: [PATCH v2] HID: i2c-hid: Use block reads when possible to save
+ power
+Message-ID: <20200616181709.GA1768@sultan-box.localdomain>
+References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
+ <20200616154951.3050-1-sultan@kerneltoast.com>
+ <20200616164101.GY2428291@smile.fi.intel.com>
+ <20200616171854.GA1415@intel.intel>
+ <20200616173258.GA5266@sultan-book.localdomain>
+ <20200616180254.GB1415@intel.intel>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <68503e5e-7456-b81c-e43d-27cb331a4b72@xilinx.com>
+In-Reply-To: <20200616180254.GB1415@intel.intel>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
-
-On Tue, Jun 16, 2020 at 04:45:20PM +0200, Michal Simek wrote:
+On Tue, Jun 16, 2020 at 09:02:54PM +0300, Andi Shyti wrote:
+> Hi Sultan,
 > 
-> 
-> On 16. 06. 20 2:27, Nathan Chancellor wrote:
-> > On Thu, May 21, 2020 at 04:55:52PM +0000, Christophe Leroy wrote:
-> >> From: Michal Simek <michal.simek@xilinx.com>
-> >>
-> >> The latest Xilinx design tools called ISE and EDK has been released in
-> >> October 2013. New tool doesn't support any PPC405/PPC440 new designs.
-> >> These platforms are no longer supported and tested.
-> >>
-> >> PowerPC 405/440 port is orphan from 2013 by
-> >> commit cdeb89943bfc ("MAINTAINERS: Fix incorrect status tag") and
-> >> commit 19624236cce1 ("MAINTAINERS: Update Grant's email address and maintainership")
-> >> that's why it is time to remove the support fot these platforms.
-> >>
-> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> >> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> > > > > so the only strategy available up until now has been to always retrieve
+> > > > > the maximum possible report length over i2c, which can be quite
+> > > > > inefficient. For devices that send reports in block read format, the i2c
+> > > > > controller driver can read the payload length on the fly and terminate
+> > > > > the i2c transaction early, resulting in considerable power savings.
+> > > > > 
+> > > > > On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
+> > > > > touchpad causes psys power readings to go up by about 4W and hover there
+> > > > > until I remove my finger. With this patch, my psys readings go from 4.7W
+> > > > > down to 3.1W, yielding about 1.6W in savings. This is because my
+> > > > > touchpad's max report length is 60 bytes, but all of the regular reports
+> > > > > it sends for touch events are only 32 bytes, so the i2c transfer is
+> > > > > roughly halved for the common case.
+> > > > 
+> > > > > +	/* Try to do a block read if the size fits in one byte */
+> > > > > +	flags = size > 255 ? I2C_M_RD : I2C_M_RD | I2C_M_RECV_LEN;
+> > > > 
+> > > > AFAIR SMBus specification tells about 256. Why 255?
+> > > > 
+> > > > Andi, am I correct?
+> > > 
+> > > Actually the SMBUS 3.0 protocol from 2015[*] says 255:
+> > > 
+> > > "
+> > > D.6 255 Bytes in Process Call
+> > > 
+> > > The maximum number of bytes allowed in the Block Write-Block Read
+> > > Process Call (Section 6.5.8) was increased from 32 to 255.
+> > > "
+> > > 
+> > > But why does it matter... I see the patch is detatching itself
+> > > from smbus.
+> > > 
+> > > And, actually, I wonder if this is the right way to fix it, isn't
+> > > it better to fix smbus instead?
 > > 
-> > This patch causes qemu-system-ppc to fail to load ppc44x_defconfig:
+> > I think the best solution would be to modify the i2c api to allow passing in a
+> > function pointer and a payload size length, to specify how to interpret the size
+> > of the incoming payload, so the adapter could handle both the HID over i2c
+> > transfer spec and SMBus block reads without needing to read more bytes than
+> > needed.
+> 
+> Can't you do that by specifying the xfer function?
+> 
+> When you use smbus_read/write in block or byte or whatever, smbus
+> always checks if there is an xfer function specified and uses
+> that.
+> 
+> If it's not specified it uses the default smbus functions with
+> the limitations that come with it.
+
+The xfer functions are specified on a per-adapter basis. In the case of i2c-hid,
+we need to tell the adapter to interpret the payload size in a specific way,
+which I *think* is only specific to HID over i2c (i.e., using 16 bits to store
+the length and then checking it for device quirks).
+
+> > For example, for an SMBus block read, the payload size is specified in the first
+> > byte and it is limited to 32 bytes. However, for HID over i2c, the payload size
+> > is specified in the first two bytes, and there are also some device quirks
+> > involved to reinterpret the reported size.
+> 
+> which is wrong. The 32 bytes limitation is outdated: in the link
+> that I gave before (i.e.  this one [*]), the new SMBUS specifies
+> 255 maximum for read/write block.
+
+Oops. But still, for SMBus block reads, the size is limited to 8 bits. For HID
+over i2c, it can be 16 bits. I don't see how we can handle this without some api
+cooperation to tell the adapter what the caller is expecting to see.
+
+> > A nice solution would be to pass in how many bytes the i2c payload size can
+> > contain, as well as a function pointer to evaluate the reported payload size in
+> > a way that the caller wants. This would require modifying every i2c adapter
+> > driver to add this functionality, but it would fix the efficiency problem faced
+> > by i2c-hid and perhaps others.
 > > 
-> > $ make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc-linux- O=out/ppc distclean ppc44x_defconfig zImage
+> > > I have a patch ready that fixes the smbus transfer size, perhaps
+> > > I should rebase, test and send it.
 > > 
-> > $ timeout --foreground 30s unbuffer \
-> > qemu-system-ppc \
-> > -machine bamboo \
+> > For the i2c-hid driver?
 > 
-> Did you bisect it that you found that this patch is causing problem for
-> you on any bamboo machine?
+> No, sorry, for smbus.
 > 
-> Or this was caused by the whole series?
+> Now... here you are replacing "i2c_master_recv" with
+> "i2c_transfer_buffer_flags". I do not really like this change,
+> although I understand it's necessary, because we are bypassing
+> the real issue that is that the smbus implementation is outdated.
 > 
-> Thanks,
-> Michal
+> I have a patch for that that for a matter of time I never sent.
 
-Yes, this conclusion was the result of the following bisect:
+Can it handle block reads (8 bit size) and HID over i2c (16 bit size)?
 
-$ cat test.sh
-#!/usr/bin/env bash
-
-cd "${HOME}"/src/linux || exit 125
-
-set -x
-
-PATH=${HOME}/toolchains/gcc/10.1.0/bin:${PATH} \
-make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc-linux- O=out/ppc32 distclean ppc44x_defconfig zImage || exit 125
-
-"${HOME}"/cbl/github/boot-utils/boot-qemu.sh -a ppc32 -k out/ppc32 -t 30s
-
-$ git bisect start v5.8-rc1 v5.7
-...
-
-$ git bisect run test.sh
-...
-
-$ git bisect log
-# bad: [b3a9e3b9622ae10064826dccb4f7a52bd88c7407] Linux 5.8-rc1
-# good: [3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162] Linux 5.7
-git bisect start 'v5.8-rc1' 'v5.7'
-# good: [ee01c4d72adffb7d424535adf630f2955748fa8b] Merge branch 'akpm' (patches from Andrew)
-git bisect good ee01c4d72adffb7d424535adf630f2955748fa8b
-# bad: [6f2dc3d335457d9c815be9f4fd3dc8eff92fcef7] Merge tag 'dma-mapping-5.8-2' of git://git.infradead.org/users/hch/dma-mapping
-git bisect bad 6f2dc3d335457d9c815be9f4fd3dc8eff92fcef7
-# skip: [828f3e18e1cb98c68fc6db4d5113513d4a267775] Merge tag 'arm-drivers-5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect skip 828f3e18e1cb98c68fc6db4d5113513d4a267775
-# good: [c46241a370a61f0f264791abb9fc869016e749ce] powerpc/pkeys: Check vma before returning key fault error to the user
-git bisect good c46241a370a61f0f264791abb9fc869016e749ce
-# good: [3f0be4df50a7854a831c80a74d7cf2cfd61f2fde] Merge tag 'versatile-dts-v5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator into arm/dt
-git bisect good 3f0be4df50a7854a831c80a74d7cf2cfd61f2fde
-# bad: [bd55e792de0844631d34487d43eaf3f13294ebfe] powerpc/module_64: Use special stub for _mcount() with -mprofile-kernel
-git bisect bad bd55e792de0844631d34487d43eaf3f13294ebfe
-# good: [303e6a9ddcdc168e92253c78cdb4bbe1e10d78b3] powerpc/watchpoint: Convert thread_struct->hw_brk to an array
-git bisect good 303e6a9ddcdc168e92253c78cdb4bbe1e10d78b3
-# good: [0755e85570a4615ca674ad6489d44d63916f1f3e] powerpc/xive: Do not expose a debugfs file when XIVE is disabled
-git bisect good 0755e85570a4615ca674ad6489d44d63916f1f3e
-# bad: [b4ac18eead28611ff470d0f47a35c4e0ac080d9c] powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple hv-24x7 events run
-git bisect bad b4ac18eead28611ff470d0f47a35c4e0ac080d9c
-# bad: [3aacaa719b7bf135551cabde2480e8f7bfdf7c7d] powerpc/40x: Don't save CR in SPRN_SPRG_SCRATCH6
-git bisect bad 3aacaa719b7bf135551cabde2480e8f7bfdf7c7d
-# bad: [1b5c0967ab8aa9424cdd5108de4e055d8aeaa9d0] powerpc/40x: Remove support for IBM 403GCX
-git bisect bad 1b5c0967ab8aa9424cdd5108de4e055d8aeaa9d0
-# good: [0bdad33d6bd7b80722e2f9e588d3d7c6d6e34978] powerpc/64: Refactor interrupt exit irq disabling sequence
-git bisect good 0bdad33d6bd7b80722e2f9e588d3d7c6d6e34978
-# bad: [2c74e2586bb96012ffc05f1c819b05d9cad86d6e] powerpc/40x: Rework 40x PTE access and TLB miss
-git bisect bad 2c74e2586bb96012ffc05f1c819b05d9cad86d6e
-# bad: [7ade8495dcfd788a76e6877c9ea86f5207369ea4] powerpc: Remove Xilinx PPC405/PPC440 support
-git bisect bad 7ade8495dcfd788a76e6877c9ea86f5207369ea4
-# first bad commit: [7ade8495dcfd788a76e6877c9ea86f5207369ea4] powerpc: Remove Xilinx PPC405/PPC440 support
+Sultan
