@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6BAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A46208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA1A2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323555;
-	bh=zZwRYPHfxPr8Xw3EHAcsqmAxXoL1FwvL9a3v8YWMs3s=;
+	s=default; t=1592323558;
+	bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPFjpd4fu9QRIeT3VvGvNbizQQnsC7ObXnQ//ofiXxUrBvewT/lDM3xFkAyGWItYh
-	 7WFLwxeJKE1Fhp5L57wxhSR2QYAmNqZcyER5IldZhZYA+iVMA46sE9Izlh2JtIhMFH
-	 nWiFZezbVjQaZeE5/TqcXtiriDQ2REKIuDavz15Q=
+	b=O9CrG7Dx4NFFFBW/F6JIWD+RVW+22w2YnVyikiT0F7nH6djkZ7WkljJx+O2yD+HrC
+	 okqKVqgNkWqU3q66ojG3UkByufS4RYHWGTsDLi/17t07cBjyJsEWLjmhl/5X6iAqc9
+	 KrOTa7TBObln6jF0SYgs7UIB33IoHXUCQQLVdsmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732435AbgFPPsj (ORCPT
+        id S1732567AbgFPQF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42776 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:05:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732413AbgFPPs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:48:26 -0400
+        id S1731397AbgFPPsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:48:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D426720776;
-        Tue, 16 Jun 2020 15:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B7F21475;
+        Tue, 16 Jun 2020 15:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322506;
-        bh=zZwRYPHfxPr8Xw3EHAcsqmAxXoL1FwvL9a3v8YWMs3s=;
+        s=default; t=1592322521;
+        bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1pz9l2uzW/obvbNgy/YCW0hx28B97tYcLZbAj2ZaMFbDheW/g3Fg11SwG7RA8fcH4
-         KMuVTHF6QkkDmEjqxSgPsmk0N2kkHE3dnMLde4+rz4oYLOsUZ5O+Rj88VqNfzwAioi
-         H9pm8IOB7aWSu+bev3Y9kVPqNpm+Mzd5lb0sG1BM=
+        b=QD4WKLBS4jOO22brm7d1HeG9eBDQaKacAEtma8ii5jSJdaYolaxSrBQqncaSSoCe6
+         vQ1lC/PtAI4/399AQfwPPWjN7Q1DsjJG+5qWzmpVVkq/QNU3VmvHdVErZMqm3TMheW
+         r0aqnfyV5n6ilGKlnnOwOrxUP8VYj/+nVCLTKJDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.7 129/163] KVM: nSVM: leave ASID aside in copy_vmcb_control_area
-Date:   Tue, 16 Jun 2020 17:35:03 +0200
-Message-Id: <20200616153112.993856959@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 5.7 155/163] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node description
+Date:   Tue, 16 Jun 2020 17:35:29 +0200
+Message-Id: <20200616153114.230506967@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -58,32 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-commit 6c0238c4a62b3a0b1201aeb7e33a4636d552a436 upstream.
+commit a1af7f36c70369b971ee1cf679dd68368dad23f0 upstream.
 
-Restoring the ASID from the hsave area on VMEXIT is wrong, because its
-value depends on the handling of TLB flushes.  Just skipping the field in
-copy_vmcb_control_area will do.
+Remove non-removable and mmc-ddr-1_8v properties from the sdmmc0
+node which come probably from an unchecked copy/paste.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes:42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
+Cc: stable@vger.kernel.org # 4.19 and later
+Link: https://lore.kernel.org/r/20200401221504.41196-1-ludovic.desroches@microchip.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm/nested.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -150,7 +150,7 @@ static void copy_vmcb_control_area(struc
- 	dst->iopm_base_pa         = from->iopm_base_pa;
- 	dst->msrpm_base_pa        = from->msrpm_base_pa;
- 	dst->tsc_offset           = from->tsc_offset;
--	dst->asid                 = from->asid;
-+	/* asid not copied, it is handled manually for svm->vmcb.  */
- 	dst->tlb_ctl              = from->tlb_ctl;
- 	dst->int_ctl              = from->int_ctl;
- 	dst->int_vector           = from->int_vector;
+--- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+@@ -125,8 +125,6 @@
+ 			bus-width = <8>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
+-			non-removable;
+-			mmc-ddr-1_8v;
+ 			status = "okay";
+ 		};
+ 
 
 
