@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0758DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0A2208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B635208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322080;
-	bh=5um46MZsFbpHaxkZUw61HJPn4afteMOpE3jDZSIxDbk=;
+	s=default; t=1592322084;
+	bh=KcBtSG9xpoG4KBKN2wsFVC5ANJ63ngAtb8H3x5Iz6Dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z3CyRJx/WSA6Cfnfho1QR2xFoLLzl3djAic8ybaBzCbcukOH4BEHB0F/r/vaob0Db
-	 i/+FdOP1F4COWxXjiFinTXvPjx/5pQsqN3bPzSAQ6/7Qm4HAS348yPIN8OIXT4CKf7
-	 2d5vjAwWwxjENoy2IxGIQygdaglM60g8bLV9XI18=
+	b=snLd0OfHLg5/sLd6IW5cPabV2BvawhJHX6XlN8j8OWOb9zQypEoyNvcG2KQEsQHk9
+	 M20TmDQiCBiXRe43smKxs8yDN9LqTb2fyX3ODjvkewQ6PFdaPt15KngHM/c3qlTvuj
+	 TUYS3ilal8tRfVmpkBjutJjivVz1sVUJBZFgIwfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbgFPPlT (ORCPT
+        id S1731420AbgFPPlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:41:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730243AbgFPPlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:15 -0400
+        id S1729227AbgFPPlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D887C208E4;
-        Tue, 16 Jun 2020 15:41:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FD1D208D5;
+        Tue, 16 Jun 2020 15:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322074;
-        bh=5um46MZsFbpHaxkZUw61HJPn4afteMOpE3jDZSIxDbk=;
+        s=default; t=1592322077;
+        bh=KcBtSG9xpoG4KBKN2wsFVC5ANJ63ngAtb8H3x5Iz6Dw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bc0zQqCXadtMqxy2wfdOQTLsQToUbTZaV4PIV/5h5pB1uSjwzPxG3FR+Lhpb3C9/u
-         ZUFzt2nmVawcyFjyqyJda7HE9ohlFxsDhfAjCA/JjqJJ4n66xh9Vgb0oeAUuIbH/gf
-         22ZE18dHHGN16OZYrMtBWxxDWf33tc/Uic5jqvhs=
+        b=op07wFr9uFiK4u/xPYWyzm5Aa1Z0HBrj4V+6i+3n1yFV63AeFz0A4upGYW0QCNRsL
+         1zo09ioJIws9sk24J1qM4i0Y2n/TpvQRN6CmE3z0cL+KUHJg2N3jeVBr6wHLilzpDg
+         +vGu0ETVQk9+Qnm7ntjQfi3XxGeB7s88x8A0aZkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 126/134] mmc: tmio: Further fixup runtime PM management at remove
-Date:   Tue, 16 Jun 2020 17:35:10 +0200
-Message-Id: <20200616153106.821340873@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.4 109/134] KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
+Date:   Tue, 16 Jun 2020 17:34:53 +0200
+Message-Id: <20200616153106.007082794@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,60 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 4bd784411aca022622e484eb262f5a0540ae732c upstream.
+commit 3204be4109ad681523e3461ce64454c79278450a upstream.
 
-Before calling tmio_mmc_host_probe(), the caller is required to enable
-clocks for its device, as to make it accessible when reading/writing
-registers during probe.
+AArch32 CP1x registers are overlayed on their AArch64 counterparts
+in the vcpu struct. This leads to an interesting problem as they
+are stored in their CPU-local format, and thus a CP1x register
+doesn't "hit" the lower 32bit portion of the AArch64 register on
+a BE host.
 
-Therefore, the responsibility to disable these clocks, in the error path of
-->probe() and during ->remove(), is better managed outside
-tmio_mmc_host_remove(). As a matter of fact, callers of
-tmio_mmc_host_remove() already expects this to be the behaviour.
+To workaround this unfortunate situation, introduce a bias trick
+in the vcpu_cp1x() accessors which picks the correct half of the
+64bit register.
 
-However, there's a problem with tmio_mmc_host_remove() when the Kconfig
-option, CONFIG_PM, is set. More precisely, tmio_mmc_host_remove() may then
-disable the clock via runtime PM, which leads to clock enable/disable
-imbalance problems, when the caller of tmio_mmc_host_remove() also tries to
-disable the same clocks.
-
-To solve the problem, let's make sure tmio_mmc_host_remove() leaves the
-device with clocks enabled, but also make sure to disable the IRQs, as we
-normally do at ->runtime_suspend().
-
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200519152434.6867-1-ulf.hansson@linaro.org
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reported-by: James Morse <james.morse@arm.com>
+Tested-by: James Morse <james.morse@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/tmio_mmc_core.c |    6 ++++--
+ arch/arm64/include/asm/kvm_host.h |    6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -1285,12 +1285,14 @@ void tmio_mmc_host_remove(struct tmio_mm
- 	cancel_work_sync(&host->done);
- 	cancel_delayed_work_sync(&host->delayed_reset_work);
- 	tmio_mmc_release_dma(host);
-+	tmio_mmc_disable_mmc_irqs(host, TMIO_MASK_ALL);
- 
--	pm_runtime_dont_use_autosuspend(&pdev->dev);
- 	if (host->native_hotplug)
- 		pm_runtime_put_noidle(&pdev->dev);
--	pm_runtime_put_sync(&pdev->dev);
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -392,8 +392,10 @@ void vcpu_write_sys_reg(struct kvm_vcpu
+  * CP14 and CP15 live in the same array, as they are backed by the
+  * same system registers.
+  */
+-#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r)])
+-#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r)])
++#define CPx_BIAS		IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)
 +
- 	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_dont_use_autosuspend(&pdev->dev);
-+	pm_runtime_put_noidle(&pdev->dev);
- }
- EXPORT_SYMBOL_GPL(tmio_mmc_host_remove);
++#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
++#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
  
+ struct kvm_vm_stat {
+ 	ulong remote_tlb_flush;
 
 
