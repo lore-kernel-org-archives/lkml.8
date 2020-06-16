@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99662074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7CA20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgFPJhD (ORCPT
+        id S1728529AbgFPJhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:37:03 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6266 "EHLO huawei.com"
+        Tue, 16 Jun 2020 05:37:00 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47332 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728335AbgFPJgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728240AbgFPJgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 05:36:21 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DC5347673396AED17823;
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id AD27B10AC27B32B7709B;
         Tue, 16 Jun 2020 17:36:18 +0800 (CST)
 Received: from DESKTOP-5IS4806.china.huawei.com (10.173.221.230) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 16 Jun 2020 17:36:10 +0800
+ 14.3.487.0; Tue, 16 Jun 2020 17:36:08 +0800
 From:   Keqian Zhu <zhukeqian1@huawei.com>
 To:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -43,9 +43,9 @@ CC:     Catalin Marinas <catalin.marinas@arm.com>,
         Alexios Zavras <alexios.zavras@intel.com>,
         <liangpeng10@huawei.com>, <zhengxiang9@huawei.com>,
         <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
-Subject: [PATCH 08/12] KVM: Omit dirty log sync in log clear if initially all set
-Date:   Tue, 16 Jun 2020 17:35:49 +0800
-Message-ID: <20200616093553.27512-9-zhukeqian1@huawei.com>
+Subject: [PATCH 06/12] KVM: arm64: Set DBM bit of PTEs during write protecting
+Date:   Tue, 16 Jun 2020 17:35:47 +0800
+Message-ID: <20200616093553.27512-7-zhukeqian1@huawei.com>
 X-Mailer: git-send-email 2.8.4.windows.1
 In-Reply-To: <20200616093553.27512-1-zhukeqian1@huawei.com>
 References: <20200616093553.27512-1-zhukeqian1@huawei.com>
@@ -58,36 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Synchronizing dirty log during log clear is useful only when the dirty
-bitmap of userspace contains dirty bits that memslot dirty bitmap does
-not contain, because we can sync new dirty bits to memslot dirty bitmap,
-then we can clear them by the way and avoid reporting them to userspace
-later.
-
-With dirty bitmap "initially all set" feature, the above situation will
-not appear if userspace logic is normal, so we can omit dirty log sync in
-log clear. This is valuable when dirty log sync is a high-cost operation,
-such as arm64 DBM.
+During write protecting PTEs, if hardware dirty log is enabled,
+set the DBM bit of PTEs when they are *already writable*. This
+ensures some mechanisms that rely on "write fault", such as CoW,
+are not broken.
 
 Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+Signed-off-by: Peng Liang <liangpeng10@huawei.com>
 ---
- virt/kvm/kvm_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/kvm/mmu.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 3722343fd460..6c147d6f9da6 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1554,7 +1554,8 @@ static int kvm_clear_dirty_log_protect(struct kvm *kvm,
- 	    (log->num_pages < memslot->npages - log->first_page && (log->num_pages & 63)))
- 	    return -EINVAL;
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index f08b0fbca0a0..742c7943176f 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -1536,19 +1536,24 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
  
--	kvm_arch_sync_dirty_log(kvm, memslot);
-+	if (!kvm_dirty_log_manual_protect_and_init_set(kvm))
-+		kvm_arch_sync_dirty_log(kvm, memslot);
+ /**
+  * stage2_wp_ptes - write protect PMD range
++ * @kvm:	kvm instance for the VM
+  * @pmd:	pointer to pmd entry
+  * @addr:	range start address
+  * @end:	range end address
+  */
+-static void stage2_wp_ptes(pmd_t *pmd, phys_addr_t addr, phys_addr_t end)
++static void stage2_wp_ptes(struct kvm *kvm, pmd_t *pmd,
++			   phys_addr_t addr, phys_addr_t end)
+ {
+ 	pte_t *pte;
  
- 	flush = false;
- 	dirty_bitmap_buffer = kvm_second_dirty_bitmap(memslot);
+ 	pte = pte_offset_kernel(pmd, addr);
+ 	do {
+-		if (!pte_none(*pte)) {
+-			if (!kvm_s2pte_readonly(pte))
+-				kvm_set_s2pte_readonly(pte);
++		if (!pte_none(*pte) && !kvm_s2pte_readonly(pte)) {
++#ifdef CONFIG_ARM64_HW_AFDBM
++			if (kvm->arch.hw_dirty_log && !kvm_s2pte_dbm(pte))
++				kvm_set_s2pte_dbm(pte);
++#endif
++			kvm_set_s2pte_readonly(pte);
+ 		}
+ 	} while (pte++, addr += PAGE_SIZE, addr != end);
+ }
+@@ -1575,7 +1580,7 @@ static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
+ 				if (!kvm_s2pmd_readonly(pmd))
+ 					kvm_set_s2pmd_readonly(pmd);
+ 			} else {
+-				stage2_wp_ptes(pmd, addr, next);
++				stage2_wp_ptes(kvm, pmd, addr, next);
+ 			}
+ 		}
+ 	} while (pmd++, addr = next, addr != end);
 -- 
 2.19.1
 
