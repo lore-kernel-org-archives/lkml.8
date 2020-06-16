@@ -2,102 +2,85 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3828C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88795C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 857FC2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560BB2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gJnOQ5uo"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Z5b+s9+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgFPCN1 (ORCPT
+        id S1726393AbgFPCNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 22:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgFPCNZ (ORCPT
+        Mon, 15 Jun 2020 22:13:24 -0400
+Received: from mail-m971.mail.163.com ([123.126.97.1]:36370 "EHLO
+        mail-m971.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgFPCNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 22:13:25 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01661C061A0E;
-        Mon, 15 Jun 2020 19:13:25 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6F11AF9;
-        Tue, 16 Jun 2020 04:13:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1592273603;
-        bh=c9mN9RfMTwPGD69RrgX8WFBSnjj4aqc+2Vr28AX2PdE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gJnOQ5uoyaBs9UPEVcaagx9xtnk+gB/KUFkA+uZnhCQlWlmfyb/zBI/7rs5vBKtaT
-         T9Yg0zQHj6vRJyDFIeTqmHKhCs6Xyaup41/Qk6Qm4TrXZOzZ70ORtidUCo4Nr1Hb/4
-         V0Ox9AmAaYPbY5/Mnfe+s+7tvcZVRpfSPY3WXplI=
-Date:   Tue, 16 Jun 2020 05:13:01 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     wu000273@umn.edu
-Cc:     kjlu@umn.edu,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: rcar-vin: Fix a reference count leak.
-Message-ID: <20200616021301.GA29596@pendragon.ideasonboard.com>
-References: <20200613223008.11720-1-wu000273@umn.edu>
+        Mon, 15 Jun 2020 22:13:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=s4XBV
+        yv9DADyKucbpsy8uo0V7CPIYGBYSyMQ4h1ImtI=; b=Z5b+s9+K+TNo75YbRnwN/
+        19Lq+RWejaVHbnUHrm3uUpLV4tvv2O5s9dy7uQhFmEUGij3BTS5ZWfDgnYNGYX7c
+        gde/ZWcM2bXwmc0XQb+GESuL81Ypl8NaL/RHJDhUTS0c8Qu8z3/8ekFY1jzs/+Gd
+        B/RBybhqWoxap3V/LiXR9U=
+Received: from ubuntu.localdomain (unknown [42.238.20.186])
+        by smtp1 (Coremail) with SMTP id GdxpCgAHbSuvKuheUlW4DA--.473S3;
+        Tue, 16 Jun 2020 10:13:06 +0800 (CST)
+From:   Xidong Wang <wangxidong_97@163.com>
+To:     Xidong Wang <wangxidong_97@163.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        dev@openvswitch.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] openvswitch: fix infoleak in conntrack
+Date:   Mon, 15 Jun 2020 19:13:01 -0700
+Message-Id: <1592273581-31338-1-git-send-email-wangxidong_97@163.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200613223008.11720-1-wu000273@umn.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: GdxpCgAHbSuvKuheUlW4DA--.473S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7XFyxtr45Zr1DJw48Zr45GFg_yoWfJFX_KF
+        Z5Jw1kur15AFs5Kw4jqF4xAr1kJ34xZFZ3Xr17Zay7Gw10qwn3WF18Wa97uFy8uF1YvFW7
+        Z3sIvwsrCa4akjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUULiStUUUUU==
+X-Originating-IP: [42.238.20.186]
+X-CM-SenderInfo: pzdqw5xlgr0wrbzxqiywtou0bp/1tbizQJF81c7KrzyxQAAs0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qiushi,
+From: xidongwang <wangxidong_97@163.com>
 
-Thank you for the patch.
+The stack object “zone_limit” has 3 members. In function
+ovs_ct_limit_get_default_limit(), the member "count" is
+not initialized and sent out via “nla_put_nohdr”.
 
-On Sat, Jun 13, 2020 at 05:30:08PM -0500, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
-> 
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus call pm_runtime_put_noidle()
-> if pm_runtime_get_sync() fails.
-> 
-> Fixes: 90dedce9bc54 ("media: rcar-vin: add function to manipulate Gen3 chsel value")
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: xidongwang <wangxidong_97@163.com>
+---
+ net/openvswitch/conntrack.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-This should be squashed with the other patch that you have sent for the
-driver, with the exact same subject line. This being said, as commented
-on your similar patch for the vsp1 driver, I'd rather see the problem
-being fixed inside pm_runtime_get_sync().
-
-> ---
->  drivers/media/platform/rcar-vin/rcar-dma.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-> index 1a30cd036371..95bc9e0e8792 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> @@ -1392,8 +1392,10 @@ int rvin_set_channel_routing(struct rvin_dev *vin, u8 chsel)
->  	int ret;
->  
->  	ret = pm_runtime_get_sync(vin->dev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(vin->dev);
->  		return ret;
-> +	}
->  
->  	/* Make register writes take effect immediately. */
->  	vnmc = rvin_read(vin, VNMC_REG);
-
+diff --git a/net/openvswitch/conntrack.c b/net/openvswitch/conntrack.c
+index 4340f25..1b7820a 100644
+--- a/net/openvswitch/conntrack.c
++++ b/net/openvswitch/conntrack.c
+@@ -2020,6 +2020,7 @@ static int ovs_ct_limit_get_default_limit(struct ovs_ct_limit_info *info,
+ {
+ 	struct ovs_zone_limit zone_limit;
+ 	int err;
++	memset(&zone_limit, 0, sizeof(zone_limit));
+ 
+ 	zone_limit.zone_id = OVS_ZONE_LIMIT_DEFAULT_ZONE;
+ 	zone_limit.limit = info->default_limit;
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
