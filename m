@@ -2,205 +2,205 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB17FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99495C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C3720767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57CCC20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lHZWkXoH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mOWF7Qg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgFPKof (ORCPT
+        id S1728459AbgFPKpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:44:35 -0400
-Received: from mail-eopbgr60054.outbound.protection.outlook.com ([40.107.6.54]:37469
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728154AbgFPKoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:44:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nsw+Ys/0SvFdaRn3E7AS5vW4fi/W72i2XpH3d8bzU4nwp1CWZh212/GPIrXwhTPX/yV3wkkKRI38E5hzlJe9gf1MdrkoGPSHZBi5BZQgH+xBiNrkRK0T0i8vr1SU+KV7dlygpmujT1o1c9nW863SaDz/+byToRoVG5vty0XxKDStFaKd4yiEXgMH1g/VfG5nB6FVLC41J/hwsyHV3yOgTLUAcxGRw3X59/bRCVOY+SzzTeREOHxNBQYMi/G2/dQvr+J/rlCs+TrAB42CGfXQQuvvYct9xZZCrTAkXZyCyQ7OLRtOkaNTN+LUC03o5Q0OMGd9jBkP0Guam6SQAPjmhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VJjp/72SpbIUFREm/ugJjSIbkdd/gRMx2bRcNc0vPtk=;
- b=Ip5DTmEp9F8nJiiVoRDvBb+m5nhqd6ghRanS4+iWP9MewbPLY2tC84VMLw2OOEPGSmLlpE5ioXn4U2h5gdQDxjlhaCOrI/YoxkeSngmUgjW0eDqJmORFEroK96l5SaF52apjKLX1bRGegjgvgLg2LaohbdVGL3UNuFq4fmmTYopl67JWq6SpXQHEAH33ydVov6ZobXEVBnbV/ypJfgH78wVvI9FI7htY8u6MSKL3IygeU+qMrEIurpa/VEbEWMx24YSSq3djV+PCixOsn5ZdsaKnQIqVunn/2tnf8GlGOByWWR4FZ+6Bv6jAc2Z6GGvk7gQcXYQDfXXm70X0dU4d6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VJjp/72SpbIUFREm/ugJjSIbkdd/gRMx2bRcNc0vPtk=;
- b=lHZWkXoH6+IfgYRsc8McMMckBE63hA5g4QchEC9iSKiLSQeMRw+6Wb0hnbJKUHDQA+hadLSnJRWSh8GF8EroTX/c3zjS4AUJnavrY00QTLMPx6gJNnz7sd0+GRKUYR1/Qq7QX0U+7xxFwOx2uzXeJcBLEZJIYJJjhrKbXzvDjPE=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3946.eurprd04.prod.outlook.com (2603:10a6:8:10::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Tue, 16 Jun
- 2020 10:44:27 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3088.029; Tue, 16 Jun 2020
- 10:44:27 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V5 1/9] pinctrl: imx: Support building SCU pinctrl driver
- as module
-Thread-Topic: [PATCH V5 1/9] pinctrl: imx: Support building SCU pinctrl driver
- as module
-Thread-Index: AQHWP+XeJP9OTzRQzUu8oLCGsNFyaKja/seAgAAQIUA=
-Date:   Tue, 16 Jun 2020 10:44:27 +0000
-Message-ID: <DB3PR0402MB3916610502199D90B4BFC5E3F59D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1591875295-19427-1-git-send-email-Anson.Huang@nxp.com>
- <1591875295-19427-2-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB4966C661D52B43E6938FCBF4809D0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB4966C661D52B43E6938FCBF4809D0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 05bc5bee-0848-425c-0215-08d811e23e50
-x-ms-traffictypediagnostic: DB3PR0402MB3946:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3946400E7B165844C35A146AF59D0@DB3PR0402MB3946.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 04362AC73B
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i1DYpMf4RvA8I5i3fFtRffvlXglIwPcZhgwXq7dU+kY/z43G+4Zr77GgLpbNkiAPwQDZiXDhX3lHpBbijOgCf7F0TM1xWy5orr8uJWWLtSW0PjhPxDgqZswyYurXf2ZsPp/zcq74SruhTxDAWY4RARbYPIY7RdQTgzeKy6JuMffDnLh/Kg7UgOvM10JfioQIIi53tuM48Ov4nJOB/TzMTaZo4gdM06U7s0iQ6/zvSx59RS4bGV5dWRlwTrLNCfWgsh8p9YF60FU7jzepGVrGNiX793TaEzWHRsRuYjNupF2j/oxouw5MtrYqAVW4ubWcBwam7nhSlR/ppEffwqmBZERxqOHRgWqOcqY8sgFVpPwynfw6iBqOfVfQXsaM/1DL
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(366004)(376002)(4326008)(71200400001)(44832011)(83380400001)(26005)(5660300002)(186003)(66476007)(64756008)(55016002)(9686003)(66946007)(8936002)(316002)(7696005)(6506007)(66556008)(110136005)(2906002)(8676002)(52536014)(86362001)(33656002)(478600001)(76116006)(66446008)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: ZboKMRXEA2y/uU8RnCfl7w3xZvCp1vQqD7cKiDxn9cY4+jhqJUk4jMD9cqNAoDOY6CZ2FZXwA4h4L/SnzhSnh0tdiKlUlprNipeR4aSbkE8tVM5sgjxKBStBMTYsjYhMgQi6ay9nnIqoOcMhE7EvqHc2Jp+e0qZ4p3iGE0/IocJu+5l6OSiz3TgkQdJTcHukPkQ7knnb9gEyR/q+V8EZCU4ErstYVG6sKoQbHWLAxoeyYfGyYIndCgABY/VCLNLZPagjXchvdQJ4tfDu8EbUSMus1N2dsmtqBCgIhdILGvezPFIbONJUUvnVVlvZiMrczv9Q23ubjwC6pfSd/dLIEiNrMX9Q3PXSjCQpKeNrMIv+zOUxKvOHjDoCNYeEknL+eF9vTFW1bxdAPJezuSjXCbr54gytVYVI+nnIULHCbXbNJLc8JEfJ4PxS9/BR/JvLaqnvgO5nPEv0I40iB0nVo7MF4mldDg59qGXxxTYrsCCgqmNQgu+e8kZvfovWnyJ6
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 16 Jun 2020 06:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgFPKpF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:45:05 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83F0CC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 03:45:04 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id b15so10569364ybg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 03:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bX3GkjoGSkqKozzbiobcK9woQkK/iv79LpydnRCbLkY=;
+        b=mOWF7Qg9leKGtX5iTHhUwLC9sVpQXW/Sg3IOz8YmqpaSfHWzLTzN92FOCCurDfCrq8
+         s7XAGGpgiC90IOfjj9kbfdtnx8tUm6nu9wNJDZ9kkVAcSezB+P+wyIA/tBZFltZY71fW
+         ubZs9TGY0iPvRsF2D7578fmFYmpADV6HqsK9CeCoz+k7tY8+Myi0mklx9Vfl+WroQbJZ
+         YNVhbje5m5v062p+dGvE/G4YHnhYXZ/VynvkuxBxEEdwfHuCYzIgJK8mQEQPuybxZy13
+         QTy9i13lmlW0bHVBtGcQdBfe62azpKWsdOwT8dm6MvY56EoVKi5Dc7ThFtze8U483edb
+         rlag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bX3GkjoGSkqKozzbiobcK9woQkK/iv79LpydnRCbLkY=;
+        b=lf9KOlIeclPJKwKgCOoRZSQyFPoDS/qBTkmZ04z3ftIge4HaqntejpZlS1Ui1hanSc
+         G3B9XPLua4Kh05tWpKucAHiFyK1tqyNceKawm2k6JfM72e5zr8YDf+9KUF6SYnYVF5d+
+         d2nUsR0GcOMDaK6W17sJse7Q+/0go6NWy6GqoGRUbNAqGb7bWBfD30nrizVIVGuU6DIb
+         ojC+7Ib+DUHEb8ouKBCoCfCzOwbTs9mI5xc5k8RXmqAWx17eZKHsUl5KQwmtLWARUbJQ
+         YZ6HQqEHTLkgBR4G0ecUDOhouosw+pVcl8rEqJstCl0TFtR2CT+CCVkvBJadZOyYx9w0
+         YM4Q==
+X-Gm-Message-State: AOAM533AHqo3j0ERlgpmuy3QEHPeJxqE5E8UH9IA/bRD570XbEqPpT2o
+        ZrmzDNoWeu93PyufS2w3U8+QshIH92AUbBmaCltzLQ==
+X-Google-Smtp-Source: ABdhPJwLojkh/J/OmxCSEBsYTn7VvCgC+4bx9uX3Iyfe8I0afiR93x9S54bdhrDvPj2m8towSB9DomoEWU310pXCwVE=
+X-Received: by 2002:a25:41d2:: with SMTP id o201mr3148443yba.516.1592304303102;
+ Tue, 16 Jun 2020 03:45:03 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05bc5bee-0848-425c-0215-08d811e23e50
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 10:44:27.7137
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eLtVbjQ/M+ac+AqCLb1KgI91jNncO4It/nWvMFbkZYiEKNF5a1hBu81hI4JDNLN/mZHq4BA2Ee3DII8r1t0LRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3946
+References: <20200616045108.GP75760@lianli.shorne-pla.net> <mhng-b86477b3-4134-4023-968e-532ca0b33125@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-b86477b3-4134-4023-968e-532ca0b33125@palmerdabbelt-glaptop1>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Tue, 16 Jun 2020 03:44:49 -0700
+Message-ID: <CANN689GkUUfpTn+fkjsC-a=RwGsxVwsg-QXKDnVe6zXLjvuZWA@mail.gmail.com>
+Subject: Re: mm lock issue while booting Linux on 5.8-rc1 for RISC-V
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     shorne@gmail.com, atishp@atishpatra.org,
+        linux-riscv@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Topel <bjorn.topel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSCBWNSAxLzldIHBpbmN0cmw6IGlteDogU3VwcG9ydCBi
-dWlsZGluZyBTQ1UgcGluY3RybCBkcml2ZXIgYXMNCj4gbW9kdWxlDQo+IA0KPiA+IEZyb206IEFu
-c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IFNlbnQ6IFRodXJzZGF5LCBKdW5l
-IDExLCAyMDIwIDc6MzUgUE0NCj4gPg0KPiA+IFRvIHN1cHBvcnQgYnVpbGRpbmcgaS5NWCBTQ1Ug
-cGluY3RybCBkcml2ZXIgYXMgbW9kdWxlLCBiZWxvdyB0aGluZ3MNCj4gPiBuZWVkIHRvIGJlDQo+
-ID4gY2hhbmdlZDoNCj4gPg0KPiA+ICAgICAtIEV4cG9ydCBTQ1UgcmVsYXRlZCBmdW5jdGlvbnMg
-YW5kIHVzZSAiSVNfRU5BQkxFRCIgaW5zdGVhZCBvZg0KPiA+ICAgICAgICJpZmRlZiIgdG8gc3Vw
-cG9ydCBTQ1UgcGluY3RybCBkcml2ZXIgdXNlciBhbmQgaXRzZWxmIHRvIGJlDQo+ID4gICAgICAg
-YnVpbHQgYXMgbW9kdWxlOw0KPiA+ICAgICAtIFVzZSBmdW5jdGlvbiBjYWxsYmFja3MgZm9yIFND
-VSByZWxhdGVkIGZ1bmN0aW9ucyBpbiBwaW5jdHJsLWlteC5jDQo+ID4gICAgICAgaW4gb3JkZXIg
-dG8gc3VwcG9ydCB0aGUgc2NlbmFyaW8gb2YgUElOQ1RSTF9JTVggaXMgYnVpbHQgaW4NCj4gPiAg
-ICAgICB3aGlsZSBQSU5DVFJMX0lNWF9TQ1UgaXMgYnVpbHQgYXMgbW9kdWxlOw0KPiA+ICAgICAt
-IEFsbCBkcml2ZXJzIHVzaW5nIFNDVSBwaW5jdHJsIGRyaXZlciBuZWVkIHRvIGluaXRpYWxpemUg
-dGhlDQo+ID4gICAgICAgU0NVIHJlbGF0ZWQgZnVuY3Rpb24gY2FsbGJhY2s7DQo+ID4gICAgIC0g
-Q2hhbmdlIFBJTkNUUl9JTVhfU0NVIHRvIHRyaXN0YXRlOw0KPiA+ICAgICAtIEFkZCBtb2R1bGUg
-YXV0aG9yLCBkZXNjcmlwdGlvbiBhbmQgbGljZW5zZS4NCj4gPg0KPiA+IFdpdGggYWJvdmUgY2hh
-bmdlcywgaS5NWCBTQ1UgcGluY3RybCBkcml2ZXIgY2FuIGJlIGJ1aWx0IGFzIG1vZHVsZS4NCj4g
-Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0K
-PiA+IC0tLQ0KPiA+IENoYW5nZXMgc2luY2UgVjQ6DQo+ID4gCS0gYWRkIG1vZHVsZSBhdXRob3Ig
-YW5kIGRlc2NyaXB0aW9uLg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxl
-L0tjb25maWcgICAgICAgICAgIHwgIDIgKy0NCj4gPiAgZHJpdmVycy9waW5jdHJsL2ZyZWVzY2Fs
-ZS9waW5jdHJsLWlteC5jICAgICB8IDE4ICsrKystLS0tLQ0KPiA+ICBkcml2ZXJzL3BpbmN0cmwv
-ZnJlZXNjYWxlL3BpbmN0cmwtaW14LmggICAgIHwgNTcgKysrKysrKysrKysrLS0tLS0tLS0tLS0t
-LS0tLS0NCj4gPiAgZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhkeGwuYyB8
-ICAzICsrDQo+ID4gZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhxbS5jICB8
-ICAzICsrDQo+ID4gZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhxeHAuYyB8
-ICAzICsrDQo+ID4gIGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1zY3UuYyAgICAg
-fCAgOSArKysrKw0KPiA+ICA3IGZpbGVzIGNoYW5nZWQsIDUxIGluc2VydGlvbnMoKyksIDQ0IGRl
-bGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2Nh
-bGUvS2NvbmZpZw0KPiA+IGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9LY29uZmlnDQo+ID4g
-aW5kZXggNGNhNDRkZC4uYTNhMzBmMWQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9waW5jdHJs
-L2ZyZWVzY2FsZS9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9L
-Y29uZmlnDQo+ID4gQEAgLTcsNyArNyw3IEBAIGNvbmZpZyBQSU5DVFJMX0lNWA0KPiA+ICAJc2Vs
-ZWN0IFJFR01BUA0KPiA+DQo+ID4gIGNvbmZpZyBQSU5DVFJMX0lNWF9TQ1UNCj4gPiAtCWJvb2wN
-Cj4gPiArCXRyaXN0YXRlICJJTVggU0NVIHBpbmN0cmwgZHJpdmVyIg0KPiA+ICAJZGVwZW5kcyBv
-biBJTVhfU0NVDQo+ID4gIAlzZWxlY3QgUElOQ1RSTF9JTVgNCj4gPg0KPiA+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMNCj4gPiBiL2RyaXZlcnMv
-cGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguYw0KPiA+IGluZGV4IGNiN2UwZjAuLmMxZmFh
-ZTEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlt
-eC5jDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5jDQo+
-ID4gQEAgLTM3Miw4ICszNzIsOCBAQCBzdGF0aWMgaW50IGlteF9waW5jb25mX2dldChzdHJ1Y3Qg
-cGluY3RybF9kZXYNCj4gKnBjdGxkZXYsDQo+ID4gIAlzdHJ1Y3QgaW14X3BpbmN0cmwgKmlwY3Rs
-ID0gcGluY3RybF9kZXZfZ2V0X2RydmRhdGEocGN0bGRldik7DQo+ID4gIAljb25zdCBzdHJ1Y3Qg
-aW14X3BpbmN0cmxfc29jX2luZm8gKmluZm8gPSBpcGN0bC0+aW5mbzsNCj4gPg0KPiA+IC0JaWYg
-KGluZm8tPmZsYWdzICYgSU1YX1VTRV9TQ1UpDQo+ID4gLQkJcmV0dXJuIGlteF9waW5jb25mX2dl
-dF9zY3UocGN0bGRldiwgcGluX2lkLCBjb25maWcpOw0KPiA+ICsJaWYgKChpbmZvLT5mbGFncyAm
-IElNWF9VU0VfU0NVKSAmJiBpbmZvLT5pbXhfcGluY29uZl9nZXQpDQo+ID4gKwkJcmV0dXJuIGlu
-Zm8tPmlteF9waW5jb25mX2dldChwY3RsZGV2LCBwaW5faWQsIGNvbmZpZyk7DQo+IA0KPiBQb2lu
-dGVyIGNoZWNrIGhlcmUgc2VlbXMgbm90IGJlIG5lY2Vzc2FyeQ0KDQpJIHRoaW5rIGl0IGlzIE5P
-VCBoYXJtZnVsIGFuZCBpdCBpcyBqdXN0IGluIGNhc2UgdGhlIGRyaXZlcnMgdXNpbmcgc2N1IHBp
-bmN0cmwNCmRvIE5PVCBpbml0aWFsaXplIHRoZXNlIGZ1bmN0aW9ucyBjYWxsYmFjayBhbmQgbGVh
-ZCB0byBOVUxMIHBvaW50ZXIgZHVtcC4NCg0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
-aW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5oDQo+ID4gYi9kcml2ZXJzL3BpbmN0cmwvZnJl
-ZXNjYWxlL3BpbmN0cmwtaW14LmgNCj4gPiBpbmRleCAzMzNkMzJiLi5iZGI4NmMyIDEwMDY0NA0K
-PiA+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaA0KPiA+ICsr
-KyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaA0KPiA+IEBAIC03NSw2
-ICs3NSwyMSBAQCBzdHJ1Y3QgaW14X2NmZ19wYXJhbXNfZGVjb2RlIHsNCj4gPiAgCWJvb2wgaW52
-ZXJ0Ow0KPiA+ICB9Ow0KPiA+DQo+ID4gKy8qKg0KPiA+ICsgKiBAZGV2OiBhIHBvaW50ZXIgYmFj
-ayB0byBjb250YWluaW5nIGRldmljZQ0KPiA+ICsgKiBAYmFzZTogdGhlIG9mZnNldCB0byB0aGUg
-Y29udHJvbGxlciBpbiB2aXJ0dWFsIG1lbW9yeSAgKi8gc3RydWN0DQo+ID4gK2lteF9waW5jdHJs
-IHsNCj4gPiArCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiArCXN0cnVjdCBwaW5jdHJsX2RldiAq
-cGN0bDsNCj4gPiArCXZvaWQgX19pb21lbSAqYmFzZTsNCj4gPiArCXZvaWQgX19pb21lbSAqaW5w
-dXRfc2VsX2Jhc2U7DQo+ID4gKwljb25zdCBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gKmlu
-Zm87DQo+ID4gKwlzdHJ1Y3QgaW14X3Bpbl9yZWcgKnBpbl9yZWdzOw0KPiA+ICsJdW5zaWduZWQg
-aW50IGdyb3VwX2luZGV4Ow0KPiA+ICsJc3RydWN0IG11dGV4IG11dGV4Ow0KPiA+ICt9Ow0KPiA+
-ICsNCj4gPiAgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvIHsNCj4gPiAgCWNvbnN0IHN0cnVj
-dCBwaW5jdHJsX3Bpbl9kZXNjICpwaW5zOw0KPiA+ICAJdW5zaWduZWQgaW50IG5waW5zOw0KPiA+
-IEBAIC05OCwyMSArMTEzLDEzIEBAIHN0cnVjdCBpbXhfcGluY3RybF9zb2NfaW5mbyB7DQo+ID4g
-IAkJCQkgIHN0cnVjdCBwaW5jdHJsX2dwaW9fcmFuZ2UgKnJhbmdlLA0KPiA+ICAJCQkJICB1bnNp
-Z25lZCBvZmZzZXQsDQo+ID4gIAkJCQkgIGJvb2wgaW5wdXQpOw0KPiA+IC19Ow0KPiA+IC0NCj4g
-PiAtLyoqDQo+ID4gLSAqIEBkZXY6IGEgcG9pbnRlciBiYWNrIHRvIGNvbnRhaW5pbmcgZGV2aWNl
-DQo+ID4gLSAqIEBiYXNlOiB0aGUgb2Zmc2V0IHRvIHRoZSBjb250cm9sbGVyIGluIHZpcnR1YWwg
-bWVtb3J5DQo+ID4gLSAqLw0KPiA+IC1zdHJ1Y3QgaW14X3BpbmN0cmwgew0KPiA+IC0Jc3RydWN0
-IGRldmljZSAqZGV2Ow0KPiA+IC0Jc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsOw0KPiA+IC0Jdm9p
-ZCBfX2lvbWVtICpiYXNlOw0KPiA+IC0Jdm9pZCBfX2lvbWVtICppbnB1dF9zZWxfYmFzZTsNCj4g
-PiAtCWNvbnN0IHN0cnVjdCBpbXhfcGluY3RybF9zb2NfaW5mbyAqaW5mbzsNCj4gPiAtCXN0cnVj
-dCBpbXhfcGluX3JlZyAqcGluX3JlZ3M7DQo+ID4gLQl1bnNpZ25lZCBpbnQgZ3JvdXBfaW5kZXg7
-DQo+ID4gLQlzdHJ1Y3QgbXV0ZXggbXV0ZXg7DQo+ID4gKwlpbnQgKCppbXhfcGluY29uZl9nZXQp
-KHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwgdW5zaWduZWQgaW50IHBpbl9pZCwNCj4gPiAr
-CQkJICAgICAgIHVuc2lnbmVkIGxvbmcgKmNvbmZpZyk7DQo+ID4gKwlpbnQgKCppbXhfcGluY29u
-Zl9zZXQpKHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwgdW5zaWduZWQgaW50IHBpbl9pZCwN
-Cj4gPiArCQkJICAgICAgIHVuc2lnbmVkIGxvbmcgKmNvbmZpZ3MsIHVuc2lnbmVkIGludCBudW1f
-Y29uZmlncyk7DQo+ID4gKwl2b2lkICgqaW14X3BpbmN0cmxfcGFyc2VfcGluKShzdHJ1Y3QgaW14
-X3BpbmN0cmwgKmlwY3RsLA0KPiA+ICsJCQkJICAgICAgdW5zaWduZWQgaW50ICpwaW5faWQsIHN0
-cnVjdCBpbXhfcGluICpwaW4sDQo+ID4gKwkJCQkgICAgICBjb25zdCBfX2JlMzIgKipsaXN0X3Ap
-Ow0KPiANCj4gQ29tcGFyZWQgd2l0aCBWNCwgdGhpcyBuZXcgaW1wbGVtZW50YXRpb24gc2VlbXMg
-YSBiaXQgY29tcGxpY2F0ZWQuDQo+IEkgZ3Vlc3Mgd2UgZG9uJ3QgaGF2ZSB0byBzdXBwb3J0IFBJ
-TkNUUkxfSU1YPXkgJiYgUElOQ1RSTF9JTVhfU0NVPW0NCj4gY2FzZS4NCj4gV2lsbCB0aGF0IG1h
-a2UgdGhlIHN1cHBvcnQgYSBiaXQgZWFzaWVyPw0KDQpJIGFtIE5PVCBzdXJlIGlmIHN1Y2ggc2Nl
-bmFyaW8gbWVldHMgcmVxdWlyZW1lbnQsIHRoZSBmYWN0IGlzIG90aGVyIG5vbi1pLk1YIFNvQw0K
-YWxzbyBzZWxlY3RzIHRoZSBQSU5DVFJMX0lNWCB3aGljaCB3aWxsIG1ha2UgUElOQ1RSTF9JTVg9
-eSwgc28gaW4gdGhhdCBjYXNlLCBldmVuDQphbGwgaS5NWCBQSU5DVFJMIGRyaXZlcnMgYXJlIHNl
-dCB0byBtb2R1bGUsIGl0IHdpbGwgc3RpbGwgaGF2ZSBQSU5DVFJMX0lNWD15IGFuZCBQSU5DVFJM
-X0lNWF9TQ1U9bSwNCnRoZW4gYnVpbGQgd2lsbCBmYWlsLiBBbmQgSSBiZWxpZXZlIHRoZSBhdXRv
-IGJ1aWxkIHRlc3QgbWF5IGFsc28gY292ZXIgc3VjaCBjYXNlIGFuZCBidWlsZA0KZXJyb3Igd2ls
-bCBiZSByZXBvcnRlZCwgdGhhdCBpcyB3aHkgdGhpcyBjaGFuZ2UgaXMgbmVlZGVkIGFuZCB3aXRo
-IHRoaXMgY2hhbmdlLCBmdW5jdGlvbg0KaXMgTk9UIGltcGFjdGVkLA0KDQpBbnNvbi4NCg==
+I am also unable to reproduce the issue so far.
+
+I wanted to point to a few things in case this helps:
+- Commit 42fc541404f2 was bisected as the cause. This commit changes
+walk_page_range_novma() to use mmap_assert_locked() instead of
+lockdep_assert_held()
+- mmap_assert_locked() checks lockdep_assert_held(), but also checks
+that the rwsem itself is locked.
+
+Now how could lockdep think the lock is held, but the lock itself is
+not marked as locked ???
+
+I'm not sure if it helps at all, but a few commits earlier,
+0cc55a0213a0 introduces mmap_read_trylock_non_owner(), which is used
+exclusively by stackmap, and does the opposite: it acquires the mmap
+lock without telling lockdep about it. I can't see any smoking gun
+linking this to our bug, but I thought it may be worth mentioning as
+it involves the same suspects (stackmap and the difference between
+owning the lock vs lockdep thinking we own the lock).
+
+I'm sorry, that's only how far I was able to go on this bug - I'm not
+sure how to investigate it further as I can not reproduce the issue...
+
+On Tue, Jun 16, 2020 at 1:40 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> On Mon, 15 Jun 2020 21:51:08 PDT (-0700), shorne@gmail.com wrote:
+> > On Tue, Jun 16, 2020 at 06:57:47AM +0900, Stafford Horne wrote:
+> >> On Mon, Jun 15, 2020 at 12:28:11AM -0700, Atish Patra wrote:
+> >> > Hi,
+> >> > I encountered the following issue while booting 5.8-rc1 on Qemu for RV64.
+> >> > I added additional dump_stack and observed that it's happening in bpf free path.
+> >> > It happens always if CONFIG_DEBUG_VM is enabled. VM_BUG_ON_MM is
+> >> > compiled away without that.
+> >> > ------------------------------------------------------------------------
+> >> > forked to background, child pid 113
+> >> > [   10.328850] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted
+> >> > 5.8.0-rc1-dirty #732
+> >> > [   10.331739] Workqueue: events bpf_prog_free_deferred
+> >> > [   10.334133] Call Trace:
+> >> > [   10.338039] [<ffffffe000202698>] walk_stackframe+0x0/0xa4
+> >> > [   10.339988] [<ffffffe000202880>] show_stack+0x2e/0x3a
+> >> > [   10.340902] [<ffffffe00047074c>] dump_stack+0x72/0x8c
+> >> > [   10.341451] [<ffffffe0002db4ce>] mmap_assert_locked.part.13+0x14/0x1c
+> >> > [   10.342131] [<ffffffe0002db330>] walk_page_range_novma+0x0/0x4e
+> >> > [   10.342973] [<ffffffe000204f94>] set_direct_map_invalid_noflush+0x66/0x6e
+> >> > [   10.343917] [<ffffffe0002e0706>] __vunmap+0xe8/0x212
+> >> > [   10.344680] [<ffffffe0002e0882>] __vfree+0x22/0x6e
+> >> > [   10.345270] [<ffffffe0002e0902>] vfree+0x34/0x56
+> >> > [   10.345834] [<ffffffe00027d752>] __bpf_prog_free+0x2c/0x36
+> >> > [   10.346529] [<ffffffe0002801a2>] bpf_prog_free_deferred+0x74/0x8a
+> >> > [   10.347394] [<ffffffe000219c70>] process_one_work+0x13a/0x272
+> >> > [   10.348239] [<ffffffe00021a4b4>] worker_thread+0x50/0x2e4
+> >> > [   10.348900] [<ffffffe00021ed98>] kthread+0xfc/0x10a
+> >> > [   10.349470] [<ffffffe0002013da>] ret_from_exception+0x0/0xc
+> >> > [   10.354405] mm ffffffe001018600 mmap 0000000000000000 seqnum 0 task_size 0
+> >> > [   10.354405] get_unmapped_area 0000000000000000
+> >> > [   10.354405] mmap_base 0 mmap_legacy_base 0 highest_vm_end 0
+> >> > [   10.354405] pgd ffffffe001074000 mm_users 2 mm_count 1
+> >> > pgtables_bytes 8192 map_count 0
+> >> > [   10.354405] hiwater_rss 0 hiwater_vm 0 total_vm 0 locked_vm 0
+> >> > [   10.354405] pinned_vm 0 data_vm 0 exec_vm 0 stack_vm 0
+> >> > [   10.354405] start_code ffffffe000200000 end_code ffffffe00084acc2
+> >> > start_data 0 end_data ffffffe00106dfe4
+> >> > [   10.354405] start_brk 0 brk ffffffe0010bd6d0 start_stack 0
+> >> > [   10.354405] arg_start 0 arg_end 0 env_start 0 env_end 0
+> >> > [   10.354405] binfmt 0000000000000000 flags 0 core_state 0000000000000000
+> >> > [   10.354405] ioctx_table 0000000000000000
+> >> > [   10.354405] exe_file 0000000000000000
+> >> > [   10.354405] tlb_flush_pending 0
+> >> > [   10.354405] def_flags: 0x0()
+> >> > [   10.369325] ------------[ cut here ]------------
+> >> > [   10.370763] kernel BUG at include/linux/mmap_lock.h:81!
+> >> > [   10.375235] Kernel BUG [#1]
+> >> > [   10.377198] Modules linked in:
+> >> > [   10.378931] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted 5.8.0-rc1-dirty #732
+> >> > [   10.380179] Workqueue: events bpf_prog_free_deferred
+> >> > [   10.381270] epc: ffffffe0002db4d4 ra : ffffffe0002db4d4 sp : ffffffe3eaea7c70
+> >> > [   10.382561]  gp : ffffffe00106d950 tp : ffffffe3ef752f80 t0 :
+> >> > ffffffe0010836e8
+> >> > [   10.383996]  t1 : 0000000000000064 t2 : 0000000000000000 s0 :
+> >> > ffffffe3eaea7c90
+> >> > [   10.385119]  s1 : ffffffe001018600 a0 : 0000000000000289 a1 :
+> >> > 0000000000000020
+> >> > [   10.386099]  a2 : 0000000000000005 a3 : 0000000000000000 a4 :
+> >> > ffffffe001012758
+> >> > [   10.387294]  a5 : 0000000000000000 a6 : 0000000000000102 a7 :
+> >> > 0000000000000006
+> >> > [   10.388265]  s2 : ffffffe3f00674c0 s3 : ffffffe00106e108 s4 :
+> >> > ffffffe00106e100
+> >> > [   10.389250]  s5 : ffffffe00106e908 s6 : 0000000000000000 s7 :
+> >> > 6db6db6db6db6db7
+> >> > [   10.390272]  s8 : 0000000000000001 s9 : ffffffe00021a4f8 s10:
+> >> > ffffffffffffffff
+> >> > [   10.391293]  s11: ffffffe3f0066600 t3 : 000000000001a7a8 t4 :
+> >> > 000000000001a7a8
+> >> > [   10.392314]  t5 : 0000000000000000 t6 : ffffffe00107b76b
+> >> > [   10.393096] status: 0000000000000120 badaddr: 0000000000000000
+> >> > cause: 0000000000000003
+> >> > [   10.397755] ---[ end trace 861659596ac28841 ]---
+> >> > ---------------------------------------------------------------------------------------------------
+> >> >
+> >> > I haven't had the chance to bisect to figure out which commit caused
+> >> > the issue. Just wanted
+> >> > to check if it is a known issue already.
+> >>
+> >> Hi Atish,
+> >>
+> >> Note, I am getting the same (just now) when booting v5.8-rc1 on OpenRISC.  If
+> >> you have any updates please post back.  I will try to look into this today or
+> >> tomorrow.
+> >
+> > I have bisected this to, 42fc541404f249778e752ab39c8bc25fcb2dbe1e:
+> >
+> >   mmap locking API: add mmap_assert_locked() and mmap_assert_write_locked()
+> >
+> > This should have just changed the existing lockdep api's but something has
+> > changed.  I haven't had time to look at it yet.
+> >
+> > Ccing: Michel Lespinasse <walken@google.com>
+>
+> This isn't manifesting on boot for me, on either rc1 or that commit.  I'm
+> running a simple buildroot-based userspace, so I doubt anything is triggering
+> BPF.  I don't run the BPF selftests, as they're a bit of a pain (IIRC they
+> don't cross compile and need LLVM) -- does anyone have a userspace I can use to
+> trigger the bug?
+
+
+
+-- 
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
