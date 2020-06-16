@@ -2,142 +2,109 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C079FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B0520707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD9B20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbgFPR3X (ORCPT
+        id S1731166AbgFPR32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729272AbgFPR3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:29:20 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421C4C061573;
-        Tue, 16 Jun 2020 10:29:20 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 4CE612A2C75
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        kernel@collabora.com
-Subject: [PATCH] Input: document inhibiting
-Date:   Tue, 16 Jun 2020 19:29:09 +0200
-Message-Id: <20200616172909.21625-1-andrzej.p@collabora.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <40988408-8f36-3a52-6439-34084de6b129@redhat.com>
-References: <40988408-8f36-3a52-6439-34084de6b129@redhat.com>
+        Tue, 16 Jun 2020 13:29:28 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2316 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729272AbgFPR3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:29:25 -0400
+Received: from lhreml743-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id A3232E4DF5FCCA6C7633;
+        Tue, 16 Jun 2020 18:29:22 +0100 (IST)
+Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
+ lhreml743-chm.china.huawei.com (10.201.108.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Tue, 16 Jun 2020 18:29:22 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 16 Jun 2020 19:29:21 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Tue, 16 Jun 2020 19:29:21 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        Maurizio Drocco <maurizio.drocco@ibm.com>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>
+CC:     "dmitry.kasatkin@gmail.com" <dmitry.kasatkin@gmail.com>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [PATCH] extend IMA boot_aggregate with kernel measurements
+Thread-Topic: [PATCH] extend IMA boot_aggregate with kernel measurements
+Thread-Index: AQHWQCo8nqt7HKCznkGnNWX+y9c+NajT/1SAgADtAgCAACbgMIAABL+AgAZlbjA=
+Date:   Tue, 16 Jun 2020 17:29:21 +0000
+Message-ID: <8c44ed75fb884cad9f33c86c2d4e8a27@huawei.com>
+References: <1591921795.11061.12.camel@linux.ibm.com>
+         <20200612143812.1609-1-maurizio.drocco@ibm.com>
+         <380af929b2d2440a9dc35ba0b374247d@huawei.com>
+ <1591982059.7235.29.camel@linux.ibm.com>
+In-Reply-To: <1591982059.7235.29.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.220.96.108]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document inhibiting input devices and its relation to being
-a wakeup source.
-
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
----
-
-@Hans, @Dmitry,
-
-My fist attempt at documenting inhibiting. Kindly look at it to see if I haven't got anything
-wrong.
-
-Andrzej
-
- Documentation/input/input-programming.rst | 36 +++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/Documentation/input/input-programming.rst b/Documentation/input/input-programming.rst
-index 45a4c6e05e39..0cd1ad4504fb 100644
---- a/Documentation/input/input-programming.rst
-+++ b/Documentation/input/input-programming.rst
-@@ -164,6 +164,42 @@ disconnects. Calls to both callbacks are serialized.
- The open() callback should return a 0 in case of success or any nonzero value
- in case of failure. The close() callback (which is void) must always succeed.
- 
-+Inhibiting input devices
-+~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Inhibiting a device means ignoring input events from it. As such it is about maintaining
-+relationships with input handlers - either an already existing relationships, or
-+relationships to be established while the device is in inhibited state.
-+
-+If a device is inhibited, no input handler will receive events from it.
-+
-+The fact that nobody wants events from the device is exploited further, by calling device's
-+close() (if there are users) and open() (if there are users) on inhibit and uninhibit
-+operations, respectively. Indeed, the meaning of close() is to stop providing events
-+to the input core and that of open() is to start providing events to the input core.
-+
-+Inhibiting and uninhibiting is orthogonal to opening and closing the device by input
-+handlers. Userspace might want to inhibit a device in anticipation before any handler is
-+positively matched against it.
-+
-+Inhibiting and uninhibiting is orthogonal to device's being a wakeup source, too. Being a
-+wakeup source plays a role when the system is sleeping, not when the system is operating.
-+How drivers should program their interaction between inhibiting, sleeping and being a wakeup
-+source is driver-specific.
-+
-+Taking the analogy with the network devices - bringing a network interface down doesn't mean
-+that it should be impossible to be wake the system up on LAN through this interface. So, there
-+may be input drivers which should be considered wakeup sources even when inhibited. Actually,
-+in many i2c input devices their interrupt is declared a wakeup interrupt and its handling
-+happens in driver's core, which is not aware of input-specific inhibit (nor should it be).
-+Composite devices containing several interfaces can be inhibited on a per-interface basis and
-+e.g. inhibiting one interface shouldn't affect the device's capability of being a wakeup source.
-+
-+If a device is to be considered a wakeup source while inhibited, special care must be taken when
-+programming its suspend(), as it might need to call device's open(). Depending on what close()
-+means for the device in question not opening() it before going to sleep might make it impossible
-+to provide any wakeup events. The device is going to sleep anyway.
-+
- Basic event types
- ~~~~~~~~~~~~~~~~~
- 
--- 
-2.17.1
-
+PiBGcm9tOiBKYW1lcyBCb3R0b21sZXkgW21haWx0bzpqZWpiQGxpbnV4LmlibS5jb21dDQo+IFNl
+bnQ6IEZyaWRheSwgSnVuZSAxMiwgMjAyMCA3OjE0IFBNDQo+IE9uIEZyaSwgMjAyMC0wNi0xMiBh
+dCAxNToxMSArMDAwMCwgUm9iZXJ0byBTYXNzdSB3cm90ZToNCj4gPiB3aXRoIHJlY2VudCBwYXRj
+aGVzLCBib290X2FnZ3JlZ2F0ZSBjYW4gYmUgY2FsY3VsYXRlZCBmcm9tIG5vbi1TSEExDQo+ID4g
+UENSIGJhbmtzLiBJIHdvdWxkIHJlcGxhY2Ugd2l0aDoNCj4gPg0KPiA+IEV4dGVuZCBjdW11bGF0
+aXZlIGRpZ2VzdCBvdmVyIC4uLg0KPiA+DQo+ID4gR2l2ZW4gdGhhdCB3aXRoIHRoaXMgcGF0Y2gg
+Ym9vdF9hZ2dyZWdhdGUgaXMgY2FsY3VsYXRlZCBkaWZmZXJlbnRseSwNCj4gPiBzaG91bGRuJ3Qg
+d2UgY2FsbCBpdCBib290X2FnZ3JlZ2F0ZV92MiBhbmQgZW5hYmxlIGl0IHdpdGggYSBuZXcNCj4g
+PiBvcHRpb24/DQo+IA0KPiBTbyBoZXJlJ3MgdGhlIHByb2JsZW06IGlmIHlvdXIgY3VycmVudCBn
+cnViIGRvZXNuJ3QgZG8gYW55IFRQTQ0KPiBleHRlbnNpb25zIChhcyBtb3N0IGRvbid0KSwgdGhl
+biB0aGUgdHdvIGJvb3QgYWdncmVnYXRlcyBhcmUgdGhlIHNhbWUNCj4gYmVjYXVzZSBQQ1JzIDgg
+YW5kIDkgYXJlIHplcm8gYW5kIHRoZXJlJ3MgYSB0ZXN0IHRoYXQgZG9lc24ndCBhZGQgdGhlbQ0K
+PiB0byB0aGUgYWdncmVnYXRlIGlmIHRoZXkgYXJlIHplcm8uICBGb3IgdGhlc2UgcGVvcGxlIGl0
+cyBhIG5vcCBzbyB3ZQ0KPiBzaG91bGRuJ3QgZm9yY2UgdGhlbSB0byBjaG9vc2UgYSBkaWZmZXJl
+bnQgdmVyc2lvbiBvZiB0aGUgc2FtZSB0aGluZy4NCj4gDQo+IElmLCBob3dldmVyLCB5b3UncmUg
+b24gYSBkaXN0cmlidXRpb24gd2hlcmUgZ3J1YiBpcyBhdXRvbWF0aWNhbGx5DQo+IG1lYXN1cmlu
+ZyB0aGUga2VybmVsIGFuZCBjb21tYW5kIGxpbmUgaW50byBQQ1JzIDggYW5kIDkgKEkgdGhpbmsg
+RmVkb3JhDQo+IDMyIGRvZXMgdGhpcyksIHlvdXIgYm9vdCBhZ2dyZWdhdGUgd2lsbCBjaGFuZ2Uu
+ICBJdCBzdHJpa2VzIG1lIGluIHRoYXQNCj4gY2FzZSB3ZSBjYW4gY2FsbCB0aGlzIGEgYnVnIGZp
+eCwgc2luY2UgdGhlIGJvb3QgYWdncmVnYXRlIGlzbid0DQo+IHByb3Blcmx5IGJpbmRpbmcgdG8g
+dGhlIHByZXZpb3VzIG1lYXN1cmVtZW50cyB3aXRob3V0IFBDUnMgOCBhbmQgOS4gIEluDQo+IHRo
+aXMgY2FzZSwgZG8gd2Ugd2FudCB0byBhbGxvdyBwZW9wbGUgdG8gc2VsZWN0IGFuIG9wdGlvbiB3
+aGljaCBkb2Vzbid0DQo+IHByb3Blcmx5IGJpbmQgdGhlIElNQSBsb2cgdG8gdGhlIGJvb3QgbWVh
+c3VyZW1lbnRzPyAgVGhhdCBzb3VuZHMgbGlrZSBhDQo+IHNlY3VyaXR5IGhvbGUgdG8gbWUuDQo+
+IA0KPiBIb3dldmVyLCBzaW5jZSBpdCBjYXVzZXMgYSB1c2VyIHZpc2libGUgZGlmZmVyZW5jZSBp
+biB0aGUgZ3J1YiBhbHJlYWR5DQo+IG1lYXN1cmVzIGNhc2UsIGRvIHlvdSBoYXZlIGEgY3VycmVu
+dCB1c2UgY2FzZSB0aGF0IHdvdWxkIGJlIGFmZmVjdGVkPw0KPiBBcyBpbiBhcmUgbG90cyBvZiBw
+ZW9wbGUgYWxyZWFkeSBydW5uaW5nIGEgZGlzdHJvIHdpdGggdGhlIFRQTSBncnViDQo+IHVwZGF0
+ZXMgYW5kIHJlbHlpbmcgb24gdGhlIG9sZCBib290IGFnZ3JlZ2F0ZT8NCg0KSSBkb24ndCBrbm93
+IGhvdyBtYW55IHBlb3BsZSB3b3VsZCBiZSBhZmZlY3RlZC4gSG93ZXZlciwgaWYgYW4NCmF0dGVz
+dGF0aW9uIHRvb2wgcHJvY2Vzc2VzIGJvdGggbWVhc3VyZW1lbnQgbGlzdHMgZnJvbSB1bnBhdGNo
+ZWQga2VybmVscw0KYW5kIHBhdGNoZWQga2VybmVscywga2VlcGluZyB0aGUgc2FtZSBuYW1lIHdv
+dWxkIGJlIGEgcHJvYmxlbSBhcyBpdA0KY2Fubm90IGJlIGRldGVybWluZWQgZnJvbSB0aGUgbWVh
+c3VyZW1lbnQgbGlzdCBob3cgYm9vdF9hZ2dyZWdhdGUNCndhcyBjYWxjdWxhdGVkLg0KDQpBbnl3
+YXksIEkgYWdyZWUgdGhpcyBzaG91bGQgYmUgZml4ZWQuIEF0IGxlYXN0LCBJIHN1Z2dlc3QgdG8g
+YWRkIGEgRml4ZXMgdGFnLA0KdG8gZW5zdXJlIHRoYXQgdGhpcyBwYXRjaCBpcyBhcHBsaWVkIHRv
+IGFsbCBzdGFibGUga2VybmVscy4NCg0KUm9iZXJ0bw0KDQpIVUFXRUkgVEVDSE5PTE9HSUVTIER1
+ZXNzZWxkb3JmIEdtYkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBlbmcsIExp
+IEppYW4sIFNoaSBZYW5saQ0K
