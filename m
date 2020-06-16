@@ -2,144 +2,283 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F07C2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="VwwU5aVG"
+	by mail.kernel.org (Postfix) with ESMTP id 16E4320739
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgFPOEM (ORCPT
+        id S1729359AbgFPOES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:04:12 -0400
-Received: from mail-co1nam11on2089.outbound.protection.outlook.com ([40.107.220.89]:22262
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Tue, 16 Jun 2020 10:04:18 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48976 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728809AbgFPOEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:04:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OIXtWWtteDbzqGtxZkzLdf9jZcWwoS+boSmJZjU2kTUU8kwBOXteg5LUgccM/Xax2f6rvwKxOyuuNZtnwenv6ZxjUQv2z5evgZcSzD8NcMbaunH8sbm61VLGCU5JLwa6ig+94jJxxr6r5tlCzcbTrSpcVVeQBOLMUqVJANeBeUCWa9vWt/R54PxV3AUeMxSL40j6MZxGNtEq+Js92CWKP5fjM5b8qOd2LnAunyHvaCHZrljfBJCdmlEkLxB99b7J4SuHzkv3NbP9X5zc/D+v14hls12SDnekbwZAkDUAba4SYZVtU0253yIEJOQavVADQJYkKjY3tzo61SaL5xMeUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3EuoTMmc8y+6eZzzuYKW/xuo4nAOk0fa1sbLT7moZAk=;
- b=jcY5Dq3O0ShE6P3Xf+kIdcDEGfxr0AkLndnFeduRP9orUXV0MUoR0cxUGJ+ME4IOocTNgdoFOAwnEw076Sokyf3Brq/wlvU51AcHJgKumwfvCbJ1mfo0sEDy+oTles1KIdWVBduJ+NYD+0o2BDeORHYs+BEBnhwqXk1+3vWAkeD6xQWPzCOsFklQ2AvU9uakflCJH3xJVYxy0oCqqM1T3WwVeuwB33hGNTEDi44KbGKQlCGxZm49sFZ3z0NQi9awugaO4WIYPCcUmjXo0X30nkESInqBw62gV7kK5eDlOX9k8aBI1T3sXdJtjyx1DGOo2VngvBb6DJitK6uUD+vpQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3EuoTMmc8y+6eZzzuYKW/xuo4nAOk0fa1sbLT7moZAk=;
- b=VwwU5aVG7in61OnrE+0Vxli4zysRtdOv0l+LsYIVzk88B5oQqQm6fC0/R6IObl+y+Ph6/41CpKhLsc5wfyd0gXDmHAa95HNmHvZLsO/58CshN6qIepBXaXlghCvJ4VwqKACpRIFHz46OFDT/ySQrPtAuhz+9COP7yjx84vB9oos=
-Authentication-Results: sifive.com; dkim=none (message not signed)
- header.d=none;sifive.com; dmarc=none action=none header.from=sifive.com;
-Received: from BN6PR1301MB2020.namprd13.prod.outlook.com
- (2603:10b6:405:34::34) by BN6PR13MB0866.namprd13.prod.outlook.com
- (2603:10b6:404:4::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.13; Tue, 16 Jun
- 2020 14:04:00 +0000
-Received: from BN6PR1301MB2020.namprd13.prod.outlook.com
- ([fe80::68f2:768a:7a8b:e790]) by BN6PR1301MB2020.namprd13.prod.outlook.com
- ([fe80::68f2:768a:7a8b:e790%7]) with mapi id 15.20.3109.018; Tue, 16 Jun 2020
- 14:04:00 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     colin.king@canonical.com, aou@eecs.berkeley.edu,
-        david.abdurachmanov@gmail.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH] RISC-V: Don't allow write+exec only page mapping request in mmap
-Date:   Tue, 16 Jun 2020 19:33:06 +0530
-Message-Id: <1592316186-1420-1-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR0401CA0008.apcprd04.prod.outlook.com
- (2603:1096:3:1::18) To BN6PR1301MB2020.namprd13.prod.outlook.com
- (2603:10b6:405:34::34)
+        id S1729003AbgFPOEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:04:11 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 99BA45AC549A2D2B9715;
+        Tue, 16 Jun 2020 22:04:02 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 16 Jun 2020 22:03:52 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <will@kernel.org>, <robin.murphy@arm.com>
+CC:     <joro@8bytes.org>, <trivial@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <maz@kernel.org>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH RFC v2 4/4] iommu/arm-smmu-v3: Remove cmpxchg() in arm_smmu_cmdq_issue_cmdlist()
+Date:   Tue, 16 Jun 2020 21:59:53 +0800
+Message-ID: <1592315993-164290-5-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1592315993-164290-1-git-send-email-john.garry@huawei.com>
+References: <1592315993-164290-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from osubuntu003.open-silicon.com (159.117.144.156) by SG2PR0401CA0008.apcprd04.prod.outlook.com (2603:1096:3:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.22 via Frontend Transport; Tue, 16 Jun 2020 14:03:57 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [159.117.144.156]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 20302512-843b-47f7-b815-08d811fe1e2c
-X-MS-TrafficTypeDiagnostic: BN6PR13MB0866:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR13MB086697033160FF574A85F7188C9D0@BN6PR13MB0866.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 04362AC73B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: m/W1Rt0S2egAN6uiZeT1ceL90ITJekJr/gC50u/lxxk9Z1pgrx4Vlloh7WdzD2xuzd0Jjqx5QRk9ab7+wOuWHiyQnOb9tkajY3HAP28GdQiZE3csmOH2G28YmQN98Fb1oUl1Z5Vo3VSbfoRSl/evyfIHigEdbKzP+eisUSXMfqN7/rJ7Mv7bTyt2V9lEhPR19598edpcIdRbI2iEaaCMoxkmKle++NLTBXtNCOb+aWxgyxivdE5NsVqYIpA+zaMgydVXdzdeL0N7GOuN2hw334Oj55hgbUCvxehsVy0ni7OvV3CC6Zt8WvK4XmbvN0A+l4JI3f+TS8E0HKrJjgI+BNkTqV06nqRWSQUknQLrg1362aB7DdNZWDjdZt9crDLFC71IGTXxfg0b2IQESqpRbA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1301MB2020.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39840400004)(376002)(366004)(396003)(346002)(52116002)(8936002)(6666004)(26005)(6486002)(86362001)(6512007)(2906002)(316002)(8676002)(4326008)(478600001)(966005)(36756003)(5660300002)(83380400001)(107886003)(956004)(16526019)(186003)(66556008)(6506007)(44832011)(2616005)(66946007)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: i23e5WdMWwyJkd5Y4dEL+qEz6AjYUtGCzc+lqWq+vVCrkF1YBkssyglKjZ5ic2YROsiq1uQtvVdckX+LqOyR9Fii/NVoeMmqpfwgABcg5lULiMus5IUZTzComXRGmNU2soKg9W1ar10c+ggbIzaGV80ZKmFHX+muJqUM3Pyc0Iwx29WhRsQX+9roMN/wckFl7WGs3kCZti4lS8hdK4EtnFMZmFmn1AhgY8BZqwY3MTF6duTZiAV9rKg633qsNsphI+f1KQLIxTTUxqR1og3bpdEnsWsyUNgaYi7zU52C6ItHI4uViWtUjmy373snZbGSihtIG7fMaDFxODfF9poNWd4MUc5UOshPY/X5sMZkznVWopfV3FdjBj1GKzQaOoGDD0u5KIlEQNySMULTJB5kxyqRc7hlXQxgtyEmklNNz+dowAik/QlO4xPR05jzXcwGYlgSMDZ37nMp0+j2ubP2eXyAB7daJAawCLayhDFGEdU=
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20302512-843b-47f7-b815-08d811fe1e2c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2020 14:04:00.2495
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Pk7MlXFFsQl/Dhk/PKBYsNl2jDOVLCQEjK4GDkase2jpQfLt1Vr3zN8OaZVLggWxqj8cjkZpdaFv+QEb5sVfsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR13MB0866
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per the table 4.2 of the RISC-V instruction set manual[0], the PTE
-permission bit combination of "write+exec only" is invalid and reserved
-for future use. Hence, don't allow such mapping request in mmap call.
+It has been shown that the cmpxchg() for finding space in the cmdq can
+be a real bottleneck:
+- for more CPUs contending the cmdq, the cmpxchg() will fail more often
+- since the software-maintained cons pointer is updated on the same 64b
+  memory region, the chance of cmpxchg() failure increases again
 
-An issue is been reported by David Abdurachmanov, that while running
-stress-ng with "sysbadaddr" argument, RCU stalls are observed on RISC-V
-specific kernel.
+The cmpxchg() is removed as part of 2 related changes:
 
-This issue arises when the stress-sysbadaddr request for pages with
-"write+exec only" permission bits and then passes the address obtain
-from this mmap call to various system call. For the riscv kernel, the
-mmap call should fail for this particular combination of permission bits
-since it's not valid.
+- Update prod and cmdq owner in a single atomic add operation. For this, we
+  count the prod and owner in separate regions in prod memory.
 
-[0]: https://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-161.pdf
+  As with simple binary counting, once the prod+wrap fields overflow, they
+  will zero. They should never overflow into "owner" region, and we zero
+  the non-owner, prod region for each owner. This maintains the prod
+  pointer.
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
-Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
+  As for the "owner", we now count this value, instead of setting a flag.
+  Similar to before, once the owner has finished gathering, it will clear
+  a mask. As such, a CPU declares itself as the "owner" when it reads zero
+  for this region. This zeroing will also clear possible overflow in
+  wrap+prod region, above.
+
+  The owner is now responsible for cmdq locking to avoid possible deadlock.
+  The owner will lock the cmdq for all non-owers it has gathered when they
+  have space in the queue and have written their entries.
+
+- Check for space in the cmdq after the prod pointer has been assigned.
+
+  We don't bother checking for space in the cmdq before assigning the prod
+  pointer, as this would be racy.
+
+  So since the prod pointer is updated unconditionally, it would be common
+  for no space to be available in the cmdq when prod is assigned - that
+  is, according the software-maintained prod and cons pointer. So now
+  it must be ensured that the entries are not yet written and not until
+  there is space.
+
+  How the prod pointer is maintained also leads to a strange condition
+  where the prod pointer can wrap past the cons pointer. We can detect this
+  condition, and report no space here. However, a prod pointer progressed
+  twice past the cons pointer cannot be detected. But it can be ensured that
+  this that this scenario does not occur, as we limit the amount of
+  commands any CPU can issue at any given time, such that we cannot
+  progress prod pointer further.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- arch/riscv/kernel/sys_riscv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/iommu/arm-smmu-v3.c | 102 +++++++++++++++++++++---------------
+ 1 file changed, 61 insertions(+), 41 deletions(-)
 
-diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
-index f3619f5..12f8a7f 100644
---- a/arch/riscv/kernel/sys_riscv.c
-+++ b/arch/riscv/kernel/sys_riscv.c
-@@ -8,6 +8,7 @@
- #include <linux/syscalls.h>
- #include <asm/unistd.h>
- #include <asm/cacheflush.h>
-+#include <asm-generic/mman-common.h>
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 36648163364c..fd42a98f501f 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -772,10 +772,19 @@ static bool queue_has_space(struct arm_smmu_ll_queue *q, u32 n)
+ 	prod = Q_IDX(q, q->prod);
+ 	cons = Q_IDX(q, q->cons);
  
- static long riscv_sys_mmap(unsigned long addr, unsigned long len,
- 			   unsigned long prot, unsigned long flags,
-@@ -16,6 +17,11 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
- {
- 	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
- 		return -EINVAL;
+-	if (Q_WRP(q, q->prod) == Q_WRP(q, q->cons))
++	if (Q_WRP(q, q->prod) == Q_WRP(q, q->cons)) {
++		/* check if we have wrapped twice, meaning definitely no space */
++		if (cons > prod)
++			return false;
 +
-+	if ((prot & PROT_WRITE) && (prot & PROT_EXEC))
-+		if (unlikely(!(prot & PROT_READ)))
-+			return -EINVAL;
+ 		space = (1 << q->max_n_shift) - (prod - cons);
+-	else
++	} else {
++		/* similar check to above */
++		if (prod > cons)
++			return false;
 +
- 	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
- 			       offset >> (PAGE_SHIFT - page_shift_offset));
+ 		space = cons - prod;
++	}
+ 
+ 	return space >= n;
  }
+@@ -1073,7 +1082,7 @@ static void arm_smmu_cmdq_skip_err(struct arm_smmu_device *smmu)
+  *   fails if the caller appears to be the last lock holder (yes, this is
+  *   racy). All successful UNLOCK routines have RELEASE semantics.
+  */
+-static void arm_smmu_cmdq_shared_lock(struct arm_smmu_cmdq *cmdq)
++static void arm_smmu_cmdq_shared_lock(struct arm_smmu_cmdq *cmdq, int count)
+ {
+ 	int val;
+ 
+@@ -1083,12 +1092,12 @@ static void arm_smmu_cmdq_shared_lock(struct arm_smmu_cmdq *cmdq)
+ 	 * to INT_MIN so these increments won't hurt as the value will remain
+ 	 * negative.
+ 	 */
+-	if (atomic_fetch_inc_relaxed(&cmdq->lock) >= 0)
++	if (atomic_fetch_add_relaxed(count, &cmdq->lock) >= 0)
+ 		return;
+ 
+ 	do {
+ 		val = atomic_cond_read_relaxed(&cmdq->lock, VAL >= 0);
+-	} while (atomic_cmpxchg_relaxed(&cmdq->lock, val, val + 1) != val);
++	} while (atomic_cmpxchg_relaxed(&cmdq->lock, val, val + count) != val);
+ }
+ 
+ static void arm_smmu_cmdq_shared_unlock(struct arm_smmu_cmdq *cmdq)
+@@ -1374,8 +1383,10 @@ static void arm_smmu_cmdq_write_entries(struct arm_smmu_cmdq *cmdq, u64 *cmds,
+  *   insert their own list of commands then all of the commands from one
+  *   CPU will appear before any of the commands from the other CPU.
+  *
+- * - A CMD_SYNC is always inserted, ensuring that any CPU does not issue
+- *   more than the permitted amount commands at once.
++ * - A CMD_SYNC is always inserted, which ensures we limit the prod pointer
++ *   for when the cmdq is full, such that we don't wrap more than twice.
++ *   It also makes it easy for the owner to know by how many to increment the
++ *   cmdq lock.
+  */
+ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+ 				       u64 *cmds, int n)
+@@ -1388,39 +1399,38 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+ 	struct arm_smmu_cmdq *cmdq = &smmu->cmdq;
+ 	struct arm_smmu_ll_queue llq = {
+ 		.max_n_shift = cmdq->q.llq.max_n_shift,
+-	}, head = llq;
++	}, head = llq, space = llq;
++	u32 owner_val = 1 << cmdq->q.llq.owner_count_shift;
++	u32 prod_mask = GENMASK(cmdq->q.llq.max_n_shift, 0);
++	u32 owner_mask = GENMASK(30, cmdq->q.llq.owner_count_shift);
+ 	int ret = 0;
+ 
+ 	/* 1. Allocate some space in the queue */
+ 	local_irq_save(flags);
+-	llq.val = READ_ONCE(cmdq->q.llq.val);
+-	do {
+-		u64 old;
+ 
+-		while (!queue_has_space(&llq, n + sync)) {
+-			local_irq_restore(flags);
+-			if (arm_smmu_cmdq_poll_until_not_full(smmu, &llq))
+-				dev_err_ratelimited(smmu->dev, "CMDQ timeout\n");
+-			local_irq_save(flags);
+-		}
++	prod = atomic_fetch_add(n + sync + owner_val,
++				&cmdq->q.llq.atomic.prod);
+ 
+-		head.cons = llq.cons;
+-		head.prod = queue_inc_prod_n(&llq, n + sync) |
+-					     CMDQ_PROD_OWNED_FLAG;
++	owner = !(prod & owner_mask);
++	llq.prod = prod_mask & prod;
++	head.prod = queue_inc_prod_n(&llq, n + sync);
+ 
+-		old = cmpxchg_relaxed(&cmdq->q.llq.val, llq.val, head.val);
+-		if (old == llq.val)
+-			break;
++	/*
++	 * Ensure it's safe to write the entries. For this, we need to ensure
++	 * that there is space in the queue from our prod pointer.
++	 */
++	space.cons = READ_ONCE(cmdq->q.llq.cons);
++	space.prod = llq.prod;
++	while (!queue_has_space(&space, n + sync)) {
++		if (arm_smmu_cmdq_poll_until_not_full(smmu, &space))
++			dev_err_ratelimited(smmu->dev, "CMDQ timeout\n");
+ 
+-		llq.val = old;
+-	} while (1);
+-	owner = !(llq.prod & CMDQ_PROD_OWNED_FLAG);
+-	head.prod &= ~CMDQ_PROD_OWNED_FLAG;
+-	llq.prod &= ~CMDQ_PROD_OWNED_FLAG;
++		space.prod = llq.prod;
++	}
+ 
+ 	/*
+ 	 * 2. Write our commands into the queue
+-	 * Dependency ordering from the cmpxchg() loop above.
++	 * Dependency ordering from the space-checking while loop, above.
+ 	 */
+ 	arm_smmu_cmdq_write_entries(cmdq, cmds, llq.prod, n);
+ 
+@@ -1428,27 +1438,24 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+ 	arm_smmu_cmdq_build_sync_cmd(cmd_sync, smmu, prod);
+ 	queue_write(Q_ENT(&cmdq->q, prod), cmd_sync, CMDQ_ENT_DWORDS);
+ 
+-	/*
+-	 * In order to determine completion of our CMD_SYNC, we must
+-	 * ensure that the queue can't wrap twice without us noticing.
+-	 * We achieve that by taking the cmdq lock as shared before
+-	 * marking our slot as valid.
+-	 */
+-	arm_smmu_cmdq_shared_lock(cmdq);
+-
+ 	/* 3. Mark our slots as valid, ensuring commands are visible first */
+ 	dma_wmb();
+ 	arm_smmu_cmdq_set_valid_map(cmdq, llq.prod, head.prod);
+ 
+ 	/* 4. If we are the owner, take control of the SMMU hardware */
+ 	if (owner) {
++		int owner_count;
++		u32 prod_tmp;
++
+ 		/* a. Wait for previous owner to finish */
+ 		atomic_cond_read_relaxed(&cmdq->owner_prod, VAL == llq.prod);
+ 
+-		/* b. Stop gathering work by clearing the owned flag */
+-		prod = atomic_fetch_andnot_relaxed(CMDQ_PROD_OWNED_FLAG,
+-						   &cmdq->q.llq.atomic.prod);
+-		prod &= ~CMDQ_PROD_OWNED_FLAG;
++		/* b. Stop gathering work by clearing the owned mask */
++		prod_tmp = atomic_fetch_andnot_relaxed(~prod_mask,
++						       &cmdq->q.llq.atomic.prod);
++		prod = prod_tmp & prod_mask;
++		owner_count = prod_tmp & owner_mask;
++		owner_count >>= cmdq->q.llq.owner_count_shift;
+ 
+ 		/*
+ 		 * c. Wait for any gathered work to be written to the queue.
+@@ -1457,6 +1464,19 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
+ 		 */
+ 		arm_smmu_cmdq_poll_valid_map(cmdq, llq.prod, prod);
+ 
++		/*
++		 * In order to determine completion of the CMD_SYNCs, we must
++		 * ensure that the queue can't wrap twice without us noticing.
++		 * We achieve that by taking the cmdq lock as shared before
++		 * progressing the prod pointer.
++		 * The owner does this for all the non-owners it has gathered.
++		 * Otherwise, some non-owner(s) may lock the cmdq, blocking
++		 * cons being updating. This could be when the cmdq has just
++		 * become full. In this case, other sibling non-owners could be
++		 * blocked from progressing, leading to deadlock.
++		 */
++		arm_smmu_cmdq_shared_lock(cmdq, owner_count);
++
+ 		/*
+ 		 * d. Advance the hardware prod pointer
+ 		 * Control dependency ordering from the entries becoming valid.
 -- 
-2.7.4
+2.26.2
 
