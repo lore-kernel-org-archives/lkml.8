@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D687FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B689208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C169A2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbgFPSYZ (ORCPT
+        id S1730164AbgFPSYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:24:25 -0400
+        Tue, 16 Jun 2020 14:24:16 -0400
 Received: from v6.sk ([167.172.42.174]:47662 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730133AbgFPSYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:24:17 -0400
+        id S1730018AbgFPSYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 14:24:10 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 58BD961632;
-        Tue, 16 Jun 2020 18:24:16 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id D952D6162E;
+        Tue, 16 Jun 2020 18:24:08 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 12/13] ARM: dts: mmp3: Add the GPU
-Date:   Tue, 16 Jun 2020 20:23:40 +0200
-Message-Id: <20200616182341.944473-13-lkundrak@v3.sk>
+Subject: [PATCH 08/13] ARM: dts: mmp2: Add SSPA nodes
+Date:   Tue, 16 Jun 2020 20:23:36 +0200
+Message-Id: <20200616182341.944473-9-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200616182341.944473-1-lkundrak@v3.sk>
 References: <20200616182341.944473-1-lkundrak@v3.sk>
@@ -40,56 +40,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a GC2000 3D core accompanied by a GC300 2D core.
+There are two I2S-capable audio serial port blocks.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/mmp3.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/mmp2.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-index 57231d49d9386..cc4efd0efabd2 100644
---- a/arch/arm/boot/dts/mmp3.dtsi
-+++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/clock/marvell,mmp2.h>
-+#include <dt-bindings/power/marvell,mmp2.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
-@@ -310,6 +311,30 @@ camera1: camera@d420a800 {
- 				clock-output-names = "mclk";
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index dd7fba65799ea..31592acd3ef4f 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -223,6 +223,32 @@ audio_clk: clocks@d42a0c30 {
+ 				#clock-cells = <1>;
  				status = "disabled";
  			};
 +
-+			gpu_3d: gpu@d420d000 {
-+				compatible = "vivante,gc";
-+				reg = <0xd420d000 0x2000>;
-+				interrupt-parent = <&gpu_mux>;
-+				interrupts = <0>;
++			sspa0: audio-controller@d42a0c00 {
++				compatible = "marvell,mmp-sspa";
++				reg = <0xd42a0c00 0x30>,
++				      <0xd42a0c80 0x30>;
++				interrupts = <2>;
++				clock-names = "audio", "bitclk";
++				clocks = <&soc_clocks MMP2_CLK_AUDIO>,
++					 <&audio_clk 1>;
++				power-domains = <&soc_clocks MMP2_POWER_DOMAIN_AUDIO>;
++				#sound-dai-cells = <0>;
 +				status = "disabled";
-+				clocks = <&soc_clocks MMP3_CLK_GPU_3D>,
-+					 <&soc_clocks MMP3_CLK_GPU_BUS>;
-+				clock-names = "core", "bus";
-+				power-domains = <&soc_clocks MMP2_POWER_DOMAIN_GPU>;
 +			};
 +
-+			gpu_2d: gpu@d420f000 {
-+				compatible = "vivante,gc";
-+				reg = <0xd420f000 0x2000>;
-+				interrupt-parent = <&gpu_mux>;
-+				interrupts = <2>;
++			sspa1: audio-controller@d42a0d00 {
++				compatible = "marvell,mmp-sspa";
++				reg = <0xd42a0d00 0x30>,
++				      <0xd42a0d80 0x30>;
++				interrupts = <3>;
++				clock-names = "audio", "bitclk";
++				clocks = <&soc_clocks MMP2_CLK_AUDIO>,
++					 <&audio_clk 2>;
++				power-domains = <&soc_clocks MMP2_POWER_DOMAIN_AUDIO>;
++				#sound-dai-cells = <0>;
 +				status = "disabled";
-+				clocks = <&soc_clocks MMP3_CLK_GPU_2D>,
-+					 <&soc_clocks MMP3_CLK_GPU_BUS>;
-+				clock-names = "core", "bus";
-+				power-domains = <&soc_clocks MMP2_POWER_DOMAIN_GPU>;
 +			};
  		};
  
- 		apb@d4000000 {
+ 		apb@d4000000 {	/* APB */
 -- 
 2.26.2
 
