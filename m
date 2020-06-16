@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1091C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4CE2151B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D39A21531
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321895;
-	bh=9p4Mo042Rqy4vJYBei02Cv/NT0DA2OR0anc2hVo4VZQ=;
+	s=default; t=1592321900;
+	bh=338AucczY2mLow4d9IdceneS8Dm9fzEUvS1ZacGLH8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y65YZNEK/iJZL00F94L0XXUIiO9gw9Fjt3K5mn56vQKz6UrI90TOBdkJYg+SVdM2S
-	 FL99PIflzScHthxtewQ1m4zKzoHnBEDxbvp0R81vEwk0ZJi/aaZW/FtzZcVKLq1bv4
-	 +Cy5Go6/Shp2p6bGLc0P3CPM615puhMTblCrbSVw=
+	b=LaqfaQauXlqP18mBW5L6CTIa/uUwGZOT7Fw2zUfz7wWdwYAfdapgPPA3v7KT+XY34
+	 BsrKmn3NVTHrpTs5orM7BSDV8wJvzrH2FfI7bs7c9Ma4sbqgFp+3x6mRDWyg5coDKH
+	 cTUbR3/IyajHUQ/uxGz4FOw8ftZafQVvJDWKYZaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbgFPPiN (ORCPT
+        id S1730608AbgFPPiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:38:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50226 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:38:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730537AbgFPPiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:06 -0400
+        id S1730552AbgFPPiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A644220B1F;
-        Tue, 16 Jun 2020 15:38:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A0E620C56;
+        Tue, 16 Jun 2020 15:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321886;
-        bh=9p4Mo042Rqy4vJYBei02Cv/NT0DA2OR0anc2hVo4VZQ=;
+        s=default; t=1592321888;
+        bh=338AucczY2mLow4d9IdceneS8Dm9fzEUvS1ZacGLH8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BgFnwfZ3KznDvVT+xcBdLJgrQLmq5EKQ0x1OCqe7rFs1VejGfOEHEdIstYNeG82PE
-         21imiJIh+Ji5WtyjJrNfLANaYIUnfXr4zDwjunF/m3YQd40KHMVq82uv0K0eKzcwCp
-         fPd5/WlySpAxHmVUo6m2v6Ul5n5SFSrFOgpClK9o=
+        b=WG5k+/gNvwmslUD03xANP6dOwfJDSbTiUvpnwhl9L4SH7FqHvOzLGnxR2+L56zBvS
+         5YG+ER5ulsOenjD4BWKJVuMdrgt/1A0i2tbH2KraRODo4MdujbAPlOMx1dbLUoa8l/
+         bA5LQV0gjdkJxlSA4klhJcvsnNAJIQrT+G/wb2AI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Breno Lima <breno.lima@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.4 054/134] watchdog: imx_sc_wdt: Fix reboot on crash
-Date:   Tue, 16 Jun 2020 17:33:58 +0200
-Message-Id: <20200616153103.360499214@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 055/134] ALSA: es1688: Add the missed snd_card_free()
+Date:   Tue, 16 Jun 2020 17:33:59 +0200
+Message-Id: <20200616153103.409759933@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,49 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit e56d48e92b1017b6a8dbe64923a889283733fd96 upstream.
+commit d9b8fbf15d05350b36081eddafcf7b15aa1add50 upstream.
 
-Currently when running the samples/watchdog/watchdog-simple.c
-application and forcing a kernel crash by doing:
+snd_es968_pnp_detect() misses a snd_card_free() in a failed path.
+Add the missed function call to fix it.
 
-# ./watchdog-simple &
-# echo c > /proc/sysrq-trigger
-
-The system does not reboot as expected.
-
-Fix it by calling imx_sc_wdt_set_timeout() to configure the i.MX8QXP
-watchdog with a proper timeout.
-
+Fixes: a20971b201ac ("ALSA: Merge es1688 and es968 drivers")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Cc: <stable@vger.kernel.org>
-Fixes: 986857acbc9a ("watchdog: imx_sc: Add i.MX system controller watchdog support")
-Reported-by: Breno Lima <breno.lima@nxp.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Breno Lima <breno.lima@nxp.com>
-Link: https://lore.kernel.org/r/20200412230122.5601-1-festevam@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Link: https://lore.kernel.org/r/20200603092459.1424093-1-hslester96@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/imx_sc_wdt.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/isa/es1688/es1688.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/watchdog/imx_sc_wdt.c
-+++ b/drivers/watchdog/imx_sc_wdt.c
-@@ -177,6 +177,11 @@ static int imx_sc_wdt_probe(struct platf
- 	wdog->timeout = DEFAULT_TIMEOUT;
- 
- 	watchdog_init_timeout(wdog, 0, dev);
-+
-+	ret = imx_sc_wdt_set_timeout(wdog, wdog->timeout);
-+	if (ret)
-+		return ret;
-+
- 	watchdog_stop_on_reboot(wdog);
- 	watchdog_stop_on_unregister(wdog);
- 
+--- a/sound/isa/es1688/es1688.c
++++ b/sound/isa/es1688/es1688.c
+@@ -267,8 +267,10 @@ static int snd_es968_pnp_detect(struct p
+ 		return error;
+ 	}
+ 	error = snd_es1688_probe(card, dev);
+-	if (error < 0)
++	if (error < 0) {
++		snd_card_free(card);
+ 		return error;
++	}
+ 	pnp_set_card_drvdata(pcard, card);
+ 	snd_es968_pnp_is_probed = 1;
+ 	return 0;
 
 
