@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E61C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20BEE21527
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1391721527
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322693;
-	bh=zpYShMOZpswtC64OW2r7Dp1omfS1QSaZmPRDUdLIA9E=;
+	s=default; t=1592322696;
+	bh=cc3t7bypVm3p9AtLB9mp71orkwFwbbE2brkF9FZtrq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVSGxQWm2VjkTFQEMpybPD9jxqvR7hVi4HvqcGutF1b2CUY7w1NDFUaVt3rQxrs36
-	 md+TpIbdTAyKuHfnsWF4KZG97cyA6l9zCt7FstgNHQZXmvv7h/5rur94CUqdQkXzJn
-	 57is+EOwOdIkVLVjaawEXOGENtCiairHVEGY7HXE=
+	b=bmdPJdXIx+eb36CR6MczNT1ON9gI1G92HpXB153PxqyIkTcevVjpFJfm52xS6wS2r
+	 i1NevnjNTNYQ9cf/9TGnutM97l8RtpheemzL3jMGhDJTqcHCirOha2aSE0rLWtyC/x
+	 JBIlx7mrrB7FlUT2SvLcyxeP85rRF7VMX5ZVBq50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732673AbgFPPva (ORCPT
+        id S1732676AbgFPPve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:51:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732653AbgFPPvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:51:12 -0400
+        id S1730172AbgFPPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:51:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3BF4214DB;
-        Tue, 16 Jun 2020 15:51:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65FFA208D5;
+        Tue, 16 Jun 2020 15:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322671;
-        bh=zpYShMOZpswtC64OW2r7Dp1omfS1QSaZmPRDUdLIA9E=;
+        s=default; t=1592322673;
+        bh=cc3t7bypVm3p9AtLB9mp71orkwFwbbE2brkF9FZtrq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCmMYwYCcA1wD3Rk+1cplRGw7tmXHbXNQVBPOEARFXaH41YT6wnz0QX6WVq3dzw1n
-         JIKwbJfKqo9i0T1EIPqI/vPs+gTtSv5u5LKnEs9+PvQ+Lp7MpE+mi8lNgEBBLoI/Hg
-         7o2LJQjzIfdF5dJ4FhMb0lrCXMvu33mrLvWPhYRE=
+        b=ne33w+94X1IebRNTZj8VNn5VzqcmsyutoDrTXoclh1NFQgVMiNC0ZzSbqRr/ysZJZ
+         DJ9M6eZMEcWs6/oWEvwd9pNLGCre0qY1X+MejlRdAUhIxgjQLvYytT3UX+WHh5qBvM
+         wGM59Od/f33s+rS3kQoc8use722swgqRAZe2pglg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
+        stable@vger.kernel.org,
+        Eiichi Tsukata <eiichi.tsukata@nutanix.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 058/161] KVM: x86: respect singlestep when emulating instruction
-Date:   Tue, 16 Jun 2020 17:34:08 +0200
-Message-Id: <20200616153109.142280020@linuxfoundation.org>
+Subject: [PATCH 5.6 059/161] KVM: x86: Fix APIC page invalidation race
+Date:   Tue, 16 Jun 2020 17:34:09 +0200
+Message-Id: <20200616153109.189807557@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,43 +60,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Franciosi <felipe@nutanix.com>
+From: Eiichi Tsukata <eiichi.tsukata@nutanix.com>
 
-commit 384dea1c9183880be183cfaae161d99aafd16df6 upstream.
+commit e649b3f0188f8fd34dd0dde8d43fd3312b902fb2 upstream.
 
-When userspace configures KVM_GUESTDBG_SINGLESTEP, KVM will manage the
-presence of X86_EFLAGS_TF via kvm_set/get_rflags on vcpus. The actual
-rflag bit is therefore hidden from callers.
+Commit b1394e745b94 ("KVM: x86: fix APIC page invalidation") tried
+to fix inappropriate APIC page invalidation by re-introducing arch
+specific kvm_arch_mmu_notifier_invalidate_range() and calling it from
+kvm_mmu_notifier_invalidate_range_start. However, the patch left a
+possible race where the VMCS APIC address cache is updated *before*
+it is unmapped:
 
-That includes init_emulate_ctxt() which uses the value returned from
-kvm_get_flags() to set ctxt->tf. As a result, x86_emulate_instruction()
-will skip a single step, leaving singlestep_rip stale and not returning
-to userspace.
+  (Invalidator) kvm_mmu_notifier_invalidate_range_start()
+  (Invalidator) kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD)
+  (KVM VCPU) vcpu_enter_guest()
+  (KVM VCPU) kvm_vcpu_reload_apic_access_page()
+  (Invalidator) actually unmap page
 
-This resolves the issue by observing the vcpu guest_debug configuration
-alongside ctxt->tf in x86_emulate_instruction(), performing the single
-step if set.
+Because of the above race, there can be a mismatch between the
+host physical address stored in the APIC_ACCESS_PAGE VMCS field and
+the host physical address stored in the EPT entry for the APIC GPA
+(0xfee0000).  When this happens, the processor will not trap APIC
+accesses, and will instead show the raw contents of the APIC-access page.
+Because Windows OS periodically checks for unexpected modifications to
+the LAPIC register, this will show up as a BSOD crash with BugCheck
+CRITICAL_STRUCTURE_CORRUPTION (109) we are currently seeing in
+https://bugzilla.redhat.com/show_bug.cgi?id=1751017.
+
+The root cause of the issue is that kvm_arch_mmu_notifier_invalidate_range()
+cannot guarantee that no additional references are taken to the pages in
+the range before kvm_mmu_notifier_invalidate_range_end().  Fortunately,
+this case is supported by the MMU notifier API, as documented in
+include/linux/mmu_notifier.h:
+
+	 * If the subsystem
+         * can't guarantee that no additional references are taken to
+         * the pages in the range, it has to implement the
+         * invalidate_range() notifier to remove any references taken
+         * after invalidate_range_start().
+
+The fix therefore is to reload the APIC-access page field in the VMCS
+from kvm_mmu_notifier_invalidate_range() instead of ..._range_start().
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
-Message-Id: <20200519081048.8204-1-felipe@nutanix.com>
+Fixes: b1394e745b94 ("KVM: x86: fix APIC page invalidation")
+Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=197951
+Signed-off-by: Eiichi Tsukata <eiichi.tsukata@nutanix.com>
+Message-Id: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/x86.c       |    7 ++-----
+ include/linux/kvm_host.h |    4 ++--
+ virt/kvm/kvm_main.c      |   26 ++++++++++++++++----------
+ 3 files changed, 20 insertions(+), 17 deletions(-)
 
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -6908,7 +6908,7 @@ restart:
- 		if (!ctxt->have_exception ||
- 		    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
- 			kvm_rip_write(vcpu, ctxt->eip);
--			if (r && ctxt->tf)
-+			if (r && (ctxt->tf || (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)))
- 				r = kvm_vcpu_do_singlestep(vcpu);
- 			if (kvm_x86_ops->update_emulated_instruction)
- 				kvm_x86_ops->update_emulated_instruction(vcpu);
+@@ -8115,9 +8115,8 @@ static void vcpu_load_eoi_exitmap(struct
+ 	kvm_x86_ops->load_eoi_exitmap(vcpu, eoi_exit_bitmap);
+ }
+ 
+-int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+-		unsigned long start, unsigned long end,
+-		bool blockable)
++void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
++					    unsigned long start, unsigned long end)
+ {
+ 	unsigned long apic_address;
+ 
+@@ -8128,8 +8127,6 @@ int kvm_arch_mmu_notifier_invalidate_ran
+ 	apic_address = gfn_to_hva(kvm, APIC_DEFAULT_PHYS_BASE >> PAGE_SHIFT);
+ 	if (start <= apic_address && apic_address < end)
+ 		kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD);
+-
+-	return 0;
+ }
+ 
+ void kvm_vcpu_reload_apic_access_page(struct kvm_vcpu *vcpu)
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1394,8 +1394,8 @@ static inline long kvm_arch_vcpu_async_i
+ }
+ #endif /* CONFIG_HAVE_KVM_VCPU_ASYNC_IOCTL */
+ 
+-int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+-		unsigned long start, unsigned long end, bool blockable);
++void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
++					    unsigned long start, unsigned long end);
+ 
+ #ifdef CONFIG_HAVE_KVM_VCPU_RUN_PID_CHANGE
+ int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu);
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -157,10 +157,9 @@ static void kvm_uevent_notify_change(uns
+ static unsigned long long kvm_createvm_count;
+ static unsigned long long kvm_active_vms;
+ 
+-__weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+-		unsigned long start, unsigned long end, bool blockable)
++__weak void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
++						   unsigned long start, unsigned long end)
+ {
+-	return 0;
+ }
+ 
+ bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
+@@ -378,6 +377,18 @@ static inline struct kvm *mmu_notifier_t
+ 	return container_of(mn, struct kvm, mmu_notifier);
+ }
+ 
++static void kvm_mmu_notifier_invalidate_range(struct mmu_notifier *mn,
++					      struct mm_struct *mm,
++					      unsigned long start, unsigned long end)
++{
++	struct kvm *kvm = mmu_notifier_to_kvm(mn);
++	int idx;
++
++	idx = srcu_read_lock(&kvm->srcu);
++	kvm_arch_mmu_notifier_invalidate_range(kvm, start, end);
++	srcu_read_unlock(&kvm->srcu, idx);
++}
++
+ static void kvm_mmu_notifier_change_pte(struct mmu_notifier *mn,
+ 					struct mm_struct *mm,
+ 					unsigned long address,
+@@ -402,7 +413,6 @@ static int kvm_mmu_notifier_invalidate_r
+ {
+ 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
+ 	int need_tlb_flush = 0, idx;
+-	int ret;
+ 
+ 	idx = srcu_read_lock(&kvm->srcu);
+ 	spin_lock(&kvm->mmu_lock);
+@@ -419,14 +429,9 @@ static int kvm_mmu_notifier_invalidate_r
+ 		kvm_flush_remote_tlbs(kvm);
+ 
+ 	spin_unlock(&kvm->mmu_lock);
+-
+-	ret = kvm_arch_mmu_notifier_invalidate_range(kvm, range->start,
+-					range->end,
+-					mmu_notifier_range_blockable(range));
+-
+ 	srcu_read_unlock(&kvm->srcu, idx);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static void kvm_mmu_notifier_invalidate_range_end(struct mmu_notifier *mn,
+@@ -532,6 +537,7 @@ static void kvm_mmu_notifier_release(str
+ }
+ 
+ static const struct mmu_notifier_ops kvm_mmu_notifier_ops = {
++	.invalidate_range	= kvm_mmu_notifier_invalidate_range,
+ 	.invalidate_range_start	= kvm_mmu_notifier_invalidate_range_start,
+ 	.invalidate_range_end	= kvm_mmu_notifier_invalidate_range_end,
+ 	.clear_flush_young	= kvm_mmu_notifier_clear_flush_young,
 
 
