@@ -2,60 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A61C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5A7207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EAC207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323381;
-	bh=A2D6K0oos0DDXw1a6HDvkTrRQJbH9cUVN9kBOJHySpg=;
+	s=default; t=1592323393;
+	bh=QLPfxFYbCqhAoVAV8gU3WcOx1/qmLb/p/3Jog8BRv30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cHJmjwMjpPtoutDfR8la5+RKba0YxCLv23LCdJeWskRlxL9qnD8fyuAhvuj8aFKXt
-	 l5CWi/drIpAsf2E90VEhVHqtyI1G1SE6QeTfexAe0kKTfVRLWaE+bnsciiiv+dXZHe
-	 RIPJ21t1psJEi4MPGSXPqg8rUNPYw2M06mRyp24k=
+	b=MvFkB6xRNGgTaXm2YdMmJV98LXMBKm/A+X4L4MaQ9IjN2fljXH+IktAB3VaT5l7J1
+	 JimTJgFEupuT7FBFBzB5Yh5ft9Jozwu9pQLLR/Hxx/D+XG32BGaVD4Cv2gLlkhQkw8
+	 Sw5yBK1Jh7ttdm/Mv/0BGk3vC/htLcOAVOuzZhIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732606AbgFPQDA (ORCPT
+        id S1732589AbgFPQDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:03:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731004AbgFPPun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:50:43 -0400
+        id S1731773AbgFPPu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 447F0207C4;
-        Tue, 16 Jun 2020 15:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB0821475;
+        Tue, 16 Jun 2020 15:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322642;
-        bh=A2D6K0oos0DDXw1a6HDvkTrRQJbH9cUVN9kBOJHySpg=;
+        s=default; t=1592322627;
+        bh=QLPfxFYbCqhAoVAV8gU3WcOx1/qmLb/p/3Jog8BRv30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxgoRerSgHCHV33r4zzzql/XtCEmUp1mohoF5XJl0Fs22fxSokHGmfUQ+Tv4swTDa
-         MEUQyrat5ElrLGYMfgslGHvkyoVM9uBm2x+XEgd7F3ckvtwzR2LyA2Y6eHN+euyOPg
-         VNGzuPh6NbKM/7aoSRS7DQmr77RjFoS8N9zsbWJE=
+        b=j4GF4mY0zs8bulCGK7N0RWIwIADFM8kDFS86NvliKIndvqAxiHR5rUeN+DxrTHGCb
+         gaOndohVLjcvkWKx8q9ocFqmuVFa3VhrjXUZJbxsL9NPXcRts+tHuxDoOrhyErG/K6
+         T4Yir42Nup2Omr3kajINxbZVn3DQSHIJAI6WIb4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alistair Delva <adelva@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Bob Haarman <inglorion@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: [PATCH 5.6 048/161] x86_64: Fix jiffies ODR violation
-Date:   Tue, 16 Jun 2020 17:33:58 +0200
-Message-Id: <20200616153108.664888702@linuxfoundation.org>
+        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
+        Maurizio Lombardi <mlombard@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 042/161] scsi: target: remove boilerplate code
+Date:   Tue, 16 Jun 2020 17:33:52 +0200
+Message-Id: <20200616153108.377377918@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -68,125 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Haarman <inglorion@google.com>
+From: Maurizio Lombardi <mlombard@redhat.com>
 
-commit d8ad6d39c35d2b44b3d48b787df7f3359381dcbf upstream.
+[ Upstream commit e49a7d994379278d3353d7ffc7994672752fb0ad ]
 
-'jiffies' and 'jiffies_64' are meant to alias (two different symbols that
-share the same address).  Most architectures make the symbols alias to the
-same address via a linker script assignment in their
-arch/<arch>/kernel/vmlinux.lds.S:
+iscsit_free_session() is equivalent to iscsit_stop_session() followed by a
+call to iscsit_close_session().
 
-jiffies = jiffies_64;
-
-which is effectively a definition of jiffies.
-
-jiffies and jiffies_64 are both forward declared for all architectures in
-include/linux/jiffies.h. jiffies_64 is defined in kernel/time/timer.c.
-
-x86_64 was peculiar in that it wasn't doing the above linker script
-assignment, but rather was:
-1. defining jiffies in arch/x86/kernel/time.c instead via the linker script.
-2. overriding the symbol jiffies_64 from kernel/time/timer.c in
-arch/x86/kernel/vmlinux.lds.s via 'jiffies_64 = jiffies;'.
-
-As Fangrui notes:
-
-  In LLD, symbol assignments in linker scripts override definitions in
-  object files. GNU ld appears to have the same behavior. It would
-  probably make sense for LLD to error "duplicate symbol" but GNU ld
-  is unlikely to adopt for compatibility reasons.
-
-This results in an ODR violation (UB), which seems to have survived
-thus far. Where it becomes harmful is when;
-
-1. -fno-semantic-interposition is used:
-
-As Fangrui notes:
-
-  Clang after LLVM commit 5b22bcc2b70d
-  ("[X86][ELF] Prefer to lower MC_GlobalAddress operands to .Lfoo$local")
-  defaults to -fno-semantic-interposition similar semantics which help
-  -fpic/-fPIC code avoid GOT/PLT when the referenced symbol is defined
-  within the same translation unit. Unlike GCC
-  -fno-semantic-interposition, Clang emits such relocations referencing
-  local symbols for non-pic code as well.
-
-This causes references to jiffies to refer to '.Ljiffies$local' when
-jiffies is defined in the same translation unit. Likewise, references to
-jiffies_64 become references to '.Ljiffies_64$local' in translation units
-that define jiffies_64.  Because these differ from the names used in the
-linker script, they will not be rewritten to alias one another.
-
-2. Full LTO
-
-Full LTO effectively treats all source files as one translation
-unit, causing these local references to be produced everywhere.  When
-the linker processes the linker script, there are no longer any
-references to jiffies_64' anywhere to replace with 'jiffies'.  And
-thus '.Ljiffies$local' and '.Ljiffies_64$local' no longer alias
-at all.
-
-In the process of porting patches enabling Full LTO from arm64 to x86_64,
-spooky bugs have been observed where the kernel appeared to boot, but init
-doesn't get scheduled.
-
-Avoid the ODR violation by matching other architectures and define jiffies
-only by linker script.  For -fno-semantic-interposition + Full LTO, there
-is no longer a global definition of jiffies for the compiler to produce a
-local symbol which the linker script won't ensure aliases to jiffies_64.
-
-Fixes: 40747ffa5aa8 ("asmlinkage: Make jiffies visible")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Alistair Delva <adelva@google.com>
-Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
-Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Bob Haarman <inglorion@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot on
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://github.com/ClangBuiltLinux/linux/issues/852
-Link: https://lkml.kernel.org/r/20200602193100.229287-1-inglorion@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200313170656.9716-2-mlombard@redhat.com
+Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/time.c        |    4 ----
- arch/x86/kernel/vmlinux.lds.S |    4 ++--
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ drivers/target/iscsi/iscsi_target.c | 46 ++---------------------------
+ drivers/target/iscsi/iscsi_target.h |  1 -
+ 2 files changed, 2 insertions(+), 45 deletions(-)
 
---- a/arch/x86/kernel/time.c
-+++ b/arch/x86/kernel/time.c
-@@ -25,10 +25,6 @@
- #include <asm/hpet.h>
- #include <asm/time.h>
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index 9fc7e374a29b..1c7514543571 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4566,49 +4566,6 @@ void iscsit_fail_session(struct iscsi_session *sess)
+ 	sess->session_state = TARG_SESS_STATE_FAILED;
+ }
  
--#ifdef CONFIG_X86_64
--__visible volatile unsigned long jiffies __cacheline_aligned_in_smp = INITIAL_JIFFIES;
--#endif
+-int iscsit_free_session(struct iscsi_session *sess)
+-{
+-	u16 conn_count = atomic_read(&sess->nconn);
+-	struct iscsi_conn *conn, *conn_tmp = NULL;
+-	int is_last;
 -
- unsigned long profile_pc(struct pt_regs *regs)
- {
- 	unsigned long pc = instruction_pointer(regs);
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -39,13 +39,13 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
- #ifdef CONFIG_X86_32
- OUTPUT_ARCH(i386)
- ENTRY(phys_startup_32)
--jiffies = jiffies_64;
- #else
- OUTPUT_ARCH(i386:x86-64)
- ENTRY(phys_startup_64)
--jiffies_64 = jiffies;
- #endif
+-	spin_lock_bh(&sess->conn_lock);
+-	atomic_set(&sess->sleep_on_sess_wait_comp, 1);
+-
+-	list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
+-			conn_list) {
+-		if (conn_count == 0)
+-			break;
+-
+-		if (list_is_last(&conn->conn_list, &sess->sess_conn_list)) {
+-			is_last = 1;
+-		} else {
+-			iscsit_inc_conn_usage_count(conn_tmp);
+-			is_last = 0;
+-		}
+-		iscsit_inc_conn_usage_count(conn);
+-
+-		spin_unlock_bh(&sess->conn_lock);
+-		iscsit_cause_connection_reinstatement(conn, 1);
+-		spin_lock_bh(&sess->conn_lock);
+-
+-		iscsit_dec_conn_usage_count(conn);
+-		if (is_last == 0)
+-			iscsit_dec_conn_usage_count(conn_tmp);
+-
+-		conn_count--;
+-	}
+-
+-	if (atomic_read(&sess->nconn)) {
+-		spin_unlock_bh(&sess->conn_lock);
+-		wait_for_completion(&sess->session_wait_comp);
+-	} else
+-		spin_unlock_bh(&sess->conn_lock);
+-
+-	iscsit_close_session(sess);
+-	return 0;
+-}
+-
+ void iscsit_stop_session(
+ 	struct iscsi_session *sess,
+ 	int session_sleep,
+@@ -4693,7 +4650,8 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
+ 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
+ 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
  
-+jiffies = jiffies_64;
-+
- #if defined(CONFIG_X86_64)
- /*
-  * On 64-bit, align RODATA to 2MB so we retain large page mappings for
+-		iscsit_free_session(sess);
++		iscsit_stop_session(sess, 1, 1);
++		iscsit_close_session(sess);
+ 		session_count++;
+ 	}
+ 
+diff --git a/drivers/target/iscsi/iscsi_target.h b/drivers/target/iscsi/iscsi_target.h
+index c95f56a3ce31..7409ce2a6607 100644
+--- a/drivers/target/iscsi/iscsi_target.h
++++ b/drivers/target/iscsi/iscsi_target.h
+@@ -43,7 +43,6 @@ extern int iscsi_target_rx_thread(void *);
+ extern int iscsit_close_connection(struct iscsi_conn *);
+ extern int iscsit_close_session(struct iscsi_session *);
+ extern void iscsit_fail_session(struct iscsi_session *);
+-extern int iscsit_free_session(struct iscsi_session *);
+ extern void iscsit_stop_session(struct iscsi_session *, int, int);
+ extern int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *, int);
+ 
+-- 
+2.25.1
+
 
 
