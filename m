@@ -2,98 +2,108 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E382C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF76C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09E5D20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2DD20734
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="K9GBZe8g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iahQORBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgFPMSb (ORCPT
+        id S1728560AbgFPMU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:18:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFPMRU (ORCPT
+        Tue, 16 Jun 2020 08:20:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43061 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725901AbgFPMUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:17:20 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C8ADC08C5C5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:17:19 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id l24so567070pgb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7Ofrbcs6powOIpLHVgUb+s2Y6gSuASwM2PMR2S8GC/8=;
-        b=K9GBZe8gNJO/W9HkRUGhLRRenI1uWzOY2VyMcVpQ1qpJoy8XFBU/gN9hplt+ZBwytp
-         Vl3FWj2Xe9Qotiq1GXQaR+lcoBmvS22iEhQgk3IrWMNrUgSANF8Ny/DCdDURZNZ9npKx
-         4DV78QiAjJ4kj6JhAdhMLmVrC5LAM7JTlQYnI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7Ofrbcs6powOIpLHVgUb+s2Y6gSuASwM2PMR2S8GC/8=;
-        b=TU4I8qNurxJEf8ICxEMfdU81vGq5syivMFebHUu2hG8UmVYHNux7LhhoiFFyL8+QkV
-         TJmzqkitUQWbLKFGOm00fRWcY9OT1uO2OmJdcausTCyXdyh486u+eMDKXR07BwdScg2L
-         d1Xyw2mMGcmc4DiKCy5qVLuH/+CdAZL3gixgEHmHAxxEf6edcf3xvEw9W5v72ib6kbA9
-         +3GT1PhkDcbz1bHvqY9602Wa4dIaWvl5I5gstvlkypsT5BDJLnpErFSoH/N0hbE9hEWN
-         THIWZheU9xN35GuTpvVJiDelTaJ6terEv0fsrfV4YWMBOQxOqgb+l7e7IpQpw13ShHiS
-         uexA==
-X-Gm-Message-State: AOAM533MuxxGAtmDjHfjQaT6L6sDWr+bfh+nN9Vh2Blf314/lYWHa9Gk
-        qCBNUDapNhZCRb8zPO6bI1/ZPQ==
-X-Google-Smtp-Source: ABdhPJx2/ZThHxd7TkGqkTWZKS35Q9MJ8+CEueo+tZWGJimgB1gnkJ2ft0DeXHEgR4K/xPkFcWleWw==
-X-Received: by 2002:a62:7dd1:: with SMTP id y200mr1787559pfc.184.1592309839077;
-        Tue, 16 Jun 2020 05:17:19 -0700 (PDT)
-Received: from shiro.work (p1285116-ipngn200805sizuokaden.shizuoka.ocn.ne.jp. [114.171.61.116])
-        by smtp.googlemail.com with ESMTPSA id f23sm2360703pja.8.2020.06.16.05.17.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 05:17:18 -0700 (PDT)
-From:   Daniel Palmer <daniel@0x0f.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v4 04/12] dt-bindings: vendor-prefixes: Add thingy.jp prefix
-Date:   Tue, 16 Jun 2020 21:15:17 +0900
-Message-Id: <20200616121525.1409790-5-daniel@0x0f.com>
-X-Mailer: git-send-email 2.27.0.rc0
-In-Reply-To: <20200616121525.1409790-1-daniel@0x0f.com>
-References: <20200612130032.3905240-2-daniel@0x0f.com>
- <20200616121525.1409790-1-daniel@0x0f.com>
+        Tue, 16 Jun 2020 08:20:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592310024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=00I+rEnL5zfE1rppZBUcq4cMNwu7+BKdrw9mfoX5yzY=;
+        b=iahQORBlMM6V4IaSGqpPrHAeHx5CD4ooWE4758TP+vQNLbGODPji3sPUgs73v3+8Bvjtq1
+        DL2E5MFlxcxMGpS1pCRigUHFt3LssR5hOwWB0ESvuQrvfaf2LChW2P2HcZgQIEAwIE8/Vw
+        R2Md89JSSh6bQrgoD9+XzQ8FRd+l0WA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-92-YKyVA7qMMvCdTaMTQoDbVg-1; Tue, 16 Jun 2020 08:20:20 -0400
+X-MC-Unique: YKyVA7qMMvCdTaMTQoDbVg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DD41835B5A;
+        Tue, 16 Jun 2020 12:20:18 +0000 (UTC)
+Received: from gondolin (ovpn-112-222.ams2.redhat.com [10.36.112.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CCE957CAA5;
+        Tue, 16 Jun 2020 12:20:12 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 14:20:10 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+Message-ID: <20200616142010.04b7ba19.cohuck@redhat.com>
+In-Reply-To: <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+        <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+        <20200616115202.0285aa08.pasic@linux.ibm.com>
+        <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add prefix for thingy.jp
+On Tue, 16 Jun 2020 12:52:50 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+> On 2020-06-16 11:52, Halil Pasic wrote:
+> > On Mon, 15 Jun 2020 14:39:24 +0200
+> > Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 53cd050668e6..c209b3dc7ecc 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1038,6 +1038,8 @@ patternProperties:
-     description: Three Five Corp
-   "^thine,.*":
-     description: THine Electronics, Inc.
-+  "^thingyjp,.*":
-+    description: thingy.jp
-   "^ti,.*":
-     description: Texas Instruments
-   "^tianma,.*":
--- 
-2.27.0.rc0
+> >> @@ -162,6 +163,11 @@ bool force_dma_unencrypted(struct device *dev)
+> >>   	return is_prot_virt_guest();
+> >>   }
+> >>   
+> >> +int arch_needs_iommu_platform(struct virtio_device *dev)  
+> > 
+> > Maybe prefixing the name with virtio_ would help provide the
+> > proper context.  
+> 
+> The virtio_dev makes it obvious and from the virtio side it should be 
+> obvious that the arch is responsible for this.
+> 
+> However if nobody has something against I change it.
+
+arch_needs_virtio_iommu_platform()?
+
+> 
+> >   
+> >> +{
+> >> +	return is_prot_virt_guest();
+> >> +}
+> >> +
+> >>   /* protected virtualization */
+> >>   static void pv_init(void)
+> >>   {
 
