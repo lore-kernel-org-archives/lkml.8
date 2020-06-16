@@ -2,180 +2,113 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F75C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D23C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5823120767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81572074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKrWDusJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgFPJhf (ORCPT
+        id S1728107AbgFPJkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:37:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6338 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728245AbgFPJgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:36:16 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B8F055F8BBC2B2F531C4;
-        Tue, 16 Jun 2020 17:36:13 +0800 (CST)
-Received: from DESKTOP-5IS4806.china.huawei.com (10.173.221.230) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 16 Jun 2020 17:36:05 +0800
-From:   Keqian Zhu <zhukeqian1@huawei.com>
-To:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        <liangpeng10@huawei.com>, <zhengxiang9@huawei.com>,
-        <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
-Subject: [PATCH 02/12] KVM: arm64: Modify stage2 young mechanism to support hw DBM
-Date:   Tue, 16 Jun 2020 17:35:43 +0800
-Message-ID: <20200616093553.27512-3-zhukeqian1@huawei.com>
-X-Mailer: git-send-email 2.8.4.windows.1
-In-Reply-To: <20200616093553.27512-1-zhukeqian1@huawei.com>
-References: <20200616093553.27512-1-zhukeqian1@huawei.com>
+        Tue, 16 Jun 2020 05:40:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgFPJkX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:40:23 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E590FC05BD43;
+        Tue, 16 Jun 2020 02:40:23 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k2so1184327pjs.2;
+        Tue, 16 Jun 2020 02:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o61zf+amu71GcpKa4g+8zipO/x1nrz7DOb/lUv1IKqE=;
+        b=HKrWDusJfnZ0JorBAsyfen9XqsKv61VukW4k8WO82AEYiH/lqRriDBVCkQZGCh5m1x
+         odRWfuOT4Gop01fYuLlQgCHMrZXFIAsOEEx4qu+8+8d6Q25Y6aR6l1+GhxnwypNsASH2
+         SyImxNxuTGnkGEGSebYkh+6GGB1I7xMoLQIX4NvKNMbgK4ozR46pLyVN6rRliZtbMn8J
+         CjZ1cHrHHvmDeGkhRKECQ3RRklrf2Y1ZHYU2w/GAej6vspe1afMcG06Uldw7m5Vv+JZK
+         dPs/i0cqTV1DyYCGG4dFKx6JiF6AzAIBAW09HDytAt4MPizPIboxlYoZMNR4rNs0v79J
+         2kdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o61zf+amu71GcpKa4g+8zipO/x1nrz7DOb/lUv1IKqE=;
+        b=sSuhmHV9boEDn8wSjgxu2OzXzfE+0uPJP5DrN9rkCpRwYShif8qctMxN1cC9+BLO9D
+         6L+ykhzXKYKt3iZkJI+VXX4Pa7ae0JwDW1ewkstLJKByEW0MYUAIATUh3mIYQA5fk5Vv
+         xss38Me/p30mdxY35ZK9bdy6U6U23M79gUU7oLBq/JLwu4yuD9iC9XUTwYq/XbeKeo9E
+         mHcglwchM1px5zezpYOPQ47RE5oZzZ4PFY+pe9Iqpd+rFEuE1AR3ovKd1ozoabePUxjy
+         SrIPNSpOzXb1yFAOHPBIPUDtx7ayuWwBbV6oZKIY6C7s+9RNp2oBVGf4j4kjmM4m1/G/
+         +VWw==
+X-Gm-Message-State: AOAM531oSntS2EsKQGQYrJYB3kHjO4vsHa/GRgExDq6DHMbCO12nOBcH
+        veDJ73bknN7FIId8JN17vNk=
+X-Google-Smtp-Source: ABdhPJxdcoOoqQjpkzBdwwQThw9R/l4QSTBNADgC0pFL2q1yMO4TqlMl2Uv59u8b3VyTUqRf4qNTPA==
+X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr2004943pjb.4.1592300423037;
+        Tue, 16 Jun 2020 02:40:23 -0700 (PDT)
+Received: from sol (220-235-122-244.dyn.iinet.net.au. [220.235.122.244])
+        by smtp.gmail.com with ESMTPSA id 12sm16529428pfj.149.2020.06.16.02.40.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Jun 2020 02:40:22 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 17:40:17 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v3] gpiolib: split character device into gpiolib-cdev
+Message-ID: <20200616094017.GA5118@sol>
+References: <20200609235135.10414-1-warthog618@gmail.com>
+ <CACRpkdZ9to8LRMFiGNW5gd-v901j2AsKDWKojw=f4dRaJSm4kQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.221.230]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZ9to8LRMFiGNW5gd-v901j2AsKDWKojw=f4dRaJSm4kQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marking PTs young (set AF bit) should be atomic to avoid cover
-dirty status set by hardware.
+On Tue, Jun 16, 2020 at 10:37:32AM +0200, Linus Walleij wrote:
+> On Wed, Jun 10, 2020 at 1:52 AM Kent Gibson <warthog618@gmail.com> wrote:
+> 
+> > Split the cdev specific functionality out of gpiolib.c and into
+> > gpiolib-cdev.c. This improves the readability and maintainability of both
+> > the cdev and core gpiolib code.
+> >
+> > Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> >
+> > ---
+> >
+> > Changes in v3:
+> >  - updated the gpiolib-cdev.c file comment.
+> >  - rebased to latest gpio/devel (no changes impacted this patch)
+> >  - dropped the patch commentary as the points mentioned are mostly
+> >   resolved - there still remain a couple of commits in gpio/fixes that will
+> >   conflict...
+> 
+> I rebased my GPIO tree on v5.8-rc1 and the old version of the patch did
+> not apply and neither did this, could you rebase this patch so I can
+> apply it? Sorry for the moving target, the merge window times are
+> a bit bumpy. :/
+> 
 
-Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
----
- arch/arm64/include/asm/kvm_mmu.h | 32 ++++++++++++++++++++++----------
- arch/arm64/kvm/mmu.c             | 15 ++++++++-------
- 2 files changed, 30 insertions(+), 17 deletions(-)
+No problem - I was expecting a rebase to be in that patch's future from
+the beginning.
 
-diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
-index e0ee6e23d626..51af71505fbc 100644
---- a/arch/arm64/include/asm/kvm_mmu.h
-+++ b/arch/arm64/include/asm/kvm_mmu.h
-@@ -215,6 +215,18 @@ static inline void kvm_set_s2pte_readonly(pte_t *ptep)
- 	} while (pteval != old_pteval);
- }
- 
-+static inline void kvm_set_s2pte_young(pte_t *ptep)
-+{
-+	pteval_t old_pteval, pteval;
-+
-+	pteval = READ_ONCE(pte_val(*ptep));
-+	do {
-+		old_pteval = pteval;
-+		pteval |= PTE_AF;
-+		pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval, pteval);
-+	} while (pteval != old_pteval);
-+}
-+
- static inline bool kvm_s2pte_readonly(pte_t *ptep)
- {
- 	return (READ_ONCE(pte_val(*ptep)) & PTE_S2_RDWR) == PTE_S2_RDONLY;
-@@ -230,6 +242,11 @@ static inline void kvm_set_s2pmd_readonly(pmd_t *pmdp)
- 	kvm_set_s2pte_readonly((pte_t *)pmdp);
- }
- 
-+static inline void kvm_set_s2pmd_young(pmd_t *pmdp)
-+{
-+	kvm_set_s2pte_young((pte_t *)pmdp);
-+}
-+
- static inline bool kvm_s2pmd_readonly(pmd_t *pmdp)
- {
- 	return kvm_s2pte_readonly((pte_t *)pmdp);
-@@ -245,6 +262,11 @@ static inline void kvm_set_s2pud_readonly(pud_t *pudp)
- 	kvm_set_s2pte_readonly((pte_t *)pudp);
- }
- 
-+static inline void kvm_set_s2pud_young(pud_t *pudp)
-+{
-+	kvm_set_s2pte_young((pte_t *)pudp);
-+}
-+
- static inline bool kvm_s2pud_readonly(pud_t *pudp)
- {
- 	return kvm_s2pte_readonly((pte_t *)pudp);
-@@ -255,16 +277,6 @@ static inline bool kvm_s2pud_exec(pud_t *pudp)
- 	return !(READ_ONCE(pud_val(*pudp)) & PUD_S2_XN);
- }
- 
--static inline pud_t kvm_s2pud_mkyoung(pud_t pud)
--{
--	return pud_mkyoung(pud);
--}
--
--static inline bool kvm_s2pud_young(pud_t pud)
--{
--	return pud_young(pud);
--}
--
- #ifdef CONFIG_ARM64_HW_AFDBM
- static inline bool kvm_hw_dbm_enabled(void)
- {
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 8c0035cab6b6..5ad87bce23c0 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -2008,8 +2008,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-  * Resolve the access fault by making the page young again.
-  * Note that because the faulting entry is guaranteed not to be
-  * cached in the TLB, we don't need to invalidate anything.
-- * Only the HW Access Flag updates are supported for Stage 2 (no DBM),
-- * so there is no need for atomic (pte|pmd)_mkyoung operations.
-+ *
-+ * Note: Both DBM and HW AF updates are supported for Stage2, so
-+ * young operations should be atomic.
-  */
- static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
- {
-@@ -2027,15 +2028,15 @@ static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
- 		goto out;
- 
- 	if (pud) {		/* HugeTLB */
--		*pud = kvm_s2pud_mkyoung(*pud);
-+		kvm_set_s2pud_young(pud);
- 		pfn = kvm_pud_pfn(*pud);
- 		pfn_valid = true;
- 	} else	if (pmd) {	/* THP, HugeTLB */
--		*pmd = pmd_mkyoung(*pmd);
-+		kvm_set_s2pmd_young(pmd);
- 		pfn = pmd_pfn(*pmd);
- 		pfn_valid = true;
--	} else {
--		*pte = pte_mkyoung(*pte);	/* Just a page... */
-+	} else {		/* Just a page... */
-+		kvm_set_s2pte_young(pte);
- 		pfn = pte_pfn(*pte);
- 		pfn_valid = true;
- 	}
-@@ -2280,7 +2281,7 @@ static int kvm_test_age_hva_handler(struct kvm *kvm, gpa_t gpa, u64 size, void *
- 		return 0;
- 
- 	if (pud)
--		return kvm_s2pud_young(*pud);
-+		return pud_young(*pud);
- 	else if (pmd)
- 		return pmd_young(*pmd);
- 	else
--- 
-2.19.1
+Give v4 a try.
 
+Cheers,
+Kent.
