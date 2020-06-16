@@ -2,283 +2,178 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B695C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16E4320739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E1820E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="GplrJnlM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgFPOES (ORCPT
+        id S1729178AbgFPOGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:04:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48976 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729003AbgFPOEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:04:11 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 99BA45AC549A2D2B9715;
-        Tue, 16 Jun 2020 22:04:02 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 16 Jun 2020 22:03:52 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <will@kernel.org>, <robin.murphy@arm.com>
-CC:     <joro@8bytes.org>, <trivial@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <maz@kernel.org>,
-        "John Garry" <john.garry@huawei.com>
-Subject: [PATCH RFC v2 4/4] iommu/arm-smmu-v3: Remove cmpxchg() in arm_smmu_cmdq_issue_cmdlist()
-Date:   Tue, 16 Jun 2020 21:59:53 +0800
-Message-ID: <1592315993-164290-5-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1592315993-164290-1-git-send-email-john.garry@huawei.com>
-References: <1592315993-164290-1-git-send-email-john.garry@huawei.com>
+        Tue, 16 Jun 2020 10:06:37 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:60690 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728931AbgFPOGd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:06:33 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GE413V031762;
+        Tue, 16 Jun 2020 09:06:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=zYwKJ1CJs7EwiWbQtUIxCucFwzW65Qc+VizfhvJTK+s=;
+ b=GplrJnlMIjfwOoHBzKCDazfk799DMGGOolw0RyvE3yulv/oZA26jBA+TyAtHajXMpH2v
+ 0lz5qvecvQQesKRFQ9bwqMmEtEtST3FsiFvcsi0nbqwKxsdbEwomBjp3thLVv/jDKEnJ
+ seS5LalTKgsWXei4rud4FsrS+x+JGga+77otX3DOYf2dUDiUNcJr8yja4icZIw3uwYeA
+ MDkqmTjhQPmatpQyjCnQXA29XTvYpOeJqJ32p1PtxYiEMlAdzoOfPdT4xpgQdBpKT86+
+ A7NyRB3E3LhB+liFDOnhH+1o97UWC9x5XnTA8bKArmm1jD+yfoQc+rF2r0sfP3q6FZKy ig== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 31mv73mgrw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 16 Jun 2020 09:06:30 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 16 Jun
+ 2020 15:06:27 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Tue, 16 Jun 2020 15:06:27 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id C733D2D4;
+        Tue, 16 Jun 2020 14:06:27 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: [PATCH v3 1/2] mfd: mfd-core: Add mechanism for removal of a subset of children
+Date:   Tue, 16 Jun 2020 15:06:26 +0100
+Message-ID: <20200616140627.17170-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 clxscore=1015 spamscore=0 impostorscore=0 mlxlogscore=999
+ malwarescore=0 bulkscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006160103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has been shown that the cmpxchg() for finding space in the cmdq can
-be a real bottleneck:
-- for more CPUs contending the cmdq, the cmpxchg() will fail more often
-- since the software-maintained cons pointer is updated on the same 64b
-  memory region, the chance of cmpxchg() failure increases again
+Currently, the only way to remove MFD children is with a call to
+mfd_remove_devices, which will remove all the children. Under
+some circumstances it is useful to remove only a subset of the
+child devices. For example if some additional clean up is required
+between removal of certain child devices.
 
-The cmpxchg() is removed as part of 2 related changes:
+To accomplish this a level field is added to mfd_cell, the normal
+mfd_remove_devices is modified to not remove devices that are set
+to a higher level and a corresponding mfd_remove_devices_late
+function is added to remove those children.
 
-- Update prod and cmdq owner in a single atomic add operation. For this, we
-  count the prod and owner in separate regions in prod memory.
+See further discussion at:
+https://lore.kernel.org/lkml/20200616075834.GF2608702@dell/
 
-  As with simple binary counting, once the prod+wrap fields overflow, they
-  will zero. They should never overflow into "owner" region, and we zero
-  the non-owner, prod region for each owner. This maintains the prod
-  pointer.
-
-  As for the "owner", we now count this value, instead of setting a flag.
-  Similar to before, once the owner has finished gathering, it will clear
-  a mask. As such, a CPU declares itself as the "owner" when it reads zero
-  for this region. This zeroing will also clear possible overflow in
-  wrap+prod region, above.
-
-  The owner is now responsible for cmdq locking to avoid possible deadlock.
-  The owner will lock the cmdq for all non-owers it has gathered when they
-  have space in the queue and have written their entries.
-
-- Check for space in the cmdq after the prod pointer has been assigned.
-
-  We don't bother checking for space in the cmdq before assigning the prod
-  pointer, as this would be racy.
-
-  So since the prod pointer is updated unconditionally, it would be common
-  for no space to be available in the cmdq when prod is assigned - that
-  is, according the software-maintained prod and cons pointer. So now
-  it must be ensured that the entries are not yet written and not until
-  there is space.
-
-  How the prod pointer is maintained also leads to a strange condition
-  where the prod pointer can wrap past the cons pointer. We can detect this
-  condition, and report no space here. However, a prod pointer progressed
-  twice past the cons pointer cannot be detected. But it can be ensured that
-  this that this scenario does not occur, as we limit the amount of
-  commands any CPU can issue at any given time, such that we cannot
-  progress prod pointer further.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
+Suggested-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- drivers/iommu/arm-smmu-v3.c | 102 +++++++++++++++++++++---------------
- 1 file changed, 61 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 36648163364c..fd42a98f501f 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -772,10 +772,19 @@ static bool queue_has_space(struct arm_smmu_ll_queue *q, u32 n)
- 	prod = Q_IDX(q, q->prod);
- 	cons = Q_IDX(q, q->cons);
- 
--	if (Q_WRP(q, q->prod) == Q_WRP(q, q->cons))
-+	if (Q_WRP(q, q->prod) == Q_WRP(q, q->cons)) {
-+		/* check if we have wrapped twice, meaning definitely no space */
-+		if (cons > prod)
-+			return false;
-+
- 		space = (1 << q->max_n_shift) - (prod - cons);
--	else
-+	} else {
-+		/* similar check to above */
-+		if (prod > cons)
-+			return false;
-+
- 		space = cons - prod;
-+	}
- 
- 	return space >= n;
- }
-@@ -1073,7 +1082,7 @@ static void arm_smmu_cmdq_skip_err(struct arm_smmu_device *smmu)
-  *   fails if the caller appears to be the last lock holder (yes, this is
-  *   racy). All successful UNLOCK routines have RELEASE semantics.
-  */
--static void arm_smmu_cmdq_shared_lock(struct arm_smmu_cmdq *cmdq)
-+static void arm_smmu_cmdq_shared_lock(struct arm_smmu_cmdq *cmdq, int count)
+Changes since v2:
+  - Removed old tag system and now just have 2 levels, one removed
+    by new mfd_remove_devices_late
+
+Thanks,
+Charles
+
+ drivers/mfd/mfd-core.c   | 16 +++++++++++++++-
+ include/linux/mfd/core.h |  5 +++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index f5a73af60dd40..d1602a87db29b 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -287,6 +287,7 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
  {
- 	int val;
+ 	struct platform_device *pdev;
+ 	const struct mfd_cell *cell;
++	int *level = data;
  
-@@ -1083,12 +1092,12 @@ static void arm_smmu_cmdq_shared_lock(struct arm_smmu_cmdq *cmdq)
- 	 * to INT_MIN so these increments won't hurt as the value will remain
- 	 * negative.
- 	 */
--	if (atomic_fetch_inc_relaxed(&cmdq->lock) >= 0)
-+	if (atomic_fetch_add_relaxed(count, &cmdq->lock) >= 0)
- 		return;
+ 	if (dev->type != &mfd_dev_type)
+ 		return 0;
+@@ -294,6 +295,9 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
+ 	pdev = to_platform_device(dev);
+ 	cell = mfd_get_cell(pdev);
  
- 	do {
- 		val = atomic_cond_read_relaxed(&cmdq->lock, VAL >= 0);
--	} while (atomic_cmpxchg_relaxed(&cmdq->lock, val, val + 1) != val);
-+	} while (atomic_cmpxchg_relaxed(&cmdq->lock, val, val + count) != val);
++	if (level && cell->level > *level)
++		return 0;
++
+ 	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
+ 					       cell->num_parent_supplies);
+ 
+@@ -301,9 +305,19 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
+ 	return 0;
  }
  
- static void arm_smmu_cmdq_shared_unlock(struct arm_smmu_cmdq *cmdq)
-@@ -1374,8 +1383,10 @@ static void arm_smmu_cmdq_write_entries(struct arm_smmu_cmdq *cmdq, u64 *cmds,
-  *   insert their own list of commands then all of the commands from one
-  *   CPU will appear before any of the commands from the other CPU.
-  *
-- * - A CMD_SYNC is always inserted, ensuring that any CPU does not issue
-- *   more than the permitted amount commands at once.
-+ * - A CMD_SYNC is always inserted, which ensures we limit the prod pointer
-+ *   for when the cmdq is full, such that we don't wrap more than twice.
-+ *   It also makes it easy for the owner to know by how many to increment the
-+ *   cmdq lock.
-  */
- static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
- 				       u64 *cmds, int n)
-@@ -1388,39 +1399,38 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
- 	struct arm_smmu_cmdq *cmdq = &smmu->cmdq;
- 	struct arm_smmu_ll_queue llq = {
- 		.max_n_shift = cmdq->q.llq.max_n_shift,
--	}, head = llq;
-+	}, head = llq, space = llq;
-+	u32 owner_val = 1 << cmdq->q.llq.owner_count_shift;
-+	u32 prod_mask = GENMASK(cmdq->q.llq.max_n_shift, 0);
-+	u32 owner_mask = GENMASK(30, cmdq->q.llq.owner_count_shift);
- 	int ret = 0;
- 
- 	/* 1. Allocate some space in the queue */
- 	local_irq_save(flags);
--	llq.val = READ_ONCE(cmdq->q.llq.val);
--	do {
--		u64 old;
- 
--		while (!queue_has_space(&llq, n + sync)) {
--			local_irq_restore(flags);
--			if (arm_smmu_cmdq_poll_until_not_full(smmu, &llq))
--				dev_err_ratelimited(smmu->dev, "CMDQ timeout\n");
--			local_irq_save(flags);
--		}
-+	prod = atomic_fetch_add(n + sync + owner_val,
-+				&cmdq->q.llq.atomic.prod);
- 
--		head.cons = llq.cons;
--		head.prod = queue_inc_prod_n(&llq, n + sync) |
--					     CMDQ_PROD_OWNED_FLAG;
-+	owner = !(prod & owner_mask);
-+	llq.prod = prod_mask & prod;
-+	head.prod = queue_inc_prod_n(&llq, n + sync);
- 
--		old = cmpxchg_relaxed(&cmdq->q.llq.val, llq.val, head.val);
--		if (old == llq.val)
--			break;
-+	/*
-+	 * Ensure it's safe to write the entries. For this, we need to ensure
-+	 * that there is space in the queue from our prod pointer.
-+	 */
-+	space.cons = READ_ONCE(cmdq->q.llq.cons);
-+	space.prod = llq.prod;
-+	while (!queue_has_space(&space, n + sync)) {
-+		if (arm_smmu_cmdq_poll_until_not_full(smmu, &space))
-+			dev_err_ratelimited(smmu->dev, "CMDQ timeout\n");
- 
--		llq.val = old;
--	} while (1);
--	owner = !(llq.prod & CMDQ_PROD_OWNED_FLAG);
--	head.prod &= ~CMDQ_PROD_OWNED_FLAG;
--	llq.prod &= ~CMDQ_PROD_OWNED_FLAG;
-+		space.prod = llq.prod;
-+	}
- 
- 	/*
- 	 * 2. Write our commands into the queue
--	 * Dependency ordering from the cmpxchg() loop above.
-+	 * Dependency ordering from the space-checking while loop, above.
- 	 */
- 	arm_smmu_cmdq_write_entries(cmdq, cmds, llq.prod, n);
- 
-@@ -1428,27 +1438,24 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
- 	arm_smmu_cmdq_build_sync_cmd(cmd_sync, smmu, prod);
- 	queue_write(Q_ENT(&cmdq->q, prod), cmd_sync, CMDQ_ENT_DWORDS);
- 
--	/*
--	 * In order to determine completion of our CMD_SYNC, we must
--	 * ensure that the queue can't wrap twice without us noticing.
--	 * We achieve that by taking the cmdq lock as shared before
--	 * marking our slot as valid.
--	 */
--	arm_smmu_cmdq_shared_lock(cmdq);
--
- 	/* 3. Mark our slots as valid, ensuring commands are visible first */
- 	dma_wmb();
- 	arm_smmu_cmdq_set_valid_map(cmdq, llq.prod, head.prod);
- 
- 	/* 4. If we are the owner, take control of the SMMU hardware */
- 	if (owner) {
-+		int owner_count;
-+		u32 prod_tmp;
++void mfd_remove_devices_late(struct device *parent)
++{
++	int level = MFD_DEP_LEVEL_HIGH;
 +
- 		/* a. Wait for previous owner to finish */
- 		atomic_cond_read_relaxed(&cmdq->owner_prod, VAL == llq.prod);
- 
--		/* b. Stop gathering work by clearing the owned flag */
--		prod = atomic_fetch_andnot_relaxed(CMDQ_PROD_OWNED_FLAG,
--						   &cmdq->q.llq.atomic.prod);
--		prod &= ~CMDQ_PROD_OWNED_FLAG;
-+		/* b. Stop gathering work by clearing the owned mask */
-+		prod_tmp = atomic_fetch_andnot_relaxed(~prod_mask,
-+						       &cmdq->q.llq.atomic.prod);
-+		prod = prod_tmp & prod_mask;
-+		owner_count = prod_tmp & owner_mask;
-+		owner_count >>= cmdq->q.llq.owner_count_shift;
- 
- 		/*
- 		 * c. Wait for any gathered work to be written to the queue.
-@@ -1457,6 +1464,19 @@ static int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
- 		 */
- 		arm_smmu_cmdq_poll_valid_map(cmdq, llq.prod, prod);
- 
-+		/*
-+		 * In order to determine completion of the CMD_SYNCs, we must
-+		 * ensure that the queue can't wrap twice without us noticing.
-+		 * We achieve that by taking the cmdq lock as shared before
-+		 * progressing the prod pointer.
-+		 * The owner does this for all the non-owners it has gathered.
-+		 * Otherwise, some non-owner(s) may lock the cmdq, blocking
-+		 * cons being updating. This could be when the cmdq has just
-+		 * become full. In this case, other sibling non-owners could be
-+		 * blocked from progressing, leading to deadlock.
-+		 */
-+		arm_smmu_cmdq_shared_lock(cmdq, owner_count);
++	device_for_each_child_reverse(parent, &level, mfd_remove_devices_fn);
++}
++EXPORT_SYMBOL(mfd_remove_devices_late);
 +
- 		/*
- 		 * d. Advance the hardware prod pointer
- 		 * Control dependency ordering from the entries becoming valid.
+ void mfd_remove_devices(struct device *parent)
+ {
+-	device_for_each_child_reverse(parent, NULL, mfd_remove_devices_fn);
++	int level = MFD_DEP_LEVEL_NORMAL;
++
++	device_for_each_child_reverse(parent, &level, mfd_remove_devices_fn);
+ }
+ EXPORT_SYMBOL(mfd_remove_devices);
+ 
+diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+index 7e5ac3c00891a..1ca2048eba22b 100644
+--- a/include/linux/mfd/core.h
++++ b/include/linux/mfd/core.h
+@@ -41,6 +41,9 @@
+ #define MFD_CELL_NAME(_name)						\
+ 	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
+ 
++#define MFD_DEP_LEVEL_NORMAL 0
++#define MFD_DEP_LEVEL_HIGH 1
++
+ struct irq_domain;
+ struct property_entry;
+ 
+@@ -58,6 +61,7 @@ struct mfd_cell_acpi_match {
+ struct mfd_cell {
+ 	const char		*name;
+ 	int			id;
++	int			level;
+ 
+ 	int			(*enable)(struct platform_device *dev);
+ 	int			(*disable)(struct platform_device *dev);
+@@ -135,6 +139,7 @@ static inline int mfd_add_hotplug_devices(struct device *parent,
+ }
+ 
+ extern void mfd_remove_devices(struct device *parent);
++extern void mfd_remove_devices_late(struct device *parent);
+ 
+ extern int devm_mfd_add_devices(struct device *dev, int id,
+ 				const struct mfd_cell *cells, int n_devs,
 -- 
-2.26.2
+2.11.0
 
