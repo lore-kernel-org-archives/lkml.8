@@ -2,174 +2,128 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6549C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E50C20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:23:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CzcrJ5qY"
+	by mail.kernel.org (Postfix) with ESMTP id AE66520734
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgFPLXu (ORCPT
+        id S1728420AbgFPLYE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:23:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgFPLXt (ORCPT
+        Tue, 16 Jun 2020 07:24:04 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50783 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgFPLYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:23:49 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8778C08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:23:48 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y13so21094073eju.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Qpexp3RkjxitjYyax71XJ65xkJqK+VpFeUkVzeKS31U=;
-        b=CzcrJ5qYmxaryGHdthk67cFgCecZH0CWdPJ5g60Tbk7urXTr3nTLDwfmB5s1698gNp
-         2W8xKL96xH4IMnKONF0VYAjsOIKLyXp7eo5uqkRsmdTf+MPQTQTTLfbUsp7/iu6uP3VQ
-         6cCMPgG5TQeczkuPQgzlJjgGcYYBTbJmi0nxT+pe5/KADtzhPDdLdIQcjcedQhXho4Bq
-         Lb4Xx2PzbJ5XDcT8p0pdhf253Rr+exgxegmp4Of5dpkqmnftSt5JI4nSn1U5ooXhJZio
-         5jm8Br0wcEJCMYBGptdMm09o9IQC/DMQYNcRRNDOGYpmY5HMe0Obx7OZieVR0aeIQ9qG
-         A9xQ==
+        Tue, 16 Jun 2020 07:24:02 -0400
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jl9h9-0005PP-Sv
+        for linux-kernel@vger.kernel.org; Tue, 16 Jun 2020 11:24:00 +0000
+Received: by mail-pl1-f198.google.com with SMTP id b5so5287021pls.17
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:23:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Qpexp3RkjxitjYyax71XJ65xkJqK+VpFeUkVzeKS31U=;
-        b=Q2KSQSjs8F02UvB4iDWCQ/1PGeXWISfiqM0UbikrsQpHVg7jup7v7W62bz0AuGSuvQ
-         lrMjnpb4P8LzA8SXCxAYuC++uOEfSfWelqrJMY3GaZTzijGp4C/IJ/+LCp12Lg94iGgw
-         I768yR9VaA8iPtPilA9swiEg79aBGLyL/QRQCM2izFKYOqlnluZ5vF7mt8KhWcfGor+x
-         AUdxmRrX/or55yWiK2+3B2vdrW9Xf61AWEIOycqEYNnV+wzoB8RWRHpn2PMuTYDoH2Zy
-         7nquVhzQsr+H3C+ABj1041GisFRM61ceSvig1dTpgbENqA6JuS0Qjzr0LSgoKC/wHCAq
-         WUCQ==
-X-Gm-Message-State: AOAM532wvV9+pcsxYYN1ujjbkaQJoj+DLi2YP/zgLlglXQyTDW5OmJB9
-        EwVqtPxk2YNsEaEjkTgQqKcRYiQtzLBF6A==
-X-Google-Smtp-Source: ABdhPJwKr4leC7r3LIVJk23t6Nm5edH3moLqFl/zFOX/DcPhAXaJAtmXjP54cSGsZ1INulzT27bARA==
-X-Received: by 2002:a17:906:3951:: with SMTP id g17mr2368423eje.414.1592306626719;
-        Tue, 16 Jun 2020 04:23:46 -0700 (PDT)
-Received: from [192.168.1.3] (212-5-158-38.ip.btc-net.bg. [212.5.158.38])
-        by smtp.googlemail.com with ESMTPSA id y12sm7638412edj.37.2020.06.16.04.23.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 04:23:46 -0700 (PDT)
-Subject: Re: [PATCH v4 2/3] venus: Make debug infrastructure more flexible
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20200613223919.7038-1-stanimir.varbanov@linaro.org>
- <20200613223919.7038-3-stanimir.varbanov@linaro.org>
- <20200614063710.GB2611869@kroah.com>
- <c54a12a2-7f92-105c-a01c-8e85730f36bb@linaro.org>
- <20200615120337.GA511582@kroah.com>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <0f53eb20-6f52-e76e-3957-f7af38b88d35@linaro.org>
-Date:   Tue, 16 Jun 2020 14:23:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200615120337.GA511582@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=RKV/iihpMFOKrX8Dy/UHawwcIU/eq1oQLDV9xYsClvQ=;
+        b=QubAzf16E4/SURbmIjFraYRZQfSK85c+5vKk0fGj23lDbGGn8bN28JWNoS5IMzrFk4
+         qY4auJSJ2g5463J0xPz1A8myy6obYbHH81VKA+0LVz1tX5NYXHZNu6zhySeFY4pepZFr
+         GtYUAUfx4D5cloO/VZoaOiF4cTv0HmUdbFucqKM42X7kDn5MaL8cvkcHJTwaES28P8eY
+         MixcXZ4PX10TC0txPhjKF2JMIvm3pKG3YLfykyEixOBB7UY8Ivzr9zeIL3XetL56EiXr
+         VxKP7JxmYfXvdFlsEofixI2ufNHt4AN5ZzP5/D5wRT/bKO3Tg/CX4cmZhSr++rtVYLq6
+         TuOQ==
+X-Gm-Message-State: AOAM530HCOtJALLlOFaliJzr+pptSLELQvYiAVq874LI6qz048nPPwHH
+        KdXTCRKfTbqm9FA9gkP4LmMSjtjCtJj32J19VdIiBlrJ7QNqsW0bDf58u3fXjnuP8Dsb6jTaWcv
+        OI/6I8ZQuHJ4apapuMM6zX8j0Atq1clQfpxMQxBfchw==
+X-Received: by 2002:aa7:9f10:: with SMTP id g16mr1692901pfr.47.1592306638258;
+        Tue, 16 Jun 2020 04:23:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxn76cJL80QgLRqpVQR9LS39Yxme3oExRkYxI5UyhE9Nws2RV5nZr3RTYu817dCcgb8VQkTjA==
+X-Received: by 2002:aa7:9f10:: with SMTP id g16mr1692885pfr.47.1592306637881;
+        Tue, 16 Jun 2020 04:23:57 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id gg10sm2268181pjb.38.2020.06.16.04.23.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 04:23:57 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] e1000e: continue to init phy even when failed to disable
+ ULP
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200616100512.22512-1-aaron.ma@canonical.com>
+Date:   Tue, 16 Jun 2020 19:23:53 +0800
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vitaly.lifshits@intel.com,
+        sasha.neftin@intel.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <4CC928F1-02CC-4675-908E-42B26C151FA1@canonical.com>
+References: <20200616100512.22512-1-aaron.ma@canonical.com>
+To:     Aaron Ma <aaron.ma@canonical.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
 
-On 6/15/20 3:03 PM, Greg KH wrote:
-> On Mon, Jun 15, 2020 at 12:55:29PM +0300, Stanimir Varbanov wrote:
->> Hi Greg,
->>
->> On 6/14/20 9:37 AM, Greg KH wrote:
->>> On Sun, Jun 14, 2020 at 01:39:18AM +0300, Stanimir Varbanov wrote:
->>>>  	if (slot == -1) {
->>>> -		dev_dbg(inst->core->dev, "%s: no free slot\n", __func__);
->>>> +		VDBGH("no free slot for timestamp\n");
->>>
->>> Again, no, you just lost a lot of valuable information by changing to a
->>> different format (like driver, specific device, etc.).  Please don't do
->>> this, it just makes the information less than before.
->>
->> OK, one of the reasons to use pr_debug inside VDBGH macro is to avoid
->> having struct device *dev variable in every function with dev_dbg even
->> when the function doesn't use it.
+
+> On Jun 16, 2020, at 18:05, Aaron Ma <aaron.ma@canonical.com> wrote:
 > 
-> But the function _is_ using it, as you are referring to the device that
-> is being controlled by the driver.  That's the point, you are stripping
-> off that very valuable information for no git grep dev_dbg | wc -lreason.
+> After commit "e1000e: disable s0ix entry and exit flows for ME systems",
+> some ThinkPads always failed to disable ulp by ME.
+> commit "e1000e: Warn if disabling ULP failed" break out of init phy:
 > 
-> Which means to me that you never really actually _NEED_ these debugging
-> messages, as you have not used them to see if it provides you with
-> something that can tell you something about something.
+> error log:
+> [   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
+> [   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast Packet
+> [   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
 > 
-> So, let me push harder, why do you even want this message at all?  What
-> can it provide you now that the driver is up and working properly?
-
-I will delete that message.
-
+> When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
+> If continue to init phy like before, it can work as before.
+> iperf test result good too.
 > 
->> Are you fine with s/pr_debug/dev_dbg in VDBGX macros?
+> Chnage e_warn to e_dbg, in case it confuses.
 > 
-> I would be a bit happier yes, but the fact that you didn't use it means
-> you aren't even looking at these messages, which implies that it isn't
-> even needed.
+> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+> ---
+> drivers/net/ethernet/intel/e1000e/ich8lan.c | 3 +--
+> 1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> So, how about just stripping all of these debugging messages out
+> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> index f999cca37a8a..63405819eb83 100644
+> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> @@ -302,8 +302,7 @@ static s32 e1000_init_phy_workarounds_pchlan(struct e1000_hw *hw)
+> 	hw->dev_spec.ich8lan.ulp_state = e1000_ulp_state_unknown;
+> 	ret_val = e1000_disable_ulp_lpt_lp(hw, true);
 
-I'm not sure for which messages you are talking. The messages added by
-this patch or the messages which currently exist?
+If si0x entry isn't enabled, maybe skip calling e1000_disable_ulp_lpt_lp() altogether?
+We can use e1000e_check_me() to check that.
 
-> entirely?  What do they provide that you don't already know?  Who would
-> use them?
+> 	if (ret_val) {
+> -		e_warn("Failed to disable ULP\n");
+> -		goto out;
+> +		e_dbg("Failed to disable ULP\n");
+> 	}
 
-Presently in 5.8-rc1 debug messages count for similar (encoder/decoder)
-drivers compared with Venus one:
+The change of "e1000e: Warn if disabling ULP failed" is intentional to catch bugs like this.
 
-Venus
-$git grep dev_dbg | wc -l
-15
-
-Coda
-$git grep coda_dbg | wc -l
-56
-
-Mtk-vcodec
-$git grep mtk_v4l2_debug | wc -l
-95
-
-Mfc
-$git grep mfc_debug | wc -l
-227
-
-As you can see Venus driver is the one with smallest count of debug
-messages. It is smallest because I also don't want to overload the code
-with so many debugs and thus make it unreadable.
-
-I personally don't need so much debug messages. I can add them to debug
-some particular issue and drop them before sending the fix. But now when
-the driver is going to be used more widely I've been asked to "improve"
-debug infrastructure. That will help to unfamiliar with the driver
-persons to enable debug messages and send bug reports to help them to
-diagnose the problem.
-
-What messages are needed and where is a subjective question. I'm relying
-on my experience with the driver and issues I had previously.
+Kai-Heng
 
 > 
-> thanks,
-> 
-> greg k-h
+> 	ret_val = hw->phy.ops.acquire(hw);
+> -- 
+> 2.26.2
 > 
 
--- 
-regards,
-Stan
