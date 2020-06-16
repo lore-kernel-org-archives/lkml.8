@@ -2,231 +2,242 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3520C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8650CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A5020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11FC20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rpD0tjID"
+	dkim=pass (2048-bit key) header.d=boo.tc header.i=@boo.tc header.b="aVKAofFt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Vflw3gHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731334AbgFPR5a (ORCPT
+        id S1731211AbgFPSAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgFPR53 (ORCPT
+        Tue, 16 Jun 2020 14:00:06 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:37745 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727083AbgFPSAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:57:29 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B054C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:57:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j10so21704948wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oEBfLPiOYvV8Wp4MUoFiCMdsHve7/PzLYazK5rtAoxo=;
-        b=rpD0tjIDuylGgqeb8JmVhI6WWVv8neBbwDdRxGG8H5r8xcH7lwZWNbUvwF9eX20GmG
-         abTRGAMJLBbKsFwL1joM4tlQrAlo3S0XNpsMBD74578aILPPtpJVmze4OmmCzq/Lwycw
-         NXlgSQyEdyLS9+qRjueUIz9kaGfCvVYlzqg03xmdoSWYSnozH3MpulHuncW5IJIYId9s
-         1ArCFwF08jvhuvLEgrW6sxN+Fd/MA5ELKg2N3+Gh8e2N+8y0q8jyF4CoeVql0ZW+sEGN
-         373KAe4+D52Aq4wWcEGRHCqYYyqMRP6pjOQds5rzdQEfvUwWogD8a0XzP68zG9jvPhBh
-         I1Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oEBfLPiOYvV8Wp4MUoFiCMdsHve7/PzLYazK5rtAoxo=;
-        b=ZElZrXzEgsrVbV9lmC2yBiDsDx8Bqj8GfYVOC3aNmkP5P6bDfBfPWqJcewcgEiye+Q
-         hE0F2I/AP1hNEKgroFRSFEnu4xv0ZCIYpacW9AKfcQrVzv4W9TJnb42GZYJlwR5T/lNU
-         wUBHEtTmsjPsArH3t/zhAML6CntmbT2/+WMKiX5J0UwYoEyhuUR6O8kIGAMjbEiYOCze
-         pWSHg6F4OZISIJG8KyOvn1hUL3A8rDhiSuLjvQnnVZ5H1I4OLRZfNFWJv30nthbW1jEH
-         Go4HL70c37WJS34dDQsMcrGQKUEOHNG+tV+oyiZ3Dw8xrC7D912vDFX9Q4wsI9A2OvwY
-         fUlw==
-X-Gm-Message-State: AOAM532T5tEg7dbHn6dye8r6bA/eELJOZK/JkLShQQmwgiK0YVAc0tzw
-        kPV9tXhqvyWWZrYPe6tw7d5PkSckrI8=
-X-Google-Smtp-Source: ABdhPJzHE0/Us52Z0TZBqRSkkSink7YtGieP4JIIpIl4KB1gKQYiH/BFjgPeTpyrbSTvPca849OeQA==
-X-Received: by 2002:adf:b60b:: with SMTP id f11mr4274582wre.7.1592330246776;
-        Tue, 16 Jun 2020 10:57:26 -0700 (PDT)
-Received: from google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id g19sm4742347wmh.29.2020.06.16.10.57.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 10:57:25 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 19:57:20 +0200
-From:   Marco Elver <elver@google.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, shuah@kernel.org, rcu@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] torture: Pass --kmake-arg to all make invocations
-Message-ID: <20200616175720.GA124701@google.com>
-References: <20200616094924.159539-1-elver@google.com>
- <20200616160524.GW2723@paulmck-ThinkPad-P72>
- <20200616164202.GA208325@google.com>
- <20200616174222.GB2723@paulmck-ThinkPad-P72>
+        Tue, 16 Jun 2020 14:00:05 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id BF51258027E;
+        Tue, 16 Jun 2020 14:00:03 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 16 Jun 2020 14:00:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=boo.tc; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=W
+        K4JaLWYbo7txUBZY+FCSU3GLstd9cPvWcMBaGJr3nE=; b=aVKAofFtzCa5gI6mc
+        Th0FzfvwxeMhpKkpgocaoFXWMcsKKUgFgYpGA88jW9s5PaDhGQe4GWzXd/vHmEua
+        lT7pb2FdO6VBhiXRkjC6lleFdw//9+7arTNZf5YtGxPUY4pqdBhw6/lFNEeqGch8
+        T+ZizTzfvJ7P146VPbRwJ/EGTR7rdxuZ7DVrW0jCmq1DSk5OhSITKuW0EHa9TezK
+        2q1DVij7/VYoJOiQilRtIxznilDE39wCMG6mgmkYvJ6y6zm2LTFGzDCoApCFw/bU
+        C8y9WzS67y8Mxn34ov8w2a3p9thBfXG/aSBMQcV5eKt5Ib2vufaz6szCNFfdKcNO
+        KYqXQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=WK4JaLWYbo7txUBZY+FCSU3GLstd9cPvWcMBaGJr3
+        nE=; b=Vflw3gHWExDHUqNm9TIBMt9r9dXnWF1nw4gPi5V7YOTVx1ITtbh7GgDc+
+        DAlvMwJ24dwV4n82ePizZn+NUwNMvj3LP1XToX52jWIt5nF/24wDC3qbLkzdbUti
+        JKyUP2WTDvmatC6WYj8yV6GqJkvxQBo2eRZahLO7/tdkdoBQfUXD0h0WNTDcr1P0
+        eAWNuRFBy5RihbQp4AJD3c3JF5sz7PpWQ1uoqMFbGJK0jQftO2BmFDJi3DU5+TI/
+        B42rK0ncFb7+zJdUOCVy1K6WZ78vcdyWKD/B1TxGEWLF1T/f3hhCzLX+xKNFba4r
+        tD8i+YlriVNwbeLkbw5QX5GjDbkDw==
+X-ME-Sender: <xms:ogjpXkkoKnunkfd9JFWoIFvt67aMmfEilLqcNRC4dEGvV3tOGJjppQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejtddguddvfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enfghrlhcuvffnffculddvhedmnecujfgurhepuffvfhfhkffffgggjggtgfesthejredt
+    tdefjeenucfhrhhomhepvehhrhhishcuuehoohhtuceosghoohhttgessghoohdrthgtqe
+    enucggtffrrghtthgvrhhnpeetuefgvefhhfdugeetveekvdelhffhledvhfeuvdekfedu
+    hffhvdehgefffeduvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeekud
+    drudekjedrheehrdelfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhothgtsegsohhordhttg
+X-ME-Proxy: <xmx:ogjpXj3ZZgqjj-SYUvp_AiGYnVP7rV_A2S44npTeCH9uXVa0dnFV1w>
+    <xmx:ogjpXiqlk_aIyP35hP8w2jLot76p3QuQHdg1A00TZ82OZqARYiie6A>
+    <xmx:ogjpXgl73JZYaOIHbwf8Qf1SKVfh-zHHk3M9t5sb1YhSQ4mRs7S1-A>
+    <xmx:owjpXgxwGkSRNnQZjvuen7DQCuiOf57sCZ2fqC69v8jTiV-Vlfv0Og>
+Received: from heen.boo.tc (heen.boo.tc [81.187.55.93])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4440730618C1;
+        Tue, 16 Jun 2020 14:00:00 -0400 (EDT)
+Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Finn Thain <fthain@telegraphics.com.au>
+Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux1394-devel@lists.sourceforge.net" 
+        <linux1394-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>
+References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com>
+ <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet>
+ <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc>
+ <alpine.LNX.2.22.394.2006150919110.8@nippy.intranet>
+ <8da0c285-d707-a3d2-063e-472af5cc560f@boo.tc>
+ <alpine.LNX.2.22.394.2006161929380.8@nippy.intranet>
+ <8cbab988-fba7-8e27-7faf-9f7aa36ca235@acm.org>
+ <SN4PR0401MB35982D889857E3C03E96E49D9B9D0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+ <1592321667.4394.5.camel@HansenPartnership.com>
+From:   Chris Boot <bootc@boo.tc>
+Autocrypt: addr=bootc@boo.tc; prefer-encrypt=mutual;
+ keydata= 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
+ 1QBDj3S+cCP/8Pe5l3n1B7V4SkVPBQs/H/ClB6o=
+Message-ID: <5e512185-45d1-61eb-9bec-91e9f9d53ea3@boo.tc>
+Date:   Tue, 16 Jun 2020 18:59:58 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616174222.GB2723@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.13.2 (2019-12-18)
+In-Reply-To: <1592321667.4394.5.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16 2020 at 10:42AM -0700, Paul E. McKenney wrote:
-> On Tue, Jun 16, 2020 at 06:42:02PM +0200, Marco Elver wrote:
-> > On Tue, Jun 16 2020 at 09:05AM -0700, Paul E. McKenney wrote:
-> > > On Tue, Jun 16, 2020 at 11:49:24AM +0200, Marco Elver wrote:
-> > > > We need to pass the arguments provided to --kmake-arg to all make
-> > > > invocations. In particular, the make invocations generating the configs
-> > > > need to see the final make arguments, e.g. if config variables depend on
-> > > > particular variables that are passed to make.
-> > > > 
-> > > > For example, when using '--kcsan --kmake-arg CC=clang-11', we would lose
-> > > > CONFIG_KCSAN=y due to 'make oldconfig' not seeing that we want to use a
-> > > > compiler that supports KCSAN.
-> > > > 
-> > > > Signed-off-by: Marco Elver <elver@google.com>
-> > > 
-> > > Queued and pushed, thank you!
-> > > 
-> > > Would the following patch make sense, at least until such time
-> > > as some other compiler supports KCSAN?
-> > > 
-> > > 							Thanx, Paul
-> > > 
-> > > ------------------------------------------------------------------------
-> > > 
-> > > commit 88bcaa730b6d40ddf69b09ed6f0a14803d087d99
-> > > Author: Paul E. McKenney <paulmck@kernel.org>
-> > > Date:   Tue Jun 16 09:02:34 2020 -0700
-> > > 
-> > >     torture: Make --kcsan default to using Clang 11
-> > >     
-> > >     Currently, Clang 11 is the only compiler that can support KCSAN.
-> > >     Therefore, as a convenience to the KCSAN user, this commit causes
-> > >     --kcsan to specify Clang 11 unless a "CC=" argument was already
-> > >     specified via the --kmake-arg argument.
-> > 
-> > As soon as more compilers support KCSAN (e.g. clang-12, etc...) we run
-> > the risk of actually inconveniencing ourselves more because then we
-> > really need to say '--kmake-arg CC=clang-1X' to not use the old
-> > compiler. Or revert this in time.
-> > 
-> > My command-line looks more like this right now:
-> > 
-> > 	kvm.sh ... --kmake-arg "CC="${HOME}/local/<gcc-or-clang>-11.kcsan/local/bin/<gcc-or-clang>" ...
-> > 
-> > I think the safer alternative would be to error if CONFIG_KCSAN=y is not
-> > in the config, and simply suggest "Did you forget to switch your
-> > compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?" (of course, a
-> > 'gcc' in $PATH that supports KCSAN would also be fine -- see below).
-> > Eventually, when the default compilers support KCSAN, this will resolve
-> > itself gracefully.
-> > 
-> > Also, I'm going to send a series later this week to re-enable GCC
-> > support. ;-)
+On 16/06/2020 16:34, James Bottomley wrote:
+> On Tue, 2020-06-16 at 14:13 +0000, Johannes Thumshirn wrote:
+>> On 16/06/2020 16:09, Bart Van Assche wrote:
+>>> On 2020-06-16 02:42, Finn Thain wrote:
+>>>> Martin said, "I'd appreciate a patch to remove it"
+>>>>
+>>>> And Bart said, "do you want to keep this driver in the kernel
+>>>> tree?"
+>>>>
+>>>> AFAICT both comments are quite ambiguous. I don't see an
+>>>> actionable request, just an expression of interest from people
+>>>> doing their jobs.
+>>>>
+>>>> Note well: there is no pay check associated with having a
+>>>> MAINTAINERS file 
+>>>> entry.
+>>>
+>>> Hi Finn,
+>>>
+>>> As far as I know the sbp driver only has had one user ever and that
+>>> user is no longer user the sbp driver. So why to keep it in the
+>>> kernel tree? Restoring a kernel driver can be easy - the first step
+>>> is a "git revert".
+>>
+>> Why not move the driver to drivers/staging for 2 or 3 kernel releases
+>> and if noone steps up, delete it?
 > 
-> OK, sounds like I should leave well enough alone, then.  ;-)
+> Because that's pretty much the worst of all worlds: If the driver is
+> simply going orphaned it can stay where it is to avoid confusion.  If
+> it's being removed, it's better to remove it from where it is because
+> that makes the patch to restore it easy to find.
 > 
-> In its current state, specifying "--kcsan" without a KCSAN-capable
-> compiler does get you this:
-> 
-> :CONFIG_KCSAN=y: improperly set
-> :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-> :CONFIG_KCSAN_VERBOSE=y: improperly set
-> :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-> Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
-> 
-> Which admittedly is a bit obtuse, especially that last line.  So how
-> about the following patch, which instead results in this?
-> 
-> :CONFIG_KCSAN=y: improperly set
-> :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-> :CONFIG_KCSAN_VERBOSE=y: improperly set
+> Chris, the thing is this: if this driver has just one user on a stable
+> distro who complains about its removal six months to two years from
+> now, Linus will descend on us from a great height (which won't matter
+> to you, since you'll be long gone).  This makes everyone very wary of
+> outright removal.  If you're really, really sure it has no users, it
+> can be deleted, but if there's the slightest chance it has just one, it
+> should get orphaned.
 
-Noticed that CONFIG_KCSAN_VERBOSE=y warning still appears, because it
-wants CONFIG_PROVE_LOCKING=y.
+My patch to delete the driver was based on Martin's original request:
+https://lore.kernel.org/lkml/yq1img99d4k.fsf@ca-mkp.ca.oracle.com/
 
-> :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-> Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
+I don't especially want it to be gone, nor can I be sure there are no
+users of what is as far as I can tell a working piece of code. I can
+tell you that I never hear about it (other than the odd patch), whereas
+I do get emails out of the blue for some of my other (much smaller)
+stuff which clearly has users. I'd be just as happy for this to be
+orphaned or for nothing to happen to it.
 
-Sounds good, with another suggestion below, but otherwise
+Honestly, I am totally ambivalent as to what happens to this code.
+Martin, however, clearly cares enough to have asked me to supply a patch
+to remove it.
 
-Acked-by: Marco Elver <elver@google.com>
+Cheers,
+Chris
 
-Thanks,
--- Marco
-
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit f571795b1146007407851675a258b6685ea2d589
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Tue Jun 16 10:38:57 2020 -0700
-> 
->     torture: Improve diagnostic for KCSAN-incapable compilers
->     
->     Using --kcsan when the compiler does not support KCSAN results in this:
->     
->     :CONFIG_KCSAN=y: improperly set
->     :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
->     :CONFIG_KCSAN_VERBOSE=y: improperly set
->     :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
->     Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
->     
->     This is a bit obtuse, so this commit adds checks resulting in this:
->     
->     :CONFIG_KCSAN=y: improperly set
->     :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
->     :CONFIG_KCSAN_VERBOSE=y: improperly set
->     :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
->     Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
->     
->     Suggested-by: Marco Elver <elver@google.com>
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-> index 357899c..837643a 100755
-> --- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-> +++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-> @@ -44,7 +44,8 @@ do
->  			then
->  				echo QEMU killed
->  			fi
-> -			configcheck.sh $i/.config $i/ConfigFragment
-> +			configcheck.sh $i/.config $i/ConfigFragment > $T 2>&1
-> +			cat $T
->  			if test -r $i/Make.oldconfig.err
->  			then
->  				cat $i/Make.oldconfig.err
-> @@ -73,7 +74,10 @@ do
->  	done
->  	if test -f "$rd/kcsan.sum"
->  	then
-> -		if test -s "$rd/kcsan.sum"
-> +		if grep -q CONFIG_KCSAN=y $T
-> +		then
-
-For completeness, could add this above:
-
-	echo "Compiler or architecture does not support KCSAN!"
-
-Because we might also be on an unsupported architecture.
-
-> +			echo Did you forget to switch your compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?
-> +		elif test -s "$rd/kcsan.sum"
->  		then
->  			echo KCSAN summary in $rd/kcsan.sum
->  		else
+-- 
+Chris Boot
+bootc@boo.tc
