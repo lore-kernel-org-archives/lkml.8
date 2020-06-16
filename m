@@ -2,141 +2,140 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F120AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E364620786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCDA208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqhQVfYq"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="YDTJVCT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbgFPOlm (ORCPT
+        id S1729556AbgFPOlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:41:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729337AbgFPOl3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:41:29 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2718C061755;
-        Tue, 16 Jun 2020 07:41:27 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id k11so21769401ejr.9;
-        Tue, 16 Jun 2020 07:41:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t9VYpoFL9w8l3JM8D5Zcf8Ffo0yBSVNMWP1q8cMCzJA=;
-        b=NqhQVfYqJPN5RJlZ0wjep6gjAzfZa9XL7ArMRoHeSS79eqmSg/OyEJU/35eT5EFwx2
-         +DhP7rmZaD7BqG7H94kkFYld10FtWaUOd2hAw2KjGWyr/Bs7DkwQPc+PWm0xo8bFfJYA
-         mKzXxSKXt1hYJVj6FS9rKT276fSm+vsbqN1MdKh3p4Ifw8dAib1DQ9IqPd8lf2csR0ae
-         RN/ZPcqEwUR03DYrJpqINMhDc19gS4hCZCKWvLhW+8D49tPW1tzHJonv9HW974yEebQg
-         dRlyCSoM0NRn2yHPk3TK1ES3fMxFswKBqNC2w45beDIN6Fvbvh/MaoPWtqNQKbWgNjaa
-         aTeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t9VYpoFL9w8l3JM8D5Zcf8Ffo0yBSVNMWP1q8cMCzJA=;
-        b=OLPuoBQk6VkP5DbZv6Dt9DCnquUwuF7lgFYgtwjCRgELMRBd2fqaiEzqZvw6H6ikO5
-         DVypBjQZ7GSDZhuR/je9TcYXx6tguwr0mnNgsSJcq/U/PiXK0QfOI4is0oCoyC5m3BLU
-         ip2ILuh9CcWpTO7h7R1spzl/McIQESBzdFHX10mwr4QO09UEi4izciJpgPfEetiXuTe4
-         J90h1jDfak8ak3gtucKyM5cZstNCHwqgikoksAQQWrS1QEaRGCxRsFzBuRy85vwNH2Hp
-         gwXF5fjvpEw3ReZpY2rBFsgMhHSpcjEzo0r5jgzOsGIlBPD0jUMmaOw0Z8N8pebO24yn
-         wPiw==
-X-Gm-Message-State: AOAM533Q2/+ZZQnAk9XjHNjaOBpvr7zscH2PILA9DWm+9MYlIGFMuCqF
-        xtaxEIWBk4ZOA2/ZPHjumws=
-X-Google-Smtp-Source: ABdhPJz3Z31JxPmZxR1T5GzJbWFj9vmA5JDpuiTPiN7c7MNeCKdEZoyaby8TTrav6F4+oVE/zvM+6w==
-X-Received: by 2002:a17:907:b03:: with SMTP id h3mr3304855ejl.367.1592318486368;
-        Tue, 16 Jun 2020 07:41:26 -0700 (PDT)
-Received: from localhost.localdomain ([188.26.56.128])
-        by smtp.gmail.com with ESMTPSA id c17sm11264964eja.42.2020.06.16.07.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 07:41:25 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
-        f.fainelli@gmail.com, joakim.tjernlund@infinera.com,
-        madalin.bucur@oss.nxp.com, fido_max@inbox.ru,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net 2/2] dpaa_eth: fix usage as DSA master, try 4
-Date:   Tue, 16 Jun 2020 17:41:18 +0300
-Message-Id: <20200616144118.3902244-3-olteanv@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200616144118.3902244-1-olteanv@gmail.com>
-References: <20200616144118.3902244-1-olteanv@gmail.com>
+        Tue, 16 Jun 2020 10:41:47 -0400
+Received: from mga12.intel.com ([192.55.52.136]:9766 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727804AbgFPOli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:41:38 -0400
+IronPort-SDR: sNfv+pD7Y/yZ8CfyI8oISdoUaawoVVbUbM9dUZy6bnwJT6C130G/GrL1KKi7yQZAHwUY39D5vi
+ HChtkpoo033Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 07:41:37 -0700
+IronPort-SDR: g/OsKLJymTggqELw1zclcd2caGgYQJUvEYCR4q6L0j4bwy1dCq4nUqdenbyav1b+OEFIK3R4jG
+ DZISc/Xf/EjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="309130605"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Jun 2020 07:41:36 -0700
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 16 Jun 2020 07:41:36 -0700
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 16 Jun 2020 07:41:35 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 16 Jun 2020 07:41:35 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.103)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 16 Jun 2020 07:41:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QSjsWmi3c4UlrWUpiITw9OlVjNKGqRaPyhQog8nhkBtO5DRi6kKLCKwoIjKBfDjXTYPhpaT6K6lr2gFI1cib0DWbLJAEuPcq2I1XWSkzn7jxtrRaYcCn2rEn5CsW6Iem1my4zkgEIbVdJUyyNOyPvq8CoyFz7FH6Hzk8Q+0pTHT+0CEJO0yeCA16V/24EsBSfpIfhX6TErH61JnhMd7oT64+VSOGQXALg0wj8TVwynsKHL1nDx/UHpUlTxkEykcBfqgpoAmbSkL6RSMnkiDuyTBisQ4AlULNZDZfAGEl1rcLNA+kC3EmtXBwklT1sRteHR4vQ8p9DAMTlZAvg9XwSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aQDa0GO6mxgVLUSaUULEZQcmK1BOqZvaCj6Pv7Hd5vg=;
+ b=R2FhAusXsyiFIHuwXiepC4kw3+GsAiWsT6H63SUXGvRg6sVm0QVmyp8/m3CfxGYnZtcVMlGCabcURr0QKqv8udAgnBmx2QxS5v5rtD68gNYR9a59w9FdEPtU1ArzfAz+C79XEMATRQOnJnqWK/twlN/NG3Xrpdl0bDAX+b+h5v5+9a0ThIAtyJP5IeNJ1mkBVnfd61T0fdylM2g8Sj1P01Z1qkM/RkrMdcwNknmbh/pAhec895zbm79ayw0ROoB8Ac3IOgRcdMF+ZDaQXLE1IQ3BhdajIuNUNJFamYMDB3uKjHtUFJiNHin+dnhdAKRRf6/CjNJj9MmpQZJHKCpb6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aQDa0GO6mxgVLUSaUULEZQcmK1BOqZvaCj6Pv7Hd5vg=;
+ b=YDTJVCT5jGUJ72kA1uNv2JEJUVigldhuY/Ly3wUffdJxTIXD7eA5iArH7a67V4NkE153wrvYLiNN/eVYhdMpSer5otJdmVNx5Bm7ffzLtn9anOUj4KzcWvcrupLK+nwGQKC/5qaAJEMN3tkWDdJ6An7VSXuRUDwntrr0/etX634=
+Received: from BL0PR11MB3252.namprd11.prod.outlook.com (2603:10b6:208:6e::18)
+ by BL0PR11MB3411.namprd11.prod.outlook.com (2603:10b6:208:32::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Tue, 16 Jun
+ 2020 14:41:33 +0000
+Received: from BL0PR11MB3252.namprd11.prod.outlook.com
+ ([fe80::7d75:5039:3841:943d]) by BL0PR11MB3252.namprd11.prod.outlook.com
+ ([fe80::7d75:5039:3841:943d%3]) with mapi id 15.20.3088.029; Tue, 16 Jun 2020
+ 14:41:33 +0000
+From:   "Zhao, Shirley" <shirley.zhao@intel.com>
+To:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "LSM List" <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Two questions about IMA
+Thread-Topic: Two questions about IMA
+Thread-Index: AdZD7Cuj8qgPLpy/Qw2vOJwAmSsd8Q==
+Date:   Tue, 16 Jun 2020 14:41:33 +0000
+Message-ID: <BL0PR11MB3252AC76F135A7546554BDF88D9D0@BL0PR11MB3252.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDAyOGIxYzEtYmRhZi00NzM2LTg2YmUtYjk4MTRkZDRhZjdiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoickJ2eVhraDFvVVNUaGVjWnZiSXpIMlwvck5xcWRveVRDQ2I5OGFLcWNNVDZoXC9XQllVZXgrUEVtajhqemNndURZIn0=
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.218]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cfe07939-83d1-48d1-cc62-08d812035d80
+x-ms-traffictypediagnostic: BL0PR11MB3411:
+x-microsoft-antispam-prvs: <BL0PR11MB3411C527A1BD80379C154E7F8D9D0@BL0PR11MB3411.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 04362AC73B
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qBBdeI5a0G2c+rdeaSUGW+jGO67/SwS3+JN6X9bHW37rFbkEy615xMEjy02aIEc8/01P4rzGryssfrbqj37zbiY1rqueIutRZyROGJe7lZ49u2pFdTcMYLR7MgPEobobBiDucQWgURz/3niSac0YgdFnXP0moYni2bqoukGE5E9QpIvM6uvBrE10h5cHCogPbNnv6EQIUzArxhbZz0OjhQbPmLeSyX+icVpBtTpN1NEkT3HDdNggEZsx3Fmsr8KxwAiDYvKxtAn9bsuLzyYVMXc3u/Txhr+2MOy2Ss5BdEz5Aes8I2z4EpbbzoPvm8Y6ZA4ZKoAx2M/3TSopnrpd9ITYwMTTUqW6ZV0sDfBzWLEyAELW7Zj39SjrJrhRWvQTzfjMpZXmNHt7ilMGvSdsGQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB3252.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(136003)(366004)(39860400002)(64756008)(66476007)(33656002)(66556008)(66446008)(7696005)(76116006)(55016002)(8676002)(66946007)(9686003)(6506007)(71200400001)(4744005)(450100002)(966005)(8936002)(110136005)(2906002)(52536014)(83380400001)(3480700007)(26005)(86362001)(5660300002)(478600001)(316002)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: HHo0HJ2XkhkxxFVm96khPVI3hWtxEY8Gu0TC17YTbsP8brx194dW6gWDs+ObpTOnJB+mJIbNQz+5M5Za31FbklGkp8I7n5v4Dej/hRvwtkjN2DxUJWuFKzLAqpz2PJHtM/OeABoXzlR6VtRIAgK9DORRQFPUgjhcjsGD5EP6qUIJZXI8QbuU1BWMNPikoN/lP9Nv4uJjX6eK33Xuat2+kc0/0CECPPHGgjI/c9oey9NY3AhtzqfbArd+VtdYnOtD9/pcaeQJMy2IwKd4r8YZ/6qaPgadAWoIcWGIxzhbuwNXMnh4YBKCAetNUsbUm3w32xXvNHRzK7v2p0MMjIlSw/rZh1jPPm6u9at+TqTD6q3XEwUUudl1zTLC0PhhJr6zo0D5L/HHytuVtFEpLSWzRMpmXJoJxrrAIvQlUJJE7VmkqjM39KtnhxBrhx/rUeQP3BncGkkRkcylMAZaH6IaY2lCbSwWjUwdLtS6VDAPe8lvZ1CCCM7hlxto5syFvxD9
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfe07939-83d1-48d1-cc62-08d812035d80
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 14:41:33.4080
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YlM7o18kj1WEqu508s8x1ZUzO5pdNWn5rb5LrTW11gGa7o3DmsFzZjYjmxf85XdWYMfxT19Zudy8wwdBOAZZTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR11MB3411
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-
-The dpaa-eth driver probes on compatible string for the MAC node, and
-the fman/mac.c driver allocates a dpaa-ethernet platform device that
-triggers the probing of the dpaa-eth net device driver.
-
-All of this is fine, but the problem is that the struct device of the
-dpaa_eth net_device is 2 parents away from the MAC which can be
-referenced via of_node. So of_find_net_device_by_node can't find it, and
-DSA switches won't be able to probe on top of FMan ports.
-
-It would be a bit silly to modify a core function
-(of_find_net_device_by_node) to look for dev->parent->parent->of_node
-just for one driver. We're just 1 step away from implementing full
-recursion.
-
-On T1040, the /sys/class/net/eth0 symlink currently points to:
-
-../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/net/eth0
-
-which pretty much illustrates the problem. The closest of_node we've got
-is the "fsl,fman-memac" at /soc@ffe000000/fman@400000/ethernet@e6000,
-which is what we'd like to be able to reference from DSA as host port.
-
-For of_find_net_device_by_node to find the eth0 port, we would need the
-parent of the eth0 net_device to not be the "dpaa-ethernet" platform
-device, but to point 1 level higher, aka the "fsl,fman-memac" node
-directly. The new sysfs path would look like this:
-
-../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/dpaa-ethernet.0/net/eth0
-
-Actually this has worked before, through the SET_NETDEV_DEV mechanism,
-which sets the parent of the net_device as the parent of the platform
-device. But the device which was set as sysfs parent was inadvertently
-changed through commit 060ad66f9795 ("dpaa_eth: change DMA device"),
-which did not take into consideration the effect it would have upon
-of_find_net_device_by_node. So restore the old sysfs parent to make that
-work correctly.
-
-Fixes: 060ad66f9795 ("dpaa_eth: change DMA device")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index c4416a5f8816..2972244e6eb0 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2914,7 +2914,7 @@ static int dpaa_eth_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Do this here, so we can be verbose early */
--	SET_NETDEV_DEV(net_dev, dev);
-+	SET_NETDEV_DEV(net_dev, dev->parent);
- 	dev_set_drvdata(dev, net_dev);
- 
- 	priv = netdev_priv(net_dev);
--- 
-2.25.1
-
+SGksIGFsbCwgDQoNClRoaXMgaXMgU2hpcmxleSBmcm9tLCBJIGFtIGEgbmV3ZXIgb2YgSU1BLiAN
+CkkgaGF2ZSBzb21lIHF1ZXN0aW9ucy4gQ2FuIHlvdSBoZWxwPw0KDQpBY2NvcmRpbmcgdG8gdGhl
+IGd1aWRlOiBodHRwczovL3NvdXJjZWZvcmdlLm5ldC9wL2xpbnV4LWltYS93aWtpL0hvbWUvI2xp
+bnV4LWV4dGVuZGVkLXZlcmlmaWNhdGlvbi1tb2R1bGUtZXZtLiANCjEuCUhvdyB0byBjYWxjdWxh
+dGUgdGhlIHRlbXBsYXRlIGhhc2ggaW4gL3N5cy9rZXJuZWwvc2VjdXJpdHkvaW1hL2FzY2lpX3J1
+bnRpbWVfbWVhc3VyZW1lbnRzPyBMaWtlIGJlbG93Og0KUENSICAgICB0ZW1wbGF0ZS1oYXNoICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgZmlsZWRhdGEtaGFzaCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGZpbGVuYW1lLWhpbnQNCjEwIDkxZjM0YjVjNjcxZDczNTA0YjI3NGE5MTk2NjFjZjgw
+ZGFiMWUxMjcgaW1hLW5nIHNoYTE6MTgwMWUxYmUzZTY1ZWYxZWFhNWMxNjYxN2JlYzhmMTI3NGVh
+ZjZiMyBib290X2FnZ3JlZ2F0ZSANCjEwIDhiMTY4MzI4N2Y2MWY5NmU1NDQ4ZjQwYmRlZjZkZjMy
+YmU4NjQ4NmEgaW1hLW5nIHNoYTI1NjplZmRkMjQ5ZWRlYzk3Y2FmOTMyOGE0YTAxYmFhOTliN2Q2
+NjBkMWFmYzJlMTE4YjY5MTM3MDgxYzliNjg5OTU0IC9pbml0IA0KMi4JVWJ1bnR1IDIwLjA0IGlz
+IGluc3RhbGxlZCBvbiBteSBtYWNoaW5lLCBidXQgYXNjaWlfYmlvc19tZWFzdXJlbWVudHMgY2Fu
+4oCZdCBiZSBmb3VuZCB1bmRlciAvc3lzL2tlcm5lbC9zZWN1cml0eS90cG0wLy4gDQpUaGVyZSBp
+cyBvbmx5IGJpbmFyeV9iaW9zX21lYXN1cmVtZW50cyB1bmRlciB0cG0wLy4gDQpTbyB3aGVyZSB0
+byBmaW5kIHRoZSBiaW9zIG1lYXN1cmUgbGlzdCBvbiBVYnVudHUgMjAuMDQ/DQoNClRoYW5rcy4g
+DQoNCi0JU2hpcmxleSAgDQo=
