@@ -2,129 +2,132 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054C2C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8801E208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92522067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731115AbgFPRc6 (ORCPT
+        id S1731233AbgFPRdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:32:58 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:40860 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730978AbgFPRc5 (ORCPT
+        Tue, 16 Jun 2020 13:33:04 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34623 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730978AbgFPRdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:32:57 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id EE0E43C00BA;
-        Tue, 16 Jun 2020 19:32:54 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RkBGNM8CkM4J; Tue, 16 Jun 2020 19:32:48 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id EABF03C0022;
-        Tue, 16 Jun 2020 19:32:48 +0200 (CEST)
-Received: from vmlxhi-121.localdomain (10.72.92.132) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 16 Jun
- 2020 19:32:48 +0200
-From:   Michael Rodin <mrodin@de.adit-jv.com>
-To:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Michael Rodin <mrodin@de.adit-jv.com>, <michael@rodin.online>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>
-Subject: [PATCH] media: rcar-vin: Move media_device_register to async completion
-Date:   Tue, 16 Jun 2020 19:31:36 +0200
-Message-ID: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 16 Jun 2020 13:33:04 -0400
+Received: by mail-pj1-f67.google.com with SMTP id a45so1365566pje.1;
+        Tue, 16 Jun 2020 10:33:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lTlodo8W+7IZCNOxUc98tNEtc14F+hi5VzzRB8qcV8k=;
+        b=iZDt9CsfmJFr2UV7Iy1RixHn6g3hAhbYj/t6cADVwTc6OoNKBDokDRsyIT+lbOeUim
+         dNiRvxP+Pc56Rxz9uYFoOtL2iT/TTGuMUq6zgefIbF5jD1IGaAv+yZvKf0NP4qHtMYHC
+         g5uNsAApe6HDXu6AtuYl0TcDuhLE+N6wF3GO8fH0co+UuklN/SeuvNvwx1uOk05WDRXj
+         6mDmD0GLmzQ0I+1hN4+AyjhQsM5rv+iBzciZuU8FyVST4URaQ/hFmpwBkH0gQHhF8Ny/
+         ac9i+Mv0UMJ66WgP+O8BEY/2Xtoig1M4rvd54haJg8nESdCGPJhbnQfyPO2tu7Jvum8G
+         oiVA==
+X-Gm-Message-State: AOAM5336AUBEE1RnwbbAlvNBvUyHk+RAxXR3lH3qIApshEvpvXCH+D59
+        iqLB/fRS90Yo8xW8krXgHsU=
+X-Google-Smtp-Source: ABdhPJzn5/Pk4Zg7dHMupWkqizhxoXwW3gfU2LBGKuCnaoK0mzNGSY/Mlvy0XJpGUJGPUYCaEiBmzw==
+X-Received: by 2002:a17:90b:3544:: with SMTP id lt4mr4097717pjb.19.1592328783265;
+        Tue, 16 Jun 2020 10:33:03 -0700 (PDT)
+Received: from sultan-book.localdomain ([89.45.90.111])
+        by smtp.gmail.com with ESMTPSA id h3sm15304253pgd.0.2020.06.16.10.33.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 10:33:02 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 10:32:58 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Andi Shyti <andi.shyti@intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jarkko.nikula@linux.intel.com, aaron.ma@canonical.com,
+        admin@kryma.net, benjamin.tissoires@redhat.com,
+        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
+        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, vicamo.yang@canonical.com,
+        wsa@kernel.org
+Subject: Re: [PATCH v2] HID: i2c-hid: Use block reads when possible to save
+ power
+Message-ID: <20200616173258.GA5266@sultan-book.localdomain>
+References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
+ <20200616154951.3050-1-sultan@kerneltoast.com>
+ <20200616164101.GY2428291@smile.fi.intel.com>
+ <20200616171854.GA1415@intel.intel>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.72.92.132]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616171854.GA1415@intel.intel>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <steve_longerbeam@mentor.com>
+On Tue, Jun 16, 2020 at 08:18:54PM +0300, Andi Shyti wrote:
+> Hi Andy,
+> 
+> > > so the only strategy available up until now has been to always retrieve
+> > > the maximum possible report length over i2c, which can be quite
+> > > inefficient. For devices that send reports in block read format, the i2c
+> > > controller driver can read the payload length on the fly and terminate
+> > > the i2c transaction early, resulting in considerable power savings.
+> > > 
+> > > On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
+> > > touchpad causes psys power readings to go up by about 4W and hover there
+> > > until I remove my finger. With this patch, my psys readings go from 4.7W
+> > > down to 3.1W, yielding about 1.6W in savings. This is because my
+> > > touchpad's max report length is 60 bytes, but all of the regular reports
+> > > it sends for touch events are only 32 bytes, so the i2c transfer is
+> > > roughly halved for the common case.
+> > 
+> > > +	/* Try to do a block read if the size fits in one byte */
+> > > +	flags = size > 255 ? I2C_M_RD : I2C_M_RD | I2C_M_RECV_LEN;
+> > 
+> > AFAIR SMBus specification tells about 256. Why 255?
+> > 
+> > Andi, am I correct?
+> 
+> Actually the SMBUS 3.0 protocol from 2015[*] says 255:
+> 
+> "
+> D.6 255 Bytes in Process Call
+> 
+> The maximum number of bytes allowed in the Block Write-Block Read
+> Process Call (Section 6.5.8) was increased from 32 to 255.
+> "
+> 
+> But why does it matter... I see the patch is detatching itself
+> from smbus.
+> 
+> And, actually, I wonder if this is the right way to fix it, isn't
+> it better to fix smbus instead?
 
-The media_device is registered during driver probe, before async
-completion, so it is possible for .link_notify to be called before
-all devices are bound.
+I think the best solution would be to modify the i2c api to allow passing in a
+function pointer and a payload size length, to specify how to interpret the size
+of the incoming payload, so the adapter could handle both the HID over i2c
+transfer spec and SMBus block reads without needing to read more bytes than
+needed.
 
-Fix this by moving media_device_register() to rvin_group_notify_complete().
-This ensures that all devices are now bound (the rcar-csi2 subdevices and
-and video capture devices) before .link_notify can be called.
+For example, for an SMBus block read, the payload size is specified in the first
+byte and it is limited to 32 bytes. However, for HID over i2c, the payload size
+is specified in the first two bytes, and there are also some device quirks
+involved to reinterpret the reported size.
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
----
- drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+A nice solution would be to pass in how many bytes the i2c payload size can
+contain, as well as a function pointer to evaluate the reported payload size in
+a way that the caller wants. This would require modifying every i2c adapter
+driver to add this functionality, but it would fix the efficiency problem faced
+by i2c-hid and perhaps others.
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-index 7440c89..e70f83b 100644
---- a/drivers/media/platform/rcar-vin/rcar-core.c
-+++ b/drivers/media/platform/rcar-vin/rcar-core.c
-@@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
- 	struct media_device *mdev = &group->mdev;
- 	const struct of_device_id *match;
- 	struct device_node *np;
--	int ret;
- 
- 	mutex_init(&group->lock);
- 
-@@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
- 	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
- 
- 	mdev->dev = vin->dev;
--	mdev->ops = &rvin_media_ops;
- 
- 	match = of_match_node(vin->dev->driver->of_match_table,
- 			      vin->dev->of_node);
-@@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
- 
- 	media_device_init(mdev);
- 
--	ret = media_device_register(&group->mdev);
--	if (ret)
--		rvin_group_cleanup(group);
--
--	return ret;
-+	return 0;
- }
- 
- static void rvin_group_release(struct kref *kref)
-@@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
- 		return ret;
- 	}
- 
-+	vin->group->mdev.ops = &rvin_media_ops;
-+
- 	/* Register all video nodes for the group. */
- 	for (i = 0; i < RCAR_VIN_NUM; i++) {
- 		if (vin->group->vin[i] &&
-@@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
- 		}
- 	}
- 	mutex_unlock(&vin->group->lock);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	return media_device_register(&vin->group->mdev);
- }
- 
- static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
--- 
-2.7.4
+> I have a patch ready that fixes the smbus transfer size, perhaps
+> I should rebase, test and send it.
 
+For the i2c-hid driver?
+
+Sultan
