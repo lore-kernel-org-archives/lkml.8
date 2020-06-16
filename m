@@ -2,60 +2,77 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8754FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3433C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA9A208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A616B208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324019;
-	bh=a7avgGW8Pb6mY9ujyM5PSFtctNJTkJfibtYp4fwY5Z8=;
+	s=default; t=1592324022;
+	bh=cfc5FjrY9vBGbt70tlqFyKkXVCs/JWORPS2LyxaMb0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQaIDj+/YvQx79YV7pqYvYnOahdMPrAkr/B14zfaq4lC0cLW15qJepC9HBsqhyKfH
-	 1RJ+Hw5mmhWU6fL7uWCEi847FvLtlREXmMuJy/785Kvdy8GlTnWnPjqo4Y7zqgPgkh
-	 PSm2UGcnsDtVEAYBLYkYe0SlWCSgKgllBcC9/LYI=
+	b=retzftSdDszn6De+zXI5ThaQw8xPE2zSd1+wHKxCCo8srcKT3Q09PCS2jOIQxNDBg
+	 CnoiS29uG2lMVlhTcxTQEDYq1MAbCFKJOsozrUV9G3F0hoovEkvpdPAbniUFUIaaV1
+	 N5uVcuGzr/3haaDq6blWa0l2eExWkvm0Mpakptv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgFPPnW (ORCPT
+        id S1731093AbgFPPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60384 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbgFPPnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:08 -0400
+        id S1731737AbgFPPnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:43:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54F39214DB;
-        Tue, 16 Jun 2020 15:43:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A78A220C56;
+        Tue, 16 Jun 2020 15:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322187;
-        bh=a7avgGW8Pb6mY9ujyM5PSFtctNJTkJfibtYp4fwY5Z8=;
+        s=default; t=1592322185;
+        bh=cfc5FjrY9vBGbt70tlqFyKkXVCs/JWORPS2LyxaMb0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbMn/HK3HwUwyu8SqmgW66n3wKtT7TyJplyDEUI1y9Cz3HZC8due/lrPOUTd419EE
-         LFZRs4NE3vCCbBkOG9oOe0mLlxob7MMRcSvhUFTSxG8LJ1jYErAR6Rf9UxR0hXNwVW
-         2yzDoN/Eu58160YGppnibVe70AQO/KwJcTpCK3M8=
+        b=C6AF0Zigar1wRvpKjFZvlVXnHFS7L9U233UhB5vuhlQweQaTHgbFvrLGlYdSuDYjr
+         i0j+MWdj9GssV9nog6U8//tpjGG/tGZnGYqz7ilUtzjFsRYAYjZkCnlp8DQ8H6pjRO
+         fK2HG9uz3OiApbWzazdGXUvN5CdtXmCmQRSsYw/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alistair Delva <adelva@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Bob Haarman <inglorion@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: [PATCH 5.7 035/163] x86_64: Fix jiffies ODR violation
-Date:   Tue, 16 Jun 2020 17:33:29 +0200
-Message-Id: <20200616153108.543251819@linuxfoundation.org>
+        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Jiri Slaby <jslaby@suse.cz>, Jann Horn <jannh@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christopher Lameter <cl@linux.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        David Windsor <dave@nullcore.net>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christoffer Dall <christoffer.dall@linaro.org>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rik van Riel <riel@surriel.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 034/163] usercopy: mark dma-kmalloc caches as usercopy caches
+Date:   Tue, 16 Jun 2020 17:33:28 +0200
+Message-Id: <20200616153108.503176174@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -68,125 +85,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Haarman <inglorion@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit d8ad6d39c35d2b44b3d48b787df7f3359381dcbf upstream.
+commit 49f2d2419d60a103752e5fbaf158cf8d07c0d884 upstream.
 
-'jiffies' and 'jiffies_64' are meant to alias (two different symbols that
-share the same address).  Most architectures make the symbols alias to the
-same address via a linker script assignment in their
-arch/<arch>/kernel/vmlinux.lds.S:
+We have seen a "usercopy: Kernel memory overwrite attempt detected to
+SLUB object 'dma-kmalloc-1 k' (offset 0, size 11)!" error on s390x, as
+IUCV uses kmalloc() with __GFP_DMA because of memory address
+restrictions.  The issue has been discussed [2] and it has been noted
+that if all the kmalloc caches are marked as usercopy, there's little
+reason not to mark dma-kmalloc caches too.  The 'dma' part merely means
+that __GFP_DMA is used to restrict memory address range.
 
-jiffies = jiffies_64;
+As Jann Horn put it [3]:
+ "I think dma-kmalloc slabs should be handled the same way as normal
+  kmalloc slabs. When a dma-kmalloc allocation is freshly created, it is
+  just normal kernel memory - even if it might later be used for DMA -,
+  and it should be perfectly fine to copy_from_user() into such
+  allocations at that point, and to copy_to_user() out of them at the
+  end. If you look at the places where such allocations are created, you
+  can see things like kmemdup(), memcpy() and so on - all normal
+  operations that shouldn't conceptually be different from usercopy in
+  any relevant way."
 
-which is effectively a definition of jiffies.
+Thus this patch marks the dma-kmalloc-* caches as usercopy.
 
-jiffies and jiffies_64 are both forward declared for all architectures in
-include/linux/jiffies.h. jiffies_64 is defined in kernel/time/timer.c.
+[1] https://bugzilla.suse.com/show_bug.cgi?id=1156053
+[2] https://lore.kernel.org/kernel-hardening/bfca96db-bbd0-d958-7732-76e36c667c68@suse.cz/
+[3] https://lore.kernel.org/kernel-hardening/CAG48ez1a4waGk9kB0WLaSbs4muSoK0AYAVk8=XYaKj4_+6e6Hg@mail.gmail.com/
 
-x86_64 was peculiar in that it wasn't doing the above linker script
-assignment, but rather was:
-1. defining jiffies in arch/x86/kernel/time.c instead via the linker script.
-2. overriding the symbol jiffies_64 from kernel/time/timer.c in
-arch/x86/kernel/vmlinux.lds.s via 'jiffies_64 = jiffies;'.
-
-As Fangrui notes:
-
-  In LLD, symbol assignments in linker scripts override definitions in
-  object files. GNU ld appears to have the same behavior. It would
-  probably make sense for LLD to error "duplicate symbol" but GNU ld
-  is unlikely to adopt for compatibility reasons.
-
-This results in an ODR violation (UB), which seems to have survived
-thus far. Where it becomes harmful is when;
-
-1. -fno-semantic-interposition is used:
-
-As Fangrui notes:
-
-  Clang after LLVM commit 5b22bcc2b70d
-  ("[X86][ELF] Prefer to lower MC_GlobalAddress operands to .Lfoo$local")
-  defaults to -fno-semantic-interposition similar semantics which help
-  -fpic/-fPIC code avoid GOT/PLT when the referenced symbol is defined
-  within the same translation unit. Unlike GCC
-  -fno-semantic-interposition, Clang emits such relocations referencing
-  local symbols for non-pic code as well.
-
-This causes references to jiffies to refer to '.Ljiffies$local' when
-jiffies is defined in the same translation unit. Likewise, references to
-jiffies_64 become references to '.Ljiffies_64$local' in translation units
-that define jiffies_64.  Because these differ from the names used in the
-linker script, they will not be rewritten to alias one another.
-
-2. Full LTO
-
-Full LTO effectively treats all source files as one translation
-unit, causing these local references to be produced everywhere.  When
-the linker processes the linker script, there are no longer any
-references to jiffies_64' anywhere to replace with 'jiffies'.  And
-thus '.Ljiffies$local' and '.Ljiffies_64$local' no longer alias
-at all.
-
-In the process of porting patches enabling Full LTO from arm64 to x86_64,
-spooky bugs have been observed where the kernel appeared to boot, but init
-doesn't get scheduled.
-
-Avoid the ODR violation by matching other architectures and define jiffies
-only by linker script.  For -fno-semantic-interposition + Full LTO, there
-is no longer a global definition of jiffies for the compiler to produce a
-local symbol which the linker script won't ensure aliases to jiffies_64.
-
-Fixes: 40747ffa5aa8 ("asmlinkage: Make jiffies visible")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Alistair Delva <adelva@google.com>
-Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
-Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-Suggested-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Bob Haarman <inglorion@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot on
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://github.com/ClangBuiltLinux/linux/issues/852
-Link: https://lkml.kernel.org/r/20200602193100.229287-1-inglorion@google.com
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Acked-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Jann Horn <jannh@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Christopher Lameter <cl@linux.com>
+Cc: Julian Wiedmann <jwi@linux.ibm.com>
+Cc: Ursula Braun <ubraun@linux.ibm.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: David Windsor <dave@nullcore.net>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Christoffer Dall <christoffer.dall@linaro.org>
+Cc: Dave Kleikamp <dave.kleikamp@oracle.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Luis de Bethencourt <luisbg@kernel.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: Michal Kubecek <mkubecek@suse.cz>
+Link: http://lkml.kernel.org/r/7d810f6d-8085-ea2f-7805-47ba3842dc50@suse.cz
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/time.c        |    4 ----
- arch/x86/kernel/vmlinux.lds.S |    4 ++--
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ mm/slab_common.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/time.c
-+++ b/arch/x86/kernel/time.c
-@@ -25,10 +25,6 @@
- #include <asm/hpet.h>
- #include <asm/time.h>
- 
--#ifdef CONFIG_X86_64
--__visible volatile unsigned long jiffies __cacheline_aligned_in_smp = INITIAL_JIFFIES;
--#endif
--
- unsigned long profile_pc(struct pt_regs *regs)
- {
- 	unsigned long pc = instruction_pointer(regs);
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -40,13 +40,13 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
- #ifdef CONFIG_X86_32
- OUTPUT_ARCH(i386)
- ENTRY(phys_startup_32)
--jiffies = jiffies_64;
- #else
- OUTPUT_ARCH(i386:x86-64)
- ENTRY(phys_startup_64)
--jiffies_64 = jiffies;
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1303,7 +1303,8 @@ void __init create_kmalloc_caches(slab_f
+ 			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
+ 				kmalloc_info[i].name[KMALLOC_DMA],
+ 				kmalloc_info[i].size,
+-				SLAB_CACHE_DMA | flags, 0, 0);
++				SLAB_CACHE_DMA | flags, 0,
++				kmalloc_info[i].size);
+ 		}
+ 	}
  #endif
- 
-+jiffies = jiffies_64;
-+
- #if defined(CONFIG_X86_64)
- /*
-  * On 64-bit, align RODATA to 2MB so we retain large page mappings for
 
 
