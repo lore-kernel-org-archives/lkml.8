@@ -2,130 +2,172 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF1A6208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:59:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="P6F/6Li0"
+	by mail.kernel.org (Postfix) with ESMTP id C5BE8208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730554AbgFPQ7z (ORCPT
+        id S1728917AbgFPRAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729841AbgFPQ7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:59:52 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F73AC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:59:52 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id k11so22311340ejr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9c3XpUNRuxc8tvHN/G/s1TeMtn7R53E47RIpJ3K1Kjo=;
-        b=P6F/6Li0cNofNpVQGyh790TSj0hnEC9itlHPgIsadxqJsMTv2HLDoSobSlbltEfUh2
-         vsx03Q2EGLSEX7+lQl/MFwECf5bdmgM/HEP7HOpYfqkTdczVCH17cPrTGFDJe3AEkS5o
-         pf8zQoNctOFIsW4Qb46xAtZ3QA+nKYUdOu7KlruHzayUM/3u36JTjcwVVu7dI78fRVEu
-         i5HYmeba9xv0+8lhJ3e7NcOji7wdwUegQuxlSH8ohKTtEU1xlc/1cFLccXTVL3AHSEnC
-         6VvaV4Nh34wT3F3OsOOF5xnel9B2+wAVGlu2+qDsFzs4oEACd3ex/bFB2/yaZmCvdUPy
-         0rOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9c3XpUNRuxc8tvHN/G/s1TeMtn7R53E47RIpJ3K1Kjo=;
-        b=HcBsSlmLWxnllwRDLEhI9ycWaw/J0MERNSColFhYHMSHEPsPOcTm+TERtQgGi4EoRi
-         qkCOaY/2yK/hB7Ag3JdtKOQK0ktYEWmEFzhzDeZRAn8UrHhHOQQVFmEUbnqslFWAXDqr
-         lLNE/L/CCPThWS6JDrwY7IPTxSP9C+JCXn1GtnNmENu8uBnqECiEn4s9HffvoiF7nPKY
-         UDZTHDLU28CsdYtjXq9yUvETBoU2XtCwLlmF8wn1KUBktesoRY80zlu4TQZTwasPJPRD
-         gsAykrCm9Q0h90FNhc+mnLYWEhEfQlaq5hgaB3CSiVfgHcttz/O8gGVvuaENWS8aJQsH
-         9Tjg==
-X-Gm-Message-State: AOAM532x8wJOohKyxZioQPIjdvN5y9i7GiTLKgIyVZCgDGU0T6pf02kC
-        J0O4f3NXSE/Gtl72RgrT1dNezN8VfG1zrMe/svnPnA==
-X-Google-Smtp-Source: ABdhPJxUcerRmdzyFUvLtbWcqtliDcNlbqG0p6OLPpFJjZwLdfD/UvIdP+kEnW0mIo2vb6TxUppF8iaiEBWW8qw+7w8=
-X-Received: by 2002:a17:906:22d0:: with SMTP id q16mr3584102eja.455.1592326791128;
- Tue, 16 Jun 2020 09:59:51 -0700 (PDT)
+        Tue, 16 Jun 2020 13:00:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57921 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729103AbgFPRAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:00:36 -0400
+IronPort-SDR: tPXq8KsMIkMJ+lekExbd+RoNkgurPpzW5SCs2kVElBx3wEcHkXhoKhO2tezU3GlMedG2sAKeNA
+ j9PgdE/DwCMA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 10:00:17 -0700
+IronPort-SDR: shXlJDB6Aa2I7qVQkpqzSISC/9/CbPOu9n9L7Pl4JZVPZQbC2aORL/Zi3VEf3kIBSNnoifV9z0
+ o0yzMkUEcJDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="273217899"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga003.jf.intel.com with ESMTP; 16 Jun 2020 10:00:16 -0700
+Date:   Tue, 16 Jun 2020 10:00:16 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v2 00/15] vfio: expose virtual Shared Virtual Addressing
+ to VMs
+Message-ID: <20200616170016.GC34820@otc-nc-03>
+References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
+ <20200615100214.GC1491454@stefanha-x1.localdomain>
+ <MWHPR11MB16451F1E4748DF97D6A1DDD48C9D0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200616154928.GF1491454@stefanha-x1.localdomain>
 MIME-Version: 1.0
-References: <20200616115213.13109-1-david@redhat.com> <20200616115213.13109-4-david@redhat.com>
- <20200616124120.GF9499@dhcp22.suse.cz> <30c35cd2-8167-d402-2c7e-94f5fcce0274@redhat.com>
-In-Reply-To: <30c35cd2-8167-d402-2c7e-94f5fcce0274@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 16 Jun 2020 09:59:40 -0700
-Message-ID: <CAPcyv4irwGUU2x+c6b4L=KbB1dnasNKaaZd6oSpYjL9kfsnROQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] mm/shuffle: remove dynamic reconfiguration
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616154928.GF1491454@stefanha-x1.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 6:45 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 16.06.20 14:41, Michal Hocko wrote:
-> > [Add Dan]
->
-> Whops, dropped by mistake. Thanks for adding.
->
-> >
-> > On Tue 16-06-20 13:52:13, David Hildenbrand wrote:
-> >> Commit e900a918b098 ("mm: shuffle initial free memory to improve
-> >> memory-side-cache utilization") promised "autodetection of a
-> >> memory-side-cache (to be added in a follow-on patch)" over a year ago.
-> >>
-> >> The original series included patches [1], however, they were dropped
-> >> during review [2] to be followed-up later.
-> >>
-> >> Let's simplify for now and re-add when really (ever?) needed.
-> >>
-> >> [1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com/
-> >> [2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com/
-> >>
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> >> Cc: Michal Hocko <mhocko@suse.com>
-> >> Cc: Minchan Kim <minchan@kernel.org>
-> >> Cc: Huang Ying <ying.huang@intel.com>
-> >> Cc: Wei Yang <richard.weiyang@gmail.com>
-> >> Cc: Keith Busch <keith.busch@intel.com>
-> >> Cc: Mel Gorman <mgorman@techsingularity.net>
-> >> Signed-off-by: David Hildenbrand <david@redhat.com>
-> >
-> > While I am not against removing this unused code I am really curious
-> > what is the future of the auto detection. Has this just fall through
-> > cracks or there are some more serious problem to make detection
-> > possible/reliable?
->
-> From the bouncing mails I assume Keith - author of the original patches
-> in [1] -  is no longer working at Intel (or I messed up :) "#5.1.0
-> Address rejected"). Maybe Dan can clarify what the future of this is.
+On Tue, Jun 16, 2020 at 04:49:28PM +0100, Stefan Hajnoczi wrote:
+> On Tue, Jun 16, 2020 at 02:26:38AM +0000, Tian, Kevin wrote:
+> > > From: Stefan Hajnoczi <stefanha@gmail.com>
+> > > Sent: Monday, June 15, 2020 6:02 PM
+> > > 
+> > > On Thu, Jun 11, 2020 at 05:15:19AM -0700, Liu Yi L wrote:
+> > > > Shared Virtual Addressing (SVA), a.k.a, Shared Virtual Memory (SVM) on
+> > > > Intel platforms allows address space sharing between device DMA and
+> > > > applications. SVA can reduce programming complexity and enhance
+> > > security.
+> > > >
+> > > > This VFIO series is intended to expose SVA usage to VMs. i.e. Sharing
+> > > > guest application address space with passthru devices. This is called
+> > > > vSVA in this series. The whole vSVA enabling requires QEMU/VFIO/IOMMU
+> > > > changes. For IOMMU and QEMU changes, they are in separate series (listed
+> > > > in the "Related series").
+> > > >
+> > > > The high-level architecture for SVA virtualization is as below, the key
+> > > > design of vSVA support is to utilize the dual-stage IOMMU translation (
+> > > > also known as IOMMU nesting translation) capability in host IOMMU.
+> > > >
+> > > >
+> > > >     .-------------.  .---------------------------.
+> > > >     |   vIOMMU    |  | Guest process CR3, FL only|
+> > > >     |             |  '---------------------------'
+> > > >     .----------------/
+> > > >     | PASID Entry |--- PASID cache flush -
+> > > >     '-------------'                       |
+> > > >     |             |                       V
+> > > >     |             |                CR3 in GPA
+> > > >     '-------------'
+> > > > Guest
+> > > > ------| Shadow |--------------------------|--------
+> > > >       v        v                          v
+> > > > Host
+> > > >     .-------------.  .----------------------.
+> > > >     |   pIOMMU    |  | Bind FL for GVA-GPA  |
+> > > >     |             |  '----------------------'
+> > > >     .----------------/  |
+> > > >     | PASID Entry |     V (Nested xlate)
+> > > >     '----------------\.------------------------------.
+> > > >     |             |   |SL for GPA-HPA, default domain|
+> > > >     |             |   '------------------------------'
+> > > >     '-------------'
+> > > > Where:
+> > > >  - FL = First level/stage one page tables
+> > > >  - SL = Second level/stage two page tables
+> > > 
+> > > Hi,
+> > > Looks like an interesting feature!
+> > > 
+> > > To check I understand this feature: can applications now pass virtual
+> > > addresses to devices instead of translating to IOVAs?
+> > > 
+> > > If yes, can guest applications restrict the vSVA address space so the
+> > > device only has access to certain regions?
+> > > 
+> > > On one hand replacing IOVA translation with virtual addresses simplifies
+> > > the application programming model, but does it give up isolation if the
+> > > device can now access all application memory?
+> > > 
+> > 
+> > with SVA each application is allocated with a unique PASID to tag its
+> > virtual address space. The device that claims SVA support must guarantee 
+> > that one application can only program the device to access its own virtual
+> > address space (i.e. all DMAs triggered by this application are tagged with
+> > the application's PASID, and are translated by IOMMU's PASID-granular
+> > page table). So, isolation is not sacrificed in SVA.
+> 
+> Isolation between applications is preserved but there is no isolation
+> between the device and the application itself. The application needs to
+> trust the device.
 
-People are actively using this via the command line option. In fact it
-has saved some people that have deployed platforms with mistmatched
-DIMM populations where no HMAT autodetection would be possible. It's
-also been useful for mitigating other memory interleaving performance
-problems that are sensitive to a given address line.
+Right. With all convenience comes security trust. With SVA there is an
+expectation that the device has the required security boundaries properly
+implemented. FWIW, what is our guarantee today that VF's are secure from
+one another or even its own PF? They can also generate transactions with
+any of its peer id's and there is nothing an IOMMU can do today. Other than
+rely on ACS. Even BusMaster enable can be ignored and devices (malicious
+or otherwise) can generate after the BM=0. With SVM you get the benefits of
 
-The reason this is still manual is the dearth of platforms that
-publish an HMAT, but again the command line option is actively
-mitigating performance issues or otherwise allowing for testing a
-"pre-aged" memory allocator free list.
+* Not having to register regions
+* Don't need to pin application space for DMA.
+
+> 
+> Examples:
+> 
+> 1. The device can snoop secret data from readable pages in the
+>    application's virtual memory space.
+
+Aren't there other security technologies that can address this?
+
+> 
+> 2. The device can gain arbitrary execution on the CPU by overwriting
+>    control flow addresses (e.g. function pointers, stack return
+>    addresses) in writable pages.
+
+I suppose technology like CET might be able to guard. The general
+expectation is code pages and anything that needs to be protected should be
+mapped nor writable.
+
+Cheers,
+Ashok
