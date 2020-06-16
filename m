@@ -2,59 +2,56 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C471C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0BE2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED80207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323369;
-	bh=/r3KO7PaVTlxx0ywqc9J+F4gfKLaD0dZKTHkI7KZUWc=;
+	s=default; t=1592323374;
+	bh=haZufumXIivprfu8VoTRQ4JkgkKWPzkC5c1Tw18T4LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fY1LEKztt++2c9okjqo1WTAFDyt52RGa7dSrIRdJiQtVkriPkzwlKkHmCsjmiPfHe
-	 pceMPytU5rVeIlIirP1aQJ+WBNRzOMePRj3okvFmgXFMnDlKbUjAygeQf+PyhM5KoR
-	 ZRVztUA3/gBzHhj60xtWanPRFUA1u2gkTP+ZKgaA=
+	b=uPYu2ncNFsXyOaN8v4ff4Zs39rlIXzg0c/oK83YuL/gLmmo/SwEioQHco9E66WcC9
+	 Tv9eVfzqYbdYzhNE5GMVE8AfnokV3LuZaXjgyn+U6tQHHzg6XgGrKj5Rm+KJhDi+lM
+	 ZXr/xsETRM6LHJhG0uNiNLGDlM8QR9L5zHMhy2VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732630AbgFPPu6 (ORCPT
+        id S1732817AbgFPQCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:50:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:02:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732618AbgFPPuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:50:46 -0400
+        id S1732624AbgFPPus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D664521508;
-        Tue, 16 Jun 2020 15:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B617221527;
+        Tue, 16 Jun 2020 15:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322645;
-        bh=/r3KO7PaVTlxx0ywqc9J+F4gfKLaD0dZKTHkI7KZUWc=;
+        s=default; t=1592322648;
+        bh=haZufumXIivprfu8VoTRQ4JkgkKWPzkC5c1Tw18T4LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cL32zkzQDEBN5WjgCNHNF3I9PUaqvmycTVvJAhW9T5oovlmEZGxENYU9VSE4+Ml3+
-         YsPK4TBP201fTN0MYqmPa3A5bYSBoVI6nG4mQQFbVPFE/jJXunuHlcN/fNJFqlAB4x
-         PCZrh7p5Oib6B+MbtxvFrIQ4mpSuGW1+sV/RKZwQ=
+        b=a19DOTF0j/BOOmK/GE22x34y8Tv8ql+s7g7/fJ2R7ZBNRl27JwkDqhGRE18hlrK6z
+         i4R4ZpkQGkhnST7GwcgfYv48fWg4qEpHKZCBcq8vXhgUW/IIbK3+0Lpv10Afghc2pj
+         yqGsCuqBVvejOY59Aix7Sw4PgvoTL4MUebVJ/YVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
-        Steven Price <steven.price@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 049/161] x86: mm: ptdump: calculate effective permissions correctly
-Date:   Tue, 16 Jun 2020 17:33:59 +0200
-Message-Id: <20200616153108.713593706@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 032/161] spi: dw: Fix native CS being unset
+Date:   Tue, 16 Jun 2020 17:33:42 +0200
+Message-Id: <20200616153107.918956461@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -67,188 +64,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Price <steven.price@arm.com>
+[ Upstream commit 9aea644ca17b94f82ad7fa767cbc4509642f4420 ]
 
-commit 1494e0c38ee903e83aefb58caf54a9217273d49a upstream.
+Commit 6e0a32d6f376 ("spi: dw: Fix default polarity of native
+chipselect") attempted to fix the problem when GPIO active-high
+chip-select is utilized to communicate with some SPI slave. It fixed
+the problem, but broke the normal native CS support. At the same time
+the reversion commit ada9e3fcc175 ("spi: dw: Correct handling of native
+chipselect") didn't solve the problem either, since it just inverted
+the set_cs() polarity perception without taking into account that
+CS-high might be applicable. Here is what is done to finally fix the
+problem.
 
-Patch series "Fix W+X debug feature on x86"
+DW SPI controller demands any native CS being set in order to proceed
+with data transfer. So in order to activate the SPI communications we
+must set any bit in the Slave Select DW SPI controller register no
+matter whether the platform requests the GPIO- or native CS. Preferably
+it should be the bit corresponding to the SPI slave CS number. But
+currently the dw_spi_set_cs() method activates the chip-select
+only if the second argument is false. Since the second argument of the
+set_cs callback is expected to be a boolean with "is-high" semantics
+(actual chip-select pin state value), the bit in the DW SPI Slave
+Select register will be set only if SPI core requests the driver
+to set the CS in the low state. So this will work for active-low
+GPIO-based CS case, and won't work for active-high CS setting
+the bit when SPI core actually needs to deactivate the CS.
 
-Jan alerted me[1] that the W+X detection debug feature was broken in x86
-by my change[2] to switch x86 to use the generic ptdump infrastructure.
+This commit fixes the problem for all described cases. So no matter
+whether an SPI slave needs GPIO- or native-based CS with active-high
+or low signal the corresponding bit will be set in SER.
 
-Fundamentally the approach of trying to move the calculation of
-effective permissions into note_page() was broken because note_page() is
-only called for 'leaf' entries and the effective permissions are passed
-down via the internal nodes of the page tree.  The solution I've taken
-here is to create a new (optional) callback which is called for all
-nodes of the page tree and therefore can calculate the effective
-permissions.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Fixes: ada9e3fcc175 ("spi: dw: Correct handling of native chipselect")
+Fixes: 6e0a32d6f376 ("spi: dw: Fix default polarity of native chipselect")
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Secondly on some configurations (32 bit with PAE) "unsigned long" is not
-large enough to store the table entries.  The fix here is simple - let's
-just use a u64.
-
-[1] https://lore.kernel.org/lkml/d573dc7e-e742-84de-473d-f971142fa319@suse.com/
-[2] 2ae27137b2db ("x86: mm: convert dump_pagetables to use walk_page_range")
-
-This patch (of 2):
-
-By switching the x86 page table dump code to use the generic code the
-effective permissions are no longer calculated correctly because the
-note_page() function is only called for *leaf* entries.  To calculate
-the actual effective permissions it is necessary to observe the full
-hierarchy of the page tree.
-
-Introduce a new callback for ptdump which is called for every entry and
-can therefore update the prot_levels array correctly.  note_page() can
-then simply access the appropriate element in the array.
-
-[steven.price@arm.com: make the assignment conditional on val != 0]
-  Link: http://lkml.kernel.org/r/430c8ab4-e7cd-6933-dde6-087fac6db872@arm.com
-Fixes: 2ae27137b2db ("x86: mm: convert dump_pagetables to use walk_page_range")
-Reported-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200521152308.33096-1-steven.price@arm.com
-Link: http://lkml.kernel.org/r/20200521152308.33096-2-steven.price@arm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200515104758.6934-5-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/dump_pagetables.c |   33 ++++++++++++++++++++-------------
- include/linux/ptdump.h        |    1 +
- mm/ptdump.c                   |   17 ++++++++++++++++-
- 3 files changed, 37 insertions(+), 14 deletions(-)
+ drivers/spi/spi-dw.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -249,10 +249,22 @@ static void note_wx(struct pg_state *st,
- 		  (void *)st->start_address);
- }
- 
--static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
-+static void effective_prot(struct ptdump_state *pt_st, int level, u64 val)
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 31e3f866d11a..6c2d8df50507 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -128,12 +128,20 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
  {
--	return (prot1 & prot2 & (_PAGE_USER | _PAGE_RW)) |
--	       ((prot1 | prot2) & _PAGE_NX);
-+	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-+	pgprotval_t prot = val & PTE_FLAGS_MASK;
-+	pgprotval_t effective;
-+
-+	if (level > 0) {
-+		pgprotval_t higher_prot = st->prot_levels[level - 1];
-+
-+		effective = (higher_prot & prot & (_PAGE_USER | _PAGE_RW)) |
-+			    ((higher_prot | prot) & _PAGE_NX);
-+	} else {
-+		effective = prot;
-+	}
-+
-+	st->prot_levels[level] = effective;
- }
+ 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+ 	struct chip_data *chip = spi_get_ctldata(spi);
++	bool cs_high = !!(spi->mode & SPI_CS_HIGH);
  
- /*
-@@ -270,16 +282,10 @@ static void note_page(struct ptdump_stat
- 	struct seq_file *m = st->seq;
+ 	/* Chip select logic is inverted from spi_set_cs() */
+ 	if (chip && chip->cs_control)
+ 		chip->cs_control(!enable);
  
- 	new_prot = val & PTE_FLAGS_MASK;
--
--	if (level > 0) {
--		new_eff = effective_prot(st->prot_levels[level - 1],
--					 new_prot);
--	} else {
--		new_eff = new_prot;
--	}
--
--	if (level >= 0)
--		st->prot_levels[level] = new_eff;
-+	if (!val)
-+		new_eff = 0;
-+	else
-+		new_eff = st->prot_levels[level];
- 
- 	/*
- 	 * If we have a "break" in the series, we need to flush the state that
-@@ -374,6 +380,7 @@ static void ptdump_walk_pgd_level_core(s
- 	struct pg_state st = {
- 		.ptdump = {
- 			.note_page	= note_page,
-+			.effective_prot = effective_prot,
- 			.range		= ptdump_ranges
- 		},
- 		.level = -1,
---- a/include/linux/ptdump.h
-+++ b/include/linux/ptdump.h
-@@ -14,6 +14,7 @@ struct ptdump_state {
- 	/* level is 0:PGD to 4:PTE, or -1 if unknown */
- 	void (*note_page)(struct ptdump_state *st, unsigned long addr,
- 			  int level, unsigned long val);
-+	void (*effective_prot)(struct ptdump_state *st, int level, u64 val);
- 	const struct ptdump_range *range;
- };
- 
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -36,6 +36,9 @@ static int ptdump_pgd_entry(pgd_t *pgd,
- 		return note_kasan_page_table(walk, addr);
- #endif
- 
-+	if (st->effective_prot)
-+		st->effective_prot(st, 0, pgd_val(val));
-+
- 	if (pgd_leaf(val))
- 		st->note_page(st, addr, 0, pgd_val(val));
- 
-@@ -53,6 +56,9 @@ static int ptdump_p4d_entry(p4d_t *p4d,
- 		return note_kasan_page_table(walk, addr);
- #endif
- 
-+	if (st->effective_prot)
-+		st->effective_prot(st, 1, p4d_val(val));
-+
- 	if (p4d_leaf(val))
- 		st->note_page(st, addr, 1, p4d_val(val));
- 
-@@ -70,6 +76,9 @@ static int ptdump_pud_entry(pud_t *pud,
- 		return note_kasan_page_table(walk, addr);
- #endif
- 
-+	if (st->effective_prot)
-+		st->effective_prot(st, 2, pud_val(val));
-+
- 	if (pud_leaf(val))
- 		st->note_page(st, addr, 2, pud_val(val));
- 
-@@ -87,6 +96,8 @@ static int ptdump_pmd_entry(pmd_t *pmd,
- 		return note_kasan_page_table(walk, addr);
- #endif
- 
-+	if (st->effective_prot)
-+		st->effective_prot(st, 3, pmd_val(val));
- 	if (pmd_leaf(val))
- 		st->note_page(st, addr, 3, pmd_val(val));
- 
-@@ -97,8 +108,12 @@ static int ptdump_pte_entry(pte_t *pte,
- 			    unsigned long next, struct mm_walk *walk)
- {
- 	struct ptdump_state *st = walk->private;
-+	pte_t val = READ_ONCE(*pte);
-+
-+	if (st->effective_prot)
-+		st->effective_prot(st, 4, pte_val(val));
- 
--	st->note_page(st, addr, 4, pte_val(READ_ONCE(*pte)));
-+	st->note_page(st, addr, 4, pte_val(val));
- 
- 	return 0;
- }
+-	if (!enable)
++	/*
++	 * DW SPI controller demands any native CS being set in order to
++	 * proceed with data transfer. So in order to activate the SPI
++	 * communications we must set a corresponding bit in the Slave
++	 * Enable register no matter whether the SPI core is configured to
++	 * support active-high or active-low CS level.
++	 */
++	if (cs_high == enable)
+ 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+ 	else if (dws->cs_override)
+ 		dw_writel(dws, DW_SPI_SER, 0);
+-- 
+2.25.1
+
 
 
