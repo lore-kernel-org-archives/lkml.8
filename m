@@ -6,126 +6,113 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4549C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC086C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A62DD208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24F3208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C58ODwXu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gnG7x985"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbgFPQfR (ORCPT
+        id S1729303AbgFPQgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:35:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32389 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729912AbgFPQfQ (ORCPT
+        Tue, 16 Jun 2020 12:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728860AbgFPQgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:35:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592325315;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ORHnGJFA6Z19L1N7yd7kPFx1/z/PnVDRBNvmZJMNqEQ=;
-        b=C58ODwXuEakej8S2vZBMO9sREEvmAah9xtwU9piCSyGunyo6hn6njjwk4YeuiuC0ZzlTDT
-        rW3IFulau/nfbkH3YlGN0cvpyMF4mxRIQk9PS6buVNrhGaZTGImISkdkjyvqKDRofESlzm
-        Mm9Ul/0NBmlrfJ+UlJQp/+6jZgs/T54=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-gH-oggDdPRa8ev6uGsQkRg-1; Tue, 16 Jun 2020 12:35:13 -0400
-X-MC-Unique: gH-oggDdPRa8ev6uGsQkRg-1
-Received: by mail-qk1-f197.google.com with SMTP id a6so17244240qka.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:35:13 -0700 (PDT)
+        Tue, 16 Jun 2020 12:36:06 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3880DC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:36:06 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id m21so14740106eds.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o45SzGEhISkHwjx9Xk4Zota2ATe5VzgJHxzdX5yZlQU=;
+        b=gnG7x985R1tEYKBnLkUkqIitLuGBbe4oy0tyxAEpf5dAqa8wk5smI8Q0pG0OCsItX9
+         Dtq00XodNngQZXU3Dg+2Nt/+mxzu9Or+7h6TwNDXlMz2y2RVzRZZDD4xU5xoIzkyUpSR
+         dlZUH/WF8264k1pLGkLagvsL1f2bnzkP2I2Ko=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ORHnGJFA6Z19L1N7yd7kPFx1/z/PnVDRBNvmZJMNqEQ=;
-        b=Ppf43pY8FhNXVoFFy29EQPp/XX9m9VFXgWjpougSDfdDmqB+hljxOFovGBdCDvA4fC
-         kQtXGenfKFSzyscrtJthGFDbmZA/HlpRfne/NmIXnmT+OHjfqhrwmCV717+Cmr6Slqa4
-         R0yvHU5ZcIAcTQixSOSJx4mdIhcisYXkvlGpPIyUVxGXTIb1o2mygFiJIfE+L7KmA45C
-         IKywUgM6oUOzD7vi9tmhCUv/PZdUpF2ckET2UsNMbhgNn6V/T6A35JY9mEQ3OKfR/tzb
-         XtScDv//TOZQaJLh/4mPjcv/eMEf2k5fvUgjCS5zU45crVPer4aXfNlvBloTZO6rRv1J
-         zfjg==
-X-Gm-Message-State: AOAM532aHbo0HSmAh/XvimKrbQzjeUu2RTsfKjXAcL4HyJuiTGaLdHmz
-        +1zBxcLpSAznsnWp0Z8ENWSvfE2CzhLpqhJbaELN0LNK7/+aPtRo/xYrymMZVmJQNwcgGGQeSY3
-        qRH9kLMEcJdyKyTNhWAmlshAP
-X-Received: by 2002:a37:9587:: with SMTP id x129mr21560261qkd.184.1592325312798;
-        Tue, 16 Jun 2020 09:35:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxFtYGitcStKhm9rXFtngsYzszPm1k1N+2h9Oc/swRH+scEB+KPGSxp8+t3TKRkUXSpqa15Pg==
-X-Received: by 2002:a37:9587:: with SMTP id x129mr21560236qkd.184.1592325312498;
-        Tue, 16 Jun 2020 09:35:12 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id b24sm14336505qkj.0.2020.06.16.09.35.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 09:35:11 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 12:35:10 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
-Message-ID: <20200616163510.GD11838@xz-x1>
-References: <20200615221607.7764-1-peterx@redhat.com>
- <20200615222302.8452-1-peterx@redhat.com>
- <20200616155933.GA12897@oc3871087118.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o45SzGEhISkHwjx9Xk4Zota2ATe5VzgJHxzdX5yZlQU=;
+        b=sxiBX7ibMUwYkjs0sSM2iJsr3GxuuBtqLwpXqrJ8BeHbToLc/mLzKQpmuI/ab6IL2t
+         95IihFIj3J3eLiq6MOUX7ilZfmMU7yMiAMIFP4PZGjcVO0lKzYHj92K71p6yFV7rty1X
+         7gx+F3kKbJYc/Q/mjcm0sQKnaESpyeUnUo6bawSVOYngBD1lfPDsMTTQW1IBfg1/OmJ6
+         q1WG93Cc8Fe2pjCBdygPWlkY8+I30BUCiVgL7l7SOiAyK5Xfjmurp8nTzoHQ19Dbf9tD
+         pgJfobRLBtgM2OYBPAtHGDFM3SPjtjQyC0QVWJ57XkHZGgOTt5T//UiBEV4i3b2mfoEV
+         2rQw==
+X-Gm-Message-State: AOAM533hSPpXtYYKdVvouz34tB5umf53Tz8ZFt7BDsvdRzummjrPuQpy
+        Eu3o7IenS/AFTb0MjK2+cXUgBsxJNb2crH0GyIiC4w==
+X-Google-Smtp-Source: ABdhPJyc7aL3w4XRRIomOZ4mG3n4e8Sc1Y0FRNCDqH9HrUkbAg1OXuTS1fNZ/rLEGJcYfisj5f3DmVKI8970fJ0YBGk=
+X-Received: by 2002:a05:6402:b13:: with SMTP id bm19mr3460769edb.82.1592325364666;
+ Tue, 16 Jun 2020 09:36:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200616155933.GA12897@oc3871087118.ibm.com>
+References: <CAJ-EccOy4qDpbfrP5=KH40LSOx1F4-ciY2=hFv_c+goUHLJ6PQ@mail.gmail.com>
+ <CAHk-=wiLXXR1+o4VAuw5MM3V1D8h6C6te3y8VMvW8iAJw6noJg@mail.gmail.com>
+ <CAJ-EccPGQ62yMK1Nmvie4qWzproSqb4POwAD4_0Nt62KLbGhqg@mail.gmail.com>
+ <alpine.LRH.2.21.2006151517230.9003@namei.org> <CAJ-EccO+4s8Dd=wj75ckfp4ZLhppt7uCgg2chf4SvTOxzqbgPw@mail.gmail.com>
+ <alpine.LRH.2.21.2006160403190.9951@namei.org>
+In-Reply-To: <alpine.LRH.2.21.2006160403190.9951@namei.org>
+From:   Micah Morton <mortonm@chromium.org>
+Date:   Tue, 16 Jun 2020 09:35:54 -0700
+Message-ID: <CAJ-EccNrw6J0-Z2qAMpAT4YUZMmuAN8P33SjN6tGOjekYHggGw@mail.gmail.com>
+Subject: Re: [GIT PULL] SafeSetID LSM changes for v5.8
+To:     James Morris <jmorris@namei.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        John Johansen <john.johansen@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Alexander,
+On Mon, Jun 15, 2020 at 11:03 AM James Morris <jmorris@namei.org> wrote:
+>
+> On Mon, 15 Jun 2020, Micah Morton wrote:
+>
+> > On Sun, Jun 14, 2020 at 10:21 PM James Morris <jmorris@namei.org> wrote:
+> > >
+> > > On Sun, 14 Jun 2020, Micah Morton wrote:
+> > >
+> > > > This patch was sent to the security mailing list and there were no objections.
+> > >
+> > > Standard practice for new or modified LSM hooks is that they are reviewed
+> > > and acked by maintainers of major LSMs (SELinux, AppArmor, and Smack, at
+> > > least).
+> > >
+> > > "No objections" should be considered "not reviewed".
+> > >
+> > > Can you add your tree to linux-next?
+> > > https://www.kernel.org/doc/man-pages/linux-next.html
+> >
+> > Sure, I can do that. I should just send an email to Stephen Rothwell
+> > asking him to include the -next branch from my tree?
+>
+> Yep, thanks.
 
-On Tue, Jun 16, 2020 at 05:59:33PM +0200, Alexander Gordeev wrote:
-> > @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
-> >  	if (unlikely(fault & VM_FAULT_ERROR))
-> >  		goto out_up;
-> > 
-> > -	/*
-> > -	 * Major/minor page fault accounting is only done on the
-> > -	 * initial attempt. If we go through a retry, it is extremely
-> > -	 * likely that the page will be found in page cache at that point.
-> > -	 */
-> >  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
-> > -		if (fault & VM_FAULT_MAJOR) {
-> > -			tsk->maj_flt++;
-> > -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
-> > -				      regs, address);
-> > -		} else {
-> > -			tsk->min_flt++;
-> > -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
-> > -				      regs, address);
-> > -		}
-> >  		if (fault & VM_FAULT_RETRY) {
-> >  			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
-> >  			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
-> 
-> Seems like the call to mm_fault_accounting() will be missed if
-> we entered here with FAULT_FLAG_RETRY_NOWAIT flag set, since it
-> jumps to "out_up"...
+The commit is in -next as of next-20200615
 
-This is true as a functional change.  However that also means that we've got a
-VM_FAULT_RETRY, which hints that this fault has been requested to retry rather
-than handled correctly (for instance, due to some try_lock failed during the
-fault process).
+Thanks
 
-To me, that case should not be counted as a page fault at all?  Or we might get
-the same duplicated accounting when the page fault retried from a higher stack.
-
-Thanks,
-
--- 
-Peter Xu
-
+>
+> >
+> > >
+> > > --
+> > > James Morris
+> > > <jmorris@namei.org>
+> > >
+> >
+>
+> --
+> James Morris
+> <jmorris@namei.org>
+>
