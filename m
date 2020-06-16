@@ -2,229 +2,233 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93624C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C90207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592333739;
-	bh=IsdzgXrYkW06ZRsfIxA8YgHQt63UhViFakKJYKfyV+s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UGGzk6je8HTOE1jOuJx+3Tit0F/+2xd4WURZr0ovA5AbqHLsrmtZ8OkVhzuePyMsB
-	 TiUQpEzersSUChRK/S/k3GyyoGNiRqNPer2UzJtlS63MW3d2OskZwLodoJndQn7qFn
-	 Wt5XHA+C1849caxIernSeiV3anrB/y1sSwxFyW6s=
+	by mail.kernel.org (Postfix) with ESMTP id 64DCA207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucqd3uRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730246AbgFPSzi (ORCPT
+        id S1730573AbgFPS5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47522 "EHLO
+        Tue, 16 Jun 2020 14:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgFPSzh (ORCPT
+        with ESMTP id S1730543AbgFPS5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:55:37 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C6EC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 11:55:37 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id d7so12392314lfi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 11:55:37 -0700 (PDT)
+        Tue, 16 Jun 2020 14:57:48 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A70C061573;
+        Tue, 16 Jun 2020 11:57:48 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id g44so7267023uae.12;
+        Tue, 16 Jun 2020 11:57:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q0q8gubf8krgZV8oGCJJ77Manwa2gcrwHgDVVcoIMF4=;
-        b=Za9iu2csZgttP35aE+aT08tNb3V6uxoyuIhn76uFapZGtiQBoNJQlm46x1X88modKX
-         56L73dqUCWnkD91z+9cqMwv5Y5xo/wgnVPwKoQqgiOz23E0vmPXaA37iu5082TSSxz11
-         OBgSNYHUnDL9NHnY2O/1eCVT5xkEIS6vHlrTo=
+         :cc:content-transfer-encoding;
+        bh=++LLNhIunq6DJtsYt7QZbdqySyg8Go49MpsG3rgmJFk=;
+        b=ucqd3uRfFrWWfhaWf9cHHzOjFfxjf+pM4uKzNCUtF/d+yZgJyda2W8vRmNZTm1bayL
+         ApfngBOpOMdN6PzBTFTDn5ZDvzQ+hZTx/O5Bc61BarswK4M3/TWkbP3G/EDw7yFl6FfN
+         b0WGuUH8p94o8xa78M0Pw5GtNyBAXLSbVfEAZ3JVVtxB52wjpaXUrbWmvhrHK7amPaTC
+         I89MkXxWZL+P9zfwnOofiMiR05w0LUtemmqwx9eF7rxbYZV5LbvLH4BW4vn5xvvlZeKa
+         rO44opmN0Vbscb9rd2pRP5SMuncZsYxio5xx/pJuIGqU3W5RlSOKaL20wL3KjIhGOarv
+         eIKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q0q8gubf8krgZV8oGCJJ77Manwa2gcrwHgDVVcoIMF4=;
-        b=k4m0tQ++FHNaVWGwgQ7w2Ddf08HF9Mt6IBH9QfquH/2r5jJyj3sYQiXSxbelrgTOb+
-         Z1nV1n5YwWtZTnCfhMcGYBWeTTSUwkhuJjZSKNEw4dtSGX7LuDKwqPJA+XUwSQImbi7B
-         hSH8stHRO3eta4FoaL9ozQFAVHBq/N0J2Nl4fuT9L6xnyYhsi/r1QLto/sqUxfvfuxEC
-         LthZsbhIBwa/i2+4UfnhuMa+3Tgh/bMT9MUiDun22rSN/lf0xuxlt5XneI3+YLvhFwzj
-         mdOApobLlcR4hYQPOZ46sEYrlhr8lnK8kDzkYKbDnPB1ZZdPvJS1pPzd98ZQqp6S7kBF
-         /JAQ==
-X-Gm-Message-State: AOAM533xNamfCVwiwjWN0eUSnm2/DTKfwxyfCvSYlIwYzGZmGG5M7qmc
-        CYHj6gosi550ZtEk5u0om0weRxabTdw=
-X-Google-Smtp-Source: ABdhPJzD7If6nG1sjDWX1/pnHOwnxyv+n64Z7ClQTcxWgOO/JjVl4Z06NRy0rtJZCi55NznJClNKwQ==
-X-Received: by 2002:ac2:48a6:: with SMTP id u6mr2404776lfg.49.1592333735576;
-        Tue, 16 Jun 2020 11:55:35 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id y3sm4547970ljk.39.2020.06.16.11.55.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 11:55:34 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id q19so24896772lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 11:55:34 -0700 (PDT)
-X-Received: by 2002:a2e:97c3:: with SMTP id m3mr2263094ljj.312.1592333733916;
- Tue, 16 Jun 2020 11:55:33 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=++LLNhIunq6DJtsYt7QZbdqySyg8Go49MpsG3rgmJFk=;
+        b=GRIC7JJ91raUgO2YCmNEzq1WuxJgiG5Rgj4dbdbe/LGMW4hteZwH8a4+ACGxmS+Rqt
+         /RFK8UEoLBxDMRGmR0MkS/VaAC85aCfwh3d7P7idNbQsF12eI1DII3ylI8ROcs9mXQxl
+         zfhIgY2JCpZBvIOh8pdGOiH8xlvZNFbC4PE5mcGail2+7MyW+EL4YAMPf0+EJabvqCxt
+         ICglS+iRiGa6V0EGO5uRabtqnF5LA9a5gdOkmCWZ2Fgx6Dccble4GkH3xQh5kxR82aqj
+         ucRu33D8zqyJUWw/o7xcct7l4kQVrpgkHJHYp+yhOgUtlg1ZO0U923DU0RmrmjWdIVpX
+         0g5w==
+X-Gm-Message-State: AOAM533D7f1ElUVAShSB/Yxy6wZlyGv+tB0dDCncPJqdxW5N6GJohFWq
+        7hL3QU2HZcv+Zuv9dhdRhy4aMc2k6/TdJlWbIQE=
+X-Google-Smtp-Source: ABdhPJyYmytGR8vTEkPVUPgo49cK7EQnTHmS8BVcg2vn5GTHd6Fgny/W6WxC0wlrw/Rf9G2X+D5P4Lx6cnQx09zgPeI=
+X-Received: by 2002:ab0:71ce:: with SMTP id n14mr3669545uao.46.1592333867137;
+ Tue, 16 Jun 2020 11:57:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200615221607.7764-1-peterx@redhat.com>
-In-Reply-To: <20200615221607.7764-1-peterx@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 16 Jun 2020 11:55:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
-Message-ID: <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
-Subject: Re: [PATCH 00/25] mm: Page fault accounting cleanups
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        openrisc@lists.librecores.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: multipart/mixed; boundary="00000000000093703c05a8381612"
+References: <20200614200121.14147-1-digetx@gmail.com> <CACvgo51QuXMgWhFk4C=3rGvUZDX1_W0RZtVb5RtRPiHTpMebWQ@mail.gmail.com>
+ <8f789ef5-bebf-c869-784d-afda70fc1fb8@gmail.com> <CACvgo50oSMbgXw1vHwVT4hhGe6g3YzKQEohCLJdfDq+0UaN1jw@mail.gmail.com>
+ <646b3f37-0f72-7f3b-388f-f71dbcdd5c84@gmail.com>
+In-Reply-To: <646b3f37-0f72-7f3b-388f-f71dbcdd5c84@gmail.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Tue, 16 Jun 2020 19:54:04 +0100
+Message-ID: <CACvgo50BFH5qsPyWx9a1aZ4k5bzjSN-3KTU0BvnZ-nG-hfzKOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] 180 degrees rotation support for NVIDIA Tegra DRM
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>, linux-tegra@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000093703c05a8381612
-Content-Type: text/plain; charset="UTF-8"
-
-On Mon, Jun 15, 2020 at 3:16 PM Peter Xu <peterx@redhat.com> wrote:
+On Tue, 16 Jun 2020 at 18:20, Dmitry Osipenko <digetx@gmail.com> wrote:
 >
-> This series tries to address all of them by introducing mm_fault_accounting()
-> first, so that we move all the page fault accounting into the common code base,
-> then call it properly from arch pf handlers just like handle_mm_fault().
+> 16.06.2020 18:48, Emil Velikov =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Tue, 16 Jun 2020 at 12:40, Dmitry Osipenko <digetx@gmail.com> wrote:
+> >>
+> >> 16.06.2020 01:26, Emil Velikov =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> Hi Dmitry,
+> >>>
+> >>> On Mon, 15 Jun 2020 at 08:28, Dmitry Osipenko <digetx@gmail.com> wrot=
+e:
+> >>>>
+> >>>> Hello!
+> >>>>
+> >>>> This series adds 180=C2=B0 display plane rotation support to the NVI=
+DIA Tegra
+> >>>> DRM driver which is needed for devices that have display panel physi=
+cally
+> >>>> mounted upside-down, like Nexus 7 tablet device for example [1]. Sin=
+ce
+> >>>> DRM panel rotation is a new thing for a userspace, currently only
+> >>>> Opentegra Xorg driver handles the rotated display panel [2], but thi=
+s
+> >>>> is good enough for the start.
+> >>>>
+> >>>> Note that later on it should be possible to implement a transparent =
+180=C2=B0
+> >>>> display rotation for Tegra DRM driver which will remove the need to =
+have
+> >>>> a bleeding edge userspace that knows how to rotate display planes an=
+d I'm
+> >>>> slowly working on it. For the starter we can go with the minimal rot=
+ation
+> >>>> support, so it's not a blocker.
+> >>>>
+> >>>> This series is based on the work that was made by Derek Basehore for=
+ the
+> >>>> Mediatek driver [3], his patch is included into this patchset. I add=
+ed
+> >>>> my tested-by tag to the Derek's patch.
+> >>>>
+> >>>> Please review and apply, thanks in advance!
+> >>>>
+> >>>> [1] https://patchwork.ozlabs.org/project/linux-tegra/patch/202006071=
+54327.18589-3-digetx@gmail.com/
+> >>>> [2] https://github.com/grate-driver/xf86-video-opentegra/commit/28eb=
+20a3959bbe5bc3a3b67e55977093fd5114ca
+> >>>> [3] https://lkml.org/lkml/2020/3/5/1119
+> >>>>
+> >>>> Changelog:
+> >>>>
+> >>>> v2: - Dropped "drm/panel: Set display info in panel attach" patch, w=
+hich
+> >>>>       turned out to be obsolete now.
+> >>>>
+> >>>>     - Renamed the cover-latter, hopefully this will fix the bouncing=
+ emails.
+> >>>>
+> >>>> Derek Basehore (1):
+> >>>>   drm/panel: Add helper for reading DT rotation
+> >>>>
+> >>>> Dmitry Osipenko (4):
+> >>>>   drm/panel: lvds: Set up panel orientation
+> >>>
+> >>> IMHO it's perfectly reasonable to report the panel orientation to
+> >>> userspace, which can apply plane rotation as needed.
+> >>>
+> >>> Although I see that this series, alike Derek's, has a couple of issue=
+s:
+> >>>  - only a single panel driver is updated
+> >>>  - rotation is _not_ listed as supported property, in said panel
+> >>> driver device-tree bindings
+> >>>
+> >>> My personal inclination is that we should aim for a comprehensive sol=
+ution:
+> >>>  - wire all panel drivers, as currently documented (quick grep list b=
+elow)
+> >>>  - document and wire-up the lvds and boe panels - as proposed by you
+> >>> and Derek respectively
+> >>>
+> >>> HTH
+> >>> Emil
+> >>>
+> >>> Documentation/devicetree/bindings/display/himax,hx8357d.txt:2
+> >>> Documentation/devicetree/bindings/display/ilitek,ili9225.txt:2
+> >>> Documentation/devicetree/bindings/display/ilitek,ili9341.txt:2
+> >>> Documentation/devicetree/bindings/display/ilitek,ili9486.yaml:2
+> >>> Documentation/devicetree/bindings/display/multi-inno,mi0283qt.txt:2
+> >>> Documentation/devicetree/bindings/display/panel/panel-common.yaml:2
+> >>> Documentation/devicetree/bindings/display/sitronix,st7586.txt:1
+> >>> Documentation/devicetree/bindings/display/sitronix,st7735r.yaml:2
+> >>
+> >> Rotation is a common DT panel property that is described in the
+> >> panel-common.yaml.
+> > The property was introduced almost exclusively for tiny drm panels.
+> > Those ones are a bit different from the rest (in panel/) -
+> > MIPI-DBI/SPI w/o (not connected at least) an actual GPU.
+> >
+> > To make it a bit better, the rotation is seemingly performed in the
+> > tiny driver itself ouch.
+> >
+> >> This property is supported by all panel bindings
+> >> because these bindings inherent the common properties from the
+> >> panel-common.yaml.
+> >>
+> > Seems like that was an unintentional change with the conversion to YAML=
+.
+> > Beforehand only a few selected panels had rotation. Upon closer look -
+> > some panels do have follow-up fixes, to remove/limit the implicit
+> > inclusion.
+>
+> Interesting.. my understanding that the rotation property is supposed to
+> be a generic property which represents physical orientation of a display
+> panel and hence it should be applicable to all panels.
+>
+You're spot on - it is/should be a generic property.
 
-Hmm.
+I believe that in general many panels were mounted in the correct
+orientation so the property, kernel and userspace were slow to catch
+up. In some cases panels will use flip x+y to denote 180 rotation, yet
+lacking the rotation property.
+The s6e8aa0 is an example of the last oddity. To make it better, the
+two dts in-tree always set both flip x and y.
 
-So having looked at this a bit more, I'd actually like to go even
-further, and just get rid of the per-architecture code _entirely_.
+Tl;Dr: Hysterical raisins
 
-Here's a straw-man patch to the generic code - the idea is mostly laid
-out in the comment that I'm just quoting here directly too:
+> > Sam seems like you've done most of the YAML conversion. IMHO it would
+> > make sense to revisit the patches and inherit common properties only
+> > as applicable.
+> >
+> >> I don't think that it makes sense to wire up rotation property to all
+> >> panel drivers at once because those drivers will be untested, at least=
+ I
+> >> don't know anything about those other panels and can't test them. It
+> >> will be much better to support the rotation on by as-needed basis for
+> >> each panel driver individually.
+> >
+> > How about CCing the author and reviewer asking them to test the patch?
+> > The only place where the patches might cause an issue is with tiny,
+> > although patches would still be appreciated.
+>
+> There are quite a lot of panel drivers and I'm a bit doubtful that at
+> least half of devices that use those panels have any real use for the
+> rotation property. I could write the patches.. but in the end it could
+> be a wasted effort if nobody needs it, so I'd prefer not to do it.
 
-        /*
-         * Do accounting in the common code, to avoid unnecessary
-         * architecture differences or duplicated code.
-         *
-         * We arbitrarily make the rules be:
-         *
-         *  - faults that never even got here (because the address
-         *    wasn't valid). That includes arch_vma_access_permitted()
-         *    failing above.
-         *
-         *    So this is expressly not a "this many hardware page
-         *    faults" counter. Use the hw profiling for that.
-         *
-         *  - incomplete faults (ie RETRY) do not count (see above).
-         *    They will only count once completed.
-         *
-         *  - the fault counts as a "major" fault when the final
-         *    successful fault is VM_FAULT_MAJOR, or if it was a
-         *    retry (which implies that we couldn't handle it
-         *    immediately previously).
-         *
-         *  - if the fault is done for GUP, regs wil be NULL and
-         *    no accounting will be done (but you _could_ pass in
-         *    your own regs and it would be accounted to the thread
-         *    doing the fault, not to the target!)
-         */
+That's why I mentioned the rotation introduction or "confusion" if I
+may. Skimming through the pre/post YAML device tree bindings and grep
+through the panel themselves will greatly reduce the list.
+In other words: if neither binding documentation/in-tree dts nor panel
+mentions rotation - omit it.
 
-the code itself in the patch is
-
- (a) pretty trivial and self-evident
-
- (b) INCOMPLETE
-
-that (b) is worth noting: this patch won't compile on its own. It
-intentionally leaves all the users without the new 'regs' argument,
-because you obviously simply need to remove all the code that
-currently tries to do any accounting.
-
-Comments?
-
-This is a bigger change, but I think it might be worth it to _really_
-consolidate the major/minor logic.
-
-One detail worth noting: I do wonder if we should put the
-
-    perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
-
-just in the arch code at the top of the fault handling, and consider
-it entirely unrelated to the major/minor fault handling. The
-major/minor faults fundamnetally are about successes. But the plain
-PERF_COUNT_SW_PAGE_FAULTS could be about things that fail, including
-things that never even get to this point at all.
-
-I'm not convinced it's useful to have three SW events that are defined
-to be A=B+C.
-
-But this does *not* do that part. It' sreally just an RFC patch.
-
-                    Linus
-
---00000000000093703c05a8381612
-Content-Type: application/octet-stream; name=patch
-Content-Disposition: attachment; filename=patch
-Content-Transfer-Encoding: base64
-Content-ID: <f_kbiacfcm0>
-X-Attachment-Id: f_kbiacfcm0
-
-IGluY2x1ZGUvbGludXgvbW0uaCB8ICAzICsrLQogbW0vbWVtb3J5LmMgICAgICAgIHwgNDYgKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQogMiBmaWxlcyBjaGFu
-Z2VkLCA0NyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2luY2x1
-ZGUvbGludXgvbW0uaCBiL2luY2x1ZGUvbGludXgvbW0uaAppbmRleCBkYzdiODczMTBjMTAuLmU4
-MmE2MDQzMzljMCAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9tbS5oCisrKyBiL2luY2x1ZGUv
-bGludXgvbW0uaApAQCAtMTY0OCw3ICsxNjQ4LDggQEAgaW50IGludmFsaWRhdGVfaW5vZGVfcGFn
-ZShzdHJ1Y3QgcGFnZSAqcGFnZSk7CiAKICNpZmRlZiBDT05GSUdfTU1VCiBleHRlcm4gdm1fZmF1
-bHRfdCBoYW5kbGVfbW1fZmF1bHQoc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEsCi0JCQl1bnNp
-Z25lZCBsb25nIGFkZHJlc3MsIHVuc2lnbmVkIGludCBmbGFncyk7CisJCQl1bnNpZ25lZCBsb25n
-IGFkZHJlc3MsIHVuc2lnbmVkIGludCBmbGFncywKKwkJCXN0cnVjdCBwdF9yZWdzICopOwogZXh0
-ZXJuIGludCBmaXh1cF91c2VyX2ZhdWx0KHN0cnVjdCB0YXNrX3N0cnVjdCAqdHNrLCBzdHJ1Y3Qg
-bW1fc3RydWN0ICptbSwKIAkJCSAgICB1bnNpZ25lZCBsb25nIGFkZHJlc3MsIHVuc2lnbmVkIGlu
-dCBmYXVsdF9mbGFncywKIAkJCSAgICBib29sICp1bmxvY2tlZCk7CmRpZmYgLS1naXQgYS9tbS9t
-ZW1vcnkuYyBiL21tL21lbW9yeS5jCmluZGV4IGRjN2YzNTQzYjFmZC4uZjE1MDU2MTUxZmIxIDEw
-MDY0NAotLS0gYS9tbS9tZW1vcnkuYworKysgYi9tbS9tZW1vcnkuYwpAQCAtNzIsNiArNzIsNyBA
-QAogI2luY2x1ZGUgPGxpbnV4L29vbS5oPgogI2luY2x1ZGUgPGxpbnV4L251bWEuaD4KIAorI2lu
-Y2x1ZGUgPGxpbnV4L3BlcmZfZXZlbnQuaD4KICNpbmNsdWRlIDx0cmFjZS9ldmVudHMva21lbS5o
-PgogCiAjaW5jbHVkZSA8YXNtL2lvLmg+CkBAIC00MzUzLDcgKzQzNTQsNyBAQCBzdGF0aWMgdm1f
-ZmF1bHRfdCBfX2hhbmRsZV9tbV9mYXVsdChzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSwKICAq
-IHJldHVybiB2YWx1ZS4gIFNlZSBmaWxlbWFwX2ZhdWx0KCkgYW5kIF9fbG9ja19wYWdlX29yX3Jl
-dHJ5KCkuCiAgKi8KIHZtX2ZhdWx0X3QgaGFuZGxlX21tX2ZhdWx0KHN0cnVjdCB2bV9hcmVhX3N0
-cnVjdCAqdm1hLCB1bnNpZ25lZCBsb25nIGFkZHJlc3MsCi0JCXVuc2lnbmVkIGludCBmbGFncykK
-KwkJdW5zaWduZWQgaW50IGZsYWdzLCBzdHJ1Y3QgcHRfcmVncyAqcmVncykKIHsKIAl2bV9mYXVs
-dF90IHJldDsKIApAQCAtNDM5NCw2ICs0Mzk1LDQ5IEBAIHZtX2ZhdWx0X3QgaGFuZGxlX21tX2Zh
-dWx0KHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hLCB1bnNpZ25lZCBsb25nIGFkZHJlc3MsCiAJ
-CQltZW1fY2dyb3VwX29vbV9zeW5jaHJvbml6ZShmYWxzZSk7CiAJfQogCisJaWYgKHJldCAmIFZN
-X0ZBVUxUX1JFVFJZKQorCQlyZXR1cm4gcmV0OworCisJLyoKKwkgKiBEbyBhY2NvdW50aW5nIGlu
-IHRoZSBjb21tb24gY29kZSwgdG8gYXZvaWQgdW5uZWNlc3NhcnkKKwkgKiBhcmNoaXRlY3R1cmUg
-ZGlmZmVyZW5jZXMgb3IgZHVwbGljYXRlZCBjb2RlLgorCSAqCisJICogV2UgYXJiaXRyYXJpbHkg
-bWFrZSB0aGUgcnVsZXMgYmU6CisJICoKKwkgKiAgLSBmYXVsdHMgdGhhdCBuZXZlciBldmVuIGdv
-dCBoZXJlIChiZWNhdXNlIHRoZSBhZGRyZXNzCisJICogICAgd2Fzbid0IHZhbGlkKS4gVGhhdCBp
-bmNsdWRlcyBhcmNoX3ZtYV9hY2Nlc3NfcGVybWl0dGVkKCkKKwkgKiAgICBmYWlsaW5nIGFib3Zl
-LgorCSAqCisJICogICAgU28gdGhpcyBpcyBleHByZXNzbHkgbm90IGEgInRoaXMgbWFueSBoYXJk
-d2FyZSBwYWdlCisJICogICAgZmF1bHRzIiBjb3VudGVyLiBVc2UgdGhlIGh3IHByb2ZpbGluZyBm
-b3IgdGhhdC4KKwkgKgorCSAqICAtIGluY29tcGxldGUgZmF1bHRzIChpZSBSRVRSWSkgZG8gbm90
-IGNvdW50IChzZWUgYWJvdmUpLgorCSAqICAgIFRoZXkgd2lsbCBvbmx5IGNvdW50IG9uY2UgY29t
-cGxldGVkLgorCSAqCisJICogIC0gdGhlIGZhdWx0IGNvdW50cyBhcyBhICJtYWpvciIgZmF1bHQg
-d2hlbiB0aGUgZmluYWwKKwkgKiAgICBzdWNjZXNzZnVsIGZhdWx0IGlzIFZNX0ZBVUxUX01BSk9S
-LCBvciBpZiBpdCB3YXMgYQorCSAqICAgIHJldHJ5ICh3aGljaCBpbXBsaWVzIHRoYXQgd2UgY291
-bGRuJ3QgaGFuZGxlIGl0CisJICogICAgaW1tZWRpYXRlbHkgcHJldmlvdXNseSkuCisJICoKKwkg
-KiAgLSBpZiB0aGUgZmF1bHQgaXMgZG9uZSBmb3IgR1VQLCByZWdzIHdpbCBiZSBOVUxMIGFuZAor
-CSAqICAgIG5vIGFjY291bnRpbmcgd2lsbCBiZSBkb25lIChidXQgeW91IF9jb3VsZF8gcGFzcyBp
-bgorCSAqICAgIHlvdXIgb3duIHJlZ3MgYW5kIGl0IHdvdWxkIGJlIGFjY291bnRlZCB0byB0aGUg
-dGhyZWFkCisJICogICAgZG9pbmcgdGhlIGZhdWx0LCBub3QgdG8gdGhlIHRhcmdldCEpCisJICov
-CisKKwlpZiAoIXJlZ3MpCisJCXJldHVybiByZXQ7CisKKwlwZXJmX3N3X2V2ZW50KFBFUkZfQ09V
-TlRfU1dfUEFHRV9GQVVMVFMsIDEsIHJlZ3MsIGFkZHJlc3MpOworCisJaWYgKChyZXQgJiBWTV9G
-QVVMVF9NQUpPUikgfHwgKGZsYWdzICYgRkFVTFRfRkxBR19UUklFRCkpIHsKKwkJY3VycmVudC0+
-bWFqX2ZsdCsrOworCQlwZXJmX3N3X2V2ZW50KFBFUkZfQ09VTlRfU1dfUEFHRV9GQVVMVFNfTUFK
-LCAxLCByZWdzLCBhZGRyZXNzKTsKKwl9IGVsc2UgeworCQljdXJyZW50LT5taW5fZmx0Kys7CisJ
-CXBlcmZfc3dfZXZlbnQoUEVSRl9DT1VOVF9TV19QQUdFX0ZBVUxUU19NSU4sIDEsIHJlZ3MsIGFk
-ZHJlc3MpOworCX0KKwogCXJldHVybiByZXQ7CiB9CiBFWFBPUlRfU1lNQk9MX0dQTChoYW5kbGVf
-bW1fZmF1bHQpOwo=
---00000000000093703c05a8381612--
+-Emil
