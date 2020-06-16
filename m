@@ -2,63 +2,204 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A0AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99BB20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A756220767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgFPKme (ORCPT
+        id S1728408AbgFPKoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:42:34 -0400
-Received: from verein.lst.de ([213.95.11.211]:37526 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgFPKmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:42:33 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 912EF68AEF; Tue, 16 Jun 2020 12:42:30 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:42:30 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Dexuan Cui <decui@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Ju-Hyoung Lee <juhlee@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: hv_hypercall_pg page permissios
-Message-ID: <20200616104230.GA31314@lst.de>
-References: <87y2ooiv5k.fsf@vitty.brq.redhat.com> <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <20200616072318.GA17600@lst.de> <20200616101807.GO2531@hirez.programming.kicks-ass.net> <20200616102350.GA29684@lst.de> <20200616102412.GB29684@lst.de> <20200616103137.GQ2531@hirez.programming.kicks-ass.net> <20200616103313.GA30833@lst.de> <20200616104032.GR2531@hirez.programming.kicks-ass.net>
+        Tue, 16 Jun 2020 06:44:20 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:46599 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgFPKoS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:44:18 -0400
+Received: by mail-io1-f70.google.com with SMTP id w2so13338946iom.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 03:44:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=TTirQLEB1uKm+kf+MuUjGanaHGyND0bZszoGaQzfV1w=;
+        b=araDyRwlABCFheahfE3T7oB9xxWeLlwX6oag/CTr9B1x2Dcjsg6i7rku9DV2Im+Tc8
+         cTnhXuf2GUOg1rNuvT1nfIfEccsXL46O6dpzqqgnHEd/ccJbhtEVq8yXjo5SITgK2FbO
+         5XdFe0hyYjCxG7r0Mf99DxxiCoBjVCm7xZCxVFg35+lH4OQpDl10KoTu8wTm+E+ZOlan
+         iqPa983bkKaHw+jnLod1bisqU13+YDGEcAVdGnZfhGnjQI3x7Dheu+hxSymbfjcbagnv
+         I+j9sg/8wnRu1qHdej3Pa214brlXzRCzd0secltfemWCAvhoZsRzBELK10LsKJXLiqh4
+         S9MQ==
+X-Gm-Message-State: AOAM530mPzYZ2UZINQ46hcPenqEvOt0/Q87Lhvf79Y225v8p3fMHe6e2
+        r4CG13McUgZNbQ8+ljaVwDamrQrwdhB1T/BOU09tvfmijqgD
+X-Google-Smtp-Source: ABdhPJzUYLZRqL93VVykPjXPJDn+8rtTsskpGSAuekJ7vVLTVB3HbTQWFJI6xBTSTTkDBVJtE5zbSq+6J4fDhBuwSBOqVh/WNpUp
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616104032.GR2531@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Received: by 2002:a05:6e02:13ee:: with SMTP id w14mr2281057ilj.190.1592304257429;
+ Tue, 16 Jun 2020 03:44:17 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 03:44:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a376c105a8313901@google.com>
+Subject: KASAN: use-after-free Read in __smsc95xx_mdio_read
+From:   syzbot <syzbot+a7ebdb01bb2cc165cab6@syzkaller.appspotmail.com>
+To:     UNGLinuxDriver@microchip.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, steve.glendinning@shawell.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:40:32PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 16, 2020 at 12:33:13PM +0200, Christoph Hellwig wrote:
-> > sorry, s/ftrace/kprobes/.  See my updated branch here:
-> > 
-> > http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/module_alloc-cleanup
-> 
-> Ah the insn slot page, yes. Didn't you just loose VM_FLUSH_RESET_PERMS
-> there?
+Hello,
 
-Yes, we did.  vmalloc_exec had it, but given that module_alloc didn't
-allocate executable on x86 it didn't.  I guess we should make sure it
-is set by the low-level vmalloc code if exec permissions are set to
-sort this mess out.
+syzbot found the following crash on:
+
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15f83346100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=a7ebdb01bb2cc165cab6
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17046c66100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140a8a3e100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a7ebdb01bb2cc165cab6@syzkaller.appspotmail.com
+
+smsc95xx 1-1:1.0 eth6: Failed to read reg index 0x00000114: -19
+smsc95xx 1-1:1.0 eth6 (unregistering): Error reading MII_ACCESS
+smsc95xx 1-1:1.0 eth6 (unregistered): MII is busy in smsc95xx_mdio_read
+==================================================================
+BUG: KASAN: use-after-free in atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
+BUG: KASAN: use-after-free in atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
+BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x8e/0x660 kernel/locking/mutex.c:1237
+Read of size 8 at addr ffff888094310c38 by task kworker/0:4/6949
+
+CPU: 0 PID: 6949 Comm: kworker/0:4 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events check_carrier
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:192
+ atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
+ atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
+ __mutex_unlock_slowpath+0x8e/0x660 kernel/locking/mutex.c:1237
+ __smsc95xx_mdio_read+0x1bc/0x210 drivers/net/usb/smsc95xx.c:217
+ smsc95xx_mdio_read drivers/net/usb/smsc95xx.c:278 [inline]
+ check_carrier+0xf3/0x1d0 drivers/net/usb/smsc95xx.c:644
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+Allocated by task 6949:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
+ kmalloc_node include/linux/slab.h:578 [inline]
+ kvmalloc_node+0xb4/0xf0 mm/util.c:574
+ kvmalloc include/linux/mm.h:752 [inline]
+ kvzalloc include/linux/mm.h:760 [inline]
+ alloc_netdev_mqs+0x97/0xdc0 net/core/dev.c:9927
+ usbnet_probe+0x159/0x2600 drivers/net/usb/usbnet.c:1686
+ usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:374
+ really_probe+0x281/0x6d0 drivers/base/dd.c:520
+ driver_probe_device+0x104/0x210 drivers/base/dd.c:697
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:804
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x21a/0x360 drivers/base/dd.c:870
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0x132d/0x1c10 drivers/base/core.c:2557
+ usb_set_configuration+0xec5/0x1740 drivers/usb/core/message.c:2032
+ usb_generic_driver_probe+0x9d/0xe0 drivers/usb/core/generic.c:241
+ usb_probe_device+0xc6/0x1f0 drivers/usb/core/driver.c:272
+ really_probe+0x281/0x6d0 drivers/base/dd.c:520
+ driver_probe_device+0x104/0x210 drivers/base/dd.c:697
+ __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:804
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x21a/0x360 drivers/base/dd.c:870
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0x132d/0x1c10 drivers/base/core.c:2557
+ usb_new_device.cold+0x753/0x103d drivers/usb/core/hub.c:2554
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x1eca/0x38f0 drivers/usb/core/hub.c:5576
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+Freed by task 6849:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ kvfree+0x42/0x50 mm/util.c:603
+ device_release+0x71/0x200 drivers/base/core.c:1394
+ kobject_cleanup lib/kobject.c:693 [inline]
+ kobject_release lib/kobject.c:722 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1e7/0x2e0 lib/kobject.c:739
+ put_device+0x1b/0x30 drivers/base/core.c:2656
+ free_netdev+0x380/0x4a0 net/core/dev.c:10047
+ usbnet_disconnect+0x1fb/0x270 drivers/net/usb/usbnet.c:1625
+ usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
+ __device_release_driver drivers/base/dd.c:1110 [inline]
+ device_release_driver_internal+0x432/0x500 drivers/base/dd.c:1141
+ bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2734
+ usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1245
+ usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2217
+ hub_port_connect drivers/usb/core/hub.c:5059 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x17ca/0x38f0 drivers/usb/core/hub.c:5576
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+
+The buggy address belongs to the object at ffff888094310000
+ which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 3128 bytes inside of
+ 8192-byte region [ffff888094310000, ffff888094312000)
+The buggy address belongs to the page:
+page:ffffea000250c400 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea000250c400 order:2 compound_mapcount:0 compound_pincount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0002257808 ffffea0002548608 ffff8880aa0021c0
+raw: 0000000000000000 ffff888094310000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888094310b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888094310b80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888094310c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff888094310c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888094310d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
