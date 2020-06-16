@@ -2,280 +2,111 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6404C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B0DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86F3C20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD7F207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cGmxIWLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgFPWej (ORCPT
+        id S1726464AbgFPWg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:34:39 -0400
-Received: from v6.sk ([167.172.42.174]:48640 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbgFPWeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:34:36 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 03A0161637;
-        Tue, 16 Jun 2020 22:34:04 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 3/5] dt-bindings: interrupt-controller: Convert mrvl,intc to json-schema
-Date:   Wed, 17 Jun 2020 00:33:51 +0200
-Message-Id: <20200616223353.993567-4-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200616223353.993567-1-lkundrak@v3.sk>
-References: <20200616223353.993567-1-lkundrak@v3.sk>
+        Tue, 16 Jun 2020 18:36:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39051 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725849AbgFPWg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:36:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592346987;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pjA7zgwqv80y4xmAR3IWOMUOAyE53XKax4l1DtqqEck=;
+        b=cGmxIWLFerDvmbXx9wGIMeV5qMwmY3+Vdf3tc8EjWZawWwMkXzWRwUX2wIM+hUs+ubjH9r
+        JbpnGLG9iGe8fL6LRrD9HPxPCIXKXVSMkNvTKSv3KYw+hKuxH565kv4Omy8lEWJn7ZZHyl
+        Rk2uAlwgeRwCQ2AYEdLUaShoAbHpLig=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-_cbEhZjWPUuQP27xhSIg_g-1; Tue, 16 Jun 2020 18:36:25 -0400
+X-MC-Unique: _cbEhZjWPUuQP27xhSIg_g-1
+Received: by mail-ot1-f71.google.com with SMTP id w8so149929otk.21
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 15:36:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pjA7zgwqv80y4xmAR3IWOMUOAyE53XKax4l1DtqqEck=;
+        b=jmlJkbxuZZDUHsdtDdvlZ7Qh3ocUvhk3z7sQoHZ8kjiB/sTePhDPZIKFtzeIQn4a/O
+         6n+SwwNysZ/2ZmXBtBpU/DZ2Eu5Py4GTdNVK8FohEB3h2obeWd2Fz255BJGJzPO208Vv
+         UXvGqhJTNPzHASWhaKowEyfRqI9/lLG8aIaWso10e5Q+TLp+NoJJPMV5QI03mOlk6zDQ
+         /NxXVI1/TyocvLCZmC28R9ZkUfK9WTa2yL3z0x5PHAN9NmI0RhkFMP7zgrEshH2S1Bgo
+         /IVE25KKcc+KjSRMXzAJvI2UuqGpDmy9xewDvTIwiJYLJvgZ9Lv5HntBVtDoUcqXhu15
+         hzDQ==
+X-Gm-Message-State: AOAM532ndtvWSE1B/LXksGsVFgFkPWGH56AB2umpGALnV4BNc8jn8yl/
+        aqoTHU+0XZgNw6/rtXjcKGwpa2SFxcikrX/SnPw1jkoUonlTo45KHk8+xAps61eQHc1IAHYRV/K
+        SSuulXrwnKq7w/3x9Nqu8cY45Ih35Ajhf7zLs8pGW
+X-Received: by 2002:a9d:6e96:: with SMTP id a22mr4427237otr.58.1592346984854;
+        Tue, 16 Jun 2020 15:36:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyoYNEk859HKJnIJ4XSJZ0fYGYB8IyuHx9XmftKrB9TO1HP0sg3cpUFv1zd47ilgV+zJ3II6JUZaM7vtE9AC3A=
+X-Received: by 2002:a9d:6e96:: with SMTP id a22mr4427227otr.58.1592346984642;
+ Tue, 16 Jun 2020 15:36:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200414150233.24495-1-willy@infradead.org> <20200414150233.24495-17-willy@infradead.org>
+In-Reply-To: <20200414150233.24495-17-willy@infradead.org>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Wed, 17 Jun 2020 00:36:13 +0200
+Message-ID: <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
+Subject: Re: [Cluster-devel] [PATCH v11 16/25] fs: Convert mpage_readpages to mpage_readahead
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-xfs@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel <cluster-devel@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        linux-btrfs@vger.kernel.org,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the mrvl,intc binding to DT schema format using json-schema.
+Am Mi., 15. Apr. 2020 um 23:39 Uhr schrieb Matthew Wilcox <willy@infradead.org>:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>
+> Implement the new readahead aop and convert all callers (block_dev,
+> exfat, ext2, fat, gfs2, hpfs, isofs, jfs, nilfs2, ocfs2, omfs, qnx6,
+> reiserfs & udf).  The callers are all trivial except for GFS2 & OCFS2.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+This patch leads to an ABBA deadlock in xfstest generic/095 on gfs2.
 
----
-Changes since v1:
-- Move minItems/maxItems to main reg property definition from the
-  conditional one
-- Drop the condition for marvell,orion-intc
-- Add default GPL-2.0-only license tag
-- Fill in maintainers from MAINTAINERS file
+Our lock hierarchy is such that the inode cluster lock ("inode glock")
+for an inode needs to be taken before any page locks in that inode's
+address space. However, the readahead address space operation is
+called with the pages already locked. When we try to grab the inode
+glock inside gfs2_readahead, we'll deadlock with processes that are
+holding that inode glock and trying to lock one of those same pages.
 
- .../interrupt-controller/mrvl,intc.txt        |  64 ---------
- .../interrupt-controller/mrvl,intc.yaml       | 134 ++++++++++++++++++
- 2 files changed, 134 insertions(+), 64 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+One possible solution is to use a trylock on the glock in
+gfs2_readahead, and to give up the readahead in case of a locking
+conflict. I have no idea how this is going to affect performance.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-deleted file mode 100644
-index a0ed02725a9d7..0000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-+++ /dev/null
-@@ -1,64 +0,0 @@
--* Marvell MMP Interrupt controller
--
--Required properties:
--- compatible : Should be
--               "mrvl,mmp-intc" on Marvel MMP,
--               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 or
--               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
--- reg : Address and length of the register set of the interrupt controller.
--  If the interrupt controller is intc, address and length means the range
--  of the whole interrupt controller. The "marvell,mmp3-intc" controller
--  also has a secondary range for the second CPU core.  If the interrupt
--  controller is mux-intc, address and length means one register. Since
--  address of mux-intc is in the range of intc. mux-intc is secondary
--  interrupt controller.
--- reg-names : Name of the register set of the interrupt controller. It's
--  only required in mux-intc interrupt controller.
--- interrupts : Should be the port interrupt shared by mux interrupts. It's
--  only required in mux-intc interrupt controller.
--- interrupt-controller : Identifies the node as an interrupt controller.
--- #interrupt-cells : Specifies the number of cells needed to encode an
--  interrupt source.
--- mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
--  controller.
--- mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
--  detection first.
--
--Example:
--	intc: interrupt-controller@d4282000 {
--		compatible = "mrvl,mmp2-intc";
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		reg = <0xd4282000 0x1000>;
--		mrvl,intc-nr-irqs = <64>;
--	};
--
--	intcmux4@d4282150 {
--		compatible = "mrvl,mmp2-mux-intc";
--		interrupts = <4>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		reg = <0x150 0x4>, <0x168 0x4>;
--		reg-names = "mux status", "mux mask";
--		mrvl,intc-nr-irqs = <2>;
--	};
--
--* Marvell Orion Interrupt controller
--
--Required properties
--- compatible :  Should be "marvell,orion-intc".
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source. Supported value is <1>.
--- interrupt-controller : Declare this node to be an interrupt controller.
--- reg : Interrupt mask address. A list of 4 byte ranges, one per controller.
--        One entry in the list represents 32 interrupts.
--
--Example:
--
--	intc: interrupt-controller {
--        	compatible = "marvell,orion-intc", "marvell,intc";
--		interrupt-controller;
--		#interrupt-cells = <1>;
--                reg = <0xfed20204 0x04>,
--		      <0xfed20214 0x04>;
--        };
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
-new file mode 100644
-index 0000000000000..372ccbfae7716
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
-@@ -0,0 +1,134 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/mrvl,intc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell MMP/Orion Interrupt controller bindings
-+
-+maintainers:
-+  - Thomas Gleixner <tglx@linutronix.de>
-+  - Jason Cooper <jason@lakedaemon.net>
-+  - Marc Zyngier <maz@kernel.org>
-+  - Rob Herring <robh+dt@kernel.org>
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              const: marvell,orion-intc
-+    then:
-+      required:
-+        - mrvl,intc-nr-irqs
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mrvl,mmp-intc
-+              - mrvl,mmp2-intc
-+    then:
-+      properties:
-+        reg:
-+          maxItems: 1
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - marvell,mmp3-intc
-+              - mrvl,mmp2-mux-intc
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: mrvl,mmp2-mux-intc
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+        reg-names:
-+          items:
-+            - const: 'mux status'
-+            - const: 'mux mask'
-+      required:
-+        - interrupts
-+    else:
-+      properties:
-+        interrupts: false
-+
-+properties:
-+  '#interrupt-cells':
-+    const: 1
-+
-+  compatible:
-+    enum:
-+      - mrvl,mmp-intc
-+      - mrvl,mmp2-intc
-+      - marvell,mmp3-intc
-+      - marvell,orion-intc
-+      - mrvl,mmp2-mux-intc
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 2
-+
-+  reg-names: true
-+
-+  interrupts: true
-+
-+  interrupt-controller: true
-+
-+  mrvl,intc-nr-irqs:
-+    description: |
-+      Specifies the number of interrupts in the interrupt controller.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  mrvl,clr-mfp-irq:
-+    description: |
-+      Specifies the interrupt that needs to clear MFP edge detection first.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+required:
-+  - '#interrupt-cells'
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@d4282000 {
-+        compatible = "mrvl,mmp2-intc";
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0xd4282000 0x1000>;
-+        mrvl,intc-nr-irqs = <64>;
-+    };
-+
-+    interrupt-controller@d4282150 {
-+        compatible = "mrvl,mmp2-mux-intc";
-+        interrupts = <4>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0x150 0x4>, <0x168 0x4>;
-+        reg-names = "mux status", "mux mask";
-+        mrvl,intc-nr-irqs = <2>;
-+    };
-+  - |
-+    interrupt-controller@fed20204 {
-+        compatible = "marvell,orion-intc";
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0xfed20204 0x04>,
-+              <0xfed20214 0x04>;
-+    };
-+
-+...
--- 
-2.26.2
+Any other ideas?
+
+Thanks,
+Andreas
 
