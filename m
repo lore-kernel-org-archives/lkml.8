@@ -2,123 +2,168 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A6FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813932078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592305106;
-	bh=8qNxrnp6z6ekXhfP+uczjm8VmbyvtGHqi7Kjq8Sflzw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=QFVS5zuByGxUXhukzOgbCfePgwEdkkv/7tWx8ZundWkiDT8o3+tf/hctilstAC/03
-	 ucqKwS3ZzXDJ+5lPU1F8iUyhjQd4dzpl7YGJdCQ48u6wNRaAHQ+QplEwxIXQyjE4gZ
-	 xEWo45l1TIAyjWiHQFVZDPbk+CqkwGuV9zoBX3h8=
+	by mail.kernel.org (Postfix) with ESMTP id 891BD20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgFPK6Z (ORCPT
+        id S1728416AbgFPK7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37520 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 06:59:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:35430 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgFPK6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:58:24 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13DAD20786;
-        Tue, 16 Jun 2020 10:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592305103;
-        bh=8qNxrnp6z6ekXhfP+uczjm8VmbyvtGHqi7Kjq8Sflzw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VQVoElO5ym3X1nZDI9kDkBuC+GEfV02LAoBvx7AEBgiDsZQVmbD7k/DVQjrIoMmby
-         WgkPMAa7ObpenSRy3ei9G/pKegGSnTaKLLnpjw8hvAeTzfR0N6DGQVUMOIhY5PsKFD
-         +KMlFA6U92Qsgj9J0H1v9NTMM0v2E8EBfU07ETMM=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Steve Wise <larrystevenwise@gmail.com>,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: [PATCH rdma-next 0/7] Introduce KABIs to query UCONTEXT, PD and MR properties
-Date:   Tue, 16 Jun 2020 13:55:24 +0300
-Message-Id: <20200616105531.2428010-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        id S1728306AbgFPK7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:59:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2B221F1;
+        Tue, 16 Jun 2020 03:59:24 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.1.157])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 401933F6CF;
+        Tue, 16 Jun 2020 03:59:23 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 11:59:20 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH 1/6] arm64/vdso: use the fault callback to map vvar pages
+Message-ID: <20200616105920.GB11780@C02TD0UTHF1T.local>
+References: <20200616075545.312684-1-avagin@gmail.com>
+ <20200616075545.312684-2-avagin@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616075545.312684-2-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+On Tue, Jun 16, 2020 at 12:55:40AM -0700, Andrei Vagin wrote:
+> This is required to support time namespaces where a time namespace data
+> page is different for each namespace.
 
-From Yishai,
+Can you please give a bit more of an introduction to the changes here?
+As-is, this doesn't give reviewers the necessary context to understand
+the change, nor does it justify it.
 
-This series introduce KABIs to query existing UCONTEXT, PD and MR for their
-properties.
+Ideally, a commit message for this should look something like:
 
-By those KABIs a user space application which owns the command FD of the device
-can retrieve and rebuild the above objects despite that it wasn't their creator.
-As of that, PDs and MRs can be shared by any process who owns the command FD of
-their creator.
+| Currently the vdso has no awareness of time namespaces, which may
+| apply distinct offsets to processes in different namespaces. To handle
+| this within the vdso, we'll need to expose a per-namespace data page.
+|
+| As a preparatory step, this patch separates the vdso data page from
+| the code pages, and has it faulted in via its own fault callback.
+| Subsquent patches will extend this to support distinct pages per time
+| namespace.
 
-This functionality enables to utilize and optimize some application flows, few
-examples below.
+Otherwise, I have a few minor comments below.
 
-Any solution which is a single business logic based on multi-process design
-needs this. Example include NGINX, with TCP load balancing, sharing the RSS
-indirection table with RQ per process. HPC frameworks with multi-rank (process)
-solution on single hosts. UCX can share IB resources using the shared PD and
-can help dispatch data to multiple processes/MR's in single RDMA operation.
-Also, there are use cases when a primary processes registered a large shared
-memory range, and each worker process spawned will create a private QP on the
-shared PD, and use the shared MR to save the registration time per-process.
+> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Reviewed-by: Dmitry Safonov <dima@arista.com>
+> Signed-off-by: Andrei Vagin <avagin@gmail.com>
+> ---
+>  arch/arm64/kernel/vdso.c | 24 +++++++++++++++---------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+> index 4e016574bd91..b0aec4e8c9b4 100644
+> --- a/arch/arm64/kernel/vdso.c
+> +++ b/arch/arm64/kernel/vdso.c
+> @@ -108,28 +108,32 @@ static int __vdso_init(enum vdso_abi abi)
+>  			PAGE_SHIFT;
+>  
+>  	/* Allocate the vDSO pagelist, plus a page for the data. */
+> -	vdso_pagelist = kcalloc(vdso_info[abi].vdso_pages + 1,
+> +	vdso_pagelist = kcalloc(vdso_info[abi].vdso_pages,
+>  				sizeof(struct page *),
+>  				GFP_KERNEL);
 
-The matching verbs APIs were introduced in the mailing list by the below RFC [1].
+The comment above is now stale. Can you please update it, or (event
+better) delete it entirely?
 
-In addition, the series enables CQ ioctl commands by default as this
-functionality is fully mature for a long time and sets IOVA on IB MR in the uverbs
-layer to let all drivers have it.
+>  	if (vdso_pagelist == NULL)
+>  		return -ENOMEM;
+>  
+> -	/* Grab the vDSO data page. */
+> -	vdso_pagelist[0] = phys_to_page(__pa_symbol(vdso_data));
+> -
+> -
+>  	/* Grab the vDSO code pages. */
+>  	pfn = sym_to_pfn(vdso_info[abi].vdso_code_start);
+>  
+>  	for (i = 0; i < vdso_info[abi].vdso_pages; i++)
+> -		vdso_pagelist[i + 1] = pfn_to_page(pfn + i);
+> +		vdso_pagelist[i] = pfn_to_page(pfn + i);
+>  
+> -	vdso_info[abi].dm->pages = &vdso_pagelist[0];
+> -	vdso_info[abi].cm->pages = &vdso_pagelist[1];
+> +	vdso_info[abi].cm->pages = vdso_pagelist;
+>  
+>  	return 0;
+>  }
+>  
+> +static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+> +			     struct vm_area_struct *vma, struct vm_fault *vmf)
+> +{
+> +	if (vmf->pgoff == 0)
+> +		return vmf_insert_pfn(vma, vmf->address,
+> +				sym_to_pfn(vdso_data));
+> +	return VM_FAULT_SIGBUS;
+> +}
 
-[1] https://patchwork.kernel.org/patch/11540665/
+This might look better as:
 
-Yishai
+|	if (vmf->pgoff != 0)
+|		return VM_FAULT_SIGBUS;
+|	
+|	return vmf_insert_pfn(vma, vmf->address, sym_to_pfn(vdso_data));
 
-Yishai Hadas (7):
-  IB/uverbs: Enable CQ ioctl commands by default
-  IB/uverbs: Set IOVA on IB MR in uverbs layer
-  IB/uverbs: Expose KABI to query ucontext
-  RDMA/mlx5: Refactor mlx5_ib_alloc_ucontext() response
-  RDMA/mlx5: Implement the query ucontext functionality
-  RDMA/mlx5: Introduce KABI to query PD attributes
-  IB/uverbs: Expose KABI to query MR
+> +
+>  static int __setup_additional_pages(enum vdso_abi abi,
+>  				    struct mm_struct *mm,
+>  				    struct linux_binprm *bprm,
+> @@ -150,7 +154,7 @@ static int __setup_additional_pages(enum vdso_abi abi,
+>  	}
+>  
+>  	ret = _install_special_mapping(mm, vdso_base, PAGE_SIZE,
+> -				       VM_READ|VM_MAYREAD,
+> +				       VM_READ|VM_MAYREAD|VM_PFNMAP,
 
- drivers/infiniband/Kconfig                    |   8 -
- drivers/infiniband/core/device.c              |   1 +
- drivers/infiniband/core/uverbs_cmd.c          |   4 +
- drivers/infiniband/core/uverbs_ioctl.c        |   1 +
- drivers/infiniband/core/uverbs_std_types_cq.c |   3 -
- .../infiniband/core/uverbs_std_types_device.c |  41 +++-
- drivers/infiniband/core/uverbs_std_types_mr.c |  50 +++-
- drivers/infiniband/hw/cxgb4/mem.c             |   1 -
- drivers/infiniband/hw/mlx4/mr.c               |   1 -
- drivers/infiniband/hw/mlx5/Makefile           |   3 +-
- drivers/infiniband/hw/mlx5/main.c             | 232 ++++++++++--------
- drivers/infiniband/hw/mlx5/mlx5_ib.h          |   2 +
- drivers/infiniband/hw/mlx5/std_types.c        |  45 ++++
- include/rdma/ib_verbs.h                       |   4 +
- include/uapi/rdma/ib_user_ioctl_cmds.h        |  15 ++
- include/uapi/rdma/mlx5_user_ioctl_cmds.h      |  14 ++
- 16 files changed, 306 insertions(+), 119 deletions(-)
- create mode 100644 drivers/infiniband/hw/mlx5/std_types.c
+This change needs to be explained in the commit message. WHy is it
+necessary, and why only so for the data page?
 
---
-2.26.2
+Thanks,
+Mark.
 
+>  				       vdso_info[abi].dm);
+>  	if (IS_ERR(ret))
+>  		goto up_fail;
+> @@ -209,6 +213,7 @@ static struct vm_special_mapping aarch32_vdso_maps[] = {
+>  #ifdef CONFIG_COMPAT_VDSO
+>  	[AA32_MAP_VVAR] = {
+>  		.name = "[vvar]",
+> +		.fault = vvar_fault,
+>  	},
+>  	[AA32_MAP_VDSO] = {
+>  		.name = "[vdso]",
+> @@ -376,6 +381,7 @@ enum aarch64_map {
+>  static struct vm_special_mapping aarch64_vdso_maps[] __ro_after_init = {
+>  	[AA64_MAP_VVAR] = {
+>  		.name	= "[vvar]",
+> +		.fault = vvar_fault,
+>  	},
+>  	[AA64_MAP_VDSO] = {
+>  		.name	= "[vdso]",
+> -- 
+> 2.24.1
+> 
