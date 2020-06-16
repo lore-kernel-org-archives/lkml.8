@@ -2,56 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82258C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F9820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5871F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324424;
-	bh=1ibSWb40h2ksUfir1sJ9yp6ZcqNYXZk2i/6KuaDpPFM=;
+	s=default; t=1592324429;
+	bh=f4dWbME0zvTO4lNAmFwEvgbVjHjm7e7nyr1BsvdN+HM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cf387qHdoEiI2Debg82K7w+xuT9NJL6y+W/h7i7cOQREFlyOnGpEiNKBD04K8kyvo
-	 V+49MKmO3iQBN2zgHS2LCfrbonO7dL8rnhFaniMLY2hADRNqukinosuymVrWelRQkQ
-	 mondbxby2CmhlHSiImC+YzewFjvtODKMXYxFfxBg=
+	b=aH+nh9KQZMw7M0rAwr9VGTYCM5WWbxY4x3EJyg3osi6Ohgxu7HrskBjd5SG85gkPB
+	 bLgK7p6nOmXqj0+JHMfsLaJcOiQiA4Egw69hahFX9UWdK1aPpBnINTOodLAl0D1Q8A
+	 2ibzsrEhCXm2r5D5XNB/DGDDcZWj5SGKVwDUCxxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731574AbgFPQUW (ORCPT
+        id S1729960AbgFPPg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47456 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:36:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbgFPPgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:36:36 -0400
+        id S1729609AbgFPPgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:36:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DAFB21655;
-        Tue, 16 Jun 2020 15:36:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F080420B1F;
+        Tue, 16 Jun 2020 15:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321795;
-        bh=1ibSWb40h2ksUfir1sJ9yp6ZcqNYXZk2i/6KuaDpPFM=;
+        s=default; t=1592321779;
+        bh=f4dWbME0zvTO4lNAmFwEvgbVjHjm7e7nyr1BsvdN+HM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yjbFSOE99xY+Oj8UdblfyKIq2M5Ig7VncOyXEgbUBEWCVw7xVMeNiJBU7xoLLK5w6
-         6ncmJFZGqAUTdN2zvucSVoJHprSh7yWHxdiqLz7VAM33iwA6SaXcG3sIATxF4Ia7Wu
-         JZjOkokwzC5qfqi3azKb0k2BD1AFQYnowtzsslAg=
+        b=D8E5EXsoDUs5W+FQ29XRa5o2BcHRC3mVRkihFmcuRmSizKsZS0ILS4zgew3vpHl3H
+         uA/HP0457MyZRnY00a7VOGaLqAJfyKRIJ85Kj3axLfMG0coAVaM4D5bXSxZduVx4s5
+         UZvm9i/R/5pu0gO+W/8DcMG2vODzaODpoVdsOJgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 019/134] spi: dw: Fix native CS being unset
-Date:   Tue, 16 Jun 2020 17:33:23 +0200
-Message-Id: <20200616153101.634133752@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alla Segal <allas@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 005/134] bridge: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Tue, 16 Jun 2020 17:33:09 +0200
+Message-Id: <20200616153100.917915774@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -64,78 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9aea644ca17b94f82ad7fa767cbc4509642f4420 ]
+From: Ido Schimmel <idosch@mellanox.com>
 
-Commit 6e0a32d6f376 ("spi: dw: Fix default polarity of native
-chipselect") attempted to fix the problem when GPIO active-high
-chip-select is utilized to communicate with some SPI slave. It fixed
-the problem, but broke the normal native CS support. At the same time
-the reversion commit ada9e3fcc175 ("spi: dw: Correct handling of native
-chipselect") didn't solve the problem either, since it just inverted
-the set_cs() polarity perception without taking into account that
-CS-high might be applicable. Here is what is done to finally fix the
-problem.
+[ Upstream commit 53fc685243bd6fb90d90305cea54598b78d3cbfc ]
 
-DW SPI controller demands any native CS being set in order to proceed
-with data transfer. So in order to activate the SPI communications we
-must set any bit in the Slave Select DW SPI controller register no
-matter whether the platform requests the GPIO- or native CS. Preferably
-it should be the bit corresponding to the SPI slave CS number. But
-currently the dw_spi_set_cs() method activates the chip-select
-only if the second argument is false. Since the second argument of the
-set_cs callback is expected to be a boolean with "is-high" semantics
-(actual chip-select pin state value), the bit in the DW SPI Slave
-Select register will be set only if SPI core requests the driver
-to set the CS in the low state. So this will work for active-low
-GPIO-based CS case, and won't work for active-high CS setting
-the bit when SPI core actually needs to deactivate the CS.
+When neighbor suppression is enabled the bridge device might reply to
+Neighbor Solicitation (NS) messages on behalf of remote hosts.
 
-This commit fixes the problem for all described cases. So no matter
-whether an SPI slave needs GPIO- or native-based CS with active-high
-or low signal the corresponding bit will be set in SER.
+In case the NS message includes the "Source link-layer address" option
+[1], the bridge device will use the specified address as the link-layer
+destination address in its reply.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Fixes: ada9e3fcc175 ("spi: dw: Correct handling of native chipselect")
-Fixes: 6e0a32d6f376 ("spi: dw: Fix default polarity of native chipselect")
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
 
-Link: https://lore.kernel.org/r/20200515104758.6934-5-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
+
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
+
+Fixes: ed842faeb2bd ("bridge: suppress nd pkts on BR_NEIGH_SUPPRESS ports")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alla Segal <allas@mellanox.com>
+Tested-by: Alla Segal <allas@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/spi/spi-dw.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ net/bridge/br_arp_nd_proxy.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index d2ca3b357cfe..c7d2f74f0d69 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -128,12 +128,20 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
- {
- 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
- 	struct chip_data *chip = spi_get_ctldata(spi);
-+	bool cs_high = !!(spi->mode & SPI_CS_HIGH);
- 
- 	/* Chip select logic is inverted from spi_set_cs() */
- 	if (chip && chip->cs_control)
- 		chip->cs_control(!enable);
- 
--	if (!enable)
-+	/*
-+	 * DW SPI controller demands any native CS being set in order to
-+	 * proceed with data transfer. So in order to activate the SPI
-+	 * communications we must set a corresponding bit in the Slave
-+	 * Enable register no matter whether the SPI core is configured to
-+	 * support active-high or active-low CS level.
-+	 */
-+	if (cs_high == enable)
- 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
- 	else if (dws->cs_override)
- 		dw_writel(dws, DW_SPI_SER, 0);
--- 
-2.25.1
-
+--- a/net/bridge/br_arp_nd_proxy.c
++++ b/net/bridge/br_arp_nd_proxy.c
+@@ -276,6 +276,10 @@ static void br_nd_send(struct net_bridge
+ 	ns_olen = request->len - (skb_network_offset(request) +
+ 				  sizeof(struct ipv6hdr)) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen - 1; i += (ns->opt[i + 1] << 3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return;
++		}
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 
 
