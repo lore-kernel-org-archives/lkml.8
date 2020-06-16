@@ -2,59 +2,54 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB688C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ED0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C331B21475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A907208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324049;
-	bh=/r3KO7PaVTlxx0ywqc9J+F4gfKLaD0dZKTHkI7KZUWc=;
+	s=default; t=1592324059;
+	bh=6YdPTTXXDwj2dgnMH6G/oFCnlD2ssGIfMkM8JLEItE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwAvu9r84OA3hFNZ80IlYi0UsQkCc1nHRzTj6xeNqytsCPHbWBc3HbJ7wpw/QVfZL
-	 2AtO3KzxbCDFN0DuTIhwsM504xjCu7oVeILfgWGUlwOcCq2NoUnAxzZdeXXZNNV+sI
-	 oHRbGt72u6IAbsTqhAmw1FY1VYnr96G/FNNWd208=
+	b=OKsXipdTJmvfqWu6YhzEFrzCT7FgEOa75mnTzoIfuz8P04ghG97OMRqBl7nxCD22D
+	 c3hdUnxcR7dW/TWVxtNVcIiG5wt5CYArdmjQw+4ewoVl57is3By3hbtdCFMNH40OLd
+	 PO1S2weA/egKW/dFGwt3fJU47wUpknlirh2+6sLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbgFPQOI (ORCPT
+        id S1729984AbgFPQOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:14:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730597AbgFPPnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:11 -0400
+        id S1730495AbgFPPmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC44208E4;
-        Tue, 16 Jun 2020 15:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 903E9208E4;
+        Tue, 16 Jun 2020 15:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322190;
-        bh=/r3KO7PaVTlxx0ywqc9J+F4gfKLaD0dZKTHkI7KZUWc=;
+        s=default; t=1592322175;
+        bh=6YdPTTXXDwj2dgnMH6G/oFCnlD2ssGIfMkM8JLEItE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2tcz0+aQZa6qEv2ab0UlvAW65Md48xvce23uQcDUOcKOOmZzI8NOYUY1+JQwhMbNt
-         Ctg7jTDGoxFh0bwojrdZUWg0vIt8vyaOnGTeNUpBMJMPXLBP/d15JIoSMnNVx9x6DZ
-         EXu75bSjomCLErVb2HSR6D8RSpjQUMfrQHvpR0Xw=
+        b=drp/L1EbEHzXKREk5WQWhEpCGqQ7CQgb6onbLyndv7qacwrotjS8URQVZ7yt5tKaJ
+         afsYF1AHxAQzp8RUJISvr4njAj2js7Q4xxMEv1FTqi6C0PVCLQcuEEh3e5boSShGoS
+         rNoDXfsQKJfjcHObre/2X9Am1qdke+w/Y77RhBA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Beulich <jbeulich@suse.com>,
-        Steven Price <steven.price@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 036/163] x86: mm: ptdump: calculate effective permissions correctly
-Date:   Tue, 16 Jun 2020 17:33:30 +0200
-Message-Id: <20200616153108.593678434@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 022/163] ASoC: SOF: imx8: Fix randbuild error
+Date:   Tue, 16 Jun 2020 17:33:16 +0200
+Message-Id: <20200616153107.951781958@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -67,188 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Price <steven.price@arm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 1494e0c38ee903e83aefb58caf54a9217273d49a upstream.
+[ Upstream commit fe17e6cdc0fefca96ba9659be4b2b07487cbf0c5 ]
 
-Patch series "Fix W+X debug feature on x86"
+when do randconfig like this:
+CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
+CONFIG_SND_SOC_SOF_IMX8=y
+CONFIG_SND_SOC_SOF_OF=y
+CONFIG_IMX_DSP=m
+CONFIG_IMX_SCU=y
 
-Jan alerted me[1] that the W+X detection debug feature was broken in x86
-by my change[2] to switch x86 to use the generic ptdump infrastructure.
+there is a link error:
 
-Fundamentally the approach of trying to move the calculation of
-effective permissions into note_page() was broken because note_page() is
-only called for 'leaf' entries and the effective permissions are passed
-down via the internal nodes of the page tree.  The solution I've taken
-here is to create a new (optional) callback which is called for all
-nodes of the page tree and therefore can calculate the effective
-permissions.
+sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
+imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
 
-Secondly on some configurations (32 bit with PAE) "unsigned long" is not
-large enough to store the table entries.  The fix here is simple - let's
-just use a u64.
+Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
 
-[1] https://lore.kernel.org/lkml/d573dc7e-e742-84de-473d-f971142fa319@suse.com/
-[2] 2ae27137b2db ("x86: mm: convert dump_pagetables to use walk_page_range")
-
-This patch (of 2):
-
-By switching the x86 page table dump code to use the generic code the
-effective permissions are no longer calculated correctly because the
-note_page() function is only called for *leaf* entries.  To calculate
-the actual effective permissions it is necessary to observe the full
-hierarchy of the page tree.
-
-Introduce a new callback for ptdump which is called for every entry and
-can therefore update the prot_levels array correctly.  note_page() can
-then simply access the appropriate element in the array.
-
-[steven.price@arm.com: make the assignment conditional on val != 0]
-  Link: http://lkml.kernel.org/r/430c8ab4-e7cd-6933-dde6-087fac6db872@arm.com
-Fixes: 2ae27137b2db ("x86: mm: convert dump_pagetables to use walk_page_range")
-Reported-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200521152308.33096-1-steven.price@arm.com
-Link: http://lkml.kernel.org/r/20200521152308.33096-2-steven.price@arm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20200409071832.2039-2-daniel.baluta@oss.nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/dump_pagetables.c |   33 ++++++++++++++++++++-------------
- include/linux/ptdump.h        |    1 +
- mm/ptdump.c                   |   17 ++++++++++++++++-
- 3 files changed, 37 insertions(+), 14 deletions(-)
+ sound/soc/sof/imx/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -249,10 +249,22 @@ static void note_wx(struct pg_state *st,
- 		  (void *)st->start_address);
- }
- 
--static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
-+static void effective_prot(struct ptdump_state *pt_st, int level, u64 val)
- {
--	return (prot1 & prot2 & (_PAGE_USER | _PAGE_RW)) |
--	       ((prot1 | prot2) & _PAGE_NX);
-+	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-+	pgprotval_t prot = val & PTE_FLAGS_MASK;
-+	pgprotval_t effective;
-+
-+	if (level > 0) {
-+		pgprotval_t higher_prot = st->prot_levels[level - 1];
-+
-+		effective = (higher_prot & prot & (_PAGE_USER | _PAGE_RW)) |
-+			    ((higher_prot | prot) & _PAGE_NX);
-+	} else {
-+		effective = prot;
-+	}
-+
-+	st->prot_levels[level] = effective;
- }
- 
- /*
-@@ -270,16 +282,10 @@ static void note_page(struct ptdump_stat
- 	struct seq_file *m = st->seq;
- 
- 	new_prot = val & PTE_FLAGS_MASK;
--
--	if (level > 0) {
--		new_eff = effective_prot(st->prot_levels[level - 1],
--					 new_prot);
--	} else {
--		new_eff = new_prot;
--	}
--
--	if (level >= 0)
--		st->prot_levels[level] = new_eff;
-+	if (!val)
-+		new_eff = 0;
-+	else
-+		new_eff = st->prot_levels[level];
- 
- 	/*
- 	 * If we have a "break" in the series, we need to flush the state that
-@@ -374,6 +380,7 @@ static void ptdump_walk_pgd_level_core(s
- 	struct pg_state st = {
- 		.ptdump = {
- 			.note_page	= note_page,
-+			.effective_prot = effective_prot,
- 			.range		= ptdump_ranges
- 		},
- 		.level = -1,
---- a/include/linux/ptdump.h
-+++ b/include/linux/ptdump.h
-@@ -14,6 +14,7 @@ struct ptdump_state {
- 	/* level is 0:PGD to 4:PTE, or -1 if unknown */
- 	void (*note_page)(struct ptdump_state *st, unsigned long addr,
- 			  int level, unsigned long val);
-+	void (*effective_prot)(struct ptdump_state *st, int level, u64 val);
- 	const struct ptdump_range *range;
- };
- 
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -36,6 +36,9 @@ static int ptdump_pgd_entry(pgd_t *pgd,
- 		return note_kasan_page_table(walk, addr);
- #endif
- 
-+	if (st->effective_prot)
-+		st->effective_prot(st, 0, pgd_val(val));
-+
- 	if (pgd_leaf(val))
- 		st->note_page(st, addr, 0, pgd_val(val));
- 
-@@ -53,6 +56,9 @@ static int ptdump_p4d_entry(p4d_t *p4d,
- 		return note_kasan_page_table(walk, addr);
- #endif
- 
-+	if (st->effective_prot)
-+		st->effective_prot(st, 1, p4d_val(val));
-+
- 	if (p4d_leaf(val))
- 		st->note_page(st, addr, 1, p4d_val(val));
- 
-@@ -70,6 +76,9 @@ static int ptdump_pud_entry(pud_t *pud,
- 		return note_kasan_page_table(walk, addr);
- #endif
- 
-+	if (st->effective_prot)
-+		st->effective_prot(st, 2, pud_val(val));
-+
- 	if (pud_leaf(val))
- 		st->note_page(st, addr, 2, pud_val(val));
- 
-@@ -87,6 +96,8 @@ static int ptdump_pmd_entry(pmd_t *pmd,
- 		return note_kasan_page_table(walk, addr);
- #endif
- 
-+	if (st->effective_prot)
-+		st->effective_prot(st, 3, pmd_val(val));
- 	if (pmd_leaf(val))
- 		st->note_page(st, addr, 3, pmd_val(val));
- 
-@@ -97,8 +108,12 @@ static int ptdump_pte_entry(pte_t *pte,
- 			    unsigned long next, struct mm_walk *walk)
- {
- 	struct ptdump_state *st = walk->private;
-+	pte_t val = READ_ONCE(*pte);
-+
-+	if (st->effective_prot)
-+		st->effective_prot(st, 4, pte_val(val));
- 
--	st->note_page(st, addr, 4, pte_val(READ_ONCE(*pte)));
-+	st->note_page(st, addr, 4, pte_val(val));
- 
- 	return 0;
- }
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index bae4f7bf5f75..812749064ca8 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -14,7 +14,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+ config SND_SOC_SOF_IMX8_SUPPORT
+ 	bool "SOF support for i.MX8"
+ 	depends on IMX_SCU
+-	depends on IMX_DSP
++	select IMX_DSP
+ 	help
+ 	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
+ 	  Say Y if you have such a device.
+-- 
+2.25.1
+
 
 
