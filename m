@@ -2,100 +2,80 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EFDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8427D208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:29:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+t3P92G"
+	by mail.kernel.org (Postfix) with ESMTP id 98C71208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgFPP3a (ORCPT
+        id S1729380AbgFPPar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:29:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35261 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728919AbgFPP33 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:29:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592321368;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=prvuib5zQmcv0KtPefPihKfecw6gAeEldQvoe7ZUcw8=;
-        b=J+t3P92GsJPs/zExJ6s+CfijxJR0RLrt6yaR56z8cu9vT96ucZPnNQ3oWLliluuLhCT2zG
-        tJzEEn4Yu8+gKVAGpwWN21y68xIyHTH9dwlyqCe1CLqJ/qEeRVKwffZCMMquObkUt/awcP
-        oy+94OlFb20Q5hDA8pAIZxLLR/2jYS8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-mImIVvnyOWiBzs4mNEtzcw-1; Tue, 16 Jun 2020 11:29:26 -0400
-X-MC-Unique: mImIVvnyOWiBzs4mNEtzcw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C6FA150562;
-        Tue, 16 Jun 2020 15:29:25 +0000 (UTC)
-Received: from x2.localnet (ovpn-113-82.phx2.redhat.com [10.3.113.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5559110013D6;
-        Tue, 16 Jun 2020 15:29:24 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, rgb@redhat.com,
-        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] integrity: Add errno field in audit message
-Date:   Tue, 16 Jun 2020 11:29:22 -0400
-Message-ID: <6643272.rC52FQZPYE@x2>
-Organization: Red Hat
-In-Reply-To: <CAHC9VhT6JSLBD-JMfQbn9eUsUg=juznRz41DTOaia-=WhrAAuA@mail.gmail.com>
-References: <20200611000400.3771-1-nramas@linux.microsoft.com> <8800031.dr63W5FlUW@x2> <CAHC9VhT6JSLBD-JMfQbn9eUsUg=juznRz41DTOaia-=WhrAAuA@mail.gmail.com>
+        Tue, 16 Jun 2020 11:30:47 -0400
+Received: from muru.com ([72.249.23.125]:57974 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728809AbgFPPaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:30:46 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 2F8D88123;
+        Tue, 16 Jun 2020 15:31:37 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 08:30:42 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+Message-ID: <20200616153042.GZ37466@atomide.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+ <d03dd04f-6f2c-25ba-fe1f-d5fc0dfb5c68@ti.com>
+ <592501c9-2d94-b266-ae76-e383d3bffa29@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <592501c9-2d94-b266-ae76-e383d3bffa29@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, June 15, 2020 6:58:13 PM EDT Paul Moore wrote:
-> On Mon, Jun 15, 2020 at 6:23 PM Steve Grubb <sgrubb@redhat.com> wrote:
-> > On Friday, June 12, 2020 3:50:14 PM EDT Lakshmi Ramasubramanian wrote:
-> > > On 6/12/20 12:25 PM, Mimi Zohar wrote:
-> > > > The idea is a good idea, but you're assuming that "result" is always
-> > > > errno.  That was probably true originally, but isn't now.  For
-> > > > example, ima_appraise_measurement() calls xattr_verify(), which
-> > > > compares the security.ima hash with the calculated file hash.  On
-> > > > failure, it returns the result of memcmp().  Each and every code path
-> > > > will need to be checked.
-> > > 
-> > > Good catch Mimi.
-> > > 
-> > > Instead of "errno" should we just use "result" and log the value given
-> > > in the result parameter?
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [200616 13:02]:
+> On 11/06/2020 17:00, Grygorii Strashko wrote:
+> > I think, suspend might be fixed if all devices, which are now child of ti-sysc, will do
+> > pm_runtime_force_xxx() calls at noirq suspend stage by adding:
 > > 
-> > That would likely collide with another field of the same name which is
-> > the
-> > operation's results. If it really is errno, the name is fine. It's
-> > generic
-> > enough that it can be reused on other events if that mattered.
+> >      SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> >                        pm_runtime_force_resume)
+> > 
+> > Am I missing smth?
 > 
-> Steve, what is the historical reason why we have both "res" and
-> "result" for indicating a boolean success/fail?  I'm just curious how
-> we ended up this way, and who may still be using "result".
+> Isn't this almost exactly the same my patch does? I just used suspend_late
+> and resume_early. Is noirq phase better than late & early?
 
-I think its pam and some other user space things did this. But because of 
-mixed machines in datacenters supporting multiple versions of OS, we have to 
-leave result alone. It has to be 0,1 or success/fail. We cannot use it for 
-errno.
+Well up to you as far as I'm concerned. The noirq phase comes with serious
+limitations, for let's say i2c bus usage if needed. Probably also harder
+to debug for suspend and resume.
 
--Steve
+Regards,
 
-
+Tony
