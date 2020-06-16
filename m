@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEBC21527
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DB621534
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322714;
-	bh=jgxcL1X6W2aAeM8W8i4kiLVRIxHvBOrwl3wrmQEKn/0=;
+	s=default; t=1592322723;
+	bh=6YdPTTXXDwj2dgnMH6G/oFCnlD2ssGIfMkM8JLEItE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7xLPnmsaYj8d5lJAu2JR+D8Blq44m0dbl2XPsK+W/jBQ+ExC24a0ufdKOPuSFbKB
-	 2ZiHgYVbj7hy1ldcyZRswSfGrFZWEPjrFMwQI0YJ5cnwOmS2nU9A7p3HKrBkjN5KJv
-	 l7ciLu0XeZvLJ3QruGkqJlu2pgKVz+PXRnBRsiYY=
+	b=j1fVpPt4AoN9uSvC8O/8evly+T9a12x0QICFNWF22Tv53hU+3ZnQrOm+1ETOaAYdR
+	 pprW4RkXPz/smpjfN1/5Om0AvrwLEkeR1X/lc762VFRuNdDz1Ns/nekIGICnkcO8PD
+	 x0sx7NNbo0AEpm7c0DeFuntIL47QZZj3ZdGZagpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbgFPPvx (ORCPT
+        id S1732738AbgFPPwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48316 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:52:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732649AbgFPPvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:51:37 -0400
+        id S1731975AbgFPPvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:51:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35E5521501;
-        Tue, 16 Jun 2020 15:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EE40207C4;
+        Tue, 16 Jun 2020 15:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322696;
-        bh=jgxcL1X6W2aAeM8W8i4kiLVRIxHvBOrwl3wrmQEKn/0=;
+        s=default; t=1592322701;
+        bh=6YdPTTXXDwj2dgnMH6G/oFCnlD2ssGIfMkM8JLEItE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7Gt90aOLj0KDOGSxXp6BSAVTceJeG3uxssDbb0li2saseV88jfDfkaFVGjb3eEZ1
-         pEOGBFgkc0opCv1PdVTtZEQjNNwB0FO13juhP8HYzVH7Gm5XkOeX8JQczxENY63oAI
-         Rqo/gR6anZshsDv6PhyrsouXZQch9D7TJ6/7D/9w=
+        b=uen+K0sEfYZDr7vEqYu0LlR/6JGuw7lgIvjxUM6HL1i8XxD2TmHvYZmOkwiumSpMA
+         9pT/HTo7X8Zg3VyMRJ8I8hpG8skLcoJDIF5iVSq+4XmxTce5nENo7EJmeoxIwbJZoT
+         kYZQzGyg59nt8P9rlpszrw+O6capZ7cljEgPzbXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Cooper <andrew.cooper3@citrix.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 038/161] x86/cpu/amd: Make erratum #1054 a legacy erratum
-Date:   Tue, 16 Jun 2020 17:33:48 +0200
-Message-Id: <20200616153108.195884840@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 030/161] ASoC: SOF: imx8: Fix randbuild error
+Date:   Tue, 16 Jun 2020 17:33:40 +0200
+Message-Id: <20200616153107.831133757@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,53 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e2abfc0448a46d8a137505aa180caf14070ec535 ]
+[ Upstream commit fe17e6cdc0fefca96ba9659be4b2b07487cbf0c5 ]
 
-Commit
+when do randconfig like this:
+CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
+CONFIG_SND_SOC_SOF_IMX8=y
+CONFIG_SND_SOC_SOF_OF=y
+CONFIG_IMX_DSP=m
+CONFIG_IMX_SCU=y
 
-  21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired
-		 counter IRPERF")
+there is a link error:
 
-mistakenly added erratum #1054 as an OS Visible Workaround (OSVW) ID 0.
-Erratum #1054 is not OSVW ID 0 [1], so make it a legacy erratum.
+sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
+imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
 
-There would never have been a false positive on older hardware that
-has OSVW bit 0 set, since the IRPERF feature was not available.
+Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
 
-However, save a couple of RDMSR executions per thread, on modern
-system configurations that correctly set non-zero values in their
-OSVW_ID_Length MSRs.
-
-[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors. The
-revision guide is available from the bugzilla link below.
-
-Fixes: 21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF")
-Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200417143356.26054-1-kim.phillips@amd.com
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20200409071832.2039-2-daniel.baluta@oss.nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/amd.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/soc/sof/imx/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 1f875fbe1384..f04cc01e629e 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1111,8 +1111,7 @@ static const int amd_erratum_383[] =
- 
- /* #1054: Instructions Retired Performance Counter May Be Inaccurate */
- static const int amd_erratum_1054[] =
--	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
--
-+	AMD_LEGACY_ERRATUM(AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
- 
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
- {
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index bae4f7bf5f75..812749064ca8 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -14,7 +14,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+ config SND_SOC_SOF_IMX8_SUPPORT
+ 	bool "SOF support for i.MX8"
+ 	depends on IMX_SCU
+-	depends on IMX_DSP
++	select IMX_DSP
+ 	help
+ 	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
+ 	  Say Y if you have such a device.
 -- 
 2.25.1
 
