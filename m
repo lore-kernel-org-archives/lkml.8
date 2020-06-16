@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1160C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E574C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAB220C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A8E20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321815;
-	bh=eZQl0S2K3ZTzZ0LLyydp0Siqt2ix5XFxW31Fv2OTH6g=;
+	s=default; t=1592321818;
+	bh=9ssOAW7ppA3qIA1s5QJqEpg4nrLN5tMpyiBlmt04Fqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEpxFEw0J1fm3OgVeGoVI0m6Dq6W8un3+5rUygTkYmPfCA4c2w7UBdZgjkeV6gc0O
-	 s0N1M4kFdvzvH2qkr3EV2MGNELuLs1esq4lS0MGYaEY2EF81Cuxg1G+VCQ4p/xknxv
-	 D0BxZa3EfJCeDhwzLAmfJBCi8ua3Uf3d7OwxeB30=
+	b=DNqn7NDqRC9cHq17zqqFe+g6ZTgQRyORSGkz08e0oIM/+SeVLrf2luGCDdkq53OgQ
+	 j5HysYZbUDrnOFUF1YKJX6f8NhQs9lgn4Nasjg5YOMYwkL+cyL965KMUevnmGlZ3nL
+	 LyoOMRYnnTW6pcnKwnv+Wy/MkXtJvG3Dcy/lHk/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgFPPgy (ORCPT
+        id S1730137AbgFPPg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47826 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730070AbgFPPgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:36:49 -0400
+        id S1730110AbgFPPgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:36:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A81D20B1F;
-        Tue, 16 Jun 2020 15:36:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 909352098B;
+        Tue, 16 Jun 2020 15:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321808;
-        bh=eZQl0S2K3ZTzZ0LLyydp0Siqt2ix5XFxW31Fv2OTH6g=;
+        s=default; t=1592321814;
+        bh=9ssOAW7ppA3qIA1s5QJqEpg4nrLN5tMpyiBlmt04Fqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+RuCHmybubuyMxAGbba8ROwr68xdzaJNjxxCjehT3p1bCQvSCcCUFEn0u8tXTNEa
-         oxg9TwHug8aMHlYHXm+uTQfS9a4Nz0k6ffVmNvkyAXefTXzdm7G12m2ztwfb1PgTGH
-         bblYlBkkW4TwajxMQJ66LVyMlnvRxZqLfqlNCa68=
+        b=r1YsBjtn6ksUx7PFCuzZrthFqyRI+frY/3zOM2QNOMXyUvOgBPNZngjsMYpxvDQxw
+         dRn+gyhm4mgQCTNmZP6OQbWSDMqG0cG9+drBG8vxKsDFn8dhcccW552mck9j04w/xs
+         xGofbLlKfpXk0paIbct6fB4QYIWYGoGkBksb/fbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 024/134] s390/pci: Log new handle in clp_disable_fh()
-Date:   Tue, 16 Jun 2020 17:33:28 +0200
-Message-Id: <20200616153101.907591519@linuxfoundation.org>
+Subject: [PATCH 5.4 026/134] KVM: x86: only do L1TF workaround on affected processors
+Date:   Tue, 16 Jun 2020 17:33:30 +0200
+Message-Id: <20200616153102.019041905@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,43 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Tesarik <ptesarik@suse.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit e1750a3d9abbea2ece29cac8dc5a6f5bc19c1492 ]
+[ Upstream commit d43e2675e96fc6ae1a633b6a69d296394448cc32 ]
 
-After disabling a function, the original handle is logged instead of
-the disabled handle.
+KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
+in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
+in an L1TF attack.  This works as long as there are 5 free bits between
+MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
+access triggers a reserved-bit-set page fault.
 
-Link: https://lkml.kernel.org/r/20200522183922.5253-1-ptesarik@suse.com
-Fixes: 17cdec960cf7 ("s390/pci: Recover handle in clp_set_pci_fn()")
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+The bit positions however were computed wrongly for AMD processors that have
+encryption support.  In this case, x86_phys_bits is reduced (for example
+from 48 to 43, to account for the C bit at position 47 and four bits used
+internally to store the SEV ASID and other stuff) while x86_cache_bits in
+would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
+and bit 51 are set.  Then low_phys_bits would also cover some of the
+bits that are set in the shadow_mmio_value, terribly confusing the gfn
+caching mechanism.
+
+To fix this, avoid splitting gfns as long as the processor does not have
+the L1TF bug (which includes all AMD processors).  When there is no
+splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
+the overlap.  This fixes "npt=0" operation on EPYC processors.
+
+Thanks to Maxim Levitsky for bisecting this bug.
+
+Cc: stable@vger.kernel.org
+Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/pci/pci_clp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/kvm/mmu.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-index 281e0dd4c614..20e093f86329 100644
---- a/arch/s390/pci/pci_clp.c
-+++ b/arch/s390/pci/pci_clp.c
-@@ -309,14 +309,13 @@ int clp_enable_fh(struct zpci_dev *zdev, u8 nr_dma_as)
- 
- int clp_disable_fh(struct zpci_dev *zdev)
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 518100ea5ef4..50d67ad15790 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -343,6 +343,8 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask)
  {
--	u32 fh = zdev->fh;
- 	int rc;
+ 	BUG_ON((u64)(unsigned)access_mask != access_mask);
+ 	BUG_ON((mmio_mask & mmio_value) != mmio_value);
++	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
++	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
+ 	shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
+ 	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
+ 	shadow_mmio_access_mask = access_mask;
+@@ -580,16 +582,15 @@ static void kvm_mmu_reset_all_pte_masks(void)
+ 	 * the most significant bits of legal physical address space.
+ 	 */
+ 	shadow_nonpresent_or_rsvd_mask = 0;
+-	low_phys_bits = boot_cpu_data.x86_cache_bits;
+-	if (boot_cpu_data.x86_cache_bits <
+-	    52 - shadow_nonpresent_or_rsvd_mask_len) {
++	low_phys_bits = boot_cpu_data.x86_phys_bits;
++	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
++	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
++			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
++		low_phys_bits = boot_cpu_data.x86_cache_bits
++			- shadow_nonpresent_or_rsvd_mask_len;
+ 		shadow_nonpresent_or_rsvd_mask =
+-			rsvd_bits(boot_cpu_data.x86_cache_bits -
+-				  shadow_nonpresent_or_rsvd_mask_len,
+-				  boot_cpu_data.x86_cache_bits - 1);
+-		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
+-	} else
+-		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
++			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
++	}
  
- 	if (!zdev_enabled(zdev))
- 		return 0;
- 
- 	rc = clp_set_pci_fn(zdev, 0, CLP_SET_DISABLE_PCI_FN);
--	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, fh, rc);
-+	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, zdev->fh, rc);
- 	return rc;
- }
- 
+ 	shadow_nonpresent_or_rsvd_lower_gfn_mask =
+ 		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
 -- 
 2.25.1
 
