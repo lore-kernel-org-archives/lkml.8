@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C785C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD6DB20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084B920882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:02:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBXcv5Ry"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+HvmqxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgFPHCe (ORCPT
+        id S1727086AbgFPHCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49726 "EHLO
+        Tue, 16 Jun 2020 03:02:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgFPHC3 (ORCPT
+        with ESMTP id S1727054AbgFPHCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:02:29 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17ED6C05BD43;
-        Tue, 16 Jun 2020 00:02:29 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j10so19517861wrw.8;
-        Tue, 16 Jun 2020 00:02:29 -0700 (PDT)
+        Tue, 16 Jun 2020 03:02:32 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE83BC03E96A;
+        Tue, 16 Jun 2020 00:02:31 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h5so19555150wrc.7;
+        Tue, 16 Jun 2020 00:02:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UD0BzEH0M8YZp//omQOWTqvshKj+X7/NNaB98DCZXBo=;
-        b=kBXcv5RyDkAUziAF8On2RRAtLdxkf+PQ7mctnBuYI1ulgkFh/EmWKQjx53fhn0ldHk
-         LesW1oDVYJTh6OGiYAqOI3xOXkPU27Z04FpPBJVhWOSs1dGMO40bH7OhT2KvUzLngmZT
-         WEIC3zlK6d5Ht8onBNAN+EaApUSuDyovAyFRZHsp6dAqISO3b+n4ekdEH2wZ/0fuBHo8
-         ekvuEpK1L5M+cWd2smMn81pC2K1+gAXCOkRSw8wpQoH6hNbVDo/FPlZ0Q0ivpVgrnmJk
-         2+OXaDk/mfKfWzPLnEY+UhXm/0El39dLT1CnYwnZ9j91NSdklJKxe/nUeJVuQJvdT64U
-         Y0BQ==
+        bh=pk+BVPAFs3HZDk7vo9cGngkaw64SHz8Pd/OXNI1lr+0=;
+        b=C+HvmqxTo8kyxFjHP2roUq3Qhu/w2Sn9iKkXF5vp1PkF7GbmPNr5BmB8EkfpDDMxac
+         kdmT6qSYiaWA3K/hNkrgidPcZ6LuiPC0DLbbmToRDyesIED5lrjotym1kkf2ziAPFiXy
+         5+dJ0nxRD0KsYrzoLPRT9zLqPcuf5o+tsWQDYebZCEEqyxwxoKb6AE7lUI8BoaEkXf2+
+         lTqUPGHBsmBpSfmbuay1zzlge1jeN5tZt+kEH+cMY8WhyGOVfLxOQs8XfRxP+1pBE7A4
+         fTv9lg3hdkyU6Jemj9/exNbEWgE9T74u4CqWzTegS1SA0Zo1QwquJNGl0gz0DJV4DCD3
+         Oq+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UD0BzEH0M8YZp//omQOWTqvshKj+X7/NNaB98DCZXBo=;
-        b=rq9b/hxQEYmf5JbC+tfzC2sF6ObSTpHyvh6Afo3cdPF7jr8+wnyJrmNzQjeYaZjJgG
-         Ua0oSCLWOeaSwfwiA/o2JCeghxpKMfQShHjTGwFMmKY8Ic8CNA96Lq5Jujv8eQcXNsW6
-         DdAfLuhsPyfuzHo0IZRcd+4q7GNOyG0a+HN0udLAdJRyH9LFUlrPaaFK4Dmy5V0LjF5I
-         cD+eBvyyLkmd1J5pC5Ew1zfX4IL2fzxfdmkoAz/ZRFlPCJk61bB1BPMePb1ivanXHbnZ
-         XOukeXfVqy7AuVUURsnwVJN3N6KA5jZj1L7sPHHaH57TPEhPVoVVJUk+LnXrwr1T33bd
-         Zcxw==
-X-Gm-Message-State: AOAM531wafBoT40cRN+CDUL8e/K2xTAzPEE/Wzbp+Z0vaSymB/Z+LUXD
-        wUDy5xJWO4k2+gr6uKRZreE=
-X-Google-Smtp-Source: ABdhPJxJocaEAJDjXYgrdusUF1X6ahSw5QoOUewPSOXVR9vtcDbBiuhLEL6qn82QSv28cJKE+g2//Q==
-X-Received: by 2002:adf:fc0c:: with SMTP id i12mr1403233wrr.365.1592290947713;
-        Tue, 16 Jun 2020 00:02:27 -0700 (PDT)
+        bh=pk+BVPAFs3HZDk7vo9cGngkaw64SHz8Pd/OXNI1lr+0=;
+        b=oPNHqExOwRzYPE0l3CZki9egGe1fDDW62g/rD+o/we/KkczMcA7JGePN2RA+4V1pbk
+         BPdgGR8Hu2MJnDIzDiYZhYfr/dxkBit+Bhwm7AW0JwJmUl8Ox6jC9575kbV8ga7xFKse
+         /hDxIEV33k6fAhCpCePKSBNnscdtKd/7ogDsTagZUXcGads+jdCoaGrxt3MzkDi9yrLl
+         UPkIFOFZEFK/W4AazixhkQjVwtbTMmFXMzwvRZ3OJMkoFMB245d4gTIvzjcFdvsvRlmT
+         eCEUiJutXGWNXpNCW8U3nUBTAA3dbyEEac/0ZB6v9J0gRfCdEyOaJURd1RokWw1VmVjB
+         8U1g==
+X-Gm-Message-State: AOAM533Z1yX86x7j2LSiTElUWHWYs0zebG2m3ckjGMuyqbWFzyqUA/JP
+        +4eRkb0tRt/jhAAxJWT4JBs=
+X-Google-Smtp-Source: ABdhPJxPpnpfojRlFQlz8MK0ih4ZorQrUXviNO2k8RuX8mrpkbqs+uk/jw5/vvKOelKtPiAuBDPhZQ==
+X-Received: by 2002:a5d:68cb:: with SMTP id p11mr1354863wrw.379.1592290950376;
+        Tue, 16 Jun 2020 00:02:30 -0700 (PDT)
 Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id a81sm2792897wmd.25.2020.06.16.00.02.26
+        by smtp.gmail.com with ESMTPSA id a81sm2792897wmd.25.2020.06.16.00.02.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 00:02:27 -0700 (PDT)
+        Tue, 16 Jun 2020 00:02:29 -0700 (PDT)
 From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
 To:     broonie@kernel.org, f.fainelli@gmail.com,
@@ -68,9 +68,9 @@ To:     broonie@kernel.org, f.fainelli@gmail.com,
         linux-arm-kernel@lists.infradead.org
 Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
         <noltari@gmail.com>
-Subject: [PATCH v3 1/4] spi: bcm63xx-spi: add reset support
-Date:   Tue, 16 Jun 2020 09:02:20 +0200
-Message-Id: <20200616070223.3401282-2-noltari@gmail.com>
+Subject: [PATCH v3 3/4] spi: bcm63xx-hsspi: add reset support
+Date:   Tue, 16 Jun 2020 09:02:22 +0200
+Message-Id: <20200616070223.3401282-4-noltari@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616070223.3401282-1-noltari@gmail.com>
 References: <20200616070223.3401282-1-noltari@gmail.com>
@@ -82,7 +82,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bcm63xx arch resets the SPI controller at early boot. However, bmips arch
+bcm63xx arch resets the HSSPI controller at early boot. However, bmips arch
 needs to perform a reset when probing the driver.
 
 Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
@@ -91,32 +91,32 @@ Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
  v3: use devm_reset_control_get_optional_exclusive
  v2: use devm_reset_control_get_exclusive
 
- drivers/spi/spi-bcm63xx.c | 17 +++++++++++++++++
+ drivers/spi/spi-bcm63xx-hsspi.c | 17 +++++++++++++++++
  1 file changed, 17 insertions(+)
 
-diff --git a/drivers/spi/spi-bcm63xx.c b/drivers/spi/spi-bcm63xx.c
-index 0f1b10a4ef0c..92e88901189c 100644
---- a/drivers/spi/spi-bcm63xx.c
-+++ b/drivers/spi/spi-bcm63xx.c
-@@ -18,6 +18,7 @@
- #include <linux/err.h>
- #include <linux/pm_runtime.h>
+diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
+index 6c235306c0e4..45e2b0942e64 100644
+--- a/drivers/spi/spi-bcm63xx-hsspi.c
++++ b/drivers/spi/spi-bcm63xx-hsspi.c
+@@ -20,6 +20,7 @@
+ #include <linux/spi/spi.h>
+ #include <linux/mutex.h>
  #include <linux/of.h>
 +#include <linux/reset.h>
  
- /* BCM 6338/6348 SPI core */
- #define SPI_6348_RSET_SIZE		64
-@@ -493,6 +494,7 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
- 	struct bcm63xx_spi *bs;
- 	int ret;
- 	u32 num_cs = BCM63XX_SPI_MAX_CS;
+ #define HSSPI_GLOBAL_CTRL_REG			0x0
+ #define GLOBAL_CTRL_CS_POLARITY_SHIFT		0
+@@ -334,6 +335,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
+ 	struct clk *clk, *pll_clk = NULL;
+ 	int irq, ret;
+ 	u32 reg, rate, num_cs = HSSPI_SPI_MAX_CS;
 +	struct reset_control *reset;
  
- 	if (dev->of_node) {
- 		const struct of_device_id *match;
-@@ -529,6 +531,15 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+@@ -348,10 +350,25 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
+ 	if (IS_ERR(clk))
  		return PTR_ERR(clk);
- 	}
  
 +	reset = devm_reset_control_get_optional_exclusive(dev, NULL);
 +	if (IS_ERR(reset)) {
@@ -127,22 +127,19 @@ index 0f1b10a4ef0c..92e88901189c 100644
 +		return ret;
 +	}
 +
- 	master = spi_alloc_master(dev, sizeof(*bs));
- 	if (!master) {
- 		dev_err(dev, "out of memory\n");
-@@ -579,6 +590,12 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
+ 	ret = clk_prepare_enable(clk);
  	if (ret)
- 		goto out_err;
+ 		return ret;
  
 +	ret = reset_control_reset(reset);
 +	if (ret) {
 +		dev_err(dev, "unable to reset device: %d\n", ret);
-+		goto out_clk_disable;
++		goto out_disable_clk;
 +	}
 +
- 	bcm_spi_writeb(bs, SPI_INTR_CLEAR_ALL, SPI_INT_STATUS);
- 
- 	/* register and we are done */
+ 	rate = clk_get_rate(clk);
+ 	if (!rate) {
+ 		pll_clk = devm_clk_get(dev, "pll");
 -- 
 2.27.0
 
