@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA96C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAAC214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE6E2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322418;
-	bh=cB0xYbRke6CaPhv+2x3VkaVLolCq4Lq7+R793GDpnis=;
+	s=default; t=1592322423;
+	bh=Q9VzjPAFTOrJwsOtNxPwztfgd+T3mqZj6+9goc1O0fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U/2dxjyyhuF9T0Bzp3jmYjkXo7pR5mejd0KdqrTXPF3MAp5UnzqweonaWh7lxLNZz
-	 NYNZkEE2JpSs0OiVI41+phzkuogAIM5Qbi5ZvrFoYZZLxuuMJr91BM5U0YKO8HvJqV
-	 Q8kowWa+Qxa8Wm4giPmIGxt2phWtTBAchHms7Np8=
+	b=xMVwH59pJDJIKq+YutBuPw/b2dE8OLrHycQWUCt/7xX/5i0vdTgZNa12kahTeQ5q9
+	 AgJ8pUkEhdK91p2lxC0rN0i8XR6BRqW3BrMqvJJHODhcdJkEk27stIq8u88pRDHwy5
+	 dxaMpw6v7HEsKmuQ7gvYx9BsQ8mqfcGt9CPtEBhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731218AbgFPPq4 (ORCPT
+        id S1732254AbgFPPrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39422 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:47:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732230AbgFPPqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:52 -0400
+        id S1731189AbgFPPq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D223E214DB;
-        Tue, 16 Jun 2020 15:46:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 082962071A;
+        Tue, 16 Jun 2020 15:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322412;
-        bh=cB0xYbRke6CaPhv+2x3VkaVLolCq4Lq7+R793GDpnis=;
+        s=default; t=1592322417;
+        bh=Q9VzjPAFTOrJwsOtNxPwztfgd+T3mqZj6+9goc1O0fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G0OkRiPqdZDd5gFvbKo4vhzkEqd+cv+GDFaznmBmOG5Z/wECczI9e+BBFwEzMwCfZ
-         faM/el+7CkgEs7i1C+g42wWl/oBLtOfn7k1e02kR+0EP34ca/9i2kSfkOapz+GjHug
-         xybbWDVTCzFwQpp73JA2xBRJxr2fA5HuhNkTtvpA=
+        b=JBiI7Ffrm/dUHTxH+aMYdBqZ2hQlJ9xt6958wbS5eg3S5R//wLwGYCP183+rDXavY
+         Hn61p0ZpVMEDQykD8WqUDIdoN6kRxu/TD+65cOMTa+xKNXmv2mT23zhMJp5sXArMX2
+         8iFcGEI7dx0/WyELE+QA2E0bJnC+zYZZ9HoEyx4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.7 091/163] crypto: algapi - Avoid spurious modprobe on LOADED
-Date:   Tue, 16 Jun 2020 17:34:25 +0200
-Message-Id: <20200616153111.195011314@linuxfoundation.org>
+        stable@vger.kernel.org, Gonglei <arei.gonglei@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        "Longpeng(Mike)" <longpeng2@huawei.com>
+Subject: [PATCH 5.7 093/163] crypto: virtio: Fix dest length calculation in __virtio_crypto_skcipher_do_req()
+Date:   Tue, 16 Jun 2020 17:34:27 +0200
+Message-Id: <20200616153111.289538103@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,44 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Longpeng(Mike) <longpeng2@huawei.com>
 
-commit beeb460cd12ac9b91640b484b6a52dcba9d9fc8f upstream.
+commit d90ca42012db2863a9a30b564a2ace6016594bda upstream.
 
-Currently after any algorithm is registered and tested, there's an
-unnecessary request_module("cryptomgr") even if it's already loaded.
-Also, CRYPTO_MSG_ALG_LOADED is sent twice, and thus if the algorithm is
-"crct10dif", lib/crc-t10dif.c replaces the tfm twice rather than once.
+The src/dst length is not aligned with AES_BLOCK_SIZE(which is 16) in some
+testcases in tcrypto.ko.
 
-This occurs because CRYPTO_MSG_ALG_LOADED is sent using
-crypto_probing_notify(), which tries to load "cryptomgr" if the
-notification is not handled (NOTIFY_DONE).  This doesn't make sense
-because "cryptomgr" doesn't handle this notification.
+For example, the src/dst length of one of cts(cbc(aes))'s testcase is 17, the
+crypto_virtio driver will set @src_data_len=16 but @dst_data_len=17 in this
+case and get a wrong at then end.
 
-Fix this by using crypto_notify() instead of crypto_probing_notify().
+  SRC: pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp (17 bytes)
+  EXP: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc pp (17 bytes)
+  DST: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 00 (pollute the last bytes)
+  (pp: plaintext  cc:ciphertext)
 
-Fixes: dd8b083f9a5e ("crypto: api - Introduce notifier for new crypto algorithms")
-Cc: <stable@vger.kernel.org> # v4.20+
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fix this issue by limit the length of dest buffer.
+
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Cc: Gonglei <arei.gonglei@huawei.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200602070501.2023-4-longpeng2@huawei.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algapi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/virtio/virtio_crypto_algs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -403,7 +403,7 @@ static void crypto_wait_for_test(struct
- 	err = wait_for_completion_killable(&larval->completion);
- 	WARN_ON(err);
- 	if (!err)
--		crypto_probing_notify(CRYPTO_MSG_ALG_LOADED, larval);
-+		crypto_notify(CRYPTO_MSG_ALG_LOADED, larval);
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -402,6 +402,7 @@ __virtio_crypto_skcipher_do_req(struct v
+ 		goto free;
+ 	}
  
- out:
- 	crypto_larval_kill(&larval->alg);
++	dst_len = min_t(unsigned int, req->cryptlen, dst_len);
+ 	pr_debug("virtio_crypto: src_len: %u, dst_len: %llu\n",
+ 			req->cryptlen, dst_len);
+ 
 
 
