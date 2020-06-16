@@ -2,214 +2,107 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5808AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC02C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE2C20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A81120A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="C+1WjSl8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ti3A4cIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgFPNo0 (ORCPT
+        id S1729027AbgFPNod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:44:26 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:43223 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728980AbgFPNoH (ORCPT
+        Tue, 16 Jun 2020 09:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgFPNoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:44:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592315045; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=neAnsfkRMgdLmxrFAs43gbDE9/rNCoat18mjJVvgJoU=; b=C+1WjSl8ynVwJ8EhanDDuPl5UFZjJVYazIGQhK7p7ALyZsBM02ltAGjaB7DA5NZFPf23EUUw
- sFfsIu7iyyCSQQbcVq9Tsm3Imo4w5e4Hk/l0QE3Ib/5JyZr4cY1tlqOUi+udlGLFBbs3KHTV
- 1cYR8xGrBMAPFTogfXaTq/uFaAE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ee8cc996bebe35deb85aa37 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 13:43:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7B2CEC43395; Tue, 16 Jun 2020 13:43:53 +0000 (UTC)
-Received: from [192.168.1.102] (unknown [183.83.143.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BBD87C433C9;
-        Tue, 16 Jun 2020 13:43:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BBD87C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-Subject: Re: [PATCH v2] dma-buf: Move dma_buf_release() from fops to
- dentry_ops
-To:     Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Chenbo Feng <fengc@google.com>, linux-kernel@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org,
-        syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-References: <20200611114418.19852-1-sumit.semwal@linaro.org>
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Message-ID: <59f0062d-5ca9-84f1-ba92-c3463ff0e73d@codeaurora.org>
-Date:   Tue, 16 Jun 2020 19:13:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 16 Jun 2020 09:44:14 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 450FBC06174E
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:44:11 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id s13so15937510otd.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eIo+HGK20axijQZBtO3IaHsxbNdFn4EANNOPWtaPaLA=;
+        b=Ti3A4cILAHIDDIxgVtqdZ2BML3TZ6f6OLZGrHLBL34GXJRffClZw072wL1Qo4irTRG
+         LxLWRixU8D9pdjtFCIEaBQgDWc1eiSXdOQwy7qHCS4Tp4O7FvTR+d+9heh5J1AGxv8ZF
+         +uVYoUwMaD5nA7wH+WGhp0SptSU3H8NTwJVag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eIo+HGK20axijQZBtO3IaHsxbNdFn4EANNOPWtaPaLA=;
+        b=I6+hQBwFpGBVYBP0Rw3W70RSutZ46LKbpCuTEqVMWCmi4I6P5AzVlq2TkWU4WPyTGk
+         bo1nHudjyAzYBsmlK/SOnhB20IMFGlvYTrv2wJoyo1BHIYCxOSZ8L6bOj1eXT5aCHVu2
+         0Bmc/IJgzLl9Oeag43VMtWkeDmupAXaBzHN0i4IpWCeVXvvm0gkngVfLsjJnNBTuRYol
+         OwBeLHrkiYxHmyNjCm+gHkdTsYWzVqkqx7P3HR4qes1bAUkQ1K9BlXxScMauNl+PliBi
+         Jb8PktXj36iI/xNCFDXH0k6ZDS6c60JCHTtmhAo7/RxCMKzrNPBhekfb0cyhMnyp02R0
+         bzkA==
+X-Gm-Message-State: AOAM532Q7uC2Ordkb3pt+qaUr7Dbx9o3iLfZSzwtotBMo1wU1zBF89pe
+        01jT6ZoJunIRhTiwLHO3htWUA2qsJO7nYfUJTSLWUQ==
+X-Google-Smtp-Source: ABdhPJxAQz7lgJOkgxxD01CXUR5nj9hSTyWiOqMKGx2oXnhmOyOV/5G796JybldjApvIzMDJUn85OazsBmNrocLYiX0=
+X-Received: by 2002:a9d:8b8:: with SMTP id 53mr1550777otf.356.1592315050316;
+ Tue, 16 Jun 2020 06:44:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200611114418.19852-1-sumit.semwal@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200612164632.25648-1-nsaenzjulienne@suse.de> <20200612164632.25648-5-nsaenzjulienne@suse.de>
+In-Reply-To: <20200612164632.25648-5-nsaenzjulienne@suse.de>
+From:   Simon Glass <sjg@chromium.org>
+Date:   Tue, 16 Jun 2020 07:43:57 -0600
+Message-ID: <CAPnjgZ2jarQArKN=0h0mNnxE7gAL0juvGhMxMF4a0CehqxWcRw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] dm: pci: Assign controller device node to root bridge
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Matthias Brugger <mbrugger@suse.com>,
+        U-Boot Mailing List <u-boot@lists.denx.de>,
+        Bin Meng <bmeng.cn@gmail.com>, Marek Vasut <marex@denx.de>,
+        lk <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Sumit for the fix.
+Hi Nicolas,
 
-On 6/11/2020 5:14 PM, Sumit Semwal wrote:
-> Charan Teja reported a 'use-after-free' in dmabuffs_dname [1], which
-> happens if the dma_buf_release() is called while the userspace is
-> accessing the dma_buf pseudo fs's dmabuffs_dname() in another process,
-> and dma_buf_release() releases the dmabuf object when the last reference
-> to the struct file goes away.
-> 
-> I discussed with Arnd Bergmann, and he suggested that rather than tying
-> the dma_buf_release() to the file_operations' release(), we can tie it to
-> the dentry_operations' d_release(), which will be called when the last ref
-> to the dentry is removed.
-> 
-> The path exercised by __fput() calls f_op->release() first, and then calls
-> dput, which eventually calls d_op->d_release().
-> 
-> In the 'normal' case, when no userspace access is happening via dma_buf
-> pseudo fs, there should be exactly one fd, file, dentry and inode, so
-> closing the fd will kill of everything right away.
-> 
-> In the presented case, the dentry's d_release() will be called only when
-> the dentry's last ref is released.
-> 
-> Therefore, lets move dma_buf_release() from fops->release() to
-> d_ops->d_release()
-> 
-> Many thanks to Arnd for his FS insights :)
-> 
-> [1]: https://lore.kernel.org/patchwork/patch/1238278/
-> 
-> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
-> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
-> Cc: <stable@vger.kernel.org> [5.3+]
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Reported-by: Charan Teja Reddy <charante@codeaurora.org>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> 
-
-Tested this patch for Android running on Snapdragon hardware and see no
-issues.
-Tested-by: Charan Teja Reddy <charante@codeaurora.org>
-
+On Fri, 12 Jun 2020 at 10:47, Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> There is no distinction in DT between the PCI controller device and the
+> root bridge, whereas such distinction exists from dm's perspective. Make
+> sure the root bridge ofnode is assigned to the controller's platform
+> device node.
+>
+> This permits setups like this to work correctly:
+>
+>         pcie {
+>                 compatible = "...";
+>                 ...
+>                 dev {
+>                         reg = <0 0 0 0 0>;
+>                         ...
+>                 };
+>         };
+>
+> Without this the dev node is assigned to the root bridge and the
+> actual device search starts one level lower than expected.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
-> v2: per Arnd: Moved dma_buf_release() above to avoid forward declaration;
->      removed dentry_ops check.
-> ---
->  drivers/dma-buf/dma-buf.c | 54 ++++++++++++++++++---------------------
->  1 file changed, 25 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> index 01ce125f8e8d..412629601ad3 100644
-> --- a/drivers/dma-buf/dma-buf.c
-> +++ b/drivers/dma-buf/dma-buf.c
-> @@ -54,37 +54,11 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
->  			     dentry->d_name.name, ret > 0 ? name : "");
->  }
->  
-> -static const struct dentry_operations dma_buf_dentry_ops = {
-> -	.d_dname = dmabuffs_dname,
-> -};
-> -
-> -static struct vfsmount *dma_buf_mnt;
-> -
-> -static int dma_buf_fs_init_context(struct fs_context *fc)
-> -{
-> -	struct pseudo_fs_context *ctx;
-> -
-> -	ctx = init_pseudo(fc, DMA_BUF_MAGIC);
-> -	if (!ctx)
-> -		return -ENOMEM;
-> -	ctx->dops = &dma_buf_dentry_ops;
-> -	return 0;
-> -}
-> -
-> -static struct file_system_type dma_buf_fs_type = {
-> -	.name = "dmabuf",
-> -	.init_fs_context = dma_buf_fs_init_context,
-> -	.kill_sb = kill_anon_super,
-> -};
-> -
-> -static int dma_buf_release(struct inode *inode, struct file *file)
-> +static void dma_buf_release(struct dentry *dentry)
->  {
->  	struct dma_buf *dmabuf;
->  
-> -	if (!is_dma_buf_file(file))
-> -		return -EINVAL;
-> -
-> -	dmabuf = file->private_data;
-> +	dmabuf = dentry->d_fsdata;
->  
->  	BUG_ON(dmabuf->vmapping_counter);
->  
-> @@ -110,9 +84,32 @@ static int dma_buf_release(struct inode *inode, struct file *file)
->  	module_put(dmabuf->owner);
->  	kfree(dmabuf->name);
->  	kfree(dmabuf);
-> +}
-> +
-> +static const struct dentry_operations dma_buf_dentry_ops = {
-> +	.d_dname = dmabuffs_dname,
-> +	.d_release = dma_buf_release,
-> +};
-> +
-> +static struct vfsmount *dma_buf_mnt;
-> +
-> +static int dma_buf_fs_init_context(struct fs_context *fc)
-> +{
-> +	struct pseudo_fs_context *ctx;
-> +
-> +	ctx = init_pseudo(fc, DMA_BUF_MAGIC);
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +	ctx->dops = &dma_buf_dentry_ops;
->  	return 0;
->  }
->  
-> +static struct file_system_type dma_buf_fs_type = {
-> +	.name = "dmabuf",
-> +	.init_fs_context = dma_buf_fs_init_context,
-> +	.kill_sb = kill_anon_super,
-> +};
-> +
->  static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
->  {
->  	struct dma_buf *dmabuf;
-> @@ -412,7 +409,6 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
->  }
->  
->  static const struct file_operations dma_buf_fops = {
-> -	.release	= dma_buf_release,
->  	.mmap		= dma_buf_mmap_internal,
->  	.llseek		= dma_buf_llseek,
->  	.poll		= dma_buf_poll,
-> 
+>  drivers/pci/pci-uclass.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation Collaborative Project
+Can you update the tests to handle this case please?
+
+Regards,
+Simon
