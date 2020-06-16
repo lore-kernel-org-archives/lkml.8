@@ -2,59 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D238C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48246C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1C1E208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2826C208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323512;
-	bh=cR0PP+/MQZYLqQf3bbJfXoLuvhvnjpmt6Okx0cKiyf4=;
+	s=default; t=1592323516;
+	bh=ELu6WPG4+sAvh19uhN0GXT119B0iyYXi286G6sFTCZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uSE8E43auCWsArM7KxtvCn7c2Etb7GaG/Mr4a5Adcxb41iD1hhneEFxzXL6BzUa+K
-	 zqYScJZeorYmcs8N/SxrRkJotdoFvIoElJ154AIcdGzJovUiO0lLZJIqSkTKn9zzOy
-	 3KKIw+jbAOU6eDh1er6WvJNZ3r7VdnsRk2a2ZvLA=
+	b=Ahr3fP366k9lWExoV0XBjanlFSNoUNperkiufE9FELhtE6LDz7W2vLD9iFG41pCZS
+	 vKk10C+XwnKVYeoll5tIkGhV+BA1nyiRu0l1JP3Q1mZ6llQW13hpXRvCnukHRVb0es
+	 aIw2MLi7KRzOWwRNiW+jNbor21WG9Df97dnLBWAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732970AbgFPQFL (ORCPT
+        id S1733240AbgFPQFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44044 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732473AbgFPPtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:12 -0400
+        id S1732062AbgFPPtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2F1F2071A;
-        Tue, 16 Jun 2020 15:49:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 718BC20776;
+        Tue, 16 Jun 2020 15:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322552;
-        bh=cR0PP+/MQZYLqQf3bbJfXoLuvhvnjpmt6Okx0cKiyf4=;
+        s=default; t=1592322545;
+        bh=ELu6WPG4+sAvh19uhN0GXT119B0iyYXi286G6sFTCZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugzR4CCo6RiDW7hayB/yjARNCvFGaFMe8YkxepG4xMJGHEyWq8KiKIxER1s335Iy/
-         mpuxje/ygGgOdt8pPBpkompgBZnpdOl0OPQrZlWphe0b8l65MFRYoAwN6u6Vt4/fdQ
-         KBFHQvS2o1oNCh1/ABqhskzS2NzKdmv/c5itCu1E=
+        b=L9cuvx+v6nMqlYVeH0YvM4Ar1m3lxpFwSNx6vtUn9wx/Nd4mmwdIIYKSRtUXGnKCQ
+         y//usknQkzyHJf1IMOuUMYzSOJXSzI/XuYTP+IXcrr84NZDLJiNBUE3QHnmcTPq/Oh
+         opRKFUQOpSNJbHSC3VRaivTiPiuEaxJofAEvBtP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Jeremy Fitzhardinge <jeremy@goop.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jian Cai <jiancai@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>
-Subject: [PATCH 5.6 013/161] elfnote: mark all .note sections SHF_ALLOC
-Date:   Tue, 16 Jun 2020 17:33:23 +0200
-Message-Id: <20200616153107.043647293@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 010/161] net: dsa: qca8k: Fix "Unexpected gfp" kernel exception
+Date:   Tue, 16 Jun 2020 17:33:20 +0200
+Message-Id: <20200616153106.905571697@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -67,58 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: "Michal Vokáč" <michal.vokac@ysoft.com>
 
-commit 51da9dfb7f20911ae4e79e9b412a9c2d4c373d4b upstream.
+[ Upstream commit 67122a7910bf2135dc7f7ececfcf16a5bdb362c1 ]
 
-ELFNOTE_START allows callers to specify flags for .pushsection assembler
-directives.  All callsites but ELF_NOTE use "a" for SHF_ALLOC.  For vdso's
-that explicitly use ELF_NOTE_START and BUILD_SALT, the same section is
-specified twice after preprocessing, once with "a" flag, once without.
-Example:
+Commit 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
+replaced the dsa_switch_alloc helper by devm_kzalloc in all DSA
+drivers. Unfortunately it introduced a typo in qca8k.c driver and
+wrong argument is passed to the devm_kzalloc function.
 
-.pushsection .note.Linux, "a", @note ;
-.pushsection .note.Linux, "", @note ;
+This fix mitigates the following kernel exception:
 
-While GNU as allows this ordering, it warns for the opposite ordering,
-making these directives position dependent.  We'd prefer not to precisely
-match this behavior in Clang's integrated assembler.  Instead, the non
-__ASSEMBLY__ definition of ELF_NOTE uses
-__attribute__((section(".note.Linux"))) which is created with SHF_ALLOC,
-so let's make the __ASSEMBLY__ definition of ELF_NOTE consistent with C
-and just always use "a" flag.
+  Unexpected gfp: 0x6 (__GFP_HIGHMEM|GFP_DMA32). Fixing up to gfp: 0x101 (GFP_DMA|__GFP_ZERO). Fix your code!
+  CPU: 1 PID: 44 Comm: kworker/1:1 Not tainted 5.5.9-yocto-ua #1
+  Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+  Workqueue: events deferred_probe_work_func
+  [<c0014924>] (unwind_backtrace) from [<c00123bc>] (show_stack+0x10/0x14)
+  [<c00123bc>] (show_stack) from [<c04c8fb4>] (dump_stack+0x90/0xa4)
+  [<c04c8fb4>] (dump_stack) from [<c00e1b10>] (new_slab+0x20c/0x214)
+  [<c00e1b10>] (new_slab) from [<c00e1cd0>] (___slab_alloc.constprop.0+0x1b8/0x540)
+  [<c00e1cd0>] (___slab_alloc.constprop.0) from [<c00e2074>] (__slab_alloc.constprop.0+0x1c/0x24)
+  [<c00e2074>] (__slab_alloc.constprop.0) from [<c00e4538>] (__kmalloc_track_caller+0x1b0/0x298)
+  [<c00e4538>] (__kmalloc_track_caller) from [<c02cccac>] (devm_kmalloc+0x24/0x70)
+  [<c02cccac>] (devm_kmalloc) from [<c030d888>] (qca8k_sw_probe+0x94/0x1ac)
+  [<c030d888>] (qca8k_sw_probe) from [<c0304788>] (mdio_probe+0x30/0x54)
+  [<c0304788>] (mdio_probe) from [<c02c93bc>] (really_probe+0x1e0/0x348)
+  [<c02c93bc>] (really_probe) from [<c02c9884>] (driver_probe_device+0x60/0x16c)
+  [<c02c9884>] (driver_probe_device) from [<c02c7fb0>] (bus_for_each_drv+0x70/0x94)
+  [<c02c7fb0>] (bus_for_each_drv) from [<c02c9708>] (__device_attach+0xb4/0x11c)
+  [<c02c9708>] (__device_attach) from [<c02c8148>] (bus_probe_device+0x84/0x8c)
+  [<c02c8148>] (bus_probe_device) from [<c02c8cec>] (deferred_probe_work_func+0x64/0x90)
+  [<c02c8cec>] (deferred_probe_work_func) from [<c0033c14>] (process_one_work+0x1d4/0x41c)
+  [<c0033c14>] (process_one_work) from [<c00340a4>] (worker_thread+0x248/0x528)
+  [<c00340a4>] (worker_thread) from [<c0039148>] (kthread+0x124/0x150)
+  [<c0039148>] (kthread) from [<c00090d8>] (ret_from_fork+0x14/0x3c)
+  Exception stack(0xee1b5fb0 to 0xee1b5ff8)
+  5fa0:                                     00000000 00000000 00000000 00000000
+  5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+  5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+  qca8k 2188000.ethernet-1:0a: Using legacy PHYLIB callbacks. Please migrate to PHYLINK!
+  qca8k 2188000.ethernet-1:0a eth2 (uninitialized): PHY [2188000.ethernet-1:01] driver [Generic PHY]
+  qca8k 2188000.ethernet-1:0a eth1 (uninitialized): PHY [2188000.ethernet-1:02] driver [Generic PHY]
 
-This allows Clang to assemble a working mainline (5.6) kernel via:
-$ make CC=clang AS=clang
-
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Cc: Jeremy Fitzhardinge <jeremy@goop.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/913
-Link: http://lkml.kernel.org/r/20200325231250.99205-1-ndesaulniers@google.com
-Debugged-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jian Cai <jiancai@google.com>
+Fixes: 7e99e3470172 ("net: dsa: remove dsa_switch_alloc helper")
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/linux/elfnote.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/qca8k.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/include/linux/elfnote.h
-+++ b/include/linux/elfnote.h
-@@ -54,7 +54,7 @@
- .popsection				;
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -1079,8 +1079,7 @@ qca8k_sw_probe(struct mdio_device *mdiod
+ 	if (id != QCA8K_ID_QCA8337)
+ 		return -ENODEV;
  
- #define ELFNOTE(name, type, desc)		\
--	ELFNOTE_START(name, type, "")		\
-+	ELFNOTE_START(name, type, "a")		\
- 		desc			;	\
- 	ELFNOTE_END
+-	priv->ds = devm_kzalloc(&mdiodev->dev, sizeof(*priv->ds),
+-				QCA8K_NUM_PORTS);
++	priv->ds = devm_kzalloc(&mdiodev->dev, sizeof(*priv->ds), GFP_KERNEL);
+ 	if (!priv->ds)
+ 		return -ENOMEM;
  
 
 
