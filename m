@@ -2,234 +2,143 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE6FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC50C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4520120679
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ezt4NfB4"
+	by mail.kernel.org (Postfix) with ESMTP id 8A51320679
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592298533;
+	bh=mMcZbBKDIEf5QDbJvhcjb8NySIKsPG7Fhgc8LiSbKCo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wFV7orJ6b4kfwbzTwdtQnOqDy89OT5t1wEs2rtt7zAnxy//+XAwKxyhrcC1lmJaBI
+	 99XdZnIlc45FsHuWaiA3Vv8CmL7Kyf4J3X33cxfxGr9JCewCEE7knMeL642CWX+YSh
+	 /4YEjRy19s0q/nClatv8vDTMlQODlUj9s7ebi8I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgFPJIM (ORCPT
+        id S1726064AbgFPJIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgFPJIL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:08:11 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69BCFC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:08:11 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d66so9198043pfd.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Eu2oq0yjr6Eq5I9NRCK1BJJMT0oPPDxPZXG6oIi1TI0=;
-        b=ezt4NfB4JG+xSwwNShZEsNSM9PWNfoR57G0ueDUBHNAzAqMLXb6Kft8YjHXYBqLP4f
-         87N1XLEK4GD+Q3c1r7MUl0tiKmcWsW+4HnCO5HAm3Ut0a8IivFBhk6eBibNilpHhqaxG
-         HT9HIss0WFfQ5nn45hXP0J1caAdgZEkzMS660=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Eu2oq0yjr6Eq5I9NRCK1BJJMT0oPPDxPZXG6oIi1TI0=;
-        b=j43fTjelw9PcvpGq4qmlYV0YgGfTyAvAe3I6vWnlD2wtrRHOCc/Q8AooF8wrssMCDY
-         gbMaM5CgNcnPInGa9tyw3JAiF3sj28jCaYaW4U7Hq5gqQdPif+z4wsah7cgJdAf1XfcE
-         N0Q6rdXsRYjl9NB58sLIynVkhPqXvj1vwRWQLUNTLjfl0APEpz5QLNOL+faqMT47dgU5
-         f0/4reMN7RhZ8vKtYODZ2mle6MAkUSF5jhVV4OPL1Vzm6+ZnIADL6EJgDIurcJ2MlGAn
-         kfwRazW/rUXNE5/kVC9w68hQNRkmDG6yJU1OPj1nCsnHw7ZFF68dVfrqkF/0MiUygBB5
-         q3IQ==
-X-Gm-Message-State: AOAM530Ba1SRVJZMLhulBW66fI+TV5U+KbgiEHkMBTjDdqQq81ksIvNz
-        xrwKsrh9zw6BJgmEFg4QchvHEg==
-X-Google-Smtp-Source: ABdhPJxa1M9lfXKWXXotDl+Tv4E6TsIr+bwNAHx7um2PrBzY3tZEsYxiPRDcdZ6Eova+j1giK6zZhQ==
-X-Received: by 2002:a62:3645:: with SMTP id d66mr1252372pfa.275.1592298490417;
-        Tue, 16 Jun 2020 02:08:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 6sm16449421pfi.170.2020.06.16.02.08.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 02:08:09 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 02:08:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     glider@google.com
-Cc:     yamada.masahiro@socionext.com, jmorris@namei.org, maze@google.com,
-        ndesaulniers@google.com, gregkh@linuxfoundation.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] [RFC] security: allow using Clang's zero
- initialization for stack variables
-Message-ID: <202006160207.E9C6FDDB7@keescook>
-References: <20200616083435.223038-1-glider@google.com>
+        Tue, 16 Jun 2020 05:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727804AbgFPJIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:08:50 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C272A207DD;
+        Tue, 16 Jun 2020 09:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592298529;
+        bh=mMcZbBKDIEf5QDbJvhcjb8NySIKsPG7Fhgc8LiSbKCo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QAbJhmj34S2Fh7X92lHNNV0g9TgINhpbE+Xi01XOpZGNnKr1JQOzc8zJFa/Q/IWIE
+         KUXLzFRoNnTDPXxxfw5nMVDVRRo5OGfYUCr1Uu+PHiRMjg+ihC/RhWsE2s9n/dd3g0
+         4HFqrjPh5o76I0Mk0irL6v+qQWIW1zQYLLpbow1A=
+Received: by mail-oi1-f176.google.com with SMTP id a137so18611837oii.3;
+        Tue, 16 Jun 2020 02:08:49 -0700 (PDT)
+X-Gm-Message-State: AOAM532iBcwy8DQnU/c6AeEDsaRJC0okNSv1M7hOKPjTmTBuLeg5FPR0
+        tulR5SBG+4hKCDmeyhe9hKWIAUAr0/AYstUiE8M=
+X-Google-Smtp-Source: ABdhPJwa1K5xO9vLA3j1dAI/megl1vvVrIUpuNpiiEU3U5egWn6I8rCdX4OdQEugsG4Pg25O6pqrL++03BNz9mew+r8=
+X-Received: by 2002:aca:ba03:: with SMTP id k3mr2525490oif.33.1592298529095;
+ Tue, 16 Jun 2020 02:08:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616083435.223038-1-glider@google.com>
+References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
+In-Reply-To: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 16 Jun 2020 11:08:38 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
+Message-ID: <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
+Subject: Re: [PATCH] tpm: Require that all digests are present in
+ TCG_PCR_EVENT2 structures
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Peter Jones <pjones@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Petr Vandrovec <petr@vmware.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:34:35AM +0200, glider@google.com wrote:
-> In addition to -ftrivial-auto-var-init=pattern (used by
-> CONFIG_INIT_STACK_ALL now) Clang also supports zero initialization for
-> locals enabled by -ftrivial-auto-var-init=zero.
-> The future of this flag is still being debated, see
-> https://bugs.llvm.org/show_bug.cgi?id=45497
-> Right now it is guarded by another flag,
-> -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang,
-> which means it may not be supported by future Clang releases.
-> Another possible resolution is that -ftrivial-auto-var-init=zero will
-> persist (as certain users have already started depending on it), but the
-> name of the guard flag will change.
-> 
-> In the meantime, zero initialization has proven itself as a good
-> production mitigation measure against uninitialized locals. Unlike
-> pattern initialization, which has a higher chance of triggering existing
-> bugs, zero initialization provides safe defaults for strings, pointers,
-> indexes, and sizes. On the other hand, pattern initialization remains
-> safer for return values.
-> Performance-wise, the difference between pattern and zero initialization
-> is usually negligible, although the generated code for zero
-> initialization is more compact.
-> 
-> This patch renames CONFIG_INIT_STACK_ALL to
-> CONFIG_INIT_STACK_ALL_PATTERN and introduces another config option,
-> CONFIG_INIT_STACK_ALL_ZERO, that enables zero initialization for locals
-> if the corresponding flags are supported by Clang.
-> 
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Alexander Potapenko <glider@google.com>
+(cc Matthew and Peter)
 
-Thanks! I've applied this to my for-next/kspp tree (with a few small
-tweaks).
+On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
+>
+> Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
+> value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
+> TCG_PCClientPCREvent event log header. Also require that
+> TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+>
+> The TCG PC Client Platform Firmware Profile Specification section 9.1
+> (Family "2.0", Level 00 Revision 1.04) states:
+>
+>  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
+>  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
+>  Note: This includes EV_NO_ACTION events which do not extend the PCR.
+>
+> Section 9.4.5.1 provides this description of
+> TCG_EfiSpecIdEvent.numberOfAlgorithms:
+>
+>  The number of Hash algorithms in the digestSizes field. This field MUST
+>  be set to a value of 0x01 or greater.
+>
+> Enforce these restrictions, as required by the above specification, in
+> order to better identify and ignore invalid sequences of bytes at the
+> end of an otherwise valid TPM2 event log. Firmware doesn't always have
+> the means necessary to inform the kernel of the actual event log size so
+> the kernel's event log parsing code should be stringent when parsing the
+> event log for resiliency against firmware bugs. This is true, for
+> example, when firmware passes the event log to the kernel via a reserved
+> memory region described in device tree.
+>
 
-> --
+When does this happen? Do we have code in mainline that does this?
 
-^^ note, this separator should be "---" for diff tools to do the right
-thing, etc.
-
-> v2:
->  - as suggested by Kees Cook, make CONFIG_INIT_STACK_ALL_PATTERN and
->    CONFIG_INIT_STACK_ALL_ZERO separate options.
+> Prior to this patch, a single bit set in the offset corresponding to
+> either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
+> after the last valid event log entry, could confuse the parser into
+> thinking that an additional entry is present in the event log. This
+> patch raises the bar on how difficult it is for stale memory to confuse
+> the kernel's event log parser but there's still a reliance on firmware
+> to properly initialize the remainder of the memory region reserved for
+> the event log as the parser cannot be expected to detect a stale but
+> otherwise properly formatted firmware event log entry.
+>
+> Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 > ---
->  Makefile                   | 12 ++++++++++--
->  init/main.c                |  6 ++++--
->  security/Kconfig.hardening | 29 +++++++++++++++++++++++++----
->  3 files changed, 39 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index fd31992bf918..fa739995ee12 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -802,11 +802,19 @@ KBUILD_CFLAGS	+= -fomit-frame-pointer
->  endif
->  endif
->  
-> -# Initialize all stack variables with a pattern, if desired.
-> -ifdef CONFIG_INIT_STACK_ALL
-> +# Initialize all stack variables with a 0xAA pattern.
-> +ifdef CONFIG_INIT_STACK_ALL_PATTERN
->  KBUILD_CFLAGS	+= -ftrivial-auto-var-init=pattern
->  endif
->  
-> +# Initialize all stack variables with a zero pattern.
-> +ifdef CONFIG_INIT_STACK_ALL_ZERO
-> +# Future support for zero initialization is still being debated, see
-> +# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
-> +# renamed or dropped.
-> +KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
-> +endif
-> +
->  DEBUG_CFLAGS	:= $(call cc-option, -fno-var-tracking-assignments)
->  
->  ifdef CONFIG_DEBUG_INFO
-> diff --git a/init/main.c b/init/main.c
-> index 0ead83e86b5a..ee08cef4aa1a 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -779,8 +779,10 @@ static void __init report_meminit(void)
->  {
->  	const char *stack;
->  
-> -	if (IS_ENABLED(CONFIG_INIT_STACK_ALL))
-> -		stack = "all";
-> +	if (IS_ENABLED(CONFIG_INIT_STACK_ALL_PATTERN))
-> +		stack = "all (pattern)";
-> +	else if (IS_ENABLED(CONFIG_INIT_STACK_ALL_ZERO))
-> +		stack = "all (zero)";
->  	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL))
->  		stack = "byref_all";
->  	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF))
-> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> index af4c979b38ee..7b705611ccaa 100644
-> --- a/security/Kconfig.hardening
-> +++ b/security/Kconfig.hardening
-> @@ -19,13 +19,16 @@ config GCC_PLUGIN_STRUCTLEAK
->  
->  menu "Memory initialization"
->  
-> -config CC_HAS_AUTO_VAR_INIT
-> +config CC_HAS_AUTO_VAR_INIT_PATTERN
->  	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
->  
-> +config CC_HAS_AUTO_VAR_INIT_ZERO
-> +	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
-> +
->  choice
->  	prompt "Initialize kernel stack variables at function entry"
->  	default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
-> -	default INIT_STACK_ALL if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT
-> +	default INIT_STACK_ALL_PATTERN if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT_PATTERN
->  	default INIT_STACK_NONE
->  	help
->  	  This option enables initialization of stack variables at
-> @@ -88,15 +91,33 @@ choice
->  		  of uninitialized stack variable exploits and information
->  		  exposures.
->  
-> -	config INIT_STACK_ALL
-> +	config INIT_STACK_ALL_PATTERN
->  		bool "0xAA-init everything on the stack (strongest)"
-> -		depends on CC_HAS_AUTO_VAR_INIT
-> +		depends on CC_HAS_AUTO_VAR_INIT_PATTERN
->  		help
->  		  Initializes everything on the stack with a 0xAA
->  		  pattern. This is intended to eliminate all classes
->  		  of uninitialized stack variable exploits and information
->  		  exposures, even variables that were warned to have been
->  		  left uninitialized.
-> +		  Pattern initialization is known to provoke many existing bugs
-> +		  related to uninitialized locals, e.g. pointers receive
-> +		  non-NULL values, buffer sizes and indices are very big.
-> +
-> +	config INIT_STACK_ALL_ZERO
-> +		bool "zero-init everything on the stack (strongest and safest)"
-> +		depends on CC_HAS_AUTO_VAR_INIT_ZERO
-> +		help
-> +		  Initializes everything on the stack with a zero
-> +		  pattern. This is intended to eliminate all classes
-> +		  of uninitialized stack variable exploits and information
-> +		  exposures, even variables that were warned to have been
-> +		  left uninitialized.
-> +		  Zero initialization provides safe defaults for strings,
-> +		  pointers, indices and sizes, and is therefore more suitable as
-> +		  a security mitigation measure.
-> +		  The corresponding flag isn't officially supported by Clang and
-> +		  may sooner or later go away or get renamed.
->  
->  endchoice
->  
-> -- 
-> 2.27.0.290.gba653c62da-goog
-> 
 
--- 
-Kees Cook
+I am all for stringent checks, but this could potentially break
+measured boot on systems that are working fine today, right?
+
+>  include/linux/tpm_eventlog.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+> index 4f8c90c93c29..d83eb9fd5614 100644
+> --- a/include/linux/tpm_eventlog.h
+> +++ b/include/linux/tpm_eventlog.h
+> @@ -201,7 +201,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>         efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+>
+>         /* Check if event is malformed. */
+> -       if (count > efispecid->num_algs) {
+> +       if (!efispecid->num_algs || count != efispecid->num_algs) {
+>                 size = 0;
+>                 goto out;
+>         }
+> --
+> 2.25.1
+>
