@@ -2,197 +2,123 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC50C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D213C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20FAF20739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0430920739
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:03:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hdho9rnv"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="na7Wx0MB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgFPB7O (ORCPT
+        id S1726369AbgFPCDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:59:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgFPB7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 21:59:09 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CCEC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 18:59:08 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x11so2275399plo.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 18:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c6qSOHXQD4hhumQbZikXxSVaWTqHQyHgmFGcIGOztbI=;
-        b=Hdho9rnvhEUVTmAqgZmwWYS8RzOIXPvCmcrdiHoWOSSv9gOV6MjCV5xh7IZtx9ItbZ
-         +O4XLUz0sei1/nC+7CPDSozGf6Tgl7lIF96q91XBCfc99Ye6Fi9Jq4d1qxK44UiZhgWT
-         6ez7hLSLyQ27AEpC5O/kOv48zLGAqLBArsXn3NjIxmVeEFt/YPJfzgKVXoMWCtoRgcFk
-         ysl/KEbk3PSvoy3O+Gwxsqw4LBMpFsoMqjgCu540Za/JDS0WBv58gISlJION8NOnAwCG
-         L0bOtLmIY/AUpg4/pIQOfqCHp19HnSWOQ/Y2cNSN1sSHXwTYkle7vTBCppaVG7xYNpPe
-         zXrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c6qSOHXQD4hhumQbZikXxSVaWTqHQyHgmFGcIGOztbI=;
-        b=SwKGUUgROVj8FHI5yFFhZQtOVSFRUwkvZ5f3uFQy15Zhrxd354xmcVy2KJKpa5fNBT
-         TBy4FrHY3E9GzQ7Xgi2PgkHlssldh0ECxbe930fopoaMfh7lk0bSoIa1TMnLzkS4NTVj
-         jbIq7t++wyOHMvaU/m0nEWDmWKps6fBs+1KRbbDzDKcs+nN/jjCYLvIJnFUw2xgiuN4I
-         IC3CLw2q93IBZwK4IETcCD79n2szRk53ZfETYGCw6uNampTktkczQNBMwuo5jkI9XZze
-         3EnUMEzpWpFafqOauUj7Eeb6j3gY5imQ2vTE7DS/uhmdAbqqpwdSgY5Eiu2NPc6ds5fT
-         4vCA==
-X-Gm-Message-State: AOAM532R1wyLUZphk5LJj1qmnMTRPwgBKSjnxnEwzYLEO2cwWvrYEVRi
-        gy+BOlYbu5dZfID5AD77ozM=
-X-Google-Smtp-Source: ABdhPJwQspXhDL8ZeLiPXsByuB95kCv+TZO5QCOae6ToeEXyIPt0N78KWSViGNui3IvFDCRG0fVYLA==
-X-Received: by 2002:a17:90a:336c:: with SMTP id m99mr502352pjb.168.1592272748269;
-        Mon, 15 Jun 2020 18:59:08 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id x1sm683125pju.3.2020.06.15.18.59.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jun 2020 18:59:07 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 18:58:52 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ASoC: fsl_ssi: Fix bclk calculation for mono channel
-Message-ID: <20200616015851.GA23235@Asurada-Nvidia>
-References: <b5cf5e3cc39c62f6bb3660b7588b037ffc57f780.1592200690.git.shengjiu.wang@nxp.com>
- <20200615230912.GA16681@Asurada-Nvidia>
- <CAA+D8ANK079rFL-_kwYKkn=nvrsBJPHW8bWMTwNCwDVzHt0PdA@mail.gmail.com>
+        Mon, 15 Jun 2020 22:03:31 -0400
+Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:65251
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725985AbgFPCDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 22:03:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DxHUumNzPTZcguSN+ouBSa+3a9/sELAlCBy9729C7ZXNQEI43XixAqyEz0FATaK/HE7KCzBnx8YWwjlD8QV6ic+leTOQQu3z0jh9Ez+V6Joz3J+LpeOs0ejNBAXuB0X8e0/0i4TgLycO4VL+o57TkEwpVnxeZ89Ci4lR7MzpmMuFvASkDT5sMwRWpQjqgTeypFBt8noDlEBOzmUvyIvG+sCOYB2yS1gZl81FKm+5IOlbhYzcRQsQKDrlLJpWr6NexeDZVroHQMk0RzpOZYEHypMDtWeRx5HQCw21w6b/ncyzTEhxc7J4Gge/QqAaq6nGe/yHwpOlv5iFdVNnK3EPSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pBrtIwJk9xX/rlXkt51Keq//76WwkjphXVdEqtjjOPo=;
+ b=EHq/MyMz3HeBFYlf71un1K17yqY9Qz1xGHIvR5Kqw8UAkvdVaxpiXFLovEu0A72w5Abdz5+oki6ZS/8StbKzdgjbbrk0gn/IJardxQ+z1pkiiqL7nHkdcpYgjfWmJ0b+KdHMtuDLVtcjlWsbQqpU6AJGu1z8Mt4nvP3QPGmMGQT7qVRv7OtCdHLFSOUbx+pL+0lCccYeCIfqUO/y/wIku/tUpj0kA+2aBKJRmUfn2ST5cAxHWmn8cD4G5hVaw2cTMq/anuTF/12yFaN0jGTfK5QoOimCIoa/b5shl0T+4ZUrVJvGYcT0h92zC0i3eGi/xT9fSc6SleC5g1oixhWWUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pBrtIwJk9xX/rlXkt51Keq//76WwkjphXVdEqtjjOPo=;
+ b=na7Wx0MBk+l6o3qgffFbR16MlkDVrhGneRbQczM4QqoempNZXE8A0k+mHOb78ULZkpsg87U0ysPD6tGu0MhpTELMPenSgjIGH7Z7EmZQFX7ZKzQK6b+2xn3O4lfX2VETy5B310Qfy/Gt/oC8htr/lJmEppvoIfcmrv9o7Mg3Tqc=
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ (2603:10a6:209:12::18) by AM6PR0402MB3430.eurprd04.prod.outlook.com
+ (2603:10a6:209:8::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Tue, 16 Jun
+ 2020 02:03:26 +0000
+Received: from AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1]) by AM6PR0402MB3607.eurprd04.prod.outlook.com
+ ([fe80::35f8:f020:9b47:9aa1%7]) with mapi id 15.20.3088.029; Tue, 16 Jun 2020
+ 02:03:26 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     David Miller <davem@davemloft.net>,
+        "navid.emamdoost@gmail.com" <navid.emamdoost@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "emamd001@umn.edu" <emamd001@umn.edu>,
+        "wu000273@umn.edu" <wu000273@umn.edu>,
+        "kjlu@umn.edu" <kjlu@umn.edu>,
+        "mccamant@cs.umn.edu" <mccamant@cs.umn.edu>
+Subject: RE: [EXT] Re: [PATCH] net: fec: fix ref count leaking when
+ pm_runtime_get_sync fails
+Thread-Topic: [EXT] Re: [PATCH] net: fec: fix ref count leaking when
+ pm_runtime_get_sync fails
+Thread-Index: AQHWQ1V3+vVzwdRR0UC91oL2FbKQiKjafRmA
+Date:   Tue, 16 Jun 2020 02:03:25 +0000
+Message-ID: <AM6PR0402MB3607327188F1F9178A7E5BFBFF9D0@AM6PR0402MB3607.eurprd04.prod.outlook.com>
+References: <20200614053801.94112-1-navid.emamdoost@gmail.com>
+ <20200615.134216.1492983787088475104.davem@davemloft.net>
+In-Reply-To: <20200615.134216.1492983787088475104.davem@davemloft.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2d597b26-cc42-4139-45f3-08d8119974da
+x-ms-traffictypediagnostic: AM6PR0402MB3430:
+x-microsoft-antispam-prvs: <AM6PR0402MB3430FAF97336F2A21971377EFF9D0@AM6PR0402MB3430.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 04362AC73B
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: e9vva4c7Ir5IcnmwKujfTtTRvqhxbq/jYLqroQuAvMRzZbNJkyuLy3/J+xZb2OS/KYKMgtB52DyozN9bGGCgoRz9xmaUPFiedX/mlJRxwrjWVlOTUnKOgdGnLrMFJ8IsDtPjQ+baj6WSaP7J+WVudvNvXjZJ+J5aTJ7e5As+PzjlM2/SzYrXIO2xDhKVK3RArroa5T5wXTRLZEMi/26vwxM3GQ1V0ns6ZeVT1RAeAnUnOfOBXrRGJTc2qIUCNXBKYDDMUwiVrRHgRP4o91RhMYBr9jMINNZ1pGOq6avAzGh8zbRHfsLbQ312qHN9sbLkiYoAe6S9sl3N0281CPAowAJiOaisq6rBN0hs05SXKKqLMzq0DgwSlNEoCmgCrn2S7XkN39zGLzah0709g1Iwuw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR0402MB3607.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(54906003)(4744005)(7696005)(110136005)(71200400001)(316002)(5660300002)(52536014)(33656002)(186003)(66446008)(66556008)(76116006)(64756008)(4326008)(8676002)(966005)(8936002)(9686003)(83380400001)(66946007)(26005)(478600001)(6506007)(86362001)(66476007)(2906002)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: /9aMgB629G4OSIKiaviNmTe2fGcSW9bepLl8C5WRZj/0/DQ5Ce/PysnvCogFPBUkRQ7OE5ENcSElzjQqN+OL94r07/eWv0oFMHY4z7HVqM4fGIGX3jghO+xS9fm9gE02oJp6wn1ZJjA/T7rRBCvvcrgzkSRSOSGx6m6bm7g6yZ/7rVE1G27WdvtIKrG9i1NYprGwhkZhkmvABSD/nn/C6+Tfbfo9BIacisqzbbDTMjcogyo1+yj6GhEmDj/eJd10WaEiHB6PukvVqywdAAVfd7jvwhp0wCw7uzUYztkm/NW3AcOgQAaKHVgmxKPaI9IZw3HL387wGYf30DZ6BdoODyTwbTewgPj4+YH09Ov1Te1PAXHpIfbugxDGxtFtJJsctiLCXu/1Mv39Z9qu7Dp+DVOIPoXFwoKF6dD3ZLBYhsONjVqusiVgVhdU7mNqHEfVBHTN4I8hYsJRH5oQzddDHw5fdDtNtmWR2Ujilp4JsiE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA+D8ANK079rFL-_kwYKkn=nvrsBJPHW8bWMTwNCwDVzHt0PdA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d597b26-cc42-4139-45f3-08d8119974da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 02:03:26.0002
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MFTm/1ua0Y7jEM5qvv4gk+2FWGqpwx6sYl9XUu2ehhJeRJ4Xm6ZMSHh4pJsrLuiIVHMnrocENEU0YRGmWKR2qA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3430
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:48:39AM +0800, Shengjiu Wang wrote:
-> On Tue, Jun 16, 2020 at 7:11 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+From: David Miller <davem@davemloft.net> Sent: Tuesday, June 16, 2020 4:42 =
+AM
+> From: Navid Emamdoost <navid.emamdoost@gmail.com>
+> Date: Sun, 14 Jun 2020 00:38:01 -0500
+>=20
+> > in fec_enet_mdio_read, fec_enet_mdio_write, fec_enet_get_regs,
+> > fec_enet_open and fec_drv_remove, pm_runtime_get_sync is called which
+> > increments the counter even in case of failure, leading to incorrect
+> > ref count. In case of failure, decrement the ref count before returning=
+.
 > >
-> > On Mon, Jun 15, 2020 at 01:56:18PM +0800, Shengjiu Wang wrote:
-> > > For mono channel, SSI will switch to Normal mode.
-> > >
-> > > In Normal mode and Network mode, the Word Length Control bits
-> > > control the word length divider in clock generator, which is
-> > > different with I2S Master mode (the word length is fixed to
-> > > 32bit), it should be the value of params_width(hw_params).
-> > >
-> > > The condition "slots == 2" is not good for I2S Master mode,
-> > > because for Network mode and Normal mode, the slots can also
-> > > be 2. Then we need to use (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK)
-> > > to check if it is I2S Master mode.
-> >
-> > The fsl_ssi_set_bclk is only called when fsl_ssi_is_i2s_master,
-> > though I agree that that line of comments sounds confusing now.
-> 
-> Actually I think fsl_ssi_is_i2s_master is not accurate, it just checks
-> the Master mode,  but didn't check the I2S mode.
-> 
-> >
-> > > So we refine the famula for mono channel, otherwise there
-> >
-> > famula => formula?
-> >
-> > > will be sound issue for S24_LE.
-> > >
-> > > Fixes: b0a7043d5c2c ("ASoC: fsl_ssi: Caculate bit clock rate using slot number and width")
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > ---
-> > > changes in v2
-> > > - refine patch for Network mode and Normal mode.
-> > >
-> > >  sound/soc/fsl/fsl_ssi.c | 15 +++++++++++----
-> > >  1 file changed, 11 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-> > > index bad89b0d129e..cbf67d132fda 100644
-> > > --- a/sound/soc/fsl/fsl_ssi.c
-> > > +++ b/sound/soc/fsl/fsl_ssi.c
-> > > @@ -678,7 +678,8 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
-> > >       struct regmap *regs = ssi->regs;
-> > >       u32 pm = 999, div2, psr, stccr, mask, afreq, factor, i;
-> > >       unsigned long clkrate, baudrate, tmprate;
-> > > -     unsigned int slots = params_channels(hw_params);
-> > > +     unsigned int channels = params_channels(hw_params);
-> > > +     unsigned int slots;
-> > >       unsigned int slot_width = 32;
-> > >       u64 sub, savesub = 100000;
-> > >       unsigned int freq;
-> > > @@ -688,9 +689,15 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
-> > >       /* Override slots and slot_width if being specifically set... */
-> > >       if (ssi->slots)
-> > >               slots = ssi->slots;
-> > > -     /* ...but keep 32 bits if slots is 2 -- I2S Master mode */
-> > > -     if (ssi->slot_width && slots != 2)
-> > > -             slot_width = ssi->slot_width;
-> > > +     else
-> > > +             /* Apply two slots for mono channel, because DC = 2 */
-> > > +             slots = (channels == 1) ? 2 : channels;
-> > > +
-> > > +     /* ...but keep 32 bits if I2S Master mode */
-> > > +     if ((ssi->i2s_net & SSI_SCR_I2S_MODE_MASK) != SSI_SCR_I2S_MODE_MASTER ||
-> > > +         channels == 1)
-> > > +             slot_width = ssi->slot_width ? ssi->slot_width :
-> >
-> > This looks very complicated...can you review and try mine?
-> > (Basically, take 32-bit out of default but force it later)
-> >
-> > @@ -678,8 +678,9 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
-> >         struct regmap *regs = ssi->regs;
-> >         u32 pm = 999, div2, psr, stccr, mask, afreq, factor, i;
-> >         unsigned long clkrate, baudrate, tmprate;
-> > -       unsigned int slots = params_channels(hw_params);
-> > -       unsigned int slot_width = 32;
-> > +       unsigned int channels = params_channels(hw_params);
-> > +       unsigned int slot_width = params_width(hw_params);
-> > +       unsigned int slots = 2;
-> >         u64 sub, savesub = 100000;
-> >         unsigned int freq;
-> >         bool baudclk_is_used;
-> > @@ -688,10 +689,16 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
-> >         /* Override slots and slot_width if being specifically set... */
-> >         if (ssi->slots)
-> >                 slots = ssi->slots;
-> > -       /* ...but keep 32 bits if slots is 2 -- I2S Master mode */
-> > -       if (ssi->slot_width && slots != 2)
-> > +       if (ssi->slot_width)
-> >                 slot_width = ssi->slot_width;
-> >
-> > +       /*
-> > +        * ...but force 32 bits for stereo audio. Note that mono audio is also
-> > +        * sent in 2 slots via NORMAL mode, so check both slots and channels.
-> > +        */
-> > +       if (slots == 2 && channels == 2)
-> > +               slot_width = 32;
-> 
-> slots ==2 && channels ==2 does not mean the I2S Master mode.
-> For LEFT_J, it is also slots =2 & channels = 2, then the slot_width
-> should be params_width(hw_params).
-> and DSP_A/B also supports stereo.
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+>=20
+> This does not apply to the net tree.
 
-I think you have a point. Then would this condition work?
+Wolfram Sang wonder if such de-reference can be better handled by pm runtim=
+e core code.
+https://lkml.org/lkml/2020/6/14/76
 
-+       /* ...but force 32 bits for stereo audio using I2S Master Mode */
-+	if (channels == 2 &&
-+	    ssi->i2s_net & SSI_SCR_I2S_MODE_MASK == SSI_SCR_I2S_MODE_MASTER)
 
-Similar to yours but the code above it could look straightforward.
