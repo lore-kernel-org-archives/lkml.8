@@ -2,241 +2,232 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8352C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 895D7208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7375D208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:26:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpIFTC7O"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ScXiocFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgFPPYZ (ORCPT
+        id S1729439AbgFPP0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:24:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43878 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728861AbgFPPYY (ORCPT
+        Tue, 16 Jun 2020 11:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgFPP0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:24:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592321062;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QCt56TgF5Tw5yluNgtWn5zzCa00ineAmOgTzmQ5THbs=;
-        b=KpIFTC7OT9kHswMp43KnY194WMhmGuNMAP2d+/M9EIwhKEQQGGY39KhBX4ryzI3o3Fdw6z
-        C8bWHp5zOJsYXEaHLmsGSpo6vCfKlgoGkWRclvspCGDmA8qyEBKYgbUL+WvWy6VYGJec/w
-        dbhQgzV6fuqzqm32h4dLS8fzEzXAz98=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-6Zy_LUz4NfOwreYe1GF3Qw-1; Tue, 16 Jun 2020 11:24:20 -0400
-X-MC-Unique: 6Zy_LUz4NfOwreYe1GF3Qw-1
-Received: by mail-qk1-f200.google.com with SMTP id l6so17067305qkk.14
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:24:20 -0700 (PDT)
+        Tue, 16 Jun 2020 11:26:36 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D94DC06174E
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:26:35 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id j1so9669758pfe.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 08:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=J55Yrg8VYzY4+wtj/Uv5g1sQPpUZEQ1qQJiBJy8F1Vw=;
+        b=ScXiocFCM5KN9GGXxl0vObK+ejCxA6xVsGZPKNQ+ryqY3Jvi31PyHkuwz0Rrr2YD9a
+         BoxB7Kna4b072h7rZRctDWTRPmkvc8bMj9qY0whYmIq0f3k54OvlwYfDE3ezNa+e5o0z
+         uU5N2MewUe6VjabfCEby+ro5yrYF1/RYX/RXIwB9a/X1ePRBcUxa8QUZq+gXMDOvicL/
+         PC1amgfEh44RnI3ZjeSOaPVROnO0V4Q9/xwM/MPWlZmte2CmkVl8UUB3JMKrtqiQngQ/
+         YQGKL6QWG//9IRy57BHOD+bUa2NcE5sl4+yfuYncd10bJhmpoHa9OrTvLMxh4CDQyPj6
+         /j0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QCt56TgF5Tw5yluNgtWn5zzCa00ineAmOgTzmQ5THbs=;
-        b=fWk2Ugrvi8Dh3Z/zugftoLRa8MpXa2wiMa6lFWD4ge7n+TgRwxvC/dF/2XcQb3xxMN
-         TwyduUlgmOQJRUjoI57bhiAhZtSCvXUdV/WL3BigPl/B5rRTj5/UVbXP+NpENVtjfrgG
-         /Pchn1KoUIOe1ZLKSWG3wkrcasCqOhXQMN+7jCk4EJXy3/VEk8KEifCNsVuACyB5Hry5
-         FoU/TEWyoFV1Di/uCB7caeCRAWRSLHlRLrGCOXBs29qslj4yR4FWduRtKuNpqhp44KIc
-         Q7v+vmDezQQ4uYhy7Rf5wjaYYj/aF+XpPND8F8fPTUgMwsR/bQO72xXUO0BSKy/qPCh3
-         UO8g==
-X-Gm-Message-State: AOAM532KigouwwKMFoNBfNI3GYf+kjZAq4++MQYkdrKMUR0NxdGEg6HL
-        CySXTyxL+oudHphJk3ww9Y96ce4oHF52X5Uxlc5t2UrvkOcOrCCR3+2x2aTqnBZvRq62B8hRuyq
-        NKlxadVhlXh0xNmXWJK4uJOxjcnF0/2IC3h9vTBz6
-X-Received: by 2002:ac8:6f79:: with SMTP id u25mr21947988qtv.183.1592321059656;
-        Tue, 16 Jun 2020 08:24:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyFMDdrqK/OlOW77u7x1PWyKbJBzCxu+e2KyoDT0Uqm3C6a8PEU1QsN17lAMeGw4S6IidaoGZ0gOCmD+8ixV1g=
-X-Received: by 2002:ac8:6f79:: with SMTP id u25mr21947954qtv.183.1592321059329;
- Tue, 16 Jun 2020 08:24:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J55Yrg8VYzY4+wtj/Uv5g1sQPpUZEQ1qQJiBJy8F1Vw=;
+        b=L7+jSdIqrpu4cqvCQkmkFoqLHy6lD6UxqzqQSSZxviq5OeqVFTo5P/wdAcLEuFqHXY
+         efrTnJJIXtdwmmRw6GI2gPUJNtyzYjd96K2XrUiivJJcz7IPWqKYY4CUvbA0CFihg7lc
+         5KeY4xj2MjRORZjd38QnYCgUSP50NRdaC4RrNLpNMad+O4Sy8DkV8YRIKFM3kpNCVClZ
+         b6gkeEeYFSxDjSKoKie377EkLnwHXugW/kXN3ugtJyMiuekUCy1DETJcMbSfYWKVZpsl
+         OF7LcihYIglpbxpvaxoOUerrS4fLRwCaUTM2usTgq0RqYPzEOmbltpqVOTcsyDkP6+PA
+         M2KQ==
+X-Gm-Message-State: AOAM531MZ9JQb1BoO2ZrTyJxr/kEbKKj+sCRjCLdJvhu+o41VsuRkatA
+        lqqRdsWXzBO4EnxQH8qLxb65iA==
+X-Google-Smtp-Source: ABdhPJxwjVMSe24dxFtfwQkcGPlFq0g48BFEg5rx42dbXBbl70ZAVFthn5j92OenIA18sx0vejCOtw==
+X-Received: by 2002:a63:580c:: with SMTP id m12mr2442156pgb.446.1592321194136;
+        Tue, 16 Jun 2020 08:26:34 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m14sm2897821pjv.12.2020.06.16.08.26.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 08:26:33 -0700 (PDT)
+Subject: Re: [RFC] io_uring: add restrictions to support untrusted
+ applications and guests
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        io-uring <io-uring@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+References: <20200609142406.upuwpfmgqjeji4lc@steredhat>
+ <CAG48ez3kdNKjif==MbX36cKNYDpZwEPMZaJQ1rrpXZZjGZwbKw@mail.gmail.com>
+ <20200615133310.qwdmnctrir5zgube@steredhat>
+ <f7f2841e-3dbb-377f-f8f8-826506a938a6@kernel.dk>
+ <20200616091247.hdmxcrnlrrxih7my@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9483bbde-b1de-93b1-a239-4ba3613a63e5@kernel.dk>
+Date:   Tue, 16 Jun 2020 09:26:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200610113515.1497099-1-mst@redhat.com> <20200610113515.1497099-4-mst@redhat.com>
- <CAJaqyWdGKh5gSTndGuVPyJSgt3jfjfW4xNCrJ2tQ9f+mD8=sMQ@mail.gmail.com>
- <20200610111147-mutt-send-email-mst@kernel.org> <CAJaqyWe6d19hFAbpqaQqOPuQQmBQyevyF4sTVkaXKhD729XDkw@mail.gmail.com>
- <20200611072702-mutt-send-email-mst@kernel.org> <26bef3f07277b028034c019e456b4f236078c5fb.camel@redhat.com>
-In-Reply-To: <26bef3f07277b028034c019e456b4f236078c5fb.camel@redhat.com>
-From:   Eugenio Perez Martin <eperezma@redhat.com>
-Date:   Tue, 16 Jun 2020 17:23:43 +0200
-Message-ID: <CAJaqyWeX7knekVPcsZ2+AAf8zvZhPvt46fZncAsLhwYJ3eUa1g@mail.gmail.com>
-Subject: Re: [PATCH RFC v7 03/14] vhost: use batched get_vq_desc version
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200616091247.hdmxcrnlrrxih7my@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 6:05 PM Eugenio P=C3=A9rez <eperezma@redhat.com> wr=
-ote:
->
-> On Thu, 2020-06-11 at 07:30 -0400, Michael S. Tsirkin wrote:
-> > On Wed, Jun 10, 2020 at 06:18:32PM +0200, Eugenio Perez Martin wrote:
-> > > On Wed, Jun 10, 2020 at 5:13 PM Michael S. Tsirkin <mst@redhat.com> w=
-rote:
-> > > > On Wed, Jun 10, 2020 at 02:37:50PM +0200, Eugenio Perez Martin wrot=
-e:
-> > > > > > +/* This function returns a value > 0 if a descriptor was found=
-, or 0 if none were found.
-> > > > > > + * A negative code is returned on error. */
-> > > > > > +static int fetch_descs(struct vhost_virtqueue *vq)
-> > > > > > +{
-> > > > > > +       int ret;
-> > > > > > +
-> > > > > > +       if (unlikely(vq->first_desc >=3D vq->ndescs)) {
-> > > > > > +               vq->first_desc =3D 0;
-> > > > > > +               vq->ndescs =3D 0;
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       if (vq->ndescs)
-> > > > > > +               return 1;
-> > > > > > +
-> > > > > > +       for (ret =3D 1;
-> > > > > > +            ret > 0 && vq->ndescs <=3D vhost_vq_num_batch_desc=
-s(vq);
-> > > > > > +            ret =3D fetch_buf(vq))
-> > > > > > +               ;
-> > > > >
-> > > > > (Expanding comment in V6):
-> > > > >
-> > > > > We get an infinite loop this way:
-> > > > > * vq->ndescs =3D=3D 0, so we call fetch_buf() here
-> > > > > * fetch_buf gets less than vhost_vq_num_batch_descs(vq); descript=
-ors. ret =3D 1
-> > > > > * This loop calls again fetch_buf, but vq->ndescs > 0 (and avail_=
-vq =3D=3D
-> > > > > last_avail_vq), so it just return 1
-> > > >
-> > > > That's what
-> > > >          [PATCH RFC v7 08/14] fixup! vhost: use batched get_vq_desc=
- version
-> > > > is supposed to fix.
-> > > >
-> > >
-> > > Sorry, I forgot to include that fixup.
-> > >
-> > > With it I don't see CPU stalls, but with that version latency has
-> > > increased a lot and I see packet lost:
-> > > + ping -c 5 10.200.0.1
-> > > PING 10.200.0.1 (10.200.0.1) 56(84) bytes of data.
-> > > > From 10.200.0.2 icmp_seq=3D1 Destination Host Unreachable
-> > > > From 10.200.0.2 icmp_seq=3D2 Destination Host Unreachable
-> > > > From 10.200.0.2 icmp_seq=3D3 Destination Host Unreachable
-> > > 64 bytes from 10.200.0.1: icmp_seq=3D5 ttl=3D64 time=3D6848 ms
-> > >
-> > > --- 10.200.0.1 ping statistics ---
-> > > 5 packets transmitted, 1 received, +3 errors, 80% packet loss, time 7=
-6ms
-> > > rtt min/avg/max/mdev =3D 6848.316/6848.316/6848.316/0.000 ms, pipe 4
-> > > --
-> > >
-> > > I cannot even use netperf.
-> >
-> > OK so that's the bug to try to find and fix I think.
-> >
-> >
-> > > If I modify with my proposed version:
-> > > + ping -c 5 10.200.0.1
-> > > PING 10.200.0.1 (10.200.0.1) 56(84) bytes of data.
-> > > 64 bytes from 10.200.0.1: icmp_seq=3D1 ttl=3D64 time=3D7.07 ms
-> > > 64 bytes from 10.200.0.1: icmp_seq=3D2 ttl=3D64 time=3D0.358 ms
-> > > 64 bytes from 10.200.0.1: icmp_seq=3D3 ttl=3D64 time=3D5.35 ms
-> > > 64 bytes from 10.200.0.1: icmp_seq=3D4 ttl=3D64 time=3D2.27 ms
-> > > 64 bytes from 10.200.0.1: icmp_seq=3D5 ttl=3D64 time=3D0.426 ms
-> >
-> > Not sure which version this is.
-> >
-> > > [root@localhost ~]# netperf -H 10.200.0.1 -p 12865 -l 10 -t TCP_STREA=
-M
-> > > MIGRATED TCP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to
-> > > 10.200.0.1 () port 0 AF_INET
-> > > Recv   Send    Send
-> > > Socket Socket  Message  Elapsed
-> > > Size   Size    Size     Time     Throughput
-> > > bytes  bytes   bytes    secs.    10^6bits/sec
-> > >
-> > > 131072  16384  16384    10.01    4742.36
-> > > [root@localhost ~]# netperf -H 10.200.0.1 -p 12865 -l 10 -t UDP_STREA=
-M
-> > > MIGRATED UDP STREAM TEST from 0.0.0.0 (0.0.0.0) port 0 AF_INET to
-> > > 10.200.0.1 () port 0 AF_INET
-> > > Socket  Message  Elapsed      Messages
-> > > Size    Size     Time         Okay Errors   Throughput
-> > > bytes   bytes    secs            #      #   10^6bits/sec
-> > >
-> > > 212992   65507   10.00        9214      0     482.83
-> > > 212992           10.00        9214            482.83
-> > >
-> > > I will compare with the non-batch version for reference, but the
-> > > difference between the two is noticeable. Maybe it's worth finding a
-> > > good value for the if() inside fetch_buf?
-> > >
-> > > Thanks!
-> > >
-> >
-> > I don't think it's performance, I think it's a bug somewhere,
-> > e.g. maybe we corrupt a packet, or stall the queue, or
-> > something like this.
-> >
-> > Let's do this, I will squash the fixups and post v8 so you can bisect
-> > and then debug cleanly.
->
-> Ok, so if we apply the patch proposed in v7 08/14 (Or the version 8 of th=
-e patchset sent), this is what happens:
->
-> 1. Userland (virtio_test in my case) introduces just one buffer in vq, an=
-d it kicks
-> 2. vhost module reaches fetch_descs, called from vhost_get_vq_desc. From =
-there we call fetch_buf in a for loop.
-> 3. The first time we call fetch_buf, it returns properly one buffer. Howe=
-ver, the second time we call it, it returns 0
-> because vq->avail_idx =3D=3D vq->last_avail_idx and vq->avail_idx =3D=3D =
-last_avail_idx code path.
-> 4. fetch_descs assign ret =3D 0, so it returns 0. vhost_get_vq_desc will =
-goto err, and it will signal no new buffer
-> (returning vq->num).
->
-> So to fix it and maintain the batching maybe we could return vq->ndescs i=
-n case ret =3D=3D 0:
->
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index c0dfb5e3d2af..5993d4f34ca9 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -2315,7 +2327,8 @@ static int fetch_descs(struct vhost_virtqueue *vq)
->
->         /* On success we expect some descs */
->         BUG_ON(ret > 0 && !vq->ndescs);
-> -       return ret;
-> +       return ret ?: vq->ndescs;
->  }
->
->  /* Reverse the effects of fetch_descs */
-> --
->
-> Another possibility could be to return different codes from fetch_buf, bu=
-t I find the suggested modification easier.
->
-> What do you think?
->
-> Thanks!
->
+On 6/16/20 3:12 AM, Stefano Garzarella wrote:
+> On Mon, Jun 15, 2020 at 11:00:25AM -0600, Jens Axboe wrote:
+>> On 6/15/20 7:33 AM, Stefano Garzarella wrote:
+>>> On Mon, Jun 15, 2020 at 11:04:06AM +0200, Jann Horn wrote:
+>>>> +Kees, Christian, Sargun, Aleksa, kernel-hardening for their opinions
+>>>> on seccomp-related aspects
+>>>>
+>>>> On Tue, Jun 9, 2020 at 4:24 PM Stefano Garzarella <sgarzare@redhat.com> wrote:
+>>>>> Hi Jens,
+>>>>> Stefan and I have a proposal to share with io_uring community.
+>>>>> Before implementing it we would like to discuss it to receive feedbacks and
+>>>>> to see if it could be accepted:
+>>>>>
+>>>>> Adding restrictions to io_uring
+>>>>> =====================================
+>>>>> The io_uring API provides submission and completion queues for performing
+>>>>> asynchronous I/O operations. The queues are located in memory that is
+>>>>> accessible to both the host userspace application and the kernel, making it
+>>>>> possible to monitor for activity through polling instead of system calls. This
+>>>>> design offers good performance and this makes exposing io_uring to guests an
+>>>>> attractive idea for improving I/O performance in virtualization.
+>>>> [...]
+>>>>> Restrictions
+>>>>> ------------
+>>>>> This document proposes io_uring API changes that safely allow untrusted
+>>>>> applications or guests to use io_uring. io_uring's existing security model is
+>>>>> that of kernel system call handler code. It is designed to reject invalid
+>>>>> inputs from host userspace applications. Supporting guests as io_uring API
+>>>>> clients adds a new trust domain with access to even fewer resources than host
+>>>>> userspace applications.
+>>>>>
+>>>>> Guests do not have direct access to host userspace application file descriptors
+>>>>> or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
+>>>>> as QEMU, grants access to a subset of its file descriptors and memory. The
+>>>>> allowed file descriptors are typically the disk image files belonging to the
+>>>>> guest. The memory is typically the virtual machine's RAM that the VMM has
+>>>>> allocated on behalf of the guest.
+>>>>>
+>>>>> The following extensions to the io_uring API allow the host application to
+>>>>> grant access to some of its file descriptors.
+>>>>>
+>>>>> These extensions are designed to be applicable to other use cases besides
+>>>>> untrusted guests and are not virtualization-specific. For example, the
+>>>>> restrictions can be used to allow only a subset of sqe operations available to
+>>>>> an application similar to seccomp syscall whitelisting.
+>>>>>
+>>>>> An address translation and memory restriction mechanism would also be
+>>>>> necessary, but we can discuss this later.
+>>>>>
+>>>>> The IOURING_REGISTER_RESTRICTIONS opcode
+>>>>> ----------------------------------------
+>>>>> The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
+>>>>> installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
+>>>>> passed to untrusted code with the knowledge that only operations present in the
+>>>>> whitelist can be executed.
+>>>>
+>>>> This approach of first creating a normal io_uring instance and then
+>>>> installing restrictions separately in a second syscall means that it
+>>>> won't be possible to use seccomp to restrict newly created io_uring
+>>>> instances; code that should be subject to seccomp restrictions and
+>>>> uring restrictions would only be able to use preexisting io_uring
+>>>> instances that have already been configured by trusted code.
+>>>>
+>>>> So I think that from the seccomp perspective, it might be preferable
+>>>> to set up these restrictions in the io_uring_setup() syscall. It might
+>>>> also be a bit nicer from a code cleanliness perspective, since you
+>>>> won't have to worry about concurrently changing restrictions.
+>>>>
+>>>
+>>> Thank you for these details!
+>>>
+>>> It seems feasible to include the restrictions during io_uring_setup().
+>>>
+>>> The only doubt concerns the possibility of allowing the trusted code to
+>>> do some operations, before passing queues to the untrusted code, for
+>>> example registering file descriptors, buffers, eventfds, etc.
+>>>
+>>> To avoid this, I should include these operations in io_uring_setup(),
+>>> adding some code that I wanted to avoid by reusing io_uring_register().
+>>>
+>>> If I add restrictions in io_uring_setup() and then add an operation to
+>>> go into safe mode (e.g. a flag in io_uring_enter()), we would have the same
+>>> problem, right?
+>>>
+>>> Just to be clear, I mean something like this:
+>>>
+>>>     /* params will include restrictions */
+>>>     fd = io_uring_setup(entries, params);
+>>>
+>>>     /* trusted code */
+>>>     io_uring_register_files(fd, ...);
+>>>     io_uring_register_buffers(fd, ...);
+>>>     io_uring_register_eventfd(fd, ...);
+>>>
+>>>     /* enable safe mode */
+>>>     io_uring_enter(fd, ..., IORING_ENTER_ENABLE_RESTRICTIONS);
+>>>
+>>>
+>>> Anyway, including a list of things to register in the 'params', passed
+>>> to io_uring_setup(), should be feasible, if Jens agree :-)
+>>
+>> I wonder how best to deal with this, in terms of ring visibility vs
+>> registering restrictions. We could potentially start the ring in a
+>> disabled mode, if asked to. It'd still be visible in terms of having
+>> the fd installed, but it'd just error requests. That'd leave you with
+>> time to do the various setup routines needed before then flagging it
+>> as enabled. My only worry on that would be adding overhead for doing
+>> that. It'd be cheap enough to check for IORING_SETUP_DISABLED in
+>> ctx->flags in io_uring_enter(), and return -EBADFD or something if
+>> that's the case. That doesn't cover the SQPOLL case though, but maybe we
+>> just don't start the sq thread if IORING_SETUP_DISABLED is set.
+> 
+> It seems to me a very good approach and easy to implement. In this way
+> we can reuse io_uring_register() without having to modify too much
+> io_uring_setup().
 
-Hi!
+Right
 
-I can send a proposed RFC v9 in case it is more convenient for you.
+>> We'd need a way to clear IORING_SETUP_DISABLED through
+>> io_uring_register(). When clearing, that could then start the sq thread
+>> as well, when SQPOLL is set.
+> 
+> Could we do it using io_uring_enter() since we have a flag field or
+> do you think it's semantically incorrect?
 
-Thanks!
+Either way is probably fine, I gravitated towards io_uring_register()
+since any io_uring_enter() should fail if the ring is disabled. But I
+guess it's fine to allow the "enable" operation through io_uring_enter.
+Keep in mind that io_uring_enter is the hottest path, where
+io_uring_register is not nearly as hot and we can allow ourselves a bit
+more flexibility there.
+
+In summary, I'd be fine with io_uring_enter if it's slim and lean, still
+leaning towards doing it in io_uring_register as it seems like a more
+natural fit.
+
+-- 
+Jens Axboe
 
