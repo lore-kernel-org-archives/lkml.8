@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB3A20C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70268208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322110;
-	bh=ruNSsfJCTPonu4mLKTusIRA8aOSqZO700jsa+VZrv2U=;
+	s=default; t=1592322113;
+	bh=PXQbYePEv5IhWEvTGJrooq3Lpy51SLgKHXT4N5t/O6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WvDc5vkUIhb1lYXDMC2vheeGXU2aYyLmmj2u3wI6I06NqDjpZAt55DAZzHA8rdvSz
-	 qFcWArWRQa9yEuxEXUvU5vfKlj7a6x2A4srdwIuM/VCXrdc8ozbXCJ1U1n4rEsAAP6
-	 +2AMD3+yLv5NH9SuVnVrJjv4LzRAw1rjD1Bzdei0=
+	b=Zos4GGZuC8BAQA2f3bplqZuK+jZpdVneJoo7JMevg6TUhSeYi6afOD/pSv+MJeXer
+	 aTbjWc0J47QIpqkx9yrFzAX4Xc/XE5NO5anVTXZZik2XaqGtuLYb7YtLLc1X6goSuF
+	 wgtZrFu2h01QzL4JS5qYvR9BKEtTMEPpBjfteG38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731531AbgFPPlt (ORCPT
+        id S1731548AbgFPPlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730729AbgFPPln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:43 -0400
+        id S1731513AbgFPPlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB85521531;
-        Tue, 16 Jun 2020 15:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37AF121475;
+        Tue, 16 Jun 2020 15:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322103;
-        bh=ruNSsfJCTPonu4mLKTusIRA8aOSqZO700jsa+VZrv2U=;
+        s=default; t=1592322105;
+        bh=PXQbYePEv5IhWEvTGJrooq3Lpy51SLgKHXT4N5t/O6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOgKUBKyx/WDAJCWFBly40E8pNjOjwmDpYLgF2mYxBD6t0jMa8/B3/RXeFsajDyAi
-         bmC3L1OTSQh0Qk7fWAKPQCUBeLDRdQPzX742GyJcpwG0so6EYvqgfSZe4bGctNtUGf
-         FFnkROh10ayfN1s9w17KzpMReD4kX4HDiV1Jnhuc=
+        b=ryPo9ou737BGrLqpiLI8UaWvcCc+p8Dc5hzaUy92Qx76dQaBYAmOKEYsI+vUtqKAc
+         bp8sSrUXNn1d6wr+sWSiTjPOv2IbaBVvyRSYKUDNf2XjRdACQhl97h5+6gqcq9kfyM
+         NIJnu7c8JdKOdUaZRDT0RgVuetnUMbJPNsQipxiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 111/134] scsi: lpfc: Fix negation of else clause in lpfc_prep_node_fc4type
-Date:   Tue, 16 Jun 2020 17:34:55 +0200
-Message-Id: <20200616153106.103157170@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 5.4 112/134] selftests/ftrace: Return unsupported if no error_log file
+Date:   Tue, 16 Jun 2020 17:34:56 +0200
+Message-Id: <20200616153106.153416320@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,39 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dick Kennedy <dick.kennedy@broadcom.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit f809da6db68a8be49e317f0ccfbced1af9258839 upstream.
+commit 619ee76f5c9f6a1d601d1a056a454d62bf676ae4 upstream.
 
-Implementation of a previous patch added a condition to an if check that
-always end up with the if test being true. Execution of the else clause was
-inadvertently negated.  The additional condition check was incorrect and
-unnecessary after the other modifications had been done in that patch.
+Check whether error_log file exists in tracing/error_log testcase
+and return UNSUPPORTED if no error_log file.
 
-Remove the check from the if series.
+This can happen if we run the ftracetest on the older stable
+kernel.
 
-Link: https://lore.kernel.org/r/20200501214310.91713-5-jsmart2021@gmail.com
-Fixes: b95b21193c85 ("scsi: lpfc: Fix loss of remote port after devloss due to lack of RPIs")
-Cc: <stable@vger.kernel.org> # v5.4+
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 4eab1cc461a6 ("selftests/ftrace: Add tracing/error_log testcase")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/lpfc/lpfc_ct.c |    1 -
- 1 file changed, 1 deletion(-)
+ tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -462,7 +462,6 @@ lpfc_prep_node_fc4type(struct lpfc_vport
- 	struct lpfc_nodelist *ndlp;
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
+@@ -14,6 +14,8 @@ if [ ! -f set_event ]; then
+     exit_unsupported
+ fi
  
- 	if ((vport->port_type != LPFC_NPIV_PORT) ||
--	    (fc4_type == FC_TYPE_FCP) ||
- 	    !(vport->ct_flags & FC_CT_RFF_ID) || !vport->cfg_restrict_login) {
++[ -f error_log ] || exit_unsupported
++
+ ftrace_errlog_check 'event filter parse error' '((sig >= 10 && sig < 15) || dsig ^== 17) && comm != bash' 'events/signal/signal_generate/filter'
  
- 		ndlp = lpfc_setup_disc_node(vport, Did);
+ exit 0
 
 
