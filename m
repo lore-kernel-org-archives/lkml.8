@@ -2,53 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3133C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92425C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8997921475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721AB2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323486;
-	bh=C0AQZmqKYDSYCAAADdcgii1JJGtRlmPQWuBiuYvQsMw=;
+	s=default; t=1592323491;
+	bh=JaAgU929H/sHzVvkGs0E1ui40+lainALY9/ORBjgk5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4/gYTPoFdWBjjZlyas01mxsXg//Pv5dBLFg1FS8ZeP/2HCeSWKUU3iL5fc1xoTuC
-	 aYO+5WAcN4lGp29ElzlOS4Sy5orj5+3QoBw7QV2UJ9RedAXFxbnMLoPwaB5CmPFzzm
-	 AiNLocuWh5GkrPACZf87kgqGxqWd+CKK+uwM5BVI=
+	b=iMtsW4ayrk90zOiSb+n7R+uWvnOQzfkb5t3X1aYJ3uO3yho7DZjey33KukVrXP5Vn
+	 Wg32pFKXZ61TAejKn/xSz7zwLpwWCnf5jT9Yzl+KVzJiRi0JWMxskJhmb6FIVjFTVV
+	 /DEBpWR7No/UjHxunRCZ6+dPc2rS36Se9xm6JRXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732880AbgFPQEo (ORCPT
+        id S1732504AbgFPPt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:04:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44494 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:49:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732508AbgFPPtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:31 -0400
+        id S1731887AbgFPPtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AC6A2071A;
-        Tue, 16 Jun 2020 15:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B9382071A;
+        Tue, 16 Jun 2020 15:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322570;
-        bh=C0AQZmqKYDSYCAAADdcgii1JJGtRlmPQWuBiuYvQsMw=;
+        s=default; t=1592322559;
+        bh=JaAgU929H/sHzVvkGs0E1ui40+lainALY9/ORBjgk5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2o51I6XSfErdbQL3YAEshec4FTz3V5VscxFuEXVLOQlOSV/TrhJjoDUwPOkdXdmRS
-         E67x8qHjVyLi8STUThFDcBkIUSBPNj64s9wGmF1Ji5tBtpMWGf5wXi+JdvNwH6xtjL
-         7NphfWCxoYSLzenEcrO0jWz8yz8EMkl9mJTxZH9o=
+        b=oJLoRLjFYkMx0oyqjpRC33eI2It6daH0NIolgW04DucBLIv2n0LvvrAS2ip8dYXqN
+         koEnl/mtVy/BH3Uy+XN94Idch1Q9tC5JXeiB1QXsPZkpQ7gCOOjo2NZ8vFytqSq+rp
+         qg03yPfBrjRG6Er7XgcegkiNOADpYcbsd1jwWewk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 002/161] mlxsw: core: Use different get_trend() callbacks for different thermal zones
-Date:   Tue, 16 Jun 2020 17:33:12 +0200
-Message-Id: <20200616153106.528385150@linuxfoundation.org>
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Fredrik Strupe <fredrik@strupe.net>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 016/161] ARM: 8977/1: ptrace: Fix mask for thumb breakpoint hook
+Date:   Tue, 16 Jun 2020 17:33:26 +0200
+Message-Id: <20200616153107.180362456@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,83 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: Fredrik Strupe <fredrik@strupe.net>
 
-[ Upstream commit 2dc2f760052da4925482ecdcdc5c94d4a599153c ]
+[ Upstream commit 3866f217aaa81bf7165c7f27362eee5d7919c496 ]
 
-The driver registers three different types of thermal zones: For the
-ASIC itself, for port modules and for gearboxes.
+call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
+and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
+(0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
+instructions will be masked out. This makes the function match 32-bit
+thumb instructions where the second half-word is equal to instr_val,
+regardless of the first half-word.
 
-Currently, all three types use the same get_trend() callback which does
-not work correctly for the ASIC thermal zone. The callback assumes that
-the device data is of type 'struct mlxsw_thermal_module', whereas for
-the ASIC thermal zone 'struct mlxsw_thermal' is passed as device data.
+The result in this case is that all undefined 32-bit thumb instructions
+with the second half-word equal to 0xde01 (udf #1) work as breakpoints
+and will raise a SIGTRAP instead of a SIGILL, instead of just the one
+intended 16-bit instruction. An example of such an instruction is
+0xeaa0de01, which is unallocated according to Arm ARM and should raise a
+SIGILL, but instead raises a SIGTRAP.
 
-Fix this by using one get_trend() callback for the ASIC thermal zone and
-another for the other two types.
+This patch fixes the issue by setting all the bits in instr_mask, which
+will still match the intended 16-bit thumb instruction (where the
+upper half is always 0), but not any 32-bit thumb instructions.
 
-Fixes: 6f73862fabd9 ("mlxsw: core: Add the hottest thermal zone detection")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/core_thermal.c |   23 +++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ arch/arm/kernel/ptrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
-@@ -391,8 +391,7 @@ static int mlxsw_thermal_set_trip_hyst(s
- static int mlxsw_thermal_trend_get(struct thermal_zone_device *tzdev,
- 				   int trip, enum thermal_trend *trend)
- {
--	struct mlxsw_thermal_module *tz = tzdev->devdata;
--	struct mlxsw_thermal *thermal = tz->parent;
-+	struct mlxsw_thermal *thermal = tzdev->devdata;
- 
- 	if (trip < 0 || trip >= MLXSW_THERMAL_NUM_TRIPS)
- 		return -EINVAL;
-@@ -593,6 +592,22 @@ mlxsw_thermal_module_trip_hyst_set(struc
- 	return 0;
- }
- 
-+static int mlxsw_thermal_module_trend_get(struct thermal_zone_device *tzdev,
-+					  int trip, enum thermal_trend *trend)
-+{
-+	struct mlxsw_thermal_module *tz = tzdev->devdata;
-+	struct mlxsw_thermal *thermal = tz->parent;
-+
-+	if (trip < 0 || trip >= MLXSW_THERMAL_NUM_TRIPS)
-+		return -EINVAL;
-+
-+	if (tzdev == thermal->tz_highest_dev)
-+		return 1;
-+
-+	*trend = THERMAL_TREND_STABLE;
-+	return 0;
-+}
-+
- static struct thermal_zone_device_ops mlxsw_thermal_module_ops = {
- 	.bind		= mlxsw_thermal_module_bind,
- 	.unbind		= mlxsw_thermal_module_unbind,
-@@ -604,7 +619,7 @@ static struct thermal_zone_device_ops ml
- 	.set_trip_temp	= mlxsw_thermal_module_trip_temp_set,
- 	.get_trip_hyst	= mlxsw_thermal_module_trip_hyst_get,
- 	.set_trip_hyst	= mlxsw_thermal_module_trip_hyst_set,
--	.get_trend	= mlxsw_thermal_trend_get,
-+	.get_trend	= mlxsw_thermal_module_trend_get,
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index b606cded90cd..4cc6a7eff635 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -219,8 +219,8 @@ static struct undef_hook arm_break_hook = {
  };
  
- static int mlxsw_thermal_gearbox_temp_get(struct thermal_zone_device *tzdev,
-@@ -643,7 +658,7 @@ static struct thermal_zone_device_ops ml
- 	.set_trip_temp	= mlxsw_thermal_module_trip_temp_set,
- 	.get_trip_hyst	= mlxsw_thermal_module_trip_hyst_get,
- 	.set_trip_hyst	= mlxsw_thermal_module_trip_hyst_set,
--	.get_trend	= mlxsw_thermal_trend_get,
-+	.get_trend	= mlxsw_thermal_module_trend_get,
- };
- 
- static int mlxsw_thermal_get_max_state(struct thermal_cooling_device *cdev,
+ static struct undef_hook thumb_break_hook = {
+-	.instr_mask	= 0xffff,
+-	.instr_val	= 0xde01,
++	.instr_mask	= 0xffffffff,
++	.instr_val	= 0x0000de01,
+ 	.cpsr_mask	= PSR_T_BIT,
+ 	.cpsr_val	= PSR_T_BIT,
+ 	.fn		= break_trap,
+-- 
+2.25.1
+
 
 
