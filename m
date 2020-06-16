@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9018C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B21C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C62207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA9E207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323042;
-	bh=HYWquZViGbGdIcbesak3htJvfn2PAB/KpqgGhH9wMTg=;
+	s=default; t=1592323049;
+	bh=REfJ7+ONixLxyVEXno+zYpwYGwcixL3r/XPDzbPOx0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjD8Cm2RCtJdJmyA+EdHnHSwM/VVHJApdXpdd4NU5uQGtMwMDxJZZBUw4ayU9QuSc
-	 +7riOJuk8mJXEYjnYdKweaOTwqicYNvUbs1ijF3urENRs/fROBpaQYMFkRPWBdhnTH
-	 PWkpmrZ/46WfU4QROCUsj4jfPHFaUTYrMGULWjEY=
+	b=M+1W2ec/LfKGaxyBuqicCUib4CFfT30+fjdkxvnCdJi4lur7sUp/cb89T1iZJ4v5g
+	 rv5kQ9lH4kKINlko+vZpAZe9sXwwvTVYCZG5ajPTJ/mCe50O1Uegftze6dVZQO48I+
+	 LeQksbkQqp9tBqozcguBl3/FwOIJkMS9zNvRWh+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732993AbgFPP5Q (ORCPT
+        id S1732232AbgFPP51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55462 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732659AbgFPPzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:24 -0400
+        id S1732447AbgFPPzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B78521532;
-        Tue, 16 Jun 2020 15:55:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BA51207C4;
+        Tue, 16 Jun 2020 15:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322924;
-        bh=HYWquZViGbGdIcbesak3htJvfn2PAB/KpqgGhH9wMTg=;
+        s=default; t=1592322918;
+        bh=REfJ7+ONixLxyVEXno+zYpwYGwcixL3r/XPDzbPOx0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3bPteUVlKdnCT9O9Rh59KldQYFsJbYfkbqc6HgQqKRMI7dik0qiYaWIe10Ahxk+V
-         yrt1Trvtl4jThpOZUkkVhksTSr8nw3DsNHrIY4xlyi2xZL6Xf6tAcTF1AOlC6lCoBq
-         w8I/2OBP1X5p3XPP59Mn24osT5oQcImYHq9c+Aos=
+        b=CaLMMgblH3Veshfe4s4Ldun9nV/VkyTK65J/bJsGRM1rgj8x2QdVdPZMiWFjXsrng
+         EPvLDaJIdcj5qGy61Ql/uPSGZ1I+h2X5aJ1nIStGbfAvxZX/fR0WPOT1M9ul0t0MzK
+         6MPiJdRdj/ORCh5Bl5pWz2ggXXD29Hccwlj/9TjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Libor Pechacek <lpechacek@suse.cz>,
-        Jiri Kosina <jkosina@suse.cz>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.6 156/161] block/floppy: fix contended case in floppy_queue_rq()
-Date:   Tue, 16 Jun 2020 17:35:46 +0200
-Message-Id: <20200616153113.776518867@linuxfoundation.org>
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.6 154/161] mmc: sdio: Fix potential NULL pointer error in mmc_sdio_init_card()
+Date:   Tue, 16 Jun 2020 17:35:44 +0200
+Message-Id: <20200616153113.682730368@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,69 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit 263c61581a38d0a5ad1f5f4a9143b27d68caeffd upstream.
+commit f04086c225da11ad16d7f9a2fbca6483ab16dded upstream.
 
-Since the switch of floppy driver to blk-mq, the contended (fdc_busy) case
-in floppy_queue_rq() is not handled correctly.
+During some scenarios mmc_sdio_init_card() runs a retry path for the UHS-I
+specific initialization, which leads to removal of the previously allocated
+card. A new card is then re-allocated while retrying.
 
-In case we reach floppy_queue_rq() with fdc_busy set (i.e. with the floppy
-locked due to another request still being in-flight), we put the request
-on the list of requests and return BLK_STS_OK to the block core, without
-actually scheduling delayed work / doing further processing of the
-request. This means that processing of this request is postponed until
-another request comes and passess uncontended.
+However, in one of the corresponding error paths we may end up to remove an
+already removed card, which likely leads to a NULL pointer exception. So,
+let's fix this.
 
-Which in some cases might actually never happen and we keep waiting
-indefinitely. The simple testcase is
-
-	for i in `seq 1 2000`; do echo -en $i '\r'; blkid --info /dev/fd0 2> /dev/null; done
-
-run in quemu. That reliably causes blkid eventually indefinitely hanging
-in __floppy_read_block_0() waiting for completion, as the BIO callback
-never happens, and no further IO is ever submitted on the (non-existent)
-floppy device. This was observed reliably on qemu-emulated device.
-
-Fix that by not queuing the request in the contended case, and return
-BLK_STS_RESOURCE instead, so that blk core handles the request
-rescheduling and let it pass properly non-contended later.
-
-Fixes: a9f38e1dec107a ("floppy: convert to blk-mq")
-Cc: stable@vger.kernel.org
-Tested-by: Libor Pechacek <lpechacek@suse.cz>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 5fc3d80ef496 ("mmc: sdio: don't use rocr to check if the card could support UHS mode")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200430091640.455-2-ulf.hansson@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/floppy.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/mmc/core/sdio.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2902,17 +2902,17 @@ static blk_status_t floppy_queue_rq(stru
- 		 (unsigned long long) current_req->cmd_flags))
- 		return BLK_STS_IOERR;
- 
--	spin_lock_irq(&floppy_lock);
--	list_add_tail(&bd->rq->queuelist, &floppy_reqs);
--	spin_unlock_irq(&floppy_lock);
--
- 	if (test_and_set_bit(0, &fdc_busy)) {
- 		/* fdc busy, this new request will be treated when the
- 		   current one is done */
- 		is_alive(__func__, "old request running");
--		return BLK_STS_OK;
-+		return BLK_STS_RESOURCE;
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -718,9 +718,8 @@ try_again:
+ 			/* Retry init sequence, but without R4_18V_PRESENT. */
+ 			retries = 0;
+ 			goto try_again;
+-		} else {
+-			goto remove;
+ 		}
++		return err;
  	}
  
-+	spin_lock_irq(&floppy_lock);
-+	list_add_tail(&bd->rq->queuelist, &floppy_reqs);
-+	spin_unlock_irq(&floppy_lock);
-+
- 	command_status = FD_COMMAND_NONE;
- 	__reschedule_timeout(MAXTIMEOUT, "fd_request");
- 	set_fdc(0);
+ 	/*
 
 
