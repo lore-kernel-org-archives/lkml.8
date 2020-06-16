@@ -6,66 +6,56 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE20C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12EA22085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B32207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbgFPU5k (ORCPT
+        id S1728317AbgFPVBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:57:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:61308 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbgFPU5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:57:40 -0400
-IronPort-SDR: 5gcjQoT+PNDZm1ek3QSQQOZNsAdC99jU8u0KEAd4Lr+Rx8i/VyOVgjA2btv4rEX4I82jZfp6Dc
- 8aW9wdD9bMXw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 13:57:39 -0700
-IronPort-SDR: aGZvAOnGEPGr1XK59sU0e1rUzVAIi2qEubYftAwcjSgOjsPdRMfuaqjAYXdpgUOTMMJltunT/x
- 50mHfSwTvxmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,519,1583222400"; 
-   d="scan'208";a="277052052"
-Received: from gosinald-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.36.106])
-  by orsmga006.jf.intel.com with ESMTP; 16 Jun 2020 13:57:34 -0700
-Date:   Tue, 16 Jun 2020 23:57:32 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
-        peterhuewe@gmx.de, jgg@ziepe.ca, gregkh@linuxfoundation.org,
-        jens.wiklander@linaro.org, linux-integrity@vger.kernel.org,
-        arnd@linaro.org, sumit.garg@linaro.org
-Subject: Re: [PATCHv8 3/3] tpm_ftpm_tee: register driver on TEE bus
-Message-ID: <20200616205732.GF20943@linux.intel.com>
-References: <20200604175851.758-1-maxim.uvarov@linaro.org>
- <20200604175851.758-4-maxim.uvarov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604175851.758-4-maxim.uvarov@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Tue, 16 Jun 2020 17:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgFPVBi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 17:01:38 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BB5C061573;
+        Tue, 16 Jun 2020 14:01:37 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 237D6128D864A;
+        Tue, 16 Jun 2020 14:01:37 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 14:01:36 -0700 (PDT)
+Message-Id: <20200616.140136.2098262489959228356.davem@davemloft.net>
+To:     tharvey@gateworks.com
+Cc:     bryan.whitehead@microchip.com, UNGLinuxDriver@microchip.com,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lan743x: add MODULE_DEVICE_TABLE for module loading
+ alias
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1592321518-28464-1-git-send-email-tharvey@gateworks.com>
+References: <1592321518-28464-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 16 Jun 2020 14:01:37 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 08:58:51PM +0300, Maxim Uvarov wrote:
-> OP-TEE based fTPM Trusted Application depends on tee-supplicant to
-> provide NV RAM implementation based on RPMB secure storage. So this
-> dependency can be resolved via TEE bus where we only invoke fTPM
-> driver probe once fTPM device is registered on the bus which is only
-> true after the tee-supplicant is up and running. Additionally, TEE bus
-> provides auto device enumeration.
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Tue, 16 Jun 2020 08:31:58 -0700
+
+> Without a MODULE_DEVICE_TABLE the attributes are missing that create
+> an alias for auto-loading the module in userspace via hotplug.
 > 
-> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-> Suggested-by: Arnd Bergmann <arnd@linaro.org>
-> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-
-/Jarkko
+Applied, thank you.
