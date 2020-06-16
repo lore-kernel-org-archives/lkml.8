@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE4AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6727C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9EB72071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FCE2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323976;
-	bh=xxAjpRjVLlI8NKW4e1lJlk10UMBdmbGEv5G6zi0b0B8=;
+	s=default; t=1592323980;
+	bh=jf1FBQnI/bPixSQ+NKyhPhPHwnkZyjW5PODZrSEkPNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/7S35Pvz14Oq8N1h69C9Tt9aNXVRJSllWz/wIGvR2OvngoaLcq82F+oQBLRJ5mYb
-	 fb+bjdfvaOTBl/l/L5araY/c+5MVPids1VdJP1qEXEveqhP3i+Bjd8gb7a+HThgYI8
-	 65cJfJ7dqRoL1+N15dL9ol8PGYEMR0QNRkr0qdAE=
+	b=eYZM+zI6Mr+hE9GBozwSbbRg3Ccb9U5CBlLBDrgcEO4g0cHsaUyspWIOjo+F2Epa4
+	 04xzNlNsOZpbIG+LtJnFwb97JYWfph54OvZ4KcIvm/GZVrG+kfwvS4dySMBuDkelaq
+	 Qk7GB/iTHtt49jKi57AkjppQHiX8leSFCCGT4rxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbgFPPnu (ORCPT
+        id S1731842AbgFPPnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:43:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33230 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:43:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731153AbgFPPno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:44 -0400
+        id S1731152AbgFPPnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:43:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E643208D5;
-        Tue, 16 Jun 2020 15:43:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6729421475;
+        Tue, 16 Jun 2020 15:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322223;
-        bh=xxAjpRjVLlI8NKW4e1lJlk10UMBdmbGEv5G6zi0b0B8=;
+        s=default; t=1592322221;
+        bh=jf1FBQnI/bPixSQ+NKyhPhPHwnkZyjW5PODZrSEkPNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tn8UR3Vr6w66lUdOkCuSRvLA4vZ5z2XfQHSYj3MbQXhuErZCNuYPYXwOCuW7Jj/0Q
-         pQw0v3IK71Ey0+cIg97K/H/+avMlve5457UhEkU/BlBtJusTSQwsTz4qIp8u6CE9HX
-         HXfvZp4Ko+hvjREsX/dKf3zb+4oHjbXWZc0A8bks=
+        b=QFqK/tYf/Or67KG4GfaNBOC4kWEGEuN7LlZwUqe6hSDddFOFyMPS6lmV6aUixjKHy
+         W73ggjOaOlP8tjVIJe6pHO97uFRL87gBf9Mry3eC2FRe63DAhbnpDjJ8VLlXBm9kTM
+         XNe7gMWdRwAw2XgcndTzafYu08EWZwRiRhs3lD+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felipe Franciosi <felipe@nutanix.com>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.7 048/163] KVM: x86: respect singlestep when emulating instruction
-Date:   Tue, 16 Jun 2020 17:33:42 +0200
-Message-Id: <20200616153109.154140150@linuxfoundation.org>
+Subject: [PATCH 5.7 047/163] KVM: x86/mmu: Set mmio_value to 0 if reserved #PF cant be generated
+Date:   Tue, 16 Jun 2020 17:33:41 +0200
+Message-Id: <20200616153109.107992694@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,43 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Franciosi <felipe@nutanix.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 384dea1c9183880be183cfaae161d99aafd16df6 upstream.
+commit 6129ed877d409037b79866327102c9dc59a302fe upstream.
 
-When userspace configures KVM_GUESTDBG_SINGLESTEP, KVM will manage the
-presence of X86_EFLAGS_TF via kvm_set/get_rflags on vcpus. The actual
-rflag bit is therefore hidden from callers.
+Set the mmio_value to '0' instead of simply clearing the present bit to
+squash a benign warning in kvm_mmu_set_mmio_spte_mask() that complains
+about the mmio_value overlapping the lower GFN mask on systems with 52
+bits of PA space.
 
-That includes init_emulate_ctxt() which uses the value returned from
-kvm_get_flags() to set ctxt->tf. As a result, x86_emulate_instruction()
-will skip a single step, leaving singlestep_rip stale and not returning
-to userspace.
-
-This resolves the issue by observing the vcpu guest_debug configuration
-alongside ctxt->tf in x86_emulate_instruction(), performing the single
-step if set.
+Opportunistically clean up the code and comments.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Felipe Franciosi <felipe@nutanix.com>
-Message-Id: <20200519081048.8204-1-felipe@nutanix.com>
+Fixes: d43e2675e96fc ("KVM: x86: only do L1TF workaround on affected processors")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200527084909.23492-1-sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/mmu/mmu.c |   27 +++++++++------------------
+ 1 file changed, 9 insertions(+), 18 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6923,7 +6923,7 @@ restart:
- 		if (!ctxt->have_exception ||
- 		    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
- 			kvm_rip_write(vcpu, ctxt->eip);
--			if (r && ctxt->tf)
-+			if (r && (ctxt->tf || (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)))
- 				r = kvm_vcpu_do_singlestep(vcpu);
- 			if (kvm_x86_ops.update_emulated_instruction)
- 				kvm_x86_ops.update_emulated_instruction(vcpu);
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -6143,25 +6143,16 @@ static void kvm_set_mmio_spte_mask(void)
+ 	u64 mask;
+ 
+ 	/*
+-	 * Set the reserved bits and the present bit of an paging-structure
+-	 * entry to generate page fault with PFER.RSV = 1.
++	 * Set a reserved PA bit in MMIO SPTEs to generate page faults with
++	 * PFEC.RSVD=1 on MMIO accesses.  64-bit PTEs (PAE, x86-64, and EPT
++	 * paging) support a maximum of 52 bits of PA, i.e. if the CPU supports
++	 * 52-bit physical addresses then there are no reserved PA bits in the
++	 * PTEs and so the reserved PA approach must be disabled.
+ 	 */
+-
+-	/*
+-	 * Mask the uppermost physical address bit, which would be reserved as
+-	 * long as the supported physical address width is less than 52.
+-	 */
+-	mask = 1ull << 51;
+-
+-	/* Set the present bit. */
+-	mask |= 1ull;
+-
+-	/*
+-	 * If reserved bit is not supported, clear the present bit to disable
+-	 * mmio page fault.
+-	 */
+-	if (shadow_phys_bits == 52)
+-		mask &= ~1ull;
++	if (shadow_phys_bits < 52)
++		mask = BIT_ULL(51) | PT_PRESENT_MASK;
++	else
++		mask = 0;
+ 
+ 	kvm_mmu_set_mmio_spte_mask(mask, mask, ACC_WRITE_MASK | ACC_USER_MASK);
+ }
 
 
