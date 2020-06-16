@@ -2,262 +2,257 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEBBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3B8207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DEF9207C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:00:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgFPN7w convert rfc822-to-8bit (ORCPT
+        id S1729030AbgFPOAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:59:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:57549 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726606AbgFPN7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:59:51 -0400
-IronPort-SDR: tbp73/BgdSo74zL6VT4cecjS3jL4a59ZCaYekeZ/fh42QCeloQKXDXYz+SUmstIHirNvwLaLeh
- g13uQcVJ4x5g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 06:59:49 -0700
-IronPort-SDR: rsvUd2K8Rjd/Chd9QnQKbs8ZSlxfNxI367Qd4WoHwiKtukcN2FrqzLr4GYlH4I8FmT1x/uHjGU
- 8/3xVJXG1p+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="298916485"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Jun 2020 06:59:49 -0700
-Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 16 Jun 2020 06:59:49 -0700
-Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.74]) by
- FMSMSX113.amr.corp.intel.com ([169.254.13.85]) with mapi id 14.03.0439.000;
- Tue, 16 Jun 2020 06:59:48 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Charan Teja Kalla <charante@codeaurora.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        "DRI mailing list" <dri-devel@lists.freedesktop.org>
-CC:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        "vinmenon@codeaurora.org" <vinmenon@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] dmabuf: use spinlock to access dmabuf->name
-Thread-Topic: [PATCH] dmabuf: use spinlock to access dmabuf->name
-Thread-Index: AQHWQWvsYI6eTL2/6UmOYEBVkPsE9KjbRi5AgAADWlA=
-Date:   Tue, 16 Jun 2020 13:59:48 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010F365F7D@fmsmsx107.amr.corp.intel.com>
-References: <316a5cf9-ca71-6506-bf8b-e79ded9055b2@codeaurora.org>
- <14063C7AD467DE4B82DEDB5C278E8663010F365EF5@fmsmsx107.amr.corp.intel.com>
-In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663010F365EF5@fmsmsx107.amr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.108]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 16 Jun 2020 10:00:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47646 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbgFPOAD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:00:03 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 134132A065C
+Subject: Re: [PATCH v2] docs: block: Create blk-mq documentation
+To:     Randy Dunlap <rdunlap@infradead.org>, axboe@kernel.dk,
+        corbet@lwn.net, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com
+References: <20200605175536.19681-1-andrealmeid@collabora.com>
+ <3fc90f94-c034-7508-3938-f24beddbc5f3@infradead.org>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <31c78e71-10fc-8629-6aa0-50e08b42387f@collabora.com>
+Date:   Tue, 16 Jun 2020 10:59:53 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <3fc90f94-c034-7508-3938-f24beddbc5f3@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Ruhl, Michael J
->Sent: Tuesday, June 16, 2020 9:51 AM
->To: Charan Teja Kalla <charante@codeaurora.org>; Sumit Semwal
-><sumit.semwal@linaro.org>; open list:DMA BUFFER SHARING FRAMEWORK
-><linux-media@vger.kernel.org>; DRI mailing list <dri-
->devel@lists.freedesktop.org>
->Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>;
->vinmenon@codeaurora.org; LKML <linux-kernel@vger.kernel.org>;
->stable@vger.kernel.org
->Subject: RE: [PATCH] dmabuf: use spinlock to access dmabuf->name
->
->>-----Original Message-----
->>From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->>Charan Teja Kalla
->>Sent: Thursday, June 11, 2020 9:40 AM
->>To: Sumit Semwal <sumit.semwal@linaro.org>; open list:DMA BUFFER
->>SHARING FRAMEWORK <linux-media@vger.kernel.org>; DRI mailing list <dri-
->>devel@lists.freedesktop.org>
->>Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>;
->>vinmenon@codeaurora.org; LKML <linux-kernel@vger.kernel.org>;
->>stable@vger.kernel.org
->>Subject: [PATCH] dmabuf: use spinlock to access dmabuf->name
+On 6/15/20 9:15 PM, Randy Dunlap wrote:
+> Hi,
+> I have a few more editing comments for you (below):
+> 
+> On 6/5/20 10:55 AM, André Almeida wrote:
+>> Create a documentation providing a background and explanation around the
+>> operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
 >>
->>There exists a sleep-while-atomic bug while accessing the dmabuf->name
->>under mutex in the dmabuffs_dname(). This is caused from the SELinux
->>permissions checks on a process where it tries to validate the inherited
->>files from fork() by traversing them through iterate_fd() (which
->>traverse files under spin_lock) and call
->>match_file(security/selinux/hooks.c) where the permission checks happen.
->>This audit information is logged using dump_common_audit_data() where it
->>calls d_path() to get the file path name. If the file check happen on
->>the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex to
->>access dmabuf->name. The flow will be like below:
->>flush_unauthorized_files()
->>  iterate_fd()
->>    spin_lock() --> Start of the atomic section.
->>      match_file()
->>        file_has_perm()
->>          avc_has_perm()
->>            avc_audit()
->>              slow_avc_audit()
->>	        common_lsm_audit()
->>		  dump_common_audit_data()
->>		    audit_log_d_path()
->>		      d_path()
->>                        dmabuffs_dname()
->>                          mutex_lock()--> Sleep while atomic.
+>> The reference for writing this documentation was the source code and
+>> "Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+>> Systems", by Axboe et al.
 >>
->>Call trace captured (on 4.19 kernels) is below:
->>___might_sleep+0x204/0x208
->>__might_sleep+0x50/0x88
->>__mutex_lock_common+0x5c/0x1068
->>__mutex_lock_common+0x5c/0x1068
->>mutex_lock_nested+0x40/0x50
->>dmabuffs_dname+0xa0/0x170
->>d_path+0x84/0x290
->>audit_log_d_path+0x74/0x130
->>common_lsm_audit+0x334/0x6e8
->>slow_avc_audit+0xb8/0xf8
->>avc_has_perm+0x154/0x218
->>file_has_perm+0x70/0x180
->>match_file+0x60/0x78
->>iterate_fd+0x128/0x168
->>selinux_bprm_committing_creds+0x178/0x248
->>security_bprm_committing_creds+0x30/0x48
->>install_exec_creds+0x1c/0x68
->>load_elf_binary+0x3a4/0x14e0
->>search_binary_handler+0xb0/0x1e0
+>> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+>> ---
+>> Changes from v1:
+>> - Fixed typos
+>> - Reworked blk_mq_hw_ctx
 >>
->>So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
+>> Hello,
 >>
->>Cc: <stable@vger.kernel.org> [5.3+]
->>Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
->>---
->> drivers/dma-buf/dma-buf.c | 13 +++++++------
->> include/linux/dma-buf.h   |  1 +
->> 2 files changed, 8 insertions(+), 6 deletions(-)
+>> This commit was tested using "make htmldocs" and the HTML output has
+>> been verified.
 >>
->>diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
->>index 01ce125..2e0456c 100644
->>--- a/drivers/dma-buf/dma-buf.c
->>+++ b/drivers/dma-buf/dma-buf.c
->>@@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry *dentry,
->>char *buffer, int buflen)
->> 	size_t ret = 0;
+>> Thanks,
+>> 	André
+>> ---
+>>  Documentation/block/blk-mq.rst | 154 +++++++++++++++++++++++++++++++++
+>>  Documentation/block/index.rst  |   1 +
+>>  2 files changed, 155 insertions(+)
+>>  create mode 100644 Documentation/block/blk-mq.rst
 >>
->> 	dmabuf = dentry->d_fsdata;
->>-	dma_resv_lock(dmabuf->resv, NULL);
->>+	spin_lock(&dmabuf->name_lock);
->> 	if (dmabuf->name)
->> 		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
->>-	dma_resv_unlock(dmabuf->resv);
->>+	spin_unlock(&dmabuf->name_lock);
->
->I am not really clear on why you need this lock.
->
->If name == NULL you have no issues.
->If name is real, you have no issues.
->
->If name is freed you will copy garbage, but the only way
->for that to happen is that _set_name or _release have to be called
->at just the right time.
->
->And the above would probably only be an issue if the set_name
->was called, so you will get NULL or a real name.
->
->Is there a reason for the lock here?
->
->Mike
+>> diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
+>> new file mode 100644
+>> index 000000000000..1f702adbc577
+>> --- /dev/null
+>> +++ b/Documentation/block/blk-mq.rst
+>> @@ -0,0 +1,154 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +================================================
+>> +Multi-Queue Block IO Queueing Mechanism (blk-mq)
+>> +================================================
+>> +
+>> +The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
+>> +devices to achieve a huge number of input/output operations per second (IOPS)
+>> +through queueing and submitting IO requests to block devices simultaneously,
+>> +benefiting from the parallelism offered by modern storage devices.
+>> +
+>> +Introduction
+>> +============
+>> +
+>> +Background
+>> +----------
+>> +
+>> +Magnetic hard disks have been the de facto standard from the beginning of the
+>> +development of the kernel. The Block IO subsystem aimed to achieve the best
+>> +performance possible for those devices with a high penalty when doing random
+>> +access, and the bottleneck was the mechanical moving parts, a lot more slower
+> 
+>                                                                a lot slower
+> or                                                             much slower
+> 
+>> +than any layer on the storage stack. One example of such optimization technique
+>> +involves ordering read/write requests accordingly to the current position of
+> 
+> I would say                              according to
+> 
+>> +the hard disk head.
+>> +
+>> +However, with the development of Solid State Drives and Non-Volatile Memories
+>> +without mechanical parts nor random access penalty and capable of performing
+>> +high parallel access, the bottleneck of the stack had moved from the storage
+>> +device to the operating system. In order to  take advantage of the parallelism
+> 
+> drop one space                               ^^^^
+> 
+>> +in those devices design, the multi-queue mechanism was introduced.
+> 
+>             devices'
+> 
+>> +
+>> +The former design had a single queue to store block IO requests with a single
+>> +lock. That did not scale well in SMP systems due to dirty data in cache and the
+>> +bottleneck of having a single lock for multiple processors. This setup also
+>> +suffered with congestion when different processes (or the same process, moving
+>> +to different CPUs) wanted to perform block IO. Instead of this, the blk-mq API
+>> +spawns multiple queues with individual entry points local to the CPU, removing
+>> +the need for a lock. A deeper explanation on how this works is covered in the
+>> +following section (`Operation`_).
+>> +
+>> +Operation
+>> +---------
+>> +
+>> +When the userspace performs IO to a block device (reading or writing a file,
+>> +for instance), blk-mq takes action: it will store and manage IO requests to
+>> +the block device, acting as middleware between the userspace (and a file
+>> +system, if present) and the block device driver.
+>> +
+>> +blk-mq has two group of queues: software staging queues and hardware dispatch
+>> +queues. When the request arrives at the block layer, it will try the shortest
+>> +path possible: send it directly to the hardware queue. However, there are two
+>> +cases that it might not do that: if there's an IO scheduler attached at the
+>> +layer or if we want to try to merge requests. In both cases, requests will be
+>> +sent to the software queue.
+>> +
+>> +Then, after the requests are processed by software queues, they will be placed
+>> +at the hardware queue, a second stage queue were the hardware has direct access
+>> +to process those requests. However, if the hardware does not have enough
+>> +resources to accept more requests, blk-mq will places requests on a temporary
+>> +queue, to be sent in the future, when the hardware is able.
+>> +
+>> +Software staging queues
+>> +~~~~~~~~~~~~~~~~~~~~~~~
+>> +
+>> +The block IO subsystem adds requests (represented by struct
+>> +:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
+>> +sent directly to the driver. A request is a collection of BIOs. They arrived at
+>> +the block layer through the data structure struct :c:type:`bio`. The block
+>> +layer will then build a new structure from it, the struct :c:type:`request`
+>> +that will be used to communicate with the device driver. Each queue has its
+>> +own lock and the number of queues is defined by a per-CPU or per-node basis.
+>> +
+>> +The staging queue can be used to merge requests for adjacent sectors. For
+>> +instance, requests for sector 3-6, 6-7, 7-9 can become one request for 3-9.
+>> +Even if random access to SSDs and NVMs have the same time of response compared
+>> +to sequential access, grouped requests for sequential access decreases the
+>> +number of individual requests. This technique of merging requests is called
+>> +plugging.
+>> +
+>> +Along with that, the requests can be reordered to ensure fairness of system
+>> +resources (e.g. to ensure that no application suffers from starvation) and/or to
+>> +improve IO performance, by an IO scheduler.
+>> +
+>> +IO Schedulers
+>> +^^^^^^^^^^^^^
+>> +
+>> +There are several schedulers implemented by the block layer, each one following
+>> +a heuristic to improve the IO performance. They are "pluggable" (as in plug
+>> +and play), in the sense of they can be selected at run time using sysfs. You
+>> +can read more about Linux's IO schedulers `here
+>> +<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
+>> +happens only between requests in the same queue, so it is not possible to merge
+>> +requests from different queues, otherwise there would be cache trashing and a
+>> +need to have a lock for each queue. After the scheduling, the requests are
+>> +eligible to be sent to the hardware. One of the possible schedulers to be
+>> +selected is the NOOP scheduler, the most straightforward one, that implements a
+>> +simple FIFO, without performing any reordering. This is useful in the following
+>> +scenarios: when scheduling will be performed in a next step somewhere in the
+>> +stack, like block device controllers; the actual sector position of blocks are
+>> +transparent for the host, meaning it hasn't enough information to take a proper
+>> +decision; or the overhead of reordering is higher than the handicap of
+>> +non-sequential accesses.
+>> +
+>> +Hardware dispatch queues
+>> +~~~~~~~~~~~~~~~~~~~~~~~~
+>> +
+>> +The hardware queues (represented by struct :c:type:`blk_mq_hw_ctx`) have a 1:1
+>> +correspondence to the device driver's submission queues, and are the last step
+>> +of the block layer submission code before the low level device driver taking
+>> +ownership of the request. To run this queue, the block layer removes requests
+>> +from the associated software queues and tries to dispatch to the hardware.
+>> +
+>> +If it's not possible to send the requests directly to hardware, they will be
+>> +added to a linked list (:c:type:`hctx->dispatch`) of requests. Then,
+>> +next time the block layer runs a queue, it will send the requests laying at the
+>> +:c:type:`dispatch` list first, to ensure a fairness dispatch with those
+>> +requests that were ready to be sent first. The number of hardware queues
+>> +depends on the number of hardware contexts supported by the hardware and its
+>> +device driver, but it will not be more than the number of cores of the system.
+>> +There is no reordering at this stage, and each software queue has a set of
+>> +hardware queues to send requests for.
+>> +
+>> +.. note::
+>> +
+>> +        Neither the block layer nor the device protocols guarantee
+>> +        the order of completion of requests. This must be handled by
+>> +        higher layers, like the filesystem.
+>> +
+>> +Tag-based completion
+>> +~~~~~~~~~~~~~~~~~~~~
+>> +
+>> +In order to indicate which request has been completed, every request is
+>> +identified by an integer, ranging from 0 to the dispatch queue size. This tag
+>> +is generated by the block layer and later reused by the device driver, removing
+>> +the need to create a redundant identifier. When a request is completed in the
+>> +drive, the tag is sent back to the block layer to notify it of the finalization.
+>> +This removes the need to do a linear search to find out which IO has been
+>> +completed.
+>> +
+>> +Further reading
+>> +---------------
+>> +
+>> +- `Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems <http://kernel.dk/blk-mq.pdf>`_
+>> +
+>> +- `NOOP scheduler <https://en.wikipedia.org/wiki/Noop_scheduler>`_
+>> +
+>> +- `Null block device driver <https://www.kernel.org/doc/html/latest/block/null_blk.html>`_
+>> +
+>> +Source code documentation
+>> +=========================
+>> +
+>> +.. kernel-doc:: include/linux/blk-mq.h
+>> +
+>> +.. kernel-doc:: block/blk-mq.c
+> 
+> thanks.
+> 
 
-Maybe dmabuf->name = NULL after the kfree(dmabuf->name) in:
-
-dma_buf_release()
-
-Would be sufficient?
-
-M
->> 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
->> 			     dentry->d_name.name, ret > 0 ? name : "");
->>@@ -335,7 +335,7 @@ static long dma_buf_set_name(struct dma_buf
->>*dmabuf, const char __user *buf)
->> 	if (IS_ERR(name))
->> 		return PTR_ERR(name);
->>
->>-	dma_resv_lock(dmabuf->resv, NULL);
->>+	spin_lock(&dmabuf->name_lock);
->> 	if (!list_empty(&dmabuf->attachments)) {
->> 		ret = -EBUSY;
->> 		kfree(name);
->>@@ -345,7 +345,7 @@ static long dma_buf_set_name(struct dma_buf
->>*dmabuf, const char __user *buf)
->> 	dmabuf->name = name;
->>
->> out_unlock:
->>-	dma_resv_unlock(dmabuf->resv);
->>+	spin_unlock(&dmabuf->name_lock);
->> 	return ret;
->> }
->>
->>@@ -405,10 +405,10 @@ static void dma_buf_show_fdinfo(struct seq_file
->>*m, struct file *file)
->> 	/* Don't count the temporary reference taken inside procfs seq_show
->>*/
->> 	seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
->> 	seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
->>-	dma_resv_lock(dmabuf->resv, NULL);
->>+	spin_lock(&dmabuf->name_lock);
->> 	if (dmabuf->name)
->> 		seq_printf(m, "name:\t%s\n", dmabuf->name);
->>-	dma_resv_unlock(dmabuf->resv);
->>+	spin_unlock(&dmabuf->name_lock);
->> }
->>
->> static const struct file_operations dma_buf_fops = {
->>@@ -546,6 +546,7 @@ struct dma_buf *dma_buf_export(const struct
->>dma_buf_export_info *exp_info)
->> 	dmabuf->size = exp_info->size;
->> 	dmabuf->exp_name = exp_info->exp_name;
->> 	dmabuf->owner = exp_info->owner;
->>+	spin_lock_init(&dmabuf->name_lock);
->> 	init_waitqueue_head(&dmabuf->poll);
->> 	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
->> 	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
->>diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
->>index ab0c156..93108fd 100644
->>--- a/include/linux/dma-buf.h
->>+++ b/include/linux/dma-buf.h
->>@@ -311,6 +311,7 @@ struct dma_buf {
->> 	void *vmap_ptr;
->> 	const char *exp_name;
->> 	const char *name;
->>+	spinlock_t name_lock;
->> 	struct module *owner;
->> 	struct list_head list_node;
->> 	void *priv;
->>--
->>The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->>Forum, a Linux Foundation Collaborative Project
->>_______________________________________________
->>dri-devel mailing list
->>dri-devel@lists.freedesktop.org
->>https://lists.freedesktop.org/mailman/listinfo/dri-devel
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks Randy, all changes applied for v3.
