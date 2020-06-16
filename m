@@ -2,59 +2,52 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA22C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98856C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9085208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0A1214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322139;
-	bh=cR0PP+/MQZYLqQf3bbJfXoLuvhvnjpmt6Okx0cKiyf4=;
+	s=default; t=1592322144;
+	bh=djLqvwOIRLMfyQA3QMmRQ5njsQ6BvC6f0GfJ1VSuINc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mB47FBEAKUBjcjG7wip+96MrxyIy/opIO3+qiBF67s+7TEsGEWeHqRryoiNzcR1LH
-	 XpLgoR1bxvftGWByOULzjxi4LK0ELObDcc8auG9rSrrYyRRVlL9uqxFOhaU2jK+4Sk
-	 /E1plFOQxPLd/eg6M587GTZWWvzmhpFV28IpmrZ8=
+	b=v/zgXk8+tLgNlJJKeFewFLi6/XBpw14O59EAXekaXbeR12/wTMcLAWxPYeg0WYRcV
+	 QIUjjHFqvOdMXd6pgKyAOJg0olG18DJ1NHJjlN+nvJ+uXsGFQ5MJXZafvSwksMqmty
+	 JSR7yRQfkD7kU5de63QO3WHuvEBveEx7ipjbHp+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbgFPPmQ (ORCPT
+        id S1731663AbgFPPmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58614 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730841AbgFPPmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:12 -0400
+        id S1731635AbgFPPmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCB7620C56;
-        Tue, 16 Jun 2020 15:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8154E214DB;
+        Tue, 16 Jun 2020 15:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322131;
-        bh=cR0PP+/MQZYLqQf3bbJfXoLuvhvnjpmt6Okx0cKiyf4=;
+        s=default; t=1592322134;
+        bh=djLqvwOIRLMfyQA3QMmRQ5njsQ6BvC6f0GfJ1VSuINc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbPCuNTjTKXeLfeu1BTUxcJ6lmUCPX+MbTxIEpZBmeC+uJ/l9YQRo4q6cpZbNX8P8
-         CsyxaxTlMemE4G5/ZwDT6G+BK/dYpKwhuzXs80WlZvvlJ81VR9iKr7JpmC8aOl4ryq
-         Wy38PXCkejE9jm9JTqYZFXnd66/qy6upXojHIbuY=
+        b=Xn7Ktcl/aUw2au+U95jtXDBIjucxuLttWyvDJD0ThUKreQH/U2iAD18PsQEhaNHAb
+         IKoKJig8o/YRYlvNmfdrkJXDdRft1dQ+a7EQtbKpAYHhh1ExrvqdiHiPg5c6MYjGTP
+         Pgp/nHMDBgQEdJkAg9bL6eILcDr3D6hkUewzmbGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Jeremy Fitzhardinge <jeremy@goop.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jian Cai <jiancai@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>
-Subject: [PATCH 5.7 013/163] elfnote: mark all .note sections SHF_ALLOC
-Date:   Tue, 16 Jun 2020 17:33:07 +0200
-Message-Id: <20200616153107.510290511@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 014/163] staging: mt7621-pci: properly power off dual-ported pcie phy
+Date:   Tue, 16 Jun 2020 17:33:08 +0200
+Message-Id: <20200616153107.558370601@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -67,58 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-commit 51da9dfb7f20911ae4e79e9b412a9c2d4c373d4b upstream.
+[ Upstream commit 5fcded5e857cf66c9592e4be28c4dab4520c9177 ]
 
-ELFNOTE_START allows callers to specify flags for .pushsection assembler
-directives.  All callsites but ELF_NOTE use "a" for SHF_ALLOC.  For vdso's
-that explicitly use ELF_NOTE_START and BUILD_SALT, the same section is
-specified twice after preprocessing, once with "a" flag, once without.
-Example:
+Pcie phy for pcie0 and pcie1 is shared using a dual ported
+one. Current code was assuming that if nothing is connected
+in pcie0 it won't be also nothing connected in pcie1. This
+assumtion is wrong for some devices such us 'Mikrotik rbm33g'
+and 'ZyXEL LTE3301-PLUS' where only connecting a card to the
+second bus on the phy is possible. For such devices kernel
+hangs in the same point because of the wrong poweroff of the
+phy getting the following trace:
 
-.pushsection .note.Linux, "a", @note ;
-.pushsection .note.Linux, "", @note ;
+mt7621-pci-phy 1e149000.pcie-phy: PHY for 0xbe149000 (dual port = 1)
+mt7621-pci-phy 1e14a000.pcie-phy: PHY for 0xbe14a000 (dual port = 0)
+mt7621-pci-phy 1e149000.pcie-phy: Xtal is 40MHz
+mt7621-pci-phy 1e14a000.pcie-phy: Xtal is 40MHz
+mt7621-pci 1e140000.pcie: pcie0 no card, disable it (RST & CLK)
+[hangs]
 
-While GNU as allows this ordering, it warns for the opposite ordering,
-making these directives position dependent.  We'd prefer not to precisely
-match this behavior in Clang's integrated assembler.  Instead, the non
-__ASSEMBLY__ definition of ELF_NOTE uses
-__attribute__((section(".note.Linux"))) which is created with SHF_ALLOC,
-so let's make the __ASSEMBLY__ definition of ELF_NOTE consistent with C
-and just always use "a" flag.
+The wrong assumption is located in the 'mt7621_pcie_init_ports'
+function where we are just making a power off of the phy for
+slots 0 and 2 if nothing is connected in them. Hence, only
+poweroff the phy if nothing is connected in both slot 0 and
+slot 1 avoiding the kernel to hang.
 
-This allows Clang to assemble a working mainline (5.6) kernel via:
-$ make CC=clang AS=clang
-
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Cc: Jeremy Fitzhardinge <jeremy@goop.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/913
-Link: http://lkml.kernel.org/r/20200325231250.99205-1-ndesaulniers@google.com
-Debugged-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jian Cai <jiancai@google.com>
+Fixes: 5737cfe87a9c ("staging: mt7621-pci: avoid to poweroff the phy for slot one")
+Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Link: https://lore.kernel.org/r/20200409111652.30964-1-sergio.paracuellos@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/elfnote.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/mt7621-pci/pci-mt7621.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/include/linux/elfnote.h
-+++ b/include/linux/elfnote.h
-@@ -54,7 +54,7 @@
- .popsection				;
+diff --git a/drivers/staging/mt7621-pci/pci-mt7621.c b/drivers/staging/mt7621-pci/pci-mt7621.c
+index f58e3a51fc71..b9d460a9c041 100644
+--- a/drivers/staging/mt7621-pci/pci-mt7621.c
++++ b/drivers/staging/mt7621-pci/pci-mt7621.c
+@@ -502,17 +502,25 @@ static void mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
  
- #define ELFNOTE(name, type, desc)		\
--	ELFNOTE_START(name, type, "")		\
-+	ELFNOTE_START(name, type, "a")		\
- 		desc			;	\
- 	ELFNOTE_END
+ 	mt7621_pcie_reset_ep_deassert(pcie);
  
++	tmp = NULL;
+ 	list_for_each_entry(port, &pcie->ports, list) {
+ 		u32 slot = port->slot;
+ 
+ 		if (!mt7621_pcie_port_is_linkup(port)) {
+ 			dev_err(dev, "pcie%d no card, disable it (RST & CLK)\n",
+ 				slot);
+-			if (slot != 1)
+-				phy_power_off(port->phy);
+ 			mt7621_control_assert(port);
+ 			mt7621_pcie_port_clk_disable(port);
+ 			port->enabled = false;
++
++			if (slot == 0) {
++				tmp = port;
++				continue;
++			}
++
++			if (slot == 1 && tmp && !tmp->enabled)
++				phy_power_off(tmp->phy);
++
+ 		}
+ 	}
+ }
+-- 
+2.25.1
+
 
 
