@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6718C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB17C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C71321532
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906A2207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322864;
-	bh=TW9JezX4flra15yeNwYJVoO40qkjcL7U7ogEwc1jMaY=;
+	s=default; t=1592322867;
+	bh=v0CSC7d6WhJ2bIpIBAu+WGTgul81sAmDxaMiaZ1+04c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UPyaFugCgsLwT/McQcbEw3us8VDxAsI3yX22RW0+Wt6tNQD38wFXa1XZLm6cKYu5U
-	 Rf7jAPgEmu0oExcP+Hf/qpLo9e6GAsvdZhr9p2UG3Q47omVSxAdlN/VbjoT+QjtrD1
-	 lv26/40av5BrGWHaPx+4j5tvaLg3XALp5a0KJLec=
+	b=1FKmO+VKTKhheusM30ODO2SLFDstAlQwW7RaxVoDK0KNEBX3Uol48ycJylx3Z824L
+	 kUY9U/jIVzwIBwuQsSM3lKc7oWbOFC+88Y3hlXTBDpzo+XZ/CVSYpSjqqHtZ0X99lB
+	 ei8LGeE2PmTW5NU3u8eNUs5n8Glmgvr9HEx34QGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732403AbgFPPyV (ORCPT
+        id S1732982AbgFPPyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53162 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:54:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731739AbgFPPyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:11 -0400
+        id S1732963AbgFPPyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B73C521532;
-        Tue, 16 Jun 2020 15:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95C2821527;
+        Tue, 16 Jun 2020 15:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322851;
-        bh=TW9JezX4flra15yeNwYJVoO40qkjcL7U7ogEwc1jMaY=;
+        s=default; t=1592322856;
+        bh=v0CSC7d6WhJ2bIpIBAu+WGTgul81sAmDxaMiaZ1+04c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J8UkGgs/UNJgauMpl++MUycFxEs5kjIx8nr4ppTYwUm2kXrc4cEHdX8gGm6ngQsjc
-         wUe92PGZoapcj1YcXqE4NQQJTEP1ch1OV/YKRjTCQS8oIPa9ZZft+PYm9oVcX1QN/q
-         RROBmB/KLmIGQtvln2lMwR9WjSCeWtP8ohJyqqn4=
+        b=Vmju6KLnDmEJx10WHyJar9QMwzw2YwD068apcYi/zy79yDf9CN6MkavvWskHAhsyY
+         m4uIKoDIlr+J2Jeox5Ku0mwdmQWS6819Y+vcJpmzQhAtSeeYuIJOCT3pS+8hZOx0wl
+         5rkvrZPCKN/vXVeZauEr1iZm91C+3Q44M4otsGn8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.6 127/161] KVM: nSVM: leave ASID aside in copy_vmcb_control_area
-Date:   Tue, 16 Jun 2020 17:35:17 +0200
-Message-Id: <20200616153112.411554722@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.6 101/161] io_uring: fix mismatched finish_wait() calls in io_uring_cancel_files()
+Date:   Tue, 16 Jun 2020 17:34:51 +0200
+Message-Id: <20200616153111.172048635@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -58,32 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
 
-commit 6c0238c4a62b3a0b1201aeb7e33a4636d552a436 upstream.
+commit d8f1b9716cfd1a1f74c0fedad40c5f65a25aa208 upstream.
 
-Restoring the ASID from the hsave area on VMEXIT is wrong, because its
-value depends on the handling of TLB flushes.  Just skipping the field in
-copy_vmcb_control_area will do.
+The prepare_to_wait() and finish_wait() calls in io_uring_cancel_files()
+are mismatched. Currently I don't see any issues related this bug, just
+find it by learning codes.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -3326,7 +3326,7 @@ static inline void copy_vmcb_control_are
- 	dst->iopm_base_pa         = from->iopm_base_pa;
- 	dst->msrpm_base_pa        = from->msrpm_base_pa;
- 	dst->tsc_offset           = from->tsc_offset;
--	dst->asid                 = from->asid;
-+	/* asid not copied, it is handled manually for svm->vmcb.  */
- 	dst->tlb_ctl              = from->tlb_ctl;
- 	dst->int_ctl              = from->int_ctl;
- 	dst->int_vector           = from->int_vector;
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -6488,11 +6488,9 @@ static int io_uring_release(struct inode
+ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
+ 				  struct files_struct *files)
+ {
+-	struct io_kiocb *req;
+-	DEFINE_WAIT(wait);
+-
+ 	while (!list_empty_careful(&ctx->inflight_list)) {
+-		struct io_kiocb *cancel_req = NULL;
++		struct io_kiocb *cancel_req = NULL, *req;
++		DEFINE_WAIT(wait);
+ 
+ 		spin_lock_irq(&ctx->inflight_lock);
+ 		list_for_each_entry(req, &ctx->inflight_list, inflight_entry) {
+@@ -6532,6 +6530,7 @@ static void io_uring_cancel_files(struct
+ 			 */
+ 			if (refcount_sub_and_test(2, &cancel_req->refs)) {
+ 				io_put_req(cancel_req);
++				finish_wait(&ctx->inflight_wait, &wait);
+ 				continue;
+ 			}
+ 		}
+@@ -6539,8 +6538,8 @@ static void io_uring_cancel_files(struct
+ 		io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
+ 		io_put_req(cancel_req);
+ 		schedule();
++		finish_wait(&ctx->inflight_wait, &wait);
+ 	}
+-	finish_wait(&ctx->inflight_wait, &wait);
+ }
+ 
+ static int io_uring_flush(struct file *file, void *data)
 
 
