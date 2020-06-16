@@ -2,229 +2,99 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 998D9206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43C42071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:00:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="qU3gGhZy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVXqvcoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgFPL74 (ORCPT
+        id S1728527AbgFPMAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39206 "EHLO
+        Tue, 16 Jun 2020 08:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgFPL7z (ORCPT
+        with ESMTP id S1726606AbgFPMAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:59:55 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7BBC08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:59:55 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id t21so14021702edr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:59:55 -0700 (PDT)
+        Tue, 16 Jun 2020 08:00:52 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4903BC08C5C2;
+        Tue, 16 Jun 2020 05:00:52 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q19so23202403lji.2;
+        Tue, 16 Jun 2020 05:00:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vFt52X6ZxnjFhdInzqPTsBTf0H25///Yw0La+Ewwi+o=;
-        b=qU3gGhZyPmAH6X7JfnyHrsDU+7oTdpbz1YAthn1buJ0jnK49tJAfpCusTt5I70ATYx
-         0gOBtgEnf4sVLHiZlKm5pnuNYAZtL3Rzzi/83WU03/jW4uF8lW9YNQSmsWMMziU6Y5Oa
-         Vuklbd5Nus9ElENtzXUkbsmUVT2wjmPP0OAH/Y/CSj1EikMdGljd0ewAMOv1mYeWNWlH
-         wWbdevHWLvxK7U1mqSRRgn8dttBSzPxRw43NT4YSLoheKQwtucMJZQi8WrsliV+pL26W
-         o/2l97fOVDL2+ac20rcG45UJaUaMel5v7Q/2zi5OE6fbzCPP+ehhpmoPCeirYewIILwz
-         KvBw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QSDz1CcTlXHevMdT17dfagrIIYP8BvIZ7bez+W8TR/I=;
+        b=oVXqvcoYIkCXNR7wL6n3vOVqa4vsvz555GXgN3SvQbk++DqCfyY3ihS6C44FTj/1l6
+         oxmN6rQSl/0N9Rs3GD1cLcFTRNOKZVrFi+4MTLxT4A2/TIruex3OouFYhG8DGyT0KOei
+         Egd1CQ9keFWRBVCIckvgZJkqKf+CloQ3UDJ82KcY8QsjVL5gnReCpUBL/e/CbpjQs1IB
+         8i7oNBfAdR0pwujcU3YFsnbfNvsFqW8GB4um9FicmqKBkBg+cjmgG00mhPHH06pjiOMn
+         Yh7v9I+PaSONtPPasNP/XArF6pxddi6OvJDr7wTny6RMQ7M6/XNYqeMBP+Vd+B4k5NLy
+         MlIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vFt52X6ZxnjFhdInzqPTsBTf0H25///Yw0La+Ewwi+o=;
-        b=sWBuC5oalrMUt+ipJ8/9qaIfUMdKl7LgxBmBFqf+3Ttre7PWy0s0xFpXPYsOlZ1oLq
-         Hp9Le+8qXUmIVbaop2dgMIKtnaiCSeMAdYi+8YkxRzppvWqDUajcS/W1QWG+h3dsIy9g
-         xQy6mK+Z6N9FJgm0ZQh0iW7AtC/KQqb2RnnPB6R/FyGKCkE3S32MCtoFr2kgpt/P0Ozn
-         plYKDhNi49bDCOL/eUdI9SX5yhYCiBkuJ8ok1ATVwdmCsQuX/+tEB5m6/5M3VJR1tE7+
-         b75rjifc4ouahsdRB7pw96I+1biUXJypJ+0m87vhMkxkGXx3S/L/Z1iiCthLYLQwOt6H
-         QrnQ==
-X-Gm-Message-State: AOAM532QJk7MNaaDVVhCXihE3zs3LmQm1RSV6GVXzxmaIsGX/gu7Fqhi
-        Xmmvqw2ccNHusM5ucRqbmy44Eg==
-X-Google-Smtp-Source: ABdhPJyF1u1ezjdAA2rWPEYtw/dAw4UYwl9b/mgLDaDmMHfOk/h17IkWVgv5p5leHslveVvEwX3McQ==
-X-Received: by 2002:aa7:d698:: with SMTP id d24mr2252260edr.56.1592308793605;
-        Tue, 16 Jun 2020 04:59:53 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id lw11sm10833271ejb.58.2020.06.16.04.59.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 04:59:52 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 13:59:51 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
-Message-ID: <20200616115951.GA3976568@x1>
-References: <20200608125143.GA2789203@x1>
- <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QSDz1CcTlXHevMdT17dfagrIIYP8BvIZ7bez+W8TR/I=;
+        b=Ec6xqW6fCdV5BRUROYAof+dWucvox0XxNn1JOZokn7nFsqD+r1lDqyEBRFMZ/G+Srj
+         QL2m6+fXLxak2r6TERz0a1SVWrvQQQLSEJ7/OI41B53gthOgJDWTtZQB7tNETMUPc7j1
+         eV+T4dZ5hB12gacpr5ypIZToU2+P96MggM4Yu/vFx2aIPtOT2nEr880ESKYNZNiTfdcF
+         HISCWlhCF9421z6gLifIgWexHZxMJUmn85rzUx6JZOYtCRxHIzN7ZaqOqE+rLggOl0uI
+         r1I/3OPn01PPEbDnX4fuRVVx8D5AMNaJKDT9ExkeW60FiYJh31v1Ms9I070qjAFt6ld/
+         duYw==
+X-Gm-Message-State: AOAM530S/pBbXTp82v2wm/Mp15GSDNxGvfKEFc9znFJ3DSHuUE96Remb
+        VNQfZj3uQgxFT48zaPTk6gM=
+X-Google-Smtp-Source: ABdhPJwuQbHaMDqXb3iB07dLDs9sxQLsnHPublzf3ks7pGsQG6s9Bp48XpLM+JQKBc+w1SQqlJh7Iw==
+X-Received: by 2002:a2e:98d4:: with SMTP id s20mr1343979ljj.83.1592308850862;
+        Tue, 16 Jun 2020 05:00:50 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id i22sm4343234ljb.21.2020.06.16.05.00.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 05:00:50 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] 180 degrees rotation support for NVIDIA Tegra DRM
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>, linux-tegra@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <20200614200121.14147-1-digetx@gmail.com>
+ <CACvgo51QuXMgWhFk4C=3rGvUZDX1_W0RZtVb5RtRPiHTpMebWQ@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e6b50ec8-08f9-a15e-6aa5-2ca306613e97@gmail.com>
+Date:   Tue, 16 Jun 2020 15:00:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
+In-Reply-To: <CACvgo51QuXMgWhFk4C=3rGvUZDX1_W0RZtVb5RtRPiHTpMebWQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:31:54AM +0200, Linus Walleij wrote:
-> On Mon, Jun 8, 2020 at 2:51 PM Drew Fustini <drew@beagleboard.org> wrote:
-> 
-> > This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
-> > pinctrl_map is added.  The current behavior is to return 0 when
-> > !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
-> > incorrectly assumes that a map was added and sets num_maps = 2.
-> >
-> > Analysis:
-> > =========
-> > The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
-> > if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
-> > returns 0 to indicate there was no error and num_maps is then set to 2:
-> >
-> >  980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
-> >  981                                                 struct device_node *np,
-> >  982                                                 struct pinctrl_map **map,
-> >  983                                                 unsigned *num_maps,
-> >  984                                                 const char **pgnames)
-> >  985 {
-> > <snip>
-> > 1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
-> > 1054         (*map)->data.mux.group = np->name;
-> > 1055         (*map)->data.mux.function = np->name;
-> > 1056
-> > 1057         if (PCS_HAS_PINCONF && function) {
-> > 1058                 res = pcs_parse_pinconf(pcs, np, function, map);
-> > 1059                 if (res)
-> > 1060                         goto free_pingroups;
-> > 1061                 *num_maps = 2;
-> > 1062         } else {
-> > 1063                 *num_maps = 1;
-> > 1064         }
-> >
-> > However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
-> > !nconfs.  I believe these conditions should indicate that no map was
-> > added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
-> > will set num_maps = 2 even though no maps were successfully added, as
-> > it does not reach "m++" on line 940:
-> >
-> >  895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
-> >  896                              struct pcs_function *func,
-> >  897                              struct pinctrl_map **map)
-> >  898
-> >  899 {
-> >  900         struct pinctrl_map *m = *map;
-> > <snip>
-> >  917         /* If pinconf isn't supported, don't parse properties in below. */
-> >  918         if (!PCS_HAS_PINCONF)
-> >  919                 return 0;
-> >  920
-> >  921         /* cacluate how much properties are supported in current node */
-> >  922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
-> >  923                 if (of_find_property(np, prop2[i].name, NULL))
-> >  924                         nconfs++;
-> >  925         }
-> >  926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
-> >  927                 if (of_find_property(np, prop4[i].name, NULL))
-> >  928                         nconfs++;
-> >  929         }
-> >  930         if (!nconfs)
-> >  919                 return 0;
-> >  932
-> >  933         func->conf = devm_kcalloc(pcs->dev,
-> >  934                                   nconfs, sizeof(struct pcs_conf_vals),
-> >  935                                   GFP_KERNEL);
-> >  936         if (!func->conf)
-> >  937                 return -ENOMEM;
-> >  938         func->nconfs = nconfs;
-> >  939         conf = &(func->conf[0]);
-> >  940         m++;
-> >
-> > This situtation will cause a boot failure [0] on the BeagleBone Black
-> > (AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
-> > has compatible = "pinconf-single" instead of "pinctrl-single".
-> >
-> > The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
-> > or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
-> > map was added.
-> >
-> > Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
-> > between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
-> > is set to 1 as it is valid for pinconf to be enabled and a given pin
-> > group to not any pinconf properties.
-> >
-> > [0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
-> >
-> > Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> 
-> Patch applied as non-critical (for-next) fix.
-> 
-> If there is no hurry let's merge it this way with lots of testing
-> along the way.
-> 
-> Yours,
-> Linus Walleij
+16.06.2020 01:26, Emil Velikov пишет:
+...
+> Although I see that this series, alike Derek's, has a couple of issues:
+>  - only a single panel driver is updated
 
-Thanks, I agree more testing is a good idea.
+I'll separate this series into two patchsets.
 
-In particular, do you have a way to followup with Haojian Zhuang within
-Linaro?
+One will add orientation support to the panel drivers and I'll include
+the Derek's tv101wum-nl6 patch, so it will be two panel drivers \o/ :)
 
-Haojian added the generic pinconf support back in 2013, so it would be
-good to get his review.
-
-Also, neither Tony or I have the Hikey hardware to test.
-
-The most important to test would be those which include a .dtsi with
-"pinconf-single" compatible.  I do plan to add pinconf-single to the
-AM3358 BeagleBone (which is what I am testing on), but the current
-mainline users are:
-
-arch/arm/boot/dts/hi3620.dtsi
-|- arch/arm/boot/dts/hi3620-hi4511.dts
-
-arch/arm/boot/dts/pxa3xx.dtsi
-|- arch/arm/boot/dts/pxa300-raumfeld-common.dtsi
-   |- arch/arm/boot/dts/pxa300-raumfeld-connector.dts
-      arch/arm/boot/dts/pxa300-raumfeld-controller.dts
-      arch/arm/boot/dts/pxa300-raumfeld-speaker-l.dts
-      arch/arm/boot/dts/pxa300-raumfeld-speaker-m.dts
-      arch/arm/boot/dts/pxa300-raumfeld-speaker-one.dts
-      arch/arm/boot/dts/pxa300-raumfeld-speaker-s.dts
-
-I am cc'ing Daniel Mack and Robert Jarzmi as they are listed as
-maintainers for the pxa300 related dts files.
-
-Those platforms using compatible = "pinctrl-single" should not be
-effected by this patch:
-
-arch/arm/boot/dts/am33xx-l4.dtsi (I have changed to pinconf for test)
-arch/arm/boot/dts/da850.dtsi
-arch/arm/boot/dts/dm814x.dtsi
-arch/arm/boot/dts/dm816x.dtsi
-arch/arm/boot/dts/hi3620.dtsi
-arch/arm/boot/dts/keystone-k2g.dtsi
-arch/arm/boot/dts/keystone-k2l.dtsi
-arch/arm/boot/dts/omap3-gta04.dtsi
-
-
-Thanks,
-Drew
+The other will add reflection-x support to the Tegra driver.
