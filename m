@@ -2,88 +2,129 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7809C20810
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s6q4GSmm"
+	by mail.kernel.org (Postfix) with ESMTP id CE9E420810
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592291973;
+	bh=pF2mfGeuTkIK61PJYe3gXKNT6PbuRpb4orz5pBUOhmE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=g0Fhsp+73WYYYYgI/lL83abfmvbZ9H9Z5c/tfBQx65IZYrZ2Z1oISZpgypbxnarp2
+	 X5BeGk/9rGws7Z7uUf+iobLseIwRerk+XxiNkHUmKlLchStzn8+XDzQyJu2RthZACK
+	 OssVcevcH2JlzYTA/nMnqoIvrVSsUFF99U8K7ZlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgFPHRN (ORCPT
+        id S1726712AbgFPHTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgFPHRM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:17:12 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBEFC05BD43;
-        Tue, 16 Jun 2020 00:17:12 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id a10so6568248uan.8;
-        Tue, 16 Jun 2020 00:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9LYtGDwP5PdSta9rN7AHT/0i8mo67vKpZcwwXBQEekc=;
-        b=s6q4GSmmT/fgvqjShwMjZBqADAVAr8ri9DjZc1CuRZG3RsZyXDySUL6BCQ//HlRvTG
-         IWtUnd23kiKVhKGd7udNxaWI3lRFILnJRU710fqGQiYpmTZYyLzDRCwQ4W2PEa+qpm9M
-         2mPYAm63G2r3Gnw+9MjaIea6jsg+H4JeTRtmWo/J3uTZQmc3NLHKJh4uc8m7n1Qcb/QE
-         xX148ZwzaT/q3S7StdSmKdwUJZO8ggBq+YZrQ+F1IBlTnDYencE0ibZZ4OYNbwQ0h/Hq
-         ajPwDVzOyudAGmISEWGI1PWNhTkgl7VMzTGpEQg/X3eJTcrFE8v1DWMlb+ug7O4rXsTu
-         bLzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9LYtGDwP5PdSta9rN7AHT/0i8mo67vKpZcwwXBQEekc=;
-        b=Il5JdXJXWjLBxWTYDQ9jlq58NR4Gj0mSIcq0EyMAd76YXOA3yc4yYiznUxJKVkFGDc
-         s5XiDqbmhfSl8Lrzc3R+oeoEjVKAeq1GEev4CQCbcyYB9zZ/63KQgD+bFmFSq4rwfaQo
-         2xs/Mtu1pDQyhI+zSKBWYcs2yukI3EQo8SvXZVcKxkx94pJBH0QNqZsDF46Y7iMv+EXe
-         GyfqRyP+jC2KmfBG7qsh684Y8awICG7H3ky5RRChweCsYBzeaTZGA+/DLSTF+GbNynhr
-         DxqRKrZkc102UM+1OnK9qQNTaJuPhtwhovG/H37EUY3FjQvTKx6sxR/kGEa52eVbek5d
-         gq9w==
-X-Gm-Message-State: AOAM530ZSd7jyUoGgul+zyWua6H2LNFNgxRPmVRxA+Pg9MFiGw/FqRef
-        98JyVm1dcW9qiHBaIvEedrjjqRMJ1JChVXJBvlk=
-X-Google-Smtp-Source: ABdhPJxDc4ltOFg4e2D9idSg8cYMi8y5aUI/B9xqAR/M9yJuX0M5nyLtPkrhcm1sxd5CV8esSUi0dnYIRD5mhFuNJMQ=
-X-Received: by 2002:ab0:b0d:: with SMTP id b13mr828924uak.70.1592291831308;
- Tue, 16 Jun 2020 00:17:11 -0700 (PDT)
+        Tue, 16 Jun 2020 03:19:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgFPHTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 03:19:31 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7221C2074D;
+        Tue, 16 Jun 2020 07:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592291971;
+        bh=pF2mfGeuTkIK61PJYe3gXKNT6PbuRpb4orz5pBUOhmE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n9cT4V7heVaz5IdegaMJZXPMwCjuvW6FuRHJDN4vPy7mW1xeGuYsQXbymEeEH6OCE
+         f0Cu5jrNv2B/Y4GOWKYrhq5h3Vexr64UQntCwLmu1hvI0NNKx99q7XZzsBIz9I5jJk
+         RNgU/3BQJwpMKISQbylgwLNcG0oxzahEl7uqLZ/Q=
+Date:   Tue, 16 Jun 2020 09:19:26 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-spdx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Subject: Re: [PATCH 18/22] docs: trace: ring-buffer-design.txt: convert to
+ ReST format
+Message-ID: <20200616091926.7f109860@coco.lan>
+In-Reply-To: <4e00b2fa91f1f818de4658f2695d4b433852959d.camel@perches.com>
+References: <cover.1592203650.git.mchehab+huawei@kernel.org>
+        <c11ee0be2bf63626887d7cd38e7572b31e2a2ce2.1592203650.git.mchehab+huawei@kernel.org>
+        <4e00b2fa91f1f818de4658f2695d4b433852959d.camel@perches.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <1592273581-31338-1-git-send-email-wangxidong_97@163.com>
-In-Reply-To: <1592273581-31338-1-git-send-email-wangxidong_97@163.com>
-From:   Pravin Shelar <pravin.ovn@gmail.com>
-Date:   Tue, 16 Jun 2020 00:17:00 -0700
-Message-ID: <CAOrHB_C2o31V1duzEFYAc4cqejR+P9m=7KuW=6trQa=aM8v7yg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] openvswitch: fix infoleak in conntrack
-To:     Xidong Wang <wangxidong_97@163.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        ovs dev <dev@openvswitch.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 7:13 PM Xidong Wang <wangxidong_97@163.com> wrote:
->
-> From: xidongwang <wangxidong_97@163.com>
->
-> The stack object =E2=80=9Czone_limit=E2=80=9D has 3 members. In function
-> ovs_ct_limit_get_default_limit(), the member "count" is
-> not initialized and sent out via =E2=80=9Cnla_put_nohdr=E2=80=9D.
->
-> Signed-off-by: xidongwang <wangxidong_97@163.com>
+Em Mon, 15 Jun 2020 10:48:10 -0700
+Joe Perches <joe@perches.com> escreveu:
 
-Looks good.
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
+> On Mon, 2020-06-15 at 08:50 +0200, Mauro Carvalho Chehab wrote:
+> > - Just like some media documents, this file is dual licensed
+> >   with GPL and GFDL. As right now the GFDL SPDX definition is
+> >   bogus (as it doesn't tell anything about invariant parts),
+> >   let's not use SPDX here. Let's use, instead, the same test
+> >   as we have on media. =20
+> []
+> > diff --git a/Documentation/trace/ring-buffer-design.txt b/Documentation=
+/trace/ring-buffer-design.rst
+> > []
+> > +.. Or, alternatively,
+> > +..
+> > +.. b) Permission is granted to copy, distribute and/or modify this
+> > +..    document under the terms of the GNU Free Documentation License,
+> > +..    Version 1.1 or any later version published by the Free Software
+> > +..    Foundation, with no Invariant Sections, no Front-Cover Texts
+> > +..    and no Back-Cover Texts. A copy of the license is available at
+> > +..    https://www.gnu.org/licenses/old-licenses/fdl-1.2.html =20
+>=20
+> Use of a version 1.1 reference with a 1.2 link.
+
+Right. I'll fix it.
+
+>=20
+> Perhaps the link should be:
+> https://www.gnu.org/licenses/old-licenses/fdl-1.1.html
+>=20
+> > +..
+> > +.. TODO: replace it to GPL-2.0 OR GFDL-1.2-or-later WITH no-invariant-=
+sections =20
+>=20
+> Is there some reason a new GFDL entry has not yet been added
+> to the LICENSES directory?
+
+Yes:
+
+	https://github.com/spdx/license-list-XML/issues/686
+	https://github.com/spdx/license-list-XML/issues/970
+
+In summary, GFDL can either be a free or non-free license, depending
+on having or not "invariant sections", but SPDX spec is incomplete on
+that matter.
+
+=46rom the discussions, it *seems* that we'll end having a SPDX header
+like:=20
+
+	GFDL-1.2-or-later-no-invariant	https://github.com/spdx/license-list-XML/mi=
+lestone/12
+
+
+But the discussion is still open, and so far there's no such tag.
+So, we'll need to keep track at the above issues, until they finally
+create the new ones.
+
+It sounds that this is expected to happen on SPDX version 3.10:
+
+	https://github.com/spdx/license-list-XML/milestone/12
+
+Btw, thanks for asking. I just added some comments there, in order
+to indicate what it is needed for the Linux Kernel.
+
+Thanks,
+Mauro
