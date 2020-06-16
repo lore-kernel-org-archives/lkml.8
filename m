@@ -2,176 +2,141 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32450C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9534C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 102B32080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:10:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihtlPylS"
+	by mail.kernel.org (Postfix) with ESMTP id BEDF2208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgFPSKv (ORCPT
+        id S1731003AbgFPSLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:10:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgFPSKu (ORCPT
+        Tue, 16 Jun 2020 14:11:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10632 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727114AbgFPSLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:10:50 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B079EC061573;
-        Tue, 16 Jun 2020 11:10:50 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t18so21768948wru.6;
-        Tue, 16 Jun 2020 11:10:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=4FgiENwfUO7mA2YjX6lAwyQhzjyMjVdETYKldtPiPZM=;
-        b=ihtlPylSj3JcohHV286c1z+Qs7Eghf1Xmc6bx0PhYaab2WkhdzK4hODezL0QYUtqAg
-         rHh/Mky6WL/awMIqEGk2GR2rd2aVMK9U9Bzd3xkJ2+OAodfqVVnwOrIeYjyF67gD9i4y
-         EFtbP7EVddV9djSwTyk20y1cW1jD9qbSdxD3U4BfRmyAK8EBtmHUS+Yd+Dj3lMCHa96V
-         XPiap68X3kvj/SNYoizdKiJZS3nCvlIU7sxHgbhRGh+WucTsIXrX86/XXsOAi5jskjMa
-         8epcN4Si9qjExDiFmJL0mL28HI9YVpxa1bAL2+nMREX/OSySImmxJcSonBdynMIvmW6x
-         RoUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=4FgiENwfUO7mA2YjX6lAwyQhzjyMjVdETYKldtPiPZM=;
-        b=iQwHPiIFgxyLkcUMgf7syXf4VAwtyX2MAX7Kg4SotJUXE9t6cwRuLzTQCZBx2XNkMi
-         2N7cU/Zn531vMdbGHRZ8fDSqyOQ3OThRR4Y6FBz+RK4FiWm9ImAVu0YUtbsYiweCJ5vD
-         JGughPkirSQt9z2sGYvzIaoe/O9FEAuJTLYwbratpFiWNGEvjUlorONyrNm0LKHyp8nz
-         PUQmp91iDksk7xgr+zF/zx0gUHOoZl/cdDk1ocZTd+T1FpgwSaMlHfPMxx1W5WFoug7L
-         Sl2i6nUIjWwGLQTTaI/v8+Ag3jBAon7EsUdVg2RP+JiGOTgIp96a2Eiiq4QzD3GGpK/4
-         ANyw==
-X-Gm-Message-State: AOAM533oohMwNnLcKfH4kZWDsmEKTGFxkTxP4dgOCOtF0Z3xCkDL7oYC
-        gOh3atTwY8GQptiYtTzPOn4=
-X-Google-Smtp-Source: ABdhPJxz8xC5eDCPgXCsGHzuJTJKCr0/MKUW77brkupm8ub+5mVxMnEZXVqKaEYUwBTfsRyEHDwnGw==
-X-Received: by 2002:adf:e7ce:: with SMTP id e14mr4662739wrn.217.1592331049362;
-        Tue, 16 Jun 2020 11:10:49 -0700 (PDT)
-Received: from macbook-pro-alvaro-eth.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id j5sm30772747wrm.57.2020.06.16.11.10.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 11:10:48 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <2cc00ff1-f411-1c2d-d2ce-4cc0bfc2ccb5@gmail.com>
-Date:   Tue, 16 Jun 2020 20:10:47 +0200
-Cc:     simon@fire.lp0.eu, Jonas Gorski <jonas.gorski@gmail.com>,
-        kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Philipp Zabel <p.zabel@pengutronix.de>, krzk@kernel.org,
-        gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7E21D795-8D20-4EB1-9758-D2B5BD389F1F@gmail.com>
-References: <20200616083408.3426435-1-noltari@gmail.com>
- <20200616083408.3426435-2-noltari@gmail.com>
- <2cc00ff1-f411-1c2d-d2ce-4cc0bfc2ccb5@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Tue, 16 Jun 2020 14:11:30 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GI268R115534;
+        Tue, 16 Jun 2020 14:11:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pwcvvfe3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 14:11:15 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GI2kaO119330;
+        Tue, 16 Jun 2020 14:11:15 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pwcvvfdg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 14:11:15 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GIB9rV030256;
+        Tue, 16 Jun 2020 18:11:13 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma05fra.de.ibm.com with ESMTP id 31mpe82b0j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 18:11:12 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GIBAsM61735064
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 18:11:10 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8243042042;
+        Tue, 16 Jun 2020 18:11:10 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64C494204D;
+        Tue, 16 Jun 2020 18:11:09 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.158.198])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jun 2020 18:11:09 +0000 (GMT)
+Message-ID: <1592331068.11061.218.camel@linux.ibm.com>
+Subject: Re: [PATCH] extend IMA boot_aggregate with kernel measurements
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        Maurizio Drocco <maurizio.drocco@ibm.com>
+Cc:     "dmitry.kasatkin@gmail.com" <dmitry.kasatkin@gmail.com>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Tue, 16 Jun 2020 14:11:08 -0400
+In-Reply-To: <8c44ed75fb884cad9f33c86c2d4e8a27@huawei.com>
+References: <1591921795.11061.12.camel@linux.ibm.com>
+         <20200612143812.1609-1-maurizio.drocco@ibm.com>
+         <380af929b2d2440a9dc35ba0b374247d@huawei.com>
+         <1591982059.7235.29.camel@linux.ibm.com>
+         <8c44ed75fb884cad9f33c86c2d4e8a27@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_10:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015
+ cotscore=-2147483648 impostorscore=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006160124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Florian,
+On Tue, 2020-06-16 at 17:29 +0000, Roberto Sassu wrote:
+> > From: James Bottomley [mailto:jejb@linux.ibm.com]
+> > Sent: Friday, June 12, 2020 7:14 PM
+> > On Fri, 2020-06-12 at 15:11 +0000, Roberto Sassu wrote:
+> > > with recent patches, boot_aggregate can be calculated from non-SHA1
+> > > PCR banks. I would replace with:
+> > >
+> > > Extend cumulative digest over ...
+> > >
+> > > Given that with this patch boot_aggregate is calculated differently,
+> > > shouldn't we call it boot_aggregate_v2 and enable it with a new
+> > > option?
+> > 
+> > So here's the problem: if your current grub doesn't do any TPM
+> > extensions (as most don't), then the two boot aggregates are the same
+> > because PCRs 8 and 9 are zero and there's a test that doesn't add them
+> > to the aggregate if they are zero.  For these people its a nop so we
+> > shouldn't force them to choose a different version of the same thing.
+> > 
+> > If, however, you're on a distribution where grub is automatically
+> > measuring the kernel and command line into PCRs 8 and 9 (I think Fedora
+> > 32 does this), your boot aggregate will change.  It strikes me in that
+> > case we can call this a bug fix, since the boot aggregate isn't
+> > properly binding to the previous measurements without PCRs 8 and 9.  In
+> > this case, do we want to allow people to select an option which doesn't
+> > properly bind the IMA log to the boot measurements?  That sounds like a
+> > security hole to me.
+> > 
+> > However, since it causes a user visible difference in the grub already
+> > measures case, do you have a current use case that would be affected?
+> > As in are lots of people already running a distro with the TPM grub
+> > updates and relying on the old boot aggregate?
+> 
+> I don't know how many people would be affected. However, if an
+> attestation tool processes both measurement lists from unpatched kernels
+> and patched kernels, keeping the same name would be a problem as it
+> cannot be determined from the measurement list how boot_aggregate
+> was calculated.
+> 
+> Anyway, I agree this should be fixed. At least, I suggest to add a Fixes tag,
+> to ensure that this patch is applied to all stable kernels.
 
-> El 16 jun 2020, a las 19:17, Florian Fainelli <f.fainelli@gmail.com> =
-escribi=C3=B3:
->=20
->=20
->=20
-> On 6/16/2020 1:34 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
->> Document BCM63xx USBH PHY bindings.
->>=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 72 =
-+++++++++++++++++++
->> 1 file changed, 72 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml =
-b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
->> new file mode 100644
->> index 000000000000..3e7c97799b91
->> --- /dev/null
->> +++ =
-b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
->> @@ -0,0 +1,72 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/phy/brcm,bcm63xx-usbh-phy.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: BCM63xx USBH PHY
->> +
->> +maintainers:
->> +  - =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - brcm,bcm6318-usbh-phy
->> +      - brcm,bcm6328-usbh-phy
->> +      - brcm,bcm6358-usbh-phy
->> +      - brcm,bcm6362-usbh-phy
->> +      - brcm,bcm6368-usbh-phy
->> +      - brcm,bcm63268-usbh-phy
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 2
->> +
->> +  clock-names:
->> +    items:
->> +      - const: usbh
->> +      - const: usb_ref
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  "#phy-cells":
->> +    const: 0
->=20
-> On 6328, the same register space allows the controlling of the USB PHY
-> in either host or device mode, so I believe you would need to add a
-> #phy-cells =3D 1 in order to distinguish the consumer (host versus =
-device)
-> if we get to the point where drivers/usb/gadget/udc/bcm63xx_udc.c
-> becomes DT aware.
+The boot aggregate on existing systems would be sha1.  Does it make
+sense to limit this change to larger digests?  Anyone backporting
+support for larger digests would also need to backport this change as
+well.
 
-I=E2=80=99m not really sure about how I should do this because there=E2=80=
-=99s no definition for device phy mode in dt-bindings/phy/phy.h:
-=
-https://github.com/torvalds/linux/blob/master/include/dt-bindings/phy/phy.=
-h#L13
-
-Which value should I use for device mode and which one for host?
-Should I support both modes at the same time or are they exclusive?
-
->=20
-> Other than that, this looks good to me!
-> --=20
-> Florian
-
-Best regards,
-=C3=81lvaro.
-
+Mimi
