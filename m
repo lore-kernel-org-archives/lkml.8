@@ -2,55 +2,89 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D020C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6247DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80DB720734
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A34220767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592302295;
+	bh=zSfipJoycycqxaCuBeGKMu4P0mp1YuiXVf5MlZ2int8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XrRncYraJJ6ZVqRp+9O8au8Qb5ksgaLppQxzvje/VuExtuujvzVR4DZRJ3QslmIwt
+	 PbIDPQN028OHwPXvvDYoHX4nJlYPzxRM3w/oECHs29OFD+NBi8JUpL3480C1Rq5+lj
+	 1EmF32IOpTK2GPTLW0nwfgg0qm8EWOCKHcolSBqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgFPKIQ (ORCPT
+        id S1728130AbgFPKLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:08:16 -0400
-Received: from verein.lst.de ([213.95.11.211]:37352 "EHLO verein.lst.de"
+        Tue, 16 Jun 2020 06:11:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727773AbgFPKIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:08:15 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1D0F968AEF; Tue, 16 Jun 2020 12:08:11 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:08:10 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Dexuan Cui <decui@microsoft.com>, Christoph Hellwig <hch@lst.de>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Ju-Hyoung Lee <juhlee@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: Re: hv_hypercall_pg page permissios
-Message-ID: <20200616100810.GA28973@lst.de>
-References: <20200407073830.GA29279@lst.de> <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net> <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <87y2ooiv5k.fsf@vitty.brq.redhat.com> <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <87blljicjm.fsf@vitty.brq.redhat.com> <20200616093341.GA26400@lst.de> <20200616095549.GA27917@lst.de>
+        id S1726052AbgFPKLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:11:32 -0400
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 437AC20767;
+        Tue, 16 Jun 2020 10:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592302291;
+        bh=zSfipJoycycqxaCuBeGKMu4P0mp1YuiXVf5MlZ2int8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yQX0vQg4a9u7aEyGEEQsDZWSPBXYmyM4crsvvDVQ+54+Tba2Hzpo13qtwvHu4uS69
+         Lh2Ai8QKoeQwojqNVCU3Xiu1jtCNOg7hwP6iJ3NiQXaseMZQtYA4aZP22RBom9m71c
+         AwR9KutXIggbu+DV83G+OphS5XkM1VlhgZNc1EQU=
+Received: by mail-lj1-f179.google.com with SMTP id q19so22831328lji.2;
+        Tue, 16 Jun 2020 03:11:31 -0700 (PDT)
+X-Gm-Message-State: AOAM530i7NljY9E4km03W7Gw9Mdk5s2h8/2LpLYMj0ziRShC6oNFDhjd
+        f+ezBy2mJkT7vFjgUjzVzB/qTWxX9T9G3xeZpxM=
+X-Google-Smtp-Source: ABdhPJxAGYTa5TM2iZcJcSa9qS5oZENiqU99mpRsWCivOY+inRr4VYWNscCGMkSEGKobWZnnuaYCo49iZhicJjMM0PA=
+X-Received: by 2002:a2e:8651:: with SMTP id i17mr1061792ljj.45.1592302289579;
+ Tue, 16 Jun 2020 03:11:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616095549.GA27917@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <1592208439-17594-1-git-send-email-krzk@kernel.org>
+ <1592208439-17594-3-git-send-email-krzk@kernel.org> <20200615120844.GL4447@sirena.org.uk>
+In-Reply-To: <20200615120844.GL4447@sirena.org.uk>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 16 Jun 2020 12:11:17 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfEpLN9jS11WW367Na3Ukfi8p3urKDcJoafg9dHuCDSUA@mail.gmail.com>
+Message-ID: <CAJKOXPfEpLN9jS11WW367Na3Ukfi8p3urKDcJoafg9dHuCDSUA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] genirq: Do not test disabled IRQs with DEBUG_SHIRQ
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        linux-spi@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Wolfram Sang <wsa@kernel.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:55:49AM +0200, Christoph Hellwig wrote:
-> Actually, what do you think of this one:
+On Mon, Jun 15, 2020 at 01:08:44PM +0100, Mark Brown wrote:
+> On Mon, Jun 15, 2020 at 10:07:19AM +0200, Krzysztof Kozlowski wrote:
+> > Testing events during freeing of disabled shared interrupts
+> > (CONFIG_DEBUG_SHIRQ) leads to false positives.  The driver disabled
+> > interrupts on purpose to be sure that they will not fire during device
+> > removal.
+>
+> Surely the whole issue with shared IRQs that's being tested for here is
+> that when the interrupt is shared some other device connected to the
+> same interrupt line may trigger an interrupt regardless of what's going
+> on with this device?
 
-Plus this whole series to kill of vmalloc_exec entirely:
+Yes. However if that device disabled the interrupt, it should not be
+fired for other users. In such case the testing does not point to a
+real issue.
 
-http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/vmalloc_exec-fixes
+Anyway, this patch is not necessary with my v3 approach to SPI shared
+interrupts issue.
+
+Best regards,
+Krzysztof
