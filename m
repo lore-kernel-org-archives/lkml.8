@@ -2,160 +2,141 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9653AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF36C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858CC20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE4620882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="W/psw7rJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731158AbgFPQTP (ORCPT
+        id S1732515AbgFPQTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:19:15 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:42744 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730312AbgFPPhc (ORCPT
+        Tue, 16 Jun 2020 12:19:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731894AbgFPQTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:32 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 16 Jun 2020 21:06:55 +0530
-Received: from vbadigan-linux.qualcomm.com ([10.206.24.109])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 16 Jun 2020 21:06:47 +0530
-Received: by vbadigan-linux.qualcomm.com (Postfix, from userid 76677)
-        id 7EE834C6C; Tue, 16 Jun 2020 21:06:46 +0530 (IST)
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V4 1/2] mmc: sdhci: Allow platform controlled voltage switching
-Date:   Tue, 16 Jun 2020 21:06:18 +0530
-Message-Id: <1592321779-28556-2-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1592321779-28556-1-git-send-email-vbadigan@codeaurora.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1592321779-28556-1-git-send-email-vbadigan@codeaurora.org>
+        Tue, 16 Jun 2020 12:19:10 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF06C0613ED
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:19:10 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id n6so16409980otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fiWLJlRK7hIrVJhqrA73kDSLrIv9Ym+IMHSkrLmFVXs=;
+        b=W/psw7rJjjj0igh5USfHJFwAvdGtWgwMOOIfoxPkytUdSSQAdFOH/bfQIqrUsIOuzv
+         a9Vl2sPr7U6gMv9WtD5uCoRamUoj0WIOZ/n0nICz5buDFIt1jLDFuvkvAOZuebZGPj4r
+         Jn2sggqqK9sb1MI3Um3GNHKq17xFRhWCG166HdQLYSHMEk2FY5ACBBZ5hN2lGun81Qyi
+         GJENDCD6oY3Wj4DPdEsHzNRbtcAkvwi4zjzLFGU1+ft+jy2FY0geCnqGSH6Q4MrxLAjz
+         HCQPdEi04N1sqR64Sbg1vccPjTualudux+UTkyybTF1we4OWenyu+uqGY2pczphBKFNF
+         WhEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fiWLJlRK7hIrVJhqrA73kDSLrIv9Ym+IMHSkrLmFVXs=;
+        b=aeS9eyuGxhiJZnDfKYll2MyBqkXk8vgoPaOe3qwiBcpmg/z4NBblFOcWaL4V0s+dDg
+         OOPpd0+Z8ckRxU0MHrUsv4/B6NQNr0YqZxi8GGSyLJzjAfNcl/HydoqvRD5yrZwsjrMg
+         JPX++UbmDlztCBlSN9H3Dd1ieXGP7OoNs3O+2KeCDe8V94Td4QJgwoxKGVF2YIRoKSPz
+         8NsPSwwLeQKeQ3r33qab321NMNXtqJTx3nZqykV24PhUyuciQEYM/3445oNBd4ymhQZe
+         rTdJ7pN8NjiokOhsxvGXS0L6FVaFxCWaCjhU4dIYf9qFtX7l4giYiGiYo1oVUIaS+nRZ
+         HrNw==
+X-Gm-Message-State: AOAM533AS+qJ3+Jgkr5e3Jb2eZdS1HoyO3ZhuwZMKlENe8y6DyW/VCS6
+        3OBW8MOuwV/NwtgqmqxM1sCM1h7TOABpxA==
+X-Google-Smtp-Source: ABdhPJwJLUo+s/3zvXyuzd5xR5zRDZ7iEWewkVzWg80Un1dA516CGEOvT/txqHhK+aWdjAw3vd97RA==
+X-Received: by 2002:a05:6830:1d1:: with SMTP id r17mr3101139ota.19.1592324348502;
+        Tue, 16 Jun 2020 09:19:08 -0700 (PDT)
+Received: from cisco ([2601:282:902:b340:f5b5:cc36:51c:a840])
+        by smtp.gmail.com with ESMTPSA id k84sm4256949oia.3.2020.06.16.09.19.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 09:19:07 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 10:18:59 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 10/11] seccomp: Switch addfd to Extensible Argument
+ ioctl
+Message-ID: <20200616161859.GL2893648@cisco>
+References: <20200616032524.460144-1-keescook@chromium.org>
+ <20200616032524.460144-11-keescook@chromium.org>
+ <20200616145546.GH2893648@cisco>
+ <202006160904.A30F2C5B9E@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006160904.A30F2C5B9E@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vijay Viswanath <vviswana@codeaurora.org>
+On Tue, Jun 16, 2020 at 09:05:29AM -0700, Kees Cook wrote:
+> On Tue, Jun 16, 2020 at 08:55:46AM -0600, Tycho Andersen wrote:
+> > On Mon, Jun 15, 2020 at 08:25:23PM -0700, Kees Cook wrote:
+> > > This patch is based on discussions[1] with Sargun Dhillon, Christian
+> > > Brauner, and David Laight. Instead of building size into the addfd
+> > > structure, make it a function of the ioctl command (which is how sizes are
+> > > normally passed to ioctls). To support forward and backward compatibility,
+> > > just mask out the direction and size, and match everything. The size (and
+> > > any future direction) checks are done along with copy_struct_from_user()
+> > > logic. Also update the selftests to check size bounds.
+> > > 
+> > > [1] https://lore.kernel.org/lkml/20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal
+> > > 
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  include/uapi/linux/seccomp.h                  |  2 -
+> > >  kernel/seccomp.c                              | 21 ++++++----
+> > >  tools/testing/selftests/seccomp/seccomp_bpf.c | 40 ++++++++++++++++---
+> > >  3 files changed, 49 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> > > index c347160378e5..473a61695ac3 100644
+> > > --- a/include/uapi/linux/seccomp.h
+> > > +++ b/include/uapi/linux/seccomp.h
+> > > @@ -118,7 +118,6 @@ struct seccomp_notif_resp {
+> > >  
+> > >  /**
+> > >   * struct seccomp_notif_addfd
+> > > - * @size: The size of the seccomp_notif_addfd structure
+> > >   * @id: The ID of the seccomp notification
+> > >   * @flags: SECCOMP_ADDFD_FLAG_*
+> > >   * @srcfd: The local fd number
+> > > @@ -126,7 +125,6 @@ struct seccomp_notif_resp {
+> > >   * @newfd_flags: The O_* flags the remote FD should have applied
+> > >   */
+> > >  struct seccomp_notif_addfd {
+> > > -	__u64 size;
+> > 
+> > Huh? Won't this break builds?
+> 
+> Only if they use addfd without this patch? :) Are you saying I should
+> collapse this patch into the main addfd and test patches?
 
-If vendor platform drivers are controlling whole logic of voltage
-switching, then sdhci driver no need control vqmmc regulator.
-So skip enabling/disable vqmmc from SDHC driver.
+Oh, derp, I see :) Yeah, maybe that would be good.
 
-Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
----
- drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
- drivers/mmc/host/sdhci.h |  1 +
- 2 files changed, 20 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 37b1158c1c0c..e6275c2202b0 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -4105,6 +4105,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	unsigned int override_timeout_clk;
- 	u32 max_clk;
- 	int ret;
-+	bool enable_vqmmc = false;
- 
- 	WARN_ON(host == NULL);
- 	if (host == NULL)
-@@ -4118,9 +4119,12 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	 * the host can take the appropriate action if regulators are not
- 	 * available.
- 	 */
--	ret = mmc_regulator_get_supply(mmc);
--	if (ret)
--		return ret;
-+	if (!mmc->supply.vqmmc) {
-+		ret = mmc_regulator_get_supply(mmc);
-+		if (ret)
-+			return ret;
-+		enable_vqmmc  = true;
-+	}
- 
- 	DBG("Version:   0x%08x | Present:  0x%08x\n",
- 	    sdhci_readw(host, SDHCI_HOST_VERSION),
-@@ -4377,7 +4381,15 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		mmc->caps |= MMC_CAP_NEEDS_POLL;
- 
- 	if (!IS_ERR(mmc->supply.vqmmc)) {
--		ret = regulator_enable(mmc->supply.vqmmc);
-+		if (enable_vqmmc) {
-+			ret = regulator_enable(mmc->supply.vqmmc);
-+			if (ret) {
-+				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
-+					mmc_hostname(mmc), ret);
-+				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
-+			}
-+			host->sdhci_core_to_disable_vqmmc = !ret;
-+		}
- 
- 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
- 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
-@@ -4390,12 +4402,6 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
- 						    3600000))
- 			host->flags &= ~SDHCI_SIGNALING_330;
--
--		if (ret) {
--			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
--				mmc_hostname(mmc), ret);
--			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
--		}
- 	}
- 
- 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
-@@ -4626,7 +4632,7 @@ int sdhci_setup_host(struct sdhci_host *host)
- 	return 0;
- 
- unreg:
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->sdhci_core_to_disable_vqmmc)
- 		regulator_disable(mmc->supply.vqmmc);
- undma:
- 	if (host->align_buffer)
-@@ -4644,7 +4650,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
- {
- 	struct mmc_host *mmc = host->mmc;
- 
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->sdhci_core_to_disable_vqmmc)
- 		regulator_disable(mmc->supply.vqmmc);
- 
- 	if (host->align_buffer)
-@@ -4787,7 +4793,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
- 
- 	destroy_workqueue(host->complete_wq);
- 
--	if (!IS_ERR(mmc->supply.vqmmc))
-+	if (host->sdhci_core_to_disable_vqmmc)
- 		regulator_disable(mmc->supply.vqmmc);
- 
- 	if (host->align_buffer)
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 0008bbd27127..0770c036e2ff 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -567,6 +567,7 @@ struct sdhci_host {
- 	u32 caps1;		/* CAPABILITY_1 */
- 	bool read_caps;		/* Capability flags have been read */
- 
-+	bool sdhci_core_to_disable_vqmmc;  /* sdhci core can disable vqmmc */
- 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
- 	unsigned int            ocr_avail_sd;
- 	unsigned int            ocr_avail_mmc;
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
-
+Tycho
