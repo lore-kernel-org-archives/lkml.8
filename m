@@ -2,114 +2,138 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C685C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4935BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3FC20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2762820786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GGqVzPSX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sXimB0Wu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgFPPGT (ORCPT
+        id S1729306AbgFPPI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:06:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38027 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729602AbgFPPGR (ORCPT
+        Tue, 16 Jun 2020 11:08:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728445AbgFPPI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:06:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592319976;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zMJwLzxJj7q5lIXa5apx7u6nKtBFyLcKdF8jh3rUT7U=;
-        b=GGqVzPSXrUFyy1cmwGjVyPsA4PT6Q8j6QvkLWvU7xsriVXHuy0g9f7wub6gedGmL2OL9Na
-        zANZV/JADlTpPkcCD6QYsB6FsXahq0h4xu9+mq4aEqPRn5JJojppQZx5xkA/b+anPtZ+3L
-        cDumYwiMCEcmWjWw5Ta5gQkAu+24qgg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-443-zoZVocg1PeKVqdkZgJCjfg-1; Tue, 16 Jun 2020 11:06:11 -0400
-X-MC-Unique: zoZVocg1PeKVqdkZgJCjfg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ECA125AED8;
-        Tue, 16 Jun 2020 15:06:06 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-114-156.rdu2.redhat.com [10.10.114.156])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 41DFF5C1D4;
-        Tue, 16 Jun 2020 15:06:00 +0000 (UTC)
-Subject: Re: [PATCH v4 2/3] mm, treewide: Rename kzfree() to kfree_sensitive()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        David Sterba <dsterba@suse.cz>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-References: <20200616015718.7812-1-longman@redhat.com>
- <20200616015718.7812-3-longman@redhat.com> <20200616142624.GO4282@kadam>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <72aa954d-4933-333c-b784-f8df14e407e6@redhat.com>
-Date:   Tue, 16 Jun 2020 11:05:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 16 Jun 2020 11:08:28 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E244C061573;
+        Tue, 16 Jun 2020 08:08:28 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id m21so14504948eds.13;
+        Tue, 16 Jun 2020 08:08:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ieFif6Dp7VmWzl4Uvdt66GqbDo7zg9G/ZmQz9moNnNk=;
+        b=sXimB0WujoHh0iKvel/2kjQh4euBLYsaraYQMeN81sdM94prxm06OI0LH7alaMS8w0
+         zorQ3PAK0c+/AuUHoa5Xk7Ly+eF3kDdr0dEuHUF02rR+ohu0T9Roy2KZEyzmBrXgRT7L
+         66y+y0KyFAq0/nelHOV1leV8YFodeaxOw5jSXltFUU2LThDpiZ/2INO7wLrWFF9UoMpG
+         z/l8/+c2pGVVqjhEg5RVMBTzspOJmp7K1w3rEp0YROkBibS8UQj3y0ZxXePg3mv0QSm2
+         vjwPS00D4z7thPIkWlpisjoF/u9S8BbJK1vOhUhTdG8x0wZZqv/mTSHwE/Ymfjt0Gop8
+         m6tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ieFif6Dp7VmWzl4Uvdt66GqbDo7zg9G/ZmQz9moNnNk=;
+        b=c5Z4sFi9JLbl4DQIPsmmaNooOPmac8PNvbS81MXNEuXTTQs1SbDkHDOrcDJV/JjYeF
+         14yFih4i1n6jCiV4E4wEAJb6zXJ0eWBPjo0Buo225EtOmikjpzEaL9HGj+Ns5O2tTfI9
+         cjAaEQ+jG6oBJtYw8TqZOmK5LcxoX3RIQ+C/BIZM+6SQdlwAUDhTls5ZR6TbA2tacsrD
+         QhzKe/JItodwqO2hCAuQTsy8gTdwehBd8Avsk/DGerpDmSZI7zlNtcHuOjQ6yw8i9fgt
+         nPNlBz4bu9r9dChNJ1jiSDZsR7v8Hd3SgFowelFfeBsI5c2uHMlyoTjNpFOYvFT4bhgp
+         esrw==
+X-Gm-Message-State: AOAM5316kj/iOhejpDBE7aoGLFOB2G2lh4cbuyoFvFEgnPq0cjoeGKmJ
+        iZB8wyGg2VgOlqapfVKuDcdVvRR4R4Fu38v0rrQ=
+X-Google-Smtp-Source: ABdhPJz7d/9EurY/RJVF6J327iySQLAu+gCD/whozJ5ANqq67+P17HM5kW5NPp0QF37QphDc+mmIIByFhyBDyXq6O3I=
+X-Received: by 2002:a50:fb0b:: with SMTP id d11mr3097145edq.118.1592320106749;
+ Tue, 16 Jun 2020 08:08:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200616142624.GO4282@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200616144118.3902244-1-olteanv@gmail.com> <20200616144118.3902244-3-olteanv@gmail.com>
+ <acb765da28bde4dff4fc2cd9ea661fa1b3486947.camel@infinera.com>
+ <CA+h21hoz_LJgvCiVeuPTUVHN2Nu9wWAVnzz9GS2bo=y+Y1hLJA@mail.gmail.com> <d02301e1e7fa9bee3486ea8b9e3d445863bf49c8.camel@infinera.com>
+In-Reply-To: <d02301e1e7fa9bee3486ea8b9e3d445863bf49c8.camel@infinera.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 16 Jun 2020 18:08:15 +0300
+Message-ID: <CA+h21hqyV5RMip8etVvSWpQU0scPpXDNbMJgP9piXrn1maSMbw@mail.gmail.com>
+Subject: Re: [PATCH net 2/2] dpaa_eth: fix usage as DSA master, try 4
+To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "fido_max@inbox.ru" <fido_max@inbox.ru>,
+        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "madalin.bucur@oss.nxp.com" <madalin.bucur@oss.nxp.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/16/20 10:26 AM, Dan Carpenter wrote:
-> Last time you sent this we couldn't decide which tree it should go
-> through.  Either the crypto tree or through Andrew seems like the right
-> thing to me.
+On Tue, 16 Jun 2020 at 18:04, Joakim Tjernlund
+<Joakim.Tjernlund@infinera.com> wrote:
 >
-> Also the other issue is that it risks breaking things if people add
-> new kzfree() instances while we are doing the transition.  Could you
-> just add a "#define kzfree kfree_sensitive" so that things continue to
-> compile and we can remove it in the next kernel release?
+> On Tue, 2020-06-16 at 17:56 +0300, Vladimir Oltean wrote:
+> > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
+> >
+> >
+> > Hi Joakim,
+> >
+> > On Tue, 16 Jun 2020 at 17:51, Joakim Tjernlund
+> > <Joakim.Tjernlund@infinera.com> wrote:
+> > > On Tue, 2020-06-16 at 17:41 +0300, Vladimir Oltean wrote:
+> > > > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > > >
+> > > > The dpaa-eth driver probes on compatible string for the MAC node, and
+> > > > the fman/mac.c driver allocates a dpaa-ethernet platform device that
+> > > > triggers the probing of the dpaa-eth net device driver.
+> > > >
+> > > > All of this is fine, but the problem is that the struct device of the
+> > > > dpaa_eth net_device is 2 parents away from the MAC which can be
+> > > > referenced via of_node. So of_find_net_device_by_node can't find it, and
+> > > > DSA switches won't be able to probe on top of FMan ports.
+> > > >
+> > > > It would be a bit silly to modify a core function
+> > > > (of_find_net_device_by_node) to look for dev->parent->parent->of_node
+> > > > just for one driver. We're just 1 step away from implementing full
+> > > > recursion.
+> > > >
+> > > > On T1040, the /sys/class/net/eth0 symlink currently points to:
+> > > >
+> > > > ../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/net/eth0
+> > >
+> > > Just want to point out that on 4.19.x, the above patch still exists:
+> > > cd /sys
+> > > find -name eth0
+> > > ./devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/net/eth0
+> > > ./class/net/eth
+> > >
+> >
+> > By 'current' I mean 'the net tree just before this patch is applied',
+> > i.e. a v5.7 tree with "dpaa_eth: fix usage as DSA master, try 3"
+> > reverted.
 >
-> regards,
-> dan carpenter
+> Confused, with patch reverted(and DSA working) in 4.19, I have
+>   ../../devices/platform/ffe000000.soc/ffe400000.fman/ffe4e6000.ethernet/net/eth0
+> Is that the wanted path? Because I figured you wanted to change it to the path further down in this email?
 >
-Yes, that make sure sense. Will send out v5 later today.
+>  Jocke
+> >
 
-Cheers,
-Longman
+Yes, this is the wanted path.
+The path is fine for anything below commit 060ad66f9795 ("dpaa_eth:
+change DMA device"), including your v4.19.y, that's the point. By
+specifying that commit in the Fixes: tag, people who deal with
+backporting to stable trees know to not backport it below that commit.
+So your stable tree will only get the revert patch.
 
+-Vladimir
