@@ -2,107 +2,85 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02689C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D147D20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DE32071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ON70wM29"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UEtOfsuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgFPJuD (ORCPT
+        id S1728059AbgFPJv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgFPJuC (ORCPT
+        Tue, 16 Jun 2020 05:51:27 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:19722 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726261AbgFPJv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:50:02 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5AAC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:50:02 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id e82so23709738ybh.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=IEOhiucuBJ/KD8n8JX6Fqs7j+NCQAoB88CGBLL1yHLU=;
-        b=ON70wM29pNL8PMIrB1afYrBLyKFOeka3Vl5NxJ00ntOpkJGImvXTgMk+hDrT0eo+A6
-         takau6hHHwRDZ2ylDPK141S73OaTI+hGqoITLzmDA7LoqPpavV+kekGnh+iVbSOQusSj
-         iexRlk84fHEAFEYNqvTon0kOjyh6t97mxbq4WP2oifCi2CUwCEKke0voQb0nIVQ1f2w6
-         80kR7g3OT2Z0e3Q2bpeskk/WLnRn5yjamHf6j1pFV6Yb/DXPvJImx1h2M/HmUEubVsSx
-         rc1GR8Mpg1xZTFv11/a/pKBxRUOjvHb24ZIrBQBUlhntdz8NOc16MGTplZ8CtVzBTFvO
-         fAYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=IEOhiucuBJ/KD8n8JX6Fqs7j+NCQAoB88CGBLL1yHLU=;
-        b=GlU2XOwK9oZAA5nKmjqu59Jx55JOpkSBuT4/0lykhm2lPXruOsMtqLRNva3gre9Cju
-         6f6krboel1B45CHvSbJnSeIZKnweH4JLy0lj3hfUWCKomNGN0aC01wisW9/GJC/J1jQV
-         5btW9KsOKZWgwOpk3gi9xYjjjSMPCBL0spLdaTAGFmuz0dkd3IA7Fh2Y8MAx0c9gnzkt
-         BJtAMnU2C3WaHy4pW097G7CcKaQyaFomNhMvxOygHPp8OLkFCkthhmHyW2B46yktLX3C
-         Uwtv9VowzQSM5t7xkeP/6NHBj3GG0LraaSOgUy6UWj/2sNpcJPDmyGNx3Ld26UKnqBhI
-         oFkg==
-X-Gm-Message-State: AOAM532Aa0Pk0kQ+9PQLPm+RLQaEKCYwGXydD8ThxpBa0K0NVcGNSJpM
-        x6KyXBodB2dzHblRLGEeznI1x+XTtg==
-X-Google-Smtp-Source: ABdhPJwI1NfCdqG00Qq++my5I/CvMzNwn79kMguUXhY5VGw1tqdWTsUlT+ft5O8RsGtOI+TwGXbq+Cypyg==
-X-Received: by 2002:a25:e795:: with SMTP id e143mr2911433ybh.181.1592301001423;
- Tue, 16 Jun 2020 02:50:01 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 11:49:24 +0200
-Message-Id: <20200616094924.159539-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH] torture: Pass --kmake-arg to all make invocations
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, shuah@kernel.org, rcu@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 16 Jun 2020 05:51:26 -0400
+X-UUID: 093abb29ef2141c386ede716f4b65212-20200616
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=PUmd0x9RibPQtgq71WhoBPwcOlI5fEGWCsbX2zCT6VQ=;
+        b=UEtOfsuq7DAjTXOjStRaimXdavQ70uYZhrfrMF/JC850yawuL0VNDaueBR8jq6YoQcClIGW1X4+7BnHLhI68YaERECB1gBD30a6PONW36gouybWqtqxxHnHmpC+csfIn3fIoA2QthvxmVKzmmMjF9J9sn1a3Bd62wiFCH+TvZSM=;
+X-UUID: 093abb29ef2141c386ede716f4b65212-20200616
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1939617296; Tue, 16 Jun 2020 17:51:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 16 Jun 2020 17:51:19 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 16 Jun 2020 17:51:19 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
+CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
+        <chaotian.jing@mediatek.com>,
+        Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH] scsi: ufs-mediatek: Make ufs_mtk_wait_link_state as static function
+Date:   Tue, 16 Jun 2020 17:51:20 +0800
+Message-ID: <20200616095120.14570-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to pass the arguments provided to --kmake-arg to all make
-invocations. In particular, the make invocations generating the configs
-need to see the final make arguments, e.g. if config variables depend on
-particular variables that are passed to make.
-
-For example, when using '--kcsan --kmake-arg CC=clang-11', we would lose
-CONFIG_KCSAN=y due to 'make oldconfig' not seeing that we want to use a
-compiler that supports KCSAN.
-
-Signed-off-by: Marco Elver <elver@google.com>
----
- tools/testing/selftests/rcutorture/bin/configinit.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/rcutorture/bin/configinit.sh b/tools/testing/selftests/rcutorture/bin/configinit.sh
-index 93e80a42249a..d6e5ce084b1c 100755
---- a/tools/testing/selftests/rcutorture/bin/configinit.sh
-+++ b/tools/testing/selftests/rcutorture/bin/configinit.sh
-@@ -32,11 +32,11 @@ if test -z "$TORTURE_TRUST_MAKE"
- then
- 	make clean > $resdir/Make.clean 2>&1
- fi
--make $TORTURE_DEFCONFIG > $resdir/Make.defconfig.out 2>&1
-+make $TORTURE_KMAKE_ARG $TORTURE_DEFCONFIG > $resdir/Make.defconfig.out 2>&1
- mv .config .config.sav
- sh $T/upd.sh < .config.sav > .config
- cp .config .config.new
--yes '' | make oldconfig > $resdir/Make.oldconfig.out 2> $resdir/Make.oldconfig.err
-+yes '' | make $TORTURE_KMAKE_ARG oldconfig > $resdir/Make.oldconfig.out 2> $resdir/Make.oldconfig.err
- 
- # verify new config matches specification.
- configcheck.sh .config $c
--- 
-2.27.0.290.gba653c62da-goog
+Rml4IGJ1aWxkIHdhcm5pbmcgcmVwb3J0ZWQgYnkga2VybmVsIHRlc3Qgcm9ib3Q6DQpNYWtlIHVm
+c19tdGtfd2FpdF9saW5rX3N0YXRlKCkgYXMgc3RhdGljIGZ1bmN0b24uDQoNCldhcm5pbmc6DQo+
+PiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jOjE4MTo1OiB3YXJuaW5nOiBubyBwcmV2
+aW91cyBwcm90b3R5cGUNCj4+IGZvciAndWZzX210a193YWl0X2xpbmtfc3RhdGUnIFstV21pc3Np
+bmctcHJvdG90eXBlc10NCg0KU2lnbmVkLW9mZi1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1
+QG1lZGlhdGVrLmNvbT4NClJlcG9ydGVkLWJ5OiBrZXJuZWwgdGVzdCByb2JvdCA8bGtwQGludGVs
+LmNvbT4NCi0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMgfCA0ICsrLS0NCiAx
+IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYyBiL2RyaXZlcnMvc2NzaS91ZnMv
+dWZzLW1lZGlhdGVrLmMNCmluZGV4IDlhNDQzMmM5ZjdkYy4uYWQ5MjkyMzVjMTkzIDEwMDY0NA0K
+LS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KKysrIGIvZHJpdmVycy9zY3Np
+L3Vmcy91ZnMtbWVkaWF0ZWsuYw0KQEAgLTE4NSw4ICsxODUsOCBAQCBzdGF0aWMgdm9pZCB1ZnNf
+bXRrX3NldHVwX3JlZl9jbGtfd2FpdF91cyhzdHJ1Y3QgdWZzX2hiYSAqaGJhLA0KIAlob3N0LT5y
+ZWZfY2xrX3VuZ2F0aW5nX3dhaXRfdXMgPSB1bmdhdGluZ191czsNCiB9DQogDQotaW50IHVmc19t
+dGtfd2FpdF9saW5rX3N0YXRlKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHUzMiBzdGF0ZSwNCi0JCQkg
+ICAgdW5zaWduZWQgbG9uZyBtYXhfd2FpdF9tcykNCitzdGF0aWMgaW50IHVmc19tdGtfd2FpdF9s
+aW5rX3N0YXRlKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHUzMiBzdGF0ZSwNCisJCQkJICAgdW5zaWdu
+ZWQgbG9uZyBtYXhfd2FpdF9tcykNCiB7DQogCWt0aW1lX3QgdGltZW91dCwgdGltZV9jaGVja2Vk
+Ow0KIAl1MzIgdmFsOw0KLS0gDQoyLjE4LjANCg==
 
