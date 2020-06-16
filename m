@@ -2,63 +2,69 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4599CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5808AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A73420A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE2C20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="C+1WjSl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgFPNns (ORCPT
+        id S1729004AbgFPNo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:43:48 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54320 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbgFPNns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:43:48 -0400
-IronPort-SDR: QiLXGhGVt0/RGIYugZaAWCbKPZ+IEaNTzeWSNz3Y/qFS56rC8VvArCkeBnXJaw//d2d5Tq3W+2
- Nmhu8Bw/eyMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 06:43:47 -0700
-IronPort-SDR: UlN3qSw3HadyyxqoA8Wd+oVzrQhLxVNmSJP4GMrvRbJvjjWleLYzzTToY6pJe1OiSjO42XOMyw
- 6n5M/v4yGSXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="298905989"
-Received: from mylly.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Jun 2020 06:43:43 -0700
-Subject: Re: [PATCH 2/2] HID: i2c-hid: Use block reads when possible to save
- power
-To:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        HungNien Chen <hn.chen@weidahitech.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Pavel Balan <admin@kryma.net>, Tin Huynh <tnhuynh@apm.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        You-Sheng Yang <vicamo.yang@canonical.com>
-References: <20200614210255.4641-1-sultan@kerneltoast.com>
- <20200614210255.4641-3-sultan@kerneltoast.com>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
-Date:   Tue, 16 Jun 2020 16:43:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Tue, 16 Jun 2020 09:44:26 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:43223 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728980AbgFPNoH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 09:44:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592315045; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=neAnsfkRMgdLmxrFAs43gbDE9/rNCoat18mjJVvgJoU=; b=C+1WjSl8ynVwJ8EhanDDuPl5UFZjJVYazIGQhK7p7ALyZsBM02ltAGjaB7DA5NZFPf23EUUw
+ sFfsIu7iyyCSQQbcVq9Tsm3Imo4w5e4Hk/l0QE3Ib/5JyZr4cY1tlqOUi+udlGLFBbs3KHTV
+ 1cYR8xGrBMAPFTogfXaTq/uFaAE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ee8cc996bebe35deb85aa37 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 13:43:53
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7B2CEC43395; Tue, 16 Jun 2020 13:43:53 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [183.83.143.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BBD87C433C9;
+        Tue, 16 Jun 2020 13:43:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BBD87C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+Subject: Re: [PATCH v2] dma-buf: Move dma_buf_release() from fops to
+ dentry_ops
+To:     Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Chenbo Feng <fengc@google.com>, linux-kernel@vger.kernel.org,
+        linaro-mm-sig@lists.linaro.org,
+        syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+References: <20200611114418.19852-1-sumit.semwal@linaro.org>
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Message-ID: <59f0062d-5ca9-84f1-ba92-c3463ff0e73d@codeaurora.org>
+Date:   Tue, 16 Jun 2020 19:13:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200614210255.4641-3-sultan@kerneltoast.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200611114418.19852-1-sumit.semwal@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,93 +72,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 12:02 AM, Sultan Alsawaf wrote:
-> From: Sultan Alsawaf <sultan@kerneltoast.com>
+Thanks Sumit for the fix.
+
+On 6/11/2020 5:14 PM, Sumit Semwal wrote:
+> Charan Teja reported a 'use-after-free' in dmabuffs_dname [1], which
+> happens if the dma_buf_release() is called while the userspace is
+> accessing the dma_buf pseudo fs's dmabuffs_dname() in another process,
+> and dma_buf_release() releases the dmabuf object when the last reference
+> to the struct file goes away.
 > 
-> We have no way of knowing how large an incoming payload is going to be,
-> so the only strategy available up until now has been to always retrieve
-> the maximum possible report length over i2c, which can be quite
-> inefficient. For devices that send reports in block read format, the i2c
-> controller driver can read the payload length on the fly and terminate
-> the i2c transaction early, resulting in considerable power savings.
+> I discussed with Arnd Bergmann, and he suggested that rather than tying
+> the dma_buf_release() to the file_operations' release(), we can tie it to
+> the dentry_operations' d_release(), which will be called when the last ref
+> to the dentry is removed.
 > 
-> On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
-> touchpad causes psys power readings to go up by about 4W and hover there
-> until I remove my finger. With this patch, my psys readings go from 4.7W
-> down to 3.1W, yielding about 1.6W in savings. This is because my
-> touchpad's max report length is 60 bytes, but all of the regular reports
-> it sends for touch events are only 32 bytes, so the i2c transfer is
-> roughly halved for the common case.
+> The path exercised by __fput() calls f_op->release() first, and then calls
+> dput, which eventually calls d_op->d_release().
 > 
-> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+> In the 'normal' case, when no userspace access is happening via dma_buf
+> pseudo fs, there should be exactly one fd, file, dentry and inode, so
+> closing the fd will kill of everything right away.
+> 
+> In the presented case, the dentry's d_release() will be called only when
+> the dentry's last ref is released.
+> 
+> Therefore, lets move dma_buf_release() from fops->release() to
+> d_ops->d_release()
+> 
+> Many thanks to Arnd for his FS insights :)
+> 
+> [1]: https://lore.kernel.org/patchwork/patch/1238278/
+> 
+> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
+> Cc: <stable@vger.kernel.org> [5.3+]
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Reported-by: Charan Teja Reddy <charante@codeaurora.org>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> 
+
+Tested this patch for Android running on Snapdragon hardware and see no
+issues.
+Tested-by: Charan Teja Reddy <charante@codeaurora.org>
+
 > ---
->   drivers/hid/i2c-hid/i2c-hid-core.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> v2: per Arnd: Moved dma_buf_release() above to avoid forward declaration;
+>      removed dentry_ops check.
+> ---
+>  drivers/dma-buf/dma-buf.c | 54 ++++++++++++++++++---------------------
+>  1 file changed, 25 insertions(+), 29 deletions(-)
 > 
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-> index 294c84e136d7..4b507de48d70 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -476,7 +476,8 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
->   	if (size > ihid->bufsize)
->   		size = ihid->bufsize;
->   
-> -	ret = i2c_master_recv(ihid->client, ihid->inbuf, size);
-> +	ret = i2c_transfer_buffer_flags(ihid->client, ihid->inbuf, size,
-> +					I2C_M_RD | I2C_M_RECV_LEN);
-
-This causes i2c-hid compatible touchscreen to stop working for me.
-
-Ok (with patch 1/2)
-
-[    9.346134] i2c_hid i2c-ELAN221D:00: Fetching the HID descriptor
-[    9.346141] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=01 00
-[    9.362082] i2c_hid i2c-ELAN221D:00: HID Descriptor: 1e 00 00 01 31 
-02 02 00 03 00 43 00 04 00 ff 00 05 00 06 00 f3 04 1d 22 10 56 00 00 00 00
-[    9.385897] i2c_hid i2c-ELAN221D:00: entering i2c_hid_parse
-[    9.386547] i2c_hid i2c-ELAN221D:00: i2c_hid_hwreset
-[    9.386598] i2c_hid i2c-ELAN221D:00: i2c_hid_set_power
-[    9.386616] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 00 08
-[    9.391595] i2c_hid i2c-ELAN221D:00: resetting...
-[    9.408864] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 00 01
-[    9.410162] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: waiting...
-[    9.418223] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: finished.
-[    9.418231] i2c_hid i2c-ELAN221D:00: i2c_hid_set_power
-[    9.418236] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 00 08
-[    9.418531] i2c_hid i2c-ELAN221D:00: asking HID report descriptor
-[    9.418537] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=02 00
-[    9.440093] i2c_hid i2c-ELAN221D:00: Report Descriptor: 05 0d 09 04 
-a1 01 85 01 09 22 a1 02 09 42 15 00 25 01 75 01 95 01 81 02 75 01 81 03 
-75 06 09 51 25 3f 81 02 26 ff 00 75 08 09 48 81 02 09 49 81 02 95 01 05 
-01 a4 26 c0 0c 75 10 55 0f 65 11 09
-
-Not ok (with patches 1-2/2)
-
-[    9.428690] i2c_hid i2c-ELAN221D:00: Fetching the HID descriptor
-[    9.428698] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=01 00
-[    9.430017] i2c_hid i2c-ELAN221D:00: HID Descriptor: 1e 00 00 01 31 
-02 02 00 03 00 43 00 04 00 ff 00 05 00 06 00 f3 04 1d 22 10 56 00 00 00 00
-[    9.430836] i2c_hid i2c-ELAN221D:00: entering i2c_hid_parse
-[    9.431205] i2c_hid i2c-ELAN221D:00: i2c_hid_hwreset
-[    9.431294] i2c_hid i2c-ELAN221D:00: i2c_hid_set_power
-[    9.431314] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 00 08
-[    9.435937] i2c_hid i2c-ELAN221D:00: resetting...
-[    9.435944] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 00 01
-[    9.436150] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: waiting...
-[   10.461304] i2c_designware i2c_designware.3: controller timed out
-[   10.498312] i2c_designware i2c_designware.3: timeout in disabling adapter
-[   14.525115] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: finished.
-[   14.525130] i2c_hid i2c-ELAN221D:00: failed to reset device.
-[   14.532507] i2c_hid i2c-ELAN221D:00: i2c_hid_set_power
-[   14.532520] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 01 08
-[   14.553027] i2c_designware i2c_designware.3: timeout waiting for bus 
-ready
-...
-
-I don't know what causes the breakage but according to HID Over I2C 
-Protocol Specification the descriptor length is 16 bits. Maybe the code 
-misses the last byte and/or the data is off by one byte by taking the 
-2nd length byte as 1st data byte?
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index 01ce125f8e8d..412629601ad3 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -54,37 +54,11 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+>  			     dentry->d_name.name, ret > 0 ? name : "");
+>  }
+>  
+> -static const struct dentry_operations dma_buf_dentry_ops = {
+> -	.d_dname = dmabuffs_dname,
+> -};
+> -
+> -static struct vfsmount *dma_buf_mnt;
+> -
+> -static int dma_buf_fs_init_context(struct fs_context *fc)
+> -{
+> -	struct pseudo_fs_context *ctx;
+> -
+> -	ctx = init_pseudo(fc, DMA_BUF_MAGIC);
+> -	if (!ctx)
+> -		return -ENOMEM;
+> -	ctx->dops = &dma_buf_dentry_ops;
+> -	return 0;
+> -}
+> -
+> -static struct file_system_type dma_buf_fs_type = {
+> -	.name = "dmabuf",
+> -	.init_fs_context = dma_buf_fs_init_context,
+> -	.kill_sb = kill_anon_super,
+> -};
+> -
+> -static int dma_buf_release(struct inode *inode, struct file *file)
+> +static void dma_buf_release(struct dentry *dentry)
+>  {
+>  	struct dma_buf *dmabuf;
+>  
+> -	if (!is_dma_buf_file(file))
+> -		return -EINVAL;
+> -
+> -	dmabuf = file->private_data;
+> +	dmabuf = dentry->d_fsdata;
+>  
+>  	BUG_ON(dmabuf->vmapping_counter);
+>  
+> @@ -110,9 +84,32 @@ static int dma_buf_release(struct inode *inode, struct file *file)
+>  	module_put(dmabuf->owner);
+>  	kfree(dmabuf->name);
+>  	kfree(dmabuf);
+> +}
+> +
+> +static const struct dentry_operations dma_buf_dentry_ops = {
+> +	.d_dname = dmabuffs_dname,
+> +	.d_release = dma_buf_release,
+> +};
+> +
+> +static struct vfsmount *dma_buf_mnt;
+> +
+> +static int dma_buf_fs_init_context(struct fs_context *fc)
+> +{
+> +	struct pseudo_fs_context *ctx;
+> +
+> +	ctx = init_pseudo(fc, DMA_BUF_MAGIC);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +	ctx->dops = &dma_buf_dentry_ops;
+>  	return 0;
+>  }
+>  
+> +static struct file_system_type dma_buf_fs_type = {
+> +	.name = "dmabuf",
+> +	.init_fs_context = dma_buf_fs_init_context,
+> +	.kill_sb = kill_anon_super,
+> +};
+> +
+>  static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+>  {
+>  	struct dma_buf *dmabuf;
+> @@ -412,7 +409,6 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+>  }
+>  
+>  static const struct file_operations dma_buf_fops = {
+> -	.release	= dma_buf_release,
+>  	.mmap		= dma_buf_mmap_internal,
+>  	.llseek		= dma_buf_llseek,
+>  	.poll		= dma_buf_poll,
+> 
 
 -- 
-Jarkko
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation Collaborative Project
