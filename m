@@ -2,122 +2,153 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD5720739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCD420756
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nQNDBZOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgFPCjB (ORCPT
+        id S1726562AbgFPCuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 22:39:01 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:59286 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725978AbgFPCjB (ORCPT
+        Mon, 15 Jun 2020 22:50:06 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:28295 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgFPCuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 22:39:01 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 8CF88761207;
-        Tue, 16 Jun 2020 12:38:57 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jl1V2-0002F3-Dd; Tue, 16 Jun 2020 12:38:56 +1000
-Date:   Tue, 16 Jun 2020 12:38:56 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "yukuai (C)" <yukuai3@huawei.com>
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
-Subject: Re: [PATCH] xfs: fix use-after-free on CIL context on shutdown
-Message-ID: <20200616023856.GD2005@dread.disaster.area>
-References: <20200611013952.2589997-1-yukuai3@huawei.com>
- <20200611022848.GQ2040@dread.disaster.area>
- <20200611024503.GR2040@dread.disaster.area>
- <9d13cb34-5625-ed84-71f5-ad48204589a1@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d13cb34-5625-ed84-71f5-ad48204589a1@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=4gZMuf7uG7p2KhJwSLEA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Mon, 15 Jun 2020 22:50:05 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200616025002epoutp043f1e5a452b8d6a81f17141e69a04cb72~Y5mfwnsZ91477114771epoutp04N
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:50:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200616025002epoutp043f1e5a452b8d6a81f17141e69a04cb72~Y5mfwnsZ91477114771epoutp04N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592275802;
+        bh=LxQRlTC7iL0L+qHFsNsjwE0X+VN3mnmMRGvEckdvV+Y=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=nQNDBZOCWEgVt77xfPXuo5lnTdDRaPPMt8xnfA13g4X2FHFJXJqKVYcHPcuLJjP/L
+         tJdzzuEsJvjQ2KKeOqXNXfhMCcvnnLevuQc1/uw2WKFQlIVxor9rVgU01laaj6/ekd
+         ahyRJSUhHQhNnhT7NQ9VmICLg/glth6MBhCxaoig=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200616025001epcas1p2bac7260510918b8e2ae55da822437f52~Y5mfXXVo82697926979epcas1p2b;
+        Tue, 16 Jun 2020 02:50:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: Re: [RFC PATCH v2 4/5] scsi: ufs: L2P map management for HPB read
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Bean Huo <huobean@gmail.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <078bb71ddc9cda4454d213333afa4b6a905b8b09.camel@gmail.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01592275801931.JavaMail.epsvc@epcpadp1>
+Date:   Tue, 16 Jun 2020 10:17:44 +0900
+X-CMS-MailID: 20200616011744epcms2p781f586af00852f67a62d9b557ee05591
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210
+References: <078bb71ddc9cda4454d213333afa4b6a905b8b09.camel@gmail.com>
+        <231786897.01592213402355.JavaMail.epsvc@epcpadp1>
+        <231786897.01592212081335.JavaMail.epsvc@epcpadp2>
+        <336371513.41592205783606.JavaMail.epsvc@epcpadp2>
+        <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
+        <231786897.01592214002170.JavaMail.epsvc@epcpadp1>
+        <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:16:09AM +0800, yukuai (C) wrote:
-> On 2020/6/11 10:45, Dave Chinner wrote:
-> > 
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > xlog_wait() on the CIL context can reference a freed context if the
-> > waiter doesn't get scheduled before the CIL context is freed. This
-> > can happen when a task is on the hard throttle and the CIL push
-> > aborts due to a shutdown. This was detected by generic/019:
-> > 
-> > thread 1			thread 2
-> > 
-> > __xfs_trans_commit
-> >   xfs_log_commit_cil
-> >    <CIL size over hard throttle limit>
-> >    xlog_wait
-> >     schedule
-> > 				xlog_cil_push_work
-> > 				wake_up_all
-> > 				<shutdown aborts commit>
-> > 				xlog_cil_committed
-> > 				kmem_free
-> > 
-> >     remove_wait_queue
-> >      spin_lock_irqsave --> UAF
-> > 
-> > Fix it by moving the wait queue to the CIL rather than keeping it in
-> > in the CIL context that gets freed on push completion. Because the
-> > wait queue is now independent of the CIL context and we might have
-> > multiple contexts in flight at once, only wake the waiters on the
-> > push throttle when the context we are pushing is over the hard
-> > throttle size threshold.
+Hi Bean
 > 
-> Hi, Dave,
 > 
-> How do you think about the following fix:
+> On Mon, 2020-06-15 at 18:30 +0900, Daejun Park wrote:
+> > +static int ufshpb_execute_map_req(struct ufshpb_lu *hpb,
+> > +                                 struct ufshpb_req *map_req)
+> > +{
+> > +       struct request_queue *q;
+> > +       struct request *req;
+> > +       struct scsi_request *rq;
+> > +       int ret = 0;
+> > +
+> > +       q = hpb->sdev_ufs_lu->request_queue;
+> > +       ret = ufshpb_map_req_add_bio_page(hpb, q, map_req->bio,
+> > +                                         map_req->mctx);
+> > +       if (ret) {
+> > +               dev_notice(&hpb->hpb_lu_dev,
+> > +                          "map_req_add_bio_page fail %d - %d\n",
+> > +                          map_req->rgn_idx, map_req->srgn_idx);
+> > +               return ret;
+> > +       }
+> > +
+> > +       req = map_req->req;
+> > +
+> > +       blk_rq_append_bio(req, &map_req->bio);
+> > +
+> > +       req->timeout = 0;
+> > +       req->end_io_data = (void *)map_req;
+> > +
+> > +       rq = scsi_req(req);
+> > +       ufshpb_set_read_buf_cmd(rq->cmd, map_req->rgn_idx,
+> > +                               map_req->srgn_idx, hpb-
+> > >srgn_mem_size);
+> > +       rq->cmd_len = HPB_READ_BUFFER_CMD_LENGTH;
+> > +
+> > +       blk_execute_rq_nowait(q, NULL, req, 1,
+> > ufshpb_map_req_compl_fn);
 > 
-> 1. use autoremove_wake_func(), and remove remove_wait_queue() to
-> avoid UAF.
-> 2. add finish_wait().
 > 
-> @@ -576,12 +576,13 @@ xlog_wait(
->                 __releases(lock)
->  {
->         DECLARE_WAITQUEUE(wait, current);
-> +       wait.func = autoremove_wake_function;
-> 
->         add_wait_queue_exclusive(wq, &wait);
->         __set_current_state(TASK_UNINTERRUPTIBLE);
->         spin_unlock(lock);
->         schedule();
-> -       remove_wait_queue(wq, &wait);
-> +       finish_wait(wq, &wait);
->  }
+> HPB map_req is now being en-queued in sdev->request_queue.
+> This is ok for the HPB v1.0. Have you ever been thinking about
+> changing this way to directly issue HPB requests to UFS?
+I think it is enough to support HPB.
 
-Yes, that would address this specific symptom of the problem, but it
-doesn't fix the problem root cause: that the wq can be freed while
-this function sleeps. IMO, this sort of change leaves a trap for
-future modifications - all the code calling xlog_wait() assumes the
-embedded wq the task is sleeping on still exists after waiting so we
-really should be fixing the problem the incorrect existence
-guarantee in the CIL code that you tripped over.
+> Actually, there are two reasons for this way:
+> 
+> 1. Latency of loading mapping entries is lower comparing to your curret
+> approach.
+Our map request style utilizes block layer API. It makes the codes keep
+simple and reliable. Also, I think the latency of loading mapping entries 
+is not critical for HPB. Futhermore, I think the other requests from
+user is important than loading mapping entries. If the map_work issues map
+request directly, the user requests can be disturbed by map requests.
 
-Cheers,
+> 2. Also, it is preparing for the HPB v2.0.  After all HPB 1.0 only
+> supports 4KB read, this is useless, I am looking for the HPB v2.0.
+I don't understand this comment. In HPB v2.0, this code can be used without
+changing.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks,
+Daejun
