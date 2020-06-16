@@ -2,188 +2,112 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B31C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79AEC2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="m7xJtfd6"
+	by mail.kernel.org (Postfix) with ESMTP id 7D0B72071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323728;
+	bh=6mb25FkOw5ohSnBP7pmFf8WZ6p6jKa0VhuRgbk7vP94=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2MliJ2NJJHLMEkyW4WpSpPPsBdyBkYRhk5Cex0cpHI+Zrp6qnsAWAyDinZTTtuQ8i
+	 7oEEdJrbzELjvSpz/6BOlwfzLxVKgr3YJgPNBx5FYD7FvgjKQhPg0FMaRjcHRl5Laj
+	 xRnRnSjsOVVteKLYKx/50NWFduz9kQRb4fbYfQxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732005AbgFPQIp (ORCPT
+        id S1731017AbgFPQIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:08:45 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:54363 "EHLO m43-7.mailgun.net"
+        Tue, 16 Jun 2020 12:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732166AbgFPQIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:08:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592323719; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=MD92WfPRgR/jkFLJAG2o5YhCjEHFWsLDGTiEaMXk+O4=; b=m7xJtfd6CQazK7aMdgGAyfgDAeg/zKIYR4v4vPKc/QANRL8xvMCSW7qETLU4O2latcdIUlcC
- 2zIjl4H6sm4IFpCkS1SeEmndSpnlJ2LyXgSvjIsz5ooRe3Urz7TWW4G/yYrYLTacpzc9/rAb
- phNejYiJyzdf0QOP6GOioUkZH04=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5ee8ee75bfb34e631cae2c64 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 16:08:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D9B68C433AD; Tue, 16 Jun 2020 16:08:20 +0000 (UTC)
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731296AbgFPPqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2594BC433CA;
-        Tue, 16 Jun 2020 16:08:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2594BC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 16 Jun 2020 10:08:18 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [RFC][PATCH 3/5] irqchip: Allow QCOM_PDC to be loadable as a
- perment module
-Message-ID: <20200616160818.GD12942@codeaurora.org>
-References: <20200616061338.109499-1-john.stultz@linaro.org>
- <20200616061338.109499-4-john.stultz@linaro.org>
- <55e5982a-1e73-7013-e02d-5d1d30815fba@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B972071A;
+        Tue, 16 Jun 2020 15:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322363;
+        bh=6mb25FkOw5ohSnBP7pmFf8WZ6p6jKa0VhuRgbk7vP94=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MHCYIsZGljt4EZ+glEWDPfatCwpCQvQINp/e0uP0m+WP9UaE5/YjSRV73OkTzUXJ1
+         u6nuQ9JrbB0DV65hs+Z/xUvb+UKndkBMFHxcfH9wkfmw9SauZywutjhDk49ND3nbVY
+         A2Lp9THiHr+Xy3GofPHN+DMw5KPCNEoLJ3dU7wg0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Shay Drory <shayd@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.7 103/163] net/mlx5: Fix fatal error handling during device load
+Date:   Tue, 16 Jun 2020 17:34:37 +0200
+Message-Id: <20200616153111.753324589@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
+References: <20200616153106.849127260@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <55e5982a-1e73-7013-e02d-5d1d30815fba@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16 2020 at 05:30 -0600, Maulik Shah wrote:
->Hi,
->
->On 6/16/2020 11:43 AM, John Stultz wrote:
->>Allows qcom-pdc driver to be loaded as a permenent module
->
->typo: permanent
->
->>Also, due to the fact that IRQCHIP_DECLARE becomes a no-op when
->>building as a module, we have to add the platform driver hooks
->>explicitly.
->>
->>Thanks to Saravana for his help on pointing out the
->>IRQCHIP_DECLARE issue and guidance on a solution.
->>
->>Cc: Andy Gross <agross@kernel.org>
->>Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
->>Cc: Joerg Roedel <joro@8bytes.org>
->>Cc: Thomas Gleixner <tglx@linutronix.de>
->>Cc: Jason Cooper <jason@lakedaemon.net>
->>Cc: Marc Zyngier <maz@kernel.org>
->>Cc: Linus Walleij <linus.walleij@linaro.org>
->>Cc: Lina Iyer <ilina@codeaurora.org>
->>Cc: Saravana Kannan <saravanak@google.com>
->>Cc: Todd Kjos <tkjos@google.com>
->>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>Cc: linux-arm-msm@vger.kernel.org
->>Cc: iommu@lists.linux-foundation.org
->>Cc: linux-gpio@vger.kernel.org
->>Signed-off-by: John Stultz <john.stultz@linaro.org>
->>---
->>  drivers/irqchip/Kconfig    |  2 +-
->>  drivers/irqchip/qcom-pdc.c | 30 ++++++++++++++++++++++++++++++
->>  2 files changed, 31 insertions(+), 1 deletion(-)
->>
->>diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->>index 29fead208cad..12765bed08f9 100644
->>--- a/drivers/irqchip/Kconfig
->>+++ b/drivers/irqchip/Kconfig
->>@@ -425,7 +425,7 @@ config GOLDFISH_PIC
->>           for Goldfish based virtual platforms.
->>  config QCOM_PDC
->>-	bool "QCOM PDC"
->>+	tristate "QCOM PDC"
->>  	depends on ARCH_QCOM
->>  	select IRQ_DOMAIN_HIERARCHY
->>  	help
->>diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->>index 6ae9e1f0819d..98d74160afcd 100644
->>--- a/drivers/irqchip/qcom-pdc.c
->>+++ b/drivers/irqchip/qcom-pdc.c
->>@@ -11,7 +11,9 @@
->>  #include <linux/irqdomain.h>
->>  #include <linux/io.h>
->>  #include <linux/kernel.h>
->>+#include <linux/module.h>
->>  #include <linux/of.h>
->>+#include <linux/of_irq.h>
->please move this include in order after of_device.h
->>  #include <linux/of_address.h>
->>  #include <linux/of_device.h>
->>  #include <linux/soc/qcom/irq.h>
->>@@ -430,4 +432,32 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->>  	return ret;
->>  }
->>+#ifdef MODULE
->>+static int qcom_pdc_probe(struct platform_device *pdev)
->>+{
->>+	struct device_node *np = pdev->dev.of_node;
->>+	struct device_node *parent = of_irq_find_parent(np);
->>+
->>+	return qcom_pdc_init(np, parent);
->>+}
->>+
->>+static const struct of_device_id qcom_pdc_match_table[] = {
->>+	{ .compatible = "qcom,pdc" },
->>+	{}
->>+};
->>+MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
->>+
->>+static struct platform_driver qcom_pdc_driver = {
->>+	.probe = qcom_pdc_probe,
->>+	.driver = {
->>+		.name = "qcom-pdc",
->>+		.of_match_table = qcom_pdc_match_table,
->
->can you please set .suppress_bind_attrs = true,
->
->This is to prevent bind/unbind using sysfs. Once irqchip driver module 
->is loaded, it shouldn't get unbind at runtime.
->
-That is a good point. We probably should do that to RPMH RSC driver as well.
+From: Shay Drory <shayd@mellanox.com>
 
->Thanks,
->Maulik
->>+	},
->>+};
->>+module_platform_driver(qcom_pdc_driver);
->>+#else
->>  IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
->>+#endif
->>+
->>+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
->>+MODULE_LICENSE("GPL v2");
->
->-- 
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->
+[ Upstream commit b6e0b6bebe0732d5cac51f0791f269d2413b8980 ]
+
+Currently, in case of fatal error during mlx5_load_one(), we cannot
+enter error state until mlx5_load_one() is finished, what can take
+several minutes until commands will get timeouts, because these commands
+can't be processed due to the fatal error.
+Fix it by setting dev->state as MLX5_DEVICE_STATE_INTERNAL_ERROR before
+requesting the lock.
+
+Fixes: c1d4d2e92ad6 ("net/mlx5: Avoid calling sleeping function by the health poll thread")
+Signed-off-by: Shay Drory <shayd@mellanox.com>
+Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/health.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+--- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
+@@ -193,15 +193,23 @@ static bool reset_fw_if_needed(struct ml
+ 
+ void mlx5_enter_error_state(struct mlx5_core_dev *dev, bool force)
+ {
++	bool err_detected = false;
++
++	/* Mark the device as fatal in order to abort FW commands */
++	if ((check_fatal_sensors(dev) || force) &&
++	    dev->state == MLX5_DEVICE_STATE_UP) {
++		dev->state = MLX5_DEVICE_STATE_INTERNAL_ERROR;
++		err_detected = true;
++	}
+ 	mutex_lock(&dev->intf_state_mutex);
+-	if (dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
+-		goto unlock;
++	if (!err_detected && dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
++		goto unlock;/* a previous error is still being handled */
+ 	if (dev->state == MLX5_DEVICE_STATE_UNINITIALIZED) {
+ 		dev->state = MLX5_DEVICE_STATE_INTERNAL_ERROR;
+ 		goto unlock;
+ 	}
+ 
+-	if (check_fatal_sensors(dev) || force) {
++	if (check_fatal_sensors(dev) || force) { /* protected state setting */
+ 		dev->state = MLX5_DEVICE_STATE_INTERNAL_ERROR;
+ 		mlx5_cmd_flush(dev);
+ 	}
+
+
