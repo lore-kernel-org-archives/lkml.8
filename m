@@ -2,103 +2,122 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44457C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1323FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBEB21475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592308676;
-	bh=Errpk4RGUSnVRaYQRQJG/RiPJ8pFfZhX1wfT4d5FgtU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0dxoA+lJljKtD8KjZ+aUf3+taKMghxYv9J9PdrF5gPcCj8Ph+5Nw6cdLgfJ59SpGq
-	 MxvOqJcpYaQUNd33NWvCcL3MMkf4cJZsVZaapoeLACermFILUNXeH70sy1HAUEGt3k
-	 soAWnCkCYciwymbVDne12+Oj5Hp7NhNpglV5CYEo=
+	by mail.kernel.org (Postfix) with ESMTP id EF1AF206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgFPL5t (ORCPT
+        id S1728728AbgFPL6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:57:49 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:40667 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728144AbgFPL5q (ORCPT
+        Tue, 16 Jun 2020 07:58:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45776 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728481AbgFPL6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:57:46 -0400
-Received: by mail-ej1-f65.google.com with SMTP id q19so21183066eja.7;
-        Tue, 16 Jun 2020 04:57:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+v8uCi/MM/jmen9lx+FKaOy5thFlmFvnrtAkhPsEN2s=;
-        b=Kea9gTBuTz9gAlpjaFxFE+HQ0A3C5OA1UCPmqpcnV+orUJP6slNUDP/sEAUvcl7vEi
-         GPKo1sxTSHny8UdwdUp289JVYe0q2kQIgZORdowU7ngnMVuTJiyNOanw5o53aRWogpum
-         FNdCw/rW6iTYPFTuuLHj37vqtBtLqJDWzJYDRSikz679YnfVgPRlNsCBUGJqg7Nh09rE
-         Zv1VwldY5vFkI9UULpznr3/0GMhcojFfQIlIhAA/qwyV+Txz5gI3OA/jwjuX/XW4NNFE
-         SjknAb961v1NWcBdnCgLqxwdvQwrvrvFgY8x5FnIDE+rBYcojNq3HImEIRbppJY9JZ3n
-         Dkng==
-X-Gm-Message-State: AOAM530RfBJx/HfU0PCe5Ovh6S76OcXAh7IPrjI17bIc4xjewU/cvTg/
-        9dhRTb2fbSxwPRPhwkQX/70=
-X-Google-Smtp-Source: ABdhPJxcQNdV/H7nPWwktJ3WW5sRNLcscw+1S7A9rSCDlEe2uCTezR9VSviWZ9JiV63E3GHfZiF0Jw==
-X-Received: by 2002:a17:906:fcb7:: with SMTP id qw23mr2247171ejb.229.1592308664586;
-        Tue, 16 Jun 2020 04:57:44 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id h5sm10994714ejp.45.2020.06.16.04.57.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Jun 2020 04:57:43 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 13:57:41 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     "Andrew F. Davis" <afd@ti.com>, Pali Roh??r <pali@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@proceq.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 1/2] power: supply: bq27xxx_battery: Notify about all
- battery changes
-Message-ID: <20200616115741.GA13274@kozik-lap>
-References: <20200525141200.17199-1-krzk@kernel.org>
- <fc59bcd5-1868-8c7a-9fc9-67ad70b477f4@ti.com>
- <20200616105224.GF1718@bug>
+        Tue, 16 Jun 2020 07:58:03 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GBVkN5176896;
+        Tue, 16 Jun 2020 07:57:56 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7qdxth-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 07:57:56 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GBlCB6032338;
+        Tue, 16 Jun 2020 07:57:56 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7qdxsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 07:57:55 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GBtjk4016289;
+        Tue, 16 Jun 2020 11:57:53 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7w980-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 11:57:53 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GBvoDl60555284
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 11:57:50 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A55BC4C046;
+        Tue, 16 Jun 2020 11:57:50 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC4D14C040;
+        Tue, 16 Jun 2020 11:57:49 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.56.227])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jun 2020 11:57:49 +0000 (GMT)
+Date:   Tue, 16 Jun 2020 13:57:26 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+Message-ID: <20200616135726.04fa8314.pasic@linux.ibm.com>
+In-Reply-To: <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+        <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+        <20200616115202.0285aa08.pasic@linux.ibm.com>
+        <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200616105224.GF1718@bug>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-15,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 impostorscore=0 suspectscore=0 priorityscore=1501
+ malwarescore=0 mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0
+ clxscore=1015 cotscore=-2147483648 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:52:24PM +0200, Pavel Machek wrote:
-> On Tue 2020-05-26 21:24:39, Andrew F. Davis wrote:
-> > On 5/25/20 10:11 AM, Krzysztof Kozlowski wrote:
-> > > All battery related data could be important for user-space.  For example
-> > > time-to-full could be shown to user on the screen or health could be
-> > > monitored for any issues.  Instead of comparing few selected old/new
-> > > values, just check if anything changed in the cache.
-> > > 
+On Tue, 16 Jun 2020 12:52:50 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> >>   int virtio_finalize_features(struct virtio_device *dev)
+> >>   {
+> >>   	int ret = dev->config->finalize_features(dev);
+> >> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
+> >>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+> >>   		return 0;
+> >>   
+> >> +	if (arch_needs_iommu_platform(dev) &&
+> >> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+> >> +		return -EIO;
+> >> +  
 > > 
-> > 
-> > At least some value will change every time we poll the battery, are we
-> > okay with having power_supply_changed() called every time?
+> > Why EIO?  
 > 
-> I believe that's very bad idea. AFAICT that would wake up userspace every
-> 5 seconds, eating power in unexpected way, and without easy ability of opting
-> out. IOW a regression.
+> Because I/O can not occur correctly?
+> I am open to suggestions.
 
-It won't be 5 seconds but poll_interval which is 360 seconds by default.
-It can be 5 seconds if user-space changes this time or if user-space
-keeps asking for get_property. In first case: user-space kind of decided
-about it... In second: user-space is already woken-up since it polls get
-properties.
+We use -ENODEV if feature when the device rejects the features we
+tried to negotiate (see virtio_finalize_features()) and -EINVAL when
+the F_VERSION_1 and the virtio-ccw revision ain't coherent (in
+virtio_ccw_finalize_features()). Any of those seems more fitting
+that EIO to me. BTW does the error code itself matter in any way,
+or is it just OK vs some error?
 
-However I understand that this is quite intrusive change and maybe in
-such case user-space should just keep polling (if it wants all data to
-be provided every n-seconds).
-
-Best regards,
-Krzysztof
-
+Regards,
+Halil
