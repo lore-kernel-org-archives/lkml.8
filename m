@@ -2,127 +2,203 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3CE20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:07:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Lisyu563"
+	by mail.kernel.org (Postfix) with ESMTP id 4F25C20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgFPDHY (ORCPT
+        id S1726482AbgFPDKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 23:07:24 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51840 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgFPDHX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 23:07:23 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3CBFB806AC;
-        Tue, 16 Jun 2020 15:07:20 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1592276840;
-        bh=XrQwFMgzmQ++BTETHMRkARdW5JDjGNo8Hn0JI+Z6+v0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=Lisyu563s6DH0QCMPc7BAnEtj1lJUuqKBJ/rqRu+74BKqlMVsb3matB8fht/HoBZr
-         Uv5aUIXKvCfxxL/dpdYMqjurJvxFW8XEVBy/nMmo15vYradSFTS/MTRIRAumMA4oNH
-         kzFEpdNoZStZSmcH1K9XRdbZFClzAMqWsqa9CuJ/lD2pflvNf1PKTeNWYftWcSrMrz
-         TuTspGtHdDBjxUxLK/HIgr5AahaBBEORMOIm+IdpjwMzQH4Vlml5/Mt77PlzFpK8It
-         qgbHz2BZ859Qmo1L1IgPGyGrL/C+s8I3A+ug73cDFn3q9hLfoslpmXdcYEFSqyl/L2
-         2kCR/axHn3Ygg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ee837660000>; Tue, 16 Jun 2020 15:07:18 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 16 Jun 2020 15:07:18 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Tue, 16 Jun 2020 15:07:18 +1200
-From:   Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "kdasu.kdev@gmail.com" <kdasu.kdev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] spi: bcm-qspi: Make multiple data blocks
- interrupt-driven
-Thread-Topic: [PATCH 4/5] spi: bcm-qspi: Make multiple data blocks
- interrupt-driven
-Thread-Index: AQHWQspGicsrLKHS70ycxRR+nhJ226jY9N2AgADS34A=
-Date:   Tue, 16 Jun 2020 03:07:17 +0000
-Message-ID: <40bae0160c6e24c3d90d4935eb31cf3de64abc9e.camel@alliedtelesis.co.nz>
-References: <20200615040557.2011-1-mark.tomlinson@alliedtelesis.co.nz>
-         <20200615040557.2011-5-mark.tomlinson@alliedtelesis.co.nz>
-         <20200615143233.GW4447@sirena.org.uk>
-In-Reply-To: <20200615143233.GW4447@sirena.org.uk>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:23:ed42:47d3:290f:32e3]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <40BFA6DC74A6F54791D9992BC84A293D@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Mon, 15 Jun 2020 23:10:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:58364 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgFPDKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 23:10:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B0A81FB;
+        Mon, 15 Jun 2020 20:10:40 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.80.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BE0DC3F6CF;
+        Mon, 15 Jun 2020 20:10:37 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64/panic: Unify all three existing notifier blocks
+Date:   Tue, 16 Jun 2020 08:40:17 +0530
+Message-Id: <1592277017-31784-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA2LTE1IGF0IDE1OjMyICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
-biBNb24sIEp1biAxNSwgMjAyMCBhdCAwNDowNTo1NlBNICsxMjAwLCBNYXJrIFRvbWxpbnNvbiB3
-cm90ZToNCj4gDQo+ID4gV2hlbiBuZWVkaW5nIHRvIHNlbmQvcmVjZWl2ZSBkYXRhIGluIHNtYWxs
-IGNodW5rcywgbWFrZSB0aGlzIGludGVycnVwdA0KPiA+IGRyaXZlbiByYXRoZXIgdGhhbiB3YWl0
-aW5nIGZvciBhIGNvbXBsZXRpb24gZXZlbnQgZm9yIGVhY2ggc21hbGwgc2VjdGlvbg0KPiA+IG9m
-IGRhdGEuDQo+IA0KPiBBZ2FpbiB3YXMgdGhpcyBkb25lIGZvciBhIHJlYXNvbiBhbmQgaWYgc28g
-ZG8gd2UgdW5kZXJzdGFuZCB3aHkgZG9pbmcNCj4gdGhpcyBmcm9tIGludGVycnVwdCBjb250ZXh0
-IGlzIHNhZmUgLSBob3cgbG9uZyBjYW4gdGhlIGludGVycnVwdHMgYmUNCj4gd2hlbiBzdHVmZmlu
-ZyB0aGUgRklGTyBmcm9tIGludGVycnVwdCBjb250ZXh0Pw0KDQpBcyBJJ20gcG9ydGluZyBhIEJy
-b2FkY29tIHBhdGNoLCBJJ20gaG9waW5nIHNvbWVvbmUgZWxzZSBjYW4gYWRkDQpzb21ldGhpbmcg
-dG8gdGhpcy4gRnJvbSB0aGUgaGlzdG9yeSBpdCBhcHBlYXJzIHRoZXJlIHdhcyBhIGhhcmQgbGlt
-aXQNCihubyBzbWFsbCBjaHVua3MpLCBhbmQgdGhpcyB3YXMgY2hhbmdlZCB0byBkb2luZyBpdCBp
-biBjaHVua3Mgd2l0aA0KcGF0Y2ggMzQ1MzA5ZmE3YzBjOTIsIGFwcGFyZW50bHkgdG8gaW1wcm92
-ZSBwZXJmb3JtYW5jZS4gSSBiZWxpZXZlIHRoaXMNCmNoYW5nZSBmdXJ0aGVyIGltcHJvdmVzIHBl
-cmZvcm1hbmNlLCBidXQgYXMgdGhlIHBhdGNoIGFycml2ZWQgd2l0aG91dA0KYW55IGRvY3VtZW50
-YXRpb24sIEknbSBub3QgY2VydGFpbi4NCg0KDQo+ID4gQEAgLTczMSwxMiArNzMzLDE0IEBAIHN0
-YXRpYyBpbmxpbmUgdTE2IHJlYWRfcnhyYW1fc2xvdF91MTYoc3RydWN0IGJjbV9xc3BpICpxc3Bp
-LCBpbnQgc2xvdCkNCj4gPiAgCQkoKGJjbV9xc3BpX3JlYWQocXNwaSwgTVNQSSwgbXNiX29mZnNl
-dCkgJiAweGZmKSA8PCA4KTsNCj4gPiAgfQ0KPiA+ICANCj4gPiAtc3RhdGljIHZvaWQgcmVhZF9m
-cm9tX2h3KHN0cnVjdCBiY21fcXNwaSAqcXNwaSwgaW50IHNsb3RzKQ0KPiA+ICtzdGF0aWMgdm9p
-ZCByZWFkX2Zyb21faHcoc3RydWN0IGJjbV9xc3BpICpxc3BpKQ0KPiA+ICB7DQo+IA0KPiBUaGlu
-Z3MgbWlnaHQgYmUgY2xlYXJlciBpZiB0aGlzIHJlZmFjdG9yaW5nIHdlcmUgc3BsaXQgb3V0IGlu
-dG8gYQ0KPiBzZXBhcmF0ZSBwYXRjaC4NCg0KRG9uZS4NCg0KPiA+IEBAIC05NjAsMjQgKzk2Niwy
-MSBAQCBzdGF0aWMgaW50IGJjbV9xc3BpX3RyYW5zZmVyX29uZShzdHJ1Y3Qgc3BpX21hc3RlciAq
-bWFzdGVyLA0KPiA+ICAJCQkJIHN0cnVjdCBzcGlfdHJhbnNmZXIgKnRyYW5zKQ0KPiA+ICB7DQo+
-ID4gIAlzdHJ1Y3QgYmNtX3FzcGkgKnFzcGkgPSBzcGlfbWFzdGVyX2dldF9kZXZkYXRhKG1hc3Rl
-cik7DQo+ID4gLQlpbnQgc2xvdHM7DQo+ID4gLQl1bnNpZ25lZCBsb25nIHRpbWVvID0gbXNlY3Nf
-dG9famlmZmllcygxMDApOw0KPiA+ICsJdW5zaWduZWQgbG9uZyB0aW1lbyA9IG1zZWNzX3RvX2pp
-ZmZpZXMoMTAwMCk7DQo+IA0KPiBUaGF0J3MgYSByYW5kb21seSBjaG9zZW4gdmFsdWUgLSBpZiB3
-ZSdyZSBub3cgZG9pbmcgdGhlIGVudGlyZSB0cmFuc2Zlcg0KPiB0aGVuIHdlIHNob3VsZCBiZSB0
-cnlpbmcgdG8gZXN0aW1hdGUgdGhlIGxlbmd0aCBvZiB0aW1lIHRoZSB0cmFuc2Zlcg0KPiB3aWxs
-IHRha2UsIGZvciBhIHZlcnkgbGFyZ2UgdHJhbnNmZXIgb24gYSBzbG93IGJ1cyBpdCdzIHBvc3Np
-YmxlIHRoYXQNCj4gZXZlbiBhIHNlY29uZCB3b24ndCBiZSBlbm91Z2guDQo+IA0KQWdhaW4sIHRo
-ZSB2YWx1ZSBjYW1lIGZyb20gQnJvYWRjb20uIFVzaW5nIHRoZSBkYXRhIGxlbmd0aCBhcyBhbg0K
-ZXN0aW1hdGUgc291bmRzIGxpa2UgYSBnb29kIGlkZWEuDQoNCj4gPiAtCQljb21wbGV0ZSgmcXNw
-aS0+bXNwaV9kb25lKTsNCj4gPiArDQo+ID4gKwkJcmVhZF9mcm9tX2h3KHFzcGkpOw0KPiA+ICsN
-Cj4gPiArCQlpZiAocXNwaS0+dHJhbnNfcG9zLnRyYW5zKSB7DQo+ID4gKwkJCXdyaXRlX3RvX2h3
-KHFzcGkpOw0KPiA+ICsJCX0gZWxzZSB7DQo+ID4gKwkJCWNvbXBsZXRlKCZxc3BpLT5tc3BpX2Rv
-bmUpOw0KPiA+ICsJCQlzcGlfZmluYWxpemVfY3VycmVudF90cmFuc2Zlcihxc3BpLT5tYXN0ZXIp
-Ow0KPiA+ICsJCX0NCj4gPiArDQo+IA0KPiBUaGlzIGlzIGFkZGluZyBhIHNwaV9maW5hbGl6ZV9j
-dXJyZW50X3RyYW5zZmVyKCkgd2hpY2ggd2UgZGlkbid0IGhhdmUNCj4gYmVmb3JlLCBhbmQgc3Rp
-bGwgbGVhdmluZyB1cyBkb2luZyBjbGVhbnVwIHdvcmsgaW4gdGhlIGRyaXZlciBpbiBhbm90aGVy
-DQo+IHRocmVhZC4gIFRoaXMgaXMgY29uZnVzZWQsIHRoZSBkcml2ZXIgc2hvdWxkIG9ubHkgbmVl
-ZCB0byBmaW5hbGl6ZSB0aGUNCj4gdHJhbnNmZXIgZXhwbGljaXRseSBpZiBpdCByZXR1cm5lZCBh
-IHRpbWVvdXQgZnJvbSB0cmFuc2Zlcl9vbmUoKSBidXQNCj4gbm90aGluZydzIGNoYW5nZWQgdGhl
-cmUuDQoNCkkgY2FuIHJlbW92ZSB0aGUgY2FsbCB0byBzcGlfZmluYWxpemVfY3VycmVudF90cmFu
-c2ZlcigpIGZyb20gdGhpcw0KcGF0Y2guIEknbGwgdHJ5IHRvIGNoZWNrIHdoYXQgZG9lcyBoYXBw
-ZW4gaW4gdGhlIHRpbWVvdXQgY2FzZS4NCg0KDQo=
+Currently there are three different registered panic notifier blocks. This
+unifies all of them into a single one i.e arm64_panic_block, hence reducing
+code duplication and required calling sequence during panic. This preserves
+the existing dump sequence.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Applies on 5.8-rc1.
+
+ arch/arm64/include/asm/cpufeature.h |  1 +
+ arch/arm64/include/asm/memory.h     |  1 +
+ arch/arm64/kernel/cpufeature.c      | 15 +--------------
+ arch/arm64/kernel/setup.c           | 24 ++++++++++++++----------
+ arch/arm64/mm/init.c                | 18 +-----------------
+ 5 files changed, 18 insertions(+), 41 deletions(-)
+
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index 5d1f4ae42799..e375529ca9fc 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -774,6 +774,7 @@ static inline unsigned int get_vmid_bits(u64 mmfr1)
+ }
+ 
+ u32 get_kvm_ipa_limit(void);
++void dump_cpu_features(void);
+ 
+ #endif /* __ASSEMBLY__ */
+ 
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index a1871bb32bb1..2a88cb734d06 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -322,6 +322,7 @@ static inline void *phys_to_virt(phys_addr_t x)
+ 	__is_lm_address(__addr) && pfn_valid(virt_to_pfn(__addr));	\
+ })
+ 
++void dump_mem_limit(void);
+ #endif /* !ASSEMBLY */
+ 
+ /*
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 2270eda9a7fb..756775f4b7d4 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -119,24 +119,11 @@ static inline void finalize_system_capabilities(void)
+ 	static_branch_enable(&arm64_const_caps_ready);
+ }
+ 
+-static int dump_cpu_hwcaps(struct notifier_block *self, unsigned long v, void *p)
++void dump_cpu_features(void)
+ {
+ 	/* file-wide pr_fmt adds "CPU features: " prefix */
+ 	pr_emerg("0x%*pb\n", ARM64_NCAPS, &cpu_hwcaps);
+-	return 0;
+-}
+-
+-static struct notifier_block cpu_hwcaps_notifier = {
+-	.notifier_call = dump_cpu_hwcaps
+-};
+-
+-static int __init register_cpu_hwcaps_dumper(void)
+-{
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-				       &cpu_hwcaps_notifier);
+-	return 0;
+ }
+-__initcall(register_cpu_hwcaps_dumper);
+ 
+ DEFINE_STATIC_KEY_ARRAY_FALSE(cpu_hwcap_keys, ARM64_NCAPS);
+ EXPORT_SYMBOL(cpu_hwcap_keys);
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 93b3844cf442..312b19263cb7 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -400,11 +400,7 @@ static int __init topology_init(void)
+ }
+ subsys_initcall(topology_init);
+ 
+-/*
+- * Dump out kernel offset information on panic.
+- */
+-static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
+-			      void *p)
++void dump_kernel_offset(void)
+ {
+ 	const unsigned long offset = kaslr_offset();
+ 
+@@ -415,17 +411,25 @@ static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
+ 	} else {
+ 		pr_emerg("Kernel Offset: disabled\n");
+ 	}
++}
++
++static int arm64_panic_block_dump(struct notifier_block *self,
++				  unsigned long v, void *p)
++{
++	dump_kernel_offset();
++	dump_cpu_features();
++	dump_mem_limit();
+ 	return 0;
+ }
+ 
+-static struct notifier_block kernel_offset_notifier = {
+-	.notifier_call = dump_kernel_offset
++static struct notifier_block arm64_panic_block = {
++	.notifier_call = arm64_panic_block_dump
+ };
+ 
+-static int __init register_kernel_offset_dumper(void)
++static int __init register_arm64_panic_block(void)
+ {
+ 	atomic_notifier_chain_register(&panic_notifier_list,
+-				       &kernel_offset_notifier);
++				       &arm64_panic_block);
+ 	return 0;
+ }
+-__initcall(register_kernel_offset_dumper);
++__initcall(register_arm64_panic_block);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index e631e6425165..b88ef04033de 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -558,27 +558,11 @@ void free_initmem(void)
+ 	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
+ }
+ 
+-/*
+- * Dump out memory limit information on panic.
+- */
+-static int dump_mem_limit(struct notifier_block *self, unsigned long v, void *p)
++void dump_mem_limit(void)
+ {
+ 	if (memory_limit != PHYS_ADDR_MAX) {
+ 		pr_emerg("Memory Limit: %llu MB\n", memory_limit >> 20);
+ 	} else {
+ 		pr_emerg("Memory Limit: none\n");
+ 	}
+-	return 0;
+-}
+-
+-static struct notifier_block mem_limit_notifier = {
+-	.notifier_call = dump_mem_limit,
+-};
+-
+-static int __init register_mem_limit_dumper(void)
+-{
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-				       &mem_limit_notifier);
+-	return 0;
+ }
+-__initcall(register_mem_limit_dumper);
+-- 
+2.20.1
+
