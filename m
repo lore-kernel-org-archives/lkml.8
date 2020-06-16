@@ -2,102 +2,149 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1218DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4D142074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592297820;
-	bh=krP7gKe+MHwab1VcIRScXJOGCE+MKe9KH7U31oT4Lyw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ak32KRbl3LnCRWI98HXfW36anLLKBPAHafJHBsD05BfoSfoNKwDl4XELOAoSRd3aW
-	 NSTZFbaabV/j7EtBAq6KizTV4NKzixqWI2WhuzbCUoSQJtpFR4gk5IbDMrikG0spzh
-	 0sKWe+3s78vafP2qAfkd/WC1PUVaj+kVQA6pXclY=
+	by mail.kernel.org (Postfix) with ESMTP id 663612074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="bxLzhhZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgFPI47 (ORCPT
+        id S1727119AbgFPJB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:56:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbgFPI47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:56:59 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1E6420786;
-        Tue, 16 Jun 2020 08:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592297818;
-        bh=krP7gKe+MHwab1VcIRScXJOGCE+MKe9KH7U31oT4Lyw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IqfRsQqVmU5Ie0GYmb2DxtHdA0AaxN/YPZRHahX/drWO5P24WQsVpyZGX7pbZoxM1
-         yv3KrzlrKVfjxUUu+aCbAo5wbhi8TJFztfXuJMzk0QqCk5tUngEcHBqjGB2mm7UkxJ
-         QkOCbCEjWLoQyjEgkcUjvt8aEBdUAXKk18j7dp0c=
-Received: by mail-ot1-f49.google.com with SMTP id k15so15372983otp.8;
-        Tue, 16 Jun 2020 01:56:58 -0700 (PDT)
-X-Gm-Message-State: AOAM533bmFQhRrSuyJlI8jZAHCq/3xO9BWVjO6QCB4zWA1zKe8R2xYzb
-        E9evak0CJ8Ru+hsyOP9x/ZqvBGii6zRRkQs+Zb0=
-X-Google-Smtp-Source: ABdhPJztfZ3Sn/u7Ko/lutTXyCkDkk4FVJ9sTvFLCbnOOi1nv/T5npChMWD8vzSU+LsXsesBlSV09O6gCjtrIWj+n54=
-X-Received: by 2002:a9d:5a12:: with SMTP id v18mr1548614oth.90.1592297818179;
- Tue, 16 Jun 2020 01:56:58 -0700 (PDT)
+        Tue, 16 Jun 2020 05:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbgFPJB2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:01:28 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8EA9C03E96A
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:01:26 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id d15so13662074edm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:01:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IXqJ+RQf+2HxRMU1JHbm735Et9Rb/a777XiyMXnrkuA=;
+        b=bxLzhhZKjFFEansW2CGWHfG43cgQwpbnzVH6qLEiCQ6gnKC8IHUTIhAz5n77Wm/Pml
+         vWSTFMw+eyqstHjZVU9rHtwv+RLIFJZ0lHZc4ybESxoAFssGZ2LqrEPRKi83kpCIP8FU
+         MXSgw6fwsQP4d6rGNtDVWkB2gncPjCUybm6Yk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IXqJ+RQf+2HxRMU1JHbm735Et9Rb/a777XiyMXnrkuA=;
+        b=Rux82woFY68oe4UbmqIDDNTbLB48WwFhMhGzqD4kgm9dxCglCgIhl+wqP4RiN9e5lp
+         XiWQMZKPkuOhyhc41BDoD18GZ2Z00ZFRo+lIFxpIQif5Ovv3WxOnsO3D2cfnYmnAVFiw
+         B3ASkkso0RvWBCF5fovqQdMZIT7sx0oEn5qMPMDfCzlmrRMtSr1i4uQzrhgysd/Wr/m9
+         RetbMGgTSQxDC3N7XVY6nbcA7vLch3GNx/B3qn1nAd4QGEwti1u47qfTyg2HXAq7pS3y
+         rxsDn8Ae6eGHhy+c+5FR/YJLHVye+UW7fTAwpNHk0OCra7ATIyNLv704VSb6936KGDMk
+         tkDw==
+X-Gm-Message-State: AOAM530WOwuftzo1gwFbzOpcKTSin0n886wMNHJDP99wP6O0IwiicXU2
+        FiyZsRIUbFpjz0qwHEqWhPvtp0iDiUPWEvnd/QMgwA==
+X-Google-Smtp-Source: ABdhPJxNZWipYKKlR5OtEfpmzoc47S3PROSEQ+F2abrhpsMM+Wm0j4MqqdQ3IOWc1jhXe+AWNF/jZwF6otlN3W9Mtwg=
+X-Received: by 2002:aa7:d9d3:: with SMTP id v19mr1550941eds.364.1592298084726;
+ Tue, 16 Jun 2020 02:01:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200615203951.11705-1-xypron.glpk@gmx.de>
-In-Reply-To: <20200615203951.11705-1-xypron.glpk@gmx.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 16 Jun 2020 10:56:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFpuPsp2+9a4Raab32UUwLySvT+k-ZpKZFs4dxapQxyRQ@mail.gmail.com>
-Message-ID: <CAMj1kXFpuPsp2+9a4Raab32UUwLySvT+k-ZpKZFs4dxapQxyRQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: Add libstub/random.c to the
- documentation tree
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200612004644.255692-1-mike.kravetz@oracle.com>
+ <20200612015842.GC23230@ZenIV.linux.org.uk> <b1756da5-4e91-298f-32f1-e5642a680cbf@oracle.com>
+ <CAOQ4uxg=o2SVbfUiz0nOg-XHG8irvAsnXzFWjExjubk2v_6c_A@mail.gmail.com>
+ <6e8924b0-bfc4-eaf5-1775-54f506cdf623@oracle.com> <CAJfpegsugobr8LnJ7e3D1+QFHCdYkW1swtSZ_hKouf_uhZreMg@mail.gmail.com>
+ <80f869aa-810d-ef6c-8888-b46cee135907@oracle.com>
+In-Reply-To: <80f869aa-810d-ef6c-8888-b46cee135907@oracle.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 16 Jun 2020 11:01:13 +0200
+Message-ID: <CAJfpeguTnVOTq4u_E=wDPcJ7vJE_jsAOi_ztm0Pt=X1qtC8ObA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] hugetlb: use f_mode & FMODE_HUGETLBFS to identify
+ hugetlbfs files
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Colin Walters <walters@verbum.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 at 22:40, Heinrich Schuchardt <xypron.glpk@gmx.de> wrot=
-e:
+On Tue, Jun 16, 2020 at 1:45 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
 >
-> Let the description of the efi/libstub/random.c functions appear in the
-> kernel API documentation in the following chapters:
+> On 6/15/20 12:53 AM, Miklos Szeredi wrote:
+> > On Sat, Jun 13, 2020 at 9:12 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >> On 6/12/20 11:53 PM, Amir Goldstein wrote:
+> >>>
+> >>> The simplest thing for you to do in order to shush syzbot is what procfs does:
+> >>>         /*
+> >>>          * procfs isn't actually a stacking filesystem; however, there is
+> >>>          * too much magic going on inside it to permit stacking things on
+> >>>          * top of it
+> >>>          */
+> >>>         s->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
+> >>>
+> >>> Currently, the only in-tree stacking fs are overlayfs and ecryptfs, but there
+> >>> are some out of tree implementations as well (shiftfs).
+> >>> So you may only take that option if you do not care about the combination
+> >>> of hugetlbfs with any of the above.
+> >>>
+> >>> overlayfs support of mmap is not as good as one might hope.
+> >>> overlayfs.rst says:
+> >>> "If a file residing on a lower layer is opened for read-only and then
+> >>>  memory mapped with MAP_SHARED, then subsequent changes to
+> >>>  the file are not reflected in the memory mapping."
+> >>>
+> >>> So if I were you, I wouldn't go trying to fix overlayfs-huguetlb interop...
+> >>
+> >> Thanks again,
+> >>
+> >> I'll look at something as simple as s_stack_depth.
+> >
+> > Agree.
 >
->     The Linux driver implementer=E2=80=99s API guide
->         Linux Firmware API
->             UEFI Support
->                 UEFI stub library functions
+> Apologies again for in the incorrect information about writing to lower
+> filesystem.
 >
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> Stacking ecryptfs on hugetlbfs does not work either.  Here is what happens
+> when trying to create a new file.
+>
+> [ 1188.863425] ecryptfs_write_metadata_to_contents: Error attempting to write header information to lower file; rc = [-22]
+> [ 1188.865469] ecryptfs_write_metadata: Error writing metadata out to lower file; rc = [-22]
+> [ 1188.867022] Error writing headers; rc = [-22]
+>
+> I like Amir's idea of just setting s_stack_depth in hugetlbfs to prevent
+> stacking.
+>
+> From 0fbed66b37c18919ea7edd47b113c97644f49362 Mon Sep 17 00:00:00 2001
+> From: Mike Kravetz <mike.kravetz@oracle.com>
+> Date: Mon, 15 Jun 2020 14:37:52 -0700
+> Subject: [PATCH] hugetlbfs: prevent filesystem stacking of hugetlbfs
+>
+> syzbot found issues with having hugetlbfs on a union/overlay as reported
+> in [1].  Due to the limitations (no write) and special functionality of
+> hugetlbfs, it does not work well in filesystem stacking.  There are no
+> know use cases for hugetlbfs stacking.  Rather than making modifications
+> to get hugetlbfs working in such environments, simply prevent stacking.
+>
+> [1] https://lore.kernel.org/linux-mm/000000000000b4684e05a2968ca6@google.com/
+>
+> Reported-by: syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com
+> Suggested-by: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Miklos Szeredi <mszeredi@redhat.com>
 
-> ---
->  Documentation/driver-api/firmware/efi/index.rst | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/driver-api/firmware/efi/index.rst b/Documentat=
-ion/driver-api/firmware/efi/index.rst
-> index 4fe8abba9fc6..08679962ae3b 100644
-> --- a/Documentation/driver-api/firmware/efi/index.rst
-> +++ b/Documentation/driver-api/firmware/efi/index.rst
-> @@ -9,3 +9,7 @@ UEFI stub library functions
->
->  .. kernel-doc:: drivers/firmware/efi/libstub/mem.c
->     :internal:
-> +
-> +.. kernel-doc:: drivers/firmware/efi/libstub/random.c
-> +   :internal:
-> +
-> --
-> 2.27.0
->
+Thanks,
+Miklos
