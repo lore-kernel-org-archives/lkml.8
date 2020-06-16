@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CDBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E90C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67FC20C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AAB21475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbgFPMWN (ORCPT
+        id S1729086AbgFPMWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42676 "EHLO
+        Tue, 16 Jun 2020 08:22:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgFPMV6 (ORCPT
+        with ESMTP id S1728815AbgFPMV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:21:58 -0400
+        Tue, 16 Jun 2020 08:21:59 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0DBC08C5C2;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96FD4C08C5C2;
         Tue, 16 Jun 2020 05:21:58 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbB-0004e6-Ks; Tue, 16 Jun 2020 14:21:53 +0200
+        id 1jlAbC-0004cb-2b; Tue, 16 Jun 2020 14:21:54 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D0C8A1C06FE;
-        Tue, 16 Jun 2020 14:21:50 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:50 -0000
-From:   "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 58B641C0475;
+        Tue, 16 Jun 2020 14:21:48 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:48 -0000
+From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/pelt: Cleanup PELT divider
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+Subject: [tip: perf/core] ftrace: Add symbols for ftrace trampolines
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200612154703.23555-1-vincent.guittot@linaro.org>
-References: <20200612154703.23555-1-vincent.guittot@linaro.org>
+In-Reply-To: <20200512121922.8997-7-adrian.hunter@intel.com>
+References: <20200512121922.8997-7-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <159231011058.16989.14137603065539923568.tip-bot2@tip-bot2>
+Message-ID: <159231010811.16989.9609331219224673450.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,144 +57,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     87e867b4269f29dac8190bca13912d08163a277f
-Gitweb:        https://git.kernel.org/tip/87e867b4269f29dac8190bca13912d08163a277f
-Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Fri, 12 Jun 2020 17:47:03 +02:00
+Commit-ID:     fc0ea795f53c8d7040fa42471f74fe51d78d0834
+Gitweb:        https://git.kernel.org/tip/fc0ea795f53c8d7040fa42471f74fe51d78d0834
+Author:        Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate:    Tue, 12 May 2020 15:19:13 +03:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:06 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:09:49 +02:00
 
-sched/pelt: Cleanup PELT divider
+ftrace: Add symbols for ftrace trampolines
 
-Factorize in a single place the calculation of the divider to be used to
-to compute *_avg from *_sum value
+Symbols are needed for tools to describe instruction addresses. Pages
+allocated for ftrace's purposes need symbols to be created for them.
+Add such symbols to be visible via /proc/kallsyms.
 
-Suggested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Example on x86 with CONFIG_DYNAMIC_FTRACE=y
+
+	# echo function > /sys/kernel/debug/tracing/current_tracer
+	# cat /proc/kallsyms | grep '\[__builtin__ftrace\]'
+	ffffffffc0238000 t ftrace_trampoline    [__builtin__ftrace]
+
+Note: This patch adds "__builtin__ftrace" as a module name in /proc/kallsyms for
+symbols for pages allocated for ftrace's purposes, even though "__builtin__ftrace"
+is not a module.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200612154703.23555-1-vincent.guittot@linaro.org
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200512121922.8997-7-adrian.hunter@intel.com
 ---
- kernel/sched/fair.c | 32 ++++++++++++++++++--------------
- kernel/sched/pelt.c |  2 +-
- kernel/sched/pelt.h |  5 +++++
- 3 files changed, 24 insertions(+), 15 deletions(-)
+ include/linux/ftrace.h | 12 ++++--
+ kernel/kallsyms.c      |  5 +++-
+ kernel/trace/ftrace.c  | 77 +++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 88 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 295c9ff..0424a0a 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3094,7 +3094,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
- 
- #ifdef CONFIG_SMP
- 	do {
--		u32 divider = LOAD_AVG_MAX - 1024 + se->avg.period_contrib;
-+		u32 divider = get_pelt_divider(&se->avg);
- 
- 		se->avg.load_avg = div_u64(se_weight(se) * se->avg.load_sum, divider);
- 	} while (0);
-@@ -3440,16 +3440,18 @@ static inline void
- update_tg_cfs_util(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index e339dac..ce2c06f 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -58,9 +58,6 @@ struct ftrace_direct_func;
+ const char *
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym);
+-int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
+-			   char *type, char *name,
+-			   char *module_name, int *exported);
+ #else
+ static inline const char *
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+@@ -68,6 +65,13 @@ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
  {
- 	long delta = gcfs_rq->avg.util_avg - se->avg.util_avg;
--	/*
--	 * cfs_rq->avg.period_contrib can be used for both cfs_rq and se.
--	 * See ___update_load_avg() for details.
--	 */
--	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
-+	u32 divider;
- 
- 	/* Nothing to update */
- 	if (!delta)
- 		return;
- 
-+	/*
-+	 * cfs_rq->avg.period_contrib can be used for both cfs_rq and se.
-+	 * See ___update_load_avg() for details.
-+	 */
-+	divider = get_pelt_divider(&cfs_rq->avg);
+ 	return NULL;
+ }
++#endif
 +
- 	/* Set new sched_entity's utilization */
- 	se->avg.util_avg = gcfs_rq->avg.util_avg;
- 	se->avg.util_sum = se->avg.util_avg * divider;
-@@ -3463,16 +3465,18 @@ static inline void
- update_tg_cfs_runnable(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq *gcfs_rq)
- {
- 	long delta = gcfs_rq->avg.runnable_avg - se->avg.runnable_avg;
--	/*
--	 * cfs_rq->avg.period_contrib can be used for both cfs_rq and se.
--	 * See ___update_load_avg() for details.
--	 */
--	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
-+	u32 divider;
- 
- 	/* Nothing to update */
- 	if (!delta)
- 		return;
- 
-+	/*
-+	 * cfs_rq->avg.period_contrib can be used for both cfs_rq and se.
-+	 * See ___update_load_avg() for details.
-+	 */
-+	divider = get_pelt_divider(&cfs_rq->avg);
-+
- 	/* Set new sched_entity's runnable */
- 	se->avg.runnable_avg = gcfs_rq->avg.runnable_avg;
- 	se->avg.runnable_sum = se->avg.runnable_avg * divider;
-@@ -3500,7 +3504,7 @@ update_tg_cfs_load(struct cfs_rq *cfs_rq, struct sched_entity *se, struct cfs_rq
- 	 * cfs_rq->avg.period_contrib can be used for both cfs_rq and se.
- 	 * See ___update_load_avg() for details.
- 	 */
--	divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
-+	divider = get_pelt_divider(&cfs_rq->avg);
- 
- 	if (runnable_sum >= 0) {
- 		/*
-@@ -3646,7 +3650,7 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
- 
- 	if (cfs_rq->removed.nr) {
- 		unsigned long r;
--		u32 divider = LOAD_AVG_MAX - 1024 + sa->period_contrib;
-+		u32 divider = get_pelt_divider(&cfs_rq->avg);
- 
- 		raw_spin_lock(&cfs_rq->removed.lock);
- 		swap(cfs_rq->removed.util_avg, removed_util);
-@@ -3701,7 +3705,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 	 * cfs_rq->avg.period_contrib can be used for both cfs_rq and se.
- 	 * See ___update_load_avg() for details.
- 	 */
--	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
-+	u32 divider = get_pelt_divider(&cfs_rq->avg);
- 
- 	/*
- 	 * When we attach the @se to the @cfs_rq, we must align the decay
-diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-index dea5567..11bea3b 100644
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -262,7 +262,7 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
- static __always_inline void
- ___update_load_avg(struct sched_avg *sa, unsigned long load)
- {
--	u32 divider = LOAD_AVG_MAX - 1024 + sa->period_contrib;
-+	u32 divider = get_pelt_divider(sa);
- 
- 	/*
- 	 * Step 2: update *_avg.
-diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
-index eb034d9..795e43e 100644
---- a/kernel/sched/pelt.h
-+++ b/kernel/sched/pelt.h
-@@ -37,6 +37,11 @@ update_irq_load_avg(struct rq *rq, u64 running)
++#if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_DYNAMIC_FTRACE)
++int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
++			   char *type, char *name,
++			   char *module_name, int *exported);
++#else
+ static inline int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
+ 					 char *type, char *name,
+ 					 char *module_name, int *exported)
+@@ -76,7 +80,6 @@ static inline int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *val
  }
  #endif
  
-+static inline u32 get_pelt_divider(struct sched_avg *avg)
+-
+ #ifdef CONFIG_FUNCTION_TRACER
+ 
+ extern int ftrace_enabled;
+@@ -207,6 +210,7 @@ struct ftrace_ops {
+ 	struct ftrace_ops_hash		old_hash;
+ 	unsigned long			trampoline;
+ 	unsigned long			trampoline_size;
++	struct list_head		list;
+ #endif
+ };
+ 
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index c6cc293..834bfdc 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -482,6 +482,11 @@ static int get_ksymbol_mod(struct kallsym_iter *iter)
+ 	return 1;
+ }
+ 
++/*
++ * ftrace_mod_get_kallsym() may also get symbols for pages allocated for ftrace
++ * purposes. In that case "__builtin__ftrace" is used as a module name, even
++ * though "__builtin__ftrace" is not a module.
++ */
+ static int get_ksymbol_ftrace_mod(struct kallsym_iter *iter)
+ {
+ 	int ret = ftrace_mod_get_kallsym(iter->pos - iter->pos_mod_end,
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index c163c35..31675b2 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -2764,6 +2764,38 @@ void __weak arch_ftrace_trampoline_free(struct ftrace_ops *ops)
+ {
+ }
+ 
++/* List of trace_ops that have allocated trampolines */
++static LIST_HEAD(ftrace_ops_trampoline_list);
++
++static void ftrace_add_trampoline_to_kallsyms(struct ftrace_ops *ops)
 +{
-+	return LOAD_AVG_MAX - 1024 + avg->period_contrib;
++	lockdep_assert_held(&ftrace_lock);
++	list_add_rcu(&ops->list, &ftrace_ops_trampoline_list);
 +}
 +
- /*
-  * When a task is dequeued, its estimated utilization should not be update if
-  * its util_avg has not been updated at least once.
++static void ftrace_remove_trampoline_from_kallsyms(struct ftrace_ops *ops)
++{
++	lockdep_assert_held(&ftrace_lock);
++	list_del_rcu(&ops->list);
++}
++
++/*
++ * "__builtin__ftrace" is used as a module name in /proc/kallsyms for symbols
++ * for pages allocated for ftrace purposes, even though "__builtin__ftrace" is
++ * not a module.
++ */
++#define FTRACE_TRAMPOLINE_MOD "__builtin__ftrace"
++#define FTRACE_TRAMPOLINE_SYM "ftrace_trampoline"
++
++static void ftrace_trampoline_free(struct ftrace_ops *ops)
++{
++	if (ops && (ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP) &&
++	    ops->trampoline)
++		ftrace_remove_trampoline_from_kallsyms(ops);
++
++	arch_ftrace_trampoline_free(ops);
++}
++
+ static void ftrace_startup_enable(int command)
+ {
+ 	if (saved_ftrace_func != ftrace_trace_function) {
+@@ -2934,7 +2966,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
+ 			synchronize_rcu_tasks();
+ 
+  free_ops:
+-		arch_ftrace_trampoline_free(ops);
++		ftrace_trampoline_free(ops);
+ 	}
+ 
+ 	return 0;
+@@ -6178,6 +6210,27 @@ struct ftrace_mod_map {
+ 	unsigned int		num_funcs;
+ };
+ 
++static int ftrace_get_trampoline_kallsym(unsigned int symnum,
++					 unsigned long *value, char *type,
++					 char *name, char *module_name,
++					 int *exported)
++{
++	struct ftrace_ops *op;
++
++	list_for_each_entry_rcu(op, &ftrace_ops_trampoline_list, list) {
++		if (!op->trampoline || symnum--)
++			continue;
++		*value = op->trampoline;
++		*type = 't';
++		strlcpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
++		strlcpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
++		*exported = 0;
++		return 0;
++	}
++
++	return -ERANGE;
++}
++
+ #ifdef CONFIG_MODULES
+ 
+ #define next_to_ftrace_page(p) container_of(p, struct ftrace_page, next)
+@@ -6514,6 +6567,7 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
+ {
+ 	struct ftrace_mod_map *mod_map;
+ 	struct ftrace_mod_func *mod_func;
++	int ret;
+ 
+ 	preempt_disable();
+ 	list_for_each_entry_rcu(mod_map, &ftrace_mod_maps, list) {
+@@ -6540,8 +6594,10 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
+ 		WARN_ON(1);
+ 		break;
+ 	}
++	ret = ftrace_get_trampoline_kallsym(symnum, value, type, name,
++					    module_name, exported);
+ 	preempt_enable();
+-	return -ERANGE;
++	return ret;
+ }
+ 
+ #else
+@@ -6553,6 +6609,18 @@ allocate_ftrace_mod_map(struct module *mod,
+ {
+ 	return NULL;
+ }
++int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
++			   char *type, char *name, char *module_name,
++			   int *exported)
++{
++	int ret;
++
++	preempt_disable();
++	ret = ftrace_get_trampoline_kallsym(symnum, value, type, name,
++					    module_name, exported);
++	preempt_enable();
++	return ret;
++}
+ #endif /* CONFIG_MODULES */
+ 
+ struct ftrace_init_func {
+@@ -6733,7 +6801,12 @@ void __weak arch_ftrace_update_trampoline(struct ftrace_ops *ops)
+ 
+ static void ftrace_update_trampoline(struct ftrace_ops *ops)
+ {
++	unsigned long trampoline = ops->trampoline;
++
+ 	arch_ftrace_update_trampoline(ops);
++	if (ops->trampoline && ops->trampoline != trampoline &&
++	    (ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
++		ftrace_add_trampoline_to_kallsyms(ops);
+ }
+ 
+ void ftrace_init_trace_array(struct trace_array *tr)
