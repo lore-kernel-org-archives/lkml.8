@@ -2,140 +2,174 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D86820734
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E50C20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ey/eP+F7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CzcrJ5qY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgFPLXf (ORCPT
+        id S1728269AbgFPLXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:23:35 -0400
-Received: from mout.web.de ([212.227.15.3]:36709 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgFPLXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:23:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592306597;
-        bh=huDFMMsaa4Ulh6re2u+THK4NQNIrYFu1wKCsPaanNcM=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Ey/eP+F7vsba1bVvyKJC8mENAyNDplQXjlkXgKabpnbfnW0BpMGM115ImE3VWG+5M
-         WqhXL66l3ZtEntzbw+U25TexoPFq1T8SBVKd+t9OUtKUzn/LcSQS2sTpItR7Kaaud6
-         iLsE02qH2rAMyUortMH2RdhZI2C+BIhPcSWlwE4c=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.138.51]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MJZLX-1jjli21DK7-0031rk; Tue, 16
- Jun 2020 13:23:17 +0200
-To:     Chen Tao <chentao107@huawei.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Jack Xiao <Jack.Xiao@amd.com>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        Yintian Tao <yttao@amd.com>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Subject: Re: [PATCH 1/2] drm/amdgpu/debugfs: fix memory leak when
- pm_runtime_get_sync failed
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <ae59e47a-f981-9ae6-840d-1912c01b53cd@web.de>
-Date:   Tue, 16 Jun 2020 13:23:15 +0200
+        Tue, 16 Jun 2020 07:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgFPLXt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 07:23:49 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8778C08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:23:48 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id y13so21094073eju.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:23:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Qpexp3RkjxitjYyax71XJ65xkJqK+VpFeUkVzeKS31U=;
+        b=CzcrJ5qYmxaryGHdthk67cFgCecZH0CWdPJ5g60Tbk7urXTr3nTLDwfmB5s1698gNp
+         2W8xKL96xH4IMnKONF0VYAjsOIKLyXp7eo5uqkRsmdTf+MPQTQTTLfbUsp7/iu6uP3VQ
+         6cCMPgG5TQeczkuPQgzlJjgGcYYBTbJmi0nxT+pe5/KADtzhPDdLdIQcjcedQhXho4Bq
+         Lb4Xx2PzbJ5XDcT8p0pdhf253Rr+exgxegmp4Of5dpkqmnftSt5JI4nSn1U5ooXhJZio
+         5jm8Br0wcEJCMYBGptdMm09o9IQC/DMQYNcRRNDOGYpmY5HMe0Obx7OZieVR0aeIQ9qG
+         A9xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Qpexp3RkjxitjYyax71XJ65xkJqK+VpFeUkVzeKS31U=;
+        b=Q2KSQSjs8F02UvB4iDWCQ/1PGeXWISfiqM0UbikrsQpHVg7jup7v7W62bz0AuGSuvQ
+         lrMjnpb4P8LzA8SXCxAYuC++uOEfSfWelqrJMY3GaZTzijGp4C/IJ/+LCp12Lg94iGgw
+         I768yR9VaA8iPtPilA9swiEg79aBGLyL/QRQCM2izFKYOqlnluZ5vF7mt8KhWcfGor+x
+         AUdxmRrX/or55yWiK2+3B2vdrW9Xf61AWEIOycqEYNnV+wzoB8RWRHpn2PMuTYDoH2Zy
+         7nquVhzQsr+H3C+ABj1041GisFRM61ceSvig1dTpgbENqA6JuS0Qjzr0LSgoKC/wHCAq
+         WUCQ==
+X-Gm-Message-State: AOAM532wvV9+pcsxYYN1ujjbkaQJoj+DLi2YP/zgLlglXQyTDW5OmJB9
+        EwVqtPxk2YNsEaEjkTgQqKcRYiQtzLBF6A==
+X-Google-Smtp-Source: ABdhPJwKr4leC7r3LIVJk23t6Nm5edH3moLqFl/zFOX/DcPhAXaJAtmXjP54cSGsZ1INulzT27bARA==
+X-Received: by 2002:a17:906:3951:: with SMTP id g17mr2368423eje.414.1592306626719;
+        Tue, 16 Jun 2020 04:23:46 -0700 (PDT)
+Received: from [192.168.1.3] (212-5-158-38.ip.btc-net.bg. [212.5.158.38])
+        by smtp.googlemail.com with ESMTPSA id y12sm7638412edj.37.2020.06.16.04.23.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 04:23:46 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] venus: Make debug infrastructure more flexible
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20200613223919.7038-1-stanimir.varbanov@linaro.org>
+ <20200613223919.7038-3-stanimir.varbanov@linaro.org>
+ <20200614063710.GB2611869@kroah.com>
+ <c54a12a2-7f92-105c-a01c-8e85730f36bb@linaro.org>
+ <20200615120337.GA511582@kroah.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <0f53eb20-6f52-e76e-3957-f7af38b88d35@linaro.org>
+Date:   Tue, 16 Jun 2020 14:23:44 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200615120337.GA511582@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:u3t9Od09Vu4D12ZCx29gsAzxYzsjg+REFMWz/C0rnIBfRWDnG16
- oCHAw26d3DReAZJDCVikivyrZ7WiXD6ncPwZw6cOBHfh2TxXzp5qUR/1gCa4yODW5cDUJwd
- mA0dWsBdL7C3WC66C8BZfc5E8ovylJZkEhgs9Rs0FlenEn6KAVa7qUtvvtpIuieH4RdqpgN
- hS43LquQ+vKn9wj+nj1WQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IFof/In4pzc=:yNZPNihtX14YaPGTC+8LPW
- 7Ed1vUNwMHb6b46KiLVzfhNcXMQlzQNqbXPxy/8hzASTcYLIR8jnhkcW1+Bg8kY1UTBelc3yT
- /M228TgWyjBCeb7Y/E5CGJrQA+t8XGs036bg57PE+CxxVKJXESwHFom2X/Nk2WWn3ZPK71DBU
- 8cYaAIEKBRYIl2wgMsdDF/kP2bUeUJYA7LH6PnnCNwbdmIsPPsCvFPpkIj9h4TYvxIWlbB5+f
- YNhMKxfueQvGPN4gGKbqEVvbTzhvqeILtlnuZeBWIOCOrDh4ArFMz5aXVoDrDjDH+Jj1ZiVg1
- rYbSkF0wQb9D2zUALmkU7FqPNe2QlMR+raubI9OVNsDQS6WInyVQS2esvl4pYpnEx/jpAJUIh
- tuVexgjzKHEhzlzhE/Tum4NnZdFSrKCp3UaqAbeP5uhciW3lYDXJbZM4LtMU6CP5CxPssmJbY
- 0cxfDnDTair6cmyqmo8X4KF0VVo2/31fcxy0QsVVCzgqcvvu/NnUl/HYucoEgu0cMi0g2RIGy
- bUVemsr+6/1pS2XFq01xDi3zOEl+82nqItW69xEvecEJ440iyUxp2N0pWqzxdMhpbUC7itRUg
- gebAC1j5VdR0g8WKtnWa5/d5CaYXXYAAbvQa+9E6bYPwn80z++/u1pdHGFrpAn0KyqOiyBDzh
- plQCAyRzu2iWbqu3saihRRq46slDFkzAsjAbd40qfbu0OXWijiydn6ypXP8EXEYHphVri+xTz
- 4d5Bd84E6vO11JKB1yK1rzXzr9ghpZnQdky1r1//+CWca4XOIz33+fJMyTaWXeFp2j7T9G0mu
- 8PQK+b26RQK0jkr3X7Fwo4juwPdVXcFKXr5+fZNVn36lqtzSnffbsFkpP3L4zMKCy+v/fM1sa
- P8fjPOEohcJfh7zKwBQ169LpS3mslN63wxJ9QvY++dLZ7C+M3vawnKgo95E7pcDW8VJTvc9y0
- wLRSiURE0awdXt9cyqEyoh5vRz8xn+IwLxoLT0KZVnLHYrL50YZpAp5hcVBtEC6aYp9G0KTLF
- n1Lx54sQZ6WUY6EBl3IbKcO2CSu6UAPH1pTgOXMTPZXcg35Zd6SqD1XT1x7ehuLO0jofCDmYx
- Yi00e47Cb8XVutZigQfl7Jk8Yi0vvoupcFuDCSK9sj8DKuVVEWzaCjgITtCPPpSN2ELpCASAV
- pBAtim2Qa1TPUtFJVeYK8Yz4Pu4lBOpfAOoYOxVe4EIFGgLEE0UPClwd1tXnz0ZUZkzCXH9CX
- +9KAbziy35qizn15B
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fix memory leak in amdgpu_debugfs_gpr_read not freeing data when
-> pm_runtime_get_sync failed.
+Hi Greg,
 
-* Would you like to improve the exception handling any more for this softw=
-are module?
+On 6/15/20 3:03 PM, Greg KH wrote:
+> On Mon, Jun 15, 2020 at 12:55:29PM +0300, Stanimir Varbanov wrote:
+>> Hi Greg,
+>>
+>> On 6/14/20 9:37 AM, Greg KH wrote:
+>>> On Sun, Jun 14, 2020 at 01:39:18AM +0300, Stanimir Varbanov wrote:
+>>>>  	if (slot == -1) {
+>>>> -		dev_dbg(inst->core->dev, "%s: no free slot\n", __func__);
+>>>> +		VDBGH("no free slot for timestamp\n");
+>>>
+>>> Again, no, you just lost a lot of valuable information by changing to a
+>>> different format (like driver, specific device, etc.).  Please don't do
+>>> this, it just makes the information less than before.
+>>
+>> OK, one of the reasons to use pr_debug inside VDBGH macro is to avoid
+>> having struct device *dev variable in every function with dev_dbg even
+>> when the function doesn't use it.
+> 
+> But the function _is_ using it, as you are referring to the device that
+> is being controlled by the driver.  That's the point, you are stripping
+> off that very valuable information for no git grep dev_dbg | wc -lreason.
+> 
+> Which means to me that you never really actually _NEED_ these debugging
+> messages, as you have not used them to see if it provides you with
+> something that can tell you something about something.
+> 
+> So, let me push harder, why do you even want this message at all?  What
+> can it provide you now that the driver is up and working properly?
 
-* How do you think about calling the function =E2=80=9Cpm_runtime_put_noid=
-le=E2=80=9D?
+I will delete that message.
 
-Regards,
-Markus
+> 
+>> Are you fine with s/pr_debug/dev_dbg in VDBGX macros?
+> 
+> I would be a bit happier yes, but the fact that you didn't use it means
+> you aren't even looking at these messages, which implies that it isn't
+> even needed.
+> 
+> So, how about just stripping all of these debugging messages out
+
+I'm not sure for which messages you are talking. The messages added by
+this patch or the messages which currently exist?
+
+> entirely?  What do they provide that you don't already know?  Who would
+> use them?
+
+Presently in 5.8-rc1 debug messages count for similar (encoder/decoder)
+drivers compared with Venus one:
+
+Venus
+$git grep dev_dbg | wc -l
+15
+
+Coda
+$git grep coda_dbg | wc -l
+56
+
+Mtk-vcodec
+$git grep mtk_v4l2_debug | wc -l
+95
+
+Mfc
+$git grep mfc_debug | wc -l
+227
+
+As you can see Venus driver is the one with smallest count of debug
+messages. It is smallest because I also don't want to overload the code
+with so many debugs and thus make it unreadable.
+
+I personally don't need so much debug messages. I can add them to debug
+some particular issue and drop them before sending the fix. But now when
+the driver is going to be used more widely I've been asked to "improve"
+debug infrastructure. That will help to unfamiliar with the driver
+persons to enable debug messages and send bug reports to help them to
+diagnose the problem.
+
+What messages are needed and where is a subjective question. I'm relying
+on my experience with the driver and issues I had previously.
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+-- 
+regards,
+Stan
