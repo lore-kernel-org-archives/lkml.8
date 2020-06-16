@@ -2,136 +2,217 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5631C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC67C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC2A20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BC120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cVx0KE5h"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XyNypN9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgFPJMe (ORCPT
+        id S1728113AbgFPJNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:12:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48598 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFPJMb (ORCPT
+        Tue, 16 Jun 2020 05:13:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38522 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725896AbgFPJM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:12:31 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05G93Vcj108652;
-        Tue, 16 Jun 2020 09:10:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=vHFhOuRLkm8vQDg8Dof4S5HKAiKznh8tBQ+Mr1OID/Q=;
- b=cVx0KE5h1EIzH/Nv6xjfZ5nTWCPzlMev+meeNe8ig/R6zGb1hcI4zPyrerRBxYg+mmc+
- qKwemscmFpcbtZudgCHIJKFWU2+MEqUR3sjHNYzDUDCSWPx5pmD4LBuQpWhngStPV5H0
- 4QQ1w6PiSDdHFWQ+ndzL39yxLvqknoA5VRhKUkk0TCj0AiX8q664S4ecxGUJH34dsTgv
- f9QhZLAjaVCh+OyWTAfnAqTx90cKQuDChSnHHM+F7Utt0PRApBfU8iMActdQhiOLrCqP
- +xx+YuMkqnBp9yLLOcyvwHAC7rCtpaJ69Rrf1s2Xt7AKk0laObtgJ3Pt4+o8dQUQESCt bA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31p6e5wptp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 16 Jun 2020 09:10:36 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05G933ih037660;
-        Tue, 16 Jun 2020 09:08:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 31p6s6w4s2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 09:08:35 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05G98O1L002227;
-        Tue, 16 Jun 2020 09:08:25 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 16 Jun 2020 02:08:24 -0700
-Date:   Tue, 16 Jun 2020 12:08:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Waiman Long <longman@redhat.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        linux-btrfs@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Sterba <dsterba@suse.cz>,
-        David Howells <dhowells@redhat.com>, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, keyrings@vger.kernel.org,
-        kasan-dev@googlegroups.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org,
-        linux-scsi@vger.kernel.org, James Morris <jmorris@namei.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-wpan@vger.kernel.org, David Rientjes <rientjes@google.com>,
-        linux-pm@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        linux-integrity@vger.kernel.org, linux-nfs@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        linux-crypto@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-ppp@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] mm/slab: Use memzero_explicit() in kzfree()
-Message-ID: <20200616090807.GK4151@kadam>
-References: <20200616015718.7812-1-longman@redhat.com>
- <20200616015718.7812-2-longman@redhat.com>
- <20200616064208.GA9499@dhcp22.suse.cz>
+        Tue, 16 Jun 2020 05:12:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592298776;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KpFMwGKnCWLslGz1ShbrW/qNgT9EYfVeEgEKH929dV8=;
+        b=XyNypN9lLlgnPFGZfwmo0Fl6xJHxq+iBo+VsniagHJgm0FwB6Ri0pTP7MRmu3X1MAP3bb6
+        XsFI21yZpiM9+YFrC/PduMI/UQoSJCHb72qZPxKshgdWAUJhd5o303BzXWFHe0KtmF0uC8
+        J5XZr7/ra74rTfJxEARplOuiMZfhLRQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-SUgPsaCDPIiCf3CXpMpYfA-1; Tue, 16 Jun 2020 05:12:53 -0400
+X-MC-Unique: SUgPsaCDPIiCf3CXpMpYfA-1
+Received: by mail-wr1-f72.google.com with SMTP id l18so8102350wrm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:12:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KpFMwGKnCWLslGz1ShbrW/qNgT9EYfVeEgEKH929dV8=;
+        b=gOQ+2pDvWZm5cM/RPRHESg/91y7xkTQsInLCuuwmin/5dE9/jSOjQL/90k55hQXZPy
+         VU8AlzUiHCWnqsRZ6DTJkZzab/+U78tm7iSt/0J22lLR2W+Vy9GyWYhdYFsUkXzBooxk
+         ukhpCJT0MA9QbQf5arTcy/Bx9Oadh0dpmqn25u4LDRVn8IgqaChV7SGadcHr+e325vXp
+         CnCoA7E6X16bNpHGwDqN2CvPny0bt+5aBmdgmL8Sj+s7a7uvbg1oHXOpdt3Tkbity4wF
+         IxLKWDv7hG0lDjwCVEWQ9/16iMS6OxST27e6LjSeb1DuKTeYVOnCi22TtYTprhVIWBnd
+         Wezw==
+X-Gm-Message-State: AOAM531SzT/DQfZQJdp6QfYuwD+xgmPVvRYHxITpQYah8KelyQZRXYM4
+        1eN5ACVcgDqYWd/i9Bq4Pt9zES7JCxl/+jGqr4yyQaDtPgezWuDAVQ00PTz4Lk6/r3N7RkXOSax
+        6Ew7oXiBVZYeg6IyMG58ZyzJT
+X-Received: by 2002:adf:ff83:: with SMTP id j3mr1991783wrr.264.1592298772685;
+        Tue, 16 Jun 2020 02:12:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwvcIpIFWszxHkde+5PP2e7SeEMAmFeepnBsxqv+e10s0vJo2qksi76vif4CocolLtCn1yXTA==
+X-Received: by 2002:adf:ff83:: with SMTP id j3mr1991750wrr.264.1592298772376;
+        Tue, 16 Jun 2020 02:12:52 -0700 (PDT)
+Received: from steredhat ([5.180.207.22])
+        by smtp.gmail.com with ESMTPSA id u7sm28820594wrm.23.2020.06.16.02.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 02:12:51 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 11:12:47 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Aleksa Sarai <asarai@suse.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        io-uring <io-uring@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [RFC] io_uring: add restrictions to support untrusted
+ applications and guests
+Message-ID: <20200616091247.hdmxcrnlrrxih7my@steredhat>
+References: <20200609142406.upuwpfmgqjeji4lc@steredhat>
+ <CAG48ez3kdNKjif==MbX36cKNYDpZwEPMZaJQ1rrpXZZjGZwbKw@mail.gmail.com>
+ <20200615133310.qwdmnctrir5zgube@steredhat>
+ <f7f2841e-3dbb-377f-f8f8-826506a938a6@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616064208.GA9499@dhcp22.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 mlxlogscore=781 phishscore=0 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006160066
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9653 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- mlxscore=0 phishscore=0 mlxlogscore=814 lowpriorityscore=0 clxscore=1011
- suspectscore=0 spamscore=0 bulkscore=0 malwarescore=0 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006160066
+In-Reply-To: <f7f2841e-3dbb-377f-f8f8-826506a938a6@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 08:42:08AM +0200, Michal Hocko wrote:
-> On Mon 15-06-20 21:57:16, Waiman Long wrote:
-> > The kzfree() function is normally used to clear some sensitive
-> > information, like encryption keys, in the buffer before freeing it back
-> > to the pool. Memset() is currently used for the buffer clearing. However,
-> > it is entirely possible that the compiler may choose to optimize away the
-> > memory clearing especially if LTO is being used. To make sure that this
-> > optimization will not happen, memzero_explicit(), which is introduced
-> > in v3.18, is now used in kzfree() to do the clearing.
+On Mon, Jun 15, 2020 at 11:00:25AM -0600, Jens Axboe wrote:
+> On 6/15/20 7:33 AM, Stefano Garzarella wrote:
+> > On Mon, Jun 15, 2020 at 11:04:06AM +0200, Jann Horn wrote:
+> >> +Kees, Christian, Sargun, Aleksa, kernel-hardening for their opinions
+> >> on seccomp-related aspects
+> >>
+> >> On Tue, Jun 9, 2020 at 4:24 PM Stefano Garzarella <sgarzare@redhat.com> wrote:
+> >>> Hi Jens,
+> >>> Stefan and I have a proposal to share with io_uring community.
+> >>> Before implementing it we would like to discuss it to receive feedbacks and
+> >>> to see if it could be accepted:
+> >>>
+> >>> Adding restrictions to io_uring
+> >>> =====================================
+> >>> The io_uring API provides submission and completion queues for performing
+> >>> asynchronous I/O operations. The queues are located in memory that is
+> >>> accessible to both the host userspace application and the kernel, making it
+> >>> possible to monitor for activity through polling instead of system calls. This
+> >>> design offers good performance and this makes exposing io_uring to guests an
+> >>> attractive idea for improving I/O performance in virtualization.
+> >> [...]
+> >>> Restrictions
+> >>> ------------
+> >>> This document proposes io_uring API changes that safely allow untrusted
+> >>> applications or guests to use io_uring. io_uring's existing security model is
+> >>> that of kernel system call handler code. It is designed to reject invalid
+> >>> inputs from host userspace applications. Supporting guests as io_uring API
+> >>> clients adds a new trust domain with access to even fewer resources than host
+> >>> userspace applications.
+> >>>
+> >>> Guests do not have direct access to host userspace application file descriptors
+> >>> or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
+> >>> as QEMU, grants access to a subset of its file descriptors and memory. The
+> >>> allowed file descriptors are typically the disk image files belonging to the
+> >>> guest. The memory is typically the virtual machine's RAM that the VMM has
+> >>> allocated on behalf of the guest.
+> >>>
+> >>> The following extensions to the io_uring API allow the host application to
+> >>> grant access to some of its file descriptors.
+> >>>
+> >>> These extensions are designed to be applicable to other use cases besides
+> >>> untrusted guests and are not virtualization-specific. For example, the
+> >>> restrictions can be used to allow only a subset of sqe operations available to
+> >>> an application similar to seccomp syscall whitelisting.
+> >>>
+> >>> An address translation and memory restriction mechanism would also be
+> >>> necessary, but we can discuss this later.
+> >>>
+> >>> The IOURING_REGISTER_RESTRICTIONS opcode
+> >>> ----------------------------------------
+> >>> The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
+> >>> installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
+> >>> passed to untrusted code with the knowledge that only operations present in the
+> >>> whitelist can be executed.
+> >>
+> >> This approach of first creating a normal io_uring instance and then
+> >> installing restrictions separately in a second syscall means that it
+> >> won't be possible to use seccomp to restrict newly created io_uring
+> >> instances; code that should be subject to seccomp restrictions and
+> >> uring restrictions would only be able to use preexisting io_uring
+> >> instances that have already been configured by trusted code.
+> >>
+> >> So I think that from the seccomp perspective, it might be preferable
+> >> to set up these restrictions in the io_uring_setup() syscall. It might
+> >> also be a bit nicer from a code cleanliness perspective, since you
+> >> won't have to worry about concurrently changing restrictions.
+> >>
 > > 
-> > Fixes: 3ef0e5ba4673 ("slab: introduce kzfree()")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Waiman Long <longman@redhat.com>
+> > Thank you for these details!
+> > 
+> > It seems feasible to include the restrictions during io_uring_setup().
+> > 
+> > The only doubt concerns the possibility of allowing the trusted code to
+> > do some operations, before passing queues to the untrusted code, for
+> > example registering file descriptors, buffers, eventfds, etc.
+> > 
+> > To avoid this, I should include these operations in io_uring_setup(),
+> > adding some code that I wanted to avoid by reusing io_uring_register().
+> > 
+> > If I add restrictions in io_uring_setup() and then add an operation to
+> > go into safe mode (e.g. a flag in io_uring_enter()), we would have the same
+> > problem, right?
+> > 
+> > Just to be clear, I mean something like this:
+> > 
+> >     /* params will include restrictions */
+> >     fd = io_uring_setup(entries, params);
+> > 
+> >     /* trusted code */
+> >     io_uring_register_files(fd, ...);
+> >     io_uring_register_buffers(fd, ...);
+> >     io_uring_register_eventfd(fd, ...);
+> > 
+> >     /* enable safe mode */
+> >     io_uring_enter(fd, ..., IORING_ENTER_ENABLE_RESTRICTIONS);
+> > 
+> > 
+> > Anyway, including a list of things to register in the 'params', passed
+> > to io_uring_setup(), should be feasible, if Jens agree :-)
 > 
-> Acked-by: Michal Hocko <mhocko@suse.com>
+> I wonder how best to deal with this, in terms of ring visibility vs
+> registering restrictions. We could potentially start the ring in a
+> disabled mode, if asked to. It'd still be visible in terms of having
+> the fd installed, but it'd just error requests. That'd leave you with
+> time to do the various setup routines needed before then flagging it
+> as enabled. My only worry on that would be adding overhead for doing
+> that. It'd be cheap enough to check for IORING_SETUP_DISABLED in
+> ctx->flags in io_uring_enter(), and return -EBADFD or something if
+> that's the case. That doesn't cover the SQPOLL case though, but maybe we
+> just don't start the sq thread if IORING_SETUP_DISABLED is set.
+
+It seems to me a very good approach and easy to implement. In this way
+we can reuse io_uring_register() without having to modify too much
+io_uring_setup().
+
 > 
-> Although I am not really sure this is a stable material. Is there any
-> known instance where the memset was optimized out from kzfree?
+> We'd need a way to clear IORING_SETUP_DISABLED through
+> io_uring_register(). When clearing, that could then start the sq thread
+> as well, when SQPOLL is set.
 
-I told him to add the stable.  Otherwise it will just get reported to
-me again.  It's a just safer to backport it before we forget.
+Could we do it using io_uring_enter() since we have a flag field or
+do you think it's semantically incorrect?
 
-regards,
-dan carpenter
+@Jann, do you think this could work with seccomp?
+
+Thanks,
+Stefano
 
