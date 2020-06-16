@@ -2,85 +2,79 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB14C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6DDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEF1208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C9120739
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592345096;
-	bh=zZ4bUdq2K5ojEsFNwkT75BRnNvTH2SiQYaGdmtmA+LY=;
+	s=default; t=1592345108;
+	bh=9bH3nkbMis+3M+lEU06ECFeAOUKxNtoZ5l6kTuWtHJ4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=n5KR5o9JWix5PeAS8tGmakkpctbP0nijeOtAv5jZ9iaEqkkAsyxG8m/rjp1MeqX6X
-	 7g2ju3OuRCkBAdsHSkW2n5jA4Xc4nOMZYS9S+xDZGnbZL5k1JEV9BKJAYP0SMMxhFV
-	 PWYZc66QsRPWBXr6s1f8SOyMYxWGtPP7Zxi6AUdo=
+	b=qQm3trpLUJ0BmX5v+7e9NCTTKVT9BNQiQj2Aj4RhDAW33iB/cydSxgzuvznEE34Or
+	 7z4St9HoGqA9x0T7IAYyWpFUQWNF2Z70m4nmrU2x91uQvnJZVkumWIEB4SmuL7YBRv
+	 H6oTUd1kTorovk7fDzw91gcq43ALSUdpdG4Sn/0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgFPWEz (ORCPT
+        id S1726546AbgFPWFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:04:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 18:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgFPWEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:04:55 -0400
+        id S1725790AbgFPWFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:05:06 -0400
 Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1217D2098B;
-        Tue, 16 Jun 2020 22:04:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70AC520739;
+        Tue, 16 Jun 2020 22:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592345094;
-        bh=zZ4bUdq2K5ojEsFNwkT75BRnNvTH2SiQYaGdmtmA+LY=;
+        s=default; t=1592345105;
+        bh=9bH3nkbMis+3M+lEU06ECFeAOUKxNtoZ5l6kTuWtHJ4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dd7DDppHgktg8e8KtkNmGEBjAzou4NJtHhshd5D5iXcW+leO25FXNxXDZWnY2I0Bk
-         YrxOpMwfKTfQ2ieFXVvDjA9DHKagBo5wTtub2FYwA+pxC4gHs4II2F9118TPhU0NwW
-         CEOrkYO+kNqRG1mP0l0R1uk+nRVtuDAWkJ2JD1zA=
-Date:   Tue, 16 Jun 2020 17:04:51 -0500
+        b=NjFR2rOLvjf1Fl8aIw/KJ8pg7rdNAzn+ldbAARieoWv6tfX23tuZTCAG/lBok9e3H
+         sgtWezY0YeOjBEX/eyBS6rW1QM7IkGdvUIF4plMokntwY7lOSSWG+ay7TIm9Hv/iwb
+         tGfciR+AzZ5vTi9M3+jj17AmDOmEqBbHiBZRS5ps=
+Date:   Tue, 16 Jun 2020 17:05:04 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Jim Quinlan <james.quinlan@broadcom.com>
 Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com,
-        Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 02/12] ata: ahci_brcm: Fix use of BCM7216 reset
- controller
-Message-ID: <20200616220451.GA1983693@bjorn-Precision-5520>
+Subject: Re: [PATCH v5 03/12] dt-bindings: PCI: Add bindings for more Brcmstb
+ chips
+Message-ID: <20200616220504.GA1983902@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616205533.3513-3-james.quinlan@broadcom.com>
+In-Reply-To: <20200616205533.3513-4-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 04:55:09PM -0400, Jim Quinlan wrote:
+On Tue, Jun 16, 2020 at 04:55:10PM -0400, Jim Quinlan wrote:
 > From: Jim Quinlan <jquinlan@broadcom.com>
 > 
-> A reset controller "rescal" is shared between the AHCI driver and the PCIe
-> driver for the BrcmSTB 7216 chip.  The code is modified to allow this
-> sharing and to deassert() properly.
+> - Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+>   7211 (STB version of RPi4).
+> - add new property 'brcm,scb-sizes'
+> - add new property 'resets'
+> - add new property 'reset-names' for 7216 only
+> - allow 'ranges' and 'dma-ranges' to have more than one item and update
+>   the example to show this.
 
-Use imperative mood, e.g.,
-
-  A reset controller "rescal" is shared between the AHCI driver and
-  the PCIe driver for the BrcmSTB 7216 chip.  Use
-  devm_reset_control_get_optional_shared control() to handle this
-  sharing.
-
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-> Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller
-> name")
-
-Don't wrap "Fixes:" lines so it's easier to search for them.
+Capitalize and add periods to the list items consistently.
