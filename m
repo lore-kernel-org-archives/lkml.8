@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF62C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9E4321473
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A2121508
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322343;
-	bh=98mUkrdbwddYhdPlGGCuuAKIc46kJxY1PfoxGBDKUdQ=;
+	s=default; t=1592322347;
+	bh=rm1bzAXLBXkymLfucPHjI52gwCHPLfYj8Fb3tWjdOxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PD0yAvwXW1HWL2rNGjrU/NA9gZLLM115jmEHVkikl3/q0J+/jYug7qc+ZoG3uZ4xh
-	 WEqgg73a5pDaxj7YeLS0VkLYU5yltlptL5QQ8uQZXEHursyO+mUh5/CS5o3e0b6Vgs
-	 i/txLUt9lTOG0evsmbekHqfvtmdnN9waK9oKA6r8=
+	b=hHZJVe3F4YUGxlafWknK0gYTnyOhSbf3VKxcmhB/vzaVYczmQ4s06Zs/reQ65dS6l
+	 ps09vNX51cNXx7jMeiB7pFiOthSIUfz//gwJxF0kaaQrdQlNuQ93SbHrdTudHarMoh
+	 qqBQc9EYWAH0kqkjJ0Q/MKWvsa3NW24+syCLgVDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbgFPPpm (ORCPT
+        id S1731453AbgFPPpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37034 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:45:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbgFPPph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:45:37 -0400
+        id S1731142AbgFPPpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA33120776;
-        Tue, 16 Jun 2020 15:45:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C2D20C09;
+        Tue, 16 Jun 2020 15:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322337;
-        bh=98mUkrdbwddYhdPlGGCuuAKIc46kJxY1PfoxGBDKUdQ=;
+        s=default; t=1592322342;
+        bh=rm1bzAXLBXkymLfucPHjI52gwCHPLfYj8Fb3tWjdOxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NpE8ZWCJa87KGLcgQsOuyUjwZd7sjep0j7CJ71lmAV7sAt+rPZRXG8GQVRqm9ASga
-         asEoN6ObeW+OgG9YiOtUieuZ2gJQ/GshbC3sSDkancuh6peiG/TeRP/MFoFH1H7ijh
-         7qNi7z4sxMEcJNbJchJhfSl1q+yYzJiZimLdx8qw=
+        b=E9bh1UZ1DdFkq3JHLGmOfhZaWTV4H5EmkRg4zZrldxUEYIeFz0bTTD06v3zcdZlOC
+         s80tACP+KOopFOQT1dBbFoslhL3jvcrU4mQIuGEI0I+Cwr0518qnEgdauim64i+gxn
+         VQRNwAD2YOl1nRcupdR2un03rXYCnDknML9i7508=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Breno Lima <breno.lima@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.7 062/163] watchdog: imx_sc_wdt: Fix reboot on crash
-Date:   Tue, 16 Jun 2020 17:33:56 +0200
-Message-Id: <20200616153109.814744666@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 054/163] io_uring: re-set iov base/len for buffer select retry
+Date:   Tue, 16 Jun 2020 17:33:48 +0200
+Message-Id: <20200616153109.432071451@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,49 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit e56d48e92b1017b6a8dbe64923a889283733fd96 upstream.
+commit dddb3e26f6d88c5344d28cb5ff9d3d6fa05c4f7a upstream.
 
-Currently when running the samples/watchdog/watchdog-simple.c
-application and forcing a kernel crash by doing:
+We already have the buffer selected, but we should set the iter list
+again.
 
-# ./watchdog-simple &
-# echo c > /proc/sysrq-trigger
-
-The system does not reboot as expected.
-
-Fix it by calling imx_sc_wdt_set_timeout() to configure the i.MX8QXP
-watchdog with a proper timeout.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 986857acbc9a ("watchdog: imx_sc: Add i.MX system controller watchdog support")
-Reported-by: Breno Lima <breno.lima@nxp.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Breno Lima <breno.lima@nxp.com>
-Link: https://lore.kernel.org/r/20200412230122.5601-1-festevam@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: stable@vger.kernel.org # v5.7
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/imx_sc_wdt.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/io_uring.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/watchdog/imx_sc_wdt.c
-+++ b/drivers/watchdog/imx_sc_wdt.c
-@@ -175,6 +175,11 @@ static int imx_sc_wdt_probe(struct platf
- 	wdog->timeout = DEFAULT_TIMEOUT;
- 
- 	watchdog_init_timeout(wdog, 0, dev);
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2333,8 +2333,14 @@ static ssize_t __io_iov_buffer_select(st
+ static ssize_t io_iov_buffer_select(struct io_kiocb *req, struct iovec *iov,
+ 				    bool needs_lock)
+ {
+-	if (req->flags & REQ_F_BUFFER_SELECTED)
++	if (req->flags & REQ_F_BUFFER_SELECTED) {
++		struct io_buffer *kbuf;
 +
-+	ret = imx_sc_wdt_set_timeout(wdog, wdog->timeout);
-+	if (ret)
-+		return ret;
-+
- 	watchdog_stop_on_reboot(wdog);
- 	watchdog_stop_on_unregister(wdog);
- 
++		kbuf = (struct io_buffer *) (unsigned long) req->rw.addr;
++		iov[0].iov_base = u64_to_user_ptr(kbuf->addr);
++		iov[0].iov_len = kbuf->len;
+ 		return 0;
++	}
+ 	if (!req->rw.len)
+ 		return 0;
+ 	else if (req->rw.len > 1)
 
 
