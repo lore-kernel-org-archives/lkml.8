@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC15C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E44C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E7420C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB0221548
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321902;
-	bh=8oOdO8G5uDNdbKO90o2ZU39T1Bp6Ti8hqZkMXc9pX6k=;
+	s=default; t=1592321906;
+	bh=dTnrw0JasMGS76R+m/RltFYVDflbnjset2bZOPtq2lA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SzhFOhw1duWQ5PbFt9rgOMh6+49MGSamSnqKJw8gsKg1mYlqfNsFEjSJZp5IfFMV4
-	 eVhhFfbOoScrT7olWDBpWF48MxvEApLKMTpjr2LR3TxdC+jduH8o5FpAWgWMMPnpAz
-	 xPDWk44AwigxA9uaV+npYen8+FTnq6+mCpj3D9N8=
+	b=QnWh6+/k8a6G/Ybn3VaautRObsblZwtIH/LOuZDjTm3lzuBXDOwGl1BhzD6XuyKNg
+	 6tkpwxFgtF5eqgfyO9lPwTCB48f6fB9OMHNNR7jwrd2kMRNtQ+SDFmu4NS4fGGE4PO
+	 Io1VGFggs+z/zkYOStJIRJ5AfsTygGa+RW+NKQyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbgFPPiV (ORCPT
+        id S1730644AbgFPPiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:38:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50400 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730567AbgFPPiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:11 -0400
+        id S1730609AbgFPPiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF95820C56;
-        Tue, 16 Jun 2020 15:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4863C214DB;
+        Tue, 16 Jun 2020 15:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321891;
-        bh=8oOdO8G5uDNdbKO90o2ZU39T1Bp6Ti8hqZkMXc9pX6k=;
+        s=default; t=1592321898;
+        bh=dTnrw0JasMGS76R+m/RltFYVDflbnjset2bZOPtq2lA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KlyOkRLjAVFooyhsy/zKVOv2Qk7dVEmA1J/u6BA9MFi/062aS/VD4VOw4fsMRpXGL
-         /ROao15HpjOF0cpmiikmKWbvkwNm2ORiaQZgO29BeZqL0mR8A0/5WNauWE/aYyz0dI
-         DuuEU+2vxQlWgGa+4be/pomkImmeyA54HQmhpOg8=
+        b=KJnhBsRUxtTIi2TzyhaJp1Fr3qB60pJyoCnyAtprcT3n3jne1V77axDRHXwY//r6/
+         rjQg0GfshiP+z/p+OfNdSmtsMoBdsneqMxjwmzVtxSuPVdFBGjGE3gY7v+ZPqB0x8i
+         AsyAgXcr4mcAY08dRhO1lnasYQ/Y8lx07zYxIVdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 056/134] ALSA: fireface: fix configuration error for nominal sampling transfer frequency
-Date:   Tue, 16 Jun 2020 17:34:00 +0200
-Message-Id: <20200616153103.456589269@linuxfoundation.org>
+Subject: [PATCH 5.4 059/134] ALSA: pcm: fix snd_pcm_link() lockdep splat
+Date:   Tue, 16 Jun 2020 17:34:03 +0200
+Message-Id: <20200616153103.599157790@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,67 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit bbd6aac3ae15bef762af03bf62e35ace5c4292bd upstream.
+commit e18035cf5cb3d2bf8e4f4d350a23608bd208b934 upstream.
 
-128000 and 192000 are congruence modulo 32000, thus it's wrong to
-distinguish them as multiple of 32000 and 48000 by modulo 32000 at
-first.
+Add and use snd_pcm_stream_lock_nested() in snd_pcm_link/unlink
+implementation.  The code is fine, but generates a lockdep complaint:
 
-Additionally, used condition statement to detect quadruple speed can
-cause missing bit flag.
+============================================
+WARNING: possible recursive locking detected
+5.7.1mq+ #381 Tainted: G           O
+--------------------------------------------
+pulseaudio/4180 is trying to acquire lock:
+ffff888402d6f508 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xda8/0xee0 [snd_pcm]
 
-Furthermore, counter to ensure the configuration is wrong and it
-causes false positive.
+but task is already holding lock:
+ffff8883f7a8cf18 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xe4e/0xee0 [snd_pcm]
 
-This commit fixes the above three bugs.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-Cc: <stable@vger.kernel.org>
-Fixes: 60aec494b389 ("ALSA: fireface: support allocate_resources operation in latter protocol")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200510074301.116224-2-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+       CPU0
+       ----
+  lock(&group->lock);
+  lock(&group->lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by pulseaudio/4180:
+ #0: ffffffffa1a05190 (snd_pcm_link_rwsem){++++}-{3:3}, at: snd_pcm_common_ioctl+0xca0/0xee0 [snd_pcm]
+ #1: ffff8883f7a8cf18 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xe4e/0xee0 [snd_pcm]
+[...]
+
+Cc: stable@vger.kernel.org
+Fixes: f57f3df03a8e ("ALSA: pcm: More fine-grained PCM link locking")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/37252c65941e58473b1219ca9fab03d48f47e3e3.1591610330.git.mirq-linux@rere.qmqm.pl
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- sound/firewire/fireface/ff-protocol-latter.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 
---- a/sound/firewire/fireface/ff-protocol-latter.c
-+++ b/sound/firewire/fireface/ff-protocol-latter.c
-@@ -107,18 +107,18 @@ static int latter_allocate_resources(str
- 	int err;
+---
+ sound/core/pcm_native.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -136,6 +136,16 @@ void snd_pcm_stream_lock_irq(struct snd_
+ }
+ EXPORT_SYMBOL_GPL(snd_pcm_stream_lock_irq);
  
- 	// Set the number of data blocks transferred in a second.
--	if (rate % 32000 == 0)
--		code = 0x00;
-+	if (rate % 48000 == 0)
-+		code = 0x04;
- 	else if (rate % 44100 == 0)
- 		code = 0x02;
--	else if (rate % 48000 == 0)
--		code = 0x04;
-+	else if (rate % 32000 == 0)
-+		code = 0x00;
- 	else
- 		return -EINVAL;
++static void snd_pcm_stream_lock_nested(struct snd_pcm_substream *substream)
++{
++	struct snd_pcm_group *group = &substream->self_group;
++
++	if (substream->pcm->nonatomic)
++		mutex_lock_nested(&group->mutex, SINGLE_DEPTH_NESTING);
++	else
++		spin_lock_nested(&group->lock, SINGLE_DEPTH_NESTING);
++}
++
+ /**
+  * snd_pcm_stream_unlock_irq - Unlock the PCM stream
+  * @substream: PCM substream
+@@ -2028,7 +2038,7 @@ static int snd_pcm_link(struct snd_pcm_s
+ 	snd_pcm_stream_unlock_irq(substream);
  
- 	if (rate >= 64000 && rate < 128000)
- 		code |= 0x08;
--	else if (rate >= 128000 && rate < 192000)
-+	else if (rate >= 128000)
- 		code |= 0x10;
+ 	snd_pcm_group_lock_irq(target_group, nonatomic);
+-	snd_pcm_stream_lock(substream1);
++	snd_pcm_stream_lock_nested(substream1);
+ 	snd_pcm_group_assign(substream1, target_group);
+ 	refcount_inc(&target_group->refs);
+ 	snd_pcm_stream_unlock(substream1);
+@@ -2044,7 +2054,7 @@ static int snd_pcm_link(struct snd_pcm_s
  
- 	reg = cpu_to_le32(code);
-@@ -140,7 +140,7 @@ static int latter_allocate_resources(str
- 		if (curr_rate == rate)
- 			break;
- 	}
--	if (count == 10)
-+	if (count > 10)
- 		return -ETIMEDOUT;
- 
- 	for (i = 0; i < ARRAY_SIZE(amdtp_rate_table); ++i) {
+ static void relink_to_local(struct snd_pcm_substream *substream)
+ {
+-	snd_pcm_stream_lock(substream);
++	snd_pcm_stream_lock_nested(substream);
+ 	snd_pcm_group_assign(substream, &substream->self_group);
+ 	snd_pcm_stream_unlock(substream);
+ }
 
 
