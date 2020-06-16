@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F95C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC30F20C09
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E4321473
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322337;
-	bh=9/f0wi49iItWo3HVGU0BxHoshxsiC38fZ6j+hzA7fI0=;
+	s=default; t=1592322343;
+	bh=98mUkrdbwddYhdPlGGCuuAKIc46kJxY1PfoxGBDKUdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lkh9tNaNR16FW/dOccf9NrUWr8HvJFXY3pSTi/2Z9u3gGvdYEX1jgXCU2j9dEB7vM
-	 w5CrADvJbLlojXEjg9EAiovKFfTZ+JnThoHcIOI4UZm5LjQn5rXml2YoZBRx/4ETZP
-	 DNaN6aX2g6MXZO+f/WOCQrQaYGUm+NdroDuxPJp8=
+	b=PD0yAvwXW1HWL2rNGjrU/NA9gZLLM115jmEHVkikl3/q0J+/jYug7qc+ZoG3uZ4xh
+	 WEqgg73a5pDaxj7YeLS0VkLYU5yltlptL5QQ8uQZXEHursyO+mUh5/CS5o3e0b6Vgs
+	 i/txLUt9lTOG0evsmbekHqfvtmdnN9waK9oKA6r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbgFPPpg (ORCPT
+        id S1732117AbgFPPpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:45:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36886 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:45:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732102AbgFPPpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:45:32 -0400
+        id S1731142AbgFPPph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99F632071A;
-        Tue, 16 Jun 2020 15:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA33120776;
+        Tue, 16 Jun 2020 15:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322332;
-        bh=9/f0wi49iItWo3HVGU0BxHoshxsiC38fZ6j+hzA7fI0=;
+        s=default; t=1592322337;
+        bh=98mUkrdbwddYhdPlGGCuuAKIc46kJxY1PfoxGBDKUdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OHQ03V4+5j6TZyrAajQdtt80vT735q8CGpMybTRQcDCjHUXps+S/SEwdYmGAGI4EC
-         RKWZPbfZfHTJlFINx4Sd2wGeXmVic17KkWcPc3VEs+xlRTeR84FtoUVY3Tlckb8/M4
-         TXXkNHcuxsAjzbLH7l5u0br3QOeT7dolNx9fnhSo=
+        b=NpE8ZWCJa87KGLcgQsOuyUjwZd7sjep0j7CJ71lmAV7sAt+rPZRXG8GQVRqm9ASga
+         asEoN6ObeW+OgG9YiOtUieuZ2gJQ/GshbC3sSDkancuh6peiG/TeRP/MFoFH1H7ijh
+         7qNi7z4sxMEcJNbJchJhfSl1q+yYzJiZimLdx8qw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Shyam Prasad N <nspmangalore@gmail.com>
-Subject: [PATCH 5.7 060/163] smb3: fix typo in mount options displayed in /proc/mounts
-Date:   Tue, 16 Jun 2020 17:33:54 +0200
-Message-Id: <20200616153109.723325561@linuxfoundation.org>
+        stable@vger.kernel.org, Breno Lima <breno.lima@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 5.7 062/163] watchdog: imx_sc_wdt: Fix reboot on crash
+Date:   Tue, 16 Jun 2020 17:33:56 +0200
+Message-Id: <20200616153109.814744666@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,32 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit 7866c177a03b18be3d83175014c643546e5b53c6 upstream.
+commit e56d48e92b1017b6a8dbe64923a889283733fd96 upstream.
 
-Missing the final 's' in "max_channels" mount option when displayed in
-/proc/mounts (or by mount command)
+Currently when running the samples/watchdog/watchdog-simple.c
+application and forcing a kernel crash by doing:
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
+# ./watchdog-simple &
+# echo c > /proc/sysrq-trigger
+
+The system does not reboot as expected.
+
+Fix it by calling imx_sc_wdt_set_timeout() to configure the i.MX8QXP
+watchdog with a proper timeout.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 986857acbc9a ("watchdog: imx_sc: Add i.MX system controller watchdog support")
+Reported-by: Breno Lima <breno.lima@nxp.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Breno Lima <breno.lima@nxp.com>
+Link: https://lore.kernel.org/r/20200412230122.5601-1-festevam@gmail.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifsfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/imx_sc_wdt.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -621,7 +621,7 @@ cifs_show_options(struct seq_file *s, st
- 	seq_printf(s, ",actimeo=%lu", cifs_sb->actimeo / HZ);
+--- a/drivers/watchdog/imx_sc_wdt.c
++++ b/drivers/watchdog/imx_sc_wdt.c
+@@ -175,6 +175,11 @@ static int imx_sc_wdt_probe(struct platf
+ 	wdog->timeout = DEFAULT_TIMEOUT;
  
- 	if (tcon->ses->chan_max > 1)
--		seq_printf(s, ",multichannel,max_channel=%zu",
-+		seq_printf(s, ",multichannel,max_channels=%zu",
- 			   tcon->ses->chan_max);
+ 	watchdog_init_timeout(wdog, 0, dev);
++
++	ret = imx_sc_wdt_set_timeout(wdog, wdog->timeout);
++	if (ret)
++		return ret;
++
+ 	watchdog_stop_on_reboot(wdog);
+ 	watchdog_stop_on_unregister(wdog);
  
- 	return 0;
 
 
