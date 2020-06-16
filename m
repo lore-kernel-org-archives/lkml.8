@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD610C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87EBC20E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5B320C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321819;
-	bh=qbjFp3mx16T80Cvs+TRI69TmGM1espN6i4MH6KsISO4=;
+	s=default; t=1592321822;
+	bh=oXxrqKU3RYuFHlbwhWmrhjiO0p/+PyjSyNfifVE7cVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sf0ESdRuGAH3X3RrLRegbG3GlyOf9QTmLsvt7fR81FYX/RFIMzoNk1TdCa2k5rjmN
-	 2HD790lVurVWGT3ByyBabqR3Saa9o4MsD2jimlutDGhwv71NX8fh4zx1606D+Ib/KQ
-	 tMwpWTjGbnx5A0XpjguQGcvDn1JKtI7I0K/kVhic=
+	b=u0uEjaXa+92PrTwreCiOzb437gTxUX0A1XtFYrJ5NbC3ksPNyKFzF/LOpjTg7qYSS
+	 2b5jkR5BL9ffuEEnOxNODOQcNNrMUaTUh0ktbco+1XVdaiz0F5VSJbYqe+zjW1qPwJ
+	 bqwn2JnVecC/tHqY6Sp+aNbn8GWIj9d5Q6fpYMO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbgFPPg6 (ORCPT
+        id S1730179AbgFPPhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:36:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48046 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730139AbgFPPg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:36:57 -0400
+        id S1729543AbgFPPhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CD7D2098B;
-        Tue, 16 Jun 2020 15:36:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 893B420B1F;
+        Tue, 16 Jun 2020 15:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321816;
-        bh=qbjFp3mx16T80Cvs+TRI69TmGM1espN6i4MH6KsISO4=;
+        s=default; t=1592321819;
+        bh=oXxrqKU3RYuFHlbwhWmrhjiO0p/+PyjSyNfifVE7cVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mk/S6iMSf/nIBQ3CllzAtjilVJ2Ww80LsidpQOnsWFnaI6FEY1ZlX7d5hew6oh/fB
-         lIO+57VceLbubLLcjhcEi5ciSca8AIwCoSjOkCpoWqWdsgN9jtEkHTAeYgLucoC0C5
-         1Qk8rk+imN5kkE0niSJTbcei7JB5By8AM5THNpfc=
+        b=R+kJ0oPEfzq61A2iIwZtgeNdjVkL2JMacyYL44oCh67QrHtyvao+HYZXbGpYEE3bv
+         j/Ws1kNLXtaujMKtLpVGBYZAXD5F8ubYdCIwP+8V1TmgW8cFS/qAHcEWG7d6z/NIO8
+         w51/Azq1BINK3BS3OnxCDQUVUcvPHIl4dje6SBbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/134] PCI/PM: Adjust pcie_wait_for_link_delay() for caller delay
-Date:   Tue, 16 Jun 2020 17:33:31 +0200
-Message-Id: <20200616153102.067648603@linuxfoundation.org>
+Subject: [PATCH 5.4 028/134] kobject: Make sure the parent does not get released before its children
+Date:   Tue, 16 Jun 2020 17:33:32 +0200
+Message-Id: <20200616153102.122765377@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,42 +65,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-[ Upstream commit f044baaff1eb7ae5aa7a36f1b7ad5bd8eeb672c4 ]
+[ Upstream commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa ]
 
-The caller of pcie_wait_for_link_delay() specifies the time to wait after
-the link becomes active.  When the downstream port doesn't support link
-active reporting, obviously we can't tell when the link becomes active, so
-we waited the worst-case time (1000 ms) plus 100 ms, ignoring the delay
-from the caller.
+In the function kobject_cleanup(), kobject_del(kobj) is
+called before the kobj->release(). That makes it possible to
+release the parent of the kobject before the kobject itself.
 
-Instead, wait for 1000 ms + the delay from the caller.
+To fix that, adding function __kboject_del() that does
+everything that kobject_del() does except release the parent
+reference. kobject_cleanup() then calls __kobject_del()
+instead of kobject_del(), and separately decrements the
+reference count of the parent kobject after kobj->release()
+has been called.
 
-Fixes: 4827d63891b6 ("PCI/PM: Add pcie_wait_for_link_delay()")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/r/20200513151840.36400-1-heikki.krogerus@linux.intel.com
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/kobject.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 779132aef0fb..c73e8095a849 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4621,10 +4621,10 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 83198cb37d8d..2bd631460e18 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
+ }
+ EXPORT_SYMBOL_GPL(kobject_move);
  
- 	/*
- 	 * Some controllers might not implement link active reporting. In this
--	 * case, we wait for 1000 + 100 ms.
-+	 * case, we wait for 1000 ms + any delay requested by the caller.
- 	 */
- 	if (!pdev->link_active_reporting) {
--		msleep(1100);
-+		msleep(timeout + delay);
- 		return true;
+-/**
+- * kobject_del() - Unlink kobject from hierarchy.
+- * @kobj: object.
+- *
+- * This is the function that should be called to delete an object
+- * successfully added via kobject_add().
+- */
+-void kobject_del(struct kobject *kobj)
++static void __kobject_del(struct kobject *kobj)
+ {
+ 	struct kernfs_node *sd;
+ 	const struct kobj_type *ktype;
+@@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+ 
+ 	kobj->state_in_sysfs = 0;
+ 	kobj_kset_leave(kobj);
+-	kobject_put(kobj->parent);
+ 	kobj->parent = NULL;
+ }
++
++/**
++ * kobject_del() - Unlink kobject from hierarchy.
++ * @kobj: object.
++ *
++ * This is the function that should be called to delete an object
++ * successfully added via kobject_add().
++ */
++void kobject_del(struct kobject *kobj)
++{
++	struct kobject *parent = kobj->parent;
++
++	__kobject_del(kobj);
++	kobject_put(parent);
++}
+ EXPORT_SYMBOL(kobject_del);
+ 
+ /**
+@@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+  */
+ static void kobject_cleanup(struct kobject *kobj)
+ {
++	struct kobject *parent = kobj->parent;
+ 	struct kobj_type *t = get_ktype(kobj);
+ 	const char *name = kobj->name;
+ 
+@@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
+ 	if (kobj->state_in_sysfs) {
+ 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+ 			 kobject_name(kobj), kobj);
+-		kobject_del(kobj);
++		__kobject_del(kobj);
  	}
  
+ 	if (t && t->release) {
+@@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
+ 		pr_debug("kobject: '%s': free name\n", name);
+ 		kfree_const(name);
+ 	}
++
++	kobject_put(parent);
+ }
+ 
+ #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
 -- 
 2.25.1
 
