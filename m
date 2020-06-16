@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97327C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7014B21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F80214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322399;
-	bh=lC0Nos0Z2xN682tVmoX7eeKjh3ClUl7Mw27xlR7HuUg=;
+	s=default; t=1592322402;
+	bh=G3+7YwfmCftXoGAKSqvknHj6X2bwZy+Mwn8MdcTJ/ak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4uqa/QeAQT0IohcNsiwkDpNfYeBIkaGwaO2rCxHyvU6RT1QpRH/hz9tDNin4SIrk
-	 98lmuxVfBwpzMzfiz7aBOYxSAGMgl2WbRHUET9h7kLI05wVyDmYK9HhzS5rocLesWc
-	 U1Or8GstId2/Kmrudj29D/w0k+A0kIs7wEsJ2JTE=
+	b=GHk0fJM9D5IVBM/jj6sDEt49JbSNnbQlMA82TtH3eBuOldCGLCV/ZoS3EDE1dbStr
+	 gxlkGA7AfSiywtwD82LmcpOI45qGx4qFsL7z2QV9ufWd/VNipmDtxncuzPlGPUKjxP
+	 5Ii+kiDgDHtXEvTl/w+aAuUwLdDg9cK/YQBEKlOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730675AbgFPPqi (ORCPT
+        id S1731301AbgFPPqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38844 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:46:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732200AbgFPPqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:35 -0400
+        id S1730049AbgFPPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A88F5214F1;
-        Tue, 16 Jun 2020 15:46:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 122E121473;
+        Tue, 16 Jun 2020 15:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322394;
-        bh=lC0Nos0Z2xN682tVmoX7eeKjh3ClUl7Mw27xlR7HuUg=;
+        s=default; t=1592322391;
+        bh=G3+7YwfmCftXoGAKSqvknHj6X2bwZy+Mwn8MdcTJ/ak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EsFpV+mQTJObZa2B0eQiJZh9sG9R6gTu8gtbspsSldCot4Tt2E2JSpXgME2a/dXIj
-         J4GXc0vWEdAA86efBJuGv2HkdlRgxwqCQy+6hJcK8SKnTMqvwWchyOwkuGaD2ai8oc
-         8IcwVp4hGsq3f0iS+1R1QBgyqWsQ/hmKXPOtVFhQ=
+        b=b/nF4PE+seUdkgnNgvsp46MpVVX9YIDELl2DL+DuhlNpNSlURC0v8W5jtznoSw36N
+         yUFhv08hjNv5RqTP+0a6ohfJ/s5ASdON7bXJj5oYAZ9NXlHF8bhrupme10jVShaMrT
+         zP5rFYghg3U8i7HPZ94wFW/E8We5e4ceOFw99G94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oz Shlomo <ozsh@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.7 114/163] net/mlx5e: CT: Fix ipv6 nat header rewrite actions
-Date:   Tue, 16 Jun 2020 17:34:48 +0200
-Message-Id: <20200616153112.265339373@linuxfoundation.org>
+        stable@vger.kernel.org, Valentin Longchamp <valentin@longchamp.me>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 113/163] net: sched: export __netdev_watchdog_up()
+Date:   Tue, 16 Jun 2020 17:34:47 +0200
+Message-Id: <20200616153112.216801135@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,52 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oz Shlomo <ozsh@mellanox.com>
+From: Valentin Longchamp <valentin@longchamp.me>
 
-[ Upstream commit 0d156f2deda8675c29fa2b8b5ed9b374370e47f2 ]
+[ Upstream commit 1a3db27ad9a72d033235b9673653962c02e3486e ]
 
-Set the ipv6 word fields according to the hardware definitions.
+Since the quiesce/activate rework, __netdev_watchdog_up() is directly
+called in the ucc_geth driver.
 
-Fixes: ac991b48d43c ("net/mlx5e: CT: Offload established flows")
-Signed-off-by: Oz Shlomo <ozsh@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Unfortunately, this function is not available for modules and thus
+ucc_geth cannot be built as a module anymore. Fix it by exporting
+__netdev_watchdog_up().
+
+Since the commit introducing the regression was backported to stable
+branches, this one should ideally be as well.
+
+Fixes: 79dde73cf9bc ("net/ethernet/freescale: rework quiesce/activate for ucc_geth")
+Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ net/sched/sch_generic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c
-@@ -320,21 +320,21 @@ mlx5_tc_ct_parse_mangle_to_mod_act(struc
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -464,6 +464,7 @@ void __netdev_watchdog_up(struct net_dev
+ 			dev_hold(dev);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(__netdev_watchdog_up);
  
- 	case FLOW_ACT_MANGLE_HDR_TYPE_IP6:
- 		MLX5_SET(set_action_in, modact, length, 0);
--		if (offset == offsetof(struct ipv6hdr, saddr))
-+		if (offset == offsetof(struct ipv6hdr, saddr) + 12)
- 			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_31_0;
--		else if (offset == offsetof(struct ipv6hdr, saddr) + 4)
--			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_63_32;
- 		else if (offset == offsetof(struct ipv6hdr, saddr) + 8)
-+			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_63_32;
-+		else if (offset == offsetof(struct ipv6hdr, saddr) + 4)
- 			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_95_64;
--		else if (offset == offsetof(struct ipv6hdr, saddr) + 12)
-+		else if (offset == offsetof(struct ipv6hdr, saddr))
- 			field = MLX5_ACTION_IN_FIELD_OUT_SIPV6_127_96;
--		else if (offset == offsetof(struct ipv6hdr, daddr))
-+		else if (offset == offsetof(struct ipv6hdr, daddr) + 12)
- 			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_31_0;
--		else if (offset == offsetof(struct ipv6hdr, daddr) + 4)
--			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_63_32;
- 		else if (offset == offsetof(struct ipv6hdr, daddr) + 8)
-+			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_63_32;
-+		else if (offset == offsetof(struct ipv6hdr, daddr) + 4)
- 			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_95_64;
--		else if (offset == offsetof(struct ipv6hdr, daddr) + 12)
-+		else if (offset == offsetof(struct ipv6hdr, daddr))
- 			field = MLX5_ACTION_IN_FIELD_OUT_DIPV6_127_96;
- 		else
- 			return -EOPNOTSUPP;
+ static void dev_watchdog_up(struct net_device *dev)
+ {
 
 
