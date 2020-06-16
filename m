@@ -2,91 +2,97 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE09C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B43FC2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/U4j28m"
+	by mail.kernel.org (Postfix) with ESMTP id 037C12071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592324092;
+	bh=hIHnApJ9WgvKETz2q3jIxCz4NB+t33uQCq2vQiNDRZ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dgm4BBbAbbYJqu3sqPPQvnazIVFJOLE48GyT5EN7KAdtlQEoigxb//p7+SuNaP1yj
+	 mZrUstB1uutztakymJ0SG1zwLAS1vvd3/POMD4mJ4qHxe6JuHaXo2hOvSdibtbWYgN
+	 LEQAHe/YclXuV1d8nKS49xdYzjucsEtkvsEnjThQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgFPQOq (ORCPT
+        id S1730390AbgFPPm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:14:46 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37474 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732261AbgFPQOm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:14:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592324081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=EGk4MDxuxjJxgEfnB6gIyOaKHUzMx57nfzVxFUf1flw=;
-        b=b/U4j28mnQmJJ2K3ZZsm0kFoFZauhNVQWi91KqZiObYKmnSxwHnOTGNlUxvUVAm+Up9VPI
-        mU+iLjzCDkwv9A0SIT6YKPmLVt4CmJ2j8f6U4UirpCAp9qmuzdGfXS4Za1xCMavVHWpU2L
-        le6pg+Ywc8kZp3Ung2wBcWIrLEw7GYU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-KOglBjA_PZOFj8z9UPRzyA-1; Tue, 16 Jun 2020 12:14:39 -0400
-X-MC-Unique: KOglBjA_PZOFj8z9UPRzyA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 16 Jun 2020 11:42:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731653AbgFPPmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22EC5100A69D;
-        Tue, 16 Jun 2020 16:14:32 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.192.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C6FF7CAA0;
-        Tue, 16 Jun 2020 16:14:28 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Like Xu <like.xu@linux.intel.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated MSRs
-Date:   Tue, 16 Jun 2020 18:14:27 +0200
-Message-Id: <20200616161427.375651-1-vkuznets@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F0F2208E4;
+        Tue, 16 Jun 2020 15:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322136;
+        bh=hIHnApJ9WgvKETz2q3jIxCz4NB+t33uQCq2vQiNDRZ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=erTe6yFgleIsGzllfRYuJz8j0epkgsscd20GJwPmw7EgBEequoNH0vg3IirmytyJT
+         r3oiK80/e5BE3Owh6pHYqx0411Dv+ll5wlQgYcw/cIMasdaECFcnE9m31CpjoTYbZr
+         Gsp82Y6vsJudJoBscFnfhs3WuP69y/N/duaCumoE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 015/163] staging: wfx: fix double free
+Date:   Tue, 16 Jun 2020 17:33:09 +0200
+Message-Id: <20200616153107.606632227@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
+References: <20200616153106.849127260@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-state_test/smm_test selftests are failing on AMD with:
-"Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-MSR_IA32_PERF_CAPABILITIES is an emulated MSR indeed but only on Intel,
-make svm_has_emulated_msr() skip it so it is not returned by
-KVM_GET_MSR_INDEX_LIST.
+[ Upstream commit 832cc98141b4b93acbb9231ca9e36f7fbe347f47 ]
 
-Fixes: 27461da31089 ("KVM: x86/pmu: Support full width counting")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+In case of error in wfx_probe(), wdev->hw is freed. Since an error
+occurred, wfx_free_common() is called, then wdev->hw is freed again.
+
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Fixes: 4033714d6cbe ("staging: wfx: fix init/remove vs IRQ race")
+Link: https://lore.kernel.org/r/20200505123757.39506-4-Jerome.Pouiller@silabs.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/svm/svm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/wfx/main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 8ccfa4197d9c..2c423d64fb8f 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3539,6 +3539,8 @@ static bool svm_has_emulated_msr(u32 index)
- 	case MSR_IA32_MCG_EXT_CTL:
- 	case MSR_IA32_VMX_BASIC ... MSR_IA32_VMX_VMFUNC:
- 		return false;
-+	case MSR_IA32_PERF_CAPABILITIES:
-+		return false;
- 	default:
- 		break;
- 	}
+diff --git a/drivers/staging/wfx/main.c b/drivers/staging/wfx/main.c
+index 3c4c240229ad..8f19bd0fd2a1 100644
+--- a/drivers/staging/wfx/main.c
++++ b/drivers/staging/wfx/main.c
+@@ -466,7 +466,6 @@ int wfx_probe(struct wfx_dev *wdev)
+ 
+ err2:
+ 	ieee80211_unregister_hw(wdev->hw);
+-	ieee80211_free_hw(wdev->hw);
+ err1:
+ 	wfx_bh_unregister(wdev);
+ 	return err;
 -- 
-2.25.4
+2.25.1
+
+
 
