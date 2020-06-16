@@ -2,103 +2,154 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0240AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5690C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5D8D207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4360207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="EfroWTqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgFPXer (ORCPT
+        id S1726556AbgFPXgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:34:47 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5561 "EHLO mga11.intel.com"
+        Tue, 16 Jun 2020 19:36:12 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:40981 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgFPXen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:34:43 -0400
-IronPort-SDR: gBhqEhejMETHRpP6DaKlCpewzsprfX52T9XwAqc7XsNCMQE0NpPoB5N1oiXH59hKP3YSmFNAqT
- wyXO0fGa5V+A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 16:34:41 -0700
-IronPort-SDR: R5pbt93QtwvAwi2k8gNlUim5YH6uxmGR5y5OApouSsM9hQGLKaoMyx+tK1qdfmG1H84PGiORO9
- Uapt1LJVqd8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,520,1583222400"; 
-   d="scan'208";a="263155654"
-Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Jun 2020 16:34:37 -0700
-From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, adrian.hunter@intel.com,
-        wan.ahmad.zainie.wan.mohamad@intel.com
-Subject: [RESEND v5 0/2] phy: intel: Add Keem Bay eMMC PHY support
-Date:   Wed, 17 Jun 2020 07:32:50 +0800
-Message-Id: <20200616233252.15619-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726271AbgFPXgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 19:36:12 -0400
+Received: from [192.168.1.3] (212-5-158-38.ip.btc-net.bg [212.5.158.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 1F3F2CFFF;
+        Wed, 17 Jun 2020 02:36:08 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1592350568; bh=aLjBBuVOgl1FEIUDX+t32lCMDeKTv5OVH1NddWDHMpE=;
+        h=Subject:To:Cc:From:Date:From;
+        b=EfroWTqqlD6NHw6xyFCW6GE8yNG9v4tk9irwG84sR4pF6hq/+ltwGqL5xdpb0edjn
+         r5UQ/kKqRFK+U5OXH/gAW4439jtDbk+lvbvmmfw/emfwsyxyJ0vYjnxnQejw9mXyME
+         5VayAl3PcplbJxDYIst2n5x1bGwouyPJSLMWQm4azu5MolegAppuBLr1eN+BZfhu33
+         jmjyzV10E7U3EumlPt1c78s/+hKpUQjGqGZdTTGrfZDVjgecQgv627neoN8vWI+awy
+         4QZ8/0uQj+wehx2TajEMLiZnF9CDqPvWUHpE7VoXioOvs7j4xrbtMRjbxdVxQWg5vv
+         FGk9WG7SqdTfw==
+Subject: Re: [PATCH] PCI: qcom: Disable power management for uPD720201 USB3
+ controller
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     bjorn.andersson@linaro.org, vkoul@kernel.org, sanm@codeaurora.org,
+        mgautam@codeaurora.org, agross@kernel.org, bhelgaas@google.com,
+        robh@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+References: <20200616211711.GA1981914@bjorn-Precision-5520>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <47b52403-360e-08b6-ad0d-0f4a2272a5f7@mm-sol.com>
+Date:   Wed, 17 Jun 2020 02:36:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200616211711.GA1981914@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
-
-The first part is to document DT bindings for Keem Bay eMMC PHY.
-
-The second is the driver file, loosely based on phy-rockchip-emmc.c
-and phy-intel-emmc.c. The latter is not being reused as there are
-quite a number of differences i.e. registers offset, supported clock
-rates, bitfield to set.
-
-The patch was tested with Keem Bay evaluation module board.
-
-Thank you.
-
-Best regards,
-Zainie
-
-Resend v5:
-- Include missing changes done for phy-keembay-emmc.c (See Changes since v3)
-
-Changes since v4:
-- In Kconfig file, add depends on ARM64 || COMPILE_TEST and
-  depends on OF && HAS_IOMEM.
-- In Kconfig file, reword the help section to be more verbose.
-
-Changes since v3:
-- Exit keembay_emmc_phy_power() with return ret;.
-- In keembay_emmc_phy_init(), use PTR_ERR_OR_ZERO(...).
-- In keembay_emmc_phy_probe(), devm_regmap_init_mmio(...) in single
-  line.
-
-Changes since v2:
-- Modify DT example to use single cell for address and size.
-
-Changes since v1:
-- Rework phy-keembay-emmc.c to make it similar to phy-intel-emmc.c.
-- Use regmap_mmio, and remove reference to intel,syscon.
-- Use node name phy@....
-- Update license i.e. use dual license.
 
 
+On 6/17/20 12:17 AM, Bjorn Helgaas wrote:
+> [+cc Rafael, linux-pm]
+> 
+> On Mon, Jun 15, 2020 at 09:24:13PM +0300, Georgi Djakov wrote:
+>> The uPD720201 USB3 host controller (connected to PCIe) on the Dragonboard
+>> 845c is often failing during suspend and resume. The following messages
+>> are seen over the console:
+>>
+>>   PM: suspend entry (s2idle)
+>>   Filesystems sync: 0.000 seconds
+>>   Freezing user space processes ... (elapsed 0.001 seconds) done.
+>>   OOM killer disabled.
+>>   Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+>>   printk: Suspending console(s) (use no_console_suspend to debug)
+>>   dwc3-qcom a8f8800.usb: HS-PHY not in L2
+>>   dwc3-qcom a6f8800.usb: HS-PHY not in L2
+>>   xhci_hcd 0000:01:00.0: can't change power state from D3hot to D0 (config
+>>   space inaccessible)
+>>   xhci_hcd 0000:01:00.0: can't change power state from D3hot to D0 (config
+>>   space inaccessible)
+>>   xhci_hcd 0000:01:00.0: Controller not ready at resume -19
+>>   xhci_hcd 0000:01:00.0: PCI post-resume error -19!
+>>   xhci_hcd 0000:01:00.0: HC died; cleaning up
+>>
+>> Then the USB devices are not functional anymore. Let's disable the PM of
+>> the controller for now, as this will at least keep USB devices working
+>> even after suspend and resume.
+> 
+> This seems like we're just covering up a deeper problem here.  I think
+> it would be better to fix the underlying problem.
+> 
+> The quirk you're adding is specific to the Renesas 0x0014 device.  Is
+> there some reason to think the problem is specific to that device, or
+> might other devices have the same problem?
 
-Wan Ahmad Zainie (2):
-  dt-bindings: phy: intel: Add Keem Bay eMMC PHY bindings
-  phy: intel: Add Keem Bay eMMC PHY support
+I also think that the USB controller might have some issue with .resume.
+It is obvious that qcom-pcie RC doesn't implement suspend/resume which
+means that its clocks are not disabled at the moment when USB is resuming.
 
- .../bindings/phy/intel,keembay-emmc-phy.yaml  |  44 +++
- drivers/phy/intel/Kconfig                     |  12 +
- drivers/phy/intel/Makefile                    |   1 +
- drivers/phy/intel/phy-keembay-emmc.c          | 316 ++++++++++++++++++
- 4 files changed, 373 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
- create mode 100644 drivers/phy/intel/phy-keembay-emmc.c
+Georgi, can you try to bypass suspend/resume in the USB driver itself?
+
+> 
+> Maybe we're missing something in pcie-qcom.c?  Is there any
+> suspend/resume support required in that driver?  It doesn't look like
+> it has anything except that it calls pm_runtime_enable().
+
+Yes, definitely we did not implemented suspend/resume callbacks, but
+that means that the RC should be functional while the system is in suspend.
+
+> 
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 138e1a2d21cc..c1f502682a19 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -1439,6 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>  {
+>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>  }
+>> +
+>> +static void qcom_fixup_nopm(struct pci_dev *dev)
+>> +{
+>> +	dev->pm_cap = 0;
+>> +	dev_info(&dev->dev, "Disabling PCI power management\n");
+>> +}
+>> +
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+>> @@ -1446,6 +1453,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RENESAS, 0x0014, qcom_fixup_nopm);
+> 
+> The convention is that DECLARE_PCI_FIXUP_*() comes immediately after
+> the quirk function itself, so the whole patch would be a single diff
+> hunk.  See drivers/pci/quirks.c for many examples.
+> 
+>>  static struct platform_driver qcom_pcie_driver = {
+>>  	.probe = qcom_pcie_probe,
 
 -- 
-2.17.1
-
+regards,
+Stan
