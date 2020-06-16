@@ -2,52 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3133C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48B61207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8997921475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323479;
-	bh=VASNrqWw28hYBms+NUsXU/7SVcpOs3TperhQW5FRVcg=;
+	s=default; t=1592323486;
+	bh=C0AQZmqKYDSYCAAADdcgii1JJGtRlmPQWuBiuYvQsMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=henGdD+bE4u4Ji+36pG/uZ0IK+KufWv35SsOhUH0sOgdj21acKn3pQsTZ/yk4c9Ah
-	 Ohb6OLPK8gXkNQNiO/yRP9VO/RN48iLe0wNC8pA9//42DU4ww6w4QMyXzAhw9MEjWl
-	 17ilCUtGORaJ/TG5YsSni7Upv6nRxwu3N/wFX5r0=
+	b=C4/gYTPoFdWBjjZlyas01mxsXg//Pv5dBLFg1FS8ZeP/2HCeSWKUU3iL5fc1xoTuC
+	 aYO+5WAcN4lGp29ElzlOS4Sy5orj5+3QoBw7QV2UJ9RedAXFxbnMLoPwaB5CmPFzzm
+	 AiNLocuWh5GkrPACZf87kgqGxqWd+CKK+uwM5BVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732692AbgFPQEh (ORCPT
+        id S1732880AbgFPQEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:04:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44586 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732520AbgFPPte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:34 -0400
+        id S1732508AbgFPPtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1EE821473;
-        Tue, 16 Jun 2020 15:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AC6A2071A;
+        Tue, 16 Jun 2020 15:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322573;
-        bh=VASNrqWw28hYBms+NUsXU/7SVcpOs3TperhQW5FRVcg=;
+        s=default; t=1592322570;
+        bh=C0AQZmqKYDSYCAAADdcgii1JJGtRlmPQWuBiuYvQsMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2LAFXsJhBrKKI8TwrPTTFiOTB55yVel5GHF2F/PyPirYsB2hcDioJpQRv0CIBjUQ+
-         VgdRvTc838NLuvwZr81mZ/1TiDkcoj6a4mrklb61Yrl5CCWaLHg/6H1hjedZ/s8d5O
-         r4gPrH6lr/hXRGtpsUmYmuNkS5QrdeNIdOm2k8X0=
+        b=2o51I6XSfErdbQL3YAEshec4FTz3V5VscxFuEXVLOQlOSV/TrhJjoDUwPOkdXdmRS
+         E67x8qHjVyLi8STUThFDcBkIUSBPNj64s9wGmF1Ji5tBtpMWGf5wXi+JdvNwH6xtjL
+         7NphfWCxoYSLzenEcrO0jWz8yz8EMkl9mJTxZH9o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 020/161] gfs2: Even more gfs2_find_jhead fixes
-Date:   Tue, 16 Jun 2020 17:33:30 +0200
-Message-Id: <20200616153107.366133434@linuxfoundation.org>
+        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 002/161] mlxsw: core: Use different get_trend() callbacks for different thermal zones
+Date:   Tue, 16 Jun 2020 17:33:12 +0200
+Message-Id: <20200616153106.528385150@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,91 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit 20be493b787cd581c9fffad7fcd6bfbe6af1050c ]
+[ Upstream commit 2dc2f760052da4925482ecdcdc5c94d4a599153c ]
 
-Fix several issues in the previous gfs2_find_jhead fix:
-* When updating @blocks_submitted, @block refers to the first block block not
-  submitted yet, not the last block submitted, so fix an off-by-one error.
-* We want to ensure that @blocks_submitted is far enough ahead of @blocks_read
-  to guarantee that there is in-flight I/O.  Otherwise, we'll eventually end up
-  waiting for pages that haven't been submitted, yet.
-* It's much easier to compare the number of blocks added with the number of
-  blocks submitted to limit the maximum bio size.
-* Even with bio chaining, we can keep adding blocks until we reach the maximum
-  bio size, as long as we stop at a page boundary.  This simplifies the logic.
+The driver registers three different types of thermal zones: For the
+ASIC itself, for port modules and for gearboxes.
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Reviewed-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Currently, all three types use the same get_trend() callback which does
+not work correctly for the ASIC thermal zone. The callback assumes that
+the device data is of type 'struct mlxsw_thermal_module', whereas for
+the ASIC thermal zone 'struct mlxsw_thermal' is passed as device data.
+
+Fix this by using one get_trend() callback for the ASIC thermal zone and
+another for the other two types.
+
+Fixes: 6f73862fabd9 ("mlxsw: core: Add the hottest thermal zone detection")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/gfs2/lops.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c |   23 +++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
-index 3a020bdc358c..966ed37c9acd 100644
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -505,12 +505,12 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 	unsigned int bsize = sdp->sd_sb.sb_bsize, off;
- 	unsigned int bsize_shift = sdp->sd_sb.sb_bsize_shift;
- 	unsigned int shift = PAGE_SHIFT - bsize_shift;
--	unsigned int max_bio_size = 2 * 1024 * 1024;
-+	unsigned int max_blocks = 2 * 1024 * 1024 >> bsize_shift;
- 	struct gfs2_journal_extent *je;
- 	int sz, ret = 0;
- 	struct bio *bio = NULL;
- 	struct page *page = NULL;
--	bool bio_chained = false, done = false;
-+	bool done = false;
- 	errseq_t since;
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+@@ -391,8 +391,7 @@ static int mlxsw_thermal_set_trip_hyst(s
+ static int mlxsw_thermal_trend_get(struct thermal_zone_device *tzdev,
+ 				   int trip, enum thermal_trend *trend)
+ {
+-	struct mlxsw_thermal_module *tz = tzdev->devdata;
+-	struct mlxsw_thermal *thermal = tz->parent;
++	struct mlxsw_thermal *thermal = tzdev->devdata;
  
- 	memset(head, 0, sizeof(*head));
-@@ -533,10 +533,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 				off = 0;
- 			}
+ 	if (trip < 0 || trip >= MLXSW_THERMAL_NUM_TRIPS)
+ 		return -EINVAL;
+@@ -593,6 +592,22 @@ mlxsw_thermal_module_trip_hyst_set(struc
+ 	return 0;
+ }
  
--			if (!bio || (bio_chained && !off) ||
--			    bio->bi_iter.bi_size >= max_bio_size) {
--				/* start new bio */
--			} else {
-+			if (bio && (off || block < blocks_submitted + max_blocks)) {
- 				sector_t sector = dblock << sdp->sd_fsb2bb_shift;
++static int mlxsw_thermal_module_trend_get(struct thermal_zone_device *tzdev,
++					  int trip, enum thermal_trend *trend)
++{
++	struct mlxsw_thermal_module *tz = tzdev->devdata;
++	struct mlxsw_thermal *thermal = tz->parent;
++
++	if (trip < 0 || trip >= MLXSW_THERMAL_NUM_TRIPS)
++		return -EINVAL;
++
++	if (tzdev == thermal->tz_highest_dev)
++		return 1;
++
++	*trend = THERMAL_TREND_STABLE;
++	return 0;
++}
++
+ static struct thermal_zone_device_ops mlxsw_thermal_module_ops = {
+ 	.bind		= mlxsw_thermal_module_bind,
+ 	.unbind		= mlxsw_thermal_module_unbind,
+@@ -604,7 +619,7 @@ static struct thermal_zone_device_ops ml
+ 	.set_trip_temp	= mlxsw_thermal_module_trip_temp_set,
+ 	.get_trip_hyst	= mlxsw_thermal_module_trip_hyst_get,
+ 	.set_trip_hyst	= mlxsw_thermal_module_trip_hyst_set,
+-	.get_trend	= mlxsw_thermal_trend_get,
++	.get_trend	= mlxsw_thermal_module_trend_get,
+ };
  
- 				if (bio_end_sector(bio) == sector) {
-@@ -549,19 +546,17 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 						(PAGE_SIZE - off) >> bsize_shift;
+ static int mlxsw_thermal_gearbox_temp_get(struct thermal_zone_device *tzdev,
+@@ -643,7 +658,7 @@ static struct thermal_zone_device_ops ml
+ 	.set_trip_temp	= mlxsw_thermal_module_trip_temp_set,
+ 	.get_trip_hyst	= mlxsw_thermal_module_trip_hyst_get,
+ 	.set_trip_hyst	= mlxsw_thermal_module_trip_hyst_set,
+-	.get_trend	= mlxsw_thermal_trend_get,
++	.get_trend	= mlxsw_thermal_module_trend_get,
+ };
  
- 					bio = gfs2_chain_bio(bio, blocks);
--					bio_chained = true;
- 					goto add_block_to_new_bio;
- 				}
- 			}
- 
- 			if (bio) {
--				blocks_submitted = block + 1;
-+				blocks_submitted = block;
- 				submit_bio(bio);
- 			}
- 
- 			bio = gfs2_log_alloc_bio(sdp, dblock, gfs2_end_log_read);
- 			bio->bi_opf = REQ_OP_READ;
--			bio_chained = false;
- add_block_to_new_bio:
- 			sz = bio_add_page(bio, page, bsize, off);
- 			BUG_ON(sz != bsize);
-@@ -569,7 +564,7 @@ block_added:
- 			off += bsize;
- 			if (off == PAGE_SIZE)
- 				page = NULL;
--			if (blocks_submitted < 2 * max_bio_size >> bsize_shift) {
-+			if (blocks_submitted <= blocks_read + max_blocks) {
- 				/* Keep at least one bio in flight */
- 				continue;
- 			}
--- 
-2.25.1
-
+ static int mlxsw_thermal_get_max_state(struct thermal_cooling_device *cdev,
 
 
