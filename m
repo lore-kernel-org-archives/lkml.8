@@ -2,143 +2,130 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F76C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E822AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA5C206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB25206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:02:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gwuk/kzd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tgt9w+4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731490AbgFPUBu (ORCPT
+        id S1731455AbgFPUCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:01:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24861 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731348AbgFPUBl (ORCPT
+        Tue, 16 Jun 2020 16:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728144AbgFPUCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:01:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592337700;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IZuHuVBorvvnUwBUanoxn5EJfFFGTbG0F4JYxmnKd8I=;
-        b=gwuk/kzdb3Ik/Dhd6PCUCPRmNEObII+9CwrZ/qJl/8ZMzV9Julk2/PzPS1Kt5wSfmj85JW
-        GcpiGRFXoqunERmt75RXVaWyPWzbgwxA9xXkyR72DbZB1LRzKAyBx7Ars6UjCB0BBiDDAL
-        Uk6QmjDdivEAi3x3XULlpxOBCWEX8XA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-195-RsA5jiRVM622hegDVDAGvA-1; Tue, 16 Jun 2020 16:01:36 -0400
-X-MC-Unique: RsA5jiRVM622hegDVDAGvA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD51C8035E9;
-        Tue, 16 Jun 2020 20:01:28 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-114-156.rdu2.redhat.com [10.10.114.156])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F41719D71;
-        Tue, 16 Jun 2020 20:01:20 +0000 (UTC)
-Subject: Re: [PATCH v4 0/3] mm, treewide: Rename kzfree() to kfree_sensitive()
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        David Sterba <dsterba@suse.cz>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-References: <20200616015718.7812-1-longman@redhat.com>
- <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <7662bfe8-b279-f98c-3ae3-c3b889aea1f5@redhat.com>
-Date:   Tue, 16 Jun 2020 16:01:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 16 Jun 2020 16:02:30 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A84BC061573;
+        Tue, 16 Jun 2020 13:02:29 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id w15so12495544lfe.11;
+        Tue, 16 Jun 2020 13:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mw839rq7RjrHM/hppkDoF5y0yc1HEG6Z382QxOHiZE4=;
+        b=tgt9w+4hhcFOFvmXJG0d9BLOqArfPCHifgXbSYew66UIyXnLr0WUwEx4TsvRz028Lf
+         bivExKj/4cpv1mA9fUYkYngREvq4Ty+BdV9AWLRkuU+b3R/ghhAzF1wjZ9am/BzgnyAX
+         6BgHGeesz3cMwAjD4Rys7gVGBQU67KzsuHhhtgpfNUJZD/kvU+P/MCh1OjqYNn3Ep7Cw
+         L9rH+HQR6ygyoEG8foSwxB1CSQG2UL/cuJCqr/UNNKO6DUcxhcaBIsIE+cl6mW+us2h8
+         od9BQKTKD5jIGZEmQe4fPRcAGCJpk/K9mtLFGnyRNHfnLo5jzYY4BZW0TecQWRJ02foK
+         xOYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mw839rq7RjrHM/hppkDoF5y0yc1HEG6Z382QxOHiZE4=;
+        b=G1jwDtcOlbUPEIQWWQ9ojo2SKl1pyy85B4hUHz57dq+zyDnHpV6dnOxdCPaxYltlYT
+         S5Oob3/jAXV0fJJ/oTkIJyiCZPEFsuA5CIsXu3hoxPIw8HqyndbIHoMLOsTc5jInETTF
+         Sinf7vOn8LrP0a1wIafyqwLdi/4VBRPeAXccyZQOyEMP8u15GUVMbH6ZA17Z/vV5lSCC
+         Dx+TrOzj9pvIfk3gn0xFNTPjovQoKdwpVrUCIjHcbRkaSTIK5xhfgHbQPvzNXgMTjpQO
+         v9hG70xtTAMKuLMr9WlUIAMFTO53t34yIaLX0eD6cfiTTuR3srZ/130Njp5Pl54ZHU4i
+         MSkA==
+X-Gm-Message-State: AOAM532zF5GQUsji/q92dIA/u1VuUVFJNK3t3la+UCAkIZakGSflhSxg
+        jLlycDmav2iQmdzpn9UEzVWSKj0U
+X-Google-Smtp-Source: ABdhPJytqFCePdIKP+8M6eemAWjcBI9X51u1xMeVXsCLKE0WG48gFo9Ny4Zbw4Qelfx4B3lTHCtSNA==
+X-Received: by 2002:ac2:44cd:: with SMTP id d13mr1126260lfm.13.1592337748063;
+        Tue, 16 Jun 2020 13:02:28 -0700 (PDT)
+Received: from mobilestation ([95.79.139.207])
+        by smtp.gmail.com with ESMTPSA id 144sm2858709lfm.87.2020.06.16.13.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 13:02:27 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 23:02:25 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
+Message-ID: <20200616200225.32mwzew3zw3nuiwh@mobilestation>
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/16/20 2:53 PM, Joe Perches wrote:
-> On Mon, 2020-06-15 at 21:57 -0400, Waiman Long wrote:
->>   v4:
->>    - Break out the memzero_explicit() change as suggested by Dan Carpenter
->>      so that it can be backported to stable.
->>    - Drop the "crypto: Remove unnecessary memzero_explicit()" patch for
->>      now as there can be a bit more discussion on what is best. It will be
->>      introduced as a separate patch later on after this one is merged.
-> To this larger audience and last week without reply:
-> https://lore.kernel.org/lkml/573b3fbd5927c643920e1364230c296b23e7584d.camel@perches.com/
->
-> Are there _any_ fastpath uses of kfree or vfree?
->
-> Many patches have been posted recently to fix mispairings
-> of specific types of alloc and free functions.
->
-> To eliminate these mispairings at a runtime cost of four
-> comparisons, should the kfree/vfree/kvfree/kfree_const
-> functions be consolidated into a single kfree?
->
-> Something like the below:
->
->     void kfree(const void *addr)
->     {
->     	if (is_kernel_rodata((unsigned long)addr))
->     		return;
->
->     	if (is_vmalloc_addr(addr))
->     		_vfree(addr);
->     	else
->     		_kfree(addr);
->     }
->
->     #define kvfree		kfree
->     #define vfree		kfree
->     #define kfree_const	kfree
->
->
-How about adding CONFIG_DEBUG_VM code to check for invalid address 
-ranges in kfree() and vfree()? By doing this, we can catch unmatched 
-pairing in debug mode, but won't have the overhead when debug mode is off.
+On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
+> Some devices would need to have a hierarchy of properties and
+> child nodes passed to the child or children of MFD. For such case
+> we may utilize software nodes, which is superior on device properties.
+> 
+> Add support of software nodes to MFD core and convert one driver
+> to show how it looks like. This allows to get rid of legacy platform
+> data.
+> 
+> The change has been tested on Intel Galileo Gen 2.
 
-Thought?
+I am wondering whether we could move the {gpio_base, ngpio, irq_shared}
+part into the gpio-dwapb.c driver and use either the ACPI-based or
+platform_device_id-based matching to get the device-specific resources
+info through the driver_data field. By doing so you wouldn't need to
+introduce a new "snps,gpio-base"-like property and propagate
+software_node-based properties, but still you could get rid of the
+dwapb_platform_data structure since all the info would be locally
+available.
 
-Cheers,
-Longman
+If ACPI-based matching doesn't uniquely address the Quark GPIO node,
+then you could just replace the intel_quark_mfd_cells[0].name with
+something like "gpio-dwapb-quark", which then by the MFD core will be
+copied to the corresponding platform_device->name due to calling
+platform_device_alloc() with cell-name passed. That name will be used
+to match a platform_driver with id_table having that new name added.
 
+-Sergey
+
+> 
+> Andy Shevchenko (5):
+>   gpio: dwapb: Replace irq_shared flag with fwnode type check
+>   gpio: dwapb: Read GPIO base from snps,gpio-base property
+>   mfd: intel_quark_i2c_gpio: Convert to use software nodes
+>   gpio: dwapb: Get rid of legacy platform data
+>   gpio: dwapb: Define magic number for IRQ and GPIO lines
+> 
+> Heikki Krogerus (1):
+>   mfd: core: Propagate software node group to the sub devices
+> 
+>  drivers/gpio/gpio-dwapb.c                | 44 +++++++++-------
+>  drivers/mfd/intel_quark_i2c_gpio.c       | 64 +++++++++++-------------
+>  drivers/mfd/mfd-core.c                   | 31 ++++++++++--
+>  include/linux/mfd/core.h                 |  3 ++
+>  include/linux/platform_data/gpio-dwapb.h | 23 ---------
+>  5 files changed, 85 insertions(+), 80 deletions(-)
+>  delete mode 100644 include/linux/platform_data/gpio-dwapb.h
+> 
+> -- 
+> 2.27.0.rc2
+> 
