@@ -2,136 +2,207 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D41AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68D942071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U+rVcwzv"
+	by mail.kernel.org (Postfix) with ESMTP id 4F76A2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323549;
+	bh=7iKMm7KSRQUJ5Y+WeKndqu7co8tjv7zaxZdV9VUdtYA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=XpWyzFXhtcxdgoxMP8k9WvDKI5m6UUQRzZdjpavoBU4WaO2OVASM9FW3x2ZQnJezW
+	 U8TEMGjZR2kk7SmmRO9eVGbmCxXb8H+Bglzbnl4C+8DSCULBKuIOAnJA3qHVYOP9ae
+	 PrWhbPfamKgk7Z9A68j/O24M9rq6hrgdmXw8mW6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732668AbgFPQFh (ORCPT
+        id S1733242AbgFPQFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733059AbgFPQFc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:05:32 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A2BFC0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:05:32 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d4so2392413pgk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:05:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GsZMacKtpesOxP+a2myMr99YbAG58BqzpuI3p66lyWE=;
-        b=U+rVcwzvOxiugEYzwFEOsUTyIYC0zrD9L//KqbY3KLh6kAWaKOVLW6S2PEBZNkUzZB
-         Va/ID/Lx0jY7fHPp5zQPHHxv/Ln+/ZqNNagq0jWU0rfjSlk7wKKfPbUbnKanRNPb4MXv
-         BPQ+ZtNfKAAI/vlY8WCybDSIj/et0xHDCOIHg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GsZMacKtpesOxP+a2myMr99YbAG58BqzpuI3p66lyWE=;
-        b=tXvwi784gwsx55ZfFIMhvM5U4Z7ZBtQS3g71Zr2CFGlCl/DgkjBbFtlXRFeheWr2l4
-         ItjW1I2nW1Hp4AiGguUUN/nq62cx+hsijRcBymJMoXCVpP1RinqHoKRxeJkOsU5YhDy4
-         770GPpYaV/c+4ZOYFbtGRXX5qfYQjFXZsqqCwJ8Z5WRZfFer/WR3qmBVRnfTiBDdCLsi
-         21vYn/f1MU8TAQ7Lax8HOC5W6Wd0GPB01/awU64/oTiNsAciS2BUFHs1rjvraVFBVzRw
-         3wrHkvDmTEygmKMO5BdEpVzg1KAp1CxE/zNFZ29agEYrjDcPTcvcrURCVN/1IzyJtOJ9
-         m8tQ==
-X-Gm-Message-State: AOAM530bANXNt5E7hGdr07Jnpgit40FlOFVSfr0Un7p/lIDzD4HMU6F5
-        Wf6H6uPjwYtvlDKReL33Fnl/lA==
-X-Google-Smtp-Source: ABdhPJzdfPhLjN6zvps8V8jiQcD/fOqJIIccHadakXun+WI/1mta+SFES2gZ8pnzJRsPG2WOBzf7GA==
-X-Received: by 2002:a63:1b4b:: with SMTP id b11mr2541719pgm.243.1592323531730;
-        Tue, 16 Jun 2020 09:05:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 140sm17823314pfz.154.2020.06.16.09.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 09:05:30 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:05:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 10/11] seccomp: Switch addfd to Extensible Argument
- ioctl
-Message-ID: <202006160904.A30F2C5B9E@keescook>
-References: <20200616032524.460144-1-keescook@chromium.org>
- <20200616032524.460144-11-keescook@chromium.org>
- <20200616145546.GH2893648@cisco>
+        Tue, 16 Jun 2020 12:05:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730466AbgFPPsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:48:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A1E821475;
+        Tue, 16 Jun 2020 15:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322526;
+        bh=7iKMm7KSRQUJ5Y+WeKndqu7co8tjv7zaxZdV9VUdtYA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m4JtVA3jDLq3jcUuL5/g4dHnFf9UtdRVaWuffgV9aq+E0LQ+jOgVtdJabXS+z6W1Z
+         o92v1nXY+s77W7waqTaxkSR9WgnkhFfXtCaYvXlGQhICy/mUo5PPJbCX6hZJJI3l3N
+         gyF8e7VqKgZ+9nyNNBBUcRq7aQEXfNohefmIhHoA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.7 157/163] mmc: sdio: Fix several potential memory leaks in mmc_sdio_init_card()
+Date:   Tue, 16 Jun 2020 17:35:31 +0200
+Message-Id: <20200616153114.326712847@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
+References: <20200616153106.849127260@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616145546.GH2893648@cisco>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 08:55:46AM -0600, Tycho Andersen wrote:
-> On Mon, Jun 15, 2020 at 08:25:23PM -0700, Kees Cook wrote:
-> > This patch is based on discussions[1] with Sargun Dhillon, Christian
-> > Brauner, and David Laight. Instead of building size into the addfd
-> > structure, make it a function of the ioctl command (which is how sizes are
-> > normally passed to ioctls). To support forward and backward compatibility,
-> > just mask out the direction and size, and match everything. The size (and
-> > any future direction) checks are done along with copy_struct_from_user()
-> > logic. Also update the selftests to check size bounds.
-> > 
-> > [1] https://lore.kernel.org/lkml/20200612104629.GA15814@ircssh-2.c.rugged-nimbus-611.internal
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/uapi/linux/seccomp.h                  |  2 -
-> >  kernel/seccomp.c                              | 21 ++++++----
-> >  tools/testing/selftests/seccomp/seccomp_bpf.c | 40 ++++++++++++++++---
-> >  3 files changed, 49 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> > index c347160378e5..473a61695ac3 100644
-> > --- a/include/uapi/linux/seccomp.h
-> > +++ b/include/uapi/linux/seccomp.h
-> > @@ -118,7 +118,6 @@ struct seccomp_notif_resp {
-> >  
-> >  /**
-> >   * struct seccomp_notif_addfd
-> > - * @size: The size of the seccomp_notif_addfd structure
-> >   * @id: The ID of the seccomp notification
-> >   * @flags: SECCOMP_ADDFD_FLAG_*
-> >   * @srcfd: The local fd number
-> > @@ -126,7 +125,6 @@ struct seccomp_notif_resp {
-> >   * @newfd_flags: The O_* flags the remote FD should have applied
-> >   */
-> >  struct seccomp_notif_addfd {
-> > -	__u64 size;
-> 
-> Huh? Won't this break builds?
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-Only if they use addfd without this patch? :) Are you saying I should
-collapse this patch into the main addfd and test patches?
+commit a94a59f43749b4f8cd81b8be87c95f9ef898d19d upstream.
 
--- 
-Kees Cook
+Over the years, the code in mmc_sdio_init_card() has grown to become quite
+messy. Unfortunate this has also lead to that several paths are leaking
+memory in form of an allocated struct mmc_card, which includes additional
+data, such as initialized struct device for example.
+
+Unfortunate, it's a too complex task find each offending commit. Therefore,
+this change fixes all memory leaks at once.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200430091640.455-3-ulf.hansson@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/mmc/core/sdio.c |   58 ++++++++++++++++++++++--------------------------
+ 1 file changed, 27 insertions(+), 31 deletions(-)
+
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -584,7 +584,7 @@ try_again:
+ 	 */
+ 	err = mmc_send_io_op_cond(host, ocr, &rocr);
+ 	if (err)
+-		goto err;
++		return err;
+ 
+ 	/*
+ 	 * For SPI, enable CRC as appropriate.
+@@ -592,17 +592,15 @@ try_again:
+ 	if (mmc_host_is_spi(host)) {
+ 		err = mmc_spi_set_crc(host, use_spi_crc);
+ 		if (err)
+-			goto err;
++			return err;
+ 	}
+ 
+ 	/*
+ 	 * Allocate card structure.
+ 	 */
+ 	card = mmc_alloc_card(host, NULL);
+-	if (IS_ERR(card)) {
+-		err = PTR_ERR(card);
+-		goto err;
+-	}
++	if (IS_ERR(card))
++		return PTR_ERR(card);
+ 
+ 	if ((rocr & R4_MEMORY_PRESENT) &&
+ 	    mmc_sd_get_cid(host, ocr & rocr, card->raw_cid, NULL) == 0) {
+@@ -610,19 +608,15 @@ try_again:
+ 
+ 		if (oldcard && (oldcard->type != MMC_TYPE_SD_COMBO ||
+ 		    memcmp(card->raw_cid, oldcard->raw_cid, sizeof(card->raw_cid)) != 0)) {
+-			mmc_remove_card(card);
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+ 	} else {
+ 		card->type = MMC_TYPE_SDIO;
+ 
+ 		if (oldcard && oldcard->type != MMC_TYPE_SDIO) {
+-			mmc_remove_card(card);
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+ 	}
+ 
+@@ -677,7 +671,7 @@ try_again:
+ 	if (!oldcard && card->type == MMC_TYPE_SD_COMBO) {
+ 		err = mmc_sd_get_csd(host, card);
+ 		if (err)
+-			return err;
++			goto remove;
+ 
+ 		mmc_decode_cid(card);
+ 	}
+@@ -704,7 +698,12 @@ try_again:
+ 			mmc_set_timing(card->host, MMC_TIMING_SD_HS);
+ 		}
+ 
+-		goto finish;
++		if (oldcard)
++			mmc_remove_card(card);
++		else
++			host->card = card;
++
++		return 0;
+ 	}
+ 
+ 	/*
+@@ -730,16 +729,14 @@ try_again:
+ 		goto remove;
+ 
+ 	if (oldcard) {
+-		int same = (card->cis.vendor == oldcard->cis.vendor &&
+-			    card->cis.device == oldcard->cis.device);
+-		mmc_remove_card(card);
+-		if (!same) {
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++		if (card->cis.vendor == oldcard->cis.vendor &&
++		    card->cis.device == oldcard->cis.device) {
++			mmc_remove_card(card);
++			card = oldcard;
++		} else {
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+-
+-		card = oldcard;
+ 	}
+ 	card->ocr = ocr_card;
+ 	mmc_fixup_device(card, sdio_fixup_methods);
+@@ -800,16 +797,15 @@ try_again:
+ 		err = -EINVAL;
+ 		goto remove;
+ 	}
+-finish:
+-	if (!oldcard)
+-		host->card = card;
++
++	host->card = card;
+ 	return 0;
+ 
++mismatch:
++	pr_debug("%s: Perhaps the card was replaced\n", mmc_hostname(host));
+ remove:
+-	if (!oldcard)
++	if (oldcard != card)
+ 		mmc_remove_card(card);
+-
+-err:
+ 	return err;
+ }
+ 
+
+
