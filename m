@@ -2,221 +2,311 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A93C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A0C20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF4420776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:57:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="Ni0wHVus"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y7PwRYNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731126AbgFPRzF (ORCPT
+        id S1731146AbgFPR5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgFPRzE (ORCPT
+        Tue, 16 Jun 2020 13:57:04 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35778 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgFPR5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:55:04 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69592C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:55:04 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so2557792wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x6TeJ27Z/ufkTVSy5H2Hs8I8PEvzUkw/b06a5ar99hE=;
-        b=Ni0wHVusra0BeszNE1FbdZq3xiw577V9lcPBzEp9viNz3mzkFw7bJepz/1FNbd0zVU
-         c1OVCXOu4+VXtsRLvW+Ar61hh4iIbDzWsX42lFRybCScKSib/9e6vgaYHQ9piGanRxXV
-         NLd6nBAgfW7w5ZfXYAtJeoWVzBCaZAgiaEs/I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x6TeJ27Z/ufkTVSy5H2Hs8I8PEvzUkw/b06a5ar99hE=;
-        b=M5TVg4azC15zWduB8L9BSXKJCUuAf6wAUCjof9JvpS/LWFeuB4xlC9ond9MCEi0JeY
-         8JbEZ3TfInhqK/reXqM42aym+z23LYO0h0ADWRUarufjWNIWCIi2ECcGgOfa1p0PyB1H
-         X8lqkfhXZpRkHWsmcTW/mnXk0dZFvgOtLXqwA5T2mF0gdPYVsVeqpXPo0Sx677YbrRSK
-         BhbLeVROGRpGI3g1qieTtd/S+MC7vv0uE4GjjJxxKS2YxkRiUqTGHCeUuj7g8s6ccpeY
-         NJKm9Y0YfIRTImNFKybu0SWrt10Gbxj1J1KiTpwzB5ZgHdcsgvIVkcxhqiSFlV0WdGLG
-         fPjA==
-X-Gm-Message-State: AOAM533mtlB+z+HA9ejcbLAvztymMX0/GyP+8VJzufhzIbILI5i1l74B
-        bAd86lO9r7lgLVYlxh5RkP7PdI5mlCfVkJBsxyqN
-X-Google-Smtp-Source: ABdhPJyZsG53yUkvAS7hfPSTsF86BxVUykQ+gEEoGqay+9S63hUPcf1mzcNPs1iPOt4D5AP6L4ckXF/Nudy/JVNC9Wo=
-X-Received: by 2002:adf:edc8:: with SMTP id v8mr4137541wro.176.1592330103084;
- Tue, 16 Jun 2020 10:55:03 -0700 (PDT)
+        Tue, 16 Jun 2020 13:57:04 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GHVSjq095031;
+        Tue, 16 Jun 2020 17:56:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Z9J/IPljIUbKCuF3YBQjI7FBhBW8FVH498X9WVzfaec=;
+ b=Y7PwRYNHsMDH51jPZ8vSGNJUEt1QzMEpm6FdwujxPFUX/sgT44XqduF2Y++vCG7WmCv7
+ UsHAfbqWPUg340SsTmetGFtQNeMWkCfBAvUksFnbFo89pUWxMn93ZobPijH1aPhdVpVm
+ 9GKP/SC1p8t4R7fwMwQCZDf2nqqRZzZxqoTZE6OEQhyCgU0LH6/R9yNOIpeHHvqUQDiM
+ F8qJ09H8MD7GnSF/3O+kPO5XlETfKxvkupTGZs8lySq5mVfyKUhnrHgg686htg9YGO54
+ an0qnYII9lBXFBO5t4lelGbACc1ATR9R50w4LG6XGaIuB/PUP5BOB2cSz34tXEabFzmu fQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 31p6e608ys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 16 Jun 2020 17:56:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GHrJ6H091181;
+        Tue, 16 Jun 2020 17:56:57 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 31p6s7jvme-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 17:56:57 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05GHutn5029176;
+        Tue, 16 Jun 2020 17:56:56 GMT
+Received: from dhcp-10-159-228-201.vpn.oracle.com (/10.159.228.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 16 Jun 2020 10:56:55 -0700
+Subject: Re: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
+ <1591627576-920-2-git-send-email-divya.indi@oracle.com>
+ <20200609070026.GJ164174@unreal>
+ <ee7139ff-465e-6c43-1b55-eab502044e0f@oracle.com>
+ <20200614064156.GB2132762@unreal>
+From:   Divya Indi <divya.indi@oracle.com>
+Message-ID: <09bbe749-7eb2-7caa-71a9-3ead4e51e5ed@oracle.com>
+Date:   Tue, 16 Jun 2020 10:56:53 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200616045108.GP75760@lianli.shorne-pla.net> <mhng-b86477b3-4134-4023-968e-532ca0b33125@palmerdabbelt-glaptop1>
- <CANN689GkUUfpTn+fkjsC-a=RwGsxVwsg-QXKDnVe6zXLjvuZWA@mail.gmail.com>
-In-Reply-To: <CANN689GkUUfpTn+fkjsC-a=RwGsxVwsg-QXKDnVe6zXLjvuZWA@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Tue, 16 Jun 2020 10:54:51 -0700
-Message-ID: <CAOnJCUKDP=xr=ddFvaTW_1gux=jshycvxmb=CYtt_+jpN6-u4g@mail.gmail.com>
-Subject: Re: mm lock issue while booting Linux on 5.8-rc1 for RISC-V
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>, shorne@gmail.com,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Topel <bjorn.topel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200614064156.GB2132762@unreal>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
+ suspectscore=13 mlxlogscore=999 phishscore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ mlxscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
+ suspectscore=13 spamscore=0 bulkscore=0 malwarescore=0 impostorscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006160124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 3:45 AM Michel Lespinasse <walken@google.com> wrote:
->
-> I am also unable to reproduce the issue so far.
->
-> I wanted to point to a few things in case this helps:
-> - Commit 42fc541404f2 was bisected as the cause. This commit changes
-> walk_page_range_novma() to use mmap_assert_locked() instead of
-> lockdep_assert_held()
-> - mmap_assert_locked() checks lockdep_assert_held(), but also checks
-> that the rwsem itself is locked.
->
-> Now how could lockdep think the lock is held, but the lock itself is
-> not marked as locked ???
->
-> I'm not sure if it helps at all, but a few commits earlier,
-> 0cc55a0213a0 introduces mmap_read_trylock_non_owner(), which is used
-> exclusively by stackmap, and does the opposite: it acquires the mmap
-> lock without telling lockdep about it. I can't see any smoking gun
-> linking this to our bug, but I thought it may be worth mentioning as
-> it involves the same suspects (stackmap and the difference between
-> owning the lock vs lockdep thinking we own the lock).
->
-> I'm sorry, that's only how far I was able to go on this bug - I'm not
-> sure how to investigate it further as I can not reproduce the issue...
->
-> On Tue, Jun 16, 2020 at 1:40 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> >
-> > On Mon, 15 Jun 2020 21:51:08 PDT (-0700), shorne@gmail.com wrote:
-> > > On Tue, Jun 16, 2020 at 06:57:47AM +0900, Stafford Horne wrote:
-> > >> On Mon, Jun 15, 2020 at 12:28:11AM -0700, Atish Patra wrote:
-> > >> > Hi,
-> > >> > I encountered the following issue while booting 5.8-rc1 on Qemu for RV64.
-> > >> > I added additional dump_stack and observed that it's happening in bpf free path.
-> > >> > It happens always if CONFIG_DEBUG_VM is enabled. VM_BUG_ON_MM is
-> > >> > compiled away without that.
-> > >> > ------------------------------------------------------------------------
-> > >> > forked to background, child pid 113
-> > >> > [   10.328850] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted
-> > >> > 5.8.0-rc1-dirty #732
-> > >> > [   10.331739] Workqueue: events bpf_prog_free_deferred
-> > >> > [   10.334133] Call Trace:
-> > >> > [   10.338039] [<ffffffe000202698>] walk_stackframe+0x0/0xa4
-> > >> > [   10.339988] [<ffffffe000202880>] show_stack+0x2e/0x3a
-> > >> > [   10.340902] [<ffffffe00047074c>] dump_stack+0x72/0x8c
-> > >> > [   10.341451] [<ffffffe0002db4ce>] mmap_assert_locked.part.13+0x14/0x1c
-> > >> > [   10.342131] [<ffffffe0002db330>] walk_page_range_novma+0x0/0x4e
-> > >> > [   10.342973] [<ffffffe000204f94>] set_direct_map_invalid_noflush+0x66/0x6e
-> > >> > [   10.343917] [<ffffffe0002e0706>] __vunmap+0xe8/0x212
-> > >> > [   10.344680] [<ffffffe0002e0882>] __vfree+0x22/0x6e
-> > >> > [   10.345270] [<ffffffe0002e0902>] vfree+0x34/0x56
-> > >> > [   10.345834] [<ffffffe00027d752>] __bpf_prog_free+0x2c/0x36
-> > >> > [   10.346529] [<ffffffe0002801a2>] bpf_prog_free_deferred+0x74/0x8a
-> > >> > [   10.347394] [<ffffffe000219c70>] process_one_work+0x13a/0x272
-> > >> > [   10.348239] [<ffffffe00021a4b4>] worker_thread+0x50/0x2e4
-> > >> > [   10.348900] [<ffffffe00021ed98>] kthread+0xfc/0x10a
-> > >> > [   10.349470] [<ffffffe0002013da>] ret_from_exception+0x0/0xc
-> > >> > [   10.354405] mm ffffffe001018600 mmap 0000000000000000 seqnum 0 task_size 0
-> > >> > [   10.354405] get_unmapped_area 0000000000000000
-> > >> > [   10.354405] mmap_base 0 mmap_legacy_base 0 highest_vm_end 0
-> > >> > [   10.354405] pgd ffffffe001074000 mm_users 2 mm_count 1
-> > >> > pgtables_bytes 8192 map_count 0
-> > >> > [   10.354405] hiwater_rss 0 hiwater_vm 0 total_vm 0 locked_vm 0
-> > >> > [   10.354405] pinned_vm 0 data_vm 0 exec_vm 0 stack_vm 0
-> > >> > [   10.354405] start_code ffffffe000200000 end_code ffffffe00084acc2
-> > >> > start_data 0 end_data ffffffe00106dfe4
-> > >> > [   10.354405] start_brk 0 brk ffffffe0010bd6d0 start_stack 0
-> > >> > [   10.354405] arg_start 0 arg_end 0 env_start 0 env_end 0
-> > >> > [   10.354405] binfmt 0000000000000000 flags 0 core_state 0000000000000000
-> > >> > [   10.354405] ioctx_table 0000000000000000
-> > >> > [   10.354405] exe_file 0000000000000000
-> > >> > [   10.354405] tlb_flush_pending 0
-> > >> > [   10.354405] def_flags: 0x0()
-> > >> > [   10.369325] ------------[ cut here ]------------
-> > >> > [   10.370763] kernel BUG at include/linux/mmap_lock.h:81!
-> > >> > [   10.375235] Kernel BUG [#1]
-> > >> > [   10.377198] Modules linked in:
-> > >> > [   10.378931] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted 5.8.0-rc1-dirty #732
-> > >> > [   10.380179] Workqueue: events bpf_prog_free_deferred
-> > >> > [   10.381270] epc: ffffffe0002db4d4 ra : ffffffe0002db4d4 sp : ffffffe3eaea7c70
-> > >> > [   10.382561]  gp : ffffffe00106d950 tp : ffffffe3ef752f80 t0 :
-> > >> > ffffffe0010836e8
-> > >> > [   10.383996]  t1 : 0000000000000064 t2 : 0000000000000000 s0 :
-> > >> > ffffffe3eaea7c90
-> > >> > [   10.385119]  s1 : ffffffe001018600 a0 : 0000000000000289 a1 :
-> > >> > 0000000000000020
-> > >> > [   10.386099]  a2 : 0000000000000005 a3 : 0000000000000000 a4 :
-> > >> > ffffffe001012758
-> > >> > [   10.387294]  a5 : 0000000000000000 a6 : 0000000000000102 a7 :
-> > >> > 0000000000000006
-> > >> > [   10.388265]  s2 : ffffffe3f00674c0 s3 : ffffffe00106e108 s4 :
-> > >> > ffffffe00106e100
-> > >> > [   10.389250]  s5 : ffffffe00106e908 s6 : 0000000000000000 s7 :
-> > >> > 6db6db6db6db6db7
-> > >> > [   10.390272]  s8 : 0000000000000001 s9 : ffffffe00021a4f8 s10:
-> > >> > ffffffffffffffff
-> > >> > [   10.391293]  s11: ffffffe3f0066600 t3 : 000000000001a7a8 t4 :
-> > >> > 000000000001a7a8
-> > >> > [   10.392314]  t5 : 0000000000000000 t6 : ffffffe00107b76b
-> > >> > [   10.393096] status: 0000000000000120 badaddr: 0000000000000000
-> > >> > cause: 0000000000000003
-> > >> > [   10.397755] ---[ end trace 861659596ac28841 ]---
-> > >> > ---------------------------------------------------------------------------------------------------
-> > >> >
-> > >> > I haven't had the chance to bisect to figure out which commit caused
-> > >> > the issue. Just wanted
-> > >> > to check if it is a known issue already.
-> > >>
-> > >> Hi Atish,
-> > >>
-> > >> Note, I am getting the same (just now) when booting v5.8-rc1 on OpenRISC.  If
-> > >> you have any updates please post back.  I will try to look into this today or
-> > >> tomorrow.
-> > >
-> > > I have bisected this to, 42fc541404f249778e752ab39c8bc25fcb2dbe1e:
-> > >
-> > >   mmap locking API: add mmap_assert_locked() and mmap_assert_write_locked()
-> > >
-> > > This should have just changed the existing lockdep api's but something has
-> > > changed.  I haven't had time to look at it yet.
-> > >
-> > > Ccing: Michel Lespinasse <walken@google.com>
-> >
-> > This isn't manifesting on boot for me, on either rc1 or that commit.  I'm
-> > running a simple buildroot-based userspace, so I doubt anything is triggering
-> > BPF.  I don't run the BPF selftests, as they're a bit of a pain (IIRC they
-> > don't cross compile and need LLVM) -- does anyone have a userspace I can use to
-> > trigger the bug?
->
-I am also using buildroot based userspace but it's a bit bulky because
-of my config.
-You can access it from here:
-https://wdc.box.com/s/r8j0d5ynp5gr27n2wo124xi9t8fp0tls
+Hi Leon,
 
-A defconfig build & boot in Qemu with above userspace is sufficient to
-trigger the bug.
+Please find my comments inline -
 
-FYI: I noticed the kernel bug message every time during ssh-key
-generation. Not sure if that is related.
+On 6/13/20 11:41 PM, Leon Romanovsky wrote:
+> On Tue, Jun 09, 2020 at 07:45:21AM -0700, Divya Indi wrote:
+>> Hi Leon,
+>>
+>> Thanks for taking the time to review.
+>>
+>> Please find my comments inline -
+>>
+>> On 6/9/20 12:00 AM, Leon Romanovsky wrote:
+>>> On Mon, Jun 08, 2020 at 07:46:16AM -0700, Divya Indi wrote:
+>>>> Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
+>>>> -
+>>>> 1. Adds the query to the request list before ib_nl_snd_msg.
+>>>> 2. Removes ib_nl_send_msg from within the spinlock which also makes it
+>>>> possible to allocate memory with GFP_KERNEL.
+>>>>
+>>>> However, if there is a delay in sending out the request (For
+>>>> eg: Delay due to low memory situation) the timer to handle request timeout
+>>>> might kick in before the request is sent out to ibacm via netlink.
+>>>> ib_nl_request_timeout may release the query causing a use after free situation
+>>>> while accessing the query in ib_nl_send_msg.
+>>>>
+>>>> Call Trace for the above race:
+>>>>
+>>>> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
+>>>> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
+>>>> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
+>>>> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
+>>>> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
+>>>> [rds_rdma]
+>>>> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
+>>>> [rds_rdma]
+>>>> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
+>>>> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
+>>>> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
+>>>> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
+>>>> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
+>>>> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
+>>>> [<ffffffff810a68fb>] kthread+0xcb/0xf0
+>>>> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+>>>> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
+>>>> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+>>>> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
+>>>> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
+>>>> ....
+>>>> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
+>>>>
+>>>> To resolve the above issue -
+>>>> 1. Add the req to the request list only after the request has been sent out.
+>>>> 2. To handle the race where response comes in before adding request to
+>>>> the request list, send(rdma_nl_multicast) and add to list while holding the
+>>>> spinlock - request_lock.
+>>>> 3. Use GFP_NOWAIT for rdma_nl_multicast since it is called while holding
+>>>> a spinlock. In case of memory allocation failure, request will go out to SA.
+>>>>
+>>>> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+>>>> Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
+>>>> before sending")
+>>> Author SOB should be after "Fixes" line.
+>> My bad. Noted.
+>>
+>>>> ---
+>>>>  drivers/infiniband/core/sa_query.c | 34 +++++++++++++++++-----------------
+>>>>  1 file changed, 17 insertions(+), 17 deletions(-)
+>>>>
+>>>> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+>>>> index 74e0058..042c99b 100644
+>>>> --- a/drivers/infiniband/core/sa_query.c
+>>>> +++ b/drivers/infiniband/core/sa_query.c
+>>>> @@ -836,6 +836,9 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+>>>>  	void *data;
+>>>>  	struct ib_sa_mad *mad;
+>>>>  	int len;
+>>>> +	unsigned long flags;
+>>>> +	unsigned long delay;
+>>>> +	int ret;
+>>>>
+>>>>  	mad = query->mad_buf->mad;
+>>>>  	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
+>>>> @@ -860,35 +863,32 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
+>>>>  	/* Repair the nlmsg header length */
+>>>>  	nlmsg_end(skb, nlh);
+>>>>
+>>>> -	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
+>>>> +	spin_lock_irqsave(&ib_nl_request_lock, flags);
+>>>> +	ret =  rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, GFP_NOWAIT);
+>>> It is hard to be convinced that this is correct solution. The mix of
+>>> gfp_flags and GFP_NOWAIT at the same time and usage of
+>>> ib_nl_request_lock to protect lists and suddenly rdma_nl_multicast() too
+>>> makes this code unreadable/non-maintainable.
+>> Prior to 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
+>> before sending"), we had ib_nl_send_msg under the spinlock ib_nl_request_lock.
+>>
+>> ie we had -
+>>
+>> 1. Get spinlock - ib_nl_request_lock
+>> 2. ib_nl_send_msg
+>> 	2.a) rdma_nl_multicast
+>> 3. Add request to the req list
+>> 4. Arm the timer if needed.
+>> 5. Release spinlock
+>>
+>> However, ib_nl_send_msg involved a memory allocation using GFP_KERNEL.
+>> hence, was moved out of the spinlock. In addition, req was now being
+>> added prior to ib_nl_send_msg [To handle the race where response can
+>> come in before we get a chance to add the request back to the list].
+>>
+>> This introduced another race resulting in use-after-free.[Described in the commit.]
+>>
+>> To resolve this, sending out the request and adding it to list need to
+>> happen while holding the request_lock.
+>> To ensure minimum allocations while holding the lock, instead of having
+>> the entire ib_nl_send_msg under the lock, we only have rdma_nl_multicast
+>> under this spinlock.
+>>
+>> However, do you think it would be a good idea to split ib_nl_send_msg
+>> into 2 functions -
+>> 1. Prepare the req/query [Outside the spinlock]
+>> 2. Sending the req - rdma_nl_multicast [while holding spinlock]
+>>
+>> Would this be more intuitive?
+> While it is always good idea to minimize the locked period. It still
+> doesn't answer concern about mixing gfp_flags and direct GFP_NOWAIT.
+> For example if user provides GFP_ATOMIC, the GFP_NOWAIT allocation will
+> cause a trouble because latter is more lax than first one.
 
->
->
-> --
-> Michel "Walken" Lespinasse
-> A program is never fully debugged until the last user dies.
+Makes sense, and we do have callers passing GFP_ATOMIC with gfp_mask.
+
+However, in this case when we fail to send the request to ibacm,
+we then fallback to sending it to the SA with gfp_mask. So, the
+request will eventually go out with GFP_ATOMIC to SA. From the
+caller perspective the request will not fail due to memory pressure.
+
+-------
+send_mad(...gfp_mask)
+	- send to ibacm with GFP_NOWAIT
+	- If fails, send to SA with gfp_mask
+-------
+
+So, using GFP_NOWAIT may not cause trouble here. 
+
+The other option might be to use GFP_NOWAIT conditionally ie
+(only use GFP_NOWAIT when GFP_ATOMIC is not specified in gfp_mask else
+use GFP_ATOMIC). Eventual goal being to not have a blocking memory allocation.
+
+Your thoughts? 
+
+Really appreciate your feedback. Thanks!
 
 
-
--- 
 Regards,
-Atish
+Divya
+
+>
+> Thanks
+>
+>>>> +	if (!ret) {
+>>> Please use kernel coding style.
+>>>
+>>> if (ret) {
+>>>   spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+>>>   return ret;
+>>>   }
+>>>
+>>>  ....
+>> Noted. Will make this change.
+>>
+>>>> +		/* Put the request on the list.*/
+>>>> +		delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
+>>>> +		query->timeout = delay + jiffies;
+>>>> +		list_add_tail(&query->list, &ib_nl_request_list);
+>>>> +		/* Start the timeout if this is the only request */
+>>>> +		if (ib_nl_request_list.next == &query->list)
+>>>> +			queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
+>>>> +	}
+>>>> +	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+>>>> +
+>>>> +	return ret;
+>>>>  }
+>>>>
+>>>>  static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
+>>>>  {
+>>>> -	unsigned long flags;
+>>>> -	unsigned long delay;
+>>>>  	int ret;
+>>>>
+>>>>  	INIT_LIST_HEAD(&query->list);
+>>>>  	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
+>>>>
+>>>> -	/* Put the request on the list first.*/
+>>>> -	spin_lock_irqsave(&ib_nl_request_lock, flags);
+>>>> -	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
+>>>> -	query->timeout = delay + jiffies;
+>>>> -	list_add_tail(&query->list, &ib_nl_request_list);
+>>>> -	/* Start the timeout if this is the only request */
+>>>> -	if (ib_nl_request_list.next == &query->list)
+>>>> -		queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
+>>>> -	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+>>>> -
+>>>>  	ret = ib_nl_send_msg(query, gfp_mask);
+>>>>  	if (ret) {
+>>>>  		ret = -EIO;
+>>>> -		/* Remove the request */
+>>>> -		spin_lock_irqsave(&ib_nl_request_lock, flags);
+>>>> -		list_del(&query->list);
+>>>> -		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+>>>>  	}
+>>> Brackets should be removed too.
+>> Noted.
+>>>>  	return ret;
+>>>> --
+>>>> 1.8.3.1
+>>>>
