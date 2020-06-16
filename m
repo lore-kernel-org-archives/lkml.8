@@ -2,107 +2,91 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7039DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB553C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 201832098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:09:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1NFK1Is"
+	by mail.kernel.org (Postfix) with ESMTP id BE8F2208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbgFPUJZ (ORCPT
+        id S1731397AbgFPUKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:09:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbgFPUJY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:09:24 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FBAC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:09:24 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id r11so30693vsj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cVMWjFScpVollEOaNkFT8lSb179zymvf6bAuLU3nZ8g=;
-        b=F1NFK1Isz0JIvcb9r87G9yspaDOOrupvCmuU/LAcJSn7u8WAmPr5qOibsWhJDSAbxP
-         a3OFOdRsjDt2zI3ptL+pYtfB9xBHqQ1RomcjZJBHiFpqV62dqNSQeN2FOGXbOLTvpslr
-         KCNa6gR+VdOLXF2ivweaOgfh0WnSXhr584BplLueb24vGG/nk7eyDGz3i5ki9iXSI1Zg
-         xZbFe/s7r11uFZVsMNYZq2yn39WEI0gcZGvz1KdRR6uTNZ6mlayN+LdgQY5J+V/g/mjQ
-         b0DqZJtwpP1nmW32d+jO9IpF0Efg54SkbLlgdjem9NxI8bUHZ1DE1hHii3bQPyE0J4BE
-         fJFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cVMWjFScpVollEOaNkFT8lSb179zymvf6bAuLU3nZ8g=;
-        b=VIumRW9b/nmz99Fd8G5o53F1apIwXwEjneXUmeEAmJhGM/6wju7MSLeHt37q0UhwmI
-         8Xn7hMnqsfyreuxVU/wA80htCf3AEixVieb8jLSLa8XJ3niWbR6pkyp0ituR6rnmJrs9
-         n+vNjsW7j3SqSN4qPwoed0/APgOFwxss2ss5Lx7VDntnN6eNMTZ5NXyDT0CjOwBcpMqL
-         Q6mITlaYAD5RQAa6jR0F9Z5Nq9SnSlkGQKL2dNZ/yy0mGi2e4A3rvzF+7M12myuO0h24
-         dOn0IrAWMDp0s9TaERJX2YxhnAKAf/O5fPp/3e8QFrrJD/NPJDqYG367XF4ACUB4m/N8
-         hvdg==
-X-Gm-Message-State: AOAM531xQO/y5zc67HLwOE7h7Vz7zLmVx/BQGi2rebQit+GxHlInz6cc
-        QMGHSe+FC3J158j2NPCdjPRbjMIBNXYtSNwm4ak=
-X-Google-Smtp-Source: ABdhPJw/4cuYPDUCD3Xns9GGeuzMZTuvKA8qrzsY4d6/0el53JdYE/CqpRJaf9WdfVmlQY8zIW6vIVR4Rh0gDJBoqcw=
-X-Received: by 2002:a67:3211:: with SMTP id y17mr3218081vsy.56.1592338163782;
- Tue, 16 Jun 2020 13:09:23 -0700 (PDT)
+        Tue, 16 Jun 2020 16:10:10 -0400
+Received: from mga01.intel.com ([192.55.52.88]:13022 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727962AbgFPUKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 16:10:10 -0400
+IronPort-SDR: F1YhcCf1QQ2eKQstkSiOmMjJXlu1xh1/ONgSNtZ7tvJ015Inz/HLjzKiNZcWEjDvU7cKTGIppx
+ nVjjEgmQUBcg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 13:10:09 -0700
+IronPort-SDR: 3acZQnJGhOh+XvlJm6v0GvJ3UIbJLjErxgGQr7cjJuVRIjqLzOio6mQYzTQN3AqQTDa/TFvDhK
+ okf0LgpUTI3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,519,1583222400"; 
+   d="scan'208";a="291185078"
+Received: from gosinald-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.36.106])
+  by orsmga002.jf.intel.com with ESMTP; 16 Jun 2020 13:09:59 -0700
+Date:   Tue, 16 Jun 2020 23:09:58 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        andriy.shevchenko@linux.intel.com, asapek@google.com, bp@alien8.de,
+        cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v32 00/21] Intel SGX foundations
+Message-ID: <20200616200958.GC10412@linux.intel.com>
+References: <20200601075218.65618-1-jarkko.sakkinen@linux.intel.com>
+ <20200610205903.GF18790@linux.intel.com>
 MIME-Version: 1.0
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-20-jim.cromie@gmail.com> <20200616115727.GN31238@alley>
-In-Reply-To: <20200616115727.GN31238@alley>
-From:   jim.cromie@gmail.com
-Date:   Tue, 16 Jun 2020 14:08:57 -0600
-Message-ID: <CAJfuBxwmMNzt6ffQkYX7vU1qRa12=mCbO9T4SMzF7RXV5UwkYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 19/24] dyndbg: accept query terms like module:foo and file=bar
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610205903.GF18790@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 5:57 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Sat 2020-06-13 09:57:33, Jim Cromie wrote:
-> > Current code expects "keyword" "arg" as 2 space separated words.
-> > Change to also accept "keyword:arg" and "keyword=arg" forms as well,
-> > and drop !(nwords%2) requirement.
-> >
-> > Then in rest of function, use new keyword,arg variables instead of
-> > word[i],word[i+1]
->
-> I like the idea. But please allow only one form. IMHO, parameter=value
-> is a common way to pass values to commandline parameters.
->
+On Wed, Jun 10, 2020 at 01:59:03PM -0700, Sean Christopherson wrote:
+> On Mon, Jun 01, 2020 at 10:51:57AM +0300, Jarkko Sakkinen wrote:
+> > v29:
+> > * The selftest has been moved to selftests/sgx. Because SGX is an execution
+> >   environment of its own, it really isn't a great fit with more "standard"
+> >   x86 tests.
+> > 
+> >   The RSA key is now generated on fly and the whole signing process has
+> >   been made as part of the enclave loader instead of signing the enclave
+> >   during the compilation time.
+> > 
+> >   Finally, the enclave loader loads now the test enclave directly from its
+> >   ELF file, which means that ELF file does not need to be coverted as raw
+> >   binary during the build process.
+> 
+> Something in the above rework broke the selftest.  I'm getting intermittent
+> EINIT failures with SGX_INVALID_SIGNATURE.  I'm guessing it's related to
+> the dynamic RSA key generation, e.g. only ~15% of runs fail.  Verified that
+> v29 selftest fails and v28 passes.  My internal tests also pass, i.e. it's
+> all but guaranteed to be a selftest issue, not a kernel issue.
+> 
+> Jarkko, I don't have bandwidth to dig into this right now, hopefully this
+> reproduces in your environment.  Let me know if that's not the case.
 
-I dont see a basis to prefer one over the other.
-we already now accept  " file   foo.c:func "
-that might argue for file=foo:func
-but file:foo:func is what youd expect reading left-to-right
+I haven't experienced but I'll try to stress test it.
 
+Just to know how complex test should reproduce your issue, can you
+reproduce the issue by running the selftest sequentially in a loop or
+do I need to do something more complex than that?
 
-> Note that "keyword" and "arg" is strange naming, especially "arg".
->
-
-I think keyword is clear in context. query_term is suitable, but no better.
-
-arg is pretty generic, without overloaded meaning like value ( like
-lvalue ? rvalue ?)
-almost as old as 'i', but generally a string (not an int)
-Is there an alternative you favor ?
-
-> Best Regards,
-> Petr
+/Jarkko
