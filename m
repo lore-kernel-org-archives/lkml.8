@@ -2,178 +2,91 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D65FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE09C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 832A22071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324082;
-	bh=vXf5CedmMokYoBGH9K1E2czkrLVJNPlSnTrBImd5GUU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOgEoZAivEj9Mt8Gh/Hmen36nhvNaSruA6sZ/bADpv8NkivQOEPjhLNbnVAClWKfw
-	 GdmpsJrXiQ3xqDmVw6NjbHzpIlPv5aEVhAvw6uxL4F6sYvJDGYyqGNEDjZoNrD7ilh
-	 +dFm9aAkIhXmornVZV6IzEtZbCbxOsVvGH1c2h5I=
+	by mail.kernel.org (Postfix) with ESMTP id B43FC2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/U4j28m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbgFPQOl (ORCPT
+        id S1730204AbgFPQOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731669AbgFPPm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 16 Jun 2020 12:14:46 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37474 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732261AbgFPQOm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:14:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592324081;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=EGk4MDxuxjJxgEfnB6gIyOaKHUzMx57nfzVxFUf1flw=;
+        b=b/U4j28mnQmJJ2K3ZZsm0kFoFZauhNVQWi91KqZiObYKmnSxwHnOTGNlUxvUVAm+Up9VPI
+        mU+iLjzCDkwv9A0SIT6YKPmLVt4CmJ2j8f6U4UirpCAp9qmuzdGfXS4Za1xCMavVHWpU2L
+        le6pg+Ywc8kZp3Ung2wBcWIrLEw7GYU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-460-KOglBjA_PZOFj8z9UPRzyA-1; Tue, 16 Jun 2020 12:14:39 -0400
+X-MC-Unique: KOglBjA_PZOFj8z9UPRzyA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 960D2214DB;
-        Tue, 16 Jun 2020 15:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322147;
-        bh=vXf5CedmMokYoBGH9K1E2czkrLVJNPlSnTrBImd5GUU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D7qAl4tMBuNkCqfeijrCtWm1Ie58Ov0CXe2a+7QhmuEeratbCOaYvSsqagNt0s+S4
-         w5Zyt/kjMGeNl4etQHyAheizWz7DHbWm05T70moHSsZLLlw5HMI9A13+OruZj+ntQh
-         40trxRNvmpUfy+Y8mh28PpHKu72JIZkwJclAEPDM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Walle <michael@walle.cc>,
-        Saravana Kannan <saravanak@google.com>,
-        "Rafael J. Wysocki" <rrafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 019/163] driver core: Update device link status correctly for SYNC_STATE_ONLY links
-Date:   Tue, 16 Jun 2020 17:33:13 +0200
-Message-Id: <20200616153107.801511931@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
-References: <20200616153106.849127260@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22EC5100A69D;
+        Tue, 16 Jun 2020 16:14:32 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.192.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C6FF7CAA0;
+        Tue, 16 Jun 2020 16:14:28 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Like Xu <like.xu@linux.intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated MSRs
+Date:   Tue, 16 Jun 2020 18:14:27 +0200
+Message-Id: <20200616161427.375651-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+state_test/smm_test selftests are failing on AMD with:
+"Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
 
-[ Upstream commit 8c3e315d4296421cd26b3300ee0ac117f0877f20 ]
+MSR_IA32_PERF_CAPABILITIES is an emulated MSR indeed but only on Intel,
+make svm_has_emulated_msr() skip it so it is not returned by
+KVM_GET_MSR_INDEX_LIST.
 
-When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
-core: Add device link support for SYNC_STATE_ONLY flag"),
-SYNC_STATE_ONLY links were treated similar to STATELESS links in terms
-of not blocking consumer probe if the supplier hasn't probed yet.
-
-That caused a SYNC_STATE_ONLY device link's status to not get updated.
-Since SYNC_STATE_ONLY device link is no longer useful once the
-consumer probes, commit 21c27f06587d ("driver core: Fix
-SYNC_STATE_ONLY device link implementation") addresses the status
-update issue by deleting the SYNC_STATE_ONLY device link instead of
-complicating the status update code.
-
-However, there are still some cases where we need to update the status
-of a SYNC_STATE_ONLY device link. This is because a SYNC_STATE_ONLY
-device link can later get converted into a normal MANAGED device link
-when a normal MANAGED device link is created between a supplier and
-consumer that already have a SYNC_STATE_ONLY device link between them.
-
-If a SYNC_STATE_ONLY device link's status isn't maintained correctly
-till it's converted to a normal MANAGED device link, then the normal
-MANAGED device link will end up with a wrong link status. This can cause
-a warning stack trace[1] when the consumer device probes successfully.
-
-This commit fixes the SYNC_STATE_ONLY device link status update issue
-where it wouldn't transition correctly from DL_STATE_DORMANT or
-DL_STATE_AVAILABLE to DL_STATE_CONSUMER_PROBE. It also resets the status
-back to DL_STATE_DORMANT or DL_STATE_AVAILABLE if the consumer probe
-fails.
-
-[1] - https://lore.kernel.org/lkml/20200522204120.3b3c9ed6@apollo/
-Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
-Fixes: 21c27f06587d ("driver core: Fix SYNC_STATE_ONLY device link implementation")
-Reported-by: Michael Walle <michael@walle.cc>
-Tested-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Reviewed-by: Rafael J. Wysocki <rrafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20200526220928.49939-1-saravanak@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 27461da31089 ("KVM: x86/pmu: Support full width counting")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- drivers/base/core.c | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
+ arch/x86/kvm/svm/svm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 0cad34f1eede..213106ed8a56 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -643,9 +643,17 @@ static void device_links_missing_supplier(struct device *dev)
- {
- 	struct device_link *link;
- 
--	list_for_each_entry(link, &dev->links.suppliers, c_node)
--		if (link->status == DL_STATE_CONSUMER_PROBE)
-+	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-+		if (link->status != DL_STATE_CONSUMER_PROBE)
-+			continue;
-+
-+		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
- 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
-+		} else {
-+			WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY));
-+			WRITE_ONCE(link->status, DL_STATE_DORMANT);
-+		}
-+	}
- }
- 
- /**
-@@ -684,11 +692,11 @@ int device_links_check_suppliers(struct device *dev)
- 	device_links_write_lock();
- 
- 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
--		if (!(link->flags & DL_FLAG_MANAGED) ||
--		    link->flags & DL_FLAG_SYNC_STATE_ONLY)
-+		if (!(link->flags & DL_FLAG_MANAGED))
- 			continue;
- 
--		if (link->status != DL_STATE_AVAILABLE) {
-+		if (link->status != DL_STATE_AVAILABLE &&
-+		    !(link->flags & DL_FLAG_SYNC_STATE_ONLY)) {
- 			device_links_missing_supplier(dev);
- 			ret = -EPROBE_DEFER;
- 			break;
-@@ -949,11 +957,21 @@ static void __device_links_no_driver(struct device *dev)
- 		if (!(link->flags & DL_FLAG_MANAGED))
- 			continue;
- 
--		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
-+		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER) {
- 			device_link_drop_managed(link);
--		else if (link->status == DL_STATE_CONSUMER_PROBE ||
--			 link->status == DL_STATE_ACTIVE)
-+			continue;
-+		}
-+
-+		if (link->status != DL_STATE_CONSUMER_PROBE &&
-+		    link->status != DL_STATE_ACTIVE)
-+			continue;
-+
-+		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
- 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
-+		} else {
-+			WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY));
-+			WRITE_ONCE(link->status, DL_STATE_DORMANT);
-+		}
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 8ccfa4197d9c..2c423d64fb8f 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3539,6 +3539,8 @@ static bool svm_has_emulated_msr(u32 index)
+ 	case MSR_IA32_MCG_EXT_CTL:
+ 	case MSR_IA32_VMX_BASIC ... MSR_IA32_VMX_VMFUNC:
+ 		return false;
++	case MSR_IA32_PERF_CAPABILITIES:
++		return false;
+ 	default:
+ 		break;
  	}
- 
- 	dev->links.status = DL_DEV_NO_DRIVER;
 -- 
-2.25.1
-
-
+2.25.4
 
