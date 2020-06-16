@@ -2,101 +2,120 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B05208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E9E20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:56:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVuZirMA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sSHE2J4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgFPMvl (ORCPT
+        id S1728160AbgFPM4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47332 "EHLO
+        Tue, 16 Jun 2020 08:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgFPMvl (ORCPT
+        with ESMTP id S1725901AbgFPM4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:51:41 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 127A5C0F26CA
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:51:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h22so1535631pjf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:51:38 -0700 (PDT)
+        Tue, 16 Jun 2020 08:56:33 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D33C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:56:33 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id d2so16652641qtw.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d+HKpiBULj5/x+8JoN3AVc7dWKv37MLi37e+vc/Tkuk=;
-        b=jVuZirMAy0emttsGnuAecLYK0EdQ9xJpE0ZSDfnOab61zHzmy+gb9XMzaTrodYgSHs
-         Xv6jn0RlFFgOgUvscS60gx3uCDf7oc7M2/QAd8eCfyckVK2tJrhIHOHr2P2/qis5Jm8Z
-         Ve5n9WvjfNTnBOdyCzxGMgxCNcWgD5vQ7InBmXGhP+6IOEtiFiXJ9VVxrtCQu7L4BDE1
-         4gcJ4ZMfX8DaMLEYG9u7jDOlgqNbBSC20WylJDSLND3Fqd55jjcApJjXtBsml3uOErZU
-         UPiYGVuREKP49Y7jzWPq0/V5Rb9D3cm0fBrTBl7EgQvuTTWaiMa0o9HEsibGKhkjbMQI
-         IN1g==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=JEQhTwQYPsGwAzZzLRu7bODyjB8wxGLamvh49Pujfk0=;
+        b=sSHE2J4HPUB3tIDmmWhIklNcdHKql+Uyvzmc6XqZpJzmMGO9f6RWeMHzZrA6nd1tSH
+         wMFPzYcAPkUjWTpoSnXWYqcJagGQ/qjFYIRVjH2z9YI/HeVHHQV5Pl3ZS6vTxa7SGj5L
+         j+utHFL7hNCvLLPoFB+AbBI8rZHh9d4+uQVvgsOqCTpmGC27qch98mbMkhW9CKDfvNJ8
+         c1NsXeSe3lzWr+2hbz2PjJhuS2gJbX8ZKdgrN0uNsF4RMooNpcflAm1VQJlWZ+0I9jie
+         0V6sIasNyxIBD6XERhgR0uOqbXiop7Ciwfj1E4eOd1HPeB+YNnkWvso/1bDHoPZ3yCxp
+         kg8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d+HKpiBULj5/x+8JoN3AVc7dWKv37MLi37e+vc/Tkuk=;
-        b=R2XuM98tWYEw1OasmLc+H9q3mHk892lCCdj5sq0OaZOiusrn6lDz+jzPHADCnMqbK7
-         Jgw/1eKdKP8p0eNgHp7pictmyHTsWqUGsLyEiWCUjP/z2xZhZ0zAJGbUSmluV5B3mRSr
-         Xj0h/o9Tkzi1/SARpPAmE6mDWJw5r4cr9gtuHvhojumvjl+lp+A1rzgBkWbJ8ooqcgyN
-         Cxjm/J5D0wUydDt4Lzk+q80IyHrFMA+LvMA0256vMIGvaTkMVqoWXe6d+6CYPAYaBAAd
-         sQlUl/4Qc9giVsnDM9emj0XUsKZ1Lq1FgMtc0l+dy8OLGdwyZWg5iGnAOtL5b61zohAc
-         LLJQ==
-X-Gm-Message-State: AOAM530XkVXhVsu2GJjeR1d5+Bzd+BTERmLkV7lAgsGkt/ABIhL4eZ0G
-        tWVwg4tPBHMU5MJUHM/47NM=
-X-Google-Smtp-Source: ABdhPJyD9rYqsvjIRvFkeJrxMmm/10C4XSG7Dn9KS9TzDdg/7mQDJCq66SYQFOJSFAL1kmfWHKuFFg==
-X-Received: by 2002:a17:90b:2308:: with SMTP id mt8mr2598237pjb.211.1592311897707;
-        Tue, 16 Jun 2020 05:51:37 -0700 (PDT)
-Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
-        by smtp.gmail.com with ESMTPSA id 25sm1811392pfi.7.2020.06.16.05.51.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 05:51:37 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id 1D4CA2360394; Tue, 16 Jun 2020 21:51:35 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        arnd@arndb.de, geert+renesas@glider.be
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH] scripts: Fix typo in headers_install.sh
-Date:   Tue, 16 Jun 2020 21:51:32 +0900
-Message-Id: <20200616125132.1586086-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.27.0.83.g0313f36c6ebe
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=JEQhTwQYPsGwAzZzLRu7bODyjB8wxGLamvh49Pujfk0=;
+        b=raZRygRs7hzzyj7VQrxroBF0+K2hBZPfQGadIDHKu6eqFWlJ8YdQ/4FWaoy/UtBVj4
+         JpyGuWALEr6hCbjsPMIN+Nhv8PJIGLCeVWTZ637abt6e4yQdfL9a84N+/IgAubIVYWzq
+         Ex0rp+XilR57dx5DP0mzZ8TrWWVKLngfEn12GsEW0oXTPeRy1oKqRYrvjahP5tie/QnR
+         PoL5dwjJPLIhrwpcpkxsVuAs78Q3B2I8IcgtgLSlvqkTT0E288VUsmIJnRY/VSeDbczv
+         DXFRjxuGxl5p/MptWXLjS2TsbO625SfsIsMpy+PbMY4D5OXIbd04FQrvqQgjVyMpOw56
+         s62g==
+X-Gm-Message-State: AOAM531C08HqF9tXErSREP96xwUthGdR5XpI3DUcebycmxRhqvXEm3YC
+        FaMkiCFcT7UacKjvAVFepVUX1iJuWQ==
+X-Google-Smtp-Source: ABdhPJwJECfqDtEzlbRiaVbG9X3exdfTM0hZYMe8eM3LQl2bahV0IpaKa5NjpgAs6dfyJ1u5JrhunEnOKA==
+X-Received: by 2002:a0c:e5c1:: with SMTP id u1mr2081593qvm.140.1592312191743;
+ Tue, 16 Jun 2020 05:56:31 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 14:56:17 +0200
+Message-Id: <20200616125617.237428-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+Subject: [PATCH] mm, kcsan: Instrument SLAB/SLUB free with "ASSERT_EXCLUSIVE_ACCESS"
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, akpm@linux-foundation.org
+Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fix a spelling typo in scripts/headers_install.sh
+Provide the necessary KCSAN checks to assist with debugging racy
+use-after-frees. While KASAN is more reliable at generally catching such
+use-after-frees (due to its use of a quarantine), it can be difficult to
+debug racy use-after-frees. If a reliable reproducer exists, KCSAN can
+assist in debugging such issues.
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+Note: ASSERT_EXCLUSIVE_ACCESS is a convenience wrapper if the size is
+simply sizeof(var). Instead, here we just use __kcsan_check_access()
+explicitly to pass the correct size.
+
+Signed-off-by: Marco Elver <elver@google.com>
 ---
- scripts/headers_install.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/slab.c | 4 ++++
+ mm/slub.c | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
-index 955cf3aedf21..224f51012b6e 100755
---- a/scripts/headers_install.sh
-+++ b/scripts/headers_install.sh
-@@ -11,7 +11,7 @@ then
- 	echo "asm/inline/volatile keywords."
- 	echo
- 	echo "INFILE: header file to operate on"
--	echo "OUTFILE: output file which the processed header is writen to"
-+	echo "OUTFILE: output file which the processed header is written to"
+diff --git a/mm/slab.c b/mm/slab.c
+index 9350062ffc1a..4c7013eeacd9 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -3426,6 +3426,10 @@ static __always_inline void __cache_free(struct kmem_cache *cachep, void *objp,
+ 	if (kasan_slab_free(cachep, objp, _RET_IP_))
+ 		return;
  
- 	exit 1
- fi
++	/* Use KCSAN to help debug racy use-after-free. */
++	__kcsan_check_access(objp, cachep->object_size,
++			     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT);
++
+ 	___cache_free(cachep, objp, caller);
+ }
+ 
+diff --git a/mm/slub.c b/mm/slub.c
+index b8f798b50d44..57db6ca2e0dc 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1470,6 +1470,10 @@ static __always_inline bool slab_free_hook(struct kmem_cache *s, void *x)
+ 	if (!(s->flags & SLAB_DEBUG_OBJECTS))
+ 		debug_check_no_obj_freed(x, s->object_size);
+ 
++	/* Use KCSAN to help debug racy use-after-free. */
++	__kcsan_check_access(x, s->object_size,
++			     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT);
++
+ 	/* KASAN might put x into memory quarantine, delaying its reuse */
+ 	return kasan_slab_free(s, x, _RET_IP_);
+ }
 -- 
-2.27.0.83.g0313f36c6ebe
+2.27.0.290.gba653c62da-goog
 
