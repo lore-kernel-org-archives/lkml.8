@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C59C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F75C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C073B2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5823120767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgFPJh2 (ORCPT
+        id S1728078AbgFPJhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:37:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6336 "EHLO huawei.com"
+        Tue, 16 Jun 2020 05:37:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6338 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbgFPJgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:36:17 -0400
+        id S1728245AbgFPJgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:36:16 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A7F67EB29739727ABAE9;
+        by Forcepoint Email with ESMTP id B8F055F8BBC2B2F531C4;
         Tue, 16 Jun 2020 17:36:13 +0800 (CST)
 Received: from DESKTOP-5IS4806.china.huawei.com (10.173.221.230) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 16 Jun 2020 17:36:07 +0800
+ 14.3.487.0; Tue, 16 Jun 2020 17:36:05 +0800
 From:   Keqian Zhu <zhukeqian1@huawei.com>
 To:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -43,9 +43,9 @@ CC:     Catalin Marinas <catalin.marinas@arm.com>,
         Alexios Zavras <alexios.zavras@intel.com>,
         <liangpeng10@huawei.com>, <zhengxiang9@huawei.com>,
         <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
-Subject: [PATCH 05/12] KVM: arm64: Add KVM_CAP_ARM_HW_DIRTY_LOG capability
-Date:   Tue, 16 Jun 2020 17:35:46 +0800
-Message-ID: <20200616093553.27512-6-zhukeqian1@huawei.com>
+Subject: [PATCH 02/12] KVM: arm64: Modify stage2 young mechanism to support hw DBM
+Date:   Tue, 16 Jun 2020 17:35:43 +0800
+Message-ID: <20200616093553.27512-3-zhukeqian1@huawei.com>
 X-Mailer: git-send-email 2.8.4.windows.1
 In-Reply-To: <20200616093553.27512-1-zhukeqian1@huawei.com>
 References: <20200616093553.27512-1-zhukeqian1@huawei.com>
@@ -58,98 +58,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For that using arm64 DBM to log dirty pages has the side effect
-of long time dirty log sync, we should give userspace opportunity
-to enable or disable this feature, to realize some policy.
+Marking PTs young (set AF bit) should be atomic to avoid cover
+dirty status set by hardware.
 
 Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
 ---
- arch/arm64/include/asm/kvm_host.h |  7 +++++++
- arch/arm64/kvm/arm.c              | 10 ++++++++++
- arch/arm64/kvm/reset.c            |  5 +++++
- include/uapi/linux/kvm.h          |  1 +
- tools/include/uapi/linux/kvm.h    |  1 +
- 5 files changed, 24 insertions(+)
+ arch/arm64/include/asm/kvm_mmu.h | 32 ++++++++++++++++++++++----------
+ arch/arm64/kvm/mmu.c             | 15 ++++++++-------
+ 2 files changed, 30 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 9ea2dcfd609c..2bc3256759e3 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -95,6 +95,13 @@ struct kvm_arch {
- 	 * supported.
- 	 */
- 	bool return_nisv_io_abort_to_user;
+diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
+index e0ee6e23d626..51af71505fbc 100644
+--- a/arch/arm64/include/asm/kvm_mmu.h
++++ b/arch/arm64/include/asm/kvm_mmu.h
+@@ -215,6 +215,18 @@ static inline void kvm_set_s2pte_readonly(pte_t *ptep)
+ 	} while (pteval != old_pteval);
+ }
+ 
++static inline void kvm_set_s2pte_young(pte_t *ptep)
++{
++	pteval_t old_pteval, pteval;
 +
-+	/*
-+	 * Use hardware management of dirty status (DBM) to log dirty pages.
-+	 * Userspace can enable this feature if KVM_CAP_ARM_HW_DIRTY_LOG is
-+	 * supported.
-+	 */
-+	bool hw_dirty_log;
- };
++	pteval = READ_ONCE(pte_val(*ptep));
++	do {
++		old_pteval = pteval;
++		pteval |= PTE_AF;
++		pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval, pteval);
++	} while (pteval != old_pteval);
++}
++
+ static inline bool kvm_s2pte_readonly(pte_t *ptep)
+ {
+ 	return (READ_ONCE(pte_val(*ptep)) & PTE_S2_RDWR) == PTE_S2_RDONLY;
+@@ -230,6 +242,11 @@ static inline void kvm_set_s2pmd_readonly(pmd_t *pmdp)
+ 	kvm_set_s2pte_readonly((pte_t *)pmdp);
+ }
  
- #define KVM_NR_MEM_OBJS     40
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 90cb90561446..850cc5cbc6f0 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -87,6 +87,16 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		r = 0;
- 		kvm->arch.return_nisv_io_abort_to_user = true;
- 		break;
-+#ifdef CONFIG_ARM64_HW_AFDBM
-+	case KVM_CAP_ARM_HW_DIRTY_LOG:
-+		if ((cap->args[0] & ~1) || !kvm_hw_dbm_enabled()) {
-+			r = -EINVAL;
-+		} else {
-+			r = 0;
-+			kvm->arch.hw_dirty_log = cap->args[0];
-+		}
-+		break;
-+#endif
- 	default:
- 		r = -EINVAL;
- 		break;
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index d3b209023727..52bb801c9b2c 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -83,6 +83,11 @@ int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		r = has_vhe() && system_supports_address_auth() &&
- 				 system_supports_generic_auth();
- 		break;
-+#ifdef CONFIG_ARM64_HW_AFDBM
-+	case KVM_CAP_ARM_HW_DIRTY_LOG:
-+		r = kvm_hw_dbm_enabled();
-+		break;
-+#endif /* CONFIG_ARM64_HW_AFDBM */
- 	default:
- 		r = 0;
++static inline void kvm_set_s2pmd_young(pmd_t *pmdp)
++{
++	kvm_set_s2pte_young((pte_t *)pmdp);
++}
++
+ static inline bool kvm_s2pmd_readonly(pmd_t *pmdp)
+ {
+ 	return kvm_s2pte_readonly((pte_t *)pmdp);
+@@ -245,6 +262,11 @@ static inline void kvm_set_s2pud_readonly(pud_t *pudp)
+ 	kvm_set_s2pte_readonly((pte_t *)pudp);
+ }
+ 
++static inline void kvm_set_s2pud_young(pud_t *pudp)
++{
++	kvm_set_s2pte_young((pte_t *)pudp);
++}
++
+ static inline bool kvm_s2pud_readonly(pud_t *pudp)
+ {
+ 	return kvm_s2pte_readonly((pte_t *)pudp);
+@@ -255,16 +277,6 @@ static inline bool kvm_s2pud_exec(pud_t *pudp)
+ 	return !(READ_ONCE(pud_val(*pudp)) & PUD_S2_XN);
+ }
+ 
+-static inline pud_t kvm_s2pud_mkyoung(pud_t pud)
+-{
+-	return pud_mkyoung(pud);
+-}
+-
+-static inline bool kvm_s2pud_young(pud_t pud)
+-{
+-	return pud_young(pud);
+-}
+-
+ #ifdef CONFIG_ARM64_HW_AFDBM
+ static inline bool kvm_hw_dbm_enabled(void)
+ {
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 8c0035cab6b6..5ad87bce23c0 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -2008,8 +2008,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+  * Resolve the access fault by making the page young again.
+  * Note that because the faulting entry is guaranteed not to be
+  * cached in the TLB, we don't need to invalidate anything.
+- * Only the HW Access Flag updates are supported for Stage 2 (no DBM),
+- * so there is no need for atomic (pte|pmd)_mkyoung operations.
++ *
++ * Note: Both DBM and HW AF updates are supported for Stage2, so
++ * young operations should be atomic.
+  */
+ static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
+ {
+@@ -2027,15 +2028,15 @@ static void handle_access_fault(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
+ 		goto out;
+ 
+ 	if (pud) {		/* HugeTLB */
+-		*pud = kvm_s2pud_mkyoung(*pud);
++		kvm_set_s2pud_young(pud);
+ 		pfn = kvm_pud_pfn(*pud);
+ 		pfn_valid = true;
+ 	} else	if (pmd) {	/* THP, HugeTLB */
+-		*pmd = pmd_mkyoung(*pmd);
++		kvm_set_s2pmd_young(pmd);
+ 		pfn = pmd_pfn(*pmd);
+ 		pfn_valid = true;
+-	} else {
+-		*pte = pte_mkyoung(*pte);	/* Just a page... */
++	} else {		/* Just a page... */
++		kvm_set_s2pte_young(pte);
+ 		pfn = pte_pfn(*pte);
+ 		pfn_valid = true;
  	}
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 4fdf30316582..e0b12c43397b 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1031,6 +1031,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_PPC_SECURE_GUEST 181
- #define KVM_CAP_HALT_POLL 182
- #define KVM_CAP_ASYNC_PF_INT 183
-+#define KVM_CAP_ARM_HW_DIRTY_LOG 184
+@@ -2280,7 +2281,7 @@ static int kvm_test_age_hva_handler(struct kvm *kvm, gpa_t gpa, u64 size, void *
+ 		return 0;
  
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index fdd632c833b4..53908a8881a4 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -1017,6 +1017,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_S390_VCPU_RESETS 179
- #define KVM_CAP_S390_PROTECTED 180
- #define KVM_CAP_PPC_SECURE_GUEST 181
-+#define KVM_CAP_ARM_HW_DIRTY_LOG 184
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
+ 	if (pud)
+-		return kvm_s2pud_young(*pud);
++		return pud_young(*pud);
+ 	else if (pmd)
+ 		return pmd_young(*pmd);
+ 	else
 -- 
 2.19.1
 
