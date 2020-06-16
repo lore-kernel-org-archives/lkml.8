@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E10C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A223DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A8520C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8100720C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgFPMWY (ORCPT
+        id S1729143AbgFPMW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:22:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42706 "EHLO
+        Tue, 16 Jun 2020 08:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728895AbgFPMWE (ORCPT
+        with ESMTP id S1728900AbgFPMWF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:22:04 -0400
+        Tue, 16 Jun 2020 08:22:05 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 092ACC08C5C3;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805C8C08C5C4;
         Tue, 16 Jun 2020 05:22:04 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbI-0004hw-QZ; Tue, 16 Jun 2020 14:22:01 +0200
+        id 1jlAbH-0004f8-V9; Tue, 16 Jun 2020 14:22:00 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8102F1C0838;
-        Tue, 16 Jun 2020 14:21:53 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:53 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AF04D1C04CC;
+        Tue, 16 Jun 2020 14:21:51 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:51 -0000
+From:   "tip-bot2 for Luca Abeni" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/deadline: Impose global limits on
- sched_attr::sched_period
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20190726161357.397880775@infradead.org>
-References: <20190726161357.397880775@infradead.org>
+Subject: [tip: sched/core] sched/deadline: Make DL capacity-aware
+Cc:     Luca Abeni <luca.abeni@santannapisa.it>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200520134243.19352-5-dietmar.eggemann@arm.com>
+References: <20200520134243.19352-5-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
-Message-ID: <159231011330.16989.6804741545941906806.tip-bot2@tip-bot2>
+Message-ID: <159231011148.16989.3880543915105728495.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,111 +61,131 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     b4098bfc5efb1fd7ecf40165132a1283aeea3500
-Gitweb:        https://git.kernel.org/tip/b4098bfc5efb1fd7ecf40165132a1283aeea3500
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 26 Jul 2019 16:54:10 +02:00
+Commit-ID:     b4118988fdcb4554ea6687dd8ff68bcab690b8ea
+Gitweb:        https://git.kernel.org/tip/b4118988fdcb4554ea6687dd8ff68bcab690b8ea
+Author:        Luca Abeni <luca.abeni@santannapisa.it>
+AuthorDate:    Wed, 20 May 2020 15:42:42 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:04 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:05 +02:00
 
-sched/deadline: Impose global limits on sched_attr::sched_period
+sched/deadline: Make DL capacity-aware
 
+The current SCHED_DEADLINE (DL) scheduler uses a global EDF scheduling
+algorithm w/o considering CPU capacity or task utilization.
+This works well on homogeneous systems where DL tasks are guaranteed
+to have a bounded tardiness but presents issues on heterogeneous
+systems.
+
+A DL task can migrate to a CPU which does not have enough CPU capacity
+to correctly serve the task (e.g. a task w/ 70ms runtime and 100ms
+period on a CPU w/ 512 capacity).
+
+Add the DL fitness function dl_task_fits_capacity() for DL admission
+control on heterogeneous systems. A task fits onto a CPU if:
+
+    CPU original capacity / 1024 >= task runtime / task deadline
+
+Use this function on heterogeneous systems to try to find a CPU which
+meets this criterion during task wakeup, push and offline migration.
+
+On homogeneous systems the original behavior of the DL admission
+control should be retained.
+
+Signed-off-by: Luca Abeni <luca.abeni@santannapisa.it>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190726161357.397880775@infradead.org
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Link: https://lkml.kernel.org/r/20200520134243.19352-5-dietmar.eggemann@arm.com
 ---
- include/linux/sched/sysctl.h |  3 +++
- kernel/sched/deadline.c      | 23 +++++++++++++++++++++--
- kernel/sysctl.c              | 14 ++++++++++++++
- 3 files changed, 38 insertions(+), 2 deletions(-)
+ kernel/sched/cpudeadline.c | 14 +++++++++++++-
+ kernel/sched/deadline.c    | 18 ++++++++++++++----
+ kernel/sched/sched.h       | 15 +++++++++++++++
+ 3 files changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index 660ac49..24be30a 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -61,6 +61,9 @@ int sched_proc_update_handler(struct ctl_table *table, int write,
- extern unsigned int sysctl_sched_rt_period;
- extern int sysctl_sched_rt_runtime;
+diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
+index 5cc4012..8630f2a 100644
+--- a/kernel/sched/cpudeadline.c
++++ b/kernel/sched/cpudeadline.c
+@@ -121,7 +121,19 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
  
-+extern unsigned int sysctl_sched_dl_period_max;
-+extern unsigned int sysctl_sched_dl_period_min;
+ 	if (later_mask &&
+ 	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
+-		return 1;
++		int cpu;
 +
- #ifdef CONFIG_UCLAMP_TASK
- extern unsigned int sysctl_sched_uclamp_util_min;
- extern unsigned int sysctl_sched_uclamp_util_max;
++		if (!static_branch_unlikely(&sched_asym_cpucapacity))
++			return 1;
++
++		/* Ensure the capacity of the CPUs fits the task. */
++		for_each_cpu(cpu, later_mask) {
++			if (!dl_task_fits_capacity(p, cpu))
++				cpumask_clear_cpu(cpu, later_mask);
++		}
++
++		if (!cpumask_empty(later_mask))
++			return 1;
+ 	} else {
+ 		int best_cpu = cpudl_maximum(cp);
+ 
 diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 504d2f5..f31964a 100644
+index 9ebd0a9..84e84ba 100644
 --- a/kernel/sched/deadline.c
 +++ b/kernel/sched/deadline.c
-@@ -2635,6 +2635,14 @@ void __getparam_dl(struct task_struct *p, struct sched_attr *attr)
- }
- 
- /*
-+ * Default limits for DL period; on the top end we guard against small util
-+ * tasks still getting rediculous long effective runtimes, on the bottom end we
-+ * guard against timer DoS.
-+ */
-+unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
-+unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
-+
-+/*
-  * This function validates the new parameters of a -deadline task.
-  * We ask for the deadline not being zero, and greater or equal
-  * than the runtime, as well as the period of being zero or
-@@ -2646,6 +2654,8 @@ void __getparam_dl(struct task_struct *p, struct sched_attr *attr)
-  */
- bool __checkparam_dl(const struct sched_attr *attr)
+@@ -1643,6 +1643,7 @@ static int
+ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
  {
-+	u64 period, max, min;
-+
- 	/* special dl tasks don't actually use any parameter */
- 	if (attr->sched_flags & SCHED_FLAG_SUGOV)
- 		return true;
-@@ -2669,12 +2679,21 @@ bool __checkparam_dl(const struct sched_attr *attr)
- 	    attr->sched_period & (1ULL << 63))
- 		return false;
+ 	struct task_struct *curr;
++	bool select_rq;
+ 	struct rq *rq;
  
-+	period = attr->sched_period;
-+	if (!period)
-+		period = attr->sched_deadline;
+ 	if (sd_flag != SD_BALANCE_WAKE)
+@@ -1662,10 +1663,19 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 	 * other hand, if it has a shorter deadline, we
+ 	 * try to make it stay here, it might be important.
+ 	 */
+-	if (unlikely(dl_task(curr)) &&
+-	    (curr->nr_cpus_allowed < 2 ||
+-	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
+-	    (p->nr_cpus_allowed > 1)) {
++	select_rq = unlikely(dl_task(curr)) &&
++		    (curr->nr_cpus_allowed < 2 ||
++		     !dl_entity_preempt(&p->dl, &curr->dl)) &&
++		    p->nr_cpus_allowed > 1;
 +
- 	/* runtime <= deadline <= period (if period != 0) */
--	if ((attr->sched_period != 0 &&
--	     attr->sched_period < attr->sched_deadline) ||
-+	if (period < attr->sched_deadline ||
- 	    attr->sched_deadline < attr->sched_runtime)
- 		return false;
++	/*
++	 * Take the capacity of the CPU into account to
++	 * ensure it fits the requirement of the task.
++	 */
++	if (static_branch_unlikely(&sched_asym_cpucapacity))
++		select_rq |= !dl_task_fits_capacity(p, cpu);
++
++	if (select_rq) {
+ 		int target = find_later_rq(p);
  
-+	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
-+	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
-+
-+	if (period < min || period > max)
-+		return false;
-+
- 	return true;
+ 		if (target != -1 &&
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 91b250f..3368876 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -317,6 +317,21 @@ static inline bool __dl_overflow(struct dl_bw *dl_b, unsigned long cap,
+ 	       cap_scale(dl_b->bw, cap) < dl_b->total_bw - old_bw + new_bw;
  }
  
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index db1ce7a..4aea67d 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1780,6 +1780,20 @@ static struct ctl_table kern_table[] = {
- 		.proc_handler	= sched_rt_handler,
- 	},
- 	{
-+		.procname	= "sched_deadline_period_max_us",
-+		.data		= &sysctl_sched_dl_period_max,
-+		.maxlen		= sizeof(unsigned int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
-+	{
-+		.procname	= "sched_deadline_period_min_us",
-+		.data		= &sysctl_sched_dl_period_min,
-+		.maxlen		= sizeof(unsigned int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
-+	{
- 		.procname	= "sched_rr_timeslice_ms",
- 		.data		= &sysctl_sched_rr_timeslice,
- 		.maxlen		= sizeof(int),
++/*
++ * Verify the fitness of task @p to run on @cpu taking into account the
++ * CPU original capacity and the runtime/deadline ratio of the task.
++ *
++ * The function will return true if the CPU original capacity of the
++ * @cpu scaled by SCHED_CAPACITY_SCALE >= runtime/deadline ratio of the
++ * task and false otherwise.
++ */
++static inline bool dl_task_fits_capacity(struct task_struct *p, int cpu)
++{
++	unsigned long cap = arch_scale_cpu_capacity(cpu);
++
++	return cap_scale(p->dl.dl_deadline, cap) >= p->dl.dl_runtime;
++}
++
+ extern void init_dl_bw(struct dl_bw *dl_b);
+ extern int  sched_dl_global_validate(void);
+ extern void sched_dl_do_global(void);
