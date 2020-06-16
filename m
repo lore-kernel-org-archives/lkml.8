@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96258C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2B5208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78ECD21475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323842;
-	bh=UDMldpiL3ZcmkG02DJ17tLmEDkvzlsbIxX8TylRM4vM=;
+	s=default; t=1592323862;
+	bh=dgxLg9/WAz14j7DRXHBtdt+AY2BI1lbUfEcpD6tDa5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e/Sqlb2N35Q6UwWuw4IvWey3Iv/35UBHRlnXtWEU2Bm5APlUaQd23Ac11DxXpXpp2
-	 31EAOwZTgPCjCQrynDNF7dnCT08cpOhwJCZIvR1htdMC2b2jjEYEvuFBwQZB3xAh/U
-	 bOgUbM2uYr7UdaltnHZ0dXwFC5A+yyoIVHjLZopg=
+	b=VM8gOGTgqyjhXoX15K+fqYnInxu3qAuWSiEtrF1aBYraI7Lg+Up8u7FmJQBRJ6eke
+	 fNrOxv2Ss2hF+i28fjhDPD6ygr7VCbYAMMPYPne5tOXVBAARjZ/9C1kxvXC0dwO5R+
+	 wL6uVVzg0jPhB9SlMi3P1owOMhItluhHo1tBsRzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbgFPQKk (ORCPT
+        id S1731309AbgFPQKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:10:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34372 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731961AbgFPPoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:44:17 -0400
+        id S1730510AbgFPPoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B199208E4;
-        Tue, 16 Jun 2020 15:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB47321475;
+        Tue, 16 Jun 2020 15:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322256;
-        bh=UDMldpiL3ZcmkG02DJ17tLmEDkvzlsbIxX8TylRM4vM=;
+        s=default; t=1592322254;
+        bh=dgxLg9/WAz14j7DRXHBtdt+AY2BI1lbUfEcpD6tDa5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfsq6++u44RoPeIWUo74OqST3yanWlqenaWm8MhC0OdNk+LbvcKJ8uF8ceeELEgvb
-         JjUQd2p2yIo+Uy2t8MeVFRlkECcu5SpvI/nlN9Vkr7Q3rEeqs3vIFeg+ANzvsJo1MD
-         6sidcfTLAt1FgsRSohENqTI+sFOg2A4col5fO7As=
+        b=gyf/sZQg5P5dQDDHvLAAL1KhoV1Ys4eIDSJSAQKCHMmARo5S1e3ZxnBsGhAfvC6cK
+         tUm+4SxYtHC5/QD/0Ldo/5KA8GcopqdjlcLqXaXU6/1UiT1AI9NBE1pfRsrJs8j6IJ
+         tBzLhNOCxLBQ1uGxSL3XG1kaDWLz8NozAttG8fb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 021/163] powerpc/xive: Clear the page tables for the ESB IO mapping
-Date:   Tue, 16 Jun 2020 17:33:15 +0200
-Message-Id: <20200616153107.897579747@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 030/163] padata: add separate cpuhp node for CPUHP_PADATA_DEAD
+Date:   Tue, 16 Jun 2020 17:33:24 +0200
+Message-Id: <20200616153108.321662299@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,69 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-[ Upstream commit a101950fcb78b0ba20cd487be6627dea58d55c2b ]
+[ Upstream commit 3c2214b6027ff37945799de717c417212e1a8c54 ]
 
-Commit 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the
-machine crash handler") fixed an issue in the FW assisted dump of
-machines using hash MMU and the XIVE interrupt mode under the POWER
-hypervisor. It forced the mapping of the ESB page of interrupts being
-mapped in the Linux IRQ number space to make sure the 'crash kexec'
-sequence worked during such an event. But it didn't handle the
-un-mapping.
+Removing the pcrypt module triggers this:
 
-This mapping is now blocking the removal of a passthrough IO adapter
-under the POWER hypervisor because it expects the guest OS to have
-cleared all page table entries related to the adapter. If some are
-still present, the RTAS call which isolates the PCI slot returns error
-9001 "valid outstanding translations".
+  general protection fault, probably for non-canonical
+    address 0xdead000000000122
+  CPU: 5 PID: 264 Comm: modprobe Not tainted 5.6.0+ #2
+  Hardware name: QEMU Standard PC
+  RIP: 0010:__cpuhp_state_remove_instance+0xcc/0x120
+  Call Trace:
+   padata_sysfs_release+0x74/0xce
+   kobject_put+0x81/0xd0
+   padata_free+0x12/0x20
+   pcrypt_exit+0x43/0x8ee [pcrypt]
 
-Remove these mapping in the IRQ data cleanup routine.
+padata instances wrongly use the same hlist node for the online and dead
+states, so __padata_free()'s second cpuhp remove call chokes on the node
+that the first poisoned.
 
-Under KVM, this cleanup is not required because the ESB pages for the
-adapter interrupts are un-mapped from the guest by the hypervisor in
-the KVM XIVE native device. This is now redundant but it's harmless.
+cpuhp multi-instance callbacks only walk forward in cpuhp_step->list and
+the same node is linked in both the online and dead lists, so the list
+corruption that results from padata_alloc() adding the node to a second
+list without removing it from the first doesn't cause problems as long
+as no instances are freed.
 
-Fixes: 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the machine crash handler")
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200429075122.1216388-2-clg@kaod.org
+Avoid the issue by giving each state its own node.
+
+Fixes: 894c9ef9780c ("padata: validate cpumask without removed CPU during offline")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/sysdev/xive/common.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/padata.h |  6 ++++--
+ kernel/padata.c        | 14 ++++++++------
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
-index b294f70f1a67..261cff60df14 100644
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/msi.h>
-+#include <linux/vmalloc.h>
+diff --git a/include/linux/padata.h b/include/linux/padata.h
+index a0d8b41850b2..693cae9bfe66 100644
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -139,7 +139,8 @@ struct padata_shell {
+ /**
+  * struct padata_instance - The overall control structure.
+  *
+- * @node: Used by CPU hotplug.
++ * @cpu_online_node: Linkage for CPU online callback.
++ * @cpu_dead_node: Linkage for CPU offline callback.
+  * @parallel_wq: The workqueue used for parallel work.
+  * @serial_wq: The workqueue used for serial work.
+  * @pslist: List of padata_shell objects attached to this instance.
+@@ -150,7 +151,8 @@ struct padata_shell {
+  * @flags: padata flags.
+  */
+ struct padata_instance {
+-	struct hlist_node		 node;
++	struct hlist_node		cpu_online_node;
++	struct hlist_node		cpu_dead_node;
+ 	struct workqueue_struct		*parallel_wq;
+ 	struct workqueue_struct		*serial_wq;
+ 	struct list_head		pslist;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index a6afa12fb75e..aae789896616 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -703,7 +703,7 @@ static int padata_cpu_online(unsigned int cpu, struct hlist_node *node)
+ 	struct padata_instance *pinst;
+ 	int ret;
  
- #include <asm/debugfs.h>
- #include <asm/prom.h>
-@@ -1017,12 +1018,16 @@ EXPORT_SYMBOL_GPL(is_xive_irq);
- void xive_cleanup_irq_data(struct xive_irq_data *xd)
+-	pinst = hlist_entry_safe(node, struct padata_instance, node);
++	pinst = hlist_entry_safe(node, struct padata_instance, cpu_online_node);
+ 	if (!pinst_has_cpu(pinst, cpu))
+ 		return 0;
+ 
+@@ -718,7 +718,7 @@ static int padata_cpu_dead(unsigned int cpu, struct hlist_node *node)
+ 	struct padata_instance *pinst;
+ 	int ret;
+ 
+-	pinst = hlist_entry_safe(node, struct padata_instance, node);
++	pinst = hlist_entry_safe(node, struct padata_instance, cpu_dead_node);
+ 	if (!pinst_has_cpu(pinst, cpu))
+ 		return 0;
+ 
+@@ -734,8 +734,9 @@ static enum cpuhp_state hp_online;
+ static void __padata_free(struct padata_instance *pinst)
  {
- 	if (xd->eoi_mmio) {
-+		unmap_kernel_range((unsigned long)xd->eoi_mmio,
-+				   1u << xd->esb_shift);
- 		iounmap(xd->eoi_mmio);
- 		if (xd->eoi_mmio == xd->trig_mmio)
- 			xd->trig_mmio = NULL;
- 		xd->eoi_mmio = NULL;
- 	}
- 	if (xd->trig_mmio) {
-+		unmap_kernel_range((unsigned long)xd->trig_mmio,
-+				   1u << xd->esb_shift);
- 		iounmap(xd->trig_mmio);
- 		xd->trig_mmio = NULL;
- 	}
+ #ifdef CONFIG_HOTPLUG_CPU
+-	cpuhp_state_remove_instance_nocalls(CPUHP_PADATA_DEAD, &pinst->node);
+-	cpuhp_state_remove_instance_nocalls(hp_online, &pinst->node);
++	cpuhp_state_remove_instance_nocalls(CPUHP_PADATA_DEAD,
++					    &pinst->cpu_dead_node);
++	cpuhp_state_remove_instance_nocalls(hp_online, &pinst->cpu_online_node);
+ #endif
+ 
+ 	WARN_ON(!list_empty(&pinst->pslist));
+@@ -939,9 +940,10 @@ static struct padata_instance *padata_alloc(const char *name,
+ 	mutex_init(&pinst->lock);
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+-	cpuhp_state_add_instance_nocalls_cpuslocked(hp_online, &pinst->node);
++	cpuhp_state_add_instance_nocalls_cpuslocked(hp_online,
++						    &pinst->cpu_online_node);
+ 	cpuhp_state_add_instance_nocalls_cpuslocked(CPUHP_PADATA_DEAD,
+-						    &pinst->node);
++						    &pinst->cpu_dead_node);
+ #endif
+ 
+ 	put_online_cpus();
 -- 
 2.25.1
 
