@@ -2,96 +2,87 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE34C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 084D420786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E843520786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:24:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y1c6FPq2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbgFPQXz (ORCPT
+        id S1730194AbgFPQY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:23:55 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:49766 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbgFPQXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:23:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id E0CDF200A7;
-        Tue, 16 Jun 2020 18:23:52 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lv3h3kpKjtfv; Tue, 16 Jun 2020 18:23:52 +0200 (CEST)
-Received: from mail-essen-02.secunet.de (mail-essen-02.secunet.de [10.53.40.205])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 7FCB620080;
-        Tue, 16 Jun 2020 18:23:52 +0200 (CEST)
-Received: from mbx-dresden-01.secunet.de (10.53.40.199) by
- mail-essen-02.secunet.de (10.53.40.205) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Tue, 16 Jun 2020 18:23:52 +0200
-Received: from gauss2.secunet.de (10.182.7.193) by mbx-dresden-01.secunet.de
- (10.53.40.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Tue, 16 Jun
- 2020 18:23:51 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id D236C3180126;
- Tue, 16 Jun 2020 18:23:50 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 18:23:50 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     David Ahern <dsahern@gmail.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Westphal <fw@strlen.de>
-Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus' tree
-Message-ID: <20200616162350.GK13121@gauss3.secunet.de>
-References: <20200511130015.37103884@canb.auug.org.au>
- <20200602092040.5ef52300@canb.auug.org.au>
- <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
- <20200604112606.25ffde35@canb.auug.org.au>
- <8d943a28-2e9f-9c61-9cff-899e907d6b86@gmail.com>
- <20200604064149.GT19286@gauss3.secunet.de>
- <9b338449-e342-96ab-0ba1-a73058fac037@gmail.com>
- <2aab8efc-783d-8502-d268-ab435f566b06@gmail.com>
+        Tue, 16 Jun 2020 12:24:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729386AbgFPQYz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:24:55 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F808C06174E
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:24:55 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id o5so22552628iow.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oHU5NIj28mFBazu9jdqEVaKFMbdsjaboVO1Xjcptaqs=;
+        b=Y1c6FPq275I90ZY+g0ftWg5KQkd1D+8GqwaUSjZUJoK0rstULwyRaN4x6eKhEmbJjf
+         QPQe+soc9cGuoZCFIWUcuUjIKN0A6zZtGWoGt1IQBgjs6lqQVlD7uNzNgKkp7lsEMKoa
+         PSkh4qlK00BTuN2ZPq3YCVyjo3tbhyKXLxc3R/UFheQFEEi1h3HD7MsA936xUCEyWU9G
+         IZumGTqJ3lTToH6U4GoJv1Jh52/aet6V2cDzMIUdT3CgQvkp0fLLJNFNUjB61qpgY/oK
+         Mfh5aUcbVRoZFWIndjuzoW2pK08ag7n6l7x/fICh+ZZV2ApZujcMyD0QG7IHCGnzZfdT
+         MESA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oHU5NIj28mFBazu9jdqEVaKFMbdsjaboVO1Xjcptaqs=;
+        b=idcAZmwjV1+x7Ije/7N1U7dd4u06DjtJuXAJdf255qV8tk1nP4D4QbeYaBMLfdw0VH
+         GDTN7taKNnO7W+kqUvF7/gz3eK/crfdBorgHwzvzRHzVJJZajglS7LKzcSt+LzgdT3Pi
+         MUFqYpCHPlcTvAqK63w7K2T8+DyW7fpMfOaTn3UzOLAXz4ftB6k0DExgwoE5L7zT7QcT
+         wZhYqATxF7ReCp+Pw+tXAqZztgV4j8XKiNPzDK3jjaAeq3o7gD4uSrYZOEboLo8moTbO
+         lxzFBMzreT5d2LEc9J2QRwImjXTskkrEz5jfVG4PqQarkCjDPwzcfoplV4K7OtIPBzV7
+         wJBA==
+X-Gm-Message-State: AOAM530J9vkuUjbhBLyWaVR2s7FHZA9f62lgVs4E3/KPgUL5CxVH6SIF
+        XSxUIo2SoUs6eE9COZmDx17OoxewTS6FnLDEXxArbQ==
+X-Google-Smtp-Source: ABdhPJz6daLARwINz1z8LOJd4TBWGCiIuoS7XuQTJSE+8zWd6pJytz4lbvrsJEBrFmTx9/LKJmuob4k32nzTsdscrnQ=
+X-Received: by 2002:a02:3406:: with SMTP id x6mr26671587jae.24.1592324694558;
+ Tue, 16 Jun 2020 09:24:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2aab8efc-783d-8502-d268-ab435f566b06@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
- mbx-dresden-01.secunet.de (10.53.40.199)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+References: <20200616161427.375651-1-vkuznets@redhat.com>
+In-Reply-To: <20200616161427.375651-1-vkuznets@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 16 Jun 2020 09:24:42 -0700
+Message-ID: <CALMp9eSWXGQkOOzSrALfZDMj5JHSH=CsK1wKfdj2x2jtV4XJsw@mail.gmail.com>
+Subject: Re: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated MSRs
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 07:39:30AM -0600, David Ahern wrote:
-> > 
-> > Indeed. I must have been looking at -net. Both -net and -net-next have
-> > it conditional, so yes a fixup patch is needed.
-> > 
-> 
-> I see that both net and net-next still have the conditional in xfrm_output:
-> 
-> #ifdef CONFIG_NETFILTER
->                 IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
-> #endif
->                 break;
->         case AF_INET6:
->                 memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
-> 
-> #ifdef CONFIG_NETFILTER
->                 IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
-> #endif
-> 
-> Did you submit the merge fix? If not, I can do it today.
+On Tue, Jun 16, 2020 at 9:14 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> state_test/smm_test selftests are failing on AMD with:
+> "Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
+>
+> MSR_IA32_PERF_CAPABILITIES is an emulated MSR indeed but only on Intel,
+> make svm_has_emulated_msr() skip it so it is not returned by
+> KVM_GET_MSR_INDEX_LIST.
 
-I still have it in the ipsec tree, I'll do a pull request
-this week. The fixup will go to the net tree then. It should
-be already in linux-next.
+Do we need to support this MSR under SVM for cross-vendor migration?
+Or, have we given up on that?
