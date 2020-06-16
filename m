@@ -2,133 +2,108 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3FE820767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:54:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zrq7TkrI"
+	by mail.kernel.org (Postfix) with ESMTP id 239332071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgFPJyo (ORCPT
+        id S1728240AbgFPJzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgFPJym (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:54:42 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07411C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:54:41 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id j1so9255873pfe.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l9/ZHQGipIrOoq5y2llLzfpy6Wx+X9yAE1JveALeHdc=;
-        b=Zrq7TkrI6b0M48sbi6PdxOk9kKcWNUY6JdnA8vPenSSWIPTbMtZR0/46Legu3j0OSS
-         YnNL9TXbRkwz90ASeUFJ6Uy1a4XavE1gdm2FtW15G/G328pINz2Am0oyj5axkrSTRAzV
-         CON0wC5CK0nBtf8rUhP312tL2EXZV3Ze9RMRnQElpd58mF3TRmP+gswR92sxlHiwTN5H
-         FYagGbwhvYogIZNVRlEqC9d8FW1J5hgO6aJM3Abq5kv87hOPHE6xH4/eO3r61lFWPsR2
-         7Ke6S337xpp6SvcjG/U6yAKTFsyO9n6DBvlwyzLCHtdYI40slRlewewgdBy9st5wq7Zy
-         zcIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l9/ZHQGipIrOoq5y2llLzfpy6Wx+X9yAE1JveALeHdc=;
-        b=Rpkm+ZGijD/oAae9yDH0sD9qdUP9kryK52yesQ5LLhTtpTUm4Qi+/KhvSOqC3DFSaK
-         MQKB9aHk+2nv+fNtDf0JktK/XZVxffktx62E7YcM8R45ihqHyIbXe1NW1agPD3X6TCQ1
-         YnQXMTsDZ7VjzbE9RNin1qfaNMYNvspF3YsNtgROR2ZANtEGfrwtBt/8Pz48cL79pGlK
-         Z0QPZdjf3Qe5x0GpuYoGg4Vu4eZJfTWL0bHqPI9NdgZWIclhpg9cCImZuPCB+Qc2Nauh
-         Gp6s2v77zbkwmHubZoXXrAkD2ng0XEPRjGkLCChHD0Lm4kA0s5hxx3u4geISQweUwHgf
-         X24Q==
-X-Gm-Message-State: AOAM531OGk2lE7O6kONNSJfud89zTDyIzyJzE8gwAcMJv6rDXjXHUDXe
-        8w7jFFVn0nZg3tLu5ht/kou+mA==
-X-Google-Smtp-Source: ABdhPJwcFpKI9llvV/hiCbHlmggb6SvTCk47o//zCCLLDejPSv7SyKqdnPffI6cRjZSvsO7NBRr5Cg==
-X-Received: by 2002:a62:1704:: with SMTP id 4mr1358860pfx.290.1592301281329;
-        Tue, 16 Jun 2020 02:54:41 -0700 (PDT)
-Received: from localhost ([122.172.119.132])
-        by smtp.gmail.com with ESMTPSA id z186sm14155351pgb.93.2020.06.16.02.54.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 02:54:40 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 15:24:38 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Quentin Perret <qperret@google.com>
-Cc:     rjw@rjwysocki.net, rafael@kernel.org, arnd@arndb.de,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org
-Subject: Re: [PATCH 2/2] cpufreq: Specify default governor on command line
-Message-ID: <20200616095438.v7wywhfq5ealvyih@vireshk-i7>
-References: <20200615165554.228063-1-qperret@google.com>
- <20200615165554.228063-3-qperret@google.com>
- <20200616043143.obk5k3rv737j5dnd@vireshk-i7>
- <20200616083107.GA122049@google.com>
- <20200616092759.rjnk3lef4tedfust@vireshk-i7>
- <20200616094802.GA139416@google.com>
+        Tue, 16 Jun 2020 05:55:55 -0400
+Received: from verein.lst.de ([213.95.11.211]:37309 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728204AbgFPJzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:55:54 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B8EE268AFE; Tue, 16 Jun 2020 11:55:49 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 11:55:49 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Dexuan Cui <decui@microsoft.com>, Christoph Hellwig <hch@lst.de>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Ju-Hyoung Lee <juhlee@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>
+Subject: Re: hv_hypercall_pg page permissios
+Message-ID: <20200616095549.GA27917@lst.de>
+References: <20200407073830.GA29279@lst.de> <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net> <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <87y2ooiv5k.fsf@vitty.brq.redhat.com> <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <87blljicjm.fsf@vitty.brq.redhat.com> <20200616093341.GA26400@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616094802.GA139416@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200616093341.GA26400@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-06-20, 10:48, Quentin Perret wrote:
-> ---8<---
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 0f05caedc320..a9219404e07f 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2340,6 +2340,11 @@ int cpufreq_register_governor(struct cpufreq_governor *governor)
->  		list_add(&governor->governor_list, &cpufreq_governor_list);
->  	}
->  
-> +	if (!strncasecmp(cpufreq_param_governor, governor->name, CPUFREQ_NAME_LEN))
-> +		default_governor = governor;
-> +	else if (!default_governor && cpufreq_default_governor() == governor)
-> +		default_governor = cpufreq_default_governor();
+Actually, what do you think of this one:
 
-Instead of the else part here, maybe just do this from
-cpufreq_core_init() only once, and so we will always have
-default_governor set.
+---
+From a5ee278f4244c6bfc0ce2d2b2fd4f99358dbde4d Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Tue, 16 Jun 2020 11:50:59 +0200
+Subject: x86/hyperv: allocate the hypercall page with only read and execute
+ bits
 
-> +
->  	mutex_unlock(&cpufreq_governor_mutex);
->  	return err;
->  }
-> @@ -2368,6 +2373,8 @@ void cpufreq_unregister_governor(struct cpufreq_governor *governor)
->  
->  	mutex_lock(&cpufreq_governor_mutex);
->  	list_del(&governor->governor_list);
-> +	if (governor == default_governor)
-> +		default_governor = cpufreq_default_governor();
->  	mutex_unlock(&cpufreq_governor_mutex);
->  }
->  EXPORT_SYMBOL_GPL(cpufreq_unregister_governor);
-> --->8---
-> 
-> should do the trick. That removes the unnecessary reference count, and
-> feels like a good place to hook things -- that is how cpuidle does it
-> too IIRC.
-> 
-> I'll double check the locking/synchronization, but that shouldn't be too
-> bad (famous last words).
-> 
-> Cheers,
-> Quentin
+Avoid a W^X violation cause by the fact that PAGE_KERNEL_EXEC includes the
+writable bit.
 
+Fixes: 78bb17f76edc ("x86/hyperv: use vmalloc_exec for the hypercall page")
+Reported-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/x86/hyperv/hv_init.c            | 4 +++-
+ arch/x86/include/asm/pgtable_types.h | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index a54c6a401581dd..f4875bf05c17ff 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -375,7 +375,9 @@ void __init hyperv_init(void)
+ 	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
+ 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
+ 
+-	hv_hypercall_pg = vmalloc_exec(PAGE_SIZE);
++	hv_hypercall_pg = __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START,
++			VMALLOC_END, GFP_KERNEL, PAGE_KERNEL_RX,
++			VM_FLUSH_RESET_PERMS, NUMA_NO_NODE, __func__);
+ 	if (hv_hypercall_pg == NULL) {
+ 		wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+ 		goto remove_cpuhp_state;
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index 2da1f95b88d761..591b5c92a66249 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -194,6 +194,7 @@ enum page_cache_mode {
+ #define _PAGE_TABLE_NOENC	 (__PP|__RW|_USR|___A|   0|___D|   0|   0)
+ #define _PAGE_TABLE		 (__PP|__RW|_USR|___A|   0|___D|   0|   0| _ENC)
+ #define __PAGE_KERNEL_RO	 (__PP|   0|   0|___A|__NX|___D|   0|___G)
++#define __PAGE_KERNEL_RX	 (__PP|   0|   0|___A|   0|___D|   0|___G)
+ #define __PAGE_KERNEL_NOCACHE	 (__PP|__RW|   0|___A|__NX|___D|   0|___G| __NC)
+ #define __PAGE_KERNEL_VVAR	 (__PP|   0|_USR|___A|__NX|___D|   0|___G)
+ #define __PAGE_KERNEL_LARGE	 (__PP|__RW|   0|___A|__NX|___D|_PSE|___G)
+@@ -219,6 +220,7 @@ enum page_cache_mode {
+ #define PAGE_KERNEL_RO		__pgprot_mask(__PAGE_KERNEL_RO         | _ENC)
+ #define PAGE_KERNEL_EXEC	__pgprot_mask(__PAGE_KERNEL_EXEC       | _ENC)
+ #define PAGE_KERNEL_EXEC_NOENC	__pgprot_mask(__PAGE_KERNEL_EXEC       |    0)
++#define PAGE_KERNEL_RX		__pgprot_mask(__PAGE_KERNEL_RX         | _ENC)
+ #define PAGE_KERNEL_NOCACHE	__pgprot_mask(__PAGE_KERNEL_NOCACHE    | _ENC)
+ #define PAGE_KERNEL_LARGE	__pgprot_mask(__PAGE_KERNEL_LARGE      | _ENC)
+ #define PAGE_KERNEL_LARGE_EXEC	__pgprot_mask(__PAGE_KERNEL_LARGE_EXEC | _ENC)
 -- 
-viresh
+2.26.2
+
