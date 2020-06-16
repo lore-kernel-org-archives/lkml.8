@@ -2,130 +2,113 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD17BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64158208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323437;
-	bh=RnGfq6XicmATSrcxTW6KBYrhcOmlfHfLCVHxBNwjR68=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmSPLv8UTc1FnfZzYXck/kwwqFXzuNFMGMBpKoxILTrdKzpbBHvbUcvnzSESMbl4U
-	 Rbr1GM1VI2juSsvk2TFRaq0j2GcPxYnKa6XCEtawxudaA8hJKpflltqb4zWapm5f39
-	 APs6nghQgkizivGCTDyG084vkAbLavYzv816aqt4=
+	by mail.kernel.org (Postfix) with ESMTP id A05C92071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OllvnLop"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732928AbgFPQDw (ORCPT
+        id S1733230AbgFPQEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731719AbgFPPt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06C0221473;
-        Tue, 16 Jun 2020 15:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322596;
-        bh=RnGfq6XicmATSrcxTW6KBYrhcOmlfHfLCVHxBNwjR68=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vja6/PMUGukflHuEkHf6a/iujaU3zD2WfU7Q9DCZcjjDnL5wG7iK6NFrn85tR10P8
-         8ZE3KygC0SwBEyx85+gpjVTN4kCYCk1trwEGuc3aEZmT8MuDsnqJfSMDQiNgqvUbxJ
-         CD43HWu231B4/zD+6vdMN919PFwYR3e9twqscvOs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 029/161] powerpc/xive: Clear the page tables for the ESB IO mapping
-Date:   Tue, 16 Jun 2020 17:33:39 +0200
-Message-Id: <20200616153107.790285704@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
-References: <20200616153106.402291280@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 16 Jun 2020 12:04:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733051AbgFPQDy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:03:54 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE940C06174E
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:03:53 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh7so8583780plb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zKc/JpLrFA5C9B00OW//vjJ8ZMv5QimUc3F5i8rvet4=;
+        b=OllvnLopOjSAVN/rCkHGWJ500Le3/6Ku5c3o8ZlC+gP2RzGDWdyhUX0XwzoK6KZlXi
+         oVUvlUOsEvATG+ldK1KcrhLOS061oY8IpfnuZkqmEEiYnuh+gmbZps73C0AZ9cOBaHq1
+         exTGM1g9ghl69TYphlzSAJ8R2IcP6MK/Wv63w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zKc/JpLrFA5C9B00OW//vjJ8ZMv5QimUc3F5i8rvet4=;
+        b=jC3FblNoIpgkN9LvJmOLXzyAKpfgLdcWdOUfh7iEuYZhnGZSiVnD3ru76xAcyq1DEi
+         1Mur7MDmpYQ8NPKiW2P5ngENXA0FtIl8ViX7TV6CtAEpi0G36ee19yOuHbJ/NAx3mApe
+         CnMMxxN9zcooiHTmW/z6hmzFCSy7N+naawfzq2YVAlOGjJTPDgPCxyjM0kIJ1ridMmKL
+         erxUyJAvj1Qnc1pBK0xd7hdztbtl8McAGlbctPIKXlwBl2XczSGQEiGMPS/Eofj74wB1
+         EcNOLar3fpVbMY+uIRpPHtBEfic8CZW8YeXQbCv5Tu3O4/AN/sJRXPelqd88e51Z/5ZQ
+         CR4w==
+X-Gm-Message-State: AOAM532dEWlKh8W37wbtb0ZhccarsKTMLQDuL6oVx9/W1h4uB1dvt6bQ
+        rQ0JRJ62tITrf+P9VI3oinyDcw==
+X-Google-Smtp-Source: ABdhPJwVjALfzLCAM/XOMQlngQM0/cTr6VlDaTe0C2TtJc/aiEyzOtzkrH1NE78arH20bNJ9zx2lfA==
+X-Received: by 2002:a17:902:e901:: with SMTP id k1mr2665677pld.92.1592323433244;
+        Tue, 16 Jun 2020 09:03:53 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a14sm17059842pfc.133.2020.06.16.09.03.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 09:03:52 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 09:03:51 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tycho Andersen <tycho@tycho.ws>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 08/11] selftests/seccomp: Make kcmp() less required
+Message-ID: <202006160902.E331FF1917@keescook>
+References: <20200616032524.460144-1-keescook@chromium.org>
+ <20200616032524.460144-9-keescook@chromium.org>
+ <20200616145725.GJ2893648@cisco>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616145725.GJ2893648@cisco>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cédric Le Goater <clg@kaod.org>
+On Tue, Jun 16, 2020 at 08:57:25AM -0600, Tycho Andersen wrote:
+> On Mon, Jun 15, 2020 at 08:25:21PM -0700, Kees Cook wrote:
+> > The seccomp tests are a bit noisy without CONFIG_CHECKPOINT_RESTORE (due
+> > to missing the kcmp() syscall). The seccomp tests are more accurate with
+> > kcmp(), but it's not strictly required. Refactor the tests to use
+> > alternatives (comparing fd numbers), and provide a central test for
+> > kcmp() so there is a single XFAIL instead of many. Continue to produce
+> > warnings for the other tests, though.
+> > 
+> > Additionally adds some more bad flag EINVAL tests to the addfd selftest.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> This looks fine, but I wonder if this is enough motivation for taking
+> kcmp() out of CONFIG_CHECKPOINT_RESTORE guards?
 
-[ Upstream commit a101950fcb78b0ba20cd487be6627dea58d55c2b ]
+Do you mean in the kernel? I'd rather not -- it's a relatively powerful
+primitive. Maybe if there were other users needing it, but there doesn't
+seem to have been much demand.
 
-Commit 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the
-machine crash handler") fixed an issue in the FW assisted dump of
-machines using hash MMU and the XIVE interrupt mode under the POWER
-hypervisor. It forced the mapping of the ESB page of interrupts being
-mapped in the Linux IRQ number space to make sure the 'crash kexec'
-sequence worked during such an event. But it didn't handle the
-un-mapping.
-
-This mapping is now blocking the removal of a passthrough IO adapter
-under the POWER hypervisor because it expects the guest OS to have
-cleared all page table entries related to the adapter. If some are
-still present, the RTAS call which isolates the PCI slot returns error
-9001 "valid outstanding translations".
-
-Remove these mapping in the IRQ data cleanup routine.
-
-Under KVM, this cleanup is not required because the ESB pages for the
-adapter interrupts are un-mapped from the guest by the hypervisor in
-the KVM XIVE native device. This is now redundant but it's harmless.
-
-Fixes: 1ca3dec2b2df ("powerpc/xive: Prevent page fault issues in the machine crash handler")
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200429075122.1216388-2-clg@kaod.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/sysdev/xive/common.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
-index fe8d396e2301..16df9cc8f360 100644
---- a/arch/powerpc/sysdev/xive/common.c
-+++ b/arch/powerpc/sysdev/xive/common.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/msi.h>
-+#include <linux/vmalloc.h>
- 
- #include <asm/prom.h>
- #include <asm/io.h>
-@@ -1013,12 +1014,16 @@ EXPORT_SYMBOL_GPL(is_xive_irq);
- void xive_cleanup_irq_data(struct xive_irq_data *xd)
- {
- 	if (xd->eoi_mmio) {
-+		unmap_kernel_range((unsigned long)xd->eoi_mmio,
-+				   1u << xd->esb_shift);
- 		iounmap(xd->eoi_mmio);
- 		if (xd->eoi_mmio == xd->trig_mmio)
- 			xd->trig_mmio = NULL;
- 		xd->eoi_mmio = NULL;
- 	}
- 	if (xd->trig_mmio) {
-+		unmap_kernel_range((unsigned long)xd->trig_mmio,
-+				   1u << xd->esb_shift);
- 		iounmap(xd->trig_mmio);
- 		xd->trig_mmio = NULL;
- 	}
 -- 
-2.25.1
-
-
-
+Kees Cook
