@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD478C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E66C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4407208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB208208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323032;
-	bh=d97WpFy+5OREEuxVaheOyuxtpt3chE+sXqbZmAI3iho=;
+	s=default; t=1592323039;
+	bh=7iKMm7KSRQUJ5Y+WeKndqu7co8tjv7zaxZdV9VUdtYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3gKyb4l8MFQLfpCbUm8KqlwTqQh2X8pQJvIVOkMyXjUWTWwsMqrFGfc/hmqqCsoA
-	 LDouZlpXHHXydPvKkCIpHaY4H40ltH1gBP3qihdtDOd4Z/E7ICpQCQe71sk3YbP2/X
-	 i9h+qjvT9MaozAWxEaubEHDmp8jI6GwsUmOC4yw0=
+	b=fAiapcYYfZOr1Ch80zsG6fO98pT6dA8sr//Tt35N+Sq0Y+Ie4cZmHVP0tdsHwsCiQ
+	 SEE6uz9zGfEe41YBKztrcW3EaNXfVLqoyYMlnBF7veld/1NkrytyW6YOutvTwNw1rK
+	 m6F+NkdiUnPWBlSWwPPFPGqT8fsyGJibIwpQQNDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732460AbgFPP5K (ORCPT
+        id S1733039AbgFPP5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55536 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:57:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732857AbgFPPz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:26 -0400
+        id S1732745AbgFPPzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 282F1216C4;
-        Tue, 16 Jun 2020 15:55:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7F7521527;
+        Tue, 16 Jun 2020 15:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322926;
-        bh=d97WpFy+5OREEuxVaheOyuxtpt3chE+sXqbZmAI3iho=;
+        s=default; t=1592322921;
+        bh=7iKMm7KSRQUJ5Y+WeKndqu7co8tjv7zaxZdV9VUdtYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsq//8UHfo42HZA+84ukwwiKu4sgizIgr+sDiVJwCoxutDqqOCRhvTcXQHshFrdmu
-         d2dChZHd+lgNTLWUAcfvN9AuEE436EUIry2+zypZBYXOh6Ji6H6dJGqi0Dn77H+5zn
-         QEvTT/mbd4nqMXRpS1SJlwsP1uI9IlcimatRuV9c=
+        b=DQAnkUuNOpzQg+iuUcLdTRFuKnhFqOYJhnwXrDRzWRLdgDVpo7o+3MRUPn7CiC5sz
+         cp0B5ot9EkEFsq5uQzOh7oQsaRX3pzhrrEIXEr8vxLHrJmSSkf11P1p5fVhz6b7uy+
+         tc4QpsZBK8VUez0UEF7eELDJJZaAySliu/AmBvj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 5.6 157/161] xen/pvcalls-back: test for errors when calling backend_connect()
-Date:   Tue, 16 Jun 2020 17:35:47 +0200
-Message-Id: <20200616153113.827943075@linuxfoundation.org>
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.6 155/161] mmc: sdio: Fix several potential memory leaks in mmc_sdio_init_card()
+Date:   Tue, 16 Jun 2020 17:35:45 +0200
+Message-Id: <20200616153113.728946582@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,36 +58,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit c8d70a29d6bbc956013f3401f92a4431a9385a3c upstream.
+commit a94a59f43749b4f8cd81b8be87c95f9ef898d19d upstream.
 
-backend_connect() can fail, so switch the device to connected only if
-no error occurred.
+Over the years, the code in mmc_sdio_init_card() has grown to become quite
+messy. Unfortunate this has also lead to that several paths are leaking
+memory in form of an allocated struct mmc_card, which includes additional
+data, such as initialized struct device for example.
 
-Fixes: 0a9c75c2c7258f2 ("xen/pvcalls: xenbus state handling")
-Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/20200511074231.19794-1-jgross@suse.com
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Unfortunate, it's a too complex task find each offending commit. Therefore,
+this change fixes all memory leaks at once.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200430091640.455-3-ulf.hansson@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/pvcalls-back.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mmc/core/sdio.c |   58 ++++++++++++++++++++++--------------------------
+ 1 file changed, 27 insertions(+), 31 deletions(-)
 
---- a/drivers/xen/pvcalls-back.c
-+++ b/drivers/xen/pvcalls-back.c
-@@ -1087,7 +1087,8 @@ static void set_backend_state(struct xen
- 		case XenbusStateInitialised:
- 			switch (state) {
- 			case XenbusStateConnected:
--				backend_connect(dev);
-+				if (backend_connect(dev))
-+					return;
- 				xenbus_switch_state(dev, XenbusStateConnected);
- 				break;
- 			case XenbusStateClosing:
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -584,7 +584,7 @@ try_again:
+ 	 */
+ 	err = mmc_send_io_op_cond(host, ocr, &rocr);
+ 	if (err)
+-		goto err;
++		return err;
+ 
+ 	/*
+ 	 * For SPI, enable CRC as appropriate.
+@@ -592,17 +592,15 @@ try_again:
+ 	if (mmc_host_is_spi(host)) {
+ 		err = mmc_spi_set_crc(host, use_spi_crc);
+ 		if (err)
+-			goto err;
++			return err;
+ 	}
+ 
+ 	/*
+ 	 * Allocate card structure.
+ 	 */
+ 	card = mmc_alloc_card(host, NULL);
+-	if (IS_ERR(card)) {
+-		err = PTR_ERR(card);
+-		goto err;
+-	}
++	if (IS_ERR(card))
++		return PTR_ERR(card);
+ 
+ 	if ((rocr & R4_MEMORY_PRESENT) &&
+ 	    mmc_sd_get_cid(host, ocr & rocr, card->raw_cid, NULL) == 0) {
+@@ -610,19 +608,15 @@ try_again:
+ 
+ 		if (oldcard && (oldcard->type != MMC_TYPE_SD_COMBO ||
+ 		    memcmp(card->raw_cid, oldcard->raw_cid, sizeof(card->raw_cid)) != 0)) {
+-			mmc_remove_card(card);
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+ 	} else {
+ 		card->type = MMC_TYPE_SDIO;
+ 
+ 		if (oldcard && oldcard->type != MMC_TYPE_SDIO) {
+-			mmc_remove_card(card);
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+ 	}
+ 
+@@ -677,7 +671,7 @@ try_again:
+ 	if (!oldcard && card->type == MMC_TYPE_SD_COMBO) {
+ 		err = mmc_sd_get_csd(host, card);
+ 		if (err)
+-			return err;
++			goto remove;
+ 
+ 		mmc_decode_cid(card);
+ 	}
+@@ -704,7 +698,12 @@ try_again:
+ 			mmc_set_timing(card->host, MMC_TIMING_SD_HS);
+ 		}
+ 
+-		goto finish;
++		if (oldcard)
++			mmc_remove_card(card);
++		else
++			host->card = card;
++
++		return 0;
+ 	}
+ 
+ 	/*
+@@ -730,16 +729,14 @@ try_again:
+ 		goto remove;
+ 
+ 	if (oldcard) {
+-		int same = (card->cis.vendor == oldcard->cis.vendor &&
+-			    card->cis.device == oldcard->cis.device);
+-		mmc_remove_card(card);
+-		if (!same) {
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++		if (card->cis.vendor == oldcard->cis.vendor &&
++		    card->cis.device == oldcard->cis.device) {
++			mmc_remove_card(card);
++			card = oldcard;
++		} else {
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+-
+-		card = oldcard;
+ 	}
+ 	card->ocr = ocr_card;
+ 	mmc_fixup_device(card, sdio_fixup_methods);
+@@ -800,16 +797,15 @@ try_again:
+ 		err = -EINVAL;
+ 		goto remove;
+ 	}
+-finish:
+-	if (!oldcard)
+-		host->card = card;
++
++	host->card = card;
+ 	return 0;
+ 
++mismatch:
++	pr_debug("%s: Perhaps the card was replaced\n", mmc_hostname(host));
+ remove:
+-	if (!oldcard)
++	if (oldcard != card)
+ 		mmc_remove_card(card);
+-
+-err:
+ 	return err;
+ }
+ 
 
 
