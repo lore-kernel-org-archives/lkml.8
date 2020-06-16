@@ -2,115 +2,150 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E88BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A06FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC3132078D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522A02078D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr8WqzTi"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="is2mj2dK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731730AbgFPU1q (ORCPT
+        id S1731755AbgFPU3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgFPU1q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:27:46 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85355C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:27:44 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id t194so4419558wmt.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TP+qVkiiShfjmlFDbsqkgBgPwSAQSfed1CQJN6zPUxk=;
-        b=gr8WqzTiJH5/qGRblApIlRwJH/SNUnkL4qmGG1sfC9DOsHAsztaMCuE5weVAhdagn9
-         ZhMXhqwkCBimhxY8N5suO671XSrEsPZbe55+qMFuWhZpj/zZAh3Hlk2fnfYFvWXr3MYu
-         XZLHo6HJPW2C3bbomOmD9zoXdz292J0BSegHJWROMDLPSaUHRRMpt89ydKlPWyOQrmKV
-         O1Sh5MCM6nuMAyK1v6VAVqYyFPd80/rm8fjpv80QpzVYjcYkINat+9UNy/dzK8R7cWi1
-         sqKaoHh4yMcGtFbtVG3y0Q7gjaAd/f8MTQL9KBLmuWtE4yyJ55zQ85fZn8eROBy8Q3JE
-         CYsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TP+qVkiiShfjmlFDbsqkgBgPwSAQSfed1CQJN6zPUxk=;
-        b=a47PFnA7nMwErdhB/RU/EtOkSqN5eXIZ9WK/pfEjQc/XlKBX7cr42hY3rQcDQMOxBM
-         cQm2U/Yk/5W6RaV9L07DMqDaz9SBtl1B9Qn0fwLYNVIdn93K4bbe0ul3uk1VQVxEe7J9
-         oYnmZrHcbK67acbDeMiDsXzq1A0murpzUbFDvdN74Q1rRcl/TiFaRAGyRN68QV1RnoM0
-         5qxxCqXEPnUMEaxObZ9VqlhwGG46c4c7TWVaWnbewLNa1F1Jd30RlJlDKnyJC3HMcNVs
-         LdwkP+IACkxiqdFrgOErYdI6a9u8E4wioly1bY9DZR3d9assXN2kfp0l01P/zzhsISBg
-         nxOA==
-X-Gm-Message-State: AOAM531kBttBziXp0CEsFtdiRJv3ktc5v7xUschWEjHYClzHpwM+nXkb
-        n4jEBqjHVzEbLApHZOIptUA=
-X-Google-Smtp-Source: ABdhPJwEY5epIaFIhnATfuW+CIIqe71BHWTH/FHA2pkTWaiEXvs0EaLM7g5IIC4RthxqcP9xDHULZg==
-X-Received: by 2002:a7b:cc08:: with SMTP id f8mr5270576wmh.106.1592339263257;
-        Tue, 16 Jun 2020 13:27:43 -0700 (PDT)
-Received: from localhost.localdomain ([95.145.157.140])
-        by smtp.googlemail.com with ESMTPSA id a3sm29421673wrp.91.2020.06.16.13.27.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 13:27:42 -0700 (PDT)
-From:   dan love <danlovecomputing@gmail.com>
-X-Google-Original-From: dan love <danlove99@hotmail.co.uk>
-To:     danlove99@hotmail.co.uk
-Cc:     abbotti@mev.co.uk,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Michel Lespinasse <walken@google.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Fixed styling issues by adding blank line after definitions.
-Date:   Tue, 16 Jun 2020 21:26:55 +0100
-Message-Id: <20200616202658.4844-1-danlove99@hotmail.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Tue, 16 Jun 2020 16:29:03 -0400
+Received: from mout.gmx.net ([212.227.15.19]:41521 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbgFPU3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 16:29:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1592339324;
+        bh=2pcxNtxOxco1guBLo7NG7YQuecY/6crnNcCqmrQnqaA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=is2mj2dKu2pRc4DqNsDqgneXvL121xcu8x0wDhL7ns2TsnwhEixZ6yx3i1SnndQU3
+         SCWe2KKK+9UCHY2p/v9fYgf5yqEZaykYPF8vQOPNGu2AvWJ2AyIAXjAz35M2SrrYu5
+         Z8CXllhNz/AvXvy0i6zEvqmMPKb2cOUlwM2uLsJ0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from strobe-jhalfs ([92.73.64.60]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MQ5vW-1jYB9o2TSa-00M33E; Tue, 16
+ Jun 2020 22:28:44 +0200
+From:   Stephen Berman <stephen.berman@gmx.net>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+References: <87imfyh6yx.fsf@gmx.net> <87wo4dligz.fsf@gmx.net>
+        <20200612110122.jossn5zrktcvpbpm@linutronix.de>
+        <87tuzdrgm5.fsf@gmx.net>
+        <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
+        <874krcsquv.fsf@gmx.net>
+        <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
+        <87tuzbh482.fsf@gmx.net>
+        <20200616073827.vysntufld3ves666@linutronix.de>
+        <87o8pjh1i0.fsf@gmx.net>
+        <20200616155501.psduxnisltitodme@linutronix.de>
+Date:   Tue, 16 Jun 2020 22:28:43 +0200
+In-Reply-To: <20200616155501.psduxnisltitodme@linutronix.de> (Sebastian
+        Andrzej Siewior's message of "Tue, 16 Jun 2020 17:55:01 +0200")
+Message-ID: <871rmesqkk.fsf@gmx.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:v6O2Oj6vpVD5HT5VMTCK58R+4ZYiC3+dCwrh+F5Wwhd8XCqu3ju
+ sqArwwZb/HmbbXxk71EPzIX1DEtN0O4GEKux7YstO9rlXITe/SI+Ap1XBveZEMuRsFrvZkE
+ 0tjUWXgudC+UBletGoJZhfZlkYuT0K8ZtIl6qycWHN7YcT4wTLN0OniUOsIZitUHoPPzwiU
+ /XI4EM0HhdEwURd21ZUow==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lldolxazXTI=:j4Kripz+Awwf6u29+QdgeD
+ emPZjh1Sn8vzKc0hoz6qnl6Jkra9bxcPc0AA27HGdSIL1IP6Er2MM/mERKm9EJxP6W4f6E4A5
+ aZbPc1SaXDU9hZE2SeRcs9F8SK7gQlPOxoR1u82DE9dKWtpfKko7iASksExpQF8ASiQXTBIRr
+ v2ISZa+AuOPYGI4eNEid3rGn/XtTsNr/nxJrgAE9lCpI6wsCjCK+XEQyvghNcmuLawvWZfvVP
+ D5dnrUsaa2Bemv3kUgdW/9+8I06aK8uHVCr1H4lC0BO5dfpzEmx/XLMfn851zuDC/YTLV41fb
+ 4Ksk6hNnOxpJy56X3D71rkJrBwOsYrTJPR5L+woBQyP+ZdhdDY23gHSS/xREVjrT6ggCrzlMq
+ dz4upZFQPtFyog0nsc2GMZxBVjGE2BkhZnQdSXr05ul94AfdE+B0S9kvsq3y0gMF6v99E5DXX
+ nwhdlSLdgcMLXl80s+VSQtOKkbxVqItKqX30IP1reTIbKljj3RZru/BltXZ9LdeZH1M9+Lk5o
+ 1WxgSperTRx5jIlljIZxPeC7bAXE0V0iWmcHOrobs3kk+SZa3QZq8uUvaDgcidNbFjqlwL7fw
+ DKxn6RSXgfMgvAHaNC87XjD9iv2BvqNgfhZMOO7Z0ovqQ1iRXN+hqYcyqomELhtB/NnIsCU6u
+ voYXNxti2W/WJY914T32bv2yVqh1qhJ2I3RJLwdiY7tdiT7GQy/UfC9DFXmzaFkxm+VThvGii
+ zMGyoZRdak9VJQD3POW/u/4RwB6GNorKIOXL6mpq4uZsw6LiM/ZJ/Ap5tRVvFHm9HD+RrQkqG
+ gfEsVc6oR+thjMbHoefiCMPHoVJFZU4I//WCHV1LIK3aQHgpCCSIkbcACNd2w4hqqpTcF8JV2
+ 5EheD7hi4dOpx6J6LSFfC6a+sAkalUbt5LkawYzLBdIxn9ln6p8nP3+Yw4z/BgyO8KXeG9u5R
+ ETHAHUTt8Rk5NpuXmOCieSFmk81GoKUrPaXTEa2OFL4j8eNo05RNBplILjCLuc7fZFscjQJMO
+ 6HCP/vhycrmUaRb31aQyjGXta5ErMmiVVQ7cL6ys3WJFsqrwccAoopTrY1YohwTsWUvGROKdC
+ VRwLpSoUCgUS+E8jbwNTCkvdPv5ZqLeExlGSPIQxuBnWNenfR9texwUcZfz6fOzCNdVDQkZjc
+ Uf9irkcs5RU8Tpy31x12oMRGZevzAefnu7NHDO0AQSMtzKsefDrU3le0HM00Sm0VJir5tcJpd
+ HGcJp3csuQPSkllPi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: dan love <danlove99@hotmail.co.uk>
----
- drivers/staging/comedi/comedi_fops.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Tue, 16 Jun 2020 17:55:01 +0200 Sebastian Andrzej Siewior <bigeasy@linut=
+ronix.de> wrote:
 
-diff --git a/drivers/staging/comedi/comedi_fops.c b/drivers/staging/comedi/comedi_fops.c
-index e85a99b68f31..3f70e5dfac39 100644
---- a/drivers/staging/comedi/comedi_fops.c
-+++ b/drivers/staging/comedi/comedi_fops.c
-@@ -2169,6 +2169,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
- 		break;
- 	case COMEDI_CHANINFO: {
- 		struct comedi_chaninfo it;
-+
- 		if (copy_from_user(&it, (void __user *)arg, sizeof(it)))
- 			rc = -EFAULT;
- 		else
-@@ -2177,6 +2178,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
- 	}
- 	case COMEDI_RANGEINFO: {
- 		struct comedi_rangeinfo it;
-+
- 		if (copy_from_user(&it, (void __user *)arg, sizeof(it)))
- 			rc = -EFAULT;
- 		else
-@@ -2249,6 +2251,7 @@ static long comedi_unlocked_ioctl(struct file *file, unsigned int cmd,
- 	}
- 	case COMEDI_INSN: {
- 		struct comedi_insn insn;
-+
- 		if (copy_from_user(&insn, (void __user *)arg, sizeof(insn)))
- 			rc = -EFAULT;
- 		else
--- 
-2.17.1
+> On 2020-06-16 10:13:27 [+0200], Stephen Berman wrote:
+>> Yes, thanks, that did it.  Trace attached.
+>
+> So TZ10 is a temperature sensor of some kind on your motherboard. In
+> your v5.6 dmesg there is:
+> | thermal LNXTHERM:00: registered as thermal_zone0
+> | ACPI: Thermal Zone [TZ10] (17 C)
+>
+> So. In /sys/class/thermal/thermal_zone0/device/path you should also see
+> TZ10. And /sys/class/thermal/thermal_zone0/temp should show the actual
+> value.
+> This comes from the "thermal" module.
 
+Yes, TZ10 was in the thermal_zone0/device/path and the value in
+thermal_zone0/temp was 16800.
+
+> Looking at the trace, might query the temperature every second which
+> somehow results in "Dispatching Notify on". I don't understand how it
+> gets from reading of the temperature to the notify part, maybe it is
+> part of the ACPI=E2=80=A6
+>
+> However. Could you please make sure that the thermal module is not
+> loaded at system startup? Adding
+>     thermal.off=3D1
+>
+> to the kernel commandline should do the trick. And you should see
+>    thermal control disabled
+>
+> in dmesg.=20
+
+Confirmed.  And the value in thermal_zone0/temp was now 33000.
+
+>           That means your thermal_zone0 with TZ10 does not show up in
+> /sys and nothing should schedule the work-items. This in turn should
+> allow you to shutdown your system without the delay.
+
+It did!
+
+> If this works, could you please try to load the module with tzp=3D300?
+> If you add this
+>  	thermal.tzp=3D300
+>=20=20=20
+> to the kernel commandline then it should do the trick. You can verify it
+> by
+>    cat /sys/module/thermal/parameters/tzp=20
+>
+> This should change the polling interval from what ACPI says to 30secs.
+> This should ensure that you don't have so many worker waiting. So you
+> should also be able to shutdown the system.
+
+Your assessment and predictions are right on the mark!
+
+I'm fine with the thermal.tzp=3D300 workaround, but it would be good to
+find out why this problem started with commit 6d25be57, if my git
+bisection was correct, or if it wasn't, then at least somewhere between
+5.1.0 and 5.2.0.  Or can you already deduce why?  If not, I'd be more
+than happy to continue applying any patches or trying any suggestions
+you have, if you want to continue debugging this issue.  In any case,
+thanks for pursuing it to this point.
+
+Steve Berman
