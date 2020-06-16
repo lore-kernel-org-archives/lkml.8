@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E44C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92958C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB0221548
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684A820B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321906;
-	bh=dTnrw0JasMGS76R+m/RltFYVDflbnjset2bZOPtq2lA=;
+	s=default; t=1592321911;
+	bh=LHf8gDm6CCyZh1htR8UAvbQLFNdi/dqQI5P0jwFwD2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QnWh6+/k8a6G/Ybn3VaautRObsblZwtIH/LOuZDjTm3lzuBXDOwGl1BhzD6XuyKNg
-	 6tkpwxFgtF5eqgfyO9lPwTCB48f6fB9OMHNNR7jwrd2kMRNtQ+SDFmu4NS4fGGE4PO
-	 Io1VGFggs+z/zkYOStJIRJ5AfsTygGa+RW+NKQyc=
+	b=2Soz0UvvHPaPWQdCIe/0Bwde0YmAULl5m8fZjVjfrKJSRPE/XyLMQcB9kUspQEFCY
+	 QLJrW8sMdFlKhj8AsenTf9PTSKADpLId1Zg+Derp8SHmlylo3HxHopuZjxVGxYQC0G
+	 7trh9v8rYKzYvrmuYV+DhgQkfyQyDCQI3YCfhsmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgFPPiY (ORCPT
+        id S1730163AbgFPPi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:38:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:38:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730609AbgFPPiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:19 -0400
+        id S1730645AbgFPPiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4863C214DB;
-        Tue, 16 Jun 2020 15:38:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC60020B1F;
+        Tue, 16 Jun 2020 15:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321898;
-        bh=dTnrw0JasMGS76R+m/RltFYVDflbnjset2bZOPtq2lA=;
+        s=default; t=1592321904;
+        bh=LHf8gDm6CCyZh1htR8UAvbQLFNdi/dqQI5P0jwFwD2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KJnhBsRUxtTIi2TzyhaJp1Fr3qB60pJyoCnyAtprcT3n3jne1V77axDRHXwY//r6/
-         rjQg0GfshiP+z/p+OfNdSmtsMoBdsneqMxjwmzVtxSuPVdFBGjGE3gY7v+ZPqB0x8i
-         AsyAgXcr4mcAY08dRhO1lnasYQ/Y8lx07zYxIVdw=
+        b=FFyxKjT2Q6rYXEZU3XPeVpKco00b2o3Dkwduj2YidUYhSDuFufLiUhOlzgNsS0pVU
+         YxLREQDt/AW8wnSHjVuX7YxoD/N5RvivFPgcat4x9uBbH2uI2ufpiIOsQu7reE7zkV
+         3vDoTvA/zMV3PKYCGyjYHScdMSCRcnbn7kcfnKp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 059/134] ALSA: pcm: fix snd_pcm_link() lockdep splat
-Date:   Tue, 16 Jun 2020 17:34:03 +0200
-Message-Id: <20200616153103.599157790@linuxfoundation.org>
+Subject: [PATCH 5.4 061/134] ALSA: usb-audio: Add vendor, product and profile name for HP Thunderbolt Dock
+Date:   Tue, 16 Jun 2020 17:34:05 +0200
+Message-Id: <20200616153103.696457290@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,88 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit e18035cf5cb3d2bf8e4f4d350a23608bd208b934 upstream.
+commit 0c5086f5699906ec8e31ea6509239489f060f2dc upstream.
 
-Add and use snd_pcm_stream_lock_nested() in snd_pcm_link/unlink
-implementation.  The code is fine, but generates a lockdep complaint:
+The HP Thunderbolt Dock has two separate USB devices, one is for speaker
+and one is for headset. Add names for them so userspace can apply UCM
+settings.
 
-============================================
-WARNING: possible recursive locking detected
-5.7.1mq+ #381 Tainted: G           O
---------------------------------------------
-pulseaudio/4180 is trying to acquire lock:
-ffff888402d6f508 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xda8/0xee0 [snd_pcm]
-
-but task is already holding lock:
-ffff8883f7a8cf18 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xe4e/0xee0 [snd_pcm]
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&group->lock);
-  lock(&group->lock);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-2 locks held by pulseaudio/4180:
- #0: ffffffffa1a05190 (snd_pcm_link_rwsem){++++}-{3:3}, at: snd_pcm_common_ioctl+0xca0/0xee0 [snd_pcm]
- #1: ffff8883f7a8cf18 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xe4e/0xee0 [snd_pcm]
-[...]
-
-Cc: stable@vger.kernel.org
-Fixes: f57f3df03a8e ("ALSA: pcm: More fine-grained PCM link locking")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/37252c65941e58473b1219ca9fab03d48f47e3e3.1591610330.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200608062630.10806-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-
 ---
- sound/core/pcm_native.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ sound/usb/quirks-table.h |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -136,6 +136,16 @@ void snd_pcm_stream_lock_irq(struct snd_
- }
- EXPORT_SYMBOL_GPL(snd_pcm_stream_lock_irq);
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -25,6 +25,26 @@
+ 	.idProduct = prod, \
+ 	.bInterfaceClass = USB_CLASS_VENDOR_SPEC
  
-+static void snd_pcm_stream_lock_nested(struct snd_pcm_substream *substream)
++/* HP Thunderbolt Dock Audio Headset */
 +{
-+	struct snd_pcm_group *group = &substream->self_group;
-+
-+	if (substream->pcm->nonatomic)
-+		mutex_lock_nested(&group->mutex, SINGLE_DEPTH_NESTING);
-+	else
-+		spin_lock_nested(&group->lock, SINGLE_DEPTH_NESTING);
-+}
-+
- /**
-  * snd_pcm_stream_unlock_irq - Unlock the PCM stream
-  * @substream: PCM substream
-@@ -2028,7 +2038,7 @@ static int snd_pcm_link(struct snd_pcm_s
- 	snd_pcm_stream_unlock_irq(substream);
- 
- 	snd_pcm_group_lock_irq(target_group, nonatomic);
--	snd_pcm_stream_lock(substream1);
-+	snd_pcm_stream_lock_nested(substream1);
- 	snd_pcm_group_assign(substream1, target_group);
- 	refcount_inc(&target_group->refs);
- 	snd_pcm_stream_unlock(substream1);
-@@ -2044,7 +2054,7 @@ static int snd_pcm_link(struct snd_pcm_s
- 
- static void relink_to_local(struct snd_pcm_substream *substream)
++	USB_DEVICE(0x03f0, 0x0269),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.vendor_name = "HP",
++		.product_name = "Thunderbolt Dock Audio Headset",
++		.profile_name = "HP-Thunderbolt-Dock-Audio-Headset",
++		.ifnum = QUIRK_NO_INTERFACE
++	}
++},
++/* HP Thunderbolt Dock Audio Module */
++{
++	USB_DEVICE(0x03f0, 0x0567),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.vendor_name = "HP",
++		.product_name = "Thunderbolt Dock Audio Module",
++		.profile_name = "HP-Thunderbolt-Dock-Audio-Module",
++		.ifnum = QUIRK_NO_INTERFACE
++	}
++},
+ /* FTDI devices */
  {
--	snd_pcm_stream_lock(substream);
-+	snd_pcm_stream_lock_nested(substream);
- 	snd_pcm_group_assign(substream, &substream->self_group);
- 	snd_pcm_stream_unlock(substream);
- }
+ 	USB_DEVICE(0x0403, 0xb8d8),
 
 
