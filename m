@@ -2,58 +2,58 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1202C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B249220776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10A720756
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IgudgnzK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FRqFvjr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgFPDZj (ORCPT
+        id S1726984AbgFPDZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 23:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
+        Mon, 15 Jun 2020 23:25:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgFPDZc (ORCPT
+        with ESMTP id S1726846AbgFPDZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 23:25:32 -0400
+        Mon, 15 Jun 2020 23:25:33 -0400
 Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2275C0A88B4
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 20:25:30 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d8so7756657plo.12
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 20:25:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94B6C008632
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 20:25:32 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n9so7775726plk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 20:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d7bw5q/TJxpqMicrHyIFon0t9gt+svhVPDuc7AUFnrI=;
-        b=IgudgnzK6YOeQXxO/GhbZyRnD7yKsB19/poCwHH5zYg0DNwv/OjS7ClaVfKBcPYMJl
-         gk02nAiuMCNLKeX/ZV8hAsNyo4xkNMZpUlVd73LjLWPTM3vu0gDsAt4qIgmqVBNttPDZ
-         W8gmwOqh2kvJFeY1MjkoUB2YMUS901i5ZFCmE=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OccJNbyy0FfcO+NA6C7yQdujZ1D/AqAjCekMSJ8aj8A=;
+        b=FRqFvjr6OjkLiohv0sT5U1oo9bD6Ib4bxSZIX8h+h7+J/bnqygBr6USH7j+phNr76Q
+         F4vUdJeQo9YhtpUAiEDXiUENq7bOLk4RWEw145LTOX3+UBjOPc7vT4BUJ2rMVm0HCN/S
+         zrrQ03Wg1ub1uXhOt1dsf8fWKv7xBwMTu70O8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d7bw5q/TJxpqMicrHyIFon0t9gt+svhVPDuc7AUFnrI=;
-        b=NqNZ1ugoCyK5MnKWvesrIVS8V99V/PpK+t3XjcnBlKEjTGpdILJPPwcNG0KH11TEmG
-         x7L0jTE5x3Jew4q9mgLKg3fiNv0XikDtbrCKWYN4caueCpGnDzObDttE8DjnGavAaotf
-         QOB562oWGDaAXDES3KU9pjubOrTzjLOdNjPBrsALgLuxMt0x+CSmhom4qurgJCImR68K
-         62nxkOysEYU4BbAV/wjUVlHHhEK/LTLT4Htf6MI3oCkoH3hJZcjiBJ+3wW/XLHIcesWP
-         pJ20N7fyDVKXsq26OBcQVp6N6FOWBFizvitgcTdqIZGDlPfL92Wkf0mH3WpAYg0zmvMg
-         ajXA==
-X-Gm-Message-State: AOAM532eGvYncD9yYt5jszu5YIMXJnBmn3IzAQ6lUaobLI/2Ks8jMv2W
-        gY12zngO4DMWeJl0j06yJax34w==
-X-Google-Smtp-Source: ABdhPJw66Qb+fMMy1G2QTWCPav55PuClQnfisvC1pdmVOLwHIqdy34tq0HaqwNMimHEa+bRLc4w0yQ==
-X-Received: by 2002:a17:902:8346:: with SMTP id z6mr329196pln.27.1592277930455;
-        Mon, 15 Jun 2020 20:25:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OccJNbyy0FfcO+NA6C7yQdujZ1D/AqAjCekMSJ8aj8A=;
+        b=kMSo0nomqPLGXedv2QUQLALMyOyQ+ddJ4Pu8Sui/4C1VC+0yLBqnRfZ1JyDlQuzFlu
+         UdTOz9P9ViC3t4VbJ1N/kfAlmJrHsuwuAm412XntQKRqnu9oagbEnhuy2HRd5H51PBff
+         wgJtKNirb6dWjJid5mfzto5uu7EcIGmnETjzRbPzfqz9jf7DdR4IU7k7yqNpPXaC3p56
+         5WYGekIDjuYvvObHor6bLRx6gzu3ElyzNTfZHlNcJDNpO7fmwUhAhAo/2EEFsUfq/5O0
+         mw1z4HcXDWL0EXik2TFutV8yM9vj1wbc+c48NlSkPt4yhRMunx8g1yySnlIzsRybC7hx
+         5beA==
+X-Gm-Message-State: AOAM531HulLRZQcZe1c8KgRXqGgO+eM3nA43UrhrVBfi4aqq3ukVEnBR
+        /RV2n5xXIVVewuauDcfzG6MdwQ==
+X-Google-Smtp-Source: ABdhPJxgcK/l6xCXdtSwCQ40JJUAiVgLKoo4hOU48ZEP4FhEZChYl9Se2TmOgyhEb/6Mbtv9TOME9g==
+X-Received: by 2002:a17:90a:1617:: with SMTP id n23mr730023pja.80.1592277932181;
+        Mon, 15 Jun 2020 20:25:32 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u4sm762715pjn.42.2020.06.15.20.25.28
+        by smtp.gmail.com with ESMTPSA id n2sm15740871pfd.125.2020.06.15.20.25.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 15 Jun 2020 20:25:28 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -77,12 +77,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         netdev@vger.kernel.org, containers@lists.linux-foundation.org,
         linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 04/11] pidfd: Replace open-coded partial fd_install_received()
-Date:   Mon, 15 Jun 2020 20:25:17 -0700
-Message-Id: <20200616032524.460144-5-keescook@chromium.org>
+Subject: [PATCH v4 00/11] Add seccomp notifier ioctl that enables adding fds
+Date:   Mon, 15 Jun 2020 20:25:13 -0700
+Message-Id: <20200616032524.460144-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200616032524.460144-1-keescook@chromium.org>
-References: <20200616032524.460144-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,41 +88,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sock counting (sock_update_netprioidx() and sock_update_classid()) was
-missing from pidfd's implementation of received fd installation.  Replace
-the open-coded version with a call to the new fd_install_received()
-helper.
+Hello!
 
-Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- kernel/pid.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+This is a bit of thread-merge between [1] and [2]. tl;dr: add a way for
+a seccomp user_notif process manager to inject files into the managed
+process in order to handle emulation of various fd-returning syscalls
+across security boundaries. Containers folks and Chrome are in need
+of the feature, and investigating this solution uncovered (and fixed)
+implementation issues with existing file sending routines.
 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index f1496b757162..24924ec5df0e 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -635,18 +635,9 @@ static int pidfd_getfd(struct pid *pid, int fd)
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
- 
--	ret = security_file_receive(file);
--	if (ret) {
--		fput(file);
--		return ret;
--	}
--
--	ret = get_unused_fd_flags(O_CLOEXEC);
-+	ret = fd_install_received(file, O_CLOEXEC);
- 	if (ret < 0)
- 		fput(file);
--	else
--		fd_install(ret, file);
--
- 	return ret;
- }
- 
+I intend to carry this in the seccomp tree, unless someone has objections.
+:) Please review and test!
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/20200603011044.7972-1-sargun@sargun.me/
+[2] https://lore.kernel.org/lkml/20200610045214.1175600-1-keescook@chromium.org/
+
+Kees Cook (9):
+  net/scm: Regularize compat handling of scm_detach_fds()
+  fs: Move __scm_install_fd() to __fd_install_received()
+  fs: Add fd_install_received() wrapper for __fd_install_received()
+  pidfd: Replace open-coded partial fd_install_received()
+  fs: Expand __fd_install_received() to accept fd
+  selftests/seccomp: Make kcmp() less required
+  selftests/seccomp: Rename user_trap_syscall() to user_notif_syscall()
+  seccomp: Switch addfd to Extensible Argument ioctl
+  seccomp: Fix ioctl number for SECCOMP_IOCTL_NOTIF_ID_VALID
+
+Sargun Dhillon (2):
+  seccomp: Introduce addfd ioctl to seccomp user notifier
+  selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
+
+ fs/file.c                                     |  65 ++++
+ include/linux/file.h                          |  16 +
+ include/uapi/linux/seccomp.h                  |  25 +-
+ kernel/pid.c                                  |  11 +-
+ kernel/seccomp.c                              | 181 ++++++++-
+ net/compat.c                                  |  55 ++-
+ net/core/scm.c                                |  50 +--
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 350 +++++++++++++++---
+ 8 files changed, 618 insertions(+), 135 deletions(-)
+
 -- 
 2.25.1
 
