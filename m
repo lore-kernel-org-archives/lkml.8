@@ -2,169 +2,211 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0ADCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05664C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A99220734
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="di0k6irK"
+	by mail.kernel.org (Postfix) with ESMTP id D83EA20734
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgFPMbh (ORCPT
+        id S1728454AbgFPMd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728779AbgFPMbf (ORCPT
+        Tue, 16 Jun 2020 08:33:26 -0400
+Received: from outbound-smtp53.blacknight.com ([46.22.136.237]:58851 "EHLO
+        outbound-smtp53.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725843AbgFPMdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:31:35 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4B5CC08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:31:34 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id y6so8844054edi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mF+JQd+IF6PC7hSV5l8PoaKlbsKGhrqeRetXtUoVSHs=;
-        b=di0k6irKRJ+g2vp5YaQg/DO7fnWR2AELf8GZANx0Y5AVqc2GM/yo128odbAPjwi0+7
-         LZxHsEp2sN2zbPRYhUpBV2BMecMH+wMhfBJxPJ1KAor/++YzPrHsbDQZy5s9Rs5xmoyY
-         gCXoTG3devaIwQshEONY5bHgzarNfHq+1w4825uEB1e4K3X7kTB/epzSreX0608ln8hL
-         uDlMqcBpqp1RnvC4sc/7oRVRgbPgrgrOU2btQfyWIMn17fTZEKJbH0vVqnxeKhUlc51g
-         t+KKqe7g+NjWJS5Une5UXJXIhJjy7EepvIi+Hn0bfd1hWcgY9UWFxQTuiAdqCM7SxPiI
-         SxSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mF+JQd+IF6PC7hSV5l8PoaKlbsKGhrqeRetXtUoVSHs=;
-        b=L+iDxuht2sRg44Tp4RUEcpfTVq/DPpgsjb9LesPCQjsmvpbXA3svz7xMGCvkLhlEUd
-         90KIP/gF9Rn7gAo/70i8JAQFzCNUuctqdGkjWeV0HQTrgh4XZpDTFM+Il2QYHKGivlT+
-         QDQBew0ywKpt6pKCKMYOS5f407++cVdHrm1GRzgVdwabq89WbRJkzfaQ5vFDmXkzWnEx
-         rTEf+VnkDp0Zj06IWrj7e1J1nbUxE/IuSZ+g+ZbDsRCH0dj43FeB5jhCAHcIncReIDGy
-         sKCfWJMqPb4MXt167b505ZbzLabB3Y3RbpdJeO2zZFQ4pL0yXcO4VzxVJuK6l1zmlykL
-         BqIQ==
-X-Gm-Message-State: AOAM5339P8FQZOu3S8+GzNYFhmAmsLJtt6xot8tGQE8k2270cX/XwKj1
-        8W9+rPGWoXmQH4dQ/UfLXYkgjg==
-X-Google-Smtp-Source: ABdhPJwa4abVKH2y/LcU2JPL1QA9Z3cgfaWYrNBEqtgA33F0xUZb6Gh/4af2MSCBfhoi3qVGtH/KmA==
-X-Received: by 2002:a50:f985:: with SMTP id q5mr2305480edn.180.1592310693139;
-        Tue, 16 Jun 2020 05:31:33 -0700 (PDT)
-Received: from localhost.localdomain (212-5-158-38.ip.btc-net.bg. [212.5.158.38])
-        by smtp.gmail.com with ESMTPSA id p6sm11071983ejb.71.2020.06.16.05.31.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 05:31:32 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maheshwar Ajja <majja@codeaurora.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 1/4] media: v4l2-ctrls: Add encoder constant quality control
-Date:   Tue, 16 Jun 2020 15:29:58 +0300
-Message-Id: <20200616123001.11321-2-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616123001.11321-1-stanimir.varbanov@linaro.org>
-References: <20200616123001.11321-1-stanimir.varbanov@linaro.org>
+        Tue, 16 Jun 2020 08:33:25 -0400
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+        by outbound-smtp53.blacknight.com (Postfix) with ESMTPS id 46BD8FAA1B
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:33:22 +0100 (IST)
+Received: (qmail 25132 invoked from network); 16 Jun 2020 12:33:22 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 16 Jun 2020 12:33:21 -0000
+Date:   Tue, 16 Jun 2020 13:33:20 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jirka Hladky <jhladky@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [sched/core] 2ebb177175: will-it-scale.per_thread_ops -3.7%
+ regression
+Message-ID: <20200616123320.GH3183@techsingularity.net>
+References: <20200616073908.GG5653@shao2-debian>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200616073908.GG5653@shao2-debian>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maheshwar Ajja <majja@codeaurora.org>
+On Tue, Jun 16, 2020 at 03:39:08PM +0800, kernel test robot wrote:
+> 
+> FYI, we noticed a -3.7% regression of will-it-scale.per_thread_ops due to commit:
+> 
 
-When V4L2_CID_MPEG_VIDEO_BITRATE_MODE value is
-V4L2_MPEG_VIDEO_BITRATE_MODE_CQ, encoder will produce
-constant quality output indicated by
-V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY control value.
-Encoder will choose appropriate quantization parameter
-and bitrate to produce requested frame quality level.
+Thanks.
 
-Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
+> 
+> commit: 2ebb17717550607bcd85fb8cf7d24ac870e9d762 ("sched/core: Offload wakee task activation if it the wakee is descheduling")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> in testcase: will-it-scale
+> on test machine: 8 threads Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz with 16G memory
+> with following parameters:
+> 
+> <SNIP>
+> 
+> In addition to that, the commit also has significant impact on the following tests:
+> 
+> +------------------+--------------------------------------------------------------------------+
+> | testcase: change | lmbench3: lmbench3.AF_UNIX.sock.stream.bandwidth.MB/sec 5.1% improvement |
+> | test machine     | 16 threads Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz with 48G memory         |
+> | test parameters  | cpufreq_governor=performance                                             |
+> |                  | mode=development                                                         |
+> |                  | nr_threads=50%                                                           |
+> |                  | test=UNIX                                                                |
+> |                  | test_memory_size=50%                                                     |
+> |                  | ucode=0x7000019                                                          |
+> +------------------+--------------------------------------------------------------------------+
+> | testcase: change | vm-scalability: vm-scalability.throughput 4.6% improvement               |
+> | test machine     | 16 threads Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz with 32G memory        |
+> | test parameters  | cpufreq_governor=performance                                             |
+> |                  | runtime=300s                                                             |
+> |                  | size=2T                                                                  |
+> |                  | test=shm-pread-seq-mt                                                    |
+> |                  | ucode=0xca                                                               |
+> +------------------+--------------------------------------------------------------------------+
+> 
 
-v3: moved description around line 925 - Hans
+This is telling me that there are both wins and losses due to the
+patch. That is not entirely unexpected given the nature of the patch and
+how it impacts timings.
 
- .../userspace-api/media/v4l/ext-ctrls-codec.rst        | 10 ++++++++++
- drivers/media/v4l2-core/v4l2-ctrls.c                   |  2 ++
- include/uapi/linux/v4l2-controls.h                     |  2 ++
- 3 files changed, 14 insertions(+)
+> c6e7bd7afaeb3af5 2ebb17717550607bcd85fb8cf7d 
+> ---------------- --------------------------- 
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |    
+>            :4           25%           1:4     dmesg.RIP:find_vma
+>           1:4          -25%            :4     dmesg.RIP:loop
+>            :4           25%           1:4     dmesg.RIP:poll_idle
+>            :4           25%           1:4     dmesg.RIP:release_pages
+>            :4           25%           1:4     kmsg.a562403>]usb_hcd_irq
+>           1:4          -25%            :4     kmsg.a9be0b>]usb_hcd_irq
+>            :4           25%           1:4     kmsg.c867d3b>]usb_hcd_irq
+>            :4           25%           1:4     kmsg.e2bf9>]usb_hcd_irq
+>           1:4          -25%            :4     kmsg.e6afaad>]usb_hcd_irq
+>           1:4          -25%            :4     kmsg.ef22>]usb_hcd_irq
+>          %stddev     %change         %stddev
+>              \          |                \  
+>    1564377            -3.7%    1506585        will-it-scale.per_thread_ops
+>   12515025            -3.7%   12052684        will-it-scale.workload
 
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-index d0d506a444b1..b9d3f7ae6486 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-@@ -581,6 +581,8 @@ enum v4l2_mpeg_video_bitrate_mode -
-       - Variable bitrate
-     * - ``V4L2_MPEG_VIDEO_BITRATE_MODE_CBR``
-       - Constant bitrate
-+    * - ``V4L2_MPEG_VIDEO_BITRATE_MODE_CQ``
-+      - Constant quality
- 
- 
- 
-@@ -592,6 +594,14 @@ enum v4l2_mpeg_video_bitrate_mode -
-     the average video bitrate. It is ignored if the video bitrate mode
-     is set to constant bitrate.
- 
-+``V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY (integer)``
-+    Constant quality level control. This control is applicable when
-+    ``V4L2_CID_MPEG_VIDEO_BITRATE_MODE`` value is
-+    ``V4L2_MPEG_VIDEO_BITRATE_MODE_CQ``. Valid range is 1 to 100
-+    where 1 indicates lowest quality and 100 indicates highest quality.
-+    Encoder will decide the appropriate quantization parameter and
-+    bitrate to produce requested frame quality.
-+
- ``V4L2_CID_MPEG_VIDEO_TEMPORAL_DECIMATION (integer)``
-     For every captured frame, skip this many subsequent frames (default
-     0).
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 3f3fbcd60cc6..bc00d02e411f 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -200,6 +200,7 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
- 	static const char * const mpeg_video_bitrate_mode[] = {
- 		"Variable Bitrate",
- 		"Constant Bitrate",
-+		"Constant Quality",
- 		NULL
- 	};
- 	static const char * const mpeg_stream_type[] = {
-@@ -832,6 +833,7 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_MPEG_VIDEO_GOP_CLOSURE:	return "Video GOP Closure";
- 	case V4L2_CID_MPEG_VIDEO_PULLDOWN:	return "Video Pulldown";
- 	case V4L2_CID_MPEG_VIDEO_BITRATE_MODE:	return "Video Bitrate Mode";
-+	case V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY:	return "Constant Quality";
- 	case V4L2_CID_MPEG_VIDEO_BITRATE:	return "Video Bitrate";
- 	case V4L2_CID_MPEG_VIDEO_BITRATE_PEAK:	return "Video Peak Bitrate";
- 	case V4L2_CID_MPEG_VIDEO_TEMPORAL_DECIMATION: return "Video Temporal Decimation";
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 62271418c1be..0f7e4388dcce 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -375,6 +375,7 @@ enum v4l2_mpeg_video_aspect {
- enum v4l2_mpeg_video_bitrate_mode {
- 	V4L2_MPEG_VIDEO_BITRATE_MODE_VBR = 0,
- 	V4L2_MPEG_VIDEO_BITRATE_MODE_CBR = 1,
-+	V4L2_MPEG_VIDEO_BITRATE_MODE_CQ  = 2,
- };
- #define V4L2_CID_MPEG_VIDEO_BITRATE		(V4L2_CID_MPEG_BASE+207)
- #define V4L2_CID_MPEG_VIDEO_BITRATE_PEAK	(V4L2_CID_MPEG_BASE+208)
-@@ -742,6 +743,7 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
- #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
- #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
- #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
-+#define V4L2_CID_MPEG_VIDEO_CONSTANT_QUALITY		(V4L2_CID_MPEG_BASE + 645)
- 
- /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
- #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+What is the variability here? The stddev is blank.
+
+>       7295 ± 18%     +32.3%       9651 ±  3%  slabinfo.kmalloc-32.active_objs
+>       7295 ± 18%     +32.3%       9651 ±  3%  slabinfo.kmalloc-32.num_objs
+>      52712 ±167%     -99.8%     122.25 ±  9%  softirqs.CPU7.NET_RX
+>     167833 ± 37%     -96.0%       6770 ± 70%  softirqs.NET_RX
+
+This is curious, why was there a storm of network traffic during the
+baseline run? It may not matter but I find it interesting that there was
+different background traffic during the two tests.
+
+>       8.17            -6.2        1.95 ±  2%  mpstat.cpu.all.idle%
+>       0.05 ± 39%      -0.0        0.00 ± 92%  mpstat.cpu.all.soft%
+>      36.39            +4.6       40.97        mpstat.cpu.all.usr%
+>      54.75            +2.3%      56.00        vmstat.cpu.sy
+>      36.00           +11.8%      40.25        vmstat.cpu.us
+>     879009            +9.8%     964967        vmstat.system.cs
+>      80622          +438.9%     434480        vmstat.system.in
+>    8567964 ± 11%     -24.3%    6482942 ±  4%  cpuidle.C1.time
+>    7399663 ± 10%     -46.7%    3944245 ±  5%  cpuidle.C1.usage
+>    4762729 ± 15%     -76.7%    1108338 ±  4%  cpuidle.C1E.time
+>    2825633 ± 12%     -92.5%     213227 ± 11%  cpuidle.C1E.usage
+>    1392828 ± 18%     -89.8%     142380 ± 13%  cpuidle.C3.usage
+>    9138464 ± 19%     -39.7%    5510711 ± 12%  cpuidle.C6.time
+>   49832321           -80.0%    9988732 ±  5%  cpuidle.POLL.time
+>   67398769 ±  2%     -89.1%    7335934 ±  6%  cpuidle.POLL.usage
+
+This generally indicates that CPUs are spending less time in C-states
+and more likely to be active. In itself, this is not a bad thing.
+
+>   18365719           -91.7%    1533497 ±  4%  interrupts.RES:Rescheduling_interrupts
+>     103.25 ±  5%    +159.1%     267.50 ±  5%  interrupts.TLB:TLB_shootdowns
+>      13.47 ±  3%     -19.3%      10.86 ±  3%  perf-stat.i.MPKI
+>  1.746e+09            +1.9%  1.779e+09        perf-stat.i.branch-instructions
+>   47675183            +1.8%   48541350        perf-stat.i.branch-misses
+>  1.145e+08 ±  3%     -18.3%   93535517 ±  3%  perf-stat.i.cache-references
+>     885445            +9.7%     971331        perf-stat.i.context-switches
+>       3.43            -1.1%       3.39        perf-stat.i.cpi
+>  2.155e+09            +3.4%  2.228e+09        perf-stat.i.dTLB-loads
+>   1.73e+09            +5.6%  1.827e+09        perf-stat.i.dTLB-stores
+>    5869850 ±  5%     -16.5%    4900813        perf-stat.i.iTLB-load-misses
+>     786437 ± 13%     -30.9%     543649 ± 16%  perf-stat.i.iTLB-loads
+>  8.535e+09            +1.3%  8.642e+09        perf-stat.i.instructions
+>       1492 ±  4%     +20.6%       1798        perf-stat.i.instructions-per-iTLB-miss
+>       0.29            +1.1%       0.30        perf-stat.i.ipc
+>     720.16            +3.2%     742.92        perf-stat.i.metric.M/sec
+>      13.41 ±  3%     -19.3%      10.82 ±  3%  perf-stat.overall.MPKI
+>       3.42            -1.1%       3.39        perf-stat.overall.cpi
+>       1457 ±  4%     +21.0%       1763        perf-stat.overall.instructions-per-iTLB-miss
+>       0.29            +1.1%       0.30        perf-stat.overall.ipc
+>     205548            +5.0%     215927        perf-stat.overall.path-length
+>   1.74e+09            +1.9%  1.773e+09        perf-stat.ps.branch-instructions
+>   47519673            +1.8%   48383718        perf-stat.ps.branch-misses
+>  1.141e+08 ±  3%     -18.3%   93221019 ±  3%  perf-stat.ps.cache-references
+>     882476            +9.7%     968061        perf-stat.ps.context-switches
+>  2.148e+09            +3.4%  2.221e+09        perf-stat.ps.dTLB-loads
+>  1.724e+09            +5.6%  1.821e+09        perf-stat.ps.dTLB-stores
+>    5850190 ±  5%     -16.5%    4884334        perf-stat.ps.iTLB-load-misses
+>     783812 ± 13%     -30.9%     541830 ± 16%  perf-stat.ps.iTLB-loads
+>  8.507e+09            +1.3%  8.614e+09        perf-stat.ps.instructions
+>  2.572e+12            +1.2%  2.602e+12        perf-stat.total.instructions
+
+I'm not getting much out of this. I was hoping to see something on
+dcache hit/miss rates but only cache-references are mentioned. I think
+what is happening is that the threads are staying active to contend on a
+shared mutex more and incurring more cache misses as a result.
+
+>       8.95 ±  2%      -6.5        2.50 ±  3%  perf-profile.calltrace.cycles-pp.try_to_wake_up.wake_up_q.futex_wake.do_futex.__x64_sys_futex
+>       9.15 ±  2%      -6.4        2.79 ±  3%  perf-profile.calltrace.cycles-pp.wake_up_q.futex_wake.do_futex.__x64_sys_futex.do_syscall_64
+
+Less time spend in try_to_wake_up which is not surprising given the
+patch is meant to avoid spinning in that path.
+
+>      22.31            -4.6       17.69        perf-profile.calltrace.cycles-pp.do_futex.__x64_sys_futex.do_syscall_64.entry_SYSCALL_64_after_hwframe.__lll_unlock_wake
+>      21.97            -4.6       17.37        perf-profile.calltrace.cycles-pp.futex_wake.do_futex.__x64_sys_futex.do_syscall_64.entry_SYSCALL_64_after_hwframe
+>      40.70            -4.6       36.13        perf-profile.calltrace.cycles-pp.__lll_unlock_wake
+>      23.13            -4.6       18.56        perf-profile.calltrace.cycles-pp.__x64_sys_futex.do_syscall_64.entry_SYSCALL_64_after_hwframe.__lll_unlock_wake
+>      30.54            -4.5       26.03        perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.__lll_unlock_wake
+>      31.06            -4.5       26.59        perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.__lll_unlock_wake
+>       2.81 ±  5%      -2.4        0.40 ± 58%  perf-profile.calltrace.cycles-pp.menu_select.do_idle.cpu_startup_entry.start_secondary.secondary_startup_64
+>       3.15 ± 10%      -1.9        1.28 ± 10%  perf-profile.calltrace.cycles-pp.cpuidle_enter.do_idle.cpu_startup_entry.start_secondary.secondary_startup_64
+>       3.11 ± 10%      -1.8        1.26 ± 10%  perf-profile.calltrace.cycles-pp.cpuidle_enter_state.cpuidle_enter.do_idle.cpu_startup_entry.start_secondary
+
+Less going into idle, generally good.
+
+Overall, I do not think there is something worth digging into here.
+Two other reports showed performance gains and the data for this profile
+shows that the threads are likely spending more time being active so
+they can contend on the mutex more aggressively. Having multiple threads
+contend on the same mutex in a loop looks like an anti-pattern and I do
+not think we want to artificially starve/stall threads just to make that
+particular figure look good.
+
 -- 
-2.17.1
-
+Mel Gorman
+SUSE Labs
