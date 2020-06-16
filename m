@@ -2,285 +2,164 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD6BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29916C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA022082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D2C2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="S0KWAit/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a55P7Mb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgFPVt4 (ORCPT
+        id S1726311AbgFPVvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:49:56 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:31941 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgFPVtz (ORCPT
+        Tue, 16 Jun 2020 17:51:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45802 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725849AbgFPVvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:49:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592344188; x=1623880188;
-  h=date:from:to:cc:message-id:references:mime-version:
-   content-transfer-encoding:in-reply-to:subject;
-  bh=2xZWar77dXkth8tk0V/E/5zPJfDMTckPDO14OJN6cFs=;
-  b=S0KWAit/W96xLY6edIEKux3Zl9R0ulYlurEYcb452/iVIrYLPsdgVvUr
-   eiIA7JRiRy7K/26SH2lDtEaRDHr8AtS7RkrkG+Wmz3R26zaeF5cq/kLQo
-   Ja+nDsTbQg25cN36o2n41AdEhrYSVSz0y6f96V4lPNSp2NMyNYyCmw1hN
-   g=;
-IronPort-SDR: mrYnVTXGTnnqHewBUIddvzzRXlflYMjMyxE96i0WnUJPOgd3L5PuAQgZhdT+1V4jG9PhbPquY9
- XRYaFMbAvvQw==
-X-IronPort-AV: E=Sophos;i="5.73,519,1583193600"; 
-   d="scan'208";a="44534346"
-Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and hibernation]
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 16 Jun 2020 21:49:43 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 8C216A07C3;
-        Tue, 16 Jun 2020 21:49:41 +0000 (UTC)
-Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
- EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Jun 2020 21:49:26 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
- EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Jun 2020 21:49:25 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Tue, 16 Jun 2020 21:49:25 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 872B240139; Tue, 16 Jun 2020 21:49:25 +0000 (UTC)
-Date:   Tue, 16 Jun 2020 21:49:25 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Message-ID: <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
- <20200604070548.GH1195@Air-de-Roger>
+        Tue, 16 Jun 2020 17:51:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592344312;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Pa26AneX0j3DPUjeJdvfIiB6K0FofWmkV9YrdZxZmQs=;
+        b=a55P7Mb3q4p4wgansmTh5VoQXMTNEK0CdutfOOBHSuAvTX/Nm/NvFkMe/8p8Wk3sYxS5Rl
+        47F7HisAYwlLL1rkJtb8b+IwyvDhtlW/xQdZQL1jkpO5y+bSsVLMtSgNuvnpbqzKeiyBMl
+        wmUoDnOta+tInw+mR1JXfvG9dlBzzUM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334-ShKAFPiiPxSqZyoOOcsMPg-1; Tue, 16 Jun 2020 17:51:50 -0400
+X-MC-Unique: ShKAFPiiPxSqZyoOOcsMPg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D324C10059B4;
+        Tue, 16 Jun 2020 21:51:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A59DA60C80;
+        Tue, 16 Jun 2020 21:51:47 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, marc.dionne@auristor.com,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] afs: Fixes for bugs found by xfstests
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200604070548.GH1195@Air-de-Roger>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <930957.1592344306.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 16 Jun 2020 22:51:46 +0100
+Message-ID: <930958.1592344306@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:05:48AM +0200, Roger Pau Monné wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> 
-> 
-> 
-> Hello,
-> 
-> On Wed, Jun 03, 2020 at 11:33:52PM +0000, Agarwal, Anchal wrote:
-> >  CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> >
-> >
-> >
-> >     On Tue, May 19, 2020 at 11:27:50PM +0000, Anchal Agarwal wrote:
-> >     > From: Munehisa Kamata <kamatam@amazon.com>
-> >     >
-> >     > S4 power transition states are much different than xen
-> >     > suspend/resume. Former is visible to the guest and frontend drivers should
-> >     > be aware of the state transitions and should be able to take appropriate
-> >     > actions when needed. In transition to S4 we need to make sure that at least
-> >     > all the in-flight blkif requests get completed, since they probably contain
-> >     > bits of the guest's memory image and that's not going to get saved any
-> >     > other way. Hence, re-issuing of in-flight requests as in case of xen resume
-> >     > will not work here. This is in contrast to xen-suspend where we need to
-> >     > freeze with as little processing as possible to avoid dirtying RAM late in
-> >     > the migration cycle and we know that in-flight data can wait.
-> >     >
-> >     > Add freeze, thaw and restore callbacks for PM suspend and hibernation
-> >     > support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
-> >     > events, need to implement these xenbus_driver callbacks. The freeze handler
-> >     > stops block-layer queue and disconnect the frontend from the backend while
-> >     > freeing ring_info and associated resources. Before disconnecting from the
-> >     > backend, we need to prevent any new IO from being queued and wait for existing
-> >     > IO to complete. Freeze/unfreeze of the queues will guarantee that there are no
-> >     > requests in use on the shared ring. However, for sanity we should check
-> >     > state of the ring before disconnecting to make sure that there are no
-> >     > outstanding requests to be processed on the ring. The restore handler
-> >     > re-allocates ring_info, unquiesces and unfreezes the queue and re-connect to
-> >     > the backend, so that rest of the kernel can continue to use the block device
-> >     > transparently.
-> >     >
-> >     > Note:For older backends,if a backend doesn't have commit'12ea729645ace'
-> >     > xen/blkback: unmap all persistent grants when frontend gets disconnected,
-> >     > the frontend may see massive amount of grant table warning when freeing
-> >     > resources.
-> >     > [   36.852659] deferring g.e. 0xf9 (pfn 0xffffffffffffffff)
-> >     > [   36.855089] xen:grant_table: WARNING:e.g. 0x112 still in use!
-> >     >
-> >     > In this case, persistent grants would need to be disabled.
-> >     >
-> >     > [Anchal Changelog: Removed timeout/request during blkfront freeze.
-> >     > Reworked the whole patch to work with blk-mq and incorporate upstream's
-> >     > comments]
-> >
-> >     Please tag versions using vX and it would be helpful if you could list
-> >     the specific changes that you performed between versions. There where
-> >     3 RFC versions IIRC, and there's no log of the changes between them.
-> >
-> > I will elaborate on "upstream's comments" in my changelog in my next round of patches.
-> 
-> Sorry for being picky, but can you please make sure your email client
-> properly quotes previous emails on reply. Note the lack of '>' added
-> to the quoted parts of your reply.
-That was just my outlook probably. Note taken.
-> 
-> >     > +                     }
-> >     > +
-> >     >                       break;
-> >     > +             }
-> >     > +
-> >     > +             /*
-> >     > +              * We may somehow receive backend's Closed again while thawing
-> >     > +              * or restoring and it causes thawing or restoring to fail.
-> >     > +              * Ignore such unexpected state regardless of the backend state.
-> >     > +              */
-> >     > +             if (info->connected == BLKIF_STATE_FROZEN) {
-> >
-> >     I think you can join this with the previous dev->state == XenbusStateClosed?
-> >
-> >     Also, won't the device be in the Closed state already if it's in state
-> >     frozen?
-> > Yes but I think this mostly due to a hypothetical case if during thawing backend switches to Closed state.
-> > I am not entirely sure if that could happen. Could use some expertise here.
-> 
-> I think the frontend seeing the backend in the closed state during
-> restore would be a bug that should prevent the frontend from
-> resuming.
-> 
-> >     > +     /* Kick the backend to disconnect */
-> >     > +     xenbus_switch_state(dev, XenbusStateClosing);
-> >     > +
-> >     > +     /*
-> >     > +      * We don't want to move forward before the frontend is diconnected
-> >     > +      * from the backend cleanly.
-> >     > +      */
-> >     > +     timeout = wait_for_completion_timeout(&info->wait_backend_disconnected,
-> >     > +                                           timeout);
-> >     > +     if (!timeout) {
-> >     > +             err = -EBUSY;
-> >
-> >     Note err is only used here, and I think could just be dropped.
-> >
-> > This err is what's being returned from the function. Am I missing anything?
-> 
-> Just 'return -EBUSY;' directly, and remove the top level variable. You
-> can also use -EBUSY directly in the xenbus_dev_error call. Anyway, not
-> that important.
-> 
-> >     > +             xenbus_dev_error(dev, err, "Freezing timed out;"
-> >     > +                              "the device may become inconsistent state");
-> >
-> >     Leaving the device in this state is quite bad, as it's in a closed
-> >     state and with the queues frozen. You should make an attempt to
-> >     restore things to a working state.
-> >
-> > You mean if backend closed after timeout? Is there a way to know that? I understand it's not good to
-> > leave it in this state however, I am still trying to find if there is a good way to know if backend is still connected after timeout.
-> > Hence the message " the device may become inconsistent state".  I didn't see a timeout not even once on my end so that's why
-> > I may be looking for an alternate perspective here. may be need to thaw everything back intentionally is one thing I could think of.
-> 
-> You can manually force this state, and then check that it will behave
-> correctly. I would expect that on a failure to disconnect from the
-> backend you should switch the frontend to the 'Init' state in order to
-> try to reconnect to the backend when possible.
-> 
-From what I understand forcing manually is, failing the freeze without
-disconnect and try to revive the connection by unfreezing the
-queues->reconnecting to backend [which never got diconnected]. May be even
-tearing down things manually because I am not sure what state will frontend
-see if backend fails to to disconnect at any point in time. I assumed connected.
-Then again if its "CONNECTED" I may not need to tear down everything and start
-from Initialising state because that may not work.
+Hi Linus,
 
-So I am not so sure about backend's state so much, lets say if  xen_blkif_disconnect fail,
-I don't see it getting handled in the backend then what will be backend's state?
-Will it still switch xenbus state to 'Closed'? If not what will frontend see, 
-if it tries to read backend's state through xenbus_read_driver_state ?
+I've managed to get xfstests kind of working with afs.  Here are a set of
+patches that fix most of the bugs found.
 
-So the flow be like:
-Front end marks XenbusStateClosing
-Backend marks its state as XenbusStateClosing
-    Frontend marks XenbusStateClosed
-    Backend disconnects calls xen_blkif_disconnect
-       Backend fails to disconnect, the above function returns EBUSY
-       What will be state of backend here? 
-       Frontend did not tear down the rings if backend does not switches the
-       state to 'Closed' in case of failure.
+There are a number of primary issues:
 
-If backend stays in CONNECTED state, then even if we mark it Initialised in frontend, backend
-won't be calling connect(). {From reading code in frontend_changed}
-IMU, Initialising will fail since backend dev->state != XenbusStateClosed plus
-we did not tear down anything so calling talk_to_blkback may not be needed
+ (1) Incorrect handling of mtime and non-handling of ctime.  It might be
+     argued, that the latter isn't a bug since the AFS protocol doesn't
+     support ctime, but I should probably still update it locally.
 
-Does that sound correct?
-> >     > +     }
-> >     > +
-> >     > +     return err;
-> >     > +}
-> >     > +
-> >     > +static int blkfront_restore(struct xenbus_device *dev)
-> >     > +{
-> >     > +     struct blkfront_info *info = dev_get_drvdata(&dev->dev);
-> >     > +     int err = 0;
-> >     > +
-> >     > +     err = talk_to_blkback(dev, info);
-> >     > +     blk_mq_unquiesce_queue(info->rq);
-> >     > +     blk_mq_unfreeze_queue(info->rq);
-> >     > +     if (!err)
-> >     > +         blk_mq_update_nr_hw_queues(&info->tag_set, info->nr_rings);
-> >
-> >     Bad indentation. Also shouldn't you first update the queues and then
-> >     unfreeze them?
-> > Please correct me if I am wrong, blk_mq_update_nr_hw_queues freezes the queue
-> > So I don't think the order could be reversed.
-> 
-> Regardless of what blk_mq_update_nr_hw_queues does, I don't think it's
-> correct to unfreeze the queues without having updated them. Also the
-> freezing/unfreezing uses a refcount, so I think it's perfectly fine to
-> call blk_mq_update_nr_hw_queues first and then unfreeze the queues.
-> 
-> Also note that talk_to_blkback returning an error should likely
-> prevent any unfreezing, as the queues won't be updated to match the
-> parameters of the backend.
->
-I think you are right here. Will send out fixes in V2
-> Thanks, Roger.
-> 
-Thanks,
-Anchal
+ (2) Shared-write mmap, truncate and writeback bugs.  This includes not
+     changing i_size under the callback lock, overwriting local i_size wit=
+h
+     the reply from the server after a partial writeback, not limiting the
+     writeback from an mmapped page to EOF.
+
+ (3) Checks for an abort code indicating that the primary vnode in an
+     operation was deleted by a third-party are done in the wrong place.
+
+ (4) Silly rename bugs.  This includes an incomplete conversion to the new
+     operation handling, duplicate nlink handling, nlink changing not bein=
+g
+     done inside the callback lock and insufficient handling of third-part=
+y
+     conflicting directory changes.
+
+And some secondary ones:
+
+ (1) The UAEOVERFLOW abort code should map to EOVERFLOW not EREMOTEIO.
+
+ (2) Remove a couple of unused or incompletely used bits.
+
+ (3) Remove a couple of redundant success checks.
+
+These seem to fix all the data-corruption bugs found by "./check -afs -g
+quick", along with the obvious silly rename bugs and time bugs.
+
+There are still some test failures, but they seem to fall into two classes=
+:
+firstly, the authentication/security model is different to the standard
+UNIX model and permission is arbitrated by the server and cached locally;
+and secondly, there are a number of features that AFS does not support
+(such as mknod).  But in these cases, the tests themselves need to be
+adapted or skipped.
+
+Using the in-kernel afs client with xfstests also found a bug in the
+AuriStor AFS server that has been fixed for a future release.
+
+David
+---
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c740=
+7:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
+/afs-fixes-20200616
+
+for you to fetch changes up to b6489a49f7b71964e37978d6f89bbdbdb263f6f5:
+
+  afs: Fix silly rename (2020-06-16 22:00:28 +0100)
+
+----------------------------------------------------------------
+AFS fixes
+
+----------------------------------------------------------------
+David Howells (12):
+      afs: Fix non-setting of mtime when writing into mmap
+      afs: afs_write_end() should change i_size under the right lock
+      afs: Fix EOF corruption
+      afs: Concoct ctimes
+      afs: Fix truncation issues and mmap writeback size
+      afs: Fix the mapping of the UAEOVERFLOW abort code
+      afs: Remove yfs_fs_fetch_file_status() as it's not used
+      afs: Fix yfs_fs_fetch_status() to honour vnode selector
+      afs: Remove afs_operation::abort_code
+      afs: Fix use of afs_check_for_remote_deletion()
+      afs: afs_vnode_commit_status() doesn't need to check the RPC error
+      afs: Fix silly rename
+
+ fs/afs/dir.c          | 62 ++++++++++++++++++++++++++++++----
+ fs/afs/dir_silly.c    | 38 +++++++++++++++------
+ fs/afs/file.c         |  2 +-
+ fs/afs/flock.c        |  4 +--
+ fs/afs/fs_operation.c | 10 +++++-
+ fs/afs/inode.c        | 91 ++++++++++++++++++++++++++++++++++++++--------=
+---
+ fs/afs/internal.h     | 36 +++++++++++++-------
+ fs/afs/misc.c         |  1 +
+ fs/afs/write.c        | 12 +++++--
+ fs/afs/yfsclient.c    | 93 ++++++++++++++--------------------------------=
+-----
+ 10 files changed, 225 insertions(+), 124 deletions(-)
+
