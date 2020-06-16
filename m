@@ -2,110 +2,197 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2C0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 142D2207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322753;
-	bh=aeJVDlEjSdLDLdlvppBsDFafIzMahO0CTxavjubEvs4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2r2OUV8xdW5DQn9g3T/YR+wjweuUlL/CO2B4sUAqzzwOwKMtqk8s7ROfHCO8MwgtP
-	 RFeVOhwcDv+aVk0/FhLsmGeH38vqqMLs5yxrWn+aDzS4XEwLAUPA8ckpDOOyHRccW7
-	 4aQjpWFy8/9P/ICYOZr0ZIPadUJhofdWxcZ7UWYk=
+	by mail.kernel.org (Postfix) with ESMTP id 1D3FC21534
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fI4dEliv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732536AbgFPPwb (ORCPT
+        id S1732781AbgFPPwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732759AbgFPPwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66FB0207C4;
-        Tue, 16 Jun 2020 15:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322732;
-        bh=aeJVDlEjSdLDLdlvppBsDFafIzMahO0CTxavjubEvs4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VT2QgVsPIZJYYzprm8rVRCtlG6/5m1ebPmZ61sQC0RzE74Lvacxg8hZRvEZWJGrxu
-         k2U9Za7ulPjcvl9J36hpWN/aHnXrOgAhqwujtZTniVHqZsD3qN/jK6xPmwRBUIhX6x
-         iaNe64r4d6mAH3t9OhV1d78RuCjmpUC89to/G3ak=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
-        Steve French <smfrench@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.6 065/161] smb3: add indatalen that can be a non-zero value to calculation of credit charge in smb2 ioctl
-Date:   Tue, 16 Jun 2020 17:34:15 +0200
-Message-Id: <20200616153109.474849450@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
-References: <20200616153106.402291280@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 16 Jun 2020 11:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732589AbgFPPwR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:52:17 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66E7C061573;
+        Tue, 16 Jun 2020 08:52:16 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id i1so4922679vkp.8;
+        Tue, 16 Jun 2020 08:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5tUwv8GZvt0tLegCth1XOp+6yS8yReQyRSOWrSBlQn4=;
+        b=fI4dElivqPDBIde5zHrPQYVfRHoecvaR5xo2tlpmaSvwEURd0T3CLTe89tX8Ov7VVD
+         pFh7Hu0POSS26z2glZ3JYCbowKhH5z7mjGkigZN/pcaPT2YYEurO7olee9W3e68oKtPx
+         nF5bVCcpSA+9cLGc6xJZ6b0221kLKp8a3gSIpJmBvM7lf34BvnKlD9UJMArax01JPeTd
+         rg2hy3AFr6C5NxGh/iBUQgibmY54+x5KUwnqUYHTXT3iuxvdOR4TRcoEil1s6Msr1bda
+         DnI2Fg9A4r/DFruzrO0GCxCU/5Lzs+ffQmEuQ/lcZ1GLu4UQQpv95sQqImrT5bt5+3fG
+         XXTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5tUwv8GZvt0tLegCth1XOp+6yS8yReQyRSOWrSBlQn4=;
+        b=GBVlB8hUcaTnkmMNSueXpOZ6Vo6JA3LBI60P3JbNFCfc3uYrlv2DHAnkX9Fi/zcmw2
+         BoJwdMWZl/X1vmPBJK/8MiMML3BchcvoxgCK6F88jsjpCSP9a65vzBufzm3pjUImNei0
+         xfs3q8nlhZ6TATxZzPzdmVZqNKd81xG5ZZnljYZn4DrZqmWx0QRS8QaNXkOgvI42F3QI
+         jvSjrmc8DBjEKJDMe1JhS3pbNSFqxzFiZcTun7HzqAhZcxEL7IueeGf+XVCTcK4geL+A
+         cevTZa2F6NPHaCImGWepNQWPrLe206H6gK4ZAYQQmq3E7ndwGzEQ8OjBu2MwgZ1Hvneg
+         saPQ==
+X-Gm-Message-State: AOAM533cZgM7LiRk3rMom2dRGZdz8VKDWnoBTOn26XR/H7avxJNGGJpM
+        5FItuwy0NDUY4st0tD6uMkRvIuI1gJEbo5i0I+I=
+X-Google-Smtp-Source: ABdhPJwHbzHiIoOeOqf88qGm635l6SYTNpkzRacF/MQtw+0fGQ+NRwhque+7rGZBn/dzalt7nyDZTCXKgzsXv6lYO+E=
+X-Received: by 2002:a1f:ee81:: with SMTP id m123mr2257220vkh.51.1592322735381;
+ Tue, 16 Jun 2020 08:52:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200614200121.14147-1-digetx@gmail.com> <CACvgo51QuXMgWhFk4C=3rGvUZDX1_W0RZtVb5RtRPiHTpMebWQ@mail.gmail.com>
+ <8f789ef5-bebf-c869-784d-afda70fc1fb8@gmail.com>
+In-Reply-To: <8f789ef5-bebf-c869-784d-afda70fc1fb8@gmail.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Tue, 16 Jun 2020 16:48:34 +0100
+Message-ID: <CACvgo50oSMbgXw1vHwVT4hhGe6g3YzKQEohCLJdfDq+0UaN1jw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] 180 degrees rotation support for NVIDIA Tegra DRM
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Derek Basehore <dbasehore@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>, linux-tegra@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Namjae Jeon <namjae.jeon@samsung.com>
+On Tue, 16 Jun 2020 at 12:40, Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 16.06.2020 01:26, Emil Velikov =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > Hi Dmitry,
+> >
+> > On Mon, 15 Jun 2020 at 08:28, Dmitry Osipenko <digetx@gmail.com> wrote:
+> >>
+> >> Hello!
+> >>
+> >> This series adds 180=C2=B0 display plane rotation support to the NVIDI=
+A Tegra
+> >> DRM driver which is needed for devices that have display panel physica=
+lly
+> >> mounted upside-down, like Nexus 7 tablet device for example [1]. Since
+> >> DRM panel rotation is a new thing for a userspace, currently only
+> >> Opentegra Xorg driver handles the rotated display panel [2], but this
+> >> is good enough for the start.
+> >>
+> >> Note that later on it should be possible to implement a transparent 18=
+0=C2=B0
+> >> display rotation for Tegra DRM driver which will remove the need to ha=
+ve
+> >> a bleeding edge userspace that knows how to rotate display planes and =
+I'm
+> >> slowly working on it. For the starter we can go with the minimal rotat=
+ion
+> >> support, so it's not a blocker.
+> >>
+> >> This series is based on the work that was made by Derek Basehore for t=
+he
+> >> Mediatek driver [3], his patch is included into this patchset. I added
+> >> my tested-by tag to the Derek's patch.
+> >>
+> >> Please review and apply, thanks in advance!
+> >>
+> >> [1] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200607154=
+327.18589-3-digetx@gmail.com/
+> >> [2] https://github.com/grate-driver/xf86-video-opentegra/commit/28eb20=
+a3959bbe5bc3a3b67e55977093fd5114ca
+> >> [3] https://lkml.org/lkml/2020/3/5/1119
+> >>
+> >> Changelog:
+> >>
+> >> v2: - Dropped "drm/panel: Set display info in panel attach" patch, whi=
+ch
+> >>       turned out to be obsolete now.
+> >>
+> >>     - Renamed the cover-latter, hopefully this will fix the bouncing e=
+mails.
+> >>
+> >> Derek Basehore (1):
+> >>   drm/panel: Add helper for reading DT rotation
+> >>
+> >> Dmitry Osipenko (4):
+> >>   drm/panel: lvds: Set up panel orientation
+> >
+> > IMHO it's perfectly reasonable to report the panel orientation to
+> > userspace, which can apply plane rotation as needed.
+> >
+> > Although I see that this series, alike Derek's, has a couple of issues:
+> >  - only a single panel driver is updated
+> >  - rotation is _not_ listed as supported property, in said panel
+> > driver device-tree bindings
+> >
+> > My personal inclination is that we should aim for a comprehensive solut=
+ion:
+> >  - wire all panel drivers, as currently documented (quick grep list bel=
+ow)
+> >  - document and wire-up the lvds and boe panels - as proposed by you
+> > and Derek respectively
+> >
+> > HTH
+> > Emil
+> >
+> > Documentation/devicetree/bindings/display/himax,hx8357d.txt:2
+> > Documentation/devicetree/bindings/display/ilitek,ili9225.txt:2
+> > Documentation/devicetree/bindings/display/ilitek,ili9341.txt:2
+> > Documentation/devicetree/bindings/display/ilitek,ili9486.yaml:2
+> > Documentation/devicetree/bindings/display/multi-inno,mi0283qt.txt:2
+> > Documentation/devicetree/bindings/display/panel/panel-common.yaml:2
+> > Documentation/devicetree/bindings/display/sitronix,st7586.txt:1
+> > Documentation/devicetree/bindings/display/sitronix,st7735r.yaml:2
+>
+> Rotation is a common DT panel property that is described in the
+> panel-common.yaml.
+The property was introduced almost exclusively for tiny drm panels.
+Those ones are a bit different from the rest (in panel/) -
+MIPI-DBI/SPI w/o (not connected at least) an actual GPU.
 
-commit ebf57440ec59a36e1fc5fe91e31d66ae0d1662d0 upstream.
+To make it a bit better, the rotation is seemingly performed in the
+tiny driver itself ouch.
 
-Some of tests in xfstests failed with cifsd kernel server since commit
-e80ddeb2f70e. cifsd kernel server validates credit charge from client
-by calculating it base on max((InputCount + OutputCount) and
-(MaxInputResponse + MaxOutputResponse)) according to specification.
+> This property is supported by all panel bindings
+> because these bindings inherent the common properties from the
+> panel-common.yaml.
+>
+Seems like that was an unintentional change with the conversion to YAML.
+Beforehand only a few selected panels had rotation. Upon closer look -
+some panels do have follow-up fixes, to remove/limit the implicit
+inclusion.
 
-MS-SMB2 specification describe credit charge calculation of smb2 ioctl :
+Sam seems like you've done most of the YAML conversion. IMHO it would
+make sense to revisit the patches and inherit common properties only
+as applicable.
 
-If Connection.SupportsMultiCredit is TRUE, the server MUST validate
-CreditCharge based on the maximum of (InputCount + OutputCount) and
-(MaxInputResponse + MaxOutputResponse), as specified in section 3.3.5.2.5.
-If the validation fails, it MUST fail the IOCTL request with
-STATUS_INVALID_PARAMETER.
+> I don't think that it makes sense to wire up rotation property to all
+> panel drivers at once because those drivers will be untested, at least I
+> don't know anything about those other panels and can't test them. It
+> will be much better to support the rotation on by as-needed basis for
+> each panel driver individually.
 
-This patch add indatalen that can be a non-zero value to calculation of
-credit charge in SMB2_ioctl_init().
+How about CCing the author and reviewer asking them to test the patch?
+The only place where the patches might cause an issue is with tiny,
+although patches would still be appreciated.
 
-Fixes: e80ddeb2f70e ("smb3: fix incorrect number of credits when ioctl
-MaxOutputResponse > 64K")
-Cc: Stable <stable@vger.kernel.org>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-Cc: Steve French <smfrench@gmail.com>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/cifs/smb2pdu.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -2868,7 +2868,9 @@ SMB2_ioctl_init(struct cifs_tcon *tcon,
- 	 * response size smaller.
- 	 */
- 	req->MaxOutputResponse = cpu_to_le32(max_response_size);
--	req->sync_hdr.CreditCharge = cpu_to_le16(DIV_ROUND_UP(max_response_size, SMB2_MAX_BUFFER_SIZE));
-+	req->sync_hdr.CreditCharge =
-+		cpu_to_le16(DIV_ROUND_UP(max(indatalen, max_response_size),
-+					 SMB2_MAX_BUFFER_SIZE));
- 	if (is_fsctl)
- 		req->Flags = cpu_to_le32(SMB2_0_IOCTL_IS_FSCTL);
- 	else
-
-
+-Emil
