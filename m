@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F66AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69130C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBACB2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4883F2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322019;
-	bh=KERNEO/I/JhTJOE7gZeiLLtKqNd+wcWeZV80AwRWTDw=;
+	s=default; t=1592322023;
+	bh=k/EPgKmRS9L5M2I2PZL9E/xJWe2aJEGIgseTIXXPD9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NazEfypnL3gmtlswdmzHkztg6tzbmdMT/qOX5dfSBB3fK4kHW231I6qSrbE/5jOCX
-	 upLTHnE5SN3XoVgh5vAJWrzEjTMEKq+HQeu+3wk5Znoey7HX2ljve9JcH0MOlJQw7u
-	 2TYStRIeycHC4F3IgirZ8/lKVmvTA/xi9d1MzoaI=
+	b=iTLRIQjusrKRX3iyNsccmC4u85eUEbsV98a/NNlIA1PPD+38YAOVCZhCp54RkbNNE
+	 o/+dY5xTv0FlTrmUh33R7lSYoGnoAfeiBL8plidBhSjsytK5P4lqXFJOxrVr3Kl0WF
+	 EhxGUmqigEVKlJzvQ7N9Bs+/Tq9PKF0G/LJ83hgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731135AbgFPPkT (ORCPT
+        id S1731149AbgFPPkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:40:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54472 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:40:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729815AbgFPPkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:40:11 -0400
+        id S1730286AbgFPPkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03AA82145D;
-        Tue, 16 Jun 2020 15:40:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F3C820B1F;
+        Tue, 16 Jun 2020 15:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322011;
-        bh=KERNEO/I/JhTJOE7gZeiLLtKqNd+wcWeZV80AwRWTDw=;
+        s=default; t=1592322014;
+        bh=k/EPgKmRS9L5M2I2PZL9E/xJWe2aJEGIgseTIXXPD9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLclMM2WpKM64IouccNwAqVEFe7JiDXN0fFBEKkmH+nb/S+HErDjKFX/t/BIGBpRU
-         mdufUAs5u9iaVVkrOZkVLcEAr/SumDFi1/6vJtqBmdBIPIiJ+WGcIJ5exl90K2cv95
-         M+hFveZMeKkWiU/QsN7J1gO5TE1Ggl9GnVj3ub0o=
+        b=FlIuSXo0NgVc4dR4skiP8BcXkEE7hZtsLqnz4OBssffSr9mEcBZHuvYCXgutQ5pd9
+         wgZhk1pMCOz4S/JzMGewDwJGFeq31lZTnYWBs0qq0QRka06GFVW6fUTxRb2C/jOU/d
+         vDWV3hMpsAcuIXd+GtrFXNRbOmdyoWa0smVZbTWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>,
-        Antonino Daplas <adaplas@pol.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH 5.4 101/134] video: fbdev: w100fb: Fix a potential double free.
-Date:   Tue, 16 Jun 2020 17:34:45 +0200
-Message-Id: <20200616153105.626004585@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 102/134] KVM: nVMX: Skip IBPB when switching between vmcs01 and vmcs02
+Date:   Tue, 16 Jun 2020 17:34:46 +0200
+Message-Id: <20200616153105.675428469@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -62,50 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 18722d48a6bb9c2e8d046214c0a5fd19d0a7c9f6 upstream.
+commit 5c911beff20aa8639e7a1f28988736c13e03ed54 upstream.
 
-Some memory is vmalloc'ed in the 'w100fb_save_vidmem' function and freed in
-the 'w100fb_restore_vidmem' function. (these functions are called
-respectively from the 'suspend' and the 'resume' functions)
+Skip the Indirect Branch Prediction Barrier that is triggered on a VMCS
+switch when running with spectre_v2_user=on/auto if the switch is
+between two VMCSes in the same guest, i.e. between vmcs01 and vmcs02.
+The IBPB is intended to prevent one guest from attacking another, which
+is unnecessary in the nested case as it's the same guest from KVM's
+perspective.
 
-However, it is also freed in the 'remove' function.
+This all but eliminates the overhead observed for nested VMX transitions
+when running with CONFIG_RETPOLINE=y and spectre_v2_user=on/auto, which
+can be significant, e.g. roughly 3x on current systems.
 
-In order to avoid a potential double free, set the corresponding pointer
-to NULL once freed in the 'w100fb_restore_vidmem' function.
-
-Fixes: aac51f09d96a ("[PATCH] w100fb: Rewrite for platform independence")
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Antonino Daplas <adaplas@pol.net>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: <stable@vger.kernel.org> # v2.6.14+
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200506181902.193290-1-christophe.jaillet@wanadoo.fr
+Reported-by: Alexander Graf <graf@amazon.com>
+Cc: KarimAllah Raslan <karahmed@amazon.de>
+Cc: stable@vger.kernel.org
+Fixes: 15d45071523d ("KVM/x86: Add IBPB support")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200501163117.4655-1-sean.j.christopherson@intel.com>
+[Invert direction of bool argument. - Paolo]
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/w100fb.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/vmx/nested.c |    2 +-
+ arch/x86/kvm/vmx/vmx.c    |   18 ++++++++++++++----
+ arch/x86/kvm/vmx/vmx.h    |    3 ++-
+ 3 files changed, 17 insertions(+), 6 deletions(-)
 
---- a/drivers/video/fbdev/w100fb.c
-+++ b/drivers/video/fbdev/w100fb.c
-@@ -588,6 +588,7 @@ static void w100fb_restore_vidmem(struct
- 		memsize=par->mach->mem->size;
- 		memcpy_toio(remapped_fbuf + (W100_FB_BASE-MEM_WINDOW_BASE), par->saved_extmem, memsize);
- 		vfree(par->saved_extmem);
-+		par->saved_extmem = NULL;
- 	}
- 	if (par->saved_intmem) {
- 		memsize=MEM_INT_SIZE;
-@@ -596,6 +597,7 @@ static void w100fb_restore_vidmem(struct
- 		else
- 			memcpy_toio(remapped_fbuf + (W100_FB_BASE-MEM_WINDOW_BASE), par->saved_intmem, memsize);
- 		vfree(par->saved_intmem);
-+		par->saved_intmem = NULL;
- 	}
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -302,7 +302,7 @@ static void vmx_switch_vmcs(struct kvm_v
+ 	cpu = get_cpu();
+ 	prev = vmx->loaded_vmcs;
+ 	vmx->loaded_vmcs = vmcs;
+-	vmx_vcpu_load_vmcs(vcpu, cpu);
++	vmx_vcpu_load_vmcs(vcpu, cpu, prev);
+ 	vmx_sync_vmcs_host_state(vmx, prev);
+ 	put_cpu();
+ 
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1286,10 +1286,12 @@ after_clear_sn:
+ 		pi_set_on(pi_desc);
  }
  
+-void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
++void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
++			struct loaded_vmcs *buddy)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	bool already_loaded = vmx->loaded_vmcs->cpu == cpu;
++	struct vmcs *prev;
+ 
+ 	if (!already_loaded) {
+ 		loaded_vmcs_clear(vmx->loaded_vmcs);
+@@ -1308,10 +1310,18 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu
+ 		local_irq_enable();
+ 	}
+ 
+-	if (per_cpu(current_vmcs, cpu) != vmx->loaded_vmcs->vmcs) {
++	prev = per_cpu(current_vmcs, cpu);
++	if (prev != vmx->loaded_vmcs->vmcs) {
+ 		per_cpu(current_vmcs, cpu) = vmx->loaded_vmcs->vmcs;
+ 		vmcs_load(vmx->loaded_vmcs->vmcs);
+-		indirect_branch_prediction_barrier();
++
++		/*
++		 * No indirect branch prediction barrier needed when switching
++		 * the active VMCS within a guest, e.g. on nested VM-Enter.
++		 * The L1 VMM can protect itself with retpolines, IBPB or IBRS.
++		 */
++		if (!buddy || WARN_ON_ONCE(buddy->vmcs != prev))
++			indirect_branch_prediction_barrier();
+ 	}
+ 
+ 	if (!already_loaded) {
+@@ -1356,7 +1366,7 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 
+-	vmx_vcpu_load_vmcs(vcpu, cpu);
++	vmx_vcpu_load_vmcs(vcpu, cpu, NULL);
+ 
+ 	vmx_vcpu_pi_load(vcpu, cpu);
+ 
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -304,7 +304,8 @@ struct kvm_vmx {
+ };
+ 
+ bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
+-void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu);
++void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
++			struct loaded_vmcs *buddy);
+ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+ int allocate_vpid(void);
+ void free_vpid(int vpid);
 
 
