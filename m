@@ -7,60 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D40C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF95FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7267820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB2D206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IcgNnBPc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mha/1v4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgFPHua (ORCPT
+        id S1727841AbgFPHuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:50:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56990 "EHLO
+        Tue, 16 Jun 2020 03:50:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgFPHts (ORCPT
+        with ESMTP id S1725843AbgFPHts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 03:49:48 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E722C08C5C4
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6DFDC08C5C6
         for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:49:45 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id x11so2617833plo.7
+Received: by mail-pf1-x444.google.com with SMTP id s23so9104428pfh.7
         for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CiCnefOEfqSi7wYDZ0Ly9qFUXTY1JQW6i7HQc69RyoQ=;
-        b=IcgNnBPcUI4XxaHRZv+68h1umX7cyvIMCP36Q7y+O5a5sA6ytY5XtslKRv21o3+cf9
-         X+FMmnNEztj2FpFUzVzclsbAf//w6fXPH21coPI4d9FweeYzdb0yM25T7mcIhl6EITHx
-         x7tTwGEQtIjtktlXFsLdB31FXf9xbkZG5U6Uk=
+        bh=aNHAhNI6ZTS0Tgwm1Tz8nA62WMbjyUFexQ8Av4x5DPE=;
+        b=Mha/1v4ZCwL99EzxQ318yAgdODuTalg/C5a5af5exiokd8c5p7ofhUjPq9F2KXq+2Z
+         y7yP3+k5eNCRMrakWOPlm6eIxB24HvrLbf760fTeCcQu5b/qlXMhpecyVB/F0VkMtoBL
+         zMVf+teQCmyVijKGcfvhfnSjCaUXm3PFBJyUc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CiCnefOEfqSi7wYDZ0Ly9qFUXTY1JQW6i7HQc69RyoQ=;
-        b=rBwVHVdRqQdnQoByhRTE/I36+XIg6n5fuLqiW5bE0PkAlU0yD5bIL+tIc//uDEyjCl
-         dR3n1wZ3DIOibYdM5Jd3JDNb/hGxGzv82VInH9v9DW3PeMlbNlOwLLxkZW8t1Hz3T/6/
-         MPG16S+HCBPan6LnYKzt1Y8rcs4IjLn1557s3CRjHcbqMLZY2NzlUrbPKaGm5ljO4zVn
-         NnbBSBIrFF9u2KWDNjzarn7J+iwvMqRBwitS7vb99rvwGUxIOExzgXOX9+JkQIOlm3sY
-         C5jwrU66l7iSMUFCBu2R7mgnFIGAKOhc983PWbACrvvFgvyQfeSQw/w5foG0obdbORO9
-         H38Q==
-X-Gm-Message-State: AOAM530322daf6cNUDBvIc6PUGsagWf/K+6EktXafKnWpC7AuFmYSKhG
-        ywtAfjAYubmfE9meO2pa2UdmOw==
-X-Google-Smtp-Source: ABdhPJxhW3y6afh5FWceB3QtLHRl8svdq02t3gc51fHES1LTZe4hExYi0JoBBUl7YmojYiOSd5noTw==
-X-Received: by 2002:a17:90a:4d4e:: with SMTP id l14mr1619537pjh.10.1592293784832;
-        Tue, 16 Jun 2020 00:49:44 -0700 (PDT)
+        bh=aNHAhNI6ZTS0Tgwm1Tz8nA62WMbjyUFexQ8Av4x5DPE=;
+        b=iqOJ8GEF6nE6aw4SJE1acko/ZkfzEoWTh6NW/gzmzCirSW/xXK6zNxoIS+AMQygXXg
+         olbqj0+Cl8uE4TtYcqr9xYQ/3ifr9SRzO7yGhoV0WnVc5Xb1znLllOwkk5xX1uHaI4Bt
+         yzPTf5Rc2frc9B1xbLpP/OjspnQ+T56UfUe2tTdEHnU9/Y6DowaOTDHGNR8HMJFpv7AY
+         aUsjx0vd1eCpQe9M0oRrb6iRO77zUFeQVJBV6rvXDmAP29cVZopfyczfF78ekKNa1MGb
+         P3+3k7iopVoKd5A3Lhe//ZuO1iXQZK83DZnVYUpb+E5i+z9W0xmTTAreyPG0H1/7OO0f
+         XRuA==
+X-Gm-Message-State: AOAM532WH/kAsNZRQs3cLn0QEfTNNx3n9j1xInV1+asS7FF9hJ0oODnc
+        FeUGAAk+hw97F9IbW3HbjvxfiQ==
+X-Google-Smtp-Source: ABdhPJxI3CY4yrnJgeIk7sRjLPfxIjZxfINYy/6N9uGIlb1gaIy+PlZdT78JgpuwV7WO9L49REPdQw==
+X-Received: by 2002:aa7:972b:: with SMTP id k11mr1003541pfg.299.1592293785373;
+        Tue, 16 Jun 2020 00:49:45 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z1sm1612258pjz.10.2020.06.16.00.49.42
+        by smtp.gmail.com with ESMTPSA id t76sm14171409pfc.220.2020.06.16.00.49.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 16 Jun 2020 00:49:42 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
         Christian Brauner <christian@brauner.io>,
         Sargun Dhillon <sargun@sargun.me>,
         Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
@@ -68,7 +66,7 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Matthew Wilcox <willy@infradead.org>,
         Andy Lutomirski <luto@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
         Matt Denton <mpdenton@google.com>,
         Chris Palmer <palmer@google.com>,
         Jeffrey Vander Stoep <jeffv@google.com>,
@@ -76,9 +74,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Hehuazhen <hehuazhen@huawei.com>, x86@kernel.org,
         Linux Containers <containers@lists.linux-foundation.org>,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 3/8] seccomp: Introduce SECCOMP_PIN_ARCHITECTURE
-Date:   Tue, 16 Jun 2020 00:49:29 -0700
-Message-Id: <20200616074934.1600036-4-keescook@chromium.org>
+Subject: [PATCH 2/8] seccomp: Use pr_fmt
+Date:   Tue, 16 Jun 2020 00:49:28 -0700
+Message-Id: <20200616074934.1600036-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200616074934.1600036-1-keescook@chromium.org>
 References: <20200616074934.1600036-1-keescook@chromium.org>
@@ -89,117 +87,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For systems that provide multiple syscall maps based on architectures
-(e.g. AUDIT_ARCH_X86_64 and AUDIT_ARCH_I386 via CONFIG_COMPAT), allow
-a fast way to pin the process to a specific syscall mapping, instead of
-needing to generate all filters with an architecture check as the first
-filter action.
+Avoid open-coding "seccomp: " prefixes for pr_*() calls.
 
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Will Drewry <wad@chromium.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/seccomp.h      |  3 +++
- include/uapi/linux/seccomp.h |  1 +
- kernel/seccomp.c             | 37 ++++++++++++++++++++++++++++++++++--
- 3 files changed, 39 insertions(+), 2 deletions(-)
+ kernel/seccomp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
-index babcd6c02d09..6525ddec177a 100644
---- a/include/linux/seccomp.h
-+++ b/include/linux/seccomp.h
-@@ -30,6 +30,9 @@ struct seccomp_filter;
-  */
- struct seccomp {
- 	int mode;
-+#ifdef CONFIG_COMPAT
-+	u32 arch;
-+#endif
- 	atomic_t filter_count;
- 	struct seccomp_filter *filter;
- };
-diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-index c1735455bc53..84e89bb201ae 100644
---- a/include/uapi/linux/seccomp.h
-+++ b/include/uapi/linux/seccomp.h
-@@ -16,6 +16,7 @@
- #define SECCOMP_SET_MODE_FILTER		1
- #define SECCOMP_GET_ACTION_AVAIL	2
- #define SECCOMP_GET_NOTIF_SIZES		3
-+#define SECCOMP_PIN_ARCHITECTURE	4
- 
- /* Valid flags for SECCOMP_SET_MODE_FILTER */
- #define SECCOMP_FILTER_FLAG_TSYNC		(1UL << 0)
 diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index a319700c04c4..43edf53c2d84 100644
+index 0016cad0e605..a319700c04c4 100644
 --- a/kernel/seccomp.c
 +++ b/kernel/seccomp.c
-@@ -268,9 +268,16 @@ static u32 seccomp_run_filters(const struct seccomp_data *sd,
- 			       struct seccomp_filter **match)
- {
- 	u32 ret = SECCOMP_RET_ALLOW;
-+	struct seccomp_filter *f;
-+
-+#ifdef CONFIG_COMPAT
-+	/* Block mismatched architectures. */
-+	if (current->seccomp.arch && current->seccomp.arch != sd->arch)
-+		return SECCOMP_RET_KILL_PROCESS;
-+#endif
-+
- 	/* Make sure cross-thread synced filter points somewhere sane. */
--	struct seccomp_filter *f =
--			READ_ONCE(current->seccomp.filter);
-+	f = READ_ONCE(current->seccomp.filter);
+@@ -13,6 +13,7 @@
+  * Mode 2 allows user-defined system call filters in the form
+  *        of Berkeley Packet Filters/Linux Socket Filters.
+  */
++#define pr_fmt(fmt) "seccomp: " fmt
  
- 	/* Ensure unexpected behavior doesn't result in failing open. */
- 	if (WARN_ON(f == NULL))
-@@ -478,6 +485,11 @@ static inline void seccomp_sync_threads(unsigned long flags)
- 		if (task_no_new_privs(caller))
- 			task_set_no_new_privs(thread);
+ #include <linux/refcount.h>
+ #include <linux/audit.h>
+@@ -1873,7 +1874,7 @@ static int __init seccomp_sysctl_init(void)
  
-+#ifdef CONFIG_COMPAT
-+		/* Copy any pinned architecture. */
-+		thread->seccomp.arch = caller->seccomp.arch;
-+#endif
-+
- 		/*
- 		 * Opt the other thread into seccomp if needed.
- 		 * As threads are considered to be trust-realm
-@@ -1456,6 +1468,20 @@ static long seccomp_get_notif_sizes(void __user *usizes)
- 	return 0;
- }
+ 	hdr = register_sysctl_paths(seccomp_sysctl_path, seccomp_sysctl_table);
+ 	if (!hdr)
+-		pr_warn("seccomp: sysctl registration failed\n");
++		pr_warn("sysctl registration failed\n");
+ 	else
+ 		kmemleak_not_leak(hdr);
  
-+static long seccomp_pin_architecture(void)
-+{
-+#ifdef CONFIG_COMPAT
-+	u32 arch = syscall_get_arch(current);
-+
-+	/* How did you even get here? */
-+	if (current->seccomp.arch && current->seccomp.arch != arch)
-+		return -EBUSY;
-+
-+	current->seccomp.arch = arch;
-+#endif
-+	return 0;
-+}
-+
- /* Common entry point for both prctl and syscall. */
- static long do_seccomp(unsigned int op, unsigned int flags,
- 		       void __user *uargs)
-@@ -1477,6 +1503,13 @@ static long do_seccomp(unsigned int op, unsigned int flags,
- 			return -EINVAL;
- 
- 		return seccomp_get_notif_sizes(uargs);
-+	case SECCOMP_PIN_ARCHITECTURE:
-+		if (flags != 0)
-+			return -EINVAL;
-+		if (uargs != NULL)
-+			return -EINVAL;
-+
-+		return seccomp_pin_architecture();
- 	default:
- 		return -EINVAL;
- 	}
 -- 
 2.25.1
 
