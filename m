@@ -2,135 +2,140 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5972C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADF7208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EA0208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDGj9ezX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETBPxV/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731852AbgFPPnr (ORCPT
+        id S1729884AbgFPPnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:43:47 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24891 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731827AbgFPPnj (ORCPT
+        Tue, 16 Jun 2020 11:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731840AbgFPPnp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592322217;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oKDGWEKwqPpKFVbswFpUDNbyYl/9csGc/AghQtdbXr0=;
-        b=KDGj9ezXb0MATsoFrINZS/KJ9YGE0IRYNuxPqefFDG0loeuHQ0mTUMQlbj21UcRLjKxhjv
-        62b+wbnLFk7COuSJPWNGsYeS4LBp4htdQ+LpYWoytZZ6sWljzIOU3wojamHfPwIFqTzTpF
-        IG4JgtXAbYLlhGpoOWCYbJmI0PF913I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-18RYIHL_PyO2hLSMA5unqA-1; Tue, 16 Jun 2020 11:43:36 -0400
-X-MC-Unique: 18RYIHL_PyO2hLSMA5unqA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5B1910AEA20;
-        Tue, 16 Jun 2020 15:43:34 +0000 (UTC)
-Received: from x2.localnet (ovpn-113-82.phx2.redhat.com [10.3.113.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 777BE1001B07;
-        Tue, 16 Jun 2020 15:43:28 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        zohar@linux.ibm.com, rgb@redhat.com,
-        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] integrity: Add result field in audit message
-Date:   Tue, 16 Jun 2020 11:43:26 -0400
-Message-ID: <41911815.FMGa2a4QOz@x2>
-Organization: Red Hat
-In-Reply-To: <CAHC9VhTmShh8ggdjLKf_ciL6fDt3ZH59BXaXMAgd8LFzqVj6rQ@mail.gmail.com>
-References: <20200613022633.3129-1-nramas@linux.microsoft.com> <CAHC9VhTmShh8ggdjLKf_ciL6fDt3ZH59BXaXMAgd8LFzqVj6rQ@mail.gmail.com>
+        Tue, 16 Jun 2020 11:43:45 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA55DC061573;
+        Tue, 16 Jun 2020 08:43:44 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a127so9675096pfa.12;
+        Tue, 16 Jun 2020 08:43:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=w/Ciov9t0cTutzO4p633r2W+NbASpriMULdDl2xvMIs=;
+        b=ETBPxV/lHGvYByFysF/yMcA65AniTR6zZ9T49f5VlQX+ut3BMhgHsDD3Thg75xLWO/
+         ghmsqvPijrBOnLbVTeJTqE5URxBseYBquqfwJ3YtwsPpLA7037fNK7CvF9EPYew4dSwZ
+         PH2s8pDzIMkrmEj1GCF/v3P6EZUpYEcEbEaPh1Qqg5iKDK+nv4zuS5Hlmj4JAEQ7zFFD
+         FwK/1WVrh9TeGJn/d44S3QAklh9xdDf6wcQJ6ngVWdiACQJBTtzsOcpeMIDXSg0+ZTw5
+         n+qJTSTQohvZj0L2hd7/ftJLoZR7B3bSYU7SfcQkHis1uJsVrS9W1Detdr6RbQFJF+y5
+         PiyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=w/Ciov9t0cTutzO4p633r2W+NbASpriMULdDl2xvMIs=;
+        b=TT3PZ+CMkbUNhP7Pz2Hb43XeSaQbYMuKyVO92t86kxYagtqrp11OsIWYnqKszdAUtb
+         0TR7coLLzyxZdv1o4Cicixf/J+vBxKb0kfMZt2zSRtpe9XKk+TqRPBPrQUPL14ThZ8m/
+         6pJUfXpP4+y/jUblQe35E1coTNsaTRxgrr6ZXqlQSnjP/1Q6pwoFpq/jwd9gB6iaS/HM
+         BZMeXmPH9Y/gFeZaWgBlr71CRO5E/EM9+e1QnfdxtDhx0g6BjTaTWS8EelRw5Z/gJmiC
+         QnAreucsJw4pnSwyfB0zpYLOTo+RmCPbbTxvHZlMFq8gHJkP9tBUVI4eKqctqscxOrge
+         XRxA==
+X-Gm-Message-State: AOAM5315x+SIuE+o/Puq+bztuyJ24ykPg4ks2iySEwQ0NPMf+MMsZg9G
+        lvux9HdkorUm3F51NvimtRmvcy/Q
+X-Google-Smtp-Source: ABdhPJxv0IaKwMnUpXyDzneEw/MpLUyX/yRRHSZQW5/Fq5lXhvaDPw8QVhhoEQjI8jabz0B6vg+7NA==
+X-Received: by 2002:a63:3c16:: with SMTP id j22mr2611605pga.335.1592322224256;
+        Tue, 16 Jun 2020 08:43:44 -0700 (PDT)
+Received: from sultan-box.localdomain ([89.45.90.111])
+        by smtp.gmail.com with ESMTPSA id c194sm17199948pfc.212.2020.06.16.08.43.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 08:43:43 -0700 (PDT)
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+X-Google-Original-From: Sultan Alsawaf
+To:     jarkko.nikula@linux.intel.com
+Cc:     aaron.ma@canonical.com, admin@kryma.net,
+        andriy.shevchenko@linux.intel.com, benjamin.tissoires@redhat.com,
+        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
+        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, sultan@kerneltoast.com,
+        vicamo.yang@canonical.com, wsa@kernel.org
+Subject: [PATCH v2] i2c: designware: Only check the first byte for SMBus block read length
+Date:   Tue, 16 Jun 2020 08:43:28 -0700
+Message-Id: <20200616154328.2866-1-sultan@kerneltoast.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <9782f44e-4e01-4e5d-cc50-ab9e2219085c@linux.intel.com>
+References: <9782f44e-4e01-4e5d-cc50-ab9e2219085c@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, June 15, 2020 6:51:22 PM EDT Paul Moore wrote:
-> On Fri, Jun 12, 2020 at 10:26 PM Lakshmi Ramasubramanian
-> 
-> <nramas@linux.microsoft.com> wrote:
-> > Result code is not included in the audit messages logged by
-> > the integrity subsystem. Add "result" field in the audit messages
-> > logged by the integrity subsystem and set the value to the result code
-> > passed to integrity_audit_msg() in the "result" parameter.
-> > 
-> > Sample audit message:
-> > 
-> > [    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0
-> > auid=4294967295 ses=4294967295 subj=kernel op=add_boot_aggregate
-> > cause=alloc_entry comm="swapper/0" name="boot_aggregate" res=0
-> > result=-12
-> > 
-> > [    8.085456] audit: type=1802 audit(1592005947.297:9): pid=1 uid=0
-> > auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0
-> > op=policy_update cause=completed comm="systemd" res=1 result=0
-> > 
-> > Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> > Suggested-by: Steve Grubb <sgrubb@redhat.com>
-> > ---
-> > 
-> >  security/integrity/integrity_audit.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> If we can't use "res=" to carry more than 0/1 then this seems reasonable.
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-Paul,
+SMBus block reads can be broken because the read function will just skip
+over bytes it doesn't like until reaching a byte that conforms to the
+length restrictions for block reads. This is problematic when it isn't
+known if the incoming payload is indeed a conforming block read.
 
-But we can't do this. The field name dictionary says this is used to convey 
-success/fail. It is hard coded in the field interpretation table to look for 
-0/1 and interpret that. Interpeting this field will now produce an error 
-message. And "result" is a searchable field.
+According to the SMBus specification, block reads will only send the
+payload length in the first byte, so we can fix this by only considering
+the first byte in a sequence for block read length purposes.
 
-As I suggested a few emails back, let's just use errno or something not 
-already taken in the dictionary. NACK.
+Fixes: c3ae106050b9 ("i2c: designware: Implement support for SMBus block read and write")
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+---
+ drivers/i2c/busses/i2c-designware-master.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
--Steve
-
-> Acked-by: Paul Moore <paul@paul-moore.com>
-> 
-> > diff --git a/security/integrity/integrity_audit.c
-> > b/security/integrity/integrity_audit.c index 5109173839cc..84002d3d5a95
-> > 100644
-> > --- a/security/integrity/integrity_audit.c
-> > +++ b/security/integrity/integrity_audit.c
-> > @@ -53,6 +53,6 @@ void integrity_audit_msg(int audit_msgno, struct inode
-> > *inode,> 
-> >                 audit_log_untrustedstring(ab, inode->i_sb->s_id);
-> >                 audit_log_format(ab, " ino=%lu", inode->i_ino);
-> >         
-> >         }
-> > 
-> > -       audit_log_format(ab, " res=%d", !result);
-> > +       audit_log_format(ab, " res=%d result=%d", !result, result);
-> > 
-> >         audit_log_end(ab);
-> >  
-> >  }
-> > 
-> > --
-> > 2.27.0
-
-
-
+diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
+index d6425ad6e6a3..d22271438869 100644
+--- a/drivers/i2c/busses/i2c-designware-master.c
++++ b/drivers/i2c/busses/i2c-designware-master.c
+@@ -391,14 +391,10 @@ i2c_dw_recv_len(struct dw_i2c_dev *dev, u8 len)
+ 	struct i2c_msg *msgs = dev->msgs;
+ 	u32 flags = msgs[dev->msg_read_idx].flags;
+ 
+-	/*
+-	 * Adjust the buffer length and mask the flag
+-	 * after receiving the first byte.
+-	 */
++	/* Adjust the buffer length */
+ 	len += (flags & I2C_CLIENT_PEC) ? 2 : 1;
+ 	dev->tx_buf_len = len - min_t(u8, len, dev->rx_outstanding);
+ 	msgs[dev->msg_read_idx].len = len;
+-	msgs[dev->msg_read_idx].flags &= ~I2C_M_RECV_LEN;
+ 
+ 	return len;
+ }
+@@ -430,10 +426,12 @@ i2c_dw_read(struct dw_i2c_dev *dev)
+ 			u32 flags = msgs[dev->msg_read_idx].flags;
+ 
+ 			regmap_read(dev->map, DW_IC_DATA_CMD, &tmp);
+-			/* Ensure length byte is a valid value */
+-			if (flags & I2C_M_RECV_LEN &&
+-			    tmp <= I2C_SMBUS_BLOCK_MAX && tmp > 0) {
+-				len = i2c_dw_recv_len(dev, tmp);
++			if (flags & I2C_M_RECV_LEN) {
++				/* Ensure length byte is a valid value */
++				if (tmp <= I2C_SMBUS_BLOCK_MAX && tmp > 0)
++					len = i2c_dw_recv_len(dev, tmp);
++				/* Mask the flag after receiving the first byte */
++				msgs[dev->msg_read_idx].flags &= ~I2C_M_RECV_LEN;
+ 			}
+ 			*buf++ = tmp;
+ 			dev->rx_outstanding--;
+-- 
+2.27.0
 
