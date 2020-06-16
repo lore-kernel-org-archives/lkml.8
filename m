@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9819EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7402E208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1081121532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322920;
-	bh=wvkG8oLcFXZiSR2IS2+UDxHhiG4WeeVdy5UKKuQIeE8=;
+	s=default; t=1592322933;
+	bh=Qhi5KkPSXLeHybOGv76Qt/SYPAaz5EEHzGOkFjbQqds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqUp9V6jbe69qsGh2vxxuPmVKFe+iJTVahg3Ros+mreuymtX0TK4zZTkmpcEBuvZQ
-	 F4mOz1T3Gsgk6Ui5fIgxQPLfViUXnred50nD0johDRSTEhi6xa+m9JMA8J4L/izGZL
-	 Th1O7dWVhHx7qnuj85j1eOnj//wzBjx5c2cScKWM=
+	b=YQwnG3XpUbd9bKGVa2QO2P5apcCg1A8q9baLzUuIozRgULhQZAqk+hzG3i1MOksn/
+	 X/BY/guT04OVtjXe1cANdI54DnUov8mwjpW7NXf0A8L7T+isgUMc2Q7+LU8YbjSWoT
+	 T6n0d3IEBxaWExVr6rppekr2+2Dia9wFMMFpalN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbgFPPzT (ORCPT
+        id S1732114AbgFPPzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:55:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732745AbgFPPzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:13 -0400
+        id S1733051AbgFPPzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D037221532;
-        Tue, 16 Jun 2020 15:55:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1298D21527;
+        Tue, 16 Jun 2020 15:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322913;
-        bh=wvkG8oLcFXZiSR2IS2+UDxHhiG4WeeVdy5UKKuQIeE8=;
+        s=default; t=1592322905;
+        bh=Qhi5KkPSXLeHybOGv76Qt/SYPAaz5EEHzGOkFjbQqds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eph9299BMkjeABbAN7I7I5+VunYgCIMs99To5u6aeyQxVBRPVUocqwKe7ol9xc4Xf
-         1MgA/Hm9pc+yRtGvymk1TY+h+vuZ/5xaVMVeIuvM9LU+A0WhmfXPjdtfW8C4xKtygF
-         BURMv1Ei36iyAH0EEabW4BFV62vNUmrvr5Fs7Rjw=
+        b=l/axVOy4/qHQXF5ST/8C9N+pcqIMEQoQDLCSDagnK0va1x6ijqryGcFZoNUM/1OKh
+         QixDVZT+nrb9Ip56s+xVbdtCXvP+UuJ+YNRRiwr/T8vvnS4opQ++anuZ7gCmqaeZvQ
+         U1HTiSlQbFDBHIhE54nXsGH0RH8YFLBDGvtBdd9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.6 152/161] mmc: uniphier-sd: call devm_request_irq() after tmio_mmc_host_probe()
-Date:   Tue, 16 Jun 2020 17:35:42 +0200
-Message-Id: <20200616153113.583131562@linuxfoundation.org>
+Subject: [PATCH 5.6 149/161] mmc: sdhci-of-at91: fix CALCR register being rewritten
+Date:   Tue, 16 Jun 2020 17:35:39 +0200
+Message-Id: <20200616153113.438513088@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,60 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-commit 5d1f42e14b135773c0cc1d82e904c5b223783a9d upstream.
+commit dbdea70f71d672c12bc4454e7c258a8f78194d74 upstream.
 
-Currently, tmio_mmc_irq() handler is registered before the host is
-fully initialized by tmio_mmc_host_probe(). I did not previously notice
-this problem.
+When enabling calibration at reset, the CALCR register was completely
+rewritten. This may cause certain bits being deleted unintentedly.
+Fix by issuing a read-modify-write operation.
 
-The boot ROM of a new Socionext SoC unmasks interrupts (CTL_IRQ_MASK)
-somehow. The handler is invoked before tmio_mmc_host_probe(), then
-emits noisy call trace.
-
-Move devm_request_irq() below tmio_mmc_host_probe().
-
-Fixes: 3fd784f745dd ("mmc: uniphier-sd: add UniPhier SD/eMMC controller driver")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: 727d836a375a ("mmc: sdhci-of-at91: add DT property to enable calibration on full reset")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Link: https://lore.kernel.org/r/20200527105659.142560-1-eugen.hristev@microchip.com
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200511062158.1790924-1-yamada.masahiro@socionext.com
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/uniphier-sd.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/mmc/host/sdhci-of-at91.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/uniphier-sd.c
-+++ b/drivers/mmc/host/uniphier-sd.c
-@@ -610,11 +610,6 @@ static int uniphier_sd_probe(struct plat
- 		}
- 	}
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -136,9 +136,12 @@ static void sdhci_at91_reset(struct sdhc
+ 	    || mmc_gpio_get_cd(host->mmc) >= 0)
+ 		sdhci_at91_set_force_card_detect(host);
  
--	ret = devm_request_irq(dev, irq, tmio_mmc_irq, IRQF_SHARED,
--			       dev_name(dev), host);
--	if (ret)
--		goto free_host;
--
- 	if (priv->caps & UNIPHIER_SD_CAP_EXTENDED_IP)
- 		host->dma_ops = &uniphier_sd_internal_dma_ops;
- 	else
-@@ -642,8 +637,15 @@ static int uniphier_sd_probe(struct plat
- 	if (ret)
- 		goto free_host;
- 
-+	ret = devm_request_irq(dev, irq, tmio_mmc_irq, IRQF_SHARED,
-+			       dev_name(dev), host);
-+	if (ret)
-+		goto remove_host;
+-	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL))
+-		sdhci_writel(host, SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
++	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL)) {
++		u32 calcr = sdhci_readl(host, SDMMC_CALCR);
 +
- 	return 0;
++		sdhci_writel(host, calcr | SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
+ 			     SDMMC_CALCR);
++	}
+ }
  
-+remove_host:
-+	tmio_mmc_host_remove(host);
- free_host:
- 	tmio_mmc_host_free(host);
- 
+ static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
 
 
