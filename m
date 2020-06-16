@@ -2,55 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5848320882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56FA3207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323100;
-	bh=SGKlEm4akjwRBtp7JgMewDQ7F6ow21dNEkrsU9VG3ow=;
+	s=default; t=1592323102;
+	bh=H74n6MAvvB1UwVfIs7kkoqmc7JsILcseQ+7gWMFrCa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CmX7stYxslmTK49cDDUZZsPz4toYWu4wrSHYs1C95s6lAGOYGT50ooeAaRvVtTOMy
-	 rwjoOVZ9que+syrlVh94UNVUDi+G09KTDcL+3O9YaA/rdFRx329kBdgaR/G3OEOGfR
-	 4FXcS23GWqCJHxOvref8CA3WfbAmxhcfNAX4HXXY=
+	b=aBF8HcHPYkSaM1SHkcT7pop/OBrAeK3Qtn75sKiuWUnw93GTYEW6HFscdzhb97hfL
+	 KGqhrd3PMQSPuLdxl0VJZjto9us4XukqmW036dRAeVsu9cjhLSeahfOO4SdaDJvmay
+	 2RMzpBhqO06lTk/flY6elQFL3njLkEbd80Qaq/KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733207AbgFPP6S (ORCPT
+        id S1733140AbgFPP6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53680 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732986AbgFPPy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:54:27 -0400
+        id S1732144AbgFPPyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F879208D5;
-        Tue, 16 Jun 2020 15:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A4FD21532;
+        Tue, 16 Jun 2020 15:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322866;
-        bh=SGKlEm4akjwRBtp7JgMewDQ7F6ow21dNEkrsU9VG3ow=;
+        s=default; t=1592322871;
+        bh=H74n6MAvvB1UwVfIs7kkoqmc7JsILcseQ+7gWMFrCa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S01rn2JrDfPAhcfwYHPsKpBLN31eYOpDhBN5K2Uq2tfpK0d2XiXBSbWrMaGtdbkJh
-         iexbsuavrDNRZGoMD+txDp8CTXTQmoHp+CI/e7wg0jsYpwNI8DJNrICJ3ZyuRX+TEl
-         8eCVdqtAhXCZi7INEGwlmeKVJnlAF1ACtiAWjngY=
+        b=x+6fCW27znAQ9LWpeSUDGeZqyeQOSj7o4DwrQDbCovl0nN5UDvtVIpEgCMgq/XqB3
+         ayX920lzRPwsoCbkjKkDWpSjEynAeR8AXfeera6J+BlRHeMiMxsuooWXLEOFfCpnNN
+         +j6qE0Y7XMPVhHcD0ZVLwc9R+b4eyh0ZIjC/m7gg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 105/161] firmware: imx: scu: Fix corruption of header
-Date:   Tue, 16 Jun 2020 17:34:55 +0200
-Message-Id: <20200616153111.360167837@linuxfoundation.org>
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 129/161] KVM: MIPS: Define KVM_ENTRYHI_ASID to cpu_asid_mask(&boot_cpu_data)
+Date:   Tue, 16 Jun 2020 17:35:19 +0200
+Message-Id: <20200616153112.503941539@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -63,72 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Franck LENORMAND <franck.lenormand@nxp.com>
+From: Xing Li <lixing@loongson.cn>
 
-[ Upstream commit f5f27b79eab80de0287c243a22169e4876b08d5e ]
+commit fe2b73dba47fb6d6922df1ad44e83b1754d5ed4d upstream.
 
-The header of the message to send can be changed if the
-response is longer than the request:
- - 1st word, the header is sent
- - the remaining words of the message are sent
- - the response is received asynchronously during the
-   execution of the loop, changing the size field in
-   the header
- - the for loop test the termination condition using
-   the corrupted header
+The code in decode_config4() of arch/mips/kernel/cpu-probe.c
 
-It is the case for the API build_info which has just a
-header as request but 3 words in response.
+        asid_mask = MIPS_ENTRYHI_ASID;
+        if (config4 & MIPS_CONF4_AE)
+                asid_mask |= MIPS_ENTRYHI_ASIDX;
+        set_cpu_asid_mask(c, asid_mask);
 
-This issue is fixed storing the header locally instead of
-using a pointer on it.
+set asid_mask to cpuinfo->asid_mask.
 
-Fixes: edbee095fafb (firmware: imx: add SCU firmware driver support)
+So in order to support variable ASID_MASK, KVM_ENTRYHI_ASID should also
+be changed to cpu_asid_mask(&boot_cpu_data).
 
-Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Stable <stable@vger.kernel.org>  #4.9+
+Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
+Signed-off-by: Xing Li <lixing@loongson.cn>
+[Huacai: Change current_cpu_data to boot_cpu_data for optimization]
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Message-Id: <1590220602-3547-2-git-send-email-chenhc@lemote.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/firmware/imx/imx-scu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/mips/include/asm/kvm_host.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index e94a5585b698..b3da2e193ad2 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -158,7 +158,7 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -275,7 +275,7 @@ enum emulation_result {
+ #define MIPS3_PG_FRAME		0x3fffffc0
  
- static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- {
--	struct imx_sc_rpc_msg *hdr = msg;
-+	struct imx_sc_rpc_msg hdr = *(struct imx_sc_rpc_msg *)msg;
- 	struct imx_sc_chan *sc_chan;
- 	u32 *data = msg;
- 	int ret;
-@@ -166,13 +166,13 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- 	int i;
- 
- 	/* Check size */
--	if (hdr->size > IMX_SC_RPC_MAX_MSG)
-+	if (hdr.size > IMX_SC_RPC_MAX_MSG)
- 		return -EINVAL;
- 
--	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr->svc,
--		hdr->func, hdr->size);
-+	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr.svc,
-+		hdr.func, hdr.size);
- 
--	size = sc_ipc->fast_ipc ? 1 : hdr->size;
-+	size = sc_ipc->fast_ipc ? 1 : hdr.size;
- 	for (i = 0; i < size; i++) {
- 		sc_chan = &sc_ipc->chans[i % 4];
- 
--- 
-2.25.1
-
+ #define VPN2_MASK		0xffffe000
+-#define KVM_ENTRYHI_ASID	MIPS_ENTRYHI_ASID
++#define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
+ #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
+ #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
+ #define TLB_ASID(x)		((x).tlb_hi & KVM_ENTRYHI_ASID)
 
 
