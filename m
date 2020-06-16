@@ -2,110 +2,98 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA120C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBB5208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="DZHrUyxn"
+	by mail.kernel.org (Postfix) with ESMTP id B50C32098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592324402;
+	bh=sY7IOLWrLr9i1xz6QzqOFe7fx2/d/XapJgLK2xiLV58=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ktLEge9aZ1W1O9FaZRePJdRCyfmGGo336eIoPY+KGV/1j7X4dYN0QilU/l4CKcY+W
+	 uhd4/ovY/lqzYbKmOb1EucWz4/doxkb/1md0L2LfW9FhOIfOWk7kELlcJwTOlt4YG/
+	 I1roIencr4LEkTaHiFDNM3B3pVeKywhEn/pD1Y7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732646AbgFPQTv (ORCPT
+        id S1730093AbgFPPgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731856AbgFPQTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:19:44 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F991C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:19:43 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id s28so12643642edw.11
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:19:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hr3yVEPV6lA1nanRTqWI8IJryq24qnnSTFJ14MM/7zs=;
-        b=DZHrUyxnI2wxj8f69u1+U5wzsYX16HUl/aTv7JYK9V6CybdFLK91SGat3bh7Zz5pKw
-         eYWNsiiq8LeeM+qtd7hoZtFM79A0GikMLP2CTK6Vi7ZZ3Pmc8rO8F/88x/U8wjBzFXFN
-         AIPABW4VADwBnv3oGKeg7KUqSBmIPbMNrxfXP5kMM8OMO1Pcj0s8YPKN2cZrU+HnFBrU
-         VqlKs3aaMLtqjjlJwDCST5EVn6wc9W5nXa48X3RPiivOEQlkEzTUg/2yeuO2FyDFZIvX
-         G9k72NLkB0J8o6esTtqZXiRhC3ZF3v+XgQP08ADK7sTgozAKVy3ir0QokMg/k6nW07/+
-         qObQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hr3yVEPV6lA1nanRTqWI8IJryq24qnnSTFJ14MM/7zs=;
-        b=kaoLk2KazO7PTTX9SgkC1zHrq7tLgUBfkZvhYvyB55DckSef04UZEF1mz9eKgWMGpc
-         1vzNXOmS4yAB5wtTXC03eR/kyiaNfbmO2Qi1+NXnD+6ZT4ktoDqOSzJDgxOF8R+mrZB7
-         8j+ScR9ZJLMv5J0rHiMG3SL7QfGoxWLaPMDgSKbeZEbRtyGRts/ydKphSQPoQNY2+ig5
-         alaOYqBlYp6tfXlH9CO1IepmNuUoTpmFVEVgarsvCvCMuFwunMR+6WFxcpmaqEXCndg2
-         sK4pBwJd5YC6O9rgVhtwzMRmMozd4LKGZsj5p83VJXkvgSIuAYr+SR0PyL6AbRaAYUA7
-         enFw==
-X-Gm-Message-State: AOAM531oIPs9bYCWZm1WXPN4m5YfMTfqFhzSqXlv0YRG8xTjfudFrJMt
-        +1bTmLqHbPkz+bTB1zjUYCJLtw==
-X-Google-Smtp-Source: ABdhPJwxZcp1lp6WrQvxCOa4+J+L4Hbhu6KDNsF55SP0s+x799vNFH70u0bmPLYwCTn8NeutUxBsnQ==
-X-Received: by 2002:aa7:d6d0:: with SMTP id x16mr3399666edr.175.1592324382014;
-        Tue, 16 Jun 2020 09:19:42 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id ce25sm10330788edb.45.2020.06.16.09.19.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 09:19:41 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 18:19:39 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH V2] ARM: dts: am335x-pocketbeagle: Fix mmc0 Write Protect
-Message-ID: <20200616161939.GA4007093@x1>
-References: <20200609214521.GB2995279@x1>
- <20200616161024.GC37466@atomide.com>
+        Tue, 16 Jun 2020 11:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730041AbgFPPgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:36:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ABB821475;
+        Tue, 16 Jun 2020 15:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592321803;
+        bh=sY7IOLWrLr9i1xz6QzqOFe7fx2/d/XapJgLK2xiLV58=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y+DoOhTwcWQG1lrsBf+p4L1sh1M2rUtlevdbNUMSugq/HSz54F45rhC2aX4w/EcCH
+         uMM+5ayxldVeqRE2bHy3VYu8Wi64VyHU0cvNSDAoDDhX55tpU1sxanVN5opgzVvK92
+         RlcWjTCijq6X5dEpeEQ8InO+pK4NyEyanenOqOXE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 022/134] RDMA/uverbs: Make the event_queue fds return POLLERR when disassociated
+Date:   Tue, 16 Jun 2020 17:33:26 +0200
+Message-Id: <20200616153101.788743387@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
+References: <20200616153100.633279950@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616161024.GC37466@atomide.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:10:24AM -0700, Tony Lindgren wrote:
-> * Drew Fustini <drew@beagleboard.org> [200609 14:46]:
-> > AM3358 pin mcasp0_aclkr (ZCZ ball B13) [0] is routed to P1.31 header [1]
-> > Mode 4 of this pin is mmc0_sdwp (SD Write Protect).  A signal connected
-> > to P1.31 may accidentally trigger mmc0 write protection.  To avoid this
-> > situation, do not put mcasp0_aclkr in mode 4 (mmc0_sdwp) by default.
-> > 
-> > [0] http://www.ti.com/lit/ds/symlink/am3358.pdf
-> > [1] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#531_Expansion_Headers
-> > 
-> > Fixes: 047905376a16 (ARM: dts: Add am335x-pocketbeagle)
-> > Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > ---
-> > V2 change:
-> > - correct P1.13 to P1.31, apologies for not catching that in V1
-> 
-> Thanks (manually) applying into fixes. Your outgoing mail server has replaced
-> the tabs in the patch with spaces making it not apply FYI.
-> 
-> Regards,
-> 
-> Tony
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-Thanks, Tony.
+[ Upstream commit eb356e6dc15a30af604f052cd0e170450193c254 ]
 
-That is werid about the spaces.  I use mutt to send mail via smtp.google.com
-(beagleboard.org is gsuite).  I'll inspect more closely next time.
+If is_closed is set, and the event list is empty, then read() will return
+-EIO without blocking. After setting is_closed in
+ib_uverbs_free_event_queue(), we do trigger a wake_up on the poll_wait,
+but the fops->poll() function does not check it, so poll will continue to
+sleep on an empty list.
+
+Fixes: 14e23bd6d221 ("RDMA/core: Fix locking in ib_uverbs_event_read")
+Link: https://lore.kernel.org/r/0-v1-ace813388969+48859-uverbs_poll_fix%25jgg@mellanox.com
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/core/uverbs_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+index f2a2d1246c19..adb08c3fc085 100644
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -307,6 +307,8 @@ static __poll_t ib_uverbs_event_poll(struct ib_uverbs_event_queue *ev_queue,
+ 	spin_lock_irq(&ev_queue->lock);
+ 	if (!list_empty(&ev_queue->event_list))
+ 		pollflags = EPOLLIN | EPOLLRDNORM;
++	else if (ev_queue->is_closed)
++		pollflags = EPOLLERR;
+ 	spin_unlock_irq(&ev_queue->lock);
+ 
+ 	return pollflags;
+-- 
+2.25.1
+
+
+
