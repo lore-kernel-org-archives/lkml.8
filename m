@@ -2,102 +2,99 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0582CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D1F2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592300519;
-	bh=Sk4uiVB4B7/+E1RJwwK7lA3+sa9J1bh2Mauaa7YcTGs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z/GGWp5Ep+iMD8hA2gZfvvDesLFH65gzgPKPvAczPt7yNowcwjohAcMDeE9yJiWFo
-	 iopr+5fLR19uC/uVsAO880FWwhmy+beW8smilvGfUP2A+fzAqSuuXWjDBAtbXpSzCr
-	 aYM0dGGJLMqn7GoosXHtXWp4s7aOjX++viO8Vguw=
+	by mail.kernel.org (Postfix) with ESMTP id DF8092078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:42:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgFPJl6 (ORCPT
+        id S1728245AbgFPJm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:41:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbgFPJlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:41:55 -0400
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201D1207BC;
-        Tue, 16 Jun 2020 09:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592300514;
-        bh=Sk4uiVB4B7/+E1RJwwK7lA3+sa9J1bh2Mauaa7YcTGs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uuH6hJ7BzxsYm5ac/1w5A0PPdWJGvffe+XiYFt1N1U4jLkUN/SqqpE7p4nhks72/X
-         wWj5/HjGnQVaGiZpRrFHy2qo57RMQWZt6ScWdYBz4e8ccAN2/kz8Rq/r+us9FwB+kE
-         rK3uK/BdzjNysHtJCXZd2KoUiqOG9d6d2xld1B4w=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Mark Brown <broonie@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Wolfram Sang <wsa@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH v3 2/2] spi: spi-fsl-dspi: Initialize completion before possible interrupt
-Date:   Tue, 16 Jun 2020 11:41:07 +0200
-Message-Id: <1592300467-29196-2-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592300467-29196-1-git-send-email-krzk@kernel.org>
-References: <1592300467-29196-1-git-send-email-krzk@kernel.org>
+        Tue, 16 Jun 2020 05:42:27 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:44190 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgFPJm0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:42:26 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id DC1CE274AC;
+        Tue, 16 Jun 2020 05:42:21 -0400 (EDT)
+Date:   Tue, 16 Jun 2020 19:42:23 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Chris Boot <bootc@boo.tc>
+cc:     linuxppc-dev@lists.ozlabs.org, target-devel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>
+Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
+In-Reply-To: <8da0c285-d707-a3d2-063e-472af5cc560f@boo.tc>
+Message-ID: <alpine.LNX.2.22.394.2006161929380.8@nippy.intranet>
+References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com> <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet> <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc> <alpine.LNX.2.22.394.2006150919110.8@nippy.intranet>
+ <8da0c285-d707-a3d2-063e-472af5cc560f@boo.tc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The interrupt handler calls completion and is IRQ requested before the
-completion is initialized.  Logically it should be the other way.
+On Mon, 15 Jun 2020, Chris Boot wrote:
 
-Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> On 15/06/2020 00:28, Finn Thain wrote:
+> > On Sun, 14 Jun 2020, Chris Boot wrote:
+> > 
+> >> I expect that if someone finds this useful it can stick around (but 
+> >> that's not my call).
+> > 
+> > Who's call is that? If the patch had said "From: Martin K. Petersen" 
+> > and "This driver is being removed because it has the following 
+> > defects..." that would be some indication of a good-faith willingness 
+> > to accept users as developers in the spirit of the GPL, which is what 
+> > you seem to be alluding to (?).
+> 
+> If you're asking me, I'd say it was martin's call:
+> 
+> > SCSI TARGET SUBSYSTEM                                                          
+> > M:      "Martin K. Petersen" <martin.petersen@oracle.com>                      
+> [...]
+> > F:      drivers/target/                                                        
+> > F:      include/target/                                                        
+> 
 
----
+The question I asked you was intended to make you think. I wasn't asking 
+you to search MAINTAINERS for "drivers/target" (I had already done so).
 
-Changes since v2:
-1. None
+Chris, you can find my name in that file too. That's because I see my role 
+as custodian of that particular code. That code lives in the kernel.org 
+tree because others put it there and because users find it useful -- not 
+merely because it happens to please the official glorious MAINTAINER of 
+said code.
 
-Changes since v1:
-1. Rework the commit msg.
----
- drivers/spi/spi-fsl-dspi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If you would ask, "who's call is it to delete drivers/nubus? or 
+drivers/scsi/NCR5380.c?" my answer is, I have no idea.
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 7ecc90ec8f2f..51e0bf617b16 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -1389,6 +1389,8 @@ static int dspi_probe(struct platform_device *pdev)
- 		goto poll_mode;
- 	}
- 
-+	init_completion(&dspi->xfer_done);
-+
- 	ret = request_threaded_irq(dspi->irq, dspi_interrupt, NULL,
- 				   IRQF_SHARED, pdev->name, dspi);
- 	if (ret < 0) {
-@@ -1396,8 +1398,6 @@ static int dspi_probe(struct platform_device *pdev)
- 		goto out_clk_put;
- 	}
- 
--	init_completion(&dspi->xfer_done);
--
- poll_mode:
- 
- 	if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
--- 
-2.7.4
+> >> I just don't have the time or inclination or hardware to be able to 
+> >> maintain it anymore, so someone else would have to pick it up.
+> >>
+> > 
+> > Which is why most drivers get orphaned, right?
+> 
+> Sure, but that's not what Martin asked me to do, hence this patch.
+> 
 
+Martin said, "I'd appreciate a patch to remove it"
+
+And Bart said, "do you want to keep this driver in the kernel tree?"
+
+AFAICT both comments are quite ambiguous. I don't see an actionable 
+request, just an expression of interest from people doing their jobs.
+
+Note well: there is no pay check associated with having a MAINTAINERS file 
+entry.
