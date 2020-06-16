@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF50C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C40C433E0
 	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00699208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0412098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592323820;
-	bh=LHf8gDm6CCyZh1htR8UAvbQLFNdi/dqQI5P0jwFwD2o=;
+	bh=oy8Ne+jeLXvgmLgXt/ubGvSCJ8wk0wvHtZ/C7KZN9qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j4fX6SVX7HZvN7PbvU0Qm3esJe60kfXmuqy1o8kGhVOAybDqTvqu3u32AaulOfam7
-	 iPbSDSDQA9l22NFWgcjgzVRUwdZ05S6Y8kddST3dSOghFkV7gYt29PJnzls9dTQBlJ
-	 ODssRDIOStLxlwykzAwOAcriU88e1L6baQP+t3Bw=
+	b=ws1qKLu81pA4kLAzyJXKf+ZMl84ym43Zij5Z3fa+gJAkxiiQL0q7IvOFVw/5x2ek0
+	 rq29FqfGQNBzf0+EC45GXfcD4zAzgDznHMiHD+R14ftxcB/NuPMjqEb2PVrgP4WGIs
+	 8X+8wA5mYo4wrLnUKhnPWvX8KBiGDnSfIfVZLcAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgFPQKS (ORCPT
+        id S1731417AbgFPPok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731996AbgFPPok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 11:44:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731990AbgFPPoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD9121534;
-        Tue, 16 Jun 2020 15:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE32208D5;
+        Tue, 16 Jun 2020 15:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322280;
-        bh=LHf8gDm6CCyZh1htR8UAvbQLFNdi/dqQI5P0jwFwD2o=;
+        s=default; t=1592322272;
+        bh=oy8Ne+jeLXvgmLgXt/ubGvSCJ8wk0wvHtZ/C7KZN9qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0m8yJdlzvojBACriFCNxQ5UuTQts015aC+EPveYYIquK1B4IYbH9SpkjmWmOvVrvv
-         TvT4F6XDePOBZUfkFRtssD8AVy8UMAQfoobOs8YZtw23/PlR9oqOImRvg/VKBYnxC5
-         xDhBODuH6SHZmE7d5r2G8JSgpKtSC1XhTzMNYiNU=
+        b=MeiBtGWxB1MrZoz6+JuM3F4Uw10rkjYn/m95KPbiL9V+siMeecfWvUGsetiHd6LyS
+         hdg6WJGNh/4J5muXmvHvN/43ZnJHCyBfU0WEhMThy/AwI96O6hhFjWVUyk12wvh4bv
+         IdbFEtGhyNoCgO2UerCRah5QzRzs15SNQbRSDFmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 071/163] ALSA: usb-audio: Add vendor, product and profile name for HP Thunderbolt Dock
-Date:   Tue, 16 Jun 2020 17:34:05 +0200
-Message-Id: <20200616153110.248840190@linuxfoundation.org>
+Subject: [PATCH 5.7 068/163] ALSA: pcm: disallow linking stream to itself
+Date:   Tue, 16 Jun 2020 17:34:02 +0200
+Message-Id: <20200616153110.103210684@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,52 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit 0c5086f5699906ec8e31ea6509239489f060f2dc upstream.
+commit 951e2736f4b11b58dc44d41964fa17c3527d882a upstream.
 
-The HP Thunderbolt Dock has two separate USB devices, one is for speaker
-and one is for headset. Add names for them so userspace can apply UCM
-settings.
+Prevent SNDRV_PCM_IOCTL_LINK linking stream to itself - the code
+can't handle it. Fixed commit is not where bug was introduced, but
+changes the context significantly.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200608062630.10806-1-kai.heng.feng@canonical.com
+Cc: stable@vger.kernel.org
+Fixes: 0888c321de70 ("pcm_native: switch to fdget()/fdput()")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/89c4a2487609a0ed6af3ecf01cc972bdc59a7a2d.1591634956.git.mirq-linux@rere.qmqm.pl
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks-table.h |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ sound/core/pcm_native.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -25,6 +25,26 @@
- 	.idProduct = prod, \
- 	.bInterfaceClass = USB_CLASS_VENDOR_SPEC
- 
-+/* HP Thunderbolt Dock Audio Headset */
-+{
-+	USB_DEVICE(0x03f0, 0x0269),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.vendor_name = "HP",
-+		.product_name = "Thunderbolt Dock Audio Headset",
-+		.profile_name = "HP-Thunderbolt-Dock-Audio-Headset",
-+		.ifnum = QUIRK_NO_INTERFACE
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -2166,6 +2166,12 @@ static int snd_pcm_link(struct snd_pcm_s
+ 	}
+ 	pcm_file = f.file->private_data;
+ 	substream1 = pcm_file->substream;
++
++	if (substream == substream1) {
++		res = -EINVAL;
++		goto _badf;
 +	}
-+},
-+/* HP Thunderbolt Dock Audio Module */
-+{
-+	USB_DEVICE(0x03f0, 0x0567),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.vendor_name = "HP",
-+		.product_name = "Thunderbolt Dock Audio Module",
-+		.profile_name = "HP-Thunderbolt-Dock-Audio-Module",
-+		.ifnum = QUIRK_NO_INTERFACE
-+	}
-+},
- /* FTDI devices */
- {
- 	USB_DEVICE(0x0403, 0xb8d8),
++
+ 	group = kzalloc(sizeof(*group), GFP_KERNEL);
+ 	if (!group) {
+ 		res = -ENOMEM;
 
 
