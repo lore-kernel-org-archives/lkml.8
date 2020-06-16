@@ -2,175 +2,155 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA04C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741562074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62C5F20810
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XaG+e2qq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L074jNjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgFPGT4 (ORCPT
+        id S1726993AbgFPGXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:19:56 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:12906 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725775AbgFPGTz (ORCPT
+        Tue, 16 Jun 2020 02:23:04 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53670 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725775AbgFPGXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:19:55 -0400
-X-UUID: 993fc058fd8d4f17803f657b693ff5a2-20200616
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=W/ueputhDRkRPjBhF0TvVzqMTSqLl9GiuJKA6uNs9+c=;
-        b=XaG+e2qqIXL5d/DS0WB+Imw+s446JAvXj7No0oGDhmxMv4zqCfvyoDkgqOa5iOO7zflqYYZPDY2ElBD1aO+lrLrDGOH3p3D7cpyL5mJen7hsFblxVG53Oc/nuybXWVkrIY1cssPagz9e/PxrBZ/NNXdX0vsp7ecIpDyaDVbk0zU=;
-X-UUID: 993fc058fd8d4f17803f657b693ff5a2-20200616
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1161711656; Tue, 16 Jun 2020 14:19:48 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 16 Jun 2020 14:19:48 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 16 Jun 2020 14:19:42 +0800
-Message-ID: <1592288387.18012.8.camel@mtkswgap22>
-Subject: Re: [PATCH 2/2] soc: mediatek: devapc: add devapc-mt6873 driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 16 Jun 2020 14:19:47 +0800
-In-Reply-To: <CAAOTY_-T7L5Cj3UOXDgwTo7jGw+PbcM9Fyy9StX35PwU533zLQ@mail.gmail.com>
-References: <1591698261-22639-1-git-send-email-neal.liu@mediatek.com>
-         <1591698261-22639-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_-T7L5Cj3UOXDgwTo7jGw+PbcM9Fyy9StX35PwU533zLQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 16 Jun 2020 02:23:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592288582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8VH7R/DoU62ut+esRu7Hjq7cJgKyK7i23Q0GKINZbgM=;
+        b=L074jNjqCzjBqcI21Lh8nf+zRILP45p/Lg2LNjOQLEoZ22hJ4qgUmHRqyJgmUuFTMXG0wD
+        dSJggUtqfl38Ysfb3ZlA+u5MKSUUhf41tgUM1hlPBXnO5vRStDjzU48GO2xjmPMZXgxV7V
+        MdKrIF8XVqTtmPSj/4al0oWcEY4jvVk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-224-dV-6KyFgPMiZJmzQP3PJeQ-1; Tue, 16 Jun 2020 02:22:58 -0400
+X-MC-Unique: dV-6KyFgPMiZJmzQP3PJeQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 057271085945;
+        Tue, 16 Jun 2020 06:22:57 +0000 (UTC)
+Received: from [10.72.13.124] (ovpn-13-124.pek2.redhat.com [10.72.13.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72FE71001901;
+        Tue, 16 Jun 2020 06:22:46 +0000 (UTC)
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+ <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b45e321a-5acb-9be2-4cd6-ae75d7f78f05@redhat.com>
+Date:   Tue, 16 Jun 2020 14:22:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gTW9uLCAyMDIwLTA2LTE1IGF0IDIzOjUxICswODAwLCBDaHVu
-LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0NuaciDnml6Ug6YCx5LqMIOS4i+WNiDY6MjXlr6vpgZPv
-vJoNCj4gPg0KPiA+IE1UNjg3MyBidXMgZnJhYnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2VjdXJp
-dHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJv
-bSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVjdGVkDQo+ID4gbWFzdGVycy4NCj4gPiBUaGUgc2Vj
-dXJpdHkgdmlvbGF0aW9ucyBhcmUgbG9nZ2VkIGFuZCBzZW50IHRvIHRoZSBwcm9jZXNzb3IgZm9y
-DQo+ID4gZnVydGhlciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4NCj4gPiBBbnkg
-b2NjdXJyZW5jZSBvZiBzZWN1cml0eSB2aW9sYXRpb24gd291bGQgcmFpc2UgYW4gaW50ZXJydXB0
-LCBhbmQNCj4gPiBpdCB3aWxsIGJlIGhhbmRsZWQgYnkgZGV2YXBjLW10Njg3MyBkcml2ZXIuIFRo
-ZSB2aW9sYXRpb24NCj4gPiBpbmZvcm1hdGlvbiBpcyBwcmludGVkIGluIG9yZGVyIHRvIGZpbmQg
-dGhlIG11cmRlcmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTmVhbCBMaXUgPG5lYWwubGl1
-QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArICAgICAgIHsx
-LCAwLCAyMiwgIk1NU1lTIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgMSwgMjMsICJNTVNZU19E
-SVNQIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgMiwgMjQsICJTTUkiLCB0cnVlfSwNCj4gPiAr
-ICAgICAgIHsxLCAzLCAyNSwgIlNNSSIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDQsIDI2LCAi
-U01JIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgNSwgMjcsICJNTVNZU19ESVNQIiwgdHJ1ZX0s
-DQo+ID4gKyAgICAgICB7MSwgNiwgMjgsICJNTVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4gKw0KPiA+
-ICsgICAgICAgLyogMzAgKi8NCj4gPiArICAgICAgIHsxLCA3LCAyOSwgIk1NU1lTX0RJU1AiLCB0
-cnVlfSwNCj4gPiArICAgICAgIHsxLCA4LCAzMCwgIk1NU1lTX0RJU1AiLCB0cnVlfSwNCj4gPiAr
-ICAgICAgIHsxLCA5LCAzMSwgIk1NU1lTX0RJU1AiLCB0cnVlfSwNCj4gPiArICAgICAgIHsxLCAx
-MCwgMzIsICJNTVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgMTEsIDMzLCAiTU1T
-WVNfRElTUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDEyLCAzNCwgIk1NU1lTX0RJU1AiLCB0
-cnVlfSwNCj4gPiArICAgICAgIHsxLCAxMywgMzUsICJNTVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4g
-KyAgICAgICB7MSwgMTQsIDM2LCAiTU1TWVNfRElTUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEs
-IDE1LCAzNywgIk1NU1lTX0RJU1AiLCB0cnVlfSwNCj4gPiArICAgICAgIHsxLCAxNiwgMzgsICJN
-TVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4gKw0KPiA+ICsgICAgICAgLyogNDAgKi8NCj4gPiArICAg
-ICAgIHsxLCAxNywgMzksICJNTVNZU19ESVNQIiwgdHJ1ZX0sDQo+ID4gKyAgICAgICB7MSwgMTgs
-IDQwLCAiTU1TWVNfRElTUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDE5LCA0MSwgIk1NU1lT
-X0RJU1AiLCB0cnVlfSwNCj4gPiArICAgICAgIHsxLCAyMCwgNDIsICJNTVNZU19ESVNQIiwgdHJ1
-ZX0sDQo+ID4gKyAgICAgICB7MSwgMjEsIDQzLCAiTU1TWVNfRElTUCIsIHRydWV9LA0KPiA+ICsg
-ICAgICAgezEsIDIyLCA0NCwgIk1NU1lTX0RJU1AiLCB0cnVlfSwNCj4gDQo+IEkgdGhpbmsgdGhl
-IGRldmljZSBuYW1lLCBzdWNoIGFzICJNTVNZU19ESVNQIiBkb2VzIG5vdCBoZWxwIGZvciBkZWJ1
-Zy4NCj4gV2hlbiBEZXZBUEMgcHJpbnQgIk1NU1lTX0RJU1AiIGhhcyBlcnJvciwgaG93IGRvZXMg
-dXMga25vdyB0aGF0IHRvIGRvDQo+IG5leHQ/IFdIRVJFIGlzIHRoZSBjb2RlIG1heSByZWxhdGVk
-IHRvIHRoaXMgZXJyb3IsIGFuZCBXSE8gc2hvdWxkIHVzDQo+IHRvIGZpbmQgaGVscD8gSSB0aGlu
-ayB3ZSBqdXN0IG5lZWQgdmlvIGFkZHJlc3MuIFVzaW5nIG10ODE3MyBmb3INCj4gZXhhbXBsZSwg
-aWYgdGhlIHZpbyBhZGRyZXNzIGlzIDB4MTQwMGQwM2MsIHdlIGNvdWxkIGZpbmQgdGhlIGRldmlj
-ZSBpbg0KPiBtdDgxNzMuZHRzaSBbMV0sDQo+IA0KPiBvdmwxOiBvdmxAMTQwMGQwMDAgew0KPiAg
-ICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRpc3Atb3ZsIjsNCj4gICAgICAg
-ICByZWcgPSA8MCAweDE0MDBkMDAwIDAgMHgxMDAwPjsNCj4gfTsNCj4gDQo+IHdlIGNvdWxkIGtu
-b3cgZXJyb3Igb2NjdXIgaW4gb3ZsMSwgYW5kIHdlIGNvdWxkIGZpbmQgdGhlIGNvbXBhdGlibGUN
-Cj4gc3RyaW5nICJtZWRpYXRlayxtdDgxNzMtZGlzcC1vdmwiIGluDQo+IGRyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jLCBzbyB3ZSBrbm93IFdIRVJFIGlzIHRoZSBjb2RlDQo+
-IG1heSByZWxhdGVkIHRvIHRoaXMgZXJyb3IuIEFuZCB3ZSBjb3VsZCBmaW5kIG1haW50YWluZXIg
-bGlzdCBbMl0gdG8NCj4gZmluZCBvdXQgdGhlIG1haW50YWluZXIgb2YgdGhpcyBjb2RlOg0KPiAN
-Cj4gRFJNIERSSVZFUlMgRk9SIE1FRElBVEVLDQo+IE06IENodW4tS3VhbmcgSHUgPGNodW5rdWFu
-Zy5odUBrZXJuZWwub3JnPg0KPiBNOiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4
-LmRlPg0KPiBMOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+IFM6IFN1cHBvcnRl
-ZA0KPiBGOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRl
-ay8NCj4gRjogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrLw0KPiANCj4gYW5kIHdlIGtub3cgZmlu
-ZCBXSE8gZm9yIGhlbHAuDQo+IFNvIEkgdGhpbmsgd2Ugc2hvdWxkIGRyb3AgZGV2aWNlIG5hbWUg
-YW5kIGp1c3QgcHJpbnQgdmlvIGFkZHJlc3MgaXMNCj4gZW5vdWdoIGZvciBkZWJ1Zy4NCj4gDQo+
-IFsxXSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2
-YWxkcy9saW51eC5naXQvdHJlZS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5k
-dHNpP2g9djUuOC1yYzENCj4gWzJdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51
-eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL01BSU5UQUlORVJTP2g9djUuOC1y
-YzENCj4gDQoNCllvdSBhcmUgcmlnaHQuIFRoaXMgaXMgYSB3YXkgdG8gZmluZCBXSE8gY2FuIGhl
-bHAgdGhpcyBpc3N1ZS4NCldlIGludGVncmF0ZWQgb3VyIGludGVybmFsIGRlYnVnIHN5c3RlbSB3
-aXRoIGRldmljZSBuYW1lLCBhbmQgaXQgY2FuDQpoZWxwIHVzIHRvIGZpbmQgbW9kdWxlIG93bmVy
-IGF1dG9tYXRpY2FsbHkgaW5zdGVhZCBvZiBzZWFyY2hpbmcgZHRzIGFuZA0Kc291cmNlIGNvZGUg
-bWFudWFsbHkuDQpCdXQgdGhpcyBraW5kcyBvZiBkZWJ1Z2dpbmcgZmxvdyBpcyBub3QgbmVjZXNz
-YXJ5IGZvciB1cHN0cmVhbS4gSSdsbCB0cnkNCnRvIHJlbW92ZSBpdC4NCg0KPiA+ICsgICAgICAg
-ezEsIDIzLCA0NSwgIk1NU1lTX01EUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDI0LCA0Niwg
-Ik1NU1lTX01EUCIsIHRydWV9LA0KPiA+ICsgICAgICAgezEsIDI1LCA0NywgIk1NU1lTX01EUCIs
-IHRydWV9LA0KPiA+ICsgICAgICAgezEsIDI2LCA0OCwgIk1NU1lTX01EUCIsIHRydWV9LA0KPiA+
-ICsNCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gK2ludCBtdGtfZGV2YXBjX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIHN0cnVjdCBtdGtfZGV2YXBjX3NvYyAqc29jKQ0K
-PiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBwZGV2LT5kZXYu
-b2Zfbm9kZTsNCj4gPiArICAgICAgIHUzMiBzbGF2ZV90eXBlX251bTsNCj4gPiArICAgICAgIGlu
-dCBzbGF2ZV90eXBlOw0KPiA+ICsgICAgICAgaW50IHJldDsNCj4gPiArDQo+ID4gKyAgICAgICBp
-ZiAoSVNfRVJSKG5vZGUpKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4g
-PiArDQo+ID4gKyAgICAgICBtdGtfZGV2YXBjX2N0eC0+c29jID0gc29jOw0KPiA+ICsgICAgICAg
-c2xhdmVfdHlwZV9udW0gPSBtdGtfZGV2YXBjX2N0eC0+c29jLT5zbGF2ZV90eXBlX251bTsNCj4g
-PiArDQo+ID4gKyAgICAgICBmb3IgKHNsYXZlX3R5cGUgPSAwOyBzbGF2ZV90eXBlIDwgc2xhdmVf
-dHlwZV9udW07IHNsYXZlX3R5cGUrKykgew0KPiA+ICsgICAgICAgICAgICAgICBtdGtfZGV2YXBj
-X2N0eC0+ZGV2YXBjX3BkX2Jhc2Vbc2xhdmVfdHlwZV0gPQ0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIG9mX2lvbWFwKG5vZGUsIHNsYXZlX3R5cGUpOw0KPiA+ICsgICAgICAgICAgICAgICBp
-ZiAoIW10a19kZXZhcGNfY3R4LT5kZXZhcGNfcGRfYmFzZVtzbGF2ZV90eXBlXSkNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArICAgICAgIH0NCj4gPiAr
-DQo+ID4gKyAgICAgICBtdGtfZGV2YXBjX2N0eC0+aW5mcmFjZmdfYmFzZSA9IG9mX2lvbWFwKG5v
-ZGUsIHNsYXZlX3R5cGVfbnVtICsgMSk7DQo+ID4gKyAgICAgICBpZiAoIW10a19kZXZhcGNfY3R4
-LT5pbmZyYWNmZ19iYXNlKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4g
-PiArDQo+ID4gKyAgICAgICBtdGtfZGV2YXBjX2N0eC0+ZGV2YXBjX2lycSA9IGlycV9vZl9wYXJz
-ZV9hbmRfbWFwKG5vZGUsIDApOw0KPiA+ICsgICAgICAgaWYgKCFtdGtfZGV2YXBjX2N0eC0+ZGV2
-YXBjX2lycSkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gKw0KPiA+
-ICsgICAgICAgLyogQ0NGIChDb21tb24gQ2xvY2sgRnJhbWV3b3JrKSAqLw0KPiA+ICsgICAgICAg
-bXRrX2RldmFwY19jdHgtPmRldmFwY19pbmZyYV9jbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRl
-diwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICJkZXZhcGMtaW5mcmEtY2xvY2siKTsNCj4gPiArDQo+ID4gKyAgICAgICBpZiAoSVNf
-RVJSKG10a19kZXZhcGNfY3R4LT5kZXZhcGNfaW5mcmFfY2xrKSkNCj4gPiArICAgICAgICAgICAg
-ICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gKw0KPiA+ICsgICAgICAgcHJvY19jcmVhdGUoImRldmFw
-Y19kYmciLCAwNjY0LCBOVUxMLCAmZGV2YXBjX2RiZ19mb3BzKTsNCj4gDQo+IEkgdGhpbmsgZGVi
-dWdmcyBpcyBub3QgYSBiYXNpYyBmdW5jdGlvbiwgc28gbW92ZSBkZWJ1Z2ZzIGZ1bmN0aW9uIHRv
-DQo+IGFub3RoZXIgcGF0Y2guDQo+IA0KDQpPa2F5LCBJJ2xsIHRyeSB0byByZW1vdmUgYW5kIHVw
-c3RyZWFtIGFnYWluLg0KDQo+IFJlZ2FyZHMsDQo+IENodW4tS3VhbmcuDQo+IA0KPiA+ICsNCj4g
-PiArICAgICAgIGlmIChjbGtfcHJlcGFyZV9lbmFibGUobXRrX2RldmFwY19jdHgtPmRldmFwY19p
-bmZyYV9jbGspKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArDQo+
-ID4gKyAgICAgICBzdGFydF9kZXZhcGMoKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXQgPSBkZXZt
-X3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYsIG10a19kZXZhcGNfY3R4LT5kZXZhcGNfaXJxLA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoaXJxX2hhbmRsZXJfdClkZXZhcGNfdmlv
-bGF0aW9uX2lycSwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSVJRRl9UUklH
-R0VSX05PTkUsICJkZXZhcGMiLCBOVUxMKTsNCj4gPiArICAgICAgIGlmIChyZXQpIHsNCj4gPiAr
-ICAgICAgICAgICAgICAgcHJfZXJyKFBGWCAicmVxdWVzdCBkZXZhcGMgaXJxIGZhaWxlZCwgcmV0
-OiVkXG4iLCByZXQpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAg
-ICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiAwOw0KPiA+ICt9DQo+ID4gK0VYUE9SVF9T
-WU1CT0xfR1BMKG10a19kZXZhcGNfcHJvYmUpOw0KPiA+ICsNCj4gPg0KDQo=
+
+On 2020/6/15 下午8:39, Pierre Morel wrote:
+> An architecture protecting the guest memory against unauthorized host
+> access may want to enforce VIRTIO I/O device protection through the
+> use of VIRTIO_F_IOMMU_PLATFORM.
+>
+> Let's give a chance to the architecture to accept or not devices
+> without VIRTIO_F_IOMMU_PLATFORM.
+>
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+
+> ---
+>   arch/s390/mm/init.c     | 6 ++++++
+>   drivers/virtio/virtio.c | 9 +++++++++
+>   include/linux/virtio.h  | 2 ++
+>   3 files changed, 17 insertions(+)
+>
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 87b2d024e75a..3f04ad09650f 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -46,6 +46,7 @@
+>   #include <asm/kasan.h>
+>   #include <asm/dma-mapping.h>
+>   #include <asm/uv.h>
+> +#include <linux/virtio.h>
+>   
+>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>   
+> @@ -162,6 +163,11 @@ bool force_dma_unencrypted(struct device *dev)
+>   	return is_prot_virt_guest();
+>   }
+>   
+> +int arch_needs_iommu_platform(struct virtio_device *dev)
+> +{
+> +	return is_prot_virt_guest();
+> +}
+> +
+>   /* protected virtualization */
+>   static void pv_init(void)
+>   {
+> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> index a977e32a88f2..30091089bee8 100644
+> --- a/drivers/virtio/virtio.c
+> +++ b/drivers/virtio/virtio.c
+> @@ -167,6 +167,11 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
+>   }
+>   EXPORT_SYMBOL_GPL(virtio_add_status);
+>   
+> +int __weak arch_needs_iommu_platform(struct virtio_device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+>   int virtio_finalize_features(struct virtio_device *dev)
+>   {
+>   	int ret = dev->config->finalize_features(dev);
+> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
+>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+>   		return 0;
+>   
+> +	if (arch_needs_iommu_platform(dev) &&
+> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+> +		return -EIO;
+> +
+>   	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
+>   	status = dev->config->get_status(dev);
+>   	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> index a493eac08393..2c46b310c38c 100644
+> --- a/include/linux/virtio.h
+> +++ b/include/linux/virtio.h
+> @@ -195,4 +195,6 @@ void unregister_virtio_driver(struct virtio_driver *drv);
+>   #define module_virtio_driver(__virtio_driver) \
+>   	module_driver(__virtio_driver, register_virtio_driver, \
+>   			unregister_virtio_driver)
+> +
+> +int arch_needs_iommu_platform(struct virtio_device *dev);
+>   #endif /* _LINUX_VIRTIO_H */
 
