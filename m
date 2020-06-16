@@ -2,100 +2,133 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899C820810
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592290986;
-	bh=air/hKC0z5+Ttcp0buy/L1uE6RcyvZHYqvLAfZqOw5w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1uG9hEUMGr7uGYH0VPFU7VfIcVsLideenYRklvdEgy28dgS7RMVY3DxIDS0M/cC3z
-	 psZeIy5005tcJootK8my0Docz2CThiqH7SC4qiyxq55LAhA82PIn+DcqYRTrb3Htj1
-	 pD90pVWYqe58Y8i1/qoXTwg2fR2FI5Jmn2ddq+O0=
+	by mail.kernel.org (Postfix) with ESMTP id 4C58820882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYYMuveh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgFPHDF (ORCPT
+        id S1726511AbgFPHGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:03:05 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:41125 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgFPHDB (ORCPT
+        Tue, 16 Jun 2020 03:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgFPHGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:03:01 -0400
-Received: by mail-ej1-f65.google.com with SMTP id dp18so2100945ejc.8;
-        Tue, 16 Jun 2020 00:02:59 -0700 (PDT)
+        Tue, 16 Jun 2020 03:06:06 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97DDC05BD43;
+        Tue, 16 Jun 2020 00:06:06 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i25so434456iog.0;
+        Tue, 16 Jun 2020 00:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:message-id:in-reply-to:references:subject:mime-version
+         :content-transfer-encoding;
+        bh=7UYkh8B3Fgzwx1rQ3OeB4igDdNX76egtj7f9JC6lupI=;
+        b=OYYMuvehv/qPMmliSCDYK5QkafZl2sPnKeKmHj8GLN1GKJykOCKee0EQFmDR4rhhyr
+         Hu4tnAFyWvABeM2j9ATpoj8htmFRFD9XufGunYw+0cZDPg6IN3Wnwq0iThzuXxF6YgrM
+         F7IUv0QoOzG5l7kzjaF+ucbyQg3MGv9KvXrqJuzV62Et0VnBusvmq6qWozV4ULNHZUe+
+         fkKXal0X5pFSA5UshG6yRt3dVjTWL/6twoZliH/AfuJJ6ds+I6Xibo9+jcdqFzhDPMJV
+         hfz0/W3ZE/BkgfnjbWOL0xK2nFN68O8DjMpJa9C7Q4GsZ9xenEKVBQ5znwUkdcNWn48w
+         kkpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W+RINVE0XAWlLx/NciRZL3CxZwQ8/XrClWGZWDn4nfE=;
-        b=SUl4rQGIHivhb71P38XTo3bb5chjpqgajocfue2hqT6SnY6ArjPxgQTExOnU4iZ5b6
-         QX2QjT8b6UOVGPN0ikVzyb93tmRiuHXZzz7iFdjSk2lJSp92QghQMckn5Bd0No/eaJ95
-         SqjC0vjQl/DkBkBv757gP3kgdLTTZux1+/M64fB4lQWS658ZsRs3+xG8wxCA5MDktY/3
-         tVDlK3IDx/bd1qtPARuNae+XlpV6SKp/ya4qsQpednwqot+T2QVWF9l/uzgr+VfOtomv
-         mCPTHv6kir7GauYdNwQeYztpU/s/gIzfFxULEc8WGhq6ofHH+ob5EXCWWqVY3kpCLoUS
-         pquA==
-X-Gm-Message-State: AOAM530yjinjsQU8j5BI9o7G+e3IqytlFNG5r/VtiltddsUbPEmNr+yr
-        eRShRpsoO62B1me90lHew6s=
-X-Google-Smtp-Source: ABdhPJxl4oyx9iQxhRGORq2pzdp+iXjssmPRevhLNp+7V95nN07E3myCv4N1zJvRvpw1FVDX/qymKQ==
-X-Received: by 2002:a17:906:4b50:: with SMTP id j16mr1504437ejv.415.1592290978329;
-        Tue, 16 Jun 2020 00:02:58 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id ce14sm10568034ejc.3.2020.06.16.00.02.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Jun 2020 00:02:57 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:02:54 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        linux-samsung-soc@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH RESEND v4] soc: samsung: Add simple voltage coupler for
- Exynos5800
-Message-ID: <20200616070254.GA20282@kozik-lap>
-References: <CGME20200616065834eucas1p268ef16744422664c783b17f0a18c53e2@eucas1p2.samsung.com>
- <20200616065821.29616-1-m.szyprowski@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200616065821.29616-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
+         :subject:mime-version:content-transfer-encoding;
+        bh=7UYkh8B3Fgzwx1rQ3OeB4igDdNX76egtj7f9JC6lupI=;
+        b=WfrX7JnNNj9wpk9oqQ6selDeM3t9FyxkylvZ5ZqBQw6gpSDVIuL5INq8kFT2Gmszpt
+         fyR6WF71eCxz7GbJn/wBa/HoHorQdnX2tnh5Id1Aiuw9qZ2gIbN2B9Uqirx9494vMDTi
+         q2OdEmupFzqm7ISBrmk3IG00M67VGh8C1+a2QvYitDPXodbV98R6bs/zeYf29+c/3OJz
+         wwUcZlwQSQPpKqGuU2brquu1UVKKTTO7l8bDj85pMJPyM5FC/SVu2EIDKqwKZkJDC3ud
+         9NaEGRzgeI3g3wSaA8qNWTypvkJ0OcAQUARwYugDwxgeDL2mCdDIi9HLWEa3MylT2Yoc
+         C8KQ==
+X-Gm-Message-State: AOAM533Ksg7EQBdOBM5OepH9klMYngxREsPpNoU+qihiesOzpvrWch+7
+        8gKJbHF+b2ma3FuGTifrOes=
+X-Google-Smtp-Source: ABdhPJxo3yD7pmXL10U/+JtXAVaSOVZFsi1kh/FOJ+i5Ph63gDHX7AwLfZMQBRplKiCsZasV/bjIwQ==
+X-Received: by 2002:a5e:d90c:: with SMTP id n12mr1611376iop.144.1592291165839;
+        Tue, 16 Jun 2020 00:06:05 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id j80sm9681504ili.65.2020.06.16.00.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 00:06:05 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 00:05:58 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Gaurav Singh <gaurav1086@gmail.com>, gaurav1086@gmail.com,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        "(open list:BPF \\(Safe dynamic programs and tools\\))" 
+        <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org (open list:BPF \(Safe dynamic programs and tools\)),
+        "(open list:BPF \\(Safe dynamic programs and tools\\) open list)" 
+        <linux-kernel@vger.kernel.org>
+Message-ID: <5ee86f561cff7_4be02ab1b668a5b4e2@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200614184102.30992-1-gaurav1086@gmail.com>
+References: <20200614184102.30992-1-gaurav1086@gmail.com>
+Subject: RE: [PATCH] [bpf] xdp_monitor_user: Fix null pointer dereference
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 08:58:21AM +0200, Marek Szyprowski wrote:
-> Add a simple custom voltage regulator coupler for Exynos5800 SoCs, which
-> require coupling between "vdd_arm" and "vdd_int" regulators. This coupler
-> ensures that the voltage values don't go below the bootloader-selected
-> operation point during the boot process until a the clients sets their
-> constraints. It is achieved by assuming minimal voltage value equal to
-> the current value if no constraints are set. This also ensures proper
-> voltage balancing if any of the client driver is missing.
+Gaurav Singh wrote:
+> Memset() on the pointer right after malloc() can cause
+> a null pointer dereference if it failed to allocate memory.
+> Fix this by replacing malloc/memset with a single calloc().
 > 
-> The balancing code comes from the regulator/core.c with the additional
-> logic for handling regulators without client constraints applied added.
+> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+> ---
+>  samples/bpf/xdp_monitor_user.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 > 
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> diff --git a/samples/bpf/xdp_monitor_user.c b/samples/bpf/xdp_monitor_user.c
+> index dd558cbb2309..ef53b93db573 100644
+> --- a/samples/bpf/xdp_monitor_user.c
+> +++ b/samples/bpf/xdp_monitor_user.c
+> @@ -509,11 +509,8 @@ static void *alloc_rec_per_cpu(int record_size)
+>  {
+>  	unsigned int nr_cpus = bpf_num_possible_cpus();
+>  	void *array;
+> -	size_t size;
+>  
+> -	size = record_size * nr_cpus;
+> -	array = malloc(size);
+> -	memset(array, 0, size);
+> +	array = calloc(nr_cpus, record_size);
+>  	if (!array) {
+>  		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+>  		exit(EXIT_FAIL_MEM);
+> @@ -528,8 +525,7 @@ static struct stats_record *alloc_stats_record(void)
+>  	int i;
+>  
+>  	/* Alloc main stats_record structure */
+> -	rec = malloc(sizeof(*rec));
+> -	memset(rec, 0, sizeof(*rec));
+> +	rec = calloc(1, sizeof(*rec));
+>  	if (!rec) {
+>  		fprintf(stderr, "Mem alloc error\n");
+>  		exit(EXIT_FAIL_MEM);
+> -- 
+> 2.17.1
+> 
 
-Thanks, applied.
-
-Best regards,
-Krzysztof
-
+Acked-by: John Fastabend <john.fastabend@gmail.com>
