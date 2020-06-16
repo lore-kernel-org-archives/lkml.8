@@ -4,65 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39125C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E421FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5162071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21262071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323255;
-	bh=UGvNsIBI77475V/aFFDuzHClccitPkM+H/tfhf9NUJ4=;
+	s=default; t=1592323258;
+	bh=lMiw6z8M6Tmg7XUhbTCh6hOdFxHhL1CBBaI7l7SKsZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WdJ2tqOPouypmhbmGP0JVinQBcRnFF3l6tN0T2mtG3pK6/fkEPwRAns+bLmc6Ujyy
-	 b9qvdH99moEqpfLJAyVi7KSCc/EPvM0HuMvHCDtBecxDwqm5Gq+8jxzY1M0tF8CM1N
-	 3AdFNaFdvCHm/wS7+JhgS7hFIfOZTZXrT+uAHfbA=
+	b=uwUtiXzlrlHiC7M6nOFEvbYBYeJ2ZebVspK1+NHYFvc/kQ9IJGND7rBn8r3oXFqT9
+	 Up0KjodNh8naArchtqsK0hBQ9r0TSg9698Tzxgyic6Ip8QNs5ESmsRLXhKlzs1tHO1
+	 MrwReYgSvKjs3ya2EB0ZFb3lMQT60Eq4ikhugGU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbgFPPwj (ORCPT
+        id S1732959AbgFPQA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49498 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:00:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732710AbgFPPwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:18 -0400
+        id S1732792AbgFPPwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:52:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 856AE207C4;
-        Tue, 16 Jun 2020 15:52:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37CBD207C4;
+        Tue, 16 Jun 2020 15:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322738;
-        bh=UGvNsIBI77475V/aFFDuzHClccitPkM+H/tfhf9NUJ4=;
+        s=default; t=1592322758;
+        bh=lMiw6z8M6Tmg7XUhbTCh6hOdFxHhL1CBBaI7l7SKsZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OAtVOKm8TPVNPM4ZyWfF70b4hpbwXepNt+Lmjx2+Y4HrUeHhJZY07tdMErgkaLjak
-         tmLmvWruuyf2CwXh2plZ4BXXqUkm7RAHZkUsZ1+tXeDObD/dXhHLEi0278LT12KL5u
-         jjayytZUULIR/cqF7ApllI7wr2Vm5EePIPqGPiCY=
+        b=HEW1g9n2pix0dhXmy4ZZ9Em5zYDA6XzzxdVNjE6DeLrUOciBkdYsbT1i2VulpvPvi
+         +LOQLUtxWwToTNwihuDUknhYcn2Kt/hWySr5NrFLCKrgVZJBdYJUubnrn1ND65uNiI
+         BfvedPshWtkv9MUDx+MIVWaE3j4m998At8ThC3Ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 084/161] lib: fix bitmap_parse() on 64-bit big endian archs
-Date:   Tue, 16 Jun 2020 17:34:34 +0200
-Message-Id: <20200616153110.373677553@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.6 092/161] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
+Date:   Tue, 16 Jun 2020 17:34:42 +0200
+Message-Id: <20200616153110.760822504@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -75,70 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Gordeev <agordeev@linux.ibm.com>
+From: Justin Chen <justinpopo6@gmail.com>
 
-commit 81c4f4d924d5d009b5ed785a3e22b18d0f7b831f upstream.
+commit 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c upstream.
 
-Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not take into
-account order of halfwords on 64-bit big endian architectures.  As
-result (at least) Receive Packet Steering, IRQ affinity masks and
-runtime kernel test "test_bitmap" get broken on s390.
+Currently we set the tx/rx buffer to 0xff when NULL. This causes
+problems with some spi slaves where 0xff is a valid command. Looking
+at other drivers, the tx/rx buffer is usually set to 0x00 when NULL.
+Following this convention solves the issue.
 
-[andriy.shevchenko@linux.intel.com: convert infinite while loop to a for loop]
-  Link: http://lkml.kernel.org/r/20200609140535.87160-1-andriy.shevchenko@linux.intel.com
-
-Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Amritha Nambiar <amritha.nambiar@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Miklos Szeredi <mszeredi@redhat.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: "Tobin C . Harding" <tobin@kernel.org>
-Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1591634471-17647-1-git-send-email-agordeev@linux.ibm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: fa236a7ef240 ("spi: bcm-qspi: Add Broadcom MSPI driver")
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200420190853.45614-6-kdasu.kdev@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/bitmap.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/spi/spi-bcm-qspi.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -740,8 +740,9 @@ int bitmap_parse(const char *start, unsi
- 	int chunks = BITS_TO_U32(nmaskbits);
- 	u32 *bitmap = (u32 *)maskp;
- 	int unset_bit;
-+	int chunk;
+--- a/drivers/spi/spi-bcm-qspi.c
++++ b/drivers/spi/spi-bcm-qspi.c
+@@ -670,7 +670,7 @@ static void read_from_hw(struct bcm_qspi
+ 			if (buf)
+ 				buf[tp.byte] = read_rxram_slot_u8(qspi, slot);
+ 			dev_dbg(&qspi->pdev->dev, "RD %02x\n",
+-				buf ? buf[tp.byte] : 0xff);
++				buf ? buf[tp.byte] : 0x0);
+ 		} else {
+ 			u16 *buf = tp.trans->rx_buf;
  
--	while (1) {
-+	for (chunk = 0; ; chunk++) {
- 		end = bitmap_find_region_reverse(start, end);
- 		if (start > end)
- 			break;
-@@ -749,7 +750,11 @@ int bitmap_parse(const char *start, unsi
- 		if (!chunks--)
- 			return -EOVERFLOW;
+@@ -678,7 +678,7 @@ static void read_from_hw(struct bcm_qspi
+ 				buf[tp.byte / 2] = read_rxram_slot_u16(qspi,
+ 								      slot);
+ 			dev_dbg(&qspi->pdev->dev, "RD %04x\n",
+-				buf ? buf[tp.byte] : 0xffff);
++				buf ? buf[tp.byte / 2] : 0x0);
+ 		}
  
--		end = bitmap_get_x32_reverse(start, end, bitmap++);
-+#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
-+		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk ^ 1]);
-+#else
-+		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk]);
-+#endif
- 		if (IS_ERR(end))
- 			return PTR_ERR(end);
- 	}
+ 		update_qspi_trans_byte_count(qspi, &tp,
+@@ -733,13 +733,13 @@ static int write_to_hw(struct bcm_qspi *
+ 	while (!tstatus && slot < MSPI_NUM_CDRAM) {
+ 		if (tp.trans->bits_per_word <= 8) {
+ 			const u8 *buf = tp.trans->tx_buf;
+-			u8 val = buf ? buf[tp.byte] : 0xff;
++			u8 val = buf ? buf[tp.byte] : 0x00;
+ 
+ 			write_txram_slot_u8(qspi, slot, val);
+ 			dev_dbg(&qspi->pdev->dev, "WR %02x\n", val);
+ 		} else {
+ 			const u16 *buf = tp.trans->tx_buf;
+-			u16 val = buf ? buf[tp.byte / 2] : 0xffff;
++			u16 val = buf ? buf[tp.byte / 2] : 0x0000;
+ 
+ 			write_txram_slot_u16(qspi, slot, val);
+ 			dev_dbg(&qspi->pdev->dev, "WR %04x\n", val);
 
 
