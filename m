@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CD7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD7A207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3E8207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322971;
-	bh=sBp50xgtSXUBc3XAEiLd22g9LgGhg066+1c0iNI/n2o=;
+	s=default; t=1592322977;
+	bh=lz0QmYUpdiPvamXMQCfnRLqqLSzc8DlZx7YXj9CHO6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LCQK/mcpsbTuFcMzd4/2TcuprCx9YK3msvdS9430FJ8Sg2cmFljNglJdiFP9IUgJU
-	 i+1vobSQTxX2V/HK14a38j3xjATtn70EQpaqwDq5gEmV1bdTYE+541PGsTp0AqfxLF
-	 57acGD1Ou7MLKJIqxHRqSHYIHw87150H/T5EwTz0=
+	b=t9w4rFJEI6Uvf4oNQ3Tcv6EP95k9n1lKt61f60tiCeRx5JVWg+vqgRbBIozs1fgCJ
+	 Fwl/7QgFNIrMTmbq5r+7L8AKiVNxN/23oxpvk6BNpOPuoe6uVfT2zmR6OGtLE9fJyl
+	 E4Zso/8s83UkdZJATULneCdQ0+t1MK7syn8VlYmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbgFPP4J (ORCPT
+        id S1733125AbgFPP4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:56:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:56:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732800AbgFPPz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:59 -0400
+        id S1730949AbgFPPzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8ECC208D5;
-        Tue, 16 Jun 2020 15:55:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31BFF207C4;
+        Tue, 16 Jun 2020 15:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322958;
-        bh=sBp50xgtSXUBc3XAEiLd22g9LgGhg066+1c0iNI/n2o=;
+        s=default; t=1592322947;
+        bh=lz0QmYUpdiPvamXMQCfnRLqqLSzc8DlZx7YXj9CHO6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cco7KpE9NcXZgoPGfuVE56pxIPEQ4Do4ygMXzb+AQPyOuGuoK/22f1TWOiCtN7nts
-         tc5y5jfPogTfOCOvfl116nKtPqgY4OpHD+h/EXo6ndoBzPu84W/aj20t0zL8bfKbnE
-         LGOE7Ak8hQZG21lNvz8yEU6ny8rzga3UpevP6yNo=
+        b=C5S+A5U8J9rB5USbo6PNAY4zut07Btd2rteMjA3yzn9NghhH69Vcuyz29cBNL49Lr
+         QBz4jGYJ/lz3bTlwIXnn+pxt2asn7JDQhCfghlYTdzqEFhUf7fc0RX4oTjSz/O+vgm
+         M9nFeOtgiQKR5vLgMFGcRn2JfhNUacYR5FIu2NEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.6 161/161] KVM: arm64: Save the hosts PtrAuth keys in non-preemptible context
-Date:   Tue, 16 Jun 2020 17:35:51 +0200
-Message-Id: <20200616153114.048785126@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.6 135/161] scsi: megaraid_sas: Replace undefined MFI_BIG_ENDIAN macro with __BIG_ENDIAN_BITFIELD macro
+Date:   Tue, 16 Jun 2020 17:35:25 +0200
+Message-Id: <20200616153112.793384651@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,133 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 
-commit ef3e40a7ea8dbe2abd0a345032cd7d5023b9684f upstream.
+commit b9d5e3e7f370a817c742fb089ac1a86dfe8947dc upstream.
 
-When using the PtrAuth feature in a guest, we need to save the host's
-keys before allowing the guest to program them. For that, we dump
-them in a per-CPU data structure (the so called host context).
+MFI_BIG_ENDIAN macro used in drivers structure bitfield to check the CPU
+big endianness is undefined which would break the code on big endian
+machine. __BIG_ENDIAN_BITFIELD kernel macro should be used in places of
+MFI_BIG_ENDIAN macro.
 
-But both call sites that do this are in preemptible context,
-which may end up in disaster should the vcpu thread get preempted
-before reentering the guest.
-
-Instead, save the keys eagerly on each vcpu_load(). This has an
-increased overhead, but is at least safe.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200508085130.23339-1-chandrakanth.patil@broadcom.com
+Fixes: a7faf81d7858 ("scsi: megaraid_sas: Set no_write_same only for Virtual Disk")
+Cc: <stable@vger.kernel.org> # v5.6+
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Signed-off-by: Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- arch/arm/include/asm/kvm_emulate.h   |    3 ++-
- arch/arm64/include/asm/kvm_emulate.h |    6 ------
- arch/arm64/kvm/handle_exit.c         |   19 ++-----------------
- virt/kvm/arm/arm.c                   |   22 +++++++++++++++++++++-
- 4 files changed, 25 insertions(+), 25 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas.h        |    4 ++--
+ drivers/scsi/megaraid/megaraid_sas_fusion.h |    6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/arch/arm/include/asm/kvm_emulate.h
-+++ b/arch/arm/include/asm/kvm_emulate.h
-@@ -367,6 +367,7 @@ static inline unsigned long vcpu_data_ho
- 	}
- }
- 
--static inline void vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu) {}
-+static inline bool vcpu_has_ptrauth(struct kvm_vcpu *vcpu) { return false; }
-+static inline void vcpu_ptrauth_disable(struct kvm_vcpu *vcpu) { }
- 
- #endif /* __ARM_KVM_EMULATE_H__ */
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -111,12 +111,6 @@ static inline void vcpu_ptrauth_disable(
- 	vcpu->arch.hcr_el2 &= ~(HCR_API | HCR_APK);
- }
- 
--static inline void vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu)
--{
--	if (vcpu_has_ptrauth(vcpu))
--		vcpu_ptrauth_disable(vcpu);
--}
--
- static inline unsigned long vcpu_get_vsesr(struct kvm_vcpu *vcpu)
- {
- 	return vcpu->arch.vsesr_el2;
---- a/arch/arm64/kvm/handle_exit.c
-+++ b/arch/arm64/kvm/handle_exit.c
-@@ -162,31 +162,16 @@ static int handle_sve(struct kvm_vcpu *v
- 	return 1;
- }
- 
--#define __ptrauth_save_key(regs, key)						\
--({										\
--	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
--	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
--})
--
- /*
-  * Handle the guest trying to use a ptrauth instruction, or trying to access a
-  * ptrauth register.
+--- a/drivers/scsi/megaraid/megaraid_sas.h
++++ b/drivers/scsi/megaraid/megaraid_sas.h
+@@ -511,7 +511,7 @@ union MR_PROGRESS {
   */
- void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu)
- {
--	struct kvm_cpu_context *ctxt;
--
--	if (vcpu_has_ptrauth(vcpu)) {
-+	if (vcpu_has_ptrauth(vcpu))
- 		vcpu_ptrauth_enable(vcpu);
--		ctxt = vcpu->arch.host_cpu_context;
--		__ptrauth_save_key(ctxt->sys_regs, APIA);
--		__ptrauth_save_key(ctxt->sys_regs, APIB);
--		__ptrauth_save_key(ctxt->sys_regs, APDA);
--		__ptrauth_save_key(ctxt->sys_regs, APDB);
--		__ptrauth_save_key(ctxt->sys_regs, APGA);
--	} else {
-+	else
- 		kvm_inject_undefined(vcpu);
--	}
- }
+ struct MR_PD_PROGRESS {
+ 	struct {
+-#ifndef MFI_BIG_ENDIAN
++#ifndef __BIG_ENDIAN_BITFIELD
+ 		u32     rbld:1;
+ 		u32     patrol:1;
+ 		u32     clear:1;
+@@ -537,7 +537,7 @@ struct MR_PD_PROGRESS {
+ 	};
  
- /*
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -332,6 +332,16 @@ void kvm_arch_vcpu_unblocking(struct kvm
- 	preempt_enable();
- }
+ 	struct {
+-#ifndef MFI_BIG_ENDIAN
++#ifndef __BIG_ENDIAN_BITFIELD
+ 		u32     rbld:1;
+ 		u32     patrol:1;
+ 		u32     clear:1;
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
+@@ -774,7 +774,7 @@ struct MR_SPAN_BLOCK_INFO {
+ struct MR_CPU_AFFINITY_MASK {
+ 	union {
+ 		struct {
+-#ifndef MFI_BIG_ENDIAN
++#ifndef __BIG_ENDIAN_BITFIELD
+ 		u8 hw_path:1;
+ 		u8 cpu0:1;
+ 		u8 cpu1:1;
+@@ -866,7 +866,7 @@ struct MR_LD_RAID {
+ 	__le16     seqNum;
  
-+#ifdef CONFIG_ARM64
-+#define __ptrauth_save_key(regs, key)						\
-+({										\
-+	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
-+	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
-+})
-+#else
-+#define  __ptrauth_save_key(regs, key)	do { } while (0)
-+#endif
-+
- void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- {
- 	int *last_ran;
-@@ -365,7 +375,17 @@ void kvm_arch_vcpu_load(struct kvm_vcpu
- 	else
- 		vcpu_set_wfx_traps(vcpu);
- 
--	vcpu_ptrauth_setup_lazy(vcpu);
-+	if (vcpu_has_ptrauth(vcpu)) {
-+		struct kvm_cpu_context __maybe_unused *ctxt = vcpu->arch.host_cpu_context;
-+
-+		__ptrauth_save_key(ctxt->sys_regs, APIA);
-+		__ptrauth_save_key(ctxt->sys_regs, APIB);
-+		__ptrauth_save_key(ctxt->sys_regs, APDA);
-+		__ptrauth_save_key(ctxt->sys_regs, APDB);
-+		__ptrauth_save_key(ctxt->sys_regs, APGA);
-+
-+		vcpu_ptrauth_disable(vcpu);
-+	}
- }
- 
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+ struct {
+-#ifndef MFI_BIG_ENDIAN
++#ifndef __BIG_ENDIAN_BITFIELD
+ 	u32 ldSyncRequired:1;
+ 	u32 regTypeReqOnReadIsValid:1;
+ 	u32 isEPD:1;
+@@ -889,7 +889,7 @@ struct {
+ 	/* 0x30 - 0x33, Logical block size for the LD */
+ 	u32 logical_block_length;
+ 	struct {
+-#ifndef MFI_BIG_ENDIAN
++#ifndef __BIG_ENDIAN_BITFIELD
+ 	/* 0x34, P_I_EXPONENT from READ CAPACITY 16 */
+ 	u32 ld_pi_exp:4;
+ 	/* 0x34, LOGICAL BLOCKS PER PHYSICAL
 
 
