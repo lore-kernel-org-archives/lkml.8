@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D117C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13496214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5085520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321827;
-	bh=Vd13UFuLRvX/wXDN1nr/A/1EkJ1sZrXmJi+i4KKoCh8=;
+	s=default; t=1592321832;
+	bh=wO96Syrd3Y+CQYFKAlkerJFStFL475pUlPCVcms5cC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/8WJexkSWIx4XRGaElteGd6I1FQ14QQVeFYrRpS5TKRz4m5+0GQWrUgedH43N/NE
-	 8H1dHnqcj7AT1op4Q2Z2aHxLGxFLYPukf38nPIssV+bnaE3OrdewjJUGzvwwtJyurL
-	 XFcHPgoQLGExLDj9eETDmDHC+VXZ3PJPbU2H3kTE=
+	b=UlPuaO6e9+v1F0JzEQ2c5Egi2V+/PGJLAYXTHOYisNv4WZ71Fa1Jtia480m1zaGSE
+	 /+yURKf4CGT6JcUHxm3Tr6DSZFFdkVhM84qM+BIAiAnUeKGP8eajQUvgQO40p5hHtx
+	 lN2+MGptQVuwSv3l1UrgSm1VCf2nda4KXRvuf+Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbgFPPhF (ORCPT
+        id S1730221AbgFPPhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:37:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48210 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729543AbgFPPhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:02 -0400
+        id S1730195AbgFPPhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7371D2098B;
-        Tue, 16 Jun 2020 15:37:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDC3F20C56;
+        Tue, 16 Jun 2020 15:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321821;
-        bh=Vd13UFuLRvX/wXDN1nr/A/1EkJ1sZrXmJi+i4KKoCh8=;
+        s=default; t=1592321824;
+        bh=wO96Syrd3Y+CQYFKAlkerJFStFL475pUlPCVcms5cC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqJ+jdasZD0DA+4qC4Mm/fjox8p0juWtw2gaXSB5M1r3DWv2+naaS3KLzDMXfNJa1
-         3NL0vXs6xmswsAtdrCqvD2h5wpyBau2zT++11v6M6wa/apzWsRounWgspFzGoQG/2W
-         9OG40oxpMNjjZ9O7R0e+1gY28FmzJb+szHN6eSBw=
+        b=Xg3Fp0utWisbhEbwRV3AK/OTm2q31Ov/tHOuR6ybMW3oovLM2c0FC6+L/DnKEmTzw
+         yQp8Nq/NVAkvQegdR3IEqWCYOLWr8JCufQTMgitrSWbGv5usUtWJ0WX20cRTIBgEfZ
+         qOT9K9cLvDpxHBCWNin23UCtyf1gjjcNmpw7M5ZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 011/134] sched/fair: Dont NUMA balance for kthreads
-Date:   Tue, 16 Jun 2020 17:33:15 +0200
-Message-Id: <20200616153101.228510546@linuxfoundation.org>
+Subject: [PATCH 5.4 029/134] perf probe: Accept the instance number of kretprobe event
+Date:   Tue, 16 Jun 2020 17:33:33 +0200
+Message-Id: <20200616153102.169724260@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,53 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 18f855e574d9799a0e7489f8ae6fd8447d0dd74a ]
+[ Upstream commit c6aab66a728b6518772c74bd9dff66e1a1c652fd ]
 
-Stefano reported a crash with using SQPOLL with io_uring:
+Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number
+on kprobe_events") introduced to show the instance number of kretprobe
+events, the length of the 1st format of the kprobe event will not 1, but
+it can be longer.  This caused a parser error in perf-probe.
 
-  BUG: kernel NULL pointer dereference, address: 00000000000003b0
-  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
-  RIP: 0010:task_numa_work+0x4f/0x2c0
-  Call Trace:
-   task_work_run+0x68/0xa0
-   io_sq_thread+0x252/0x3d0
-   kthread+0xf9/0x130
-   ret_from_fork+0x35/0x40
+Skip the length check the 1st format of the kprobe event to accept this
+instance number.
 
-which is task_numa_work() oopsing on current->mm being NULL.
+Without this fix:
 
-The task work is queued by task_tick_numa(), which checks if current->mm is
-NULL at the time of the call. But this state isn't necessarily persistent,
-if the kthread is using use_mm() to temporarily adopt the mm of a task.
+  # perf probe -a vfs_read%return
+  Added new event:
+    probe:vfs_read__return (on vfs_read%return)
 
-Change the task_tick_numa() check to exclude kernel threads in general,
-as it doesn't make sense to attempt ot balance for kthreads anyway.
+  You can now use it in all perf tools, such as:
 
-Reported-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
+  	perf record -e probe:vfs_read__return -aR sleep 1
+
+  # perf probe -l
+  Semantic error :Failed to parse event name: r16:probe/vfs_read__return
+    Error: Failed to show event list.
+
+And with this fixes:
+
+  # perf probe -a vfs_read%return
+  ...
+  # perf probe -l
+    probe:vfs_read__return (on vfs_read%return)
+
+Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
+Reported-by: Yuxuan Shui <yshuiv7@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Yuxuan Shui <yshuiv7@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207587
+Link: http://lore.kernel.org/lkml/158877535215.26469.1113127926699134067.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/probe-event.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 193b6ab74d7f..8a0e6bdba50d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2678,7 +2678,7 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
- 	/*
- 	 * We don't care about NUMA placement if we don't have memory.
- 	 */
--	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
-+	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
- 		return;
- 
- 	/*
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 91cab5f669d2..92b07be0b48b 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1757,8 +1757,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
+ 	fmt1_str = strtok_r(argv0_str, ":", &fmt);
+ 	fmt2_str = strtok_r(NULL, "/", &fmt);
+ 	fmt3_str = strtok_r(NULL, " \t", &fmt);
+-	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
+-	    || fmt3_str == NULL) {
++	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
+ 		semantic_error("Failed to parse event name: %s\n", argv[0]);
+ 		ret = -EINVAL;
+ 		goto out;
 -- 
 2.25.1
 
