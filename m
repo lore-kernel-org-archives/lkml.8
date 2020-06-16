@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCCDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7281C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC4E214F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FB621532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321925;
-	bh=qPXtMOTdflutZMIJ3Kxe+EfHyqUsxZqyhk7CaUbd0Do=;
+	s=default; t=1592321929;
+	bh=QIcS73uwgRHW6LMWNWdiRKdRJrtAF/id/hyM7AUDHKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nii91epLgOgt++ttoYpZqKpenqFhkpmfb/eWX/uIiUWo/dHEUx7P7KDtDpfq62Agq
-	 RVZs9PoYByZfSYK8fkAnjoSs2vytBD7PFJUlnpLOtyo/AaNxN8sN+5wUkFuLs0wskD
-	 oWyDjfPBPtq1bg1ZmQL5fDm2bxBNR1GzhwPwoT4U=
+	b=HAYSWL4zM7yHCgfqFwX5QyjXB/03MCpGfee9yUvtJMb7SDebodh7ZYadybQi1a+7w
+	 CagKBsFPyupNmS5RHYPPJnzWE1notwSuEBu2jCljWHmyn8Kd7nYlFW04qwWEhgT4IF
+	 wO7AZ3EkAQ43cX6trhn1ZtPsEjagnZbUi9zVRcas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbgFPPim (ORCPT
+        id S1730776AbgFPPir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:38:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51318 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730730AbgFPPik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:40 -0400
+        id S1730757AbgFPPin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 544C5214F1;
-        Tue, 16 Jun 2020 15:38:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E21B420C56;
+        Tue, 16 Jun 2020 15:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321919;
-        bh=qPXtMOTdflutZMIJ3Kxe+EfHyqUsxZqyhk7CaUbd0Do=;
+        s=default; t=1592321922;
+        bh=QIcS73uwgRHW6LMWNWdiRKdRJrtAF/id/hyM7AUDHKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PWtkTPJQgtGoXT/cL1QzKPyyNSpEMKCiP5zFTJTn7t8c7BbWwTLxlmoJyalD08Rx3
-         SJNZG7Wt1tT8D7xymWMavqfcdNJgNgtTF73WpdNeaEvFmfB0K9sXRPnvpiSRccN8qw
-         zRP6KjX0QLTE5CYfhoUNYpLSS4Gn8/vAibZeHuVc=
+        b=GK0++dcuH/TPwAHcJgE1j5M9ZS7wn7LkmGkyo4mNb4sFQbNDbV+CVlkmbODhhXU81
+         TjX0cLTQLGCU+lNX/UN81tMsf5UxqgFtRNToqoua6BMUrkQI3bUusWAKG8hwXzx8et
+         pHR7gqrUA5hdXewf3R1x7cBd3BQ2VEwVLL3i5rx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 5.4 066/134] arm64: acpi: fix UBSAN warning
-Date:   Tue, 16 Jun 2020 17:34:10 +0200
-Message-Id: <20200616153103.933415442@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Rodgman <dave.rodgman@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>, Willy Tarreau <w@1wt.eu>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        "Markus F.X.J. Oberhumer" <markus@oberhumer.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>, Chao Yu <yuchao0@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 067/134] lib/lzo: fix ambiguous encoding bug in lzo-rle
+Date:   Tue, 16 Jun 2020 17:34:11 +0200
+Message-Id: <20200616153103.983858558@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -62,76 +65,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Dave Rodgman <dave.rodgman@arm.com>
 
-commit a194c33f45f83068ef13bf1d16e26d4ca3ecc098 upstream.
+commit b5265c813ce4efbfa2e46fd27cdf9a7f44a35d2e upstream.
 
-Will reported a UBSAN warning:
+In some rare cases, for input data over 32 KB, lzo-rle could encode two
+different inputs to the same compressed representation, so that
+decompression is then ambiguous (i.e.  data may be corrupted - although
+zram is not affected because it operates over 4 KB pages).
 
-UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
-member access within null pointer of type 'struct acpi_madt_generic_interrupt'
-CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc6-00124-g96bc42ff0a82 #1
-Call trace:
- dump_backtrace+0x0/0x384
- show_stack+0x28/0x38
- dump_stack+0xec/0x174
- handle_null_ptr_deref+0x134/0x174
- __ubsan_handle_type_mismatch_v1+0x84/0xa4
- acpi_parse_gic_cpu_interface+0x60/0xe8
- acpi_parse_entries_array+0x288/0x498
- acpi_table_parse_entries_array+0x178/0x1b4
- acpi_table_parse_madt+0xa4/0x110
- acpi_parse_and_init_cpus+0x38/0x100
- smp_init_cpus+0x74/0x258
- setup_arch+0x350/0x3ec
- start_kernel+0x98/0x6f4
+This modifies the compressor without changing the decompressor or the
+bitstream format, such that:
 
-This is from the use of the ACPI_OFFSET in
-arch/arm64/include/asm/acpi.h. Replace its use with offsetof from
-include/linux/stddef.h which should implement the same logic using
-__builtin_offsetof, so that UBSAN wont warn.
+ - there is no change to how data produced by the old compressor is
+   decompressed
 
-Reported-by: Will Deacon <will@kernel.org>
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/lkml/20200521100952.GA5360@willie-the-truck/
-Link: https://lore.kernel.org/r/20200608203818.189423-1-ndesaulniers@google.com
-Signed-off-by: Will Deacon <will@kernel.org>
+ - an old decompressor will correctly decode data from the updated
+   compressor
+
+ - performance and compression ratio are not affected
+
+ - we avoid introducing a new bitstream format
+
+In testing over 12.8M real-world files totalling 903 GB, three files
+were affected by this bug.  I also constructed 37M semi-random 64 KB
+files totalling 2.27 TB, and saw no affected files.  Finally I tested
+over files constructed to contain each of the ~1024 possible bad input
+sequences; for all of these cases, updated lzo-rle worked correctly.
+
+There is no significant impact to performance or compression ratio.
+
+Signed-off-by: Dave Rodgman <dave.rodgman@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Dave Rodgman <dave.rodgman@arm.com>
+Cc: Willy Tarreau <w@1wt.eu>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: Markus F.X.J. Oberhumer <markus@oberhumer.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
+Cc: Chao Yu <yuchao0@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200507100203.29785-1-dave.rodgman@arm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/acpi.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/lzo.txt    |    8 ++++++--
+ lib/lzo/lzo1x_compress.c |   13 +++++++++++++
+ 2 files changed, 19 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -12,6 +12,7 @@
- #include <linux/efi.h>
- #include <linux/memblock.h>
- #include <linux/psci.h>
-+#include <linux/stddef.h>
+--- a/Documentation/lzo.txt
++++ b/Documentation/lzo.txt
+@@ -159,11 +159,15 @@ Byte sequences
+            distance = 16384 + (H << 14) + D
+            state = S (copy S literals after this block)
+            End of stream is reached if distance == 16384
++           In version 1 only, to prevent ambiguity with the RLE case when
++           ((distance & 0x803f) == 0x803f) && (261 <= length <= 264), the
++           compressor must not emit block copies where distance and length
++           meet these conditions.
  
- #include <asm/cputype.h>
- #include <asm/io.h>
-@@ -31,14 +32,14 @@
-  * is therefore used to delimit the MADT GICC structure minimum length
-  * appropriately.
-  */
--#define ACPI_MADT_GICC_MIN_LENGTH   ACPI_OFFSET(  \
-+#define ACPI_MADT_GICC_MIN_LENGTH   offsetof(  \
- 	struct acpi_madt_generic_interrupt, efficiency_class)
+         In version 1 only, this instruction is also used to encode a run of
+-        zeros if distance = 0xbfff, i.e. H = 1 and the D bits are all 1.
++           zeros if distance = 0xbfff, i.e. H = 1 and the D bits are all 1.
+            In this case, it is followed by a fourth byte, X.
+-           run length = ((X << 3) | (0 0 0 0 0 L L L)) + 4.
++           run length = ((X << 3) | (0 0 0 0 0 L L L)) + 4
  
- #define BAD_MADT_GICC_ENTRY(entry, end)					\
- 	(!(entry) || (entry)->header.length < ACPI_MADT_GICC_MIN_LENGTH || \
- 	(unsigned long)(entry) + (entry)->header.length > (end))
- 
--#define ACPI_MADT_GICC_SPE  (ACPI_OFFSET(struct acpi_madt_generic_interrupt, \
-+#define ACPI_MADT_GICC_SPE  (offsetof(struct acpi_madt_generic_interrupt, \
- 	spe_interrupt) + sizeof(u16))
- 
- /* Basic configuration for ACPI */
+       0 0 1 L L L L L  (32..63)
+            Copy of small block within 16kB distance (preferably less than 34B)
+--- a/lib/lzo/lzo1x_compress.c
++++ b/lib/lzo/lzo1x_compress.c
+@@ -268,6 +268,19 @@ m_len_done:
+ 				*op++ = (M4_MARKER | ((m_off >> 11) & 8)
+ 						| (m_len - 2));
+ 			else {
++				if (unlikely(((m_off & 0x403f) == 0x403f)
++						&& (m_len >= 261)
++						&& (m_len <= 264))
++						&& likely(bitstream_version)) {
++					// Under lzo-rle, block copies
++					// for 261 <= length <= 264 and
++					// (distance & 0x80f3) == 0x80f3
++					// can result in ambiguous
++					// output. Adjust length
++					// to 260 to prevent ambiguity.
++					ip -= m_len - 260;
++					m_len = 260;
++				}
+ 				m_len -= M4_MAX_LEN;
+ 				*op++ = (M4_MARKER | ((m_off >> 11) & 8));
+ 				while (unlikely(m_len > 255)) {
 
 
