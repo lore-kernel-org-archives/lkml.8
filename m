@@ -2,172 +2,126 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55E0D20739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEE92074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:56:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LDcDxbJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgFPCu3 (ORCPT
+        id S1726535AbgFPC4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 22:50:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:22554 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgFPCu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 22:50:28 -0400
-IronPort-SDR: mFmmbHKG9SBBc40uMzDjCJR0OCap/SchHUTMi2ZuL1Y+AZJXMOJYLzj4UMOej+hzYEi+IJmXZE
- 9kh46i7dgXlA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 19:50:27 -0700
-IronPort-SDR: EooRz/LA+ATGqtDCneDKtobTGFprX0pDFQt4zaWlIbGdGmDApuNBSJoM7oNEJMR3+VMawXixMT
- XZpPyokdgYdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,517,1583222400"; 
-   d="scan'208";a="261998340"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga007.jf.intel.com with ESMTP; 15 Jun 2020 19:50:23 -0700
-Subject: Re: [kmemleak] b751c52bb5: BUG:kernel_hang_in_boot_stage
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200610075156.GE12456@shao2-debian>
- <20200610105640.GB26099@gaia>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <9bc70c0d-00b3-ff5a-e8bd-d4315e367fad@intel.com>
-Date:   Tue, 16 Jun 2020 10:50:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Jun 2020 22:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbgFPC43 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 22:56:29 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B43CC061A0E;
+        Mon, 15 Jun 2020 19:56:29 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B06CEF9;
+        Tue, 16 Jun 2020 04:56:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1592276184;
+        bh=+p29mN3O4KA8+pYMxFKIjzQpJJOcdUqinFmYsFDSJwI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LDcDxbJuHmMXCEwXE1fgvV7P0DQ7rvDH5MFaa0/spasIzJiZrahiaSyVccQo7PxvF
+         Hq9o1J5LX87Zvb548SyDFIR60KZiH6Nx1ygbLLuKTv9XFQwYcQVFcoex2uaTF+5WtP
+         BmtiYGcHquXcbee0W6D5KMulWW+a0goZwTeP/p2k=
+Date:   Tue, 16 Jun 2020 05:56:02 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] media: vsp1: Fix runtime PM imbalance on error
+Message-ID: <20200616025602.GG29596@pendragon.ideasonboard.com>
+References: <20200608052919.4984-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-In-Reply-To: <20200610105640.GB26099@gaia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200608052919.4984-1-dinghao.liu@zju.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Dinghao,
 
+Thank you for the patch.
 
-On 6/10/20 6:56 PM, Catalin Marinas wrote:
-> On Wed, Jun 10, 2020 at 03:51:56PM +0800, kernel test robot wrote:
->> FYI, we noticed the following commit (built with gcc-7):
->>
->> commit: b751c52bb587ae66f773b15204ef7a147467f4c7 ("kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K")
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->>
->> in testcase: boot
->>
->> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> [...]
->> BUG: kernel hang in boot stage
->>
->> To reproduce:
->>
->>          # build kernel
->> 	cd linux
->> 	cp config-5.3.0-11789-gb751c52bb587a .config
->> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=i386 olddefconfig prepare modules_prepare bzImage
-> I've never tried kmemleak on i386.
->
-> Anyway, I'm not sure what caused the hang (or whether it's a hang at
-> all) but I suspect prior to the above commit, kmemleak probably just
-> disabled itself (early log  buffer exceeded). So the bug may have been
-> there already, only that kmemleak started working and tripped over it
-> when the log buffer increased.
+On Mon, Jun 08, 2020 at 01:29:19PM +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-Hi,
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Sorry for the late, I can reproduce the problem with command "bin/lkp 
-qemu -k <bzImage> job-script",
-and the kernel hangs:
+I have however received multiple similar patches recently, for different
+drivers. I've CC'ed Rafael, the PM maintainer, in one of those e-mail
+threads, and questioned whether we should really mass-patch drivers, or
+fix the issue in pm_runtime_get_sync(). I'll defer pushing this patch
+until that discussion comes to a conclusion.
 
-[    0.333897] -----------------------------------------------------
-[    0.334561]                                  |block | try |context|
-[    0.335170] -----------------------------------------------------
-[    0.335760]                           context:  ok  |  ok  |  ok |
-[    0.337995]                               try:  ok  |  ok  |  ok |
-[    0.340089]                             block:  ok  |  ok  |  ok |
-[    0.342175]                          spinlock:  ok  |  ok  |  ok |
-[    0.344481] -------------------------------------------------------
-[    0.345068] Good, all 261 testcases passed! |
-[    0.345514] ---------------------------------
-KVM internal error. Suberror: 3
-extra data[0]: 80000b0e
-extra data[1]: 31
-extra data[2]: 182
-extra data[3]: bfff0
-EAX=00000000 EBX=00200297 ECX=00000000 EDX=ffffffff
-ESI=d2e997c0 EDI=d2e997f0 EBP=d2bbb038 ESP=c00bfff4
-EIP=f4dccd57 EFL=00210046 [---Z-P-] CPL=0 II=0 A20=1 SMM=0 HLT=0
-ES =007b 00000000 ffffffff 00c0f300 DPL=3 DS   [-WA]
-CS =0060 00000000 ffffffff 00c09b00 DPL=0 CS32 [-RA]
-SS =0068 00000000 ffffffff 00c09300 DPL=0 DS   [-WA]
-DS =007b 00000000 ffffffff 00c0f300 DPL=3 DS   [-WA]
-FS =00d8 23331000 ffffffff 00809300 DPL=0 DS16 [-WA]
-GS =00e0 f6422900 00000018 00409100 DPL=0 DS   [--A]
-LDT=0000 00000000 ffffffff 00c00000
-TR =0080 ff403000 0000206b 00008b00 DPL=0 TSS32-busy
-GDT=     ff401000 000000ff
-IDT=     ff400000 000007ff
-CR0=80050033 CR2=00000000 CR3=130fc000 CR4=00000690
-DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 
-DR3=0000000000000000
-DR6=00000000fffe0ff0 DR7=0000000000000400
-EFER=0000000000000000
-Code=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-00 00 00 00
+> ---
+> 
+> Changelog:
+> 
+> v2: - Fix the imbalance in vsp1_device_get().
+>       Use vsp1_device_get() and vsp1_device_put()
+>       to replace pm_runtime_get_sync() and
+>       pm_runtime_put_sync() in vsp1_probe().
+> ---
+>  drivers/media/platform/vsp1/vsp1_drv.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
+> index c650e45bb0ad..dc62533cf32c 100644
+> --- a/drivers/media/platform/vsp1/vsp1_drv.c
+> +++ b/drivers/media/platform/vsp1/vsp1_drv.c
+> @@ -562,7 +562,12 @@ int vsp1_device_get(struct vsp1_device *vsp1)
+>  	int ret;
+>  
+>  	ret = pm_runtime_get_sync(vsp1->dev);
+> -	return ret < 0 ? ret : 0;
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(vsp1->dev);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -845,12 +850,12 @@ static int vsp1_probe(struct platform_device *pdev)
+>  	/* Configure device parameters based on the version register. */
+>  	pm_runtime_enable(&pdev->dev);
+>  
+> -	ret = pm_runtime_get_sync(&pdev->dev);
+> +	ret = vsp1_device_get(vsp1);
+>  	if (ret < 0)
+>  		goto done;
+>  
+>  	vsp1->version = vsp1_read(vsp1, VI6_IP_VERSION);
+> -	pm_runtime_put_sync(&pdev->dev);
+> +	vsp1_device_put(vsp1);
+>  
+>  	for (i = 0; i < ARRAY_SIZE(vsp1_device_infos); ++i) {
+>  		if ((vsp1->version & VI6_IP_VERSION_MODEL_MASK) ==
 
->
-> Is there a chance that the kernel got much slower with kmemleak enabled
-> and the test scripts timed out?
-no, the parent commit log is:
+-- 
+Regards,
 
-[    0.313845] -----------------------------------------------------
-[    0.314608]                                  |block | try |context|
-[    0.315314] -----------------------------------------------------
-[    0.315974]                           context:  ok  |  ok  |  ok |
-[    0.318261]                               try:  ok  |  ok  |  ok |
-[    0.320478]                             block:  ok  |  ok  |  ok |
-[    0.322562]                          spinlock:  ok  |  ok  |  ok |
-[    0.324825] -------------------------------------------------------
-[    0.325403] Good, all 261 testcases passed! |
-[    0.325809] ---------------------------------
-[    0.326221] kmemleak: Early log buffer exceeded (401), please 
-increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE
-[    0.327065] ACPI: Core revision 20190816
-[    0.327585] clocksource: hpet: mask: 0xffffffff max_cycles: 
-0xffffffff, max_idle_ns: 19112604467 ns
-[    0.328545] APIC: Switch to symmetric I/O mode setup
-[    0.329009] Enabling APIC mode:  Flat.  Using 1 I/O APICs
-[    0.329572] masked ExtINT on CPU#0
-[    0.330686] ENABLING IO-APIC IRQs
-[    0.331001] init IO_APIC IRQs
-[    0.331274]  apic 0 pin 0 not connected
-
->
-> Does this problem still exist with the latest mainline?
-yes, still in v5.7.
-
-Best Regards,
-Rong Chen
+Laurent Pinchart
