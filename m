@@ -2,176 +2,140 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0445B2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592347576;
-	bh=ZAs7GT5Hxz71cY/X1yUf6UmpNbaDaFyhGT9dvQA8WSg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=BpF96o0SlJIm57zxNSAV+WmC/nnxp06iwIZSh8E9zmE9zT/KlqEjpWpnpVNl8Riu8
-	 7MscnlQ+YYPU8df9kCEQG+YWAmtSwT0KjPj46583HhZm67LwsPDUNI0kjI9SDJqVSz
-	 Rzb+NDCDTZm/8NXLJkqAEm7G8NlLGjyt7R0xLk2o=
+	by mail.kernel.org (Postfix) with ESMTP id 6799F2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:54:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XHfi2r83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgFPWqO (ORCPT
+        id S1726524AbgFPWyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgFPWqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:46:14 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7327C207E8;
-        Tue, 16 Jun 2020 22:46:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592347573;
-        bh=ZAs7GT5Hxz71cY/X1yUf6UmpNbaDaFyhGT9dvQA8WSg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tOtTUn6i9JsmvvjEEcLkyE+BYqlTRTvJf4uHci8yqejVU0er62cLvJj2gbUOPAzfJ
-         up5vztwPIEe0amz4UFOILuMoruoFTt4kWOB+2IIa/cvjIXlldniAsFFGvq04+wnYVS
-         XN6RxJJynwG497vXF3GeNuZyE8Of68agP6gaGGiI=
-Date:   Tue, 16 Jun 2020 17:51:32 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] ath10k: wmi: Use struct_size() helper in
- ath10k_wmi_alloc_skb()
-Message-ID: <20200616225132.GA19873@embeddedor>
+        Tue, 16 Jun 2020 18:54:37 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55828 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgFPWyg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:54:36 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GMl5uh191571;
+        Tue, 16 Jun 2020 22:54:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=Zmvxp6TcklTF5tZHdIjURz6zaQoJfhp55XSlQEQbRBQ=;
+ b=XHfi2r836QGJbY2pb+IHV8UwTlHhIeA1V8Dg2/Log+JAp2Ye4WofBcW2KOqkNULm7M3H
+ ATpM2OLgDQe5XG6K6HY7ztoLiLvIzHLuOHLH8eVNoTVPhzDyOC1lBzxjDUggJBrCyG07
+ G697HRQ2MY85AWBah5rFvQYT9sk/4LmdZnrSRkEcp3liTfFQ7Ooaxr7UaSb3iUQ1LFQ4
+ p+Tgv1PfC0OBf7Mh1KsehSwHcMheEfE9EgH5kAqhNLjJX8y/V7MU48fODynBo617Jlnu
+ eQBNz+gPfVyWUDSLjtXNTmLG33Uc6qtFHVMerKA6Zifgs0mbRSoMU37Ba1rfiAnGelBW Ug== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31q65jr6ye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 16 Jun 2020 22:54:27 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GMr54r145209;
+        Tue, 16 Jun 2020 22:54:27 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 31q66m9sxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 22:54:26 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05GMsPkl029460;
+        Tue, 16 Jun 2020 22:54:26 GMT
+Received: from localhost.localdomain (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 16 Jun 2020 15:54:25 -0700
+From:   William Kucharski <william.kucharski@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] mm: ksize() should silently accept a NULL pointer
+Date:   Tue, 16 Jun 2020 16:54:09 -0600
+Message-Id: <20200616225409.4670-1-william.kucharski@oracle.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=884 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 malwarescore=0 cotscore=-2147483648 suspectscore=0
+ bulkscore=0 mlxlogscore=903 mlxscore=0 impostorscore=0 priorityscore=1501
+ phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006160156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes. Also, remove unnecessary
-variable _len_.
+Other mm routines such as kfree() and kzfree() silently do the right
+thing if passed a NULL pointer, so ksize() should do the same.
 
-This code was detected with the help of Coccinelle and, audited and
-fixed manually.
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: William Kucharski <william.kucharski@oracle.com>
 ---
- drivers/net/wireless/ath/ath10k/wmi.c | 32 +++++++--------------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
+ mm/slab_common.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index a81a1ab2de19..b89681394a15 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -6551,7 +6551,7 @@ static struct sk_buff *ath10k_wmi_op_gen_init(struct ath10k *ar)
- 	struct wmi_init_cmd *cmd;
- 	struct sk_buff *buf;
- 	struct wmi_resource_config config = {};
--	u32 len, val;
-+	u32 val;
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 9e72ba224175..2bff01ad94d8 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1660,10 +1660,9 @@ static __always_inline void *__do_krealloc(const void *p, size_t new_size,
+ 					   gfp_t flags)
+ {
+ 	void *ret;
+-	size_t ks = 0;
++	size_t ks;
  
- 	config.num_vdevs = __cpu_to_le32(TARGET_NUM_VDEVS);
- 	config.num_peers = __cpu_to_le32(TARGET_NUM_PEERS);
-@@ -6603,10 +6603,7 @@ static struct sk_buff *ath10k_wmi_op_gen_init(struct ath10k *ar)
- 	config.num_msdu_desc = __cpu_to_le32(TARGET_NUM_MSDU_DESC);
- 	config.max_frag_entries = __cpu_to_le32(TARGET_MAX_FRAG_ENTRIES);
+-	if (p)
+-		ks = ksize(p);
++	ks = ksize(p);
  
--	len = sizeof(*cmd) +
--	      (sizeof(struct host_memory_chunk) * ar->wmi.num_mem_chunks);
--
--	buf = ath10k_wmi_alloc_skb(ar, len);
-+	buf = ath10k_wmi_alloc_skb(ar, struct_size(cmd, mem_chunks.items, ar->wmi.num_mem_chunks));
- 	if (!buf)
- 		return ERR_PTR(-ENOMEM);
+ 	if (ks >= new_size) {
+ 		p = kasan_krealloc((void *)p, new_size, flags);
+@@ -1723,10 +1722,9 @@ void kzfree(const void *p)
+ 	size_t ks;
+ 	void *mem = (void *)p;
  
-@@ -6624,7 +6621,7 @@ static struct sk_buff *ath10k_wmi_10_1_op_gen_init(struct ath10k *ar)
- 	struct wmi_init_cmd_10x *cmd;
- 	struct sk_buff *buf;
- 	struct wmi_resource_config_10x config = {};
--	u32 len, val;
-+	u32 val;
+-	if (unlikely(ZERO_OR_NULL_PTR(mem)))
+-		return;
+ 	ks = ksize(mem);
+-	memset(mem, 0, ks);
++	if (ks)
++		memset(mem, 0, ks);
+ 	kfree(mem);
+ }
+ EXPORT_SYMBOL(kzfree);
+@@ -1749,8 +1747,6 @@ size_t ksize(const void *objp)
+ {
+ 	size_t size;
  
- 	config.num_vdevs = __cpu_to_le32(TARGET_10X_NUM_VDEVS);
- 	config.num_peers = __cpu_to_le32(TARGET_10X_NUM_PEERS);
-@@ -6668,10 +6665,7 @@ static struct sk_buff *ath10k_wmi_10_1_op_gen_init(struct ath10k *ar)
- 	config.num_msdu_desc = __cpu_to_le32(TARGET_10X_NUM_MSDU_DESC);
- 	config.max_frag_entries = __cpu_to_le32(TARGET_10X_MAX_FRAG_ENTRIES);
+-	if (WARN_ON_ONCE(!objp))
+-		return 0;
+ 	/*
+ 	 * We need to check that the pointed to object is valid, and only then
+ 	 * unpoison the shadow memory below. We use __kasan_check_read(), to
+@@ -1764,7 +1760,7 @@ size_t ksize(const void *objp)
+ 	 * We want to perform the check before __ksize(), to avoid potentially
+ 	 * crashing in __ksize() due to accessing invalid metadata.
+ 	 */
+-	if (unlikely(objp == ZERO_SIZE_PTR) || !__kasan_check_read(objp, 1))
++	if (unlikely(ZERO_OR_NULL_PTR(objp)) || !__kasan_check_read(objp, 1))
+ 		return 0;
  
--	len = sizeof(*cmd) +
--	      (sizeof(struct host_memory_chunk) * ar->wmi.num_mem_chunks);
--
--	buf = ath10k_wmi_alloc_skb(ar, len);
-+	buf = ath10k_wmi_alloc_skb(ar, struct_size(cmd, mem_chunks.items, ar->wmi.num_mem_chunks));
- 	if (!buf)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -6689,7 +6683,7 @@ static struct sk_buff *ath10k_wmi_10_2_op_gen_init(struct ath10k *ar)
- 	struct wmi_init_cmd_10_2 *cmd;
- 	struct sk_buff *buf;
- 	struct wmi_resource_config_10x config = {};
--	u32 len, val, features;
-+	u32 val, features;
- 
- 	config.num_vdevs = __cpu_to_le32(TARGET_10X_NUM_VDEVS);
- 	config.num_peer_keys = __cpu_to_le32(TARGET_10X_NUM_PEER_KEYS);
-@@ -6741,10 +6735,7 @@ static struct sk_buff *ath10k_wmi_10_2_op_gen_init(struct ath10k *ar)
- 	config.num_msdu_desc = __cpu_to_le32(TARGET_10X_NUM_MSDU_DESC);
- 	config.max_frag_entries = __cpu_to_le32(TARGET_10X_MAX_FRAG_ENTRIES);
- 
--	len = sizeof(*cmd) +
--	      (sizeof(struct host_memory_chunk) * ar->wmi.num_mem_chunks);
--
--	buf = ath10k_wmi_alloc_skb(ar, len);
-+	buf = ath10k_wmi_alloc_skb(ar, struct_size(cmd, mem_chunks.items, ar->wmi.num_mem_chunks));
- 	if (!buf)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -6776,7 +6767,6 @@ static struct sk_buff *ath10k_wmi_10_4_op_gen_init(struct ath10k *ar)
- 	struct wmi_init_cmd_10_4 *cmd;
- 	struct sk_buff *buf;
- 	struct wmi_resource_config_10_4 config = {};
--	u32 len;
- 
- 	config.num_vdevs = __cpu_to_le32(ar->max_num_vdevs);
- 	config.num_peers = __cpu_to_le32(ar->max_num_peers);
-@@ -6838,10 +6828,7 @@ static struct sk_buff *ath10k_wmi_10_4_op_gen_init(struct ath10k *ar)
- 	config.iphdr_pad_config = __cpu_to_le32(TARGET_10_4_IPHDR_PAD_CONFIG);
- 	config.qwrap_config = __cpu_to_le32(TARGET_10_4_QWRAP_CONFIG);
- 
--	len = sizeof(*cmd) +
--	      (sizeof(struct host_memory_chunk) * ar->wmi.num_mem_chunks);
--
--	buf = ath10k_wmi_alloc_skb(ar, len);
-+	buf = ath10k_wmi_alloc_skb(ar, struct_size(cmd, mem_chunks.items, ar->wmi.num_mem_chunks));
- 	if (!buf)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -7549,12 +7536,9 @@ ath10k_wmi_op_gen_scan_chan_list(struct ath10k *ar,
- 	struct sk_buff *skb;
- 	struct wmi_channel_arg *ch;
- 	struct wmi_channel *ci;
--	int len;
- 	int i;
- 
--	len = sizeof(*cmd) + arg->n_channels * sizeof(struct wmi_channel);
--
--	skb = ath10k_wmi_alloc_skb(ar, len);
-+	skb = ath10k_wmi_alloc_skb(ar, struct_size(cmd, chan_info, arg->n_channels));
- 	if (!skb)
- 		return ERR_PTR(-EINVAL);
- 
+ 	size = __ksize(objp);
 -- 
-2.27.0
+2.26.2
 
