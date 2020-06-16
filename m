@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7747C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F79CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E94207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DEFE208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323421;
-	bh=f4dWbME0zvTO4lNAmFwEvgbVjHjm7e7nyr1BsvdN+HM=;
+	s=default; t=1592323424;
+	bh=+Mw1Hkuxle5Fl7ol3+GYHkofD6hHkT3YdniPFZuASkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=arOubER2IEVskyUAXmb79Vn5GoJfEjXw754PYKBiOLy5nEcIZaCmZU2WYlyeWtRxZ
-	 J9CM7f0puR3u1X7bihD8C0t/11FbuZwYEoxaasQGZabjjhJUJHAurFwThY7iBXnTdO
-	 BhU8T7DaFo7TZG3vsMEhdASykESOvF1VcXXv0iYY=
+	b=F8LrwGOev/991mmu5/Vb1DEGChs4J2ACFIVRbok2mwS5z0gTgkznzOz3WsbSvKRXE
+	 ZwR35n3XE0KcTwPPduV5aL7trNXjnC35OdMujBnokowhUx7qZtFTxqhNuMrQxnlVmF
+	 lQjqeWZGb5/SOOepeHg3ZSSV/OhuaC6mhnCGs1LY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732577AbgFPPuK (ORCPT
+        id S1732588AbgFPQDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45444 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:03:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732570AbgFPPuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:50:04 -0400
+        id S1732375AbgFPPuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE2CF21475;
-        Tue, 16 Jun 2020 15:50:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97DFC208B8;
+        Tue, 16 Jun 2020 15:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322604;
-        bh=f4dWbME0zvTO4lNAmFwEvgbVjHjm7e7nyr1BsvdN+HM=;
+        s=default; t=1592322609;
+        bh=+Mw1Hkuxle5Fl7ol3+GYHkofD6hHkT3YdniPFZuASkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLDjSSyQ8cQmKr9slU7SLGOqu2Oq/yb0NJKms2JbcffDvHQwgDTjRXeDW+Ua2xa6L
-         Exo1jVUEN0msRTiloxGBTKDW2Xk54XdIdtoasF5CLcms9/pmO+dqT8wWCQYA4jXkjt
-         bdKJshMUdw/V2sNsiYG9JPyITsHFW6naU4wisv8A=
+        b=whngCUcGuXl75VTUgegcgTkz4XEAJ+Srd8BB1J6ezZxkr99DxV5g7txSBI7T9nkAZ
+         JMcwDew1jsHBPPiFlQo0C6CcGLcqMMqDgvpNlebRSsDkdBuR3RWmwrXvPBKWbvd/rA
+         9XVMRkIKYc3fFZP0oHjaba8SH+dF99m+ZNQW0WXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Alla Segal <allas@mellanox.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 005/161] bridge: Avoid infinite loop when suppressing NS messages with invalid options
-Date:   Tue, 16 Jun 2020 17:33:15 +0200
-Message-Id: <20200616153106.667196714@linuxfoundation.org>
+Subject: [PATCH 5.6 007/161] net: ena: xdp: XDP_TX: fix memory leak
+Date:   Tue, 16 Jun 2020 17:33:17 +0200
+Message-Id: <20200616153106.759787627@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,50 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 53fc685243bd6fb90d90305cea54598b78d3cbfc ]
+[ Upstream commit cd07ecccba13b8bd5023ffe7be57363d07e3105f ]
 
-When neighbor suppression is enabled the bridge device might reply to
-Neighbor Solicitation (NS) messages on behalf of remote hosts.
+When sending very high packet rate, the XDP tx queues can get full and
+start dropping packets. In this case we don't free the pages which
+results in ena driver draining the system memory.
 
-In case the NS message includes the "Source link-layer address" option
-[1], the bridge device will use the specified address as the link-layer
-destination address in its reply.
+Fix:
+Simply free the pages when necessary.
 
-To avoid an infinite loop, break out of the options parsing loop when
-encountering an option with length zero and disregard the NS message.
-
-This is consistent with the IPv6 ndisc code and RFC 4886 which states
-that "Nodes MUST silently discard an ND packet that contains an option
-with length zero" [2].
-
-[1] https://tools.ietf.org/html/rfc4861#section-4.3
-[2] https://tools.ietf.org/html/rfc4861#section-4.6
-
-Fixes: ed842faeb2bd ("bridge: suppress nd pkts on BR_NEIGH_SUPPRESS ports")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Alla Segal <allas@mellanox.com>
-Tested-by: Alla Segal <allas@mellanox.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: 548c4940b9f1 ("net: ena: Implement XDP_TX action")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_arp_nd_proxy.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bridge/br_arp_nd_proxy.c
-+++ b/net/bridge/br_arp_nd_proxy.c
-@@ -276,6 +276,10 @@ static void br_nd_send(struct net_bridge
- 	ns_olen = request->len - (skb_network_offset(request) +
- 				  sizeof(struct ipv6hdr)) - sizeof(*ns);
- 	for (i = 0; i < ns_olen - 1; i += (ns->opt[i + 1] << 3)) {
-+		if (!ns->opt[i + 1]) {
-+			kfree_skb(reply);
-+			return;
-+		}
- 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
- 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
- 			break;
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -358,7 +358,7 @@ error_unmap_dma:
+ 	ena_unmap_tx_buff(xdp_ring, tx_info);
+ 	tx_info->xdpf = NULL;
+ error_drop_packet:
+-
++	__free_page(tx_info->xdp_rx_page);
+ 	return NETDEV_TX_OK;
+ }
+ 
 
 
