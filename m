@@ -2,269 +2,116 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B788C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7F6207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:17:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eq+7vwnp"
+	by mail.kernel.org (Postfix) with ESMTP id 8AD7320B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592349624;
+	bh=tiK4KMdA62onp2wByWby+/bwJDYFvHk4Oek1Xrw3dFA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=VCvABBPG1bbZ77vJhF/Tw31gMyhkgeeJ+jnPzEpLI+14DzRcHFrfay9okEboAJyNr
+	 mgYpsev21/NkDjHbgE4RDE3vleK8cmXtDGtAznbybu0vUjXml6OzZIlg2KkJRD6n41
+	 ZlIjBIzE4d37yNhvjs1PAos6Bbc2ihmzytKwLMVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgFPXRZ (ORCPT
+        id S1726508AbgFPXUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgFPXRX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:17:23 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E6FC06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:17:22 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id e11so290390ilr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2suWlJa8CpH6BIGy7EoIm2xIgo7asmnb0ube9qU2ZKk=;
-        b=eq+7vwnpvebg3rd3wG9R+noiw205POdh0tWyYaRranqq/PD30SLj0QFQlCh+9IrNPE
-         lPcquAIew/6yDSLJ4H7rhCnTweLD0e5EXs2SBne34BYDYeHwV34PqkgyM0XBRQcyrkBD
-         ZYZE7toxMTPsLxWi3AErNt2zSzuOb4tWYafwc4eFqQsaddLZmlyEZGtVMzhvRuRwDWrR
-         LncAbtZYwsRE19gQNbbvhjW7sQUEL86wM3AVn+rY3Swkqwft3mWeVNV04Y+/Q8DilSvo
-         FIcLi8slFYfuV8gDATUiLWBYABJmthAIbWyzER3395cFjAf2A02yrrAJTkEkAk+cJrjS
-         y+bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2suWlJa8CpH6BIGy7EoIm2xIgo7asmnb0ube9qU2ZKk=;
-        b=EsCEJXsei4P/wYKetG8AsT/aWCuDc92YblaERbSd1o0uhGat6hXhYkTkldaCJXmROv
-         2xJbdxFwggn+U8SW0MGJ+uy4isng+EsxNPAwBprxO+LgStZFj0ge9xIDT63pUBb8fHiR
-         JA5YLTLR7Ng/3l/8xS9Qm8xXiEhxluzaZFg573/iM6Zk8adYT/G0VyOeuZ8YTdEr3bD4
-         1krrAcOZfDsneYWjpnLC2G/7iUeZmLcGSnijNCd929y2+26KaCorE4jMJCLOkroT9vRM
-         hVy0cD4XkhsoU2rjZXP1yJQZbSlI1amih6PeWUfl+iSa/shbzdQWYtj+JNFY/b8DFKm7
-         OtYQ==
-X-Gm-Message-State: AOAM530ABxgZGQrBW7UmFJXbDK6lnvI5jbkSziUMtyAnV8gr06sapUsa
-        fPqxM4KwFlTgP9fj2pJ0PJWzGKrnW+Mbu7TADGV+3A==
-X-Google-Smtp-Source: ABdhPJwV6lb4T8E6Us4v6aI0n/kcJpPwIFqsk2SK5vA5bPQN6SJQSZlp17j1pgg0EWXgiE6GIBwyukvNj686beLRO3I=
-X-Received: by 2002:a05:6e02:1208:: with SMTP id a8mr5682459ilq.118.1592349440425;
- Tue, 16 Jun 2020 16:17:20 -0700 (PDT)
+        Tue, 16 Jun 2020 19:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725849AbgFPXUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 19:20:21 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B618A207DD;
+        Tue, 16 Jun 2020 23:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592349621;
+        bh=tiK4KMdA62onp2wByWby+/bwJDYFvHk4Oek1Xrw3dFA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=D7HZDgKlntaC82ZPfQik/dwZOJzJT8jigSpJ6AyIV8lHA6Cg/pM1zhcrNrtBna2A7
+         kwoDrlCmjaOCGTlzlQzpNBUXNCxV/ZBZyNFuk9Yb6KlzTl7Us1ydVRQaEVUwryEqso
+         wVt0aaNxTPk4+CMop//V+SdFwLsaSU0gEfDhcg3E=
+Date:   Tue, 16 Jun 2020 18:20:19 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
+        james.morse@arm.com, lenb@kernel.org, tony.luck@intel.com,
+        dan.carpenter@oracle.com, zhangliguang@linux.alibaba.com,
+        andriy.shevchenko@linux.intel.com, wangkefeng.wang@huawei.com,
+        jroedel@suse.de, yangyicong@hisilicon.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
+Subject: Re: [PATCH v9 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
+ controller errors
+Message-ID: <20200616232019.GA1987909@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <159234483706.6230.13753828995249423191.stgit@bmoger-ubuntu> <159234502394.6230.5169466123693241678.stgit@bmoger-ubuntu>
-In-Reply-To: <159234502394.6230.5169466123693241678.stgit@bmoger-ubuntu>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 16 Jun 2020 16:17:09 -0700
-Message-ID: <CALMp9eTxs5nb9Ay0ELVa71cmA9VPzaMSuGgW_iM2tmAVvXs4Pg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] KVM:SVM: Add extended intercept support
-To:     Babu Moger <babu.moger@amd.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>, Joerg Roedel <joro@8bytes.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615101552.802-3-shiju.jose@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 3:03 PM Babu Moger <babu.moger@amd.com> wrote:
->
-> The new intercept bits have been added in vmcb control
-> area to support the interception of INVPCID instruction.
->
-> The following bit is added to the VMCB layout control area
-> to control intercept of INVPCID:
->
-> Byte Offset     Bit(s)          Function
-> 14h             2               intercept INVPCID
->
-> Add the interfaces to support these extended interception.
-> Also update the tracing for extended intercepts.
->
-> AMD documentation for INVPCID feature is available at "AMD64
-> Architecture Programmer=E2=80=99s Manual Volume 2: System Programming,
-> Pub. 24593 Rev. 3.34(or later)"
->
-> The documentation can be obtained at the links below:
-> Link: https://www.amd.com/system/files/TechDocs/24593.pdf
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D206537
+On Mon, Jun 15, 2020 at 11:15:52AM +0100, Shiju Jose wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> The HiSilicon HIP PCIe controller is capable of handling errors
+> on root port and perform port reset separately at each root port.
+> 
+> Add error handling driver for HIP PCIe controller to log
+> and report recoverable errors. Perform root port reset and restore
+> link status after the recovery.
+> 
+> Following are some of the PCIe controller's recoverable errors
+> 1. completion transmission timeout error.
+> 2. CRS retry counter over the threshold error.
+> 3. ECC 2 bit errors
+> 4. AXI bresponse/rresponse errors etc.
 
-Not your change, but this documentation is terrible. There is no
-INVLPCID instruction, nor is there a PCID instruction.
-
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> ---
->  arch/x86/include/asm/svm.h |    3 ++-
->  arch/x86/kvm/svm/nested.c  |    6 +++++-
->  arch/x86/kvm/svm/svm.c     |    1 +
->  arch/x86/kvm/svm/svm.h     |   18 ++++++++++++++++++
->  arch/x86/kvm/trace.h       |   12 ++++++++----
->  5 files changed, 34 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-> index 8a1f5382a4ea..62649fba8908 100644
-> --- a/arch/x86/include/asm/svm.h
-> +++ b/arch/x86/include/asm/svm.h
-> @@ -61,7 +61,8 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
->         u32 intercept_dr;
->         u32 intercept_exceptions;
->         u64 intercept;
-> -       u8 reserved_1[40];
-> +       u32 intercept_extended;
-> +       u8 reserved_1[36];
-
-It seems like a more straightforward implementation would simply
-change 'u64 intercept' to 'u32 intercept[3].'
-
->         u16 pause_filter_thresh;
->         u16 pause_filter_count;
->         u64 iopm_base_pa;
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index 8a6db11dcb43..7f6d0f2533e2 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -121,6 +121,7 @@ void recalc_intercepts(struct vcpu_svm *svm)
->         c->intercept_dr =3D h->intercept_dr;
->         c->intercept_exceptions =3D h->intercept_exceptions;
->         c->intercept =3D h->intercept;
-> +       c->intercept_extended =3D h->intercept_extended;
->
->         if (g->int_ctl & V_INTR_MASKING_MASK) {
->                 /* We only want the cr8 intercept bits of L1 */
-> @@ -142,6 +143,7 @@ void recalc_intercepts(struct vcpu_svm *svm)
->         c->intercept_dr |=3D g->intercept_dr;
->         c->intercept_exceptions |=3D g->intercept_exceptions;
->         c->intercept |=3D g->intercept;
-> +       c->intercept_extended |=3D g->intercept_extended;
->  }
->
->  static void copy_vmcb_control_area(struct vmcb_control_area *dst,
-> @@ -151,6 +153,7 @@ static void copy_vmcb_control_area(struct vmcb_contro=
-l_area *dst,
->         dst->intercept_dr         =3D from->intercept_dr;
->         dst->intercept_exceptions =3D from->intercept_exceptions;
->         dst->intercept            =3D from->intercept;
-> +       dst->intercept_extended   =3D from->intercept_extended;
->         dst->iopm_base_pa         =3D from->iopm_base_pa;
->         dst->msrpm_base_pa        =3D from->msrpm_base_pa;
->         dst->tsc_offset           =3D from->tsc_offset;
-> @@ -433,7 +436,8 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
->         trace_kvm_nested_intercepts(nested_vmcb->control.intercept_cr & 0=
-xffff,
->                                     nested_vmcb->control.intercept_cr >> =
-16,
->                                     nested_vmcb->control.intercept_except=
-ions,
-> -                                   nested_vmcb->control.intercept);
-> +                                   nested_vmcb->control.intercept,
-> +                                   nested_vmcb->control.intercept_extend=
-ed);
->
->         /* Clear internal status */
->         kvm_clear_exception_queue(&svm->vcpu);
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 9e333b91ff78..285e5e1ff518 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -2801,6 +2801,7 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
->         pr_err("%-20s%04x\n", "dr_write:", control->intercept_dr >> 16);
->         pr_err("%-20s%08x\n", "exceptions:", control->intercept_exception=
-s);
->         pr_err("%-20s%016llx\n", "intercepts:", control->intercept);
-> +       pr_err("%-20s%08x\n", "intercepts (extended):", control->intercep=
-t_extended);
->         pr_err("%-20s%d\n", "pause filter count:", control->pause_filter_=
-count);
->         pr_err("%-20s%d\n", "pause filter threshold:",
->                control->pause_filter_thresh);
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 6ac4c00a5d82..935d08fac03d 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -311,6 +311,24 @@ static inline void clr_intercept(struct vcpu_svm *sv=
-m, int bit)
->         recalc_intercepts(svm);
->  }
->
-> +static inline void set_extended_intercept(struct vcpu_svm *svm, int bit)
+> +static int hisi_pcie_notify_error(struct notifier_block *nb,
+> +				  unsigned long event, void *data)
 > +{
-> +       struct vmcb *vmcb =3D get_host_vmcb(svm);
+> +	struct acpi_hest_generic_data *gdata = data;
+> +	const struct hisi_pcie_error_data *error_data =
+> +				acpi_hest_get_payload(gdata);
+> +	struct hisi_pcie_error_private *priv =
+> +			container_of(nb, struct hisi_pcie_error_private, nb);
+> +	struct platform_device *pdev = priv->pdev;
+> +	struct device *dev = &pdev->dev;
+> +	u8 socket;
 > +
-> +       vmcb->control.intercept_extended |=3D (1U << bit);
+> +	if (device_property_read_u8(dev, "socket", &socket))
+> +		return NOTIFY_DONE;
 > +
-> +       recalc_intercepts(svm);
-> +}
-> +
-> +static inline void clr_extended_intercept(struct vcpu_svm *svm, int bit)
-> +{
-> +       struct vmcb *vmcb =3D get_host_vmcb(svm);
-> +
-> +       vmcb->control.intercept_extended &=3D ~(1U << bit);
-> +
-> +       recalc_intercepts(svm);
-> +}
+> +	if (!guid_equal((guid_t *)gdata->section_type, &hisi_pcie_sec_type) ||
+> +	    error_data->socket_id != socket)
+> +		return NOTIFY_DONE;
 
-You wouldn't need these new functions if you defined 'u32
-intercept[3],' as I suggested above. Just change set_intercept and
-clr_intercept to use __set_bit and __clear_bit.
+I think you have to verify the GUID first before you can even safely
+extract a struct hisi_pcie_error_private from the payload:
 
->  static inline bool is_intercept(struct vcpu_svm *svm, int bit)
->  {
->         return (svm->vmcb->control.intercept & (1ULL << bit)) !=3D 0;
-> diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-> index b66432b015d2..5c841c42b33d 100644
-> --- a/arch/x86/kvm/trace.h
-> +++ b/arch/x86/kvm/trace.h
-> @@ -544,14 +544,16 @@ TRACE_EVENT(kvm_nested_vmrun,
->  );
->
->  TRACE_EVENT(kvm_nested_intercepts,
-> -           TP_PROTO(__u16 cr_read, __u16 cr_write, __u32 exceptions, __u=
-64 intercept),
-> -           TP_ARGS(cr_read, cr_write, exceptions, intercept),
-> +           TP_PROTO(__u16 cr_read, __u16 cr_write, __u32 exceptions, __u=
-64 intercept,
-> +                    __u32 extended),
-> +           TP_ARGS(cr_read, cr_write, exceptions, intercept, extended),
->
->         TP_STRUCT__entry(
->                 __field(        __u16,          cr_read         )
->                 __field(        __u16,          cr_write        )
->                 __field(        __u32,          exceptions      )
->                 __field(        __u64,          intercept       )
-> +               __field(        __u32,          extended        )
->         ),
->
->         TP_fast_assign(
-> @@ -559,11 +561,13 @@ TRACE_EVENT(kvm_nested_intercepts,
->                 __entry->cr_write       =3D cr_write;
->                 __entry->exceptions     =3D exceptions;
->                 __entry->intercept      =3D intercept;
-> +               __entry->extended       =3D extended;
->         ),
->
-> -       TP_printk("cr_read: %04x cr_write: %04x excp: %08x intercept: %01=
-6llx",
-> +       TP_printk("cr_read: %04x cr_write: %04x excp: %08x intercept: %01=
-6llx"
-> +                 "intercept (extended): %08x",
->                 __entry->cr_read, __entry->cr_write, __entry->exceptions,
-> -               __entry->intercept)
-> +               __entry->intercept, __entry->extended)
->  );
->  /*
->   * Tracepoint for #VMEXIT while nested
->
+  if (!guid_equal(...))
+    return NOTIFY_DONE;
+
+  priv = container_of(nb, struct hisi_pcie_error_private, nb);
+  pdev = priv->pdev;
+  dev = &pdev->dev;
+
+  if (device_property_read_u8(dev, "socket", &socket))
+    return NOTIFY_DONE;
+
+  if (error_data->socket_id != socket)
+    return NOTIFY_DONE;
+
+> +	hisi_pcie_handle_error(pdev, error_data);
+> +
+> +	return NOTIFY_OK;
+> +}
