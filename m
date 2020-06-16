@@ -2,94 +2,117 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A686AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B85C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82EE820776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6536220882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323228;
-	bh=338AucczY2mLow4d9IdceneS8Dm9fzEUvS1ZacGLH8w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tifiDOyoNu5bQYdqvu6w6Z+WdiSE+MWVBL822u6wnY8/2iV9efV5gIemxQQ2H2UZa
-	 9wLiWj4GfdGcD0UH+kWrm2wQXK5zpBX7zeJkhqcnxC8Z1fPwX6dtrlfAqO9s/dhLDv
-	 EzWyVz6o3heNo+txbg9WkJ5fThCFNoHh9C7siSVk=
+	s=default; t=1592323230;
+	bh=nhtRihdq0ZnRFzRQVLYSMJPsEUezpVlbdISEsa2u8F0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xDNJbAKy8cKzA5rq5eGdwN9s/Wtw4NjTj3mO5dVyuhlPQVOrh4I/yUyjI/DxF79cp
+	 yS+Fw3GwHmvrU4bM28wmZwnLMaH6THJzmKPe31vs9Z/PaxQBPO3FxF1D4EvZ64QCa2
+	 AuTKKt0cuwWfWNOZJt3XxGRBHrSzElzHpgEc6LRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733095AbgFPQAY (ORCPT
+        id S1729560AbgFPQA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50662 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732821AbgFPPwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1732614AbgFPQAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:00:21 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B64C208D5;
-        Tue, 16 Jun 2020 15:52:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 584D620882;
+        Tue, 16 Jun 2020 16:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322773;
-        bh=338AucczY2mLow4d9IdceneS8Dm9fzEUvS1ZacGLH8w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dIwyZzvhk5uI7bPLuLSN0tL+4N/srZ0qHBXfoE/yqyD1v8nZ/f5dq1KGz5WVIH242
-         9yxwnMyAqux0opK1DUb3UwjgHvRrDi2fH4o5walMuTu523v3bxQRidRsXkGpaIyEeX
-         GCM7QUh8EhXF+ig0SDG/CuIazPAfupZdzkPVxdVM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 068/161] ALSA: es1688: Add the missed snd_card_free()
-Date:   Tue, 16 Jun 2020 17:34:18 +0200
-Message-Id: <20200616153109.619370736@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
-References: <20200616153106.402291280@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1592323220;
+        bh=nhtRihdq0ZnRFzRQVLYSMJPsEUezpVlbdISEsa2u8F0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qwvcb5lGhEbAtTjUKYtG+m/I0Vwuvkg8ZwXwxUy/bdqyWvbARwe+nPbeVmI45HELY
+         k32Drk1lwyA1R4DgzpmrRhwMQlZjKM1yiKXnfWlV1syy8bYMgCU/PyQWMQedOAzL/O
+         SQnIfmHT3qkfUTsuJbwEYKQrubysqHO7QnSE1Kws=
+Date:   Tue, 16 Jun 2020 12:00:19 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Thomas Zimmermann <tzimmermann@suse.de>, alexander.deucher@amd.com,
+        chris@chris-wilson.co.uk, ville.syrjala@linux.intel.com,
+        Hawking.Zhang@amd.com, tvrtko.ursulin@intel.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, spronovo@microsoft.com, iourit@microsoft.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [RFC PATCH 0/4] DirectX on Linux
+Message-ID: <20200616160019.GQ1931@sasha-vm>
+References: <20200519163234.226513-1-sashal@kernel.org>
+ <55c57049-1869-7421-aa0f-3ce0b6a133cf@suse.de>
+ <20200616105112.GC1718@bug>
+ <20200616132819.GP1931@sasha-vm>
+ <20200616144122.GA18447@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200616144122.GA18447@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+On Tue, Jun 16, 2020 at 04:41:22PM +0200, Pavel Machek wrote:
+>On Tue 2020-06-16 09:28:19, Sasha Levin wrote:
+>> On Tue, Jun 16, 2020 at 12:51:13PM +0200, Pavel Machek wrote:
+>> > Hi!
+>> >
+>> > > > The driver creates the /dev/dxg device, which can be opened by user mode
+>> > > > application and handles their ioctls. The IOCTL interface to the driver
+>> > > > is defined in dxgkmthk.h (Dxgkrnl Graphics Port Driver ioctl
+>> > > > definitions). The interface matches the D3DKMT interface on Windows.
+>> > > > Ioctls are implemented in ioctl.c.
+>> > >
+>> > > Echoing what others said, you're not making a DRM driver. The driver should live outside
+>> > > of the DRM code.
+>> > >
+>> >
+>> > Actually, this sounds to me like "this should not be merged into linux kernel". I mean,
+>> > we already have DRM API on Linux. We don't want another one, do we?
+>>
+>> This driver doesn't have any display functionality.
+>
+>Graphics cards without displays connected are quite common. I may be
+>wrong, but I believe we normally handle them using DRM...
 
-commit d9b8fbf15d05350b36081eddafcf7b15aa1add50 upstream.
+This is more similar to the accelerators that live in drivers/misc/
+right now.
 
-snd_es968_pnp_detect() misses a snd_card_free() in a failed path.
-Add the missed function call to fix it.
+>> > And at the very least... this misses API docs for /dev/dxg. Code can't really
+>> > be reviewed without that.
+>>
+>> The docs live here: https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/d3dkmthk/
+>
+>I don't see "/dev/dxg" being metioned there. Plus, kernel API
 
-Fixes: a20971b201ac ("ALSA: Merge es1688 and es968 drivers")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603092459.1424093-1-hslester96@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Right, this is because this entire codebase is just a pipe to the API
+I've linked, it doesn't implement anything new on it's own.
 
----
- sound/isa/es1688/es1688.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+>documentation should really go to Documentation, and be suitably
+>licensed.
 
---- a/sound/isa/es1688/es1688.c
-+++ b/sound/isa/es1688/es1688.c
-@@ -267,8 +267,10 @@ static int snd_es968_pnp_detect(struct p
- 		return error;
- 	}
- 	error = snd_es1688_probe(card, dev);
--	if (error < 0)
-+	if (error < 0) {
-+		snd_card_free(card);
- 		return error;
-+	}
- 	pnp_set_card_drvdata(pcard, card);
- 	snd_es968_pnp_is_probed = 1;
- 	return 0;
+While I don't mind copying the docs into Documentation, I'm concerned
+that over time they will diverge from the docs on the website. This is
+similar to how other documentation (such as the virtio spec) live out of
+tree to avoid these issues.
 
+w.r.t the licensing, again: this was sent under GPL2 (note the SPDX tags
+in each file), and the patches carry a S-O-B by someone who was a
+Microsoft employee at the time the patches were sent.
 
+-- 
+Thanks,
+Sasha
