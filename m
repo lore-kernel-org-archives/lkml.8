@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36031C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 888CD21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1889521475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322593;
-	bh=x33DfcqvHmtV7bBLn53MbpkOd18BX8qs2S2kmHLyUbA=;
+	s=default; t=1592322597;
+	bh=9gmy1HztA2mjnSIrbqEUjMiWyJe09lRlOSUFVNxX+Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h1ZY472mQNu7fNXGuZ/OaX0+ewZuaS81LcnMmyQPK+qp/yK4NiOB+bz+3NGz2n1q/
-	 KyMqhi48BgcRveu4ba9LM+DUVAagSZnDIa0ai3/Txz6H3+k1M2tipkK3Kcesnx7roQ
-	 8zaHPa2qONKqFp+E9u0hWGNZktUlwyLxZc8cqfPI=
+	b=LN5deMhceYcCf2cjA2RFdgoc5yqJFPTMdxCL9nRqBZ4j62An39WLWjBy2wPtqRYhd
+	 +EkdtQQq/wUMCQApwiAeUqTfWB/wc+7zQ22lO3BedHseQXGhEoiNvXY1Tpg0T9ujHj
+	 UBw3zH45WG7AvxlWdTu79bVgZ1IwgeBDERmH1Zr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbgFPPtv (ORCPT
+        id S1732557AbgFPPtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:49:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44874 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:49:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732536AbgFPPto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:44 -0400
+        id S1732014AbgFPPtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 435302071A;
-        Tue, 16 Jun 2020 15:49:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C7702071A;
+        Tue, 16 Jun 2020 15:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322583;
-        bh=x33DfcqvHmtV7bBLn53MbpkOd18BX8qs2S2kmHLyUbA=;
+        s=default; t=1592322591;
+        bh=9gmy1HztA2mjnSIrbqEUjMiWyJe09lRlOSUFVNxX+Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nk6Ys9q1TwwuFvqWmdQ66yBIDXcBlsuI5dCvFNGbgZ+H1jYmccmOshLkgrnB5+AXU
-         2fUrqBXWJPHvQGkjPVyKxFTy9A6phZv2R/+pzIHJ7wszHUsOgt16KGepYVWLP8d8/6
-         m+l8dFvs4Z/c1QJc+CcDsQSzX25ZVBIJxE7WzgsM=
+        b=apgcXrXKD7Eb0pGt/Y5XIfu5mTsTdr0GIFp5dIJhpY1WslKbbBBBH9/aYm9rwt/0Y
+         xu4MNb4/JqxB6Ph7dzsHCt4kDOYr9tQkjIZFbemqeuqW54O28rxitn/+DO/+on7Pfl
+         vZiskPWGBi5ofWWsVvFrdiC+ec4PIr25sadZGd5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 024/161] perf probe: Accept the instance number of kretprobe event
-Date:   Tue, 16 Jun 2020 17:33:34 +0200
-Message-Id: <20200616153107.549472199@linuxfoundation.org>
+Subject: [PATCH 5.6 027/161] fanotify: fix ignore mask logic for events on child and on dir
+Date:   Tue, 16 Jun 2020 17:33:37 +0200
+Message-Id: <20200616153107.691857095@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -63,68 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit c6aab66a728b6518772c74bd9dff66e1a1c652fd ]
+[ Upstream commit 2f02fd3fa13e51713b630164f8a8e5b42de8283b ]
 
-Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number
-on kprobe_events") introduced to show the instance number of kretprobe
-events, the length of the 1st format of the kprobe event will not 1, but
-it can be longer.  This caused a parser error in perf-probe.
+The comments in fanotify_group_event_mask() say:
 
-Skip the length check the 1st format of the kprobe event to accept this
-instance number.
+  "If the event is on dir/child and this mark doesn't care about
+   events on dir/child, don't send it!"
 
-Without this fix:
+Specifically, mount and filesystem marks do not care about events
+on child, but they can still specify an ignore mask for those events.
+For example, a group that has:
+- A mount mark with mask 0 and ignore_mask FAN_OPEN
+- An inode mark on a directory with mask FAN_OPEN | FAN_OPEN_EXEC
+  with flag FAN_EVENT_ON_CHILD
 
-  # perf probe -a vfs_read%return
-  Added new event:
-    probe:vfs_read__return (on vfs_read%return)
+A child file open for exec would be reported to group with the FAN_OPEN
+event despite the fact that FAN_OPEN is in ignore mask of mount mark,
+because the mark iteration loop skips over non-inode marks for events
+on child when calculating the ignore mask.
 
-  You can now use it in all perf tools, such as:
+Move ignore mask calculation to the top of the iteration loop block
+before excluding marks for events on dir/child.
 
-  	perf record -e probe:vfs_read__return -aR sleep 1
-
-  # perf probe -l
-  Semantic error :Failed to parse event name: r16:probe/vfs_read__return
-    Error: Failed to show event list.
-
-And with this fixes:
-
-  # perf probe -a vfs_read%return
-  ...
-  # perf probe -l
-    probe:vfs_read__return (on vfs_read%return)
-
-Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
-Reported-by: Yuxuan Shui <yshuiv7@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Yuxuan Shui <yshuiv7@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207587
-Link: http://lore.kernel.org/lkml/158877535215.26469.1113127926699134067.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lore.kernel.org/r/20200524072441.18258-1-amir73il@gmail.com
+Reported-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/linux-fsdevel/20200521162443.GA26052@quack2.suse.cz/
+Fixes: 55bf882c7f13 "fanotify: fix merging marks masks with FAN_ONDIR"
+Fixes: b469e7e47c8a "fanotify: fix handling of events on child..."
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-event.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/notify/fanotify/fanotify.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index eea132f512b0..c6bcf5709564 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1765,8 +1765,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
- 	fmt1_str = strtok_r(argv0_str, ":", &fmt);
- 	fmt2_str = strtok_r(NULL, "/", &fmt);
- 	fmt3_str = strtok_r(NULL, " \t", &fmt);
--	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
--	    || fmt3_str == NULL) {
-+	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
- 		semantic_error("Failed to parse event name: %s\n", argv[0]);
- 		ret = -EINVAL;
- 		goto out;
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index deb13f0a0f7d..d24548ed31b9 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -171,6 +171,10 @@ static u32 fanotify_group_event_mask(struct fsnotify_group *group,
+ 		if (!fsnotify_iter_should_report_type(iter_info, type))
+ 			continue;
+ 		mark = iter_info->marks[type];
++
++		/* Apply ignore mask regardless of ISDIR and ON_CHILD flags */
++		marks_ignored_mask |= mark->ignored_mask;
++
+ 		/*
+ 		 * If the event is on dir and this mark doesn't care about
+ 		 * events on dir, don't send it!
+@@ -188,7 +192,6 @@ static u32 fanotify_group_event_mask(struct fsnotify_group *group,
+ 			continue;
+ 
+ 		marks_mask |= mark->mask;
+-		marks_ignored_mask |= mark->ignored_mask;
+ 	}
+ 
+ 	test_mask = event_mask & marks_mask & ~marks_ignored_mask;
 -- 
 2.25.1
 
