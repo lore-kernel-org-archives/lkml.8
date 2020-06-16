@@ -2,103 +2,116 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F895C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66100C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7825020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6A720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fd+q13dn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgFPRTC (ORCPT
+        id S1729234AbgFPRTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:19:02 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36599 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgFPRTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:19:01 -0400
-IronPort-SDR: Kb2nRk8r/1qvENrJmyPawleHqzB4tdft2mApEndQCe9uxR06KPXcNV8ZkvpsoUhbXz4NCPIkQi
- TQ/jBTZp9hDg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 10:19:00 -0700
-IronPort-SDR: HPPTnoVMM9cF4ZrV3z6gERadUOEYz01w9Pc8K1U0rwqGA/pHFooWfUooLD5cImk7Tkjn3gqczO
- P9u1ee/Ft3xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="298984794"
-Received: from unknown (HELO intel.com) ([10.251.95.102])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Jun 2020 10:18:54 -0700
-Date:   Tue, 16 Jun 2020 20:18:54 +0300
-From:   Andi Shyti <andi.shyti@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        jarkko.nikula@linux.intel.com, aaron.ma@canonical.com,
-        admin@kryma.net, benjamin.tissoires@redhat.com,
-        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
-        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, vicamo.yang@canonical.com,
-        wsa@kernel.org
-Subject: Re: [PATCH v2] HID: i2c-hid: Use block reads when possible to save
- power
-Message-ID: <20200616171854.GA1415@intel.intel>
-References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
- <20200616154951.3050-1-sultan@kerneltoast.com>
- <20200616164101.GY2428291@smile.fi.intel.com>
+        Tue, 16 Jun 2020 13:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgFPRTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:19:33 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA700C0613ED
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:19:30 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id e16so16095937qtg.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:19:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wWTEVC4IvADhgC8WKAFdPBJMykXtWuEzpH/Aah85Qcs=;
+        b=fd+q13dnpRb7sosklNefJkvA0FgEtbX+514cFpXpLhhiNOAvyS/H0qQcCQx7cfQRZa
+         4rh9Q/ZoLUFe0x7JUpc361CfeuZK/IAZud2gStzhirNsoDffnc2VZVHaTihzVXmP3wqE
+         W4h4PmzaSlA5SXNbb1860nwCQOOwf1EZw5Pz89AXzvU86IydYIKA3GHIBnmWdy+vpU9t
+         3+kfMcxSKGu00Aa0iG7gvZtvRzhO/TbhNKd1QkdN/KFxYeqijSeeAI55jwazR6hriiRB
+         56xUWZXy6kVPqQ57aqcuOMqHTxnV3wxH1D+rVTeNzAtv4xr0oH4BCIBYKjVdllNkMxPT
+         q9bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wWTEVC4IvADhgC8WKAFdPBJMykXtWuEzpH/Aah85Qcs=;
+        b=JNhB92ouZUo8eqF/1oJ6HrO+wAQLa6hLYUba1t9pg6lzP6/N9KHWHEXr7VO/sdzD2y
+         6P/0ChWEDLbXrmgjK6Seodv2cSRZG65BzfNIR//fRFByTbKIzS7UcSUGcyR5WY8mdqzS
+         J+BHKlO1sssAdUuyxsapiE67oNWQ6LxRSEntE9KD7OpW2Uto/OufHj/bRzHrStlJC7yr
+         e2E90KgffAER6n8z+0JBc7WOiWtS6xpGBTUn9u9+D/il7Tqr/5zARKz20+ydWe/OCoup
+         Ttpt3IGuZM+4UliW8QqRGyGOdSri4Jnr7Ja2aXEhUF5MQ/P85W40LHDTfj6mBz1BpQEo
+         i7aA==
+X-Gm-Message-State: AOAM532Q9l3bB47zdn3s0v0VQe05W2pbNTN02c8NtQvOhO/1kCIB/e7B
+        F2CFc3PT7q5pAJFpKd/qHRLAHIMY1D8=
+X-Google-Smtp-Source: ABdhPJy8Ml+SRDOIpfMU19h6AyD4PHxw4EEAdOlfy7DVyy6x5lPuP4K3JL/v7tdCndKeai3czWUJcg==
+X-Received: by 2002:ac8:339b:: with SMTP id c27mr21285530qtb.210.1592327969918;
+        Tue, 16 Jun 2020 10:19:29 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id q187sm14335126qka.34.2020.06.16.10.19.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 10:19:29 -0700 (PDT)
+Subject: Re: [PATCH v6 2/6] soc: qcom: rpmhpd: Introduce function to retrieve
+ power domain performance state count
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200604015317.31389-1-thara.gopinath@linaro.org>
+ <20200604015317.31389-3-thara.gopinath@linaro.org>
+ <CAPDyKFqxV20Fv2X7wJ5zKa_csDgSBL5KN9HtrA6+EFpgYPhxyg@mail.gmail.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <6ce39992-2b24-ba55-521b-6f27e52b9f6e@linaro.org>
+Date:   Tue, 16 Jun 2020 13:19:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616164101.GY2428291@smile.fi.intel.com>
+In-Reply-To: <CAPDyKFqxV20Fv2X7wJ5zKa_csDgSBL5KN9HtrA6+EFpgYPhxyg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
 
-> > so the only strategy available up until now has been to always retrieve
-> > the maximum possible report length over i2c, which can be quite
-> > inefficient. For devices that send reports in block read format, the i2c
-> > controller driver can read the payload length on the fly and terminate
-> > the i2c transaction early, resulting in considerable power savings.
-> > 
-> > On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
-> > touchpad causes psys power readings to go up by about 4W and hover there
-> > until I remove my finger. With this patch, my psys readings go from 4.7W
-> > down to 3.1W, yielding about 1.6W in savings. This is because my
-> > touchpad's max report length is 60 bytes, but all of the regular reports
-> > it sends for touch events are only 32 bytes, so the i2c transfer is
-> > roughly halved for the common case.
+
+On 6/16/20 5:21 AM, Ulf Hansson wrote:
+> On Thu, 4 Jun 2020 at 03:53, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>>
+>> Populate .get_performance_state_count in genpd ops to retrieve the count of
+>> performance states supported by a rpmh power domain.
+>>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > 
-> > +	/* Try to do a block read if the size fits in one byte */
-> > +	flags = size > 255 ? I2C_M_RD : I2C_M_RD | I2C_M_RECV_LEN;
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Thanks Ulf for all the reviews.
 > 
-> AFAIR SMBus specification tells about 256. Why 255?
+> Kind regards
+> Uffe
 > 
-> Andi, am I correct?
 
-Actually the SMBUS 3.0 protocol from 2015[*] says 255:
 
-"
-D.6 255 Bytes in Process Call
-
-The maximum number of bytes allowed in the Block Write-Block Read
-Process Call (Section 6.5.8) was increased from 32 to 255.
-"
-
-But why does it matter... I see the patch is detatching itself
-from smbus.
-
-And, actually, I wonder if this is the right way to fix it, isn't
-it better to fix smbus instead?
-
-I have a patch ready that fixes the smbus transfer size, perhaps
-I should rebase, test and send it.
-
-Andi
-
-[*] http://smbus.org/specs/SMBus_3_0_20141220.pdf
+-- 
+Warm Regards
+Thara
