@@ -2,432 +2,421 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2202C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8CCB20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IW1zKN4y"
+	by mail.kernel.org (Postfix) with ESMTP id A4AB820707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 02:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgFPCXi (ORCPT
+        id S1726608AbgFPCXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 22:23:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgFPCXg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 22:23:36 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F44C061A0E;
-        Mon, 15 Jun 2020 19:23:36 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l63so6275408pge.12;
-        Mon, 15 Jun 2020 19:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zdSInKb96WROn1ZDvTb+Jk2VVDBFoWMwvWe43mu8U3E=;
-        b=IW1zKN4ysIKMSTXMzqNeZ2Qkn+iF7A36JvvbjhxrvCLDy1+ZmwfzGitTU5agPMrlAw
-         9wBPhESagkJqswYKA2vVAQ5umRaoVlXQs66nDYsA07E6g179AAuc14IiXq0J/2x6ALtj
-         xplRJtUcUmvrkwdo6pFrG9jac5u287Gp1/+FcQlEF5dhOEJhsbedsVFYjWff4b2GKBjV
-         hirWnQxcjaz9Pa1WjJwKx2hOvfRCz+nQK1KLI56IfDQ9KrOwD9enAyFzbqu22d5PJImZ
-         37bDtPfCnq69DKnva9HuyLy4BYqYicXQsAJJY++sWdkPoeJPmzcIfaUmpkAo+3LXq8fQ
-         0f3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zdSInKb96WROn1ZDvTb+Jk2VVDBFoWMwvWe43mu8U3E=;
-        b=YidSGuYvUeL/5CFnpu4WibXTtE3kOss7EYPjKDwbbtgQ74PvFq5HkMwG+Nq9IH0rdQ
-         ACKibBBywz+cPHaL7SwBTdkoU9kCiJ6962sE4oOI5f+hNcptwbIwrTbxA7ju+dRzelsv
-         P65vfIH3X6qC2lScTsT0JUEFT66jXqsOecpPAhN6foiyxgaZRoGJs68XMl/24wrPkJm6
-         Cv9t/+3d4TLJjgrIP2pUwPWRQ5j0RMUMGIrMB2sOSpydbjT4+RWGvGfnaatq7IgGvAAj
-         vdKu4Y/NFzI2c4/KMaewHuG3grZr8b1jFptqUua/RWym1IfgvhOeGgzN4x0Y6LhKEHPU
-         wRFQ==
-X-Gm-Message-State: AOAM530vnvJ1IIskfIEyMgdcPv7rmbGhBWd2cecwe5GRKVavSzf/ko3S
-        3L/592LCtX0h6xAyCUwvfqDSbsYOOuY=
-X-Google-Smtp-Source: ABdhPJzXURz4CvbccISHZ5NPq6CdTw0bZPVTbT2s77jqP+Z9zmCztU5IW8TlVws8W6ZPkpHwMYdBtQ==
-X-Received: by 2002:a65:5949:: with SMTP id g9mr417682pgu.220.1592274215203;
-        Mon, 15 Jun 2020 19:23:35 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:b8ad:8a8d:fa4d:221e? ([2404:7a87:83e0:f800:b8ad:8a8d:fa4d:221e])
-        by smtp.gmail.com with ESMTPSA id q186sm15211448pfc.166.2020.06.15.19.23.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2020 19:23:34 -0700 (PDT)
-Subject: Re: [PATCH v2] exfat: remove EXFAT_SB_DIRTY flag
-To:     Sungjong Seo <sj1557.seo@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Namjae Jeon' <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200616002500epcas1p19135f6f329fbf8c90df1b3ba8a1f67f7@epcas1p1.samsung.com>
- <20200616002450.2522-1-kohada.t2@gmail.com>
- <2c3a01d64382$62b44880$281cd980$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <f072fc24-1c39-3b01-ab94-1e668a01d1f0@gmail.com>
-Date:   Tue, 16 Jun 2020 11:23:32 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 15 Jun 2020 22:23:50 -0400
+Received: from mga12.intel.com ([192.55.52.136]:19294 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgFPCXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 22:23:49 -0400
+IronPort-SDR: yyQxQS39V9u9zuyeSXY7cE7dcG8ARKl2kCMsIK4T8DnmzhjPSi03HOvcQ6eahyiH/fh+TJITyt
+ eKiuEzG3Z6Uw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 19:23:47 -0700
+IronPort-SDR: +8kKmWNGShx52rU2nInPBIcjV35AAAVTBl5+UMQhMLwzBF0zbQ/wuV/D/9LTiUnPWUESYocXWT
+ 77tE5REVXkig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,517,1583222400"; 
+   d="scan'208";a="262885388"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Jun 2020 19:23:47 -0700
+Date:   Mon, 15 Jun 2020 19:23:47 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v13 3/6] powerpc/papr_scm: Fetch nvdimm health
+ information from PHYP
+Message-ID: <20200616022347.GC4160762@iweiny-DESK2.sc.intel.com>
+References: <20200615124407.32596-1-vaibhav@linux.ibm.com>
+ <20200615124407.32596-4-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <2c3a01d64382$62b44880$281cd980$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615124407.32596-4-vaibhav@linux.ibm.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/16 11:03, Sungjong Seo wrote:
->> remove EXFAT_SB_DIRTY flag and related codes.
->>
->> This flag is set/reset in exfat_put_super()/exfat_sync_fs() to avoid
->> sync_blockdev().
->> However ...
->> - exfat_put_super():
->> Before calling this, the VFS has already called sync_filesystem(), so sync
->> is never performed here.
->> - exfat_sync_fs():
->> After calling this, the VFS calls sync_blockdev(), so, it is meaningless
->> to check EXFAT_SB_DIRTY or to bypass sync_blockdev() here.
->> Not only that, but in some cases can't clear VOL_DIRTY.
->> ex:
->> VOL_DIRTY is set when rmdir starts, but when non-empty-dir is detected,
->> return error without setting EXFAT_SB_DIRTY.
->> If performe 'sync' in this state, VOL_DIRTY will not be cleared.
->>
->> Remove the EXFAT_SB_DIRTY check to ensure synchronization.
->> And, remove the code related to the flag.
->>
->> Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
->> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
->> ---
->> Changes in v2:
->>   - exfat_sync_fs() avoids synchronous processing when wait=0
->>
->>   fs/exfat/balloc.c   |  4 ++--
->>   fs/exfat/dir.c      | 16 ++++++++--------
->>   fs/exfat/exfat_fs.h |  5 +----
->>   fs/exfat/fatent.c   |  7 ++-----
->>   fs/exfat/misc.c     |  3 +--
->>   fs/exfat/namei.c    | 12 ++++++------
->>   fs/exfat/super.c    | 14 ++++++--------
->>   7 files changed, 26 insertions(+), 35 deletions(-)
->>
->> diff --git a/fs/exfat/balloc.c b/fs/exfat/balloc.c index
->> 4055eb00ea9b..a987919686c0 100644
->> --- a/fs/exfat/balloc.c
->> +++ b/fs/exfat/balloc.c
->> @@ -158,7 +158,7 @@ int exfat_set_bitmap(struct inode *inode, unsigned int
->> clu)
->>   	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
->>
->>   	set_bit_le(b, sbi->vol_amap[i]->b_data);
->> -	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
->> +	exfat_update_bh(sbi->vol_amap[i], IS_DIRSYNC(inode));
->>   	return 0;
->>   }
->>
->> @@ -180,7 +180,7 @@ void exfat_clear_bitmap(struct inode *inode, unsigned
->> int clu)
->>   	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
->>
->>   	clear_bit_le(b, sbi->vol_amap[i]->b_data);
->> -	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
->> +	exfat_update_bh(sbi->vol_amap[i], IS_DIRSYNC(inode));
->>
->>   	if (opts->discard) {
->>   		int ret_discard;
->> diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c index
->> 8e775bd5d523..02acbb6ddf02 100644
->> --- a/fs/exfat/dir.c
->> +++ b/fs/exfat/dir.c
->> @@ -470,7 +470,7 @@ int exfat_init_dir_entry(struct inode *inode, struct
->> exfat_chain *p_dir,
->>   			&ep->dentry.file.access_date,
->>   			NULL);
->>
->> -	exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
->> +	exfat_update_bh(bh, IS_DIRSYNC(inode));
->>   	brelse(bh);
->>
->>   	ep = exfat_get_dentry(sb, p_dir, entry + 1, &bh, &sector); @@ -
->> 480,7 +480,7 @@ int exfat_init_dir_entry(struct inode *inode, struct
->> exfat_chain *p_dir,
->>   	exfat_init_stream_entry(ep,
->>   		(type == TYPE_FILE) ? ALLOC_FAT_CHAIN : ALLOC_NO_FAT_CHAIN,
->>   		start_clu, size);
->> -	exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
->> +	exfat_update_bh(bh, IS_DIRSYNC(inode));
->>   	brelse(bh);
->>
->>   	return 0;
->> @@ -516,7 +516,7 @@ int exfat_update_dir_chksum(struct inode *inode,
->> struct exfat_chain *p_dir,
->>   	}
->>
->>   	fep->dentry.file.checksum = cpu_to_le16(chksum);
->> -	exfat_update_bh(sb, fbh, IS_DIRSYNC(inode));
->> +	exfat_update_bh(fbh, IS_DIRSYNC(inode));
->>   release_fbh:
->>   	brelse(fbh);
->>   	return ret;
->> @@ -538,7 +538,7 @@ int exfat_init_ext_entry(struct inode *inode, struct
->> exfat_chain *p_dir,
->>   		return -EIO;
->>
->>   	ep->dentry.file.num_ext = (unsigned char)(num_entries - 1);
->> -	exfat_update_bh(sb, bh, sync);
->> +	exfat_update_bh(bh, sync);
->>   	brelse(bh);
->>
->>   	ep = exfat_get_dentry(sb, p_dir, entry + 1, &bh, &sector); @@ -
->> 547,7 +547,7 @@ int exfat_init_ext_entry(struct inode *inode, struct
->> exfat_chain *p_dir,
->>
->>   	ep->dentry.stream.name_len = p_uniname->name_len;
->>   	ep->dentry.stream.name_hash = cpu_to_le16(p_uniname->name_hash);
->> -	exfat_update_bh(sb, bh, sync);
->> +	exfat_update_bh(bh, sync);
->>   	brelse(bh);
->>
->>   	for (i = EXFAT_FIRST_CLUSTER; i < num_entries; i++) { @@ -556,7
->> +556,7 @@ int exfat_init_ext_entry(struct inode *inode, struct exfat_chain
->> *p_dir,
->>   			return -EIO;
->>
->>   		exfat_init_name_entry(ep, uniname);
->> -		exfat_update_bh(sb, bh, sync);
->> +		exfat_update_bh(bh, sync);
->>   		brelse(bh);
->>   		uniname += EXFAT_FILE_NAME_LEN;
->>   	}
->> @@ -580,7 +580,7 @@ int exfat_remove_entries(struct inode *inode, struct
->> exfat_chain *p_dir,
->>   			return -EIO;
->>
->>   		exfat_set_entry_type(ep, TYPE_DELETED);
->> -		exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
->> +		exfat_update_bh(bh, IS_DIRSYNC(inode));
->>   		brelse(bh);
->>   	}
->>
->> @@ -610,7 +610,7 @@ void exfat_free_dentry_set(struct
->> exfat_entry_set_cache *es, int sync)
->>
->>   	for (i = 0; i < es->num_bh; i++) {
->>   		if (es->modified)
->> -			exfat_update_bh(es->sb, es->bh[i], sync);
->> +			exfat_update_bh(es->bh[i], sync);
->>   		brelse(es->bh[i]);
->>   	}
->>   	kfree(es);
->> diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h index
->> 595f3117f492..84664024e51e 100644
->> --- a/fs/exfat/exfat_fs.h
->> +++ b/fs/exfat/exfat_fs.h
->> @@ -13,8 +13,6 @@
->>   #define EXFAT_SUPER_MAGIC       0x2011BAB0UL
->>   #define EXFAT_ROOT_INO		1
->>
->> -#define EXFAT_SB_DIRTY		0
->> -
->>   #define EXFAT_CLUSTERS_UNTRACKED (~0u)
->>
->>   /*
->> @@ -238,7 +236,6 @@ struct exfat_sb_info {
->>   	unsigned int clu_srch_ptr; /* cluster search pointer */
->>   	unsigned int used_clusters; /* number of used clusters */
->>
->> -	unsigned long s_state;
->>   	struct mutex s_lock; /* superblock lock */
->>   	struct exfat_mount_options options;
->>   	struct nls_table *nls_io; /* Charset used for input and display */
->> @@ -514,7 +511,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi,
->> struct timespec64 *ts,
->>   		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
->>   u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
->>   u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type); -void
->> exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
->> +void exfat_update_bh(struct buffer_head *bh, int sync);
->>   void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
->>   		unsigned int size, unsigned char flags);  void
->> exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec); diff --
->> git a/fs/exfat/fatent.c b/fs/exfat/fatent.c index
->> 4e5c5c9c0f2d..82ee8246c080 100644
->> --- a/fs/exfat/fatent.c
->> +++ b/fs/exfat/fatent.c
->> @@ -75,7 +75,7 @@ int exfat_ent_set(struct super_block *sb, unsigned int
->> loc,
->>
->>   	fat_entry = (__le32 *)&(bh->b_data[off]);
->>   	*fat_entry = cpu_to_le32(content);
->> -	exfat_update_bh(sb, bh, sb->s_flags & SB_SYNCHRONOUS);
->> +	exfat_update_bh(bh, sb->s_flags & SB_SYNCHRONOUS);
->>   	exfat_mirror_bh(sb, sec, bh);
->>   	brelse(bh);
->>   	return 0;
->> @@ -174,7 +174,6 @@ int exfat_free_cluster(struct inode *inode, struct
->> exfat_chain *p_chain)
->>   		return -EIO;
->>   	}
->>
->> -	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
->>   	clu = p_chain->dir;
->>
->>   	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) { @@ -274,7 +273,7 @@ int
->> exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
->>   			goto release_bhs;
->>   		}
->>   		memset(bhs[n]->b_data, 0, sb->s_blocksize);
->> -		exfat_update_bh(sb, bhs[n], 0);
->> +		exfat_update_bh(bhs[n], 0);
->>
->>   		n++;
->>   		blknr++;
->> @@ -358,8 +357,6 @@ int exfat_alloc_cluster(struct inode *inode, unsigned
->> int num_alloc,
->>   		}
->>   	}
->>
->> -	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
->> -
->>   	p_chain->dir = EXFAT_EOF_CLUSTER;
->>
->>   	while ((new_clu = exfat_find_free_bitmap(sb, hint_clu)) != diff --
->> git a/fs/exfat/misc.c b/fs/exfat/misc.c index 17d41f3d3709..8a3dde59052b
->> 100644
->> --- a/fs/exfat/misc.c
->> +++ b/fs/exfat/misc.c
->> @@ -163,9 +163,8 @@ u32 exfat_calc_chksum32(void *data, int len, u32
->> chksum, int type)
->>   	return chksum;
->>   }
->>
->> -void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int
->> sync)
->> +void exfat_update_bh(struct buffer_head *bh, int sync)
->>   {
->> -	set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(sb)->s_state);
->>   	set_buffer_uptodate(bh);
->>   	mark_buffer_dirty(bh);
->>
->> diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c index
->> edd8023865a0..5eef2217fcf2 100644
->> --- a/fs/exfat/namei.c
->> +++ b/fs/exfat/namei.c
->> @@ -387,7 +387,7 @@ static int exfat_find_empty_entry(struct inode *inode,
->>   			ep->dentry.stream.valid_size = cpu_to_le64(size);
->>   			ep->dentry.stream.size =
-> ep->dentry.stream.valid_size;
->>   			ep->dentry.stream.flags = p_dir->flags;
->> -			exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
->> +			exfat_update_bh(bh, IS_DIRSYNC(inode));
->>   			brelse(bh);
->>   			if (exfat_update_dir_chksum(inode, &(ei->dir),
->>   			    ei->entry))
->> @@ -1071,7 +1071,7 @@ static int exfat_rename_file(struct inode *inode,
->> struct exfat_chain *p_dir,
->>   			epnew->dentry.file.attr |=
-> cpu_to_le16(ATTR_ARCHIVE);
->>   			ei->attr |= ATTR_ARCHIVE;
->>   		}
->> -		exfat_update_bh(sb, new_bh, sync);
->> +		exfat_update_bh(new_bh, sync);
->>   		brelse(old_bh);
->>   		brelse(new_bh);
->>
->> @@ -1087,7 +1087,7 @@ static int exfat_rename_file(struct inode *inode,
->> struct exfat_chain *p_dir,
->>   		}
->>
->>   		memcpy(epnew, epold, DENTRY_SIZE);
->> -		exfat_update_bh(sb, new_bh, sync);
->> +		exfat_update_bh(new_bh, sync);
->>   		brelse(old_bh);
->>   		brelse(new_bh);
->>
->> @@ -1104,7 +1104,7 @@ static int exfat_rename_file(struct inode *inode,
->> struct exfat_chain *p_dir,
->>   			epold->dentry.file.attr |=
-> cpu_to_le16(ATTR_ARCHIVE);
->>   			ei->attr |= ATTR_ARCHIVE;
->>   		}
->> -		exfat_update_bh(sb, old_bh, sync);
->> +		exfat_update_bh(old_bh, sync);
->>   		brelse(old_bh);
->>   		ret = exfat_init_ext_entry(inode, p_dir, oldentry,
->>   			num_new_entries, p_uniname);
->> @@ -1159,7 +1159,7 @@ static int exfat_move_file(struct inode *inode,
->> struct exfat_chain *p_olddir,
->>   		epnew->dentry.file.attr |= cpu_to_le16(ATTR_ARCHIVE);
->>   		ei->attr |= ATTR_ARCHIVE;
->>   	}
->> -	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
->> +	exfat_update_bh(new_bh, IS_DIRSYNC(inode));
->>   	brelse(mov_bh);
->>   	brelse(new_bh);
->>
->> @@ -1175,7 +1175,7 @@ static int exfat_move_file(struct inode *inode,
->> struct exfat_chain *p_olddir,
->>   	}
->>
->>   	memcpy(epnew, epmov, DENTRY_SIZE);
->> -	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
->> +	exfat_update_bh(new_bh, IS_DIRSYNC(inode));
->>   	brelse(mov_bh);
->>   	brelse(new_bh);
->>
->> diff --git a/fs/exfat/super.c b/fs/exfat/super.c index
->> e650e65536f8..49804d369b51 100644
->> --- a/fs/exfat/super.c
->> +++ b/fs/exfat/super.c
->> @@ -45,9 +45,6 @@ static void exfat_put_super(struct super_block *sb)
->>   	struct exfat_sb_info *sbi = EXFAT_SB(sb);
->>
->>   	mutex_lock(&sbi->s_lock);
->> -	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state))
->> -		sync_blockdev(sb->s_bdev);
->> -	exfat_set_vol_flags(sb, VOL_CLEAN);
->>   	exfat_free_bitmap(sbi);
->>   	brelse(sbi->boot_bh);
->>   	mutex_unlock(&sbi->s_lock);
->> @@ -60,13 +57,14 @@ static int exfat_sync_fs(struct super_block *sb, int
->> wait)
->>   	struct exfat_sb_info *sbi = EXFAT_SB(sb);
->>   	int err = 0;
->>
->> +	if (!wait)
->> +		return;
+On Mon, Jun 15, 2020 at 06:14:04PM +0530, Vaibhav Jain wrote:
+> Implement support for fetching nvdimm health information via
+> H_SCM_HEALTH hcall as documented in Ref[1]. The hcall returns a pair
+> of 64-bit bitmap, bitwise-and of which is then stored in
+> 'struct papr_scm_priv' and subsequently partially exposed to
+> user-space via newly introduced dimm specific attribute
+> 'papr/flags'. Since the hcall is costly, the health information is
+> cached and only re-queried, 60s after the previous successful hcall.
 > 
-> Need to return 0.
-
-I'm sorry.
-Reconsider the check before posting.
-
->> +
->>   	/* If there are some dirty buffers in the bdev inode */
->>   	mutex_lock(&sbi->s_lock);
->> -	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state)) {
->> -		sync_blockdev(sb->s_bdev);
->> -		if (exfat_set_vol_flags(sb, VOL_CLEAN))
->> -			err = -EIO;
->> -	}
->> +	sync_blockdev(sb->s_bdev);
->> +	if (exfat_set_vol_flags(sb, VOL_CLEAN))
->> +		err = -EIO;
->>   	mutex_unlock(&sbi->s_lock);
->>   	return err;
->>   }
->> --
->> 2.25.1
+> The patch also adds a  documentation text describing flags reported by
+> the the new sysfs attribute 'papr/flags' is also introduced at
+> Documentation/ABI/testing/sysfs-bus-papr-pmem.
 > 
+> [1] commit 58b278f568f0 ("powerpc: Provide initial documentation for
+> PAPR hcalls")
+> 
+> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+> ---
+> Changelog:
+> 
+> v12..v13:
+> * None
+> 
+> v11..v12:
+> * None
+> 
+> v10..v11:
+> * None
+> 
+> v9..v10:
+> * Removed an avoidable 'goto' in __drc_pmem_query_health. [ Ira ].
+> 
+> Resend:
+> * Added ack from Aneesh.
+> 
+> v8..v9:
+> * Rename some variables and defines to reduce usage of term SCM
+>   replacing it with PMEM [Dan Williams, Aneesh]
+> * s/PAPR_SCM_DIMM/PAPR_PMEM/g
+> * s/papr_scm_nd_attributes/papr_nd_attributes/g
+> * s/papr_scm_nd_attribute_group/papr_nd_attribute_group/g
+> * s/papr_scm_dimm_attr_groups/papr_nd_attribute_groups/g
+> * Renamed file sysfs-bus-papr-scm to sysfs-bus-papr-pmem
+> 
+> v7..v8:
+> * Update type of variable 'rc' in __drc_pmem_query_health() and
+>   drc_pmem_query_health() to long and int respectively. [ Ira ]
+> * Updated the patch description to s/64 bit Big Endian Number/64-bit
+>   bitmap/ [ Ira, Aneesh ].
+> 
+> Resend:
+> * None
+> 
+> v6..v7 :
+> * Used the exported buf_seq_printf() function to generate content for
+>   'papr/flags'
+> * Moved the PAPR_SCM_DIMM_* bit-flags macro definitions to papr_scm.c
+>   and removed the papr_scm.h file [Mpe]
+> * Some minor consistency issued in sysfs-bus-papr-scm
+>   documentation. [Mpe]
+> * s/dimm_mutex/health_mutex/g [Mpe]
+> * Split drc_pmem_query_health() into two function one of which takes
+>   care of caching and locking. [Mpe]
+> * Fixed a local copy creation of dimm health information using
+>   READ_ONCE(). [Mpe]
+> 
+> v5..v6 :
+> * Change the flags sysfs attribute from 'papr_flags' to 'papr/flags'
+>   [Dan Williams]
+> * Include documentation for 'papr/flags' attr [Dan Williams]
+> * Change flag 'save_fail' to 'flush_fail' [Dan Williams]
+> * Caching of health bitmap to reduce expensive hcalls [Dan Williams]
+> * Removed usage of PPC_BIT from 'papr-scm.h' header [Mpe]
+> * Replaced two __be64 integers from papr_scm_priv to a single u64
+>   integer [Mpe]
+> * Updated patch description to reflect the changes made in this
+>   version.
+> * Removed avoidable usage of 'papr_scm_priv.dimm_mutex' from
+>   flags_show() [Dan Williams]
+> 
+> v4..v5 :
+> * None
+> 
+> v3..v4 :
+> * None
+> 
+> v2..v3 :
+> * Removed PAPR_SCM_DIMM_HEALTH_NON_CRITICAL as a condition for
+>        	 NVDIMM unarmed [Aneesh]
+> 
+> v1..v2 :
+> * New patch in the series.
+> ---
+>  Documentation/ABI/testing/sysfs-bus-papr-pmem |  27 +++
+>  arch/powerpc/platforms/pseries/papr_scm.c     | 168 +++++++++++++++++-
+>  2 files changed, 193 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-papr-pmem
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-papr-pmem b/Documentation/ABI/testing/sysfs-bus-papr-pmem
+> new file mode 100644
+> index 000000000000..5b10d036a8d4
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-papr-pmem
+> @@ -0,0 +1,27 @@
+> +What:		/sys/bus/nd/devices/nmemX/papr/flags
+> +Date:		Apr, 2020
+> +KernelVersion:	v5.8
+> +Contact:	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-nvdimm@lists.01.org,
+> +Description:
+> +		(RO) Report flags indicating various states of a
+> +		papr-pmem NVDIMM device. Each flag maps to a one or
+> +		more bits set in the dimm-health-bitmap retrieved in
+> +		response to H_SCM_HEALTH hcall. The details of the bit
+> +		flags returned in response to this hcall is available
+> +		at 'Documentation/powerpc/papr_hcalls.rst' . Below are
+> +		the flags reported in this sysfs file:
+> +
+> +		* "not_armed"	: Indicates that NVDIMM contents will not
+> +				  survive a power cycle.
+> +		* "flush_fail"	: Indicates that NVDIMM contents
+> +				  couldn't be flushed during last
+> +				  shut-down event.
+> +		* "restore_fail": Indicates that NVDIMM contents
+> +				  couldn't be restored during NVDIMM
+> +				  initialization.
+> +		* "encrypted"	: NVDIMM contents are encrypted.
+> +		* "smart_notify": There is health event for the NVDIMM.
+> +		* "scrubbed"	: Indicating that contents of the
+> +				  NVDIMM have been scrubbed.
+> +		* "locked"	: Indicating that NVDIMM contents cant
+> +				  be modified until next power cycle.
+> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+> index f35592423380..0c091622b15e 100644
+> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/libnvdimm.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/delay.h>
+> +#include <linux/seq_buf.h>
+>  
+>  #include <asm/plpar_wrappers.h>
+>  
+> @@ -22,6 +23,44 @@
+>  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
+>  	 (1ul << ND_CMD_SET_CONFIG_DATA))
+>  
+> +/* DIMM health bitmap bitmap indicators */
+> +/* SCM device is unable to persist memory contents */
+> +#define PAPR_PMEM_UNARMED                   (1ULL << (63 - 0))
+> +/* SCM device failed to persist memory contents */
+> +#define PAPR_PMEM_SHUTDOWN_DIRTY            (1ULL << (63 - 1))
+> +/* SCM device contents are persisted from previous IPL */
+> +#define PAPR_PMEM_SHUTDOWN_CLEAN            (1ULL << (63 - 2))
+> +/* SCM device contents are not persisted from previous IPL */
+> +#define PAPR_PMEM_EMPTY                     (1ULL << (63 - 3))
+> +/* SCM device memory life remaining is critically low */
+> +#define PAPR_PMEM_HEALTH_CRITICAL           (1ULL << (63 - 4))
+> +/* SCM device will be garded off next IPL due to failure */
+> +#define PAPR_PMEM_HEALTH_FATAL              (1ULL << (63 - 5))
+> +/* SCM contents cannot persist due to current platform health status */
+> +#define PAPR_PMEM_HEALTH_UNHEALTHY          (1ULL << (63 - 6))
+> +/* SCM device is unable to persist memory contents in certain conditions */
+> +#define PAPR_PMEM_HEALTH_NON_CRITICAL       (1ULL << (63 - 7))
+> +/* SCM device is encrypted */
+> +#define PAPR_PMEM_ENCRYPTED                 (1ULL << (63 - 8))
+> +/* SCM device has been scrubbed and locked */
+> +#define PAPR_PMEM_SCRUBBED_AND_LOCKED       (1ULL << (63 - 9))
+> +
+> +/* Bits status indicators for health bitmap indicating unarmed dimm */
+> +#define PAPR_PMEM_UNARMED_MASK (PAPR_PMEM_UNARMED |		\
+> +				PAPR_PMEM_HEALTH_UNHEALTHY)
+> +
+> +/* Bits status indicators for health bitmap indicating unflushed dimm */
+> +#define PAPR_PMEM_BAD_SHUTDOWN_MASK (PAPR_PMEM_SHUTDOWN_DIRTY)
+> +
+> +/* Bits status indicators for health bitmap indicating unrestored dimm */
+> +#define PAPR_PMEM_BAD_RESTORE_MASK  (PAPR_PMEM_EMPTY)
+> +
+> +/* Bit status indicators for smart event notification */
+> +#define PAPR_PMEM_SMART_EVENT_MASK (PAPR_PMEM_HEALTH_CRITICAL | \
+> +				    PAPR_PMEM_HEALTH_FATAL |	\
+> +				    PAPR_PMEM_HEALTH_UNHEALTHY)
+> +
+> +/* private struct associated with each region */
+>  struct papr_scm_priv {
+>  	struct platform_device *pdev;
+>  	struct device_node *dn;
+> @@ -39,6 +78,15 @@ struct papr_scm_priv {
+>  	struct resource res;
+>  	struct nd_region *region;
+>  	struct nd_interleave_set nd_set;
+> +
+> +	/* Protect dimm health data from concurrent read/writes */
+> +	struct mutex health_mutex;
+> +
+> +	/* Last time the health information of the dimm was updated */
+> +	unsigned long lasthealth_jiffies;
+> +
+> +	/* Health information for the dimm */
+> +	u64 health_bitmap;
+>  };
+>  
+>  static int drc_pmem_bind(struct papr_scm_priv *p)
+> @@ -144,6 +192,61 @@ static int drc_pmem_query_n_bind(struct papr_scm_priv *p)
+>  	return drc_pmem_bind(p);
+>  }
+>  
+> +/*
+> + * Issue hcall to retrieve dimm health info and populate papr_scm_priv with the
+> + * health information.
+> + */
+> +static int __drc_pmem_query_health(struct papr_scm_priv *p)
+> +{
+> +	unsigned long ret[PLPAR_HCALL_BUFSIZE];
+> +	long rc;
+> +
+> +	/* issue the hcall */
+> +	rc = plpar_hcall(H_SCM_HEALTH, ret, p->drc_index);
+> +	if (rc != H_SUCCESS) {
+> +		dev_err(&p->pdev->dev,
+> +			"Failed to query health information, Err:%ld\n", rc);
+> +		return -ENXIO;
+> +	}
+> +
+> +	p->lasthealth_jiffies = jiffies;
+> +	p->health_bitmap = ret[0] & ret[1];
+> +
+> +	dev_dbg(&p->pdev->dev,
+> +		"Queried dimm health info. Bitmap:0x%016lx Mask:0x%016lx\n",
+> +		ret[0], ret[1]);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Min interval in seconds for assuming stable dimm health */
+> +#define MIN_HEALTH_QUERY_INTERVAL 60
+> +
+> +/* Query cached health info and if needed call drc_pmem_query_health */
+> +static int drc_pmem_query_health(struct papr_scm_priv *p)
+> +{
+> +	unsigned long cache_timeout;
+> +	int rc;
+> +
+> +	/* Protect concurrent modifications to papr_scm_priv */
+> +	rc = mutex_lock_interruptible(&p->health_mutex);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Jiffies offset for which the health data is assumed to be same */
+> +	cache_timeout = p->lasthealth_jiffies +
+> +		msecs_to_jiffies(MIN_HEALTH_QUERY_INTERVAL * 1000);
+> +
+> +	/* Fetch new health info is its older than MIN_HEALTH_QUERY_INTERVAL */
+> +	if (time_after(jiffies, cache_timeout))
+> +		rc = __drc_pmem_query_health(p);
+> +	else
+> +		/* Assume cached health data is valid */
+> +		rc = 0;
+> +
+> +	mutex_unlock(&p->health_mutex);
+> +	return rc;
+> +}
+>  
+>  static int papr_scm_meta_get(struct papr_scm_priv *p,
+>  			     struct nd_cmd_get_config_data_hdr *hdr)
+> @@ -286,6 +389,64 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>  	return 0;
+>  }
+>  
+> +static ssize_t flags_show(struct device *dev,
+> +			  struct device_attribute *attr, char *buf)
+> +{
+> +	struct nvdimm *dimm = to_nvdimm(dev);
+> +	struct papr_scm_priv *p = nvdimm_provider_data(dimm);
+> +	struct seq_buf s;
+> +	u64 health;
+> +	int rc;
+> +
+> +	rc = drc_pmem_query_health(p);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Copy health_bitmap locally, check masks & update out buffer */
+> +	health = READ_ONCE(p->health_bitmap);
+> +
+> +	seq_buf_init(&s, buf, PAGE_SIZE);
+> +	if (health & PAPR_PMEM_UNARMED_MASK)
+> +		seq_buf_printf(&s, "not_armed ");
+> +
+> +	if (health & PAPR_PMEM_BAD_SHUTDOWN_MASK)
+> +		seq_buf_printf(&s, "flush_fail ");
+> +
+> +	if (health & PAPR_PMEM_BAD_RESTORE_MASK)
+> +		seq_buf_printf(&s, "restore_fail ");
+> +
+> +	if (health & PAPR_PMEM_ENCRYPTED)
+> +		seq_buf_printf(&s, "encrypted ");
+> +
+> +	if (health & PAPR_PMEM_SMART_EVENT_MASK)
+> +		seq_buf_printf(&s, "smart_notify ");
+> +
+> +	if (health & PAPR_PMEM_SCRUBBED_AND_LOCKED)
+> +		seq_buf_printf(&s, "scrubbed locked ");
+> +
+> +	if (seq_buf_used(&s))
+> +		seq_buf_printf(&s, "\n");
+> +
+> +	return seq_buf_used(&s);
+> +}
+> +DEVICE_ATTR_RO(flags);
+> +
+> +/* papr_scm specific dimm attributes */
+> +static struct attribute *papr_nd_attributes[] = {
+> +	&dev_attr_flags.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group papr_nd_attribute_group = {
+> +	.name = "papr",
+> +	.attrs = papr_nd_attributes,
+> +};
+> +
+> +static const struct attribute_group *papr_nd_attr_groups[] = {
+> +	&papr_nd_attribute_group,
+> +	NULL,
+> +};
+> +
+>  static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+>  {
+>  	struct device *dev = &p->pdev->dev;
+> @@ -312,8 +473,8 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+>  	dimm_flags = 0;
+>  	set_bit(NDD_LABELING, &dimm_flags);
+>  
+> -	p->nvdimm = nvdimm_create(p->bus, p, NULL, dimm_flags,
+> -				  PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
+> +	p->nvdimm = nvdimm_create(p->bus, p, papr_nd_attr_groups,
+> +				  dimm_flags, PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
+>  	if (!p->nvdimm) {
+>  		dev_err(dev, "Error creating DIMM object for %pOF\n", p->dn);
+>  		goto err;
+> @@ -399,6 +560,9 @@ static int papr_scm_probe(struct platform_device *pdev)
+>  	if (!p)
+>  		return -ENOMEM;
+>  
+> +	/* Initialize the dimm mutex */
+> +	mutex_init(&p->health_mutex);
+> +
+>  	/* optional DT properties */
+>  	of_property_read_u32(dn, "ibm,metadata-size", &metadata_size);
+>  
+> -- 
+> 2.26.2
 > 
