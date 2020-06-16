@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3C2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F80214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9549C21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322402;
-	bh=G3+7YwfmCftXoGAKSqvknHj6X2bwZy+Mwn8MdcTJ/ak=;
+	s=default; t=1592322405;
+	bh=DstgrDs8R08mFlxBplzEZyCjzwwUFtv/2y1NO8+vwjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GHk0fJM9D5IVBM/jj6sDEt49JbSNnbQlMA82TtH3eBuOldCGLCV/ZoS3EDE1dbStr
-	 gxlkGA7AfSiywtwD82LmcpOI45qGx4qFsL7z2QV9ufWd/VNipmDtxncuzPlGPUKjxP
-	 5Ii+kiDgDHtXEvTl/w+aAuUwLdDg9cK/YQBEKlOk=
+	b=ztK2qAaUZMUlsH/fQEk0m2u5SU5heBLW0aM4EzHMWDzjNJEYHOdKumGRKIdxP2Dpe
+	 P2WWpMhhs+24Agg1NwhPwvpoty03Fc9nTbc6ucfoHWXW1bt/ajTyVQB+cNQ0FzCZyl
+	 nYFNGUAVzO3RxSxYT5pXO0p0tdcn8p3JqNOWORlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbgFPPqk (ORCPT
+        id S1731113AbgFPPqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38766 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:46:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730049AbgFPPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:32 -0400
+        id S1732209AbgFPPqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 122E121473;
-        Tue, 16 Jun 2020 15:46:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2AA32071A;
+        Tue, 16 Jun 2020 15:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322391;
-        bh=G3+7YwfmCftXoGAKSqvknHj6X2bwZy+Mwn8MdcTJ/ak=;
+        s=default; t=1592322389;
+        bh=DstgrDs8R08mFlxBplzEZyCjzwwUFtv/2y1NO8+vwjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b/nF4PE+seUdkgnNgvsp46MpVVX9YIDELl2DL+DuhlNpNSlURC0v8W5jtznoSw36N
-         yUFhv08hjNv5RqTP+0a6ohfJ/s5ASdON7bXJj5oYAZ9NXlHF8bhrupme10jVShaMrT
-         zP5rFYghg3U8i7HPZ94wFW/E8We5e4ceOFw99G94=
+        b=I7OVD1UPJt+Hk86dBM3VQqJgQFt2RcP7MWzv18Yqy8unwZqY+8i9j3adghGnh8Vbw
+         3x0T1gnrpG47DjK2hb7ihIS9bOxtYWblcTvY7alqUK8UaswQ2Bo0fDkcSWCG5zXOBw
+         tA9MNwcXsX+rBD2EpXepAzSQnkyCwajBwqTeufpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valentin Longchamp <valentin@longchamp.me>,
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 113/163] net: sched: export __netdev_watchdog_up()
-Date:   Tue, 16 Jun 2020 17:34:47 +0200
-Message-Id: <20200616153112.216801135@linuxfoundation.org>
+Subject: [PATCH 5.7 112/163] net: ethernet: ti: am65-cpsw-nuss: fix ale parameters init
+Date:   Tue, 16 Jun 2020 17:34:46 +0200
+Message-Id: <20200616153112.170524664@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,37 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Longchamp <valentin@longchamp.me>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit 1a3db27ad9a72d033235b9673653962c02e3486e ]
+[ Upstream commit 2074f9eaa58795a99e9da61c10f93180f810cfd6 ]
 
-Since the quiesce/activate rework, __netdev_watchdog_up() is directly
-called in the ucc_geth driver.
+The ALE parameters structure is created on stack, so it has to be reset
+before passing to cpsw_ale_create() to avoid garbage values.
 
-Unfortunately, this function is not available for modules and thus
-ucc_geth cannot be built as a module anymore. Fix it by exporting
-__netdev_watchdog_up().
-
-Since the commit introducing the regression was backported to stable
-branches, this one should ideally be as well.
-
-Fixes: 79dde73cf9bc ("net/ethernet/freescale: rework quiesce/activate for ucc_geth")
-Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
+Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_generic.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -464,6 +464,7 @@ void __netdev_watchdog_up(struct net_dev
- 			dev_hold(dev);
- 	}
- }
-+EXPORT_SYMBOL_GPL(__netdev_watchdog_up);
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+@@ -1804,7 +1804,7 @@ MODULE_DEVICE_TABLE(of, am65_cpsw_nuss_o
  
- static void dev_watchdog_up(struct net_device *dev)
+ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
  {
+-	struct cpsw_ale_params ale_params;
++	struct cpsw_ale_params ale_params = { 0 };
+ 	const struct of_device_id *of_id;
+ 	struct device *dev = &pdev->dev;
+ 	struct am65_cpsw_common *common;
 
 
