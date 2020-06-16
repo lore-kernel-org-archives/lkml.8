@@ -2,142 +2,99 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB842C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB216C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8534720656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE2120767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:34:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C1BbaxJP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="segt4oTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgFPIcu (ORCPT
+        id S1727829AbgFPIeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35472 "EHLO
+        Tue, 16 Jun 2020 04:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFPIct (ORCPT
+        with ESMTP id S1726626AbgFPIeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:32:49 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD737C05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QjseRY7ePwYJxBy+fzhqff7/CBSWJFymIkTnxqjIliE=; b=C1BbaxJPdFl/eQTKVsRJzm8Z4e
-        j3RkSN7q0/+ytMV4qxjz8Ti0Cz398+1XYFApw1UxjuzSrLDG/BsreMfsGP19NJKlzJjtKU1hgjpS7
-        BpWAvoWAabXUDvM2j1vuwv4OFc51crqDML5GNPw9RTIKRGGrjab0pReFkeuRaDUIt/h/aRfXrwsl6
-        DCbtW+UYmcSYMCCMBGj0f2AYUIFIVR6pbXa3DVc2jDbMGrSkoc5JqB4zG5JUNNYeXWcKXysY0/Hmz
-        7HiTtjyweivTTAgdYEf2oYmMmeIc894alYL9vK9NgZpmdHP2JOzTtOYkAnhN803B3xMP59BxzDvn1
-        xyr/lX/Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jl71I-0000wY-BF; Tue, 16 Jun 2020 08:32:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9AF0E30018A;
-        Tue, 16 Jun 2020 10:32:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 801CA2B9CA58C; Tue, 16 Jun 2020 10:32:33 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 10:32:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Matt Helsley <mhelsley@vmware.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org, dvyukov@google.com,
-        elver@google.com, andreyknvl@google.com, mark.rutland@arm.com,
-        rostedt@goodmis.org, jthierry@redhat.com, mbenes@suse.cz
-Subject: Re: [RFC][PATCH 1/3] objtool: Clean up elf_write() condition
-Message-ID: <20200616083233.GK2554@hirez.programming.kicks-ass.net>
-References: <20200612143034.933422660@infradead.org>
- <20200612143553.953897818@infradead.org>
- <20200615183448.GD25598@rlwimi.vmware.com>
- <20200615184411.GH2531@hirez.programming.kicks-ass.net>
+        Tue, 16 Jun 2020 04:34:12 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA6BC05BD43;
+        Tue, 16 Jun 2020 01:34:11 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id t18so19817855wru.6;
+        Tue, 16 Jun 2020 01:34:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i0zKxkidxBoqL2sZN9RpjSHDtjGRezB4oDkxwd9tphA=;
+        b=segt4oTI79JJbhAr8FHGJ02nd8XIH2jNl1ctQmmqmbCY57xbMHYYeJ1VTyx2thu/yb
+         D1BKMQe2TPhlKf+qsBIhffhIzHzeKNo4fT3eZWvSMbZQ7ILv9O6zpXOE6r6pkf5X48OA
+         WUED4BC9PCK5TgLeCoB9u/6h0oagmFUxPEBi0xVxS4FC2NSKoJya5QSs3mnmQLERe0Yl
+         k6jLAuhORZSUIIFf62tfpSH44MlzoYBN1pYrpu77lPjSEbk1ioFlMbLtAoA9RrKLlHQZ
+         LDcZTosAr/WApdySQGzkhA86ZXKdTRAEEI8OvXX4xHvbsXKrnUHnjvkm8ao8uev6LBst
+         NDJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i0zKxkidxBoqL2sZN9RpjSHDtjGRezB4oDkxwd9tphA=;
+        b=skfA/wDSUzHmZCGUDTJipXRHFBFXRbB9MZn89P90iuD5qWxCORt/cpE7sniECGKlzg
+         lyDu6ka2bglyuoBSMFdt6/jCg0Z06djRAHmB4sfCYrTT322LCF+p+ioo3Wfai83jYERe
+         bKTs+z3oF/C46Vyu7Q+uZ0Ogd7zPHbFnlhiFl3xEymKFg18RKo5hpiv6D9RTcK5uRWA4
+         6tF5V7aJi85GgcN2OJ8gEk7bnjfNZ0VCVA01uv6Aw2TDlKB90PrSSKxm4K9KyM97k6Sk
+         /WlUTETVo5saVXHNgln9cuOBn3bg1PLf1nY8d9tYQr2ElYf16FPg6R3Bfzw/O2uQ7fwE
+         /8sA==
+X-Gm-Message-State: AOAM533aGGz3gwj5XbysupR8NZIbtTK2BnAM9LmpYTGvEC4+MJyr52kf
+        0s374omW0abDWYoTNIlPyws=
+X-Google-Smtp-Source: ABdhPJxma8oeQOxUjCipeLcrjPMgDEuXEOpadeijHFyc8cHTTOv27MxqDi0+luB6twXRql/BToxDkg==
+X-Received: by 2002:a5d:4745:: with SMTP id o5mr1735468wrs.87.1592296450429;
+        Tue, 16 Jun 2020 01:34:10 -0700 (PDT)
+Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
+        by smtp.gmail.com with ESMTPSA id s18sm34318981wra.85.2020.06.16.01.34.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 01:34:09 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
+        vkoul@kernel.org, robh+dt@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
+Date:   Tue, 16 Jun 2020 10:34:06 +0200
+Message-Id: <20200616083408.3426435-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615184411.GH2531@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 08:44:11PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 15, 2020 at 11:34:48AM -0700, Matt Helsley wrote:
-> > On Fri, Jun 12, 2020 at 04:30:35PM +0200, Peter Zijlstra wrote:
-> > > With there being multiple ways to change the ELF data, let's more
-> > > concisely track modification.
-> > > 
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > 
-> > Would it make sense to set the relocation section's "changed" flag in
-> > addition to the elf struct's changed flag in elf_rebuild_reloc_section()?
-> > 
-> > Right now I think the code is  assuming that it's a newly created section
-> > but it would be more defensive to set it during a rebuild too I think.
-> 
-> Indeed, currently the code assumes (and this is so) elf_rebuild_rela_sections()
-> is only called on an elf_create_reloc_section() result and thus setting
-> ->changed is superfluous.
-> 
-> But sure, I can certainly set them there too.
+Add BCM63xx USBH PHY driver for BMIPS.
 
-Delta to the patch.
+Álvaro Fernández Rojas (2):
+  dt-bindings: phy: add bcm63xx-usbh bindings
+  phy: bcm63xx-usbh: Add BCM63xx USBH driver
 
----
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2740,7 +2740,7 @@ int check(const char *_objname, bool orc
- 
- 	objname = _objname;
- 
--	file.elf = elf_open_read(objname, orc ? O_RDWR : O_RDONLY);
-+	file.elf = elf_open_read(objname, O_RDWR);
- 	if (!file.elf)
- 		return 1;
- 
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -849,11 +849,14 @@ static int elf_rebuild_rela_section(stru
- 	return 0;
- }
- 
--int elf_rebuild_reloc_section(struct section *sec)
-+int elf_rebuild_reloc_section(struct elf *elf, struct section *sec)
- {
- 	struct reloc *reloc;
- 	int nr;
- 
-+	sec->changed = true;
-+	elf->changed = true;
-+
- 	nr = 0;
- 	list_for_each_entry(reloc, &sec->reloc_list, list)
- 		nr++;
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -134,7 +134,7 @@ struct reloc *find_reloc_by_dest(const s
- struct reloc *find_reloc_by_dest_range(const struct elf *elf, struct section *sec,
- 				     unsigned long offset, unsigned int len);
- struct symbol *find_func_containing(struct section *sec, unsigned long offset);
--int elf_rebuild_reloc_section(struct section *sec);
-+int elf_rebuild_reloc_section(struct elf *elf, struct section *sec);
- 
- #define for_each_sec(file, sec)						\
- 	list_for_each_entry(sec, &file->elf->sections, list)
---- a/tools/objtool/orc_gen.c
-+++ b/tools/objtool/orc_gen.c
-@@ -222,7 +222,7 @@ int create_orc_sections(struct objtool_f
- 		}
- 	}
- 
--	if (elf_rebuild_reloc_section(ip_relocsec))
-+	if (elf_rebuild_reloc_section(file->elf, ip_relocsec))
- 		return -1;
- 
- 	return 0;
+ .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   |  72 +++
+ drivers/phy/broadcom/Kconfig                  |  10 +
+ drivers/phy/broadcom/Makefile                 |   1 +
+ drivers/phy/broadcom/phy-bcm63xx-usbh.c       | 463 ++++++++++++++++++
+ 4 files changed, 546 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+ create mode 100644 drivers/phy/broadcom/phy-bcm63xx-usbh.c
+
+-- 
+2.27.0
+
