@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF80C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9542071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331772071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324139;
-	bh=SdXodXkPThgCBOXk9IORgFIxiIspDDqkx22x+9JFdJU=;
+	s=default; t=1592324142;
+	bh=7iKMm7KSRQUJ5Y+WeKndqu7co8tjv7zaxZdV9VUdtYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZqfrzraQV8foa2OpfddXbnW6e7z1kbjFx+R96vMHuvxrpvC0WB7QNQ1OJje7lp97T
-	 iAQixSxe0LXGzbIIwgwL0H429B6qEJj1EgB4RVuHMl+TpwJ/XcLdWV6/KJgHUO07d0
-	 0v0BNCTpzpkFudrEAfw6Qky5PmOJ02zq+leo0eo8=
+	b=w6PxESIraDwfVfXuS8kWKp2428YaIfA/XTJ3Fqe8ikFwFVe+EUMF2uap6+j0+v46X
+	 gezn+NcJGgwcBDhDcv0KsJcJYJfVTc9RWzKljx2gaj8bFw4DFgQKtbX1M/99bXqutB
+	 ETJ6dPvMA2M4AckkjGqjXGtVkpDdZYXu7JAObfJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbgFPQPg (ORCPT
+        id S1731462AbgFPPld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57524 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:41:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731483AbgFPPli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:38 -0400
+        id S1731414AbgFPPl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6E4F208E4;
-        Tue, 16 Jun 2020 15:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8703207C4;
+        Tue, 16 Jun 2020 15:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322098;
-        bh=SdXodXkPThgCBOXk9IORgFIxiIspDDqkx22x+9JFdJU=;
+        s=default; t=1592322087;
+        bh=7iKMm7KSRQUJ5Y+WeKndqu7co8tjv7zaxZdV9VUdtYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sfw9QPixgj4yVTa6TEbdJErwopLGL5aQxxs+pVelkntBfnNFnb/nrbvcpOHzyvrwt
-         AcYO36i2A5boxn3a4FA3/TxepJk1rgEYf/WQ1EJlafdpIDcG7sl8zh0FstpvZIBZgm
-         gajPT7s9wdAttNpZwi/JP0IQ2aQ3k6SHB/ojn084=
+        b=lruX1qxKxA+OWnCtwdubSggnzRLhRKqlLaIA5T2F2g0SVYv+3C01+ugRQHxc1EA6B
+         CNamN9xZyM7/wOeNEHNExcFhBx+6wFBFFmLW7klM9HPWOEYZDkk2G1TK6JkR8F7Gb9
+         h6gVERzQVj5UcU/xvqYjCWw1xP+2O6p9Ht2swoEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 134/134] KVM: arm64: Save the hosts PtrAuth keys in non-preemptible context
-Date:   Tue, 16 Jun 2020 17:35:18 +0200
-Message-Id: <20200616153107.201877658@linuxfoundation.org>
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 130/134] mmc: sdio: Fix several potential memory leaks in mmc_sdio_init_card()
+Date:   Tue, 16 Jun 2020 17:35:14 +0200
+Message-Id: <20200616153107.014964022@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,133 +58,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit ef3e40a7ea8dbe2abd0a345032cd7d5023b9684f upstream.
+commit a94a59f43749b4f8cd81b8be87c95f9ef898d19d upstream.
 
-When using the PtrAuth feature in a guest, we need to save the host's
-keys before allowing the guest to program them. For that, we dump
-them in a per-CPU data structure (the so called host context).
+Over the years, the code in mmc_sdio_init_card() has grown to become quite
+messy. Unfortunate this has also lead to that several paths are leaking
+memory in form of an allocated struct mmc_card, which includes additional
+data, such as initialized struct device for example.
 
-But both call sites that do this are in preemptible context,
-which may end up in disaster should the vcpu thread get preempted
-before reentering the guest.
+Unfortunate, it's a too complex task find each offending commit. Therefore,
+this change fixes all memory leaks at once.
 
-Instead, save the keys eagerly on each vcpu_load(). This has an
-increased overhead, but is at least safe.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200430091640.455-3-ulf.hansson@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- arch/arm/include/asm/kvm_emulate.h   |    3 ++-
- arch/arm64/include/asm/kvm_emulate.h |    6 ------
- arch/arm64/kvm/handle_exit.c         |   19 ++-----------------
- virt/kvm/arm/arm.c                   |   22 +++++++++++++++++++++-
- 4 files changed, 25 insertions(+), 25 deletions(-)
+ drivers/mmc/core/sdio.c |   58 ++++++++++++++++++++++--------------------------
+ 1 file changed, 27 insertions(+), 31 deletions(-)
 
---- a/arch/arm/include/asm/kvm_emulate.h
-+++ b/arch/arm/include/asm/kvm_emulate.h
-@@ -363,6 +363,7 @@ static inline unsigned long vcpu_data_ho
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -584,7 +584,7 @@ try_again:
+ 	 */
+ 	err = mmc_send_io_op_cond(host, ocr, &rocr);
+ 	if (err)
+-		goto err;
++		return err;
+ 
+ 	/*
+ 	 * For SPI, enable CRC as appropriate.
+@@ -592,17 +592,15 @@ try_again:
+ 	if (mmc_host_is_spi(host)) {
+ 		err = mmc_spi_set_crc(host, use_spi_crc);
+ 		if (err)
+-			goto err;
++			return err;
  	}
- }
  
--static inline void vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu) {}
-+static inline bool vcpu_has_ptrauth(struct kvm_vcpu *vcpu) { return false; }
-+static inline void vcpu_ptrauth_disable(struct kvm_vcpu *vcpu) { }
- 
- #endif /* __ARM_KVM_EMULATE_H__ */
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -97,12 +97,6 @@ static inline void vcpu_ptrauth_disable(
- 	vcpu->arch.hcr_el2 &= ~(HCR_API | HCR_APK);
- }
- 
--static inline void vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu)
--{
--	if (vcpu_has_ptrauth(vcpu))
--		vcpu_ptrauth_disable(vcpu);
--}
--
- static inline unsigned long vcpu_get_vsesr(struct kvm_vcpu *vcpu)
- {
- 	return vcpu->arch.vsesr_el2;
---- a/arch/arm64/kvm/handle_exit.c
-+++ b/arch/arm64/kvm/handle_exit.c
-@@ -162,31 +162,16 @@ static int handle_sve(struct kvm_vcpu *v
- 	return 1;
- }
- 
--#define __ptrauth_save_key(regs, key)						\
--({										\
--	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
--	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
--})
--
- /*
-  * Handle the guest trying to use a ptrauth instruction, or trying to access a
-  * ptrauth register.
-  */
- void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu)
- {
--	struct kvm_cpu_context *ctxt;
--
--	if (vcpu_has_ptrauth(vcpu)) {
-+	if (vcpu_has_ptrauth(vcpu))
- 		vcpu_ptrauth_enable(vcpu);
--		ctxt = vcpu->arch.host_cpu_context;
--		__ptrauth_save_key(ctxt->sys_regs, APIA);
--		__ptrauth_save_key(ctxt->sys_regs, APIB);
--		__ptrauth_save_key(ctxt->sys_regs, APDA);
--		__ptrauth_save_key(ctxt->sys_regs, APDB);
--		__ptrauth_save_key(ctxt->sys_regs, APGA);
--	} else {
-+	else
- 		kvm_inject_undefined(vcpu);
+ 	/*
+ 	 * Allocate card structure.
+ 	 */
+ 	card = mmc_alloc_card(host, NULL);
+-	if (IS_ERR(card)) {
+-		err = PTR_ERR(card);
+-		goto err;
 -	}
++	if (IS_ERR(card))
++		return PTR_ERR(card);
+ 
+ 	if ((rocr & R4_MEMORY_PRESENT) &&
+ 	    mmc_sd_get_cid(host, ocr & rocr, card->raw_cid, NULL) == 0) {
+@@ -610,19 +608,15 @@ try_again:
+ 
+ 		if (oldcard && (oldcard->type != MMC_TYPE_SD_COMBO ||
+ 		    memcmp(card->raw_cid, oldcard->raw_cid, sizeof(card->raw_cid)) != 0)) {
+-			mmc_remove_card(card);
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+ 	} else {
+ 		card->type = MMC_TYPE_SDIO;
+ 
+ 		if (oldcard && oldcard->type != MMC_TYPE_SDIO) {
+-			mmc_remove_card(card);
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+ 	}
+ 
+@@ -677,7 +671,7 @@ try_again:
+ 	if (!oldcard && card->type == MMC_TYPE_SD_COMBO) {
+ 		err = mmc_sd_get_csd(host, card);
+ 		if (err)
+-			return err;
++			goto remove;
+ 
+ 		mmc_decode_cid(card);
+ 	}
+@@ -704,7 +698,12 @@ try_again:
+ 			mmc_set_timing(card->host, MMC_TIMING_SD_HS);
+ 		}
+ 
+-		goto finish;
++		if (oldcard)
++			mmc_remove_card(card);
++		else
++			host->card = card;
++
++		return 0;
+ 	}
+ 
+ 	/*
+@@ -730,16 +729,14 @@ try_again:
+ 		goto remove;
+ 
+ 	if (oldcard) {
+-		int same = (card->cis.vendor == oldcard->cis.vendor &&
+-			    card->cis.device == oldcard->cis.device);
+-		mmc_remove_card(card);
+-		if (!same) {
+-			pr_debug("%s: Perhaps the card was replaced\n",
+-				mmc_hostname(host));
+-			return -ENOENT;
++		if (card->cis.vendor == oldcard->cis.vendor &&
++		    card->cis.device == oldcard->cis.device) {
++			mmc_remove_card(card);
++			card = oldcard;
++		} else {
++			err = -ENOENT;
++			goto mismatch;
+ 		}
+-
+-		card = oldcard;
+ 	}
+ 	card->ocr = ocr_card;
+ 	mmc_fixup_device(card, sdio_fixup_methods);
+@@ -800,16 +797,15 @@ try_again:
+ 		err = -EINVAL;
+ 		goto remove;
+ 	}
+-finish:
+-	if (!oldcard)
+-		host->card = card;
++
++	host->card = card;
+ 	return 0;
+ 
++mismatch:
++	pr_debug("%s: Perhaps the card was replaced\n", mmc_hostname(host));
+ remove:
+-	if (!oldcard)
++	if (oldcard != card)
+ 		mmc_remove_card(card);
+-
+-err:
+ 	return err;
  }
  
- /*
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -354,6 +354,16 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *
- 	return kvm_vgic_vcpu_init(vcpu);
- }
- 
-+#ifdef CONFIG_ARM64
-+#define __ptrauth_save_key(regs, key)						\
-+({										\
-+	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
-+	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
-+})
-+#else
-+#define  __ptrauth_save_key(regs, key)	do { } while (0)
-+#endif
-+
- void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- {
- 	int *last_ran;
-@@ -386,7 +396,17 @@ void kvm_arch_vcpu_load(struct kvm_vcpu
- 	else
- 		vcpu_set_wfe_traps(vcpu);
- 
--	vcpu_ptrauth_setup_lazy(vcpu);
-+	if (vcpu_has_ptrauth(vcpu)) {
-+		struct kvm_cpu_context __maybe_unused *ctxt = vcpu->arch.host_cpu_context;
-+
-+		__ptrauth_save_key(ctxt->sys_regs, APIA);
-+		__ptrauth_save_key(ctxt->sys_regs, APIB);
-+		__ptrauth_save_key(ctxt->sys_regs, APDA);
-+		__ptrauth_save_key(ctxt->sys_regs, APDB);
-+		__ptrauth_save_key(ctxt->sys_regs, APGA);
-+
-+		vcpu_ptrauth_disable(vcpu);
-+	}
- }
- 
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
 
 
