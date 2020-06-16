@@ -2,59 +2,93 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E94C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A027207C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A09C207C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592320636;
+	bh=m8KMGIhi8TwpzFZcPdaAHpApXMmafeRrM3MfBbC2yy8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CFc0ms6pC0WynhP1N27LaghakbG4tJlci5w1v4M/m2bSpG7qwnT9EnRn3c65/NvQC
+	 NtIGlFpsRrCt2Qme8P7ScDJP4c4Wrdzztn1kV499AQvt5o2zW/vYojQ9e0a1Knr2s+
+	 BxSYBwTXttBqrkT/7E5I+dkSjFIgLvM+I+f/ETqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgFPPQ6 (ORCPT
+        id S1729796AbgFPPRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:16:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57520 "EHLO mx2.suse.de"
+        Tue, 16 Jun 2020 11:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgFPPQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:16:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 72DD5B19C;
-        Tue, 16 Jun 2020 15:16:59 +0000 (UTC)
-Date:   Tue, 16 Jun 2020 17:16:54 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, paulmck@kernel.org, frederic@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, sergey.senozhatsky@gmail.com
-Subject: Re: [PATCH 5/6] irq_work: Cleanup
-Message-ID: <20200616151654.GQ31238@alley>
-References: <20200615125654.678940605@infradead.org>
- <20200615131143.373485207@infradead.org>
+        id S1728183AbgFPPRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:17:13 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 124DA207C3;
+        Tue, 16 Jun 2020 15:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592320633;
+        bh=m8KMGIhi8TwpzFZcPdaAHpApXMmafeRrM3MfBbC2yy8=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=m7jemaBrZWRJ7wdnW1byQq8GLTQQlD6rxa8Uk4825fuOC5N+aIyQZbObaRuvu1rNq
+         aDTueKcRq/4zbnXVM9CUbD7A/B0ayYIonIBqY6/mrk779x6kk7mB8PLSBV0cZXx7r+
+         36o4VH9YRLps+IUz4PaHCvqiGd6b8lBFf/1ptYj0=
+Date:   Tue, 16 Jun 2020 17:17:10 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: usbhid: remove redundant assignment to variable
+ retval
+In-Reply-To: <20200610123101.1133117-1-colin.king@canonical.com>
+Message-ID: <nycvar.YFH.7.76.2006161717030.13242@cbobk.fhfr.pm>
+References: <20200610123101.1133117-1-colin.king@canonical.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615131143.373485207@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-06-15 14:56:59, Peter Zijlstra wrote:
-> Get rid of the __call_single_node union and clean up the API a little
-> to avoid external code relying on the structure layout as much.
+On Wed, 10 Jun 2020, Colin King wrote:
+
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> The variable retval is being initialized with a value that is
+> never read and it is being updated later with a new value. The
+> initialization is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/hid/usbhid/hid-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+> index 17a638f15082..17a29ee0ac6c 100644
+> --- a/drivers/hid/usbhid/hid-core.c
+> +++ b/drivers/hid/usbhid/hid-core.c
+> @@ -1667,7 +1667,7 @@ struct usb_interface *usbhid_find_interface(int minor)
+>  
+>  static int __init hid_init(void)
+>  {
+> -	int retval = -ENOMEM;
+> +	int retval;
+>  
+>  	retval = hid_quirks_init(quirks_param, BUS_USB, MAX_USBHID_BOOT_QUIRKS);
+>  	if (retval)
 
-Revieved-by: Petr Mladek <pmladek@suse.com>
+Applied, thanks.
 
-I focused on the printk part. But the rest looks fine as well.
-It is a nice cleanup.
+-- 
+Jiri Kosina
+SUSE Labs
 
-Best Regards,
-Petr
