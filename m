@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B52FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E695820776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CB720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322513;
-	bh=31K/xXAjmx9ivj+GVlLUEC+9mIQeg4WPdAZ970qHfUE=;
+	s=default; t=1592322517;
+	bh=IVn/3drH1clXXqRbqRo2p9VUMcFT+JCYw8LrLMgWf0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JeWpdpq2gLal4atjXkxUmW35lhkxsiXKmRFPPif5biWVFdzNWOMvqaTYxnFzovR3A
-	 mEqcBHaEW1uv8/pXe1BZCfskn4S1KZ+qzejQGMPi0J/6TCJcgBEwZ5zquKfKT4cofH
-	 yo0MmqAAZypqZbbG/Zf19RwlxVBTo+sId1XTeKOg=
+	b=qrX1FZqxxWXVa4k47Fcg2LA8vD2U2gO3zl89rEVoWFitmMQ5fL3iWKldshxevbS1S
+	 DOSvmRe2Q2zwUiiY71oMwW1KoicjIxYEetIActljEJg1tbX0vUaH7FIxMCF36F4nGo
+	 GsNPE5GeWIGYE9T6ZC11uZi3MQ6fMjKkKSSlAdhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732420AbgFPPsc (ORCPT
+        id S1731735AbgFPPsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42500 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732402AbgFPPsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:48:19 -0400
+        id S1732408AbgFPPsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:48:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 122C321475;
-        Tue, 16 Jun 2020 15:48:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3039721473;
+        Tue, 16 Jun 2020 15:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322498;
-        bh=31K/xXAjmx9ivj+GVlLUEC+9mIQeg4WPdAZ970qHfUE=;
+        s=default; t=1592322503;
+        bh=IVn/3drH1clXXqRbqRo2p9VUMcFT+JCYw8LrLMgWf0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUwaG9AGeRVmtBZg112eP7ekZpt05tEr/Kc7tgHrPKzqFbyqnQ1i+983zoMzzSbUx
-         bk+tow5QfDvZxUW4Rh/6ID17lQNYI0feiXAmTEOWDpwtk24fqiztgXKb4Xrm6ExX2H
-         1p9/8AyOFu9mCmhXkxd6Ok27iYSLiBNz88QguD2U=
+        b=dT0P1by0Dcb0KdekvGEOY/CLj5l0ovI1cX4bx7o0D0WCeMVZ3fUyswf6t+rewsRwT
+         MKMu3h8Bhf1Rn9XBPEW/GGfpcD3p+eGvcc0sDDhy0QsQUwDgY3ZDQUTKBjBOGvOaw4
+         UVX9n0jqUpOSz2DF3/1z6puJTfnVD8gd5JFz6k6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.7 126/163] media: videobuf2-dma-contig: fix bad kfree in vb2_dma_contig_clear_max_seg_size
-Date:   Tue, 16 Jun 2020 17:35:00 +0200
-Message-Id: <20200616153112.850479071@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.7 128/163] KVM: nSVM: fix condition for filtering async PF
+Date:   Tue, 16 Jun 2020 17:35:02 +0200
+Message-Id: <20200616153112.945946713@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -62,89 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 0d9668721311607353d4861e6c32afeb272813dc upstream.
+commit a3535be731c2a343912578465021f50937f7b099 upstream.
 
-Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform:
-Initialize dma_parms for platform devices") in v5.7-rc5 causes
-vb2_dma_contig_clear_max_seg_size() to kfree memory that was not
-allocated by vb2_dma_contig_set_max_seg_size().
+Async page faults have to be trapped in the host (L1 in this case),
+since the APF reason was passed from L0 to L1 and stored in the L1 APF
+data page.  This was completely reversed: the page faults were passed
+to the guest, a L2 hypervisor.
 
-The assumption in vb2_dma_contig_set_max_seg_size() seems to be that
-dev->dma_parms is always NULL when the driver is probed, and the case
-where dev->dma_parms has bee initialized by someone else than the driver
-(by calling vb2_dma_contig_set_max_seg_size) will cause a failure.
-
-All the current users of these functions are platform devices, which now
-always have dma_parms set by the driver core. To fix the issue for v5.7,
-make vb2_dma_contig_set_max_seg_size() return an error if dma_parms is
-NULL to be on the safe side, and remove the kfree code from
-vb2_dma_contig_clear_max_seg_size().
-
-For v5.8 we should remove the two functions and move the
-dma_set_max_seg_size() calls into the drivers.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for platform devices")
 Cc: stable@vger.kernel.org
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/common/videobuf2/videobuf2-dma-contig.c |   20 +-----------------
- include/media/videobuf2-dma-contig.h                  |    2 -
- 2 files changed, 3 insertions(+), 19 deletions(-)
+ arch/x86/kvm/svm/nested.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-+++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-@@ -726,9 +726,8 @@ EXPORT_SYMBOL_GPL(vb2_dma_contig_memops)
- int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
- {
- 	if (!dev->dma_parms) {
--		dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
--		if (!dev->dma_parms)
--			return -ENOMEM;
-+		dev_err(dev, "Failed to set max_seg_size: dma_parms is NULL\n");
-+		return -ENODEV;
- 	}
- 	if (dma_get_max_seg_size(dev) < size)
- 		return dma_set_max_seg_size(dev, size);
-@@ -737,21 +736,6 @@ int vb2_dma_contig_set_max_seg_size(stru
- }
- EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
- 
--/*
-- * vb2_dma_contig_clear_max_seg_size() - release resources for DMA parameters
-- * @dev:	device for configuring DMA parameters
-- *
-- * This function releases resources allocated to configure DMA parameters
-- * (see vb2_dma_contig_set_max_seg_size() function). It should be called from
-- * device drivers on driver remove.
-- */
--void vb2_dma_contig_clear_max_seg_size(struct device *dev)
--{
--	kfree(dev->dma_parms);
--	dev->dma_parms = NULL;
--}
--EXPORT_SYMBOL_GPL(vb2_dma_contig_clear_max_seg_size);
--
- MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
- MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
- MODULE_LICENSE("GPL");
---- a/include/media/videobuf2-dma-contig.h
-+++ b/include/media/videobuf2-dma-contig.h
-@@ -25,7 +25,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2
- }
- 
- int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
--void vb2_dma_contig_clear_max_seg_size(struct device *dev);
-+static inline void vb2_dma_contig_clear_max_seg_size(struct device *dev) { }
- 
- extern const struct vb2_mem_ops vb2_dma_contig_memops;
- 
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -834,8 +834,8 @@ int nested_svm_exit_special(struct vcpu_
+ 			return NESTED_EXIT_HOST;
+ 		break;
+ 	case SVM_EXIT_EXCP_BASE + PF_VECTOR:
+-		/* When we're shadowing, trap PFs, but not async PF */
+-		if (!npt_enabled && svm->vcpu.arch.apf.host_apf_reason == 0)
++		/* Trap async PF even if not shadowing */
++		if (!npt_enabled || svm->vcpu.arch.apf.host_apf_reason)
+ 			return NESTED_EXIT_HOST;
+ 		break;
+ 	default:
 
 
