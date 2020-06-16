@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A628DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73EF82145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E6AD20C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321783;
-	bh=oI8bt8FHuEyhhxFsFd+uUjYBPVSPisKrstaA3CDzgjo=;
+	s=default; t=1592321787;
+	bh=s4jSCyrUMmdQJIoeCOcOl+KOd/yopV34FZ0iqG0c5/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J15UgnIe5uy+3yeCmPNcE0Xn9+mw8ZDObU1gppP5Cyy2ayE0OMj86225NbKw1suxc
-	 8rMVeceUC+moU0d79jlyqAFQml2WqBNgYa2+8LJa4CQ7Ceqcp46N7vSB3bitLzFJMf
-	 34CMsS5jMbAdtqK2JtmUP3JRQu1RZfiLVckItiQg=
+	b=gDPWY9ts5PS02TDVvxgsc3hcrzOS5BR+uG5Us4hFLvHq3mJpmpxSgZ59Eqa+zQcTE
+	 j393NWN8DI3OxePuCMSAOf16X/LbWQmXIZjsqIqANn4Gatgk6qGPzg1s1DrDNGXeQG
+	 4Z+7Jg4GgXvWjMcIXL5oKYDfcDq+2cjE8Tsa0LOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgFPPgW (ORCPT
+        id S1729945AbgFPPg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:36:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:36:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729893AbgFPPgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:36:18 -0400
+        id S1729893AbgFPPgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:36:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DC62098B;
-        Tue, 16 Jun 2020 15:36:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E80E020C09;
+        Tue, 16 Jun 2020 15:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321776;
-        bh=oI8bt8FHuEyhhxFsFd+uUjYBPVSPisKrstaA3CDzgjo=;
+        s=default; t=1592321782;
+        bh=s4jSCyrUMmdQJIoeCOcOl+KOd/yopV34FZ0iqG0c5/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POMFAjWwPmnO0ffv2Y/3mLQXIJ5yvzU+cosLSygCGvzA1o5dVLUoR06DPSGWjnDwf
-         xehTOu7VVHiufJO2cS2hcxjvI8xluIf7xuL54R/z5Co8aHY+PiaMiu3JLaMkMA9l6l
-         g3ywtppX232JN+YEr2qoPC7tOe/0ssSQQ+/l53Jk=
+        b=0Vo39YgOWuTktnPqmccTtmAYHiRxmyLkMcG5Ujif2jnB3aXkP/qymg40PlSUeqfzJ
+         XIgNz52qkjBqKKpUi6mqJCogmtX/rKR1svfIQ5PT+o4FSzdB5HBhAlNbvoEA4u3VqF
+         KCQPkn2uQY0GVvzgUGK0T7y/b9t8NoXKtl9CCa34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 004/134] tun: correct header offsets in napi frags mode
-Date:   Tue, 16 Jun 2020 17:33:08 +0200
-Message-Id: <20200616153100.866996132@linuxfoundation.org>
+Subject: [PATCH 5.4 006/134] vxlan: Avoid infinite loop when suppressing NS messages with invalid options
+Date:   Tue, 16 Jun 2020 17:33:10 +0200
+Message-Id: <20200616153100.974319714@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,65 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 96aa1b22bd6bb9fccf62f6261f390ed6f3e7967f ]
+[ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
 
-Tun in IFF_NAPI_FRAGS mode calls napi_gro_frags. Unlike netif_rx and
-netif_gro_receive, this expects skb->data to point to the mac layer.
+When proxy mode is enabled the vxlan device might reply to Neighbor
+Solicitation (NS) messages on behalf of remote hosts.
 
-But skb_probe_transport_header, __skb_get_hash_symmetric, and
-xdp_do_generic in tun_get_user need skb->data to point to the network
-header. Flow dissection also needs skb->protocol set, so
-eth_type_trans has to be called.
+In case the NS message includes the "Source link-layer address" option
+[1], the vxlan device will use the specified address as the link-layer
+destination address in its reply.
 
-Ensure the link layer header lies in linear as eth_type_trans pulls
-ETH_HLEN. Then take the same code paths for frags as for not frags.
-Push the link layer header back just before calling napi_gro_frags.
+To avoid an infinite loop, break out of the options parsing loop when
+encountering an option with length zero and disregard the NS message.
 
-By pulling up to ETH_HLEN from frag0 into linear, this disables the
-frag0 optimization in the special case when IFF_NAPI_FRAGS is used
-with zero length iov[0] (and thus empty skb->linear).
+This is consistent with the IPv6 ndisc code and RFC 4886 which states
+that "Nodes MUST silently discard an ND packet that contains an option
+with length zero" [2].
 
-Fixes: 90e33d459407 ("tun: enable napi_gro_frags() for TUN/TAP driver")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Acked-by: Petar Penkov <ppenkov@google.com>
+[1] https://tools.ietf.org/html/rfc4861#section-4.3
+[2] https://tools.ietf.org/html/rfc4861#section-4.6
+
+Fixes: 4b29dba9c085 ("vxlan: fix nonfunctional neigh_reduce()")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/vxlan.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1908,8 +1908,11 @@ drop:
- 		skb->dev = tun->dev;
- 		break;
- 	case IFF_TAP:
--		if (!frags)
--			skb->protocol = eth_type_trans(skb, tun->dev);
-+		if (frags && !pskb_may_pull(skb, ETH_HLEN)) {
-+			err = -ENOMEM;
-+			goto drop;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1924,6 +1924,10 @@ static struct sk_buff *vxlan_na_create(s
+ 	ns_olen = request->len - skb_network_offset(request) -
+ 		sizeof(struct ipv6hdr) - sizeof(*ns);
+ 	for (i = 0; i < ns_olen-1; i += (ns->opt[i+1]<<3)) {
++		if (!ns->opt[i + 1]) {
++			kfree_skb(reply);
++			return NULL;
 +		}
-+		skb->protocol = eth_type_trans(skb, tun->dev);
- 		break;
- 	}
- 
-@@ -1966,9 +1969,12 @@ drop:
- 	}
- 
- 	if (frags) {
-+		u32 headlen;
-+
- 		/* Exercise flow dissector code path. */
--		u32 headlen = eth_get_headlen(tun->dev, skb->data,
--					      skb_headlen(skb));
-+		skb_push(skb, ETH_HLEN);
-+		headlen = eth_get_headlen(tun->dev, skb->data,
-+					  skb_headlen(skb));
- 
- 		if (unlikely(headlen > skb_headlen(skb))) {
- 			this_cpu_inc(tun->pcpu_stats->rx_dropped);
+ 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
+ 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
+ 			break;
 
 
