@@ -2,217 +2,146 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E662074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419E32074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:56:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUEzt9tL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgFPGz1 (ORCPT
+        id S1726787AbgFPG4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:55:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8238 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725710AbgFPGz0 (ORCPT
+        Tue, 16 Jun 2020 02:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgFPG4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:55:26 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05G6W6jt105647;
-        Tue, 16 Jun 2020 02:55:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5ev7t0y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 02:55:23 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05G6WNkn106293;
-        Tue, 16 Jun 2020 02:55:23 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5ev7t0f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 02:55:23 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05G6o54M026008;
-        Tue, 16 Jun 2020 06:55:21 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 31mpe84u31-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 06:55:21 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05G6tIR49109774
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 06:55:19 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D95744C058;
-        Tue, 16 Jun 2020 06:55:18 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BE134C040;
-        Tue, 16 Jun 2020 06:55:18 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.20.221])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Jun 2020 06:55:18 +0000 (GMT)
-Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
- <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <74b6cf8a-d5a6-e0bf-f1c1-e453af133614@de.ibm.com>
-Date:   Tue, 16 Jun 2020 08:55:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_11:2020-06-15,2020-06-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- adultscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006160043
+        Tue, 16 Jun 2020 02:56:45 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21713C05BD43;
+        Mon, 15 Jun 2020 23:56:45 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id b5so7826581pgm.8;
+        Mon, 15 Jun 2020 23:56:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=EpclztQoSZuLTORvxhGdyCDozRw7mptagvqwSet+jsg=;
+        b=XUEzt9tLli3fnpnTh82Goidp6aJDVsFkLZYmxzv/3IVSl/0ocpBf0/5ci6KaIU4/9T
+         NIPyCiWWfFzNCb/0YzqW8a2vBxpZ6o+aRBFbaR66Yji+AqMpcImyo3enPrGqMiAFm5UB
+         Hat8dsNTqp+u+/kgFh/dIjPK7K8P9hM+n9UCScvF9MVUQVhMJH+R/8laIvSKgS77xDZu
+         s5RIHh+k0+I3fuX74WiXY4KV67MdKvEL1rljnprEdGJ9GltGy/7qHHiBjeRjCJhrR5EG
+         MYh+Rm2NoIfHpb/NEskDb8/V+qWXaP2pw0rWJqNc2Yvz6c10FvNoyBihIfcHXXWdje7d
+         2Oew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=EpclztQoSZuLTORvxhGdyCDozRw7mptagvqwSet+jsg=;
+        b=XOJsq4NhmNfYmr1mxTvXvP1N9nsIlMp8L0gB8l7VSLke/o2uYPYAKEThUkBBunY7F9
+         dx0XpJ9c6XQuQjqi19Bz7Su5MeXRyIqUJ/kl0pPMz9ySQEt6S784wQWOGVsjOT+73Pzd
+         HklyngiTAn5YJvExiv+tLfy9pHp2DfNQ4y6V3U5xMcRQ+Bq2LwM92Jh5dQ1YJ31MxDTs
+         vrbCS70qtizc/hAZ70s5wTGs3elaJz5fsEfrACgnMTswaHut5/l2SB/lF4+9hOrS3UIr
+         idlOfZoGXBYTkzMZlc1gUwm6vwd7SS/Ag+H+EkJbDWglGOzxY3D7AtdR+mqNEANdpfBo
+         3zZQ==
+X-Gm-Message-State: AOAM5337Vqu4f/Bj7zI+EA9Lo8Ij5DaI7k2af2QY8Dw+7+yFMofP638I
+        hz08CMdQ3nigBuiSK7eS+6E=
+X-Google-Smtp-Source: ABdhPJwp4gC7X35Bu222jWLJr9AernqCnX2nLSNyc70nx3p/mPBszh6cUzWj/tgDHsuBne1BDDuAfQ==
+X-Received: by 2002:a63:4a65:: with SMTP id j37mr1018218pgl.114.1592290604763;
+        Mon, 15 Jun 2020 23:56:44 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id z9sm1360534pjr.39.2020.06.15.23.56.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 23:56:44 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 3/3] mptcp: add MP_FASTCLOSE suboption handling
+Date:   Tue, 16 Jun 2020 14:47:38 +0800
+Message-Id: <6f0156a5c3304ce50521306a57e2483406f4d122.1592289629.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1592289629.git.geliangtang@gmail.com>
+References: <cover.1592289629.git.geliangtang@gmail.com>
+In-Reply-To: <9bb5cb494f4ac53845f2d233409073d8e71d0e4f.1592289629.git.geliangtang@gmail.com>
+References: <cover.1592289629.git.geliangtang@gmail.com> <f86a2f6f241b7f7a49fec17b3428ae5a0fadc93e.1592289629.git.geliangtang@gmail.com> <9bb5cb494f4ac53845f2d233409073d8e71d0e4f.1592289629.git.geliangtang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add handling for sending and receiving MP_FASTCLOSE suboption.
 
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ net/mptcp/options.c  | 16 ++++++++++++++++
+ net/mptcp/protocol.h |  2 ++
+ 2 files changed, 18 insertions(+)
 
-On 15.06.20 14:39, Pierre Morel wrote:
-> An architecture protecting the guest memory against unauthorized host
-> access may want to enforce VIRTIO I/O device protection through the
-> use of VIRTIO_F_IOMMU_PLATFORM.
-> 
-> Let's give a chance to the architecture to accept or not devices
-> without VIRTIO_F_IOMMU_PLATFORM.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 82b3d7c566b4..a99b3989fec1 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -297,6 +297,15 @@ static void mptcp_parse_option(const struct sk_buff *skb,
+ 		pr_debug("MP_FAIL: data_seq=%lld", mp_opt->data_seq);
+ 		break;
+ 
++	case MPTCPOPT_MP_FASTCLOSE:
++		if (opsize != TCPOLEN_MPTCP_FASTCLOSE)
++			break;
++
++		ptr += 2;
++		mp_opt->rcvr_key = get_unaligned_be64(ptr);
++		pr_debug("MP_FASTCLOSE: rcvr_key=%lld", mp_opt->rcvr_key);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+@@ -993,6 +1002,13 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts)
+ 		put_unaligned_be64(mpext->data_seq, ptr);
+ 	}
+ 
++	if (OPTION_MPTCP_FASTCLOSE & opts->suboptions) {
++		*ptr++ = mptcp_option(MPTCPOPT_MP_FASTCLOSE,
++				      TCPOLEN_MPTCP_FASTCLOSE,
++				      0, 0);
++		put_unaligned_be64(opts->rcvr_key, ptr);
++	}
++
+ 	if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
+ 		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
+ 				      TCPOLEN_MPTCP_MPJ_SYN,
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index e6ae0a73716b..a8faab61e7af 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -25,6 +25,7 @@
+ #define OPTION_MPTCP_RM_ADDR	BIT(8)
+ #define OPTION_MPTCP_PRIO	BIT(9)
+ #define OPTION_MPTCP_FAIL	BIT(10)
++#define OPTION_MPTCP_FASTCLOSE	BIT(11)
+ 
+ /* MPTCP option subtypes */
+ #define MPTCPOPT_MP_CAPABLE	0
+@@ -62,6 +63,7 @@
+ #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
+ #define TCPOLEN_MPTCP_PRIO		3
+ #define TCPOLEN_MPTCP_FAIL		12
++#define TCPOLEN_MPTCP_FASTCLOSE		12
+ 
+ /* MPTCP MP_JOIN flags */
+ #define MPTCPOPT_BACKUP		BIT(0)
+-- 
+2.17.1
 
-
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-
-Shouldnt we maybe add a pr_warn if that happens to help the admins to understand what is going on?
-
-
-> ---
->  arch/s390/mm/init.c     | 6 ++++++
->  drivers/virtio/virtio.c | 9 +++++++++
->  include/linux/virtio.h  | 2 ++
->  3 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 87b2d024e75a..3f04ad09650f 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -46,6 +46,7 @@
->  #include <asm/kasan.h>
->  #include <asm/dma-mapping.h>
->  #include <asm/uv.h>
-> +#include <linux/virtio.h>
->  
->  pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->  
-> @@ -162,6 +163,11 @@ bool force_dma_unencrypted(struct device *dev)
->  	return is_prot_virt_guest();
->  }
->  
-> +int arch_needs_iommu_platform(struct virtio_device *dev) 
-> +{
-> +	return is_prot_virt_guest();
-> +}
-> +
->  /* protected virtualization */
->  static void pv_init(void)
->  {
-> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> index a977e32a88f2..30091089bee8 100644
-> --- a/drivers/virtio/virtio.c
-> +++ b/drivers/virtio/virtio.c
-> @@ -167,6 +167,11 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
->  }
->  EXPORT_SYMBOL_GPL(virtio_add_status);
->  
-> +int __weak arch_needs_iommu_platform(struct virtio_device *dev)
-> +{
-> +	return 0;
-> +}
-> +
->  int virtio_finalize_features(struct virtio_device *dev)
->  {
->  	int ret = dev->config->finalize_features(dev);
-> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
->  	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
->  		return 0;
->  
-> +	if (arch_needs_iommu_platform(dev) &&
-> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
-> +		return -EIO;
-> +
->  	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
->  	status = dev->config->get_status(dev);
->  	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
-> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-> index a493eac08393..2c46b310c38c 100644
-> --- a/include/linux/virtio.h
-> +++ b/include/linux/virtio.h
-> @@ -195,4 +195,6 @@ void unregister_virtio_driver(struct virtio_driver *drv);
->  #define module_virtio_driver(__virtio_driver) \
->  	module_driver(__virtio_driver, register_virtio_driver, \
->  			unregister_virtio_driver)
-> +
-> +int arch_needs_iommu_platform(struct virtio_device *dev);
->  #endif /* _LINUX_VIRTIO_H */
-> 
