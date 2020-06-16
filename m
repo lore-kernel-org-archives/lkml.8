@@ -2,147 +2,182 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A4BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54BB42098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E40E20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICJev4x2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="agRdMFas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgFPL2D (ORCPT
+        id S1728512AbgFPL2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgFPL2C (ORCPT
+        Tue, 16 Jun 2020 07:28:40 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31347 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728176AbgFPL2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:28:02 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7218AC08C5C2;
-        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id i12so1300787pju.3;
-        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=C66Iy0udb87vhjoDYd71Ql6l2XA6eYACBYbwZNfMhzU=;
-        b=ICJev4x2OgJ6X7xmSzWcGWWwJAyPTOuhILDrFDfIxcor78l92hde85mv/ysyicxvef
-         iPNwenqBqzDbFYvb1JN0CUUfCD/bVIu8lN07+lYRk/zQ79/IhvUQXPkBOAMQHdCG5CLq
-         w5Sq6/CXDDYr0RG7p6vn79pM30Dl03IYtNXE4GfkD0tlZFOzpYLWUvcRW0T2WAK+H2/S
-         6dRw9Bh5DKve8/a1Nd85Gd7LTgTsOPUU1p2F6w3ozF/XkHf/bG/7J2lhs7lGUJtze0wc
-         f8CojXLI6JoBPREEVLMQjgXwOSuemXoDk4DjB7x7zXK9YgYMX8a87KK7rZeLaVKjY4Xk
-         I0ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=C66Iy0udb87vhjoDYd71Ql6l2XA6eYACBYbwZNfMhzU=;
-        b=EdKzUrRfmbCbnmP49siiLiLPVE4Ex5tuQSJpIwaQKqb56z5lV3LOmNVz+jZ/OjMZll
-         Xs250XTMjceZ+YezbuNS6r05vPddbE4FPJZic6NbYG1riAAl+bEDre71qGoqAUs5SPtC
-         xVVvItWzj1YFNzBnJN6HmmzJRhrsFWpgLaPeRc0XrrAOtOZvG0a63gm7wqD17PIjkYaX
-         qmQdK4mh7nUTpp812OXl+QOqaS8Eg6AXEkxTdtSwG6yPW59auPni//4wFmBmNKMLU0KP
-         dlkueKLtgAEaJ4yOb7LWLek1sd1IX60i9qsUpDOhVttl8JH+ja4GZTQ7wkHYm9DpuLWJ
-         U8aw==
-X-Gm-Message-State: AOAM530Khz1/lnGEv1qJZP2OGElHGOq/4nqSmo5yojkF0ahUmjGYmYdy
-        swxaowYDbetV5BIAhsIDBcQ=
-X-Google-Smtp-Source: ABdhPJwaevj2Eg+de+5NM26vCPlyHzB6CcylDSU3H8uKvyfdS27T3gYBG5pWtcngruNnK1bLe2z5/A==
-X-Received: by 2002:a17:90a:c85:: with SMTP id v5mr2248738pja.114.1592306882003;
-        Tue, 16 Jun 2020 04:28:02 -0700 (PDT)
-Received: from localhost.localdomain ([101.12.205.96])
-        by smtp.gmail.com with ESMTPSA id b19sm16617701pft.74.2020.06.16.04.27.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 04:28:01 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     robh+dt@kernel.org, matthias.bgg@gmail.com
-Cc:     lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: [PATCH] dt-bindings: mfd: Add bindings for the Mediatek MT6360 PMIC
-Date:   Tue, 16 Jun 2020 19:27:56 +0800
-Message-Id: <1592306876-3504-1-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 16 Jun 2020 07:28:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592306918;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8XrojXvGsQrzvO/Ri1rEyqqDQsXzc/MuTUzoBCmek2U=;
+        b=agRdMFaspM9Nwa54S/L6hn5jNs9/RrbGaKFjSlzSF9gePzO7yBMQhhNlM8LvrxfmipCVxU
+        MNQVfVpEUqtUdmv7+bWbMr2ijVu3jZ+MzbvA89Nnz7zTJusOaOfo0iizK0sxyLAaLG2NUW
+        NShuqMXBWC8dSV0sdLwoXXMHB+O/lNI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-132-Ivfosb3VPqqUSd4F1p0T2w-1; Tue, 16 Jun 2020 07:28:35 -0400
+X-MC-Unique: Ivfosb3VPqqUSd4F1p0T2w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DF3E835B5A;
+        Tue, 16 Jun 2020 11:28:33 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F32C378F0F;
+        Tue, 16 Jun 2020 11:28:31 +0000 (UTC)
+Subject: Re: [PATCH v4] x86/split_lock: Sanitize userspace and guest error
+ output
+To:     linux-kernel@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <20200616112702.1703-1-prarit@redhat.com>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <f9d8edb6-97f7-13c2-008b-8be8ff69604a@redhat.com>
+Date:   Tue, 16 Jun 2020 07:28:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20200616112702.1703-1-prarit@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gene Chen <gene_chen@richtek.com>
+This was sent in error.
 
-Add devicetree binding document support Mediatek MT6360 PMIC
+Sorry,
 
-Signed-off-by: Gene Chen <gene_chen@richtek.com>
----
- Documentation/devicetree/bindings/mfd/mt6360.txt | 53 ++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mt6360.txt
+P.
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6360.txt b/Documentation/devicetree/bindings/mfd/mt6360.txt
-new file mode 100644
-index 0000000..e25b5c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mt6360.txt
-@@ -0,0 +1,53 @@
-+MediaTek MT6360 Multifunction Device Driver
-+
-+MT6360 is a multifunction device with the following sub modules:
-+- ADC
-+- Battery Charger/OTG boost
-+- Flash LED/RGB LED/moonlight LED
-+- 2-channel Buck
-+- 6-channel LDO
-+- USB_PD
-+
-+It is interfaced to host controller using I2C interface.
-+This document describes the binding for MFD device and its sub module.
-+
-+Required properties:
-+- compatible:	Must be "mediatek,mt6360_pmu"
-+- reg:			Specifies the I2C slave address of PMIC block, Must be <0x34>
-+- interrupts:	I2C device IRQ line connected to the main SoC.
-+
-+Optional subnodes:
-+- ADC
-+	Required properties:
-+		- compatible: "mediatek,mt6360_adc"
-+- battery charger/OTG boost
-+	Required properties:
-+		- compatible: "mediatek,mt6360_chg"
-+- Flash LED/RGB LED/moonlight LED
-+	Required properties:
-+		- compatible: "mediatek,mt6360_led"
-+- 2-channel Buck
-+	Required properties:
-+		- compatible: "mediatek,mt6360_pmic"
-+- 6-channel LDO
-+	Required properties:
-+		- compatible: "mediatek,mt6360_ldo"
-+- USB_PD
-+	Required properties:
-+		- compatible: "mediatek,mt6360_tcpc"
-+
-+Example:
-+
-+	#include <dt-bindings/usb/pd.h>
-+
-+	pmu: mt6360_pmu@34 {
-+		status = "ok";
-+		compatible = "mediatek,mt6360_pmu";
-+		reg = <0x34>;
-+		wakeup-source;
-+		interrupts-extended = <&gpio26 0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "IRQB";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
--- 
-2.7.4
+
+On 6/16/20 7:27 AM, Prarit Bhargava wrote:
+> There are two problems with kernel messages in fatal mode that were found
+> during testing of guests and userspace programs.
+> 
+> The first is that no kernel message is output when the split lock detector
+> is triggered with a userspace program.  As a result the userspace process
+> dies from receiving SIGBUS with no indication to the user of what caused
+> the process to die.
+> 
+> The second problem is that only the first triggering guest causes a kernel
+> message to be output because the message is output with pr_warn_once().
+> This also results in a loss of information to the user.
+> 
+> While fixing these I noticed that the same message was being output
+> three times so I'm cleaning that up too.
+> 
+> Fix fatal mode output, and use consistent messages for fatal and
+> warn modes for both userspace and guests.
+> 
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> ---
+> v2: Do not output a message if CPL 3 Alignment Check is turned on (xiaoyao.li)
+> v3: refactor code (sean.j.christopherson)
+> v4: Fix Sign off (sean.j.christopherson)
+> 
+>  arch/x86/kernel/cpu/intel.c | 22 ++++++++++------------
+>  1 file changed, 10 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index 63926c94eb5f..3a373f0be674 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -1074,11 +1074,14 @@ static void split_lock_init(void)
+>  	split_lock_verify_msr(sld_state != sld_off);
+>  }
+>  
+> -static void split_lock_warn(unsigned long ip)
+> +static bool handle_split_lock(unsigned long ip)
+>  {
+> -	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+> +	pr_warn("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+>  			    current->comm, current->pid, ip);
+>  
+> +	if (sld_state != sld_warn)
+> +		return false;
+> +
+>  	/*
+>  	 * Disable the split lock detection for this task so it can make
+>  	 * progress and set TIF_SLD so the detection is re-enabled via
+> @@ -1086,18 +1089,13 @@ static void split_lock_warn(unsigned long ip)
+>  	 */
+>  	sld_update_msr(false);
+>  	set_tsk_thread_flag(current, TIF_SLD);
+> +	return true;
+>  }
+>  
+>  bool handle_guest_split_lock(unsigned long ip)
+>  {
+> -	if (sld_state == sld_warn) {
+> -		split_lock_warn(ip);
+> +	if (handle_split_lock(ip))
+>  		return true;
+> -	}
+> -
+> -	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
+> -		     current->comm, current->pid,
+> -		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
+>  
+>  	current->thread.error_code = 0;
+>  	current->thread.trap_nr = X86_TRAP_AC;
+> @@ -1108,10 +1106,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
+>  
+>  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+>  {
+> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+> +	if (regs->flags & X86_EFLAGS_AC)
+>  		return false;
+> -	split_lock_warn(regs->ip);
+> -	return true;
+> +
+> +	return handle_split_lock(regs->ip);
+>  }
+>  
+>  /*
+> 
 
