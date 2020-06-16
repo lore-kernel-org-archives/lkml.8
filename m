@@ -2,119 +2,127 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE89C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE985C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6FC206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1965206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgFPL4F (ORCPT
+        id S1728576AbgFPL5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:56:05 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51479 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbgFPL4D (ORCPT
+        Tue, 16 Jun 2020 07:57:21 -0400
+Received: from mailgate.ics.forth.gr ([139.91.1.2]:51200 "EHLO
+        mailgate.ics.forth.gr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728144AbgFPL5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:56:03 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jlAC8-00082K-My; Tue, 16 Jun 2020 11:56:00 +0000
-Subject: Re: [PATCH] drm/i915/display: fix missing null check on allocated dsb
- object
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Animesh Manna <animesh.manna@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200616114221.73971-1-colin.king@canonical.com>
- <20200616115459.GN4151@kadam>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <45e8594c-14e5-ba67-9708-1b72fa2c51d3@canonical.com>
-Date:   Tue, 16 Jun 2020 12:56:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 16 Jun 2020 07:57:20 -0400
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 07:57:18 EDT
+Received: from av3.ics.forth.gr (av3in.ics.forth.gr [139.91.1.77])
+        by mailgate.ics.forth.gr (8.15.2/ICS-FORTH/V10-1.8-GATE) with ESMTP id 05GBpxUA091422;
+        Tue, 16 Jun 2020 14:51:59 +0300 (EEST)
+X-AuditID: 8b5b014d-257ff700000045c5-06-5ee8b2592d99
+Received: from enigma.ics.forth.gr (enigma.ics.forth.gr [139.91.151.35])
+        by av3.ics.forth.gr (Symantec Messaging Gateway) with SMTP id B8.3F.17861.952B8EE5; Tue, 16 Jun 2020 14:51:53 +0300 (EEST)
+X-ICS-AUTH-INFO: Authenticated user:  at ics.forth.gr
 MIME-Version: 1.0
-In-Reply-To: <20200616115459.GN4151@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 16 Jun 2020 14:51:53 +0300
+From:   Nick Kossifidis <mick@ics.forth.gr>
+To:     Zong Li <zong.li@sifive.com>
+Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] riscv: Register System RAM as iomem resources
+Organization: FORTH
+In-Reply-To: <063fab26f4c15bf5b833b57fa818749afa7811d4.1592292685.git.zong.li@sifive.com>
+References: <cover.1592292685.git.zong.li@sifive.com>
+ <063fab26f4c15bf5b833b57fa818749afa7811d4.1592292685.git.zong.li@sifive.com>
+Message-ID: <0e1d7a917332b90666417ac0508f8a6d@mailhost.ics.forth.gr>
+X-Sender: mick@mailhost.ics.forth.gr
+User-Agent: Roundcube Webmail/1.3.9
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXSHT1dWTdy04s4g6cPrC0u75rDZrHtcwub
+        xcvLPcwWbbP4LT7cnc3mwOrx5uVLFo/NS+o9LjVfZ/f4vEkugCWKyyYlNSezLLVI3y6BK+Pw
+        lnlsBRMFK068WsDYwPiSt4uRk0NCwETi8ZZpbF2MXBxCAkcZJd5enscGkTCVmL23kxHE5hUQ
+        lDg58wkLiM0sYCEx9cp+RghbXqJ562xmEJtFQFViSksPWC+bgKbE/EsHwepFBBQkrizZCNVb
+        IbH1328mEFtYwE3i1b+9YHF+AWGJT3cvsoLYnAKREl/WfGWBOKiFUWL13VnMEEe4SLw6e4IJ
+        4jgViQ+/H7CD2KICyhI3Dz9nn8AoOAvJrbOQ3DoLya0LGJlXMQoklhnrZSYX66XlF5Vk6KUX
+        bWIEhzSj7w7G25vf6h1iZOJgPMQowcGsJMIbbfsiTog3JbGyKrUoP76oNCe1+BCjNAeLkjhv
+        HvfyWCGB9MSS1OzU1ILUIpgsEwenVAPTvsAL86VXMDKpWP2VKE3M7/Q0+rWmcHLW8verdTjs
+        TqX/3bw264e+IuvESV+exUU0cNfpa7GtveKyYycD865vk1zFGC6puelut66f4aG1oaShNDtP
+        KLxH1uhPU9S0x4FnRLjvT02bJ9tyJGO1zeudKw7MeOg947eZy4Fb4V0r01ibN/T39Mzmm3rM
+        f01dxpncVSe+Ckzj/10S0iF5PjHAwFdVwCdl87bG9YI7z5Qt4DXaIL/j53Q7MxuriVXGi9ZN
+        TDhtF2F9bLFF8D9FzqPZ7o85jlhaF3qWiz3lSHjincLqbniraoFQhOv9l/OCrBNmbl50ZF7D
+        YoPf0pqe/0X1eLuUz73J7oxtzBB4qK3EUpyRaKjFXFScCAA6b2Qy2AIAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/06/2020 12:54, Dan Carpenter wrote:
-> On Tue, Jun 16, 2020 at 12:42:21PM +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently there is no null check for a failed memory allocation
->> on the dsb object and without this a null pointer dereference
->> error can occur. Fix this by adding a null check.
->>
->> Note: added a drm_err message in keeping with the error message style
->> in the function.
+Στις 2020-06-16 10:45, Zong Li έγραψε:
+> Add System RAM to /proc/iomem, various tools expect it such as kdump.
+> It is also needed for page_is_ram API which checks the specified 
+> address
+> whether registered as System RAM in iomem_resource list.
 > 
-> Don't give in to peer pressure!  That's like being a lemming when Disney
-> film makers come to push you off the cliff to create the 1958 nature
-> film "White Wilderness".
-
-:-)
-
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/mm/init.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 > 
-> regards,
-> dan carpenter
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index f4adb3684f3d..bbe816e03b2f 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -517,6 +517,27 @@ void mark_rodata_ro(void)
+>  }
+>  #endif
 > 
+> +void __init resource_init(void)
+> +{
+> +	struct memblock_region *region;
+> +
+> +	for_each_memblock(memory, region) {
+> +		struct resource *res;
+> +
+> +		res = memblock_alloc(sizeof(struct resource), SMP_CACHE_BYTES);
+> +		if (!res)
+> +			panic("%s: Failed to allocate %zu bytes\n", __func__,
+> +			      sizeof(struct resource));
+> +
+> +		res->name = "System RAM";
+> +		res->start = __pfn_to_phys(memblock_region_memory_base_pfn(region));
+> +		res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 
+> 1;
+> +		res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> +
+> +		request_resource(&iomem_resource, res);
+> +	}
+> +}
+> +
+>  void __init paging_init(void)
+>  {
+>  	setup_vm_final();
+> @@ -524,6 +545,7 @@ void __init paging_init(void)
+>  	sparse_init();
+>  	setup_zero_page();
+>  	zone_sizes_init();
+> +	resource_init();
+>  }
+> 
+>  #ifdef CONFIG_SPARSEMEM_VMEMMAP
 
+
+I already have a patch for registering System RAM as an iomem resource 
+on my kexec/kdump series. Since I don't care about System RAM regions 
+being accurately exposed to userspace (I parse the current device tree 
+instead) I just use memblock_start_of_DRAM/end_of_DRAM. This approach 
+from arm64 codebase is better since it also handles the case of sparse 
+memory regions but in order to be useful for kdump we need to add the 
+various segments of the kernel image as child nodes to their respective 
+region for kexec-tools. I'll re-spin my patchset anyway so I'll extend 
+it to better handle System RAM regions.
