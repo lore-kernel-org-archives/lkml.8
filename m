@@ -1,138 +1,83 @@
-Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95700C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AAF5207EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 742E320810
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XKpaUV4k"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=icurse.nl header.i=@icurse.nl header.b="w2O9B+Si"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgFPX6t (ORCPT
+        id S1726608AbgFQAAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:58:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFPX6t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:58:49 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104BAC06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:58:49 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d8so69665plo.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:58:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1amKsauscRtUYJxwB6r4wYVg83Pm/9N/gPGEAJklEmE=;
-        b=XKpaUV4k35DbwbzOQuJTW+T/q9ZaidqF3eHIGTJL1bfH9SWqYawWt4k1SDxDdVl0Er
-         uJKpGRwXhgJ2kpafC1Cxs+opRyw0SSNeYiiRAs6NgGPj80aLrrIHJgsbZDboP5SLvum8
-         ExowX4oSlC1mDJPZvvSTKTQXnvl0JakZ2dtzA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1amKsauscRtUYJxwB6r4wYVg83Pm/9N/gPGEAJklEmE=;
-        b=pevooHM8L1D5X/nh/fQnakPXjc300I4clZ4UZYUInkRDq/Gamy3ny/Rhxma11C4+7k
-         rJ0d8xyyxghPfwniXeTeag5xkAIcq4AMKhHihyvvpKWQXaIAvq8PABVEhig8BWj8nbLi
-         nerkqAChOVHd4jME30RyEtFzzAFJ6TAKDhFJ9qgv/s2t+EIrqr8VAwzv3SqpEtQIU/dk
-         EEkF4kLwQ6Iag1tBUOG8P6DIR3NeNhXwBCAT/hYg7lpo3ZC8C76D4n1y5/XMkcMJPWpK
-         69v68ih0dwvZGq1tGJwFStZ2UakW6eV5NXBbBCd02IT0U5ZgwaaukNT2EO1pjks6n9rX
-         nraQ==
-X-Gm-Message-State: AOAM532qEa/d6/r0jz5g9xewWhpHY+pEYsWIOgDA0aogT+yRZQiGjdbO
-        CxK4gxbCjUE9MTI/qwhjJuKXig==
-X-Google-Smtp-Source: ABdhPJxw5yiyCJ+o734BQt9lxF/pwbijsWxt1/EuncjKqx6IjLfKfPKWQBHx++cMFpFqHMhs426j1A==
-X-Received: by 2002:a17:90a:ce14:: with SMTP id f20mr4947277pju.115.1592351928416;
-        Tue, 16 Jun 2020 16:58:48 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w18sm18318483pfq.121.2020.06.16.16.58.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 16:58:47 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 16:58:46 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>
-Subject: Re: RFC - kernel selftest result documentation (KTAP)
-Message-ID: <202006161653.15C278A5@keescook>
-References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
- <202006141120.96FF8C5@keescook>
- <CY4PR13MB11757D57CD441C5CAEC3F257FD9C0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <7161fadb-45ba-c4c0-8bbb-cb47d2dd0265@redhat.com>
- <CY4PR13MB11755F5A6879CA3FFD005426FD9D0@CY4PR13MB1175.namprd13.prod.outlook.com>
- <CAFd5g454n4ZPgCdWaAxezFueG47TztqBx4L7x4oYwgPAR3BZNA@mail.gmail.com>
+        Tue, 16 Jun 2020 20:00:49 -0400
+Received: from mail.ruun.network ([176.9.184.6]:48057 "EHLO mail.ruun.network"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726581AbgFQAAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 20:00:48 -0400
+X-Greylist: delayed 1114 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 20:00:48 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=icurse.nl;
+         s=x; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:
+        From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
+        References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:
+        List-Owner:List-Archive; bh=Evq8MmLfT0oR9H/XsA7WCQZbhdKyJhd3Ipik9wf89lk=; b=w
+        2O9B+Siw+aBLgVTR3Hh7VRKzNIaRyu6HLCxeaaUxQwfyDErT+63FjlmjqWKYTppgyBmnQttvYqHl7
+        c91bho9kj5M+wkM7ldipu7ilQyPd4RAgQ+k0Jjimgy4AJXkeVOnf0b6judpkzrTZpbLH1ZmmtHFiv
+        pcvLqX5+lLQFf+LuTf0ASKgDAhT9jk4Z24uPK1ZJQBrp3lm+4xUY7+gOBbYrLXWqLBR3yxbAH3XG5
+        6jLaXXheEGD1GXoARGlMUcddFVi5dbSBJkNIyOGGjc6CzWt9z45oiCry9VkDOcEbUpSwkw3sgqmBN
+        a6M4jxQkzg3rAQeXrxuNpZw+4uhOPV3Mw==;
+Received: from [23.129.64.201] (helo=localhost.localdomain)
+        by birchibald.ruun.network with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93.0.4)
+        (envelope-from <jeffrey@icurse.nl>)
+        id 1jlLDo-00087A-PA; Wed, 17 Jun 2020 01:42:29 +0200
+From:   Jeffrey Lin <jeffrey@icurse.nl>
+To:     jdelvare@suse.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Lin <jeffrey@icurse.nl>
+Subject: [PATCH] i2c: i801: Register lis3lv02d I2C device on Dell Latitude 5480
+Date:   Tue, 16 Jun 2020 19:41:30 -0400
+Message-Id: <20200616234130.814499-1-jeffrey@icurse.nl>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g454n4ZPgCdWaAxezFueG47TztqBx4L7x4oYwgPAR3BZNA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: jeffrey@icurse.nl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:44:28PM -0700, Brendan Higgins wrote:
-> On Tue, Jun 16, 2020 at 9:42 AM Bird, Tim <Tim.Bird@sony.com> wrote:
-> > > From: Paolo Bonzini <pbonzini@redhat.com>
-> > >
-> > > On 15/06/20 21:07, Bird, Tim wrote:
-> > > >> Note: making the plan line required differs from TAP13 and TAP14. I
-> > > >> think it's the right choice, but we should be clear.
-> > >
-> > > As an aside, where is TAP14?
-> > By TAP14, I was referring to the current, undocumented, KUnit
-> > conventions.
-> 
-> Not so. TAP14 is the proposed next version of TAP13:
-> 
-> https://github.com/TestAnything/testanything.github.io/pull/36
-> https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md
+Value of /sys/devices/platform/lis3lv02d/position when
+    Horizontal:     (36,-108,-1152)
+    Left elevated:  (-432,-126,-1062)
+    Front elevated: (36,594,-936)
+    Upside down:    (-126,-252,1098)
 
-I was reading this (I haven't compared to the blob above):
+Signed-off-by: Jeffrey Lin <jeffrey@icurse.nl>
+---
+ drivers/i2c/busses/i2c-i801.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://github.com/TestAnything/Specification/blob/tap-14-specification/specification.md
-
-> Based on the discussion, it seems like most of the things we wanted
-> from TAP14 would probably make it in if TAP ever accepts another pull
-> request.
-
-Were our leading diagnostic lines part of their latest spec? I thought
-we were pretty far off in left field for that particular bit.
-
-> > My personal preference is to have the dash.  I think it's more human readable.
-> > I note that the TAP spec has examples of result lines both with and without
-> > the dash, so even the spec is ambiguous on this.   I think not mandating it
-> > either way is probably best.  For regex parsers, it's easy to ignore with '[-]?'
-> > outside the pattern groups that grab the number and description.
-> 
-> I don't think we care, because we don't use it.
-
-Yeah, I'm in the same place. I don't care -- I would just like a
-determination. (The "implied" nature of it in TAP14 bothers me.)
-
-> > > XFAIL/XPASS are different from SKIP.  I personally don't have a need for
-> > > them, but kselftests includes XFAIL/XPASS exit codes and they aren't
-> > > reflected into selftests/kselftest/runner.sh.
-> > >
-> > > Likewise, kselftest.h has ksft_inc_xfail_cnt but not
-> > > ksft_test_result_xfail/ksft_test_result_xpass.
-
-I proposed fixing that recently[1]. seccomp uses XFAIL for "I have
-detected you lack the config to test this, so I can't say it's working
-or not, because it only looks like a failure without the config."
-
-[1] https://lore.kernel.org/lkml/20200611224028.3275174-7-keescook@chromium.org/
-
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index fea644921a76..d7c802e20ae6 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -1268,6 +1268,7 @@ static const struct {
+ 	/*
+ 	 * Additional individual entries were added after verification.
+ 	 */
++	{ "Latitude 5480",      0x29 },
+ 	{ "Vostro V131",        0x1d },
+ };
+ 
 -- 
-Kees Cook
+2.27.0
+
