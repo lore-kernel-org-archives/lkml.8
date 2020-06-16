@@ -2,97 +2,104 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5A220786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592296823;
-	bh=D1KwiAUn88OiFtooJuIFB9Zn8vRKLnDTMmkrIkmjR68=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oSyBbtm6j7D6DCpt1Q2e35HpnHkVIvOm2K780sf59+/OGd2Q5IuD8HXmdKfI1gFpb
-	 G/48LiWsoDDzga/Jgrv49YLVYlHaBgydjOPg1pEW+7vpTUjPC8JIZlxqS/HHBhjLlI
-	 vw6nX9YB79c3HxvAP74eOcRdPYHXZDgLT9WNUM0I=
+	by mail.kernel.org (Postfix) with ESMTP id 9CDA0206F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgFPIkW (ORCPT
+        id S1728112AbgFPIk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgFPIkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:40:20 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E192420644;
-        Tue, 16 Jun 2020 08:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592296820;
-        bh=D1KwiAUn88OiFtooJuIFB9Zn8vRKLnDTMmkrIkmjR68=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HazHfm8g0gLHALwKVq750TzWuy7RqLiX0smxtYtjtVfko6XGESlHQCoOs8goiDKkq
-         EpoRnJTVHsSxL6L1H2MaeEjfekr5wZaV9oTu+/w+FeM/yaswesWBB4Yix1DGvFvpKZ
-         9+Xle8tSpVtpevk2sfkSO859zMKwJpPGKpXNMTzA=
-Date:   Tue, 16 Jun 2020 09:40:18 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
-Subject: Re: [RESENDx2][PATCH] sound: qcom: Kconfig: Tweak dependencies on
- SND_SOC_SDM845
-Message-ID: <20200616084018.GG4447@sirena.org.uk>
-References: <20200616063417.110263-1-john.stultz@linaro.org>
+        Tue, 16 Jun 2020 04:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728086AbgFPIkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 04:40:25 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19CAC05BD43;
+        Tue, 16 Jun 2020 01:40:25 -0700 (PDT)
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jl78X-0008Hw-0e; Tue, 16 Jun 2020 10:40:05 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 8A2C010154B; Tue, 16 Jun 2020 10:40:04 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
+        Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH x86/entry: Force rcu_irq_enter() when in idle task
+In-Reply-To: <20200615201647.GC12037@google.com>
+References: <20200611235305.GA32342@paulmck-ThinkPad-P72> <CALCETrWo-zpiDsYGtKvm8LzW6CQ5L19a3+Ag_9g8aL4wHaJj9g@mail.gmail.com> <871rmkzcc8.fsf@nanos.tec.linutronix.de> <87wo4cxubv.fsf@nanos.tec.linutronix.de> <20200615201647.GC12037@google.com>
+Date:   Tue, 16 Jun 2020 10:40:04 +0200
+Message-ID: <871rmfcskb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pVF9EYSGkiif4dMH"
-Content-Disposition: inline
-In-Reply-To: <20200616063417.110263-1-john.stultz@linaro.org>
-X-Cookie: Offer may end without notice.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Joel,
 
---pVF9EYSGkiif4dMH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Joel Fernandes <joel@joelfernandes.org> writes:
+> On Fri, Jun 12, 2020 at 03:55:00PM +0200, Thomas Gleixner wrote:
+>> This is also correct vs. user mode entries in NOHZ full scenarios because
+>> user mode entries bring RCU out of EQS and force the RCU irq nesting state
+>
+> I had to re-read this sentence a couple of times. The 'user mode entries'
+> sounds like 'entry into user mode'. It would be good to reword it to 'IRQ
+> entry in user mode'.
 
-On Tue, Jun 16, 2020 at 06:34:17AM +0000, John Stultz wrote:
-> CROS_EC isn't strictly required for audio to work
-> on other SDM845 platforms (like the Dragonboard 845c).
+:)
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+> My knowledge predates the rcu-watching reworks so apologies on the below
+> question but I still didn't fully follow why when the idle task behaves
+> differently from being in user mode. Even with user mode we should have:
+>
+> <user mode>  (in EQS)
+>   <irq entry>   <---------- exits EQS so now rcu is watching
+>      <softirq entry in the exit path>
+>         <timer tick irq entry>  <-- the buggy !watching logic prevents rcu_irq_enter
+> 	    -> report QS since tick thinks it is first level.
+>
+> Is there a subtlety here I'm missing? I checked the RCU code and I did not
+> see anywhere that rcu_user_enter() makes it behave differently. Both
+> rcu_user_enter() and rcu_idle_enter() call rcu_eqs_enter().
 
---pVF9EYSGkiif4dMH
-Content-Type: application/pgp-signature; name="signature.asc"
+The interrupt hit user mode entry does:
 
------BEGIN PGP SIGNATURE-----
+    idtentry_enter_cond_rcu()
+      if (user_mode(regs))
+         enter_from_user_mode()
+           user_exit_irqoff()
+             __context_tracking_exit(CONTEXT_USER)
+               rcu_user_exit()
+                 rcu_eqs_exit(1)
+                   ...
+                   WRITE_ONCE(rdp->dynticks_nmi_nesting,
+                              DYNTICK_IRQ_NONIDLE);
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7ohXEACgkQJNaLcl1U
-h9CG/Af/ceDDlITCWmAjvFYAY2eZevnFHCVPhH4Dw7Thfl049807+vh11NAvv2+F
-2gcw0B2MUXD57nlvkIYGpJp/MbrUj05+jYjHCifVcLDOVDWgaVUTnqKOCN2t7wmT
-Sri8WAslYCAw37pUN1++DMpYII8v8ROfqO0MhKsq3dgqiWGkEIyZuaJAeH0q/u4P
-d1/C6JiRSxjx+7KidvRfkAu8eov4fCZUxqn6XMuvvMcTJTqVuWnjqHmEpZw5s8Jd
-Er4RwfxpT95g+wGjdAdGMWJCdm1GRkcPus0zlExMHwQDZMESKcdq3jPxV5H8fVh9
-Ccl1xk7tkLSC5p/mnsXeulMh0M2g/g==
-=Gwvo
------END PGP SIGNATURE-----
+i.e. for interrupts which enter from user mode we are not invoking
+rcu_irq_enter() at all.
 
---pVF9EYSGkiif4dMH--
+The return from interrupt path has nothing to do with that because
+that's an entry in kernel mode.
+
+Thanks,
+
+        tglx
+
+
