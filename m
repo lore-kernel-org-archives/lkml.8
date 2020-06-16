@@ -2,109 +2,119 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA02C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5532EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15A92074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1B920767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:27:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="VeuX1aA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgFPKYS (ORCPT
+        id S1728194AbgFPK1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:24:18 -0400
-Received: from verein.lst.de ([213.95.11.211]:37438 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgFPKYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:24:15 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5465968AEF; Tue, 16 Jun 2020 12:24:12 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:24:12 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Dexuan Cui <decui@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Ju-Hyoung Lee <juhlee@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: hv_hypercall_pg page permissios
-Message-ID: <20200616102412.GB29684@lst.de>
-References: <20200407073830.GA29279@lst.de> <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net> <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <87y2ooiv5k.fsf@vitty.brq.redhat.com> <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM> <20200616072318.GA17600@lst.de> <20200616101807.GO2531@hirez.programming.kicks-ass.net> <20200616102350.GA29684@lst.de>
+        Tue, 16 Jun 2020 06:27:22 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:10852 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgFPK0E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:26:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592303164; x=1623839164;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k2wrTtH2GzrGLfrzfk/gBGspC7SuqBmLlC4focXFTlU=;
+  b=VeuX1aA6acfxIQLGbEK8xzyv+NRsOQS2d1NOuQ2NBq9tYzknqkCWwIVI
+   E7uoP6jNIlphyQ1UeEZMnV6IxId3S+9M6XhYkZqrtrPlpTs0qmjIAev2L
+   kMfFRmwd9pKAuLUx7djCW8GoVARIBm59ZtPQMIKJDsdbNSBVk168iYxED
+   Qdzb9sUWY85yeSllfbD7EwO5tWDaABASzE0pBcoe4tZKZVVF2dd3kBlLW
+   NcS2pmuQyt12Uy2bO/3NGEYJjcK8mFsAYZKApiszJkfnedxyj66xs2R9Y
+   izFxU4fQBGagxSyXUmWkb9K+c1flOpaozMToY9iTJWeK8gJh/fpMqYz3R
+   Q==;
+IronPort-SDR: 13BdIXn7vmaUhGM174zGQSQFW6eUnoeeeErBspWBe2gtUtDc1xCBpR+kPUjKjlU6EM75KK9JF0
+ gSwTFuN20qiRYMGCYsO0znjljW2xjdAu8QY+6wPsWqHdTUk3bXLGMLGyqadfdail9ZXuwtUzXd
+ 9IRb16O/EugXeKaFyTweL6ycuw41GBic0UgFDJKIZoMdJya16eUN1DS+CA8pzPpRy7fZHu2mnf
+ JivKHBCfwfanx6MtcE6bUwzNTac2FLZ6WxGXA62eJM2W1W+vnEhek8As1WCn0/LvnpJ5lxfa0r
+ l+g=
+X-IronPort-AV: E=Sophos;i="5.73,518,1583164800"; 
+   d="scan'208";a="140383059"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 16 Jun 2020 18:26:00 +0800
+IronPort-SDR: PxLLMabxEv4N8OiX/TbggrrnRjM5Wni06yrJ7Pp7wcCKrGDT7xnm40Ws0uFobNV2JSUCrqSq6a
+ TSexQfN+SyIbwsWkXN+oPNeG5VIeV0R8w=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 03:15:15 -0700
+IronPort-SDR: Ds8ZpyQ1PDwkBGREw3CK27qrIdNAtRYofgjQkj3QsRgzQ3Byrn7Pe1AbLOoVBnTiJLKfPrmEOs
+ Y8Sji87WubWw==
+WDCIronportException: Internal
+Received: from 31yhj72.ad.shared (HELO localhost.hgst.com) ([10.86.58.100])
+  by uls-op-cesaip02.wdc.com with ESMTP; 16 Jun 2020 03:25:55 -0700
+From:   Niklas Cassel <niklas.cassel@wdc.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Niklas Cassel <niklas.cassel@wdc.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: [PATCH 0/2] Export max open zones and max active zones to sysfs
+Date:   Tue, 16 Jun 2020 12:25:44 +0200
+Message-Id: <20200616102546.491961-1-niklas.cassel@wdc.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616102350.GA29684@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:23:50PM +0200, Christoph Hellwig wrote:
-> On Tue, Jun 16, 2020 at 12:18:07PM +0200, Peter Zijlstra wrote:
-> > > It does.  But it also means every other user of PAGE_KERNEL_EXEC
-> > > should trigger this, of which there are a few (kexec, tboot, hibernate,
-> > > early xen pv mapping, early SEV identity mapping)
-> > 
-> > There are only 3 users in the entire tree afaict:
-> > 
-> > arch/arm64/kernel/probes/kprobes.c:     page = vmalloc_exec(PAGE_SIZE);
-> > arch/x86/hyperv/hv_init.c:      hv_hypercall_pg = vmalloc_exec(PAGE_SIZE);
-> > kernel/module.c:        return vmalloc_exec(size);
-> > 
-> > And that last one is a weak function that any arch that has STRICT_RWX
-> > ought to override.
-> > 
-> > > We really shouldn't create mappings like this by default.  Either we
-> > > need to flip PAGE_KERNEL_EXEC itself based on the needs of the above
-> > > users, or add another define to overload vmalloc_exec as there is no
-> > > other user of that for x86.
-> > 
-> > We really should get rid of the two !module users of this though; both
-> > x86 and arm64 have STRICT_RWX and sufficient primitives to DTRT.
-> > 
-> > What is HV even trying to do with that page? AFAICT it never actually
-> > writes to it, it seens to give the physica address to an MSR (which I
-> > suspect then writes crud into the page for us from host context).
-> > 
-> > Suggesting the page really only needs to be RX.
-> > 
-> > On top of that, vmalloc_exec() gets us a page from the entire vmalloc
-> > range, which can be outside of the 2G executable range, which seems to
-> > suggest vmalloc_exec() is wrong too and all this works by accident.
-> > 
-> > How about something like this:
-> > 
-> > 
-> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > index a54c6a401581..82a3a4a9481f 100644
-> > --- a/arch/x86/hyperv/hv_init.c
-> > +++ b/arch/x86/hyperv/hv_init.c
-> > @@ -375,12 +375,15 @@ void __init hyperv_init(void)
-> >  	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
-> >  	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
-> >  
-> > -	hv_hypercall_pg = vmalloc_exec(PAGE_SIZE);
-> > +	hv_hypercall_pg = module_alloc(PAGE_SIZE);
-> >  	if (hv_hypercall_pg == NULL) {
-> >  		wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
-> >  		goto remove_cpuhp_state;
-> >  	}
-> >  
-> > +	set_memory_ro((unsigned long)hv_hypercall_pg, 1);
-> > +	set_memory_x((unsigned long)hv_hypercall_pg, 1);
-> 
-> The changing of the permissions sucks.  I thought about adding
-> a module_alloc_prot with an explicit pgprot_t argument.  On x86
-> alone at least ftrace would also benefit from that.
+Export max open zones and max active zones to sysfs.
 
-The above is also missing a set_vm_flush_reset_perms.
+This patch series depends on the Zoned Namespace Command Set series:
+https://lore.kernel.org/linux-nvme/20200615233424.13458-1-keith.busch@wdc.com/
+
+
+All zoned block devices in the kernel utilize the "zoned block device
+support" (CONFIG_BLK_DEV_ZONED).
+
+The Zoned Namespace Command Set Specification defines two different
+resource limits: Max Open Resources and Max Active Resources.
+
+The ZAC and ZBC standards define a MAXIMUM NUMBER OF OPEN SEQUENTIAL WRITE
+REQUIRED ZONES field.
+
+
+Since the ZNS Max Open Resources field has the same purpose as the ZAC/ZBC
+field, (the ZNS field is 0's based, the ZAC/ZBC field isn't), create a
+common "max_open_zones" definition in the sysfs documentation, and export
+both the ZNS field and the ZAC/ZBC field according to this new common
+definition.
+
+The ZNS Max Active Resources field does not have an equivalent field in
+ZAC/ZBC, however, since both ZAC/ZBC and ZNS utilize the "zoned block
+device support" in the kernel, create a "max_active_zones" definition in
+the sysfs documentation, similar to "max_open_zones", and export it
+according to this new definition. For ZAC/ZBC devices, this field will be
+exported as 0, meaning "no limit".
+
+
+Niklas Cassel (2):
+  block: add max_open_zones to blk-sysfs
+  block: add max_active_zones to blk-sysfs
+
+ Documentation/block/queue-sysfs.rst | 14 ++++++++++
+ block/blk-sysfs.c                   | 27 +++++++++++++++++++
+ drivers/nvme/host/zns.c             |  2 ++
+ drivers/scsi/sd_zbc.c               |  5 ++++
+ include/linux/blkdev.h              | 40 +++++++++++++++++++++++++++++
+ 5 files changed, 88 insertions(+)
+
+-- 
+2.26.2
+
