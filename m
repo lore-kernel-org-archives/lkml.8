@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7475CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF06AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56A2C206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28A82074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K64yw4Ua"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vzILdiTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgFPBR4 (ORCPT
+        id S1726969AbgFPBSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
+        Mon, 15 Jun 2020 21:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgFPBRy (ORCPT
+        with ESMTP id S1726936AbgFPBR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 21:17:54 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E6D4C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 18:17:54 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id w14so15499348qtv.19
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 18:17:54 -0700 (PDT)
+        Mon, 15 Jun 2020 21:17:58 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173F3C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 18:17:57 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id f16so23261604ybp.5
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 18:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=/xX6nZw43qnrS5POTejrGqQ7NU/q6i+TSuGWkPxARP8=;
-        b=K64yw4UaVuSTB06zM70ynWO3Qe34OlpnWZDFtQx+XohI9pGel76JaZtLQSBoWSuTVn
-         iUzYet0x27iuRTb1k2C8psq+ocK+eUc+lbqn/lM4DjoyK8Lwthh6he1ErlgUVUwd2DYt
-         +Ye+ql9uWjMbbc98okBddDJZZSEPasbtsclPT6fSyzC2cMfQoctWhwgA1EprQkRAaKW3
-         kZpng1WUzZbMtCYVB9VeNUn8PkNpzWWpfDFshQHOc4eQsm4yRF+loPV3Fp3xPvwnmEqr
-         I9MkdliB1IiEzSTXoV4J1n+HUh2x8Vc310feGGYXQTOVnGd2k9zdRqFaiLC6Nf2wojul
-         zk3w==
+        bh=kh7TdnSzjMmv55tOoFOguM4fQKcmXvzqJelRJT/2fHA=;
+        b=vzILdiTcV8zGZvfxPJjrCDkaIiDK8KCwgVW5sP5e/czfC9CFBD+4ikfLr1nNZiLCG4
+         yExyajLI5z2tPj5jVUXTZlmBhGBcd6BGVc1XxIDjdNS3taX9qDYcvZx28CMqEi9ygJgA
+         MWL6ea5rsIGkxxLvlq7vvECQtGR9tvELA1ucICg5NNO8B8aWbqA2h64ZsHzjXsnB1YQW
+         4b2MdI3q0G8zF3rBfgke02muupsh2/pTPE8RoaCWeIK9EoWZZ89jLrd6Hi0IDaGyOVQO
+         vuDTYNL7FXPLpo9k/VkK76GyxrbKc0NHqjiyuMipoIOah7pHfFDxwNZAF35HnrttIiGX
+         Sfow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=/xX6nZw43qnrS5POTejrGqQ7NU/q6i+TSuGWkPxARP8=;
-        b=IG7iXFFWN9Qm0YwsDWIczIPWyQQpj1BzRocSPNn8g1g4VbQYZcuJP9wL2xNzadZTmi
-         OvYBfRsElwhq6fcnQQez7ADlAdaQgDxjD6si15o0zgpevV3S0f8pQqer3nND3qtgBs5Q
-         GCs3iJvWtfuFm2aqefsp3Ea3u2J20hx6tAiADB6kGXXevPXsJ0XGueTwyslghd/IDrOB
-         717JYduQOeLusac0k5L8quxLdpegQDUa82mQJeMdMY0dSJJirnxL3wvYcQm+8O2JwhxL
-         fF4WPYLfqPl5SUh7XEFcfxJ899g3LGpGqfgd0g43opetBleTa07m8WD55X+hCEejx7iE
-         GGtA==
-X-Gm-Message-State: AOAM530hXwPe5exWJMtRII6DJ8f2gkbKAfVV7KYm4NKPI/Oz7d0w4xpP
-        3aSxH503rO/dkiaGhM7uPN5Mu89gL8P2
-X-Google-Smtp-Source: ABdhPJx/VShp5rkGDpPUGAg/FhXNCRybPGhdLZkWV0hxwM8Gk42L1iKKJC5+PkUN237Ww8vlTPH4HPEgQvLG
-X-Received: by 2002:ad4:4374:: with SMTP id u20mr548678qvt.144.1592270273220;
- Mon, 15 Jun 2020 18:17:53 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 18:17:41 -0700
+        bh=kh7TdnSzjMmv55tOoFOguM4fQKcmXvzqJelRJT/2fHA=;
+        b=e5JuSQqQ6msoZT51tmWS5WM/ZFugRBE0LB7xHnI8Ace4losFWI0w48RKbE98bnafMj
+         xEqIBjFt6BP2xZTjgIOWgzK/LGYqVbLEoORgk2xLzXZr78zpv90uC5ddS8sPNsnx7smj
+         My0UZrEmSEbuHTdgz898pW7S++8DLy+MAyQp8Cihf2vv32t9PHz4pYGPHIswXHq4pDex
+         BYt+9bvhOpHcx48+cshCzgnYamAr5EcmN8jPMyDYMgHp0S704nsR0/mr3/4rSKNP3oHv
+         8tJBZ7BPx4hmnrO9wDTT1Hcw9f5fwSKNxxkqI6bpHvSMZdZhtCiCnKT6B0y+liZjDzFx
+         PpAA==
+X-Gm-Message-State: AOAM532nPjbZHzdYSRvydH9KhkIEg1zzS31kyqbuhD6sqISxhweEO2zS
+        6rimgz9A4z5in5CWuNyklen3y57rIvdl
+X-Google-Smtp-Source: ABdhPJxAth06oSMz+frpUoX8kGWlQJ8aihUMBynZvrDOTpUM1ErZyuW821epnFDUXXRGd/C8nOzICVaMXji/
+X-Received: by 2002:a25:9746:: with SMTP id h6mr429416ybo.409.1592270276282;
+ Mon, 15 Jun 2020 18:17:56 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 18:17:42 -0700
 In-Reply-To: <20200616011742.138975-1-rajatja@google.com>
-Message-Id: <20200616011742.138975-3-rajatja@google.com>
+Message-Id: <20200616011742.138975-4-rajatja@google.com>
 Mime-Version: 1.0
 References: <20200616011742.138975-1-rajatja@google.com>
 X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH 3/4] pci: acs: Enable PCI_ACS_TB for untrusted/external-facing devices
+Subject: [PATCH 4/4] pci: export untrusted attribute in sysfs
 From:   Rajat Jain <rajatja@google.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
@@ -97,61 +98,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When enabling ACS, currently the bit "translation blocking" was
-not getting changed at all. Set it to disable translation blocking
-too for all external facing or untrusted devices. This is OK
-because ATS is only allowed on internal devces.
+This is needed to allow the userspace to determine when an untrusted
+device has been added, and thus allowing it to bind the driver manually
+to it, if it so wishes. This is being done as part of the approach
+discussed at https://lkml.org/lkml/2020/6/9/1331
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
- drivers/pci/pci.c    |  4 ++++
- drivers/pci/quirks.c | 11 +++++++++++
- 2 files changed, 15 insertions(+)
+ drivers/pci/pci-sysfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d2ff987585855..79853b52658a2 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3330,6 +3330,10 @@ static void pci_std_enable_acs(struct pci_dev *dev)
- 	/* Upstream Forwarding */
- 	ctrl |= (cap & PCI_ACS_UF);
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 6d78df981d41a..574e9c613ba26 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -50,6 +50,7 @@ pci_config_attr(subsystem_device, "0x%04x\n");
+ pci_config_attr(revision, "0x%02x\n");
+ pci_config_attr(class, "0x%06x\n");
+ pci_config_attr(irq, "%u\n");
++pci_config_attr(untrusted, "%u\n");
  
-+	if (dev->external_facing || dev->untrusted)
-+		/* Translation Blocking */
-+		ctrl |= (cap & PCI_ACS_TB);
-+
- 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
- }
+ static ssize_t broken_parity_status_show(struct device *dev,
+ 					 struct device_attribute *attr,
+@@ -608,6 +609,7 @@ static struct attribute *pci_dev_attrs[] = {
+ #endif
+ 	&dev_attr_driver_override.attr,
+ 	&dev_attr_ari_enabled.attr,
++	&dev_attr_untrusted.attr,
+ 	NULL,
+ };
  
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b341628e47527..6294adeac4049 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4934,6 +4934,13 @@ static void pci_quirk_enable_intel_rp_mpc_acs(struct pci_dev *dev)
- 	}
- }
- 
-+/*
-+ * Currently this quirk does the equivalent of
-+ * PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV
-+ *
-+ * Currently missing, it also needs to do equivalent of PCI_ACS_TB,
-+ * if dev->external_facing || dev->untrusted
-+ */
- static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
- {
- 	if (!pci_quirk_intel_pch_acs_match(dev))
-@@ -4973,6 +4980,10 @@ static int pci_quirk_enable_intel_spt_pch_acs(struct pci_dev *dev)
- 	ctrl |= (cap & PCI_ACS_CR);
- 	ctrl |= (cap & PCI_ACS_UF);
- 
-+	if (dev->external_facing || dev->untrusted)
-+		/* Translation Blocking */
-+		ctrl |= (cap & PCI_ACS_TB);
-+
- 	pci_write_config_dword(dev, pos + INTEL_SPT_ACS_CTRL, ctrl);
- 
- 	pci_info(dev, "Intel SPT PCH root port ACS workaround enabled\n");
 -- 
 2.27.0.290.gba653c62da-goog
 
