@@ -2,79 +2,100 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FEFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E38F20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E4420882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JxoWMwra"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cx3qeeet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbgFPOTf (ORCPT
+        id S1728131AbgFPOXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:19:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44871 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726341AbgFPOTf (ORCPT
+        Tue, 16 Jun 2020 10:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgFPOXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:19:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592317174;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=V1VDjVY8ljytaIU7oja+UH832lNJTSMuRA4Sv5hnPs8=;
-        b=JxoWMwraSBTO7jzN7X2DPRBu8ECZzzghXf3FOfDg/GsL4AUdw2xab1xhyZY9k3epkvnAl9
-        cibdTOC+NWPrhHgeyvzyOJZDhxGwBXgh/hHplloVFEQ4nnNusQKr+UeM5p7dw5yIDUnBOp
-        2d1UleBkpLhCL+hneaMeavcX6AD28fM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-2lX4X5jUOo2Is9nT2aYKwA-1; Tue, 16 Jun 2020 10:19:27 -0400
-X-MC-Unique: 2lX4X5jUOo2Is9nT2aYKwA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB584100CCC8;
-        Tue, 16 Jun 2020 14:19:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.193.147])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4BACE19D61;
-        Tue, 16 Jun 2020 14:19:23 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 16 Jun 2020 16:19:25 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 16:19:22 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: Re: [PATCH] tracing/probe: fix memleak in fetch_op_data operations
-Message-ID: <20200616141921.GA25691@redhat.com>
-References: <20200615143034.GA1734@cosmos>
- <20200615171337.6525cefa@oasis.local.home>
- <20200616174647.d1985a66fa9bbcbe01e014b4@kernel.org>
+        Tue, 16 Jun 2020 10:23:30 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07907C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 07:23:29 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id q8so22081654iow.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 07:23:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b4U1AfLGfbsqzclrKp54jPi9In5PnDmi1Caq80dY41A=;
+        b=Cx3qeeetNETMSLLjMLDoFlb+lDoZ6kuK8weLKFqIrlpu8dK9u/vI9KmcHO5Z3bfam/
+         kBTT06m7baIxeaXc/2T01peE5OR2v6ehrVU+BcGVUKhxFhxk9CbJ32e/5GeQSDjvf9Fc
+         NtqtHQGxodM2SiyZtM/CNAC8H7frCOUnO5fzg9emG16IX0VNK41as/IGdKzNja7Ji/Yw
+         7KdfdNEzbFghL7ky/XQuUX3WRxIqcGzmXF2EA7lUjANtq1Nkx6NTxsLBTpFQuI63V3z2
+         0XrB42HmUD4QRS2aWcCjNtKce8skyQwcTDPcVmlva6nt4SrtYvvvqqzrgAVxjkvxHZe8
+         M1qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b4U1AfLGfbsqzclrKp54jPi9In5PnDmi1Caq80dY41A=;
+        b=Df2e2JvlFJyGQ/jRg/ZYsrdTWauNLfLIBAtUgEC0W94Hiihi3nH2he4mzaxJe1VHfd
+         336aTVTGnKrGE41BpGH4zJ87zahgjjvt9lQSvteC+a9S3cvlIvszBrdS+0Hx/ZeGK5Hx
+         QW5c6/AA6OtQ/DgqOKO42rJ1wCAfzonkRxmHdW6JbgSh3mimnDkwYLK+/rZtod1A8aGx
+         GblCDebtN4f6HcsDlvcG6ijQ2oT+9SmTj2TyXl/E42ODsI7WEUOIsGlIf2As5sacB3Fy
+         5C1X203Ib7XMFjTG9jQG9I9yMLZu3jYJfNlnR+sy6uuvOlHg6YLRvdG+0nGOwdgdh6MZ
+         0NdQ==
+X-Gm-Message-State: AOAM5338/XFAtmq308PcA7zv87FxkIY331xy40pHGHcTvg0hraVmOPro
+        3fErO3/NErosbXTjAjzXoT2f7eVGwg==
+X-Google-Smtp-Source: ABdhPJzHeQwK0pkNPKPVmacPZFczxrpK+FmbMED11czNyck7YdmQPWaZGyYvdTlmpp3XWg7ftkgKLA==
+X-Received: by 2002:a5e:981a:: with SMTP id s26mr2914477ioj.131.1592317408955;
+        Tue, 16 Jun 2020 07:23:28 -0700 (PDT)
+Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
+        by smtp.gmail.com with ESMTPSA id w78sm10049881ilk.14.2020.06.16.07.23.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 07:23:28 -0700 (PDT)
+From:   Brian Gerst <brgerst@gmail.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH 0/2] X32 syscall cleanups
+Date:   Tue, 16 Jun 2020 10:23:13 -0400
+Message-Id: <20200616142315.375918-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616174647.d1985a66fa9bbcbe01e014b4@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/16, Masami Hiramatsu wrote:
->
-> BTW, for uprobes, I think Oleg is mainly reviewed changes on that in
-> these days. Maybe better to assign him?
+Christoph Hellwig uncovered an issue with how we currently handle X32
+syscalls.  Currently, we can only use COMPAT_SYS_DEFINEx() for X32
+specific syscalls.  These changes remove that restriction and allow
+native syscalls.
 
-Well, then I'd suggest both me and Srikar.
+Brian Gerst (2):
+  x86/x32: Use __x64 prefix for X32 compat syscalls
+  x86/x32: Convert x32_rt_sigreturn to native syscall
 
-Oleg.
+ arch/x86/entry/syscall_x32.c                      |  8 +++-----
+ arch/x86/entry/syscalls/syscall_64.tbl            |  2 +-
+ arch/x86/include/asm/syscall_wrapper.h            | 10 +++++-----
+ arch/x86/kernel/signal.c                          |  2 +-
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl |  2 +-
+ 5 files changed, 11 insertions(+), 13 deletions(-)
+
+
+base-commit: 83cdaef93988a6bc6875623781de571b2694fe02
+-- 
+2.26.2
 
