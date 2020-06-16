@@ -2,280 +2,160 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB98BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9653AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8582520882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324341;
-	bh=C46HhCPP2oW/e/dN088+OWJukLykerqswiW7knkBI0w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MDpvwlj2ADECNboaBlpYT40k/mkVxutRxCry7AQ2N0xbf5jIow478asoopMVQOGrd
-	 Y+8DyzKaD5hIv4CMxoOMF74OmLT3GnhTkNfpXokee/mrD3gChFdfzNH52AMQjmVAJl
-	 avTpnxJO4w2dMx5Xzw/abmIu2GCxURS20nJgKgvE=
+	by mail.kernel.org (Postfix) with ESMTP id 858CC20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732020AbgFPQS4 (ORCPT
+        id S1731158AbgFPQTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:18:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730363AbgFPPhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E952214F1;
-        Tue, 16 Jun 2020 15:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321857;
-        bh=C46HhCPP2oW/e/dN088+OWJukLykerqswiW7knkBI0w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ju6N7m+voc5x2pa+soXcrd98WNdyeNDVkgo08rfInURko1jijKwze91AxUvvX1h7l
-         mtc0MT/Iv6+kQDdsXfpv/U46lmEGSMzLi7fS4nqiZyDWLba8QUOMTv8szC21m+8fFH
-         LjkqRuSUdbUkslY/CNieVYXvhuVPTR8F/+1DEvjw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.4 041/134] x86/speculation: Avoid force-disabling IBPB based on STIBP and enhanced IBRS.
-Date:   Tue, 16 Jun 2020 17:33:45 +0200
-Message-Id: <20200616153102.763529826@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
-References: <20200616153100.633279950@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 16 Jun 2020 12:19:15 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:42744 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730312AbgFPPhc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:32 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 16 Jun 2020 21:06:55 +0530
+Received: from vbadigan-linux.qualcomm.com ([10.206.24.109])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 16 Jun 2020 21:06:47 +0530
+Received: by vbadigan-linux.qualcomm.com (Postfix, from userid 76677)
+        id 7EE834C6C; Tue, 16 Jun 2020 21:06:46 +0530 (IST)
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V4 1/2] mmc: sdhci: Allow platform controlled voltage switching
+Date:   Tue, 16 Jun 2020 21:06:18 +0530
+Message-Id: <1592321779-28556-2-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1592321779-28556-1-git-send-email-vbadigan@codeaurora.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1592321779-28556-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Steinhauser <asteinhauser@google.com>
+From: Vijay Viswanath <vviswana@codeaurora.org>
 
-commit 21998a351512eba4ed5969006f0c55882d995ada upstream.
+If vendor platform drivers are controlling whole logic of voltage
+switching, then sdhci driver no need control vqmmc regulator.
+So skip enabling/disable vqmmc from SDHC driver.
 
-When STIBP is unavailable or enhanced IBRS is available, Linux
-force-disables the IBPB mitigation of Spectre-BTB even when simultaneous
-multithreading is disabled. While attempts to enable IBPB using
-prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, ...) fail with
-EPERM, the seccomp syscall (or its prctl(PR_SET_SECCOMP, ...) equivalent)
-which are used e.g. by Chromium or OpenSSH succeed with no errors but the
-application remains silently vulnerable to cross-process Spectre v2 attacks
-(classical BTB poisoning). At the same time the SYSFS reporting
-(/sys/devices/system/cpu/vulnerabilities/spectre_v2) displays that IBPB is
-conditionally enabled when in fact it is unconditionally disabled.
-
-STIBP is useful only when SMT is enabled. When SMT is disabled and STIBP is
-unavailable, it makes no sense to force-disable also IBPB, because IBPB
-protects against cross-process Spectre-BTB attacks regardless of the SMT
-state. At the same time since missing STIBP was only observed on AMD CPUs,
-AMD does not recommend using STIBP, but recommends using IBPB, so disabling
-IBPB because of missing STIBP goes directly against AMD's advice:
-https://developer.amd.com/wp-content/resources/Architecture_Guidelines_Update_Indirect_Branch_Control.pdf
-
-Similarly, enhanced IBRS is designed to protect cross-core BTB poisoning
-and BTB-poisoning attacks from user space against kernel (and
-BTB-poisoning attacks from guest against hypervisor), it is not designed
-to prevent cross-process (or cross-VM) BTB poisoning between processes (or
-VMs) running on the same core. Therefore, even with enhanced IBRS it is
-necessary to flush the BTB during context-switches, so there is no reason
-to force disable IBPB when enhanced IBRS is available.
-
-Enable the prctl control of IBPB even when STIBP is unavailable or enhanced
-IBRS is available.
-
-Fixes: 7cc765a67d8e ("x86/speculation: Enable prctl mode for spectre_v2_user")
-Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- arch/x86/kernel/cpu/bugs.c |   87 +++++++++++++++++++++++++--------------------
- 1 file changed, 50 insertions(+), 37 deletions(-)
+ drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -581,7 +581,9 @@ early_param("nospectre_v1", nospectre_v1
- static enum spectre_v2_mitigation spectre_v2_enabled __ro_after_init =
- 	SPECTRE_V2_NONE;
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 37b1158c1c0c..e6275c2202b0 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -4105,6 +4105,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	unsigned int override_timeout_clk;
+ 	u32 max_clk;
+ 	int ret;
++	bool enable_vqmmc = false;
  
--static enum spectre_v2_user_mitigation spectre_v2_user __ro_after_init =
-+static enum spectre_v2_user_mitigation spectre_v2_user_stibp __ro_after_init =
-+	SPECTRE_V2_USER_NONE;
-+static enum spectre_v2_user_mitigation spectre_v2_user_ibpb __ro_after_init =
- 	SPECTRE_V2_USER_NONE;
- 
- #ifdef CONFIG_RETPOLINE
-@@ -727,15 +729,6 @@ spectre_v2_user_select_mitigation(enum s
- 		break;
- 	}
- 
--	/*
--	 * At this point, an STIBP mode other than "off" has been set.
--	 * If STIBP support is not being forced, check if STIBP always-on
--	 * is preferred.
--	 */
--	if (mode != SPECTRE_V2_USER_STRICT &&
--	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
--		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
--
- 	/* Initialize Indirect Branch Prediction Barrier */
- 	if (boot_cpu_has(X86_FEATURE_IBPB)) {
- 		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
-@@ -758,23 +751,36 @@ spectre_v2_user_select_mitigation(enum s
- 		pr_info("mitigation: Enabling %s Indirect Branch Prediction Barrier\n",
- 			static_key_enabled(&switch_mm_always_ibpb) ?
- 			"always-on" : "conditional");
-+
-+		spectre_v2_user_ibpb = mode;
- 	}
- 
--	/* If enhanced IBRS is enabled no STIBP required */
--	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
-+	/*
-+	 * If enhanced IBRS is enabled or SMT impossible, STIBP is not
-+	 * required.
-+	 */
-+	if (!smt_possible || spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return;
- 
- 	/*
--	 * If SMT is not possible or STIBP is not available clear the STIBP
--	 * mode.
-+	 * At this point, an STIBP mode other than "off" has been set.
-+	 * If STIBP support is not being forced, check if STIBP always-on
-+	 * is preferred.
-+	 */
-+	if (mode != SPECTRE_V2_USER_STRICT &&
-+	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
-+		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
-+
-+	/*
-+	 * If STIBP is not available, clear the STIBP mode.
+ 	WARN_ON(host == NULL);
+ 	if (host == NULL)
+@@ -4118,9 +4119,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	 * the host can take the appropriate action if regulators are not
+ 	 * available.
  	 */
--	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
-+	if (!boot_cpu_has(X86_FEATURE_STIBP))
- 		mode = SPECTRE_V2_USER_NONE;
-+
-+	spectre_v2_user_stibp = mode;
-+
- set_mode:
--	spectre_v2_user = mode;
--	/* Only print the STIBP mode when SMT possible */
--	if (smt_possible)
--		pr_info("%s\n", spectre_v2_user_strings[mode]);
-+	pr_info("%s\n", spectre_v2_user_strings[mode]);
- }
+-	ret = mmc_regulator_get_supply(mmc);
+-	if (ret)
+-		return ret;
++	if (!mmc->supply.vqmmc) {
++		ret = mmc_regulator_get_supply(mmc);
++		if (ret)
++			return ret;
++		enable_vqmmc  = true;
++	}
  
- static const char * const spectre_v2_strings[] = {
-@@ -1007,7 +1013,7 @@ void cpu_bugs_smt_update(void)
+ 	DBG("Version:   0x%08x | Present:  0x%08x\n",
+ 	    sdhci_readw(host, SDHCI_HOST_VERSION),
+@@ -4377,7 +4381,15 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		mmc->caps |= MMC_CAP_NEEDS_POLL;
+ 
+ 	if (!IS_ERR(mmc->supply.vqmmc)) {
+-		ret = regulator_enable(mmc->supply.vqmmc);
++		if (enable_vqmmc) {
++			ret = regulator_enable(mmc->supply.vqmmc);
++			if (ret) {
++				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
++					mmc_hostname(mmc), ret);
++				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
++			}
++			host->sdhci_core_to_disable_vqmmc = !ret;
++		}
+ 
+ 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
+@@ -4390,12 +4402,6 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
+ 						    3600000))
+ 			host->flags &= ~SDHCI_SIGNALING_330;
+-
+-		if (ret) {
+-			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
+-				mmc_hostname(mmc), ret);
+-			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
+-		}
+ 	}
+ 
+ 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
+@@ -4626,7 +4632,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	return 0;
+ 
+ unreg:
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ undma:
+ 	if (host->align_buffer)
+@@ -4644,7 +4650,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
  {
- 	mutex_lock(&spec_ctrl_mutex);
+ 	struct mmc_host *mmc = host->mmc;
  
--	switch (spectre_v2_user) {
-+	switch (spectre_v2_user_stibp) {
- 	case SPECTRE_V2_USER_NONE:
- 		break;
- 	case SPECTRE_V2_USER_STRICT:
-@@ -1250,14 +1256,16 @@ static int ib_prctl_set(struct task_stru
- {
- 	switch (ctrl) {
- 	case PR_SPEC_ENABLE:
--		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
-+		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
- 			return 0;
- 		/*
- 		 * Indirect branch speculation is always disabled in strict
- 		 * mode.
- 		 */
--		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
--		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
-+		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
- 			return -EPERM;
- 		task_clear_spec_ib_disable(task);
- 		task_update_spec_tif(task);
-@@ -1268,10 +1276,12 @@ static int ib_prctl_set(struct task_stru
- 		 * Indirect branch speculation is always allowed when
- 		 * mitigation is force disabled.
- 		 */
--		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
-+		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
- 			return -EPERM;
--		if (spectre_v2_user == SPECTRE_V2_USER_STRICT ||
--		    spectre_v2_user == SPECTRE_V2_USER_STRICT_PREFERRED)
-+		if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
-+		    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
- 			return 0;
- 		task_set_spec_ib_disable(task);
- 		if (ctrl == PR_SPEC_FORCE_DISABLE)
-@@ -1302,7 +1312,8 @@ void arch_seccomp_spec_mitigate(struct t
- {
- 	if (ssb_mode == SPEC_STORE_BYPASS_SECCOMP)
- 		ssb_prctl_set(task, PR_SPEC_FORCE_DISABLE);
--	if (spectre_v2_user == SPECTRE_V2_USER_SECCOMP)
-+	if (spectre_v2_user_ibpb == SPECTRE_V2_USER_SECCOMP ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP)
- 		ib_prctl_set(task, PR_SPEC_FORCE_DISABLE);
- }
- #endif
-@@ -1333,22 +1344,24 @@ static int ib_prctl_get(struct task_stru
- 	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2))
- 		return PR_SPEC_NOT_AFFECTED;
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
  
--	switch (spectre_v2_user) {
--	case SPECTRE_V2_USER_NONE:
-+	if (spectre_v2_user_ibpb == SPECTRE_V2_USER_NONE &&
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_NONE)
- 		return PR_SPEC_ENABLE;
--	case SPECTRE_V2_USER_PRCTL:
--	case SPECTRE_V2_USER_SECCOMP:
-+	else if (spectre_v2_user_ibpb == SPECTRE_V2_USER_STRICT ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_STRICT_PREFERRED)
-+		return PR_SPEC_DISABLE;
-+	else if (spectre_v2_user_ibpb == SPECTRE_V2_USER_PRCTL ||
-+	    spectre_v2_user_ibpb == SPECTRE_V2_USER_SECCOMP ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_PRCTL ||
-+	    spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP) {
- 		if (task_spec_ib_force_disable(task))
- 			return PR_SPEC_PRCTL | PR_SPEC_FORCE_DISABLE;
- 		if (task_spec_ib_disable(task))
- 			return PR_SPEC_PRCTL | PR_SPEC_DISABLE;
- 		return PR_SPEC_PRCTL | PR_SPEC_ENABLE;
--	case SPECTRE_V2_USER_STRICT:
--	case SPECTRE_V2_USER_STRICT_PREFERRED:
--		return PR_SPEC_DISABLE;
--	default:
-+	} else
- 		return PR_SPEC_NOT_AFFECTED;
--	}
- }
+ 	if (host->align_buffer)
+@@ -4787,7 +4793,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
  
- int arch_prctl_spec_ctrl_get(struct task_struct *task, unsigned long which)
-@@ -1587,7 +1600,7 @@ static char *stibp_state(void)
- 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return "";
+ 	destroy_workqueue(host->complete_wq);
  
--	switch (spectre_v2_user) {
-+	switch (spectre_v2_user_stibp) {
- 	case SPECTRE_V2_USER_NONE:
- 		return ", STIBP: disabled";
- 	case SPECTRE_V2_USER_STRICT:
-
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ 
+ 	if (host->align_buffer)
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 0008bbd27127..0770c036e2ff 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -567,6 +567,7 @@ struct sdhci_host {
+ 	u32 caps1;		/* CAPABILITY_1 */
+ 	bool read_caps;		/* Capability flags have been read */
+ 
++	bool sdhci_core_to_disable_vqmmc;  /* sdhci core can disable vqmmc */
+ 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
+ 	unsigned int            ocr_avail_sd;
+ 	unsigned int            ocr_avail_mmc;
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
