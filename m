@@ -2,52 +2,51 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDF1321531
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D68520C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321854;
-	bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
+	s=default; t=1592321858;
+	bh=bJ5vHl2H8/BvNDVhsIs4pfBDlyCaMBFtm0KMc8o1C+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ghrIe9sD/fJH8Y7QwWqRiLan6BRrM4lCr3VQO6Sokc/aXtsMgHzkqWdbo4HPTFMoP
-	 Ia/WS34ulTFiAoLUVbA5DSTXWREk7iFlf6nIwuMLb1kxJ332P2G9wF+j7PVCEntf+P
-	 8DTzSGqCyuaauMLy1PqlASPB+i1OIZ/4qN6GSBPQ=
+	b=D7p9rWaLKKC+sL+tLdblq19AiPu19AuZ4o5gJQr1roSeWsQFZgZ7bW8qM+t5v/94h
+	 ymHeUH1auaRM+L4ZnrsdXQYrWhPe5qSiNpJCHqD9bovX83YwKUmFRfMEDz+nQdw8ke
+	 BpXFvB4cBO7A8GyivKUwNiTJYNWa4kJZaIUI/DF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgFPPhd (ORCPT
+        id S1730354AbgFPPhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49038 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:37:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbgFPPha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:30 -0400
+        id S1730330AbgFPPhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B6E821475;
-        Tue, 16 Jun 2020 15:37:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16DF3214F1;
+        Tue, 16 Jun 2020 15:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321850;
-        bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
+        s=default; t=1592321852;
+        bh=bJ5vHl2H8/BvNDVhsIs4pfBDlyCaMBFtm0KMc8o1C+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fPK7IJ+iIcMClRWYVyRrqwc2Yy0x1I8NuHHdDleOdgBAth4e+j3M4+sBV9nj+mC2
-         ygxPUtipP2nuGQlCfb+yUuhLjlJmgBJ1IjR4VRYj0EfhKojvhDyhQzo7JPtCrC1vUf
-         6wrjV31Qo0QCCN1MmpkpVrmqRFKiV/WelA7zfvAM=
+        b=XIkPRhq6SwR55qa+Pmgsjri5+BbpxDDqZIi64g6EfMwv3dJ18dZN5kDNG2trnxt6q
+         yelhZlGQ7a73Z8o3UbsRCyWDBUFoQLO8lZ45pVJnUnWpb9VAQw3GfAOJVAcLklqWZO
+         VqctlxmKEzikrtpEw94og+4+GyIDe0hL4DYqEvwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dennis Kadioglu <denk@eclipso.email>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 012/134] Input: synaptics - add a second working PNP_ID for Lenovo T470s
-Date:   Tue, 16 Jun 2020 17:33:16 +0200
-Message-Id: <20200616153101.280335153@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaochun Lee <lixc17@lenovo.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.4 039/134] x86/PCI: Mark Intel C620 MROMs as having non-compliant BARs
+Date:   Tue, 16 Jun 2020 17:33:43 +0200
+Message-Id: <20200616153102.667930938@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,37 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dennis Kadioglu <denk@eclipso.email>
+From: Xiaochun Lee <lixc17@lenovo.com>
 
-[ Upstream commit 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c ]
+commit 1574051e52cb4b5b7f7509cfd729b76ca1117808 upstream.
 
-The Lenovo Thinkpad T470s I own has a different touchpad with "LEN007a"
-instead of the already included PNP ID "LEN006c". However, my touchpad
-seems to work well without any problems using RMI. So this patch adds the
-other PNP ID.
+The Intel C620 Platform Controller Hub has MROM functions that have non-PCI
+registers (undocumented in the public spec) where BAR 0 is supposed to be,
+which results in messages like this:
 
-Signed-off-by: Dennis Kadioglu <denk@eclipso.email>
-Link: https://lore.kernel.org/r/ff770543cd53ae818363c0fe86477965@mail.eclipso.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  pci 0000:00:11.0: [Firmware Bug]: reg 0x30: invalid BAR (can't size)
+
+Mark these MROM functions as having non-compliant BARs so we don't try to
+probe any of them.  There are no other BARs on these devices.
+
+See the Intel C620 Series Chipset Platform Controller Hub Datasheet,
+May 2019, Document Number 336067-007US, sec 2.1, 35.5, 35.6.
+
+[bhelgaas: commit log, add 0xa26d]
+Link: https://lore.kernel.org/r/1589513467-17070-1-git-send-email-lixiaochun.2888@163.com
+Signed-off-by: Xiaochun Lee <lixc17@lenovo.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/pci/fixup.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index 4d2036209b45..758dae8d6500 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -170,6 +170,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"LEN005b", /* P50 */
- 	"LEN005e", /* T560 */
- 	"LEN006c", /* T470s */
-+	"LEN007a", /* T470s */
- 	"LEN0071", /* T480 */
- 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
- 	"LEN0073", /* X1 Carbon G5 (Elantech) */
--- 
-2.25.1
-
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -572,6 +572,10 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IN
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6f60, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fa0, pci_invalid_bar);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ec, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa1ed, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26c, pci_invalid_bar);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0xa26d, pci_invalid_bar);
+ 
+ /*
+  * Device [1022:7808]
 
 
