@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3771C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E032C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3487208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1ECC2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324216;
-	bh=ZXs9ocW7Ed+eH9yAMQJE98d/MX0NoYJxO6UE9FsODYQ=;
+	s=default; t=1592324218;
+	bh=8DHEUyrxUYcT2iumm9RzdbJZzd0UEQ03DEP40wWww9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18XVv8xzKZqxDaV9zlRuyp25M5HllhKZEeG/lLjiyA+rYZ/GeSW5dQYPxH7TPERPZ
-	 2tThsYmCdB5OAhynNOKZrefTp82rXzfgEIISGjnAp/fEq68e0SKY0VEkDjK3L2psoV
-	 n9Ocr6ErDePKIYCX/uAkxY5f0lbslW0AGWgXo9yw=
+	b=Ch7CaW2TBCekC1D1Et1l/DjKRoecO4OT9zkoyar6WHWmNRAKoIRjaQ+29BwzOI/LI
+	 6TO8GuXl7OlnyyHah/pHkQ7bFQzeB4IDyh5NqJBhyFzOe0S6X/d9ch1u5+i5iuv2GE
+	 BoiCUBSmPTua5KaDkvKkpCDQB1lHek/e/KN1V/Wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731025AbgFPPjs (ORCPT
+        id S1732306AbgFPQQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:39:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:16:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730967AbgFPPjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:40 -0400
+        id S1729942AbgFPPjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:39:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF05920B1F;
-        Tue, 16 Jun 2020 15:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9665720B1F;
+        Tue, 16 Jun 2020 15:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321980;
-        bh=ZXs9ocW7Ed+eH9yAMQJE98d/MX0NoYJxO6UE9FsODYQ=;
+        s=default; t=1592321988;
+        bh=8DHEUyrxUYcT2iumm9RzdbJZzd0UEQ03DEP40wWww9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2duqi/M1o/oeXAUdHkuCJxWQqETJyq5IwHm4cRT5LmzX1SDxj4o+Jo5SRARCZ+2Vs
-         Gcz/c+aFFWX9FC6BnFTokx6IIbVYZi+gh7DOj+T+XG8rmtktEPRkhnQdHso8Rv57YY
-         HhKkwUmgFItkt7hNEV5LPu1r30H+1htkwbHrBRK8=
+        b=ZTRopmbcHtgP4OC8l2mRAauHuGx2NVCtScOAq5puLou4EFMh6VM2Q3Ec19FOK6xb6
+         BYViTAVqic4DjIz1r2FPaZMDNskYBrLITUZZY0lwMjrHxe5GfMK42Ej9yLCy8DW/SI
+         ciXu8cO88VxAdtd008pxWaKhuqBT6ZF194Aa2rls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 090/134] selftests/net: in rxtimestamp getopt_long needs terminating null entry
-Date:   Tue, 16 Jun 2020 17:34:34 +0200
-Message-Id: <20200616153105.093713585@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 093/134] net/mlx5e: Fix repeated XSK usage on one channel
+Date:   Tue, 16 Jun 2020 17:34:37 +0200
+Message-Id: <20200616153105.237895441@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,31 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit 865a6cbb2288f8af7f9dc3b153c61b7014fdcf1e ]
+[ Upstream commit 36d45fb9d2fdf348d778bfe73f0427db1c6f9bc7 ]
 
-getopt_long requires the last element to be filled with zeros.
-Otherwise, passing an unrecognized option can cause a segfault.
+After an XSK is closed, the relevant structures in the channel are not
+zeroed. If an XSK is opened the second time on the same channel without
+recreating channels, the stray values in the structures will lead to
+incorrect operation of queues, which causes CQE errors, and the new
+socket doesn't work at all.
 
-Fixes: 16e781224198 ("selftests/net: Add a test to validate behavior of rx timestamps")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch fixes the issue by explicitly zeroing XSK-related structs in
+the channel on XSK close. Note that those structs are zeroed on channel
+creation, and usually a configuration change (XDP program is set)
+happens on XSK open, which leads to recreating channels, so typical XSK
+usecases don't suffer from this issue. However, if XSKs are opened and
+closed on the same channel without removing the XDP program, this bug
+reproduces.
+
+Fixes: db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/networking/timestamping/rxtimestamp.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-+++ b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-@@ -115,6 +115,7 @@ static struct option long_options[] = {
- 	{ "tcp", no_argument, 0, 't' },
- 	{ "udp", no_argument, 0, 'u' },
- 	{ "ip", no_argument, 0, 'i' },
-+	{ NULL, 0, NULL, 0 },
- };
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
+@@ -152,6 +152,10 @@ void mlx5e_close_xsk(struct mlx5e_channe
+ 	mlx5e_close_cq(&c->xskicosq.cq);
+ 	mlx5e_close_xdpsq(&c->xsksq);
+ 	mlx5e_close_cq(&c->xsksq.cq);
++
++	memset(&c->xskrq, 0, sizeof(c->xskrq));
++	memset(&c->xsksq, 0, sizeof(c->xsksq));
++	memset(&c->xskicosq, 0, sizeof(c->xskicosq));
+ }
  
- static int next_port = 19999;
+ void mlx5e_activate_xsk(struct mlx5e_channel *c)
 
 
