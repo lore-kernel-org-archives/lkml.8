@@ -4,49 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39125C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16050207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5162071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323251;
-	bh=9/f0wi49iItWo3HVGU0BxHoshxsiC38fZ6j+hzA7fI0=;
+	s=default; t=1592323255;
+	bh=UGvNsIBI77475V/aFFDuzHClccitPkM+H/tfhf9NUJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PORJZSLQ6rBjr6rFaHPyGfbxuRkCyipfyP2xn39IjRiEzAprxsKoKlOd6CKEx4KjX
-	 8GEoHrj6/SY6XEDUoqOgsKo7AlCj/u//Wt5d835B3MSn6rEhj3r5sIkDrZ5QSkYV2C
-	 ujW9CTNCiT/JYzSsJ2KlF+lHNIoNTGKsxJyoc0GM=
+	b=WdJ2tqOPouypmhbmGP0JVinQBcRnFF3l6tN0T2mtG3pK6/fkEPwRAns+bLmc6Ujyy
+	 b9qvdH99moEqpfLJAyVi7KSCc/EPvM0HuMvHCDtBecxDwqm5Gq+8jxzY1M0tF8CM1N
+	 3AdFNaFdvCHm/wS7+JhgS7hFIfOZTZXrT+uAHfbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732778AbgFPQAt (ORCPT
+        id S1731639AbgFPPwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:00:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50274 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732748AbgFPPwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:52:41 -0400
+        id S1732710AbgFPPwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:52:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7592207C4;
-        Tue, 16 Jun 2020 15:52:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 856AE207C4;
+        Tue, 16 Jun 2020 15:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322761;
-        bh=9/f0wi49iItWo3HVGU0BxHoshxsiC38fZ6j+hzA7fI0=;
+        s=default; t=1592322738;
+        bh=UGvNsIBI77475V/aFFDuzHClccitPkM+H/tfhf9NUJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ya/qYjlM9JDhxqYETjWj8+2Q/h5NMLbaL3szAEYaWnyKOaVtMxLxa6zlyaQBZ3bbC
-         H+AXcTXTFpZXChi3gIc/PC5SY/NiU+o5QLXQIaGeEI/4oxsxsFine4IZPf3uxj4R60
-         FqmhwWWtXbduNY4DK9u3Q9S0WCRvmWCnIt1VLBNI=
+        b=OAtVOKm8TPVNPM4ZyWfF70b4hpbwXepNt+Lmjx2+Y4HrUeHhJZY07tdMErgkaLjak
+         tmLmvWruuyf2CwXh2plZ4BXXqUkm7RAHZkUsZ1+tXeDObD/dXhHLEi0278LT12KL5u
+         jjayytZUULIR/cqF7ApllI7wr2Vm5EePIPqGPiCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Shyam Prasad N <nspmangalore@gmail.com>
-Subject: [PATCH 5.6 066/161] smb3: fix typo in mount options displayed in /proc/mounts
-Date:   Tue, 16 Jun 2020 17:34:16 +0200
-Message-Id: <20200616153109.524240065@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 084/161] lib: fix bitmap_parse() on 64-bit big endian archs
+Date:   Tue, 16 Jun 2020 17:34:34 +0200
+Message-Id: <20200616153110.373677553@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,32 +75,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-commit 7866c177a03b18be3d83175014c643546e5b53c6 upstream.
+commit 81c4f4d924d5d009b5ed785a3e22b18d0f7b831f upstream.
 
-Missing the final 's' in "max_channels" mount option when displayed in
-/proc/mounts (or by mount command)
+Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not take into
+account order of halfwords on 64-bit big endian architectures.  As
+result (at least) Receive Packet Steering, IRQ affinity masks and
+runtime kernel test "test_bitmap" get broken on s390.
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
+[andriy.shevchenko@linux.intel.com: convert infinite while loop to a for loop]
+  Link: http://lkml.kernel.org/r/20200609140535.87160-1-andriy.shevchenko@linux.intel.com
+
+Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Yury Norov <yury.norov@gmail.com>
+Cc: Amritha Nambiar <amritha.nambiar@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: "Tobin C . Harding" <tobin@kernel.org>
+Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/1591634471-17647-1-git-send-email-agordeev@linux.ibm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifsfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bitmap.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -621,7 +621,7 @@ cifs_show_options(struct seq_file *s, st
- 	seq_printf(s, ",actimeo=%lu", cifs_sb->actimeo / HZ);
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -740,8 +740,9 @@ int bitmap_parse(const char *start, unsi
+ 	int chunks = BITS_TO_U32(nmaskbits);
+ 	u32 *bitmap = (u32 *)maskp;
+ 	int unset_bit;
++	int chunk;
  
- 	if (tcon->ses->chan_max > 1)
--		seq_printf(s, ",multichannel,max_channel=%zu",
-+		seq_printf(s, ",multichannel,max_channels=%zu",
- 			   tcon->ses->chan_max);
+-	while (1) {
++	for (chunk = 0; ; chunk++) {
+ 		end = bitmap_find_region_reverse(start, end);
+ 		if (start > end)
+ 			break;
+@@ -749,7 +750,11 @@ int bitmap_parse(const char *start, unsi
+ 		if (!chunks--)
+ 			return -EOVERFLOW;
  
- 	return 0;
+-		end = bitmap_get_x32_reverse(start, end, bitmap++);
++#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
++		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk ^ 1]);
++#else
++		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk]);
++#endif
+ 		if (IS_ERR(end))
+ 			return PTR_ERR(end);
+ 	}
 
 
