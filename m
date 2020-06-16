@@ -2,52 +2,52 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51824C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DECC720882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF9D20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="U+XMYBKk"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="b5JLPgOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgFPOM2 (ORCPT
+        id S1729333AbgFPONH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:12:28 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:43387 "EHLO
+        Tue, 16 Jun 2020 10:13:07 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:43570 "EHLO
         smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgFPOM0 (ORCPT
+        with ESMTP id S1726606AbgFPONF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:12:26 -0400
+        Tue, 16 Jun 2020 10:13:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592316745; x=1623852745;
+  t=1592316785; x=1623852785;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=w1Wrf62e73x+SRZTs2supCzGH7vYA1IEmIfHRiOCQt8=;
-  b=U+XMYBKkQxWtMChQYipgYhNytgEWZ/EBfACBwNB/Bad40dvu7Wpqby15
-   gAr+Z+LinTR0RRrzHw7lfVyFTICBJHD7cFP3+Vlx2YZyg0WsT4cwkVKvm
-   dYwK16HEMe8/NUk3T2T0Md81i2tLLnSbSgmJMaRlBI3r+o1DxDrSf0qbE
-   g=;
-IronPort-SDR: Q7vc99IXsCqljdqDle+7g6R/Hu+R7fF3+WAAXICsYy4e3/KZpWColZqgNokHRGLbDyKGPSQQW/
- BKv5fjpf3ILQ==
+  bh=Ca8DlQAlerKhHdi7ITKEKAXpP8xJZRRbzDPmzlgJzIw=;
+  b=b5JLPgOhievFcyaP20syy/j4pbfnpboXC7OwfDmqXizdOxBtukpV48ri
+   UNcXaEQ/hNG76cDaM6gHS+a+TGG+nelQ3EAjjFrB76SedmHT/9+ARPiqq
+   VadgQmnXjz18j6nHWuPuB7nYqumaLhvVeLbkQpWR2E2VH5m5XvKfndvWs
+   s=;
+IronPort-SDR: mKStTPImit/pCNcb2IDZHuCxECcH8x0uzJXcu1UblBWEBSVsl0/0LPfh5vydNSndJGIEofM1tr
+ 2HMzmozVAw0A==
 X-IronPort-AV: E=Sophos;i="5.73,518,1583193600"; 
-   d="scan'208";a="51356971"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 16 Jun 2020 14:12:23 +0000
+   d="scan'208";a="51357153"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 16 Jun 2020 14:13:04 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id 922C12218D4;
-        Tue, 16 Jun 2020 14:12:20 +0000 (UTC)
+        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id CD30CA22AC;
+        Tue, 16 Jun 2020 14:13:01 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Jun 2020 14:12:20 +0000
+ id 15.0.1497.2; Tue, 16 Jun 2020 14:13:01 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.109) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Jun 2020 14:11:52 +0000
+ id 15.0.1497.2; Tue, 16 Jun 2020 14:12:33 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -67,9 +67,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <ying.huang@intel.com>, <david@redhat.com>,
         <linux-damon@amazon.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v4 7/8] tools/damon/record: Support physical memory address spce
-Date:   Tue, 16 Jun 2020 16:08:12 +0200
-Message-ID: <20200616140813.17863-8-sjpark@amazon.com>
+Subject: [RFC v4 8/8] Docs/damon: Document physical memory monitoring support
+Date:   Tue, 16 Jun 2020 16:08:13 +0200
+Message-ID: <20200616140813.17863-9-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200616140813.17863-1-sjpark@amazon.com>
 References: <20200616140813.17863-1-sjpark@amazon.com>
@@ -85,92 +85,161 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit allows users to record the data accesses on physical memory
-address space by passing 'paddr' as target to 'damo-record'.  If the
-init regions are given, the regions will be monitored.  Else, it will
-monitor biggest conitguous 'System RAM' region in '/proc/iomem' and
-monitor the region.
+This commit adds description for the physical memory monitoring usage in
+the DAMON document.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- tools/damon/_damon.py |  2 ++
- tools/damon/heats.py  |  2 +-
- tools/damon/record.py | 29 ++++++++++++++++++++++++++++-
- 3 files changed, 31 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/mm/damon/faq.rst   |  7 +--
+ Documentation/admin-guide/mm/damon/index.rst |  1 -
+ Documentation/admin-guide/mm/damon/plans.rst |  7 ---
+ Documentation/admin-guide/mm/damon/usage.rst | 59 ++++++++++++++------
+ 4 files changed, 46 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/admin-guide/mm/damon/plans.rst
 
-diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
-index ad476cc61421..95d23c2ab6ee 100644
---- a/tools/damon/_damon.py
-+++ b/tools/damon/_damon.py
-@@ -27,6 +27,8 @@ def set_target(pid, init_regions=[]):
-     if not os.path.exists(debugfs_init_regions):
-         return 0
+diff --git a/Documentation/admin-guide/mm/damon/faq.rst b/Documentation/admin-guide/mm/damon/faq.rst
+index b1f108009115..d72d6182d7ea 100644
+--- a/Documentation/admin-guide/mm/damon/faq.rst
++++ b/Documentation/admin-guide/mm/damon/faq.rst
+@@ -45,10 +45,9 @@ constructions and actual access checks can be implemented and configured on the
+ DAMON core by the users.  In this way, DAMON users can monitor any address
+ space with any access check technique.
  
-+    if pid == 'paddr':
-+        pid = -1
-     string = ' '.join(['%s %d %d' % (pid, r[0], r[1]) for r in init_regions])
-     return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
-             shell=True, executable='/bin/bash')
-diff --git a/tools/damon/heats.py b/tools/damon/heats.py
-index 99837083874e..34dbcf1a839d 100644
---- a/tools/damon/heats.py
-+++ b/tools/damon/heats.py
-@@ -307,7 +307,7 @@ def plot_heatmap(data_file, output_file):
-     set xrange [0:];
-     set yrange [0:];
-     set xlabel 'Time (ns)';
--    set ylabel 'Virtual Address (bytes)';
-+    set ylabel 'Address (bytes)';
-     plot '%s' using 1:2:3 with image;""" % (terminal, output_file, data_file)
-     subprocess.call(['gnuplot', '-e', gnuplot_cmd])
-     os.remove(data_file)
-diff --git a/tools/damon/record.py b/tools/damon/record.py
-index 6ce8721d782a..416dca940c1d 100644
---- a/tools/damon/record.py
-+++ b/tools/damon/record.py
-@@ -73,6 +73,29 @@ def set_argparser(parser):
-     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-             default='damon.data', help='output file path')
+-Nonetheless, DAMON provides a vma tracking and PTE Accessed bit check based
+-implementation of the address space dependent functions for the virtual memory
+-by default, for a reference and convenient use.  In near future, we will also
+-provide that for physical memory address space.
++Nonetheless, DAMON provides vma/rmap tracking and PTE Accessed bit check based
++implementations of the address space dependent functions for the virtual memory
++and the physical memory by default, for a reference and convenient use.
  
-+def default_paddr_region():
-+    "Largest System RAM region becomes the default"
-+    ret = []
-+    with open('/proc/iomem', 'r') as f:
-+        # example of the line: '100000000-42b201fff : System RAM'
-+        for line in f:
-+            fields = line.split(':')
-+            if len(fields) != 2:
-+                continue
-+            name = fields[1].strip()
-+            if name != 'System RAM':
-+                continue
-+            addrs = fields[0].split('-')
-+            if len(addrs) != 2:
-+                continue
-+            start = int(addrs[0], 16)
-+            end = int(addrs[1], 16)
+ 
+ Can I simply monitor page granularity?
+diff --git a/Documentation/admin-guide/mm/damon/index.rst b/Documentation/admin-guide/mm/damon/index.rst
+index 4d128e4fd9c8..7b2939d50408 100644
+--- a/Documentation/admin-guide/mm/damon/index.rst
++++ b/Documentation/admin-guide/mm/damon/index.rst
+@@ -33,4 +33,3 @@ optimizations of their systems.
+    faq
+    mechanisms
+    eval
+-   plans
+diff --git a/Documentation/admin-guide/mm/damon/plans.rst b/Documentation/admin-guide/mm/damon/plans.rst
+deleted file mode 100644
+index 765344f02eb3..000000000000
+--- a/Documentation/admin-guide/mm/damon/plans.rst
++++ /dev/null
+@@ -1,7 +0,0 @@
+-.. SPDX-License-Identifier: GPL-2.0
+-
+-============
+-Future Plans
+-============
+-
+-TBD.
+diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
+index 24f1b05a859a..b2bcbd6ebe9d 100644
+--- a/Documentation/admin-guide/mm/damon/usage.rst
++++ b/Documentation/admin-guide/mm/damon/usage.rst
+@@ -61,9 +61,11 @@ Recording Data Access Pattern
+ -----------------------------
+ 
+ The ``record`` subcommand records the data access pattern of target processes
+-in a file (``./damon.data`` by default).  You can specify the target as either
+-pid of running target or a command for execution of the process.  Below example
+-shows a command target usage::
++in a file (``./damon.data`` by default).  You can specify the target with 1)
++the command for execution of the monitoring target process, 2) pid of running
++target process, or 3) the special keyword, 'paddr', if you want to monitor the
++system's physical memory address space.  Below example shows a command target
++usage::
+ 
+     # cd <kernel>/tools/damon/
+     # damo record "sleep 5"
+@@ -74,6 +76,15 @@ of the process.  Below example shows a pid target usage::
+     # sleep 5 &
+     # damo record `pidof sleep`
+ 
++Finally, below example shows the use of the special keyword, 'paddr'::
 +
-+            sz_region = end - start
-+            if not ret or sz_region > (ret[1] - ret[0]):
-+                ret = [start, end]
-+    return ret
++    # damo record paddr
 +
- def main(args=None):
-     global orig_attrs
-     if not args:
-@@ -93,7 +116,11 @@ def main(args=None):
-     target = args.target
++In this case, the monitoring target regions defaults to the largetst 'System
++RAM' region specified in '/proc/iomem' file.  Note that the initial monitoring
++target region is maintained rather than dynamically updated like the virtual
++memory address spaces monitoring mode.
++
+ You can tune this by setting the monitoring attributes and path to the record
+ file using optional arguments to the subcommand.  To know about the monitoring
+ attributes in detail, please refer to :doc:`mechanisms`.
+@@ -317,27 +328,42 @@ check it again::
+ Target PIDs
+ -----------
  
-     target_fields = target.split()
--    if not subprocess.call('which %s > /dev/null' % target_fields[0],
-+    if target == 'paddr':   # physical memory address space
-+        if not init_regions:
-+            init_regions = [default_paddr_region()]
-+        do_record(target, False, init_regions, new_attrs, orig_attrs)
-+    elif not subprocess.call('which %s > /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
-         do_record(target, True, init_regions, new_attrs, orig_attrs)
-     else:
+-Users can get and set the pids of monitoring target processes by reading from
+-and writing to the ``pids`` file.  For example, below commands set processes
+-having pids 42 and 4242 as the processes to be monitored and check it again::
++To monitor the virtual memory address spaces of specific processes, users can
++get and set the pids of monitoring target processes by reading from and writing
++to the ``pids`` file.  For example, below commands set processes having pids 42
++and 4242 as the processes to be monitored and check it again::
+ 
+     # cd <debugfs>/damon
+     # echo 42 4242 > pids
+     # cat pids
+     42 4242
+ 
++Users can also monitor the physical memory address space of the system by
++writing a special keyword, "``paddr\n``" to the file.  In this case, reading the
++file will show ``-1``, as below::
++
++    # cd <debugfs>/damon
++    # echo paddr > pids
++    # cat pids
++    -1
++
+ Note that setting the pids doesn't start the monitoring.
+ 
+ 
+ Initial Monitoring Target Regions
+ ---------------------------------
+ 
+-DAMON automatically sets and updates the monitoring target regions so that
+-entire memory mappings of target processes can be covered.  However, users
+-might want to limit the monitoring region to specific address ranges, such as
+-the heap, the stack, or specific file-mapped area.  Or, some users might know
+-the initial access pattern of their workloads and therefore want to set optimal
+-initial regions for the 'adaptive regions adjustment'.
++In case of the virtual memory monitoring, DAMON automatically sets and updates
++the monitoring target regions so that entire memory mappings of target
++processes can be covered.  However, users might want to limit the monitoring
++region to specific address ranges, such as the heap, the stack, or specific
++file-mapped area.  Or, some users might know the initial access pattern of
++their workloads and therefore want to set optimal initial regions for the
++'adaptive regions adjustment'.
++
++In contrast, DAMON do not automatically sets and updates the monitoring target
++regions in case of physical memory monitoring.  Therefore, users should set the
++monitoring target regions by themselves.
+ 
+ In such cases, users can explicitly set the initial monitoring target regions
+ as they want, by writing proper values to the ``init_regions`` file.  Each line
+@@ -357,10 +383,11 @@ region of process 42, and another couple of address ranges, ``20-40`` and
+             4242 20      40
+             4242 50      100" > init_regions
+ 
+-Note that this sets the initial monitoring target regions only.  DAMON will
+-automatically updates the boundary of the regions after one ``regions update
+-interval``.  Therefore, users should set the ``regions update interval`` large
+-enough.
++Note that this sets the initial monitoring target regions only.  In case of
++virtual memory monitoring, DAMON will automatically updates the boundary of the
++regions after one ``regions update interval``.  Therefore, users should set the
++``regions update interval`` large enough in this case, if they don't want the
++update.
+ 
+ 
+ Record
 -- 
 2.17.1
 
