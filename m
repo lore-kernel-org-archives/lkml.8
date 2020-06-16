@@ -2,162 +2,208 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46419C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28560C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A5820707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0905520707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HbVTefFi";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="He+5c+Jd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MtLodwT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgFPOOA (ORCPT
+        id S1729110AbgFPOOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:14:00 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:38436 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgFPON7 (ORCPT
+        Tue, 16 Jun 2020 10:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbgFPOOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:13:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592316839; x=1623852839;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=5ru8INMLguJmSGjgKHqEdPjyXEvO+zybcMK9YmIq9xk=;
-  b=HbVTefFiYH3zHgGHysAR0U8L+2DbyzDzFG+X/zN05XorUMnMUdln2df4
-   gBbH7SfPX+W/qF5do0c5btMqoJt5uogFEyR4q64w2zFyy2HCdlfMk7qbK
-   BOdgFD4irhVFnf5Zb+xN187tOHjigCXCRTdpzXdUubRqOp3S9HjYO/AOF
-   4HH1ewRe+GZfd2xmQ3lm+8KrJ23h8xKQBhGJDgMDvdoeufVWFobRvT58b
-   YCj3kbmKeiB+sSfbiA5TZmSE3SFmkN1l+e8ZsCd+Dqbf9HSdoUfOrsnqu
-   id2E+KrVEvghy4+FcVVhAiOxlCOgnV80P6zuBIrGBRYandkpyRvmcj2eg
-   Q==;
-IronPort-SDR: eb1TYldMd1Mnu88G0cqZmXiReI1uNw3O7v0HvCjGcJM4k3RT3jhTf9RkwjYCRYiyoRxEF+Ezlo
- TfvQGLaIpLZ0q0c5Cos75Ns/pf52eWH6yIRo41Gz6hWgwJtrL1b8LTQUJo5MyxsFdgFzCBgwLb
- eQLhXYiCRP77sx5GMCauDe+Y7SSK/SXou6TUyIW6rVBCE6UjDZTHfNfo7cwPgXGo3ADAMQCK2Y
- 6Rf33CgQH4RixLHY5UInSiDZ+Eo9ClEKrMv643A1Zd/z2JrrXN8aiVNVKizSnB0rD1iTpLD8ui
- e6w=
-X-IronPort-AV: E=Sophos;i="5.73,518,1583164800"; 
-   d="scan'208";a="140131335"
-Received: from mail-dm6nam11lp2170.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.170])
-  by ob1.hgst.iphmx.com with ESMTP; 16 Jun 2020 22:13:57 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S1BL/xPG/PeVHvec0QZJ/uY5lGpQnNwwd6+mo7XvXeOkOdYK3MwJ+SSMdeooMkIg6Cf8NXJlCaUe9vdzHYmYmleFb50nUDk9V4nuusduq+aV+n7i8MieWHC7ZI1xWDk4teMBTJmaGIhda68kTVWWCYnBFjPkaqoEKrktLvKYe3UwaHGv2t373hLI/Q0Q846v4wOCxeZdhc9mRHVXn8TcwkLgaEkzIyT8hRWIOoYQIX+5aq7j8ccQbt4yvVgOl0LsKsQszDb0Lq8fxtG/6whhPHl1uFp9Ra5uolAdan/2IHpzN80ltBXgyUi7biKpAXgBqCxuKAuV4fpokdHDVBOMDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N1ADHNg3PJ8+F4rqdl0gQ3PQ436o5b5tv/CbEdwgCQI=;
- b=CEbVripfhKgISVX0M/QdgE8Mg9S+fjHmlH0Sbb01xAShIdPSQNbHYrZU8rXSyEz0LupXPv38eV+kR1VW5Kp0Z1WpwZ7N0B286aCntnqTgefhFgQBkhvoU6NCjiQw6sEdj/WsWizEEmxig9RKvmXwJby1Vmxd42h7owd+5KJcOsqper1oBHUKpajI9nYH1henVOCteiWrQI4sBFg51Fuih21NZXCluYZ3mQi7pvapFY9JFOM7GB/5ieHYGkHyJ1ate+Z8g/Ugaicf09nZ34ZchgZmLc++IwweF2yA3w32VrV36mnVrJO0SG3XmFlDDuZ6zRT/QEysWPGtBjtjR8E7mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Tue, 16 Jun 2020 10:14:05 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4AC7C061573;
+        Tue, 16 Jun 2020 07:14:04 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e4so23752726ljn.4;
+        Tue, 16 Jun 2020 07:14:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N1ADHNg3PJ8+F4rqdl0gQ3PQ436o5b5tv/CbEdwgCQI=;
- b=He+5c+JduqYVwDgoZLzLVAVFpWnnCKAeguaXri55yYn8dZ4stgpyo5ZOBFJZTB5yVZkrtuJSlnIxMfhHrzSvj95GGD3SjGw0jykEWOLKrfc2KTB+kXzcev9cRurv5YaaLYC69gmCP+FomngMbbgLUSX4KqRFFus3gKBA+RasdTs=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4046.namprd04.prod.outlook.com
- (2603:10b6:805:4a::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Tue, 16 Jun
- 2020 14:13:54 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3088.028; Tue, 16 Jun 2020
- 14:13:54 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Chris Boot <bootc@boo.tc>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux1394-devel@lists.sourceforge.net" 
-        <linux1394-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>
-Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
-Thread-Topic: [PATCH] scsi: target/sbp: remove firewire SBP target driver
-Thread-Index: AQHWQd9L9CW+VqfbYUW2am9N2FcWXg==
-Date:   Tue, 16 Jun 2020 14:13:54 +0000
-Message-ID: <SN4PR0401MB35982D889857E3C03E96E49D9B9D0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com>
- <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet>
- <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc>
- <alpine.LNX.2.22.394.2006150919110.8@nippy.intranet>
- <8da0c285-d707-a3d2-063e-472af5cc560f@boo.tc>
- <alpine.LNX.2.22.394.2006161929380.8@nippy.intranet>
- <8cbab988-fba7-8e27-7faf-9f7aa36ca235@acm.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: acm.org; dkim=none (message not signed)
- header.d=none;acm.org; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f4b67696-eab0-46ae-3391-08d811ff808d
-x-ms-traffictypediagnostic: SN6PR04MB4046:
-x-microsoft-antispam-prvs: <SN6PR04MB4046EA5A9CBA518F7A07276F9B9D0@SN6PR04MB4046.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 04362AC73B
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YUSiJ8Hwm5WME7OmxRDuxyB71Y3IvMKlMBomEvN3y9i/j8mSnTwJNagsNBfHhvpYxwsHTGRsozO8eZT27nP27ZLLlLo7RRk87/U+INkW4F5o2H9kdKYlb1V52crQuvA8zfbgta6hLo2oBEPTUTIGsUpQ5cSYhgLn4AWbpYC5B7Ar1h06FlQM+AQOW+1JtR6yDcaMe7sFqYkMTYwoqPx4K3R70DbjngaT5iANnwAx4B4eNP6AyFXRGz2ilpJzaX76f7IMquOTGz0Lf3PZeFWjRT2mNRdLaDQa7J1M89gjeW180NABk4wYwIvl/vIX0H4ML5vzA+4d+dQO2osmaLnUFQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(52536014)(2906002)(9686003)(26005)(55016002)(498600001)(5660300002)(6506007)(4326008)(53546011)(4744005)(86362001)(8936002)(110136005)(7696005)(7416002)(66946007)(76116006)(186003)(91956017)(33656002)(66476007)(66556008)(64756008)(66446008)(71200400001)(54906003)(8676002)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: dZrsZbRzUHnP4XBXwlFVJemPGBxUFP38bAC/JG522uMsZ6cxXI/i+92j/xcIXqn79I1MJxQwWr7al9YZknqvbv9ROOyvhma9mkRn7LcCl+BVsYwbJ6unDv+XBVSNU0UPmVscvalEiUhEjA2o44yYoXwwLieaPHgiBTeUPXTxIFmQGYZ+XksrrQKHeIbcswOSeCiiYKWDknUwhMBzIB5E6c5IqNXJAST5NKF88BX/yCUqddOLUFhnCv8Yk/qzOQbmCFLEYJxlon5Cf9M60IQgCDP9pbxLCwFRLRd0FpcM4bPApph/9FsTTcIDMD+hj0IKdEf/SKJM653mHaLR23jTtx71mvX83Xc14OEKBoc9xfviqQ81G5LLE21opmDH+jq7ZnRQ9koeqMt3UsaXPCg6icYiYsp2TyhIuutbXQMJDNbLRVi//jIKZ56IpPHH8raZU9lcewMQMfki5XtGGQwWNIAlsaA6v5Br4Hi10u6Sim/DiCJ4CN9uvaJTJJMAg01i
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hek6dP2hX1DkgDYCqdcoJnb8OPxCsTSvr04uC6UyePo=;
+        b=MtLodwT052MO77CtPzvAlxsDAVhljp+66ljgns+U6+ZxI4qknX8gYGhnCMtG2gNZmr
+         NvRJ4uE5JLC41sk8ZjlywfNqcp1nxJrEmfbPpWkcwLvmez97GufcfRqa8slpX8cRZqOi
+         CZ/a2qI64/L8aeu1VTFEESTz546IYV3UJ50oEzANxAOj5NZPK3TSsrUJM3xuifnIYDKq
+         57h3HwrehB3endNr4326TQHFamVzsJoP//q8MPBdCk5wKezG+Knc2WaW3Z2IXDIuVIWT
+         dXsmDzBeJc6U08yJdOJxWTQj5qoFzlyC7plimVT7Wy2XRSrGmAJnqyah4KDx9xy0jcI1
+         Uoug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hek6dP2hX1DkgDYCqdcoJnb8OPxCsTSvr04uC6UyePo=;
+        b=CB4Sh7iUuizMyRy7gmfA/mMoJsIWOXTqeaPXzSwoSeOtw07kQLnKakUXZplrX2b7HA
+         la22PBeBfek6ox2JdXcD9meZr5rPc4dbcxAOUeG9aq/rkC5iGmuw8+bqugtWrXYWPKfJ
+         ub9aKpP4VeRUWMbDcs8Su7M0xwXQGSIl7nZfpUaD/PK5vtYoTuklH2IEQfl/Im2A0r8U
+         4rbwoJxpap557cjJVes55FvtqJXIjU5AXeCAwvZKSC2RZKL7L8S8UaJ5RUVbP34ewDTc
+         3Cz2hLBrfz/5h+796jqQnC5que5py2S+9I2sLK3kSF/KpdpNDoicXVOsQIzRYZWSOWc0
+         B0gw==
+X-Gm-Message-State: AOAM533xDjKIpmUN77K8Rkd/379tKkN3k5Pn1FAbgnUucMfqVgeecV9X
+        W9aCwXLPpJbsTg1JTIUUoMV42B0h
+X-Google-Smtp-Source: ABdhPJw6i3nzmi8i8Yhv4m5YwTiNhrHSw2RE3pRuemxQAi1F/wEPq9D9lvAR1eJoOW8I3RYe4DtHGQ==
+X-Received: by 2002:a2e:571b:: with SMTP id l27mr1663467ljb.308.1592316842693;
+        Tue, 16 Jun 2020 07:14:02 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id h24sm4411484lji.115.2020.06.16.07.14.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 07:14:01 -0700 (PDT)
+Subject: Re: [PATCH v7 1/6] of_graph: add of_graph_get_local_port()
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200614172234.8856-1-digetx@gmail.com>
+ <20200614172234.8856-2-digetx@gmail.com>
+ <20200616012111.GE1629@pendragon.ideasonboard.com>
+ <20200616012513.GF1629@pendragon.ideasonboard.com>
+ <8b7c6395-edd8-cecd-7004-e9f3f22d61f2@gmail.com>
+Message-ID: <7c40f145-f31b-8397-ac23-601828c9f013@gmail.com>
+Date:   Tue, 16 Jun 2020 17:14:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4b67696-eab0-46ae-3391-08d811ff808d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 14:13:54.2486
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D0cCNG3TTt5CBTr4ejKQQmhSKY5P9ZXep4z+lTTVW87qxHFI4DQ2bul+90jMIcZgur/xgnaRMG3ZsJO70aPsvYzUw2KpsYc/PcNyMUoXngY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4046
+In-Reply-To: <8b7c6395-edd8-cecd-7004-e9f3f22d61f2@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/06/2020 16:09, Bart Van Assche wrote:=0A=
-> On 2020-06-16 02:42, Finn Thain wrote:=0A=
->> Martin said, "I'd appreciate a patch to remove it"=0A=
->>=0A=
->> And Bart said, "do you want to keep this driver in the kernel tree?"=0A=
->>=0A=
->> AFAICT both comments are quite ambiguous. I don't see an actionable =0A=
->> request, just an expression of interest from people doing their jobs.=0A=
->>=0A=
->> Note well: there is no pay check associated with having a MAINTAINERS fi=
-le =0A=
->> entry.=0A=
-> =0A=
-> Hi Finn,=0A=
-> =0A=
-> As far as I know the sbp driver only has had one user ever and that user=
-=0A=
-> is no longer user the sbp driver. So why to keep it in the kernel tree?=
-=0A=
-> Restoring a kernel driver can be easy - the first step is a "git revert".=
-=0A=
-=0A=
-Why not move the driver to drivers/staging for 2 or 3 kernel releases and i=
-f=0A=
-noone steps up, delete it?=0A=
-=0A=
-Just my 2 Cents,=0A=
-	Johannes=0A=
+16.06.2020 16:56, Dmitry Osipenko пишет:
+> 16.06.2020 04:25, Laurent Pinchart пишет:
+>> On Tue, Jun 16, 2020 at 04:21:12AM +0300, Laurent Pinchart wrote:
+>>> Hi Dmitry,
+>>>
+>>> Thank you for the patch.
+>>>
+>>> On Sun, Jun 14, 2020 at 08:22:29PM +0300, Dmitry Osipenko wrote:
+>>>> In some case, like a DRM display code for example, it's useful to silently
+>>>> check whether port node exists at all in a device-tree before proceeding
+>>>> with parsing the graph.
+>>>>
+>>>> This patch adds of_graph_get_local_port() which returns pointer to a local
+>>>> port node, or NULL if graph isn't specified in a device-tree for a given
+>>>> device node.
+>>>>
+>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/of/property.c    | 32 +++++++++++++++++++++++---------
+>>>>  include/linux/of_graph.h |  7 +++++++
+>>>>  2 files changed, 30 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/of/property.c b/drivers/of/property.c
+>>>> index 1f2086f4e7ce..05c5f619b8bb 100644
+>>>> --- a/drivers/of/property.c
+>>>> +++ b/drivers/of/property.c
+>>>> @@ -608,15 +608,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+>>>>  	 * parent port node.
+>>>>  	 */
+>>>>  	if (!prev) {
+>>>> -		struct device_node *node;
+>>>> -
+>>>> -		node = of_get_child_by_name(parent, "ports");
+>>>> -		if (node)
+>>>> -			parent = node;
+>>>> -
+>>>> -		port = of_get_child_by_name(parent, "port");
+>>>> -		of_node_put(node);
+>>>> -
+>>>> +		port = of_graph_get_local_port(parent);
+>>>>  		if (!port) {
+>>>>  			pr_err("graph: no port node found in %pOF\n", parent);
+>>>>  			return NULL;
+>>>> @@ -765,6 +757,28 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+>>>>  }
+>>>>  EXPORT_SYMBOL(of_graph_get_remote_port);
+>>>>  
+>>>> +/**
+>>>> + * of_graph_get_local_port() - get local port node
+>>>> + * @node: pointer to a local endpoint device_node
+>>>> + *
+>>>> + * Return: First local port node associated with local endpoint node linked
+>>>> + *	   to @node. Use of_node_put() on it when done.
+>>>> + */
+>>>> +struct device_node *of_graph_get_local_port(const struct device_node *node)
+>>
+>> I forgot to mention that, given that there could be multiple 'port'
+>> nodes, this function would be better named
+>> of_graph_get_first_local_port(). 'first' here would refer to the nodes
+>> order in the device tree, which I believe may not match the port number.
+>> For instance, in the following case
+>>
+>> 	ports {
+>> 		#address-cells = <1>;
+>> 		#size-cells = <1>;
+>> 		port@1 {
+>> 			reg = <1>;
+>> 		};
+>> 		port@0 {
+>> 			reg = <0>;
+>> 		};
+>> 	};
+>>
+>> the function would I believe return port@1. It may be a good idea to
+>> explain this in the documentation.
+> 
+> Hello Laurent,
+> 
+> It's correct that the port@1 will be returned in yours example.
+> 
+> I'll improve the doc and the function's name in the next revision, thank
+> you for the suggestions!
+> 
+>> Depending on how you use this
+>> function, if your only use case is to test for the presence of port
+>> nodes, it may be best to return a bool and name it of_graph_has_port()
+>> or something similar.
+>>
+>>>> +{
+>>>> +	struct device_node *ports, *port;
+>>>> +
+>>>> +	ports = of_get_child_by_name(node, "ports");
+>>>> +	if (ports)
+>>>> +		node = ports;
+>>>> +
+>>>> +	port = of_get_child_by_name(node, "port");
+>>>> +	of_node_put(ports);
+>>>> +
+>>>> +	return port;
+>>>
+>>> The implementation doesn't seem to match the documentation. If node is a
+>>> pointer to an endpoint, it should not have any ports child.
+> 
+> Right, I'll reword the doc in v8. This function doesn't differentiate
+> between start / end points. It's up to a user of this function to check
+> whether node is endpoint or something else if needed.
+> 
+> Thank you very much for the comments!
+> 
+
+Although, I re-read the doc comment and compared it to the wording of
+the other of_graph_*() functions and it's already good as-is to me
+because the doc explicitly says the "Return: First local port associated
+with local endpoint...", which is exactly what this function does.
+
+But still the function name and it's brief description could be improved.
