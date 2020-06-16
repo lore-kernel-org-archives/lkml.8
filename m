@@ -2,79 +2,120 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EE3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C496F207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TjLBhP6F"
+	by mail.kernel.org (Postfix) with ESMTP id 575EB2085B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592349742;
+	bh=Q7XqjDbI5KF1xwlA2pFU0ud6lF4J0reUpw77Uk5OM0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NDwT5G2C3jphCWRpZa00HSebf80pRGY8azH+aSKR4kzy0SFnnJVmIYg9NypQP6Ai+
+	 b05A8ZsYEuviXw6o9uXTwPzqErvrvpH/ENf1fDjWJw1B4wwHBD5Btis2BIQko6zszj
+	 dXZOn0Wqibwxiqmopa55UC6kco7egV5C0RdJkSVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgFPXVR (ORCPT
+        id S1726506AbgFPXWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:21:17 -0400
-Received: from ozlabs.org ([203.11.71.1]:42775 "EHLO ozlabs.org"
+        Tue, 16 Jun 2020 19:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgFPXVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:21:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725894AbgFPXWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 19:22:21 -0400
+Received: from localhost (lfbn-ncy-1-150-120.w83-194.abo.wanadoo.fr [83.194.232.120])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49mkj62czzz9sRR;
-        Wed, 17 Jun 2020 09:21:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592349675;
-        bh=YglC3d1qIVwIT/vjXu+XckyVGaLr6tr684jtKcQd7wA=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=TjLBhP6F5nvAq3REnn28vPAfAN4v2wNRC3IswZSOd3M1v2oMLUr3ZaarOk/kGkbNe
-         l2bXoy7UF17GYKU2mlwqnp3A3sJGbG69OHzkz9w4kk9DKZrGXU3iRShzRVFHnw36Kc
-         mlXGwtKpTsiUvUPcXeTZ/OH288mn4G1fwqul/FaDegm2WRnMaxF58Hs4pWGuM53BCx
-         kbDgoRiGGj0QirPmEdKWaFCoYE+6QuWoHcp++BilPwisIW/Ss3Hqh9cmqu1R88H2Ne
-         UHpEVFkkOZbaao2+YIa/+rvxgw7yOfB+lMNLRib3Za/8phJL6Y13Y8EbdWImFgTtit
-         c//M/lvPC+WIQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/8xx: use pmd_off() to access a PMD entry in pte_update()
-In-Reply-To: <20200616124304.bbe36933fcd48c5f467f4be9@linux-foundation.org>
-References: <20200615092229.23142-1-rppt@kernel.org> <20200616124304.bbe36933fcd48c5f467f4be9@linux-foundation.org>
-Date:   Wed, 17 Jun 2020 09:21:42 +1000
-Message-ID: <87o8piegvt.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A257207E8;
+        Tue, 16 Jun 2020 23:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592349740;
+        bh=Q7XqjDbI5KF1xwlA2pFU0ud6lF4J0reUpw77Uk5OM0c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZdGbq74tHPXO2Wt0cZq0o8vUmOKQNSUEuni9CHU3QPzO3yTtxrQQYLUdvmof/fKqd
+         8U6SDr9+WOFs8po3lanJsWlgt0Ov5uAC3U86UrsDUx86uzJNhHMkmdJODhfvy+kHkX
+         0TsL4eAqVwaiiyjeoT3SS8/1ysm8ksYEaq4ZCLfw=
+Date:   Wed, 17 Jun 2020 01:22:18 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        mtosatti@redhat.com, juri.lelli@redhat.com, abelits@marvell.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de
+Subject: Re: [Patch v1 2/3] PCI: prevent work_on_cpu's probe to execute on
+ isolated CPUs
+Message-ID: <20200616232217.GB4914@lenoir>
+References: <20200610161226.424337-1-nitesh@redhat.com>
+ <20200610161226.424337-3-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610161226.424337-3-nitesh@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Morton <akpm@linux-foundation.org> writes:
-> On Mon, 15 Jun 2020 12:22:29 +0300 Mike Rapoport <rppt@kernel.org> wrote:
->
->> From: Mike Rapoport <rppt@linux.ibm.com>
->> 
->> The pte_update() implementation for PPC_8xx unfolds page table from the PGD
->> level to access a PMD entry. Since 8xx has only 2-level page table this can
->> be simplified with pmd_off() shortcut.
->> 
->> Replace explicit unfolding with pmd_off() and drop defines of pgd_index()
->> and pgd_offset() that are no longer needed.
->> 
->> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->> ---
->> 
->> I think it's powerpc material, but I won't mind if Andrew picks it up :)
->
-> Via the powerpc tree would be better, please.
+On Wed, Jun 10, 2020 at 12:12:25PM -0400, Nitesh Narayan Lal wrote:
+> From: Alex Belits <abelits@marvell.com>
+> 
+> pci_call_probe() prevents the nesting of work_on_cpu()
+> for a scenario where a VF device is probed from work_on_cpu()
+> of the Physical device.
+> This patch replaces the cpumask used in pci_call_probe()
+> from all online CPUs to only housekeeping CPUs. This is to
+> ensure that there are no additional latency overheads
+> caused due to the pinning of jobs on isolated CPUs.
+> 
+> Signed-off-by: Alex Belits <abelits@marvell.com>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  drivers/pci/pci-driver.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index da6510af1221..449466f71040 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/string.h>
+>  #include <linux/slab.h>
+>  #include <linux/sched.h>
+> +#include <linux/sched/isolation.h>
+>  #include <linux/cpu.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/suspend.h>
+> @@ -333,6 +334,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+>  			  const struct pci_device_id *id)
+>  {
+>  	int error, node, cpu;
+> +	int hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
+>  	struct drv_dev_and_id ddi = { drv, dev, id };
+>  
+>  	/*
+> @@ -353,7 +355,8 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+>  	    pci_physfn_is_probed(dev))
+>  		cpu = nr_cpu_ids;
+>  	else
+> -		cpu = cpumask_any_and(cpumask_of_node(node), cpu_online_mask);
+> +		cpu = cpumask_any_and(cpumask_of_node(node),
+> +				      housekeeping_cpumask(hk_flags));
 
-I'll take it into next for v5.9, unless there's a reason it needs to go
-into v5.8.
+Looks like cpumask_of_node() is based on online CPUs. So that all
+looks good. Thanks!
 
-cheers
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+
+
+>  
+>  	if (cpu < nr_cpu_ids)
+>  		error = work_on_cpu(cpu, local_pci_probe, &ddi);
+> -- 
+> 2.18.4
+> 
