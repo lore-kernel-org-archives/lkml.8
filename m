@@ -2,362 +2,174 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA257C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A299EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D94920B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592348200;
-	bh=1Y39lAnqjB4tYzCk7tiF0QydRbO/+ffQDiMnNp6WH2I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Joz/IPtGkN/PA0wSjMZrq2k7P6WQ7g6QCIY9Vh7S0wurTk9t9B1uLvr5XH1iy9oe9
-	 fMd3WpTkb97uUvzBr+ujdIiIQ088xth7U4LGE71uYhMjjnUr7Ks3ehrcN8hY9dfSDp
-	 xHWLYCFjRP4buFf6FYxNRK9KojBmXkliu0JwV3gU=
+	by mail.kernel.org (Postfix) with ESMTP id 74D6320DD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:56:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPIBpSPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgFPW4j (ORCPT
+        id S1726476AbgFPW4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:56:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgFPW4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:56:38 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5AD82082F;
-        Tue, 16 Jun 2020 22:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592348197;
-        bh=1Y39lAnqjB4tYzCk7tiF0QydRbO/+ffQDiMnNp6WH2I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uqk4XyBojWHCxDkX406EGFyuDQkBYLLg1HgDfsm8qQyPabis7YEuzMYKZxPrTINPm
-         7LlMvpmraRa0iaGUVmzu4k+tdyjTEeU/o2A2Zsiv6jq4A3jV59Xx2pFgW6Gfc+IgIn
-         16D9m1S33jQLsBRSn7bi7ZWB/WHtneQ97nyYY3pU=
-Date:   Tue, 16 Jun 2020 17:56:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, bp@alien8.de,
-        james.morse@arm.com, lenb@kernel.org, tony.luck@intel.com,
-        dan.carpenter@oracle.com, zhangliguang@linux.alibaba.com,
-        andriy.shevchenko@linux.intel.com, wangkefeng.wang@huawei.com,
-        jroedel@suse.de, yangyicong@hisilicon.com,
-        jonathan.cameron@huawei.com, tanxiaofei@huawei.com
-Subject: Re: [PATCH v9 1/2] ACPI / APEI: Add support to notify the vendor
- specific HW errors
-Message-ID: <20200616225635.GA1987516@bjorn-Precision-5520>
+        Tue, 16 Jun 2020 18:56:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgFPW4y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:56:54 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA13BC061573;
+        Tue, 16 Jun 2020 15:56:52 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q19so536870lji.2;
+        Tue, 16 Jun 2020 15:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xATZgEhnG4iKc4HqGtcJhZicmRUvlwjJ75PcShv0Jqo=;
+        b=CPIBpSPElykGHBPMqo9Q4pjn4Auscuaph/MdSO7bCogU5ysAEYwLTmQx6PdzbDoZZQ
+         zO53ZnWwyw0JejFDRyEQTSkMbKkyOoMDWhYOZ5KyQkdweEb1CVtRPSD8VptrrN2IDNPZ
+         Ynd+IOUh+YpoK3CQ59njE+4WC4lOo34DaNvGx7o2SUrnIzrAlvGRWC2KIrxfZihuGhtb
+         hk2MLH76MfcLE/vyEYaHtewAfbZYQl2lYJRdtALC1ljmkR5WglIL4OZLkcbDMagABPe8
+         WQXemwGwOTZXLGrhg/T5II1GAGtlEPABzRFCPt9oHuM8PNFt1RscmpN1Bhb1SnqQoCyg
+         kuOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xATZgEhnG4iKc4HqGtcJhZicmRUvlwjJ75PcShv0Jqo=;
+        b=SERNXsTPOkKf9ixTvC8ByKCjVeiUZ5Lh81QJxWKofhI2Y4ogZWCVg4NkjFukjEWn+3
+         tu0a2mDWiUvZ6Xpp52K1MAXbgyY8BXsaGq8GXHMiJ9Hnc4QgOWwy+rOvJ4aS00x1n2JQ
+         wOnGr/5+MdFwXWpOqu5qKHw/AsomtNRfuALdFVsQHpYpJImE2GKFsvxmVHfQDrn+4/KX
+         QEooRJXiijV+dN+XcKckXDOipOKKrsfjJk8i+wrWznPgKOl/9DH1R2BwikgFLFHNna/p
+         pQnOX2nMzGuSQuIkxV/o8naQjsYn/YgzHGc3o3LnZjCF6VwpBKx5OMlg4RM8Y5krimz9
+         lS8g==
+X-Gm-Message-State: AOAM531KeU9lUggxUx1p2ZBtCZS8r9Gr7K6Jhc8ZmdZVNrkuwu39lc7q
+        oRxc3a0KUTo98g5m5FeVGds=
+X-Google-Smtp-Source: ABdhPJzb+Fd0VMFfJKRay58MZlrAsRVUwz7+Aw5W83ky8xl5ymgEUzxNmrsFflzNNxMu9ttEGmjA7Q==
+X-Received: by 2002:a2e:3010:: with SMTP id w16mr2515012ljw.8.1592348211279;
+        Tue, 16 Jun 2020 15:56:51 -0700 (PDT)
+Received: from mobilestation ([95.79.139.207])
+        by smtp.gmail.com with ESMTPSA id a1sm4631647ljk.133.2020.06.16.15.56.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 15:56:50 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 01:56:48 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
+Message-ID: <20200616225648.eqzugzapatblndcy@mobilestation>
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
+ <20200616200225.32mwzew3zw3nuiwh@mobilestation>
+ <CAHp75VfZMx8ip=Bo=gZQiGufJvh=7dtr61C3ZcZjETFrErTk6Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200615095312.398-2-shiju.jose@huawei.com>
+In-Reply-To: <CAHp75VfZMx8ip=Bo=gZQiGufJvh=7dtr61C3ZcZjETFrErTk6Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 10:53:11AM +0100, Shiju Jose wrote:
-> Add support to notify the vendor specific non-fatal HW errors
-> to the drivers for the error recovery.
-
-This doesn't actually say anything about what this patch does.  Sure,
-it "adds support," but it doesn't say anything about how that support
-works or how to use it.
-
-This should say something about a FIFO and it should mention that an
-event handler registered with ghes_register_event_notifier() will be
-called with each vendor-specific error record.
-
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/acpi/apei/ghes.c | 130 ++++++++++++++++++++++++++++++++++++++-
->  include/acpi/ghes.h      |  28 +++++++++
->  2 files changed, 157 insertions(+), 1 deletion(-)
+On Wed, Jun 17, 2020 at 12:40:35AM +0300, Andy Shevchenko wrote:
+> On Tue, Jun 16, 2020 at 11:03 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
+> > > Some devices would need to have a hierarchy of properties and
+> > > child nodes passed to the child or children of MFD. For such case
+> > > we may utilize software nodes, which is superior on device properties.
+> > >
+> > > Add support of software nodes to MFD core and convert one driver
+> > > to show how it looks like. This allows to get rid of legacy platform
+> > > data.
+> > >
+> > > The change has been tested on Intel Galileo Gen 2.
+> >
+> > I am wondering whether we could move the {gpio_base, ngpio, irq_shared}
+> > part into the gpio-dwapb.c driver and use either the ACPI-based or
+> > platform_device_id-based matching to get the device-specific resources
+> > info through the driver_data field. By doing so you wouldn't need to
+> > introduce a new "snps,gpio-base"-like property and propagate
+> > software_node-based properties, but still you could get rid of the
+> > dwapb_platform_data structure since all the info would be locally
+> > available.
 > 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 24c9642e8fc7..854d8115cdfc 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -33,6 +33,7 @@
->  #include <linux/irq_work.h>
->  #include <linux/llist.h>
->  #include <linux/genalloc.h>
-> +#include <linux/kfifo.h>
->  #include <linux/pci.h>
->  #include <linux/pfn.h>
->  #include <linux/aer.h>
-> @@ -63,6 +64,11 @@
->  #define GHES_ESTATUS_CACHES_SIZE	4
->  
->  #define GHES_ESTATUS_IN_CACHE_MAX_NSEC	10000000000ULL
-> +
-> +#define GHES_EVENT_RING_SIZE	256
-> +#define GHES_GDATA_POOL_MIN_ALLOC_ORDER	3
-> +#define GHES_GDATA_POOL_MIN_SIZE	65536
+> The idea is to get rid of the driver being dependent on some quirks
+> when we may do it clearly and nicely.
 
-Don't drop these new #defines right in the middle of the GHES_ESTATUS
-block.  The ESTATUS ones are all related, and these new ones are
-something separate.
+Yes, I've got that and in most of the aspects I like what you suggested
+in this parchset. But it seems to me that the maintainers are mostly prone
+to having some of the platform-specifics being locally (in-driver) defined.
+So I proposed an alternative solution, which might do to satisfy their
+requirement. Note saying that you want to get rid of the quirks and
+introducing something like "gpio-base" firmware property seems contradicting
+a bit. 
 
-These new names should be related somehow.  The names don't make it
-clear that GHES_EVENT and GHES_GDATA are related.  IIUC GHES_GDATA is
-space for storing GHES structures, and GHES_EVENT is a FIFO of struct
-ghes_event_entry, each of which points to one of those GHES
-structures.
+> We, by applying this series, make (keep) layers independent: board
+> code vs. driver code. Mixing them more is the opposite to what I
+> propose.
+> 
+> WRT property.
+> snps,gpio-base can be easily changed to *already in use* gpio-base or
+> being both converted to linux,gpio-base to explicitly show people that
+> this is internal stuff that must not be present in firmware nodes.
+> 
 
->  /* Prevent too many caches are allocated because of RCU */
->  #define GHES_ESTATUS_CACHE_ALLOCED_MAX	(GHES_ESTATUS_CACHES_SIZE * 3 / 2)
->  
-> @@ -122,6 +128,19 @@ static DEFINE_MUTEX(ghes_list_mutex);
->   */
->  static DEFINE_SPINLOCK(ghes_notify_lock_irq);
->  
-> +struct ghes_event_entry {
-> +	struct acpi_hest_generic_data *gdata;
-> +	int error_severity;
-> +};
-> +
-> +static DEFINE_KFIFO(ghes_event_ring, struct ghes_event_entry,
-> +		    GHES_EVENT_RING_SIZE);
-> +
-> +static DEFINE_SPINLOCK(ghes_event_ring_lock);
-> +
-> +static struct gen_pool *ghes_gdata_pool;
-> +static unsigned long ghes_gdata_pool_size_request;
-> +
->  static struct gen_pool *ghes_estatus_pool;
->  static unsigned long ghes_estatus_pool_size_request;
->  
-> @@ -188,6 +207,40 @@ int ghes_estatus_pool_init(int num_ghes)
->  	return -ENOMEM;
->  }
->  
-> +static int ghes_gdata_pool_init(void)
-> +{
-> +	unsigned long addr, len;
-> +	int rc;
-> +
-> +	ghes_gdata_pool = gen_pool_create(GHES_GDATA_POOL_MIN_ALLOC_ORDER, -1);
-> +	if (!ghes_gdata_pool)
-> +		return -ENOMEM;
-> +
-> +	if (ghes_gdata_pool_size_request < GHES_GDATA_POOL_MIN_SIZE)
-> +		ghes_gdata_pool_size_request = GHES_GDATA_POOL_MIN_SIZE;
-> +
-> +	len = ghes_gdata_pool_size_request;
-> +	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-> +	if (!addr)
-> +		goto err_pool_alloc;
-> +
-> +	vmalloc_sync_mappings();
-> +
-> +	rc = gen_pool_add(ghes_gdata_pool, addr, PAGE_ALIGN(len), -1);
-> +	if (rc)
-> +		goto err_pool_add;
-> +
-> +	return 0;
-> +
-> +err_pool_add:
-> +	vfree((void *)addr);
-> +
-> +err_pool_alloc:
-> +	gen_pool_destroy(ghes_gdata_pool);
-> +
-> +	return -ENOMEM;
-> +}
-> +
->  static int map_gen_v2(struct ghes *ghes)
->  {
->  	return apei_map_generic_address(&ghes->generic_v2->read_ack_register);
-> @@ -247,6 +300,10 @@ static struct ghes *ghes_new(struct acpi_hest_generic *generic)
->  		goto err_unmap_status_addr;
->  	}
->  
-> +	ghes_gdata_pool_size_request += generic->records_to_preallocate *
-> +					generic->max_sections_per_record *
-> +					generic->max_raw_data_length;
-> +
->  	return ghes;
->  
->  err_unmap_status_addr:
-> @@ -490,6 +547,68 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
->  #endif
->  }
->  
-> +static BLOCKING_NOTIFIER_HEAD(ghes_event_notify_list);
-> +
-> +/**
-> + * ghes_register_event_notifier - register an event notifier
-> + * for the non-fatal HW errors.
-> + * @nb: pointer to the notifier_block structure of the event handler.
-> + *
-> + * return 0 : SUCCESS, non-zero : FAIL
-> + */
-> +int ghes_register_event_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(&ghes_event_notify_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(ghes_register_event_notifier);
-> +
-> +/**
-> + * ghes_unregister_event_notifier - unregister the previously
-> + * registered event notifier.
-> + * @nb: pointer to the notifier_block structure of the event handler.
-> + */
-> +void ghes_unregister_event_notifier(struct notifier_block *nb)
-> +{
-> +	blocking_notifier_chain_unregister(&ghes_event_notify_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(ghes_unregister_event_notifier);
-> +
-> +static void ghes_event_work_func(struct work_struct *work)
-> +{
-> +	struct ghes_event_entry entry;
-> +	u32 len;
-> +
-> +	while (kfifo_get(&ghes_event_ring, &entry)) {
-> +		blocking_notifier_call_chain(&ghes_event_notify_list,
-> +					     entry.error_severity,
-> +					     entry.gdata);
-> +		len = acpi_hest_get_record_size(entry.gdata);
-> +		gen_pool_free(ghes_gdata_pool, (unsigned long)entry.gdata, len);
-> +	}
-> +}
-> +
-> +static DECLARE_WORK(ghes_event_work, ghes_event_work_func);
-> +
-> +static void ghes_handle_non_standard_event(struct acpi_hest_generic_data *gdata,
-> +					   int sev)
-> +{
-> +	u32 len;
-> +	struct ghes_event_entry event_entry;
-> +
-> +	len = acpi_hest_get_record_size(gdata);
-> +	event_entry.gdata = (void *)gen_pool_alloc(ghes_gdata_pool, len);
-> +	if (event_entry.gdata) {
+As I see it the part with "gpio-base" and the irq_shared can be moved to the
+gpio-dwapb.c driver to be defined as the quark-specific quirks. Adding a
+property like "gpio-base" seems like a quirk anyway, so I'd leave it defined in
+the driver.
 
-Make this:
+* Note I don't really like replacing the irq_shared flag with to_of_node()
+because in general to_of_node() doesn't mean the IRQ line is shared, so
+selecting the shared and non-shared interrupt request paths based on that macro
+seems hackish.
 
-  if (!event_entry.gdata) {
-    pr_warn(...);
-    return;
-  }
+> > If ACPI-based matching doesn't uniquely address the Quark GPIO node,
+> > then you could just replace the intel_quark_mfd_cells[0].name with
+> > something like "gpio-dwapb-quark", which then by the MFD core will be
+> > copied to the corresponding platform_device->name due to calling
+> > platform_device_alloc() with cell-name passed. That name will be used
+> > to match a platform_driver with id_table having that new name added.
+> 
+> Oh, that doesn't sound right. It makes things ugly.
 
-and then you won't have to indent the usual case below.
+I may have said that a bit unclearly. The only thing you'd need to do is to
+add an unique name to the Quark GPIO cell, like:
+drivers/mfd/intel_quark_i2c_gpio.c:
+static struct mfd_cell intel_quark_mfd_cells[] = {
+        {
+                .name = "gpio-dwapb-quark",
+        }
 
-> +		memcpy(event_entry.gdata, gdata, len);
-> +		event_entry.error_severity = sev;
-> +
-> +		if (kfifo_in_spinlocked(&ghes_event_ring, &event_entry, 1,
-> +					&ghes_event_ring_lock))
-> +			schedule_work(&ghes_event_work);
-> +		else
-> +			pr_warn(GHES_PFX "ghes event queue full\n");
+Then make the gpio-dwapb.c driver being compatible with that device by declaring
+the id_table with that device name and passing the table to the DW APB GPIO
+"struct platform_driver" descriptor. The MFD/platform cores already provide the
+functionality of matching those two device and driver. If ACPI node uniquely
+defines the Quark GPIO with all that quirks applicable then you wouldn't even
+need to do the platform_device-driver-based matching. Just use the acpi_device_id
+to get the quirks flags/descriptors. 
 
-GHES_PFX is already "GHES: ", so no need to repeat "ghes" in your
-message.  You can use that space for something more useful, like the
-source ID, section type, severity, etc.  Dmesg strings that are
-completely constant are not as useful as they could be.
+The rest of the patchset concerning passing software_node's down to the
+individual MFD sub-device and declaring "reg" and "snps,nr-gpios" in there seems
+pretty much acceptable to me.
 
-> +	}
-> +}
-> +
->  static void ghes_do_proc(struct ghes *ghes,
->  			 const struct acpi_hest_generic_status *estatus)
->  {
-> @@ -527,6 +646,7 @@ static void ghes_do_proc(struct ghes *ghes,
->  		} else {
->  			void *err = acpi_hest_get_payload(gdata);
->  
-> +			ghes_handle_non_standard_event(gdata, sev);
->  			log_non_standard_event(sec_type, fru_id, fru_text,
->  					       sec_sev, err,
->  					       gdata->error_data_length);
-> @@ -1334,7 +1454,7 @@ static int __init ghes_init(void)
->  
->  	rc = platform_driver_register(&ghes_platform_driver);
->  	if (rc)
-> -		goto err;
-> +		goto exit;
->  
->  	rc = apei_osc_setup();
->  	if (rc == 0 && osc_sb_apei_support_acked)
-> @@ -1346,8 +1466,16 @@ static int __init ghes_init(void)
->  	else
->  		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
->  
-> +	rc = ghes_gdata_pool_init();
-> +	if (rc) {
-> +		pr_warn(GHES_PFX "ghes_gdata_pool_init failed\n");
+* Though indeed it would be better to mark the "snps,nr-gpios" as deprecated in
+the DT schema and have the "ngpios" supported as well.
 
-I don't think this message is really meaningful to a user.  Maybe
-something about non-fatal vendor-specific errors not being logged?
+-Sergey
 
-> +		goto err;
-
-I'm not sure this is an error that should cause the whole GHES driver
-to be unregistered.  After all, the driver *used* to work fine even
-without this vendor-specific functionality.  Seems like we ought to be
-able to fall back to the previous behavior even if we can't allocate
-the gdata pool.
-
-> +	}
-> +
->  	return 0;
->  err:
-> +	platform_driver_unregister(&ghes_platform_driver);
-> +exit:
->  	return rc;
->  }
->  device_initcall(ghes_init);
-> diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-> index e3f1cddb4ac8..a3dd82069069 100644
-> --- a/include/acpi/ghes.h
-> +++ b/include/acpi/ghes.h
-> @@ -50,6 +50,34 @@ enum {
->  	GHES_SEV_PANIC = 0x3,
->  };
->  
-> +
-
-Don't add an extra blank line here.
-
-> +#ifdef CONFIG_ACPI_APEI_GHES
-> +/**
-> + * ghes_register_event_notifier - register an event notifier
-> + * for the non-fatal HW errors.
-> + * @nb: pointer to the notifier_block structure of the event notifier.
-> + *
-> + * Return : 0 - SUCCESS, non-zero - FAIL.
-> + */
-> +int ghes_register_event_notifier(struct notifier_block *nb);
-> +
-> +/**
-> + * ghes_unregister_event_notifier - unregister the previously
-> + * registered event notifier.
-> + * @nb: pointer to the notifier_block structure of the event notifier.
-> + */
-> +void ghes_unregister_event_notifier(struct notifier_block *nb);
-> +#else
-> +static inline int ghes_register_event_notifier(struct notifier_block *nb)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline void ghes_unregister_event_notifier(struct notifier_block *nb)
-> +{
-> +}
-> +#endif
-> +
->  int ghes_estatus_pool_init(int num_ghes);
->  
->  /* From drivers/edac/ghes_edac.c */
+> 
 > -- 
-> 2.17.1
-> 
-> 
+> With Best Regards,
+> Andy Shevchenko
