@@ -2,264 +2,173 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D223C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D1B20739
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A8920739
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="u7ES9Sgb"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="aD37cj2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgFPI00 (ORCPT
+        id S1727902AbgFPI0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:26:26 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:19855 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgFPI0X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:26:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592295983; x=1623831983;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tnuVjKf68iQPKV3kfPktS/BFcn/FuHT5VzoKzWI08Qc=;
-  b=u7ES9SgbX4jwrASuuNKS/j2+pS6aWFfUHFwWZiwuwSDe3C5oyi6G0thg
-   PCEoJMT6waQMwj4spNmhD5UdDzMxCP2YaQwpC3cglKpvHCYGp0xyJZW7U
-   reKxSudeYFa7vIJPByGvXLqCPILl8l1wSmbC40P/IR1S3kqBjpxlu0ryA
-   TTy3yKeSoqKSWp3akAeVrUQcXTVVS9a7JfKt6s+5+aQVAKffJWu0qRUAI
-   nSUZS6g6E01jtihZGp/PBit3Ulu7Bg1Z9+Vz/uQkqz8I1GVB6qEiIEr33
-   BbwNiSXxulsrf1oVRLZd5uEDeTy9ri7PH/YFrdjlr0lO+FzW4kM2M2qBq
-   Q==;
-IronPort-SDR: 403Vml5SiLZQWr9N4Qe6SHADyH6fj9ZxzF3dkBVEWQ2JiTJzoavxQ25jGaO9NWS5gkBFuM8ikP
- u6HfRvuoZIsXFhsULnwdn5u8zfFQBQrwsX+eVQXiRH8Kt06V6+sYjjKeKbrrUzqqAGxqD2Dbvj
- IhEOA36cesYg0EpbkXJPndQJSDAqCPUowxDcJV2TXWWgpw+nRyJbL3KHIWz4NC81b2wPgkVwh9
- 7tktFypAn7dy3UfevFOQyvI361KNi8GRHbDMben5EgN+dcpI6J13SJLC353r2lJ0xUsqRX3zNn
- sNU=
-X-IronPort-AV: E=Sophos;i="5.73,518,1583218800"; 
-   d="scan'208";a="79621947"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Jun 2020 01:26:23 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 16 Jun 2020 01:26:20 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 16 Jun 2020 01:26:18 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
-Date:   Tue, 16 Jun 2020 10:25:56 +0200
-Message-ID: <20200616082556.27877-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616082556.27877-1-lars.povlsen@microchip.com>
-References: <20200616082556.27877-1-lars.povlsen@microchip.com>
+        Tue, 16 Jun 2020 04:26:41 -0400
+Received: from mail-bn7nam10on2058.outbound.protection.outlook.com ([40.107.92.58]:6157
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726428AbgFPI0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 04:26:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k59EQrM5yAtv/9MCakoZyDIdsdrbdMr9slpFvHrvn0ndv1iBcmJW8mq6RK8Bzb/35vt4N76BNJUvSRHOy7XDG0LXWScW3KIpQBWXAnW6YE7/zqLriAWx+YuIaMnIHOp9hBwMqutPy/c8Fg6f3P7gaYReNYpeSxTDIOh+dULEbtKbqYnH876+Iz1hjHGOIEVYVZzW1BgRHXsWX5JuVX1rv6oOkOlPy8iNoLxygrWZwga0ogaEAjwlIMO2fsS6ODWty5WFs7bBnIJ6F8MmChYzCXE3DUcOkFxYSf4hI/9178IrCvg+89JVolN2eWcOUoDJskw0U6SckTNqmL4drpQKjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BSW5q4n2HcOtAFkHaHD1arUwxQxubXglGQPTFQQu/OM=;
+ b=nZ7V7Qpn/Cyeus546l5TSPHGJaWYcp348OQ9lXvviW2kz7Zs17xvGmAkNgbttO+W6+QEW/jyPGayZL+G/TgH4K59fld/Gr/MUJhZGLmJvYigMf0gReeY0SWnqwp0OYuw1v6MxX5YLKzAI/DFOkYX0yx6nMPkeiaSkRVlq25zFx9Gz/KW6UVwHeDp8idruh1fsge1LKAPtu+gZVQkXKXcvikaPEwYvfnX3Ouv+JRkKKTRav+qTbe5nWr8Ic6xN+6MQW/FcIJBSSw5LYrUaQwqOvbYpCvB7fchS6nXX09m9m3cWUOXvaq5FHNyHP6ZOptploqWSG+YWMr3IHtV37LzLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BSW5q4n2HcOtAFkHaHD1arUwxQxubXglGQPTFQQu/OM=;
+ b=aD37cj2lc6li/wzn2myGVW+e/ZIeXvUU1A106JgfqHT1Cx0qRuQzItuD61pSS3dsAd1PzXmWRcFK5OHLuxmyw2HDT6v3q97Kias0RwfPTQ4jP8cBayBTNB0unILcDRTUoxBq/5RjPUvazoUx9cX8MwdgJ5JjCaSFlfpgTAKej+w=
+Authentication-Results: synopsys.com; dkim=none (message not signed)
+ header.d=none;synopsys.com; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB3575.namprd03.prod.outlook.com (2603:10b6:a02:ab::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.23; Tue, 16 Jun
+ 2020 08:26:36 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3088.028; Tue, 16 Jun 2020
+ 08:26:36 +0000
+Date:   Tue, 16 Jun 2020 16:26:17 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: dwc2: use well defined macros for power_down
+Message-ID: <20200616162617.38365cc8@xhacker.debian>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY2PR02CA0036.apcprd02.prod.outlook.com
+ (2603:1096:404:a6::24) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TY2PR02CA0036.apcprd02.prod.outlook.com (2603:1096:404:a6::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.26 via Frontend Transport; Tue, 16 Jun 2020 08:26:35 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 90e6d1e9-2bdb-4c67-956d-08d811cefbfc
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3575:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB3575E8EB6C3F92AE23A3EA19ED9D0@BYAPR03MB3575.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:530;
+X-Forefront-PRVS: 04362AC73B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YWYYbwANDFcMURSOd51tFmHdLqmlKSHU+PJhTPCYvphTJraihwO9btatEN29K8Q6cxjU2le74E/ahlC9vUTlaGuf8MVF5FXdnLs5nrkIDuKdISuu+PHKCur5qUqhuMTRq07JQKEP+D9ODRPaBetGcRNjUPRUlXnXSW4jfYDy6gftjXENyWB2/3PRsal1RvFe87whIUmOuCCbEVgQud7w+MljKhsIKb9sWJSJf77W+QaOqLcbPUt42LKJ2fC9VQ3EEEkeycFktZjBJ280XEcBtDz4n3+LZLg05eJ6LH0Qzxb4GcODdhsG7d1bM+KvFhkh
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(346002)(136003)(376002)(39860400002)(4326008)(16526019)(55016002)(186003)(2906002)(5660300002)(1076003)(66556008)(8676002)(26005)(8936002)(9686003)(66946007)(66476007)(316002)(956004)(110136005)(86362001)(6506007)(6666004)(478600001)(52116002)(83380400001)(7696005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: WaKQ+LTh4L3J2Nz118PETeFLkQgoEr0ef033fE6p5v8YLkh7pI8tihrKMQ239KiUW5iekEx87oaKhIij0c1RCwdd0MwfBpwE3Jd/YgtrtyAXGJ4lXa4O2BwH4SLO7MfiSceKWuLYmnS7elSFQ2VQpzVCWcLnI4zyN6qpIm5eC6nz02MAsa0JAbZEzHKseYT/vnow6aEQNUDH5sGB3D2wtaFTfx8ktD9/MsJoaVxMK3qwWRLGwELdd2Y9sZrhoQPsJzS+JwJIHljYKqkqOgBsa1RhT55U1UtZMtdkUuOEsnIsW6LuNuzRvEC9TZXmF/moJJe7yKLxTQOtPy+oVv865nMvANQvlJbCzsjlNubm1yGZwpR+saZQMESpF3xxlerZnGd52ykgthXWt9IyuOg+MfX9BTp5EEt4iD8zPWW62RXte3AvZBnI7K4ezcQHDbnn2EGvpf8PygnciMDKgZx+YPKeZVYUK6phiMFJtbavOkswmnWHYvqYU/MI8RbXkK3i
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90e6d1e9-2bdb-4c67-956d-08d811cefbfc
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2020 08:26:36.2704
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jtWsBKNkXXBfsG2apaT+pS+Nhl2jCH5LisCbpAzr/l38KfcmUhSTZYJyN2CreARZK7/IIzGvCYAXr0rRO2N2Dg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3575
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a temperature sensor driver to the Sparx5 SoC.
+Use the well defined macros such as DWC2_POWER_DOWN_PARAM_NONE,
+DWC2_POWER_DOWN_PARAM_PARTIAL and DWC2_POWER_DOWN_PARAM_HIBERNATION
+to make code more readable.
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- drivers/hwmon/Kconfig       |  10 +++
- drivers/hwmon/Makefile      |   1 +
- drivers/hwmon/sparx5-temp.c | 136 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 147 insertions(+)
- create mode 100644 drivers/hwmon/sparx5-temp.c
+ drivers/usb/dwc2/hcd.c    |  4 ++--
+ drivers/usb/dwc2/params.c | 12 ++++++------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 288ae9f63588c..7fb5e0c6c6306 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -515,6 +515,16 @@ config SENSORS_I5K_AMB
- 	  This driver can also be built as a module. If so, the module
- 	  will be called i5k_amb.
+diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+index b90f858af960..e9ac215b9663 100644
+--- a/drivers/usb/dwc2/hcd.c
++++ b/drivers/usb/dwc2/hcd.c
+@@ -3628,7 +3628,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
+ 				"SetPortFeature - USB_PORT_FEAT_SUSPEND\n");
+ 			if (windex != hsotg->otg_port)
+ 				goto error;
+-			if (hsotg->params.power_down == 2)
++			if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_HIBERNATION)
+ 				dwc2_enter_hibernation(hsotg, 1);
+ 			else
+ 				dwc2_port_suspend(hsotg, windex);
+@@ -3646,7 +3646,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
+ 			break;
  
-+config SENSORS_SPARX5
-+	tristate "Sparx5 SoC temperature sensor"
-+	depends on ARCH_SPARX5 || COMPILE_TEST
-+	help
-+	  If you say yes here you get support for temperature monitoring
-+	  with the Microchip Sparx5 SoC.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called sparx5-temp.
-+
- config SENSORS_F71805F
- 	tristate "Fintek F71805F/FG, F71806F/FG and F71872F/FG"
- 	depends on !PPC
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index 3e32c21f5efe3..857293f650412 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_SMM665)	+= smm665.o
- obj-$(CONFIG_SENSORS_SMSC47B397)+= smsc47b397.o
- obj-$(CONFIG_SENSORS_SMSC47M1)	+= smsc47m1.o
- obj-$(CONFIG_SENSORS_SMSC47M192)+= smsc47m192.o
-+obj-$(CONFIG_SENSORS_SPARX5)	+= sparx5-temp.o
- obj-$(CONFIG_SENSORS_STTS751)	+= stts751.o
- obj-$(CONFIG_SENSORS_AMC6821)	+= amc6821.o
- obj-$(CONFIG_SENSORS_TC74)	+= tc74.o
-diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
-new file mode 100644
-index 0000000000000..4ed8a2aec3ae9
---- /dev/null
-+++ b/drivers/hwmon/sparx5-temp.c
-@@ -0,0 +1,136 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Sparx5 SoC temperature sensor driver
-+ *
-+ * Copyright (C) 2020 Lars Povlsen <lars.povlsen@microchip.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/hwmon.h>
-+#include <linux/io.h>
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/bitfield.h>
-+
-+#define TEMP_CTRL		0
-+#define TEMP_CFG		4
-+#define  TEMP_CFG_CYCLES	GENMASK(24, 15)
-+#define  TEMP_CFG_ENA		BIT(0)
-+#define TEMP_STAT		8
-+#define  TEMP_STAT_VALID	BIT(12)
-+#define  TEMP_STAT_TEMP		GENMASK(11, 0)
-+
-+struct s5_hwmon {
-+	void __iomem *base;
-+};
-+
-+static void s5_temp_enable(struct s5_hwmon *hwmon)
-+{
-+	u32 val = readl(hwmon->base + TEMP_CFG);
-+	u32 clk = 250;
-+
-+	val &= ~TEMP_CFG_CYCLES;
-+	val |= FIELD_PREP(TEMP_CFG_CYCLES, clk);
-+	val |= TEMP_CFG_ENA;
-+
-+	writel(val, hwmon->base + TEMP_CFG);
-+}
-+
-+static int s5_read(struct device *dev, enum hwmon_sensor_types type,
-+		   u32 attr, int channel, long *temp)
-+{
-+	struct s5_hwmon *hwmon = dev_get_drvdata(dev);
-+	int rc = 0, value;
-+	u32 stat;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		stat = readl_relaxed(hwmon->base + TEMP_STAT);
-+		if (!(stat & TEMP_STAT_VALID))
-+			return -EIO;
-+		value = stat & TEMP_STAT_TEMP;
-+		value = DIV_ROUND_CLOSEST(value * 3522, 4096) - 1094;
-+		value *= 100;
-+		*temp = value;
-+		break;
-+	default:
-+		rc = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	return rc;
-+}
-+
-+static umode_t s5_is_visible(const void *_data, enum hwmon_sensor_types type,
-+			     u32 attr, int channel)
-+{
-+	if (type != hwmon_temp)
-+		return 0;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		return 0444;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static const struct hwmon_channel_info *s5_info[] = {
-+	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
-+	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-+	NULL
-+};
-+
-+static const struct hwmon_ops s5_hwmon_ops = {
-+	.is_visible = s5_is_visible,
-+	.read = s5_read,
-+};
-+
-+static const struct hwmon_chip_info s5_chip_info = {
-+	.ops = &s5_hwmon_ops,
-+	.info = s5_info,
-+};
-+
-+static int s5_temp_probe(struct platform_device *pdev)
-+{
-+	struct device *hwmon_dev;
-+	struct s5_hwmon *hwmon;
-+
-+	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
-+	if (!hwmon)
-+		return -ENOMEM;
-+
-+	hwmon->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(hwmon->base))
-+		return PTR_ERR(hwmon->base);
-+
-+	s5_temp_enable(hwmon);
-+
-+	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-+							 "s5_temp",
-+							 hwmon,
-+							 &s5_chip_info,
-+							 NULL);
-+
-+	return PTR_ERR_OR_ZERO(hwmon_dev);
-+}
-+
-+const struct of_device_id s5_temp_match[] = {
-+	{ .compatible = "microchip,sparx5-temp" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, s5_temp_match);
-+
-+static struct platform_driver s5_temp_driver = {
-+	.probe = s5_temp_probe,
-+	.driver = {
-+		.name = "sparx5-temp",
-+		.of_match_table = s5_temp_match,
-+	},
-+};
-+
-+module_platform_driver(s5_temp_driver);
-+
-+MODULE_AUTHOR("Lars Povlsen <lars.povlsen@microchip.com>");
-+MODULE_DESCRIPTION("Sparx5 SoC temperature sensor driver");
-+MODULE_LICENSE("GPL");
+ 		case USB_PORT_FEAT_RESET:
+-			if (hsotg->params.power_down == 2 &&
++			if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_HIBERNATION &&
+ 			    hsotg->hibernated)
+ 				dwc2_exit_hibernation(hsotg, 0, 1, 1);
+ 			hprt0 = dwc2_read_hprt0(hsotg);
+diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+index ce736d67c7c3..8f9d061c4d5f 100644
+--- a/drivers/usb/dwc2/params.c
++++ b/drivers/usb/dwc2/params.c
+@@ -68,14 +68,14 @@ static void dwc2_set_his_params(struct dwc2_hsotg *hsotg)
+ 	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 <<
+ 		GAHBCFG_HBSTLEN_SHIFT;
+ 	p->change_speed_quirk = true;
+-	p->power_down = false;
++	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
+ }
+ 
+ static void dwc2_set_s3c6400_params(struct dwc2_hsotg *hsotg)
+ {
+ 	struct dwc2_core_params *p = &hsotg->params;
+ 
+-	p->power_down = 0;
++	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
+ 	p->phy_utmi_width = 8;
+ }
+ 
+@@ -89,7 +89,7 @@ static void dwc2_set_rk_params(struct dwc2_hsotg *hsotg)
+ 	p->host_perio_tx_fifo_size = 256;
+ 	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 <<
+ 		GAHBCFG_HBSTLEN_SHIFT;
+-	p->power_down = 0;
++	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
+ }
+ 
+ static void dwc2_set_ltq_params(struct dwc2_hsotg *hsotg)
+@@ -319,11 +319,11 @@ static void dwc2_set_param_power_down(struct dwc2_hsotg *hsotg)
+ 	int val;
+ 
+ 	if (hsotg->hw_params.hibernation)
+-		val = 2;
++		val = DWC2_POWER_DOWN_PARAM_HIBERNATION;
+ 	else if (hsotg->hw_params.power_optimized)
+-		val = 1;
++		val = DWC2_POWER_DOWN_PARAM_PARTIAL;
+ 	else
+-		val = 0;
++		val = DWC2_POWER_DOWN_PARAM_NONE;
+ 
+ 	hsotg->params.power_down = val;
+ }
 -- 
 2.27.0
 
