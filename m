@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CD7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB67CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE3E8207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2399207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322977;
-	bh=lz0QmYUpdiPvamXMQCfnRLqqLSzc8DlZx7YXj9CHO6g=;
+	s=default; t=1592322982;
+	bh=UngR6ZULQj+X4Dj4/WBbfZV8St5pfzIyh3OVCShYe18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t9w4rFJEI6Uvf4oNQ3Tcv6EP95k9n1lKt61f60tiCeRx5JVWg+vqgRbBIozs1fgCJ
-	 Fwl/7QgFNIrMTmbq5r+7L8AKiVNxN/23oxpvk6BNpOPuoe6uVfT2zmR6OGtLE9fJyl
-	 E4Zso/8s83UkdZJATULneCdQ0+t1MK7syn8VlYmA=
+	b=Hc9C8pe15c1YGpbzoZBcAOd97Q1IwvjZqwjIKX455m0KUpac7z6wLEOsiFaX+yUDc
+	 UJvv9EH4N3PJf24cowL3e/lrD/9OWYt8E9nFYkiUQ9A0AmIAD1E3qvkwUchNw+i9KZ
+	 EJyu9bpl1KcVWYT6SDW+SsZxeY9H2FU/2QVTKGFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733125AbgFPP4Q (ORCPT
+        id S1732757AbgFPP4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:56:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56060 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:56:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730949AbgFPPzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:48 -0400
+        id S1733102AbgFPPzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31BFF207C4;
-        Tue, 16 Jun 2020 15:55:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2BE521527;
+        Tue, 16 Jun 2020 15:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322947;
-        bh=lz0QmYUpdiPvamXMQCfnRLqqLSzc8DlZx7YXj9CHO6g=;
+        s=default; t=1592322940;
+        bh=UngR6ZULQj+X4Dj4/WBbfZV8St5pfzIyh3OVCShYe18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C5S+A5U8J9rB5USbo6PNAY4zut07Btd2rteMjA3yzn9NghhH69Vcuyz29cBNL49Lr
-         QBz4jGYJ/lz3bTlwIXnn+pxt2asn7JDQhCfghlYTdzqEFhUf7fc0RX4oTjSz/O+vgm
-         M9nFeOtgiQKR5vLgMFGcRn2JfhNUacYR5FIu2NEE=
+        b=Wkx8UMcDwuYwzkj/JNDSjtJEM/77Frs4sz5/3/skWs5RE6hSheMde1pNdEo+jAnC7
+         0BHz9setTTYDinnvxORcMywaIL8NE8UTJhssqwdjFXCSq9RlzcOEF7BLqRdrLf53B/
+         SAlJzTri6SgksQx5+YufYmERive7Mih1VYoweZpQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.6 135/161] scsi: megaraid_sas: Replace undefined MFI_BIG_ENDIAN macro with __BIG_ENDIAN_BITFIELD macro
-Date:   Tue, 16 Jun 2020 17:35:25 +0200
-Message-Id: <20200616153112.793384651@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.6 132/161] KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
+Date:   Tue, 16 Jun 2020 17:35:22 +0200
+Message-Id: <20200616153112.643402427@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,76 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit b9d5e3e7f370a817c742fb089ac1a86dfe8947dc upstream.
+commit 3204be4109ad681523e3461ce64454c79278450a upstream.
 
-MFI_BIG_ENDIAN macro used in drivers structure bitfield to check the CPU
-big endianness is undefined which would break the code on big endian
-machine. __BIG_ENDIAN_BITFIELD kernel macro should be used in places of
-MFI_BIG_ENDIAN macro.
+AArch32 CP1x registers are overlayed on their AArch64 counterparts
+in the vcpu struct. This leads to an interesting problem as they
+are stored in their CPU-local format, and thus a CP1x register
+doesn't "hit" the lower 32bit portion of the AArch64 register on
+a BE host.
 
-Link: https://lore.kernel.org/r/20200508085130.23339-1-chandrakanth.patil@broadcom.com
-Fixes: a7faf81d7858 ("scsi: megaraid_sas: Set no_write_same only for Virtual Disk")
-Cc: <stable@vger.kernel.org> # v5.6+
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Chandrakanth Patil <chandrakanth.patil@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+To workaround this unfortunate situation, introduce a bias trick
+in the vcpu_cp1x() accessors which picks the correct half of the
+64bit register.
+
+Cc: stable@vger.kernel.org
+Reported-by: James Morse <james.morse@arm.com>
+Tested-by: James Morse <james.morse@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/megaraid/megaraid_sas.h        |    4 ++--
- drivers/scsi/megaraid/megaraid_sas_fusion.h |    6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/kvm_host.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/megaraid/megaraid_sas.h
-+++ b/drivers/scsi/megaraid/megaraid_sas.h
-@@ -511,7 +511,7 @@ union MR_PROGRESS {
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -404,8 +404,10 @@ void vcpu_write_sys_reg(struct kvm_vcpu
+  * CP14 and CP15 live in the same array, as they are backed by the
+  * same system registers.
   */
- struct MR_PD_PROGRESS {
- 	struct {
--#ifndef MFI_BIG_ENDIAN
-+#ifndef __BIG_ENDIAN_BITFIELD
- 		u32     rbld:1;
- 		u32     patrol:1;
- 		u32     clear:1;
-@@ -537,7 +537,7 @@ struct MR_PD_PROGRESS {
- 	};
+-#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r)])
+-#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r)])
++#define CPx_BIAS		IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)
++
++#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
++#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
  
- 	struct {
--#ifndef MFI_BIG_ENDIAN
-+#ifndef __BIG_ENDIAN_BITFIELD
- 		u32     rbld:1;
- 		u32     patrol:1;
- 		u32     clear:1;
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
-@@ -774,7 +774,7 @@ struct MR_SPAN_BLOCK_INFO {
- struct MR_CPU_AFFINITY_MASK {
- 	union {
- 		struct {
--#ifndef MFI_BIG_ENDIAN
-+#ifndef __BIG_ENDIAN_BITFIELD
- 		u8 hw_path:1;
- 		u8 cpu0:1;
- 		u8 cpu1:1;
-@@ -866,7 +866,7 @@ struct MR_LD_RAID {
- 	__le16     seqNum;
- 
- struct {
--#ifndef MFI_BIG_ENDIAN
-+#ifndef __BIG_ENDIAN_BITFIELD
- 	u32 ldSyncRequired:1;
- 	u32 regTypeReqOnReadIsValid:1;
- 	u32 isEPD:1;
-@@ -889,7 +889,7 @@ struct {
- 	/* 0x30 - 0x33, Logical block size for the LD */
- 	u32 logical_block_length;
- 	struct {
--#ifndef MFI_BIG_ENDIAN
-+#ifndef __BIG_ENDIAN_BITFIELD
- 	/* 0x34, P_I_EXPONENT from READ CAPACITY 16 */
- 	u32 ld_pi_exp:4;
- 	/* 0x34, LOGICAL BLOCKS PER PHYSICAL
+ struct kvm_vm_stat {
+ 	ulong remote_tlb_flush;
 
 
