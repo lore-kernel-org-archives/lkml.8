@@ -2,101 +2,137 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B5EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B95A20756
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6283320756
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 03:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592277793;
+	bh=cwuCFgtPQ05PiFOMQhBf3AYLRuAZ5wllz6/oePPqfX4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IqZc0NX5/D3lJY0vMINwcrMDLCnNAXGdxup+Jh664zDQMCA+ZZE83EjbsAq5SJWom
+	 KiagkBhux3z3i5SuEeHvviLhrRwCc0Y1Nr2dLTZGHqrJfCjrAvjukv9WfXZENvMF/e
+	 rSCiFQkNJEW+yG72cxxniBd8KhmnGrJcpmRU5Vdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgFPDWg (ORCPT
+        id S1726752AbgFPDXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 23:22:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:58440 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgFPDWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 23:22:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 781801FB;
-        Mon, 15 Jun 2020 20:22:35 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.80.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 72B943F6CF;
-        Mon, 15 Jun 2020 20:22:33 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm/mm: Drop [PTE|PMD]_TYPE_FAULT
-Date:   Tue, 16 Jun 2020 08:52:04 +0530
-Message-Id: <1592277724-2721-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 15 Jun 2020 23:23:12 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:56385 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgFPDXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Jun 2020 23:23:11 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 05G3Mwxa012301;
+        Tue, 16 Jun 2020 12:22:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 05G3Mwxa012301
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1592277779;
+        bh=2/462jbz7jQVLiDVVWzKKcGk4qeztCSU3uhhsd45JF4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wYYIk0FO0sb92e2n/k8NDpk1fopYb/hY4bojA+HZaTpXZg8QWF10eTYMBVFJzMMts
+         f6EP6j6l/ayQFmsSHbv35ZUgEO5uZBLAiG+yQ3qkg5VNjtCekxFiQxOuCZdOkn6Biv
+         J88nBCSBkcZX7wW+UcHl+pvbb6APUvlSs97EBsX4+eQbtoMorRPN72yAiHi/9u4yk1
+         edXCX7WUDLOUIPyLAlUy8+5+TK/+ZysRuznDOeFpo4usH05y5bIyRCBh6EQ2JhBNho
+         WBI473G6N9PPZ84EIDgMSY6irJ5wRVKJ2ZigU9k80QpP0XLXVIZhTnGMZF4OE4l6f9
+         xG3ihqbqga5Gw==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id w20so6445108uaa.2;
+        Mon, 15 Jun 2020 20:22:58 -0700 (PDT)
+X-Gm-Message-State: AOAM533pHBxPPJ0xc5NiMdpyvCYz9z5D0/lwYDhk/VXSv8/bEbdpDhHN
+        4pM7elSAiqT/YiK3NE58KMRnSkgprnupwuXWjOw=
+X-Google-Smtp-Source: ABdhPJylS2uk1OU4K6oY6oUB9JpzLgAK28MZHSy9Ieuy0bzPvPbnNVm5vCKIc+H1HptOGXkvcNfJXLqC1s/sVZgEnTE=
+X-Received: by 2002:ab0:156d:: with SMTP id p42mr462901uae.121.1592277777648;
+ Mon, 15 Jun 2020 20:22:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200521202716.193316-1-samitolvanen@google.com>
+ <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
+ <CAK7LNASm2t-Dkr+p_EWvqf_eoKn5R2iXWuBHnTB9n6MUxr3-pQ@mail.gmail.com>
+ <1590226253.lnkg0jun9x.astroid@bobo.none> <CAK7LNAR_-q3jhaUzDpkC3ej_DpAerzMsORT-tFw_3AwX7xM0Yw@mail.gmail.com>
+ <CABCJKufaMU1z-s4S+dHhg0iCyVynLGwsFJgYnYyiBaR=mZt-8w@mail.gmail.com>
+In-Reply-To: <CABCJKufaMU1z-s4S+dHhg0iCyVynLGwsFJgYnYyiBaR=mZt-8w@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 16 Jun 2020 12:22:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARbZhoaA=Nnuw0=gBrkuKbr_4Ng_Ei57uafujZf7Xazgw@mail.gmail.com>
+Message-ID: <CAK7LNARbZhoaA=Nnuw0=gBrkuKbr_4Ng_Ei57uafujZf7Xazgw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop these unused symbols i.e PTE_TYPE_FAULT and PMD_TYPE_FAULT.
+On Tue, Jun 16, 2020 at 6:47 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> On Sat, May 23, 2020 at 8:13 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Hi Nicholas,
+> > (+CC: Sam Ravnborg)
+> >
+> >
+> > On Sat, May 23, 2020 at 7:06 PM Nicholas Piggin <npiggin@gmail.com> wrote:
+> > >
+> > > Excerpts from Masahiro Yamada's message of May 23, 2020 3:44 am:
+> > > > + Michael, and PPC ML.
+> > > >
+> > > > They may know something about the reason of failure.
+> > >
+> > > Because the linker can't put branch stubs within object code sections,
+> > > so when you incrementally link them too large, the linker can't resolve
+> > > branches into other object files.
+> >
+> >
+> > Ah, you are right.
+> >
+> > So, this is a problem not only for PPC
+> > but also for ARM (both 32 and 64 bit), etc.
+> >
+> > ARM needs to insert a veneer to jump far.
+> >
+> > Prior to thin archive, we could not compile
+> > ARCH=arm allyesconfig because
+> > drivers/built-in.o was too large.
+> >
+> > This patch gets us back to the too large
+> > incremental object situation.
+> >
+> > With my quick compile-testing,
+> > ARCH=arm allyesconfig
+> > and ARCH=arm64 allyesconfig are broken.
+>
+> Thanks for looking into this! Clang doesn't appear to have this issue
+> with LTO because it always enables both -ffunction-sections and
+> -fdata-sections. I confirmed that -ffunction-sections also fixes arm64
+> allyesconfig with this patch. While I'm fine with reusing vmlinux.o
+> only with LTO, how would you feel about enabling -ffunction-sections
+> in the kernel by default?
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Applies on 5.8-rc1. Just found by code inspection and built tested for
-arm platform.
 
- arch/arm/include/asm/pgtable-2level-hwdef.h | 2 --
- arch/arm/include/asm/pgtable-3level-hwdef.h | 2 --
- 2 files changed, 4 deletions(-)
+I am OK if it works.
 
-diff --git a/arch/arm/include/asm/pgtable-2level-hwdef.h b/arch/arm/include/asm/pgtable-2level-hwdef.h
-index 556937e1790e..b10d6e1aee33 100644
---- a/arch/arm/include/asm/pgtable-2level-hwdef.h
-+++ b/arch/arm/include/asm/pgtable-2level-hwdef.h
-@@ -14,7 +14,6 @@
-  *   - common
-  */
- #define PMD_TYPE_MASK		(_AT(pmdval_t, 3) << 0)
--#define PMD_TYPE_FAULT		(_AT(pmdval_t, 0) << 0)
- #define PMD_TYPE_TABLE		(_AT(pmdval_t, 1) << 0)
- #define PMD_TYPE_SECT		(_AT(pmdval_t, 2) << 0)
- #define PMD_PXNTABLE		(_AT(pmdval_t, 1) << 2)     /* v7 */
-@@ -56,7 +55,6 @@
-  *   - common
-  */
- #define PTE_TYPE_MASK		(_AT(pteval_t, 3) << 0)
--#define PTE_TYPE_FAULT		(_AT(pteval_t, 0) << 0)
- #define PTE_TYPE_LARGE		(_AT(pteval_t, 1) << 0)
- #define PTE_TYPE_SMALL		(_AT(pteval_t, 2) << 0)
- #define PTE_TYPE_EXT		(_AT(pteval_t, 3) << 0)		/* v5 */
-diff --git a/arch/arm/include/asm/pgtable-3level-hwdef.h b/arch/arm/include/asm/pgtable-3level-hwdef.h
-index 2f35b4eddaa8..43aa8f61eac1 100644
---- a/arch/arm/include/asm/pgtable-3level-hwdef.h
-+++ b/arch/arm/include/asm/pgtable-3level-hwdef.h
-@@ -15,7 +15,6 @@
-  *   - common
-  */
- #define PMD_TYPE_MASK		(_AT(pmdval_t, 3) << 0)
--#define PMD_TYPE_FAULT		(_AT(pmdval_t, 0) << 0)
- #define PMD_TYPE_TABLE		(_AT(pmdval_t, 3) << 0)
- #define PMD_TYPE_SECT		(_AT(pmdval_t, 1) << 0)
- #define PMD_TABLE_BIT		(_AT(pmdval_t, 1) << 1)
-@@ -56,7 +55,6 @@
-  * + Level 3 descriptor (PTE)
-  */
- #define PTE_TYPE_MASK		(_AT(pteval_t, 3) << 0)
--#define PTE_TYPE_FAULT		(_AT(pteval_t, 0) << 0)
- #define PTE_TYPE_PAGE		(_AT(pteval_t, 3) << 0)
- #define PTE_TABLE_BIT		(_AT(pteval_t, 1) << 1)
- #define PTE_BUFFERABLE		(_AT(pteval_t, 1) << 2)		/* AttrIndx[0] */
+Please do compile tests for some architectures.
+(especially, ARCH=powerpc defconfig, and ARCH=arm(64) allyesconfig)
+
+
+Thank you.
+
+
+
+
 -- 
-2.20.1
-
+Best Regards
+Masahiro Yamada
