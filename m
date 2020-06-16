@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DACC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99E1F208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A27A21532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322825;
-	bh=1ELxeiNKC0u+xESZ8IGQ8vIZ933Fyh7SQNeFQw6Wj7g=;
+	s=default; t=1592322829;
+	bh=CMRK0YGa62R+ERoa35vn8G2WswH6HGAdKOZ5PGYl8x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xp6xm0DahmGL9F+FhU7lyVWz0IdVYFrlTY06alVsPzWxv4AsXqSSn/BESVHQgKSdG
-	 hg5i4pEdKRVK9Os0wUYBZmkJKvmuAXvSNS8oqbz+38WNYXh4aCaRFVHP4yEAHvTwMZ
-	 zG1u98PpuaM1ZnB5t6p0OYStQT1aizguOEGm6/8s=
+	b=dntu3gD/0BuOASp2sbfG+dzmmbLH0F6U2czUzU5c5mtM8LcKDPva/eQCMaDzNWFgU
+	 6IgD/uqz0Gl424PNTtBWIYeZjL6EkEn9afueMs+Ek7XzIacOnzqu/W+I0CUqYYhLzR
+	 pTISDTz7EManin4YaflSZ1HGmxk4qHy03Mp4W9e0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732899AbgFPPxo (ORCPT
+        id S1732903AbgFPPxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:53:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:53:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732283AbgFPPxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:53:33 -0400
+        id S1731326AbgFPPxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4359A207C4;
-        Tue, 16 Jun 2020 15:53:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4FAD21527;
+        Tue, 16 Jun 2020 15:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322812;
-        bh=1ELxeiNKC0u+xESZ8IGQ8vIZ933Fyh7SQNeFQw6Wj7g=;
+        s=default; t=1592322823;
+        bh=CMRK0YGa62R+ERoa35vn8G2WswH6HGAdKOZ5PGYl8x0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVAsKKO8Ol0mxNoLZGyVue8G0JOoLCIu2/Q1VlEuUwaU6BhIwojnvrXqdTsS2o/aR
-         6gqg6aKa0DJ9xHi92UXiRD4y0wA9Ypddo5fGcbx/R7SxIzxaAW7PWw+/cv+6tI2/YY
-         eEe2R9OXi4iDqBvw/1EL8Gm/vyTOdceqjr2QHgoQ=
+        b=rpRubnhJu8LiErzLnsgGxWHU7vjQgPslZdrIa1NB+vsf60tXic7g+eIRSLu0YI+pV
+         aZe8IYg6tK+LF3vFUk5AHhthaqRb9aVX53CAbKzsMk1vtTie9YQRQNTGMIu5rXPtv8
+         0EY343mU8LG9DOsBH2fHbMGLCcJtTyWBgbERXIs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.6 114/161] net/mlx5: Disable reload while removing the device
-Date:   Tue, 16 Jun 2020 17:35:04 +0200
-Message-Id: <20200616153111.786492956@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.6 117/161] proc: Use new_inode not new_inode_pseudo
+Date:   Tue, 16 Jun 2020 17:35:07 +0200
+Message-Id: <20200616153111.931452699@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,70 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-[ Upstream commit 60904cd349abc98cb888fc28d1ca55a8e2cf87b3 ]
+commit ef1548adada51a2f32ed7faef50aa465e1b4c5da upstream.
 
-While unregistration is in progress, user might be reloading the
-interface.
-This can race with unregistration in below flow which uses the
-resources which are getting disabled by reload flow.
+Recently syzbot reported that unmounting proc when there is an ongoing
+inotify watch on the root directory of proc could result in a use
+after free when the watch is removed after the unmount of proc
+when the watcher exits.
 
-Hence, disable the devlink reloading first when removing the device.
+Commit 69879c01a0c3 ("proc: Remove the now unnecessary internal mount
+of proc") made it easier to unmount proc and allowed syzbot to see the
+problem, but looking at the code it has been around for a long time.
 
-     CPU0                                   CPU1
-     ----                                   ----
-local_pci_remove()                  devlink_mutex
-  remove_one()                       devlink_nl_cmd_reload()
-    mlx5_unregister_device()           devlink_reload()
-                                       ops->reload_down()
-                                         mlx5_unload_one()
+Looking at the code the fsnotify watch should have been removed by
+fsnotify_sb_delete in generic_shutdown_super.  Unfortunately the inode
+was allocated with new_inode_pseudo instead of new_inode so the inode
+was not on the sb->s_inodes list.  Which prevented
+fsnotify_unmount_inodes from finding the inode and removing the watch
+as well as made it so the "VFS: Busy inodes after unmount" warning
+could not find the inodes to warn about them.
 
-Fixes: 4383cfcc65e7 ("net/mlx5: Add devlink reload")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Make all of the inodes in proc visible to generic_shutdown_super,
+and fsnotify_sb_delete by using new_inode instead of new_inode_pseudo.
+The only functional difference is that new_inode places the inodes
+on the sb->s_inodes list.
+
+I wrote a small test program and I can verify that without changes it
+can trigger this issue, and by replacing new_inode_pseudo with
+new_inode the issues goes away.
+
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/000000000000d788c905a7dfa3f4@google.com
+Reported-by: syzbot+7d2debdcdb3cb93c1e5e@syzkaller.appspotmail.com
+Fixes: 0097875bd415 ("proc: Implement /proc/thread-self to point at the directory of the current thread")
+Fixes: 021ada7dff22 ("procfs: switch /proc/self away from proc_dir_entry")
+Fixes: 51f0885e5415 ("vfs,proc: guarantee unique inodes in /proc")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/devlink.c |    2 --
- drivers/net/ethernet/mellanox/mlx5/core/main.c    |    2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-@@ -256,7 +256,6 @@ int mlx5_devlink_register(struct devlink
- 		goto params_reg_err;
- 	mlx5_devlink_set_params_init_values(devlink);
- 	devlink_params_publish(devlink);
--	devlink_reload_enable(devlink);
- 	return 0;
+---
+ fs/proc/inode.c       |    2 +-
+ fs/proc/self.c        |    2 +-
+ fs/proc/thread_self.c |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -448,7 +448,7 @@ const struct inode_operations proc_link_
  
- params_reg_err:
-@@ -266,7 +265,6 @@ params_reg_err:
- 
- void mlx5_devlink_unregister(struct devlink *devlink)
+ struct inode *proc_get_inode(struct super_block *sb, struct proc_dir_entry *de)
  {
--	devlink_reload_disable(devlink);
- 	devlink_params_unregister(devlink, mlx5_devlink_params,
- 				  ARRAY_SIZE(mlx5_devlink_params));
- 	devlink_unregister(devlink);
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1371,6 +1371,7 @@ static int init_one(struct pci_dev *pdev
- 		dev_err(&pdev->dev, "mlx5_crdump_enable failed with error code %d\n", err);
+-	struct inode *inode = new_inode_pseudo(sb);
++	struct inode *inode = new_inode(sb);
  
- 	pci_save_state(pdev);
-+	devlink_reload_enable(devlink);
- 	return 0;
- 
- err_load_one:
-@@ -1388,6 +1389,7 @@ static void remove_one(struct pci_dev *p
- 	struct mlx5_core_dev *dev  = pci_get_drvdata(pdev);
- 	struct devlink *devlink = priv_to_devlink(dev);
- 
-+	devlink_reload_disable(devlink);
- 	mlx5_crdump_disable(dev);
- 	mlx5_devlink_unregister(devlink);
- 
+ 	if (inode) {
+ 		inode->i_ino = de->low_ino;
+--- a/fs/proc/self.c
++++ b/fs/proc/self.c
+@@ -43,7 +43,7 @@ int proc_setup_self(struct super_block *
+ 	inode_lock(root_inode);
+ 	self = d_alloc_name(s->s_root, "self");
+ 	if (self) {
+-		struct inode *inode = new_inode_pseudo(s);
++		struct inode *inode = new_inode(s);
+ 		if (inode) {
+ 			inode->i_ino = self_inum;
+ 			inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
+--- a/fs/proc/thread_self.c
++++ b/fs/proc/thread_self.c
+@@ -43,7 +43,7 @@ int proc_setup_thread_self(struct super_
+ 	inode_lock(root_inode);
+ 	thread_self = d_alloc_name(s->s_root, "thread-self");
+ 	if (thread_self) {
+-		struct inode *inode = new_inode_pseudo(s);
++		struct inode *inode = new_inode(s);
+ 		if (inode) {
+ 			inode->i_ino = thread_self_inum;
+ 			inode->i_mtime = inode->i_atime = inode->i_ctime = current_time(inode);
 
 
