@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A58AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C519DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4E5520707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E10A20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L5+qT7uC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YrLmFDsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbgFPR1z (ORCPT
+        id S1730984AbgFPR2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33874 "EHLO
+        Tue, 16 Jun 2020 13:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729241AbgFPR1u (ORCPT
+        with ESMTP id S1728382AbgFPR1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:27:50 -0400
+        Tue, 16 Jun 2020 13:27:53 -0400
 Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EAF2C061573;
-        Tue, 16 Jun 2020 10:27:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5F6FC06174E;
+        Tue, 16 Jun 2020 10:27:51 -0700 (PDT)
 Received: from zn.tnic (p200300ec2f0f4c001d7e5f403e90d72b.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4c00:1d7e:5f40:3e90:d72b])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C5DD51EC03AC;
-        Tue, 16 Jun 2020 19:27:48 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7B59F1EC03D6;
+        Tue, 16 Jun 2020 19:27:50 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592328468;
+        t=1592328470;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Cumoy0mABNpxDdDaNdwweDyc0gOKs5OmHE1VxSQjrgM=;
-        b=L5+qT7uCD4UEsrpR4D19zqGcsqAIKuSlpinkKfdqYQhbiNQp/azdPMYW2EzGluHOfkuGsC
-        D1EdwMu4Z5jo306h7gWfdcAuxPGs/kcF+mvmW3LLjfxu/adHggl3f/bakwkBG6xD8A7SGB
-        CSRTjQSvQrNs1pa2RZ5aho3iW2qtSV4=
+        bh=JpTZBW6WOiaUX1H/zqdpGjGYoDjdyKsEKReQ25W89TE=;
+        b=YrLmFDsL3KvylqpcxW0qkQVorEXR4y/QNQcVl45UPGpbRCS3OVyb0vqRVIDjSPkm0Swn4P
+        o+XmqCUe3ZQVh7senI8bhD04Y2WUg0OcnJRzwvTRWGgnSpIZdyLl9tCvyLTjTNxWr8BfMn
+        R/SqCpbsHF6F6gNESEGadfzp8d0M5CU=
 From:   Borislav Petkov <bp@alien8.de>
 To:     Mauro Carvalho Chehab <mchehab@infradead.org>
 Cc:     linux-edac <linux-edac@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/4] EDAC/ghes: Remove unused members of struct ghes_edac_pvt, rename it to ghes_pvt
-Date:   Tue, 16 Jun 2020 19:27:35 +0200
-Message-Id: <20200616172737.30171-3-bp@alien8.de>
+Subject: [PATCH 4/4] EDAC: Remove edac_get_dimm_by_index()
+Date:   Tue, 16 Jun 2020 19:27:37 +0200
+Message-Id: <20200616172737.30171-5-bp@alien8.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200616172737.30171-1-bp@alien8.de>
 References: <20200616172737.30171-1-bp@alien8.de>
@@ -58,78 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Borislav Petkov <bp@suse.de>
 
-The struct members list and ghes of struct ghes_edac_pvt are unused,
-remove them. On that occasion, rename it to the shorter name struct
-ghes_pvt.
+It is unused now.
 
-Signed-off-by: Robert Richter <rrichter@marvell.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200519104443.15673-2-rrichter@marvell.com
 ---
- drivers/edac/ghes_edac.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ include/linux/edac.h | 29 +++++++----------------------
+ 1 file changed, 7 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index 94c70c95a896..f4f9ae32c743 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -15,9 +15,7 @@
- #include "edac_module.h"
- #include <ras/ras_event.h>
+diff --git a/include/linux/edac.h b/include/linux/edac.h
+index 6eb7d55d7c3d..15e8f3d8a895 100644
+--- a/include/linux/edac.h
++++ b/include/linux/edac.h
+@@ -594,27 +594,6 @@ struct mem_ctl_info {
+ 		     ? (mci)->dimms[(dimm)->idx + 1]		\
+ 		     : NULL)
  
--struct ghes_edac_pvt {
--	struct list_head list;
--	struct ghes *ghes;
-+struct ghes_pvt {
- 	struct mem_ctl_info *mci;
+-/**
+- * edac_get_dimm_by_index - Get DIMM info at @index from a memory
+- * 			    controller
+- *
+- * @mci:	MC descriptor struct mem_ctl_info
+- * @index:	index in the memory controller's DIMM array
+- *
+- * Returns a struct dimm_info * or NULL on failure.
+- */
+-static inline struct dimm_info *
+-edac_get_dimm_by_index(struct mem_ctl_info *mci, int index)
+-{
+-	if (index < 0 || index >= mci->tot_dimms)
+-		return NULL;
+-
+-	if (WARN_ON_ONCE(mci->dimms[index]->idx != index))
+-		return NULL;
+-
+-	return mci->dimms[index];
+-}
+-
+ /**
+  * edac_get_dimm - Get DIMM info from a memory controller given by
+  *                 [layer0,layer1,layer2] position
+@@ -650,6 +629,12 @@ static inline struct dimm_info *edac_get_dimm(struct mem_ctl_info *mci,
+ 	if (mci->n_layers > 2)
+ 		index = index * mci->layers[2].size + layer2;
  
- 	/* Buffers for the error handling routine */
-@@ -32,7 +30,7 @@ static refcount_t ghes_refcount = REFCOUNT_INIT(0);
-  * also provides the necessary (implicit) memory barrier for the SMP
-  * case to make the pointer visible on another CPU.
-  */
--static struct ghes_edac_pvt *ghes_pvt;
-+static struct ghes_pvt *ghes_pvt;
- 
- /* GHES registration mutex */
- static DEFINE_MUTEX(ghes_reg_mutex);
-@@ -212,7 +210,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
- {
- 	struct edac_raw_error_desc *e;
- 	struct mem_ctl_info *mci;
--	struct ghes_edac_pvt *pvt;
-+	struct ghes_pvt *pvt;
- 	unsigned long flags;
- 	char *p;
- 
-@@ -470,7 +468,7 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
- 	bool fake = false;
- 	int rc = 0, num_dimm = 0;
- 	struct mem_ctl_info *mci;
--	struct ghes_edac_pvt *pvt;
-+	struct ghes_pvt *pvt;
- 	struct edac_mc_layer layers[1];
- 	struct ghes_edac_dimm_fill dimm_fill;
- 	unsigned long flags;
-@@ -507,7 +505,7 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
- 	layers[0].size = num_dimm;
- 	layers[0].is_virt_csrow = true;
- 
--	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(struct ghes_edac_pvt));
-+	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(struct ghes_pvt));
- 	if (!mci) {
- 		pr_info("Can't allocate memory for EDAC data\n");
- 		rc = -ENOMEM;
-@@ -515,7 +513,6 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
- 	}
- 
- 	pvt		= mci->pvt_info;
--	pvt->ghes	= ghes;
- 	pvt->mci	= mci;
- 
- 	mci->pdev = dev;
+-	return edac_get_dimm_by_index(mci, index);
++	if (index < 0 || index >= mci->tot_dimms)
++		return NULL;
++
++	if (WARN_ON_ONCE(mci->dimms[index]->idx != index))
++		return NULL;
++
++	return mci->dimms[index];
+ }
+ #endif /* _LINUX_EDAC_H_ */
 -- 
 2.21.0
 
