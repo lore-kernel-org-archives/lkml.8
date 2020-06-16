@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B681C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADF020FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FA321501
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgFPMWj (ORCPT
+        id S1729192AbgFPMWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:22:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42734 "EHLO
+        Tue, 16 Jun 2020 08:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728976AbgFPMWJ (ORCPT
+        with ESMTP id S1728982AbgFPMWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:22:09 -0400
+        Tue, 16 Jun 2020 08:22:10 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89970C08C5C2;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82C2C08C5C3;
         Tue, 16 Jun 2020 05:22:09 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbN-0004lN-Dc; Tue, 16 Jun 2020 14:22:05 +0200
+        id 1jlAbL-0004kF-OK; Tue, 16 Jun 2020 14:22:03 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EC6431C0853;
-        Tue, 16 Jun 2020 14:21:55 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:55 -0000
-From:   "tip-bot2 for Dietmar Eggemann" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E65ED1C0095;
+        Tue, 16 Jun 2020 14:21:54 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:54 -0000
+From:   "tip-bot2 for Giovanni Gherdovich" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Remove unused 'sd' parameter from
- scale_rt_capacity()
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+Subject: [tip: sched/core] x86, sched: Bail out of frequency invariance if
+ turbo frequency is unknown
+Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200603080304.16548-5-dietmar.eggemann@arm.com>
-References: <20200603080304.16548-5-dietmar.eggemann@arm.com>
+In-Reply-To: <20200531182453.15254-3-ggherdovich@suse.cz>
+References: <20200531182453.15254-3-ggherdovich@suse.cz>
 MIME-Version: 1.0
-Message-ID: <159231011574.16989.4503865668799151297.tip-bot2@tip-bot2>
+Message-ID: <159231011472.16989.10542283129872543886.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,45 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     1ca2034ed798aea72a68d3904bd39a6cbfbdf405
-Gitweb:        https://git.kernel.org/tip/1ca2034ed798aea72a68d3904bd39a6cbfbdf405
-Author:        Dietmar Eggemann <dietmar.eggemann@arm.com>
-AuthorDate:    Wed, 03 Jun 2020 10:03:04 +02:00
+Commit-ID:     51beea8862a3095559862df39554f05042e1195b
+Gitweb:        https://git.kernel.org/tip/51beea8862a3095559862df39554f05042e1195b
+Author:        Giovanni Gherdovich <ggherdovich@suse.cz>
+AuthorDate:    Sun, 31 May 2020 20:24:52 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:01 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:02 +02:00
 
-sched/fair: Remove unused 'sd' parameter from scale_rt_capacity()
+x86, sched: Bail out of frequency invariance if turbo frequency is unknown
 
-Since commit 8ec59c0f5f49 ("sched/topology: Remove unused 'sd'
-parameter from arch_scale_cpu_capacity()") it is no longer needed.
+There may be CPUs that support turbo boost but don't declare any turbo
+ratio, i.e. their MSR_TURBO_RATIO_LIMIT is all zeroes. In that condition
+scale-invariant calculations can't be performed.
 
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Fixes: 1567c3e3467c ("x86, sched: Add support for frequency invariance")
+Suggested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20200603080304.16548-5-dietmar.eggemann@arm.com
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200531182453.15254-3-ggherdovich@suse.cz
 ---
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/smpboot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 6a4dab2..69da576 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8038,7 +8038,7 @@ static inline void init_sd_lb_stats(struct sd_lb_stats *sds)
- 	};
- }
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 18d292f..20e1cea 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -2002,9 +2002,11 @@ out:
+ 	/*
+ 	 * Some hypervisors advertise X86_FEATURE_APERFMPERF
+ 	 * but then fill all MSR's with zeroes.
++	 * Some CPUs have turbo boost but don't declare any turbo ratio
++	 * in MSR_TURBO_RATIO_LIMIT.
+ 	 */
+-	if (!base_freq) {
+-		pr_debug("Couldn't determine cpu base frequency, necessary for scale-invariant accounting.\n");
++	if (!base_freq || !turbo_freq) {
++		pr_debug("Couldn't determine cpu base or turbo frequency, necessary for scale-invariant accounting.\n");
+ 		return false;
+ 	}
  
--static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
-+static unsigned long scale_rt_capacity(int cpu)
- {
- 	struct rq *rq = cpu_rq(cpu);
- 	unsigned long max = arch_scale_cpu_capacity(cpu);
-@@ -8070,7 +8070,7 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
- 
- static void update_cpu_capacity(struct sched_domain *sd, int cpu)
- {
--	unsigned long capacity = scale_rt_capacity(sd, cpu);
-+	unsigned long capacity = scale_rt_capacity(cpu);
- 	struct sched_group *sdg = sd->groups;
- 
- 	cpu_rq(cpu)->cpu_capacity_orig = arch_scale_cpu_capacity(cpu);
