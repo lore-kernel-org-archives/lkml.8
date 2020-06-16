@@ -2,108 +2,131 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C743C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E5DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8882080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916E6208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bU5YqNKQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QOMab6ZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbgFPT16 (ORCPT
+        id S1731019AbgFPT2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52620 "EHLO
+        Tue, 16 Jun 2020 15:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730269AbgFPT15 (ORCPT
+        with ESMTP id S1730955AbgFPT2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:27:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3EF5C061573;
-        Tue, 16 Jun 2020 12:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1/p6M4udphfZorluJv8PAtxh9mkG4Cd1rD6oV0dK7MY=; b=bU5YqNKQASuxGfFaC2YHt0Kk6o
-        P4KjjAF4sgy1oQqQzcHyV6Pw88GWxBsSn6BdsJPXK2ciDyVslB33Zw0vgz61iS6OXwuBmrFg2aL2u
-        L7+pTuOctqwSpXiZ8kj8UHA6H99XHzmy8g9hipIcsQLChh0/6X1AcqRZCsDBWudn2CAOB4Biu5sKG
-        SRadq65iloF9GEk4GD/6Ge7eEQbkHxlH9DNktC++xVHZeV23+rFuvTJR/D7Kl07LpP7eoC9u2cfiW
-        754l6A5XFvnAHgUoyMcsH3RzZZXtCguKJ70MkCCCpnnHV0qmrHLYPJUhp/EbXRmExmx1uEb8n00Ih
-        xuT0trJA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlHFP-00006X-O2; Tue, 16 Jun 2020 19:27:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 691323017B7;
-        Tue, 16 Jun 2020 21:27:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 542182B6DCDEA; Tue, 16 Jun 2020 21:27:49 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 21:27:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [tip: objtool/core] objtool: Use sh_info to find the base for
- .rela sections
-Message-ID: <20200616192749.GB2531@hirez.programming.kicks-ass.net>
-References: <158759428485.28353.15005772572257518607.tip-bot2@tip-bot2>
- <202006161057.E6D5D84@keescook>
+        Tue, 16 Jun 2020 15:28:16 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8EC0C0613ED
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 12:28:15 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so24996908ljn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 12:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G+QuAOUfD+yaHMOx7JS6V2Ec/laXvrlFy0R9vzQGqF4=;
+        b=QOMab6ZBai8eX39llL4QAiuIVWOQ0kfvL9ywteJNjgzhCzjyOqdlLEs34RuWRfNLLY
+         UBmJ+sjmxHSY9KClbzPYRcmHfIbDr3RgcQIUrbh/HgB4x65p5TjwXtES2J8FIy5PzqLb
+         qNhgVYP39gDxMPl9bQhhUq4S3zMv9UfF/pmETt8VJF4G41Qcz/1zK2PnlCpJF0fz/S6h
+         PxHy+BSAWFuylkqNZeMw7xFvJ8qR/7v1dKWfEPia1fKfpNNvfy691K7fCJ3W9iR5AH/V
+         gFeKsPsrdm5Ge3TmLS1y0qxW2m4XjgJOTWFoy9c831CRjVEIM34ATLROHfUGg4Z8jDHa
+         f9Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G+QuAOUfD+yaHMOx7JS6V2Ec/laXvrlFy0R9vzQGqF4=;
+        b=pYDCnw8GGlNNxayv6F1FnjFZdcT7FNw2N+eM47Tah7NFQ7/hY+tOam0gkC4xh/eMIh
+         7ngMzHOUOSkY/TYfLfgD0MF7jzdRRSAfwNNRmqU57sQiTmCiq5sbcvuHdvj/RDICowV8
+         j50oyWByaI4qKrPHbmp85O5dabPgolD1WBq+QtZCfm53ZAwz+AtXm6NJzGulEsU8Dq5R
+         6Jlr2Q3RyhfITW+SQqGgJgIT2Ua5CsMv50EgcAx7GkEBGMkdbaVpT1/jdvzSgxebeQmM
+         GkoPfayZZ1BEhMcZixMtbpvIDIe3MW1U3KW2MrRDV8aR8sgcIqjFfREagSBPq5veTg/R
+         R2kA==
+X-Gm-Message-State: AOAM533QZW8rjmNTMKFn1x1JZZ0c5hAv74n9P0+9FILA4quFSXPqCLak
+        KhGZ20ERNaimNzZ3nEFnOwKGfO5B2Rag8tXzhGVfkw==
+X-Google-Smtp-Source: ABdhPJx83rVoJ1GBvQYrxBN8PD8VfhKiX7Lt1xY67EOoosPeSf9MmyLDKhdSIeUD5mQ+yLl+8Gvp2zP5Y6zZkNEG/uk=
+X-Received: by 2002:a2e:908f:: with SMTP id l15mr1993656ljg.307.1592335693925;
+ Tue, 16 Jun 2020 12:28:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006161057.E6D5D84@keescook>
+References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-4-rajatja@google.com>
+ <20200616073249.GB30385@infradead.org>
+In-Reply-To: <20200616073249.GB30385@infradead.org>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 16 Jun 2020 12:27:35 -0700
+Message-ID: <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:00:59AM -0700, Kees Cook wrote:
-> On Wed, Apr 22, 2020 at 10:24:44PM -0000, tip-bot2 for Sami Tolvanen wrote:
-> > The following commit has been merged into the objtool/core branch of tip:
-> > 
-> > Commit-ID:     e2ccbff8f02d6b140b8ee71108264686c19b1c78
-> > Gitweb:        https://git.kernel.org/tip/e2ccbff8f02d6b140b8ee71108264686c19b1c78
-> > Author:        Sami Tolvanen <samitolvanen@google.com>
-> > AuthorDate:    Tue, 21 Apr 2020 11:25:01 -07:00
-> > Committer:     Josh Poimboeuf <jpoimboe@redhat.com>
-> > CommitterDate: Tue, 21 Apr 2020 18:49:15 -05:00
-> > 
-> > objtool: Use sh_info to find the base for .rela sections
-> > 
-> > ELF doesn't require .rela section names to match the base section. Use
-> > the section index in sh_info to find the section instead of looking it
-> > up by name.
-> > 
-> > LLD, for example, generates a .rela section that doesn't match the base
-> > section name when we merge sections in a linker script for a binary
-> > compiled with -ffunction-sections.
-> > 
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> Hi!
-> 
-> Where did this commit end up? It seems to have vanished (404 on the
-> Gitweb link) and isn't in -next nor Linus's tree.
-> 
-> This is needed for LTO, FGKASLR, and link speed improvements[1]. Is it
-> possible to get this landed in -rc2 so all the things depending on it
-> can rebase happily?
+On Tue, Jun 16, 2020 at 12:32 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Mon, Jun 15, 2020 at 06:17:42PM -0700, Rajat Jain via iommu wrote:
+> > This is needed to allow the userspace to determine when an untrusted
+> > device has been added, and thus allowing it to bind the driver manually
+> > to it, if it so wishes. This is being done as part of the approach
+> > discussed at https://lkml.org/lkml/2020/6/9/1331
+>
+> Please move the attribute to struct device instead of further
+> entrenching it in PCIe.
 
-I can't remember why this happened, however I think this patch is in
-josh's objtool tree that I was going to stick in objtool/core
-tomorrow-ish.
+Need clarification. The flag "untrusted" is currently a part of
+pci_dev struct, and is populated within the PCI subsystem.
 
-Are those things you mentioned still slated for this release?
+1) Is your suggestion to move this flag as well as the attribute to
+device core (in "struct device")? This would allow other buses to
+populate/use this flag if they want. By default it'll be set to 0 for
+all devices (PCI subsystem will populate it based on platform info,
+like it does today).
+
+OR
+
+2) Are you suggesting to keep the "untrusted" flag within PCI, but
+attach the sysfs attribute to the base device? (&pci_dev->dev)?
+
+Thanks,
+
+Rajat
+
+>  I'm starting to grow tired of saying this
+> every other week while you guys are all moving into the entirely
+> wrong direction.
