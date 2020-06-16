@@ -2,76 +2,78 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD2D206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A24206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:25:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7vSd3CZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NFPdQ9nN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgFPAY6 (ORCPT
+        id S1726761AbgFPAZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 20:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45310 "EHLO
+        Mon, 15 Jun 2020 20:25:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgFPAY4 (ORCPT
+        with ESMTP id S1726492AbgFPAZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 20:24:56 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE313C061A0E;
-        Mon, 15 Jun 2020 17:24:56 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id d8so7568417plo.12;
-        Mon, 15 Jun 2020 17:24:56 -0700 (PDT)
+        Mon, 15 Jun 2020 20:25:12 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3274DC08C5C4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 17:25:12 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh7so7567180plb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 17:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SQQn2jlA4WN6yItqYwtJlJhnirXU5nk3dC97lktwFFs=;
-        b=E7vSd3CZltYffnJ7e8tAxU0uw5ZDpC3HRtz0oW/qdGBd10OaymT+3z69oQd+S3+sbV
-         MKvgk1WlOI3vxOv6bL51lraUpt1u+opItPIa76J6jW90yuVgJpMbW0Yqpl+Q8QFA1Aeg
-         Q8DJIKMtr/iNv2tqHxSPVRAPMyIKr2utOHA0L8MsiFaeKAlfRavDCQwae3GiBoEAEpTv
-         659uwvCy+f1w0tro+fYuoWMOmvtMLmR4Q8xg/LPOrZPv9ZB5t8T/btLKLEf8UD2EmNOw
-         lDJipkjqJrQCrVIkk/q51g9zoCHztEbHJMlaIO8gEIuGeKPiwhXxFNcAM5/Su/rIwCVw
-         XsOw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=drfa7h4uAZeehtObvAZSlgQuXNyOQkz3IPYMDRbe9fo=;
+        b=NFPdQ9nNFD61n5ngJ4UI4OxaKiSx/V7I2VgfDuIKpLKbN1fY+mZhhbM819Y8Oy7v1R
+         26ebITzbxBR8VsoNaA21uXtxPWJrhTcXDMtJ8089llno4YvuSHFy/J2CfAD/1qPwlV24
+         QB0arWBd/q4HQZzlWb7fT8lqkVPiXgm5PRFDg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SQQn2jlA4WN6yItqYwtJlJhnirXU5nk3dC97lktwFFs=;
-        b=OUd5Kdxhl0E3wh6B1w2xy6lh6RUHjZHv86z0h6KWWNvPpkX8jKdt72Ul/k5m8ixDK6
-         7PclPevEFgdyINtBdkclqxT8Dn0vOF49+ECcXPuVvUmspn608Ah3ESMTyAxIhckQgVHX
-         q7ji5abkLvY58YUpjro6/Jdru1D9goicYCEnPh0GutcmfVchLdji+AiPhw5FCiYRX/gD
-         ZHhjPB8DzTdCFLHNYh1kzGvx4PMYMmcBW5o9JvSJeZd1O9JlkEDVFqsIiOFq4Cnc5M2i
-         nzYhPKTOkDH/0sejeoiKwkC4/mQdX9qqieec/yEdGP6k58NUXXr3I/54cWhg6/wOZkdF
-         qwMw==
-X-Gm-Message-State: AOAM5337b2jbyRh16MoRT57vgO7UL1jAv4W0idVlfWQOCLBRnC/GFHxZ
-        QqArB+AsUxFdSGaxuaniYGQ=
-X-Google-Smtp-Source: ABdhPJw+7z3R7gPDdo94HqqLnkvUzcTSeGhVAeQYtwKJjQiB+OFVDEa+d1QJF1Jaz7sKQ/DGs/OYfw==
-X-Received: by 2002:a17:90a:c905:: with SMTP id v5mr219611pjt.39.1592267096165;
-        Mon, 15 Jun 2020 17:24:56 -0700 (PDT)
-Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:b8ad:8a8d:fa4d:221e])
-        by smtp.gmail.com with ESMTPSA id n4sm536619pjt.48.2020.06.15.17.24.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 17:24:55 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] exfat: remove EXFAT_SB_DIRTY flag
-Date:   Tue, 16 Jun 2020 09:24:49 +0900
-Message-Id: <20200616002450.2522-1-kohada.t2@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=drfa7h4uAZeehtObvAZSlgQuXNyOQkz3IPYMDRbe9fo=;
+        b=bLPycpYOzSMd1x/4qqRh69AXdd8PQt6QH8mntwWauT8RAcT4IHXrh3tEgM0XgqblCO
+         4izOxiOOA8H59En9t07IFFZ4KXRu8vfAZz6EfkjYkE9XiIWVKt/9KmjZ7WCvKA6fsZfd
+         tNMMw+lO5xDbFyaoYa9QPAFBkS2aU/5A3hxBBoEglvlV2AOOJLDLsaevtzOuvYXWYeOL
+         cs2F80mlbFMX22wkcETg2FuyY7nBtVGycTLr9m0e962gAEgdvCN0FUyYRuyQtzliQSud
+         qPWvHRudV+vJBIVQGKXf6OmO6AC4DbUeEQ/yhxyEHwnneg/v7+AFxfQYwmJ2/kMaYWDC
+         l9sg==
+X-Gm-Message-State: AOAM53185zDNTUOEkcdKT+lyDWjHgfrbhUs2D//R1qCb53PdBo0uNvyK
+        R7T8YVcy11w0R3Vy5z2Ix0OMFA==
+X-Google-Smtp-Source: ABdhPJxUdQqt4tHzFxHcTbY97OKvBYD76DtFlxnNp+PLFLrQl3Cup1Huw/ciaA7vECug+dfj+cprzw==
+X-Received: by 2002:a17:90b:fc8:: with SMTP id gd8mr237249pjb.142.1592267111687;
+        Mon, 15 Jun 2020 17:25:11 -0700 (PDT)
+Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
+        by smtp.gmail.com with ESMTPSA id x2sm14783781pfr.186.2020.06.15.17.25.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Jun 2020 17:25:11 -0700 (PDT)
+From:   Miao-chen Chou <mcchou@chromium.org>
+To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
+Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Yoni Shavit <yshavit@chromium.org>,
+        Michael Sun <michaelfsun@google.com>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v5 2/7] Bluetooth: Add handler of MGMT_OP_READ_ADV_MONITOR_FEATURES
+Date:   Mon, 15 Jun 2020 17:25:00 -0700
+Message-Id: <20200615172440.v5.2.I7f3372c74a6569cd3445b77a67a0b0fcfdd8a333@changeid>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615172440.v5.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
+References: <20200615172440.v5.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,315 +81,261 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove EXFAT_SB_DIRTY flag and related codes.
+This adds the request handler of MGMT_OP_READ_ADV_MONITOR_FEATURES
+command. Since the controller-based monitoring is not yet in place, this
+report only the supported features but not the enabled features.
 
-This flag is set/reset in exfat_put_super()/exfat_sync_fs()
-to avoid sync_blockdev().
-However ...
-- exfat_put_super():
-Before calling this, the VFS has already called sync_filesystem(),
-so sync is never performed here.
-- exfat_sync_fs():
-After calling this, the VFS calls sync_blockdev(), so, it is meaningless
-to check EXFAT_SB_DIRTY or to bypass sync_blockdev() here.
-Not only that, but in some cases can't clear VOL_DIRTY.
-ex:
-VOL_DIRTY is set when rmdir starts, but when non-empty-dir is detected,
-return error without setting EXFAT_SB_DIRTY.
-If performe 'sync' in this state, VOL_DIRTY will not be cleared.
+The following test was performed.
+- Issuing btmgmt advmon-features.
 
-Remove the EXFAT_SB_DIRTY check to ensure synchronization.
-And, remove the code related to the flag.
-
-Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
 ---
+
+Changes in v5: None
+Changes in v4: None
+Changes in v3:
+- Update the opcode in the mgmt table.
+
 Changes in v2:
- - exfat_sync_fs() avoids synchronous processing when wait=0
+- Convert the values from little-endian to CPU order.
+- Fix comment style and improve readability.
 
- fs/exfat/balloc.c   |  4 ++--
- fs/exfat/dir.c      | 16 ++++++++--------
- fs/exfat/exfat_fs.h |  5 +----
- fs/exfat/fatent.c   |  7 ++-----
- fs/exfat/misc.c     |  3 +--
- fs/exfat/namei.c    | 12 ++++++------
- fs/exfat/super.c    | 14 ++++++--------
- 7 files changed, 26 insertions(+), 35 deletions(-)
+ include/net/bluetooth/hci_core.h | 24 ++++++++++++++
+ net/bluetooth/hci_core.c         | 10 +++++-
+ net/bluetooth/mgmt.c             | 54 ++++++++++++++++++++++++++++++++
+ net/bluetooth/msft.c             |  7 +++++
+ net/bluetooth/msft.h             |  9 ++++++
+ 5 files changed, 103 insertions(+), 1 deletion(-)
 
-diff --git a/fs/exfat/balloc.c b/fs/exfat/balloc.c
-index 4055eb00ea9b..a987919686c0 100644
---- a/fs/exfat/balloc.c
-+++ b/fs/exfat/balloc.c
-@@ -158,7 +158,7 @@ int exfat_set_bitmap(struct inode *inode, unsigned int clu)
- 	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index cdd4f1db8670e..431fe0265dcfb 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -25,6 +25,7 @@
+ #ifndef __HCI_CORE_H
+ #define __HCI_CORE_H
  
- 	set_bit_le(b, sbi->vol_amap[i]->b_data);
--	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
-+	exfat_update_bh(sbi->vol_amap[i], IS_DIRSYNC(inode));
- 	return 0;
- }
++#include <linux/idr.h>
+ #include <linux/leds.h>
+ #include <linux/rculist.h>
  
-@@ -180,7 +180,7 @@ void exfat_clear_bitmap(struct inode *inode, unsigned int clu)
- 	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
+@@ -220,6 +221,24 @@ struct adv_info {
+ #define HCI_MAX_ADV_INSTANCES		5
+ #define HCI_DEFAULT_ADV_DURATION	2
  
- 	clear_bit_le(b, sbi->vol_amap[i]->b_data);
--	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
-+	exfat_update_bh(sbi->vol_amap[i], IS_DIRSYNC(inode));
- 
- 	if (opts->discard) {
- 		int ret_discard;
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 8e775bd5d523..02acbb6ddf02 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -470,7 +470,7 @@ int exfat_init_dir_entry(struct inode *inode, struct exfat_chain *p_dir,
- 			&ep->dentry.file.access_date,
- 			NULL);
- 
--	exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
-+	exfat_update_bh(bh, IS_DIRSYNC(inode));
- 	brelse(bh);
- 
- 	ep = exfat_get_dentry(sb, p_dir, entry + 1, &bh, &sector);
-@@ -480,7 +480,7 @@ int exfat_init_dir_entry(struct inode *inode, struct exfat_chain *p_dir,
- 	exfat_init_stream_entry(ep,
- 		(type == TYPE_FILE) ? ALLOC_FAT_CHAIN : ALLOC_NO_FAT_CHAIN,
- 		start_clu, size);
--	exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
-+	exfat_update_bh(bh, IS_DIRSYNC(inode));
- 	brelse(bh);
- 
- 	return 0;
-@@ -516,7 +516,7 @@ int exfat_update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
- 	}
- 
- 	fep->dentry.file.checksum = cpu_to_le16(chksum);
--	exfat_update_bh(sb, fbh, IS_DIRSYNC(inode));
-+	exfat_update_bh(fbh, IS_DIRSYNC(inode));
- release_fbh:
- 	brelse(fbh);
- 	return ret;
-@@ -538,7 +538,7 @@ int exfat_init_ext_entry(struct inode *inode, struct exfat_chain *p_dir,
- 		return -EIO;
- 
- 	ep->dentry.file.num_ext = (unsigned char)(num_entries - 1);
--	exfat_update_bh(sb, bh, sync);
-+	exfat_update_bh(bh, sync);
- 	brelse(bh);
- 
- 	ep = exfat_get_dentry(sb, p_dir, entry + 1, &bh, &sector);
-@@ -547,7 +547,7 @@ int exfat_init_ext_entry(struct inode *inode, struct exfat_chain *p_dir,
- 
- 	ep->dentry.stream.name_len = p_uniname->name_len;
- 	ep->dentry.stream.name_hash = cpu_to_le16(p_uniname->name_hash);
--	exfat_update_bh(sb, bh, sync);
-+	exfat_update_bh(bh, sync);
- 	brelse(bh);
- 
- 	for (i = EXFAT_FIRST_CLUSTER; i < num_entries; i++) {
-@@ -556,7 +556,7 @@ int exfat_init_ext_entry(struct inode *inode, struct exfat_chain *p_dir,
- 			return -EIO;
- 
- 		exfat_init_name_entry(ep, uniname);
--		exfat_update_bh(sb, bh, sync);
-+		exfat_update_bh(bh, sync);
- 		brelse(bh);
- 		uniname += EXFAT_FILE_NAME_LEN;
- 	}
-@@ -580,7 +580,7 @@ int exfat_remove_entries(struct inode *inode, struct exfat_chain *p_dir,
- 			return -EIO;
- 
- 		exfat_set_entry_type(ep, TYPE_DELETED);
--		exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
-+		exfat_update_bh(bh, IS_DIRSYNC(inode));
- 		brelse(bh);
- 	}
- 
-@@ -610,7 +610,7 @@ void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- 
- 	for (i = 0; i < es->num_bh; i++) {
- 		if (es->modified)
--			exfat_update_bh(es->sb, es->bh[i], sync);
-+			exfat_update_bh(es->bh[i], sync);
- 		brelse(es->bh[i]);
- 	}
- 	kfree(es);
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index 595f3117f492..84664024e51e 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -13,8 +13,6 @@
- #define EXFAT_SUPER_MAGIC       0x2011BAB0UL
- #define EXFAT_ROOT_INO		1
- 
--#define EXFAT_SB_DIRTY		0
--
- #define EXFAT_CLUSTERS_UNTRACKED (~0u)
- 
- /*
-@@ -238,7 +236,6 @@ struct exfat_sb_info {
- 	unsigned int clu_srch_ptr; /* cluster search pointer */
- 	unsigned int used_clusters; /* number of used clusters */
- 
--	unsigned long s_state;
- 	struct mutex s_lock; /* superblock lock */
- 	struct exfat_mount_options options;
- 	struct nls_table *nls_io; /* Charset used for input and display */
-@@ -514,7 +511,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- 		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
- u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
- u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
--void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
-+void exfat_update_bh(struct buffer_head *bh, int sync);
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
- 		unsigned int size, unsigned char flags);
- void exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec);
-diff --git a/fs/exfat/fatent.c b/fs/exfat/fatent.c
-index 4e5c5c9c0f2d..82ee8246c080 100644
---- a/fs/exfat/fatent.c
-+++ b/fs/exfat/fatent.c
-@@ -75,7 +75,7 @@ int exfat_ent_set(struct super_block *sb, unsigned int loc,
- 
- 	fat_entry = (__le32 *)&(bh->b_data[off]);
- 	*fat_entry = cpu_to_le32(content);
--	exfat_update_bh(sb, bh, sb->s_flags & SB_SYNCHRONOUS);
-+	exfat_update_bh(bh, sb->s_flags & SB_SYNCHRONOUS);
- 	exfat_mirror_bh(sb, sec, bh);
- 	brelse(bh);
- 	return 0;
-@@ -174,7 +174,6 @@ int exfat_free_cluster(struct inode *inode, struct exfat_chain *p_chain)
- 		return -EIO;
- 	}
- 
--	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
- 	clu = p_chain->dir;
- 
- 	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-@@ -274,7 +273,7 @@ int exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
- 			goto release_bhs;
- 		}
- 		memset(bhs[n]->b_data, 0, sb->s_blocksize);
--		exfat_update_bh(sb, bhs[n], 0);
-+		exfat_update_bh(bhs[n], 0);
- 
- 		n++;
- 		blknr++;
-@@ -358,8 +357,6 @@ int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
- 		}
- 	}
- 
--	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
--
- 	p_chain->dir = EXFAT_EOF_CLUSTER;
- 
- 	while ((new_clu = exfat_find_free_bitmap(sb, hint_clu)) !=
-diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-index 17d41f3d3709..8a3dde59052b 100644
---- a/fs/exfat/misc.c
-+++ b/fs/exfat/misc.c
-@@ -163,9 +163,8 @@ u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type)
- 	return chksum;
- }
- 
--void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync)
-+void exfat_update_bh(struct buffer_head *bh, int sync)
- {
--	set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(sb)->s_state);
- 	set_buffer_uptodate(bh);
- 	mark_buffer_dirty(bh);
- 
-diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
-index edd8023865a0..5eef2217fcf2 100644
---- a/fs/exfat/namei.c
-+++ b/fs/exfat/namei.c
-@@ -387,7 +387,7 @@ static int exfat_find_empty_entry(struct inode *inode,
- 			ep->dentry.stream.valid_size = cpu_to_le64(size);
- 			ep->dentry.stream.size = ep->dentry.stream.valid_size;
- 			ep->dentry.stream.flags = p_dir->flags;
--			exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
-+			exfat_update_bh(bh, IS_DIRSYNC(inode));
- 			brelse(bh);
- 			if (exfat_update_dir_chksum(inode, &(ei->dir),
- 			    ei->entry))
-@@ -1071,7 +1071,7 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
- 			epnew->dentry.file.attr |= cpu_to_le16(ATTR_ARCHIVE);
- 			ei->attr |= ATTR_ARCHIVE;
- 		}
--		exfat_update_bh(sb, new_bh, sync);
-+		exfat_update_bh(new_bh, sync);
- 		brelse(old_bh);
- 		brelse(new_bh);
- 
-@@ -1087,7 +1087,7 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
- 		}
- 
- 		memcpy(epnew, epold, DENTRY_SIZE);
--		exfat_update_bh(sb, new_bh, sync);
-+		exfat_update_bh(new_bh, sync);
- 		brelse(old_bh);
- 		brelse(new_bh);
- 
-@@ -1104,7 +1104,7 @@ static int exfat_rename_file(struct inode *inode, struct exfat_chain *p_dir,
- 			epold->dentry.file.attr |= cpu_to_le16(ATTR_ARCHIVE);
- 			ei->attr |= ATTR_ARCHIVE;
- 		}
--		exfat_update_bh(sb, old_bh, sync);
-+		exfat_update_bh(old_bh, sync);
- 		brelse(old_bh);
- 		ret = exfat_init_ext_entry(inode, p_dir, oldentry,
- 			num_new_entries, p_uniname);
-@@ -1159,7 +1159,7 @@ static int exfat_move_file(struct inode *inode, struct exfat_chain *p_olddir,
- 		epnew->dentry.file.attr |= cpu_to_le16(ATTR_ARCHIVE);
- 		ei->attr |= ATTR_ARCHIVE;
- 	}
--	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
-+	exfat_update_bh(new_bh, IS_DIRSYNC(inode));
- 	brelse(mov_bh);
- 	brelse(new_bh);
- 
-@@ -1175,7 +1175,7 @@ static int exfat_move_file(struct inode *inode, struct exfat_chain *p_olddir,
- 	}
- 
- 	memcpy(epnew, epmov, DENTRY_SIZE);
--	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
-+	exfat_update_bh(new_bh, IS_DIRSYNC(inode));
- 	brelse(mov_bh);
- 	brelse(new_bh);
- 
-diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-index e650e65536f8..49804d369b51 100644
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -45,9 +45,6 @@ static void exfat_put_super(struct super_block *sb)
- 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
- 
- 	mutex_lock(&sbi->s_lock);
--	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state))
--		sync_blockdev(sb->s_bdev);
--	exfat_set_vol_flags(sb, VOL_CLEAN);
- 	exfat_free_bitmap(sbi);
- 	brelse(sbi->boot_bh);
- 	mutex_unlock(&sbi->s_lock);
-@@ -60,13 +57,14 @@ static int exfat_sync_fs(struct super_block *sb, int wait)
- 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
- 	int err = 0;
- 
-+	if (!wait)
-+		return;
++struct adv_pattern {
++	struct list_head list;
++	__u8 ad_type;
++	__u8 offset;
++	__u8 length;
++	__u8 value[HCI_MAX_AD_LENGTH];
++};
 +
- 	/* If there are some dirty buffers in the bdev inode */
- 	mutex_lock(&sbi->s_lock);
--	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state)) {
--		sync_blockdev(sb->s_bdev);
--		if (exfat_set_vol_flags(sb, VOL_CLEAN))
--			err = -EIO;
--	}
-+	sync_blockdev(sb->s_bdev);
-+	if (exfat_set_vol_flags(sb, VOL_CLEAN))
-+		err = -EIO;
- 	mutex_unlock(&sbi->s_lock);
- 	return err;
++struct adv_monitor {
++	struct list_head patterns;
++	bool		active;
++	__u16		handle;
++};
++
++#define HCI_MIN_ADV_MONITOR_HANDLE		1
++#define HCI_MAX_ADV_MONITOR_NUM_HANDLES	32
++#define HCI_MAX_ADV_MONITOR_NUM_PATTERNS	16
++
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
+ /* Min encryption key size to match with SMP */
+@@ -477,6 +496,9 @@ struct hci_dev {
+ 	__u16			adv_instance_timeout;
+ 	struct delayed_work	adv_instance_expire;
+ 
++	struct idr		adv_monitors_idr;
++	unsigned int		adv_monitors_cnt;
++
+ 	__u8			irk[16];
+ 	__u32			rpa_timeout;
+ 	struct delayed_work	rpa_expired;
+@@ -1217,6 +1239,8 @@ int hci_add_adv_instance(struct hci_dev *hdev, u8 instance, u32 flags,
+ int hci_remove_adv_instance(struct hci_dev *hdev, u8 instance);
+ void hci_adv_instances_set_rpa_expired(struct hci_dev *hdev, bool rpa_expired);
+ 
++void hci_adv_monitors_clear(struct hci_dev *hdev);
++
+ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb);
+ 
+ void hci_init_sysfs(struct hci_dev *hdev);
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 83ce665d3cbfb..bfcf00e4dfa92 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -26,7 +26,6 @@
+ /* Bluetooth HCI core. */
+ 
+ #include <linux/export.h>
+-#include <linux/idr.h>
+ #include <linux/rfkill.h>
+ #include <linux/debugfs.h>
+ #include <linux/crypto.h>
+@@ -2996,6 +2995,12 @@ int hci_add_adv_instance(struct hci_dev *hdev, u8 instance, u32 flags,
+ 	return 0;
  }
+ 
++/* This function requires the caller holds hdev->lock */
++void hci_adv_monitors_clear(struct hci_dev *hdev)
++{
++	idr_destroy(&hdev->adv_monitors_idr);
++}
++
+ struct bdaddr_list *hci_bdaddr_list_lookup(struct list_head *bdaddr_list,
+ 					 bdaddr_t *bdaddr, u8 type)
+ {
+@@ -3577,6 +3582,8 @@ int hci_register_dev(struct hci_dev *hdev)
+ 
+ 	queue_work(hdev->req_workqueue, &hdev->power_on);
+ 
++	idr_init(&hdev->adv_monitors_idr);
++
+ 	return id;
+ 
+ err_wqueue:
+@@ -3647,6 +3654,7 @@ void hci_unregister_dev(struct hci_dev *hdev)
+ 	hci_smp_irks_clear(hdev);
+ 	hci_remote_oob_data_clear(hdev);
+ 	hci_adv_instances_clear(hdev);
++	hci_adv_monitors_clear(hdev);
+ 	hci_bdaddr_list_clear(&hdev->le_white_list);
+ 	hci_bdaddr_list_clear(&hdev->le_resolv_list);
+ 	hci_conn_params_clear_all(hdev);
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 9e8a3cccc6ca3..63536d6332d45 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -36,6 +36,7 @@
+ #include "hci_request.h"
+ #include "smp.h"
+ #include "mgmt_util.h"
++#include "msft.h"
+ 
+ #define MGMT_VERSION	1
+ #define MGMT_REVISION	17
+@@ -111,6 +112,7 @@ static const u16 mgmt_commands[] = {
+ 	MGMT_OP_READ_SECURITY_INFO,
+ 	MGMT_OP_READ_EXP_FEATURES_INFO,
+ 	MGMT_OP_SET_EXP_FEATURE,
++	MGMT_OP_READ_ADV_MONITOR_FEATURES,
+ };
+ 
+ static const u16 mgmt_events[] = {
+@@ -3849,6 +3851,51 @@ static int set_exp_feature(struct sock *sk, struct hci_dev *hdev,
+ 			       MGMT_STATUS_NOT_SUPPORTED);
+ }
+ 
++static int read_adv_monitor_features(struct sock *sk, struct hci_dev *hdev,
++				     void *data, u16 len)
++{
++	struct adv_monitor *monitor = NULL;
++	struct mgmt_rp_read_adv_monitor_features *rp = NULL;
++	int handle;
++	size_t rp_size = 0;
++	__u32 supported = 0;
++	__u16 num_handles = 0;
++	__u16 handles[HCI_MAX_ADV_MONITOR_NUM_HANDLES];
++
++	BT_DBG("request for %s", hdev->name);
++
++	hci_dev_lock(hdev);
++
++	if (msft_get_features(hdev) & MSFT_FEATURE_MASK_LE_ADV_MONITOR)
++		supported |= MGMT_ADV_MONITOR_FEATURE_MASK_OR_PATTERNS;
++
++	idr_for_each_entry(&hdev->adv_monitors_idr, monitor, handle) {
++		handles[num_handles++] = monitor->handle;
++	}
++
++	hci_dev_unlock(hdev);
++
++	rp_size = sizeof(*rp) + (num_handles * sizeof(u16));
++	rp = kmalloc(rp_size, GFP_KERNEL);
++	if (!rp)
++		return -ENOMEM;
++
++	/* Once controller-based monitoring is in place, the enabled_features
++	 * should reflect the use.
++	 */
++	rp->supported_features = cpu_to_le32(supported);
++	rp->enabled_features = 0;
++	rp->max_num_handles = cpu_to_le16(HCI_MAX_ADV_MONITOR_NUM_HANDLES);
++	rp->max_num_patterns = HCI_MAX_ADV_MONITOR_NUM_PATTERNS;
++	rp->num_handles = cpu_to_le16(num_handles);
++	if (num_handles)
++		memcpy(&rp->handles, &handles, (num_handles * sizeof(u16)));
++
++	return mgmt_cmd_complete(sk, hdev->id,
++				 MGMT_OP_READ_ADV_MONITOR_FEATURES,
++				 MGMT_STATUS_SUCCESS, rp, rp_size);
++}
++
+ static void read_local_oob_data_complete(struct hci_dev *hdev, u8 status,
+ 				         u16 opcode, struct sk_buff *skb)
+ {
+@@ -7297,6 +7344,13 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
+ 	{ set_exp_feature,         MGMT_SET_EXP_FEATURE_SIZE,
+ 						HCI_MGMT_VAR_LEN |
+ 						HCI_MGMT_HDEV_OPTIONAL },
++	{ NULL }, // 0x004B
++	{ NULL }, // 0x004C
++	{ NULL }, // 0x004D
++	{ NULL }, // 0x004E
++	{ NULL }, // 0x004F
++	{ NULL }, // 0x0050
++	{ read_adv_monitor_features, MGMT_READ_ADV_MONITOR_FEATURES_SIZE },
+ };
+ 
+ void mgmt_index_added(struct hci_dev *hdev)
+diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
+index d6c4e6b5ae777..8579bfeb28364 100644
+--- a/net/bluetooth/msft.c
++++ b/net/bluetooth/msft.c
+@@ -139,3 +139,10 @@ void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb)
+ 
+ 	bt_dev_dbg(hdev, "MSFT vendor event %u", event);
+ }
++
++__u64 msft_get_features(struct hci_dev *hdev)
++{
++	struct msft_data *msft = hdev->msft_data;
++
++	return  msft ? msft->features : 0;
++}
+diff --git a/net/bluetooth/msft.h b/net/bluetooth/msft.h
+index 5aa9130e1f8ab..e9c478e890b8b 100644
+--- a/net/bluetooth/msft.h
++++ b/net/bluetooth/msft.h
+@@ -3,16 +3,25 @@
+  * Copyright (C) 2020 Google Corporation
+  */
+ 
++#define MSFT_FEATURE_MASK_BREDR_RSSI_MONITOR		BIT(0)
++#define MSFT_FEATURE_MASK_LE_CONN_RSSI_MONITOR		BIT(1)
++#define MSFT_FEATURE_MASK_LE_ADV_RSSI_MONITOR		BIT(2)
++#define MSFT_FEATURE_MASK_LE_ADV_MONITOR		BIT(3)
++#define MSFT_FEATURE_MASK_CURVE_VALIDITY		BIT(4)
++#define MSFT_FEATURE_MASK_CONCURRENT_ADV_MONITOR	BIT(5)
++
+ #if IS_ENABLED(CONFIG_BT_MSFTEXT)
+ 
+ void msft_do_open(struct hci_dev *hdev);
+ void msft_do_close(struct hci_dev *hdev);
+ void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb);
++__u64 msft_get_features(struct hci_dev *hdev);
+ 
+ #else
+ 
+ static inline void msft_do_open(struct hci_dev *hdev) {}
+ static inline void msft_do_close(struct hci_dev *hdev) {}
+ static inline void msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb) {}
++static inline __u64 msft_get_features(struct hci_dev *hdev) { return 0; }
+ 
+ #endif
 -- 
-2.25.1
+2.26.2
 
