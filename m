@@ -2,184 +2,103 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02780C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391F02085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D037E20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRdD0rCj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oHgSA/KC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgFPVNj (ORCPT
+        id S1726378AbgFPVPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40772 "EHLO
+        Tue, 16 Jun 2020 17:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgFPVNi (ORCPT
+        with ESMTP id S1725773AbgFPVPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:13:38 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A7BC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 14:13:37 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id q2so148633vsr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 14:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X0rMkiop0+pruLh0Yl4qvTvDnfP83BWucM9LZrNczAw=;
-        b=LRdD0rCjrSL9JaaL0kHwdPx0M+nkvoO/8C892/SEoqI4UtOAwS2vVtEepad05HhUU8
-         m2m0yDAwLoNo6ORezqjQ7rOlOjqifjAfGJgCG8HwyFTy4mv+M46M6cFBDVfPhDGs1Zyt
-         4xZdlt3gWUPPNHnHNr3/JhLeXoOrU+9CI3aPe5ieEeYonz4inwVW8vHjPLuBE1cLd5df
-         3WGPaoqq/QpbM4Q/LSeFt6itsktKKdBT03aYrkPQ3ekG8URvAhZCf59ov/i2DZb1SNkF
-         eEQXvHmEDOpsAdyibdcwVhXxuSpMcoKVd2goW26v344s5fztOzrpJS+JywrD74ifRd+a
-         KDNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X0rMkiop0+pruLh0Yl4qvTvDnfP83BWucM9LZrNczAw=;
-        b=I7NRIEW8prh3S6kBbWittaqdItBqpnxLlQRYKBtovqzwLOgLdwPf2KvbRDtDoVGPh3
-         VXFEF88+u0Lee3y7CCGGKeIVACPIDAENSbv0lfEUUY9dp5GRZ4Wj7MltsBpGZcSkwF6S
-         ME9Lv4UmqDemym09iJ2+z4Q0fVzL1T6Vmd9a8uJ9P3n+FAxMsPRjfVwu25j07gQp+2Zp
-         GmSNBP1hdZ4GxcuZt4Nx03VqA67itew7G0dfoIRlGtSiRq+s1ZPmjoHzrmYfpxBytBsa
-         V+RwBH1Hxluk+y6qGCNKZCVBkKq4Gr+sahhpb1U7JlCVxplHfJsVJWKzn34J/qGqi3yf
-         JdDw==
-X-Gm-Message-State: AOAM532+KZc9g9xLCkWaLhH8Pxno4yT2M8eQxc1stZ5VULbJfffrervg
-        1fv90dJOndaxpX4dty0f/k4SmjoGclgEZvBqUGM=
-X-Google-Smtp-Source: ABdhPJxChHzc2yaVqH9Es+Pc3yCaZLNjBvLc3EzAyBWiKNdl6kHaxrdGGhVBZa67D+PxbQYUP7jPXoIsbp3UjculvcE=
-X-Received: by 2002:a67:f918:: with SMTP id t24mr3400638vsq.18.1592342017019;
- Tue, 16 Jun 2020 14:13:37 -0700 (PDT)
+        Tue, 16 Jun 2020 17:15:20 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E158AC061573;
+        Tue, 16 Jun 2020 14:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=leEz1fiyyYNCvStCVFZ11qKUfHMh+AfUoU9zFTvCrqA=; b=oHgSA/KCDX899omYMHX4U2OLjJ
+        EwMhiIoHigLxQ+MmRFcXyHzBFlTQmZXr04WRoMkHZe+LheH9bL5uSbscQsM64m29mzWCbQbg2tT8+
+        7YVv6xeVy1vViCaTYlOd/6wXfcX6a1cFVTgtaelhNr5Sx0Bq8ty7srr8SsI2tSkKUXRYqisvkGrfi
+        sJiaQyRIt9mSxfwey610s9TuikWX8HXsiUmyGfH8ZS9oPdOb24GGhFyI8BfzM4UPPYgOLJ+VdR52j
+        Y86D/VTQJXkQsTbKRbFAYueGk1mSp6BZ3PR31zhRZoTaAupph04Ady7RM7jEh9GkVMlChc2sCJczP
+        HkwXD4Iw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlIv1-00069R-Gz; Tue, 16 Jun 2020 21:14:55 +0000
+Date:   Tue, 16 Jun 2020 14:14:55 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Sterba <dsterba@suse.cz>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] mm, treewide: Rename kzfree() to kfree_sensitive()
+Message-ID: <20200616211455.GB8681@bombadil.infradead.org>
+References: <20200616015718.7812-1-longman@redhat.com>
+ <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
 MIME-Version: 1.0
-References: <20200613155738.2249399-1-jim.cromie@gmail.com>
- <20200613155738.2249399-21-jim.cromie@gmail.com> <20200616134507.GO31238@alley>
-In-Reply-To: <20200616134507.GO31238@alley>
-From:   jim.cromie@gmail.com
-Date:   Tue, 16 Jun 2020 15:13:10 -0600
-Message-ID: <CAJfuBxxvejGJtyQfcPmG7i6p6NAESjTuBPHeGDUwTVkg9_JfzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 20/24] dyndbg: WIP towards debug-print-class based
- callsite controls
-To:     Petr Mladek <pmladek@suse.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Jason Baron <jbaron@akamai.com>,
-        LKML <linux-kernel@vger.kernel.org>, akpm@linuxfoundation.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Petr,
+On Tue, Jun 16, 2020 at 11:53:50AM -0700, Joe Perches wrote:
+> To this larger audience and last week without reply:
+> https://lore.kernel.org/lkml/573b3fbd5927c643920e1364230c296b23e7584d.camel@perches.com/
+> 
+> Are there _any_ fastpath uses of kfree or vfree?
 
-On Tue, Jun 16, 2020 at 7:45 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Sat 2020-06-13 09:57:34, Jim Cromie wrote:
-> > There are *lots* of ad-hoc debug printing solutions in kernel,
-> > this is a 1st attempt at providing a common mechanism for many of them.
->
-> I agree that it might make sense to provide some common mechanism.
->
->
-> > Basically, there are 2 styles of debug printing:
-> > - levels, with increasing verbosity, 1-10 forex
-> > - bits/flags, independently controlling separate groups of dprints
-> >
-> > This patch does bits/flags only.
-> >
-> > proposed API:
-> >
-> > Usage model is for a module developer to create N exclusive subsets of
-> > pr_debug()s by changing some of them to pr_debug_n(1,) .. pr_debug_n(N,).
-> > Each callsite must be a single print-class, with 0 default.
-> >
-> > No multi-type classification ala pr_debug_M(1|2, ...) is contemplated.
-> >
-> >   Qfoo() { echo module foo $* >/proc/dynamic_debug/control }
-> >   Qfoo +p             # all groups, including default 0
-> >   Qfoo mflags 1 +p    # only group 1
-> >   Qfoo mflags 12 +p   # TBD[1]: groups 1 or 2
-> >   Qfoo mflags 0 +p    # ignored atm TBD[2]
-> >   Qfoo mflags af +p   # TBD[3]: groups a or f (10 or 15)
->
-> My problem with this approach is that it is too generic. Each class
-> would have different meaning in each subsystem.
->
+I worked on adding a 'free' a couple of years ago.  That was capable
+of freeing percpu, vmalloc, kmalloc and alloc_pages memory.  I ran into
+trouble when I tried to free kmem_cache_alloc memory -- it works for slab
+and slub, but not slob (because slob needs the size from the kmem_cache).
 
-I think generic is a feature.
+My motivation for this was to change kfree_rcu() to just free_rcu().
 
-subsystem and module are the organizational level
-where print-classes would be sensibly defined.
-Thats why I required a module query-term with mflags,
- so that no mflags query could operate on all the callsites.
-I might go further to prohibit a wildcard in the module query-term value,
-so its absolutely locked in to a specific module.
+> To eliminate these mispairings at a runtime cost of four
+> comparisons, should the kfree/vfree/kvfree/kfree_const
+> functions be consolidated into a single kfree?
 
-maybe there would be consensus about having 1 or 2 kernel-wide print-classes,
-but other than something akin to stdin, stdout, stderr, I cant think
-of what it would look like.
-
-
-
-> It might help to replace any existing variants. But it would be hard
-> for developers debugging the code. They would need to study/remember
-> the meaning of these groups for particular subsystems. They would
-> need to set different values for different messages.
->
-> Could you please provide more details about the potential users?
-
-Ive ccd Stanimir, who wanted HI MID LOW classifications on some of his
-debug prints.
-Im doing the simplest possible thing that might work for him.
-
-> Would be possible to find some common patterns and common
-> meaning of the groups?
-
-probably should start with anti-patterns.
-
-KISAP - simple as possible
-I offer exclusive classes only, no this or that.
-prclass = 0 is reserved for every current use.
-
-If module authors think they need many  print-classes, rethink.
-control output exposes whole structure of code,
-file and function names are chosen to convey organization,
-a small set of queries will recreate most arbitrary print-classes
-
-use the echo >control interface only.
-I briefly thought about checking module debug parameters,
-that now sounds like madness
-
-Any chunk of code with N pr-debug* callsites, however badly architected,
-can be completely controlled by N separate queries.
-for better code, its much smaller.
-
-
-ISTM the only sane way to allow external modules to control their own
-dynamic debug callsites is to expose ddebug_exec_queries,
-and let them issue the callsite modifications they want.
-
-then, they can map any updates to their debug-flags storage
-onto a pair of on-off queries for each bit.
-
-Lastly, Id note that exclusive classes doesnt mean levels (debug++, debug--)
-cant be handled.
-we could reserve pr-classes 1-9 to mean all inclusive below N.
-
-Or that meaning could be handled by merely issuing the fill-in activations.
-In the module that wants debug levels
-
-  echo module foo mflags 4 >control
-auto generates same query 3 more times, with mflags 3 flags 2 mflags:1
-
-
-
->
-> Best Regards,
-> Petr
+I would say to leave kfree() alone and just introduce free() as a new
+default.  There's some weird places in the kernel that have a 'free'
+symbol of their own, but those should be renamed anyway.
