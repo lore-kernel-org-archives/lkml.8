@@ -2,218 +2,123 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA980C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A932098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C641320B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YDrEV/nY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nDIBdjVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgFPLd0 (ORCPT
+        id S1728683AbgFPLdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:33:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
+        Tue, 16 Jun 2020 07:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728501AbgFPLdX (ORCPT
+        with ESMTP id S1728666AbgFPLdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:33:23 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49712C08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:33:23 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q19so23105875lji.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:33:23 -0700 (PDT)
+        Tue, 16 Jun 2020 07:33:33 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FCBC08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:33:32 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id o2so11225850vsr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xXpGsaf6/t1/UiE0oOHiYv8kEoRrgHAiW4t8lS6jlzI=;
-        b=YDrEV/nYXcxcVf/hCmEXrPu/Jv6dEdPyFhitALAoFiI2z7ZHQfWeC8g5ofXWQ602nT
-         a9/Ei3c57uxIGxnUYP1vqzxywcJrB58KgmavOfTYNSy9P2FIPdpvFoi9yr7XKRKp3JVw
-         JfNBwfnEjlHelGGI4r0j9FsUZgOqVvVx+WMbNFX/3zXxSah7/+FdJsOHC61nzi4qK1k/
-         h/fuAagUB1WYdifHftNn9dc1GrjHJenXrsZF12jF3rdEw2G1DU1Hl8JCFB9dHiNFnUlj
-         m4MuoVlyED08uLrtyNXMH0FCIvIJRy6yWuya04K96n+vc39GoICEauhXPn5wrbFV6rsV
-         2aoA==
+        bh=Z4+Iz5hXHc4KqHs/Siy+ZWN5Iucm03GbQ2VElO3GIbE=;
+        b=nDIBdjVmKagHvZo44/5GnMutd+R9LOzqdj7KoKAjZCeARsNRBWF+9cGFnYMjSfV7Vs
+         r4303MeB7Zgsz3BHhUBei2NxgJ77BYTNOA6KEqwV2dziFSfcZeH/37omrb/OhrA2FVhN
+         iVNLxGGtaXs8BSbxMcqI1p1jIEB5fmqAanfN0b/EtI8ut38Sql4N/26QCNTV3WypKHL7
+         Zt940MpjDG13b3XlCEGfJ5u6HOdKds0M50x4KT+fPeZ+d5gjJmO3/4sxjcS67kQrPfUf
+         wAagBLnmntF9pcPlTMGp34+8QiVEPqy3ZyRCeSFCk6rky6z01YGR03XLjBKgUcGL6oXy
+         h9+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xXpGsaf6/t1/UiE0oOHiYv8kEoRrgHAiW4t8lS6jlzI=;
-        b=D66FdY7MAZglg91DUeYudovczlWyJ1t4VLznc3tRRUJrQSsIRwV+9Sg7wuC85fBz+l
-         x5FZrWGjQ6cgwvPZtbuSIKs72e7RJLXuhLCY2Rf95HqRP8PgF9rg1I1xCh13b61zC4oE
-         vszxtv7qfDi9SA6CHEiuytrZll3jJwm8Qxk+fGy4rjDurpOLRF3hhbsHgi+UhEugbe/T
-         266WDDIYoT2cl3fjGq4jUpLd7gjYbxNUXfRNadh4otsRQy7UzGk36IAMo6Ci9G4cT9zL
-         WsM5lw9FO/Q/E1R/eQrP3KOWaElxBDUZgcMTxgNQ2Roixcorh0S/Gws4BA9ChJcadQF5
-         ymhw==
-X-Gm-Message-State: AOAM531xcYB8ikbuLYkvixZyBUqyaGcKVjEmqIV75kYWxhn3OSGSHWhw
-        uZCT0Vcs7g5ZiLsK4erDs4dbJAxM6qNAIJQFS+4fJA==
-X-Google-Smtp-Source: ABdhPJzv38zZQGodUB3dlEaatmrXMcxTNcgfAfArIu4PT76XlM3dr9hqgTduMg/QY76sLseMHYpJCp8XDSTJ2LIx/8U=
-X-Received: by 2002:a2e:9a44:: with SMTP id k4mr1157571ljj.139.1592307201386;
- Tue, 16 Jun 2020 04:33:21 -0700 (PDT)
+        bh=Z4+Iz5hXHc4KqHs/Siy+ZWN5Iucm03GbQ2VElO3GIbE=;
+        b=JWutJ3S5qLlbZQNArjLGxi1Zl4JNQfTZKZEPe9PuXk549pJkhx6RfC7ZHi4U9dQQZ9
+         bibIH4WriG6DzQSbCZTJpL5BapuKv1Vowxpy8lubZTL/xr2i/edHI1knyHT967+Lkx5g
+         nADkZW0aUoSRRulmuNivVnG/qLcQxx5UgZ8BVDoS8d4A5CkqD508wUTSAK05DThkv0gQ
+         V5Bl09hVjE67bq43PGcv1MoOHCceJ+d31jGd50gq8wUIChrkotl0jhqiEOj+j1F7oc3i
+         6Bnejh2S+p2/ngWKi6c72z46BlkSYqAOJOErfMLIlwJnhzkWlD4fvqyilnxYazruc93V
+         ZUfQ==
+X-Gm-Message-State: AOAM531d+RVmN2oDQ4J5KqUnE1W5msI8WcPLSIx3cmdA/HiCwa2GSu4p
+        yH4+84IuWpq/EJRreA0To3OFY2D5R4mlbyUUFVbQgg==
+X-Google-Smtp-Source: ABdhPJyGZERfhW1QKFPZ5+rChUj0a55YKn9tZGUbhrD+eRw5UOrhMGu/7HPk1pqELV9Q/H4lqZhJMwIGM2yDSPP9sLo=
+X-Received: by 2002:a67:903:: with SMTP id 3mr1156423vsj.191.1592307212063;
+ Tue, 16 Jun 2020 04:33:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200609142406.upuwpfmgqjeji4lc@steredhat> <CAG48ez3kdNKjif==MbX36cKNYDpZwEPMZaJQ1rrpXZZjGZwbKw@mail.gmail.com>
- <20200615133310.qwdmnctrir5zgube@steredhat> <f7f2841e-3dbb-377f-f8f8-826506a938a6@kernel.dk>
- <20200616091247.hdmxcrnlrrxih7my@steredhat>
-In-Reply-To: <20200616091247.hdmxcrnlrrxih7my@steredhat>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 16 Jun 2020 13:32:54 +0200
-Message-ID: <CAG48ez2n5t7zkm7H_bPAcxz6KT25TrMp3sLZ3BhpMHaCQqcArQ@mail.gmail.com>
-Subject: Re: [RFC] io_uring: add restrictions to support untrusted
- applications and guests
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Aleksa Sarai <asarai@suse.de>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        io-uring <io-uring@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
+References: <20200608162226.3259186-1-hslester96@gmail.com>
+In-Reply-To: <20200608162226.3259186-1-hslester96@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 16 Jun 2020 13:32:55 +0200
+Message-ID: <CAPDyKFrrrydrUaOVGB+VTgLSGMn41JO+ughhza_BzGPE7wm_yw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-of-arasan: Add missed checks for devm_clk_register()
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:13 AM Stefano Garzarella <sgarzare@redhat.com> wrote:
-> On Mon, Jun 15, 2020 at 11:00:25AM -0600, Jens Axboe wrote:
-> > On 6/15/20 7:33 AM, Stefano Garzarella wrote:
-> > > On Mon, Jun 15, 2020 at 11:04:06AM +0200, Jann Horn wrote:
-> > >> +Kees, Christian, Sargun, Aleksa, kernel-hardening for their opinions
-> > >> on seccomp-related aspects
-> > >>
-> > >> On Tue, Jun 9, 2020 at 4:24 PM Stefano Garzarella <sgarzare@redhat.com> wrote:
-> > >>> Hi Jens,
-> > >>> Stefan and I have a proposal to share with io_uring community.
-> > >>> Before implementing it we would like to discuss it to receive feedbacks and
-> > >>> to see if it could be accepted:
-> > >>>
-> > >>> Adding restrictions to io_uring
-> > >>> =====================================
-> > >>> The io_uring API provides submission and completion queues for performing
-> > >>> asynchronous I/O operations. The queues are located in memory that is
-> > >>> accessible to both the host userspace application and the kernel, making it
-> > >>> possible to monitor for activity through polling instead of system calls. This
-> > >>> design offers good performance and this makes exposing io_uring to guests an
-> > >>> attractive idea for improving I/O performance in virtualization.
-> > >> [...]
-> > >>> Restrictions
-> > >>> ------------
-> > >>> This document proposes io_uring API changes that safely allow untrusted
-> > >>> applications or guests to use io_uring. io_uring's existing security model is
-> > >>> that of kernel system call handler code. It is designed to reject invalid
-> > >>> inputs from host userspace applications. Supporting guests as io_uring API
-> > >>> clients adds a new trust domain with access to even fewer resources than host
-> > >>> userspace applications.
-> > >>>
-> > >>> Guests do not have direct access to host userspace application file descriptors
-> > >>> or memory. The host userspace application, a Virtual Machine Monitor (VMM) such
-> > >>> as QEMU, grants access to a subset of its file descriptors and memory. The
-> > >>> allowed file descriptors are typically the disk image files belonging to the
-> > >>> guest. The memory is typically the virtual machine's RAM that the VMM has
-> > >>> allocated on behalf of the guest.
-> > >>>
-> > >>> The following extensions to the io_uring API allow the host application to
-> > >>> grant access to some of its file descriptors.
-> > >>>
-> > >>> These extensions are designed to be applicable to other use cases besides
-> > >>> untrusted guests and are not virtualization-specific. For example, the
-> > >>> restrictions can be used to allow only a subset of sqe operations available to
-> > >>> an application similar to seccomp syscall whitelisting.
-> > >>>
-> > >>> An address translation and memory restriction mechanism would also be
-> > >>> necessary, but we can discuss this later.
-> > >>>
-> > >>> The IOURING_REGISTER_RESTRICTIONS opcode
-> > >>> ----------------------------------------
-> > >>> The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode permanently
-> > >>> installs a feature whitelist on an io_ring_ctx. The io_ring_ctx can then be
-> > >>> passed to untrusted code with the knowledge that only operations present in the
-> > >>> whitelist can be executed.
-> > >>
-> > >> This approach of first creating a normal io_uring instance and then
-> > >> installing restrictions separately in a second syscall means that it
-> > >> won't be possible to use seccomp to restrict newly created io_uring
-> > >> instances; code that should be subject to seccomp restrictions and
-> > >> uring restrictions would only be able to use preexisting io_uring
-> > >> instances that have already been configured by trusted code.
-> > >>
-> > >> So I think that from the seccomp perspective, it might be preferable
-> > >> to set up these restrictions in the io_uring_setup() syscall. It might
-> > >> also be a bit nicer from a code cleanliness perspective, since you
-> > >> won't have to worry about concurrently changing restrictions.
-> > >>
-> > >
-> > > Thank you for these details!
-> > >
-> > > It seems feasible to include the restrictions during io_uring_setup().
-> > >
-> > > The only doubt concerns the possibility of allowing the trusted code to
-> > > do some operations, before passing queues to the untrusted code, for
-> > > example registering file descriptors, buffers, eventfds, etc.
-> > >
-> > > To avoid this, I should include these operations in io_uring_setup(),
-> > > adding some code that I wanted to avoid by reusing io_uring_register().
-> > >
-> > > If I add restrictions in io_uring_setup() and then add an operation to
-> > > go into safe mode (e.g. a flag in io_uring_enter()), we would have the same
-> > > problem, right?
-> > >
-> > > Just to be clear, I mean something like this:
-> > >
-> > >     /* params will include restrictions */
-> > >     fd = io_uring_setup(entries, params);
-> > >
-> > >     /* trusted code */
-> > >     io_uring_register_files(fd, ...);
-> > >     io_uring_register_buffers(fd, ...);
-> > >     io_uring_register_eventfd(fd, ...);
-> > >
-> > >     /* enable safe mode */
-> > >     io_uring_enter(fd, ..., IORING_ENTER_ENABLE_RESTRICTIONS);
-> > >
-> > >
-> > > Anyway, including a list of things to register in the 'params', passed
-> > > to io_uring_setup(), should be feasible, if Jens agree :-)
-> >
-> > I wonder how best to deal with this, in terms of ring visibility vs
-> > registering restrictions. We could potentially start the ring in a
-> > disabled mode, if asked to. It'd still be visible in terms of having
-> > the fd installed, but it'd just error requests. That'd leave you with
-> > time to do the various setup routines needed before then flagging it
-> > as enabled. My only worry on that would be adding overhead for doing
-> > that. It'd be cheap enough to check for IORING_SETUP_DISABLED in
-> > ctx->flags in io_uring_enter(), and return -EBADFD or something if
-> > that's the case. That doesn't cover the SQPOLL case though, but maybe we
-> > just don't start the sq thread if IORING_SETUP_DISABLED is set.
+On Mon, 8 Jun 2020 at 18:22, Chuhong Yuan <hslester96@gmail.com> wrote:
 >
-> It seems to me a very good approach and easy to implement. In this way
-> we can reuse io_uring_register() without having to modify too much
-> io_uring_setup().
+> These functions do not check the return value of devm_clk_register():
+>   - sdhci_arasan_register_sdcardclk()
+>   - sdhci_arasan_register_sampleclk()
 >
-> >
-> > We'd need a way to clear IORING_SETUP_DISABLED through
-> > io_uring_register(). When clearing, that could then start the sq thread
-> > as well, when SQPOLL is set.
+> Therefore, add the missed checks to fix them.
 >
-> Could we do it using io_uring_enter() since we have a flag field or
-> do you think it's semantically incorrect?
->
-> @Jann, do you think this could work with seccomp?
+> Fixes: c390f2110adf1 ("mmc: sdhci-of-arasan: Add ability to export card clock")
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-To clarify that I understood your proposal correctly: Is the idea to
-have two types of mostly orthogonal restrictions; one type being
-restrictions on the opcode (supplied in io_uring_setup() and enforced
-immediately) and the other type being restrictions on
-io_uring_register() (enabled via IORING_ENTER_ENABLE_RESTRICTIONS)?
+Applied for next, thanks!
 
-That sounds fine to me. IORING_ENTER_ENABLE_RESTRICTIONS probably
-isn't necessary for your usecase though, right? Or is the idea to use
-that to suppress grace periods during setup in io_uring_register(), or
-something like that?
+Kind regards
+Uffe
+
+
+> ---
+>  drivers/mmc/host/sdhci-of-arasan.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index db9b544465cd..fb26e743e1fd 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -1299,6 +1299,8 @@ sdhci_arasan_register_sdcardclk(struct sdhci_arasan_data *sdhci_arasan,
+>         clk_data->sdcardclk_hw.init = &sdcardclk_init;
+>         clk_data->sdcardclk =
+>                 devm_clk_register(dev, &clk_data->sdcardclk_hw);
+> +       if (IS_ERR(clk_data->sdcardclk))
+> +               return PTR_ERR(clk_data->sdcardclk);
+>         clk_data->sdcardclk_hw.init = NULL;
+>
+>         ret = of_clk_add_provider(np, of_clk_src_simple_get,
+> @@ -1349,6 +1351,8 @@ sdhci_arasan_register_sampleclk(struct sdhci_arasan_data *sdhci_arasan,
+>         clk_data->sampleclk_hw.init = &sampleclk_init;
+>         clk_data->sampleclk =
+>                 devm_clk_register(dev, &clk_data->sampleclk_hw);
+> +       if (IS_ERR(clk_data->sampleclk))
+> +               return PTR_ERR(clk_data->sampleclk);
+>         clk_data->sampleclk_hw.init = NULL;
+>
+>         ret = of_clk_add_provider(np, of_clk_src_simple_get,
+> --
+> 2.26.2
+>
