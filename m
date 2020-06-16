@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E067C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5119C208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEBC21527
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322710;
-	bh=HpNJ3q8VhMPUwZr5wg2XHd0tXHo7Vqwt6uIEiQ4MXjM=;
+	s=default; t=1592322714;
+	bh=jgxcL1X6W2aAeM8W8i4kiLVRIxHvBOrwl3wrmQEKn/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oeKqxxhy9Ljo2dWRmRUXcajrmOxR/AqnQfE8+ayds1Xwl7mvJ1XRMqPULMcoCUpPf
-	 IluNZOROI7AGzjitRa3oUGGkVkbEHAYSeAJPs+yrs8dtMlJrZfdzwNuPyK7yw/BgAN
-	 TK7wZLoLz5IMLugbcc3cSETzpJT/e8CFBnjzRbpQ=
+	b=r7xLPnmsaYj8d5lJAu2JR+D8Blq44m0dbl2XPsK+W/jBQ+ExC24a0ufdKOPuSFbKB
+	 2ZiHgYVbj7hy1ldcyZRswSfGrFZWEPjrFMwQI0YJ5cnwOmS2nU9A7p3HKrBkjN5KJv
+	 l7ciLu0XeZvLJ3QruGkqJlu2pgKVz+PXRnBRsiYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731732AbgFPPvs (ORCPT
+        id S1731580AbgFPPvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:51:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:51:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732490AbgFPPve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:51:34 -0400
+        id S1732649AbgFPPvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:51:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C970E214DB;
-        Tue, 16 Jun 2020 15:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35E5521501;
+        Tue, 16 Jun 2020 15:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322694;
-        bh=HpNJ3q8VhMPUwZr5wg2XHd0tXHo7Vqwt6uIEiQ4MXjM=;
+        s=default; t=1592322696;
+        bh=jgxcL1X6W2aAeM8W8i4kiLVRIxHvBOrwl3wrmQEKn/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHfPruonOE3vI+OYSM1uXaAjrXiT4KOlOQlElVcPvjWm0LwD7f5Wcpjdq3uHuFSar
-         pW9vj28AiT11HzGTRuvnzU7hG2fAP/QQnVCL9Rf9ir45XGdlSLFFQaqTva/WMgkEY6
-         HYWiJnYAb0Df3rvO2cS7DHUHkHVgjrKb52Gg54wM=
+        b=Z7Gt90aOLj0KDOGSxXp6BSAVTceJeG3uxssDbb0li2saseV88jfDfkaFVGjb3eEZ1
+         pEOGBFgkc0opCv1PdVTtZEQjNNwB0FO13juhP8HYzVH7Gm5XkOeX8JQczxENY63oAI
+         Rqo/gR6anZshsDv6PhyrsouXZQch9D7TJ6/7D/9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 037/161] s390/pci: Log new handle in clp_disable_fh()
-Date:   Tue, 16 Jun 2020 17:33:47 +0200
-Message-Id: <20200616153108.149665067@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Cooper <andrew.cooper3@citrix.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 038/161] x86/cpu/amd: Make erratum #1054 a legacy erratum
+Date:   Tue, 16 Jun 2020 17:33:48 +0200
+Message-Id: <20200616153108.195884840@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,43 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Tesarik <ptesarik@suse.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-[ Upstream commit e1750a3d9abbea2ece29cac8dc5a6f5bc19c1492 ]
+[ Upstream commit e2abfc0448a46d8a137505aa180caf14070ec535 ]
 
-After disabling a function, the original handle is logged instead of
-the disabled handle.
+Commit
 
-Link: https://lkml.kernel.org/r/20200522183922.5253-1-ptesarik@suse.com
-Fixes: 17cdec960cf7 ("s390/pci: Recover handle in clp_set_pci_fn()")
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+  21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired
+		 counter IRPERF")
+
+mistakenly added erratum #1054 as an OS Visible Workaround (OSVW) ID 0.
+Erratum #1054 is not OSVW ID 0 [1], so make it a legacy erratum.
+
+There would never have been a false positive on older hardware that
+has OSVW bit 0 set, since the IRPERF feature was not available.
+
+However, save a couple of RDMSR executions per thread, on modern
+system configurations that correctly set non-zero values in their
+OSVW_ID_Length MSRs.
+
+[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors. The
+revision guide is available from the bugzilla link below.
+
+Fixes: 21b5ee59ef18 ("x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF")
+Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200417143356.26054-1-kim.phillips@amd.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/pci/pci_clp.c | 3 +--
+ arch/x86/kernel/cpu/amd.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-index 0d3d8f170ea4..25208fa95426 100644
---- a/arch/s390/pci/pci_clp.c
-+++ b/arch/s390/pci/pci_clp.c
-@@ -309,14 +309,13 @@ int clp_enable_fh(struct zpci_dev *zdev, u8 nr_dma_as)
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 1f875fbe1384..f04cc01e629e 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -1111,8 +1111,7 @@ static const int amd_erratum_383[] =
  
- int clp_disable_fh(struct zpci_dev *zdev)
+ /* #1054: Instructions Retired Performance Counter May Be Inaccurate */
+ static const int amd_erratum_1054[] =
+-	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
+-
++	AMD_LEGACY_ERRATUM(AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
+ 
+ static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
  {
--	u32 fh = zdev->fh;
- 	int rc;
- 
- 	if (!zdev_enabled(zdev))
- 		return 0;
- 
- 	rc = clp_set_pci_fn(zdev, 0, CLP_SET_DISABLE_PCI_FN);
--	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, fh, rc);
-+	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, zdev->fh, rc);
- 	return rc;
- }
- 
 -- 
 2.25.1
 
