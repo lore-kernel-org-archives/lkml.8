@@ -2,99 +2,122 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A36AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C105C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4069420B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E7A207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="xdXpHbJm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bs9VPbmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgFPNun (ORCPT
+        id S1729060AbgFPNvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728557AbgFPNul (ORCPT
+        Tue, 16 Jun 2020 09:51:11 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44800 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728644AbgFPNvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:50:41 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4CBC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:50:41 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g12so8415019pll.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wKgw8yL2fG/OFCaOWETgOyQMdJ8jj68sdqGzhJZN1iE=;
-        b=xdXpHbJm9xexh+go+YRBMq+GBe0v63E86PTybh8kJwGw2Rn6NiU60+Z9J3i10hlVDb
-         MuHwzp+3aGRK8R38H8fnfe6cMOLV1G/si5W0984JkNpB1m1RpA8PFCbPSTOKsuLP/p7F
-         hyK0JAyaKmzgMzJI21ZCzdtiulDl5OHuZuQm8gRL0FRT3JmbaplpTOF5sJ75xLWvLH8v
-         lD62Ty0mSSoOzoHlZL6TDx2h3ZbZzyclm9cNKXORJBqd9bz+c8xvg09AEIVUZUwBPY4e
-         9F1eLVUEGi9cza4aYmh4sN/qS+fQPISnFI4dgHI/r/cxFjCILIXGZv9BhcsZ47dO9eb1
-         Vxxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wKgw8yL2fG/OFCaOWETgOyQMdJ8jj68sdqGzhJZN1iE=;
-        b=I05oVkMaaT05pnz3cppI0ocMll07tmG9WNjmTuseGJ8TGARZyj259BxCGxgWAToH24
-         x1/1PocG5mAP1mvyLOzznwUWuKXJANXUF5cua7Ni6vg7ddqI0lRcqkTTvTtXfyaQjV8Z
-         nTlFQZzOlegcrrJduws7pLwNuw+HRiUpJhAWkQDNosZqq5g0NrgnMrNZRxM1Jq2JRJoS
-         +puQBE87zE7CjwBy4tG5zPU1PdxWGna8WuZPy0D3NBwksR5aGwvP3xhnXwM6O01VI1ZH
-         KYaMwKAOfqyJHC4Uo/zowxNKWkwAoVL5xhvpWURWsx66p5nvQ771ce6lrzBWbzWNyiOH
-         uzVA==
-X-Gm-Message-State: AOAM532DAPIo4DVWvFu47xnrPfv1VqioLZsMiLQuN6qDat2npCG0hM3M
-        He+0PqcyT89BE6BQAXWHOflRuA==
-X-Google-Smtp-Source: ABdhPJxQ/bgAkHjSLUQ1Ge4GhONjafEz01dOHSVJ60W/OI87vJ+Tvg9OgrgCGPeXcFaKuZxwykc9Tw==
-X-Received: by 2002:a17:90a:260e:: with SMTP id l14mr2969872pje.76.1592315440653;
-        Tue, 16 Jun 2020 06:50:40 -0700 (PDT)
-Received: from localhost.localdomain (118-171-140-99.dynamic-ip.hinet.net. [118.171.140.99])
-        by smtp.gmail.com with ESMTPSA id y81sm17451102pfb.33.2020.06.16.06.50.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 06:50:39 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: mt6358: Remove BROKEN dependency
-Date:   Tue, 16 Jun 2020 21:50:30 +0800
-Message-Id: <20200616135030.1163660-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 16 Jun 2020 09:51:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592315469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bW70KetN1S9pgLmduemj3sE+2f4ymbV6PKsDI2lVIow=;
+        b=bs9VPbmYoCplUqi+W3i0mJAR9XlKNpX6L13lLQw3Zcdx6lpgR1LpPqpLe6ulpJyOBj08r+
+        CdMPORHKUw/SW8cnvvqsgVunFTzuvVZ9S1zgBmUqm0oWd8ujKpEgPtrNBVpHjVS6J6BI4x
+        lnAL3vuohD7t6M0ljZhaWW7muXPVXrw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-400-WNGUn7ENPFa3byWrPY6RhQ-1; Tue, 16 Jun 2020 09:51:04 -0400
+X-MC-Unique: WNGUn7ENPFa3byWrPY6RhQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6239118C35BB;
+        Tue, 16 Jun 2020 13:51:02 +0000 (UTC)
+Received: from gondolin (ovpn-112-222.ams2.redhat.com [10.36.112.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5EB679303;
+        Tue, 16 Jun 2020 13:50:53 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 15:50:51 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+Message-ID: <20200616155051.5b842895.cohuck@redhat.com>
+In-Reply-To: <e130c5e7-40e5-40a8-eac3-c2d17c90ee7b@linux.ibm.com>
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+        <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+        <20200616115202.0285aa08.pasic@linux.ibm.com>
+        <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
+        <20200616135726.04fa8314.pasic@linux.ibm.com>
+        <20200616141744.61b3a139.cohuck@redhat.com>
+        <e130c5e7-40e5-40a8-eac3-c2d17c90ee7b@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MFD part is merged into v5.8-rc1, thus remove BROKEN dependency.
+On Tue, 16 Jun 2020 15:41:20 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On 2020-06-16 14:17, Cornelia Huck wrote:
+> > On Tue, 16 Jun 2020 13:57:26 +0200
+> > Halil Pasic <pasic@linux.ibm.com> wrote:
+> >   
+> >> On Tue, 16 Jun 2020 12:52:50 +0200
+> >> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> >>  
+> >>>>>    int virtio_finalize_features(struct virtio_device *dev)
+> >>>>>    {
+> >>>>>    	int ret = dev->config->finalize_features(dev);
+> >>>>> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
+> >>>>>    	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+> >>>>>    		return 0;
+> >>>>>    
+> >>>>> +	if (arch_needs_iommu_platform(dev) &&
+> >>>>> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+> >>>>> +		return -EIO;
+> >>>>> +  
+> >>>>
+> >>>> Why EIO?  
+> >>>
+> >>> Because I/O can not occur correctly?
+> >>> I am open to suggestions.  
+> >>
+> >> We use -ENODEV if feature when the device rejects the features we
+> >> tried to negotiate (see virtio_finalize_features()) and -EINVAL when
+> >> the F_VERSION_1 and the virtio-ccw revision ain't coherent (in
+> >> virtio_ccw_finalize_features()). Any of those seems more fitting
+> >> that EIO to me. BTW does the error code itself matter in any way,
+> >> or is it just OK vs some error?  
+> > 
+> > If I haven't lost my way, we end up in the driver core probe failure
+> > handling; we probably should do -ENODEV if we just want probing to fail
+> > and -EINVAL or -EIO if we want the code to moan.
+> >   
+> 
+> what about returning -ENODEV and add a dedicated warning here?
+> 
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index c398e90e0e73..f60eeaae7afd 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -694,7 +694,7 @@ config REGULATOR_MT6323
- 
- config REGULATOR_MT6358
- 	tristate "MediaTek MT6358 PMIC"
--	depends on MFD_MT6397 && BROKEN
-+	depends on MFD_MT6397
- 	help
- 	  Say y here to select this option to enable the power regulator of
- 	  MediaTek MT6358 PMIC.
--- 
-2.25.1
+Sounds good at least to me.
 
