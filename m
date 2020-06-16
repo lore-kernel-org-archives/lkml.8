@@ -2,86 +2,100 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25075C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1FAF214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DE6207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592329827;
-	bh=g7ios/s3I02DPjs0ABrvYdcdUrGeM5pb8RBMx9xux2c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nFHVARjlSwi1E7EFwraZXy4bGYxaKCg1jWve1IlaQqESRlSXVOf8WY8ZJRTBuMFta
-	 BmqtSfrzi32Cx1Es0kBX/T/KnUH0mwk1guV43ZZyeIPrgAhLPB1CqrxrvQn6qRVSZg
-	 9K6qPHGgksPJrpFlw/TYNgcUs5TQ/EErfq1AKfss=
+	s=default; t=1592329831;
+	bh=vo4tH3JRZUJ1nQkMWCc000fvUfJXx5ueaLCb1PSk8uU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=KRQwD8Ajbn83CjvFYOm7Jw7cWf+Ryiz61P6j2G83VSWEdX7cDRnrakNtvqcFgQxZ9
+	 65NdhzTdfkKf+RFaRXlf8GQ/9TuXHaJ8WjEzcac5YfidNAdWdOy6+XW/Ty8Fa4a/qN
+	 9ZWEGVG7NaCsk5kudQYJoV7g2pvVmsbdgbPk4j2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbgFPRuZ (ORCPT
+        id S1731103AbgFPRu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:50:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56014 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 13:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728785AbgFPRuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:50:25 -0400
-Received: from gmail.com (unknown [104.132.1.76])
+        id S1728785AbgFPRu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:50:26 -0400
+Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6636120739;
-        Tue, 16 Jun 2020 17:50:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1CA620776;
+        Tue, 16 Jun 2020 17:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592329824;
-        bh=g7ios/s3I02DPjs0ABrvYdcdUrGeM5pb8RBMx9xux2c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ws+wBGgPJoJJ1ulqBQPA4iR/uUgDrVMgFXNPSydGeX7CB16a8Ldh/rdeBRTn2u1mL
-         u3UJdzLAcBgbk89c0njyA3h+nKMmgSvZiow0EBl3KnRp+Vy27zfVRWQmLBigAYi3Nu
-         FxHaCLMFZQ2fRw7BpB2JqXPelkL+CdUpcdm32jBA=
-Date:   Tue, 16 Jun 2020 10:50:22 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Mike Snitzer <msnitzer@redhat.com>,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: Re: [dm-devel] [PATCH 4/4] crypto: fix the drivers that don't
- respect CRYPTO_TFM_REQ_MAY_SLEEP
-Message-ID: <20200616175022.GD207319@gmail.com>
-References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com>
- <20200610010450.GA6449@gondor.apana.org.au>
- <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com>
- <20200610121106.GA23137@gondor.apana.org.au>
- <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006161102250.28052@file01.intranet.prod.int.rdu2.redhat.com>
+        s=default; t=1592329826;
+        bh=vo4tH3JRZUJ1nQkMWCc000fvUfJXx5ueaLCb1PSk8uU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mPhNysb5XINMVXSr+gdSMOxrCo3cC6siFgnYxaBDyt/nZDVNnIc5bME+WsgB/Pkcl
+         VVH+gv14j50XOdzX16v/Bmyu9Flzt1BhcVpAou1II35xr4uaaI1/0HcbJe+LeBBuN9
+         I0cdk3Y+ZY0el0rGWWOemreqb/YEGASJy4jsh9WQ=
+Date:   Tue, 16 Jun 2020 12:55:43 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v2][next] staging: rts5208: Use array_size() helper in
+ vmalloc() and memset()
+Message-ID: <20200616175543.GA28687@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2006161102250.28052@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:02:50AM -0400, Mikulas Patocka wrote:
-> Fix the crypto drivers that don't respect CRYPTO_TFM_REQ_MAY_SLEEP. If
-> CRYPTO_TFM_REQ_MAY_SLEEP is not set, the driver must not do allocation
-> that sleeps.
-> 
-> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+The vmalloc() function has no 2-factor argument form, so multiplication
+factors need to be wrapped in array_size(). Also, while there, use
+array_size() in memset().
 
-I think you need to split this up per driver with a proper explanation and a
-"Fixes:" tag for each driver.
+This issue was found with the help of Coccinelle and, audited and fixed
+manually.
 
-Also, these bugs should have been detected by the crypto self-tests already,
-since they test having preemption disabled and CRYPTO_TFM_REQ_MAY_SLEEP cleared.
-Can you double check whether these are all valid fixes?  One thing to watch out
-for is that CRYPTO_TFM_REQ_MAY_SLEEP only applies to the function call like
-crypto_skcipher_encrypt() itself.  If the implementation is asynchronous and the
-request gets processed in the background (i.e. if crypto_skcipher_encrypt()
-returns -EINPROGRESS), the background work doesn't have to honor
-CRYPTO_TFM_REQ_MAY_SLEEP.
+Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Fix subject line and commit message. Previously, part of the subject
+   line, unintentionally, sneaked into the commit message.
 
-- Eric
+ drivers/staging/rts5208/ms.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/rts5208/ms.c b/drivers/staging/rts5208/ms.c
+index d53dd138a356..9001570a8c94 100644
+--- a/drivers/staging/rts5208/ms.c
++++ b/drivers/staging/rts5208/ms.c
+@@ -2306,14 +2306,14 @@ static int ms_build_l2p_tbl(struct rtsx_chip *chip, int seg_no)
+ 		if (!segment->l2p_table)
+ 			goto BUILD_FAIL;
+ 	}
+-	memset((u8 *)(segment->l2p_table), 0xff, table_size * 2);
++	memset((u8 *)(segment->l2p_table), 0xff, array_size(table_size, 2));
+ 
+ 	if (!segment->free_table) {
+-		segment->free_table = vmalloc(MS_FREE_TABLE_CNT * 2);
++		segment->free_table = vmalloc(array_size(MS_FREE_TABLE_CNT, 2));
+ 		if (!segment->free_table)
+ 			goto BUILD_FAIL;
+ 	}
+-	memset((u8 *)(segment->free_table), 0xff, MS_FREE_TABLE_CNT * 2);
++	memset((u8 *)(segment->free_table), 0xff, array_size(MS_FREE_TABLE_CNT, 2));
+ 
+ 	start = (u16)seg_no << 9;
+ 	end = (u16)(seg_no + 1) << 9;
+-- 
+2.27.0
+
