@@ -2,84 +2,107 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E93C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8676AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB53208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592320757;
-	bh=cR/WVUdzgqdDcyz4huGoobchsFZLWP6Q2tS1mzbNvwE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dFZifFIyHIp4rqbm+HT3pmpDdV7IoodbmNKw3kbg+1uVH0Ah4rCRQeKUGF6mlY36W
-	 y9n9pIVlU2xHdRXkjLzzLU97wK0iPjMwYW0vB4rWG0qid8LU/VeIvXn7lai9Z5/tqC
-	 xbHcraG3iBTmF2fQPNMsiPhmWDK/hNlcGOq1zmzk=
+	by mail.kernel.org (Postfix) with ESMTP id 58631208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:19:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7nbsQc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgFPPTP (ORCPT
+        id S1729823AbgFPPTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:19:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729005AbgFPPTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:19:12 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A7A5207C3;
-        Tue, 16 Jun 2020 15:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592320751;
-        bh=cR/WVUdzgqdDcyz4huGoobchsFZLWP6Q2tS1mzbNvwE=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=l/jZhiyZS5oMkzphSflTaqL4/JlPkWB9uB/SAi5scwIo3CEdv5/Pq751g/kU5sjSK
-         SPmWAvwlDhhqxGIrspHNf5faLhytt8dBfcoDeTpCEl+cknOx36gCYhWB6A2+elRstr
-         DBwTMu5E5OV76n4jne+n+QXeLvrhxuej8vf+HrVE=
-Date:   Tue, 16 Jun 2020 17:19:08 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-cc:     Federico Ricchiuto <fed.ricchiuto@gmail.com>, jikos@kernal.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor
- override
-In-Reply-To: <197d680d-a38b-b478-1b7a-9c821ada0846@redhat.com>
-Message-ID: <nycvar.YFH.7.76.2006161718550.13242@cbobk.fhfr.pm>
-References: <20200615204914.15549-1-fed.ricchiuto@gmail.com> <197d680d-a38b-b478-1b7a-9c821ada0846@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 16 Jun 2020 11:19:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728557AbgFPPTu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:19:50 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC84EC061573;
+        Tue, 16 Jun 2020 08:19:49 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id p20so21885953ejd.13;
+        Tue, 16 Jun 2020 08:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZiOuvmoSSjpVKcWmYlLX95BFlmP9sXL24P7r2+PCcjw=;
+        b=V7nbsQc91vxVAIyBNjXV42qarynuKWnnlkHUdfXx94u5/owbOVDlc2oJVCGQa9+EFM
+         pfq/HD6YnrQ4Sgi+LsIX7jWubCL2KbX4wRniV+OBQflmeFfnISgb8vek+ytchN72Mrv6
+         JKBKuQ8aKXg3qGX7I/u14IUwwbdZA56TRNM8faXyaNvxsSaQd8FONSoLU+/gs92IV36m
+         auNkbEKKUD5yvcrrhaRQxBXx5nvZMHMYY26660i97BrRiAX4kFj3un3PVOAdNjI7Mkws
+         dSC1XejS+4vfEshuthaN0jUPVuVHFdeFxNdg7zmQEvbfLZvtqL7egFEqB740FocQIT+A
+         P0uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZiOuvmoSSjpVKcWmYlLX95BFlmP9sXL24P7r2+PCcjw=;
+        b=rGndzBKCDqzu6gtQJ8hMFo/Y11vbzIEchNLVdisevcw2DkNoPUj09JaBzCksQD5+SW
+         udg4psTotI3B+RwKJJ6plkeOcB1Re1IoD8QEXK56/S/WStryOXxH6XreD8JQqP4cTpOg
+         kqnHHubGv8orcUMdn9o2bkNVDbY0EGs8FzAJC/l3D93kqzCfX0VeEJOaw0Hbh4I2sCKm
+         tYOU7UeZ+wpO6VUpYkNbB+FTcNC82iKsb+hUmiKlR9ksgFo6OBIKHD94j+RdyLO8gYRP
+         W76iMFJOQ7zCuFBJGwikn6Jtf9mgXdVNxV0+5T9OWH6tPE5ABIDbgTtCDXDYMoeUCt+E
+         q0xA==
+X-Gm-Message-State: AOAM531GtlGgP/OR7fAOuQTim8jJe31b7bZx1dVd07u8A0FXOx0Viwwl
+        tQBDb66WoqF5AhduLz72U8s=
+X-Google-Smtp-Source: ABdhPJxbyyjKnCOROp7UQPWuq/+0z2rga06zZ3FIwLZb/nkrHkqCkxQj+UpVq95519AoNZdnzQnE6w==
+X-Received: by 2002:a17:906:1f4f:: with SMTP id d15mr3259576ejk.206.1592320787673;
+        Tue, 16 Jun 2020 08:19:47 -0700 (PDT)
+Received: from localhost.localdomain ([188.26.56.128])
+        by smtp.gmail.com with ESMTPSA id ce23sm11368587ejc.53.2020.06.16.08.19.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 08:19:47 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, joakim.tjernlund@infinera.com,
+        madalin.bucur@oss.nxp.com, fido_max@inbox.ru,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 net 0/2] Reapply DSA fix for dpaa-eth with proper Fixes: tag
+Date:   Tue, 16 Jun 2020 18:19:08 +0300
+Message-Id: <20200616151910.3908882-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020, Hans de Goede wrote:
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-> Hi,
-> 
-> On 6/15/20 10:49 PM, Federico Ricchiuto wrote:
-> > The Mediacom FlexBook edge13 uses the SIPODEV SP1064 touchpad, which does
-> > not supply descriptors, so it has to be added to the override list.
-> > 
-> > Signed-off-by: Federico Ricchiuto <fed.ricchiuto@gmail.com>
-> 
-> It looks like you copied and pasted part of the commit message from
-> another patch (which is fine), but you need to update the Subject
-> (the first line of the commit message) the Subject now still
-> mentions the Trekstor Surfbook E11B rather then the
-> Mediacom FlexBook edge13.
-> 
-> Otherwise this looks good to me.
+Joakim notified me that this fix breaks stable trees.
+It turns out that my assessment about who-broke-who was wrong.
+The real Fixes: tag should have been:
 
-Thanks. I've fixed up the subject and applied.
+Fixes: 060ad66f9795 ("dpaa_eth: change DMA device")
+
+which changes the device on which SET_NETDEV_DEV is made.
+
+git describe --tags 060ad66f97954
+v5.4-rc3-783-g060ad66f9795
+
+Which means that it shouldn't have been backported to 4.19 and below.
+This series reverts the commit with the misleading commit message, and
+reapplies it with a corrected one. The resulting code is exactly the
+same, but now, the revert should make it to the stable trees (along with
+the bad fix), and the new fix should only make it down to v5.4.y.
+
+Changes in v2:
+Corrected the reversed sysfs paths in the new commit description.
+
+Vladimir Oltean (2):
+  Revert "dpaa_eth: fix usage as DSA master, try 3"
+  dpaa_eth: fix usage as DSA master, try 4
+
 
 -- 
-Jiri Kosina
-SUSE Labs
+2.25.1
 
