@@ -2,111 +2,100 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB28C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7764D207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:02:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sLbReXaG"
+	by mail.kernel.org (Postfix) with ESMTP id 899C820810
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592290986;
+	bh=air/hKC0z5+Ttcp0buy/L1uE6RcyvZHYqvLAfZqOw5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1uG9hEUMGr7uGYH0VPFU7VfIcVsLideenYRklvdEgy28dgS7RMVY3DxIDS0M/cC3z
+	 psZeIy5005tcJootK8my0Docz2CThiqH7SC4qiyxq55LAhA82PIn+DcqYRTrb3Htj1
+	 pD90pVWYqe58Y8i1/qoXTwg2fR2FI5Jmn2ddq+O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgFPHCq (ORCPT
+        id S1727796AbgFPHDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgFPHCa (ORCPT
+        Tue, 16 Jun 2020 03:03:05 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:41125 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbgFPHDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:02:30 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AEF8C05BD43;
-        Tue, 16 Jun 2020 00:02:30 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r7so19554020wro.1;
-        Tue, 16 Jun 2020 00:02:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hxEmWLfwHZP4Be2phdSbnhWMdtzjaR50DcbRvIkPnIU=;
-        b=sLbReXaGDklVC/wmWctEFgs5Myd1hGZTKnfLn1uS976ohunN6Cl+0+lu8WOXyp2oDX
-         twQjvyJQxLq8odtcTB3+FZFOHlWVO8VfgszE8GcRALNyJigwekf/QImno1yYn9xvEa0P
-         0TTJTF8pgre0wCBDac6pg59WDry8+EET0q5XyvalQCL6AyrxYB4KgJRrrLCw7yfZczsQ
-         0iRGjIB1637r6vtiwulMaHJenCBmMiXR3t2si280FE1yqfEWlI7o7+GQlR6TxZQ8Wgi1
-         WAL0DcUr6vH+UkHjQWvR39+7847ksKHnX2JqKSzH4+9OvDx4yAdz2CbW6ql/EeXZRknq
-         Ru2w==
+        Tue, 16 Jun 2020 03:03:01 -0400
+Received: by mail-ej1-f65.google.com with SMTP id dp18so2100945ejc.8;
+        Tue, 16 Jun 2020 00:02:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hxEmWLfwHZP4Be2phdSbnhWMdtzjaR50DcbRvIkPnIU=;
-        b=Rj4v7zBjgNT9KZPNrIOll11MCeYH95g6mJYlKaYMiulPyXF/kmuEw3w4g7TEfKAMKP
-         tf0UKR3Foig9AgcfxqyhgULtdTWF6ArYBVw5xgWuZ4pTCH2Srvo1kyW9hjTDl9yXmp0Q
-         fEr0ZYOS4YIm8laBUd51Fx6A8/hya2yweX5Dxslm6lNH6NC2Yayvev5+X8sjK9zjKqJg
-         FpPy+/BEuZFZmKm4w3YXW8RAoxPo0pWbbb6RggA8Ce6kYuWmC6MvXD8w35Gujrl0fjm3
-         b7wYdX3bTCVhDS11zao3kUuk3MfQ+Yigzpoy3kyoS2iUDj88BLm3YfMruMitz9icZ8al
-         c5og==
-X-Gm-Message-State: AOAM531RvhvCU/KtkZ63SerUQx+LdAdY3YXZBbcTZSqT8clwBrxVruVz
-        XeApzzZxCjkiZl+Adakwa32kQhLbTvk=
-X-Google-Smtp-Source: ABdhPJwDoaIXDyUzm7CintArNzHEB1nNJOCinL8DV2eNUbdJR0tdiWp7yguJ9LQxGl5k9phf2M3Kjg==
-X-Received: by 2002:a5d:4f09:: with SMTP id c9mr1417776wru.3.1592290948741;
-        Tue, 16 Jun 2020 00:02:28 -0700 (PDT)
-Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id a81sm2792897wmd.25.2020.06.16.00.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 00:02:28 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     broonie@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v3 2/4] spi: bcm63xx-spi: allow building for BMIPS
-Date:   Tue, 16 Jun 2020 09:02:21 +0200
-Message-Id: <20200616070223.3401282-3-noltari@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616070223.3401282-1-noltari@gmail.com>
-References: <20200616070223.3401282-1-noltari@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=W+RINVE0XAWlLx/NciRZL3CxZwQ8/XrClWGZWDn4nfE=;
+        b=SUl4rQGIHivhb71P38XTo3bb5chjpqgajocfue2hqT6SnY6ArjPxgQTExOnU4iZ5b6
+         QX2QjT8b6UOVGPN0ikVzyb93tmRiuHXZzz7iFdjSk2lJSp92QghQMckn5Bd0No/eaJ95
+         SqjC0vjQl/DkBkBv757gP3kgdLTTZux1+/M64fB4lQWS658ZsRs3+xG8wxCA5MDktY/3
+         tVDlK3IDx/bd1qtPARuNae+XlpV6SKp/ya4qsQpednwqot+T2QVWF9l/uzgr+VfOtomv
+         mCPTHv6kir7GauYdNwQeYztpU/s/gIzfFxULEc8WGhq6ofHH+ob5EXCWWqVY3kpCLoUS
+         pquA==
+X-Gm-Message-State: AOAM530yjinjsQU8j5BI9o7G+e3IqytlFNG5r/VtiltddsUbPEmNr+yr
+        eRShRpsoO62B1me90lHew6s=
+X-Google-Smtp-Source: ABdhPJxl4oyx9iQxhRGORq2pzdp+iXjssmPRevhLNp+7V95nN07E3myCv4N1zJvRvpw1FVDX/qymKQ==
+X-Received: by 2002:a17:906:4b50:: with SMTP id j16mr1504437ejv.415.1592290978329;
+        Tue, 16 Jun 2020 00:02:58 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id ce14sm10568034ejc.3.2020.06.16.00.02.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Jun 2020 00:02:57 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 09:02:54 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH RESEND v4] soc: samsung: Add simple voltage coupler for
+ Exynos5800
+Message-ID: <20200616070254.GA20282@kozik-lap>
+References: <CGME20200616065834eucas1p268ef16744422664c783b17f0a18c53e2@eucas1p2.samsung.com>
+ <20200616065821.29616-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200616065821.29616-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bcm63xx-spi controller is present on several BMIPS SoCs (BCM6358, BCM6362,
-BCM6368 and BCM63268).
+On Tue, Jun 16, 2020 at 08:58:21AM +0200, Marek Szyprowski wrote:
+> Add a simple custom voltage regulator coupler for Exynos5800 SoCs, which
+> require coupling between "vdd_arm" and "vdd_int" regulators. This coupler
+> ensures that the voltage values don't go below the bootloader-selected
+> operation point during the boot process until a the clients sets their
+> constraints. It is achieved by assuming minimal voltage value equal to
+> the current value if no constraints are set. This also ensures proper
+> voltage balancing if any of the client driver is missing.
+> 
+> The balancing code comes from the regulator/core.c with the additional
+> logic for handling regulators without client constraints applied added.
+> 
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- v3: no changes
- v2: no changes
+Thanks, applied.
 
- drivers/spi/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 8f1f8fca79e3..a9896e388355 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -149,7 +149,7 @@ config SPI_BCM2835AUX
- 
- config SPI_BCM63XX
- 	tristate "Broadcom BCM63xx SPI controller"
--	depends on BCM63XX || COMPILE_TEST
-+	depends on BCM63XX || BMIPS_GENERIC || COMPILE_TEST
- 	help
- 	  Enable support for the SPI controller on the Broadcom BCM63xx SoCs.
- 
--- 
-2.27.0
+Best regards,
+Krzysztof
 
