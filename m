@@ -2,213 +2,175 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2871CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89FA820656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C9420656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzgs82Ty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgFPIbz (ORCPT
+        id S1728091AbgFPIcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
+        Tue, 16 Jun 2020 04:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgFPIbw (ORCPT
+        with ESMTP id S1728074AbgFPIcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:31:52 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F402C03E96A
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:31:52 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jl70Q-0002wZ-Oz; Tue, 16 Jun 2020 10:31:42 +0200
-Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jl70P-0002HP-4b; Tue, 16 Jun 2020 10:31:41 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        kernel@pengutronix.de, Russell King <linux@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 1/2] net: ethernet: mvneta: Fix Serdes configuration for SoCs without comphy
-Date:   Tue, 16 Jun 2020 10:31:39 +0200
-Message-Id: <20200616083140.8498-1-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
+        Tue, 16 Jun 2020 04:32:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8381C03E97C
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:32:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id s1so22496356ljo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sQ4U7wvoNlcpjuMW/4KAQuHPsQCChERlSO2SrjCLc4A=;
+        b=yzgs82TyqjiolbSZa0hACzF4gN7GCdrUZ3PkJIwNsxrwGymEWug+COKC95YBk6TI0K
+         2Y0WbWcE0rB11ecpIHasmBOEfu2LHU1jVxms4CkS6c1YBhHphAVGDqxKnQPW4PBBc7hb
+         LMdJwAntiTOBJmW2XA6P3lnRabzZ3UT3E9uy8o/U1SwZ5oitYwRLHc5WSAN8DB/8WxGH
+         VrB15nm/FvXI/F5bPdrN/KsIQp6inbymvEpyLN7rdC7zEFqzsH+Jxw7zBeSbaDF9hj4Z
+         jaXPYaexNoE0Z92Ldpp3NqRRd9Su8ihOkFK3xJAvMTKv498p1DzKxsLxehhJydEQaZ+i
+         fWig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sQ4U7wvoNlcpjuMW/4KAQuHPsQCChERlSO2SrjCLc4A=;
+        b=GjziAUHb6WiJRG9pasVH061zB/I6jF91nDSs5u53JBrqxKJLBuxouvdMijWNuKyMEH
+         kelWx3LNz8Jjq8Rvtroh5FxjIrcqINpAyp2vZYZA0cH8HCb+wltLXStBHOVpIjvSG+Ss
+         D95f+Gbl6sc/+2XAA/3wJHuL7c64oh1SJLgQVryZlOm409pzbv2zvNH0ruOJvyWSRbKY
+         aiZxefnJoO/B5SPYhAmCpCxHaLVBn/i67M6UbBV3BN/QjVKtepqdYgwS940pN5c3CN0V
+         VPZi2Y9hSTUMNHLtGJ0knLJ7E7NMv6flm68096DLRg0FiWUERNfNMsTN/R+Q4S+5sWQh
+         hU1A==
+X-Gm-Message-State: AOAM531QvF9GhTRmqGLcM3wDwhQ26ux4qd/4VimP1ENHbAuzqekH9Mrp
+        YIshRs1IQIFvSmLisy64WVNV1MrXeWiF/YiG3MQIrQ==
+X-Google-Smtp-Source: ABdhPJzDjr7Vp4IVSdnf58s8G/HEW2ciu0txbLcKtPfjhvTLWtyM16wHBxujqgvNRbb533tvY8VqBYbmo4AT2CdyIOc=
+X-Received: by 2002:a2e:350a:: with SMTP id z10mr837916ljz.104.1592296325111;
+ Tue, 16 Jun 2020 01:32:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200608125143.GA2789203@x1>
+In-Reply-To: <20200608125143.GA2789203@x1>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 16 Jun 2020 10:31:54 +0200
+Message-ID: <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MVNETA_SERDES_CFG register is only available on older SoCs like the
-Armada XP. On newer SoCs like the Armada 38x the fields are moved to
-comphy. This patch moves the writes to this register next to the comphy
-initialization, so that depending on the SoC either comphy or
-MVNETA_SERDES_CFG is configured.
-With this we no longer write to the MVNETA_SERDES_CFG on SoCs where it
-doesn't exist.
+On Mon, Jun 8, 2020 at 2:51 PM Drew Fustini <drew@beagleboard.org> wrote:
 
-Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- drivers/net/ethernet/marvell/mvneta.c | 80 +++++++++++++++------------
- 1 file changed, 44 insertions(+), 36 deletions(-)
+> This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
+> pinctrl_map is added.  The current behavior is to return 0 when
+> !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+> incorrectly assumes that a map was added and sets num_maps = 2.
+>
+> Analysis:
+> =========
+> The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+> if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+> returns 0 to indicate there was no error and num_maps is then set to 2:
+>
+>  980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+>  981                                                 struct device_node *np,
+>  982                                                 struct pinctrl_map **map,
+>  983                                                 unsigned *num_maps,
+>  984                                                 const char **pgnames)
+>  985 {
+> <snip>
+> 1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+> 1054         (*map)->data.mux.group = np->name;
+> 1055         (*map)->data.mux.function = np->name;
+> 1056
+> 1057         if (PCS_HAS_PINCONF && function) {
+> 1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+> 1059                 if (res)
+> 1060                         goto free_pingroups;
+> 1061                 *num_maps = 2;
+> 1062         } else {
+> 1063                 *num_maps = 1;
+> 1064         }
+>
+> However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+> !nconfs.  I believe these conditions should indicate that no map was
+> added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
+> will set num_maps = 2 even though no maps were successfully added, as
+> it does not reach "m++" on line 940:
+>
+>  895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>  896                              struct pcs_function *func,
+>  897                              struct pinctrl_map **map)
+>  898
+>  899 {
+>  900         struct pinctrl_map *m = *map;
+> <snip>
+>  917         /* If pinconf isn't supported, don't parse properties in below. */
+>  918         if (!PCS_HAS_PINCONF)
+>  919                 return 0;
+>  920
+>  921         /* cacluate how much properties are supported in current node */
+>  922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+>  923                 if (of_find_property(np, prop2[i].name, NULL))
+>  924                         nconfs++;
+>  925         }
+>  926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+>  927                 if (of_find_property(np, prop4[i].name, NULL))
+>  928                         nconfs++;
+>  929         }
+>  930         if (!nconfs)
+>  919                 return 0;
+>  932
+>  933         func->conf = devm_kcalloc(pcs->dev,
+>  934                                   nconfs, sizeof(struct pcs_conf_vals),
+>  935                                   GFP_KERNEL);
+>  936         if (!func->conf)
+>  937                 return -ENOMEM;
+>  938         func->nconfs = nconfs;
+>  939         conf = &(func->conf[0]);
+>  940         m++;
+>
+> This situtation will cause a boot failure [0] on the BeagleBone Black
+> (AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+> has compatible = "pinconf-single" instead of "pinctrl-single".
+>
+> The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+> or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+> map was added.
+>
+> Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
+> between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
+> is set to 1 as it is valid for pinconf to be enabled and a given pin
+> group to not any pinconf properties.
+>
+> [0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+>
+> Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 51889770958d8..9933eb4577d43 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -106,6 +106,7 @@
- #define      MVNETA_TX_IN_PRGRS                  BIT(1)
- #define      MVNETA_TX_FIFO_EMPTY                BIT(8)
- #define MVNETA_RX_MIN_FRAME_SIZE                 0x247c
-+/* Only exists on Armada XP and Armada 370 */
- #define MVNETA_SERDES_CFG			 0x24A0
- #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
- #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-@@ -3514,26 +3515,55 @@ static int mvneta_setup_txqs(struct mvneta_port *pp)
- 	return 0;
- }
- 
--static int mvneta_comphy_init(struct mvneta_port *pp)
-+static int mvneta_comphy_init(struct mvneta_port *pp, phy_interface_t interface)
- {
- 	int ret;
- 
--	if (!pp->comphy)
--		return 0;
--
--	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET,
--			       pp->phy_interface);
-+	ret = phy_set_mode_ext(pp->comphy, PHY_MODE_ETHERNET, interface);
- 	if (ret)
- 		return ret;
- 
- 	return phy_power_on(pp->comphy);
- }
- 
-+static int mvneta_config_interface(struct mvneta_port *pp,
-+				   phy_interface_t interface)
-+{
-+	int ret = 0;
-+
-+	if (pp->comphy) {
-+		if (interface == PHY_INTERFACE_MODE_SGMII ||
-+		    interface == PHY_INTERFACE_MODE_1000BASEX ||
-+		    interface == PHY_INTERFACE_MODE_2500BASEX) {
-+			ret = mvneta_comphy_init(pp, interface);
-+		}
-+	} else {
-+		switch (interface) {
-+		case PHY_INTERFACE_MODE_QSGMII:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_QSGMII_SERDES_PROTO);
-+			break;
-+
-+		case PHY_INTERFACE_MODE_SGMII:
-+		case PHY_INTERFACE_MODE_1000BASEX:
-+			mvreg_write(pp, MVNETA_SERDES_CFG,
-+				    MVNETA_SGMII_SERDES_PROTO);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	pp->phy_interface = interface;
-+
-+	return ret;
-+}
-+
- static void mvneta_start_dev(struct mvneta_port *pp)
- {
- 	int cpu;
- 
--	WARN_ON(mvneta_comphy_init(pp));
-+	WARN_ON(mvneta_config_interface(pp, pp->phy_interface));
- 
- 	mvneta_max_rx_size_set(pp, pp->pkt_size);
- 	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
-@@ -3907,14 +3937,10 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
- 	if (state->speed == SPEED_2500)
- 		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
- 
--	if (pp->comphy && pp->phy_interface != state->interface &&
--	    (state->interface == PHY_INTERFACE_MODE_SGMII ||
--	     state->interface == PHY_INTERFACE_MODE_1000BASEX ||
--	     state->interface == PHY_INTERFACE_MODE_2500BASEX)) {
--		pp->phy_interface = state->interface;
--
--		WARN_ON(phy_power_off(pp->comphy));
--		WARN_ON(mvneta_comphy_init(pp));
-+	if (pp->phy_interface != state->interface) {
-+		if (pp->comphy)
-+			WARN_ON(phy_power_off(pp->comphy));
-+		WARN_ON(mvneta_config_interface(pp, state->interface));
- 	}
- 
- 	if (new_ctrl0 != gmac_ctrl0)
-@@ -4958,20 +4984,10 @@ static void mvneta_conf_mbus_windows(struct mvneta_port *pp,
- }
- 
- /* Power up the port */
--static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
-+static void mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
- {
- 	/* MAC Cause register should be cleared */
- 	mvreg_write(pp, MVNETA_UNIT_INTR_CAUSE, 0);
--
--	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
--		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
--	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
--		 phy_interface_mode_is_8023z(phy_mode))
--		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
--	else if (!phy_interface_mode_is_rgmii(phy_mode))
--		return -EINVAL;
--
--	return 0;
- }
- 
- /* Device initialization routine */
-@@ -5157,11 +5173,7 @@ static int mvneta_probe(struct platform_device *pdev)
- 	if (err < 0)
- 		goto err_netdev;
- 
--	err = mvneta_port_power_up(pp, phy_mode);
--	if (err < 0) {
--		dev_err(&pdev->dev, "can't power up port\n");
--		goto err_netdev;
--	}
-+	mvneta_port_power_up(pp, phy_mode);
- 
- 	/* Armada3700 network controller does not support per-cpu
- 	 * operation, so only single NAPI should be initialized.
-@@ -5315,11 +5327,7 @@ static int mvneta_resume(struct device *device)
- 		}
- 	}
- 	mvneta_defaults_set(pp);
--	err = mvneta_port_power_up(pp, pp->phy_interface);
--	if (err < 0) {
--		dev_err(device, "can't power up port\n");
--		return err;
--	}
-+	mvneta_port_power_up(pp, pp->phy_interface);
- 
- 	netif_device_attach(dev);
- 
--- 
-2.27.0
+Patch applied as non-critical (for-next) fix.
 
+If there is no hurry let's merge it this way with lots of testing
+along the way.
+
+Yours,
+Linus Walleij
