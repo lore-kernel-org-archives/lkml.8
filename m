@@ -2,244 +2,162 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51824C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46419C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF9D20707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A5820707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:14:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="b5JLPgOh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HbVTefFi";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="He+5c+Jd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgFPONH (ORCPT
+        id S1729196AbgFPOOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:13:07 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:43570 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgFPONF (ORCPT
+        Tue, 16 Jun 2020 10:14:00 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:38436 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbgFPON7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:13:05 -0400
+        Tue, 16 Jun 2020 10:13:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592316839; x=1623852839;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=5ru8INMLguJmSGjgKHqEdPjyXEvO+zybcMK9YmIq9xk=;
+  b=HbVTefFiYH3zHgGHysAR0U8L+2DbyzDzFG+X/zN05XorUMnMUdln2df4
+   gBbH7SfPX+W/qF5do0c5btMqoJt5uogFEyR4q64w2zFyy2HCdlfMk7qbK
+   BOdgFD4irhVFnf5Zb+xN187tOHjigCXCRTdpzXdUubRqOp3S9HjYO/AOF
+   4HH1ewRe+GZfd2xmQ3lm+8KrJ23h8xKQBhGJDgMDvdoeufVWFobRvT58b
+   YCj3kbmKeiB+sSfbiA5TZmSE3SFmkN1l+e8ZsCd+Dqbf9HSdoUfOrsnqu
+   id2E+KrVEvghy4+FcVVhAiOxlCOgnV80P6zuBIrGBRYandkpyRvmcj2eg
+   Q==;
+IronPort-SDR: eb1TYldMd1Mnu88G0cqZmXiReI1uNw3O7v0HvCjGcJM4k3RT3jhTf9RkwjYCRYiyoRxEF+Ezlo
+ TfvQGLaIpLZ0q0c5Cos75Ns/pf52eWH6yIRo41Gz6hWgwJtrL1b8LTQUJo5MyxsFdgFzCBgwLb
+ eQLhXYiCRP77sx5GMCauDe+Y7SSK/SXou6TUyIW6rVBCE6UjDZTHfNfo7cwPgXGo3ADAMQCK2Y
+ 6Rf33CgQH4RixLHY5UInSiDZ+Eo9ClEKrMv643A1Zd/z2JrrXN8aiVNVKizSnB0rD1iTpLD8ui
+ e6w=
+X-IronPort-AV: E=Sophos;i="5.73,518,1583164800"; 
+   d="scan'208";a="140131335"
+Received: from mail-dm6nam11lp2170.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.170])
+  by ob1.hgst.iphmx.com with ESMTP; 16 Jun 2020 22:13:57 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S1BL/xPG/PeVHvec0QZJ/uY5lGpQnNwwd6+mo7XvXeOkOdYK3MwJ+SSMdeooMkIg6Cf8NXJlCaUe9vdzHYmYmleFb50nUDk9V4nuusduq+aV+n7i8MieWHC7ZI1xWDk4teMBTJmaGIhda68kTVWWCYnBFjPkaqoEKrktLvKYe3UwaHGv2t373hLI/Q0Q846v4wOCxeZdhc9mRHVXn8TcwkLgaEkzIyT8hRWIOoYQIX+5aq7j8ccQbt4yvVgOl0LsKsQszDb0Lq8fxtG/6whhPHl1uFp9Ra5uolAdan/2IHpzN80ltBXgyUi7biKpAXgBqCxuKAuV4fpokdHDVBOMDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N1ADHNg3PJ8+F4rqdl0gQ3PQ436o5b5tv/CbEdwgCQI=;
+ b=CEbVripfhKgISVX0M/QdgE8Mg9S+fjHmlH0Sbb01xAShIdPSQNbHYrZU8rXSyEz0LupXPv38eV+kR1VW5Kp0Z1WpwZ7N0B286aCntnqTgefhFgQBkhvoU6NCjiQw6sEdj/WsWizEEmxig9RKvmXwJby1Vmxd42h7owd+5KJcOsqper1oBHUKpajI9nYH1henVOCteiWrQI4sBFg51Fuih21NZXCluYZ3mQi7pvapFY9JFOM7GB/5ieHYGkHyJ1ate+Z8g/Ugaicf09nZ34ZchgZmLc++IwweF2yA3w32VrV36mnVrJO0SG3XmFlDDuZ6zRT/QEysWPGtBjtjR8E7mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592316785; x=1623852785;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Ca8DlQAlerKhHdi7ITKEKAXpP8xJZRRbzDPmzlgJzIw=;
-  b=b5JLPgOhievFcyaP20syy/j4pbfnpboXC7OwfDmqXizdOxBtukpV48ri
-   UNcXaEQ/hNG76cDaM6gHS+a+TGG+nelQ3EAjjFrB76SedmHT/9+ARPiqq
-   VadgQmnXjz18j6nHWuPuB7nYqumaLhvVeLbkQpWR2E2VH5m5XvKfndvWs
-   s=;
-IronPort-SDR: mKStTPImit/pCNcb2IDZHuCxECcH8x0uzJXcu1UblBWEBSVsl0/0LPfh5vydNSndJGIEofM1tr
- 2HMzmozVAw0A==
-X-IronPort-AV: E=Sophos;i="5.73,518,1583193600"; 
-   d="scan'208";a="51357153"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 16 Jun 2020 14:13:04 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id CD30CA22AC;
-        Tue, 16 Jun 2020 14:13:01 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Jun 2020 14:13:01 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.109) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Jun 2020 14:12:33 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <david@redhat.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v4 8/8] Docs/damon: Document physical memory monitoring support
-Date:   Tue, 16 Jun 2020 16:08:13 +0200
-Message-ID: <20200616140813.17863-9-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616140813.17863-1-sjpark@amazon.com>
-References: <20200616140813.17863-1-sjpark@amazon.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N1ADHNg3PJ8+F4rqdl0gQ3PQ436o5b5tv/CbEdwgCQI=;
+ b=He+5c+JduqYVwDgoZLzLVAVFpWnnCKAeguaXri55yYn8dZ4stgpyo5ZOBFJZTB5yVZkrtuJSlnIxMfhHrzSvj95GGD3SjGw0jykEWOLKrfc2KTB+kXzcev9cRurv5YaaLYC69gmCP+FomngMbbgLUSX4KqRFFus3gKBA+RasdTs=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB4046.namprd04.prod.outlook.com
+ (2603:10b6:805:4a::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Tue, 16 Jun
+ 2020 14:13:54 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3088.028; Tue, 16 Jun 2020
+ 14:13:54 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Chris Boot <bootc@boo.tc>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux1394-devel@lists.sourceforge.net" 
+        <linux1394-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>
+Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
+Thread-Topic: [PATCH] scsi: target/sbp: remove firewire SBP target driver
+Thread-Index: AQHWQd9L9CW+VqfbYUW2am9N2FcWXg==
+Date:   Tue, 16 Jun 2020 14:13:54 +0000
+Message-ID: <SN4PR0401MB35982D889857E3C03E96E49D9B9D0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com>
+ <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet>
+ <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc>
+ <alpine.LNX.2.22.394.2006150919110.8@nippy.intranet>
+ <8da0c285-d707-a3d2-063e-472af5cc560f@boo.tc>
+ <alpine.LNX.2.22.394.2006161929380.8@nippy.intranet>
+ <8cbab988-fba7-8e27-7faf-9f7aa36ca235@acm.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: acm.org; dkim=none (message not signed)
+ header.d=none;acm.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f4b67696-eab0-46ae-3391-08d811ff808d
+x-ms-traffictypediagnostic: SN6PR04MB4046:
+x-microsoft-antispam-prvs: <SN6PR04MB4046EA5A9CBA518F7A07276F9B9D0@SN6PR04MB4046.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04362AC73B
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YUSiJ8Hwm5WME7OmxRDuxyB71Y3IvMKlMBomEvN3y9i/j8mSnTwJNagsNBfHhvpYxwsHTGRsozO8eZT27nP27ZLLlLo7RRk87/U+INkW4F5o2H9kdKYlb1V52crQuvA8zfbgta6hLo2oBEPTUTIGsUpQ5cSYhgLn4AWbpYC5B7Ar1h06FlQM+AQOW+1JtR6yDcaMe7sFqYkMTYwoqPx4K3R70DbjngaT5iANnwAx4B4eNP6AyFXRGz2ilpJzaX76f7IMquOTGz0Lf3PZeFWjRT2mNRdLaDQa7J1M89gjeW180NABk4wYwIvl/vIX0H4ML5vzA+4d+dQO2osmaLnUFQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(52536014)(2906002)(9686003)(26005)(55016002)(498600001)(5660300002)(6506007)(4326008)(53546011)(4744005)(86362001)(8936002)(110136005)(7696005)(7416002)(66946007)(76116006)(186003)(91956017)(33656002)(66476007)(66556008)(64756008)(66446008)(71200400001)(54906003)(8676002)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: dZrsZbRzUHnP4XBXwlFVJemPGBxUFP38bAC/JG522uMsZ6cxXI/i+92j/xcIXqn79I1MJxQwWr7al9YZknqvbv9ROOyvhma9mkRn7LcCl+BVsYwbJ6unDv+XBVSNU0UPmVscvalEiUhEjA2o44yYoXwwLieaPHgiBTeUPXTxIFmQGYZ+XksrrQKHeIbcswOSeCiiYKWDknUwhMBzIB5E6c5IqNXJAST5NKF88BX/yCUqddOLUFhnCv8Yk/qzOQbmCFLEYJxlon5Cf9M60IQgCDP9pbxLCwFRLRd0FpcM4bPApph/9FsTTcIDMD+hj0IKdEf/SKJM653mHaLR23jTtx71mvX83Xc14OEKBoc9xfviqQ81G5LLE21opmDH+jq7ZnRQ9koeqMt3UsaXPCg6icYiYsp2TyhIuutbXQMJDNbLRVi//jIKZ56IpPHH8raZU9lcewMQMfki5XtGGQwWNIAlsaA6v5Br4Hi10u6Sim/DiCJ4CN9uvaJTJJMAg01i
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.109]
-X-ClientProxiedBy: EX13D01UWB004.ant.amazon.com (10.43.161.157) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4b67696-eab0-46ae-3391-08d811ff808d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2020 14:13:54.2486
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: D0cCNG3TTt5CBTr4ejKQQmhSKY5P9ZXep4z+lTTVW87qxHFI4DQ2bul+90jMIcZgur/xgnaRMG3ZsJO70aPsvYzUw2KpsYc/PcNyMUoXngY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
-
-This commit adds description for the physical memory monitoring usage in
-the DAMON document.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- Documentation/admin-guide/mm/damon/faq.rst   |  7 +--
- Documentation/admin-guide/mm/damon/index.rst |  1 -
- Documentation/admin-guide/mm/damon/plans.rst |  7 ---
- Documentation/admin-guide/mm/damon/usage.rst | 59 ++++++++++++++------
- 4 files changed, 46 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/admin-guide/mm/damon/plans.rst
-
-diff --git a/Documentation/admin-guide/mm/damon/faq.rst b/Documentation/admin-guide/mm/damon/faq.rst
-index b1f108009115..d72d6182d7ea 100644
---- a/Documentation/admin-guide/mm/damon/faq.rst
-+++ b/Documentation/admin-guide/mm/damon/faq.rst
-@@ -45,10 +45,9 @@ constructions and actual access checks can be implemented and configured on the
- DAMON core by the users.  In this way, DAMON users can monitor any address
- space with any access check technique.
- 
--Nonetheless, DAMON provides a vma tracking and PTE Accessed bit check based
--implementation of the address space dependent functions for the virtual memory
--by default, for a reference and convenient use.  In near future, we will also
--provide that for physical memory address space.
-+Nonetheless, DAMON provides vma/rmap tracking and PTE Accessed bit check based
-+implementations of the address space dependent functions for the virtual memory
-+and the physical memory by default, for a reference and convenient use.
- 
- 
- Can I simply monitor page granularity?
-diff --git a/Documentation/admin-guide/mm/damon/index.rst b/Documentation/admin-guide/mm/damon/index.rst
-index 4d128e4fd9c8..7b2939d50408 100644
---- a/Documentation/admin-guide/mm/damon/index.rst
-+++ b/Documentation/admin-guide/mm/damon/index.rst
-@@ -33,4 +33,3 @@ optimizations of their systems.
-    faq
-    mechanisms
-    eval
--   plans
-diff --git a/Documentation/admin-guide/mm/damon/plans.rst b/Documentation/admin-guide/mm/damon/plans.rst
-deleted file mode 100644
-index 765344f02eb3..000000000000
---- a/Documentation/admin-guide/mm/damon/plans.rst
-+++ /dev/null
-@@ -1,7 +0,0 @@
--.. SPDX-License-Identifier: GPL-2.0
--
--============
--Future Plans
--============
--
--TBD.
-diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index 24f1b05a859a..b2bcbd6ebe9d 100644
---- a/Documentation/admin-guide/mm/damon/usage.rst
-+++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -61,9 +61,11 @@ Recording Data Access Pattern
- -----------------------------
- 
- The ``record`` subcommand records the data access pattern of target processes
--in a file (``./damon.data`` by default).  You can specify the target as either
--pid of running target or a command for execution of the process.  Below example
--shows a command target usage::
-+in a file (``./damon.data`` by default).  You can specify the target with 1)
-+the command for execution of the monitoring target process, 2) pid of running
-+target process, or 3) the special keyword, 'paddr', if you want to monitor the
-+system's physical memory address space.  Below example shows a command target
-+usage::
- 
-     # cd <kernel>/tools/damon/
-     # damo record "sleep 5"
-@@ -74,6 +76,15 @@ of the process.  Below example shows a pid target usage::
-     # sleep 5 &
-     # damo record `pidof sleep`
- 
-+Finally, below example shows the use of the special keyword, 'paddr'::
-+
-+    # damo record paddr
-+
-+In this case, the monitoring target regions defaults to the largetst 'System
-+RAM' region specified in '/proc/iomem' file.  Note that the initial monitoring
-+target region is maintained rather than dynamically updated like the virtual
-+memory address spaces monitoring mode.
-+
- You can tune this by setting the monitoring attributes and path to the record
- file using optional arguments to the subcommand.  To know about the monitoring
- attributes in detail, please refer to :doc:`mechanisms`.
-@@ -317,27 +328,42 @@ check it again::
- Target PIDs
- -----------
- 
--Users can get and set the pids of monitoring target processes by reading from
--and writing to the ``pids`` file.  For example, below commands set processes
--having pids 42 and 4242 as the processes to be monitored and check it again::
-+To monitor the virtual memory address spaces of specific processes, users can
-+get and set the pids of monitoring target processes by reading from and writing
-+to the ``pids`` file.  For example, below commands set processes having pids 42
-+and 4242 as the processes to be monitored and check it again::
- 
-     # cd <debugfs>/damon
-     # echo 42 4242 > pids
-     # cat pids
-     42 4242
- 
-+Users can also monitor the physical memory address space of the system by
-+writing a special keyword, "``paddr\n``" to the file.  In this case, reading the
-+file will show ``-1``, as below::
-+
-+    # cd <debugfs>/damon
-+    # echo paddr > pids
-+    # cat pids
-+    -1
-+
- Note that setting the pids doesn't start the monitoring.
- 
- 
- Initial Monitoring Target Regions
- ---------------------------------
- 
--DAMON automatically sets and updates the monitoring target regions so that
--entire memory mappings of target processes can be covered.  However, users
--might want to limit the monitoring region to specific address ranges, such as
--the heap, the stack, or specific file-mapped area.  Or, some users might know
--the initial access pattern of their workloads and therefore want to set optimal
--initial regions for the 'adaptive regions adjustment'.
-+In case of the virtual memory monitoring, DAMON automatically sets and updates
-+the monitoring target regions so that entire memory mappings of target
-+processes can be covered.  However, users might want to limit the monitoring
-+region to specific address ranges, such as the heap, the stack, or specific
-+file-mapped area.  Or, some users might know the initial access pattern of
-+their workloads and therefore want to set optimal initial regions for the
-+'adaptive regions adjustment'.
-+
-+In contrast, DAMON do not automatically sets and updates the monitoring target
-+regions in case of physical memory monitoring.  Therefore, users should set the
-+monitoring target regions by themselves.
- 
- In such cases, users can explicitly set the initial monitoring target regions
- as they want, by writing proper values to the ``init_regions`` file.  Each line
-@@ -357,10 +383,11 @@ region of process 42, and another couple of address ranges, ``20-40`` and
-             4242 20      40
-             4242 50      100" > init_regions
- 
--Note that this sets the initial monitoring target regions only.  DAMON will
--automatically updates the boundary of the regions after one ``regions update
--interval``.  Therefore, users should set the ``regions update interval`` large
--enough.
-+Note that this sets the initial monitoring target regions only.  In case of
-+virtual memory monitoring, DAMON will automatically updates the boundary of the
-+regions after one ``regions update interval``.  Therefore, users should set the
-+``regions update interval`` large enough in this case, if they don't want the
-+update.
- 
- 
- Record
--- 
-2.17.1
-
+On 16/06/2020 16:09, Bart Van Assche wrote:=0A=
+> On 2020-06-16 02:42, Finn Thain wrote:=0A=
+>> Martin said, "I'd appreciate a patch to remove it"=0A=
+>>=0A=
+>> And Bart said, "do you want to keep this driver in the kernel tree?"=0A=
+>>=0A=
+>> AFAICT both comments are quite ambiguous. I don't see an actionable =0A=
+>> request, just an expression of interest from people doing their jobs.=0A=
+>>=0A=
+>> Note well: there is no pay check associated with having a MAINTAINERS fi=
+le =0A=
+>> entry.=0A=
+> =0A=
+> Hi Finn,=0A=
+> =0A=
+> As far as I know the sbp driver only has had one user ever and that user=
+=0A=
+> is no longer user the sbp driver. So why to keep it in the kernel tree?=
+=0A=
+> Restoring a kernel driver can be easy - the first step is a "git revert".=
+=0A=
+=0A=
+Why not move the driver to drivers/staging for 2 or 3 kernel releases and i=
+f=0A=
+noone steps up, delete it?=0A=
+=0A=
+Just my 2 Cents,=0A=
+	Johannes=0A=
