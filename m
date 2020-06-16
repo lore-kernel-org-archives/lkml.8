@@ -2,224 +2,335 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB86C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D84992074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKop8COr"
+	by mail.kernel.org (Postfix) with ESMTP id 62B11207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgFPGOZ (ORCPT
+        id S1727930AbgFPGOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:14:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgFPGNm (ORCPT
+        Tue, 16 Jun 2020 02:14:31 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:38846 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727071AbgFPGO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:13:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC7CC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e1so19441598wrt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QzwpjUlStGFh9vQc8qqG1fW1x83wdzxqePQHAKluHfs=;
-        b=YKop8COrLC3QBJhHb3LzsX6BbngMzMP4UXvwC5YpuLvt3tW09DefuruU1Kkc2+oOMk
-         kbJZr7r0KcpGAyA3tx+fhwm5ppaMdof9EtvtE/OMWxhLaQzZco3ORiRro7mti16KK9yb
-         D7dMN1TDNDZvEljyEchn+IAuSO6/tMpX0fAe3fNXNsoPLP+nqn/133j2yxR/kYrtnSt2
-         a8V1KsbiVkGk1rwtV76gVZGG9cBeTyodqqUJRH0kccCrPjTnIhCTp5EgiXsMPytNtxG6
-         VznSA+PADgVzB4lTw292KHalK4sdhWbooIdUBSNJYdwlHTsL+hUR9Icq5Bc3ka2iOutr
-         HIYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=QzwpjUlStGFh9vQc8qqG1fW1x83wdzxqePQHAKluHfs=;
-        b=rpy6yGjh+b0nC4ahBaKhFbdYF4HRdUcyEbrJTfeBMVY0/UvEflOLIiiyXggJCsPGNB
-         Qcaoqtz2a08Kn1sbn6s9EKC1guC9KRm/aNbT4xTCFnyJnQtNZeZSTx2b2w8GVmwHIf4s
-         y571TR/RPMp7QZ1T5rKLDVZk74v/RR/gAfj3Z1NGmbr5iK/3Dd9OwKlGw1W3Xo1A/mLO
-         UoI5KK412Eev5y8oY0jVn9aUYfg2ajybGmfNmGIvI+12wNj7e5tISmUAC0qNffeSPAxl
-         LqIKJ4aNCkH9bLylgP6YiSD06Sht9fCc7djCKCjJtdEzVCSJ9aaPnMm2sZgrQw5V/3bw
-         hBlQ==
-X-Gm-Message-State: AOAM530Psw98hG7zoAextslN04FrcOb/OVgD/t9cL21XBjUpjkVSd8RP
-        nAYUnNRW51Xhl9EnqUoKDDIz192BK08=
-X-Google-Smtp-Source: ABdhPJzLHbPAOJG10FLI30D96d3W/rgLvQxGAY0iytHxAdaE5wGf8j4+t30zkT0YNO7tKPmznSjZAA==
-X-Received: by 2002:a5d:69ca:: with SMTP id s10mr1271193wrw.203.1592288019977;
-        Mon, 15 Jun 2020 23:13:39 -0700 (PDT)
-Received: from ODED-MAIN.localdomain ([87.71.142.251])
-        by smtp.gmail.com with ESMTPSA id s2sm2354963wmh.15.2020.06.15.23.13.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 23:13:39 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     gregkh@linuxfoundation.org, Ofir Bitton <obitton@habana.ai>
-Subject: [PATCH 4/7] habanalabs: Use mask instead of shift in sync stream registers
-Date:   Tue, 16 Jun 2020 09:13:24 +0300
-Message-Id: <20200616061327.12006-4-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616061327.12006-1-oded.gabbay@gmail.com>
-References: <20200616061327.12006-1-oded.gabbay@gmail.com>
+        Tue, 16 Jun 2020 02:14:29 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0U.l4uVw_1592288061;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U.l4uVw_1592288061)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 16 Jun 2020 14:14:21 +0800
+Subject: Re: [PATCH v11 00/16] per memcg lru lock
+To:     Hugh Dickins <hughd@google.com>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
+ <alpine.LSU.2.11.2006072100390.2001@eggly.anvils>
+ <31943f08-a8e8-be38-24fb-ab9d25fd96ff@linux.alibaba.com>
+ <alpine.LSU.2.11.2006091904530.2779@eggly.anvils>
+ <730c595b-f4bf-b16a-562e-de25b9b7eb97@linux.alibaba.com>
+ <alpine.LSU.2.11.2006111409280.10801@eggly.anvils>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <cc471d42-4e7d-b8ec-bc2f-ee85090231fb@linux.alibaba.com>
+Date:   Tue, 16 Jun 2020 14:14:19 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.LSU.2.11.2006111409280.10801@eggly.anvils>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Bitton <obitton@habana.ai>
 
-Use proper bitfield masks instead of shifting values when configuring
-packets sent to device.
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/gaudi/gaudi.c         | 70 ++++++++++---------
- .../habanalabs/include/gaudi/gaudi_packets.h  |  4 +-
- 2 files changed, 38 insertions(+), 36 deletions(-)
+在 2020/6/12 上午6:09, Hugh Dickins 写道:
+>>> I thought that a very safe change, but best to do some test runs with
+>>> it in before finalizing. And was then unpleasantly surprised to hit a
+>>> VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup) from
+>>> lock_page_lruvec_irqsave < relock_page_lruvec < pagevec_lru_move_fn <
+>>> pagevec_move_tail < lru_add_drain_cpu after 6 hours on one machine.
+>>> Then similar but < rotate_reclaimable_page after 8 hours on another.
+>>>
+>>> Only seen once before: that's what drove me to add patch 4 (with 3 to
+>>> revert the locking before it): somehow, when adding the lruvec locking
+>>> there, I just took it for granted that your patchset would have the
+>>> appropriate locking (or TestClearPageLRU magic) at the other end.
+>>>
+>>> But apparently not. And I'm beginning to think that TestClearPageLRU
+>>> was just to distract the audience from the lack of proper locking.
+>>>
+>>> I have certainly not concluded that yet, but I'm having to think about
+>>> an area of the code which I'd imagined you had under control (and I'm
+>>> puzzled why my testing has found it so very hard to hit). If we're
+>>> lucky, I'll find that pagevec_move_tail is a special case, and
+>>> nothing much else needs changing; but I doubt that will be so.
+> ... shows that your locking primitives are not yet good enough
+> to handle the case when tasks are moved between memcgs with
+> move_charge_at_immigrate set.  "bin/cg m" in the tests I sent,
+> but today I'm changing its "seconds=60" to "seconds=1" in hope
+> of speeding up the reproduction.
+> 
+> Ah, good, two machines crashed in 1.5 hours: but I don't need to
+> examine the crashes, now that it's obvious there's no protection -
+> please, think about rotate_reclaimable_page() (there will be more
+> cases, but in practice that seems easiest to hit, so focus on that)
+> and how it is not protected from mem_cgroup_move_account().
+> 
+> I'm thinking too. Maybe judicious use of lock_page_memcg() can fix it
+> (8 years ago it was unsuitable, but a lot has changed for the better
+> since then); otherwise it's back to what I've been doing all along,
+> taking the likely lruvec lock, and checking under that lock whether
+> we have the right lock (as your lruvec_memcg_debug() does), retrying
+> if not. Which may be more efficient than involving lock_page_memcg().
+> 
+Hi Hugh,
 
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index 9ce032466243..1ac7eb2498ef 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -21,6 +21,7 @@
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/iommu.h>
- #include <linux/seq_file.h>
-+#include <linux/bitfield.h>
+Thanks a lot for the report!
+
+Think again lru_move_fn and mem_cgroup_move_account relation. I found
+if we want to change the pgdat->lru_lock to memcg's lruvec lock, we have
+to serialize mem_cgroup_move_account during pagevec_lru_move_fn. Otherwise
+the possible bad scenario would like:
+
+        cpu 0                                   cpu 1
+    lruvec = mem_cgroup_page_lruvec()
+                                        if (!isolate_lru_page())
+                                                mem_cgroup_move_account
+
+    spin_lock_irqsave(&lruvec->lru_lock <== wrong lock.
+
+So we need the ClearPageLRU to block isolate_lru_page(), then serialize
+the memcg change here. Do relock check would get a mitigation, but not
+solution.
+
+The following patch fold vm event PGROTATED into pagevec_move_tail_fn
+and fixed this problem by ClearPageLRU before page moving between lru
+I will split them into 2 patches, and merge into v12 patchset.
+
+Reported-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+
+
+diff --git a/mm/swap.c b/mm/swap.c
+index eba0c17dffd8..fa211157bfec 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -200,8 +200,7 @@ int get_kernel_page(unsigned long start, int write, struct page **pages)
+ EXPORT_SYMBOL_GPL(get_kernel_page);
+ 
+ static void pagevec_lru_move_fn(struct pagevec *pvec,
+-	void (*move_fn)(struct page *page, struct lruvec *lruvec, void *arg),
+-	void *arg)
++	void (*move_fn)(struct page *page, struct lruvec *lruvec), bool add)
+ {
+ 	int i;
+ 	struct lruvec *lruvec = NULL;
+@@ -210,8 +209,14 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
+ 	for (i = 0; i < pagevec_count(pvec); i++) {
+ 		struct page *page = pvec->pages[i];
+ 
++		if (!add && !TestClearPageLRU(page))
++			continue;
++
+ 		lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
+-		(*move_fn)(page, lruvec, arg);
++		(*move_fn)(page, lruvec);
++
++		if (!add)
++			SetPageLRU(page);
+ 	}
+ 	if (lruvec)
+ 		unlock_page_lruvec_irqrestore(lruvec, flags);
+@@ -219,35 +224,23 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
+ 	pagevec_reinit(pvec);
+ }
+ 
+-static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec,
+-				 void *arg)
++static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec)
+ {
+-	int *pgmoved = arg;
+-
+ 	if (PageLRU(page) && !PageUnevictable(page)) {
+ 		del_page_from_lru_list(page, lruvec, page_lru(page));
+ 		ClearPageActive(page);
+ 		add_page_to_lru_list_tail(page, lruvec, page_lru(page));
+-		(*pgmoved) += hpage_nr_pages(page);
++		__count_vm_events(PGROTATED, hpage_nr_pages(page));
+ 	}
+ }
  
  /*
-  * Gaudi security scheme:
-@@ -6289,16 +6290,17 @@ static void gaudi_gen_signal_cb(struct hl_device *hdev, void *data, u16 sob_id)
- 	pkt = (struct packet_msg_short *) (uintptr_t) cb->kernel_address;
- 	memset(pkt, 0, sizeof(*pkt));
+- * pagevec_move_tail() must be called with IRQ disabled.
+- * Otherwise this may cause nasty races.
+- */
+-static void pagevec_move_tail(struct pagevec *pvec)
+-{
+-	int pgmoved = 0;
+-
+-	pagevec_lru_move_fn(pvec, pagevec_move_tail_fn, &pgmoved);
+-	__count_vm_events(PGROTATED, pgmoved);
+-}
+-
+-/*
+  * Writeback is about to end against a page which has been marked for immediate
+  * reclaim.  If it still appears to be reclaimable, move it to the tail of the
+  * inactive list.
++ *
++ * pagevec_move_tail_fn() must be called with IRQ disabled.
++ * Otherwise this may cause nasty races.
+  */
+ void rotate_reclaimable_page(struct page *page)
+ {
+@@ -260,7 +253,7 @@ void rotate_reclaimable_page(struct page *page)
+ 		local_lock_irqsave(&lru_rotate.lock, flags);
+ 		pvec = this_cpu_ptr(&lru_rotate.pvec);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+-			pagevec_move_tail(pvec);
++			pagevec_lru_move_fn(pvec, pagevec_move_tail_fn, false);
+ 		local_unlock_irqrestore(&lru_rotate.lock, flags);
+ 	}
+ }
+@@ -302,8 +295,7 @@ void lru_note_cost_page(struct page *page)
+ 		      page_is_file_lru(page), hpage_nr_pages(page));
+ }
  
--	value = 1 << GAUDI_PKT_SHORT_VAL_SOB_SYNC_VAL_SHIFT; /* inc by 1 */
--	value |= 1 << GAUDI_PKT_SHORT_VAL_SOB_MOD_SHIFT; /* add mode */
-+	/* Inc by 1, Mode ADD */
-+	value = FIELD_PREP(GAUDI_PKT_SHORT_VAL_SOB_SYNC_VAL_MASK, 1);
-+	value |= FIELD_PREP(GAUDI_PKT_SHORT_VAL_SOB_MOD_MASK, 1);
+-static void __activate_page(struct page *page, struct lruvec *lruvec,
+-			    void *arg)
++static void __activate_page(struct page *page, struct lruvec *lruvec)
+ {
+ 	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
+ 		int lru = page_lru_base_type(page);
+@@ -327,7 +319,7 @@ static void activate_page_drain(int cpu)
+ 	struct pagevec *pvec = &per_cpu(lru_pvecs.activate_page, cpu);
  
--	ctl = (sob_id * 4) << GAUDI_PKT_SHORT_CTL_ADDR_SHIFT; /* SOB id */
--	ctl |= 0 << GAUDI_PKT_SHORT_CTL_OP_SHIFT; /* write the value */
--	ctl |= 3 << GAUDI_PKT_SHORT_CTL_BASE_SHIFT; /* W_S SOB base */
--	ctl |= PACKET_MSG_SHORT << GAUDI_PKT_SHORT_CTL_OPCODE_SHIFT;
--	ctl |= 1 << GAUDI_PKT_SHORT_CTL_EB_SHIFT;
--	ctl |= 1 << GAUDI_PKT_SHORT_CTL_RB_SHIFT;
--	ctl |= 1 << GAUDI_PKT_SHORT_CTL_MB_SHIFT;
-+	ctl = FIELD_PREP(GAUDI_PKT_SHORT_CTL_ADDR_MASK, sob_id * 4);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_OP_MASK, 0); /* write the value */
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_BASE_MASK, 3); /* W_S SOB base */
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_OPCODE_MASK, PACKET_MSG_SHORT);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_EB_MASK, 1);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_RB_MASK, 1);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_MB_MASK, 1);
+ 	if (pagevec_count(pvec))
+-		pagevec_lru_move_fn(pvec, __activate_page, NULL);
++		pagevec_lru_move_fn(pvec, __activate_page, false);
+ }
  
- 	pkt->value = cpu_to_le32(value);
- 	pkt->ctl = cpu_to_le32(ctl);
-@@ -6311,12 +6313,12 @@ static u32 gaudi_add_mon_msg_short(struct packet_msg_short *pkt, u32 value,
+ static bool need_activate_page_drain(int cpu)
+@@ -345,7 +337,7 @@ void activate_page(struct page *page)
+ 		pvec = this_cpu_ptr(&lru_pvecs.activate_page);
+ 		get_page(page);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+-			pagevec_lru_move_fn(pvec, __activate_page, NULL);
++			pagevec_lru_move_fn(pvec, __activate_page, false);
+ 		local_unlock(&lru_pvecs.lock);
+ 	}
+ }
+@@ -515,8 +507,7 @@ void lru_cache_add_active_or_unevictable(struct page *page,
+  * be write it out by flusher threads as this is much more effective
+  * than the single-page writeout from reclaim.
+  */
+-static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+-			      void *arg)
++static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec)
+ {
+ 	int lru;
+ 	bool active;
+@@ -563,8 +554,7 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+ 	}
+ }
  
- 	memset(pkt, 0, pkt_size);
+-static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+-			    void *arg)
++static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec)
+ {
+ 	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
+ 		int lru = page_lru_base_type(page);
+@@ -581,8 +571,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+ 	}
+ }
  
--	ctl = addr << GAUDI_PKT_SHORT_CTL_ADDR_SHIFT;
--	ctl |= 2 << GAUDI_PKT_SHORT_CTL_BASE_SHIFT; /* W_S MON base */
--	ctl |= PACKET_MSG_SHORT << GAUDI_PKT_SHORT_CTL_OPCODE_SHIFT;
--	ctl |= 0 << GAUDI_PKT_SHORT_CTL_EB_SHIFT;
--	ctl |= 1 << GAUDI_PKT_SHORT_CTL_RB_SHIFT;
--	ctl |= 0 << GAUDI_PKT_SHORT_CTL_MB_SHIFT; /* only last pkt needs MB */
-+	ctl = FIELD_PREP(GAUDI_PKT_SHORT_CTL_ADDR_MASK, addr);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_BASE_MASK, 2);  /* W_S MON base */
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_OPCODE_MASK, PACKET_MSG_SHORT);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_EB_MASK, 0);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_RB_MASK, 1);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_MB_MASK, 0); /* last pkt MB */
+-static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+-			    void *arg)
++static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec)
+ {
+ 	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
+ 	    !PageSwapCache(page) && !PageUnevictable(page)) {
+@@ -625,21 +614,21 @@ void lru_add_drain_cpu(int cpu)
  
- 	pkt->value = cpu_to_le32(value);
- 	pkt->ctl = cpu_to_le32(ctl);
-@@ -6332,18 +6334,19 @@ static u32 gaudi_add_arm_monitor_pkt(struct packet_msg_short *pkt, u16 sob_id,
+ 		/* No harm done if a racing interrupt already did this */
+ 		local_lock_irqsave(&lru_rotate.lock, flags);
+-		pagevec_move_tail(pvec);
++		pagevec_lru_move_fn(pvec, pagevec_move_tail_fn, false);
+ 		local_unlock_irqrestore(&lru_rotate.lock, flags);
+ 	}
  
- 	memset(pkt, 0, pkt_size);
+ 	pvec = &per_cpu(lru_pvecs.lru_deactivate_file, cpu);
+ 	if (pagevec_count(pvec))
+-		pagevec_lru_move_fn(pvec, lru_deactivate_file_fn, NULL);
++		pagevec_lru_move_fn(pvec, lru_deactivate_file_fn, false);
  
--	value = (sob_id / 8) << GAUDI_PKT_SHORT_VAL_MON_SYNC_GID_SHIFT;
--	value |= sob_val << GAUDI_PKT_SHORT_VAL_MON_SYNC_VAL_SHIFT;
--	value |= 0 << GAUDI_PKT_SHORT_VAL_MON_MODE_SHIFT; /* GREATER_OR_EQUAL */
--	value |= mask << GAUDI_PKT_SHORT_VAL_MON_MASK_SHIFT;
-+	value = FIELD_PREP(GAUDI_PKT_SHORT_VAL_MON_SYNC_GID_MASK, sob_id / 8);
-+	value |= FIELD_PREP(GAUDI_PKT_SHORT_VAL_MON_SYNC_VAL_MASK, sob_val);
-+	value |= FIELD_PREP(GAUDI_PKT_SHORT_VAL_MON_MODE_MASK,
-+			0); /* GREATER OR EQUAL*/
-+	value |= FIELD_PREP(GAUDI_PKT_SHORT_VAL_MON_MASK_MASK, mask);
+ 	pvec = &per_cpu(lru_pvecs.lru_deactivate, cpu);
+ 	if (pagevec_count(pvec))
+-		pagevec_lru_move_fn(pvec, lru_deactivate_fn, NULL);
++		pagevec_lru_move_fn(pvec, lru_deactivate_fn, false);
  
--	ctl = addr << GAUDI_PKT_SHORT_CTL_ADDR_SHIFT;
--	ctl |= 0 << GAUDI_PKT_SHORT_CTL_OP_SHIFT; /* write the value */
--	ctl |= 2 << GAUDI_PKT_SHORT_CTL_BASE_SHIFT; /* W_S MON base */
--	ctl |= PACKET_MSG_SHORT << GAUDI_PKT_SHORT_CTL_OPCODE_SHIFT;
--	ctl |= 0 << GAUDI_PKT_SHORT_CTL_EB_SHIFT;
--	ctl |= 1 << GAUDI_PKT_SHORT_CTL_RB_SHIFT;
--	ctl |= 1 << GAUDI_PKT_SHORT_CTL_MB_SHIFT;
-+	ctl = FIELD_PREP(GAUDI_PKT_SHORT_CTL_ADDR_MASK, addr);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_OP_MASK, 0); /* write the value */
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_BASE_MASK, 2); /* W_S MON base */
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_OPCODE_MASK, PACKET_MSG_SHORT);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_EB_MASK, 0);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_RB_MASK, 1);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_MB_MASK, 1);
+ 	pvec = &per_cpu(lru_pvecs.lru_lazyfree, cpu);
+ 	if (pagevec_count(pvec))
+-		pagevec_lru_move_fn(pvec, lru_lazyfree_fn, NULL);
++		pagevec_lru_move_fn(pvec, lru_lazyfree_fn, false);
  
- 	pkt->value = cpu_to_le32(value);
- 	pkt->ctl = cpu_to_le32(ctl);
-@@ -6357,15 +6360,14 @@ static u32 gaudi_add_fence_pkt(struct packet_fence *pkt)
+ 	activate_page_drain(cpu);
+ }
+@@ -668,7 +657,7 @@ void deactivate_file_page(struct page *page)
+ 		pvec = this_cpu_ptr(&lru_pvecs.lru_deactivate_file);
  
- 	memset(pkt, 0, pkt_size);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+-			pagevec_lru_move_fn(pvec, lru_deactivate_file_fn, NULL);
++			pagevec_lru_move_fn(pvec, lru_deactivate_file_fn, false);
+ 		local_unlock(&lru_pvecs.lock);
+ 	}
+ }
+@@ -690,7 +679,7 @@ void deactivate_page(struct page *page)
+ 		pvec = this_cpu_ptr(&lru_pvecs.lru_deactivate);
+ 		get_page(page);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+-			pagevec_lru_move_fn(pvec, lru_deactivate_fn, NULL);
++			pagevec_lru_move_fn(pvec, lru_deactivate_fn, false);
+ 		local_unlock(&lru_pvecs.lock);
+ 	}
+ }
+@@ -712,7 +701,7 @@ void mark_page_lazyfree(struct page *page)
+ 		pvec = this_cpu_ptr(&lru_pvecs.lru_lazyfree);
+ 		get_page(page);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+-			pagevec_lru_move_fn(pvec, lru_lazyfree_fn, NULL);
++			pagevec_lru_move_fn(pvec, lru_lazyfree_fn, false);
+ 		local_unlock(&lru_pvecs.lock);
+ 	}
+ }
+@@ -913,8 +902,7 @@ void __pagevec_release(struct pagevec *pvec)
+ }
+ EXPORT_SYMBOL(__pagevec_release);
  
--	cfg = 1 << GAUDI_PKT_FENCE_CFG_DEC_VAL_SHIFT;
--	cfg |= 1 << GAUDI_PKT_FENCE_CFG_TARGET_VAL_SHIFT;
--	cfg |= 2 << GAUDI_PKT_FENCE_CFG_ID_SHIFT;
-+	cfg = FIELD_PREP(GAUDI_PKT_FENCE_CFG_DEC_VAL_MASK, 1);
-+	cfg |= FIELD_PREP(GAUDI_PKT_FENCE_CFG_TARGET_VAL_MASK, 1);
-+	cfg |= FIELD_PREP(GAUDI_PKT_FENCE_CFG_ID_MASK, 2);
+-static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
+-				 void *arg)
++static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec)
+ {
+ 	enum lru_list lru;
+ 	int was_unevictable = TestClearPageUnevictable(page);
+@@ -973,7 +961,7 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
+  */
+ void __pagevec_lru_add(struct pagevec *pvec)
+ {
+-	pagevec_lru_move_fn(pvec, __pagevec_lru_add_fn, NULL);
++	pagevec_lru_move_fn(pvec, __pagevec_lru_add_fn, true);
+ }
  
--	ctl = 0 << GAUDI_PKT_FENCE_CTL_PRED_SHIFT;
--	ctl |= PACKET_FENCE << GAUDI_PKT_FENCE_CTL_OPCODE_SHIFT;
--	ctl |= 0 << GAUDI_PKT_FENCE_CTL_EB_SHIFT;
--	ctl |= 1 << GAUDI_PKT_FENCE_CTL_RB_SHIFT;
--	ctl |= 1 << GAUDI_PKT_FENCE_CTL_MB_SHIFT;
-+	ctl = FIELD_PREP(GAUDI_PKT_FENCE_CTL_OPCODE_MASK, PACKET_FENCE);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_EB_MASK, 0);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_RB_MASK, 1);
-+	ctl |= FIELD_PREP(GAUDI_PKT_SHORT_CTL_MB_MASK, 1);
- 
- 	pkt->cfg = cpu_to_le32(cfg);
- 	pkt->ctl = cpu_to_le32(ctl);
-diff --git a/drivers/misc/habanalabs/include/gaudi/gaudi_packets.h b/drivers/misc/habanalabs/include/gaudi/gaudi_packets.h
-index 9a5800b0086b..02d62bc53f7f 100644
---- a/drivers/misc/habanalabs/include/gaudi/gaudi_packets.h
-+++ b/drivers/misc/habanalabs/include/gaudi/gaudi_packets.h
-@@ -85,7 +85,7 @@ struct packet_msg_long {
- };
- 
- #define GAUDI_PKT_SHORT_VAL_SOB_SYNC_VAL_SHIFT	0
--#define GAUDI_PKT_SHORT_VAL_SOB_SYNC_VAL_MASK	0x0000EFFF
-+#define GAUDI_PKT_SHORT_VAL_SOB_SYNC_VAL_MASK	0x00007FFF
- 
- #define GAUDI_PKT_SHORT_VAL_SOB_MOD_SHIFT	31
- #define GAUDI_PKT_SHORT_VAL_SOB_MOD_MASK	0x80000000
-@@ -141,7 +141,7 @@ struct packet_msg_prot {
- #define GAUDI_PKT_FENCE_CFG_TARGET_VAL_MASK	0x00FF0000
- 
- #define GAUDI_PKT_FENCE_CFG_ID_SHIFT		30
--#define GAUDI_PKT_FENCE_CFG_ID_MASK		0xC000000
-+#define GAUDI_PKT_FENCE_CFG_ID_MASK		0xC0000000
- 
- #define GAUDI_PKT_FENCE_CTL_PRED_SHIFT		0
- #define GAUDI_PKT_FENCE_CTL_PRED_MASK		0x0000001F
--- 
-2.17.1
-
+ /**
