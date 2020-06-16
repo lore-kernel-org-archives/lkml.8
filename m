@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9545C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBC4214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB032151B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322006;
-	bh=rslNjUeVlj97qpEPQRjAVmForQmuPgw5erM9aaqm87g=;
+	s=default; t=1592322010;
+	bh=YpiDX//DCZyndsHiTNDCXemrMW/Ng3bYPltKA4HZ0As=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQRcvZtHaIpV0GZerxjSkWWrYyVeyiQLaZdmzJzYv1RkLa9yf4Yhzx0LT4SOBSI6r
-	 zjHhAtAyfg+GLzv4qCLuT3j+Kw/QpZEOQBg1XmT6fO5xEUGankvu91ujqueWSJZpw2
-	 XfhAKrl5t76B183k9qxK8NrS88ZMrE1fO90jNYfc=
+	b=mXMjGIIeN7v52sx3UCTEAJ+g1G4E/sF5X3IL93grKftLPH7/7t+Xc9p0+Ra7w/LD3
+	 R+ndo+qjeR6N0Xhi0vouOjo01si+AjiGkgEzp2X7Yhr+dzm27PbZlWegD+CdzW5uCJ
+	 PEaQcatfttzrELmFwJL84r05172ihDK3dcZUJSSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731096AbgFPPkF (ORCPT
+        id S1731106AbgFPPkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:40:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731069AbgFPPj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:58 -0400
+        id S1730247AbgFPPkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C53E821475;
-        Tue, 16 Jun 2020 15:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECE1B21475;
+        Tue, 16 Jun 2020 15:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321998;
-        bh=rslNjUeVlj97qpEPQRjAVmForQmuPgw5erM9aaqm87g=;
+        s=default; t=1592322003;
+        bh=YpiDX//DCZyndsHiTNDCXemrMW/Ng3bYPltKA4HZ0As=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHCQOzofcOskyBdKz1V9ZtPwOVJdSCbsS2wyXDO8Hgm5G2AHHzyVXi9JdGGbluDFJ
-         ycit4+VHvKPvYTfLfGUnaCJH0XFg3GVrVpms3TWApFcv176KPnxyP4bNHcIf9jsZOh
-         iycz8KkkwxWBmBk1LAUFFABpkxFp1qN2IP/VswFk=
+        b=tmFkT8IqM5xcIxKS0RUm1FJsyQChqZsDsYh6TPKLISCdEtETbHt8PPfxLkQMStgVj
+         em63ev9P89wpDZV7c16B4caDLG8AGW8WSNW93VN8aYxsstOntS+b9ZP7/ZGpmZUtDW
+         65qsvfy5APIiI5Gkt/Z+T80cNQKvhzURSGv1GEoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Tero Kristo <t-kristo@ti.com>, Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 096/134] remoteproc: Fall back to using parent memory pool if no dedicated available
-Date:   Tue, 16 Jun 2020 17:34:40 +0200
-Message-Id: <20200616153105.380956788@linuxfoundation.org>
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 098/134] cpufreq: Fix up cpufreq_boost_set_sw()
+Date:   Tue, 16 Jun 2020 17:34:42 +0200
+Message-Id: <20200616153105.476609204@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -62,52 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit db9178a4f8c4e523f824892cb8bab00961b07385 upstream.
+commit 552abb884e97d26589964e5a8c7e736f852f95f0 upstream.
 
-In some cases, like with OMAP remoteproc, we are not creating dedicated
-memory pool for the virtio device. Instead, we use the same memory pool
-for all shared memories. The current virtio memory pool handling forces
-a split between these two, as a separate device is created for it,
-causing memory to be allocated from bad location if the dedicated pool
-is not available. Fix this by falling back to using the parent device
-memory pool if dedicated is not available.
+After commit 18c49926c4bf ("cpufreq: Add QoS requests for userspace
+constraints") the return value of freq_qos_update_request(), that can
+be 1, passed by cpufreq_boost_set_sw() to its caller sometimes
+confuses the latter, which only expects to see 0 or negative error
+codes, so notice that cpufreq_boost_set_sw() can return an error code
+(which should not be -EINVAL for that matter) as soon as the first
+policy without a frequency table is found (because either all policies
+have a frequency table or none of them have it) and rework it to meet
+its caller's expectations.
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Link: https://lore.kernel.org/r/20200420160600.10467-2-s-anna@ti.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 18c49926c4bf ("cpufreq: Add QoS requests for userspace constraints")
+Reported-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/remoteproc/remoteproc_virtio.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/cpufreq/cpufreq.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -375,6 +375,18 @@ int rproc_add_virtio_dev(struct rproc_vd
- 				goto out;
- 			}
- 		}
-+	} else {
-+		struct device_node *np = rproc->dev.parent->of_node;
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2507,26 +2507,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
+ static int cpufreq_boost_set_sw(int state)
+ {
+ 	struct cpufreq_policy *policy;
+-	int ret = -EINVAL;
+ 
+ 	for_each_active_policy(policy) {
++		int ret;
 +
-+		/*
-+		 * If we don't have dedicated buffer, just attempt to re-assign
-+		 * the reserved memory from our parent. A default memory-region
-+		 * at index 0 from the parent's memory-regions is assigned for
-+		 * the rvdev dev to allocate from. Failure is non-critical and
-+		 * the allocations will fall back to global pools, so don't
-+		 * check return value either.
-+		 */
-+		of_reserved_mem_device_init_by_idx(dev, np, 0);
+ 		if (!policy->freq_table)
+-			continue;
++			return -ENXIO;
+ 
+ 		ret = cpufreq_frequency_table_cpuinfo(policy,
+ 						      policy->freq_table);
+ 		if (ret) {
+ 			pr_err("%s: Policy frequency update failed\n",
+ 			       __func__);
+-			break;
++			return ret;
+ 		}
+ 
+ 		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+ 		if (ret < 0)
+-			break;
++			return ret;
  	}
  
- 	/* Allocate virtio device */
+-	return ret;
++	return 0;
+ }
+ 
+ int cpufreq_boost_trigger_state(int state)
 
 
