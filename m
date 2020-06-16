@@ -2,107 +2,147 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 765482074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6DB20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBXcv5Ry"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgFPG75 (ORCPT
+        id S1727069AbgFPHCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:59:57 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42770 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbgFPG74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:59:56 -0400
-IronPort-SDR: 1Y547nM1lSz1tWLB67GevE2KXgoE4XKpfycuysg8ps7ptraaEYKqhlrSERYxpjWF12AahjqXgt
- sve9cc5N5/SA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 23:59:56 -0700
-IronPort-SDR: 8BLa8egR+d0BceuadNnqir5piIf7i4xRMu4AhfKEI5XBxLk8UY/y1Jgn9pwTnW/jKhpBlfHZgO
- wI1AEoIK+2dA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="420663416"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga004.jf.intel.com with ESMTP; 15 Jun 2020 23:59:52 -0700
-Date:   Tue, 16 Jun 2020 15:01:01 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Brown, Aaron F" <aaron.f.brown@intel.com>
-Cc:     "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Kok, Auke-jan H" <auke-jan.h.kok@intel.com>,
-        Jeff Garzik <jeff@garzik.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Brown, Len" <len.brown@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Neftin, Sasha" <sasha.neftin@intel.com>,
-        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
-        "Stable@vger.kernel.org" <Stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] e1000e: Do not wake up the system via WOL if device
- wakeup is disabled
-Message-ID: <20200616070101.GA24567@chenyu-office.sh.intel.com>
-References: <cover.1590081982.git.yu.c.chen@intel.com>
- <9f7ede2e2e8152704258fc11ba3755ae93f50741.1590081982.git.yu.c.chen@intel.com>
- <SN6PR11MB2896298A90B37CEA0DC5A750BC9C0@SN6PR11MB2896.namprd11.prod.outlook.com>
+        Tue, 16 Jun 2020 03:02:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbgFPHC3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 03:02:29 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17ED6C05BD43;
+        Tue, 16 Jun 2020 00:02:29 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j10so19517861wrw.8;
+        Tue, 16 Jun 2020 00:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UD0BzEH0M8YZp//omQOWTqvshKj+X7/NNaB98DCZXBo=;
+        b=kBXcv5RyDkAUziAF8On2RRAtLdxkf+PQ7mctnBuYI1ulgkFh/EmWKQjx53fhn0ldHk
+         LesW1oDVYJTh6OGiYAqOI3xOXkPU27Z04FpPBJVhWOSs1dGMO40bH7OhT2KvUzLngmZT
+         WEIC3zlK6d5Ht8onBNAN+EaApUSuDyovAyFRZHsp6dAqISO3b+n4ekdEH2wZ/0fuBHo8
+         ekvuEpK1L5M+cWd2smMn81pC2K1+gAXCOkRSw8wpQoH6hNbVDo/FPlZ0Q0ivpVgrnmJk
+         2+OXaDk/mfKfWzPLnEY+UhXm/0El39dLT1CnYwnZ9j91NSdklJKxe/nUeJVuQJvdT64U
+         Y0BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UD0BzEH0M8YZp//omQOWTqvshKj+X7/NNaB98DCZXBo=;
+        b=rq9b/hxQEYmf5JbC+tfzC2sF6ObSTpHyvh6Afo3cdPF7jr8+wnyJrmNzQjeYaZjJgG
+         Ua0oSCLWOeaSwfwiA/o2JCeghxpKMfQShHjTGwFMmKY8Ic8CNA96Lq5Jujv8eQcXNsW6
+         DdAfLuhsPyfuzHo0IZRcd+4q7GNOyG0a+HN0udLAdJRyH9LFUlrPaaFK4Dmy5V0LjF5I
+         cD+eBvyyLkmd1J5pC5Ew1zfX4IL2fzxfdmkoAz/ZRFlPCJk61bB1BPMePb1ivanXHbnZ
+         XOukeXfVqy7AuVUURsnwVJN3N6KA5jZj1L7sPHHaH57TPEhPVoVVJUk+LnXrwr1T33bd
+         Zcxw==
+X-Gm-Message-State: AOAM531wafBoT40cRN+CDUL8e/K2xTAzPEE/Wzbp+Z0vaSymB/Z+LUXD
+        wUDy5xJWO4k2+gr6uKRZreE=
+X-Google-Smtp-Source: ABdhPJxJocaEAJDjXYgrdusUF1X6ahSw5QoOUewPSOXVR9vtcDbBiuhLEL6qn82QSv28cJKE+g2//Q==
+X-Received: by 2002:adf:fc0c:: with SMTP id i12mr1403233wrr.365.1592290947713;
+        Tue, 16 Jun 2020 00:02:27 -0700 (PDT)
+Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
+        by smtp.gmail.com with ESMTPSA id a81sm2792897wmd.25.2020.06.16.00.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 00:02:27 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     broonie@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v3 1/4] spi: bcm63xx-spi: add reset support
+Date:   Tue, 16 Jun 2020 09:02:20 +0200
+Message-Id: <20200616070223.3401282-2-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616070223.3401282-1-noltari@gmail.com>
+References: <20200616070223.3401282-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR11MB2896298A90B37CEA0DC5A750BC9C0@SN6PR11MB2896.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 02:51:27AM +0800, Brown, Aaron F wrote:
-> > From: Chen Yu <yu.c.chen@intel.com>
-> > Sent: Thursday, May 21, 2020 10:59 AM
-> > To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S. Miller
-> > <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>; Kok, Auke-jan H
-> > <auke-jan.h.kok@intel.com>; Jeff Garzik <jeff@garzik.org>
-> > Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; Brown, Len <len.brown@intel.com>; Rafael J. Wysocki
-> > <rjw@rjwysocki.net>; Shevchenko, Andriy <andriy.shevchenko@intel.com>;
-> > Neftin, Sasha <sasha.neftin@intel.com>; Lifshits, Vitaly
-> > <vitaly.lifshits@intel.com>; Chen, Yu C <yu.c.chen@intel.com>;
-> > Stable@vger.kernel.org
-> > Subject: [PATCH 1/2] e1000e: Do not wake up the system via WOL if device
-> > wakeup is disabled
-> >
-> > Currently the system will be woken up via WOL(Wake On Lan) even if the
-> > device wakeup ability has been disabled via sysfs:
-> >  cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
-> >  disabled
-> >
-> > The system should not be woken up if the user has explicitly
-> > disabled the wake up ability for this device.
-> >
-> > This patch clears the WOL ability of this network device if the
-> > user has disabled the wake up ability in sysfs.
-> >
-> > Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver")
-> > Reported-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: <Stable@vger.kernel.org>
-> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> > ---
-> >  drivers/net/ethernet/intel/e1000e/netdev.c | 14 ++++++++++----
-> >  1 file changed, 10 insertions(+), 4 deletions(-)
-> >
-> Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-> 
-Thanks for testing, Aaron.
+bcm63xx arch resets the SPI controller at early boot. However, bmips arch
+needs to perform a reset when probing the driver.
 
-Best,
-Chenyu
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ v3: use devm_reset_control_get_optional_exclusive
+ v2: use devm_reset_control_get_exclusive
+
+ drivers/spi/spi-bcm63xx.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/spi/spi-bcm63xx.c b/drivers/spi/spi-bcm63xx.c
+index 0f1b10a4ef0c..92e88901189c 100644
+--- a/drivers/spi/spi-bcm63xx.c
++++ b/drivers/spi/spi-bcm63xx.c
+@@ -18,6 +18,7 @@
+ #include <linux/err.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/of.h>
++#include <linux/reset.h>
+ 
+ /* BCM 6338/6348 SPI core */
+ #define SPI_6348_RSET_SIZE		64
+@@ -493,6 +494,7 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
+ 	struct bcm63xx_spi *bs;
+ 	int ret;
+ 	u32 num_cs = BCM63XX_SPI_MAX_CS;
++	struct reset_control *reset;
+ 
+ 	if (dev->of_node) {
+ 		const struct of_device_id *match;
+@@ -529,6 +531,15 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(clk);
+ 	}
+ 
++	reset = devm_reset_control_get_optional_exclusive(dev, NULL);
++	if (IS_ERR(reset)) {
++		ret = PTR_ERR(reset);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev,
++				"failed to get reset controller: %d\n", ret);
++		return ret;
++	}
++
+ 	master = spi_alloc_master(dev, sizeof(*bs));
+ 	if (!master) {
+ 		dev_err(dev, "out of memory\n");
+@@ -579,6 +590,12 @@ static int bcm63xx_spi_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto out_err;
+ 
++	ret = reset_control_reset(reset);
++	if (ret) {
++		dev_err(dev, "unable to reset device: %d\n", ret);
++		goto out_clk_disable;
++	}
++
+ 	bcm_spi_writeb(bs, SPI_INTR_CLEAR_ALL, SPI_INT_STATUS);
+ 
+ 	/* register and we are done */
+-- 
+2.27.0
+
