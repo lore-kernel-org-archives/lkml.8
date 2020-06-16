@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F300EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3B9F20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D919721501
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322489;
-	bh=DV1eG+bY7x696UP/Pb0uc8f2sQAeD4yGUDNfsEzAbek=;
+	s=default; t=1592322498;
+	bh=FomWAMvBZFJTmk1DReGUtwHCxzmw3Dki2Cp2WZwd6Ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YIXPSgX2xRyDCAUFFgKN3lq0VHoxD2phxpb/GQ9/6dZjrazOKQdSr9v7An+uDWquD
-	 0T0LvA4odyq6wQeGahHIVmsdXPiV44IWI9HRv6niMXTw386YgVYOYSNR1Q/xt/tRNM
-	 ZiMtSxB2sLJKBEqlQ+AJCDhquu6nIa7jz4gtsSoE=
+	b=dAYytYwCS/LBAMfXjzXe60U7fb0vjVOo05kYmmWqu54W0VlREcFfvNkIh0h4iBtWJ
+	 QT+lbPSNQxJA0QXvtrBQ6LfEbqtq1tXKkRIp+wkER0tc6e5VwaA/tDp1/r6ZY+1zII
+	 bEM0WFkYlsc1atVAqGPpY1y28ravG8iuTAPUHzpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732386AbgFPPsI (ORCPT
+        id S1732396AbgFPPsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:48:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41950 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732360AbgFPPsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:48:02 -0400
+        id S1732097AbgFPPsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:48:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC26220776;
-        Tue, 16 Jun 2020 15:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B680D20776;
+        Tue, 16 Jun 2020 15:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322481;
-        bh=DV1eG+bY7x696UP/Pb0uc8f2sQAeD4yGUDNfsEzAbek=;
+        s=default; t=1592322486;
+        bh=FomWAMvBZFJTmk1DReGUtwHCxzmw3Dki2Cp2WZwd6Ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=frP36BZgk0eJ3WhkBn8pZgbsG2VPsGGslTncqDk3ZMCe+WTFVgk2P288Pj+fqlLpf
-         U5WjTscI4xLlmVnrMlUrlgMlVcQKo3qR43Q0Ag7T0rrGmW0sGwRM3wopic8jqHF5Ch
-         bchVlhObxceU4CQVFUDVJbG954EFDcTnpD6BU/x4=
+        b=O/uLkyKeJOrbEswk1gyTZfQ3Cuhui8NneSW6ahu0l86Fn+K7XvQmi2QeiBPryuAVu
+         Ju15qYJDoTZwQ8TBEmvFIVR5Ws5S6G2l3BtD9z7jskDzg++hM60RZfIvjxgCyDHb1f
+         NHFP/W3AtBAacJmXN3driAggBfSFjW/1EHNVMhPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com,
-        Barret Rhoden <brho@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.7 148/163] perf: Add cond_resched() to task_function_call()
-Date:   Tue, 16 Jun 2020 17:35:22 +0200
-Message-Id: <20200616153113.894021545@linuxfoundation.org>
+        stable@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Matthew Riley <mattdr@google.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 5.7 123/163] EDAC/skx: Use the mcmtr register to retrieve close_pg/bank_xor_enable
+Date:   Tue, 16 Jun 2020 17:34:57 +0200
+Message-Id: <20200616153112.703060986@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,68 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Barret Rhoden <brho@google.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-commit 2ed6edd33a214bca02bd2b45e3fc3038a059436b upstream.
+commit 1032095053b34d474aa20f2625d97dd306e0991b upstream.
 
-Under rare circumstances, task_function_call() can repeatedly fail and
-cause a soft lockup.
+The skx_edac driver wrongly uses the mtr register to retrieve two fields
+close_pg and bank_xor_enable. Fix it by using the correct mcmtr register
+to get the two fields.
 
-There is a slight race where the process is no longer running on the cpu
-we targeted by the time remote_function() runs.  The code will simply
-try again.  If we are very unlucky, this will continue to fail, until a
-watchdog fires.  This can happen in a heavily loaded, multi-core virtual
-machine.
-
-Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
-Signed-off-by: Barret Rhoden <brho@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200414222920.121401-1-brho@google.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Reported-by: Matthew Riley <mattdr@google.com>
+Acked-by: Aristeu Rozanski <aris@redhat.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/20200515210146.1337-1-tony.luck@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/edac/i10nm_base.c |    2 +-
+ drivers/edac/skx_base.c   |   20 ++++++++------------
+ drivers/edac/skx_common.c |    6 +++---
+ drivers/edac/skx_common.h |    2 +-
+ 4 files changed, 13 insertions(+), 17 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -95,11 +95,11 @@ static void remote_function(void *data)
-  * @info:	the function call argument
-  *
-  * Calls the function @func when the task is currently running. This might
-- * be on the current CPU, which just calls the function directly
-+ * be on the current CPU, which just calls the function directly.  This will
-+ * retry due to any failures in smp_call_function_single(), such as if the
-+ * task_cpu() goes offline concurrently.
-  *
-- * returns: @func return value, or
-- *	    -ESRCH  - when the process isn't running
-- *	    -EAGAIN - when the process moved away
-+ * returns @func return value or -ESRCH when the process isn't running
-  */
- static int
- task_function_call(struct task_struct *p, remote_function_f func, void *info)
-@@ -112,11 +112,16 @@ task_function_call(struct task_struct *p
- 	};
- 	int ret;
+--- a/drivers/edac/i10nm_base.c
++++ b/drivers/edac/i10nm_base.c
+@@ -161,7 +161,7 @@ static int i10nm_get_dimm_config(struct
+ 				 mtr, mcddrtcfg, imc->mc, i, j);
  
--	do {
--		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
--		if (!ret)
--			ret = data.ret;
--	} while (ret == -EAGAIN);
-+	for (;;) {
-+		ret = smp_call_function_single(task_cpu(p), remote_function,
-+					       &data, 1);
-+		ret = !ret ? data.ret : -EAGAIN;
-+
-+		if (ret != -EAGAIN)
-+			break;
-+
-+		cond_resched();
-+	}
+ 			if (IS_DIMM_PRESENT(mtr))
+-				ndimms += skx_get_dimm_info(mtr, 0, dimm,
++				ndimms += skx_get_dimm_info(mtr, 0, 0, dimm,
+ 							    imc, i, j);
+ 			else if (IS_NVDIMM_PRESENT(mcddrtcfg, j))
+ 				ndimms += skx_get_nvdimm_info(dimm, imc, i, j,
+--- a/drivers/edac/skx_base.c
++++ b/drivers/edac/skx_base.c
+@@ -163,27 +163,23 @@ static const struct x86_cpu_id skx_cpuid
+ };
+ MODULE_DEVICE_TABLE(x86cpu, skx_cpuids);
  
- 	return ret;
+-#define SKX_GET_MTMTR(dev, reg) \
+-	pci_read_config_dword((dev), 0x87c, &(reg))
+-
+-static bool skx_check_ecc(struct pci_dev *pdev)
++static bool skx_check_ecc(u32 mcmtr)
+ {
+-	u32 mtmtr;
+-
+-	SKX_GET_MTMTR(pdev, mtmtr);
+-
+-	return !!GET_BITFIELD(mtmtr, 2, 2);
++	return !!GET_BITFIELD(mcmtr, 2, 2);
  }
+ 
+ static int skx_get_dimm_config(struct mem_ctl_info *mci)
+ {
+ 	struct skx_pvt *pvt = mci->pvt_info;
++	u32 mtr, mcmtr, amap, mcddrtcfg;
+ 	struct skx_imc *imc = pvt->imc;
+-	u32 mtr, amap, mcddrtcfg;
+ 	struct dimm_info *dimm;
+ 	int i, j;
+ 	int ndimms;
+ 
++	/* Only the mcmtr on the first channel is effective */
++	pci_read_config_dword(imc->chan[0].cdev, 0x87c, &mcmtr);
++
+ 	for (i = 0; i < SKX_NUM_CHANNELS; i++) {
+ 		ndimms = 0;
+ 		pci_read_config_dword(imc->chan[i].cdev, 0x8C, &amap);
+@@ -193,14 +189,14 @@ static int skx_get_dimm_config(struct me
+ 			pci_read_config_dword(imc->chan[i].cdev,
+ 					      0x80 + 4 * j, &mtr);
+ 			if (IS_DIMM_PRESENT(mtr)) {
+-				ndimms += skx_get_dimm_info(mtr, amap, dimm, imc, i, j);
++				ndimms += skx_get_dimm_info(mtr, mcmtr, amap, dimm, imc, i, j);
+ 			} else if (IS_NVDIMM_PRESENT(mcddrtcfg, j)) {
+ 				ndimms += skx_get_nvdimm_info(dimm, imc, i, j,
+ 							      EDAC_MOD_STR);
+ 				nvdimm_count++;
+ 			}
+ 		}
+-		if (ndimms && !skx_check_ecc(imc->chan[0].cdev)) {
++		if (ndimms && !skx_check_ecc(mcmtr)) {
+ 			skx_printk(KERN_ERR, "ECC is disabled on imc %d\n", imc->mc);
+ 			return -ENODEV;
+ 		}
+--- a/drivers/edac/skx_common.c
++++ b/drivers/edac/skx_common.c
+@@ -304,7 +304,7 @@ static int skx_get_dimm_attr(u32 reg, in
+ #define numrow(reg)	skx_get_dimm_attr(reg, 2, 4, 12, 1, 6, "rows")
+ #define numcol(reg)	skx_get_dimm_attr(reg, 0, 1, 10, 0, 2, "cols")
+ 
+-int skx_get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
++int skx_get_dimm_info(u32 mtr, u32 mcmtr, u32 amap, struct dimm_info *dimm,
+ 		      struct skx_imc *imc, int chan, int dimmno)
+ {
+ 	int  banks = 16, ranks, rows, cols, npages;
+@@ -324,8 +324,8 @@ int skx_get_dimm_info(u32 mtr, u32 amap,
+ 		 imc->mc, chan, dimmno, size, npages,
+ 		 banks, 1 << ranks, rows, cols);
+ 
+-	imc->chan[chan].dimms[dimmno].close_pg = GET_BITFIELD(mtr, 0, 0);
+-	imc->chan[chan].dimms[dimmno].bank_xor_enable = GET_BITFIELD(mtr, 9, 9);
++	imc->chan[chan].dimms[dimmno].close_pg = GET_BITFIELD(mcmtr, 0, 0);
++	imc->chan[chan].dimms[dimmno].bank_xor_enable = GET_BITFIELD(mcmtr, 9, 9);
+ 	imc->chan[chan].dimms[dimmno].fine_grain_bank = GET_BITFIELD(amap, 0, 0);
+ 	imc->chan[chan].dimms[dimmno].rowbits = rows;
+ 	imc->chan[chan].dimms[dimmno].colbits = cols;
+--- a/drivers/edac/skx_common.h
++++ b/drivers/edac/skx_common.h
+@@ -128,7 +128,7 @@ int skx_get_all_bus_mappings(unsigned in
+ 
+ int skx_get_hi_lo(unsigned int did, int off[], u64 *tolm, u64 *tohm);
+ 
+-int skx_get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
++int skx_get_dimm_info(u32 mtr, u32 mcmtr, u32 amap, struct dimm_info *dimm,
+ 		      struct skx_imc *imc, int chan, int dimmno);
+ 
+ int skx_get_nvdimm_info(struct dimm_info *dimm, struct skx_imc *imc,
 
 
