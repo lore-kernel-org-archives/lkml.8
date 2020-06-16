@@ -2,86 +2,127 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD27C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C36EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03C1920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA41820B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:39:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PaYdmCv5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4iG10ZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgFPNje (ORCPT
+        id S1728940AbgFPNjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:39:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54768 "EHLO
+        Tue, 16 Jun 2020 09:39:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgFPNjc (ORCPT
+        with ESMTP id S1728716AbgFPNjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 09:39:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F4AC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NX4/RAif7Qv0NRDyEqVkKAgLJrAgF0MHnstuThWnuPY=; b=PaYdmCv5e2DLub+pdwJuwWlhXs
-        l5usGFGbtrNW3QP4yazJjyBd6Xmf/AEkTxw/f851ece9hv8JoW7/6WWM/LNR39uDv7gvW1Lth8GKi
-        r11P/57AsXTc7aeGYH2AzdPK2jzvERd5CVoMimq3T0pRvC3Rkmy2rU9ldb2C8MSSYeQdEYslL5Iab
-        QAxKcCeOj8gVUw5ykaumJRMe6iTbxwEah2nuSUVJxVn3uxtpXfB4eK3SiEPU4VUgt2MZtwRTjDknl
-        /WXSVLXoAYsWm/9jjC3trjbV9PVXTQ5SIIDEN03fBVt9K+RR3LyY8QeHUfJyOGgK7nNZI5WdMar/V
-        o0riZMHQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlBnl-0000Zb-Vh; Tue, 16 Jun 2020 13:38:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E332D30018A;
-        Tue, 16 Jun 2020 15:38:55 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9D74C20244311; Tue, 16 Jun 2020 15:38:55 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 15:38:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peng Wang <rocking@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] sched/fair: Optimize dequeue_task_fair()
-Message-ID: <20200616133855.GX2531@hirez.programming.kicks-ass.net>
-References: <6f2f195aea48bc50187dfb064aa530ba132be01b.1592230286.git.rocking@linux.alibaba.com>
- <701eef9a40de93dcf5fe7063fd607bca5db38e05.1592287263.git.rocking@linux.alibaba.com>
- <CAKfTPtDUXmDB8w+03c2dqrjKDJyp7wrgdwj0oADg8N--9jmRJw@mail.gmail.com>
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A564BC06174E;
+        Tue, 16 Jun 2020 06:39:32 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id x202so19239000oix.11;
+        Tue, 16 Jun 2020 06:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fFJ7hsEAkS/er/cOkupwhFskmRsM/1kcPNiWDueIbXY=;
+        b=j4iG10ZJifpYKgHpxFg8qDzEBlYXgdm5VO3wEMk8Djzreb8/1M+1D7JoUvD+ARWnFt
+         G/SsOAgt4h0aBFko3AXQB1u7pJqWzSxUUZC9cCbmSLzZH5NLXim0G4AjEITGtSHgVKJy
+         UY/lYyd/w8zNFuRzD8S40PqTIWex5Hn0QXyRGFqPQab6t3gAxvxe3cXZFr6P8Li+eHYZ
+         3VmLm+lqKSyU0Z3EljWvxHULynn7RzS2CJbdL9eCNKMz5Q2k/tigvbQApqqU80wC+XHw
+         ikhqWydTWX6w2+JVtRzyd1YJ+khzJuiM52nj4HyQV+I0z4Pvo+iztULHcpnK4YuISVOe
+         e6jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fFJ7hsEAkS/er/cOkupwhFskmRsM/1kcPNiWDueIbXY=;
+        b=TcINAV2I02Dhm5SADOLLb914w2e/7EiGO7pyrvC8UN8QdXhf9L/yXwaiJkkdmK+KAs
+         ddHT3Pi66Pu51qYQlGxmlPsMC6IrMkuOcvg8ryb+IbWLNMK/c6wM2YzRMhrN2V+jhI8R
+         dPlC0T5UvMajvNbDzUPTR3eLtVOp3nZgLxM8OZzK2wrYeLsrAO3yhcceLugTnEqPHRjC
+         yA+7AXsP6awtcrDDrADw/WCHDM5VH2xRkj+8vLyt7r87XtV7+3UIrfPTbMPBFPuGpStd
+         Yrwsy3iuq3+9qM8qNxI8IXVGV+6u3VhSy3FXYkrKtWkHsUaMzTKx8Lz7Qj6M1xKM2q8R
+         UY7Q==
+X-Gm-Message-State: AOAM5312Vo+sdSQDejr0C/C7LEiNyq2gf4puId29bcS0kubB/PKziGO9
+        AVUFKLe4KfRgOuGtOhPtdfLH5Z19
+X-Google-Smtp-Source: ABdhPJxtZIDe/h3o9urGKjOgErmOyZ1VU5ofx7gTkZNlYtUfz7ARyL6yCCPMT1iittVSZRKV7w6VLA==
+X-Received: by 2002:aca:4145:: with SMTP id o66mr3234036oia.154.1592314772040;
+        Tue, 16 Jun 2020 06:39:32 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:b48d:5aec:2ff2:2476? ([2601:282:803:7700:b48d:5aec:2ff2:2476])
+        by smtp.googlemail.com with ESMTPSA id 35sm4028981otd.68.2020.06.16.06.39.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 06:39:31 -0700 (PDT)
+Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus' tree
+From:   David Ahern <dsahern@gmail.com>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>
+References: <20200511130015.37103884@canb.auug.org.au>
+ <20200602092040.5ef52300@canb.auug.org.au>
+ <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
+ <20200604112606.25ffde35@canb.auug.org.au>
+ <8d943a28-2e9f-9c61-9cff-899e907d6b86@gmail.com>
+ <20200604064149.GT19286@gauss3.secunet.de>
+ <9b338449-e342-96ab-0ba1-a73058fac037@gmail.com>
+Message-ID: <2aab8efc-783d-8502-d268-ab435f566b06@gmail.com>
+Date:   Tue, 16 Jun 2020 07:39:30 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDUXmDB8w+03c2dqrjKDJyp7wrgdwj0oADg8N--9jmRJw@mail.gmail.com>
+In-Reply-To: <9b338449-e342-96ab-0ba1-a73058fac037@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 02:31:15PM +0200, Vincent Guittot wrote:
-> On Tue, 16 Jun 2020 at 08:05, Peng Wang <rocking@linux.alibaba.com> wrote:
-> >
-> > While looking at enqueue_task_fair and dequeue_task_fair, it occurred
-> > to me that dequeue_task_fair can also be optimized as Vincent described
-> > in commit 7d148be69e3a ("sched/fair: Optimize enqueue_task_fair()").
-> >
-> > When encountering throttled cfs_rq, dequeue_throttle label can ensure
-> > se not to be NULL, and rq->nr_running remains unchanged, so we can also
-> > skip the early balance check.
-> >
-> > Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+On 6/4/20 6:44 AM, David Ahern wrote:
+> On 6/4/20 12:41 AM, Steffen Klassert wrote:
+>> On Wed, Jun 03, 2020 at 08:55:01PM -0600, David Ahern wrote:
+>>> On 6/3/20 7:26 PM, Stephen Rothwell wrote:
+>>>>
+>>>> And now the net-next tree has been merged into Linus' tree without this fix :-(
+>>>>
+>>>
+>>> I took a look earlier and I think it is fine. Some code was moved around
+>>> in ipsec-next and I think the merge is good. I'll run the test cases
+>>> later this week and double check. Thanks for the reminder
+>>
+>> The setting of XFRM_TRANSFORMED moved to xfrm_output() and depends
+>> on CONFIG_NETFILTER. So I think the fix is needed. After the merge
+>> of the net tree today, I have both conflicting patches patches in
+>> the ipsec tree. I'd apply the fix from Stephen unless you say
+>> it is not needed.
+>>
 > 
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Indeed. I must have been looking at -net. Both -net and -net-next have
+> it conditional, so yes a fixup patch is needed.
+> 
 
-Thanks!
+I see that both net and net-next still have the conditional in xfrm_output:
+
+#ifdef CONFIG_NETFILTER
+                IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
+#endif
+                break;
+        case AF_INET6:
+                memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+
+#ifdef CONFIG_NETFILTER
+                IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
+#endif
+
+Did you submit the merge fix? If not, I can do it today.
