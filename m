@@ -2,163 +2,108 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3755DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0918120B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3828620A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:47:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJe1ktN0"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="U6/hmvvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgFPNpq (ORCPT
+        id S1728969AbgFPNrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:45:46 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60403 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727966AbgFPNpq (ORCPT
+        Tue, 16 Jun 2020 09:47:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726306AbgFPNrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:45:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592315144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=GchcCrPFm0V1xehkf/en5Vd/sfd/fvjGeWsBcNoS9ag=;
-        b=QJe1ktN01fOaTsAfP8Y9j9OzUmh5EG+gDztTXmEU2edCwCm9D2+pIih0cOMd0/rOu4xhog
-        fIO6tmmOzbwyHv99ZNzY/akVzt4qypN1SmgzOaxmBNPqVRe2QmtQoB0/4YgX7MOGyOoLP/
-        7lTKDik0tuNRI+LT7ydvlJerD3AE3Vo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-QS6JgJdwPkO8-JY5eDFZrQ-1; Tue, 16 Jun 2020 09:45:39 -0400
-X-MC-Unique: QS6JgJdwPkO8-JY5eDFZrQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B90A1902EC4;
-        Tue, 16 Jun 2020 13:45:37 +0000 (UTC)
-Received: from [10.36.114.106] (ovpn-114-106.ams2.redhat.com [10.36.114.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DCBDA1001925;
-        Tue, 16 Jun 2020 13:45:34 +0000 (UTC)
-Subject: Re: [PATCH v1 3/3] mm/shuffle: remove dynamic reconfiguration
-To:     Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-References: <20200616115213.13109-1-david@redhat.com>
- <20200616115213.13109-4-david@redhat.com>
- <20200616124120.GF9499@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <30c35cd2-8167-d402-2c7e-94f5fcce0274@redhat.com>
-Date:   Tue, 16 Jun 2020 15:45:33 +0200
+        Tue, 16 Jun 2020 09:47:51 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B652C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:47:51 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i12so1471215pju.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:47:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TUln3eDvcCJnsTxP4o2nCcbHN366GT2XubrxAw/PwPQ=;
+        b=U6/hmvvbBbi9/FmqWEyN7ARc+R7Qqp9XN3x/VwhFJBb4m2JgiRW7JX/moBz4mnQgZm
+         WPlOUeu+0igHuD55YwEruLd1450HsTM1F0FBQ7ShKl8YTQsser8xdFrstxqNSMRYlPNl
+         ZHjjjEYU/uC0c17FfWG0iljqCjCV+68N/ZbFe4w7wsTgIUtVxTIcHLGZq8nKyqMAh2cP
+         GO4lbPVN1quzQkJulkGhxhz4pTvLLjqr3MA882ZhK3jTb66EMyR1yBvsowZ0hY97mIy1
+         k3e7T/NBrnzQks5Z+2r8aCGXg4Cs+sfJ00+ZdD85ZaEjeSUMpLhcnGJaqAA9SFu2ernE
+         WNRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TUln3eDvcCJnsTxP4o2nCcbHN366GT2XubrxAw/PwPQ=;
+        b=FdLrb+fzrMfGZEuaBzY9Bl1EbzlszpR/Yz/CSGa6Z1Yeues3MQmV22fe0RO4thyLEN
+         uFs9ou/1LpB2+0dOTzAP6tYO6qHsMKjkx7ovhj/l1wCn4qEd9CkdBRkUYjWyhcTDvng1
+         6PB2Uwk0zuyeYAQhaeoG/QT5G5vZ14scq3JuQZFMqtkES0sofLTGZe3Vv6HB8XK7R3sC
+         7kTZr+ZRl9L0zMDZDLK9HJJ6xix3UO/1DOi5gXb4XnIoQrbc6oz3hbNlnBjS5rL18XFu
+         FCGBsceSGbRI7Y8x5LyXgt75sLO0L2P2xRUVLalNbjB5m8ZL7ks1U6Bqvbu2phw/FwpN
+         S88w==
+X-Gm-Message-State: AOAM533rjIudXF67W6z3bPpsoQq2m3kzdWvEAIake3+x0y3HApN8ZYUo
+        ytP1NizrygNoUaVsfTMPquJTMA==
+X-Google-Smtp-Source: ABdhPJwh0ibun0ESRx+TqhgJ9AGgABOCSZFvigx9X6GzGraON4S2C0XpvGXtaFdBeNA6eAekB/neHg==
+X-Received: by 2002:a17:902:9b92:: with SMTP id y18mr2057706plp.228.1592315270891;
+        Tue, 16 Jun 2020 06:47:50 -0700 (PDT)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id k12sm17030398pfk.219.2020.06.16.06.47.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 06:47:50 -0700 (PDT)
+Subject: Re: [PATCH 2/6] arm64/vdso: Zap vvar pages when switching to a time
+ namespace
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200616075545.312684-1-avagin@gmail.com>
+ <20200616075545.312684-3-avagin@gmail.com>
+ <20200616112418.GC11780@C02TD0UTHF1T.local>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <d16b5cd1-bdb1-5667-fbda-c622cc795389@arista.com>
+Date:   Tue, 16 Jun 2020 14:47:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200616124120.GF9499@dhcp22.suse.cz>
+In-Reply-To: <20200616112418.GC11780@C02TD0UTHF1T.local>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.06.20 14:41, Michal Hocko wrote:
-> [Add Dan]
+Hi Mark,
 
-Whops, dropped by mistake. Thanks for adding.
-
+On 6/16/20 12:24 PM, Mark Rutland wrote:
+> On Tue, Jun 16, 2020 at 12:55:41AM -0700, Andrei Vagin wrote:
+[..]
+>> Whenever a task changes its namespace, the VVAR
+>> page tables are cleared and then they will be re-faulted with a
+>> corresponding layout.
 > 
-> On Tue 16-06-20 13:52:13, David Hildenbrand wrote:
->> Commit e900a918b098 ("mm: shuffle initial free memory to improve
->> memory-side-cache utilization") promised "autodetection of a
->> memory-side-cache (to be added in a follow-on patch)" over a year ago.
->>
->> The original series included patches [1], however, they were dropped
->> during review [2] to be followed-up later.
->>
->> Let's simplify for now and re-add when really (ever?) needed.
->>
->> [1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com/
->> [2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com/
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Minchan Kim <minchan@kernel.org>
->> Cc: Huang Ying <ying.huang@intel.com>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Keith Busch <keith.busch@intel.com>
->> Cc: Mel Gorman <mgorman@techsingularity.net>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> While I am not against removing this unused code I am really curious
-> what is the future of the auto detection. Has this just fall through
-> cracks or there are some more serious problem to make detection
-> possible/reliable?
+> How does this work for multi-threaded applications? Are there any
+> concerns w.r.t. atomicity of the change?
 
-From the bouncing mails I assume Keith - author of the original patches
-in [1] -  is no longer working at Intel (or I messed up :) "#5.1.0
-Address rejected"). Maybe Dan can clarify what the future of this is.
+Multi-threaded applications can't setns() for time namespace,
+timens_install():
 
--- 
+:	if (!current_is_single_threaded())
+:		return -EUSERS;
+
 Thanks,
-
-David / dhildenb
-
+          Dmitry
