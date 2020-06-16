@@ -2,52 +2,56 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C993C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3099BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06A1321475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114D121475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322240;
-	bh=ueKYhhqU9ZGymoAAgRU9VZn0dARvV/dpf94QbOuRwd0=;
+	s=default; t=1592322244;
+	bh=haZufumXIivprfu8VoTRQ4JkgkKWPzkC5c1Tw18T4LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tteWxryMCujwhpaGPloKlhwKegW+d3oe4wjfLYG6gC5IBSSRjIS3y+Aeeg6mvZr0U
-	 WqjZlW4xpzxrJDQdybMZg+oSfYE5SKiK3GKCxn7YRwXNLdYVGkjlDAnHoEH796AUA8
-	 dlo916lzYFzwGB/VeFqP8qPlol54x7K+evu58MXQ=
+	b=IBIHsOKGM3/auszeHd+RG3Jw7I/JChclBvobMOkW5KhkPBtc5lX3d53GXTwvECErn
+	 swcAwTfqfnIUvelMA5m0x7xdVPpWvR62C36Z6aKK90Q30NcbxoElSuyMiBXqot1u6B
+	 csOlSkNeVWPVzHOzDfYHpS0cPXoZps/0q5k/vF3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731884AbgFPPn7 (ORCPT
+        id S1731899AbgFPPoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33306 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731846AbgFPPnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:46 -0400
+        id S1731861AbgFPPnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:43:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DACC21475;
-        Tue, 16 Jun 2020 15:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAE14208E4;
+        Tue, 16 Jun 2020 15:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322226;
-        bh=ueKYhhqU9ZGymoAAgRU9VZn0dARvV/dpf94QbOuRwd0=;
+        s=default; t=1592322231;
+        bh=haZufumXIivprfu8VoTRQ4JkgkKWPzkC5c1Tw18T4LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HMXXuDFbqfLK4PzEzpVc2PkyWx/MSVHIsiahI/8gjNJ3kvWaF1+IyrCSu3hn29Nmv
-         UBEcihjY0d+TzyjJmD9mi6EUShiVMVbGLnfOcoh3t1+d30mnb9L8vJy2aY1EaU5ua1
-         OGj7m7gptFc70BzKJHKk/4fZRAJRYl+LeI+DxCBA=
+        b=Ecaak1kPskQaEN9eNgnkPUkVIjmWzrCabd54QhiYyZI4TNynz1lzec8neNGVa/v5o
+         MkOckr+OKo4I5e3X8nQhEsbwWtngMbxlPF2/HIxW1OTN2D1kNM82jdjyW42XyXAsjE
+         LMD5nqZepVYGczlhO04/FDD6Ak6GJ1Z6LI0/lWQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Eiichi Tsukata <eiichi.tsukata@nutanix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.7 049/163] KVM: x86: Fix APIC page invalidation race
-Date:   Tue, 16 Jun 2020 17:33:43 +0200
-Message-Id: <20200616153109.201428513@linuxfoundation.org>
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 024/163] spi: dw: Fix native CS being unset
+Date:   Tue, 16 Jun 2020 17:33:18 +0200
+Message-Id: <20200616153108.047634478@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,163 +64,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <eiichi.tsukata@nutanix.com>
+[ Upstream commit 9aea644ca17b94f82ad7fa767cbc4509642f4420 ]
 
-commit e649b3f0188f8fd34dd0dde8d43fd3312b902fb2 upstream.
+Commit 6e0a32d6f376 ("spi: dw: Fix default polarity of native
+chipselect") attempted to fix the problem when GPIO active-high
+chip-select is utilized to communicate with some SPI slave. It fixed
+the problem, but broke the normal native CS support. At the same time
+the reversion commit ada9e3fcc175 ("spi: dw: Correct handling of native
+chipselect") didn't solve the problem either, since it just inverted
+the set_cs() polarity perception without taking into account that
+CS-high might be applicable. Here is what is done to finally fix the
+problem.
 
-Commit b1394e745b94 ("KVM: x86: fix APIC page invalidation") tried
-to fix inappropriate APIC page invalidation by re-introducing arch
-specific kvm_arch_mmu_notifier_invalidate_range() and calling it from
-kvm_mmu_notifier_invalidate_range_start. However, the patch left a
-possible race where the VMCS APIC address cache is updated *before*
-it is unmapped:
+DW SPI controller demands any native CS being set in order to proceed
+with data transfer. So in order to activate the SPI communications we
+must set any bit in the Slave Select DW SPI controller register no
+matter whether the platform requests the GPIO- or native CS. Preferably
+it should be the bit corresponding to the SPI slave CS number. But
+currently the dw_spi_set_cs() method activates the chip-select
+only if the second argument is false. Since the second argument of the
+set_cs callback is expected to be a boolean with "is-high" semantics
+(actual chip-select pin state value), the bit in the DW SPI Slave
+Select register will be set only if SPI core requests the driver
+to set the CS in the low state. So this will work for active-low
+GPIO-based CS case, and won't work for active-high CS setting
+the bit when SPI core actually needs to deactivate the CS.
 
-  (Invalidator) kvm_mmu_notifier_invalidate_range_start()
-  (Invalidator) kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD)
-  (KVM VCPU) vcpu_enter_guest()
-  (KVM VCPU) kvm_vcpu_reload_apic_access_page()
-  (Invalidator) actually unmap page
+This commit fixes the problem for all described cases. So no matter
+whether an SPI slave needs GPIO- or native-based CS with active-high
+or low signal the corresponding bit will be set in SER.
 
-Because of the above race, there can be a mismatch between the
-host physical address stored in the APIC_ACCESS_PAGE VMCS field and
-the host physical address stored in the EPT entry for the APIC GPA
-(0xfee0000).  When this happens, the processor will not trap APIC
-accesses, and will instead show the raw contents of the APIC-access page.
-Because Windows OS periodically checks for unexpected modifications to
-the LAPIC register, this will show up as a BSOD crash with BugCheck
-CRITICAL_STRUCTURE_CORRUPTION (109) we are currently seeing in
-https://bugzilla.redhat.com/show_bug.cgi?id=1751017.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Fixes: ada9e3fcc175 ("spi: dw: Correct handling of native chipselect")
+Fixes: 6e0a32d6f376 ("spi: dw: Fix default polarity of native chipselect")
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-The root cause of the issue is that kvm_arch_mmu_notifier_invalidate_range()
-cannot guarantee that no additional references are taken to the pages in
-the range before kvm_mmu_notifier_invalidate_range_end().  Fortunately,
-this case is supported by the MMU notifier API, as documented in
-include/linux/mmu_notifier.h:
-
-	 * If the subsystem
-         * can't guarantee that no additional references are taken to
-         * the pages in the range, it has to implement the
-         * invalidate_range() notifier to remove any references taken
-         * after invalidate_range_start().
-
-The fix therefore is to reload the APIC-access page field in the VMCS
-from kvm_mmu_notifier_invalidate_range() instead of ..._range_start().
-
-Cc: stable@vger.kernel.org
-Fixes: b1394e745b94 ("KVM: x86: fix APIC page invalidation")
-Fixes: https://bugzilla.kernel.org/show_bug.cgi?id=197951
-Signed-off-by: Eiichi Tsukata <eiichi.tsukata@nutanix.com>
-Message-Id: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200515104758.6934-5-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c       |    7 ++-----
- include/linux/kvm_host.h |    4 ++--
- virt/kvm/kvm_main.c      |   26 ++++++++++++++++----------
- 3 files changed, 20 insertions(+), 17 deletions(-)
+ drivers/spi/spi-dw.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8154,9 +8154,8 @@ static void vcpu_load_eoi_exitmap(struct
- 	kvm_x86_ops.load_eoi_exitmap(vcpu, eoi_exit_bitmap);
- }
- 
--int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
--		unsigned long start, unsigned long end,
--		bool blockable)
-+void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
-+					    unsigned long start, unsigned long end)
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 31e3f866d11a..6c2d8df50507 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -128,12 +128,20 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
  {
- 	unsigned long apic_address;
+ 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+ 	struct chip_data *chip = spi_get_ctldata(spi);
++	bool cs_high = !!(spi->mode & SPI_CS_HIGH);
  
-@@ -8167,8 +8166,6 @@ int kvm_arch_mmu_notifier_invalidate_ran
- 	apic_address = gfn_to_hva(kvm, APIC_DEFAULT_PHYS_BASE >> PAGE_SHIFT);
- 	if (start <= apic_address && apic_address < end)
- 		kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD);
--
--	return 0;
- }
+ 	/* Chip select logic is inverted from spi_set_cs() */
+ 	if (chip && chip->cs_control)
+ 		chip->cs_control(!enable);
  
- void kvm_vcpu_reload_apic_access_page(struct kvm_vcpu *vcpu)
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1406,8 +1406,8 @@ static inline long kvm_arch_vcpu_async_i
- }
- #endif /* CONFIG_HAVE_KVM_VCPU_ASYNC_IOCTL */
- 
--int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
--		unsigned long start, unsigned long end, bool blockable);
-+void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
-+					    unsigned long start, unsigned long end);
- 
- #ifdef CONFIG_HAVE_KVM_VCPU_RUN_PID_CHANGE
- int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu);
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -155,10 +155,9 @@ static void kvm_uevent_notify_change(uns
- static unsigned long long kvm_createvm_count;
- static unsigned long long kvm_active_vms;
- 
--__weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
--		unsigned long start, unsigned long end, bool blockable)
-+__weak void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
-+						   unsigned long start, unsigned long end)
- {
--	return 0;
- }
- 
- bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
-@@ -384,6 +383,18 @@ static inline struct kvm *mmu_notifier_t
- 	return container_of(mn, struct kvm, mmu_notifier);
- }
- 
-+static void kvm_mmu_notifier_invalidate_range(struct mmu_notifier *mn,
-+					      struct mm_struct *mm,
-+					      unsigned long start, unsigned long end)
-+{
-+	struct kvm *kvm = mmu_notifier_to_kvm(mn);
-+	int idx;
-+
-+	idx = srcu_read_lock(&kvm->srcu);
-+	kvm_arch_mmu_notifier_invalidate_range(kvm, start, end);
-+	srcu_read_unlock(&kvm->srcu, idx);
-+}
-+
- static void kvm_mmu_notifier_change_pte(struct mmu_notifier *mn,
- 					struct mm_struct *mm,
- 					unsigned long address,
-@@ -408,7 +419,6 @@ static int kvm_mmu_notifier_invalidate_r
- {
- 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
- 	int need_tlb_flush = 0, idx;
--	int ret;
- 
- 	idx = srcu_read_lock(&kvm->srcu);
- 	spin_lock(&kvm->mmu_lock);
-@@ -425,14 +435,9 @@ static int kvm_mmu_notifier_invalidate_r
- 		kvm_flush_remote_tlbs(kvm);
- 
- 	spin_unlock(&kvm->mmu_lock);
--
--	ret = kvm_arch_mmu_notifier_invalidate_range(kvm, range->start,
--					range->end,
--					mmu_notifier_range_blockable(range));
--
- 	srcu_read_unlock(&kvm->srcu, idx);
- 
--	return ret;
-+	return 0;
- }
- 
- static void kvm_mmu_notifier_invalidate_range_end(struct mmu_notifier *mn,
-@@ -538,6 +543,7 @@ static void kvm_mmu_notifier_release(str
- }
- 
- static const struct mmu_notifier_ops kvm_mmu_notifier_ops = {
-+	.invalidate_range	= kvm_mmu_notifier_invalidate_range,
- 	.invalidate_range_start	= kvm_mmu_notifier_invalidate_range_start,
- 	.invalidate_range_end	= kvm_mmu_notifier_invalidate_range_end,
- 	.clear_flush_young	= kvm_mmu_notifier_clear_flush_young,
+-	if (!enable)
++	/*
++	 * DW SPI controller demands any native CS being set in order to
++	 * proceed with data transfer. So in order to activate the SPI
++	 * communications we must set a corresponding bit in the Slave
++	 * Enable register no matter whether the SPI core is configured to
++	 * support active-high or active-low CS level.
++	 */
++	if (cs_high == enable)
+ 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+ 	else if (dws->cs_override)
+ 		dw_writel(dws, DW_SPI_SER, 0);
+-- 
+2.25.1
+
 
 
