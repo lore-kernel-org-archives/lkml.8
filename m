@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72509C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C702820B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D7920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321931;
-	bh=Z1qeNrPzQX2HeO121luRbN2+mEG0uHjTupsRDDT/lHY=;
+	s=default; t=1592321937;
+	bh=KcTahHkVoRsy+IsGjmhF3qgFZbKsfTtARSuBnB9D+Eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VoX1LpqY63qDLsLi606MPlpnQmX53l7j235U72E7KmPkuJu5WDVFMbZ4I5G+9nNy3
-	 oQuD7c3N7229HG0e3KxbLrY2m9/b/Jj80rJzyAEITEDgeZHKEVUmBOUUCR4tnRm7i6
-	 8sCY1foEbkhnJtKdN74yMtRNSAaRWU8aWed7UTvw=
+	b=rqGgwLblV2qV6MAckZu+u/2dcaVanjJTRAgF4kT98vlaANkliBHWWPwImuUp763kI
+	 6c+rpMz20RC38QCWd7B4cpDqrETcRE1pEkIUvUNfvxDhXrwmv0E9Drmk35gU4TouJm
+	 cd9Zjr3Ao7XnAJyRxmVvlVriDHj2EdrzjWHTEWo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgFPPiu (ORCPT
+        id S1730803AbgFPPi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:38:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729916AbgFPPiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:46 -0400
+        id S1730792AbgFPPiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 696B520B1F;
-        Tue, 16 Jun 2020 15:38:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD3D021534;
+        Tue, 16 Jun 2020 15:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321925;
-        bh=Z1qeNrPzQX2HeO121luRbN2+mEG0uHjTupsRDDT/lHY=;
+        s=default; t=1592321930;
+        bh=KcTahHkVoRsy+IsGjmhF3qgFZbKsfTtARSuBnB9D+Eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vezeWBxwRMb4XCU+EgCyrmN1iavJGO2MIB+ZYhSW3bD8BCARpeRszbNWLWK6rJBCC
-         /OcKTJF5zLinF1uiCjGZdNfBBEUKULF7ze/ZQXH6c/EPVrfKqQs73/q6A1N4x2S+Wo
-         6CXxJlIYGh2GeXYl4wBF86FogHZC/m0oeatj9RLk=
+        b=QAUDUrYK6bU/BxMc53wZA1ty2yHEaP97GchYcqC6RWJ+XX7oQ5/Eqdd3/Qxm5SxbU
+         11VD1ErcGCp0Vm5O7GERiMwJ+uqgwsVwz384hJs32SpPrkuPsz8+fh99A0tpZb17Qd
+         x4E+mDm5gFES80j86AUM47zRFWx3NWaCSno3l5YI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Walton Hoops <me@waltonhoops.com>,
-        Tomas Hlavaty <tom@logand.com>,
-        ARAI Shun-ichi <hermes@ceres.dti.ne.jp>,
-        Hideki EIRAKU <hdk1983@gmail.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 068/134] nilfs2: fix null pointer dereference at nilfs_segctor_do_construct()
-Date:   Tue, 16 Jun 2020 17:34:12 +0200
-Message-Id: <20200616153104.031312267@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 070/134] spi: Fix controller unregister order
+Date:   Tue, 16 Jun 2020 17:34:14 +0200
+Message-Id: <20200616153104.134143873@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -64,67 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 8301c719a2bd131436438e49130ee381d30933f5 upstream.
+commit 84855678add8aba927faf76bc2f130a40f94b6f7 upstream.
 
-After commit c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if
-mapping has no dirty pages"), the following null pointer dereference has
-been reported on nilfs2:
+When an SPI controller unregisters, it unbinds all its slave devices.
+For this, their drivers may need to access the SPI bus, e.g. to quiesce
+interrupts.
 
-  BUG: kernel NULL pointer dereference, address: 00000000000000a8
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  ...
-  RIP: 0010:percpu_counter_add_batch+0xa/0x60
-  ...
-  Call Trace:
-    __test_set_page_writeback+0x2d3/0x330
-    nilfs_segctor_do_construct+0x10d3/0x2110 [nilfs2]
-    nilfs_segctor_construct+0x168/0x260 [nilfs2]
-    nilfs_segctor_thread+0x127/0x3b0 [nilfs2]
-    kthread+0xf8/0x130
-    ...
+However since commit ffbbdd21329f ("spi: create a message queueing
+infrastructure"), spi_destroy_queue() is executed before unbinding the
+slaves.  It sets ctlr->running = false, thereby preventing SPI bus
+access and causing unbinding of slave devices to fail.
 
-This crash turned out to be caused by set_page_writeback() call for
-segment summary buffers at nilfs_segctor_prepare_write().
+Fix by unbinding slaves before calling spi_destroy_queue().
 
-set_page_writeback() can call inc_wb_stat(inode_to_wb(inode),
-WB_WRITEBACK) where inode_to_wb(inode) is NULL if the inode of
-underlying block device does not have an associated wb.
-
-This fixes the issue by calling inode_attach_wb() in advance to ensure
-to associate the bdev inode with its wb.
-
-Fixes: c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if mapping has no dirty pages")
-Reported-by: Walton Hoops <me@waltonhoops.com>
-Reported-by: Tomas Hlavaty <tom@logand.com>
-Reported-by: ARAI Shun-ichi <hermes@ceres.dti.ne.jp>
-Reported-by: Hideki EIRAKU <hdk1983@gmail.com>
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: <stable@vger.kernel.org>	[5.4+]
-Link: http://lkml.kernel.org/r/20200608.011819.1399059588922299158.konishi.ryusuke@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: ffbbdd21329f ("spi: create a message queueing infrastructure")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.4+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/8aaf9d44c153fe233b17bc2dec4eb679898d7e7b.1589557526.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nilfs2/segment.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/nilfs2/segment.c
-+++ b/fs/nilfs2/segment.c
-@@ -2780,6 +2780,8 @@ int nilfs_attach_log_writer(struct super
- 	if (!nilfs->ns_writer)
- 		return -ENOMEM;
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2581,6 +2581,8 @@ void spi_unregister_controller(struct sp
+ 	struct spi_controller *found;
+ 	int id = ctlr->bus_num;
  
-+	inode_attach_wb(nilfs->ns_bdev->bd_inode, NULL);
++	device_for_each_child(&ctlr->dev, NULL, __unregister);
 +
- 	err = nilfs_segctor_start_thread(nilfs->ns_writer);
- 	if (err) {
- 		kfree(nilfs->ns_writer);
+ 	/* First make sure that this controller was ever added */
+ 	mutex_lock(&board_lock);
+ 	found = idr_find(&spi_master_idr, id);
+@@ -2593,7 +2595,6 @@ void spi_unregister_controller(struct sp
+ 	list_del(&ctlr->list);
+ 	mutex_unlock(&board_lock);
+ 
+-	device_for_each_child(&ctlr->dev, NULL, __unregister);
+ 	device_unregister(&ctlr->dev);
+ 	/* free bus id */
+ 	mutex_lock(&board_lock);
 
 
