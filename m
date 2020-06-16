@@ -2,58 +2,54 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A265C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55768C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79D8D214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354A621473
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322557;
-	bh=KaCRS2M8YN6o5vmclDxj8oBD9KIeYDHwC6I+bpJEoBY=;
+	s=default; t=1592322564;
+	bh=iI/BZKi97QLx0JPtrtFK7ox1FG7npbhQVMDwhtTaRYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HOGHf874KGAFXHz3F3WVQjz7jD5ml3pqHXVe4n1KgdRFVvRKXZef947mNGP1MPB4o
-	 J317E/9bLZiYB9OoQnu+kUdoTapKeyNZj1yjWs1C6LYdDfNU6SbdQs3VSgiD2gUSGh
-	 eeakD2xbGCWOETQvqTG4hSO2XKo6WGm/11+O61KQ=
+	b=haJeoZnG5IdzC8keubcZKm39ArXu8OWAl384zDN3U3qbyg4AMSu42yAG6eAIaZCfw
+	 KxPSw/qBZc6Ej4PYDOJGKKCPA+Kl6dMwhtj8olDBnxzqi0jY3t11qhhEL5hrBV5igW
+	 vNrce6L4fbRyiD20fzSud/ZRAkZTxmYcKf5Bllyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732498AbgFPPtQ (ORCPT
+        id S1732492AbgFPPtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732481AbgFPPtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:11 -0400
+        id S1732239AbgFPPtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E6520776;
-        Tue, 16 Jun 2020 15:49:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E2D82071A;
+        Tue, 16 Jun 2020 15:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322550;
-        bh=KaCRS2M8YN6o5vmclDxj8oBD9KIeYDHwC6I+bpJEoBY=;
+        s=default; t=1592322547;
+        bh=iI/BZKi97QLx0JPtrtFK7ox1FG7npbhQVMDwhtTaRYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mOOWWtSgRVGOu1237C7NCBRTvZhvg4duMtkxVA7wHVDhZ1h5Rbp9xghB7ksuCP6WU
-         6MaCIunrWdn8MJDwW2Jgn7hKoKAn+sepDsUhjV3lzTz1PF5zowXwFRMxNYbSEt/yDO
-         rQKhIewwkaCJkTejnCIX+SRUEb2I0z9+xvicKLIY=
+        b=orGxxcIqeisw8vPeXV0vd/2TOz9AM9sevoofGtlA3BNz7icEouOwhSPQz7ZAfSULl
+         bDPNkHVS+vLxlHVR7l8CVtKHjFZKxIrJ8sGl8lD9pJhxjAPEw1AidGFS6uxSVe7vJY
+         Cnd4MnfMgMrEKmqK1x+Dtqd0yQqZYwFD6mvlSMS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kees Cook <keescook@chromium.org>,
-        Maria Teguiani <teguiani@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.6 012/161] bpf: Support llvm-objcopy for vmlinux BTF
-Date:   Tue, 16 Jun 2020 17:33:22 +0200
-Message-Id: <20200616153106.997453469@linuxfoundation.org>
+        syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com,
+        Jon Maloy <jmaloy@redhat.com>,
+        Tuong Lien <tuong.t.lien@dektech.com.au>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 011/161] tipc: fix NULL pointer dereference in streaming
+Date:   Tue, 16 Jun 2020 17:33:21 +0200
+Message-Id: <20200616153106.955581775@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -66,213 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fangrui Song <maskray@google.com>
+From: Tuong Lien <tuong.t.lien@dektech.com.au>
 
-commit 90ceddcb495008ac8ba7a3dce297841efcd7d584 upstream.
+[ Upstream commit 5e9eeccc58f3e6bcc99b929670665d2ce047e9c9 ]
 
-Simplify gen_btf logic to make it work with llvm-objcopy. The existing
-'file format' and 'architecture' parsing logic is brittle and does not
-work with llvm-objcopy/llvm-objdump.
+syzbot found the following crash:
 
-'file format' output of llvm-objdump>=11 will match GNU objdump, but
-'architecture' (bfdarch) may not.
+general protection fault, probably for non-canonical address 0xdffffc0000000019: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000000c8-0x00000000000000cf]
+CPU: 1 PID: 7060 Comm: syz-executor394 Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__tipc_sendstream+0xbde/0x11f0 net/tipc/socket.c:1591
+Code: 00 00 00 00 48 39 5c 24 28 48 0f 44 d8 e8 fa 3e db f9 48 b8 00 00 00 00 00 fc ff df 48 8d bb c8 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e2 04 00 00 48 8b 9b c8 00 00 00 48 b8 00 00 00
+RSP: 0018:ffffc90003ef7818 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8797fd9d
+RDX: 0000000000000019 RSI: ffffffff8797fde6 RDI: 00000000000000c8
+RBP: ffff888099848040 R08: ffff88809a5f6440 R09: fffffbfff1860b4c
+R10: ffffffff8c305a5f R11: fffffbfff1860b4b R12: ffff88809984857e
+R13: 0000000000000000 R14: ffff888086aa4000 R15: 0000000000000000
+FS:  00000000009b4880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000140 CR3: 00000000a7fdf000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ tipc_sendstream+0x4c/0x70 net/tipc/socket.c:1533
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x32f/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmmsg+0x195/0x480 net/socket.c:2496
+ __do_sys_sendmmsg net/socket.c:2525 [inline]
+ __se_sys_sendmmsg net/socket.c:2522 [inline]
+ __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2522
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x440199
+...
 
-.BTF in .tmp_vmlinux.btf is non-SHF_ALLOC. Add the SHF_ALLOC flag
-because it is part of vmlinux image used for introspection. C code
-can reference the section via linker script defined __start_BTF and
-__stop_BTF. This fixes a small problem that previous .BTF had the
-SHF_WRITE flag (objcopy -I binary -O elf* synthesized .data).
+This bug was bisected to commit 0a3e060f340d ("tipc: add test for Nagle
+algorithm effectiveness"). However, it is not the case, the trouble was
+from the base in the case of zero data length message sending, we would
+unexpectedly make an empty 'txq' queue after the 'tipc_msg_append()' in
+Nagle mode.
 
-Additionally, `objcopy -I binary` synthesized symbols
-_binary__btf_vmlinux_bin_start and _binary__btf_vmlinux_bin_stop (not
-used elsewhere) are replaced with more commonplace __start_BTF and
-__stop_BTF.
+A similar crash can be generated even without the bisected patch but at
+the link layer when it accesses the empty queue.
 
-Add 2>/dev/null because GNU objcopy (but not llvm-objcopy) warns
-"empty loadable segment detected at vaddr=0xffffffff81000000, is this intentional?"
+We solve the issues by building at least one buffer to go with socket's
+header and an optional data section that may be empty like what we had
+with the 'tipc_msg_build()'.
 
-We use a dd command to change the e_type field in the ELF header from
-ET_EXEC to ET_REL so that lld will accept .btf.vmlinux.bin.o.  Accepting
-ET_EXEC as an input file is an extremely rare GNU ld feature that lld
-does not intend to support, because this is error-prone.
+Note: the previous commit 4c21daae3dbc ("tipc: Fix NULL pointer
+dereference in __tipc_sendstream()") is obsoleted by this one since the
+'txq' will be never empty and the check of 'skb != NULL' is unnecessary
+but it is safe anyway.
 
-The output section description .BTF in include/asm-generic/vmlinux.lds.h
-avoids potential subtle orphan section placement issues and suppresses
---orphan-handling=warn warnings.
-
-Fixes: df786c9b9476 ("bpf: Force .BTF section start to zero when dumping from vmlinux")
-Fixes: cb0cc635c7a9 ("powerpc: Include .BTF section")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Stanislav Fomichev <sdf@google.com>
-Tested-by: Andrii Nakryiko <andriin@fb.com>
-Reviewed-by: Stanislav Fomichev <sdf@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Link: https://github.com/ClangBuiltLinux/linux/issues/871
-Link: https://lore.kernel.org/bpf/20200318222746.173648-1-maskray@google.com
-Signed-off-by: Maria Teguiani <teguiani@google.com>
+Reported-by: syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com
+Fixes: c0bceb97db9e ("tipc: add smart nagle feature")
+Acked-by: Jon Maloy <jmaloy@redhat.com>
+Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/powerpc/kernel/vmlinux.lds.S |    6 ------
- include/asm-generic/vmlinux.lds.h |   15 +++++++++++++++
- kernel/bpf/btf.c                  |    9 ++++-----
- kernel/bpf/sysfs_btf.c            |   11 +++++------
- scripts/link-vmlinux.sh           |   24 ++++++++++--------------
- 5 files changed, 34 insertions(+), 31 deletions(-)
+ net/tipc/msg.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -303,12 +303,6 @@ SECTIONS
- 		*(.branch_lt)
- 	}
+--- a/net/tipc/msg.c
++++ b/net/tipc/msg.c
+@@ -221,7 +221,7 @@ int tipc_msg_append(struct tipc_msg *_hd
+ 	accounted = skb ? msg_blocks(buf_msg(skb)) : 0;
+ 	total = accounted;
  
--#ifdef CONFIG_DEBUG_INFO_BTF
--	.BTF : AT(ADDR(.BTF) - LOAD_OFFSET) {
--		*(.BTF)
+-	while (rem) {
++	do {
+ 		if (!skb || skb->len >= mss) {
+ 			prev = skb;
+ 			skb = tipc_buf_acquire(mss, GFP_KERNEL);
+@@ -249,7 +249,7 @@ int tipc_msg_append(struct tipc_msg *_hd
+ 		skb_put(skb, cpy);
+ 		rem -= cpy;
+ 		total += msg_blocks(hdr) - curr;
 -	}
--#endif
--
- 	.opd : AT(ADDR(.opd) - LOAD_OFFSET) {
- 		__start_opd = .;
- 		KEEP(*(.opd))
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -535,6 +535,7 @@
- 									\
- 	RO_EXCEPTION_TABLE						\
- 	NOTES								\
-+	BTF								\
- 									\
- 	. = ALIGN((align));						\
- 	__end_rodata = .;
-@@ -622,6 +623,20 @@
- 	}
- 
- /*
-+ * .BTF
-+ */
-+#ifdef CONFIG_DEBUG_INFO_BTF
-+#define BTF								\
-+	.BTF : AT(ADDR(.BTF) - LOAD_OFFSET) {				\
-+		__start_BTF = .;					\
-+		*(.BTF)							\
-+		__stop_BTF = .;						\
-+	}
-+#else
-+#define BTF
-+#endif
-+
-+/*
-  * Init task
-  */
- #define INIT_TASK_DATA_SECTION(align)					\
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -3477,8 +3477,8 @@ errout:
- 	return ERR_PTR(err);
++	} while (rem);
+ 	return total - accounted;
  }
  
--extern char __weak _binary__btf_vmlinux_bin_start[];
--extern char __weak _binary__btf_vmlinux_bin_end[];
-+extern char __weak __start_BTF[];
-+extern char __weak __stop_BTF[];
- extern struct btf *btf_vmlinux;
- 
- #define BPF_MAP_TYPE(_id, _ops)
-@@ -3605,9 +3605,8 @@ struct btf *btf_parse_vmlinux(void)
- 	}
- 	env->btf = btf;
- 
--	btf->data = _binary__btf_vmlinux_bin_start;
--	btf->data_size = _binary__btf_vmlinux_bin_end -
--		_binary__btf_vmlinux_bin_start;
-+	btf->data = __start_BTF;
-+	btf->data_size = __stop_BTF - __start_BTF;
- 
- 	err = btf_parse_hdr(env);
- 	if (err)
---- a/kernel/bpf/sysfs_btf.c
-+++ b/kernel/bpf/sysfs_btf.c
-@@ -9,15 +9,15 @@
- #include <linux/sysfs.h>
- 
- /* See scripts/link-vmlinux.sh, gen_btf() func for details */
--extern char __weak _binary__btf_vmlinux_bin_start[];
--extern char __weak _binary__btf_vmlinux_bin_end[];
-+extern char __weak __start_BTF[];
-+extern char __weak __stop_BTF[];
- 
- static ssize_t
- btf_vmlinux_read(struct file *file, struct kobject *kobj,
- 		 struct bin_attribute *bin_attr,
- 		 char *buf, loff_t off, size_t len)
- {
--	memcpy(buf, _binary__btf_vmlinux_bin_start + off, len);
-+	memcpy(buf, __start_BTF + off, len);
- 	return len;
- }
- 
-@@ -30,15 +30,14 @@ static struct kobject *btf_kobj;
- 
- static int __init btf_vmlinux_init(void)
- {
--	if (!_binary__btf_vmlinux_bin_start)
-+	if (!__start_BTF)
- 		return 0;
- 
- 	btf_kobj = kobject_create_and_add("btf", kernel_kobj);
- 	if (!btf_kobj)
- 		return -ENOMEM;
- 
--	bin_attr_btf_vmlinux.size = _binary__btf_vmlinux_bin_end -
--				    _binary__btf_vmlinux_bin_start;
-+	bin_attr_btf_vmlinux.size = __stop_BTF - __start_BTF;
- 
- 	return sysfs_create_bin_file(btf_kobj, &bin_attr_btf_vmlinux);
- }
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -113,9 +113,6 @@ vmlinux_link()
- gen_btf()
- {
- 	local pahole_ver
--	local bin_arch
--	local bin_format
--	local bin_file
- 
- 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
- 		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
-@@ -133,17 +130,16 @@ gen_btf()
- 	info "BTF" ${2}
- 	LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
- 
--	# dump .BTF section into raw binary file to link with final vmlinux
--	bin_arch=$(LANG=C ${OBJDUMP} -f ${1} | grep architecture | \
--		cut -d, -f1 | cut -d' ' -f2)
--	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
--		awk '{print $4}')
--	bin_file=.btf.vmlinux.bin
--	${OBJCOPY} --change-section-address .BTF=0 \
--		--set-section-flags .BTF=alloc -O binary \
--		--only-section=.BTF ${1} $bin_file
--	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
--		--rename-section .data=.BTF $bin_file ${2}
-+	# Create ${2} which contains just .BTF section but no symbols. Add
-+	# SHF_ALLOC because .BTF will be part of the vmlinux image. --strip-all
-+	# deletes all symbols including __start_BTF and __stop_BTF, which will
-+	# be redefined in the linker script. Add 2>/dev/null to suppress GNU
-+	# objcopy warnings: "empty loadable segment detected at ..."
-+	${OBJCOPY} --only-section=.BTF --set-section-flags .BTF=alloc,readonly \
-+		--strip-all ${1} ${2} 2>/dev/null
-+	# Change e_type to ET_REL so that it can be used to link final vmlinux.
-+	# Unlike GNU ld, lld does not allow an ET_EXEC input.
-+	printf '\1' | dd of=${2} conv=notrunc bs=1 seek=16 status=none
- }
- 
- # Create ${2} .o file with all symbols from the ${1} object file
 
 
