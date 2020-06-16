@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E574C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A8E20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EBC20E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321818;
-	bh=9ssOAW7ppA3qIA1s5QJqEpg4nrLN5tMpyiBlmt04Fqk=;
+	s=default; t=1592321819;
+	bh=qbjFp3mx16T80Cvs+TRI69TmGM1espN6i4MH6KsISO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DNqn7NDqRC9cHq17zqqFe+g6ZTgQRyORSGkz08e0oIM/+SeVLrf2luGCDdkq53OgQ
-	 j5HysYZbUDrnOFUF1YKJX6f8NhQs9lgn4Nasjg5YOMYwkL+cyL965KMUevnmGlZ3nL
-	 LyoOMRYnnTW6pcnKwnv+Wy/MkXtJvG3Dcy/lHk/8=
+	b=Sf0ESdRuGAH3X3RrLRegbG3GlyOf9QTmLsvt7fR81FYX/RFIMzoNk1TdCa2k5rjmN
+	 2HD790lVurVWGT3ByyBabqR3Saa9o4MsD2jimlutDGhwv71NX8fh4zx1606D+Ib/KQ
+	 tMwpWTjGbnx5A0XpjguQGcvDn1JKtI7I0K/kVhic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbgFPPg4 (ORCPT
+        id S1730161AbgFPPg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:36:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47968 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:36:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730110AbgFPPgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:36:55 -0400
+        id S1730139AbgFPPg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:36:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 909352098B;
-        Tue, 16 Jun 2020 15:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD7D2098B;
+        Tue, 16 Jun 2020 15:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321814;
-        bh=9ssOAW7ppA3qIA1s5QJqEpg4nrLN5tMpyiBlmt04Fqk=;
+        s=default; t=1592321816;
+        bh=qbjFp3mx16T80Cvs+TRI69TmGM1espN6i4MH6KsISO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1YsBjtn6ksUx7PFCuzZrthFqyRI+frY/3zOM2QNOMXyUvOgBPNZngjsMYpxvDQxw
-         dRn+gyhm4mgQCTNmZP6OQbWSDMqG0cG9+drBG8vxKsDFn8dhcccW552mck9j04w/xs
-         xGofbLlKfpXk0paIbct6fB4QYIWYGoGkBksb/fbQ=
+        b=mk/S6iMSf/nIBQ3CllzAtjilVJ2Ww80LsidpQOnsWFnaI6FEY1ZlX7d5hew6oh/fB
+         lIO+57VceLbubLLcjhcEi5ciSca8AIwCoSjOkCpoWqWdsgN9jtEkHTAeYgLucoC0C5
+         1Qk8rk+imN5kkE0niSJTbcei7JB5By8AM5THNpfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 026/134] KVM: x86: only do L1TF workaround on affected processors
-Date:   Tue, 16 Jun 2020 17:33:30 +0200
-Message-Id: <20200616153102.019041905@linuxfoundation.org>
+Subject: [PATCH 5.4 027/134] PCI/PM: Adjust pcie_wait_for_link_delay() for caller delay
+Date:   Tue, 16 Jun 2020 17:33:31 +0200
+Message-Id: <20200616153102.067648603@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,78 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit d43e2675e96fc6ae1a633b6a69d296394448cc32 ]
+[ Upstream commit f044baaff1eb7ae5aa7a36f1b7ad5bd8eeb672c4 ]
 
-KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
-in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
-in an L1TF attack.  This works as long as there are 5 free bits between
-MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
-access triggers a reserved-bit-set page fault.
+The caller of pcie_wait_for_link_delay() specifies the time to wait after
+the link becomes active.  When the downstream port doesn't support link
+active reporting, obviously we can't tell when the link becomes active, so
+we waited the worst-case time (1000 ms) plus 100 ms, ignoring the delay
+from the caller.
 
-The bit positions however were computed wrongly for AMD processors that have
-encryption support.  In this case, x86_phys_bits is reduced (for example
-from 48 to 43, to account for the C bit at position 47 and four bits used
-internally to store the SEV ASID and other stuff) while x86_cache_bits in
-would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
-and bit 51 are set.  Then low_phys_bits would also cover some of the
-bits that are set in the shadow_mmio_value, terribly confusing the gfn
-caching mechanism.
+Instead, wait for 1000 ms + the delay from the caller.
 
-To fix this, avoid splitting gfns as long as the processor does not have
-the L1TF bug (which includes all AMD processors).  When there is no
-splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
-the overlap.  This fixes "npt=0" operation on EPYC processors.
-
-Thanks to Maxim Levitsky for bisecting this bug.
-
-Cc: stable@vger.kernel.org
-Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 4827d63891b6 ("PCI/PM: Add pcie_wait_for_link_delay()")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mmu.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/pci/pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 518100ea5ef4..50d67ad15790 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -343,6 +343,8 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask)
- {
- 	BUG_ON((u64)(unsigned)access_mask != access_mask);
- 	BUG_ON((mmio_mask & mmio_value) != mmio_value);
-+	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
-+	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
- 	shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
- 	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
- 	shadow_mmio_access_mask = access_mask;
-@@ -580,16 +582,15 @@ static void kvm_mmu_reset_all_pte_masks(void)
- 	 * the most significant bits of legal physical address space.
- 	 */
- 	shadow_nonpresent_or_rsvd_mask = 0;
--	low_phys_bits = boot_cpu_data.x86_cache_bits;
--	if (boot_cpu_data.x86_cache_bits <
--	    52 - shadow_nonpresent_or_rsvd_mask_len) {
-+	low_phys_bits = boot_cpu_data.x86_phys_bits;
-+	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
-+	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
-+			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
-+		low_phys_bits = boot_cpu_data.x86_cache_bits
-+			- shadow_nonpresent_or_rsvd_mask_len;
- 		shadow_nonpresent_or_rsvd_mask =
--			rsvd_bits(boot_cpu_data.x86_cache_bits -
--				  shadow_nonpresent_or_rsvd_mask_len,
--				  boot_cpu_data.x86_cache_bits - 1);
--		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
--	} else
--		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
-+			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
-+	}
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 779132aef0fb..c73e8095a849 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4621,10 +4621,10 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
  
- 	shadow_nonpresent_or_rsvd_lower_gfn_mask =
- 		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
+ 	/*
+ 	 * Some controllers might not implement link active reporting. In this
+-	 * case, we wait for 1000 + 100 ms.
++	 * case, we wait for 1000 ms + any delay requested by the caller.
+ 	 */
+ 	if (!pdev->link_active_reporting) {
+-		msleep(1100);
++		msleep(timeout + delay);
+ 		return true;
+ 	}
+ 
 -- 
 2.25.1
 
