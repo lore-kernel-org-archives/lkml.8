@@ -2,114 +2,168 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B79CB20734
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA5C20734
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZbUTrPHT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aNl5M/1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgFPL0s (ORCPT
+        id S1728551AbgFPL1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgFPL0r (ORCPT
+        Tue, 16 Jun 2020 07:27:49 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39895 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725768AbgFPL1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:26:47 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CB4C08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:26:47 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id z47so6763351uad.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kj8pBuEYbicEiYra/1MxsnxdNYdCIy/Xz738Lg8QI0g=;
-        b=ZbUTrPHTGu4GwRh+DYfBRS103wLfZCo7oqvH3ERUV1WbxyzFR/liagSKZA7aO+Iln/
-         poyaEIZX/9KHRofWYhS5/iTPpJDMkTYArJLh0qOlLaj3kxF/Ig3VoeQs64cUdVaVPtfh
-         apJhsVaDPHBAs71yhuuMbPYLGVlTotvbI8AVAaQJ9Ngzaj/mnnhWzYwF4FCuEy5dS3OB
-         8JwCCKvrFCCDYNIQrkQsHeIMZMz62awjR+L9+I9SSwzyuhf9RpPKB3jPhGI4UpaIO5MC
-         VqFwFI1DJv4cmFI7JSJCN0+8UrjbrqoL6YXn5kgeLhzuoW7tYTuJIYJNEyfXrwAECPvR
-         JuUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kj8pBuEYbicEiYra/1MxsnxdNYdCIy/Xz738Lg8QI0g=;
-        b=EWnxilxEdX9cnIdpf+E/I4efp7okaGHO1HNMc7i0M3e1ZXm3JAf22Ztc9NzLqcsWj9
-         wYps2biwyPDXAr+kyUggw+YY5W/5OvNH4uyH4hHlJLihj6DGNKaDhNkdxdkWWCEVJg8x
-         vA0mDK8kdYsLrIissP6qTkblvkqEzKvgbPYDBVJ3Sdosdj0KMvJCfkQlfrijrD9rfAwl
-         mT4M4lzKef/5bzGvHstWWg+g5wSWbkNYK6/q5mF6rJyHaI0vr8LPLSmQgZBhhioUam8j
-         PshqvfuLyCwhPRU9pFz7RCQAXDg7Ld6XxGBYjJYYQBf5TWnYEM9gnGhP13mhQUsVAfJo
-         qHpQ==
-X-Gm-Message-State: AOAM531UzogwzaTnTbvF1o73B5Btb/sqOK0JJ9m3R2uDckAPT9jl5gY2
-        bl+bcEIGuncsWHY1Xy63S4IC/TtM3u40cLbfomFOHQQzIoA=
-X-Google-Smtp-Source: ABdhPJy2Qd7oDX9DDcKEcby0eTov3HheRlbgolbFvrZxbuuTEf20dyHDgn1w9N0lmc2eLKKRZTcijY+l68vloRA9oNY=
-X-Received: by 2002:ab0:70c9:: with SMTP id r9mr1391633ual.15.1592306806719;
- Tue, 16 Jun 2020 04:26:46 -0700 (PDT)
+        Tue, 16 Jun 2020 07:27:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592306867;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=z2I1PH69r1C+t3GnAosZT31X4STu68UH/RqrSdRETA4=;
+        b=aNl5M/1BU4qGGftvJYbbZh9i33toPiQ0UlvmRxixJE4GAvMKZvRCJoWmyiuhAVc7dLpbg1
+        /CCVaij3aSmtwQ2ZhoWoewjz4oKiGriHPKHkKOfNI+zdO6lk1Jg4ejZssZ/0euUuafFSgo
+        /nC+0i98epkS9zfTDtldE/dDBv6vM4g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215--u0R3Bt6OBiHrcorKewm_Q-1; Tue, 16 Jun 2020 07:27:43 -0400
+X-MC-Unique: -u0R3Bt6OBiHrcorKewm_Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7AD668DFFE8;
+        Tue, 16 Jun 2020 11:27:07 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 96449619C1;
+        Tue, 16 Jun 2020 11:27:05 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH v4] x86/split_lock: Sanitize userspace and guest error output
+Date:   Tue, 16 Jun 2020 07:27:02 -0400
+Message-Id: <20200616112702.1703-1-prarit@redhat.com>
 MIME-Version: 1.0
-References: <20200602172957.13592-1-gaoce123@gmail.com>
-In-Reply-To: <20200602172957.13592-1-gaoce123@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 16 Jun 2020 13:26:10 +0200
-Message-ID: <CAPDyKFrUNVryOCn0VqoATOgvJq5H7XPNb79tw+yxTV3wOqsVFQ@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: Add error check to avoid kernel panic caused
- by NULL pointer
-To:     Corey Gao <gaoce123@gmail.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 19:31, Corey Gao <gaoce123@gmail.com> wrote:
->
-> If __mmc_start_req(host, mrq) fails with error, the mrq->cmd->mrq will
-> be NULL. This will cause kernel panic in the following
-> mmc_wait_for_req_done(host, mrq). Add error check to cancle unnecessary
-> mmc_wait_for_req_done(host, mrq) if __mmc_start_req(host, mrq) fails.
+There are two problems with kernel messages in fatal mode that were found
+during testing of guests and userspace programs.
 
-The above is a bit hard for me to follow, can you please try to
-elaborate on the problem. Moreover, please, provide a stack trace, as
-that is easier to follow for me.
+The first is that no kernel message is output when the split lock detector
+is triggered with a userspace program.  As a result the userspace process
+dies from receiving SIGBUS with no indication to the user of what caused
+the process to die.
 
-Kind regards
-Uffe
+The second problem is that only the first triggering guest causes a kernel
+message to be output because the message is output with pr_warn_once().
+This also results in a loss of information to the user.
 
->
-> Signed-off-by: Corey Gao <gaoce123@gmail.com>
-> ---
->  drivers/mmc/core/core.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index 2553d903a82b..b13b484e64aa 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -734,9 +734,11 @@ EXPORT_SYMBOL(mmc_start_req);
->   */
->  void mmc_wait_for_req(struct mmc_host *host, struct mmc_request *mrq)
->  {
-> -       __mmc_start_req(host, mrq);
-> +       int err;
->
-> -       if (!mrq->cap_cmd_during_tfr)
-> +       err = __mmc_start_req(host, mrq);
-> +
-> +       if (!mrq->cap_cmd_during_tfr && !err)
->                 mmc_wait_for_req_done(host, mrq);
->  }
->  EXPORT_SYMBOL(mmc_wait_for_req);
-> --
-> 2.17.1
->
+While fixing these I noticed that the same message was being output
+three times so I'm cleaning that up too.
+
+Fix fatal mode output, and use consistent messages for fatal and
+warn modes for both userspace and guests.
+
+Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+---
+v2: Do not output a message if CPL 3 Alignment Check is turned on (xiaoyao.li)
+v3: refactor code (sean.j.christopherson)
+v4: Fix Sign off (sean.j.christopherson)
+
+ arch/x86/kernel/cpu/intel.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 63926c94eb5f..3a373f0be674 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1074,11 +1074,14 @@ static void split_lock_init(void)
+ 	split_lock_verify_msr(sld_state != sld_off);
+ }
+ 
+-static void split_lock_warn(unsigned long ip)
++static bool handle_split_lock(unsigned long ip)
+ {
+-	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
++	pr_warn("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+ 			    current->comm, current->pid, ip);
+ 
++	if (sld_state != sld_warn)
++		return false;
++
+ 	/*
+ 	 * Disable the split lock detection for this task so it can make
+ 	 * progress and set TIF_SLD so the detection is re-enabled via
+@@ -1086,18 +1089,13 @@ static void split_lock_warn(unsigned long ip)
+ 	 */
+ 	sld_update_msr(false);
+ 	set_tsk_thread_flag(current, TIF_SLD);
++	return true;
+ }
+ 
+ bool handle_guest_split_lock(unsigned long ip)
+ {
+-	if (sld_state == sld_warn) {
+-		split_lock_warn(ip);
++	if (handle_split_lock(ip))
+ 		return true;
+-	}
+-
+-	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
+-		     current->comm, current->pid,
+-		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
+ 
+ 	current->thread.error_code = 0;
+ 	current->thread.trap_nr = X86_TRAP_AC;
+@@ -1108,10 +1106,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
+ 
+ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+ {
+-	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
++	if (regs->flags & X86_EFLAGS_AC)
+ 		return false;
+-	split_lock_warn(regs->ip);
+-	return true;
++
++	return handle_split_lock(regs->ip);
+ }
+ 
+ /*
+-- 
+2.21.3
+
