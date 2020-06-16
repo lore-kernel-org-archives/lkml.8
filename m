@@ -2,188 +2,170 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCE2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF035C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74BFD2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814AB2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EF6NDaDP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rg9C1Stk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgFPVtQ (ORCPT
+        id S1726408AbgFPVtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:49:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39843 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726134AbgFPVtO (ORCPT
+        Tue, 16 Jun 2020 17:49:18 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23152 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726296AbgFPVtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:49:14 -0400
+        Tue, 16 Jun 2020 17:49:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592344152;
+        s=mimecast20190719; t=1592344154;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e6PBX3SKVg9nqUd6syjhG1IgYhvtY/KB/e1VnPReQ6w=;
-        b=EF6NDaDPC1Zjn0hHKfyl1qGM8Z244e3IfKz7w4hCemY+QF01M7Kx9+mKKcIaKZ58cbPDWB
-        /lRV+JX9V/SmmD0vdgsxyHS5dS/RaqcVGMcJQsjeGU+0qcPGIMIjjURbzAp2+kPi5dxO/f
-        xqFn43MDirNoa5uWWsKHV2+g3SkHz34=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=uv780jpNQSYzquFkmBB1m3mWJ1oYSVcoXMxNLu+Q8MQ=;
+        b=Rg9C1Stka9T5KHBzH1e0vJi5ep0klrGSWjHxzpapBn87iQ9N8k8n2bMPbhU+LgNxfUSBlS
+        ++ZiA61XnjsCNWNwh/KLiqYSusbLc/mDg75JC1H/L6+S2cNi15/p9OrTVcxCJZapxnAraF
+        0XakA0vcFblYcZRNGnqOaAXrjPuzqik=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-k1TY7La4NrqErVOPt9cjEQ-1; Tue, 16 Jun 2020 17:49:11 -0400
-X-MC-Unique: k1TY7La4NrqErVOPt9cjEQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-386-E7zfeKlANEm4BKAq4l_3xQ-1; Tue, 16 Jun 2020 17:49:11 -0400
+X-MC-Unique: E7zfeKlANEm4BKAq4l_3xQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE5F8E919;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7A0C872FF2;
         Tue, 16 Jun 2020 21:49:09 +0000 (UTC)
 Received: from horse.redhat.com (ovpn-114-132.rdu2.redhat.com [10.10.114.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DB9719D7B;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E62360BE2;
         Tue, 16 Jun 2020 21:49:03 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id CCDBC225E4C; Tue, 16 Jun 2020 17:49:02 -0400 (EDT)
+        id C17E522363A; Tue, 16 Jun 2020 17:49:02 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, vgoyal@redhat.com, vkuznets@redhat.com,
         pbonzini@redhat.com, wanpengli@tencent.com,
         sean.j.christopherson@intel.com
-Subject: [PATCH 3/3] kvm, async_pf: Use FOLL_WRITE only for write faults
-Date:   Tue, 16 Jun 2020 17:48:47 -0400
-Message-Id: <20200616214847.24482-4-vgoyal@redhat.com>
-In-Reply-To: <20200616214847.24482-1-vgoyal@redhat.com>
-References: <20200616214847.24482-1-vgoyal@redhat.com>
+Subject: [RFC PATCH 0/3] kvm,x86: Improve kvm page fault error handling
+Date:   Tue, 16 Jun 2020 17:48:44 -0400
+Message-Id: <20200616214847.24482-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-async_pf_execute() calls get_user_pages_remote() and uses FOLL_WRITE
-always. It does not matter whether fault happened due to read/write.
+Hi,
 
-This creates issues if vma is mapped for reading and does not have
-VM_WRITE set and check_vma_flags() fails in __get_user_pages() and
-get_user_pages_remote() returns -EFAULT.
+This is an RFC patch series to improve error handling. Compiled and
+tested only on x86. Have not tested or thought about nested
+configuration yet.
 
-So far this was not an issue, as we don't care about return code
-from get_user_pages_remote(). But soon we want to look at this error
-code and if file got truncated and page can't be faulted in, we want
-to inject error in guest and let guest take appropriate action (Either
-send SIGBUS to guest process or do exception table handling or possibly
-die).
+This is built on top of Vitaly's patches sending "page ready" events
+using interrupts. But it has not been rebased on top of recent
+interrupt rework yet. Patches are also available here.
 
-Hence, we don't want to get -EFAULT erroneously. Pass FOLL_WRITE only
-if it is write fault.
+https://github.com/rhvgoyal/linux/commits/asyncpf-error-v1
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- arch/x86/kvm/mmu/mmu.c   | 7 ++++---
- include/linux/kvm_host.h | 4 +++-
- virt/kvm/async_pf.c      | 9 +++++++--
- 3 files changed, 14 insertions(+), 6 deletions(-)
+Problem
+=======
+Currently kvm page fault error handling seems very unpredictable. If
+a page fault fails and kvm decided not to do async page fault, then
+upon error, we exit to user space and qemu prints
+"error: kvm run failed Bad address" and associated cpu state and VM
+freezes.
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 634182bb07c7..15969c4c8925 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4046,7 +4046,7 @@ static void shadow_page_table_clear_flood(struct kvm_vcpu *vcpu, gva_t addr)
- }
- 
- static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--				   gfn_t gfn)
-+				   gfn_t gfn, bool write)
- {
- 	struct kvm_arch_async_pf arch;
- 
-@@ -4056,7 +4056,8 @@ static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	arch.cr3 = vcpu->arch.mmu->get_guest_pgd(vcpu);
- 
- 	return kvm_setup_async_pf(vcpu, cr2_or_gpa,
--				  kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch);
-+				  kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch,
-+				  write);
- }
- 
- static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
-@@ -4084,7 +4085,7 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
- 			trace_kvm_async_pf_doublefault(cr2_or_gpa, gfn);
- 			kvm_make_request(KVM_REQ_APF_HALT, vcpu);
- 			return true;
--		} else if (kvm_arch_setup_async_pf(vcpu, cr2_or_gpa, gfn))
-+		} else if (kvm_arch_setup_async_pf(vcpu, cr2_or_gpa, gfn, write))
- 			return true;
- 	}
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index b8558334b184..a7c3999a7374 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -208,12 +208,14 @@ struct kvm_async_pf {
- 	bool   wakeup_all;
- 	bool notpresent_injected;
- 	int error_code;
-+	bool write;
- };
- 
- void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu);
- void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu);
- int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--		       unsigned long hva, struct kvm_arch_async_pf *arch);
-+		       unsigned long hva, struct kvm_arch_async_pf *arch,
-+		       bool write);
- int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
- #endif
- 
-diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-index 6b30374a4de1..1d2dc267f9b8 100644
---- a/virt/kvm/async_pf.c
-+++ b/virt/kvm/async_pf.c
-@@ -53,6 +53,7 @@ static void async_pf_execute(struct work_struct *work)
- 	int locked = 1;
- 	bool first;
- 	long ret;
-+	unsigned int gup_flags = 0;
- 
- 	might_sleep();
- 
-@@ -61,8 +62,10 @@ static void async_pf_execute(struct work_struct *work)
- 	 * mm and might be done in another context, so we must
- 	 * access remotely.
- 	 */
-+	if (apf->write)
-+		gup_flags = FOLL_WRITE;
- 	down_read(&mm->mmap_sem);
--	ret = get_user_pages_remote(NULL, mm, addr, 1, FOLL_WRITE, NULL, NULL,
-+	ret = get_user_pages_remote(NULL, mm, addr, 1, gup_flags, NULL, NULL,
- 				    &locked);
- 	if (locked)
- 		up_read(&mm->mmap_sem);
-@@ -161,7 +164,8 @@ void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu)
- }
- 
- int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--		       unsigned long hva, struct kvm_arch_async_pf *arch)
-+		       unsigned long hva, struct kvm_arch_async_pf *arch,
-+		       bool write)
- {
- 	struct kvm_async_pf *work;
- 
-@@ -186,6 +190,7 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 	work->addr = hva;
- 	work->arch = *arch;
- 	work->mm = current->mm;
-+	work->write = write;
- 	mmget(work->mm);
- 	kvm_get_kvm(work->vcpu->kvm);
- 
+But if kvm decided to async page fault, then async_pf_execute() simply
+ignores the error code (-EFAULT) returned by get_user_pages_remote()
+and injects "page ready" event into guest. Guest retries the faulting
+instruction and takes exit again and kvm again retries async page
+fault and this cycle continues and forms an infinite loop.
+
+I can reproduce this -EFAULT situation easily. Created a file
+(nvdimm.img) and exported it to guest as nvdimm device. Inside the guest
+created ext4 filesystem on device and mounted with dax enabled. Now mmap a
+file (/mnt/pmem0/foo.txt) and load from it one page at a time. Also
+truncate nvdimm.img on host. So when guest tries to load from nvdimm,
+its not mapped in page tables anymore (due to truncation) and we take
+exit and try to fault in the page. Now we either exit to user space
+with bad address or and get into infinite loop depending on state of
+filesystem in guest whether at the time of exit we were in kernel mode
+or user space mode.
+
+I am implementing DAX support in virtiofs (which is very close to what
+nvdimm will do) and I have scenarios where a DAX mapped file in guest
+can get truncated on host and page fault errors can happen. I need to
+do better error handling instead of guest and host spinning infinitely.
+It otherwise sort of creates an attack vector where a kata container
+has to mount virtiofs using DAX, mmap a file, and then truncate that
+file on host and then access it inside guest and we can hog kvm on
+host in this infinite loop of trying to fault in page.
+
+Proposed Solution
+=================
+So first idea is that how about we make the error behavior uniform. That
+is when an error is encountered, we exit to qemu which prints the
+error message and VM freezes. That will end the discrepancy in the
+behavior of sync/async page fault. First patch of the series does
+that.
+
+Second idea is that if we are doing async page fault and if guest is
+in a state so that we can inject "page not present" and "page ready"
+events, then instead of exiting to user space, send error back to
+guest as part of "page ready" event. This will allow guest to do
+finer grained error handling. For example, send SIGBUS to offending
+process. And whole of the VM does not have to go down. Second patch
+implemented it.
+
+Third idea is that find a way to inject error even when async page
+fault can't be injected. Now if we disabled any kind of async page
+fault delivery if guest is in kernel mode because this was racy.
+Once we figure out a race free way  to be able to inject page
+fault in guest (using #VE?), then use that to report errors back
+to guest even when it is in kernel mode. And that will allow
+guest to call fixup_exception() and possibly recover from situation
+otherwise panic(). This can only be implemented once we have a
+way race free way to inject an async page event into guest. So this
+is a future TBD item. For now, if we took exit and guest is in kernel
+mode and error happened, we will vcpu_run() will fail and exit
+to user space.  
+
+I have only compiled and tested this series on x86. Before I refine
+it further, wanted to post it for some feedback and see if this
+the right direction or not.
+
+Any feedback or comments are welcome.
+
+Thanks
+Vivek 
+
+Vivek Goyal (3):
+  kvm,x86: Force sync fault if previous attempts failed
+  kvm: Add capability to be able to report async pf error to guest
+  kvm, async_pf: Use FOLL_WRITE only for write faults
+
+ Documentation/virt/kvm/cpuid.rst     |  4 +++
+ Documentation/virt/kvm/msr.rst       | 10 +++---
+ arch/x86/include/asm/kvm_host.h      |  4 +++
+ arch/x86/include/asm/kvm_para.h      |  8 ++---
+ arch/x86/include/uapi/asm/kvm_para.h | 10 ++++--
+ arch/x86/kernel/kvm.c                | 34 +++++++++++++++----
+ arch/x86/kvm/cpuid.c                 |  3 +-
+ arch/x86/kvm/mmu.h                   |  2 +-
+ arch/x86/kvm/mmu/mmu.c               | 11 ++++---
+ arch/x86/kvm/x86.c                   | 49 +++++++++++++++++++++++-----
+ include/linux/kvm_host.h             |  5 ++-
+ virt/kvm/async_pf.c                  | 15 +++++++--
+ 12 files changed, 119 insertions(+), 36 deletions(-)
+
 -- 
 2.25.4
 
