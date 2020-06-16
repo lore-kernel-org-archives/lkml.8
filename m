@@ -2,52 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09261C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D547C20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2DC208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322044;
-	bh=ehGZLwBStwiNoBJPxCADAHxsq8vyqACAuHk60HMadMY=;
+	s=default; t=1592322047;
+	bh=mKEYBtnv5zZJdxSYEKrRd88IX5ReyrRvQNXH36wKkQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qA1v5d7DRjVpJ0yADk4Yl/cLkTkn1PaMAxKYGDCWg/GSHBsrLG+jIrwMpQoPDWsLB
-	 wpooK06zgnNGJ4Uv0eQ+3rUVjLTeIoFRUr20duUf1x7nLWOgHd+r4uQWQpm879Tpqn
-	 e5+CREWylYSE1Vwvw1GaGht9Wz+h8AV4MzTzz+DY=
+	b=Q8jMI5M239zMLlxabSTJ1/emT8bHBtl/JOg6OWINrcAngavO4UiFx/Iqy86GYaCZ+
+	 891ntkjJlyRSD9SHaqf9yVpHiC63F8dueDD0NOFRoX9Mw8D9eUWnRWG5tYQJqS7LJo
+	 WeCrWHGdtDbIhStLwkYkaQ/1CjgK8yfEqwJZC4T0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbgFPPkj (ORCPT
+        id S1731253AbgFPPkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:40:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731196AbgFPPk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:40:29 -0400
+        id S1731196AbgFPPkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D61A3207C4;
-        Tue, 16 Jun 2020 15:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A9C2082F;
+        Tue, 16 Jun 2020 15:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322029;
-        bh=ehGZLwBStwiNoBJPxCADAHxsq8vyqACAuHk60HMadMY=;
+        s=default; t=1592322040;
+        bh=mKEYBtnv5zZJdxSYEKrRd88IX5ReyrRvQNXH36wKkQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yvpgdwcg649maVWZINlj0nzNNn+g2HQO6pbEXkjs2R4XWQ4xMi8RUcy5GKMxOjQkj
-         yIzspkBBeb/o3C1K89Xa/N5yjvMOVR0uUjfxsHo/ycvvOo74nJINs+NBE0FtPnAzmG
-         Hek+fSHS4WqMlIZb2RCStI3x8Ylk2frKqTYDKkVI=
+        b=b+NyoJ5OIimIWAmwlc/2DtPo5J31Bl2APpmIlV0gUnvUpNe0L1TQMNhVtHhSUAKHN
+         FVTYczqhOKmR1gZyJGY3jO7G1tBB3TBcX7g1aZDm4jCYKGRikZvICdX75YyW303n6x
+         mELqSXtwcn2fgDinlxkLAsauNGSFi9uQjBym7L94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 079/134] crypto: cavium/nitrox - Fix nitrox_get_first_device() when ndevlist is fully iterated
-Date:   Tue, 16 Jun 2020 17:34:23 +0200
-Message-Id: <20200616153104.552206373@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 083/134] firmware: imx: warn on unexpected RX
+Date:   Tue, 16 Jun 2020 17:34:27 +0200
+Message-Id: <20200616153104.752713740@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,45 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-commit 320bdbd816156f9ca07e5fed7bfb449f2908dda7 upstream.
+[ Upstream commit cf0fd404455ce13850cc15423a3c2958933de384 ]
 
-When a list is completely iterated with 'list_for_each_entry(x, ...)', x is
-not NULL at the end.
+The imx_scu_call_rpc function returns the result inside the
+same "msg" struct containing the transmitted message. This is
+implemented by holding a pointer to msg (which is usually on the stack)
+in sc_imx_rpc and writing to it from imx_scu_rx_callback.
 
-While at it, remove a useless initialization of the ndev variable. It
-is overridden by 'list_for_each_entry'.
+This means that if the have_resp parameter is incorrect or SCU sends an
+unexpected response for any reason the most likely result is kernel stack
+corruption.
 
-Fixes: f2663872f073 ("crypto: cavium - Register the CNN55XX supported crypto algorithms.")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by only setting sc_imx_rpc.msg for the duration of the
+imx_scu_call_rpc call and warning in imx_scu_rx_callback if unset.
 
+Print the unexpected response data to help debugging.
+
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Acked-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/cavium/nitrox/nitrox_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/firmware/imx/imx-scu.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/cavium/nitrox/nitrox_main.c
-+++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
-@@ -278,7 +278,7 @@ static void nitrox_remove_from_devlist(s
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index 35a5f8f8eea5..6c6ac47d3c64 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -116,6 +116,12 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
+ 	struct imx_sc_rpc_msg *hdr;
+ 	u32 *data = msg;
  
- struct nitrox_device *nitrox_get_first_device(void)
- {
--	struct nitrox_device *ndev = NULL;
-+	struct nitrox_device *ndev;
++	if (!sc_ipc->msg) {
++		dev_warn(sc_ipc->dev, "unexpected rx idx %d 0x%08x, ignore!\n",
++				sc_chan->idx, *data);
++		return;
++	}
++
+ 	if (sc_chan->idx == 0) {
+ 		hdr = msg;
+ 		sc_ipc->rx_size = hdr->size;
+@@ -187,7 +193,8 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
+ 	mutex_lock(&sc_ipc->lock);
+ 	reinit_completion(&sc_ipc->done);
  
- 	mutex_lock(&devlist_lock);
- 	list_for_each_entry(ndev, &ndevlist, list) {
-@@ -286,7 +286,7 @@ struct nitrox_device *nitrox_get_first_d
- 			break;
+-	sc_ipc->msg = msg;
++	if (have_resp)
++		sc_ipc->msg = msg;
+ 	sc_ipc->count = 0;
+ 	ret = imx_scu_ipc_write(sc_ipc, msg);
+ 	if (ret < 0) {
+@@ -209,6 +216,7 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
  	}
- 	mutex_unlock(&devlist_lock);
--	if (!ndev)
-+	if (&ndev->list == &ndevlist)
- 		return NULL;
  
- 	refcount_inc(&ndev->refcnt);
+ out:
++	sc_ipc->msg = NULL;
+ 	mutex_unlock(&sc_ipc->lock);
+ 
+ 	dev_dbg(sc_ipc->dev, "RPC SVC done\n");
+-- 
+2.25.1
+
 
 
