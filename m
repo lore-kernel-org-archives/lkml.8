@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7464C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E64C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9B76208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E430208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323801;
-	bh=QIcS73uwgRHW6LMWNWdiRKdRJrtAF/id/hyM7AUDHKc=;
+	s=default; t=1592323804;
+	bh=qTgrEBZKZMWmg0X6f6sF+T8F0d7Vb3RU2qYh7J8sQn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q00SMn48EFVa3M4L0U5QhGJl5raPZ+Es5LPapT6qJLGzWZZfWNjvsXtvSQqwj9MiQ
-	 6DzE84nQqIM4lNKgyOY+Kpk9+MYN5lfyatGLpoghwWv/OqzwxyQWlxppE0IpIuAMNX
-	 QHeV84mpjxR3pzJwCa3CokikWJ/9+sl2oUDlJQ7g=
+	b=BNEBMf1vGWjK0z2X6KPRFet9OGl7ZMHPX7HRqJbLG55fBUrvw/3bIXGwMwdTZy+22
+	 BhAXBEzVlBSArtE6QcAgjURqR984a+oUU8kmsmHOK282fGwYF3hexTpieVT2bDiw7P
+	 z3KY0JTq9OgrGBpxK69b8QjkV4L3T9h7pJylACBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731431AbgFPQJ7 (ORCPT
+        id S1732024AbgFPPou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:09:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730211AbgFPPo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:44:59 -0400
+        id S1732014AbgFPPop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF5C214DB;
-        Tue, 16 Jun 2020 15:44:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B196521475;
+        Tue, 16 Jun 2020 15:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322298;
-        bh=QIcS73uwgRHW6LMWNWdiRKdRJrtAF/id/hyM7AUDHKc=;
+        s=default; t=1592322285;
+        bh=qTgrEBZKZMWmg0X6f6sF+T8F0d7Vb3RU2qYh7J8sQn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GwGJ8P2YZ84FSXVJ6XsfHxEZA+ZZmY+zhCrtnNEirxr2MnJBr6+xfWC5kfeUj2LzF
-         BjaUb2Zz+X4Gv0kSa+4dCOY63HiEn+hbnGdXSUNOzFJYXwX23eCg+cZomEJyVTrdV9
-         BR29DXzTlOrd82//Eerid8Z9c63pL2dDEJhDJwd0=
+        b=DV3oVv1shjhmPs7ZaDnR46F5yx5P/lxLQTDZ3XsOJL7iAyt1dhjxrBGw50Y+5n0A+
+         bgWRHWrZ3iGWTrnhrzI+Sp8etK/IM06PcoyLpOaGEg0QBhzYa+ntdcQ1zasu07FxzM
+         Hoac6i9eh5PRPU2bBbN5DjBKuNunNlowcQ/E5+Xo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Rodgman <dave.rodgman@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>, Willy Tarreau <w@1wt.eu>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        "Markus F.X.J. Oberhumer" <markus@oberhumer.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>, Chao Yu <yuchao0@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 077/163] lib/lzo: fix ambiguous encoding bug in lzo-rle
-Date:   Tue, 16 Jun 2020 17:34:11 +0200
-Message-Id: <20200616153110.534648551@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.7 073/163] ACPI: CPPC: Fix reference count leak in acpi_cppc_processor_probe()
+Date:   Tue, 16 Jun 2020 17:34:07 +0200
+Message-Id: <20200616153110.345119998@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -65,97 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Rodgman <dave.rodgman@arm.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit b5265c813ce4efbfa2e46fd27cdf9a7f44a35d2e upstream.
+commit 4d8be4bc94f74bb7d096e1c2e44457b530d5a170 upstream.
 
-In some rare cases, for input data over 32 KB, lzo-rle could encode two
-different inputs to the same compressed representation, so that
-decompression is then ambiguous (i.e.  data may be corrupted - although
-zram is not affected because it operates over 4 KB pages).
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-This modifies the compressor without changing the decompressor or the
-bitstream format, such that:
-
- - there is no change to how data produced by the old compressor is
-   decompressed
-
- - an old decompressor will correctly decode data from the updated
-   compressor
-
- - performance and compression ratio are not affected
-
- - we avoid introducing a new bitstream format
-
-In testing over 12.8M real-world files totalling 903 GB, three files
-were affected by this bug.  I also constructed 37M semi-random 64 KB
-files totalling 2.27 TB, and saw no affected files.  Finally I tested
-over files constructed to contain each of the ~1024 possible bad input
-sequences; for all of these cases, updated lzo-rle worked correctly.
-
-There is no significant impact to performance or compression ratio.
-
-Signed-off-by: Dave Rodgman <dave.rodgman@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Dave Rodgman <dave.rodgman@arm.com>
-Cc: Willy Tarreau <w@1wt.eu>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: Markus F.X.J. Oberhumer <markus@oberhumer.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Nitin Gupta <ngupta@vflare.org>
-Cc: Chao Yu <yuchao0@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200507100203.29785-1-dave.rodgman@arm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 158c998ea44b ("ACPI / CPPC: add sysfs support to compute delivered performance")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/lzo.txt    |    8 ++++++--
- lib/lzo/lzo1x_compress.c |   13 +++++++++++++
- 2 files changed, 19 insertions(+), 2 deletions(-)
+ drivers/acpi/cppc_acpi.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/Documentation/lzo.txt
-+++ b/Documentation/lzo.txt
-@@ -159,11 +159,15 @@ Byte sequences
-            distance = 16384 + (H << 14) + D
-            state = S (copy S literals after this block)
-            End of stream is reached if distance == 16384
-+           In version 1 only, to prevent ambiguity with the RLE case when
-+           ((distance & 0x803f) == 0x803f) && (261 <= length <= 264), the
-+           compressor must not emit block copies where distance and length
-+           meet these conditions.
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -846,6 +846,7 @@ int acpi_cppc_processor_probe(struct acp
+ 			"acpi_cppc");
+ 	if (ret) {
+ 		per_cpu(cpc_desc_ptr, pr->id) = NULL;
++		kobject_put(&cpc_ptr->kobj);
+ 		goto out_free;
+ 	}
  
-         In version 1 only, this instruction is also used to encode a run of
--        zeros if distance = 0xbfff, i.e. H = 1 and the D bits are all 1.
-+           zeros if distance = 0xbfff, i.e. H = 1 and the D bits are all 1.
-            In this case, it is followed by a fourth byte, X.
--           run length = ((X << 3) | (0 0 0 0 0 L L L)) + 4.
-+           run length = ((X << 3) | (0 0 0 0 0 L L L)) + 4
- 
-       0 0 1 L L L L L  (32..63)
-            Copy of small block within 16kB distance (preferably less than 34B)
---- a/lib/lzo/lzo1x_compress.c
-+++ b/lib/lzo/lzo1x_compress.c
-@@ -268,6 +268,19 @@ m_len_done:
- 				*op++ = (M4_MARKER | ((m_off >> 11) & 8)
- 						| (m_len - 2));
- 			else {
-+				if (unlikely(((m_off & 0x403f) == 0x403f)
-+						&& (m_len >= 261)
-+						&& (m_len <= 264))
-+						&& likely(bitstream_version)) {
-+					// Under lzo-rle, block copies
-+					// for 261 <= length <= 264 and
-+					// (distance & 0x80f3) == 0x80f3
-+					// can result in ambiguous
-+					// output. Adjust length
-+					// to 260 to prevent ambiguity.
-+					ip -= m_len - 260;
-+					m_len = 260;
-+				}
- 				m_len -= M4_MAX_LEN;
- 				*op++ = (M4_MARKER | ((m_off >> 11) & 8));
- 				while (unlikely(m_len > 255)) {
 
 
