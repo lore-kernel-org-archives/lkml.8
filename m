@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8577C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF34720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962D0214F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322383;
-	bh=C+AlfpWbyak2yWW6+lQ1jB1oFqNZLgmBcfOSY7J/CkA=;
+	s=default; t=1592322392;
+	bh=OWTCT5TGO+j2Z/dlv3pknWTmKUwEHdX83YtwpWOdZO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y2u9mqmWXZEdFzGgV8j9YvcbFuqorzR2BuJAoyTIBNDHEpoueetMvfDLUTNGWSeCF
-	 lIBzu0Zgxi5tRj2AM7raMo8777QgpXhoE/FR5DRl/VHpJTy5CX352CEUj/XHeVA6BM
-	 OyuQi16wW/HYLqeITkV4fSjcyYOUqDt51ZVKf/ck=
+	b=1BxQkJ05uaITD2udC4kgruwm73JlNIGIG0EYMtJH75pD79Qn+RsVWBmzp+VEP4y0+
+	 M1FjIKGVsV/ziVMAcNulzZwKY6LljcXRqg38CP+CDm+xz4I8YGfEeksEoi5Ag3acyQ
+	 jzsK+df75Xv6ylPIr61cK1HN1VOPG+BGMmRUxOno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbgFPPqW (ORCPT
+        id S1730664AbgFPPqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38208 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730270AbgFPPqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:46:16 -0400
+        id S1732192AbgFPPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:46:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9387B2098B;
-        Tue, 16 Jun 2020 15:46:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A614A20776;
+        Tue, 16 Jun 2020 15:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322376;
-        bh=C+AlfpWbyak2yWW6+lQ1jB1oFqNZLgmBcfOSY7J/CkA=;
+        s=default; t=1592322381;
+        bh=OWTCT5TGO+j2Z/dlv3pknWTmKUwEHdX83YtwpWOdZO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzdu/9WfDhYa/7Z9pLESRBz8kJAK2Mnfni/QpWB39S+iu42OvrePcB/WzthF82R4J
-         7W/vXakFQksVTLI4qDmjzy6adeezgGRpjyuJ5/fuesGfQ7qS1XK327yTmjJ+XkmWoD
-         RkWDfIHfumgzlcXVUzsnTczGEIwMr2TO0ydJGpsM=
+        b=pou+RKa+vJajRU7w+Zz8x8KlIxbRfWcuTY20iWGtY2jhD2LUy8DIp0OM2odo1UQpI
+         u+u/Bh5FgEth8QbPN15guN17WhoBVvLmcsdQIJF42Z0FSzA6yrM+RJlpbKJ2fC5e3H
+         9W75Q0b+u4VyxPJXyZb2uQ6LWJYlGkTTpTlztFd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.7 107/163] net/mlx5: Disable reload while removing the device
-Date:   Tue, 16 Jun 2020 17:34:41 +0200
-Message-Id: <20200616153111.941332665@linuxfoundation.org>
+        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 109/163] ionic: wait on queue start until after IFF_UP
+Date:   Tue, 16 Jun 2020 17:34:43 +0200
+Message-Id: <20200616153112.027507395@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,70 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Shannon Nelson <snelson@pensando.io>
 
-[ Upstream commit 60904cd349abc98cb888fc28d1ca55a8e2cf87b3 ]
+[ Upstream commit 976ee3b21119dcf5c6d96233d688a1453f29fa83 ]
 
-While unregistration is in progress, user might be reloading the
-interface.
-This can race with unregistration in below flow which uses the
-resources which are getting disabled by reload flow.
+The netif_running() test looks at __LINK_STATE_START which
+gets set before ndo_open() is called, there is a window of
+time between that and when the queues are actually ready to
+be run.  If ionic_check_link_status() notices that the link is
+up very soon after netif_running() becomes true, it might try
+to run the queues before they are ready, causing all manner of
+potential issues.  Since the netdev->flags IFF_UP isn't set
+until after ndo_open() returns, we can wait for that before
+we allow ionic_check_link_status() to start the queues.
 
-Hence, disable the devlink reloading first when removing the device.
+On the way back to close, __LINK_STATE_START is cleared before
+calling ndo_stop(), and IFF_UP is cleared after.  Both of
+these need to be true in order to safely stop the queues
+from ionic_check_link_status().
 
-     CPU0                                   CPU1
-     ----                                   ----
-local_pci_remove()                  devlink_mutex
-  remove_one()                       devlink_nl_cmd_reload()
-    mlx5_unregister_device()           devlink_reload()
-                                       ops->reload_down()
-                                         mlx5_unload_one()
-
-Fixes: 4383cfcc65e7 ("net/mlx5: Add devlink reload")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 49d3b493673a ("ionic: disable the queues on link down")
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/devlink.c |    2 --
- drivers/net/ethernet/mellanox/mlx5/core/main.c    |    2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/pensando/ionic/ionic_lif.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-@@ -283,7 +283,6 @@ int mlx5_devlink_register(struct devlink
- 		goto params_reg_err;
- 	mlx5_devlink_set_params_init_values(devlink);
- 	devlink_params_publish(devlink);
--	devlink_reload_enable(devlink);
- 	return 0;
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -105,7 +105,7 @@ static void ionic_link_status_check(stru
+ 			netif_carrier_on(netdev);
+ 		}
  
- params_reg_err:
-@@ -293,7 +292,6 @@ params_reg_err:
+-		if (netif_running(lif->netdev))
++		if (lif->netdev->flags & IFF_UP && netif_running(lif->netdev))
+ 			ionic_start_queues(lif);
+ 	} else {
+ 		if (netif_carrier_ok(netdev)) {
+@@ -113,7 +113,7 @@ static void ionic_link_status_check(stru
+ 			netif_carrier_off(netdev);
+ 		}
  
- void mlx5_devlink_unregister(struct devlink *devlink)
- {
--	devlink_reload_disable(devlink);
- 	devlink_params_unregister(devlink, mlx5_devlink_params,
- 				  ARRAY_SIZE(mlx5_devlink_params));
- 	devlink_unregister(devlink);
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1373,6 +1373,7 @@ static int init_one(struct pci_dev *pdev
- 		dev_err(&pdev->dev, "mlx5_crdump_enable failed with error code %d\n", err);
- 
- 	pci_save_state(pdev);
-+	devlink_reload_enable(devlink);
- 	return 0;
- 
- err_load_one:
-@@ -1390,6 +1391,7 @@ static void remove_one(struct pci_dev *p
- 	struct mlx5_core_dev *dev  = pci_get_drvdata(pdev);
- 	struct devlink *devlink = priv_to_devlink(dev);
- 
-+	devlink_reload_disable(devlink);
- 	mlx5_crdump_disable(dev);
- 	mlx5_devlink_unregister(devlink);
+-		if (netif_running(lif->netdev))
++		if (lif->netdev->flags & IFF_UP && netif_running(lif->netdev))
+ 			ionic_stop_queues(lif);
+ 	}
  
 
 
