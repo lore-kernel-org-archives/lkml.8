@@ -2,133 +2,102 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C58820882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A7E20882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:07:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYYMuveh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jH5zB2sl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgFPHGI (ORCPT
+        id S1726919AbgFPHHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50278 "EHLO
+        Tue, 16 Jun 2020 03:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgFPHGG (ORCPT
+        with ESMTP id S1726747AbgFPHG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:06:06 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97DDC05BD43;
-        Tue, 16 Jun 2020 00:06:06 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id i25so434456iog.0;
-        Tue, 16 Jun 2020 00:06:06 -0700 (PDT)
+        Tue, 16 Jun 2020 03:06:58 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A15C05BD43
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:06:58 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r7so19567204wro.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:message-id:in-reply-to:references:subject:mime-version
-         :content-transfer-encoding;
-        bh=7UYkh8B3Fgzwx1rQ3OeB4igDdNX76egtj7f9JC6lupI=;
-        b=OYYMuvehv/qPMmliSCDYK5QkafZl2sPnKeKmHj8GLN1GKJykOCKee0EQFmDR4rhhyr
-         Hu4tnAFyWvABeM2j9ATpoj8htmFRFD9XufGunYw+0cZDPg6IN3Wnwq0iThzuXxF6YgrM
-         F7IUv0QoOzG5l7kzjaF+ucbyQg3MGv9KvXrqJuzV62Et0VnBusvmq6qWozV4ULNHZUe+
-         fkKXal0X5pFSA5UshG6yRt3dVjTWL/6twoZliH/AfuJJ6ds+I6Xibo9+jcdqFzhDPMJV
-         hfz0/W3ZE/BkgfnjbWOL0xK2nFN68O8DjMpJa9C7Q4GsZ9xenEKVBQ5znwUkdcNWn48w
-         kkpA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=S6Wt2049xOyn9uDBo8RtO0TmdMtlWUY24rAkQY/ouSI=;
+        b=jH5zB2sl5+QcbiTOlHEBYBJ5vMNw9h/Hu8/Q/WEvwbj4Xt+SONwj0Ppd7fh90BM0tT
+         Hp3sfHy3IVyWzMSLyGu+k1OIJ6ma1DlcfUSDapcAbZeSUH9tyVMMA8SQzqMulzp1Kt3d
+         fvQz79e35Zb+AzwR0jFx8+bCiM6L9/rWBZhlCy0Rb2ZaUY7FKU1tY3oC+qgcODyEqvxo
+         DcHJFVViyExCkxevk0UEBlUOHoAblTD3Rkc6pL0QvjGA0QoWnaO1KIbUWByQ0JgPixsX
+         CzLA+ByKo8IhJysdlKawbnk+SPhUyylISdd+xf8uicFILiScM4a9RY6qVrhbplhLgOf1
+         ZZOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
-         :subject:mime-version:content-transfer-encoding;
-        bh=7UYkh8B3Fgzwx1rQ3OeB4igDdNX76egtj7f9JC6lupI=;
-        b=WfrX7JnNNj9wpk9oqQ6selDeM3t9FyxkylvZ5ZqBQw6gpSDVIuL5INq8kFT2Gmszpt
-         fyR6WF71eCxz7GbJn/wBa/HoHorQdnX2tnh5Id1Aiuw9qZ2gIbN2B9Uqirx9494vMDTi
-         q2OdEmupFzqm7ISBrmk3IG00M67VGh8C1+a2QvYitDPXodbV98R6bs/zeYf29+c/3OJz
-         wwUcZlwQSQPpKqGuU2brquu1UVKKTTO7l8bDj85pMJPyM5FC/SVu2EIDKqwKZkJDC3ud
-         9NaEGRzgeI3g3wSaA8qNWTypvkJ0OcAQUARwYugDwxgeDL2mCdDIi9HLWEa3MylT2Yoc
-         C8KQ==
-X-Gm-Message-State: AOAM533Ksg7EQBdOBM5OepH9klMYngxREsPpNoU+qihiesOzpvrWch+7
-        8gKJbHF+b2ma3FuGTifrOes=
-X-Google-Smtp-Source: ABdhPJxo3yD7pmXL10U/+JtXAVaSOVZFsi1kh/FOJ+i5Ph63gDHX7AwLfZMQBRplKiCsZasV/bjIwQ==
-X-Received: by 2002:a5e:d90c:: with SMTP id n12mr1611376iop.144.1592291165839;
-        Tue, 16 Jun 2020 00:06:05 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id j80sm9681504ili.65.2020.06.16.00.06.03
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=S6Wt2049xOyn9uDBo8RtO0TmdMtlWUY24rAkQY/ouSI=;
+        b=UeUsksCoET0kB8JlMIbymLPFBesWxod9nuj8VBmHF3a1nE0vRO+v8KFDYYtpHjd+En
+         aAxUFW13MHAqTE7Px7+AhK0ytwdEQqtbnjw7nsyUey7I2VDFE7MzUeI61Y3mloGUCGbz
+         0WdhMdOE8YOujUclPx4qvuFqIp8Z0/k/t9EjkVvRQO+dU7zw5SJ3CCPCgPj+tPBNi0b4
+         FaI8PytSB2O4jRb7uBhYw6fiDuLl2GB+g4Z8yTCzp8vriOYFaMe3fa2yWj+18R1xRWTZ
+         q85WZ5cOSf0piRpG9v8J2jCsMtfLKBlsbTU9GYnlQV8hejlbJsraNk3+MLfHplILSpsF
+         9EZQ==
+X-Gm-Message-State: AOAM531/MLb5A8zGsEdlza2wW2/I/ZN1+V8CJFwnJN55hvb1aMyb4rVD
+        iuqp2urnu4QPAfNo3/N4K2XPzg==
+X-Google-Smtp-Source: ABdhPJxTcyWzB10Tj4UoI0tMy/u3LqUlapmPnhWb4IqpH0dhk1/y3mG9xdwdxvPulRAXR8aBPGJpnQ==
+X-Received: by 2002:a5d:4a45:: with SMTP id v5mr1425261wrs.223.1592291217037;
+        Tue, 16 Jun 2020 00:06:57 -0700 (PDT)
+Received: from dell ([109.180.115.156])
+        by smtp.gmail.com with ESMTPSA id a81sm2809160wmd.25.2020.06.16.00.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 00:06:05 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 00:05:58 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Gaurav Singh <gaurav1086@gmail.com>, gaurav1086@gmail.com,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        "(open list:BPF \\(Safe dynamic programs and tools\\))" 
-        <netdev@vger.kernel.org>,
-        bpf@vger.kernel.org (open list:BPF \(Safe dynamic programs and tools\)),
-        "(open list:BPF \\(Safe dynamic programs and tools\\) open list)" 
-        <linux-kernel@vger.kernel.org>
-Message-ID: <5ee86f561cff7_4be02ab1b668a5b4e2@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200614184102.30992-1-gaurav1086@gmail.com>
-References: <20200614184102.30992-1-gaurav1086@gmail.com>
-Subject: RE: [PATCH] [bpf] xdp_monitor_user: Fix null pointer dereference
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Tue, 16 Jun 2020 00:06:56 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 08:06:54 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] pwm: iqs620a: Use 64-bit division
+Message-ID: <20200616070654.GC2608702@dell>
+References: <20200615141606.2814208-1-thierry.reding@gmail.com>
+ <20200615141606.2814208-3-thierry.reding@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200615141606.2814208-3-thierry.reding@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gaurav Singh wrote:
-> Memset() on the pointer right after malloc() can cause
-> a null pointer dereference if it failed to allocate memory.
-> Fix this by replacing malloc/memset with a single calloc().
-> 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> ---
->  samples/bpf/xdp_monitor_user.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/samples/bpf/xdp_monitor_user.c b/samples/bpf/xdp_monitor_user.c
-> index dd558cbb2309..ef53b93db573 100644
-> --- a/samples/bpf/xdp_monitor_user.c
-> +++ b/samples/bpf/xdp_monitor_user.c
-> @@ -509,11 +509,8 @@ static void *alloc_rec_per_cpu(int record_size)
->  {
->  	unsigned int nr_cpus = bpf_num_possible_cpus();
->  	void *array;
-> -	size_t size;
->  
-> -	size = record_size * nr_cpus;
-> -	array = malloc(size);
-> -	memset(array, 0, size);
-> +	array = calloc(nr_cpus, record_size);
->  	if (!array) {
->  		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
->  		exit(EXIT_FAIL_MEM);
-> @@ -528,8 +525,7 @@ static struct stats_record *alloc_stats_record(void)
->  	int i;
->  
->  	/* Alloc main stats_record structure */
-> -	rec = malloc(sizeof(*rec));
-> -	memset(rec, 0, sizeof(*rec));
-> +	rec = calloc(1, sizeof(*rec));
->  	if (!rec) {
->  		fprintf(stderr, "Mem alloc error\n");
->  		exit(EXIT_FAIL_MEM);
-> -- 
-> 2.17.1
-> 
+On Mon, 15 Jun 2020, Thierry Reding wrote:
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+> The PWM framework is going to change the PWM period and duty cycles to
+> be 64-bit unsigned integers. To avoid build errors on platforms that do
+> not natively support 64-bit division, use explicity 64-bit division.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+>  drivers/pwm/pwm-iqs620a.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
