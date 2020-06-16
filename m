@@ -2,116 +2,102 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA277C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6341FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B65A20810
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B69D20810
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592336366;
+	bh=Xy6OqRUCqFwqYeR610bNt54TVmb+uhKNUrgS6dl3UV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NGwl/bYYL+lSe4klINqOebEuM89Z13Q67/yHtzOooRzHYMq8Ot4C1VlMOL2NoN3S6
+	 Dnmjs7SZ6DsO74TSw8r68rJoADXxOkAEsP7L0hRTzfxL605wsjKcsWZvL3O5pSJ8cv
+	 A9AhlMAX8si+GzzdjPpv5I1nf7VKcTjWWzhWNoCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbgFPTjP (ORCPT
+        id S1730990AbgFPTjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:39:15 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:32992 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728518AbgFPTjO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:39:14 -0400
-Received: by mail-il1-f197.google.com with SMTP id c11so15335541ilq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 12:39:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=xhWTXz6SmpEnhzfxWd+ix6TSZuz6ykxq9UiT0D4oYAs=;
-        b=c0pyTyouSa81/h/wgHo0Lnl+tObQ0C4jncrvsB7Sbo1fC1WKsbXSyl2iy/z4NPTZuD
-         StUQsRI7sEiz1RJSDaOkdEK+Nc0JLiKoFDHG5AUu7jdMDpC8ZIo0lxA5PkJh1FksKL1I
-         7Yf/IUhPvuV0H7k+BnPQ1Ch5IsTivjk5T54BoCOb8UTk4zuqh14rg6wBfEBTEUpEbOrb
-         mM+JHmyNvvCMPMDl8YDQIyJa/v0u7glDO9NhCPzX+a6UpWFbvRqyRNuEMp9qq5aYtlFD
-         /PPc2oeyB2Pb9xyRyLhgv5OHdher3Dj85DqbfTRMZlgJHC2bCJIzJPWBxQEBdxhYw9FZ
-         MfQg==
-X-Gm-Message-State: AOAM532Q9+pvtQyBxN6iiwd6lTBLUmT4peuo0Rd3SP2G3GeVzWnqKe77
-        hA2VFKHTPt3UFfHqfCkgpveWqkf70Hn3MzDX1kNxJdGtqWPC
-X-Google-Smtp-Source: ABdhPJybcNcAP46lIRGqhcmL2DWu9VS8dbLVuupp560V+LfqLzVSt4u+Oi1giUa6whiX5ml9Qf1TlhPyzYCQlwGoOFEDK7jfloWj
+        Tue, 16 Jun 2020 15:39:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730792AbgFPTjX (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 15:39:23 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.162.131.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 756D820810;
+        Tue, 16 Jun 2020 19:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592336362;
+        bh=Xy6OqRUCqFwqYeR610bNt54TVmb+uhKNUrgS6dl3UV0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NF5YuhrllIfDNymltrHZ+1Vv+srN2zQip0oBZKujCkgwDBxEivG8lSt+8J/Jvm1Qm
+         vKq0YRP+kyaiR/C6pG8CmLJqX3H9pTbmYG7LbI1ePOaigi0raGDbHupOopK7SCOmNi
+         0OHyqOW6UrF3bSjjEAwrFH0kYTLaov2CrbRu7vFQ=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 76EF040AFD; Tue, 16 Jun 2020 16:38:56 -0300 (-03)
+Date:   Tue, 16 Jun 2020 16:38:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Jin, Yao" <yao.jin@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        LKML <Linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, kan.liang@intel.com,
+        "Jin, Yao" <yao.jin@intel.com>
+Subject: Re: [PATCH 0/2] Update CascadelakeX and SkylakeX events list
+Message-ID: <20200616193856.GC6393@kernel.org>
+References: <20200603021818.27028-1-yao.jin@linux.intel.com>
+ <911b4132-d1a1-f3c4-a2ed-2fcfe9a28fc6@linux.intel.com>
+ <CAP-5=fW3OCuVkQ8csYfHXj5c_pCSY5-6vDrj2r=MNDZmpo0f8g@mail.gmail.com>
+ <c7edd282-f58a-4efe-5961-6c1369b6b77b@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:2907:: with SMTP id l7mr4878547ilg.48.1592336353676;
- Tue, 16 Jun 2020 12:39:13 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 12:39:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b953d805a838b240@google.com>
-Subject: KASAN: user-memory-access Read in sync_vmcs02_to_vmcs12
-From:   syzbot <syzbot+961278f56598a876c889@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7edd282-f58a-4efe-5961-6c1369b6b77b@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Em Tue, Jun 16, 2020 at 02:27:40PM +0800, Jin, Yao escreveu:
+> On 6/16/2020 2:16 PM, Ian Rogers wrote:
+> > On Mon, Jun 15, 2020 at 6:00 PM Jin, Yao <yao.jin@linux.intel.com> wrote:
+> > > Can I get an ACK for this patchset?
+> > > On 6/3/2020 10:18 AM, Jin Yao wrote:
+> > > > This patchset updates CascadelakeX events to v1.08 and
+> > > > updates SkylakeX events to v1.21.
 
-syzbot found the following crash on:
+> > > > The events have been tested on CascadelakeX and SkylakeX
+> > > > servers with latest perf/core branch.
 
-HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14f70989100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
-dashboard link: https://syzkaller.appspot.com/bug?extid=961278f56598a876c889
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > could you rebase this on Arnaldo's tmp.perf/core tree?
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=tmp.perf/core
+> > I tried using git am but get:
+> > Applying: perf vendor events: Update CascadelakeX events to v1.08
+> > error: patch fragment without header at line 279: @@ -213,14 +220,14 @@
+> > error: could not build fake ancestor
+> > Patch failed at 0001 perf vendor events: Update CascadelakeX events to v1.08
+> > 
+> > Thanks,
+> > Ian
+> > 
+> 
+> The patchset are applied OK on perf/core branch.
+> 
+> As far as I understand, the patch for posting should be based on perf/core branch, is it right?
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Sorry, I've been testing with using tmp.perf/core as a way to more
+quickly make available what I've processed, before I test it thoroughly
+both with container builds and with manual testing, so the bleeding edge
+is there, perf/core becoming a bit more stable, as I'll try not to
+rebase it like before.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+961278f56598a876c889@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: user-memory-access in vmcs12_guest_cr0 arch/x86/kvm/vmx/nested.c:3545 [inline]
-BUG: KASAN: user-memory-access in sync_vmcs02_to_vmcs12+0x16fb/0x1a40 arch/x86/kvm/vmx/nested.c:3960
-Read of size 18446744071694194346 at addr 0000000001617928 by task systemd-udevd/3877
-
-CPU: 1 PID: 3877 Comm: systemd-udevd Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __kasan_report mm/kasan/report.c:517 [inline]
- kasan_report.cold+0x5/0x37 mm/kasan/report.c:530
- vmcs12_guest_cr0 arch/x86/kvm/vmx/nested.c:3545 [inline]
- sync_vmcs02_to_vmcs12+0x16fb/0x1a40 arch/x86/kvm/vmx/nested.c:3960
- </IRQ>
-==================================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 3877 Comm: systemd-udevd Tainted: G    B             5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- end_report+0x4d/0x53 mm/kasan/report.c:104
- __kasan_report mm/kasan/report.c:520 [inline]
- kasan_report.cold+0xd/0x37 mm/kasan/report.c:530
- vmcs12_guest_cr0 arch/x86/kvm/vmx/nested.c:3545 [inline]
- sync_vmcs02_to_vmcs12+0x16fb/0x1a40 arch/x86/kvm/vmx/nested.c:3960
- </IRQ>
-Shutting down cpus with NMI
-Kernel Offset: disabled
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+- Arnaldo
