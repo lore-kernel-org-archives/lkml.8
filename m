@@ -2,88 +2,113 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5427CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE07C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29FFC20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592294991;
-	bh=TnNFsF8rztMoV7W+U/CQlvlezHaw2ZFT7+kO9FpTDWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GtWDdOdKo9GU17zHp6Q4hoUlNYj4wvydp9bTVD4ztyTt5H0oUE7JbvIzNeuw64+yo
-	 QwuWXpJmvZOscRqB3ZgpeoM7oJBSrQDFg5bCL1O+PjaSLHHTeav2Y4ay9vVMLsF9TH
-	 erRnsjVTAItUyMqkCTaDtCjBW+vmslOx3Hyhumno=
+	by mail.kernel.org (Postfix) with ESMTP id 12F652074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:11:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Xzl2SWwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgFPIJu (ORCPT
+        id S1726686AbgFPILh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726471AbgFPIJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:09:49 -0400
-Received: from localhost (unknown [213.57.247.131])
+        Tue, 16 Jun 2020 04:11:37 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:50725 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725911AbgFPILg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 04:11:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592295095; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=9+bNEyX9TKpnegMA6tNmg75S3hpqEiep0k8ONIAoA/c=;
+ b=Xzl2SWwX1UEJQZyFSUe2sww7bPuqnqkthG35LhGUFOMyCFmuvisSWqKRzOJrH6F/mYXz/exe
+ agULba5Qv5vRmZkq5Qha3E+4+E5GE2cqLUoXNWicszVhaPUnO7/8TWJUWzSyzOv+YgQUQht7
+ AIpEssAdRG9MtSBJsYSvMq681Ns=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
+ 5ee87eb64c9690533a166edd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 08:11:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 84720C4339C; Tue, 16 Jun 2020 08:11:34 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABAC92074D;
-        Tue, 16 Jun 2020 08:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592294989;
-        bh=TnNFsF8rztMoV7W+U/CQlvlezHaw2ZFT7+kO9FpTDWE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=viRklBegqqywEYiYzNSXsGc8i5P/MH/1pw+nn1RxFX1qYLkF4ibTQ5JNh9s/GbQ+d
-         HRFUXVuX0MpPHDVzbRCXACR5ypEnQNDL5PXMG16JMftXBVyQiAtwzS6q1kOo8NJNI4
-         hwf57hO8chn7zeL76FmzW9gFJM3V7sd2DGuW9J1s=
-Date:   Tue, 16 Jun 2020 09:20:19 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jing Xiangfeng <jingxiangfeng@huawei.com>
-Cc:     bvanassche@acm.org, dledford@redhat.com, jgg@ziepe.ca,
-        linux-rdma@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2] IB/srpt: Remove WARN_ON from srpt_cm_req_recv
-Message-ID: <20200616062019.GA2141420@unreal>
-References: <20200616011715.140197-1-jingxiangfeng@huawei.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3F846C433C8;
+        Tue, 16 Jun 2020 08:11:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3F846C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616011715.140197-1-jingxiangfeng@huawei.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath10k: Wait until copy complete is actually done before
+ completing
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+References: <20200609082015.1.Ife398994e5a0a6830e4d4a16306ef36e0144e7ba@changeid>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     kuabhs@google.com, pillair@codeaurora.org,
+        saiprakash.ranjan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200616081134.84720C4339C@smtp.codeaurora.org>
+Date:   Tue, 16 Jun 2020 08:11:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:17:15AM +0800, Jing Xiangfeng wrote:
-> It's easy to show that sdev and req are always valid,
-> so we remove unnecessary WARN_ON.
+Douglas Anderson <dianders@chromium.org> wrote:
 
-So show it in the commit message, please.
+> On wcn3990 we have "per_ce_irq = true".  That makes the
+> ath10k_ce_interrupt_summary() function always return 0xfff. The
+> ath10k_ce_per_engine_service_any() function will see this and think
+> that _all_ copy engines have an interrupt.  Without checking, the
+> ath10k_ce_per_engine_service() assumes that if it's called that the
+> "copy complete" (cc) interrupt fired.  This combination seems bad.
+> 
+> Let's add a check to make sure that the "copy complete" interrupt
+> actually fired in ath10k_ce_per_engine_service().
+> 
+> This might fix a hard-to-reproduce failure where it appears that the
+> copy complete handlers run before the copy is really complete.
+> Specifically a symptom was that we were seeing this on a Qualcomm
+> sc7180 board:
+>   arm-smmu 15000000.iommu: Unhandled context fault:
+>   fsr=0x402, iova=0x7fdd45780, fsynr=0x30003, cbfrsynra=0xc1, cb=10
+> 
+> Even on platforms that don't have wcn3990 this still seems like it
+> would be a sane thing to do.  Specifically the current IRQ handler
+> comments indicate that there might be other misc interrupt sources
+> firing that need to be cleared.  If one of those sources was the one
+> that caused the IRQ handler to be called it would also be important to
+> double-check that the interrupt we cared about actually fired.
+> 
+> Tested-on: WCN3990 SNOC WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
->
-> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-> ---
->  drivers/infiniband/ulp/srpt/ib_srpt.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-> index ef7fcd3..0fa65c6 100644
-> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-> @@ -2156,9 +2156,6 @@ static int srpt_cm_req_recv(struct srpt_device *const sdev,
->
->  	WARN_ON_ONCE(irqs_disabled());
->
-> -	if (WARN_ON(!sdev || !req))
-> -		return -EINVAL;
-> -
->  	it_iu_len = be32_to_cpu(req->req_it_iu_len);
->
->  	pr_info("Received SRP_LOGIN_REQ with i_port_id %pI6, t_port_id %pI6 and it_iu_len %d on port %d (guid=%pI6); pkey %#04x\n",
-> --
-> 1.8.3.1
->
->
+Patch applied to ath-next branch of ath.git, thanks.
+
+8f9ed93d09a9 ath10k: Wait until copy complete is actually done before completing
+
+-- 
+https://patchwork.kernel.org/patch/11595887/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
