@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704D7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F93C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53D8C214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3EC420E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322429;
-	bh=ZCiPAtOxuxnCByGA3BqQ7UHBlJxuFSZWp1aLpHrCBmI=;
+	s=default; t=1592322433;
+	bh=lMiw6z8M6Tmg7XUhbTCh6hOdFxHhL1CBBaI7l7SKsZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=klsEiw+t2pNl1YwDErQjO4Se5VIqbay3wZYYxNEoHmXUY5VsE5jgk/MtkLxdfLkOm
-	 HdlrrF1cgNZFj51uACcIiEcUEWgaD1q1wTsIvwB/0f0MHA3cDCIQMPrmhBe6ve+5Ut
-	 mEQnm+lmsgPTH2Qyf6Q14tqSsKTreHl35VkRJaJE=
+	b=kWvVhpD/YLPDm5NNm4sJaTe9bc2kBtfCGKe6NiBNrL0JRxkguQIu2M4VtRWNkWAH2
+	 tKBx5HWkXDlONq11nTCsQ749hXzyO2CTDAWxRHbj5yo5GMgzAMZKllzYnu3Y7p9S/G
+	 kJU8ONd3dVK2DjlxXEZnux33ZWlUMr8E85u+fySo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732285AbgFPPrH (ORCPT
+        id S1732296AbgFPPrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:47:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:47:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732277AbgFPPrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:47:03 -0400
+        id S1732286AbgFPPrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E13F21475;
-        Tue, 16 Jun 2020 15:47:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 907E721508;
+        Tue, 16 Jun 2020 15:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322422;
-        bh=ZCiPAtOxuxnCByGA3BqQ7UHBlJxuFSZWp1aLpHrCBmI=;
+        s=default; t=1592322428;
+        bh=lMiw6z8M6Tmg7XUhbTCh6hOdFxHhL1CBBaI7l7SKsZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cYyy372Ap0zMk5I+QzJeq1EIWR6OaQ0jhfBFMe4Jv1pIIwqW22Ssg0777K0sO4/zX
-         4sOibt9ntWduVdx7CQ52kA88QxBrrFmYDut5UDNHyE1Gn5GTGhbhWJoaxhdJZLqq6C
-         XwLehHOh13F0Wpoj+gpTYuE14mJrSJHyVL/hHwyk=
+        b=q3TxlSq0eXqNt3MyM9DQiIxpZyJ9Z5F0u1NWt27o7CG9X9kDAg0qvLxIRKbj3MnYX
+         KwtwGFUE1GOtNMH8eU1rmM3elE0nR+Eke6/1/cmAjiWD4Zd+SJSm74gTFeZ8C7jASP
+         QYcUvt5GPvEDMCSpFoJnQr6PgmLyCcQb4MxGfPBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Gonglei <arei.gonglei@huawei.com>,
-        "Longpeng(Mike)" <longpeng2@huawei.com>
-Subject: [PATCH 5.7 095/163] crypto: virtio: Fix src/dst scatterlist calculation in __virtio_crypto_skcipher_do_req()
-Date:   Tue, 16 Jun 2020 17:34:29 +0200
-Message-Id: <20200616153111.382472195@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.7 087/163] spi: bcm-qspi: when tx/rx buffer is NULL set to 0
+Date:   Tue, 16 Jun 2020 17:34:21 +0200
+Message-Id: <20200616153111.014128001@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -65,76 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longpeng(Mike) <longpeng2@huawei.com>
+From: Justin Chen <justinpopo6@gmail.com>
 
-commit b02989f37fc5e865ceeee9070907e4493b3a21e2 upstream.
+commit 4df3bea7f9d2ddd9ac2c29ba945c7c4db2def29c upstream.
 
-The system will crash when the users insmod crypto/tcrypt.ko with mode=38
-( testing "cts(cbc(aes))" ).
+Currently we set the tx/rx buffer to 0xff when NULL. This causes
+problems with some spi slaves where 0xff is a valid command. Looking
+at other drivers, the tx/rx buffer is usually set to 0x00 when NULL.
+Following this convention solves the issue.
 
-Usually the next entry of one sg will be @sg@ + 1, but if this sg element
-is part of a chained scatterlist, it could jump to the start of a new
-scatterlist array. Fix it by sg_next() on calculation of src/dst
-scatterlist.
-
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Reported-by: LABBE Corentin <clabbe@baylibre.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: virtualization@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org
+Fixes: fa236a7ef240 ("spi: bcm-qspi: Add Broadcom MSPI driver")
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
-Signed-off-by: Gonglei <arei.gonglei@huawei.com>
-Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200602070501.2023-2-longpeng2@huawei.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Link: https://lore.kernel.org/r/20200420190853.45614-6-kdasu.kdev@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/spi/spi-bcm-qspi.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -350,13 +350,18 @@ __virtio_crypto_skcipher_do_req(struct v
- 	int err;
- 	unsigned long flags;
- 	struct scatterlist outhdr, iv_sg, status_sg, **sgs;
--	int i;
- 	u64 dst_len;
- 	unsigned int num_out = 0, num_in = 0;
- 	int sg_total;
- 	uint8_t *iv;
-+	struct scatterlist *sg;
+--- a/drivers/spi/spi-bcm-qspi.c
++++ b/drivers/spi/spi-bcm-qspi.c
+@@ -670,7 +670,7 @@ static void read_from_hw(struct bcm_qspi
+ 			if (buf)
+ 				buf[tp.byte] = read_rxram_slot_u8(qspi, slot);
+ 			dev_dbg(&qspi->pdev->dev, "RD %02x\n",
+-				buf ? buf[tp.byte] : 0xff);
++				buf ? buf[tp.byte] : 0x0);
+ 		} else {
+ 			u16 *buf = tp.trans->rx_buf;
  
- 	src_nents = sg_nents_for_len(req->src, req->cryptlen);
-+	if (src_nents < 0) {
-+		pr_err("Invalid number of src SG.\n");
-+		return src_nents;
-+	}
-+
- 	dst_nents = sg_nents(req->dst);
+@@ -678,7 +678,7 @@ static void read_from_hw(struct bcm_qspi
+ 				buf[tp.byte / 2] = read_rxram_slot_u16(qspi,
+ 								      slot);
+ 			dev_dbg(&qspi->pdev->dev, "RD %04x\n",
+-				buf ? buf[tp.byte] : 0xffff);
++				buf ? buf[tp.byte / 2] : 0x0);
+ 		}
  
- 	pr_debug("virtio_crypto: Number of sgs (src_nents: %d, dst_nents: %d)\n",
-@@ -443,12 +448,12 @@ __virtio_crypto_skcipher_do_req(struct v
- 	vc_sym_req->iv = iv;
+ 		update_qspi_trans_byte_count(qspi, &tp,
+@@ -733,13 +733,13 @@ static int write_to_hw(struct bcm_qspi *
+ 	while (!tstatus && slot < MSPI_NUM_CDRAM) {
+ 		if (tp.trans->bits_per_word <= 8) {
+ 			const u8 *buf = tp.trans->tx_buf;
+-			u8 val = buf ? buf[tp.byte] : 0xff;
++			u8 val = buf ? buf[tp.byte] : 0x00;
  
- 	/* Source data */
--	for (i = 0; i < src_nents; i++)
--		sgs[num_out++] = &req->src[i];
-+	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
-+		sgs[num_out++] = sg;
+ 			write_txram_slot_u8(qspi, slot, val);
+ 			dev_dbg(&qspi->pdev->dev, "WR %02x\n", val);
+ 		} else {
+ 			const u16 *buf = tp.trans->tx_buf;
+-			u16 val = buf ? buf[tp.byte / 2] : 0xffff;
++			u16 val = buf ? buf[tp.byte / 2] : 0x0000;
  
- 	/* Destination data */
--	for (i = 0; i < dst_nents; i++)
--		sgs[num_out + num_in++] = &req->dst[i];
-+	for (sg = req->dst; sg; sg = sg_next(sg))
-+		sgs[num_out + num_in++] = sg;
- 
- 	/* Status */
- 	sg_init_one(&status_sg, &vc_req->status, sizeof(vc_req->status));
+ 			write_txram_slot_u16(qspi, slot, val);
+ 			dev_dbg(&qspi->pdev->dev, "WR %04x\n", val);
 
 
