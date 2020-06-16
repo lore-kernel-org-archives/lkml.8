@@ -2,411 +2,640 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 870D0207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YikQVCuq"
+	by mail.kernel.org (Postfix) with ESMTP id 599F020810
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731296AbgFPT4w (ORCPT
+        id S1731078AbgFPT6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:56:52 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:25330 "EHLO m43-7.mailgun.net"
+        Tue, 16 Jun 2020 15:58:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:45958 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730183AbgFPT4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:56:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592337410; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Y6bxB3Hwa3CAamVt4hJiTaoqcRmcoDuwGKI6JX4QzSs=;
- b=YikQVCuqLM1umMCtVc4x9unpholP5URsSYmxeXrpcKR36xJfJfEG0szC30vleujheAx17RoU
- zOMGngFJXhX3RZ4T1d7sulhlqdQmqhdtZ3Tv0HU0pLegTtKtqhyAecxKK5PxI328RLI+Lcix
- EqdNW8FVFktmvqGAiZELQ85JCTY=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ee923fa6bebe35deb7e5017 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 19:56:42
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E8672C433CB; Tue, 16 Jun 2020 19:56:41 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1A65C433C9;
-        Tue, 16 Jun 2020 19:56:40 +0000 (UTC)
+        id S1728144AbgFPT6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 15:58:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4423B1F1;
+        Tue, 16 Jun 2020 12:58:50 -0700 (PDT)
+Received: from e119603-lin.cambridge.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC2523F71F;
+        Tue, 16 Jun 2020 12:58:43 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 20:58:41 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lukasz.luba@arm.com, james.quinlan@broadcom.com,
+        Jonathan.Cameron@Huawei.com, dave.martin@arm.com,
+        cristian.marussi@arm.com
+Subject: Re: [PATCH v8 1/9] firmware: arm_scmi: Add notification
+ protocol-registration
+Message-ID: <20200616195841.GA26288@e119603-lin.cambridge.arm.com>
+References: <20200520081118.54897-1-cristian.marussi@arm.com>
+ <20200520081118.54897-2-cristian.marussi@arm.com>
+ <20200608170258.GB13622@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 16 Jun 2020 12:56:40 -0700
-From:   rishabhb@codeaurora.org
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
-        ohad@wizery.com, tsoni@codeaurora.org, psodagud@codeaurora.org,
-        sidgup@codeaurora.org, linux-remoteproc-owner@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] remoteproc: Add remoteproc character device
- interface
-In-Reply-To: <d72ead5a-b25a-d4e2-4bbf-1790d2a64fb8@st.com>
-References: <1587492618-15896-1-git-send-email-rishabhb@codeaurora.org>
- <1587492618-15896-2-git-send-email-rishabhb@codeaurora.org>
- <d72ead5a-b25a-d4e2-4bbf-1790d2a64fb8@st.com>
-Message-ID: <d9a477cbbf19ed50af49aee7c6699e09@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608170258.GB13622@bogus>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-30 01:30, Arnaud POULIQUEN wrote:
-> Hi Rishabh,
+Hi Sudeep
+
+thanks for the review.
+
+On Mon, Jun 08, 2020 at 06:02:58PM +0100, Sudeep Holla wrote:
+> On Wed, May 20, 2020 at 09:11:10AM +0100, Cristian Marussi wrote:
+> > Add core SCMI Notifications protocol-registration support: allow protocols
+> > to register their own set of supported events, during their initialization
+> > phase. Notification core can track multiple platform instances by their
+> > handles.
+> >
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> > ---
+> >  drivers/firmware/arm_scmi/Makefile |   2 +-
+> >  drivers/firmware/arm_scmi/common.h |   4 +
+> >  drivers/firmware/arm_scmi/notify.c | 435 +++++++++++++++++++++++++++++
+> >  drivers/firmware/arm_scmi/notify.h |  56 ++++
+> >  include/linux/scmi_protocol.h      |   3 +
+> >  5 files changed, 499 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/firmware/arm_scmi/notify.c
+> >  create mode 100644 drivers/firmware/arm_scmi/notify.h
+> >
+> > diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
+> > new file mode 100644
+> > index 000000000000..8b620fc7df50
+> > --- /dev/null
+> > +++ b/drivers/firmware/arm_scmi/notify.c
+> > @@ -0,0 +1,435 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * System Control and Management Interface (SCMI) Notification support
+> > + *
+> > + * Copyright (C) 2020 ARM Ltd.
+> > + */
+> > +/**
+> > + * DOC: Theory of operation
+> > + *
+> > + * SCMI Protocol specification allows the platform to signal events to
+> > + * interested agents via notification messages: this is an implementation
+> > + * of the dispatch and delivery of such notifications to the interested users
+> > + * inside the Linux kernel.
+> > + *
+> > + * An SCMI Notification core instance is initialized for each active platform
+> > + * instance identified by the means of the usual &struct scmi_handle.
+> > + *
+> > + * Each SCMI Protocol implementation, during its initialization, registers with
+> > + * this core its set of supported events using scmi_register_protocol_events():
+> > + * all the needed descriptors are stored in the &struct registered_protocols and
+> > + * &struct registered_events arrays.
+> > + */
+> > +
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> > +#include <linux/bug.h>
+> > +#include <linux/compiler.h>
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/kfifo.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/refcount.h>
+> > +#include <linux/scmi_protocol.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/types.h>
+> > +
+> > +#include "notify.h"
+> > +
+> > +#define	SCMI_MAX_PROTO			256
 > 
+> [nit] Space after define instead of tab.
 > 
-> On 4/21/20 8:10 PM, Rishabh Bhatnagar wrote:
->> Add the character device interface into remoteproc framework.
->> This interface can be used in order to boot/shutdown remote
->> subsystems and provides a basic ioctl based interface to implement
->> supplementary functionality. An ioctl call is implemented to enable
->> the shutdown on release feature which will allow remote processors to
->> be shutdown when the controlling userpsace application crashes or 
->> hangs.
->> 
+
+Sure. (it was a one-space tab on my code..damn :D)
+
+> > +#define	SCMI_ALL_SRC_IDS		0xffffUL
 > 
-> Thanks for intruducing Ioctl, this will help for future evolutions.
+> Once you move {PROTO,EVT,SRC}_ID_MASK here, you can just {re-}use SRC_ID_MASK
 > 
->> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
->> ---
->>  Documentation/userspace-api/ioctl/ioctl-number.rst |   1 +
->>  drivers/remoteproc/Kconfig                         |   9 ++
->>  drivers/remoteproc/Makefile                        |   1 +
->>  drivers/remoteproc/remoteproc_cdev.c               | 143 
->> +++++++++++++++++++++
->>  drivers/remoteproc/remoteproc_internal.h           |  21 +++
->>  include/linux/remoteproc.h                         |   3 +
->>  include/uapi/linux/remoteproc_cdev.h               |  20 +++
->>  7 files changed, 198 insertions(+)
->>  create mode 100644 drivers/remoteproc/remoteproc_cdev.c
->>  create mode 100644 include/uapi/linux/remoteproc_cdev.h
->> 
->> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst 
->> b/Documentation/userspace-api/ioctl/ioctl-number.rst
->> index 2e91370..412b2a0 100644
->> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
->> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
->> @@ -337,6 +337,7 @@ Code  Seq#    Include File                         
->>                   Comments
->>  0xB4  00-0F  linux/gpio.h                                            
->> <mailto:linux-gpio@vger.kernel.org>
->>  0xB5  00-0F  uapi/linux/rpmsg.h                                      
->> <mailto:linux-remoteproc@vger.kernel.org>
->>  0xB6  all    linux/fpga-dfl.h
->> +0xB7  all    uapi/linux/remoteproc_cdev.h			     
->> <mailto:linux-remoteproc@vger.kernel.org>
->>  0xC0  00-0F  linux/usb/iowarrior.h
->>  0xCA  00-0F  uapi/misc/cxl.h
->>  0xCA  10-2F  uapi/misc/ocxl.h
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index de3862c..6374b79 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -14,6 +14,15 @@ config REMOTEPROC
->> 
->>  if REMOTEPROC
->> 
->> +config REMOTEPROC_CDEV
->> +	bool "Remoteproc character device interface"
->> +	help
->> +	  Say y here to have a character device interface for Remoteproc
->> +	  framework. Userspace can boot/shutdown remote processors through
->> +	  this interface.
->> +
->> +	  It's safe to say N if you don't want to use this interface.
->> +
->>  config IMX_REMOTEPROC
->>  	tristate "IMX6/7 remoteproc support"
->>  	depends on ARCH_MXC
->> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->> index e30a1b1..b7d4f77 100644
->> --- a/drivers/remoteproc/Makefile
->> +++ b/drivers/remoteproc/Makefile
->> @@ -9,6 +9,7 @@ remoteproc-y				+= remoteproc_debugfs.o
->>  remoteproc-y				+= remoteproc_sysfs.o
->>  remoteproc-y				+= remoteproc_virtio.o
->>  remoteproc-y				+= remoteproc_elf_loader.o
->> +obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
->>  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
->>  obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
->>  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->> diff --git a/drivers/remoteproc/remoteproc_cdev.c 
->> b/drivers/remoteproc/remoteproc_cdev.c
->> new file mode 100644
->> index 0000000..65142ec
->> --- /dev/null
->> +++ b/drivers/remoteproc/remoteproc_cdev.c
->> @@ -0,0 +1,143 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Character device interface driver for Remoteproc framework.
->> + *
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/cdev.h>
->> +#include <linux/fs.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/remoteproc.h>
->> +#include <uapi/linux/remoteproc_cdev.h>
->> +#include <linux/uaccess.h>
->> +
->> +#include "remoteproc_internal.h"
->> +
->> +#define NUM_RPROC_DEVICES	64
->> +static dev_t rproc_major;
->> +
->> +static ssize_t rproc_cdev_write(struct file *filp, const char __user 
->> *buf,
->> +				 size_t len, loff_t *pos)
->> +{
->> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
->> +					   struct rproc, char_dev);
->> +	int ret = 0;
->> +	char cmd[10];
->> +
->> +	if (!len || len > sizeof(cmd))
->> +		return -EINVAL;
->> +
->> +	ret = copy_from_user(cmd, buf, sizeof(cmd));
->> +	if (ret)
->> +		return -EFAULT;
->> +
->> +	if (sysfs_streq(cmd, "start")) {
->> +		if (rproc->state == RPROC_RUNNING)
->> +			return -EBUSY;
->> +
->> +		ret = rproc_boot(rproc);
->> +		if (ret)
->> +			dev_err(&rproc->dev, "Boot failed:%d\n", ret);
->> +	} else if (sysfs_streq(cmd, "stop")) {
->> +		if (rproc->state == RPROC_OFFLINE)
->> +			return -ENXIO;
+> > +/*
+> > + * Builds an unsigned 32bit key from the given input tuple to be used
+> > + * as a key in hashtables.
+> > + */
+> > +#define MAKE_HASH_KEY(p, e, s)			\
+> > +	((u32)(((p) << 24) | ((e) << 16) | ((s) & SCMI_ALL_SRC_IDS)))
+> > +
 > 
-> returning ENXIO in this case seems to me no appropriate , what about 
-> EPERM or
-> EINVAL (rproc_sysfs) ?
+> You can use {PROTO,EVT,SRC}_ID_MASK here and FIELD_PREP in the above
+> macro.
 > 
->> +
->> +		rproc_shutdown(rproc);
->> +	} else {
->> +		dev_err(&rproc->dev, "Unrecognized option\n");
->> +		ret = -EINVAL;
->> +	}
->> +
->> +	return ret ? ret : len;
->> +}
->> +
->> +static long rproc_device_ioctl(struct file *filp, unsigned int ioctl,
->> +				unsigned long arg)
->> +{
->> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
->> +					   struct rproc, char_dev);
->> +	void __user *argp = (void __user *)arg;
->> +	int ret;
->> +	bool param;
->> +
->> +	switch (ioctl) {
->> +	case RPROC_SET_SHUTDOWN_ON_RELEASE:
->> +		ret = copy_from_user(&param, argp, sizeof(bool));
->> +		if (ret) {
->> +			dev_err(&rproc->dev, "Data copy from userspace failed\n");
->> +			return -EINVAL;
->> +		}
->> +		rproc->cdev_put_on_release = param;
+
+I'll move the defs around and use the standard bitfield macros on both cases.
+
+> > +#define MAKE_ALL_SRCS_KEY(p, e)			\
+> > +	MAKE_HASH_KEY((p), (e), SCMI_ALL_SRC_IDS)
+> > +
+> > +struct scmi_registered_protocol_events_desc;
+> > +
 > 
-> argp is an void value, where cdev_put_on_release is a bool a check or
-> a conversion  seems
-> missing
+> Just a thought here: can we rename all protocol_event* as just event*.
+> The term protocol is kind of implicit and makes the names too long.
+> I feel some are really too long :). Similar if you think protocol
+> is implicit elsewhere, drop it.
 > 
->> +		break;
->> +	case RPROC_GET_SHUTDOWN_ON_RELEASE:
->> +		ret = copy_to_user(argp, &rproc->cdev_put_on_release,
->> +				   sizeof(bool));
->> +		if (ret) {
->> +			dev_err(&rproc->dev, "Data copy to userspace failed\n");
->> +			return -EINVAL;
->> +		}
->> +		break;
->> +	default:
->> +		dev_err(&rproc->dev, "Unsupported ioctl\n");
->> +		return -EINVAL;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static int rproc_cdev_release(struct inode *inode, struct file *filp)
->> +{
->> +	struct rproc *rproc = container_of(inode->i_cdev, struct rproc,
->> +					   char_dev);
->> +
->> +	if (rproc->cdev_put_on_release && rproc->state != RPROC_OFFLINE)
->> +		rproc_shutdown(rproc);
->> +
->> +	return 0;
->> +}
->> +
->> +
->> +static const struct file_operations rproc_fops = {
->> +	.write = rproc_cdev_write,
->> +	.unlocked_ioctl = rproc_device_ioctl,
->> +	.release = rproc_cdev_release,
->> +};
->> +
->> +int rproc_char_device_add(struct rproc *rproc)
->> +{
->> +	int ret;
->> +	dev_t cdevt;
->> +
->> +	cdev_init(&rproc->char_dev, &rproc_fops);
->> +	rproc->char_dev.owner = THIS_MODULE;
->> +
->> +	cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
->> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
->> +	if (ret < 0)
->> +		goto out;
->> +
->> +	rproc->dev.devt = cdevt;
->> +out:
->> +	return ret;
->> +}
->> +
->> +void rproc_char_device_remove(struct rproc *rproc)
->> +{
->> +	__unregister_chrdev(MAJOR(rproc->dev.devt), rproc->index, 1, 
->> "rproc");
->> +}
->> +
->> +void __init rproc_init_cdev(void)
->> +{
->> +	int ret;
->> +
->> +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES, 
->> "rproc");
+
+Yes you are right I hated all the time this massive protocols_ naming; I was
+trying to highlight all the internal machinery related to protocols registering
+with the core, but it was an ill attempt: I removed all redundant protocol_ prefixes
+and it seems fine. (all but scmi_register_protocol_events() itself)
+
+> > +/**
+> > + * struct scmi_notify_instance  - Represents an instance of the notification
+> > + * core
+> > + * @gid: GroupID used for devres
+> > + * @handle: A reference to the platform instance
+> > + * @registered_protocols: A statically allocated array containing pointers to
+> > + *			  all the registered protocol-level specific information
+> > + *			  related to events' handling
+> > + *
+> > + * Each platform instance, represented by a handle, has its own instance of
+> > + * the notification subsystem represented by this structure.
+> > + */
+> > +struct scmi_notify_instance {
+> > +	void						*gid;
+> > +	struct scmi_handle				*handle;
+> > +	struct scmi_registered_protocol_events_desc	**registered_protocols;
+> > +};
+> > +
+> > +/**
+> > + * struct events_queue  - Describes a queue and its associated worker
+> > + * @sz: Size in bytes of the related kfifo
+> > + * @kfifo: A dedicated Kernel kfifo descriptor
+> > + *
+> > + * Each protocol has its own dedicated events_queue descriptor.
+> > + */
+> > +struct events_queue {
+> > +	size_t				sz;
+> > +	struct kfifo			kfifo;
+> > +};
+> > +
 > 
-> "remoteproc"instead of "rproc" (in line with sysfs and debugfs naming) 
-> .
+> [nit] Add tabs only for alignment, just to keep it uniform throughout.
 > 
->> +	if (ret < 0)
->> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
->> +}
->> +
->> +void __exit rproc_exit_cdev(void)
->> +{
->> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_major), 0),
->> +				 NUM_RPROC_DEVICES);
->> +}
->> diff --git a/drivers/remoteproc/remoteproc_internal.h 
->> b/drivers/remoteproc/remoteproc_internal.h
->> index 493ef92..fb9d891 100644
->> --- a/drivers/remoteproc/remoteproc_internal.h
->> +++ b/drivers/remoteproc/remoteproc_internal.h
->> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const char 
->> *name, struct rproc *rproc,
->>  int rproc_init_sysfs(void);
->>  void rproc_exit_sysfs(void);
->> 
->> +#ifdef CONFIG_REMOTEPROC_CDEV
->> +void rproc_init_cdev(void);
->> +void rproc_exit_cdev(void);
->> +int rproc_char_device_add(struct rproc *rproc);
->> +void rproc_char_device_remove(struct rproc *rproc);
->> +#else
->> +static inline void rproc_init_cdev(void)
->> +{
->> +}
->> +static inline void rproc_exit_cdev(void)
->> +{
->> +}
->> +static inline int rproc_char_device_add(struct rproc *rproc)
->> +{
->> +	return 0;
->> +}
->> +static inline void  rproc_char_device_remove(struct rproc *rproc)
->> +{
->> +}
->> +#endif
->> +
->>  void rproc_free_vring(struct rproc_vring *rvring);
->>  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->> 
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index 16ad666..9bd2ff5 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -40,6 +40,7 @@
->>  #include <linux/virtio.h>
->>  #include <linux/completion.h>
->>  #include <linux/idr.h>
->> +#include <linux/cdev.h>
->>  #include <linux/of.h>
->> 
->>  /**
->> @@ -514,6 +515,8 @@ struct rproc {
->>  	bool auto_boot;
->>  	struct list_head dump_segments;
->>  	int nb_vdev;
->> +	struct cdev char_dev;
->> +	bool cdev_put_on_release;
->>  };
+
+Sure. I think this two lonely odd-tabbed things are so strangely aligned in
+advance for the appearance in a following patch of another massively named
+protocol field :D. I'll remove this spacing from this patch anyway.
+
+> > +/**
+> > + * struct scmi_event_header  - A utility header
+> > + * @timestamp: The timestamp, in nanoseconds (boottime), which was associated
+> > + *	       to this event as soon as it entered the SCMI RX ISR
+> > + * @evt_id: Event ID (corresponds to the Event MsgID for this Protocol)
+> > + * @payld_sz: Effective size of the embedded message payload which follows
+> > + * @payld: A reference to the embedded event payload
+> > + *
+> > + * This header is prepended to each received event message payload before
+> > + * queueing it on the related &struct events_queue.
+> > + */
+> > +struct scmi_event_header {
+> > +	u64	timestamp;
+> > +	u8	evt_id;
+> > +	size_t	payld_sz;
+> > +	u8	payld[];
+> > +} __packed;
+> > +
 > 
-> These parameters are local variables of rproc_cdev. Could be defined
-> in a separate structure.
-> with a pointer in rproc to this structure.
+> Is this directly read from the shmem ? Trying to understand need for
+> __packed.
 > 
->> 
->>  /**
->> diff --git a/include/uapi/linux/remoteproc_cdev.h 
->> b/include/uapi/linux/remoteproc_cdev.h
->> new file mode 100644
->> index 0000000..3975120
->> --- /dev/null
->> +++ b/include/uapi/linux/remoteproc_cdev.h
->> @@ -0,0 +1,20 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
->> +/*
->> + * IOCTLs for Remoteproc's character device interface.
->> + *
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +
->> +#ifndef _UAPI_REMOTEPROC_CDEV_H_
->> +#define _UAPI_REMOTEPROC_CDEV_H_
->> +
->> +#include <linux/ioctl.h>
->> +#include <linux/types.h>
->> +
->> +#define RPROC_MAGIC	0xB7
->> +
->> +#define RPROC_SET_SHUTDOWN_ON_RELEASE _IOW(RPROC_MAGIC, 1, int)
->> +#define RPROC_GET_SHUTDOWN_ON_RELEASE _IOR(RPROC_MAGIC, 2, int)
->> +
->> +#endif
->> 
-> IOCTLs should probaly be documented.
-I have added documentation to 
-Documentation/userspace-api/ioctl/ioctl-number.rst
-Is there another place where I need to add documentation for this?
+
+Mmmm, not really, it's the header describing the events which is build and
+pushed on the kfifo with the event payload appended to it, so it seemed to me
+like a sort of 'packet' flowing somewhere and I wanted to avoid padding.
+
+> > +struct scmi_registered_event;
+> > +
+> > +/**
+> > + * struct scmi_registered_protocol_events_desc  - Protocol Specific information
+> > + * @id: Protocol ID
+> > + * @ops: Protocol specific and event-related operations
+> > + * @equeue: The embedded per-protocol events_queue
+> > + * @ni: A reference to the initialized instance descriptor
+> > + * @eh: A reference to pre-allocated buffer to be used as a scratch area by the
+> > + *	deferred worker when fetching data from the kfifo
+> > + * @eh_sz: Size of the pre-allocated buffer @eh
+> > + * @in_flight: A reference to an in flight &struct scmi_registered_event
+> > + * @num_events: Number of events in @registered_events
+> > + * @registered_events: A dynamically allocated array holding all the registered
+> > + *		       events' descriptors, whose fixed-size is determined at
+> > + *		       compile time.
+> > + *
+> > + * All protocols that register at least one event have their protocol-specific
+> > + * information stored here, together with the embedded allocated events_queue.
+> > + * These descriptors are stored in the @registered_protocols array at protocol
+> > + * registration time.
+> > + *
+> > + * Once these descriptors are successfully registered, they are NEVER again
+> > + * removed or modified since protocols do not unregister ever, so that, once
+> > + * we safely grab a NON-NULL reference from the array we can keep it and use it.
+> > + */
+> > +struct scmi_registered_protocol_events_desc {
+> > +	u8					id;
+> > +	const struct scmi_protocol_event_ops	*ops;
+> > +	struct events_queue			equeue;
+> > +	struct scmi_notify_instance		*ni;
+> > +	struct scmi_event_header		*eh;
+> > +	size_t					eh_sz;
+> > +	void					*in_flight;
+> > +	int					num_events;
+> > +	struct scmi_registered_event		**registered_events;
+> > +};
+> > +
+> > +/**
+> > + * struct scmi_registered_event  - Event Specific Information
+> > + * @proto: A reference to the associated protocol descriptor
+> > + * @evt: A reference to the associated event descriptor (as provided at
+> > + *       registration time)
+> > + * @report: A pre-allocated buffer used by the deferred worker to fill a
+> > + *	    customized event report
+> > + * @num_sources: The number of possible sources for this event as stated at
+> > + *		 events' registration time
+> > + * @sources: A reference to a dynamically allocated array used to refcount the
+> > + *	     events' enable requests for all the existing sources
+> > + * @sources_mtx: A mutex to serialize the access to @sources
+> > + *
+> > + * All registered events are represented by one of these structures that are
+> > + * stored in the @registered_events array at protocol registration time.
+> > + *
+> > + * Once these descriptors are successfully registered, they are NEVER again
+> > + * removed or modified since protocols do not unregister ever, so that once we
+> > + * safely grab a NON-NULL reference from the table we can keep it and use it.
+> > + */
+> > +struct scmi_registered_event {
+> > +	struct scmi_registered_protocol_events_desc	*proto;
+> > +	const struct scmi_event				*evt;
+> > +	void						*report;
+> > +	u32						num_sources;
+> > +	refcount_t					*sources;
+> > +	struct mutex					sources_mtx;
+> > +};
+> > +
+> > +/**
+> > + * scmi_kfifo_free()  - Devres action helper to free the kfifo
+> > + * @kfifo: The kfifo to free
+> > + */
+> > +static void scmi_kfifo_free(void *kfifo)
+> > +{
+> > +	kfifo_free((struct kfifo *)kfifo);
+> > +}
+> > +
+> > +/**
+> > + * scmi_initialize_events_queue()  - Allocate/Initialize a kfifo buffer
+> > + * @ni: A reference to the notification instance to use
+> > + * @equeue: The events_queue to initialize
+> > + * @sz: Size of the kfifo buffer to allocate
+> > + *
+> > + * Allocate a buffer for the kfifo and initialize it.
+> > + *
+> > + * Return: 0 on Success
+> > + */
+> > +static int scmi_initialize_events_queue(struct scmi_notify_instance *ni,
+> > +					struct events_queue *equeue, size_t sz)
+> > +{
+> > +	if (kfifo_alloc(&equeue->kfifo, sz, GFP_KERNEL))
+> > +		return -ENOMEM;
+> > +	/* Size could have been roundup to power-of-two */
+> > +	equeue->sz = kfifo_size(&equeue->kfifo);
+> > +
+> > +	return devm_add_action_or_reset(ni->handle->dev, scmi_kfifo_free,
+> > +					&equeue->kfifo);
+> > +}
+> > +
+> > +/**
+> > + * scmi_allocate_registered_protocol_desc()  - Allocate a registered protocol
+> > + * events' descriptor
+> > + * @ni: A reference to the &struct scmi_notify_instance notification instance
+> > + *	to use
+> > + * @proto_id: Protocol ID
+> > + * @queue_sz: Size of the associated queue to allocate
+> > + * @eh_sz: Size of the event header scratch area to pre-allocate
+> > + * @num_events: Number of events to support (size of @registered_events)
+> > + * @ops: Pointer to a struct holding references to protocol specific helpers
+> > + *	 needed during events handling
+> > + *
+> > + * It is supposed to be called only once for each protocol at protocol
+> > + * initialization time, so it warns if the requested protocol is found already
+> > + * registered.
+> > + *
+> > + * Return: The allocated and registered descriptor on Success
+> > + */
+> > +static struct scmi_registered_protocol_events_desc *
+> > +scmi_allocate_registered_protocol_desc(struct scmi_notify_instance *ni,
+> > +				       u8 proto_id, size_t queue_sz,
+> > +				       size_t eh_sz, int num_events,
+> > +				const struct scmi_protocol_event_ops *ops)
+> > +{
+> > +	int ret;
+> > +	struct scmi_registered_protocol_events_desc *pd;
+> > +
+> > +	/* Ensure protocols are up to date */
+> > +	smp_rmb();
+> > +	if (ni->registered_protocols[proto_id]) {
+> > +		WARN_ON(1);
 > 
-> Thanks,
-> Arnaud
+> Can't this be if (WARN_ON(ni->registered_protocols[proto_id])) ?
+> 
+
+Yes of course.
+
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	pd = devm_kzalloc(ni->handle->dev, sizeof(*pd), GFP_KERNEL);
+> > +	if (!pd)
+> > +		return ERR_PTR(-ENOMEM);
+> > +	pd->id = proto_id;
+> > +	pd->ops = ops;
+> > +	pd->ni = ni;
+> > +
+> > +	ret = scmi_initialize_events_queue(ni, &pd->equeue, queue_sz);
+> > +	if (ret)
+> > +		return ERR_PTR(ret);
+> > +
+> > +	pd->eh = devm_kzalloc(ni->handle->dev, eh_sz, GFP_KERNEL);
+> > +	if (!pd->eh)
+> > +		return ERR_PTR(-ENOMEM);
+> > +	pd->eh_sz = eh_sz;
+> > +
+> > +	pd->registered_events = devm_kcalloc(ni->handle->dev, num_events,
+> > +					     sizeof(char *), GFP_KERNEL);
+> > +	if (!pd->registered_events)
+> > +		return ERR_PTR(-ENOMEM);
+> > +	pd->num_events = num_events;
+> > +
+> > +	return pd;
+> > +}
+> > +
+> > +/**
+> > + * scmi_register_protocol_events()  - Register Protocol Events with the core
+> > + * @handle: The handle identifying the platform instance against which the
+> > + *	    the protocol's events are registered
+> > + * @proto_id: Protocol ID
+> > + * @queue_sz: Size in bytes of the associated queue to be allocated
+> > + * @ops: Protocol specific event-related operations
+> > + * @evt: Event descriptor array
+> > + * @num_events: Number of events in @evt array
+> > + * @num_sources: Number of possible sources for this protocol on this
+> > + *		 platform.
+> > + *
+> > + * Used by SCMI Protocols initialization code to register with the notification
+> > + * core the list of supported events and their descriptors: takes care to
+> > + * pre-allocate and store all needed descriptors, scratch buffers and event
+> > + * queues.
+> > + *
+> > + * Return: 0 on Success
+> > + */
+> > +int scmi_register_protocol_events(const struct scmi_handle *handle,
+> > +				  u8 proto_id, size_t queue_sz,
+> > +				  const struct scmi_protocol_event_ops *ops,
+> > +				  const struct scmi_event *evt, int num_events,
+> > +				  int num_sources)
+> > +{
+> > +	int i;
+> > +	size_t payld_sz = 0;
+> > +	struct scmi_registered_protocol_events_desc *pd;
+> > +	struct scmi_notify_instance *ni;
+> > +
+> > +	if (!ops || !evt || proto_id >= SCMI_MAX_PROTO)
+> > +		return -EINVAL;
+> > +
+> > +	/* Ensure notify_priv is updated */
+> > +	smp_rmb();
+> > +	if (unlikely(!handle->notify_priv))
+> > +		return -ENOMEM;
+> > +	ni = handle->notify_priv;
+> > +
+> > +	/* Attach to the notification main devres group */
+> > +	if (!devres_open_group(ni->handle->dev, ni->gid, GFP_KERNEL))
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < num_events; i++)
+> > +		payld_sz = max_t(size_t, payld_sz, evt[i].max_payld_sz);
+> > +	pd = scmi_allocate_registered_protocol_desc(ni, proto_id, queue_sz,
+> > +				    sizeof(struct scmi_event_header) + payld_sz,
+> > +						    num_events, ops);
+> > +	if (IS_ERR(pd))
+> > +		goto err;
+> > +
+> > +	for (i = 0; i < num_events; i++, evt++) {
+> > +		struct scmi_registered_event *r_evt;
+> > +
+> > +		r_evt = devm_kzalloc(ni->handle->dev, sizeof(*r_evt),
+> > +				     GFP_KERNEL);
+> > +		if (!r_evt)
+> > +			goto err;
+> > +		r_evt->proto = pd;
+> > +		r_evt->evt = evt;
+> > +
+> > +		r_evt->sources = devm_kcalloc(ni->handle->dev, num_sources,
+> > +					      sizeof(refcount_t), GFP_KERNEL);
+> > +		if (!r_evt->sources)
+> > +			goto err;
+> > +		r_evt->num_sources = num_sources;
+> > +		mutex_init(&r_evt->sources_mtx);
+> > +
+> > +		r_evt->report = devm_kzalloc(ni->handle->dev,
+> > +					     evt->max_report_sz, GFP_KERNEL);
+> > +		if (!r_evt->report)
+> > +			goto err;
+> > +
+> > +		pd->registered_events[i] = r_evt;
+> > +		/* Ensure events are updated */
+> > +		smp_wmb();
+> > +		pr_info("SCMI Notifications: registered event - %X\n",
+> > +			MAKE_ALL_SRCS_KEY(r_evt->proto->id, r_evt->evt->id));
+> > +	}
+> > +
+> > +	/* Register protocol and events...it will never be removed */
+> > +	ni->registered_protocols[proto_id] = pd;
+> > +	/* Ensure protocols are updated */
+> > +	smp_wmb();
+> > +
+> > +	devres_close_group(ni->handle->dev, ni->gid);
+> > +
+> > +	return 0;
+> > +
+> > +err:
+> > +	pr_warn("SCMI Notifications - Proto:%X - Registration Failed !\n",
+> > +		proto_id);
+> > +	/* A failing protocol registration does not trigger full failure */
+> > +	devres_close_group(ni->handle->dev, ni->gid);
+> > +
+> > +	return -ENOMEM;
+> > +}
+> > +
+> > +/**
+> > + * scmi_notification_init()  - Initializes Notification Core Support
+> > + * @handle: The handle identifying the platform instance to initialize
+> > + *
+> > + * This function lays out all the basic resources needed by the notification
+> > + * core instance identified by the provided handle: once done, all of the
+> > + * SCMI Protocols can register their events with the core during their own
+> > + * initializations.
+> > + *
+> > + * Note that failing to initialize the core notifications support does not
+> > + * cause the whole SCMI Protocols stack to fail its initialization.
+> > + *
+> > + * SCMI Notification Initialization happens in 2 steps:
+> > + * * initialization: basic common allocations (this function)
+> > + * * registration: protocols asynchronously come into life and registers their
+> > + *		   own supported list of events with the core; this causes
+> > + *		   further per-protocol allocations
+> > + *
+> > + * Any user's callback registration attempt, referring a still not registered
+> > + * event, will be registered as pending and finalized later (if possible)
+> > + * by scmi_protocols_late_init() work.
+> > + * This allows for lazy initialization of SCMI Protocols due to late (or
+> > + * missing) SCMI drivers' modules loading.
+> > + *
+> > + * Return: 0 on Success
+> > + */
+> > +int scmi_notification_init(struct scmi_handle *handle)
+> > +{
+> > +	void *gid;
+> > +	struct scmi_notify_instance *ni;
+> > +
+> > +	gid = devres_open_group(handle->dev, NULL, GFP_KERNEL);
+> > +	if (!gid)
+> > +		return -ENOMEM;
+> > +
+> > +	ni = devm_kzalloc(handle->dev, sizeof(*ni), GFP_KERNEL);
+> > +	if (!ni)
+> > +		goto err;
+> > +
+> > +	ni->gid = gid;
+> > +	ni->handle = handle;
+> > +
+> > +	ni->registered_protocols = devm_kcalloc(handle->dev, SCMI_MAX_PROTO,
+> > +						sizeof(char *), GFP_KERNEL);
+> 
+> May not be too expensive, do we have to allocate for all 256 possible
+> protocols ? Will it help if we share list of implemented protocols.
+> I know this may get complex once we add support for registering protocols
+> later, but do we need it now ?
+> 
+
+So the reasoning behind this was as follows: this structure is accessed heavily
+on the rx (interrupt) path to lookup the proper kfifo queue to pick (if any) to
+push the SCMI event packets into, so I wanted to keep this as lockless as
+possible.
+
+At first I used an RCU and an hash table to access it safely and locklessly, but
+then I realized that these slots were written only once for all at initialization time
+and then only (frequently) read afterwards on the rx path. (the write-once though
+happens at unpredictable time, i.e. when the related underlying protocol is
+initialized, action which depends on when the first SCMI driver user of that
+protocol is in turn initialzed: usually at boot time, BUT possibly later if the
+user driver is a module or also possibly never)
+
+So it seemed overkill to add the complexity of an RCU htable just for writing a
+word-sized aligned single-copy-atomic pointer value into an array that is written
+once for all and then never changes again: the only thing I really cared here was
+to concurrently write and safely read the pointer from the array and check if it
+is NOT NULL.
+
+This led indeed to a fairly sparse array mostly empty though (and a few barriers):
+it seemed preferable to me at the end though.
+
+> > +	if (!ni->registered_protocols)
+> > +		goto err;
+> > +
+> > +	handle->notify_priv = ni;
+> > +	/* Ensure handle is up to date */
+> > +	smp_wmb();
+> > +
+> > +	pr_info("SCMI Notifications Core Enabled.\n");
+> > +
+> > +	devres_close_group(handle->dev, ni->gid);
+> > +
+> > +	return 0;
+> > +
+> > +err:
+> > +	pr_warn("SCMI Notifications - Initialization Failed.\n");
+> 
+> You have defined pr_fmt, do you still need "SCMI Notifications" for
+> all the logging(err/warn/info) everywhere in the file. Making use of
+> it will help you trim the messages without loosing it in the log. Update
+> pr_fmt if needed.
+> 
+
+Yes you are right, it just does not make sense this dumb repetition: I'll
+fix the pr_fmt
+
+> > +	devres_release_group(handle->dev, NULL);
+> > +	return -ENOMEM;
+> > +}
+> > +
+> > +/**
+> > + * scmi_notification_exit()  - Shutdown and clean Notification core
+> > + * @handle: The handle identifying the platform instance to shutdown
+> > + */
+> > +void scmi_notification_exit(struct scmi_handle *handle)
+> > +{
+> > +	struct scmi_notify_instance *ni;
+> > +
+> > +	/* Ensure notify_priv is updated */
+> > +	smp_rmb();
+> > +	if (unlikely(!handle->notify_priv))
+> > +		return;
+> > +	ni = handle->notify_priv;
+> > +
+> > +	devres_release_group(ni->handle->dev, ni->gid);
+> > +}
+> > diff --git a/drivers/firmware/arm_scmi/notify.h b/drivers/firmware/arm_scmi/notify.h
+> > new file mode 100644
+> > index 000000000000..54094aaf812a
+> > --- /dev/null
+> > +++ b/drivers/firmware/arm_scmi/notify.h
+> > @@ -0,0 +1,56 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * System Control and Management Interface (SCMI) Message Protocol
+> > + * notification header file containing some definitions, structures
+> > + * and function prototypes related to SCMI Notification handling.
+> > + *
+> > + * Copyright (C) 2020 ARM Ltd.
+> > + */
+> > +#ifndef _SCMI_NOTIFY_H
+> > +#define _SCMI_NOTIFY_H
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/types.h>
+> > +
+> > +/**
+> > + * struct scmi_event  - Describes an event to be supported
+> > + * @id: Event ID
+> > + * @max_payld_sz: Max possible size for the payload of a notif msg of this kind
+> > + * @max_report_sz: Max possible size for the report of a notif msg of this kind
+> 
+> :s/notif msg of this kind/notification message/
+> 
+
+I'll do.
+
+Thanks
+
+Cristian
+> --
+> Regards,
+> Sudeep
