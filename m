@@ -2,72 +2,92 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2688C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40242C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC1202078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C3620786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:33:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tCpmXscq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgFPHck (ORCPT
+        id S1727059AbgFPHdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:32:40 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:52488 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgFPHck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:32:40 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jl64M-0002Xj-Rn; Tue, 16 Jun 2020 17:31:43 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 16 Jun 2020 17:31:42 +1000
-Date:   Tue, 16 Jun 2020 17:31:42 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     wu000273@umn.edu, kjlu@umn.edu, Matt Mackall <mpm@selenic.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Tue, 16 Jun 2020 03:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgFPHdB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 03:33:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F38C05BD43;
+        Tue, 16 Jun 2020 00:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TCESyuutW94Yi9hrCxtJaxfygdsqJ+GfwqDZdSbMGZ0=; b=tCpmXscqbiULhnYZLCtyvgelRm
+        F0q+HF25wSHigEGiq9ojEMmws7IWh/6fv0QX91lkaVOvsCuJaF/mUojzH80LU60cu7s1oYVocJLy5
+        V8cqeWNrj0eHquJ4CRB9Yei9Zk/IQT/dmYwQXS55kK2CGyFV3/DPed7ZwltilqznodPTb2EJ+190q
+        M0ak5iWUzj7LJtLe0fnWMSJM7PMSOW8JN6uRCIX6PEOLkHYGmnORq9E0MasgO4qL3TpU8OU52qV3F
+        ZJSYyNx+z5OqATcbti4fbIUMZnfp1NxnZnAXHdW6dT3aickDAcfMQ9E9zNu/Fef5tNXgZnckCkDAd
+        0ozQ/Yrg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jl65R-0002Dk-Ek; Tue, 16 Jun 2020 07:32:49 +0000
+Date:   Tue, 16 Jun 2020 00:32:49 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        linux-samsung-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char: hw_random: Fix a reference count leak.
-Message-ID: <20200616073142.GA30519@gondor.apana.org.au>
-References: <20200613214128.32665-1-wu000273@umn.edu>
- <CGME20200615131915eucas1p2b8f3fa0ceb757e36aa888a4476de034f@eucas1p2.samsung.com>
- <dleftjr1uglb5t.fsf%l.stelmach@samsung.com>
+        oohall@gmail.com
+Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
+Message-ID: <20200616073249.GB30385@infradead.org>
+References: <20200616011742.138975-1-rajatja@google.com>
+ <20200616011742.138975-4-rajatja@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dleftjr1uglb5t.fsf%l.stelmach@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200616011742.138975-4-rajatja@google.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 03:18:54PM +0200, Lukasz Stelmach wrote:
->
-> I believe this fix has already been submitted
-> 
->     https://lore.kernel.org/linux-arm-kernel/20200522011659.26727-1-dinghao.liu@zju.edu.cn/T/#u
-> 
-> It hasn't been applied though. Anyway, thank you for your work.
-> 
-> Herbert, could you take a look at the Dinghao's patch, please?
+On Mon, Jun 15, 2020 at 06:17:42PM -0700, Rajat Jain via iommu wrote:
+> This is needed to allow the userspace to determine when an untrusted
+> device has been added, and thus allowing it to bind the driver manually
+> to it, if it so wishes. This is being done as part of the approach
+> discussed at https://lkml.org/lkml/2020/6/9/1331
 
-It was part of a number of patches that did similar things.  The
-general conclusion was that it should call put_noidle instead.
-
-See
-
-	https://patchwork.kernel.org/patch/11574843/
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Please move the attribute to struct device instead of further
+entrenching it in PCIe.  I'm starting to grow tired of saying this
+every other week while you guys are all moving into the entirely
+wrong direction.
