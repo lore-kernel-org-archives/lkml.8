@@ -2,53 +2,52 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B47C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5644208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB14C2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324068;
-	bh=f4dWbME0zvTO4lNAmFwEvgbVjHjm7e7nyr1BsvdN+HM=;
+	s=default; t=1592324079;
+	bh=SM+Nv9YF+KO0JqFA9dgYr8V4Xc8LFO0isYGvwpRQJAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UOZ9OhSpg+oHKjLSqTn9UPXBoqyJgDjOsVGPpwNNcG+zwecNYMr6BJf43oYFUhGha
-	 sFYC511EnPjV+Fx/DVa6ddqixDK4oS6HcvzlMgS2Wc9nFXSVItRoCVWtFRTFderpPu
-	 lBVD1clz30PftVM/u8uEpdSaLi21j0wMtplsXJXc=
+	b=fG/M1FvOqzS1nMw5KPJXv7vU6ueLEHWZTLbV1WaCqcDt7JO2nfqpXiwKTcY0GRvys
+	 XAcr2H98GN7/bGkzuIOsEIQfttBUgcfbnZdmjTGCcNlsdQ4U12v0PZEJ8YxoTqT+VX
+	 /N387nyjYNFAow+ezzwnFJF9GbkJZR+C733r4axI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732016AbgFPQO0 (ORCPT
+        id S1732151AbgFPQOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:14:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59510 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730939AbgFPPmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:40 -0400
+        id S1731680AbgFPPmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 396EA208E4;
-        Tue, 16 Jun 2020 15:42:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF19D208D5;
+        Tue, 16 Jun 2020 15:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322159;
-        bh=f4dWbME0zvTO4lNAmFwEvgbVjHjm7e7nyr1BsvdN+HM=;
+        s=default; t=1592322152;
+        bh=SM+Nv9YF+KO0JqFA9dgYr8V4Xc8LFO0isYGvwpRQJAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L/MFTqtrZk5z3eF9xclHqF7/oNEJmyNUCzXlWrRJ29uGVhRf4rHUZ/42xRmfVZC8W
-         m59ztvXPgByI/9zfFtE12tSNu5HLToVqseTyf0XKE5cYERvD+srDxultp/jpVFxYG/
-         LHXlAk/4wap4yV4ga5kEtmAt7QfPsOzraB/18Fm4=
+        b=KlgL4x2KstJN6NQgagAxPzp6OhNzunrU4dE05Y1mBIyC8Zl/ITRsRrmn+YEmaR+ys
+         vTyLmzWJZ7iv0RX7iUB01t8DmOHke2tEI2MYEKo7CFe88cjuMV9VF+bXOS7IMbcIUz
+         B8MLaugwxL4JCcQUTSbeo7ofMBwaY//nWIuJb8eQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Alla Segal <allas@mellanox.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 005/163] bridge: Avoid infinite loop when suppressing NS messages with invalid options
-Date:   Tue, 16 Jun 2020 17:32:59 +0200
-Message-Id: <20200616153107.117704051@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 020/163] fanotify: fix ignore mask logic for events on child and on dir
+Date:   Tue, 16 Jun 2020 17:33:14 +0200
+Message-Id: <20200616153107.848384207@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,50 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit 53fc685243bd6fb90d90305cea54598b78d3cbfc ]
+[ Upstream commit 2f02fd3fa13e51713b630164f8a8e5b42de8283b ]
 
-When neighbor suppression is enabled the bridge device might reply to
-Neighbor Solicitation (NS) messages on behalf of remote hosts.
+The comments in fanotify_group_event_mask() say:
 
-In case the NS message includes the "Source link-layer address" option
-[1], the bridge device will use the specified address as the link-layer
-destination address in its reply.
+  "If the event is on dir/child and this mark doesn't care about
+   events on dir/child, don't send it!"
 
-To avoid an infinite loop, break out of the options parsing loop when
-encountering an option with length zero and disregard the NS message.
+Specifically, mount and filesystem marks do not care about events
+on child, but they can still specify an ignore mask for those events.
+For example, a group that has:
+- A mount mark with mask 0 and ignore_mask FAN_OPEN
+- An inode mark on a directory with mask FAN_OPEN | FAN_OPEN_EXEC
+  with flag FAN_EVENT_ON_CHILD
 
-This is consistent with the IPv6 ndisc code and RFC 4886 which states
-that "Nodes MUST silently discard an ND packet that contains an option
-with length zero" [2].
+A child file open for exec would be reported to group with the FAN_OPEN
+event despite the fact that FAN_OPEN is in ignore mask of mount mark,
+because the mark iteration loop skips over non-inode marks for events
+on child when calculating the ignore mask.
 
-[1] https://tools.ietf.org/html/rfc4861#section-4.3
-[2] https://tools.ietf.org/html/rfc4861#section-4.6
+Move ignore mask calculation to the top of the iteration loop block
+before excluding marks for events on dir/child.
 
-Fixes: ed842faeb2bd ("bridge: suppress nd pkts on BR_NEIGH_SUPPRESS ports")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Alla Segal <allas@mellanox.com>
-Tested-by: Alla Segal <allas@mellanox.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200524072441.18258-1-amir73il@gmail.com
+Reported-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/linux-fsdevel/20200521162443.GA26052@quack2.suse.cz/
+Fixes: 55bf882c7f13 "fanotify: fix merging marks masks with FAN_ONDIR"
+Fixes: b469e7e47c8a "fanotify: fix handling of events on child..."
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/br_arp_nd_proxy.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/notify/fanotify/fanotify.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/bridge/br_arp_nd_proxy.c
-+++ b/net/bridge/br_arp_nd_proxy.c
-@@ -276,6 +276,10 @@ static void br_nd_send(struct net_bridge
- 	ns_olen = request->len - (skb_network_offset(request) +
- 				  sizeof(struct ipv6hdr)) - sizeof(*ns);
- 	for (i = 0; i < ns_olen - 1; i += (ns->opt[i + 1] << 3)) {
-+		if (!ns->opt[i + 1]) {
-+			kfree_skb(reply);
-+			return;
-+		}
- 		if (ns->opt[i] == ND_OPT_SOURCE_LL_ADDR) {
- 			daddr = ns->opt + i + sizeof(struct nd_opt_hdr);
- 			break;
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index c18459cea6f4..29a9de57c34c 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -232,6 +232,10 @@ static u32 fanotify_group_event_mask(struct fsnotify_group *group,
+ 		if (!fsnotify_iter_should_report_type(iter_info, type))
+ 			continue;
+ 		mark = iter_info->marks[type];
++
++		/* Apply ignore mask regardless of ISDIR and ON_CHILD flags */
++		marks_ignored_mask |= mark->ignored_mask;
++
+ 		/*
+ 		 * If the event is on dir and this mark doesn't care about
+ 		 * events on dir, don't send it!
+@@ -249,7 +253,6 @@ static u32 fanotify_group_event_mask(struct fsnotify_group *group,
+ 			continue;
+ 
+ 		marks_mask |= mark->mask;
+-		marks_ignored_mask |= mark->ignored_mask;
+ 	}
+ 
+ 	test_mask = event_mask & marks_mask & ~marks_ignored_mask;
+-- 
+2.25.1
+
 
 
