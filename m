@@ -2,102 +2,135 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA4CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0570420A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:02:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZiAh19re"
+	by mail.kernel.org (Postfix) with ESMTP id 13C1D20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgFPNCq (ORCPT
+        id S1728673AbgFPNFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbgFPNCo (ORCPT
+        Tue, 16 Jun 2020 09:05:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53637 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgFPNFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:02:44 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C94EC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:02:43 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id d4so1443856otk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NzTqWXpX+jIvy6nNJlsuFOKnjF4HL8dCMVxHFmjhNpc=;
-        b=ZiAh19reRpuQMNnULfDrvDsIF/sHi3PNBI2av/6tLQoIpHlpsGZyVyf5/f9zfAkXsT
-         RvqRMv27tjZWKFR9Snu8Rk1bKEaoZyL/3MRnmiJD2SYG7VpqMcAfTK6UqN88hIEJj+VT
-         ZZoCkxccGShzokCjF5GTZ+PUN11Lr1oNW1HT862bUqaAOlMVCxgyKCPIV1P3uEkrqLi1
-         kxFv1PNr65IJYwIvN8H7k/8AJzUyeVk39JEE9mCjY/8kT+oymEOkTRGIvQYJsIyQkvwl
-         VTRqUzdDBZjs9D9mgj+yTLxxaJOBRalDP+g3Ki0j/9PsO5oPKeJHujNesCv6z51OEUI/
-         s7Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NzTqWXpX+jIvy6nNJlsuFOKnjF4HL8dCMVxHFmjhNpc=;
-        b=lc7pU2neC6wVhNxuAYtlyJ0YXxdTnu0voHYMboj65cxn41KptblMm2TmUK4mC/xml9
-         ItWntJHhoOzCwB5GPaA4PKA2+FH/oDJGID5zZ8UfJrL7N/cFAR48KcBjMuUEua2Np/qK
-         nVKRFre96ZgCCHqbEiKXgPLrsxyp5u3ISNSrLWnMtNQ9ByfdhrffqTY2ki2Auv8AW5Hs
-         eC/y9eZqTHMyRq5TDMP3zYn4ERI4mLCB6P8okvJGxPwD5mhGlS3HqKtLtMQujBTE4I+b
-         G1tHCmy+/yweYRdbyj8w0O6xYr3qy3hFR3/dYTuUU6eX4s7uN7XSiCbkudLoDp8xRLHK
-         o+Pw==
-X-Gm-Message-State: AOAM5304PhthogV2KcT2Rao5MF47a7cV1UMXvQFnYgvgy15Bx9i0s04E
-        BUjGcBznPnWsMEN4GfU8Sl0aL8ya2OT8wLfNOgPIow==
-X-Google-Smtp-Source: ABdhPJxsO1eVEcTPZvlTMUrXhz7ujf5MbjRiGA+lB51S5epUV5ph0XXmivVwvq7RJRM5fxua8F5YwdkG3RxhSDPGT/s=
-X-Received: by 2002:a05:6830:242e:: with SMTP id k14mr2249753ots.36.1592312562394;
- Tue, 16 Jun 2020 06:02:42 -0700 (PDT)
+        Tue, 16 Jun 2020 09:05:01 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jlBGs-0006JI-0n; Tue, 16 Jun 2020 13:04:58 +0000
+Subject: Re: [PATCH][next] mtd: rawnand: qcom: fix incorrect masking operator,
+ used & instead of |
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200616115125.74298-1-colin.king@canonical.com>
+ <20200616145756.4875d0c6@xps13>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2df422ef-5e47-ed5b-31b0-58b29f2f0f8e@canonical.com>
+Date:   Tue, 16 Jun 2020 14:04:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200611114418.19852-1-sumit.semwal@linaro.org>
- <CAO_48GFVYOv8Km7fEh8iBPp7d5ziySBV0vB9nu_+oset6hBO8w@mail.gmail.com> <159231181752.18853.1290700688849491922@build.alporthouse.com>
-In-Reply-To: <159231181752.18853.1290700688849491922@build.alporthouse.com>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Tue, 16 Jun 2020 18:32:31 +0530
-Message-ID: <CAO_48GE8K_nDXs_LDU9caRdP-aK9DWV3vXcD4EuVCxyShCBbmg@mail.gmail.com>
-Subject: Re: [PATCH v2] dma-buf: Move dma_buf_release() from fops to dentry_ops
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chenbo Feng <fengc@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        Charan Teja Reddy <charante@codeaurora.org>,
-        syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com,
-        "# 3.4.x" <stable@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200616145756.4875d0c6@xps13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+On 16/06/2020 13:57, Miquel Raynal wrote:
+> Hi Colin,
+> 
+> Colin King <colin.king@canonical.com> wrote on Tue, 16 Jun 2020
+> 12:51:25 +0100:
+> 
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> Currently the expression (nand_ctrl | BAM_MODE_EN) is always true no
+>> matter the value of nand_ctrl because the incorrect masking operator
+>> is being used.  Fix this by using bit-wise & instead of |.
+> 
+> I saw it when reviewing and marked it to solve before applying but it
+> looks like I forgot to do so. If you don't mind I'll merge this with
+> the original commit.
+> 
+>>
+>> Addresses-Coverity: ("Wrong operator used")
+>> Fixes: dd0c1fc8de12 ("mtd: rawnand: qcom: set BAM mode only if not set already")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>  drivers/mtd/nand/raw/qcom_nandc.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+>> index a3ef4288be27..37d95532ba7e 100644
+>> --- a/drivers/mtd/nand/raw/qcom_nandc.c
+>> +++ b/drivers/mtd/nand/raw/qcom_nandc.c
+>> @@ -2790,7 +2790,7 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
+>>  		 * only if it is not in BAM mode. In most cases BAM
+>>  		 * mode will be enabled in bootloader
+>>  		 */
+>> -		if (!(nand_ctrl | BAM_MODE_EN))
+>> +		if (!(nand_ctrl & BAM_MODE_EN))
+>>  			nandc_write(nandc, NAND_CTRL, nand_ctrl | BAM_MODE_EN);
+>>  	} else {
+>>  		nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
+> 
+> Thanks,
+> Miquèl
+> 
 
-On Tue, 16 Jun 2020 at 18:20, Chris Wilson <chris@chris-wilson.co.uk> wrote:
->
-> Quoting Sumit Semwal (2020-06-16 13:42:13)
-> > Hello,
-> >
-> > If there are no objections to this, I will plan to merge it soon.
->
-> I was going to suggest running it against our CI, but that's unavailable
-> at the moment.
->
-> There's a particularly nasty BUG_ON() in dma_buf_release that we hit
-> irregularly, that this might help with.
-Thanks for your reply; if the CI is going to be available in a couple
-of days, we could wait - it'd be definitely good to see a bug being
-splattered out!
+Sure merge it.
 
-> -Chris
-
-Best,
-Sumit.
+Colin
