@@ -2,389 +2,212 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 007A620707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026C720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:22:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="ZIhX5lYa"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CuUemv0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbgFPRWh (ORCPT
+        id S1730290AbgFPRWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgFPRWg (ORCPT
+        Tue, 16 Jun 2020 13:22:41 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:59212 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgFPRWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:22:36 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F536C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:22:35 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b7so1360631pju.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=posk.io; s=google;
-        h=message-id:subject:from:to:cc:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=Pp+JbfentYaueAJNALln06L3L7MPA9gUVjWOyonrj3I=;
-        b=ZIhX5lYaKd35Wofc5tHAkw7NC8ItRkgqo7ZnbnhNae4eLHmOiEGKHBKr28VdjcglIE
-         woLn4AXArHrT//X1u+ftrxO7Njc4fs8aUe3Vsyn63QtZXScQj2cz/dAnzDSpQpBXBvNC
-         gTkpro9rM7J8fuJ8mLOmRX5GO9eILQ2QjbcCRfKzGBPrYjllCp/2y+0Xp2nOIWac1axQ
-         +/zCCCcNvKp7i3pqVj3kG38ReL9xaEcA68OrIPrytyDX5UUKet7WvtDOH9LN0NbVvZKW
-         zChN58XFYR4ynpxuuJ8nfRiszbC2L9mhdnX+QTTyv2EAWseD+3zcEEA4Vq/Z3VwxEpdr
-         YnmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=Pp+JbfentYaueAJNALln06L3L7MPA9gUVjWOyonrj3I=;
-        b=SVtrmR25ysYbNyRFf8igpsKto7glyTL4OGzbep2kz6xIjvvJgeR750g9wWyTX12cob
-         nCXQtAuFmkAN/2NK/bgzAGj8TK374a6+10bGOt5BY32ziwJktM96DNL/KSz2KkQr59qw
-         6pcPDfiRGbk0ZOl2Ec4a2Fp+ISa8U1FUQ4lq2NSzV+4k18hq1H9hgS2icpIDdzhkHOCg
-         B/TGDcbZIB1Cb+9Z7rbyaEpBEgJ+WkEDEYGpFTdLZZsHYKh5phNiVNFpKLDQU4pqqvbO
-         sdUVs1G9KnBkrI7P+pLgWgeK5D2IX5oxBgf6xtuc+6ityerb4mRtx6OcKIgBRGbKH38u
-         T9+A==
-X-Gm-Message-State: AOAM530GFKtGsw8hWIx2XHwfsaqh1M5BtduXInBNhNh82lgHLR8QoDmp
-        Vyd0krPOUERxA9fEOxYpacKH84hjfELMEg==
-X-Google-Smtp-Source: ABdhPJyf0evRInpdV5nsBjKSNX6/kcK0leh3I/Miz/txWzPBjlje2m59EWX7FVh88Waw9eEOtsJeoQ==
-X-Received: by 2002:a17:902:b106:: with SMTP id q6mr2885272plr.23.1592328154890;
-        Tue, 16 Jun 2020 10:22:34 -0700 (PDT)
-Received: from posk-x1c (c-73-202-129-89.hsd1.ca.comcast.net. [73.202.129.89])
-        by smtp.gmail.com with ESMTPSA id a12sm3033521pjw.35.2020.06.16.10.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 10:22:34 -0700 (PDT)
-Message-ID: <a58582da82f99d5e7d3c5f8d0dbc55ea85bed08d.camel@posk.io>
-Subject: [RFC PATCH 3/3 v2] selftests/futex: add futex_swap selftest
-From:   Peter Oskolkov <posk@posk.io>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Oskolkov <posk@google.com>, avagin@google.com,
-        "pjt@google.com" <pjt@google.com>, Ben Segall <bsegall@google.com>
-Date:   Tue, 16 Jun 2020 10:22:33 -0700
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Tue, 16 Jun 2020 13:22:39 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 8467D20B4780;
+        Tue, 16 Jun 2020 10:22:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8467D20B4780
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1592328158;
+        bh=Va/z/RCQjkwx4GMOEW6jvTREyv5bVvF1H/LITP0NJyY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CuUemv0O4XfTcx4Gin5xK0vy6ekfHBp24Jy+GB7UYJQC9elKaJqqNan6+VNY/q1NE
+         StNnnOB5KYPqzXz82m7khMJT37SaDN/CqxSGDaPj17YVDd7VqiAJQtZaBU/x5CJeJh
+         3YaonZT4/Ji1jJ+X4vtyjbY6It+aM6NiLc4EMNQU=
+Date:   Tue, 16 Jun 2020 12:22:35 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Vijay Balakrishna <vijayb@linux.microsoft.com>
+Cc:     Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2][RFC] kdump: append kernel build-id string to
+ VMCOREINFO
+Message-ID: <20200616172235.GB1409697@sequoia>
+References: <1591849672-34104-1-git-send-email-vijayb@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591849672-34104-1-git-send-email-vijayb@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 7b091e46de4f9227b5a943e6d78283564e8c1c72 Mon Sep 17 00:00:00 2001
-From: Peter Oskolkov <posk@google.com>
-Date: Tue, 2 Jun 2020 13:01:17 -0700
-Subject: [RFC PATCH 3/3 v2] selftests/futex: add futex_swap selftest
+On 2020-06-10 21:27:52, Vijay Balakrishna wrote:
+> Make kernel GNU build-id available in VMCOREINFO.  Having
+> build-id in VMCOREINFO facilitates presenting appropriate kernel
+> namelist image with debug information file to kernel crash dump
+> analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
+> key for crash analysis automation.
+> 
+> Regarding if this patch is necessary or matching of linux_banner
+> and OSRELEASE in VMCOREINFO employed by crash(8) meets the
+> need -- IMO, build-id approach more foolproof, in most instances it
+> is a cryptographic hash generated using internal code/ELF bits unlike
+> kernel version string upon which linux_banner is based that is
+> external to the code.  I feel each is intended for a different purpose.
+> Also OSRELEASE is not suitable when two different kernel builds
+> from same version with different features enabled.
+> 
+> Currently for most linux (and non-linux) systems build-id can be
+> extracted using standard methods for file types such as user mode crash
+> dumps, shared libraries, loadable kernel modules etc.,  This is an
+> exception for linux kernel dump.  Having build-id in VMCOREINFO brings
+> some uniformity for automation tools.
+> 
+> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
 
-This is the final RFC patch in FUTEX_SWAP patchset. It
-adds a test/benchmark to validate behavior and
-compare performance of a new FUTEX_SWAP futex operation.
+I think this is a nice improvement over today's linux_banner approach
+for correlating vmlinux to a kernel dump.
 
-Detailed API design and behavior considerations are provided
-in the commit messages of the previous two patches.
+The elf notes parsing in this patch lines up with what is described in
+in the "Notes (Nhdr)" section of the elf(5) man page.
 
-Signed-off-by: Peter Oskolkov <posk@google.com>
----
- .../selftests/futex/functional/.gitignore     |   1 +
- .../selftests/futex/functional/Makefile       |   1 +
- .../selftests/futex/functional/futex_swap.c   | 209 ++++++++++++++++++
- .../selftests/futex/include/futextest.h       |  19 ++
- 4 files changed, 230 insertions(+)
- create mode 100644 tools/testing/selftests/futex/functional/futex_swap.c
+BUILD_ID_MAX is sufficient to hold a sha1 build-id, which is the default
+build-id type today in GNU ld(2). It is also sufficient to hold the
+"fast" build-id, which is the default build-id type today in LLVM
+lld(2).
 
-diff --git a/tools/testing/selftests/futex/functional/.gitignore b/tools/testing/selftests/futex/functional/.gitignore
-index 0efcd494daab..d661ef0946cc 100644
---- a/tools/testing/selftests/futex/functional/.gitignore
-+++ b/tools/testing/selftests/futex/functional/.gitignore
-@@ -2,6 +2,7 @@
- futex_requeue_pi
- futex_requeue_pi_mismatched_ops
- futex_requeue_pi_signal_restart
-+futex_swap
- futex_wait_private_mapped_file
- futex_wait_timeout
- futex_wait_uninitialized_heap
-diff --git a/tools/testing/selftests/futex/functional/Makefile b/tools/testing/selftests/futex/functional/Makefile
-index 23207829ec75..6992fac38b15 100644
---- a/tools/testing/selftests/futex/functional/Makefile
-+++ b/tools/testing/selftests/futex/functional/Makefile
-@@ -13,6 +13,7 @@ TEST_GEN_FILES := \
- 	futex_requeue_pi \
- 	futex_requeue_pi_signal_restart \
- 	futex_requeue_pi_mismatched_ops \
-+	futex_swap \
- 	futex_wait_uninitialized_heap \
- 	futex_wait_private_mapped_file
+Therefore,
 
-diff --git a/tools/testing/selftests/futex/functional/futex_swap.c b/tools/testing/selftests/futex/functional/futex_swap.c
-new file mode 100644
-index 000000000000..9034d04372d3
---- /dev/null
-+++ b/tools/testing/selftests/futex/functional/futex_swap.c
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <errno.h>
-+#include <getopt.h>
-+#include <pthread.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
-+#include "atomic.h"
-+#include "futextest.h"
-+
-+/* The futex the main thread waits on. */
-+futex_t futex_main = FUTEX_INITIALIZER;
-+/* The futex the other thread wats on. */
-+futex_t futex_other = FUTEX_INITIALIZER;
-+
-+/* The number of iterations to run (>1 => run benchmarks. */
-+static int cfg_iterations = 1;
-+
-+/* If != 0, print diagnostic messages. */
-+static int cfg_verbose;
-+
-+/* If == 0, do not use validation_counter. Useful for benchmarking. */
-+static int cfg_validate = 1;
-+
-+/* How to swap threads. */
-+#define SWAP_WAKE_WAIT 1
-+#define SWAP_SWAP 2
-+
-+/* Futex values. */
-+#define FUTEX_WAITING 0
-+#define FUTEX_WAKEUP 1
-+
-+/* An atomic counter used to validate proper swapping. */
-+static atomic_t validation_counter;
-+
-+void futex_swap_op(int mode, futex_t *futex_this, futex_t *futex_that)
-+{
-+	int ret;
-+
-+	switch (mode) {
-+	case SWAP_WAKE_WAIT:
-+		futex_set(futex_this, FUTEX_WAITING);
-+		futex_set(futex_that, FUTEX_WAKEUP);
-+		futex_wake(futex_that, 1, FUTEX_PRIVATE_FLAG);
-+		futex_wait(futex_this, FUTEX_WAITING, NULL, FUTEX_PRIVATE_FLAG);
-+		if (*futex_this != FUTEX_WAKEUP) {
-+			fprintf(stderr, "unexpected futex_this value on wakeup\n");
-+			exit(1);
-+		}
-+		break;
-+
-+	case SWAP_SWAP:
-+		futex_set(futex_this, FUTEX_WAITING);
-+		futex_set(futex_that, FUTEX_WAKEUP);
-+		ret = futex_swap(futex_this, FUTEX_WAITING, NULL,
-+				 futex_that, FUTEX_PRIVATE_FLAG);
-+		if (ret < 0 && errno == ENOSYS) {
-+			/* futex_swap not implemented */
-+			perror("futex_swap");
-+			exit(1);
-+		}
-+		if (*futex_this != FUTEX_WAKEUP) {
-+			fprintf(stderr, "unexpected futex_this value on wakeup\n");
-+			exit(1);
-+		}
-+		break;
-+
-+	default:
-+		fprintf(stderr, "unknown mode in %s\n", __func__);
-+		exit(1);
-+	}
-+}
-+
-+void *other_thread(void *arg)
-+{
-+	int mode = *((int *)arg);
-+	int counter;
-+
-+	if (cfg_verbose)
-+		printf("%s started\n", __func__);
-+
-+	futex_wait(&futex_other, 0, NULL, FUTEX_PRIVATE_FLAG);
-+
-+	for (counter = 0; counter < cfg_iterations; ++counter) {
-+		if (cfg_validate) {
-+			int prev = 2 * counter + 1;
-+
-+			if (prev != atomic_cmpxchg(&validation_counter, prev,
-+						   prev + 1)) {
-+				fprintf(stderr, "swap validation failed\n");
-+				exit(1);
-+			}
-+		}
-+		futex_swap_op(mode, &futex_other, &futex_main);
-+	}
-+
-+	if (cfg_verbose)
-+		printf("%s finished: %d iteration(s)\n", __func__, counter);
-+
-+	return NULL;
-+}
-+
-+void run_test(int mode)
-+{
-+	struct timespec start, stop;
-+	int ret, counter;
-+	pthread_t thread;
-+	uint64_t duration;
-+
-+	futex_set(&futex_other, FUTEX_WAITING);
-+	atomic_set(&validation_counter, 0);
-+	ret = pthread_create(&thread, NULL, &other_thread, &mode);
-+	if (ret) {
-+		perror("pthread_create");
-+		exit(1);
-+	}
-+
-+	ret = clock_gettime(CLOCK_MONOTONIC, &start);
-+	if (ret) {
-+		perror("clock_gettime");
-+		exit(1);
-+	}
-+
-+	for (counter = 0; counter < cfg_iterations; ++counter) {
-+		if (cfg_validate) {
-+			int prev = 2 * counter;
-+
-+			if (prev != atomic_cmpxchg(&validation_counter, prev,
-+						   prev + 1)) {
-+				fprintf(stderr, "swap validation failed\n");
-+				exit(1);
-+			}
-+		}
-+		futex_swap_op(mode, &futex_main, &futex_other);
-+	}
-+	if (cfg_validate && validation_counter.val != 2 * cfg_iterations) {
-+		fprintf(stderr, "final swap validation failed\n");
-+		exit(1);
-+	}
-+
-+	ret = clock_gettime(CLOCK_MONOTONIC, &stop);
-+	if (ret) {
-+		perror("clock_gettime");
-+		exit(1);
-+	}
-+
-+	duration = (stop.tv_sec - start.tv_sec) * 1000000000LL +
-+	stop.tv_nsec - start.tv_nsec;
-+	if (cfg_verbose || cfg_iterations > 1) {
-+		printf("completed %d swap and back iterations in %lu ns: %lu ns per swap\n",
-+			cfg_iterations, duration,
-+			duration / (cfg_iterations * 2));
-+	}
-+
-+	/* The remote thread is blocked; send it the final wake. */
-+	futex_set(&futex_other, FUTEX_WAKEUP);
-+	futex_wake(&futex_other, 1, FUTEX_PRIVATE_FLAG);
-+	if (pthread_join(thread, NULL)) {
-+		perror("pthread_join");
-+		exit(1);
-+	}
-+}
-+
-+void usage(char *prog)
-+{
-+	printf("Usage: %s\n", prog);
-+	printf("  -h    Display this help message\n");
-+	printf("  -i N  Use N iterations to benchmark\n");
-+	printf("  -n    Do not validate swapping correctness\n");
-+	printf("  -v    Print diagnostic messages\n");
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int c;
-+
-+	while ((c = getopt(argc, argv, "hi:nv")) != -1) {
-+		switch (c) {
-+		case 'h':
-+			usage(basename(argv[0]));
-+			exit(0);
-+		case 'i':
-+			cfg_iterations = atoi(optarg);
-+			break;
-+		case 'n':
-+			cfg_validate = 0;
-+			break;
-+		case 'v':
-+			cfg_verbose = 1;
-+			break;
-+		default:
-+			usage(basename(argv[0]));
-+			exit(1);
-+		}
-+	}
-+
-+	printf("\n\n------- running SWAP_WAKE_WAIT -----------\n\n");
-+	run_test(SWAP_WAKE_WAIT);
-+	printf("PASS\n");
-+
-+	printf("\n\n------- running SWAP_SWAP -----------\n\n");
-+	run_test(SWAP_SWAP);
-+	printf("PASS\n");
-+
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/futex/include/futextest.h b/tools/testing/selftests/futex/include/futextest.h
-index ddbcfc9b7bac..4d6a0a18445a 100644
---- a/tools/testing/selftests/futex/include/futextest.h
-+++ b/tools/testing/selftests/futex/include/futextest.h
-@@ -38,6 +38,9 @@ typedef volatile u_int32_t futex_t;
- #ifndef FUTEX_CMP_REQUEUE_PI
- #define FUTEX_CMP_REQUEUE_PI		12
- #endif
-+#ifndef FUTEX_SWAP
-+#define FUTEX_SWAP			13
-+#endif
- #ifndef FUTEX_WAIT_REQUEUE_PI_PRIVATE
- #define FUTEX_WAIT_REQUEUE_PI_PRIVATE	(FUTEX_WAIT_REQUEUE_PI | \
- 					 FUTEX_PRIVATE_FLAG)
-@@ -46,6 +49,9 @@ typedef volatile u_int32_t futex_t;
- #define FUTEX_CMP_REQUEUE_PI_PRIVATE	(FUTEX_CMP_REQUEUE_PI | \
- 					 FUTEX_PRIVATE_FLAG)
- #endif
-+#ifndef FUTEX_SWAP_PRIVATE
-+#define FUTEX_SWAP_PRIVATE		(FUTEX_WAIT_WAKE | FUTEX_PRIVATE_FLAG)
-+#endif
+ Reviewed-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 
- /**
-  * futex() - SYS_futex syscall wrapper
-@@ -204,6 +210,19 @@ futex_cmp_requeue_pi(futex_t *uaddr, futex_t val, futex_t *uaddr2, int nr_wake,
- 		     val, opflags);
- }
+Thanks!
 
-+/**
-+ * futex_swap() - block on uaddr and wake one task blocked on uaddr2.
-+ * @uaddr:	futex to block the current task on
-+ * @timeout:	relative timeout for the current task block
-+ * @uaddr2:	futex to wake tasks at (can be the same as uaddr)
-+ */
-+static inline int
-+futex_swap(futex_t *uaddr, futex_t val, struct timespec *timeout,
-+	   futex_t *uaddr2, int opflags)
-+{
-+	return futex(uaddr, FUTEX_SWAP, val, timeout, uaddr2, 0, opflags);
-+}
-+
- /**
-  * futex_cmpxchg() - atomic compare and exchange
-  * @uaddr:	The address of the futex to be modified
---
-2.25.1
+Tyler
 
-
+> ---
+> Changes since v2:
+> -----------------
+> - v1 was sent out as a single patch which can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2020-June/025202.html
+> - moved justification to commit commit log
+> - renamed 'g_build_id' to 'note_sec'
+> - fixed format specifier in pr_warn() from '%lu' to '%u' (failed to
+>   catch warning in v1)
+> 
+>  include/linux/crash_core.h |  6 +++++
+>  kernel/crash_core.c        | 50 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 56 insertions(+)
+> 
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 525510a9f965..6594dbc34a37 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -38,6 +38,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>  
+>  #define VMCOREINFO_OSRELEASE(value) \
+>  	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
+> +#define VMCOREINFO_BUILD_ID(value) \
+> +	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
+>  #define VMCOREINFO_PAGESIZE(value) \
+>  	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
+>  #define VMCOREINFO_SYMBOL(name) \
+> @@ -64,6 +66,10 @@ extern unsigned char *vmcoreinfo_data;
+>  extern size_t vmcoreinfo_size;
+>  extern u32 *vmcoreinfo_note;
+>  
+> +/* raw contents of kernel .notes section */
+> +extern const void __start_notes __weak;
+> +extern const void __stop_notes __weak;
+> +
+>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  			  void *data, size_t data_len);
+>  void final_note(Elf_Word *buf);
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 9f1557b98468..64ac359cd17e 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -11,6 +11,8 @@
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+>  
+> +#include <crypto/sha.h>
+> +
+>  /* vmcoreinfo stuff */
+>  unsigned char *vmcoreinfo_data;
+>  size_t vmcoreinfo_size;
+> @@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>  }
+>  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+>  
+> +#define NOTES_SIZE (&__stop_notes - &__start_notes)
+> +#define BUILD_ID_MAX SHA1_DIGEST_SIZE
+> +#define NT_GNU_BUILD_ID 3
+> +
+> +struct elf_note_section {
+> +	struct elf_note	n_hdr;
+> +	u8 n_data[];
+> +};
+> +
+> +/*
+> + * Add build ID from .notes section as generated by the GNU ld(1)
+> + * or LLVM lld(1) --build-id option.
+> + */
+> +static void add_build_id_vmcoreinfo(void)
+> +{
+> +	char build_id[BUILD_ID_MAX * 2 + 1];
+> +	int n_remain = NOTES_SIZE;
+> +
+> +	while (n_remain >= sizeof(struct elf_note)) {
+> +		const struct elf_note_section *note_sec =
+> +			&__start_notes + NOTES_SIZE - n_remain;
+> +		const u32 n_namesz = note_sec->n_hdr.n_namesz;
+> +
+> +		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
+> +		    n_namesz != 0 &&
+> +		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
+> +			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
+> +				const u32 n_descsz = note_sec->n_hdr.n_descsz;
+> +				const u8 *s = &note_sec->n_data[n_namesz];
+> +
+> +				s = PTR_ALIGN(s, 4);
+> +				bin2hex(build_id, s, n_descsz);
+> +				build_id[2 * n_descsz] = '\0';
+> +				VMCOREINFO_BUILD_ID(build_id);
+> +				return;
+> +			}
+> +			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
+> +				note_sec->n_hdr.n_descsz,
+> +				BUILD_ID_MAX);
+> +			return;
+> +		}
+> +		n_remain -= sizeof(struct elf_note) +
+> +			ALIGN(note_sec->n_hdr.n_namesz, 4) +
+> +			ALIGN(note_sec->n_hdr.n_descsz, 4);
+> +	}
+> +}
+> +
+>  static int __init crash_save_vmcoreinfo_init(void)
+>  {
+>  	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
+> @@ -394,6 +443,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  	}
+>  
+>  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+> +	add_build_id_vmcoreinfo();
+>  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+>  
+>  	VMCOREINFO_SYMBOL(init_uts_ns);
+> -- 
+> 2.26.2
