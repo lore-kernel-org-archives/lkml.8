@@ -2,126 +2,223 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDCC2085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402D2206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 23:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgFPXXr (ORCPT
+        id S1726485AbgFPXZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 19:23:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:60344 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgFPXXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 19:23:47 -0400
-IronPort-SDR: EoqTxhD1OrOuvOAfwF5AtH5dP0W1+SwA3osSLgWAEhg7KejAYaQAfdIlZciYu43wxkvZQP30QH
- avPFb2JwT7UQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 16:23:46 -0700
-IronPort-SDR: PUdSL9s9aHkzES9vhHisJzVKu+uTZCb7Oi6VKOJd77E027eK2Hl4S07EMQa0cGcGT0pSq7Rw33
- qrXIWSr0CLkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,520,1583222400"; 
-   d="scan'208";a="383022347"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Jun 2020 16:23:46 -0700
-Date:   Tue, 16 Jun 2020 16:23:46 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
-        amd-gfx <amd-gfx@lists.freedesktop.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 12/12] x86/traps: Fix up invalid PASID
-Message-ID: <20200616232345.GC15763@romley-ivt3.sc.intel.com>
-References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
- <1592008893-9388-13-git-send-email-fenghua.yu@intel.com>
- <20200615075649.GK2497@hirez.programming.kicks-ass.net>
- <20200615154854.GB13792@romley-ivt3.sc.intel.com>
- <20200615160357.GA2531@hirez.programming.kicks-ass.net>
- <20200615181259.GC13792@romley-ivt3.sc.intel.com>
- <20200615183116.GD2531@hirez.programming.kicks-ass.net>
- <20200615185529.GD13792@romley-ivt3.sc.intel.com>
- <20200615190928.GJ2531@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615190928.GJ2531@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Tue, 16 Jun 2020 19:25:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgFPXZw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 19:25:52 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82754C061573;
+        Tue, 16 Jun 2020 16:25:52 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C3261128EB054;
+        Tue, 16 Jun 2020 16:25:51 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 16:25:51 -0700 (PDT)
+Message-Id: <20200616.162551.466272432384185418.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 16 Jun 2020 16:25:52 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Peter,
 
-On Mon, Jun 15, 2020 at 09:09:28PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 15, 2020 at 11:55:29AM -0700, Fenghua Yu wrote:
-> 
-> > Or do you suggest to add a random new flag in struct thread_info instead
-> > of a TIF flag?
-> 
-> Why thread_info? What's wrong with something simple like the below. It
-> takes a bit from the 'strictly current' flags word.
-> 
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index b62e6aaf28f0..fca830b97055 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -801,6 +801,9 @@ struct task_struct {
->  	/* Stalled due to lack of memory */
->  	unsigned			in_memstall:1;
->  #endif
-> +#ifdef CONFIG_PCI_PASID
-> +	unsigned			has_valid_pasid:1;
-> +#endif
->  
->  	unsigned long			atomic_flags; /* Flags requiring atomic access. */
->  
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 142b23645d82..10b3891be99e 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -955,6 +955,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
->  	tsk->use_memdelay = 0;
->  #endif
->  
-> +#ifdef CONFIG_PCI_PASID
-> +	tsk->has_valid_pasid = 0;
-> +#endif
-> +
->  #ifdef CONFIG_MEMCG
->  	tsk->active_memcg = NULL;
->  #endif
+1) Don't get per-cpu pointer with preemption enabled in nft_set_pipapo,
+   fix from Stefano Brivio.
 
-Can I add "Signed-off-by: Peter Zijlstra <peterz@infradead.org>"
-to this patch? I will send this patch in the next version of the series.
+2) Fix memory leak in ctnetlink, from Pablo Neira Ayuso.
 
-Thanks.
+3) Multiple definitions of MPTCP_PM_MAX_ADDR, from Geliang Tang.
 
--Fenghua
+4) Accidently disabling NAPI in non-error paths of macb_open(), from
+   Charles Keepax.
+
+5) Fix races between alx_stop and alx_remove, from Zekun Shen.
+
+6) We forget to re-enable SRIOV during resume in bnxt_en driver,
+   from Michael Chan.
+
+7) Fix memory leak in ipv6_mc_destroy_dev(), from Wang Hai.
+
+8) rxtx stats use wrong index in mvpp2 driver, from Sven Auhagen.
+
+9) Fix memory leak in mptcp_subflow_create_socket error path,
+   from Wei Yongjun.
+
+10) We should not adjust the TCP window advertised when sending dup
+    acks in non-SACK mode, because it won't be counted as a dup by the
+    sender if the window size changes.  From Eric Dumazet.
+
+11) Destroy the right number of queues during remove in mvpp2 driver,
+    from Sven Auhagen.
+
+12) Various WOL and PM fixes to e1000 driver, from Chen Yu, Vaibhav
+    Gupta, and Arnd Bergmann.
+
+Please pull, thanks a lot!
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net 
+
+for you to fetch changes up to c9f66b43ee27409e1b614434d87e0e722efaa5f2:
+
+  Merge branch '1GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/net-queue (2020-06-16 16:16:24 -0700)
+
+----------------------------------------------------------------
+Aditya Pakki (2):
+      test_objagg: Fix potential memory leak in error handling
+      rocker: fix incorrect error handling in dma_rings_init
+
+Alaa Hleihel (2):
+      net/sched: act_ct: Make tcf_ct_flow_table_restore_skb inline
+      netfilter: flowtable: Make nf_flow_table_offload_add/del_cb inline
+
+Arnd Bergmann (1):
+      e1000e: fix unused-function warning
+
+Bartosz Golaszewski (1):
+      net: ethernet: mtk-star-emac: simplify interrupt handling
+
+Charles Keepax (1):
+      net: macb: Only disable NAPI on the actual error path
+
+Chen Yu (1):
+      e1000e: Do not wake up the system via WOL if device wakeup is disabled
+
+Colin Ian King (1):
+      net: axienet: fix spelling mistake in comment "Exteneded" -> "extended"
+
+David S. Miller (4):
+      Merge git://git.kernel.org/.../pablo/nf
+      Merge branch 'bnxt_en-Bug-fixes'
+      Merge branch 'remove-dependency-between-mlx5-act_ct-nf_flow_table'
+      Merge branch '1GbE' of git://git.kernel.org/.../jkirsher/net-queue
+
+Eric Dumazet (1):
+      tcp: grow window for OOO packets only for SACK flows
+
+Geliang Tang (2):
+      mptcp: drop MPTCP_PM_MAX_ADDR
+      mptcp: use list_first_entry_or_null
+
+Ido Schimmel (1):
+      mlxsw: spectrum: Adjust headroom buffers for 8x ports
+
+Ka-Cheong Poon (1):
+      net/rds: NULL pointer de-reference in rds_ib_add_one()
+
+Martin (1):
+      bareudp: Fixed configuration to avoid having garbage values
+
+Michael Chan (3):
+      bnxt_en: Simplify bnxt_resume().
+      bnxt_en: Re-enable SRIOV during resume.
+      bnxt_en: Fix AER reset logic on 57500 chips.
+
+Pablo Neira Ayuso (2):
+      netfilter: ctnetlink: memleak in filter initialization error path
+      netfilter: nf_tables: hook list memleak in flowtable deletion
+
+Sergei Shtylyov (1):
+      MAINTAINERS: switch to my private email for Renesas Ethernet drivers
+
+Stefano Brivio (2):
+      netfilter: nft_set_rbtree: Don't account for expired elements on insertion
+      netfilter: nft_set_pipapo: Disable preemption before getting per-CPU pointer
+
+Sven Auhagen (2):
+      mvpp2: ethtool rxtx stats fix
+      mvpp2: remove module bugfix
+
+Thomas Falcon (1):
+      ibmvnic: Harden device login requests
+
+Tim Harvey (1):
+      lan743x: add MODULE_DEVICE_TABLE for module loading alias
+
+Vaibhav Gupta (1):
+      e1000: use generic power management
+
+Vasundhara Volam (1):
+      bnxt_en: Return from timer if interface is not in open state.
+
+Vladimir Oltean (2):
+      MAINTAINERS: merge entries for felix and ocelot drivers
+      net: dsa: sja1105: fix PTP timestamping with large tc-taprio cycles
+
+Wang Hai (1):
+      mld: fix memory leak in ipv6_mc_destroy_dev()
+
+Wang Qing (1):
+      qlcnic: Use kobj_to_dev() instead
+
+Wei Yongjun (1):
+      mptcp: fix memory leak in mptcp_subflow_create_socket()
+
+Zekun Shen (1):
+      net: alx: fix race condition in alx_remove
+
+ MAINTAINERS                                            |  30 ++++++++++-------------
+ drivers/net/bareudp.c                                  |   2 ++
+ drivers/net/dsa/sja1105/sja1105_ptp.c                  |   8 +++---
+ drivers/net/ethernet/atheros/alx/main.c                |   9 ++++---
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c              |  35 +++++++++++++--------------
+ drivers/net/ethernet/cadence/macb_main.c               |   9 +++----
+ drivers/net/ethernet/ibm/ibmvnic.c                     |  21 +++++++++++++---
+ drivers/net/ethernet/intel/e1000/e1000_main.c          |  49 ++++++++++---------------------------
+ drivers/net/ethernet/intel/e1000e/netdev.c             |  30 +++++++++++------------
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c        |  11 ++++++---
+ drivers/net/ethernet/mediatek/mtk_star_emac.c          | 118 ++++++++++++++++++++++-------------------------------------------------------------------
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c         |   2 ++
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.h         |  13 ++++++++++
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c |   1 +
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c    |   1 +
+ drivers/net/ethernet/microchip/lan743x_main.c          |   2 ++
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_sysfs.c      |  34 +++++++++++++-------------
+ drivers/net/ethernet/rocker/rocker_main.c              |   4 +--
+ drivers/net/ethernet/xilinx/xilinx_axienet.h           |   2 +-
+ include/net/netfilter/nf_flow_table.h                  |  49 ++++++++++++++++++++++++++++++++++---
+ include/net/tc_act/tc_ct.h                             |  11 ++++++++-
+ lib/test_objagg.c                                      |   4 +--
+ net/ipv4/tcp_input.c                                   |  12 +++++++--
+ net/ipv6/mcast.c                                       |   1 +
+ net/mptcp/protocol.h                                   |   7 +-----
+ net/mptcp/subflow.c                                    |   4 ++-
+ net/netfilter/nf_conntrack_netlink.c                   |  32 ++++++++++++++++--------
+ net/netfilter/nf_flow_table_core.c                     |  45 ----------------------------------
+ net/netfilter/nf_tables_api.c                          |  31 ++++++++++++++++++------
+ net/netfilter/nft_set_pipapo.c                         |   6 ++++-
+ net/netfilter/nft_set_rbtree.c                         |  21 ++++++++++------
+ net/rds/ib.h                                           |   8 +++++-
+ net/sched/act_ct.c                                     |  11 ---------
+ 33 files changed, 309 insertions(+), 314 deletions(-)
