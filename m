@@ -2,140 +2,130 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B84C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D5FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA1B62078D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A4B2078D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 20:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXnAb/NB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="flPVcLwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbgFPU3H (ORCPT
+        id S1731782AbgFPU3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 16:29:07 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53464 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726428AbgFPU3F (ORCPT
+        Tue, 16 Jun 2020 16:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgFPU3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 16:29:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592339343;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PuFuQg6K4e8+oPcKh4HKkSbhQEN3+Z7Dt+MuhnK0tiM=;
-        b=iXnAb/NBHnqEztj45HDCnciZ/QhUWb51ovSyCOqF9hnqfhBGkZqWhzO6OlDJf4Aw+0i5xn
-        dy37r/vANBDbnzW3wFx5M/SH5cr6kgD2DE6J0P4Eeqtzh6QBHNc7iPwVtA54qSI+09N3QX
-        bmQ/RVJQchbw0RNtZpmIQ1WtG2XIZAM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-g5CUkErUN0yKgA33gmgSYw-1; Tue, 16 Jun 2020 16:28:59 -0400
-X-MC-Unique: g5CUkErUN0yKgA33gmgSYw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1AF58AB398;
-        Tue, 16 Jun 2020 20:28:52 +0000 (UTC)
-Received: from x2.localnet (ovpn-113-201.phx2.redhat.com [10.3.113.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 06D8D6C1A0;
-        Tue, 16 Jun 2020 20:28:51 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Paul Moore <paul@paul-moore.com>, rgb@redhat.com,
-        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] integrity: Add errno field in audit message
-Date:   Tue, 16 Jun 2020 16:28:47 -0400
-Message-ID: <2644117.Ritcz3IfYv@x2>
-Organization: Red Hat
-In-Reply-To: <1592337220.11061.239.camel@linux.ibm.com>
-References: <20200611000400.3771-1-nramas@linux.microsoft.com> <1717101.NiBDiG0Zly@x2> <1592337220.11061.239.camel@linux.ibm.com>
+        Tue, 16 Jun 2020 16:29:19 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63343C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:29:18 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id e8so4359571ooi.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 13:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=jyPggzZv8VCGivaCuAFS5PLAgo7RpCZi3OBdD1gwUbA=;
+        b=flPVcLwI8gnvMfXVRNbVEJqUavqPue+QjklHJXPQpLlK6k++mnVa0GZXHcJIq57gH9
+         8Jv1exnXrPkmHXNDO8qh1vVMUE0YiW8VNsJMR4y+c0tKlj0FzjLpr960BL0hn/hTMQSb
+         xd00yXAVeExAPGODLd+qBa4yw02HiZII8b/fsGpFOv1EC5BmGJOXsT6DtNAbDy0oF2oR
+         jo2Lj9EU8g0S7OpQ9acAdhyUFkdWYP51XrrEhD1mWCvy/YQUfGEYbhhtwopo8kSIEMuW
+         5k16rMe3e7/bIwzLG6IHtfFO6WpvVQWZlXK+9TatXRDDd+SmPNyIFgWD/CoGTBzwidgf
+         h82w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=jyPggzZv8VCGivaCuAFS5PLAgo7RpCZi3OBdD1gwUbA=;
+        b=VVmyDs1fKCbBev+A/mM2tO55xExvarZO6ap7VfjCY0QrEUbxZ0bGobPhba/3aa3Obr
+         4vL3uZTQvsaT3/ku0cxy5/k2vd19BNtiUxXRAJT89btakxZiB4Us1iXcOX6zcw9e8GoT
+         plCH7k80ASOPnSBMW443HeILjImNnCciSD8D6DMXsmEsxWjS+yZ8LOaOXCLinUs+uhpU
+         nyk5v5oG5g5z8cche/jCFClVOvZgbCjoFLHbLxpiTWFnDwFwclv9kqKrqyp4BwW/fBoY
+         +1Xh7djqHkdyz60Se/gDy9Dem8RXIQyl4+/FbgLkGcB69Evn901nGn28v+z4nUTob1w9
+         rj2w==
+X-Gm-Message-State: AOAM532PAncuhnFHSVMM4Up8/Q1ItkMbZY00FlWxg3JQbU64JmqGqNL5
+        SeQYxX9e5X48swNwAWYzHaEc3GbDhe8=
+X-Google-Smtp-Source: ABdhPJzMYPbcuFOwOPomE3YNa4+25hJDx36Tn/T4Kmez4WBptaadokkxnblUUtOAc4F982FOWYusYg==
+X-Received: by 2002:a4a:d1ca:: with SMTP id a10mr3925663oos.31.1592339357430;
+        Tue, 16 Jun 2020 13:29:17 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id k8sm2642811oik.31.2020.06.16.13.29.15
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Tue, 16 Jun 2020 13:29:16 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 13:29:14 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Vlastimil Babka <vbabka@suse.cz>
+cc:     akpm@linux-foundation.org, alex.shi@linux.alibaba.com,
+        hughd@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        liwang@redhat.com, mgorman@techsingularity.net
+Subject: Re: [PATCH 2/2] mm, page_alloc: use unlikely() in task_capc()
+In-Reply-To: <20200616082649.27173-2-vbabka@suse.cz>
+Message-ID: <alpine.LSU.2.11.2006161319030.1119@eggly.anvils>
+References: <b17acf5b-5e8a-3edf-5a64-603bf6177312@suse.cz> <20200616082649.27173-1-vbabka@suse.cz> <20200616082649.27173-2-vbabka@suse.cz>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 16, 2020 3:53:40 PM EDT Mimi Zohar wrote:
-> On Tue, 2020-06-16 at 11:55 -0400, Steve Grubb wrote:
-> > On Tuesday, June 16, 2020 11:43:31 AM EDT Lakshmi Ramasubramanian wrote:
-> > > On 6/16/20 8:29 AM, Steve Grubb wrote:
-> > > >>>>> The idea is a good idea, but you're assuming that "result" is
-> > > >>>>> always errno.  That was probably true originally, but isn't now. 
-> > > >>>>> For example, ima_appraise_measurement() calls xattr_verify(),
-> > > >>>>> which compares the security.ima hash with the calculated file
-> > > >>>>> hash.  On failure, it returns the result of memcmp().  Each and
-> > > >>>>> every code path will need to be checked.
-> > > >>>> 
-> > > >>>> Good catch Mimi.
-> > > >>>> 
-> > > >>>> Instead of "errno" should we just use "result" and log the value
-> > > >>>> given in the result parameter?
-> > > >>> 
-> > > >>> That would likely collide with another field of the same name which
-> > > >>> is the operation's results. If it really is errno, the name is fine.
-> > > >>> It's generic enough that it can be reused on other events if that
-> > > >>> mattered.
-> > > >> 
-> > > >> Steve, what is the historical reason why we have both "res" and
-> > > >> "result" for indicating a boolean success/fail?  I'm just curious
-> > > >> how we ended up this way, and who may still be using "result".
-> > > > 
-> > > > I think its pam and some other user space things did this. But
-> > > > because of mixed machines in datacenters supporting multiple versions
-> > > > of OS, we have to leave result alone. It has to be 0,1 or success/
-> > > > fail. We cannot use it for errno.
-> > > 
-> > > As Mimi had pointed out, since the value passed in result parameter is
-> > > not always an error code, "errno" is not an appropriate name.
-> > > 
-> > > Can we add a new field, say, "op_result" to report the result of the
-> > > specified operation?
-> > 
-> > Sure. But since it is errno sometimes, how would we know when to
-> > translate it?
+On Tue, 16 Jun 2020, Vlastimil Babka wrote:
+
+> Hugh noted that task_capc() could use unlikely(), as most of the time there is
+> no capture in progress and we are in page freeing hot path. Indeed adding
+> unlikely() redirects produces assembly that better matches the assumption and
+> moves all the tests away from the hot path.
 > 
-> Perhaps the solution is not to imply "res" is "errno", but pass it as
-> a separate "errno" field.
-
-That's what is done on syscalls. There is success and exit where they both 
-have different meaning sometimes but otherwise they agree.
-
-> Then only include "errno" in the audit message when it isn't zero.  This
-> assumes that some audit messages for the same audit number include errno,
-> while others do not.
-
-We normally do not like to have fields that swing in and out because then its 
-hard to know exactly what's in the event. When an event has different fields 
-under special conditions, then we just say call it a new event. Split it into 
-2 or 3 instead forcing it all into 1. And we also do not like fields that 
-change meaning. Because then intepretation becomes hard. Or other people 
-wishing to record the same info in another event have to follow the same 
-pattern.
-
-So, if you really need this field, the give some name like err_code or errno 
-or anything not taken. And just fill it out every time. Its OK to be 0. If 
-this only happens under some special operation, then make it a new event and 
-fill it out only for that operation/event.
-
-Best Regards,
--Steve
-
-
-> With this solution, the existing integrity_audit_msg() could become a
-> wrapper for the new function.
+> I have also noticed that we don't need to test for cc->direct_compaction as the
+> only place we set current->task_capture is compact_zone_order() which also
+> always sets cc->direct_compaction true.
 > 
-> Mimi
+> Suggested-by: Hugh Dickins <hughd@google.com>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
+Acked-by: Hugh Dickins <hughd@googlecom>
 
+Thanks for pursuing these, Vlastimil: I'm glad you were able
+to remove a test and branch instead of adding one as I had.
 
+One little thing, you've probably gone into this yourself and know
+what you've written here is optimal: but I'd rather imagined it with
+"unlikely(capc) && ..." instead of "unlikely(capc && ...)" - no need
+to respond, please just give it a moment's consideration, Acked anyway.
 
+> ---
+>  mm/page_alloc.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 48eb0f1410d4..8a4e342d7e8f 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -813,11 +813,10 @@ static inline struct capture_control *task_capc(struct zone *zone)
+>  {
+>  	struct capture_control *capc = current->capture_control;
+>  
+> -	return capc &&
+> +	return unlikely(capc &&
+>  		!(current->flags & PF_KTHREAD) &&
+>  		!capc->page &&
+> -		capc->cc->zone == zone &&
+> -		capc->cc->direct_compaction ? capc : NULL;
+> +		capc->cc->zone == zone) ? capc : NULL;
+>  }
+>  
+>  static inline bool
+> -- 
+> 2.27.0
+> 
+> 
