@@ -2,115 +2,98 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE03C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E997B20734
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:36:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="M014hv6S";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UjEXWmFK"
+	by mail.kernel.org (Postfix) with ESMTP id 59EB6207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592303836;
+	bh=z6LDz9/G5pNcQFXdInSqegrHVHuPT3Kls9SWQAPqUyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lK+UE9N1j4/VT/+LJTLUNVAG/btF6aanaQvF/G05PLkE1xP++6MnReK9BrkKWnsg8
+	 O2IaEOj/B3l9+wJXKB1Q4arPsmqhB4EEJ353EKmzvXdA/0wY8tbt5IZeXtDtYLLWLO
+	 UcqE4hKO4TKOL8TzH9q7/pI6m1aM6AQmi3RkPOe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgFPKga (ORCPT
+        id S1728329AbgFPKhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:36:30 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:33087 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbgFPKgW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:36:22 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 70AD01B1;
-        Tue, 16 Jun 2020 06:36:20 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 16 Jun 2020 06:36:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=UIpR3OcQr1VhZFmrKqImDBYkcR+
-        LfAGA7lozqCBKyyA=; b=M014hv6SCnQirV1ZC8PNY5Kp0nQz3egQcugRwDGARI3
-        tQbzQx6BDORKt9xhVLsZxg//g95V/7NNtMJ9z0cmaGe2lvwocwKGoMhzhzJIRHB6
-        hWMzH7PRbn2vE09LNeEoDvoIuozYfea9ORw9VmvKl/bl+rSVQq3Y6m4azUkkC6iL
-        YCy7UANyoWI7EfDCqB8p/irvXTdQcp+mVNz+1CuSlHSqoMuo6W4ThyNdEjOV+U31
-        QpO4BqFM50PLVH4h/xHd9iSHPVhcr96VCdsUDQQagNcP7rvhhhXMPEhrDBKoc21Z
-        GwLn9fuHWqKbMyu4kp099flFiITKyAQvy/V16pr1wzg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=UIpR3O
-        cQr1VhZFmrKqImDBYkcR+LfAGA7lozqCBKyyA=; b=UjEXWmFKQYWW0Na1SChIsO
-        kqDAlSvy/xGG1k1Sec3PMV3eFFp2Sinj4HvxNztrvrMD+nP5AixNfQ3NW0TetyTM
-        ZrXwPFsmXc9cYo6D1hhy0YF5pjkGK9uhnu40AsV+G0Ijs+nYLRIIAzsIT/mns0qh
-        hSKuKAdXFZXbKo0yTq04TsrPAZKj7wPFB+lse6Qqot9OSaYCFRHEnrxTzdR7vgOw
-        yS+htzMnApCZDIWxTXN8w0oLp+w/PQicLH8z/7VEkm85sePUp99VfQLLwHqg7ogx
-        i2sGMgUwE8H6b1Zyw92tNOh3HYaJvkCbo49aX1k7AUoB/KYo4TuHPGIxAqS9zmHw
-        ==
-X-ME-Sender: <xms:o6DoXsJx_W1GrhUkaq8WeZvyqWeGKpYxKARNDDYkr4yDyCBHV0uHvA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejtddgfeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:o6DoXsLX6-uqGc3jLAe-QjHy2kP4Zo73GhgiR1hlmZ4nLDZD5ULzdg>
-    <xmx:o6DoXsuBe3Ga5Ycy4ewuHLPa42iZZeXqh5PPJuOct9P8LR2zEqGtrQ>
-    <xmx:o6DoXpYROj4DMqVZQzzd2YEMYEjTbJkILW_mAF9n2hzsn7unbnXboA>
-    <xmx:pKDoXvF3RmDVfnWBd2n7ALDCPRHj4fByVW0SZiHzOlDktV_0bAQHjg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 29A62328005A;
-        Tue, 16 Jun 2020 06:36:19 -0400 (EDT)
-Date:   Tue, 16 Jun 2020 12:36:17 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Diego Rondini <diego.rondini@kynetics.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 2/2] ARM: dts: orange-pi-zero-plus2: add leds
- configuration
-Message-ID: <20200616103617.ddzfbz7yvnpl3ss4@gilmour.lan>
-References: <20200615130223.34464-1-diego.rondini@kynetics.com>
- <20200615130223.34464-2-diego.rondini@kynetics.com>
+        Tue, 16 Jun 2020 06:37:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbgFPKhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:37:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BFF620734;
+        Tue, 16 Jun 2020 10:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592303831;
+        bh=z6LDz9/G5pNcQFXdInSqegrHVHuPT3Kls9SWQAPqUyE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1ivXZbzIEFoy6gy+3lznnGcBN8Tcq5DHKexhF0Wx44juizRN06sl0AESZb+Ay4joU
+         d9AtCdIMcLYsb1iT1VVMSY7cHVBKXr0EUBsnQm61HbdqQNZipQoUtcqy7h69T5ps7d
+         Qv5BWWrT+7nPW6Ac+78DvZQQ8uUIxlvFxDIf+eIs=
+Date:   Tue, 16 Jun 2020 12:37:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Manali Shukla (manashuk)" <manashuk@cisco.com>
+Cc:     Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        Aristeu Rozanski Filho <arozansk@redhat.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Russ Anderson <rja@hpe.com>, Tony Luck <tony.luck@intel.com>
+Subject: Re: [ PATCH stable v4.19] EDAC: Drop per-memory controller buses
+Message-ID: <20200616103706.GA2653240@kroah.com>
+References: <20200312052201.49456-1-manashuk@cisco.com>
+ <20200317102249.GC1130294@kroah.com>
+ <5D56C6A7-B076-47BB-9016-7BD54DFE71E7@cisco.com>
+ <20200405180605.GC17324@zn.tnic>
+ <994FAF5C-B773-4B09-8C08-91E22ECDB8A9@cisco.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="augg5iz66jyevl6m"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200615130223.34464-2-diego.rondini@kynetics.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <994FAF5C-B773-4B09-8C08-91E22ECDB8A9@cisco.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Apr 05, 2020 at 07:26:01PM +0000, Manali Shukla (manashuk) wrote:
+> > On 05/04/20, 11:36 PM, "Borislav Petkov" <bp@suse.de> wrote:
+> 
+> >    On Sun, Apr 05, 2020 at 06:01:21PM +0000, Manali Shukla (manashuk) wrote:
+> >> With this patch , we are removing per-MC bus, this removes dependency on value of max number of controllers (EDAC_MAX_MCS) which is hardcoded to 2 * MAX_NUMNODES  in all stable versions of kernel. 
+>  >> On two nodes system MAX_NUMNODES value is ‘1’ , so value of max number of memory controller becomes ‘2’, this patch fixes this issue when there are only 2 nodes on the system and number of memory controllers are more than ‘2'
+>     
+>  > You basically repeated what you had written already.
+>     
+>  >  But what is this fixing? Some platform of yours or what? Why does it
+>  > need to go to stable?
+>     
+> Certain MIPS platform can have 2 nodes and number of memory controllers can be more than '2' .
+> 
+> for above condition, if
+> #define EDAC_MAX_MCS 2 * MAX_NUMNODES,
+> it fails in this function edac_mc_add_mc_with_groups
+> in below condition
+> if (mci->mc_idx >= EDAC_MAX_MCS) {
+> pr_warn_once("Too many memory controllers: %d\n", mci->mc_idx);
+> return -ENODEV;
+> }
+> That is why this fix is needed.
 
---augg5iz66jyevl6m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What fix?
 
-On Mon, Jun 15, 2020 at 03:02:25PM +0200, Diego Rondini wrote:
-> Add pwr and status leds configuration and turn on pwr led by default for =
-Orange
-> Pi Zero Plus 2 (both H3 and H5 variants).
->=20
-> Signed-off-by: Diego Rondini <diego.rondini@kynetics.com>
+I see no patch in this email, nor do I see a git commit id anywhere :(
 
-Applied both ,thanks!
-Maxime
+Totally confused,
 
---augg5iz66jyevl6m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXuigoQAKCRDj7w1vZxhR
-xRzjAP0UVUc51P9p6mICdulyK7gjndsyarVDsU3W1zc2VrdYpQEAq4hcUnP+jHVV
-ynDLt5rRNVkGy1G8ZdpLLrdsTc4KPQ0=
-=ZfHR
------END PGP SIGNATURE-----
-
---augg5iz66jyevl6m--
+greg k-h
