@@ -2,121 +2,123 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C9B20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813932078E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:58:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592305106;
+	bh=8qNxrnp6z6ekXhfP+uczjm8VmbyvtGHqi7Kjq8Sflzw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QFVS5zuByGxUXhukzOgbCfePgwEdkkv/7tWx8ZundWkiDT8o3+tf/hctilstAC/03
+	 ucqKwS3ZzXDJ+5lPU1F8iUyhjQd4dzpl7YGJdCQ48u6wNRaAHQ+QplEwxIXQyjE4gZ
+	 xEWo45l1TIAyjWiHQFVZDPbk+CqkwGuV9zoBX3h8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgFPK4S (ORCPT
+        id S1728259AbgFPK6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:56:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:64356 "EHLO mga05.intel.com"
+        Tue, 16 Jun 2020 06:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728168AbgFPK4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:56:17 -0400
-IronPort-SDR: DWKtOVJW4SrR8JmzBLaarVAiVo1nzQ702c5yRsLNB8RgkbZHOA4nIlEzeZbCWGhxW0oU1pBdjt
- D8eqLyxgoCQA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 03:56:16 -0700
-IronPort-SDR: iS5GbzbjKPiXqDKhZpPrConT0bcq2eWASHaqzKGx4fvllcs2ZidupIXhxZrWjdC+Jga7qklkly
- S/l/9R7DZuJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="382837797"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 16 Jun 2020 03:56:12 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 16 Jun 2020 13:56:12 +0300
-Date:   Tue, 16 Jun 2020 13:56:12 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 2/6] usb: typec: add typec_find_pwr_opmode
-Message-ID: <20200616105612.GL3213128@kuha.fi.intel.com>
-References: <20200615161512.19150-1-amelie.delaunay@st.com>
- <20200615161512.19150-3-amelie.delaunay@st.com>
+        id S1725775AbgFPK6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:58:24 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13DAD20786;
+        Tue, 16 Jun 2020 10:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592305103;
+        bh=8qNxrnp6z6ekXhfP+uczjm8VmbyvtGHqi7Kjq8Sflzw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VQVoElO5ym3X1nZDI9kDkBuC+GEfV02LAoBvx7AEBgiDsZQVmbD7k/DVQjrIoMmby
+         WgkPMAa7ObpenSRy3ei9G/pKegGSnTaKLLnpjw8hvAeTzfR0N6DGQVUMOIhY5PsKFD
+         +KMlFA6U92Qsgj9J0H1v9NTMM0v2E8EBfU07ETMM=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Steve Wise <larrystevenwise@gmail.com>,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: [PATCH rdma-next 0/7] Introduce KABIs to query UCONTEXT, PD and MR properties
+Date:   Tue, 16 Jun 2020 13:55:24 +0300
+Message-Id: <20200616105531.2428010-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615161512.19150-3-amelie.delaunay@st.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:15:08PM +0200, Amelie Delaunay wrote:
-> This patch adds a function that converts power operation mode string into
-> power operation mode value.
-> 
-> It is useful to configure power operation mode through device tree
-> property, as power capabilities may be linked to hardware design.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From Yishai,
 
-> ---
->  drivers/usb/typec/class.c | 15 +++++++++++++++
->  include/linux/usb/typec.h |  1 +
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index c9234748537a..59e1837ef85e 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -1448,6 +1448,21 @@ void typec_set_pwr_opmode(struct typec_port *port,
->  }
->  EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
->  
-> +/**
-> + * typec_find_pwr_opmode - Get the typec power operation mode capability
-> + * @name: power operation mode string
-> + *
-> + * This routine is used to find the typec_pwr_opmode by its string @name.
-> + *
-> + * Returns typec_pwr_opmode if success, otherwise negative error code.
-> + */
-> +int typec_find_pwr_opmode(const char *name)
-> +{
-> +	return match_string(typec_pwr_opmodes,
-> +			    ARRAY_SIZE(typec_pwr_opmodes), name);
-> +}
-> +EXPORT_SYMBOL_GPL(typec_find_pwr_opmode);
-> +
->  /**
->   * typec_find_orientation - Convert orientation string to enum typec_orientation
->   * @name: Orientation string
-> diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-> index 5daa1c49761c..f7c63ee3d443 100644
-> --- a/include/linux/usb/typec.h
-> +++ b/include/linux/usb/typec.h
-> @@ -254,6 +254,7 @@ int typec_set_mode(struct typec_port *port, int mode);
->  
->  void *typec_get_drvdata(struct typec_port *port);
->  
-> +int typec_find_pwr_opmode(const char *name);
->  int typec_find_orientation(const char *name);
->  int typec_find_port_power_role(const char *name);
->  int typec_find_power_role(const char *name);
-> -- 
-> 2.17.1
+This series introduce KABIs to query existing UCONTEXT, PD and MR for their
+properties.
 
-thanks,
+By those KABIs a user space application which owns the command FD of the device
+can retrieve and rebuild the above objects despite that it wasn't their creator.
+As of that, PDs and MRs can be shared by any process who owns the command FD of
+their creator.
 
--- 
-heikki
+This functionality enables to utilize and optimize some application flows, few
+examples below.
+
+Any solution which is a single business logic based on multi-process design
+needs this. Example include NGINX, with TCP load balancing, sharing the RSS
+indirection table with RQ per process. HPC frameworks with multi-rank (process)
+solution on single hosts. UCX can share IB resources using the shared PD and
+can help dispatch data to multiple processes/MR's in single RDMA operation.
+Also, there are use cases when a primary processes registered a large shared
+memory range, and each worker process spawned will create a private QP on the
+shared PD, and use the shared MR to save the registration time per-process.
+
+The matching verbs APIs were introduced in the mailing list by the below RFC [1].
+
+In addition, the series enables CQ ioctl commands by default as this
+functionality is fully mature for a long time and sets IOVA on IB MR in the uverbs
+layer to let all drivers have it.
+
+[1] https://patchwork.kernel.org/patch/11540665/
+
+Yishai
+
+Yishai Hadas (7):
+  IB/uverbs: Enable CQ ioctl commands by default
+  IB/uverbs: Set IOVA on IB MR in uverbs layer
+  IB/uverbs: Expose KABI to query ucontext
+  RDMA/mlx5: Refactor mlx5_ib_alloc_ucontext() response
+  RDMA/mlx5: Implement the query ucontext functionality
+  RDMA/mlx5: Introduce KABI to query PD attributes
+  IB/uverbs: Expose KABI to query MR
+
+ drivers/infiniband/Kconfig                    |   8 -
+ drivers/infiniband/core/device.c              |   1 +
+ drivers/infiniband/core/uverbs_cmd.c          |   4 +
+ drivers/infiniband/core/uverbs_ioctl.c        |   1 +
+ drivers/infiniband/core/uverbs_std_types_cq.c |   3 -
+ .../infiniband/core/uverbs_std_types_device.c |  41 +++-
+ drivers/infiniband/core/uverbs_std_types_mr.c |  50 +++-
+ drivers/infiniband/hw/cxgb4/mem.c             |   1 -
+ drivers/infiniband/hw/mlx4/mr.c               |   1 -
+ drivers/infiniband/hw/mlx5/Makefile           |   3 +-
+ drivers/infiniband/hw/mlx5/main.c             | 232 ++++++++++--------
+ drivers/infiniband/hw/mlx5/mlx5_ib.h          |   2 +
+ drivers/infiniband/hw/mlx5/std_types.c        |  45 ++++
+ include/rdma/ib_verbs.h                       |   4 +
+ include/uapi/rdma/ib_user_ioctl_cmds.h        |  15 ++
+ include/uapi/rdma/mlx5_user_ioctl_cmds.h      |  14 ++
+ 16 files changed, 306 insertions(+), 119 deletions(-)
+ create mode 100644 drivers/infiniband/hw/mlx5/std_types.c
+
+--
+2.26.2
+
