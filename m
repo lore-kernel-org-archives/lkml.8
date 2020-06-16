@@ -2,131 +2,114 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E5DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D75C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 916E6208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5322E208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:30:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QOMab6ZB"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="m1bbgEjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731019AbgFPT2S (ORCPT
+        id S1730585AbgFPTaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730955AbgFPT2Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:28:16 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8EC0C0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 12:28:15 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so24996908ljn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 12:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G+QuAOUfD+yaHMOx7JS6V2Ec/laXvrlFy0R9vzQGqF4=;
-        b=QOMab6ZBai8eX39llL4QAiuIVWOQ0kfvL9ywteJNjgzhCzjyOqdlLEs34RuWRfNLLY
-         UBmJ+sjmxHSY9KClbzPYRcmHfIbDr3RgcQIUrbh/HgB4x65p5TjwXtES2J8FIy5PzqLb
-         qNhgVYP39gDxMPl9bQhhUq4S3zMv9UfF/pmETt8VJF4G41Qcz/1zK2PnlCpJF0fz/S6h
-         PxHy+BSAWFuylkqNZeMw7xFvJ8qR/7v1dKWfEPia1fKfpNNvfy691K7fCJ3W9iR5AH/V
-         gFeKsPsrdm5Ge3TmLS1y0qxW2m4XjgJOTWFoy9c831CRjVEIM34ATLROHfUGg4Z8jDHa
-         f9Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G+QuAOUfD+yaHMOx7JS6V2Ec/laXvrlFy0R9vzQGqF4=;
-        b=pYDCnw8GGlNNxayv6F1FnjFZdcT7FNw2N+eM47Tah7NFQ7/hY+tOam0gkC4xh/eMIh
-         7ngMzHOUOSkY/TYfLfgD0MF7jzdRRSAfwNNRmqU57sQiTmCiq5sbcvuHdvj/RDICowV8
-         j50oyWByaI4qKrPHbmp85O5dabPgolD1WBq+QtZCfm53ZAwz+AtXm6NJzGulEsU8Dq5R
-         6Jlr2Q3RyhfITW+SQqGgJgIT2Ua5CsMv50EgcAx7GkEBGMkdbaVpT1/jdvzSgxebeQmM
-         GkoPfayZZ1BEhMcZixMtbpvIDIe3MW1U3KW2MrRDV8aR8sgcIqjFfREagSBPq5veTg/R
-         R2kA==
-X-Gm-Message-State: AOAM533QZW8rjmNTMKFn1x1JZZ0c5hAv74n9P0+9FILA4quFSXPqCLak
-        KhGZ20ERNaimNzZ3nEFnOwKGfO5B2Rag8tXzhGVfkw==
-X-Google-Smtp-Source: ABdhPJx83rVoJ1GBvQYrxBN8PD8VfhKiX7Lt1xY67EOoosPeSf9MmyLDKhdSIeUD5mQ+yLl+8Gvp2zP5Y6zZkNEG/uk=
-X-Received: by 2002:a2e:908f:: with SMTP id l15mr1993656ljg.307.1592335693925;
- Tue, 16 Jun 2020 12:28:13 -0700 (PDT)
+        Tue, 16 Jun 2020 15:30:03 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:56648 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730139AbgFPTaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 15:30:01 -0400
+Received: from zn.tnic (p200300ec2f0f4c0065584234413100e1.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4c00:6558:4234:4131:e1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 86AD71EC0289;
+        Tue, 16 Jun 2020 21:30:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592335800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=QeyWb9lUgDLyCat8HPesiOku9Uoen29AAGJ4eKLbXfY=;
+        b=m1bbgEjl200cxLF5iGDsuTrNIi6AQZILJhmjutD8yNY4Z2507FeLL4M3xW+xUvoelpjO/E
+        pws/ly5ux0vzJvD5UrbkW/wajkL7yVuIm8YD6v/uGH8U0ncVOj/FZvHP1b0DzbYUvsBZXz
+        neCZlTQGqe0wj7sw4g+IkynPL8YWCuw=
+Date:   Tue, 16 Jun 2020 21:29:52 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     Youquan Song <youquan.song@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mce: Add Skylake quirk for patrol scrub reported
+ errors
+Message-ID: <20200616192952.GO13515@zn.tnic>
+References: <20200615184056.26531-1-tony.luck@intel.com>
 MIME-Version: 1.0
-References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-4-rajatja@google.com>
- <20200616073249.GB30385@infradead.org>
-In-Reply-To: <20200616073249.GB30385@infradead.org>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 16 Jun 2020 12:27:35 -0700
-Message-ID: <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200615184056.26531-1-tony.luck@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:32 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Mon, Jun 15, 2020 at 06:17:42PM -0700, Rajat Jain via iommu wrote:
-> > This is needed to allow the userspace to determine when an untrusted
-> > device has been added, and thus allowing it to bind the driver manually
-> > to it, if it so wishes. This is being done as part of the approach
-> > discussed at https://lkml.org/lkml/2020/6/9/1331
->
-> Please move the attribute to struct device instead of further
-> entrenching it in PCIe.
+On Mon, Jun 15, 2020 at 11:40:56AM -0700, Tony Luck wrote:
+> From: Youquan Song <youquan.song@intel.com>
+> 
+> Skylake has a mode where the system administrator can use a BIOS setup
+> option to request that the memory controller report uncorrected errors
+> found by the patrol scrubber as corrected.  This results in them being
+> signalled using CMCI, which is less disruptive than a machine check.
+> 
+> Add a quirk to detect that a "corrected" error is actually a downgraded
+> uncorrected error with model specific checks for the "MSCOD" signature in
+> MCi_STATUS and that the error was reported from a memory controller bank.
+> 
+> Adjust the severity to MCE_AO_SEVERITY so that Linux will try to take
+> the affected page offline.
+> 
+> [Tony: Wordsmith commit comment]
+> 
+> Signed-off-by: Youquan Song <youquan.song@intel.com>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/kernel/cpu/mce/core.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index e9265e2f28c9..0dbd0a21a0bf 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -123,6 +123,8 @@ static struct irq_work mce_irq_work;
+>  
+>  static void (*quirk_no_way_out)(int bank, struct mce *m, struct pt_regs *regs);
+>  
+> +static void no_adjust_mce_log(struct mce *m) {};
+> +static void (*adjust_mce_log)(struct mce *m) = no_adjust_mce_log;
+>  /*
+>   * CPU/chipset specific EDAC code can register a notifier call here to print
+>   * MCE errors in a human-readable form.
+> @@ -772,6 +774,7 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+>  		if (mca_cfg.dont_log_ce && !mce_usable_address(&m))
+>  			goto clear_it;
+>  
+> +		adjust_mce_log(&m);
+>  		mce_log(&m);
 
-Need clarification. The flag "untrusted" is currently a part of
-pci_dev struct, and is populated within the PCI subsystem.
+Two things: can that error type be detected when #MC gets raised, i.e., in
+do_machine_check() as part of scanning all banks?
 
-1) Is your suggestion to move this flag as well as the attribute to
-device core (in "struct device")? This would allow other buses to
-populate/use this flag if they want. By default it'll be set to 0 for
-all devices (PCI subsystem will populate it based on platform info,
-like it does today).
+If so, then the adjusting needs to happen inside mce_log().
 
-OR
+Also, that assignment to the function pointer doesn't make much sense to
+me and I think you should do the vendor/family/model checking straight
+in a function adjust_mce_log() which gets called by whoever...
 
-2) Are you suggesting to keep the "untrusted" flag within PCI, but
-attach the sysfs attribute to the base device? (&pci_dev->dev)?
+Thx.
 
-Thanks,
+-- 
+Regards/Gruss,
+    Boris.
 
-Rajat
-
->  I'm starting to grow tired of saying this
-> every other week while you guys are all moving into the entirely
-> wrong direction.
+https://people.kernel.org/tglx/notes-about-netiquette
