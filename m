@@ -2,121 +2,135 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03764C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F15C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD2E207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9864C207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbgFPTvL (ORCPT
+        id S1731051AbgFPTxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:51:11 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:13840 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730393AbgFPTvI (ORCPT
+        Tue, 16 Jun 2020 15:53:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728144AbgFPTxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:51:08 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 16 Jun 2020 12:51:05 -0700
-Received: from localhost (unknown [10.129.221.29])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 83A4D40A09;
-        Tue, 16 Jun 2020 12:51:07 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 12:51:06 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        <dvyukov@google.com>, <elver@google.com>, <andreyknvl@google.com>,
-        <mark.rutland@arm.com>, <rostedt@goodmis.org>,
-        <jthierry@redhat.com>, <mbenes@suse.cz>
-Subject: Re: [RFC][PATCH 2/3] objtool: Provide elf_write_{insn,reloc}()
-Message-ID: <20200616195106.GE25598@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, dvyukov@google.com, elver@google.com,
-        andreyknvl@google.com, mark.rutland@arm.com, rostedt@goodmis.org,
-        jthierry@redhat.com, mbenes@suse.cz
-References: <20200612143034.933422660@infradead.org>
- <20200612143554.012293047@infradead.org>
- <20200616091253.GN2531@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200616091253.GN2531@hirez.programming.kicks-ass.net>
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+        Tue, 16 Jun 2020 15:53:48 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GJW5fa008713;
+        Tue, 16 Jun 2020 15:53:47 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q1b1e3se-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 15:53:46 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GJohqH075593;
+        Tue, 16 Jun 2020 15:53:46 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q1b1e3rx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 15:53:46 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GJnhjp013450;
+        Tue, 16 Jun 2020 19:53:44 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7wvcx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 19:53:43 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GJrfI04063548
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 19:53:41 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA93E4203F;
+        Tue, 16 Jun 2020 19:53:41 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C880642045;
+        Tue, 16 Jun 2020 19:53:40 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.158.198])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jun 2020 19:53:40 +0000 (GMT)
+Message-ID: <1592337220.11061.239.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/2] integrity: Add errno field in audit message
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Steve Grubb <sgrubb@redhat.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Paul Moore <paul@paul-moore.com>, rgb@redhat.com,
+        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 16 Jun 2020 15:53:40 -0400
+In-Reply-To: <1717101.NiBDiG0Zly@x2>
+References: <20200611000400.3771-1-nramas@linux.microsoft.com>
+         <6643272.rC52FQZPYE@x2>
+         <958966b6-9972-051f-a7d5-cd6d1beb3244@linux.microsoft.com>
+         <1717101.NiBDiG0Zly@x2>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_11:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 cotscore=-2147483648 adultscore=0
+ bulkscore=0 clxscore=1015 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:12:53AM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 12, 2020 at 04:30:36PM +0200, Peter Zijlstra wrote:
-> > +int elf_write_insn(struct elf *elf, struct section *sec,
-> > +		   unsigned long offset, unsigned int len,
-> > +		   const char *insn)
-> > +{
-> > +	Elf_Data *data = sec->data;
-> > +
-> > +	if (data->d_type != ELF_T_BYTE || data->d_off) {
-> > +		WARN("write to unexpected data for section: %s", sec->name);
-> > +		return -1;
-> > +	}
-> > +
-> > +	memcpy(data->d_buf + offset, insn, len);
-> > +	elf_flagdata(data, ELF_C_SET, ELF_F_DIRTY);
-> > +
-> > +	sec->changed = true;
-> > +	elf->changed = true;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int elf_write_reloc(struct elf *elf, struct reloc *reloc)
-> > +{
-> > +	struct section *sec = reloc->sec;
-> > +
-> > +	if (sec->sh.sh_type == SHT_REL) {
-> > +		reloc->rel.r_info = GELF_R_INFO(reloc->sym->idx, reloc->type);
-> > +		reloc->rel.r_offset = reloc->offset;
-> > +
-> > +		if (!gelf_update_rel(sec->data, reloc->idx, &reloc->rel)) {
-> > +			WARN_ELF("gelf_update_rel");
-> > +			return -1;
-> > +		}
-> > +	} else {
-> > +		reloc->rela.r_info = GELF_R_INFO(reloc->sym->idx, reloc->type);
-> > +		reloc->rela.r_addend = reloc->addend;
-> > +		reloc->rela.r_offset = reloc->offset;
-> > +
-> > +		if (!gelf_update_rela(sec->data, reloc->idx, &reloc->rela)) {
-> > +			WARN_ELF("gelf_update_rela");
-> > +			return -1;
-> > +		}
-> > +	}
-> > +
-> > +	sec->changed = true;
-> > +	elf->changed = true;
-> > +
-> > +	return 0;
-> > +}
+On Tue, 2020-06-16 at 11:55 -0400, Steve Grubb wrote:
+> On Tuesday, June 16, 2020 11:43:31 AM EDT Lakshmi Ramasubramanian wrote:
+> > On 6/16/20 8:29 AM, Steve Grubb wrote:
+> > >>>>> The idea is a good idea, but you're assuming that "result" is always
+> > >>>>> errno.  That was probably true originally, but isn't now.  For
+> > >>>>> example, ima_appraise_measurement() calls xattr_verify(), which
+> > >>>>> compares the security.ima hash with the calculated file hash.  On
+> > >>>>> failure, it returns the result of memcmp().  Each and every code path
+> > >>>>> will need to be checked.
+> > >>>> 
+> > >>>> Good catch Mimi.
+> > >>>> 
+> > >>>> Instead of "errno" should we just use "result" and log the value given
+> > >>>> in the result parameter?
+> > >>> 
+> > >>> That would likely collide with another field of the same name which is
+> > >>> the
+> > >>> operation's results. If it really is errno, the name is fine. It's
+> > >>> generic
+> > >>> enough that it can be reused on other events if that mattered.
+> > >> 
+> > >> Steve, what is the historical reason why we have both "res" and
+> > >> "result" for indicating a boolean success/fail?  I'm just curious how
+> > >> we ended up this way, and who may still be using "result".
+> > > 
+> > > I think its pam and some other user space things did this. But because of
+> > > mixed machines in datacenters supporting multiple versions of OS, we have
+> > > to leave result alone. It has to be 0,1 or success/fail. We cannot use
+> > > it for errno.
+> > 
+> > As Mimi had pointed out, since the value passed in result parameter is
+> > not always an error code, "errno" is not an appropriate name.
+> > 
+> > Can we add a new field, say, "op_result" to report the result of the
+> > specified operation?
 > 
-> Doing the change Matt asked for #1, I realized that sec->changed is only
-> required if we need to rewrite the section header, neither of these two
-> changes requires that, they already mark the elf data dirty so
-> elf_update() DTRT.
+> Sure. But since it is errno sometimes, how would we know when to translate 
+> it?
 
-This is really useful information.
+Perhaps the solution is not to imply "res" is "errno", but pass it as
+a separate "errno" field.  Then only include "errno" in the audit
+message when it isn't zero.  This assumes that some audit messages for
+the same audit number include errno, while others do not.
 
-As long as you're adding the elf->changed flag it might make sense to add this
-as a comment in the struct section definition or even rename sec->changed
-to reflect this (e.g. sec->shdr_changed).
+With this solution, the existing integrity_audit_msg() could become a
+wrapper for the new function.
 
-Cheers,
-     -Matt Helsley
+Mimi
