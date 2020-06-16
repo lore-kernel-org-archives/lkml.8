@@ -2,179 +2,224 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1061C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C568C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D47D21475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aJ8p70Y5"
+	by mail.kernel.org (Postfix) with ESMTP id 589F3207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323324;
+	bh=AU8kPO1hPe5EGPaST5+To5lYsboUwNEV7+7aWvUfdVY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FgxMrX0gC6uVVp3iVQ5OXLc7wiVeMtegycVgghWZHswkRBszDI65fIAi/GqNkH2Uh
+	 4+dnFuf1aEnfXmML5ZKNxjHV4KsEgixs4q6Uj+TYlkuIoWzGq2ry6xHCg0tgnQwxlP
+	 NFX5loXlj81RtTIExmDvxbRqUOjlypJyQaXvjsmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732511AbgFPQBz (ORCPT
+        id S1732699AbgFPPvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733172AbgFPQBt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:01:49 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E598C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:01:49 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s10so9435755pgm.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C2Y4BhWefKmP9iji9eylvkFo4/M9jmgkj2BXKFGkoJE=;
-        b=aJ8p70Y5LnowTS4d6Nvq5WyEu93YaLiozLfkw0uDW6dYUF3xQNCbIJvKarTK5Ed9iD
-         m7i0zsBqFI1pIpAyIluoSmBT0Risms7oI2Pp32JEbx7n0H5pqbwQtOkP1/KHECdDu/FT
-         ltBtg48/YKabACQ+Epr94E4U9IQIdRDp/x9Fs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C2Y4BhWefKmP9iji9eylvkFo4/M9jmgkj2BXKFGkoJE=;
-        b=Tj5B0sOyvW7yiSc/4SvjOK9qZdQaxIUwW5MWDEuTmUijbgjlHy2ib2QhE/J5BvWHZw
-         Pix4kuNJ6+I0gNTuecBWoD/1mVuTDmleF0SRFBgIPQAZqygEcXFWUOQZW7P0tCcvBBz7
-         z0j8cmQb5Xedim1IoC9Etifn6T5XDoCHdl06pKh9bKGJTevl39OzKbbxjY/uIQBf80gA
-         Bl8QhgM8x0YYkO3bVIn8wxO/+jSo/6gMmaY4IhA9fCt9f/1ZAaOfv14tlsqD3E6BNCP+
-         SMNhp0wgfb9MuMaTE/l7qMjW+RqV3KAMLmlVCrVsaOiI8wWdp+UKXXLP4z/2S9FkNTjE
-         ccwQ==
-X-Gm-Message-State: AOAM530JIZKnxe1+Ipxy+6wxLyEFWWspoCWbjwPlnkXnFXRCxIRhrlFT
-        iiPA47z7pz6iAuJ9A7Cv+XYW8w==
-X-Google-Smtp-Source: ABdhPJxZYUpPJAibIwbYuU5zDTSd1Kb3np/+gOul4WD0kGGfyZGJ7hHLOe/iwa9+dycWyfSgo2noGQ==
-X-Received: by 2002:a63:5307:: with SMTP id h7mr2625624pgb.28.1592323309057;
-        Tue, 16 Jun 2020 09:01:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id iq19sm2942471pjb.48.2020.06.16.09.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 09:01:48 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:01:46 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        "zhujianwei (C)" <zhujianwei7@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Hehuazhen <hehuazhen@huawei.com>, x86@kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH 4/8] seccomp: Implement constant action bitmaps
-Message-ID: <202006160851.E8F9928AAB@keescook>
-References: <20200616074934.1600036-1-keescook@chromium.org>
- <20200616074934.1600036-5-keescook@chromium.org>
- <fc0c14cd-bcf0-c94c-6cba-d0ce1844e93c@intel.com>
+        Tue, 16 Jun 2020 11:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732664AbgFPPv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:51:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B5D1208D5;
+        Tue, 16 Jun 2020 15:51:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322686;
+        bh=AU8kPO1hPe5EGPaST5+To5lYsboUwNEV7+7aWvUfdVY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G+yTT5kljlEhuvJK7SHb9Pku84zKmGMJemHI816EOakBU06FjBN4O7sHmLmrpzCr7
+         kZgg/FH4imAG32j6njWYAeOQ1xeiRAsNymjsgHGe61Nfo4zFqz5K9M5WVLUYEbxdvx
+         vgt5P8FWq/Q7wypyzYbYGLIgGJm8bPBamOb389dM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 034/161] smack: avoid unused sip variable warning
+Date:   Tue, 16 Jun 2020 17:33:44 +0200
+Message-Id: <20200616153108.013763072@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
+References: <20200616153106.402291280@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc0c14cd-bcf0-c94c-6cba-d0ce1844e93c@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 07:40:17AM -0700, Dave Hansen wrote:
-> On 6/16/20 12:49 AM, Kees Cook wrote:
-> > +	/* Mark the second page as untouched (i.e. "old") */
-> > +	preempt_disable();
-> > +	set_pte_at(&init_mm, vaddr, ptep, pte_mkold(*(READ_ONCE(ptep))));
-> > +	local_flush_tlb_kernel_range(vaddr, vaddr + PAGE_SIZE);
-> > +	preempt_enable();
-> 
-> If you can, I'd wrap that nugget up in a helper.  I'd also suggest being
-> very explicit in a comment about what it is trying to do: ensure no TLB
-> entries exist so that a future access will always set the Accessed bit.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Yeah, good idea!
+[ Upstream commit 00720f0e7f288d29681d265c23b22bb0f0f4e5b4 ]
 
-> 
-> > +	/* Make sure the PTE agrees that it is untouched. */
-> > +	if (WARN_ON_ONCE(sd_touched(ptep)))
-> > +		return;
-> > +	/* Read a portion of struct seccomp_data from the second page. */
-> > +	check = sd->instruction_pointer;
-> > +	/* First, verify the contents are zero from vzalloc(). */
-> > +	if (WARN_ON_ONCE(check))
-> > +		return;
-> > +	/* Now make sure the ACCESSED bit has been set after the read. */
-> > +	if (!sd_touched(ptep)) {
-> > +		/*
-> > +		 * If autodetection fails, fall back to standard beahavior by
-> > +		 * clearing the entire "allow" bitmap.
-> > +		 */
-> > +		pr_warn_once("seccomp: cannot build automatic syscall filters\n");
-> > +		bitmap_zero(bitmaps->allow, NR_syscalls);
-> > +		return;
-> > +	}
-> 
-> I can't find any big holes with this.  It's the kind of code that makes
-> me nervous, but mostly because it's pretty different that anything else
-> we have in the kernel.
-> 
-> It's also clear to me here that you probably have a slightly different
-> expectation of what the PTE accessed flag means versus the hardware
-> guys.  What you are looking for it to mean is roughly: "a retired
-> instruction touched this page".
-> 
-> The hardware guys would probably say it's closer to "a TLB entry was
-> established for this page."  Remember that TLB entries can be
-> established speculatively or from things like prefetchers.  While I
-> don't know of anything microarchitectural today which would trip this
-> mechanism, it's entirely possible that something in the future might.
-> Accessing close to the page boundary is the exact kind of place folks
-> might want to optimize.
+The mix of IS_ENABLED() and #ifdef checks has left a combination
+that causes a warning about an unused variable:
 
-Yeah, and to that end, going the cBPF emulator route removes this kind
-of "weird" behavior.
+security/smack/smack_lsm.c: In function 'smack_socket_connect':
+security/smack/smack_lsm.c:2838:24: error: unused variable 'sip' [-Werror=unused-variable]
+ 2838 |   struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
 
-> 
-> *But*, at least it would err in the direction of being conservative.  It
-> would say "somebody touched the page!" more often than it should, but
-> never _less_ often than it should.
+Change the code to use C-style checks consistently so the compiler
+can handle it correctly.
 
-Right -- I made sure to design the bitmaps and the direction of the
-checking to fail towards running the filter instead of bypassing it.
+Fixes: 87fbfffcc89b ("broken ping to ipv6 linklocal addresses on debian buster")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ security/smack/smack.h     |  6 ------
+ security/smack/smack_lsm.c | 25 ++++++++-----------------
+ 2 files changed, 8 insertions(+), 23 deletions(-)
 
-> One thing about the implementation (which is roughly):
-> 
-> 	// Touch the data:
-> 	check = sd->instruction_pointer;
-> 	// Examine the PTE mapping that data:
-> 	if (!sd_touched(ptep)) {
-> 		// something
-> 	}
-> 
-> There aren't any barriers in there, which could lead to the sd_touched()
-> check being ordered before the data touch.  I think a rmb() will
-> suffice.  You could even do it inside sd_touched().
-
-Ah yeah, I had convinced myself that READ_ONCE() gained me that
-coverage, but I guess that's not actually true here.
-
-> Was there a reason you chose to export a ranged TLB flush?  I probably
-> would have just used the single-page flush_tlb_one_kernel() for this
-> purpose if I were working in arch-specific code.
-
-No particular reason -- it just seemed easiest to make available given
-the interfaces. I could do the single-page version instead, if this way
-of doing things survives review. ;)
-
-Thanks for looking at it!
-
+diff --git a/security/smack/smack.h b/security/smack/smack.h
+index 62529f382942..335d2411abe4 100644
+--- a/security/smack/smack.h
++++ b/security/smack/smack.h
+@@ -148,7 +148,6 @@ struct smk_net4addr {
+ 	struct smack_known	*smk_label;	/* label */
+ };
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ /*
+  * An entry in the table identifying IPv6 hosts.
+  */
+@@ -159,9 +158,7 @@ struct smk_net6addr {
+ 	int			smk_masks;	/* mask size */
+ 	struct smack_known	*smk_label;	/* label */
+ };
+-#endif /* CONFIG_IPV6 */
+ 
+-#ifdef SMACK_IPV6_PORT_LABELING
+ /*
+  * An entry in the table identifying ports.
+  */
+@@ -174,7 +171,6 @@ struct smk_port_label {
+ 	short			smk_sock_type;	/* Socket type */
+ 	short			smk_can_reuse;
+ };
+-#endif /* SMACK_IPV6_PORT_LABELING */
+ 
+ struct smack_known_list_elem {
+ 	struct list_head	list;
+@@ -335,9 +331,7 @@ extern struct smack_known smack_known_web;
+ extern struct mutex	smack_known_lock;
+ extern struct list_head smack_known_list;
+ extern struct list_head smk_net4addr_list;
+-#if IS_ENABLED(CONFIG_IPV6)
+ extern struct list_head smk_net6addr_list;
+-#endif /* CONFIG_IPV6 */
+ 
+ extern struct mutex     smack_onlycap_lock;
+ extern struct list_head smack_onlycap_list;
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 8c61d175e195..14bf2f4aea3b 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -50,10 +50,8 @@
+ #define SMK_RECEIVING	1
+ #define SMK_SENDING	2
+ 
+-#ifdef SMACK_IPV6_PORT_LABELING
+-DEFINE_MUTEX(smack_ipv6_lock);
++static DEFINE_MUTEX(smack_ipv6_lock);
+ static LIST_HEAD(smk_ipv6_port_list);
+-#endif
+ static struct kmem_cache *smack_inode_cache;
+ struct kmem_cache *smack_rule_cache;
+ int smack_enabled;
+@@ -2320,7 +2318,6 @@ static struct smack_known *smack_ipv4host_label(struct sockaddr_in *sip)
+ 	return NULL;
+ }
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ /*
+  * smk_ipv6_localhost - Check for local ipv6 host address
+  * @sip: the address
+@@ -2388,7 +2385,6 @@ static struct smack_known *smack_ipv6host_label(struct sockaddr_in6 *sip)
+ 
+ 	return NULL;
+ }
+-#endif /* CONFIG_IPV6 */
+ 
+ /**
+  * smack_netlabel - Set the secattr on a socket
+@@ -2477,7 +2473,6 @@ static int smack_netlabel_send(struct sock *sk, struct sockaddr_in *sap)
+ 	return smack_netlabel(sk, sk_lbl);
+ }
+ 
+-#if IS_ENABLED(CONFIG_IPV6)
+ /**
+  * smk_ipv6_check - check Smack access
+  * @subject: subject Smack label
+@@ -2510,7 +2505,6 @@ static int smk_ipv6_check(struct smack_known *subject,
+ 	rc = smk_bu_note("IPv6 check", subject, object, MAY_WRITE, rc);
+ 	return rc;
+ }
+-#endif /* CONFIG_IPV6 */
+ 
+ #ifdef SMACK_IPV6_PORT_LABELING
+ /**
+@@ -2599,6 +2593,7 @@ static void smk_ipv6_port_label(struct socket *sock, struct sockaddr *address)
+ 	mutex_unlock(&smack_ipv6_lock);
+ 	return;
+ }
++#endif
+ 
+ /**
+  * smk_ipv6_port_check - check Smack port access
+@@ -2661,7 +2656,6 @@ static int smk_ipv6_port_check(struct sock *sk, struct sockaddr_in6 *address,
+ 
+ 	return smk_ipv6_check(skp, object, address, act);
+ }
+-#endif /* SMACK_IPV6_PORT_LABELING */
+ 
+ /**
+  * smack_inode_setsecurity - set smack xattrs
+@@ -2836,24 +2830,21 @@ static int smack_socket_connect(struct socket *sock, struct sockaddr *sap,
+ 		return 0;
+ 	if (IS_ENABLED(CONFIG_IPV6) && sap->sa_family == AF_INET6) {
+ 		struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
+-#ifdef SMACK_IPV6_SECMARK_LABELING
+-		struct smack_known *rsp;
+-#endif
++		struct smack_known *rsp = NULL;
+ 
+ 		if (addrlen < SIN6_LEN_RFC2133)
+ 			return 0;
+-#ifdef SMACK_IPV6_SECMARK_LABELING
+-		rsp = smack_ipv6host_label(sip);
++		if (__is_defined(SMACK_IPV6_SECMARK_LABELING))
++			rsp = smack_ipv6host_label(sip);
+ 		if (rsp != NULL) {
+ 			struct socket_smack *ssp = sock->sk->sk_security;
+ 
+ 			rc = smk_ipv6_check(ssp->smk_out, rsp, sip,
+ 					    SMK_CONNECTING);
+ 		}
+-#endif
+-#ifdef SMACK_IPV6_PORT_LABELING
+-		rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
+-#endif
++		if (__is_defined(SMACK_IPV6_PORT_LABELING))
++			rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
++
+ 		return rc;
+ 	}
+ 	if (sap->sa_family != AF_INET || addrlen < sizeof(struct sockaddr_in))
 -- 
-Kees Cook
+2.25.1
+
+
+
