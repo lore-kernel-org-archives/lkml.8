@@ -2,176 +2,106 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADBAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB425208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AF220882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwb3A+Az"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iycUgdDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgFPSSN (ORCPT
+        id S1729857AbgFPSSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgFPSSI (ORCPT
+        Tue, 16 Jun 2020 14:18:30 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31315 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729272AbgFPSS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:18:08 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA8C5C061573;
-        Tue, 16 Jun 2020 11:18:07 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id l10so21742277wrr.10;
-        Tue, 16 Jun 2020 11:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8b9w5Bl2hRduQlm5Ms5q2rrQhAAPM6If/ziLRYU2pNA=;
-        b=gwb3A+Az/M8/mSOMrobEndzEbDF9O6nZjaLrtPnL9ccc1tEDKZ4zoR/xI915JKDohZ
-         nREap0BDMicV5GOHBYJQlC1KOgibyM+7Jo0dGStow2l0leuYM8Xx/oOeEh2rXw6eDgpa
-         JiatzvrM/nSq6+J/+nSISzW0MPTsk0UjIJOQiufJNWojjwGW8+sMdzguhjSGX12TV+hA
-         UGt5b9CG88h6eTxy4mzTGCspeESYLxq+J5MpSdVEaBu/PP6sQRs3sncrvd3BVmYroBri
-         d4egmK76kwdzXQmypBXv0fPjzY8LUSkY+1iBU23PIoCl3zKAs893GOEyCycaju4d5Sn0
-         SNHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8b9w5Bl2hRduQlm5Ms5q2rrQhAAPM6If/ziLRYU2pNA=;
-        b=Rf8ZOkBx8qXCwHFGhe+jN8j5hEJGdZnfPACpMKUaxIrT4GApipS2LER690so37fHGg
-         yrQnEUm/pmhlYoIB/XchmYS1Lm9pW1fRLH/qLKlOE3XnSn5+bi3BmNVjlZfxyXwA6/HI
-         OVnoWLaRVAm4wi8pqQMn5Kxc4fhvIUoYMbyK+YpXDNXyfqwUneZCPEB5ueKORS+nxLth
-         fwf3e8UeOdvTVBSeYxbeKYAlGo/cxpmgle2JbcexxoRbLBQWBhETuqwZj5l5yzsH4P9K
-         FRKYeiaOx0ziAlxhFtM63cD9Z1m0K/dIY36UBrDlPGJZOlKtyxxxdc5nx7g9ZNOPC/w/
-         smtg==
-X-Gm-Message-State: AOAM531hjXEVxp6gDH6dqDgQ75y2cQKnC2iLrAoCKrIS+JMpo1dLDJGL
-        85o03dMAjuJRJEj/snhmOM/hHDQd4rU=
-X-Google-Smtp-Source: ABdhPJwbPkYjXMpg9rPLEmw8iujy82MzJeuXEayutCiKGTao6xvPSkg9H39yipRMGNeONYVpnZC5IA==
-X-Received: by 2002:adf:f2c2:: with SMTP id d2mr4204754wrp.424.1592331486195;
-        Tue, 16 Jun 2020 11:18:06 -0700 (PDT)
-Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id u3sm28651091wrw.89.2020.06.16.11.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 11:18:05 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
-        vkoul@kernel.org, robh+dt@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v2 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
-Date:   Tue, 16 Jun 2020 20:18:01 +0200
-Message-Id: <20200616181802.3498745-2-noltari@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616181802.3498745-1-noltari@gmail.com>
-References: <20200616181802.3498745-1-noltari@gmail.com>
+        Tue, 16 Jun 2020 14:18:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592331504;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WZ+A3atMCLTtcOhNtzCpo/suKGsMEOYjZ9xu0yuFT+M=;
+        b=iycUgdDIwYNz5VHPnFphraRP/16V/9RQtXtEFLZ+Beqefn12mKaajBJjv2qfT6/Ccc9x3V
+        gNUOtx+Itdm/FlTfTTmm1iDlWV77rTpI/Ut857kUP985+cPpiYaZnR0xHgaxG6LRBxAVou
+        kcLsq3tOGIE8gFbNzfD72cifj8E+WHI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-wq6qM4lNPjuEKE65SHmPvg-1; Tue, 16 Jun 2020 14:18:23 -0400
+X-MC-Unique: wq6qM4lNPjuEKE65SHmPvg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC080E918;
+        Tue, 16 Jun 2020 18:18:21 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CF70679302;
+        Tue, 16 Jun 2020 18:18:18 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05GIIIUG013314;
+        Tue, 16 Jun 2020 14:18:18 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05GIIIQA013310;
+        Tue, 16 Jun 2020 14:18:18 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Tue, 16 Jun 2020 14:18:17 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>
+Subject: Re: [dm-devel] [PATCH 4/4] crypto: fix the drivers that don't respect
+ CRYPTO_TFM_REQ_MAY_SLEEP
+In-Reply-To: <20200616175022.GD207319@gmail.com>
+Message-ID: <alpine.LRH.2.02.2006161416510.12390@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com> <20200610010450.GA6449@gondor.apana.org.au> <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com> <20200610121106.GA23137@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006161102250.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616175022.GD207319@gmail.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document BCM63xx USBH PHY bindings.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- v2: phy-cells changed to 1.
 
- .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+On Tue, 16 Jun 2020, Eric Biggers wrote:
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
-new file mode 100644
-index 000000000000..9ef2c1f8aa00
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/brcm,bcm63xx-usbh-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: BCM63xx USBH PHY
-+
-+maintainers:
-+  - Álvaro Fernández Rojas <noltari@gmail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,bcm6318-usbh-phy
-+      - brcm,bcm6328-usbh-phy
-+      - brcm,bcm6358-usbh-phy
-+      - brcm,bcm6362-usbh-phy
-+      - brcm,bcm6368-usbh-phy
-+      - brcm,bcm63268-usbh-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: usbh
-+      - const: usb_ref
-+
-+  resets:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - "#phy-cells"
-+
-+if:
-+  properties:
-+    compatible:
-+      enum:
-+        - brcm,bcm6318-usbh-phy
-+        - brcm,bcm6328-usbh-phy
-+        - brcm,bcm6362-usbh-phy
-+        - brcm,bcm63268-usbh-phy
-+
-+then:
-+  properties:
-+    power-domains:
-+      maxItems: 1
-+  required:
-+    - power-domains
-+
-+examples:
-+  - |
-+    usbh: usb-phy@10001700 {
-+      compatible = "brcm,bcm6368-usbh-phy";
-+      reg = <0x10001700 0x38>;
-+      clocks = <&periph_clk BCM6368_CLK_USBH>;
-+      clock-names = "usbh";
-+      resets = <&periph_rst BCM6368_RST_USBH>;
-+      #phy-cells = <1>;
-+    };
--- 
-2.27.0
+> On Tue, Jun 16, 2020 at 11:02:50AM -0400, Mikulas Patocka wrote:
+> > Fix the crypto drivers that don't respect CRYPTO_TFM_REQ_MAY_SLEEP. If
+> > CRYPTO_TFM_REQ_MAY_SLEEP is not set, the driver must not do allocation
+> > that sleeps.
+> > 
+> > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> 
+> I think you need to split this up per driver with a proper explanation and a
+> "Fixes:" tag for each driver.
+> 
+> Also, these bugs should have been detected by the crypto self-tests already,
+> since they test having preemption disabled and CRYPTO_TFM_REQ_MAY_SLEEP cleared.
+> Can you double check whether these are all valid fixes?  One thing to watch out
+> for is that CRYPTO_TFM_REQ_MAY_SLEEP only applies to the function call like
+> crypto_skcipher_encrypt() itself.  If the implementation is asynchronous and the
+> request gets processed in the background (i.e. if crypto_skcipher_encrypt()
+> returns -EINPROGRESS), the background work doesn't have to honor
+> CRYPTO_TFM_REQ_MAY_SLEEP.
+> 
+> - Eric
+
+I can only compile-test this patch. I don't have the hardware.
+
+Mikulas
 
