@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09261C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66DAA20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D547C20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322042;
-	bh=VBzTCvLr0GPpm7suJjfkrsyZqYDLp9KwBh5qcbrkXzU=;
+	s=default; t=1592322044;
+	bh=ehGZLwBStwiNoBJPxCADAHxsq8vyqACAuHk60HMadMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11oikAu2ctlGtwULyPWFdvbV03dA6fGO6117z9f46WZ4M89Krw+ag3Q+RcQ3NrcRR
-	 /RkC5/Q1Zn4ZTwxpsdEE2siYfOFeFWFQdxctrjFyTBXY+NTjlG2UQd5HzqhcXnFfUx
-	 TbJ7e4bCNN6loCMx4IUJAW1/If89Mrxc5fjNheNQ=
+	b=qA1v5d7DRjVpJ0yADk4Yl/cLkTkn1PaMAxKYGDCWg/GSHBsrLG+jIrwMpQoPDWsLB
+	 wpooK06zgnNGJ4Uv0eQ+3rUVjLTeIoFRUr20duUf1x7nLWOgHd+r4uQWQpm879Tpqn
+	 e5+CREWylYSE1Vwvw1GaGht9Wz+h8AV4MzTzz+DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbgFPPkl (ORCPT
+        id S1730627AbgFPPkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730401AbgFPPkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:40:32 -0400
+        id S1731196AbgFPPk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78F98208D5;
-        Tue, 16 Jun 2020 15:40:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D61A3207C4;
+        Tue, 16 Jun 2020 15:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322032;
-        bh=VBzTCvLr0GPpm7suJjfkrsyZqYDLp9KwBh5qcbrkXzU=;
+        s=default; t=1592322029;
+        bh=ehGZLwBStwiNoBJPxCADAHxsq8vyqACAuHk60HMadMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNXSdyqhh+fp705z65rc3dwIOPzwV1+I81+YVkGP+6gGFf381GvKAObCZ/HHbarvn
-         mTy7l/Tlpfe/dmPktBQXoScHcWIKRQ/wQwMqANLHkahL3lJ+4eqtMn9/zMQTpLfI6x
-         EmhE1DgzMwvpg64IYQshngCWOkBIc/vVDLr1lBKo=
+        b=Yvpgdwcg649maVWZINlj0nzNNn+g2HQO6pbEXkjs2R4XWQ4xMi8RUcy5GKMxOjQkj
+         yIzspkBBeb/o3C1K89Xa/N5yjvMOVR0uUjfxsHo/ycvvOo74nJINs+NBE0FtPnAzmG
+         Hek+fSHS4WqMlIZb2RCStI3x8Ylk2frKqTYDKkVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eric Biggers <ebiggers@google.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 080/134] crypto: algapi - Avoid spurious modprobe on LOADED
-Date:   Tue, 16 Jun 2020 17:34:24 +0200
-Message-Id: <20200616153104.604379441@linuxfoundation.org>
+Subject: [PATCH 5.4 079/134] crypto: cavium/nitrox - Fix nitrox_get_first_device() when ndevlist is fully iterated
+Date:   Tue, 16 Jun 2020 17:34:23 +0200
+Message-Id: <20200616153104.552206373@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,44 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit beeb460cd12ac9b91640b484b6a52dcba9d9fc8f upstream.
+commit 320bdbd816156f9ca07e5fed7bfb449f2908dda7 upstream.
 
-Currently after any algorithm is registered and tested, there's an
-unnecessary request_module("cryptomgr") even if it's already loaded.
-Also, CRYPTO_MSG_ALG_LOADED is sent twice, and thus if the algorithm is
-"crct10dif", lib/crc-t10dif.c replaces the tfm twice rather than once.
+When a list is completely iterated with 'list_for_each_entry(x, ...)', x is
+not NULL at the end.
 
-This occurs because CRYPTO_MSG_ALG_LOADED is sent using
-crypto_probing_notify(), which tries to load "cryptomgr" if the
-notification is not handled (NOTIFY_DONE).  This doesn't make sense
-because "cryptomgr" doesn't handle this notification.
+While at it, remove a useless initialization of the ndev variable. It
+is overridden by 'list_for_each_entry'.
 
-Fix this by using crypto_notify() instead of crypto_probing_notify().
-
-Fixes: dd8b083f9a5e ("crypto: api - Introduce notifier for new crypto algorithms")
-Cc: <stable@vger.kernel.org> # v4.20+
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: f2663872f073 ("crypto: cavium - Register the CNN55XX supported crypto algorithms.")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algapi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/cavium/nitrox/nitrox_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -374,7 +374,7 @@ static void crypto_wait_for_test(struct
- 	err = wait_for_completion_killable(&larval->completion);
- 	WARN_ON(err);
- 	if (!err)
--		crypto_probing_notify(CRYPTO_MSG_ALG_LOADED, larval);
-+		crypto_notify(CRYPTO_MSG_ALG_LOADED, larval);
+--- a/drivers/crypto/cavium/nitrox/nitrox_main.c
++++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
+@@ -278,7 +278,7 @@ static void nitrox_remove_from_devlist(s
  
- out:
- 	crypto_larval_kill(&larval->alg);
+ struct nitrox_device *nitrox_get_first_device(void)
+ {
+-	struct nitrox_device *ndev = NULL;
++	struct nitrox_device *ndev;
+ 
+ 	mutex_lock(&devlist_lock);
+ 	list_for_each_entry(ndev, &ndevlist, list) {
+@@ -286,7 +286,7 @@ struct nitrox_device *nitrox_get_first_d
+ 			break;
+ 	}
+ 	mutex_unlock(&devlist_lock);
+-	if (!ndev)
++	if (&ndev->list == &ndevlist)
+ 		return NULL;
+ 
+ 	refcount_inc(&ndev->refcnt);
 
 
