@@ -2,29 +2,30 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D049C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252B720B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6442080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgFPJgU (ORCPT
+        id S1728477AbgFPJgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:36:20 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6334 "EHLO huawei.com"
+        Tue, 16 Jun 2020 05:36:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6267 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728240AbgFPJgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:36:16 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 968F783B892EBF894D59;
-        Tue, 16 Jun 2020 17:36:13 +0800 (CST)
+        id S1728131AbgFPJg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:36:26 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B1B0AEC54AB3263F89AF;
+        Tue, 16 Jun 2020 17:36:23 +0800 (CST)
 Received: from DESKTOP-5IS4806.china.huawei.com (10.173.221.230) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 16 Jun 2020 17:36:03 +0800
+ 14.3.487.0; Tue, 16 Jun 2020 17:36:14 +0800
 From:   Keqian Zhu <zhukeqian1@huawei.com>
 To:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -42,10 +43,12 @@ CC:     Catalin Marinas <catalin.marinas@arm.com>,
         Alexios Zavras <alexios.zavras@intel.com>,
         <liangpeng10@huawei.com>, <zhengxiang9@huawei.com>,
         <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
-Subject: [PATCH 00/12] KVM: arm64: Support stage2 hardware DBM
-Date:   Tue, 16 Jun 2020 17:35:41 +0800
-Message-ID: <20200616093553.27512-1-zhukeqian1@huawei.com>
+Subject: [PATCH 12/12] KVM: arm64: Enable stage2 hardware DBM
+Date:   Tue, 16 Jun 2020 17:35:53 +0800
+Message-ID: <20200616093553.27512-13-zhukeqian1@huawei.com>
 X-Mailer: git-send-email 2.8.4.windows.1
+In-Reply-To: <20200616093553.27512-1-zhukeqian1@huawei.com>
+References: <20200616093553.27512-1-zhukeqian1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.173.221.230]
@@ -55,80 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series add support for stage2 hardware DBM, and it is only
-used for dirty log for now.
+We are ready to support hw management of dirty state, enable it if
+hardware support it.
 
-It works well under some migration test cases, including VM with 4K
-pages or 2M THP. I checked the SHA256 hash digest of all memory and
-they keep same for source VM and destination VM, which means no dirty
-pages is missed under hardware DBM.
+Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+Signed-off-by: Peng Liang <liangpeng10@huawei.com>
+---
+ arch/arm64/include/asm/sysreg.h | 2 ++
+ arch/arm64/kvm/reset.c          | 9 ++++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-Some key points:
-
-1. Only support hardware updates of dirty status for PTEs. PMDs and PUDs
-   are not involved for now.
-
-2. About *performance*: In RFC patch, I have mentioned that for every 64GB
-   memory, KVM consumes about 40ms to scan all PTEs to collect dirty log.
-   
-   Initially, I plan to solve this problem using parallel CPUs. However
-   I faced two problems.
-
-   The first is bottleneck of memory bandwith. Single thread will occupy
-   bandwidth about 500GB/s, we can support about 4 parallel threads at
-   most, so the ideal speedup ratio is low.
-
-   The second is huge impact on other CPUs. To scan PTs quickly, I use
-   smp_call_function_many, which is based on IPI, to dispatch workload
-   on other CPUs. Though it can complete work in time, the interrupt is
-   disabled during scaning PTs, which has huge impact on other CPUs.
-
-   Now, I make hardware dirty log can be dynamic enabled and disabled.
-   Userspace can enable it before VM migration and disable it when
-   remaining dirty pages is little. Thus VM downtime is not affected. 
-
-
-3. About correctness: Only add DBM bit when PTE is already writable, so
-   we still have readonly PTE and some mechanisms which rely on readonly
-   PTs are not broken.
-
-4. About PTs modification races: There are two kinds of PTs modification.
-   
-   The first is adding or clearing specific bit, such as AF or RW. All
-   these operations have been converted to be atomic, avoid covering
-   dirty status set by hardware.
-   
-   The second is replacement, such as PTEs unmapping or changement. All
-   these operations will invoke kvm_set_pte finally. kvm_set_pte have
-   been converted to be atomic and we save the dirty status to underlying
-   bitmap if dirty status is coverred.
-
-
-Keqian Zhu (12):
-  KVM: arm64: Add some basic functions to support hw DBM
-  KVM: arm64: Modify stage2 young mechanism to support hw DBM
-  KVM: arm64: Report hardware dirty status of stage2 PTE if coverred
-  KVM: arm64: Support clear DBM bit for PTEs
-  KVM: arm64: Add KVM_CAP_ARM_HW_DIRTY_LOG capability
-  KVM: arm64: Set DBM bit of PTEs during write protecting
-  KVM: arm64: Scan PTEs to sync dirty log
-  KVM: Omit dirty log sync in log clear if initially all set
-  KVM: arm64: Steply write protect page table by mask bit
-  KVM: arm64: Save stage2 PTE dirty status if it is coverred
-  KVM: arm64: Support disable hw dirty log after enable
-  KVM: arm64: Enable stage2 hardware DBM
-
- arch/arm64/include/asm/kvm_host.h |  11 +
- arch/arm64/include/asm/kvm_mmu.h  |  56 +++-
- arch/arm64/include/asm/sysreg.h   |   2 +
- arch/arm64/kvm/arm.c              |  22 +-
- arch/arm64/kvm/mmu.c              | 411 ++++++++++++++++++++++++++++--
- arch/arm64/kvm/reset.c            |  14 +-
- include/uapi/linux/kvm.h          |   1 +
- tools/include/uapi/linux/kvm.h    |   1 +
- virt/kvm/kvm_main.c               |   7 +-
- 9 files changed, 499 insertions(+), 26 deletions(-)
-
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 463175f80341..b22bd903284d 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -744,6 +744,8 @@
+ #define ID_AA64MMFR1_VMIDBITS_8		0
+ #define ID_AA64MMFR1_VMIDBITS_16	2
+ 
++#define ID_AA64MMFR1_HADBS_DBS		2
++
+ /* id_aa64mmfr2 */
+ #define ID_AA64MMFR2_E0PD_SHIFT		60
+ #define ID_AA64MMFR2_FWB_SHIFT		40
+diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+index 52bb801c9b2c..c1215b13bdd5 100644
+--- a/arch/arm64/kvm/reset.c
++++ b/arch/arm64/kvm/reset.c
+@@ -427,7 +427,7 @@ int kvm_arm_setup_stage2(struct kvm *kvm, unsigned long type)
+ {
+ 	u64 vtcr = VTCR_EL2_FLAGS, mmfr0;
+ 	u32 parange, phys_shift;
+-	u8 lvls;
++	u8 lvls, hadbs;
+ 
+ 	if (type & ~KVM_VM_TYPE_ARM_IPA_SIZE_MASK)
+ 		return -EINVAL;
+@@ -465,6 +465,13 @@ int kvm_arm_setup_stage2(struct kvm *kvm, unsigned long type)
+ 	 */
+ 	vtcr |= VTCR_EL2_HA;
+ 
++#ifdef CONFIG_ARM64_HW_AFDBM
++	hadbs = (read_sysreg(id_aa64mmfr1_el1) >>
++			ID_AA64MMFR1_HADBS_SHIFT) & 0xf;
++	if (hadbs == ID_AA64MMFR1_HADBS_DBS)
++		vtcr |= VTCR_EL2_HD;
++#endif
++
+ 	/* Set the vmid bits */
+ 	vtcr |= (kvm_get_vmid_bits() == 16) ?
+ 		VTCR_EL2_VS_16BIT :
 -- 
 2.19.1
 
