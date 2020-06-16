@@ -2,106 +2,76 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F41C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB15214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592331811;
-	bh=h96pX3kj7dYEFYjTWnRdrQFgB9YLpLSutCA+J+4ZzuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qmk1lcX+VOBLGmi85y2NLbmkk7QsY7QO1Wv1VZtpVfKaH4e3DsT7G3rdVSP0gvYm8
-	 QYnRa1S1lKuQ7KL/vNvnk16CdHVMZ3ceoHRG5xLfCngzNPbtgVQ8RyMaZyS1b8xIgW
-	 GLfK1M6aaor9zEWmkcERmPuRpkFwuPNrYKonpbgU=
+	by mail.kernel.org (Postfix) with ESMTP id B2DC32098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgFPSXa (ORCPT
+        id S1729571AbgFPSXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54136 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 14:23:55 -0400
+Received: from v6.sk ([167.172.42.174]:47578 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgFPSX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:23:29 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88845208D5;
-        Tue, 16 Jun 2020 18:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592331808;
-        bh=h96pX3kj7dYEFYjTWnRdrQFgB9YLpLSutCA+J+4ZzuY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1NbpAzSD+fa23xHR4jDxv4/ZGz4o6ym6JxV449gwnyurEOJ/e8gJO+qTDxENFdAg2
-         xKM3CdXM4pJXxBm9v34WJJTXYypagtSGKTadWSOH6v3+PSDsUoaZmrywBcs201igty
-         yLSvDV7ATi7rwXuvgx78PJIBP0Ixc2cgyW82sil8=
-Date:   Tue, 16 Jun 2020 11:23:27 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Mike Snitzer <msnitzer@redhat.com>,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: Re: [dm-devel] [PATCH 4/4] crypto: fix the drivers that don't
- respect CRYPTO_TFM_REQ_MAY_SLEEP
-Message-ID: <20200616182327.GE207319@gmail.com>
-References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com>
- <20200610010450.GA6449@gondor.apana.org.au>
- <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com>
- <20200610121106.GA23137@gondor.apana.org.au>
- <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006161102250.28052@file01.intranet.prod.int.rdu2.redhat.com>
- <20200616175022.GD207319@gmail.com>
- <alpine.LRH.2.02.2006161416510.12390@file01.intranet.prod.int.rdu2.redhat.com>
+        id S1726282AbgFPSXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 14:23:55 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 10A3261627;
+        Tue, 16 Jun 2020 18:23:53 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 01/13] ARM: dts: mmp2-olpc-xo-1-75: Fix camera I2C node validation
+Date:   Tue, 16 Jun 2020 20:23:29 +0200
+Message-Id: <20200616182341.944473-2-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200616182341.944473-1-lkundrak@v3.sk>
+References: <20200616182341.944473-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2006161416510.12390@file01.intranet.prod.int.rdu2.redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 02:18:17PM -0400, Mikulas Patocka wrote:
-> 
-> 
-> On Tue, 16 Jun 2020, Eric Biggers wrote:
-> 
-> > On Tue, Jun 16, 2020 at 11:02:50AM -0400, Mikulas Patocka wrote:
-> > > Fix the crypto drivers that don't respect CRYPTO_TFM_REQ_MAY_SLEEP. If
-> > > CRYPTO_TFM_REQ_MAY_SLEEP is not set, the driver must not do allocation
-> > > that sleeps.
-> > > 
-> > > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> > 
-> > I think you need to split this up per driver with a proper explanation and a
-> > "Fixes:" tag for each driver.
-> > 
-> > Also, these bugs should have been detected by the crypto self-tests already,
-> > since they test having preemption disabled and CRYPTO_TFM_REQ_MAY_SLEEP cleared.
-> > Can you double check whether these are all valid fixes?  One thing to watch out
-> > for is that CRYPTO_TFM_REQ_MAY_SLEEP only applies to the function call like
-> > crypto_skcipher_encrypt() itself.  If the implementation is asynchronous and the
-> > request gets processed in the background (i.e. if crypto_skcipher_encrypt()
-> > returns -EINPROGRESS), the background work doesn't have to honor
-> > CRYPTO_TFM_REQ_MAY_SLEEP.
-> > 
-> > - Eric
-> 
-> I can only compile-test this patch. I don't have the hardware.
-> 
+  mmp2-olpc-xo-1-75.dt.yaml: camera_i2c: $nodename:0:
+      'camera_i2c' does not match '^i2c(@.*)?'
+  mmp2-olpc-xo-1-75.dt.yaml: camera_i2c: 'sda-gpios' is a required property
+  mmp2-olpc-xo-1-75.dt.yaml: camera_i2c: 'scl-gpios' is a required property
 
-I'm just asking for you to check the code extra carefully.  The fact that the
-self-tests should have been detecting this type of bug implies that these might
-not actually be valid fixes.
+The "gpios" property actually was documented as deprecated, but got dropped
+in commit 0175ce4a58d6 ("dt-bindings: i2c: Convert i2c-gpio binding to
+json-schema"). It's probably best kept forgotten though.
 
-However, we do know that not all crypto drivers are being actively tested with
-the latest self-tests and with kernel debugging options enabled.  So it's
-expected that some are indeed broken.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-- Eric
+diff --git a/arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts b/arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts
+index 6cfa0d4a18845..02f4005a654b9 100644
+--- a/arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts
++++ b/arch/arm/boot/dts/mmp2-olpc-xo-1-75.dts
+@@ -77,10 +77,10 @@ headphone_insert {
+ 		};
+ 	};
+ 
+-	camera_i2c {
++	i2c {
+ 		compatible = "i2c-gpio";
+-		gpios = <&gpio 109 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>,
+-			<&gpio 108 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		sda-gpios = <&gpio 109 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&gpio 108 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		i2c-gpio,timeout-ms = <1000>;
+-- 
+2.26.2
+
