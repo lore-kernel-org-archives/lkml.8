@@ -2,87 +2,123 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8269C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8F3A206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB93E20739
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="E0Zi/jXU"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Z7Whu9W3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgFPNea (ORCPT
+        id S1728976AbgFPNeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728131AbgFPNe2 (ORCPT
+        Tue, 16 Jun 2020 09:34:37 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51185 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726306AbgFPNe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:34:28 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3C4C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:34:28 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id x93so14267108ede.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UAci7iu9x7AuACkwyPspvtLfgfrwKch4Y/GzStjmjeY=;
-        b=E0Zi/jXUzZyzGLyIcWdXRQd84MOhCKAGFfN7znAr5/rt4+3/R66Metwl4buEQfC7aN
-         AdZgo1V+eDHH815vjjsqU/VBwowGuCUQFyvrZfvDxSZ/0K80giQV+IgwgJKSFQzaCCbD
-         RKUnSfuw9eYiaqh7vgWsoF0WhVkGS2GLl26xHNrCRp6zfLb1qDrTMPunUkH5rrwIl1Nf
-         qervC5pVTYGCpyAoU36WuoTM/tgdjZjECgxrZjN20FY4CeIJVUvaLNi0A/qazC3x1jy/
-         WjYw/sSFNJGMIkmKxeXQCQu2J654FEaZN7Q3g+rrxkyLYl+Cql3n4+v3tha6nbo1965u
-         iH7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UAci7iu9x7AuACkwyPspvtLfgfrwKch4Y/GzStjmjeY=;
-        b=Lpr2edhyiwjSXKV9h2UU1i5s1aOwSo0HBSZ4soAMYHnxtAkOmvfZ/PEZ3TOkX7Ysel
-         JToDyqKncqeN+Fe7yyETt0bLqmNmdpEzyjWzeu/KUo//IE7iX4SvP8nevUSDNilM9GjP
-         yAbba109+8Z+Yz1TclC6IDvze4Px5JrTfZvCxiZ/lpHYg64t7VaQCehK0D8SReoAZdgW
-         O4gRvSYGPZyehyhMdRONgD9r9hZaKIdb+6/i5sMgMbjXqdFHQIw8Srpa1CPdoaU3+l/r
-         KTuatqCyBBMP/TFBwhC0gk9dCNtP8qRGVn+fADi5sfKZcMEo3UPNI3Nnbg3ps+MoarcJ
-         /8kw==
-X-Gm-Message-State: AOAM531piGr2sWlsnfvr9df/lXQBCMEG7Rn8vb6rfrx2OUQwkJhobizu
-        oWzzwcJCTdE/BTKRz/vIA1XsQUGG23dDcBLA1tQYzQ==
-X-Google-Smtp-Source: ABdhPJxKr3cIPVxwUoBrHPpip3Va7+OcCXoSiS2elgmhtiC0qEoNsFfb+CW1j+Ni3sAnWwDzyHc+AFWj5tQ6aGTp/Qg=
-X-Received: by 2002:a05:6402:a42:: with SMTP id bt2mr2544456edb.42.1592314466851;
- Tue, 16 Jun 2020 06:34:26 -0700 (PDT)
+        Tue, 16 Jun 2020 09:34:29 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GDSuXw015301;
+        Tue, 16 Jun 2020 15:33:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=8Zqu22QzzYb9zFOTMzGzv0s5kLJ9DJfwjRSOOCg3wiU=;
+ b=Z7Whu9W3CnukVE5BhvVBZNXcK9GFSDhAwpxS9uQ9p4/TF8njS7UNjXvjd1xgU2VoioeP
+ 3mEqXyvsEmcNmmTgismCPjFb0j3LTytXUn14ub+vJAsVDsKx4dk6C2a9DWqmGeAvmLen
+ EcHuxzmqybXM26XYmfaPQawFNIcxDR0jrZIeqqfzN3/pVw30RZXfPrts6le6XblcvFql
+ mU2tpNe3/dgOMfeNBg3InjBdNfP/ozRcekII0sVmHoZnW3zXf8RtRyOQmP/Xytfp3ctF
+ sZKGPW0ATAfhxaWrJ8lru0AagkKlNqpxBpLPDSdhXGrHJMXSF6Fzg5sK6SbfKKnvTcc8 JA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvyjx6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 15:33:16 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D432110002A;
+        Tue, 16 Jun 2020 15:33:14 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8801F2B663A;
+        Tue, 16 Jun 2020 15:33:14 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 16 Jun
+ 2020 15:33:14 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Tue, 16 Jun 2020 15:33:14 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     Rob Herring <robh@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.co" <mark.rutland@arm.co>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        Amelie DELAUNAY <amelie.delaunay@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Thread-Topic: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Thread-Index: AQHV6An9BN3fbiJe+Uu+wK6+EyGnQqgtoL2AgHnzXwCAABZ/gIA0KSeA
+Date:   Tue, 16 Jun 2020 13:33:14 +0000
+Message-ID: <f0e8c6fc-a5fc-b621-1c7e-251bafd2f46c@st.com>
+References: <20200220162246.8334-1-benjamin.gaignard@st.com>
+ <20200226162125.GA13349@bogus> <70ee04c9-4f65-6909-32bc-a379c21a031e@st.com>
+ <20200514090025.GE271301@dell>
+In-Reply-To: <20200514090025.GE271301@dell>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CB381301BD63D446B3798EA4A53A2647@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CAMGffEmgLbd8mjEE4xM-U7MGCsWsdHEHCqs2erMdJ7+CUCFaCA@mail.gmail.com>
- <20200616131555.GU2531@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200616131555.GU2531@hirez.programming.kicks-ass.net>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 16 Jun 2020 15:34:15 +0200
-Message-ID: <CAMGffEnevUWFQAaB9cvpCY0i0bnfiCSCBc8pWJaqMH3p-NC4xg@mail.gmail.com>
-Subject: Re: [BUG] divide error select_idle_sibling+0x36b
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-
-On Tue, Jun 16, 2020 at 3:15 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Jun 16, 2020 at 03:07:00PM +0200, Jinpu Wang wrote:
->
-> > [7623813.970839] CPU: 10 PID: 46544 Comm: qemu-2.7 Tainted: G
-> >  O    4.14.154-1-pserver #4.14.154-1.1~deb9
->
-> Please try on a kernel from this century.
-Thanks for quick reply, we are upgrading to 4.19.105 (release on Wed
-Feb 19 19:51:59 2020), do you maybe know if it is fixed in 4.19?
-
-Regards!
+DQoNCk9uIDUvMTQvMjAgMTE6MDAgQU0sIExlZSBKb25lcyB3cm90ZToNCj4gT24gVGh1LCAxNCBN
+YXkgMjAyMCwgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+DQo+Pg0KPj4gT24gMi8yNi8yMCA1
+OjIxIFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4+PiBPbiBUaHUsIDIwIEZlYiAyMDIwIDE3OjIy
+OjQ2ICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToNCj4+Pj4gQ29udmVydCBzdG1meCBi
+aW5kaW5ncyB0byBqc29uLXNjaGVtYQ0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1p
+biBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPj4+PiAtLS0NCj4+Pj4gICAg
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0LHN0bWZ4LnlhbWwgICAgICAgICAgfCAxMjQg
+KysrKysrKysrKysrKysrKysrKysrDQo+Pj4+ICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZmQvc3RtZngudHh0ICAgIHwgIDI4IC0tLS0tDQo+Pj4+ICAgIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1zdG1meC50eHQgIHwgMTE2IC0tLS0tLS0tLS0t
+LS0tLS0tLS0NCj4+Pj4gICAgMyBmaWxlcyBjaGFuZ2VkLCAxMjQgaW5zZXJ0aW9ucygrKSwgMTQ0
+IGRlbGV0aW9ucygtKQ0KPj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdCxzdG1meC55YW1sDQo+Pj4+ICAgIGRlbGV0ZSBtb2Rl
+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0bWZ4LnR4dA0K
+Pj4+PiAgICBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BpbmN0cmwvcGluY3RybC1zdG1meC50eHQNCj4+Pj4NCj4+IEhpIExlZSwgUm9iLA0KPj4N
+Cj4+IEkgaGF2ZW4ndCBiZWVuIGFibGUgdG8gZm91bmQgdGhpcyBwYXRjaCBpbiAtbmV4dCBicmFu
+Y2hlcywgY2FuIG9uZSBvZg0KPj4geW91IG1lcmdlIGl0ID8NCj4+DQo+PiBUaGFua3MsDQo+PiBC
+ZW5qYW1pbg0KPj4+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
+PiBSb2IsDQo+DQo+IFdlIHNob3VsZCBhZ3JlZSBvbiBhIHByb2Nlc3MgZ29pbmcgZm9yd2FyZC4g
+IERvIHlvdSB0YWtlIERUIGRvY3VtZW50DQo+IGNoYW5nZXMgb3Igc2hvdWxkIEk/ICBVcCB1bnRp
+bCB3ZSBtb3ZlZCB0byBZQU1MIGZvcm1hdHRpbmcsIEkgdG9vaw0KPiB0aGVtIGJ1dCByZXNwb25z
+aWJseSBzZWVtcyB0byBoYXZlIG1pZ3JhdGVkIG92ZXIgdG8geW91IHNpbmNlIHRoZW4uDQo+DQo+
+IEkgZG9uJ3QgbWluZCBlaXRoZXIgd2F5Lg0KSGksDQoNCkFueSBuZXdzIG9uIHRoaXMgeWFtbCBj
+b252ZXJzaW9uID8NCg0KQmVuamFtaW4NCj4NCg==
