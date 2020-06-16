@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A042C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E11B7208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32625208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322060;
-	bh=N2fVI1JDeAb55G6+FUaty4ijhd6xjY1FQoh6aCeXreg=;
+	s=default; t=1592322065;
+	bh=mubmbuiDOXcWalU1TUhEBw7MU27CWb53kL0rpKji7d4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKHHLbHcAI9JSXD3oPPGiHEJKww1gaPfjZjgSsWFd1cTycjrl1Ohb1jL/5RlBj1gC
-	 yu+qV5A4z86c9Q3jWlG9HlcpzxCuIn1yV4qtESXZjZIOpOQuurUa4ZhaHNUmsn1BIq
-	 Mnrrd6lpALYs2duB9pwQ1ljAiuF6W5RsDAex+a+c=
+	b=QuOJ7kpTi0+tW4/oFjglIx2ICx4ng7oi5+xiMmJshHKlKIhZbGWWvcPsC+cPp98++
+	 c6tyKBtYEFFt7JSkuqqDmZKN1yJF9PItRjscUloOGnqlLeYSVuHZnmbIxxWcb+ybyw
+	 N12JVYEtseOFyDgvzzc651yDRzKHhKWwdbhbBbrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731344AbgFPPk7 (ORCPT
+        id S1731358AbgFPPlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:40:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55988 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:41:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbgFPPk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:40:56 -0400
+        id S1731338AbgFPPk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F9C721475;
-        Tue, 16 Jun 2020 15:40:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6AFD21531;
+        Tue, 16 Jun 2020 15:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322055;
-        bh=N2fVI1JDeAb55G6+FUaty4ijhd6xjY1FQoh6aCeXreg=;
+        s=default; t=1592322058;
+        bh=mubmbuiDOXcWalU1TUhEBw7MU27CWb53kL0rpKji7d4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rj/5dtpeEu57LOK3K9HMz1li4W+dWFPyOAINhK4GKrtw35EKRIpw+tyMSh0GnulmH
-         hsPCmsU8ggpmRa0g9EL2GBTPgvjvrRBDnX5Gi6O0RCyZF8MiA+LJuKeAXd9STl+bX9
-         aF/KbTU5S2jT9n+VTCJkydr+KIcMh+mFPWhuxV+M=
+        b=me/RlDvvyOnFq2VzMDJ8rug0MCmr3t/penNGlnCSBGhQke7/I2Qiijm3Mi8wBlG+d
+         deLEXrfXEiiHH2jhDkpRJMp2vS/urHgKBgIAdM3tpCmfd9QLBPHEk1b0d+VtYHxP8E
+         4Sz+xeBD+bjLib3AOdpqOcoe15DV7kKiDDEwfi0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 119/134] drm/vkms: Hold gem object while still in-use
-Date:   Tue, 16 Jun 2020 17:35:03 +0200
-Message-Id: <20200616153106.483679065@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 120/134] mm/slub: fix a memory leak in sysfs_slab_add()
+Date:   Tue, 16 Jun 2020 17:35:04 +0200
+Message-Id: <20200616153106.532769297@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,78 +65,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-commit 0ea2ea42b31abc1141f2fd3911f952a97d401fcb upstream.
+commit dde3c6b72a16c2db826f54b2d49bdea26c3534a2 upstream.
 
-We need to keep the reference to the drm_gem_object
-until the last access by vkms_dumb_create.
+syzkaller reports for memory leak when kobject_init_and_add() returns an
+error in the function sysfs_slab_add() [1]
 
-Therefore, the put the object after it is used.
+When this happened, the function kobject_put() is not called for the
+corresponding kobject, which potentially leads to memory leak.
 
-This fixes a use-after-free issue reported by syzbot.
+This patch fixes the issue by calling kobject_put() even if
+kobject_init_and_add() fails.
 
-While here, change vkms_gem_create() symbol to static.
+[1]
+  BUG: memory leak
+  unreferenced object 0xffff8880a6d4be88 (size 8):
+  comm "syz-executor.3", pid 946, jiffies 4295772514 (age 18.396s)
+  hex dump (first 8 bytes):
+    70 69 64 5f 33 00 ff ff                          pid_3...
+  backtrace:
+     kstrdup+0x35/0x70 mm/util.c:60
+     kstrdup_const+0x3d/0x50 mm/util.c:82
+     kvasprintf_const+0x112/0x170 lib/kasprintf.c:48
+     kobject_set_name_vargs+0x55/0x130 lib/kobject.c:289
+     kobject_add_varg lib/kobject.c:384 [inline]
+     kobject_init_and_add+0xd8/0x170 lib/kobject.c:473
+     sysfs_slab_add+0x1d8/0x290 mm/slub.c:5811
+     __kmem_cache_create+0x50a/0x570 mm/slub.c:4384
+     create_cache+0x113/0x1e0 mm/slab_common.c:407
+     kmem_cache_create_usercopy+0x1a1/0x260 mm/slab_common.c:505
+     kmem_cache_create+0xd/0x10 mm/slab_common.c:564
+     create_pid_cachep kernel/pid_namespace.c:54 [inline]
+     create_pid_namespace kernel/pid_namespace.c:96 [inline]
+     copy_pid_ns+0x77c/0x8f0 kernel/pid_namespace.c:148
+     create_new_namespaces+0x26b/0xa30 kernel/nsproxy.c:95
+     unshare_nsproxy_namespaces+0xa7/0x1e0 kernel/nsproxy.c:229
+     ksys_unshare+0x3d2/0x770 kernel/fork.c:2969
+     __do_sys_unshare kernel/fork.c:3037 [inline]
+     __se_sys_unshare kernel/fork.c:3035 [inline]
+     __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3035
+     do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
 
-Reported-and-tested-by: syzbot+e3372a2afe1e7ef04bc7@syzkaller.appspotmail.com
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200427214405.13069-1-ezequiel@collabora.com
+Fixes: 80da026a8e5d ("mm/slub: fix slab double-free in case of duplicate sysfs filename")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Link: http://lkml.kernel.org/r/20200602115033.1054-1-wanghai38@huawei.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vkms/vkms_drv.h |    5 -----
- drivers/gpu/drm/vkms/vkms_gem.c |   11 ++++++-----
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ mm/slub.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -121,11 +121,6 @@ struct drm_plane *vkms_plane_init(struct
- 				  enum drm_plane_type type, int index);
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5776,8 +5776,10 @@ static int sysfs_slab_add(struct kmem_ca
  
- /* Gem stuff */
--struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
--				       struct drm_file *file,
--				       u32 *handle,
--				       u64 size);
--
- vm_fault_t vkms_gem_fault(struct vm_fault *vmf);
+ 	s->kobj.kset = kset;
+ 	err = kobject_init_and_add(&s->kobj, &slab_ktype, NULL, "%s", name);
+-	if (err)
++	if (err) {
++		kobject_put(&s->kobj);
+ 		goto out;
++	}
  
- int vkms_dumb_create(struct drm_file *file, struct drm_device *dev,
---- a/drivers/gpu/drm/vkms/vkms_gem.c
-+++ b/drivers/gpu/drm/vkms/vkms_gem.c
-@@ -95,10 +95,10 @@ vm_fault_t vkms_gem_fault(struct vm_faul
- 	return ret;
- }
- 
--struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
--				       struct drm_file *file,
--				       u32 *handle,
--				       u64 size)
-+static struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
-+					      struct drm_file *file,
-+					      u32 *handle,
-+					      u64 size)
- {
- 	struct vkms_gem_object *obj;
- 	int ret;
-@@ -111,7 +111,6 @@ struct drm_gem_object *vkms_gem_create(s
- 		return ERR_CAST(obj);
- 
- 	ret = drm_gem_handle_create(file, &obj->gem, handle);
--	drm_gem_object_put_unlocked(&obj->gem);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
-@@ -140,6 +139,8 @@ int vkms_dumb_create(struct drm_file *fi
- 	args->size = gem_obj->size;
- 	args->pitch = pitch;
- 
-+	drm_gem_object_put_unlocked(gem_obj);
-+
- 	DRM_DEBUG_DRIVER("Created object of size %lld\n", size);
- 
- 	return 0;
+ 	err = sysfs_create_group(&s->kobj, &slab_attr_group);
+ 	if (err)
 
 
