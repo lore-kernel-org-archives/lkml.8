@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E64C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E16FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E430208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D317208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323804;
-	bh=qTgrEBZKZMWmg0X6f6sF+T8F0d7Vb3RU2qYh7J8sQn8=;
+	s=default; t=1592323806;
+	bh=qPXtMOTdflutZMIJ3Kxe+EfHyqUsxZqyhk7CaUbd0Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BNEBMf1vGWjK0z2X6KPRFet9OGl7ZMHPX7HRqJbLG55fBUrvw/3bIXGwMwdTZy+22
-	 BhAXBEzVlBSArtE6QcAgjURqR984a+oUU8kmsmHOK282fGwYF3hexTpieVT2bDiw7P
-	 z3KY0JTq9OgrGBpxK69b8QjkV4L3T9h7pJylACBA=
+	b=vt37CXIsBbRwo7xkL6JYVzIya3lwMJP76yA6lF0iVpwDChBVoLJNYe2Z2O9dNIrjF
+	 r114a8b+5z3y73WIW//ap1IZTMubHgYClPW+ciD6pfX5j2YyhMdDXaUoveeowQPkv+
+	 jcTOpzILSQ/XfmDUWdxB2vPAH+boxRa6c3VT5dlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbgFPPou (ORCPT
+        id S1732288AbgFPQKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:44:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35312 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732014AbgFPPop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:44:45 -0400
+        id S1731524AbgFPPo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B196521475;
-        Tue, 16 Jun 2020 15:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EA4B21475;
+        Tue, 16 Jun 2020 15:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322285;
-        bh=qTgrEBZKZMWmg0X6f6sF+T8F0d7Vb3RU2qYh7J8sQn8=;
+        s=default; t=1592322295;
+        bh=qPXtMOTdflutZMIJ3Kxe+EfHyqUsxZqyhk7CaUbd0Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DV3oVv1shjhmPs7ZaDnR46F5yx5P/lxLQTDZ3XsOJL7iAyt1dhjxrBGw50Y+5n0A+
-         bgWRHWrZ3iGWTrnhrzI+Sp8etK/IM06PcoyLpOaGEg0QBhzYa+ntdcQ1zasu07FxzM
-         Hoac6i9eh5PRPU2bBbN5DjBKuNunNlowcQ/E5+Xo=
+        b=2RhHzeF6FcWwjVkj0fJ2D+N6ImbGM64JMTwLvH3N27tjqVQHxjOyfS0BSgIh/VMmT
+         Ohzv0EeTYiJID8rabn64Eb1dRiTJ4i2PSoP1tAaVYQ81+9sh6t3GftnGg7YNwZDo2b
+         Ft8RQ3tKrcn30HaEjqDNtJae9SgPX+AoVwQcjX34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.7 073/163] ACPI: CPPC: Fix reference count leak in acpi_cppc_processor_probe()
-Date:   Tue, 16 Jun 2020 17:34:07 +0200
-Message-Id: <20200616153110.345119998@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 5.7 076/163] arm64: acpi: fix UBSAN warning
+Date:   Tue, 16 Jun 2020 17:34:10 +0200
+Message-Id: <20200616153110.486696417@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,34 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-commit 4d8be4bc94f74bb7d096e1c2e44457b530d5a170 upstream.
+commit a194c33f45f83068ef13bf1d16e26d4ca3ecc098 upstream.
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
+Will reported a UBSAN warning:
 
-Fixes: 158c998ea44b ("ACPI / CPPC: add sysfs support to compute delivered performance")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Cc: 4.10+ <stable@vger.kernel.org> # 4.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
+member access within null pointer of type 'struct acpi_madt_generic_interrupt'
+CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc6-00124-g96bc42ff0a82 #1
+Call trace:
+ dump_backtrace+0x0/0x384
+ show_stack+0x28/0x38
+ dump_stack+0xec/0x174
+ handle_null_ptr_deref+0x134/0x174
+ __ubsan_handle_type_mismatch_v1+0x84/0xa4
+ acpi_parse_gic_cpu_interface+0x60/0xe8
+ acpi_parse_entries_array+0x288/0x498
+ acpi_table_parse_entries_array+0x178/0x1b4
+ acpi_table_parse_madt+0xa4/0x110
+ acpi_parse_and_init_cpus+0x38/0x100
+ smp_init_cpus+0x74/0x258
+ setup_arch+0x350/0x3ec
+ start_kernel+0x98/0x6f4
+
+This is from the use of the ACPI_OFFSET in
+arch/arm64/include/asm/acpi.h. Replace its use with offsetof from
+include/linux/stddef.h which should implement the same logic using
+__builtin_offsetof, so that UBSAN wont warn.
+
+Reported-by: Will Deacon <will@kernel.org>
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/lkml/20200521100952.GA5360@willie-the-truck/
+Link: https://lore.kernel.org/r/20200608203818.189423-1-ndesaulniers@google.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/cppc_acpi.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/acpi.h |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -846,6 +846,7 @@ int acpi_cppc_processor_probe(struct acp
- 			"acpi_cppc");
- 	if (ret) {
- 		per_cpu(cpc_desc_ptr, pr->id) = NULL;
-+		kobject_put(&cpc_ptr->kobj);
- 		goto out_free;
- 	}
+--- a/arch/arm64/include/asm/acpi.h
++++ b/arch/arm64/include/asm/acpi.h
+@@ -12,6 +12,7 @@
+ #include <linux/efi.h>
+ #include <linux/memblock.h>
+ #include <linux/psci.h>
++#include <linux/stddef.h>
  
+ #include <asm/cputype.h>
+ #include <asm/io.h>
+@@ -31,14 +32,14 @@
+  * is therefore used to delimit the MADT GICC structure minimum length
+  * appropriately.
+  */
+-#define ACPI_MADT_GICC_MIN_LENGTH   ACPI_OFFSET(  \
++#define ACPI_MADT_GICC_MIN_LENGTH   offsetof(  \
+ 	struct acpi_madt_generic_interrupt, efficiency_class)
+ 
+ #define BAD_MADT_GICC_ENTRY(entry, end)					\
+ 	(!(entry) || (entry)->header.length < ACPI_MADT_GICC_MIN_LENGTH || \
+ 	(unsigned long)(entry) + (entry)->header.length > (end))
+ 
+-#define ACPI_MADT_GICC_SPE  (ACPI_OFFSET(struct acpi_madt_generic_interrupt, \
++#define ACPI_MADT_GICC_SPE  (offsetof(struct acpi_madt_generic_interrupt, \
+ 	spe_interrupt) + sizeof(u16))
+ 
+ /* Basic configuration for ACPI */
 
 
