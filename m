@@ -2,311 +2,231 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A93C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3520C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF4420776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A5020776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y7PwRYNH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rpD0tjID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731146AbgFPR5E (ORCPT
+        id S1731334AbgFPR5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:57:04 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35778 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgFPR5E (ORCPT
+        Tue, 16 Jun 2020 13:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgFPR53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:57:04 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GHVSjq095031;
-        Tue, 16 Jun 2020 17:56:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Z9J/IPljIUbKCuF3YBQjI7FBhBW8FVH498X9WVzfaec=;
- b=Y7PwRYNHsMDH51jPZ8vSGNJUEt1QzMEpm6FdwujxPFUX/sgT44XqduF2Y++vCG7WmCv7
- UsHAfbqWPUg340SsTmetGFtQNeMWkCfBAvUksFnbFo89pUWxMn93ZobPijH1aPhdVpVm
- 9GKP/SC1p8t4R7fwMwQCZDf2nqqRZzZxqoTZE6OEQhyCgU0LH6/R9yNOIpeHHvqUQDiM
- F8qJ09H8MD7GnSF/3O+kPO5XlETfKxvkupTGZs8lySq5mVfyKUhnrHgg686htg9YGO54
- an0qnYII9lBXFBO5t4lelGbACc1ATR9R50w4LG6XGaIuB/PUP5BOB2cSz34tXEabFzmu fQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31p6e608ys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 16 Jun 2020 17:56:58 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05GHrJ6H091181;
-        Tue, 16 Jun 2020 17:56:57 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 31p6s7jvme-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 17:56:57 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05GHutn5029176;
-        Tue, 16 Jun 2020 17:56:56 GMT
-Received: from dhcp-10-159-228-201.vpn.oracle.com (/10.159.228.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 16 Jun 2020 10:56:55 -0700
-Subject: Re: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Gerd Rausch <gerd.rausch@oracle.com>,
-        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
- <1591627576-920-2-git-send-email-divya.indi@oracle.com>
- <20200609070026.GJ164174@unreal>
- <ee7139ff-465e-6c43-1b55-eab502044e0f@oracle.com>
- <20200614064156.GB2132762@unreal>
-From:   Divya Indi <divya.indi@oracle.com>
-Message-ID: <09bbe749-7eb2-7caa-71a9-3ead4e51e5ed@oracle.com>
-Date:   Tue, 16 Jun 2020 10:56:53 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Tue, 16 Jun 2020 13:57:29 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B054C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:57:28 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j10so21704948wrw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oEBfLPiOYvV8Wp4MUoFiCMdsHve7/PzLYazK5rtAoxo=;
+        b=rpD0tjIDuylGgqeb8JmVhI6WWVv8neBbwDdRxGG8H5r8xcH7lwZWNbUvwF9eX20GmG
+         abTRGAMJLBbKsFwL1joM4tlQrAlo3S0XNpsMBD74578aILPPtpJVmze4OmmCzq/Lwycw
+         NXlgSQyEdyLS9+qRjueUIz9kaGfCvVYlzqg03xmdoSWYSnozH3MpulHuncW5IJIYId9s
+         1ArCFwF08jvhuvLEgrW6sxN+Fd/MA5ELKg2N3+Gh8e2N+8y0q8jyF4CoeVql0ZW+sEGN
+         373KAe4+D52Aq4wWcEGRHCqYYyqMRP6pjOQds5rzdQEfvUwWogD8a0XzP68zG9jvPhBh
+         I1Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oEBfLPiOYvV8Wp4MUoFiCMdsHve7/PzLYazK5rtAoxo=;
+        b=ZElZrXzEgsrVbV9lmC2yBiDsDx8Bqj8GfYVOC3aNmkP5P6bDfBfPWqJcewcgEiye+Q
+         hE0F2I/AP1hNEKgroFRSFEnu4xv0ZCIYpacW9AKfcQrVzv4W9TJnb42GZYJlwR5T/lNU
+         wUBHEtTmsjPsArH3t/zhAML6CntmbT2/+WMKiX5J0UwYoEyhuUR6O8kIGAMjbEiYOCze
+         pWSHg6F4OZISIJG8KyOvn1hUL3A8rDhiSuLjvQnnVZ5H1I4OLRZfNFWJv30nthbW1jEH
+         Go4HL70c37WJS34dDQsMcrGQKUEOHNG+tV+oyiZ3Dw8xrC7D912vDFX9Q4wsI9A2OvwY
+         fUlw==
+X-Gm-Message-State: AOAM532T5tEg7dbHn6dye8r6bA/eELJOZK/JkLShQQmwgiK0YVAc0tzw
+        kPV9tXhqvyWWZrYPe6tw7d5PkSckrI8=
+X-Google-Smtp-Source: ABdhPJzHE0/Us52Z0TZBqRSkkSink7YtGieP4JIIpIl4KB1gKQYiH/BFjgPeTpyrbSTvPca849OeQA==
+X-Received: by 2002:adf:b60b:: with SMTP id f11mr4274582wre.7.1592330246776;
+        Tue, 16 Jun 2020 10:57:26 -0700 (PDT)
+Received: from google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id g19sm4742347wmh.29.2020.06.16.10.57.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 10:57:25 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 19:57:20 +0200
+From:   Marco Elver <elver@google.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, shuah@kernel.org, rcu@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] torture: Pass --kmake-arg to all make invocations
+Message-ID: <20200616175720.GA124701@google.com>
+References: <20200616094924.159539-1-elver@google.com>
+ <20200616160524.GW2723@paulmck-ThinkPad-P72>
+ <20200616164202.GA208325@google.com>
+ <20200616174222.GB2723@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <20200614064156.GB2132762@unreal>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
- suspectscore=13 mlxlogscore=999 phishscore=0 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006160125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- mlxscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
- suspectscore=13 spamscore=0 bulkscore=0 malwarescore=0 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006160124
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616174222.GB2723@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leon,
+On Tue, Jun 16 2020 at 10:42AM -0700, Paul E. McKenney wrote:
+> On Tue, Jun 16, 2020 at 06:42:02PM +0200, Marco Elver wrote:
+> > On Tue, Jun 16 2020 at 09:05AM -0700, Paul E. McKenney wrote:
+> > > On Tue, Jun 16, 2020 at 11:49:24AM +0200, Marco Elver wrote:
+> > > > We need to pass the arguments provided to --kmake-arg to all make
+> > > > invocations. In particular, the make invocations generating the configs
+> > > > need to see the final make arguments, e.g. if config variables depend on
+> > > > particular variables that are passed to make.
+> > > > 
+> > > > For example, when using '--kcsan --kmake-arg CC=clang-11', we would lose
+> > > > CONFIG_KCSAN=y due to 'make oldconfig' not seeing that we want to use a
+> > > > compiler that supports KCSAN.
+> > > > 
+> > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > 
+> > > Queued and pushed, thank you!
+> > > 
+> > > Would the following patch make sense, at least until such time
+> > > as some other compiler supports KCSAN?
+> > > 
+> > > 							Thanx, Paul
+> > > 
+> > > ------------------------------------------------------------------------
+> > > 
+> > > commit 88bcaa730b6d40ddf69b09ed6f0a14803d087d99
+> > > Author: Paul E. McKenney <paulmck@kernel.org>
+> > > Date:   Tue Jun 16 09:02:34 2020 -0700
+> > > 
+> > >     torture: Make --kcsan default to using Clang 11
+> > >     
+> > >     Currently, Clang 11 is the only compiler that can support KCSAN.
+> > >     Therefore, as a convenience to the KCSAN user, this commit causes
+> > >     --kcsan to specify Clang 11 unless a "CC=" argument was already
+> > >     specified via the --kmake-arg argument.
+> > 
+> > As soon as more compilers support KCSAN (e.g. clang-12, etc...) we run
+> > the risk of actually inconveniencing ourselves more because then we
+> > really need to say '--kmake-arg CC=clang-1X' to not use the old
+> > compiler. Or revert this in time.
+> > 
+> > My command-line looks more like this right now:
+> > 
+> > 	kvm.sh ... --kmake-arg "CC="${HOME}/local/<gcc-or-clang>-11.kcsan/local/bin/<gcc-or-clang>" ...
+> > 
+> > I think the safer alternative would be to error if CONFIG_KCSAN=y is not
+> > in the config, and simply suggest "Did you forget to switch your
+> > compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?" (of course, a
+> > 'gcc' in $PATH that supports KCSAN would also be fine -- see below).
+> > Eventually, when the default compilers support KCSAN, this will resolve
+> > itself gracefully.
+> > 
+> > Also, I'm going to send a series later this week to re-enable GCC
+> > support. ;-)
+> 
+> OK, sounds like I should leave well enough alone, then.  ;-)
+> 
+> In its current state, specifying "--kcsan" without a KCSAN-capable
+> compiler does get you this:
+> 
+> :CONFIG_KCSAN=y: improperly set
+> :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+> :CONFIG_KCSAN_VERBOSE=y: improperly set
+> :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+> Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
+> 
+> Which admittedly is a bit obtuse, especially that last line.  So how
+> about the following patch, which instead results in this?
+> 
+> :CONFIG_KCSAN=y: improperly set
+> :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+> :CONFIG_KCSAN_VERBOSE=y: improperly set
 
-Please find my comments inline -
+Noticed that CONFIG_KCSAN_VERBOSE=y warning still appears, because it
+wants CONFIG_PROVE_LOCKING=y.
 
-On 6/13/20 11:41 PM, Leon Romanovsky wrote:
-> On Tue, Jun 09, 2020 at 07:45:21AM -0700, Divya Indi wrote:
->> Hi Leon,
->>
->> Thanks for taking the time to review.
->>
->> Please find my comments inline -
->>
->> On 6/9/20 12:00 AM, Leon Romanovsky wrote:
->>> On Mon, Jun 08, 2020 at 07:46:16AM -0700, Divya Indi wrote:
->>>> Commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
->>>> -
->>>> 1. Adds the query to the request list before ib_nl_snd_msg.
->>>> 2. Removes ib_nl_send_msg from within the spinlock which also makes it
->>>> possible to allocate memory with GFP_KERNEL.
->>>>
->>>> However, if there is a delay in sending out the request (For
->>>> eg: Delay due to low memory situation) the timer to handle request timeout
->>>> might kick in before the request is sent out to ibacm via netlink.
->>>> ib_nl_request_timeout may release the query causing a use after free situation
->>>> while accessing the query in ib_nl_send_msg.
->>>>
->>>> Call Trace for the above race:
->>>>
->>>> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
->>>> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
->>>> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
->>>> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
->>>> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
->>>> [rds_rdma]
->>>> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
->>>> [rds_rdma]
->>>> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
->>>> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
->>>> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
->>>> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
->>>> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
->>>> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
->>>> [<ffffffff810a68fb>] kthread+0xcb/0xf0
->>>> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
->>>> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
->>>> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
->>>> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
->>>> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
->>>> ....
->>>> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
->>>>
->>>> To resolve the above issue -
->>>> 1. Add the req to the request list only after the request has been sent out.
->>>> 2. To handle the race where response comes in before adding request to
->>>> the request list, send(rdma_nl_multicast) and add to list while holding the
->>>> spinlock - request_lock.
->>>> 3. Use GFP_NOWAIT for rdma_nl_multicast since it is called while holding
->>>> a spinlock. In case of memory allocation failure, request will go out to SA.
->>>>
->>>> Signed-off-by: Divya Indi <divya.indi@oracle.com>
->>>> Fixes: 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
->>>> before sending")
->>> Author SOB should be after "Fixes" line.
->> My bad. Noted.
->>
->>>> ---
->>>>  drivers/infiniband/core/sa_query.c | 34 +++++++++++++++++-----------------
->>>>  1 file changed, 17 insertions(+), 17 deletions(-)
->>>>
->>>> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
->>>> index 74e0058..042c99b 100644
->>>> --- a/drivers/infiniband/core/sa_query.c
->>>> +++ b/drivers/infiniband/core/sa_query.c
->>>> @@ -836,6 +836,9 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
->>>>  	void *data;
->>>>  	struct ib_sa_mad *mad;
->>>>  	int len;
->>>> +	unsigned long flags;
->>>> +	unsigned long delay;
->>>> +	int ret;
->>>>
->>>>  	mad = query->mad_buf->mad;
->>>>  	len = ib_nl_get_path_rec_attrs_len(mad->sa_hdr.comp_mask);
->>>> @@ -860,35 +863,32 @@ static int ib_nl_send_msg(struct ib_sa_query *query, gfp_t gfp_mask)
->>>>  	/* Repair the nlmsg header length */
->>>>  	nlmsg_end(skb, nlh);
->>>>
->>>> -	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
->>>> +	spin_lock_irqsave(&ib_nl_request_lock, flags);
->>>> +	ret =  rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, GFP_NOWAIT);
->>> It is hard to be convinced that this is correct solution. The mix of
->>> gfp_flags and GFP_NOWAIT at the same time and usage of
->>> ib_nl_request_lock to protect lists and suddenly rdma_nl_multicast() too
->>> makes this code unreadable/non-maintainable.
->> Prior to 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list
->> before sending"), we had ib_nl_send_msg under the spinlock ib_nl_request_lock.
->>
->> ie we had -
->>
->> 1. Get spinlock - ib_nl_request_lock
->> 2. ib_nl_send_msg
->> 	2.a) rdma_nl_multicast
->> 3. Add request to the req list
->> 4. Arm the timer if needed.
->> 5. Release spinlock
->>
->> However, ib_nl_send_msg involved a memory allocation using GFP_KERNEL.
->> hence, was moved out of the spinlock. In addition, req was now being
->> added prior to ib_nl_send_msg [To handle the race where response can
->> come in before we get a chance to add the request back to the list].
->>
->> This introduced another race resulting in use-after-free.[Described in the commit.]
->>
->> To resolve this, sending out the request and adding it to list need to
->> happen while holding the request_lock.
->> To ensure minimum allocations while holding the lock, instead of having
->> the entire ib_nl_send_msg under the lock, we only have rdma_nl_multicast
->> under this spinlock.
->>
->> However, do you think it would be a good idea to split ib_nl_send_msg
->> into 2 functions -
->> 1. Prepare the req/query [Outside the spinlock]
->> 2. Sending the req - rdma_nl_multicast [while holding spinlock]
->>
->> Would this be more intuitive?
-> While it is always good idea to minimize the locked period. It still
-> doesn't answer concern about mixing gfp_flags and direct GFP_NOWAIT.
-> For example if user provides GFP_ATOMIC, the GFP_NOWAIT allocation will
-> cause a trouble because latter is more lax than first one.
+> :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+> Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
 
-Makes sense, and we do have callers passing GFP_ATOMIC with gfp_mask.
+Sounds good, with another suggestion below, but otherwise
 
-However, in this case when we fail to send the request to ibacm,
-we then fallback to sending it to the SA with gfp_mask. So, the
-request will eventually go out with GFP_ATOMIC to SA. From the
-caller perspective the request will not fail due to memory pressure.
+Acked-by: Marco Elver <elver@google.com>
 
--------
-send_mad(...gfp_mask)
-	- send to ibacm with GFP_NOWAIT
-	- If fails, send to SA with gfp_mask
--------
+Thanks,
+-- Marco
 
-So, using GFP_NOWAIT may not cause trouble here. 
+> 							Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+> commit f571795b1146007407851675a258b6685ea2d589
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Tue Jun 16 10:38:57 2020 -0700
+> 
+>     torture: Improve diagnostic for KCSAN-incapable compilers
+>     
+>     Using --kcsan when the compiler does not support KCSAN results in this:
+>     
+>     :CONFIG_KCSAN=y: improperly set
+>     :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+>     :CONFIG_KCSAN_VERBOSE=y: improperly set
+>     :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+>     Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
+>     
+>     This is a bit obtuse, so this commit adds checks resulting in this:
+>     
+>     :CONFIG_KCSAN=y: improperly set
+>     :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+>     :CONFIG_KCSAN_VERBOSE=y: improperly set
+>     :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+>     Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
+>     
+>     Suggested-by: Marco Elver <elver@google.com>
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+> index 357899c..837643a 100755
+> --- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+> +++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+> @@ -44,7 +44,8 @@ do
+>  			then
+>  				echo QEMU killed
+>  			fi
+> -			configcheck.sh $i/.config $i/ConfigFragment
+> +			configcheck.sh $i/.config $i/ConfigFragment > $T 2>&1
+> +			cat $T
+>  			if test -r $i/Make.oldconfig.err
+>  			then
+>  				cat $i/Make.oldconfig.err
+> @@ -73,7 +74,10 @@ do
+>  	done
+>  	if test -f "$rd/kcsan.sum"
+>  	then
+> -		if test -s "$rd/kcsan.sum"
+> +		if grep -q CONFIG_KCSAN=y $T
+> +		then
 
-The other option might be to use GFP_NOWAIT conditionally ie
-(only use GFP_NOWAIT when GFP_ATOMIC is not specified in gfp_mask else
-use GFP_ATOMIC). Eventual goal being to not have a blocking memory allocation.
+For completeness, could add this above:
 
-Your thoughts? 
+	echo "Compiler or architecture does not support KCSAN!"
 
-Really appreciate your feedback. Thanks!
+Because we might also be on an unsupported architecture.
 
-
-Regards,
-Divya
-
->
-> Thanks
->
->>>> +	if (!ret) {
->>> Please use kernel coding style.
->>>
->>> if (ret) {
->>>   spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->>>   return ret;
->>>   }
->>>
->>>  ....
->> Noted. Will make this change.
->>
->>>> +		/* Put the request on the list.*/
->>>> +		delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
->>>> +		query->timeout = delay + jiffies;
->>>> +		list_add_tail(&query->list, &ib_nl_request_list);
->>>> +		/* Start the timeout if this is the only request */
->>>> +		if (ib_nl_request_list.next == &query->list)
->>>> +			queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
->>>> +	}
->>>> +	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->>>> +
->>>> +	return ret;
->>>>  }
->>>>
->>>>  static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
->>>>  {
->>>> -	unsigned long flags;
->>>> -	unsigned long delay;
->>>>  	int ret;
->>>>
->>>>  	INIT_LIST_HEAD(&query->list);
->>>>  	query->seq = (u32)atomic_inc_return(&ib_nl_sa_request_seq);
->>>>
->>>> -	/* Put the request on the list first.*/
->>>> -	spin_lock_irqsave(&ib_nl_request_lock, flags);
->>>> -	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
->>>> -	query->timeout = delay + jiffies;
->>>> -	list_add_tail(&query->list, &ib_nl_request_list);
->>>> -	/* Start the timeout if this is the only request */
->>>> -	if (ib_nl_request_list.next == &query->list)
->>>> -		queue_delayed_work(ib_nl_wq, &ib_nl_timed_work, delay);
->>>> -	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->>>> -
->>>>  	ret = ib_nl_send_msg(query, gfp_mask);
->>>>  	if (ret) {
->>>>  		ret = -EIO;
->>>> -		/* Remove the request */
->>>> -		spin_lock_irqsave(&ib_nl_request_lock, flags);
->>>> -		list_del(&query->list);
->>>> -		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->>>>  	}
->>> Brackets should be removed too.
->> Noted.
->>>>  	return ret;
->>>> --
->>>> 1.8.3.1
->>>>
+> +			echo Did you forget to switch your compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?
+> +		elif test -s "$rd/kcsan.sum"
+>  		then
+>  			echo KCSAN summary in $rd/kcsan.sum
+>  		else
