@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A27CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E860EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6AD1207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0374207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323584;
-	bh=sOxhzpmmDRjatJXqcSrLLVy74KxqIyRrFovwlWN37Lc=;
+	s=default; t=1592323591;
+	bh=L+ZIDbk7gGh2d8y06TrWjfNNB4BOtBVD11yTKaLw7C0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFA0kG2pXtIYLYlTkpKbBzPuNukE0q6VHTzkLbmhZm2qPY9Y7pNqYN6wIB77f6Hpa
-	 wRa0pzjVIzDOChUErYl4NYRyT9/ByLq+Z4q3etrHP08bu0V2e4kETCXoWBHTy9ZpSB
-	 ruxL+heUsvGqOBUjch3R9+P7uMoM9SWudYDEz7Bw=
+	b=Fk1wvkQ6KTzzeP6mfp3SRxBp46UizK+JwOYk1GYxyYtKeNiXnUAA96zP+/GTVEjMC
+	 Mj8465i4XHW+nGKo6nk13jDJTwHF0PzPVdhi63vLQ4KsRc0+RreQ3PReryhM7FN316
+	 zti1cuyosvh6+C01OuaiLDeB7OZuvifecD4AnRkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732518AbgFPQGW (ORCPT
+        id S1732371AbgFPPr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:06:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42304 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732360AbgFPPsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:48:11 -0400
+        id S1731431AbgFPPrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA41B20776;
-        Tue, 16 Jun 2020 15:48:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E60E420776;
+        Tue, 16 Jun 2020 15:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322491;
-        bh=sOxhzpmmDRjatJXqcSrLLVy74KxqIyRrFovwlWN37Lc=;
+        s=default; t=1592322471;
+        bh=L+ZIDbk7gGh2d8y06TrWjfNNB4BOtBVD11yTKaLw7C0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SxUnijn1Z4bKrSY3m2/sitFtLUrbZsgxLcYghTAbXBo98IXJY/iGcjS1ybZfmZu4I
-         33cP5nBprKqM6dy5RlopDvWxwwlmucLTPgfBnsYT4x9yqM9wcvzcHq2AO+nzftBJ23
-         M+SupOJMHWmFgvCR1UdKO55Fff3RSiMLPjui96+Q=
+        b=AzhrmCqQ/uwHEuf4aGg/0xDQo+o4aJQbeGlHY0whYy4zIVTSzmQTVPDimgsq0anGx
+         LFlpOYYZjyyrB7WAZ+XENj/RJTgUn1k6uCkcFabC8swt+25efAaGx/NME7nxfOhVdm
+         wbGzTzj656TOEiolIWCJIHKAmKIV6uKeftJ8cGfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.7 151/163] mmc: sdhci-of-at91: fix CALCR register being rewritten
-Date:   Tue, 16 Jun 2020 17:35:25 +0200
-Message-Id: <20200616153114.038248740@linuxfoundation.org>
+        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
+        syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 5.7 144/163] Smack: slab-out-of-bounds in vsscanf
+Date:   Tue, 16 Jun 2020 17:35:18 +0200
+Message-Id: <20200616153113.702093609@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,41 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Casey Schaufler <casey@schaufler-ca.com>
 
-commit dbdea70f71d672c12bc4454e7c258a8f78194d74 upstream.
+commit 84e99e58e8d1e26f04c097f4266e431a33987f36 upstream.
 
-When enabling calibration at reset, the CALCR register was completely
-rewritten. This may cause certain bits being deleted unintentedly.
-Fix by issuing a read-modify-write operation.
+Add barrier to soob. Return -EOVERFLOW if the buffer
+is exceeded.
 
-Fixes: 727d836a375a ("mmc: sdhci-of-at91: add DT property to enable calibration on full reset")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Link: https://lore.kernel.org/r/20200527105659.142560-1-eugen.hristev@microchip.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-at91.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ security/smack/smackfs.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -120,9 +120,12 @@ static void sdhci_at91_reset(struct sdhc
- 	    || mmc_gpio_get_cd(host->mmc) >= 0)
- 		sdhci_at91_set_force_card_detect(host);
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -878,11 +878,21 @@ static ssize_t smk_set_cipso(struct file
+ 	else
+ 		rule += strlen(skp->smk_known) + 1;
  
--	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL))
--		sdhci_writel(host, SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
-+	if (priv->cal_always_on && (mask & SDHCI_RESET_ALL)) {
-+		u32 calcr = sdhci_readl(host, SDMMC_CALCR);
-+
-+		sdhci_writel(host, calcr | SDMMC_CALCR_ALWYSON | SDMMC_CALCR_EN,
- 			     SDMMC_CALCR);
++	if (rule > data + count) {
++		rc = -EOVERFLOW;
++		goto out;
 +	}
- }
++
+ 	ret = sscanf(rule, "%d", &maplevel);
+ 	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
+ 		goto out;
  
- static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
+ 	rule += SMK_DIGITLEN;
++	if (rule > data + count) {
++		rc = -EOVERFLOW;
++		goto out;
++	}
++
+ 	ret = sscanf(rule, "%d", &catlen);
+ 	if (ret != 1 || catlen > SMACK_CIPSO_MAXCATNUM)
+ 		goto out;
 
 
