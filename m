@@ -2,87 +2,100 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BBCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E019AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E843520786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC42520882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y1c6FPq2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGW9z6GG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbgFPQY4 (ORCPT
+        id S1729957AbgFPQ1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:24:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52312 "EHLO
+        Tue, 16 Jun 2020 12:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbgFPQYz (ORCPT
+        with ESMTP id S1728919AbgFPQ1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:24:55 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F808C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:24:55 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id o5so22552628iow.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:24:55 -0700 (PDT)
+        Tue, 16 Jun 2020 12:27:37 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F11BC061573;
+        Tue, 16 Jun 2020 09:27:37 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id m81so22604832ioa.1;
+        Tue, 16 Jun 2020 09:27:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oHU5NIj28mFBazu9jdqEVaKFMbdsjaboVO1Xjcptaqs=;
-        b=Y1c6FPq275I90ZY+g0ftWg5KQkd1D+8GqwaUSjZUJoK0rstULwyRaN4x6eKhEmbJjf
-         QPQe+soc9cGuoZCFIWUcuUjIKN0A6zZtGWoGt1IQBgjs6lqQVlD7uNzNgKkp7lsEMKoa
-         PSkh4qlK00BTuN2ZPq3YCVyjo3tbhyKXLxc3R/UFheQFEEi1h3HD7MsA936xUCEyWU9G
-         IZumGTqJ3lTToH6U4GoJv1Jh52/aet6V2cDzMIUdT3CgQvkp0fLLJNFNUjB61qpgY/oK
-         Mfh5aUcbVRoZFWIndjuzoW2pK08ag7n6l7x/fICh+ZZV2ApZujcMyD0QG7IHCGnzZfdT
-         MESA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=IxlykeCdvaeRDbODx6osAE/7PpbTM/T1nmtx4tJ5JiU=;
+        b=bGW9z6GGiC9FP/ZZRE7igGfTI+Jmy1EeQPcZkKxjhcyEj8+QhOxYX16HGPyvth0EV2
+         D9NSXLv1PTsp/nvuEv+TkKaljjWjw/6zhcAG34q1UKUlj4a/rNh/vYfURwVS9hAO5lTU
+         03IeO7WTxKo/yAO/uRzKAlqe/3BhqFK5yDxcRpx90zBc8z0xgQzjskiPfMoTVfaoycJ5
+         tna+cgGVl5MaymD0MqFQvuPmKEXBjHnUt4qH1UJOnlXYazsKU283kUi8rCX8ngakwbJm
+         u8t5WTZIsnSys9hbY4QsAsmV2xRgAxYDWYtT/8wQfeka9toAiWW6P/jPM4MjEfxwuJHo
+         RR7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oHU5NIj28mFBazu9jdqEVaKFMbdsjaboVO1Xjcptaqs=;
-        b=idcAZmwjV1+x7Ije/7N1U7dd4u06DjtJuXAJdf255qV8tk1nP4D4QbeYaBMLfdw0VH
-         GDTN7taKNnO7W+kqUvF7/gz3eK/crfdBorgHwzvzRHzVJJZajglS7LKzcSt+LzgdT3Pi
-         MUFqYpCHPlcTvAqK63w7K2T8+DyW7fpMfOaTn3UzOLAXz4ftB6k0DExgwoE5L7zT7QcT
-         wZhYqATxF7ReCp+Pw+tXAqZztgV4j8XKiNPzDK3jjaAeq3o7gD4uSrYZOEboLo8moTbO
-         lxzFBMzreT5d2LEc9J2QRwImjXTskkrEz5jfVG4PqQarkCjDPwzcfoplV4K7OtIPBzV7
-         wJBA==
-X-Gm-Message-State: AOAM530J9vkuUjbhBLyWaVR2s7FHZA9f62lgVs4E3/KPgUL5CxVH6SIF
-        XSxUIo2SoUs6eE9COZmDx17OoxewTS6FnLDEXxArbQ==
-X-Google-Smtp-Source: ABdhPJz6daLARwINz1z8LOJd4TBWGCiIuoS7XuQTJSE+8zWd6pJytz4lbvrsJEBrFmTx9/LKJmuob4k32nzTsdscrnQ=
-X-Received: by 2002:a02:3406:: with SMTP id x6mr26671587jae.24.1592324694558;
- Tue, 16 Jun 2020 09:24:54 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=IxlykeCdvaeRDbODx6osAE/7PpbTM/T1nmtx4tJ5JiU=;
+        b=rPMGPw2GplRRxduD/MF7non5GhRolJB4oz9ny4DKrxaAqxHASrHbwoz7ghN9llj1yh
+         9CKcunDGhCqxsb4Wmdhb+jphvz9PMtyF9WpeZBWDlivmJl2aWS0A2cTUlqxI5ng1Tfa6
+         nRroB2GffQEDPkFGALSRJQwBVQJIIFmyXqnkgVPnzTSy3avktciWqeJj1rlYNbHHZSVP
+         HdZUbHQH3DEr5I++3QD1Q75mb3blgKIfBf1blLhqi6v+ApBZyC3TOigeeQjEV2TgSjGK
+         nhpMg1zdXnOhyEEc+Lw6ejVJSPFBgw4J09GuaJyWQ51u813evs/5mw4+Tcj4yui496g/
+         9cPg==
+X-Gm-Message-State: AOAM533L3vkvdSj5A/llWADLJpnFROw3oNhQgajbhQqPRGpGPQzLZH3V
+        G0BPOGV7SkNxATmO8CKCxFl1GP8oYREnM+GOQ6M=
+X-Google-Smtp-Source: ABdhPJyfh9ykxsa7pmBx+zXd1nsa2zNX/K/5wpF+ENifddY9xpyjLYDocgNWsesJkqhRei2FtqbfMVr1V1Q7aVjITi8=
+X-Received: by 2002:a05:6638:406:: with SMTP id q6mr27436841jap.125.1592324856681;
+ Tue, 16 Jun 2020 09:27:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616161427.375651-1-vkuznets@redhat.com>
-In-Reply-To: <20200616161427.375651-1-vkuznets@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 16 Jun 2020 09:24:42 -0700
-Message-ID: <CALMp9eSWXGQkOOzSrALfZDMj5JHSH=CsK1wKfdj2x2jtV4XJsw@mail.gmail.com>
-Subject: Re: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated MSRs
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <CADYdroP0zdz=QtuDFCXpkDohEAgGOc7hDHT8_NnqKuvi979J5Q@mail.gmail.com>
+ <D0196413-4195-4F80-89B3-59859C1515AD@fb.com>
+In-Reply-To: <D0196413-4195-4F80-89B3-59859C1515AD@fb.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 16 Jun 2020 18:27:24 +0200
+Message-ID: <CA+icZUXxjc3COFT_VUappjBQ-gBtfRq080_Ytvhu4f4YW-MSnA@mail.gmail.com>
+Subject: Re: [GIT PULL][PATCH v5 0/8] Add support for ZSTD-compressed kernel
+ and initramfs
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Norbert Lange <nolange79@gmail.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Kernel Team <Kernel-team@fb.com>, Chris Mason <clm@fb.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>, Petr Malat <oss@malat.biz>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Patrick Williams <patrickw3@fb.com>,
+        Michael van der Westhuizen <rmikey@fb.com>,
+        "x86@kernel.org" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 9:14 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+On Tue, Jun 2, 2020 at 12:01 AM Nick Terrell <terrelln@fb.com> wrote:
 >
-> state_test/smm_test selftests are failing on AMD with:
-> "Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
+> > On Jun 1, 2020, at 2:58 PM, Norbert Lange <nolange79@gmail.com> wrote:
+> >
+> > The series seems to be stuck in limbo, and I got the hint to bring
+> > this to Andrew's attention [1].
+> > Hope this will finally end in upstream, been using these patches for ~2 years.
 >
-> MSR_IA32_PERF_CAPABILITIES is an emulated MSR indeed but only on Intel,
-> make svm_has_emulated_msr() skip it so it is not returned by
-> KVM_GET_MSR_INDEX_LIST.
+> Thanks for the CC!
 
-Do we need to support this MSR under SVM for cross-vendor migration?
-Or, have we given up on that?
+Nick can you offer latest zstd (v5) on top of Linux v5.8-rc1, please?
+
+- Sedat -
