@@ -2,52 +2,52 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA7BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3835E20E65
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAB4214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322353;
-	bh=6pBozKCjOHj7AkZeu8lezbDBJZhgI7O2YCTuNLUPR2U=;
+	s=default; t=1592322355;
+	bh=TYL96hqCUV7EkUb+/sGM7KaYy4be7uP6GAbi+l0PSrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ylqGD0gN5pkPUMI00SqJy/MhoJCVIPjJ4bT0oq5vqRVLyXh2QsA04uhhCDSSZRt1p
-	 durGEVR1P2IlL01jkMPLJKHN6WutnQkWSfaF0U8B4H1uLG5IgkW3bVrpjo5z5nYuvz
-	 ed5W/21scgOgCB+OQk7H70hyrRNfWovavoIiHFp0=
+	b=uoY+Tb6ntl1521v/XrRcLTr68k76A+HPP567Bb6O8slNddPBm06uhX8RsYGRwLZwJ
+	 lbvMaycF1ySqq/fSOlxLa96RukAlXtb5Q32dta4kdvuBo2sor1b5OzocwSlSNcWPTL
+	 zZama8fJ98R9neoSCiGljEkNIMqcK/W3dw7ovblU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731200AbgFPPpu (ORCPT
+        id S1730430AbgFPPpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:45:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731705AbgFPPpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:45:45 -0400
+        id S1731834AbgFPPps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A0221473;
-        Tue, 16 Jun 2020 15:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A0902151B;
+        Tue, 16 Jun 2020 15:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322345;
-        bh=6pBozKCjOHj7AkZeu8lezbDBJZhgI7O2YCTuNLUPR2U=;
+        s=default; t=1592322347;
+        bh=TYL96hqCUV7EkUb+/sGM7KaYy4be7uP6GAbi+l0PSrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q6BkBYaPbyi23YXUgCGWoQU4axneU20xRpAUpLzKoyKWgH338kzsw0g2vYky55m1y
-         nozusB4i7pRdfh8dm7wfVmzkF7l8NoJxCsetI+mHxqpaaMo0o0gQUxIqnIjlTOWmzw
-         jEnY3xKbUxUL4H3mlqJz4RO22XUvoSA7ZRT/Y7RY=
+        b=DazAoLkfGMI1xSAEF7s73FFETzJkhaEU/BqdnZSdHDX7sxCIFXRdfOe8f9HfrvJ2A
+         qEq4+0glE8eqs8SV8JUZIvymfv6MdBlIWaJXzFGZo436A0h9pXVKh/3V+ymCzjwoV+
+         5u8wdHBEm+tJ1p06ZFI7sD9+uukB6gHpAahX3N/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.7 088/163] PM: runtime: clk: Fix clk_pm_runtime_get() error path
-Date:   Tue, 16 Jun 2020 17:34:22 +0200
-Message-Id: <20200616153111.059772720@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 097/163] firmware: imx-scu: Support one TX and one RX
+Date:   Tue, 16 Jun 2020 17:34:31 +0200
+Message-Id: <20200616153111.475992491@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,42 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-commit 64c7d7ea22d86cacb65d0c097cc447bc0e6d8abd upstream.
+[ Upstream commit f25a066d1a07affb7bea4e5d9c179c3338338e23 ]
 
-clk_pm_runtime_get() assumes that the PM-runtime usage counter will
-be dropped by pm_runtime_get_sync() on errors, which is not the case,
-so PM-runtime references to devices acquired by the former are leaked
-on errors returned by the latter.
+Current imx-scu requires four TX and four RX to communicate with
+SCU. This is low efficient and causes lots of mailbox interrupts.
 
-Fix this by modifying clk_pm_runtime_get() to drop the reference if
-pm_runtime_get_sync() returns an error.
+With imx-mailbox driver could support one TX to use all four transmit
+registers and one RX to use all four receive registers, imx-scu
+could use one TX and one RX.
 
-Fixes: 9a34b45397e5 clk: Add support for runtime PM
-Cc: 4.15+ <stable@vger.kernel.org> # 4.15+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/firmware/imx/imx-scu.c | 54 +++++++++++++++++++++++++++-------
+ 1 file changed, 43 insertions(+), 11 deletions(-)
 
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -114,7 +114,11 @@ static int clk_pm_runtime_get(struct clk
- 		return 0;
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index f71eaa5bf52d..e94a5585b698 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -38,6 +38,7 @@ struct imx_sc_ipc {
+ 	struct device *dev;
+ 	struct mutex lock;
+ 	struct completion done;
++	bool fast_ipc;
  
- 	ret = pm_runtime_get_sync(core->dev);
--	return ret < 0 ? ret : 0;
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(core->dev);
-+		return ret;
+ 	/* temporarily store the SCU msg */
+ 	u32 *msg;
+@@ -115,6 +116,7 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
+ 	struct imx_sc_ipc *sc_ipc = sc_chan->sc_ipc;
+ 	struct imx_sc_rpc_msg *hdr;
+ 	u32 *data = msg;
++	int i;
+ 
+ 	if (!sc_ipc->msg) {
+ 		dev_warn(sc_ipc->dev, "unexpected rx idx %d 0x%08x, ignore!\n",
+@@ -122,6 +124,19 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
+ 		return;
+ 	}
+ 
++	if (sc_ipc->fast_ipc) {
++		hdr = msg;
++		sc_ipc->rx_size = hdr->size;
++		sc_ipc->msg[0] = *data++;
++
++		for (i = 1; i < sc_ipc->rx_size; i++)
++			sc_ipc->msg[i] = *data++;
++
++		complete(&sc_ipc->done);
++
++		return;
 +	}
-+	return 0;
- }
++
+ 	if (sc_chan->idx == 0) {
+ 		hdr = msg;
+ 		sc_ipc->rx_size = hdr->size;
+@@ -147,6 +162,7 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ 	struct imx_sc_chan *sc_chan;
+ 	u32 *data = msg;
+ 	int ret;
++	int size;
+ 	int i;
  
- static void clk_pm_runtime_put(struct clk_core *core)
+ 	/* Check size */
+@@ -156,7 +172,8 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ 	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr->svc,
+ 		hdr->func, hdr->size);
+ 
+-	for (i = 0; i < hdr->size; i++) {
++	size = sc_ipc->fast_ipc ? 1 : hdr->size;
++	for (i = 0; i < size; i++) {
+ 		sc_chan = &sc_ipc->chans[i % 4];
+ 
+ 		/*
+@@ -168,8 +185,10 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
+ 		 * Wait for tx_done before every send to ensure that no
+ 		 * queueing happens at the mailbox channel level.
+ 		 */
+-		wait_for_completion(&sc_chan->tx_done);
+-		reinit_completion(&sc_chan->tx_done);
++		if (!sc_ipc->fast_ipc) {
++			wait_for_completion(&sc_chan->tx_done);
++			reinit_completion(&sc_chan->tx_done);
++		}
+ 
+ 		ret = mbox_send_message(sc_chan->ch, &data[i]);
+ 		if (ret < 0)
+@@ -246,6 +265,8 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 	struct imx_sc_chan *sc_chan;
+ 	struct mbox_client *cl;
+ 	char *chan_name;
++	struct of_phandle_args args;
++	int num_channel;
+ 	int ret;
+ 	int i;
+ 
+@@ -253,11 +274,20 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 	if (!sc_ipc)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < SCU_MU_CHAN_NUM; i++) {
+-		if (i < 4)
++	ret = of_parse_phandle_with_args(pdev->dev.of_node, "mboxes",
++					 "#mbox-cells", 0, &args);
++	if (ret)
++		return ret;
++
++	sc_ipc->fast_ipc = of_device_is_compatible(args.np, "fsl,imx8-mu-scu");
++
++	num_channel = sc_ipc->fast_ipc ? 2 : SCU_MU_CHAN_NUM;
++	for (i = 0; i < num_channel; i++) {
++		if (i < num_channel / 2)
+ 			chan_name = kasprintf(GFP_KERNEL, "tx%d", i);
+ 		else
+-			chan_name = kasprintf(GFP_KERNEL, "rx%d", i - 4);
++			chan_name = kasprintf(GFP_KERNEL, "rx%d",
++					      i - num_channel / 2);
+ 
+ 		if (!chan_name)
+ 			return -ENOMEM;
+@@ -269,13 +299,15 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 		cl->knows_txdone = true;
+ 		cl->rx_callback = imx_scu_rx_callback;
+ 
+-		/* Initial tx_done completion as "done" */
+-		cl->tx_done = imx_scu_tx_done;
+-		init_completion(&sc_chan->tx_done);
+-		complete(&sc_chan->tx_done);
++		if (!sc_ipc->fast_ipc) {
++			/* Initial tx_done completion as "done" */
++			cl->tx_done = imx_scu_tx_done;
++			init_completion(&sc_chan->tx_done);
++			complete(&sc_chan->tx_done);
++		}
+ 
+ 		sc_chan->sc_ipc = sc_ipc;
+-		sc_chan->idx = i % 4;
++		sc_chan->idx = i % (num_channel / 2);
+ 		sc_chan->ch = mbox_request_channel_byname(cl, chan_name);
+ 		if (IS_ERR(sc_chan->ch)) {
+ 			ret = PTR_ERR(sc_chan->ch);
+-- 
+2.25.1
+
 
 
