@@ -2,74 +2,114 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C685C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A805D2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3FC20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GGqVzPSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbgFPPFs (ORCPT
+        id S1729891AbgFPPGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:05:48 -0400
-Received: from 167-179-156-38.a7b39c.bne.nbn.aussiebb.net ([167.179.156.38]:37193
-        "EHLO fornost.hmeau.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729839AbgFPPFp (ORCPT
+        Tue, 16 Jun 2020 11:06:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38027 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729602AbgFPPGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:05:45 -0400
-X-Greylist: delayed 1649 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 11:05:43 EDT
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jlCj1-00032J-9E; Wed, 17 Jun 2020 00:38:08 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 17 Jun 2020 00:38:07 +1000
-Date:   Wed, 17 Jun 2020 00:38:07 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org
-Subject: Re: linux-next: build failures after merge of the vfs tree
-Message-ID: <20200616143807.GA1359@gondor.apana.org.au>
-References: <20200616103330.2df51a58@canb.auug.org.au>
- <20200616103440.35a80b4b@canb.auug.org.au>
- <20200616010502.GA28834@gondor.apana.org.au>
- <20200616033849.GL23230@ZenIV.linux.org.uk>
+        Tue, 16 Jun 2020 11:06:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592319976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zMJwLzxJj7q5lIXa5apx7u6nKtBFyLcKdF8jh3rUT7U=;
+        b=GGqVzPSXrUFyy1cmwGjVyPsA4PT6Q8j6QvkLWvU7xsriVXHuy0g9f7wub6gedGmL2OL9Na
+        zANZV/JADlTpPkcCD6QYsB6FsXahq0h4xu9+mq4aEqPRn5JJojppQZx5xkA/b+anPtZ+3L
+        cDumYwiMCEcmWjWw5Ta5gQkAu+24qgg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-zoZVocg1PeKVqdkZgJCjfg-1; Tue, 16 Jun 2020 11:06:11 -0400
+X-MC-Unique: zoZVocg1PeKVqdkZgJCjfg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ECA125AED8;
+        Tue, 16 Jun 2020 15:06:06 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-114-156.rdu2.redhat.com [10.10.114.156])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 41DFF5C1D4;
+        Tue, 16 Jun 2020 15:06:00 +0000 (UTC)
+Subject: Re: [PATCH v4 2/3] mm, treewide: Rename kzfree() to kfree_sensitive()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Sterba <dsterba@suse.cz>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+References: <20200616015718.7812-1-longman@redhat.com>
+ <20200616015718.7812-3-longman@redhat.com> <20200616142624.GO4282@kadam>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <72aa954d-4933-333c-b784-f8df14e407e6@redhat.com>
+Date:   Tue, 16 Jun 2020 11:05:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616033849.GL23230@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200616142624.GO4282@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 04:38:49AM +0100, Al Viro wrote:
+On 6/16/20 10:26 AM, Dan Carpenter wrote:
+> Last time you sent this we couldn't decide which tree it should go
+> through.  Either the crypto tree or through Andrew seems like the right
+> thing to me.
 >
-> Folded and pushed
-
-Thanks Al.  Here's another one that I just got, could you add this
-one too?
-
-diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
-index c405722adfe1..c4f273e2fe78 100644
---- a/drivers/mtd/nand/raw/cadence-nand-controller.c
-+++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
-@@ -17,6 +17,7 @@
- #include <linux/mtd/rawnand.h>
- #include <linux/of_device.h>
- #include <linux/iopoll.h>
-+#include <linux/slab.h>
- 
- /*
-  * HPNFC can work in 3 modes:
+> Also the other issue is that it risks breaking things if people add
+> new kzfree() instances while we are doing the transition.  Could you
+> just add a "#define kzfree kfree_sensitive" so that things continue to
+> compile and we can remove it in the next kernel release?
+>
+> regards,
+> dan carpenter
+>
+Yes, that make sure sense. Will send out v5 later today.
 
 Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Longman
+
