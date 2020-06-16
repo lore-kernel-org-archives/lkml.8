@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D60DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE78821527
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371942168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322851;
-	bh=gGUmW2DrTIls4lFdQDuM1ToOLsMmr9KRvqtR7zLRIM4=;
+	s=default; t=1592322857;
+	bh=Cy0Pcw1eJIo5XdE8jhQZwIHhrSWVtsnsbrsGEpRIzio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PnCzvMwiOt9rYlZzwWIpV/kKodjqHICrZPBkPc2X/fG3hJmUbUDv3k8XzejR3RXgR
-	 6RLVjdgLTmeqL4ZBYlVr3n/ZCrJTCz4W0I2vZ1hNoStUBTyfxtm614dfWaijrHqqnO
-	 rKqLSTklW8EWFmIjtyzQeTq+0wGNebMhDNm4kO/k=
+	b=z/rSfuJPrg5xnM3UR/kubzo17wz7AiuhceSkTngDiNF4CKE1vHc5z2xw9Drslnl4m
+	 okdMlnYCZTfufJDBSmIbGHP2RVBixucwvfrkj7KgT2gcBP/ohHZ2sFUi91eYKnvkgs
+	 mmUfAtPN3mx+4O82LlcpNWn8hw0Kae9eG3DsNk18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732930AbgFPPyA (ORCPT
+        id S1732961AbgFPPyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52632 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:54:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730565AbgFPPx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:53:56 -0400
+        id S1732942AbgFPPyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7611C21532;
-        Tue, 16 Jun 2020 15:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC4321556;
+        Tue, 16 Jun 2020 15:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322836;
-        bh=gGUmW2DrTIls4lFdQDuM1ToOLsMmr9KRvqtR7zLRIM4=;
+        s=default; t=1592322846;
+        bh=Cy0Pcw1eJIo5XdE8jhQZwIHhrSWVtsnsbrsGEpRIzio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=teoIW4z3S/o6yJzjT6OVwCllLfLzWqE4jeGmppAi8dskA8XFUq1mcGuJKsSlEsVn/
-         kQAOPNvi9Wy4guFcxvOccvdikFerHR4B3KCGRtzsu+F4yiecHrscmED0oog0ilMRSd
-         TbTfFJvHEk11MYY+E4Fz98SUyEnmpMAU0r1c5o20=
+        b=wdHfHaf6aTqQaKcdcn4ZMpBUZvOfioXcFV3h9CBEKD9Pp1jXjgaN1cc7/ZbhTunzh
+         CHkbirW0HqF08nshMqj57ewn1WdSdMI93bsm2zmXtqmGhOIlLTi2fCY0a3xb67H80F
+         wjXhqzQNmh/2J16frxeOWjSd9/b8Rflk8zkyKgzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        kbuild test robot <lkp@intel.com>,
-        Alexey Charkov <alchark@gmail.com>,
-        Paul Mundt <lethal@linux-sh.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.6 122/161] video: vt8500lcdfb: fix fallthrough warning
-Date:   Tue, 16 Jun 2020 17:35:12 +0200
-Message-Id: <20200616153112.171028150@linuxfoundation.org>
+        stable@vger.kernel.org, LABBE Corentin <clabbe@baylibre.com>,
+        Gonglei <arei.gonglei@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        "Longpeng(Mike)" <longpeng2@huawei.com>
+Subject: [PATCH 5.6 099/161] crypto: virtio: Fix use-after-free in virtio_crypto_skcipher_finalize_req()
+Date:   Tue, 16 Jun 2020 17:34:49 +0200
+Message-Id: <20200616153111.084131462@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -62,45 +65,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Ravnborg <sam@ravnborg.org>
+From: Longpeng(Mike) <longpeng2@huawei.com>
 
-commit 1c49f35e9e9156273124a0cfd38b57f7a7d4828f upstream.
+commit 8c855f0720ff006d75d0a2512c7f6c4f60ff60ee upstream.
 
-Fix following warning:
-vt8500lcdfb.c: In function 'vt8500lcd_blank':
-vt8500lcdfb.c:229:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-      if (info->fix.visual == FB_VISUAL_PSEUDOCOLOR ||
-         ^
-vt8500lcdfb.c:233:2: note: here
-     case FB_BLANK_UNBLANK:
-     ^~~~
+The system'll crash when the users insmod crypto/tcrypto.ko with mode=155
+( testing "authenc(hmac(sha1),cbc(aes))" ). It's caused by reuse the memory
+of request structure.
 
-Adding a simple "fallthrough;" fixed the warning.
-The fix was build tested.
+In crypto_authenc_init_tfm(), the reqsize is set to:
+  [PART 1] sizeof(authenc_request_ctx) +
+  [PART 2] ictx->reqoff +
+  [PART 3] MAX(ahash part, skcipher part)
+and the 'PART 3' is used by both ahash and skcipher in turn.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: e41f1a989408 ("fbdev: Implement simple blanking in pseudocolor modes for vt8500lcdfb")
-Cc: Alexey Charkov <alchark@gmail.com>
-Cc: Paul Mundt <lethal@linux-sh.org>
-Cc: <stable@vger.kernel.org> # v2.6.38+
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200412202143.GA26948@ravnborg.org
+When the virtio_crypto driver finish skcipher req, it'll call ->complete
+callback(in crypto_finalize_skcipher_request) and then free its
+resources whose pointers are recorded in 'skcipher parts'.
+
+However, the ->complete is 'crypto_authenc_encrypt_done' in this case,
+it will use the 'ahash part' of the request and change its content,
+so virtio_crypto driver will get the wrong pointer after ->complete
+finish and mistakenly free some other's memory. So the system will crash
+when these memory will be used again.
+
+The resources which need to be cleaned up are not used any more. But the
+pointers of these resources may be changed in the function
+"crypto_finalize_skcipher_request". Thus release specific resources before
+calling this function.
+
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Reported-by: LABBE Corentin <clabbe@baylibre.com>
+Cc: Gonglei <arei.gonglei@huawei.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: virtualization@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200123101000.GB24255@Red
+Acked-by: Gonglei <arei.gonglei@huawei.com>
+Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200602070501.2023-3-longpeng2@huawei.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/vt8500lcdfb.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/virtio/virtio_crypto_algs.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/video/fbdev/vt8500lcdfb.c
-+++ b/drivers/video/fbdev/vt8500lcdfb.c
-@@ -230,6 +230,7 @@ static int vt8500lcd_blank(int blank, st
- 		    info->fix.visual == FB_VISUAL_STATIC_PSEUDOCOLOR)
- 			for (i = 0; i < 256; i++)
- 				vt8500lcd_setcolreg(i, 0, 0, 0, 0, info);
-+		fallthrough;
- 	case FB_BLANK_UNBLANK:
- 		if (info->fix.visual == FB_VISUAL_PSEUDOCOLOR ||
- 		    info->fix.visual == FB_VISUAL_STATIC_PSEUDOCOLOR)
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -578,10 +578,11 @@ static void virtio_crypto_skcipher_final
+ 		scatterwalk_map_and_copy(req->iv, req->dst,
+ 					 req->cryptlen - AES_BLOCK_SIZE,
+ 					 AES_BLOCK_SIZE, 0);
+-	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
+-					   req, err);
+ 	kzfree(vc_sym_req->iv);
+ 	virtcrypto_clear_request(&vc_sym_req->base);
++
++	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
++					   req, err);
+ }
+ 
+ static struct virtio_crypto_algo virtio_crypto_algs[] = { {
 
 
