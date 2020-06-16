@@ -2,230 +2,84 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E39C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3238E2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592330869;
-	bh=BZVysaZqnl67vY/M5mVFjgt/xrn3O0skxUj6yV26weo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UFQRnM3C+zNmlcqoaO0FN0QPWI2rVcnllmcaF9PDeCGILqzdFYpRQ7xn9Aq67nGHQ
-	 yAAjDw9fOK662ZeVoq3jmD5EGDiGVKHvx4S5VZRYiU28vXRLaZecgWLa5lzFu1ji7/
-	 bWdbvYTggG0/kthP7rx2hwBKGv6nY5iFeQlt1pik=
+	by mail.kernel.org (Postfix) with ESMTP id D5B7F2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JeU7EpLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731450AbgFPSHr (ORCPT
+        id S1731485AbgFPSIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:07:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgFPSHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:07:46 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        Tue, 16 Jun 2020 14:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbgFPSIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 14:08:30 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 654BEC061573;
+        Tue, 16 Jun 2020 11:08:30 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0f4c001d7e5f403e90d72b.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4c00:1d7e:5f40:3e90:d72b])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ECFA2080D;
-        Tue, 16 Jun 2020 18:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592330866;
-        bh=BZVysaZqnl67vY/M5mVFjgt/xrn3O0skxUj6yV26weo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Pw4W5yFw/l7lO4Jll6CPSzUj625dEi9McWKVnKN0AE2ux5jYWHuLpeeUAVmmdBLUR
-         N8WuCD7X9b9yfKgvyxoR0PiILospc5cD5Y6Roz5whsRqzcl6UYLReocT8T2ANW+zqr
-         SepWw9KZmDzmQAElI9RKb6/LeALmitipNj+gEbGg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 08F14352264F; Tue, 16 Jun 2020 11:07:46 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 11:07:46 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     linux-kernel@vger.kernel.org, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, shuah@kernel.org, rcu@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] torture: Pass --kmake-arg to all make invocations
-Message-ID: <20200616180745.GG2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200616094924.159539-1-elver@google.com>
- <20200616160524.GW2723@paulmck-ThinkPad-P72>
- <20200616164202.GA208325@google.com>
- <20200616174222.GB2723@paulmck-ThinkPad-P72>
- <20200616175720.GA124701@google.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E984A1EC035B;
+        Tue, 16 Jun 2020 20:08:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592330909;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=55p4gDchXhxo2cVul8FBBJghAN73Fe1E/I9Qo+fvFR4=;
+        b=JeU7EpLxHLDz3HPWQjyrRBA4x1W7JBV7hP0MRJ65ygLx2EXtb1gYNK8T9TQTLCj0GX73bF
+        YhdNjU15p5/c4awo9vzaRy4N/BWbyIVe1xyWK6Mx0+xack1sps8rdQUIdRGCYZOl9jyE2c
+        JZnPwQuK22d7Q4pu5KylY07YWD6gpp4=
+Date:   Tue, 16 Jun 2020 20:08:27 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jacky Hu <hengqing.hu@gmail.com>
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tony.luck@intel.com, x86@kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] x86/amd_nb: Add Family 17h, Model 60h PCI IDs
+Message-ID: <20200616180827.GM13515@zn.tnic>
+References: <20200607043709.48178-1-hengqing.hu@gmail.com>
+ <20200607043709.48178-2-hengqing.hu@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200616175720.GA124701@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200607043709.48178-2-hengqing.hu@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 07:57:20PM +0200, Marco Elver wrote:
-> On Tue, Jun 16 2020 at 10:42AM -0700, Paul E. McKenney wrote:
-> > On Tue, Jun 16, 2020 at 06:42:02PM +0200, Marco Elver wrote:
-> > > On Tue, Jun 16 2020 at 09:05AM -0700, Paul E. McKenney wrote:
-> > > > On Tue, Jun 16, 2020 at 11:49:24AM +0200, Marco Elver wrote:
-> > > > > We need to pass the arguments provided to --kmake-arg to all make
-> > > > > invocations. In particular, the make invocations generating the configs
-> > > > > need to see the final make arguments, e.g. if config variables depend on
-> > > > > particular variables that are passed to make.
-> > > > > 
-> > > > > For example, when using '--kcsan --kmake-arg CC=clang-11', we would lose
-> > > > > CONFIG_KCSAN=y due to 'make oldconfig' not seeing that we want to use a
-> > > > > compiler that supports KCSAN.
-> > > > > 
-> > > > > Signed-off-by: Marco Elver <elver@google.com>
-> > > > 
-> > > > Queued and pushed, thank you!
-> > > > 
-> > > > Would the following patch make sense, at least until such time
-> > > > as some other compiler supports KCSAN?
-> > > > 
-> > > > 							Thanx, Paul
-> > > > 
-> > > > ------------------------------------------------------------------------
-> > > > 
-> > > > commit 88bcaa730b6d40ddf69b09ed6f0a14803d087d99
-> > > > Author: Paul E. McKenney <paulmck@kernel.org>
-> > > > Date:   Tue Jun 16 09:02:34 2020 -0700
-> > > > 
-> > > >     torture: Make --kcsan default to using Clang 11
-> > > >     
-> > > >     Currently, Clang 11 is the only compiler that can support KCSAN.
-> > > >     Therefore, as a convenience to the KCSAN user, this commit causes
-> > > >     --kcsan to specify Clang 11 unless a "CC=" argument was already
-> > > >     specified via the --kmake-arg argument.
-> > > 
-> > > As soon as more compilers support KCSAN (e.g. clang-12, etc...) we run
-> > > the risk of actually inconveniencing ourselves more because then we
-> > > really need to say '--kmake-arg CC=clang-1X' to not use the old
-> > > compiler. Or revert this in time.
-> > > 
-> > > My command-line looks more like this right now:
-> > > 
-> > > 	kvm.sh ... --kmake-arg "CC="${HOME}/local/<gcc-or-clang>-11.kcsan/local/bin/<gcc-or-clang>" ...
-> > > 
-> > > I think the safer alternative would be to error if CONFIG_KCSAN=y is not
-> > > in the config, and simply suggest "Did you forget to switch your
-> > > compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?" (of course, a
-> > > 'gcc' in $PATH that supports KCSAN would also be fine -- see below).
-> > > Eventually, when the default compilers support KCSAN, this will resolve
-> > > itself gracefully.
-> > > 
-> > > Also, I'm going to send a series later this week to re-enable GCC
-> > > support. ;-)
-> > 
-> > OK, sounds like I should leave well enough alone, then.  ;-)
-> > 
-> > In its current state, specifying "--kcsan" without a KCSAN-capable
-> > compiler does get you this:
-> > 
-> > :CONFIG_KCSAN=y: improperly set
-> > :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-> > :CONFIG_KCSAN_VERBOSE=y: improperly set
-> > :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-> > Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
-> > 
-> > Which admittedly is a bit obtuse, especially that last line.  So how
-> > about the following patch, which instead results in this?
-> > 
-> > :CONFIG_KCSAN=y: improperly set
-> > :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-> > :CONFIG_KCSAN_VERBOSE=y: improperly set
+On Sun, Jun 07, 2020 at 12:37:08PM +0800, Jacky Hu wrote:
+> Add the new Family 17h, Model 60h PCI IDs for AMD Zen2 APU systems.
 > 
-> Noticed that CONFIG_KCSAN_VERBOSE=y warning still appears, because it
-> wants CONFIG_PROVE_LOCKING=y.
-> 
-> > :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-> > Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
-> 
-> Sounds good, with another suggestion below, but otherwise
-> 
-> Acked-by: Marco Elver <elver@google.com>
+> Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+> ---
+>  arch/x86/kernel/amd_nb.c | 5 +++++
+>  drivers/hwmon/k10temp.c  | 2 ++
+>  include/linux/pci_ids.h  | 1 +
+>  3 files changed, 8 insertions(+)
 
-Applied and updated as suggested below, so that the output now looks
-like this:
+Blergh, this shows that I need a vacation. That's already upstream:
 
-:CONFIG_KCSAN=y: improperly set
-:CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-:CONFIG_KCSAN_VERBOSE=y: improperly set
-:CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-Compiler or architecture does not support KCSAN!
-Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
+a4e91825d7e1 ("x86/amd_nb: Add AMD family 17h model 60h PCI IDs")
 
-And agreed, much better!
+modulo the k10temp bits.
 
-							Thanx, Paul
+Jacky, I'll let you sort this out with Guenter.
 
-> Thanks,
-> -- Marco
-> 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > commit f571795b1146007407851675a258b6685ea2d589
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Tue Jun 16 10:38:57 2020 -0700
-> > 
-> >     torture: Improve diagnostic for KCSAN-incapable compilers
-> >     
-> >     Using --kcsan when the compiler does not support KCSAN results in this:
-> >     
-> >     :CONFIG_KCSAN=y: improperly set
-> >     :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-> >     :CONFIG_KCSAN_VERBOSE=y: improperly set
-> >     :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-> >     Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
-> >     
-> >     This is a bit obtuse, so this commit adds checks resulting in this:
-> >     
-> >     :CONFIG_KCSAN=y: improperly set
-> >     :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-> >     :CONFIG_KCSAN_VERBOSE=y: improperly set
-> >     :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-> >     Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
-> >     
-> >     Suggested-by: Marco Elver <elver@google.com>
-> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > 
-> > diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-> > index 357899c..837643a 100755
-> > --- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-> > +++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-> > @@ -44,7 +44,8 @@ do
-> >  			then
-> >  				echo QEMU killed
-> >  			fi
-> > -			configcheck.sh $i/.config $i/ConfigFragment
-> > +			configcheck.sh $i/.config $i/ConfigFragment > $T 2>&1
-> > +			cat $T
-> >  			if test -r $i/Make.oldconfig.err
-> >  			then
-> >  				cat $i/Make.oldconfig.err
-> > @@ -73,7 +74,10 @@ do
-> >  	done
-> >  	if test -f "$rd/kcsan.sum"
-> >  	then
-> > -		if test -s "$rd/kcsan.sum"
-> > +		if grep -q CONFIG_KCSAN=y $T
-> > +		then
-> 
-> For completeness, could add this above:
-> 
-> 	echo "Compiler or architecture does not support KCSAN!"
-> 
-> Because we might also be on an unsupported architecture.
-> 
-> > +			echo Did you forget to switch your compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?
-> > +		elif test -s "$rd/kcsan.sum"
-> >  		then
-> >  			echo KCSAN summary in $rd/kcsan.sum
-> >  		else
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
