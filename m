@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF80C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF73C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 331772071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5000208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324142;
-	bh=7iKMm7KSRQUJ5Y+WeKndqu7co8tjv7zaxZdV9VUdtYA=;
+	s=default; t=1592324151;
+	bh=WhB8wqDXsccYzqQ2R4iFnNEDS50yOon3Np6rrhti2b8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w6PxESIraDwfVfXuS8kWKp2428YaIfA/XTJ3Fqe8ikFwFVe+EUMF2uap6+j0+v46X
-	 gezn+NcJGgwcBDhDcv0KsJcJYJfVTc9RWzKljx2gaj8bFw4DFgQKtbX1M/99bXqutB
-	 ETJ6dPvMA2M4AckkjGqjXGtVkpDdZYXu7JAObfJM=
+	b=aOE+5WMfOLOH53wnsPRBPAHJzYWgUszkviVBMEkZggUzp366CMI1zhwoyheSmdCsH
+	 UXllOkUCkl5xoY1PxBEHOhLtDZvCygZ71A6tYEILcpy5Ii2qFXA2PejyBFtd9+mgMy
+	 EUCv9yN3dR3fg54TWuGBgj9cyOKUUwlu9FCIFdWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731462AbgFPPld (ORCPT
+        id S1731962AbgFPQPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57154 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:15:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731414AbgFPPl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:28 -0400
+        id S1730630AbgFPPlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8703207C4;
-        Tue, 16 Jun 2020 15:41:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BEC5207C4;
+        Tue, 16 Jun 2020 15:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322087;
-        bh=7iKMm7KSRQUJ5Y+WeKndqu7co8tjv7zaxZdV9VUdtYA=;
+        s=default; t=1592322079;
+        bh=WhB8wqDXsccYzqQ2R4iFnNEDS50yOon3Np6rrhti2b8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lruX1qxKxA+OWnCtwdubSggnzRLhRKqlLaIA5T2F2g0SVYv+3C01+ugRQHxc1EA6B
-         CNamN9xZyM7/wOeNEHNExcFhBx+6wFBFFmLW7klM9HPWOEYZDkk2G1TK6JkR8F7Gb9
-         h6gVERzQVj5UcU/xvqYjCWw1xP+2O6p9Ht2swoEQ=
+        b=lMV/XrxdJ+A2K4w9F+8qC2kV6gMnhSQ5bDBvly+RFiHiY47Kd9qBmuMx63FHIHsU3
+         /QD5mqQ4OO8DqH2jaJ/OOMNuxarPSXIIpabd+ZZpe2fmjLEMPvg+h2TpWD27eeAoi0
+         KDviqZ9AlytdBRaDsoC+ASkge+/Z8MpP56AfjkD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 130/134] mmc: sdio: Fix several potential memory leaks in mmc_sdio_init_card()
-Date:   Tue, 16 Jun 2020 17:35:14 +0200
-Message-Id: <20200616153107.014964022@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 127/134] mmc: uniphier-sd: call devm_request_irq() after tmio_mmc_host_probe()
+Date:   Tue, 16 Jun 2020 17:35:11 +0200
+Message-Id: <20200616153106.869210030@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -58,151 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit a94a59f43749b4f8cd81b8be87c95f9ef898d19d upstream.
+commit 5d1f42e14b135773c0cc1d82e904c5b223783a9d upstream.
 
-Over the years, the code in mmc_sdio_init_card() has grown to become quite
-messy. Unfortunate this has also lead to that several paths are leaking
-memory in form of an allocated struct mmc_card, which includes additional
-data, such as initialized struct device for example.
+Currently, tmio_mmc_irq() handler is registered before the host is
+fully initialized by tmio_mmc_host_probe(). I did not previously notice
+this problem.
 
-Unfortunate, it's a too complex task find each offending commit. Therefore,
-this change fixes all memory leaks at once.
+The boot ROM of a new Socionext SoC unmasks interrupts (CTL_IRQ_MASK)
+somehow. The handler is invoked before tmio_mmc_host_probe(), then
+emits noisy call trace.
 
-Cc: <stable@vger.kernel.org>
+Move devm_request_irq() below tmio_mmc_host_probe().
+
+Fixes: 3fd784f745dd ("mmc: uniphier-sd: add UniPhier SD/eMMC controller driver")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200511062158.1790924-1-yamada.masahiro@socionext.com
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Link: https://lore.kernel.org/r/20200430091640.455-3-ulf.hansson@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/sdio.c |   58 ++++++++++++++++++++++--------------------------
- 1 file changed, 27 insertions(+), 31 deletions(-)
+ drivers/mmc/host/uniphier-sd.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/mmc/core/sdio.c
-+++ b/drivers/mmc/core/sdio.c
-@@ -584,7 +584,7 @@ try_again:
- 	 */
- 	err = mmc_send_io_op_cond(host, ocr, &rocr);
- 	if (err)
--		goto err;
-+		return err;
- 
- 	/*
- 	 * For SPI, enable CRC as appropriate.
-@@ -592,17 +592,15 @@ try_again:
- 	if (mmc_host_is_spi(host)) {
- 		err = mmc_spi_set_crc(host, use_spi_crc);
- 		if (err)
--			goto err;
-+			return err;
- 	}
- 
- 	/*
- 	 * Allocate card structure.
- 	 */
- 	card = mmc_alloc_card(host, NULL);
--	if (IS_ERR(card)) {
--		err = PTR_ERR(card);
--		goto err;
--	}
-+	if (IS_ERR(card))
-+		return PTR_ERR(card);
- 
- 	if ((rocr & R4_MEMORY_PRESENT) &&
- 	    mmc_sd_get_cid(host, ocr & rocr, card->raw_cid, NULL) == 0) {
-@@ -610,19 +608,15 @@ try_again:
- 
- 		if (oldcard && (oldcard->type != MMC_TYPE_SD_COMBO ||
- 		    memcmp(card->raw_cid, oldcard->raw_cid, sizeof(card->raw_cid)) != 0)) {
--			mmc_remove_card(card);
--			pr_debug("%s: Perhaps the card was replaced\n",
--				mmc_hostname(host));
--			return -ENOENT;
-+			err = -ENOENT;
-+			goto mismatch;
- 		}
- 	} else {
- 		card->type = MMC_TYPE_SDIO;
- 
- 		if (oldcard && oldcard->type != MMC_TYPE_SDIO) {
--			mmc_remove_card(card);
--			pr_debug("%s: Perhaps the card was replaced\n",
--				mmc_hostname(host));
--			return -ENOENT;
-+			err = -ENOENT;
-+			goto mismatch;
+--- a/drivers/mmc/host/uniphier-sd.c
++++ b/drivers/mmc/host/uniphier-sd.c
+@@ -614,11 +614,6 @@ static int uniphier_sd_probe(struct plat
  		}
  	}
  
-@@ -677,7 +671,7 @@ try_again:
- 	if (!oldcard && card->type == MMC_TYPE_SD_COMBO) {
- 		err = mmc_sd_get_csd(host, card);
- 		if (err)
--			return err;
-+			goto remove;
- 
- 		mmc_decode_cid(card);
- 	}
-@@ -704,7 +698,12 @@ try_again:
- 			mmc_set_timing(card->host, MMC_TIMING_SD_HS);
- 		}
- 
--		goto finish;
-+		if (oldcard)
-+			mmc_remove_card(card);
-+		else
-+			host->card = card;
-+
-+		return 0;
- 	}
- 
- 	/*
-@@ -730,16 +729,14 @@ try_again:
- 		goto remove;
- 
- 	if (oldcard) {
--		int same = (card->cis.vendor == oldcard->cis.vendor &&
--			    card->cis.device == oldcard->cis.device);
--		mmc_remove_card(card);
--		if (!same) {
--			pr_debug("%s: Perhaps the card was replaced\n",
--				mmc_hostname(host));
--			return -ENOENT;
-+		if (card->cis.vendor == oldcard->cis.vendor &&
-+		    card->cis.device == oldcard->cis.device) {
-+			mmc_remove_card(card);
-+			card = oldcard;
-+		} else {
-+			err = -ENOENT;
-+			goto mismatch;
- 		}
+-	ret = devm_request_irq(dev, irq, tmio_mmc_irq, IRQF_SHARED,
+-			       dev_name(dev), host);
+-	if (ret)
+-		goto free_host;
 -
--		card = oldcard;
- 	}
- 	card->ocr = ocr_card;
- 	mmc_fixup_device(card, sdio_fixup_methods);
-@@ -800,16 +797,15 @@ try_again:
- 		err = -EINVAL;
- 		goto remove;
- 	}
--finish:
--	if (!oldcard)
--		host->card = card;
+ 	if (priv->caps & UNIPHIER_SD_CAP_EXTENDED_IP)
+ 		host->dma_ops = &uniphier_sd_internal_dma_ops;
+ 	else
+@@ -646,8 +641,15 @@ static int uniphier_sd_probe(struct plat
+ 	if (ret)
+ 		goto free_host;
+ 
++	ret = devm_request_irq(dev, irq, tmio_mmc_irq, IRQF_SHARED,
++			       dev_name(dev), host);
++	if (ret)
++		goto remove_host;
 +
-+	host->card = card;
  	return 0;
  
-+mismatch:
-+	pr_debug("%s: Perhaps the card was replaced\n", mmc_hostname(host));
- remove:
--	if (!oldcard)
-+	if (oldcard != card)
- 		mmc_remove_card(card);
--
--err:
- 	return err;
- }
++remove_host:
++	tmio_mmc_host_remove(host);
+ free_host:
+ 	tmio_mmc_host_free(host);
  
 
 
