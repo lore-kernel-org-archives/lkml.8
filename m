@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F217FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 511E6208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE59D2098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324199;
-	bh=vmYf8wrr+Mn8iTIgZUODDNK0UKmCF71dcWHs18fgZAs=;
+	s=default; t=1592324202;
+	bh=A9MywORo5DzhV7UiSGjj7qcOeGCCpNhsfllbrSIvsZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swQtKfMcPWaneRufTL1E1nut/8l4GStsxgR3uygoEoQftc0myOmi09Lj0hTM5hugZ
-	 UICN6fYFRY2K9ZGYb03l0TjodQzlV6xlyMO3j9GTSEH6BW/QIuwBtUIzDvagqAUP0M
-	 fEXQeDhcUQ2APBvjm3ReVjd45vghVf8hYpl4284Y=
+	b=BgCfusjnszGAQQDX6bCQYllcAjVovfU/9xDjNbEVFVK+QRTq/Ql/7Bhc34qhZht/a
+	 JwzQJ8nDGw0O7fEyCocwqAj3mSAPaYpa/8l9e3dviKp9l3WOAVJSlQhmgYdyJljab2
+	 5T8q5OFerHitQ7k3EzT1FGVfkUojrZhyDl/KZPfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731786AbgFPQQi (ORCPT
+        id S1732224AbgFPQQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:16:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54266 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:16:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731069AbgFPPkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:40:06 -0400
+        id S1730235AbgFPPkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FB8B2145D;
-        Tue, 16 Jun 2020 15:40:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D5B2151B;
+        Tue, 16 Jun 2020 15:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322006;
-        bh=vmYf8wrr+Mn8iTIgZUODDNK0UKmCF71dcWHs18fgZAs=;
+        s=default; t=1592322000;
+        bh=A9MywORo5DzhV7UiSGjj7qcOeGCCpNhsfllbrSIvsZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zaETHSQ9MrK6qr5u5zvvcwab5AaBNcQArNPxhjX2dK7D/IIhr5yeBTlqBMz2KeTuD
-         46WPbCo7H9ZcSEX/SVJ2bAqHWqDphEOrU7ezBl9vR8oxzOnP4KquzNMU5TwS96iB5z
-         yywEKSsTBRX26Y6akvU6hvPZEVuQAiJJcUVgBs88=
+        b=xh/6mFD7vNZlXaxHhJwep49E7osEzDcJbjJYowdXO5TGhMSYvj9Pp2pO7B94OX6zz
+         PBcjpV5ysJJ1HSbqL2MImR8xa4Zz6sUNsseW3szdUn4oQYhT6Xx7ayBzPqSeJQxyUd
+         VD3Ml5T5tCw8mHvc4NbwDIK8xzKUlrDoXMukzyQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Matthew Riley <mattdr@google.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 5.4 099/134] EDAC/skx: Use the mcmtr register to retrieve close_pg/bank_xor_enable
-Date:   Tue, 16 Jun 2020 17:34:43 +0200
-Message-Id: <20200616153105.527610945@linuxfoundation.org>
+        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.4 097/134] remoteproc: Fix and restore the parenting hierarchy for vdev
+Date:   Tue, 16 Jun 2020 17:34:41 +0200
+Message-Id: <20200616153105.428551223@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -61,125 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+From: Suman Anna <s-anna@ti.com>
 
-commit 1032095053b34d474aa20f2625d97dd306e0991b upstream.
+commit c774ad010873bb89dcc0cdcb1e96aef6664d8caf upstream.
 
-The skx_edac driver wrongly uses the mtr register to retrieve two fields
-close_pg and bank_xor_enable. Fix it by using the correct mcmtr register
-to get the two fields.
+The commit 086d08725d34 ("remoteproc: create vdev subdevice with specific
+dma memory pool") has introduced a new vdev subdevice for each vdev
+declared in the firmware resource table and made it as the parent for the
+created virtio rpmsg devices instead of the previous remoteproc device.
+This changed the overall parenting hierarchy for the rpmsg devices, which
+were children of virtio devices, and does not allow the corresponding
+rpmsg drivers to retrieve the parent rproc device through the
+rproc_get_by_child() API.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Reported-by: Matthew Riley <mattdr@google.com>
-Acked-by: Aristeu Rozanski <aris@redhat.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/20200515210146.1337-1-tony.luck@intel.com
+Fix this by restoring the remoteproc device as the parent. The new vdev
+subdevice can continue to inherit the DMA attributes from the remoteproc's
+parent device (actual platform device).
+
+Cc: stable@vger.kernel.org
+Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Link: https://lore.kernel.org/r/20200420160600.10467-3-s-anna@ti.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/edac/i10nm_base.c |    2 +-
- drivers/edac/skx_base.c   |   20 ++++++++------------
- drivers/edac/skx_common.c |    6 +++---
- drivers/edac/skx_common.h |    2 +-
- 4 files changed, 13 insertions(+), 17 deletions(-)
+ drivers/remoteproc/remoteproc_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/edac/i10nm_base.c
-+++ b/drivers/edac/i10nm_base.c
-@@ -162,7 +162,7 @@ static int i10nm_get_dimm_config(struct
- 				 mtr, mcddrtcfg, imc->mc, i, j);
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -511,7 +511,7 @@ static int rproc_handle_vdev(struct rpro
  
- 			if (IS_DIMM_PRESENT(mtr))
--				ndimms += skx_get_dimm_info(mtr, 0, dimm,
-+				ndimms += skx_get_dimm_info(mtr, 0, 0, dimm,
- 							    imc, i, j);
- 			else if (IS_NVDIMM_PRESENT(mcddrtcfg, j))
- 				ndimms += skx_get_nvdimm_info(dimm, imc, i, j,
---- a/drivers/edac/skx_base.c
-+++ b/drivers/edac/skx_base.c
-@@ -151,27 +151,23 @@ static const struct x86_cpu_id skx_cpuid
- };
- MODULE_DEVICE_TABLE(x86cpu, skx_cpuids);
- 
--#define SKX_GET_MTMTR(dev, reg) \
--	pci_read_config_dword((dev), 0x87c, &(reg))
--
--static bool skx_check_ecc(struct pci_dev *pdev)
-+static bool skx_check_ecc(u32 mcmtr)
- {
--	u32 mtmtr;
--
--	SKX_GET_MTMTR(pdev, mtmtr);
--
--	return !!GET_BITFIELD(mtmtr, 2, 2);
-+	return !!GET_BITFIELD(mcmtr, 2, 2);
- }
- 
- static int skx_get_dimm_config(struct mem_ctl_info *mci)
- {
- 	struct skx_pvt *pvt = mci->pvt_info;
-+	u32 mtr, mcmtr, amap, mcddrtcfg;
- 	struct skx_imc *imc = pvt->imc;
--	u32 mtr, amap, mcddrtcfg;
- 	struct dimm_info *dimm;
- 	int i, j;
- 	int ndimms;
- 
-+	/* Only the mcmtr on the first channel is effective */
-+	pci_read_config_dword(imc->chan[0].cdev, 0x87c, &mcmtr);
-+
- 	for (i = 0; i < SKX_NUM_CHANNELS; i++) {
- 		ndimms = 0;
- 		pci_read_config_dword(imc->chan[i].cdev, 0x8C, &amap);
-@@ -182,14 +178,14 @@ static int skx_get_dimm_config(struct me
- 			pci_read_config_dword(imc->chan[i].cdev,
- 					      0x80 + 4 * j, &mtr);
- 			if (IS_DIMM_PRESENT(mtr)) {
--				ndimms += skx_get_dimm_info(mtr, amap, dimm, imc, i, j);
-+				ndimms += skx_get_dimm_info(mtr, mcmtr, amap, dimm, imc, i, j);
- 			} else if (IS_NVDIMM_PRESENT(mcddrtcfg, j)) {
- 				ndimms += skx_get_nvdimm_info(dimm, imc, i, j,
- 							      EDAC_MOD_STR);
- 				nvdimm_count++;
- 			}
- 		}
--		if (ndimms && !skx_check_ecc(imc->chan[0].cdev)) {
-+		if (ndimms && !skx_check_ecc(mcmtr)) {
- 			skx_printk(KERN_ERR, "ECC is disabled on imc %d\n", imc->mc);
- 			return -ENODEV;
- 		}
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -283,7 +283,7 @@ static int skx_get_dimm_attr(u32 reg, in
- #define numrow(reg)	skx_get_dimm_attr(reg, 2, 4, 12, 1, 6, "rows")
- #define numcol(reg)	skx_get_dimm_attr(reg, 0, 1, 10, 0, 2, "cols")
- 
--int skx_get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
-+int skx_get_dimm_info(u32 mtr, u32 mcmtr, u32 amap, struct dimm_info *dimm,
- 		      struct skx_imc *imc, int chan, int dimmno)
- {
- 	int  banks = 16, ranks, rows, cols, npages;
-@@ -303,8 +303,8 @@ int skx_get_dimm_info(u32 mtr, u32 amap,
- 		 imc->mc, chan, dimmno, size, npages,
- 		 banks, 1 << ranks, rows, cols);
- 
--	imc->chan[chan].dimms[dimmno].close_pg = GET_BITFIELD(mtr, 0, 0);
--	imc->chan[chan].dimms[dimmno].bank_xor_enable = GET_BITFIELD(mtr, 9, 9);
-+	imc->chan[chan].dimms[dimmno].close_pg = GET_BITFIELD(mcmtr, 0, 0);
-+	imc->chan[chan].dimms[dimmno].bank_xor_enable = GET_BITFIELD(mcmtr, 9, 9);
- 	imc->chan[chan].dimms[dimmno].fine_grain_bank = GET_BITFIELD(amap, 0, 0);
- 	imc->chan[chan].dimms[dimmno].rowbits = rows;
- 	imc->chan[chan].dimms[dimmno].colbits = cols;
---- a/drivers/edac/skx_common.h
-+++ b/drivers/edac/skx_common.h
-@@ -126,7 +126,7 @@ int skx_get_all_bus_mappings(unsigned in
- 
- int skx_get_hi_lo(unsigned int did, int off[], u64 *tolm, u64 *tohm);
- 
--int skx_get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
-+int skx_get_dimm_info(u32 mtr, u32 mcmtr, u32 amap, struct dimm_info *dimm,
- 		      struct skx_imc *imc, int chan, int dimmno);
- 
- int skx_get_nvdimm_info(struct dimm_info *dimm, struct skx_imc *imc,
+ 	/* Initialise vdev subdevice */
+ 	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
+-	rvdev->dev.parent = rproc->dev.parent;
++	rvdev->dev.parent = &rproc->dev;
+ 	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
+ 	rvdev->dev.release = rproc_rvdev_release;
+ 	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
 
 
