@@ -2,113 +2,129 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD17BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A05C92071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99B42071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OllvnLop"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3wGbVWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733230AbgFPQEA (ORCPT
+        id S1732879AbgFPQDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:04:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49012 "EHLO
+        Tue, 16 Jun 2020 12:03:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733051AbgFPQDy (ORCPT
+        with ESMTP id S1730401AbgFPPt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:03:54 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE940C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:03:53 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh7so8583780plb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:03:53 -0700 (PDT)
+        Tue, 16 Jun 2020 11:49:57 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0821C061573;
+        Tue, 16 Jun 2020 08:49:57 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l24so826410pgb.5;
+        Tue, 16 Jun 2020 08:49:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zKc/JpLrFA5C9B00OW//vjJ8ZMv5QimUc3F5i8rvet4=;
-        b=OllvnLopOjSAVN/rCkHGWJ500Le3/6Ku5c3o8ZlC+gP2RzGDWdyhUX0XwzoK6KZlXi
-         oVUvlUOsEvATG+ldK1KcrhLOS061oY8IpfnuZkqmEEiYnuh+gmbZps73C0AZ9cOBaHq1
-         exTGM1g9ghl69TYphlzSAJ8R2IcP6MK/Wv63w=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pFrRHq1XVs88zCS7gViaAQplZ6MV/Otf8rLxL7f/kd8=;
+        b=c3wGbVWHycQTd3FhMQJMCIvSPCX0sIf914T+Ow7XL1zuxIkMnMSYQJRKeAI6P7O4bz
+         QhBd87rsmaMDXZAWD6iuH/j46lXMJZLUwHr7HHt1DlBZUJDOCqSK0eAGDB3b/OR5S7lI
+         Ph+hmGbbzUknIG2WIxhcxpeNNegn3zXHX7CvAd3aA2HfUXFScKDKoDgQGJ7Pd0ZqgEx+
+         ZDa4mWnWcmAA2LbL2DPXmPC3kwJto6HdzQ9hWclskR+XsLmz7mqcOUfQvs6N+qVZ4vu7
+         jyvbTjqlMx4N5lmyP6I6DZLOjWxmOionysqtJeqkdIRjhDxFM9Rvz9NSbp4tZvdXmod+
+         2agg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zKc/JpLrFA5C9B00OW//vjJ8ZMv5QimUc3F5i8rvet4=;
-        b=jC3FblNoIpgkN9LvJmOLXzyAKpfgLdcWdOUfh7iEuYZhnGZSiVnD3ru76xAcyq1DEi
-         1Mur7MDmpYQ8NPKiW2P5ngENXA0FtIl8ViX7TV6CtAEpi0G36ee19yOuHbJ/NAx3mApe
-         CnMMxxN9zcooiHTmW/z6hmzFCSy7N+naawfzq2YVAlOGjJTPDgPCxyjM0kIJ1ridMmKL
-         erxUyJAvj1Qnc1pBK0xd7hdztbtl8McAGlbctPIKXlwBl2XczSGQEiGMPS/Eofj74wB1
-         EcNOLar3fpVbMY+uIRpPHtBEfic8CZW8YeXQbCv5Tu3O4/AN/sJRXPelqd88e51Z/5ZQ
-         CR4w==
-X-Gm-Message-State: AOAM532dEWlKh8W37wbtb0ZhccarsKTMLQDuL6oVx9/W1h4uB1dvt6bQ
-        rQ0JRJ62tITrf+P9VI3oinyDcw==
-X-Google-Smtp-Source: ABdhPJwVjALfzLCAM/XOMQlngQM0/cTr6VlDaTe0C2TtJc/aiEyzOtzkrH1NE78arH20bNJ9zx2lfA==
-X-Received: by 2002:a17:902:e901:: with SMTP id k1mr2665677pld.92.1592323433244;
-        Tue, 16 Jun 2020 09:03:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a14sm17059842pfc.133.2020.06.16.09.03.51
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=pFrRHq1XVs88zCS7gViaAQplZ6MV/Otf8rLxL7f/kd8=;
+        b=dw7aYj7Lz1YNIXaydYr0cZHP1f1+sfHwUxOevahONR+UHP2CpAqOAfedV7COiR4REt
+         xmPgaf8S8Pj6TFle3GvgrUlFmLRwscJfT2JYCtknqkljfilRmfCYHOr7gz6mlfBKvmmK
+         S2fAIhktOLevPVykCUBP+xZyaDnY3ht3nZrpC3tLqv7fZ/g7rxrOBZIbs7AhrQOAJ1U5
+         q3HGCdgDgRlgTBKAZkzT8dAwNsCpyZDnNly1zo01YQ9qhoDEPu1O6umwsPmdXFVoVZz2
+         De0JjgcKkZFUE+CJGPZsMXS0VFCXfGblbJ/NPDhXImYEkZasGxZeAo1WtJqhGuyfuFIq
+         PxEw==
+X-Gm-Message-State: AOAM533MQLusfWIysWm/AOreoCXgKaxbSGogb5ujIebSTrbENY3ROxrD
+        48RGrD1cRkCOf3I/WJGs8vI=
+X-Google-Smtp-Source: ABdhPJzjW4M5H25XWj36B4KIDoaMuIoILtjuNNkLOrkVPia6lZUsEEbyXpd9lc/UEJ4gSid9U6elJA==
+X-Received: by 2002:a62:ddc4:: with SMTP id w187mr2616321pff.63.1592322597492;
+        Tue, 16 Jun 2020 08:49:57 -0700 (PDT)
+Received: from sultan-box.localdomain ([89.45.90.111])
+        by smtp.gmail.com with ESMTPSA id l195sm7668873pfd.18.2020.06.16.08.49.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 09:03:52 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:03:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 08/11] selftests/seccomp: Make kcmp() less required
-Message-ID: <202006160902.E331FF1917@keescook>
-References: <20200616032524.460144-1-keescook@chromium.org>
- <20200616032524.460144-9-keescook@chromium.org>
- <20200616145725.GJ2893648@cisco>
+        Tue, 16 Jun 2020 08:49:56 -0700 (PDT)
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+X-Google-Original-From: Sultan Alsawaf
+To:     jarkko.nikula@linux.intel.com
+Cc:     aaron.ma@canonical.com, admin@kryma.net,
+        andriy.shevchenko@linux.intel.com, benjamin.tissoires@redhat.com,
+        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
+        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, sultan@kerneltoast.com,
+        vicamo.yang@canonical.com, wsa@kernel.org
+Subject: [PATCH v2] HID: i2c-hid: Use block reads when possible to save power
+Date:   Tue, 16 Jun 2020 08:49:51 -0700
+Message-Id: <20200616154951.3050-1-sultan@kerneltoast.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
+References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616145725.GJ2893648@cisco>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 08:57:25AM -0600, Tycho Andersen wrote:
-> On Mon, Jun 15, 2020 at 08:25:21PM -0700, Kees Cook wrote:
-> > The seccomp tests are a bit noisy without CONFIG_CHECKPOINT_RESTORE (due
-> > to missing the kcmp() syscall). The seccomp tests are more accurate with
-> > kcmp(), but it's not strictly required. Refactor the tests to use
-> > alternatives (comparing fd numbers), and provide a central test for
-> > kcmp() so there is a single XFAIL instead of many. Continue to produce
-> > warnings for the other tests, though.
-> > 
-> > Additionally adds some more bad flag EINVAL tests to the addfd selftest.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> This looks fine, but I wonder if this is enough motivation for taking
-> kcmp() out of CONFIG_CHECKPOINT_RESTORE guards?
+From: Sultan Alsawaf <sultan@kerneltoast.com>
 
-Do you mean in the kernel? I'd rather not -- it's a relatively powerful
-primitive. Maybe if there were other users needing it, but there doesn't
-seem to have been much demand.
+We have no way of knowing how large an incoming payload is going to be,
+so the only strategy available up until now has been to always retrieve
+the maximum possible report length over i2c, which can be quite
+inefficient. For devices that send reports in block read format, the i2c
+controller driver can read the payload length on the fly and terminate
+the i2c transaction early, resulting in considerable power savings.
 
+On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
+touchpad causes psys power readings to go up by about 4W and hover there
+until I remove my finger. With this patch, my psys readings go from 4.7W
+down to 3.1W, yielding about 1.6W in savings. This is because my
+touchpad's max report length is 60 bytes, but all of the regular reports
+it sends for touch events are only 32 bytes, so the i2c transfer is
+roughly halved for the common case.
+
+Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+---
+Jarkko, could you try this?
+ drivers/hid/i2c-hid/i2c-hid-core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 294c84e136d7..739dccfc57e1 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -472,11 +472,14 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
+ 	int ret;
+ 	u32 ret_size;
+ 	int size = le16_to_cpu(ihid->hdesc.wMaxInputLength);
++	u16 flags;
+ 
+ 	if (size > ihid->bufsize)
+ 		size = ihid->bufsize;
+ 
+-	ret = i2c_master_recv(ihid->client, ihid->inbuf, size);
++	/* Try to do a block read if the size fits in one byte */
++	flags = size > 255 ? I2C_M_RD : I2C_M_RD | I2C_M_RECV_LEN;
++	ret = i2c_transfer_buffer_flags(ihid->client, ihid->inbuf, size, flags);
+ 	if (ret != size) {
+ 		if (ret < 0)
+ 			return;
 -- 
-Kees Cook
+2.27.0
+
