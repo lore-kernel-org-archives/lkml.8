@@ -2,219 +2,125 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE290C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 226B02100A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592345138;
-	bh=1BH4MUh9Sx2yPMhHm374mBNSia4OVdEFUDw84/UO4Xo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=dLVy+IyrDVt/mLZBp4MRRIt8pkvS8ZDY3nBBivyC3BTSgjv0meOgrwf0FBUmBrCSj
-	 pJsNGZR7sAL/UHXzEwyI3fHN/+jVzEJ8UQytO6w2VvopJdry/5L1EV9Rf5vY7GGj93
-	 PM+upwq2pLYvriySTDxW4dtxUEra/ywH6RmnPNaY=
+	by mail.kernel.org (Postfix) with ESMTP id 997FF2065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 22:06:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="jjazcBnA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="If9QaZWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgFPWFg (ORCPT
+        id S1726335AbgFPWGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 18:05:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgFPWFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 18:05:36 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 850BB208B8;
-        Tue, 16 Jun 2020 22:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592345134;
-        bh=1BH4MUh9Sx2yPMhHm374mBNSia4OVdEFUDw84/UO4Xo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ulBr2x6UBFsR0wtrS1Pd+V6+HifSE/s3Spr3ObsoDbipr4vw2/xjvtyU3yer/7TdD
-         YgV1dV305jRRsbe0G9oBp9y9IN8Reg0BAVtMzkg8oZu5FwGM77nHTfi3OjtoyS2iCc
-         0G7ukGQLgH+gIqHVpWhFKb9x7an868a99OnHWiMo=
-Date:   Tue, 16 Jun 2020 17:05:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Set internal memory viewport sizes
-Message-ID: <20200616220533.GA1984551@bjorn-Precision-5520>
+        Tue, 16 Jun 2020 18:06:24 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:59285 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725941AbgFPWGX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 18:06:23 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id F1EFE5C00E1;
+        Tue, 16 Jun 2020 18:06:21 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Tue, 16 Jun 2020 18:06:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=z4kbQiA7fXENz+uZ3GRIQm70e5a
+        yJQmVi7soJQmblS4=; b=jjazcBnAGDUnOov5LjcFA98QDaCxEg6mCDvlkh+0FSR
+        rCur5LrrhmympWEZyCGhqWamzptP1IY5p83vnG19dXds4jkw5YEDxZ6/4qScJDv/
+        pdHJebk6vhRs4bCQAtOPcSfVvy3RD7/P6duGH8ueubZvM6irUgovhZbVg5s91FKc
+        L0+iMsjnOZnqGic+FXzvUPp08x247VpXdUsqUHL/WvjTiTjOr32jAy8ZGQpaAJkq
+        ibC/RcQsfKAzkUjcPyFWkATHi5/CS/fcYL2xb8aruLzwboJHuvwzlCJ0KLi3mNE5
+        b1dlXcHDD3Z/8Qm0QSqpd2jBn8xo3xgsEANKmzZ9l3A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=z4kbQi
+        A7fXENz+uZ3GRIQm70e5ayJQmVi7soJQmblS4=; b=If9QaZWcO7Epc3XUEDb7Y0
+        AviwdUFnMKi5DeaoWbDq8TKlwyO0D4S8Eal2/pmeINtKBtfMdKdLVS6vbobJ9Bzg
+        8mnDCzVaHK0G/ShowHLl+z6JghleAhQ7QCK6GblR0U7k27Vxlax8GnS7UdOmVM4T
+        XSs7jyxmL7Fi1u1w4GnTd+8a8+/nrXmwJR49aK0QNf75f3RTz+W0hfjjYRcN+P0+
+        ZukCkGSM0ru9AjIUTwMzmLVvbJ7gQFU49NO7/yKgs7xEpKZAerNTO0Ig2HTGJ4o5
+        Ev3iHweED+Z2rCXCqgsMUdQsIPQfcEAO/dIYaun1MA4qiHWMndT02IkI/umeKSAQ
+        ==
+X-ME-Sender: <xms:XULpXgoVnyhEMBsZ3Dw_jQLjC3N3_TuKBvJoZnCKOyuPkdlps0CRIA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejuddgtdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesghdtreer
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecuggftrfgrthhtvghrnhephfeiuefhtdefudetteelgfffheekffdu
+    feelteekleehhfdtieevkeegfeekgeehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
+    enucfkphepvddvtddrvdefhedrudegrdefgeenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinhdrtggt
+X-ME-Proxy: <xmx:XULpXmoN0ZFng3HlxLyhbgH8vonwucUv9dG6smJ8wbEkrQGPKBG4vg>
+    <xmx:XULpXlNKKCkYmOaKh5SQ7426baJ99TOfd0K9h7m4hTIeGFURiVj2cw>
+    <xmx:XULpXn6jVXwl1DBQ8Sr9rU9JduwRldY24qwEkHFt28O-f63lVm6hgQ>
+    <xmx:XULpXoXDXdnvzqBEHTqDg9QXD85mNgAlBNZ31lq3DHmq2v-yL8Tyxg>
+Received: from localhost (220-235-14-34.dyn.iinet.net.au [220.235.14.34])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A756A3280068;
+        Tue, 16 Jun 2020 18:06:20 -0400 (EDT)
+Date:   Wed, 17 Jun 2020 08:06:17 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: removal of the leaks tree
+Message-ID: <20200616220617.GA25096@ares>
+References: <20200616145333.40ddbce5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
 Content-Disposition: inline
-In-Reply-To: <20200616205533.3513-10-james.quinlan@broadcom.com>
+In-Reply-To: <20200616145333.40ddbce5@canb.auug.org.au>
+X-Mailer: Mutt 1.9.4 (2018-02-28)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 04:55:16PM -0400, Jim Quinlan wrote:
-> BrcmSTB PCIe controllers are intimately connected to the memory
-> controller(s) on the SOC.  There is a "viewport" for each memory controller
-> that allows inbound accesses to CPU memory.  Each viewport's size must be
-> set to a power of two, and that size must be equal to or larger than the
-> amount of memory each controller supports.
 
-This describes some requirements, but doesn't actually say what this
-patch *does*.
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I *think* it reads the viewport sizes from the "brcm,scb-sizes" DT
-property instead of computing something from "dma-ranges".  Looks like
-it also adds support for SCB1 and SCB2.
+On Tue, Jun 16, 2020 at 02:53:33PM +1000, Stephen Rothwell wrote:
+> Hi,
+>
+> I have removed the leaks tree
+> (https://git.kernel.org/pub/scm/linux/kernel/git/tobin/leaks.git#leaks-next)
+> from linux-next because it has not been updated in more than a year.
+> If you would like it reinstated, please just reply and let me know.
 
-Those seem interesting, but don't really come through in the subject
-or even the commit log.
+No worries Steven, thanks for letting me know.
 
-If I understand correctly, this is all for DMA ("inbound accesses to
-CPU memory").  I think it would be worth mentioning "DMA", since
-that's the common term for this.
 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
->  1 file changed, 50 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 9189406fd35c..39f77709c6a2 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -57,6 +57,8 @@
->  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
->  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128		0x0
->  #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
-> +#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
-> +#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
->  
->  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
->  #define PCIE_MEM_WIN0_LO(win)	\
-> @@ -154,6 +156,7 @@
->  #define SSC_STATUS_OFFSET		0x1
->  #define SSC_STATUS_SSC_MASK		0x400
->  #define SSC_STATUS_PLL_LOCK_MASK	0x800
-> +#define PCIE_BRCM_MAX_MEMC		3
->  
->  #define IDX_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_INDEX])
->  #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
-> @@ -260,6 +263,8 @@ struct brcm_pcie {
->  	const int		*reg_field_info;
->  	enum pcie_type		type;
->  	struct reset_control	*rescal;
-> +	int			num_memc;
-> +	u64			memc_size[PCIE_BRCM_MAX_MEMC];
->  };
->  
->  /*
-> @@ -715,22 +720,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
->  							u64 *rc_bar2_offset)
->  {
->  	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> -	struct device *dev = pcie->dev;
->  	struct resource_entry *entry;
-> +	struct device *dev = pcie->dev;
-> +	u64 lowest_pcie_addr = ~(u64)0;
-> +	int ret, i = 0;
-> +	u64 size = 0;
->  
-> -	entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
-> -	if (!entry)
-> -		return -ENODEV;
-> +	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-> +		u64 pcie_beg = entry->res->start - entry->offset;
->  
-> +		size += entry->res->end - entry->res->start + 1;
-> +		if (pcie_beg < lowest_pcie_addr)
-> +			lowest_pcie_addr = pcie_beg;
-> +	}
->  
-> -	/*
-> -	 * The controller expects the inbound window offset to be calculated as
-> -	 * the difference between PCIe's address space and CPU's. The offset
-> -	 * provided by the firmware is calculated the opposite way, so we
-> -	 * negate it.
-> -	 */
-> -	*rc_bar2_offset = -entry->offset;
-> -	*rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
-> +	if (lowest_pcie_addr == ~(u64)0) {
-> +		dev_err(dev, "DT node has no dma-ranges\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
-> +						  PCIE_BRCM_MAX_MEMC);
-> +
-> +	if (ret <= 0) {
-> +		/* Make an educated guess */
-> +		pcie->num_memc = 1;
-> +		pcie->memc_size[0] = 1 << fls64(size - 1);
-> +	} else {
-> +		pcie->num_memc = ret;
-> +	}
-> +
-> +	/* Each memc is viewed through a "port" that is a power of 2 */
-> +	for (i = 0, size = 0; i < pcie->num_memc; i++)
-> +		size += pcie->memc_size[i];
-> +
-> +	/* System memory starts at this address in PCIe-space */
-> +	*rc_bar2_offset = lowest_pcie_addr;
-> +	/* The sum of all memc views must also be a power of 2 */
-> +	*rc_bar2_size = 1ULL << fls64(size - 1);
->  
->  	/*
->  	 * We validate the inbound memory view even though we should trust
-> @@ -782,12 +809,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	void __iomem *base = pcie->base;
->  	struct device *dev = pcie->dev;
->  	struct resource_entry *entry;
-> -	unsigned int scb_size_val;
->  	bool ssc_good = false;
->  	struct resource *res;
->  	int num_out_wins = 0;
->  	u16 nlw, cls, lnksta;
-> -	int i, ret;
-> +	int i, ret, memc;
->  	u32 tmp, aspm_support;
->  
->  	/* Reset the bridge */
-> @@ -824,11 +850,17 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	writel(upper_32_bits(rc_bar2_offset),
->  	       base + PCIE_MISC_RC_BAR2_CONFIG_HI);
->  
-> -	scb_size_val = rc_bar2_size ?
-> -		       ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
->  	tmp = readl(base + PCIE_MISC_MISC_CTRL);
-> -	u32p_replace_bits(&tmp, scb_size_val,
-> -			  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
-> +	for (memc = 0; memc < pcie->num_memc; memc++) {
-> +		u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
-> +
-> +		if (memc == 0)
-> +			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
-> +		else if (memc == 1)
-> +			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK);
-> +		else if (memc == 2)
-> +			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK);
-> +	}
->  	writel(tmp, base + PCIE_MISC_MISC_CTRL);
->  
->  	/*
-> -- 
-> 2.17.1
-> 
+        Tobin
+--wRRV7LY7NUeQGEoC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEc/+jpUAIMPwyplf8QL+eTCadZgcFAl7pQlQACgkQQL+eTCad
+Zgcv3BAAgGIXSOHMmnitua54lQLw1uhkgeS5IvqBkZn9+fSKpGpaRPYxC4bugpgZ
+LMtt+uhaKaXu3PTgzBBnzEuYy5/FCs15fWdXJIiMQG4wOs490n3V8K4aGh2Wqx7x
+pE26E65oFBQp8GROZhbecKDLI77ng0xDCKutRrGXf9JnKotNgGY2dRUe8leVe5cE
+OoDKpTuGro4iGf9stJ5TCyKPZNsNqRSzXCjTrrPyj7lDbKRfesVIUeQ7qfYSsgR3
++iWH5enSK+PKr2PtgNfJsSmH7UMLKwzmxqkP5O8T3t2blJ2CdP9lfvAaC83xxHyQ
++7nrPs+oxoe6eiteg0CJE5k1m86p445FXDE95asBSfdR29mF3iqwmwiNrANWtzgC
+mmHxqUQ34Rcd8IIaLScO27BFJx9lL7nR2kyMVdhx/isYso1wJr7g0kyOjU81SO9o
+3vc8eAif+JBn+goaUH50opmgW0cQg6Zb7SXTZNpCFDI6wsZwQvkfx1rU15fE0O4r
+M/Y7wzIIRH5Ef8R5YIHXVEiZ9py0jN0vHYiYeT/8Ns388fdEk/fAnmQwr864qQAd
+ECTKEHKkyTm0EQxuYHV5I1d5weOLmUDJ8EmOHTz349fDXRbLA5QCUToHp4XLrY2m
+IKOX3guBL28Q81/fnvb1mCocxeHSDLYKsDOikl17tLkNp3SOR8k=
+=CJCr
+-----END PGP SIGNATURE-----
+
+--wRRV7LY7NUeQGEoC--
