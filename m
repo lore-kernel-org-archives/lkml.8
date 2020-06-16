@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB30C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67725C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE402177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466C321532
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323190;
-	bh=8DHEUyrxUYcT2iumm9RzdbJZzd0UEQ03DEP40wWww9U=;
+	s=default; t=1592323194;
+	bh=1BASumY08X9jKYnZYYImwDQRIC3ADcK3JVDtXC4Sdrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUEaFR3KBH6aLJGy0yoMo+5owv0sG45KF1U3B9ESSzO2AmE8T/eEJfzfDNUg0/K4/
-	 AjOVfqVpV4LCxB82dgAHNC9webEBqDUNQUc1+g5PWpq2E/gGE8QdOrT/UszT6ikHnf
-	 p4HiQvooR5ZR0KF4xfw0W4dH+RNYqzFpIaYZoVlc=
+	b=1pqQ3ubX0kixu7Ea/x6Ce21tqFeq7BQ2kjYqNMHPk+210wVJYagsKLZcTT7q4tQEr
+	 kx9C2K5IW8xc7DlY0PElzHyXoCnxSFPG/axW7ymughXu0KkyNM65rq60R2GYnkK9Od
+	 hoZD9/XiumcWEGgTyXu9x7m3CzOFTqcyKV9+z2lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbgFPPxb (ORCPT
+        id S1732861AbgFPPxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:53:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51602 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:53:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732864AbgFPPxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:53:25 -0400
+        id S1732645AbgFPPxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 235DE208D5;
-        Tue, 16 Jun 2020 15:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9BAE208D5;
+        Tue, 16 Jun 2020 15:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322804;
-        bh=8DHEUyrxUYcT2iumm9RzdbJZzd0UEQ03DEP40wWww9U=;
+        s=default; t=1592322799;
+        bh=1BASumY08X9jKYnZYYImwDQRIC3ADcK3JVDtXC4Sdrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z3vA4xANUnKFI2Pu5VzCuuSXh1rhlDA/A3uXuQtmljNvGqIRrAgcFVIJLJFvSW6S9
-         uZzCQWreTJuaHwdO5Ypw7m27R919kpg5czFhIOWz8xl+ivC0E/3O6sSbdffCS3jIyz
-         MMDg+VFOcPcKsTfwTsuhGakjnBBSvaJA5G7StZW8=
+        b=iFYmauMiTEefEUyMKbvGTon7lfblF/S0zqQ6hp+2QKjFRLn1j3saz/06lFuZrdTNp
+         eNQKOnS+ylbtFQpgMJKHhC0mUXVrqyD90hTYu75Cm6g1J68WlbIsmJ1he2A9/xQGYJ
+         Ih49ERhcU6zchyJrKqlMren3Gndngvv4Wi4/W18s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        stable@vger.kernel.org, Shay Drory <shayd@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.6 111/161] net/mlx5e: Fix repeated XSK usage on one channel
-Date:   Tue, 16 Jun 2020 17:35:01 +0200
-Message-Id: <20200616153111.643262034@linuxfoundation.org>
+Subject: [PATCH 5.6 109/161] net/mlx5: drain health workqueue in case of driver load error
+Date:   Tue, 16 Jun 2020 17:34:59 +0200
+Message-Id: <20200616153111.550361331@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,44 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+From: Shay Drory <shayd@mellanox.com>
 
-[ Upstream commit 36d45fb9d2fdf348d778bfe73f0427db1c6f9bc7 ]
+[ Upstream commit 42ea9f1b5c625fad225d4ac96a7e757dd4199d9c ]
 
-After an XSK is closed, the relevant structures in the channel are not
-zeroed. If an XSK is opened the second time on the same channel without
-recreating channels, the stray values in the structures will lead to
-incorrect operation of queues, which causes CQE errors, and the new
-socket doesn't work at all.
+In case there is a work in the health WQ when we teardown the driver,
+in driver load error flow, the health work will try to read dev->iseg,
+which was already unmap in mlx5_pci_close().
+Fix it by draining the health workqueue first thing in mlx5_pci_close().
 
-This patch fixes the issue by explicitly zeroing XSK-related structs in
-the channel on XSK close. Note that those structs are zeroed on channel
-creation, and usually a configuration change (XDP program is set)
-happens on XSK open, which leads to recreating channels, so typical XSK
-usecases don't suffer from this issue. However, if XSKs are opened and
-closed on the same channel without removing the XDP program, this bug
-reproduces.
+Trace of the error:
+BUG: unable to handle page fault for address: ffffb5b141c18014
+PF: supervisor read access in kernel mode
+PF: error_code(0x0000) - not-present page
+PGD 1fe95d067 P4D 1fe95d067 PUD 1fe95e067 PMD 1b7823067 PTE 0
+Oops: 0000 [#1] SMP PTI
+CPU: 3 PID: 6755 Comm: kworker/u128:2 Not tainted 5.2.0-net-next-mlx5-hv_stats-over-last-worked-hyperv #1
+Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090006  04/28/2016
+Workqueue: mlx5_healtha050:00:02.0 mlx5_fw_fatal_reporter_err_work [mlx5_core]
+RIP: 0010:ioread32be+0x30/0x40
+Code: 00 77 27 48 81 ff 00 00 01 00 76 07 0f b7 d7 ed 0f c8 c3 55 48 c7 c6 3b ee d5 9f 48 89 e5 e8 67 fc ff ff b8 ff ff ff ff 5d c3 <8b> 07 0f c8 c3 66 66 2e 0f 1f 84 00 00 00 00 00 48 81 fe ff ff 03
+RSP: 0018:ffffb5b14c56fd78 EFLAGS: 00010292
+RAX: ffffb5b141c18000 RBX: ffff8e9f78a801c0 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffff8e9f7ecd7628 RDI: ffffb5b141c18014
+RBP: ffffb5b14c56fd90 R08: 0000000000000001 R09: 0000000000000000
+R10: ffff8e9f372a2c30 R11: ffff8e9f87f4bc40 R12: ffff8e9f372a1fc0
+R13: ffff8e9f78a80000 R14: ffffffffc07136a0 R15: ffff8e9f78ae6f20
+FS:  0000000000000000(0000) GS:ffff8e9f7ecc0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffb5b141c18014 CR3: 00000001c8f82006 CR4: 00000000003606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ ? mlx5_health_try_recover+0x4d/0x270 [mlx5_core]
+ mlx5_fw_fatal_reporter_recover+0x16/0x20 [mlx5_core]
+ devlink_health_reporter_recover+0x1c/0x50
+ devlink_health_report+0xfb/0x240
+ mlx5_fw_fatal_reporter_err_work+0x65/0xd0 [mlx5_core]
+ process_one_work+0x1fb/0x4e0
+ ? process_one_work+0x16b/0x4e0
+ worker_thread+0x4f/0x3d0
+ kthread+0x10d/0x140
+ ? process_one_work+0x4e0/0x4e0
+ ? kthread_cancel_delayed_work_sync+0x20/0x20
+ ret_from_fork+0x1f/0x30
+Modules linked in: nfsv3 rpcsec_gss_krb5 nfsv4 nfs fscache 8021q garp mrp stp llc ipmi_devintf ipmi_msghandler rpcrdma rdma_ucm ib_iser rdma_cm ib_umad iw_cm ib_ipoib libiscsi scsi_transport_iscsi ib_cm mlx5_ib ib_uverbs ib_core mlx5_core sb_edac crct10dif_pclmul crc32_pclmul ghash_clmulni_intel aesni_intel aes_x86_64 mlxfw crypto_simd cryptd glue_helper input_leds hyperv_fb intel_rapl_perf joydev serio_raw pci_hyperv pci_hyperv_mini mac_hid hv_balloon nfsd auth_rpcgss nfs_acl lockd grace sunrpc sch_fq_codel ip_tables x_tables autofs4 hv_utils hid_generic hv_storvsc ptp hid_hyperv hid hv_netvsc hyperv_keyboard pps_core scsi_transport_fc psmouse hv_vmbus i2c_piix4 floppy pata_acpi
+CR2: ffffb5b141c18014
+---[ end trace b12c5503157cad24 ]---
+RIP: 0010:ioread32be+0x30/0x40
+Code: 00 77 27 48 81 ff 00 00 01 00 76 07 0f b7 d7 ed 0f c8 c3 55 48 c7 c6 3b ee d5 9f 48 89 e5 e8 67 fc ff ff b8 ff ff ff ff 5d c3 <8b> 07 0f c8 c3 66 66 2e 0f 1f 84 00 00 00 00 00 48 81 fe ff ff 03
+RSP: 0018:ffffb5b14c56fd78 EFLAGS: 00010292
+RAX: ffffb5b141c18000 RBX: ffff8e9f78a801c0 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffff8e9f7ecd7628 RDI: ffffb5b141c18014
+RBP: ffffb5b14c56fd90 R08: 0000000000000001 R09: 0000000000000000
+R10: ffff8e9f372a2c30 R11: ffff8e9f87f4bc40 R12: ffff8e9f372a1fc0
+R13: ffff8e9f78a80000 R14: ffffffffc07136a0 R15: ffff8e9f78ae6f20
+FS:  0000000000000000(0000) GS:ffff8e9f7ecc0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffb5b141c18014 CR3: 00000001c8f82006 CR4: 00000000003606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:38
+in_atomic(): 0, irqs_disabled(): 1, pid: 6755, name: kworker/u128:2
+INFO: lockdep is turned off.
+CPU: 3 PID: 6755 Comm: kworker/u128:2 Tainted: G      D           5.2.0-net-next-mlx5-hv_stats-over-last-worked-hyperv #1
+Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090006  04/28/2016
+Workqueue: mlx5_healtha050:00:02.0 mlx5_fw_fatal_reporter_err_work [mlx5_core]
+Call Trace:
+ dump_stack+0x63/0x88
+ ___might_sleep+0x10a/0x130
+ __might_sleep+0x4a/0x80
+ exit_signals+0x33/0x230
+ ? blocking_notifier_call_chain+0x16/0x20
+ do_exit+0xb1/0xc30
+ ? kthread+0x10d/0x140
+ ? process_one_work+0x4e0/0x4e0
 
-Fixes: db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Fixes: 52c368dc3da7 ("net/mlx5: Move health and page alloc init to mdev_init")
+Signed-off-by: Shay Drory <shayd@mellanox.com>
+Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/main.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
-@@ -152,6 +152,10 @@ void mlx5e_close_xsk(struct mlx5e_channe
- 	mlx5e_close_cq(&c->xskicosq.cq);
- 	mlx5e_close_xdpsq(&c->xsksq);
- 	mlx5e_close_cq(&c->xsksq.cq);
-+
-+	memset(&c->xskrq, 0, sizeof(c->xskrq));
-+	memset(&c->xsksq, 0, sizeof(c->xsksq));
-+	memset(&c->xskicosq, 0, sizeof(c->xskicosq));
- }
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -794,6 +794,11 @@ err_disable:
  
- void mlx5e_activate_xsk(struct mlx5e_channel *c)
+ static void mlx5_pci_close(struct mlx5_core_dev *dev)
+ {
++	/* health work might still be active, and it needs pci bar in
++	 * order to know the NIC state. Therefore, drain the health WQ
++	 * before removing the pci bars
++	 */
++	mlx5_drain_health_wq(dev);
+ 	iounmap(dev->iseg);
+ 	pci_clear_master(dev->pdev);
+ 	release_bar(dev->pdev);
 
 
