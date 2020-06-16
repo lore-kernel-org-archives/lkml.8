@@ -2,1102 +2,411 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71278C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8681BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 359EA207C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:56:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="MQDZzu/6"
+	by mail.kernel.org (Postfix) with ESMTP id 6E4FE2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgFPN4F (ORCPT
+        id S1729127AbgFPN4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728908AbgFPN4D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:56:03 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4991FC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:56:01 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 49mV8q3h72z9sTF; Tue, 16 Jun 2020 23:55:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592315755;
-        bh=ZoTxCdoT2iZAPY8LzBIN8t8bJXSPQWYD1tEsoKwlizE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQDZzu/6IJqqEOcb0tlxQzY40Fn/v+PZUalvkwEWmAxOy+fQeKp7ctdRks5qVEveS
-         s0tFalKX5RpckuoISqBod4NY5wpdD6FEtAxGzJd+KT1cydnGHyBUW0Pyzl+avIaYdj
-         kERo62Rj4F0+bHOGJyLHJ3PYRHsgp63kBukiRb4qoDn3dcgyf5tqoA5OQqMJRDHiPO
-         1yRAg9nUDPTiVHAwEH33Q7wTL9DZ7v5HAuBWbXEn0cuoNrg3qVHumrYcp7VwwxYxgl
-         MQe9ZkdQ9zMC01NOgYR1CDfdcQk+Yyz7aJnKK6ZVchr+d9QpoK+O1vN7D9spad/g+u
-         nupP8an3AzLrQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     linuxppc-dev@ozlabs.org
-Cc:     arnd@arndb.de, linux-arch@ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] powerpc/syscalls: Split SPU-ness out of ABI
-Date:   Tue, 16 Jun 2020 23:56:17 +1000
-Message-Id: <20200616135617.2937252-2-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200616135617.2937252-1-mpe@ellerman.id.au>
-References: <20200616135617.2937252-1-mpe@ellerman.id.au>
+        Tue, 16 Jun 2020 09:56:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:37990 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729087AbgFPN4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 09:56:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5211B1FB;
+        Tue, 16 Jun 2020 06:56:23 -0700 (PDT)
+Received: from [10.37.12.69] (unknown [10.37.12.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C5F13F71F;
+        Tue, 16 Jun 2020 06:56:18 -0700 (PDT)
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+To:     Qais Yousef <qais.yousef@arm.com>, Mel Gorman <mgorman@suse.de>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, chris.redpath@arm.com
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200529100806.GA3070@suse.de>
+ <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
+ <20200603094036.GF3070@suse.de>
+ <20200603124112.w5stb7v2z3kzcze3@e107158-lin.cambridge.arm.com>
+ <20200604134042.GJ3070@suse.de>
+ <20200611105811.5q5rga2cmy6ypq7e@e107158-lin.cambridge.arm.com>
+ <20200616110824.dgkkbyapn3io6wik@e107158-lin>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <d9c951da-87eb-ab20-9434-f15b34096d66@arm.com>
+Date:   Tue, 16 Jun 2020 14:56:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200616110824.dgkkbyapn3io6wik@e107158-lin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using the ABI field to encode whether a syscall is usable by SPU
-programs or not is a bit of kludge.
 
-The ABI of the syscall doesn't change depending on the SPU-ness, but
-in order to make the syscall generation work we have to pretend that
-it does.
+[snip]
 
-It also means we have more duplicated syscall lines than we need to,
-and the SPU logic is not well contained, instead all of the syscall
-generation targets need to know if they are spu or nospu.
+Hi Mel and Qais,
 
-So instead add a separate file which contains the information on which
-syscalls are available for SPU programs. It's just a list of syscall
-numbers with a single "spu" field. If the field has the value "spu"
-then the syscall is available to SPU programs, any other value or no
-entry entirely means the syscall is not available to SPU programs.
+I was able to synthesize results from some experiments which I conducted
+on my machine. You can find them below with descriptions.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
----
- arch/powerpc/kernel/syscalls/Makefile      |  16 +-
- arch/powerpc/kernel/syscalls/spu.tbl       | 430 +++++++++++++++++++++
- arch/powerpc/kernel/syscalls/syscall.tbl   | 195 ++++------
- arch/powerpc/kernel/syscalls/syscalltbl.sh |  10 +-
- 4 files changed, 523 insertions(+), 128 deletions(-)
- create mode 100644 arch/powerpc/kernel/syscalls/spu.tbl
+1. Description of the configuration and hardware
 
+My machine is a HP server 2 socket 24 CPUs X86 64bit
+(4 NUMA nodes, AMD Opteron 6174, L2 512KB/cpu, L3 6MB/node, RAM 40GB/node).
 
-I'm inclined to put this in next and ask Linus to pull it before rc2, that seems
-like the least disruptive way to get this in, unless anyone objects?
+Results presented here are coming from OpenSuse 15.1 (apart from last 
+experiment) with kernel build based on the distro config.
+Kernel tag v5.7-rc7.
+There are 3 kernels that I have created based on distro config:
+a) v5.7-rc7-base - default kernel build (no uclamp)
+b) v5.7-rc7-ucl-tsk - base kernel + CONFIG_UCLAMP_TASK
+c) v5.7-rc7-ucl-tsk-grp - base kernel + CONFIG_UCLAMP_TASK & 
+CONFIG_UCLAMP_TASK_GROUP
 
-cheers
+2. Experiments
 
+I have been using the mmtests with configuration as you recommended.
+I put under stress the system in different scenarios, to check if some
+regression can be observed and under what circumstances.
+The descriptions below show these different angles of attacks during
+mmtests: w/ or w/o numa pinning, using or not perf, tracing, etc.
+I have also checked a bit closer to the suspected functions:
+activate_task and deactivate_task, which you might find in the
+experiment description.
 
-diff --git a/arch/powerpc/kernel/syscalls/Makefile b/arch/powerpc/kernel/syscalls/Makefile
-index 27b48954808d..34d39b4a83f7 100644
---- a/arch/powerpc/kernel/syscalls/Makefile
-+++ b/arch/powerpc/kernel/syscalls/Makefile
-@@ -6,6 +6,7 @@ _dummy := $(shell [ -d '$(uapi)' ] || mkdir -p '$(uapi)')	\
- 	  $(shell [ -d '$(kapi)' ] || mkdir -p '$(kapi)')
- 
- syscall := $(srctree)/$(src)/syscall.tbl
-+sputbl := $(srctree)/$(src)/spu.tbl
- syshdr := $(srctree)/$(src)/syscallhdr.sh
- systbl := $(srctree)/$(src)/syscalltbl.sh
- 
-@@ -19,32 +20,33 @@ quiet_cmd_systbl = SYSTBL  $@
-       cmd_systbl = $(CONFIG_SHELL) '$(systbl)' '$<' '$@'	\
- 		   '$(systbl_abis_$(basetarget))'		\
- 		   '$(systbl_abi_$(basetarget))'		\
--		   '$(systbl_offset_$(basetarget))'
-+		   '$(systbl_offset_$(basetarget))'		\
-+		    $(sputbl)
- 
--syshdr_abis_unistd_32 := common,nospu,32
-+syshdr_abis_unistd_32 := common,32
- $(uapi)/unistd_32.h: $(syscall) $(syshdr)
- 	$(call if_changed,syshdr)
- 
--syshdr_abis_unistd_64 := common,nospu,64
-+syshdr_abis_unistd_64 := common,64
- $(uapi)/unistd_64.h: $(syscall) $(syshdr)
- 	$(call if_changed,syshdr)
- 
--systbl_abis_syscall_table_32 := common,nospu,32
-+systbl_abis_syscall_table_32 := common,32
- systbl_abi_syscall_table_32 := 32
- $(kapi)/syscall_table_32.h: $(syscall) $(systbl)
- 	$(call if_changed,systbl)
- 
--systbl_abis_syscall_table_64 := common,nospu,64
-+systbl_abis_syscall_table_64 := common,64
- systbl_abi_syscall_table_64 := 64
- $(kapi)/syscall_table_64.h: $(syscall) $(systbl)
- 	$(call if_changed,systbl)
- 
--systbl_abis_syscall_table_c32 := common,nospu,32
-+systbl_abis_syscall_table_c32 := common,32
- systbl_abi_syscall_table_c32 := c32
- $(kapi)/syscall_table_c32.h: $(syscall) $(systbl)
- 	$(call if_changed,systbl)
- 
--systbl_abis_syscall_table_spu := common,spu
-+systbl_abis_syscall_table_spu := common,64
- systbl_abi_syscall_table_spu := spu
- $(kapi)/syscall_table_spu.h: $(syscall) $(systbl)
- 	$(call if_changed,systbl)
-diff --git a/arch/powerpc/kernel/syscalls/spu.tbl b/arch/powerpc/kernel/syscalls/spu.tbl
-new file mode 100644
-index 000000000000..5eac04919303
---- /dev/null
-+++ b/arch/powerpc/kernel/syscalls/spu.tbl
-@@ -0,0 +1,430 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# The format is:
-+# <number> <name> <spu>
-+#
-+# To indicate a syscall can be used by SPU programs use "spu" for the spu column.
-+#
-+# Syscalls that are not to be used by SPU programs can be left out of the file
-+# entirely, or an entry with a value other than "spu" can be added.
-+0	restart_syscall			-
-+1	exit				-
-+2	fork				-
-+3	read				spu
-+4	write				spu
-+5	open				spu
-+6	close				spu
-+7	waitpid				spu
-+8	creat				spu
-+9	link				spu
-+10	unlink				spu
-+11	execve				-
-+12	chdir				spu
-+13	time				spu
-+14	mknod				spu
-+15	chmod				spu
-+16	lchown				spu
-+17	break				-
-+18	oldstat				-
-+19	lseek				spu
-+20	getpid				spu
-+21	mount				-
-+22	umount				-
-+23	setuid				spu
-+24	getuid				spu
-+25	stime				spu
-+26	ptrace				-
-+27	alarm				spu
-+28	oldfstat			-
-+29	pause				-
-+30	utime				-
-+31	stty				-
-+32	gtty				-
-+33	access				spu
-+34	nice				spu
-+35	ftime				-
-+36	sync				spu
-+37	kill				spu
-+38	rename				spu
-+39	mkdir				spu
-+40	rmdir				spu
-+41	dup				spu
-+42	pipe				spu
-+43	times				spu
-+44	prof				-
-+45	brk				spu
-+46	setgid				spu
-+47	getgid				spu
-+48	signal				-
-+49	geteuid				spu
-+50	getegid				spu
-+51	acct				-
-+52	umount2				-
-+53	lock				-
-+54	ioctl				spu
-+55	fcntl				spu
-+56	mpx				-
-+57	setpgid				spu
-+58	ulimit				-
-+59	oldolduname			-
-+60	umask				spu
-+61	chroot				spu
-+62	ustat				-
-+63	dup2				spu
-+64	getppid				spu
-+65	getpgrp				spu
-+66	setsid				spu
-+67	sigaction			-
-+68	sgetmask			spu
-+69	ssetmask			spu
-+70	setreuid			spu
-+71	setregid			spu
-+72	sigsuspend			-
-+73	sigpending			-
-+74	sethostname			spu
-+75	setrlimit			spu
-+76	getrlimit			-
-+77	getrusage			spu
-+78	gettimeofday			spu
-+79	settimeofday			spu
-+80	getgroups			spu
-+81	setgroups			spu
-+82	select				-
-+83	symlink				spu
-+84	oldlstat			-
-+85	readlink			spu
-+86	uselib				-
-+87	swapon				-
-+88	reboot				-
-+89	readdir				-
-+90	mmap				spu
-+91	munmap				spu
-+92	truncate			spu
-+93	ftruncate			spu
-+94	fchmod				spu
-+95	fchown				spu
-+96	getpriority			spu
-+97	setpriority			spu
-+98	profil				-
-+99	statfs				-
-+100	fstatfs				-
-+101	ioperm				-
-+102	socketcall			spu
-+103	syslog				spu
-+104	setitimer			spu
-+105	getitimer			spu
-+106	stat				spu
-+107	lstat				spu
-+108	fstat				spu
-+109	olduname			-
-+110	iopl				-
-+111	vhangup				spu
-+112	idle				-
-+113	vm86				-
-+114	wait4				spu
-+115	swapoff				-
-+116	sysinfo				spu
-+117	ipc				-
-+118	fsync				spu
-+119	sigreturn			-
-+120	clone				-
-+121	setdomainname			spu
-+122	uname				spu
-+123	modify_ldt			-
-+124	adjtimex			spu
-+125	mprotect			spu
-+126	sigprocmask			-
-+127	create_module			-
-+128	init_module			-
-+129	delete_module			-
-+130	get_kernel_syms			-
-+131	quotactl			-
-+132	getpgid				spu
-+133	fchdir				spu
-+134	bdflush				spu
-+135	sysfs				spu
-+136	personality			spu
-+137	afs_syscall			-
-+138	setfsuid			spu
-+139	setfsgid			spu
-+140	_llseek				spu
-+141	getdents			spu
-+142	_newselect			spu
-+143	flock				spu
-+144	msync				spu
-+145	readv				spu
-+146	writev				spu
-+147	getsid				spu
-+148	fdatasync			spu
-+149	_sysctl				-
-+150	mlock				spu
-+151	munlock				spu
-+152	mlockall			spu
-+153	munlockall			spu
-+154	sched_setparam			spu
-+155	sched_getparam			spu
-+156	sched_setscheduler		spu
-+157	sched_getscheduler		spu
-+158	sched_yield			spu
-+159	sched_get_priority_max		spu
-+160	sched_get_priority_min		spu
-+161	sched_rr_get_interval		spu
-+162	nanosleep			spu
-+163	mremap				spu
-+164	setresuid			spu
-+165	getresuid			spu
-+166	query_module			-
-+167	poll				spu
-+168	nfsservctl			-
-+169	setresgid			spu
-+170	getresgid			spu
-+171	prctl				spu
-+172	rt_sigreturn			-
-+173	rt_sigaction			-
-+174	rt_sigprocmask			-
-+175	rt_sigpending			-
-+176	rt_sigtimedwait			-
-+177	rt_sigqueueinfo			-
-+178	rt_sigsuspend			-
-+179	pread64				spu
-+180	pwrite64			spu
-+181	chown				spu
-+182	getcwd				spu
-+183	capget				spu
-+184	capset				spu
-+185	sigaltstack			-
-+186	sendfile			spu
-+187	getpmsg				-
-+188	putpmsg				-
-+189	vfork				-
-+190	ugetrlimit			spu
-+191	readahead			spu
-+192	mmap2				-
-+193	truncate64			-
-+194	ftruncate64			-
-+195	stat64				-
-+196	lstat64				-
-+197	fstat64				-
-+198	pciconfig_read			-
-+199	pciconfig_write			-
-+200	pciconfig_iobase		-
-+201	multiplexer			-
-+202	getdents64			spu
-+203	pivot_root			spu
-+204	fcntl64				-
-+205	madvise				spu
-+206	mincore				spu
-+207	gettid				spu
-+208	tkill				spu
-+209	setxattr			spu
-+210	lsetxattr			spu
-+211	fsetxattr			spu
-+212	getxattr			spu
-+213	lgetxattr			spu
-+214	fgetxattr			spu
-+215	listxattr			spu
-+216	llistxattr			spu
-+217	flistxattr			spu
-+218	removexattr			spu
-+219	lremovexattr			spu
-+220	fremovexattr			spu
-+221	futex				spu
-+222	sched_setaffinity		spu
-+223	sched_getaffinity		spu
-+225	tuxcall				-
-+226	sendfile64			-
-+227	io_setup			spu
-+228	io_destroy			spu
-+229	io_getevents			spu
-+230	io_submit			spu
-+231	io_cancel			spu
-+232	set_tid_address			-
-+233	fadvise64			spu
-+234	exit_group			-
-+235	lookup_dcookie			-
-+236	epoll_create			spu
-+237	epoll_ctl			spu
-+238	epoll_wait			spu
-+239	remap_file_pages		spu
-+240	timer_create			spu
-+241	timer_settime			spu
-+242	timer_gettime			spu
-+243	timer_getoverrun		spu
-+244	timer_delete			spu
-+245	clock_settime			spu
-+246	clock_gettime			spu
-+247	clock_getres			spu
-+248	clock_nanosleep			spu
-+249	swapcontext			-
-+250	tgkill				spu
-+251	utimes				spu
-+252	statfs64			spu
-+253	fstatfs64			spu
-+254	fadvise64_64			-
-+255	rtas				spu
-+256	sys_debug_setcontext		-
-+258	migrate_pages			-
-+259	mbind				-
-+260	get_mempolicy			-
-+261	set_mempolicy			-
-+262	mq_open				-
-+263	mq_unlink			-
-+264	mq_timedsend			-
-+265	mq_timedreceive			-
-+266	mq_notify			-
-+267	mq_getsetattr			-
-+268	kexec_load			-
-+269	add_key				-
-+270	request_key			-
-+271	keyctl				-
-+272	waitid				-
-+273	ioprio_set			-
-+274	ioprio_get			-
-+275	inotify_init			-
-+276	inotify_add_watch		-
-+277	inotify_rm_watch		-
-+278	spu_run				-
-+279	spu_create			-
-+280	pselect6			-
-+281	ppoll				-
-+282	unshare				spu
-+283	splice				spu
-+284	tee				spu
-+285	vmsplice			spu
-+286	openat				spu
-+287	mkdirat				spu
-+288	mknodat				spu
-+289	fchownat			spu
-+290	futimesat			spu
-+291	newfstatat			spu
-+292	unlinkat			spu
-+293	renameat			spu
-+294	linkat				spu
-+295	symlinkat			spu
-+296	readlinkat			spu
-+297	fchmodat			spu
-+298	faccessat			spu
-+299	get_robust_list			spu
-+300	set_robust_list			spu
-+301	move_pages			spu
-+302	getcpu				spu
-+303	epoll_pwait			-
-+304	utimensat			spu
-+305	signalfd			spu
-+306	timerfd_create			spu
-+307	eventfd				spu
-+308	sync_file_range2		spu
-+309	fallocate			-
-+310	subpage_prot			-
-+311	timerfd_settime			spu
-+312	timerfd_gettime			spu
-+313	signalfd4			spu
-+314	eventfd2			spu
-+315	epoll_create1			spu
-+316	dup3				spu
-+317	pipe2				spu
-+318	inotify_init1			-
-+319	perf_event_open			spu
-+320	preadv				spu
-+321	pwritev				spu
-+322	rt_tgsigqueueinfo		-
-+323	fanotify_init			-
-+324	fanotify_mark			-
-+325	prlimit64			spu
-+326	socket				spu
-+327	bind				spu
-+328	connect				spu
-+329	listen				spu
-+330	accept				spu
-+331	getsockname			spu
-+332	getpeername			spu
-+333	socketpair			spu
-+334	send				spu
-+335	sendto				spu
-+336	recv				spu
-+337	recvfrom			spu
-+338	shutdown			spu
-+339	setsockopt			spu
-+340	getsockopt			spu
-+341	sendmsg				spu
-+342	recvmsg				spu
-+343	recvmmsg			spu
-+344	accept4				spu
-+345	name_to_handle_at		spu
-+346	open_by_handle_at		spu
-+347	clock_adjtime			spu
-+348	syncfs				spu
-+349	sendmmsg			spu
-+350	setns				spu
-+351	process_vm_readv		-
-+352	process_vm_writev		-
-+353	finit_module			-
-+354	kcmp				-
-+355	sched_setattr			spu
-+356	sched_getattr			spu
-+357	renameat2			spu
-+358	seccomp				spu
-+359	getrandom			spu
-+360	memfd_create			spu
-+361	bpf				spu
-+362	execveat			-
-+363	switch_endian			-
-+364	userfaultfd			spu
-+365	membarrier			spu
-+378	mlock2				-
-+379	copy_file_range			-
-+380	preadv2				spu
-+381	pwritev2			spu
-+382	kexec_file_load			-
-+383	statx				-
-+384	pkey_alloc			-
-+385	pkey_free			-
-+386	pkey_mprotect			-
-+387	rseq				-
-+388	io_pgetevents			-
-+392	semtimedop			-
-+393	semget				spu
-+394	semctl				spu
-+395	shmget				spu
-+396	shmctl				spu
-+397	shmat				spu
-+398	shmdt				spu
-+399	msgget				spu
-+400	msgsnd				spu
-+401	msgrcv				spu
-+402	msgctl				spu
-+403	clock_gettime64			-
-+404	clock_settime64			-
-+405	clock_adjtime64			-
-+406	clock_getres_time64		-
-+407	clock_nanosleep_time64		-
-+408	timer_gettime64			-
-+409	timer_settime64			-
-+410	timerfd_gettime64		-
-+411	timerfd_settime64		-
-+412	utimensat_time64		-
-+413	pselect6_time64			-
-+414	ppoll_time64			-
-+416	io_pgetevents_time64		-
-+417	recvmmsg_time64			-
-+418	mq_timedsend_time64		-
-+419	mq_timedreceive_time64		-
-+420	semtimedop_time64		-
-+421	rt_sigtimedwait_time64		-
-+422	futex_time64			-
-+423	sched_rr_get_interval_time64	-
-+424	pidfd_send_signal		spu
-+425	io_uring_setup			spu
-+426	io_uring_enter			spu
-+427	io_uring_register		spu
-+428	open_tree			spu
-+429	move_mount			spu
-+430	fsopen				spu
-+431	fsconfig			spu
-+432	fsmount				spu
-+433	fspick				spu
-+434	pidfd_open			spu
-+435	clone3				-
-+437	openat2				spu
-+438	pidfd_getfd			spu
-+439	faccessat2			spu
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index f833a3190822..c0cdaacd770e 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -5,13 +5,12 @@
- # The format is:
- # <number> <abi> <name> <entry point> <compat entry point>
- #
--# The <abi> can be common, spu, nospu, 64, or 32 for this file.
-+# The <abi> can be common, 64, or 32 for this file.
- #
--0	nospu	restart_syscall			sys_restart_syscall
--1	nospu	exit				sys_exit
-+0	common	restart_syscall			sys_restart_syscall
-+1	common	exit				sys_exit
- 2	32	fork				ppc_fork			sys_fork
- 2	64	fork				sys_fork
--2	spu	fork				sys_ni_syscall
- 3	common	read				sys_read
- 4	common	write				sys_write
- 5	common	open				sys_open			compat_sys_open
-@@ -20,35 +19,30 @@
- 8	common	creat				sys_creat
- 9	common	link				sys_link
- 10	common	unlink				sys_unlink
--11	nospu	execve				sys_execve			compat_sys_execve
-+11	common	execve				sys_execve			compat_sys_execve
- 12	common	chdir				sys_chdir
- 13	32	time				sys_time32
- 13	64	time				sys_time
--13	spu	time				sys_time
- 14	common	mknod				sys_mknod
- 15	common	chmod				sys_chmod
- 16	common	lchown				sys_lchown
- 17	common	break				sys_ni_syscall
- 18	32	oldstat				sys_stat			sys_ni_syscall
- 18	64	oldstat				sys_ni_syscall
--18	spu	oldstat				sys_ni_syscall
- 19	common	lseek				sys_lseek			compat_sys_lseek
- 20	common	getpid				sys_getpid
--21	nospu	mount				sys_mount			compat_sys_mount
-+21	common	mount				sys_mount			compat_sys_mount
- 22	32	umount				sys_oldumount
- 22	64	umount				sys_ni_syscall
--22	spu	umount				sys_ni_syscall
- 23	common	setuid				sys_setuid
- 24	common	getuid				sys_getuid
- 25	32	stime				sys_stime32
- 25	64	stime				sys_stime
--25	spu	stime				sys_stime
--26	nospu	ptrace				sys_ptrace			compat_sys_ptrace
-+26	common	ptrace				sys_ptrace			compat_sys_ptrace
- 27	common	alarm				sys_alarm
- 28	32	oldfstat			sys_fstat			sys_ni_syscall
- 28	64	oldfstat			sys_ni_syscall
--28	spu	oldfstat			sys_ni_syscall
--29	nospu	pause				sys_pause
-+29	common	pause				sys_pause
- 30	32	utime				sys_utime32
- 30	64	utime				sys_utime
- 31	common	stty				sys_ni_syscall
-@@ -68,11 +62,11 @@
- 45	common	brk				sys_brk
- 46	common	setgid				sys_setgid
- 47	common	getgid				sys_getgid
--48	nospu	signal				sys_signal
-+48	common	signal				sys_signal
- 49	common	geteuid				sys_geteuid
- 50	common	getegid				sys_getegid
--51	nospu	acct				sys_acct
--52	nospu	umount2				sys_umount
-+51	common	acct				sys_acct
-+52	common	umount2				sys_umount
- 53	common	lock				sys_ni_syscall
- 54	common	ioctl				sys_ioctl			compat_sys_ioctl
- 55	common	fcntl				sys_fcntl			compat_sys_fcntl
-@@ -81,32 +75,27 @@
- 58	common	ulimit				sys_ni_syscall
- 59	32	oldolduname			sys_olduname
- 59	64	oldolduname			sys_ni_syscall
--59	spu	oldolduname			sys_ni_syscall
- 60	common	umask				sys_umask
- 61	common	chroot				sys_chroot
--62	nospu	ustat				sys_ustat			compat_sys_ustat
-+62	common	ustat				sys_ustat			compat_sys_ustat
- 63	common	dup2				sys_dup2
- 64	common	getppid				sys_getppid
- 65	common	getpgrp				sys_getpgrp
- 66	common	setsid				sys_setsid
- 67	32	sigaction			sys_sigaction			compat_sys_sigaction
- 67	64	sigaction			sys_ni_syscall
--67	spu	sigaction			sys_ni_syscall
- 68	common	sgetmask			sys_sgetmask
- 69	common	ssetmask			sys_ssetmask
- 70	common	setreuid			sys_setreuid
- 71	common	setregid			sys_setregid
- 72	32	sigsuspend			sys_sigsuspend
- 72	64	sigsuspend			sys_ni_syscall
--72	spu	sigsuspend			sys_ni_syscall
- 73	32	sigpending			sys_sigpending			compat_sys_sigpending
- 73	64	sigpending			sys_ni_syscall
--73	spu	sigpending			sys_ni_syscall
- 74	common	sethostname			sys_sethostname
- 75	common	setrlimit			sys_setrlimit			compat_sys_setrlimit
- 76	32	getrlimit			sys_old_getrlimit		compat_sys_old_getrlimit
- 76	64	getrlimit			sys_ni_syscall
--76	spu	getrlimit			sys_ni_syscall
- 77	common	getrusage			sys_getrusage			compat_sys_getrusage
- 78	common	gettimeofday			sys_gettimeofday		compat_sys_gettimeofday
- 79	common	settimeofday			sys_settimeofday		compat_sys_settimeofday
-@@ -114,18 +103,15 @@
- 81	common	setgroups			sys_setgroups
- 82	32	select				ppc_select			sys_ni_syscall
- 82	64	select				sys_ni_syscall
--82	spu	select				sys_ni_syscall
- 83	common	symlink				sys_symlink
- 84	32	oldlstat			sys_lstat			sys_ni_syscall
- 84	64	oldlstat			sys_ni_syscall
--84	spu	oldlstat			sys_ni_syscall
- 85	common	readlink			sys_readlink
--86	nospu	uselib				sys_uselib
--87	nospu	swapon				sys_swapon
--88	nospu	reboot				sys_reboot
-+86	common	uselib				sys_uselib
-+87	common	swapon				sys_swapon
-+88	common	reboot				sys_reboot
- 89	32	readdir				sys_old_readdir			compat_sys_old_readdir
- 89	64	readdir				sys_ni_syscall
--89	spu	readdir				sys_ni_syscall
- 90	common	mmap				sys_mmap
- 91	common	munmap				sys_munmap
- 92	common	truncate			sys_truncate			compat_sys_truncate
-@@ -135,8 +121,8 @@
- 96	common	getpriority			sys_getpriority
- 97	common	setpriority			sys_setpriority
- 98	common	profil				sys_ni_syscall
--99	nospu	statfs				sys_statfs			compat_sys_statfs
--100	nospu	fstatfs				sys_fstatfs			compat_sys_fstatfs
-+99	common	statfs				sys_statfs			compat_sys_statfs
-+100	common	fstatfs				sys_fstatfs			compat_sys_fstatfs
- 101	common	ioperm				sys_ni_syscall
- 102	common	socketcall			sys_socketcall			compat_sys_socketcall
- 103	common	syslog				sys_syslog
-@@ -147,44 +133,38 @@
- 108	common	fstat				sys_newfstat			compat_sys_newfstat
- 109	32	olduname			sys_uname
- 109	64	olduname			sys_ni_syscall
--109	spu	olduname			sys_ni_syscall
- 110	common	iopl				sys_ni_syscall
- 111	common	vhangup				sys_vhangup
- 112	common	idle				sys_ni_syscall
- 113	common	vm86				sys_ni_syscall
- 114	common	wait4				sys_wait4			compat_sys_wait4
--115	nospu	swapoff				sys_swapoff
-+115	common	swapoff				sys_swapoff
- 116	common	sysinfo				sys_sysinfo			compat_sys_sysinfo
--117	nospu	ipc				sys_ipc				compat_sys_ipc
-+117	common	ipc				sys_ipc				compat_sys_ipc
- 118	common	fsync				sys_fsync
- 119	32	sigreturn			sys_sigreturn			compat_sys_sigreturn
- 119	64	sigreturn			sys_ni_syscall
--119	spu	sigreturn			sys_ni_syscall
- 120	32	clone				ppc_clone			sys_clone
- 120	64	clone				sys_clone
--120	spu	clone				sys_ni_syscall
- 121	common	setdomainname			sys_setdomainname
- 122	common	uname				sys_newuname
- 123	common	modify_ldt			sys_ni_syscall
- 124	32	adjtimex			sys_adjtimex_time32
- 124	64	adjtimex			sys_adjtimex
--124	spu	adjtimex			sys_adjtimex
- 125	common	mprotect			sys_mprotect
- 126	32	sigprocmask			sys_sigprocmask			compat_sys_sigprocmask
- 126	64	sigprocmask			sys_ni_syscall
--126	spu	sigprocmask			sys_ni_syscall
- 127	common	create_module			sys_ni_syscall
--128	nospu	init_module			sys_init_module
--129	nospu	delete_module			sys_delete_module
-+128	common	init_module			sys_init_module
-+129	common	delete_module			sys_delete_module
- 130	common	get_kernel_syms			sys_ni_syscall
--131	nospu	quotactl			sys_quotactl
-+131	common	quotactl			sys_quotactl
- 132	common	getpgid				sys_getpgid
- 133	common	fchdir				sys_fchdir
- 134	common	bdflush				sys_bdflush
- 135	common	sysfs				sys_sysfs
- 136	32	personality			sys_personality			ppc64_personality
- 136	64	personality			ppc64_personality
--136	spu	personality			ppc64_personality
- 137	common	afs_syscall			sys_ni_syscall
- 138	common	setfsuid			sys_setfsuid
- 139	common	setfsgid			sys_setfsgid
-@@ -197,7 +177,7 @@
- 146	common	writev				sys_writev			compat_sys_writev
- 147	common	getsid				sys_getsid
- 148	common	fdatasync			sys_fdatasync
--149	nospu	_sysctl				sys_sysctl			compat_sys_sysctl
-+149	common	_sysctl				sys_sysctl			compat_sys_sysctl
- 150	common	mlock				sys_mlock
- 151	common	munlock				sys_munlock
- 152	common	mlockall			sys_mlockall
-@@ -211,10 +191,8 @@
- 160	common	sched_get_priority_min		sys_sched_get_priority_min
- 161	32	sched_rr_get_interval		sys_sched_rr_get_interval_time32
- 161	64	sched_rr_get_interval		sys_sched_rr_get_interval
--161	spu	sched_rr_get_interval		sys_sched_rr_get_interval
- 162	32	nanosleep			sys_nanosleep_time32
- 162	64	nanosleep			sys_nanosleep
--162	spu	nanosleep			sys_nanosleep
- 163	common	mremap				sys_mremap
- 164	common	setresuid			sys_setresuid
- 165	common	getresuid			sys_getresuid
-@@ -224,29 +202,27 @@
- 169	common	setresgid			sys_setresgid
- 170	common	getresgid			sys_getresgid
- 171	common	prctl				sys_prctl
--172	nospu	rt_sigreturn			sys_rt_sigreturn		compat_sys_rt_sigreturn
--173	nospu	rt_sigaction			sys_rt_sigaction		compat_sys_rt_sigaction
--174	nospu	rt_sigprocmask			sys_rt_sigprocmask		compat_sys_rt_sigprocmask
--175	nospu	rt_sigpending			sys_rt_sigpending		compat_sys_rt_sigpending
-+172	common	rt_sigreturn			sys_rt_sigreturn		compat_sys_rt_sigreturn
-+173	common	rt_sigaction			sys_rt_sigaction		compat_sys_rt_sigaction
-+174	common	rt_sigprocmask			sys_rt_sigprocmask		compat_sys_rt_sigprocmask
-+175	common	rt_sigpending			sys_rt_sigpending		compat_sys_rt_sigpending
- 176	32	rt_sigtimedwait			sys_rt_sigtimedwait_time32	compat_sys_rt_sigtimedwait_time32
- 176	64	rt_sigtimedwait			sys_rt_sigtimedwait
--177	nospu 	rt_sigqueueinfo			sys_rt_sigqueueinfo		compat_sys_rt_sigqueueinfo
--178	nospu 	rt_sigsuspend			sys_rt_sigsuspend		compat_sys_rt_sigsuspend
-+177	common 	rt_sigqueueinfo			sys_rt_sigqueueinfo		compat_sys_rt_sigqueueinfo
-+178	common 	rt_sigsuspend			sys_rt_sigsuspend		compat_sys_rt_sigsuspend
- 179	common	pread64				sys_pread64			compat_sys_pread64
- 180	common	pwrite64			sys_pwrite64			compat_sys_pwrite64
- 181	common	chown				sys_chown
- 182	common	getcwd				sys_getcwd
- 183	common	capget				sys_capget
- 184	common	capset				sys_capset
--185	nospu	sigaltstack			sys_sigaltstack			compat_sys_sigaltstack
-+185	common	sigaltstack			sys_sigaltstack			compat_sys_sigaltstack
- 186	32	sendfile			sys_sendfile			compat_sys_sendfile
- 186	64	sendfile			sys_sendfile64
--186	spu	sendfile			sys_sendfile64
- 187	common	getpmsg				sys_ni_syscall
- 188	common 	putpmsg				sys_ni_syscall
- 189	32	vfork				ppc_vfork			sys_vfork
- 189	64	vfork				sys_vfork
--189	spu	vfork				sys_ni_syscall
- 190	common	ugetrlimit			sys_getrlimit			compat_sys_getrlimit
- 191	common	readahead			sys_readahead			compat_sys_readahead
- 192	32	mmap2				sys_mmap2			compat_sys_mmap2
-@@ -255,9 +231,9 @@
- 195	32	stat64				sys_stat64
- 196	32	lstat64				sys_lstat64
- 197	32	fstat64				sys_fstat64
--198	nospu 	pciconfig_read			sys_pciconfig_read
--199	nospu 	pciconfig_write			sys_pciconfig_write
--200	nospu 	pciconfig_iobase		sys_pciconfig_iobase
-+198	common 	pciconfig_read			sys_pciconfig_read
-+199	common 	pciconfig_write			sys_pciconfig_write
-+200	common 	pciconfig_iobase		sys_pciconfig_iobase
- 201	common 	multiplexer			sys_ni_syscall
- 202	common	getdents64			sys_getdents64
- 203	common	pivot_root			sys_pivot_root
-@@ -280,7 +256,6 @@
- 220	common	fremovexattr			sys_fremovexattr
- 221	32	futex				sys_futex_time32
- 221	64	futex				sys_futex
--221	spu	futex				sys_futex
- 222	common	sched_setaffinity		sys_sched_setaffinity		compat_sys_sched_setaffinity
- 223	common	sched_getaffinity		sys_sched_getaffinity		compat_sys_sched_getaffinity
- # 224 unused
-@@ -290,13 +265,12 @@
- 228	common	io_destroy			sys_io_destroy
- 229	32	io_getevents			sys_io_getevents_time32
- 229	64	io_getevents			sys_io_getevents
--229	spu	io_getevents			sys_io_getevents
- 230	common	io_submit			sys_io_submit			compat_sys_io_submit
- 231	common	io_cancel			sys_io_cancel
--232	nospu	set_tid_address			sys_set_tid_address
-+232	common	set_tid_address			sys_set_tid_address
- 233	common	fadvise64			sys_fadvise64			ppc32_fadvise64
--234	nospu	exit_group			sys_exit_group
--235	nospu	lookup_dcookie			sys_lookup_dcookie		compat_sys_lookup_dcookie
-+234	common	exit_group			sys_exit_group
-+235	common	lookup_dcookie			sys_lookup_dcookie		compat_sys_lookup_dcookie
- 236	common	epoll_create			sys_epoll_create
- 237	common	epoll_ctl			sys_epoll_ctl
- 238	common	epoll_wait			sys_epoll_wait
-@@ -304,64 +278,54 @@
- 240	common	timer_create			sys_timer_create		compat_sys_timer_create
- 241	32	timer_settime			sys_timer_settime32
- 241	64	timer_settime			sys_timer_settime
--241	spu	timer_settime			sys_timer_settime
- 242	32	timer_gettime			sys_timer_gettime32
- 242	64	timer_gettime			sys_timer_gettime
--242	spu	timer_gettime			sys_timer_gettime
- 243	common	timer_getoverrun		sys_timer_getoverrun
- 244	common	timer_delete			sys_timer_delete
- 245	32	clock_settime			sys_clock_settime32
- 245	64	clock_settime			sys_clock_settime
--245	spu	clock_settime			sys_clock_settime
- 246	32	clock_gettime			sys_clock_gettime32
- 246	64	clock_gettime			sys_clock_gettime
--246	spu	clock_gettime			sys_clock_gettime
- 247	32	clock_getres			sys_clock_getres_time32
- 247	64	clock_getres			sys_clock_getres
--247	spu	clock_getres			sys_clock_getres
- 248	32	clock_nanosleep			sys_clock_nanosleep_time32
- 248	64	clock_nanosleep			sys_clock_nanosleep
--248	spu	clock_nanosleep			sys_clock_nanosleep
- 249	32	swapcontext			ppc_swapcontext			compat_sys_swapcontext
- 249	64	swapcontext			sys_swapcontext
--249	spu	swapcontext			sys_ni_syscall
- 250	common	tgkill				sys_tgkill
- 251	32	utimes				sys_utimes_time32
- 251	64	utimes				sys_utimes
--251	spu	utimes				sys_utimes
- 252	common	statfs64			sys_statfs64			compat_sys_statfs64
- 253	common	fstatfs64			sys_fstatfs64			compat_sys_fstatfs64
- 254	32	fadvise64_64			ppc_fadvise64_64
--254	spu	fadvise64_64			sys_ni_syscall
- 255	common	rtas				sys_rtas
- 256	32	sys_debug_setcontext		sys_debug_setcontext		sys_ni_syscall
- 256	64	sys_debug_setcontext		sys_ni_syscall
--256	spu	sys_debug_setcontext		sys_ni_syscall
- # 257 reserved for vserver
--258	nospu	migrate_pages			sys_migrate_pages		compat_sys_migrate_pages
--259	nospu	mbind				sys_mbind			compat_sys_mbind
--260	nospu	get_mempolicy			sys_get_mempolicy		compat_sys_get_mempolicy
--261	nospu	set_mempolicy			sys_set_mempolicy		compat_sys_set_mempolicy
--262	nospu	mq_open				sys_mq_open			compat_sys_mq_open
--263	nospu	mq_unlink			sys_mq_unlink
-+258	common	migrate_pages			sys_migrate_pages		compat_sys_migrate_pages
-+259	common	mbind				sys_mbind			compat_sys_mbind
-+260	common	get_mempolicy			sys_get_mempolicy		compat_sys_get_mempolicy
-+261	common	set_mempolicy			sys_set_mempolicy		compat_sys_set_mempolicy
-+262	common	mq_open				sys_mq_open			compat_sys_mq_open
-+263	common	mq_unlink			sys_mq_unlink
- 264	32	mq_timedsend			sys_mq_timedsend_time32
- 264	64	mq_timedsend			sys_mq_timedsend
- 265	32	mq_timedreceive			sys_mq_timedreceive_time32
- 265	64	mq_timedreceive			sys_mq_timedreceive
--266	nospu	mq_notify			sys_mq_notify			compat_sys_mq_notify
--267	nospu	mq_getsetattr			sys_mq_getsetattr		compat_sys_mq_getsetattr
--268	nospu	kexec_load			sys_kexec_load			compat_sys_kexec_load
--269	nospu	add_key				sys_add_key
--270	nospu	request_key			sys_request_key
--271	nospu	keyctl				sys_keyctl			compat_sys_keyctl
--272	nospu	waitid				sys_waitid			compat_sys_waitid
--273	nospu	ioprio_set			sys_ioprio_set
--274	nospu	ioprio_get			sys_ioprio_get
--275	nospu	inotify_init			sys_inotify_init
--276	nospu	inotify_add_watch		sys_inotify_add_watch
--277	nospu	inotify_rm_watch		sys_inotify_rm_watch
--278	nospu	spu_run				sys_spu_run
--279	nospu	spu_create			sys_spu_create
-+266	common	mq_notify			sys_mq_notify			compat_sys_mq_notify
-+267	common	mq_getsetattr			sys_mq_getsetattr		compat_sys_mq_getsetattr
-+268	common	kexec_load			sys_kexec_load			compat_sys_kexec_load
-+269	common	add_key				sys_add_key
-+270	common	request_key			sys_request_key
-+271	common	keyctl				sys_keyctl			compat_sys_keyctl
-+272	common	waitid				sys_waitid			compat_sys_waitid
-+273	common	ioprio_set			sys_ioprio_set
-+274	common	ioprio_get			sys_ioprio_get
-+275	common	inotify_init			sys_inotify_init
-+276	common	inotify_add_watch		sys_inotify_add_watch
-+277	common	inotify_rm_watch		sys_inotify_rm_watch
-+278	common	spu_run				sys_spu_run
-+279	common	spu_create			sys_spu_create
- 280	32	pselect6			sys_pselect6_time32		compat_sys_pselect6_time32
- 280	64	pselect6			sys_pselect6
- 281	32	ppoll				sys_ppoll_time32		compat_sys_ppoll_time32
-@@ -376,10 +340,8 @@
- 289	common	fchownat			sys_fchownat
- 290	32	futimesat			sys_futimesat_time32
- 290	64	futimesat			sys_futimesat
--290	spu	utimesat			sys_futimesat
- 291	32	fstatat64			sys_fstatat64
- 291	64	newfstatat			sys_newfstatat
--291	spu	newfstatat			sys_newfstatat
- 292	common	unlinkat			sys_unlinkat
- 293	common	renameat			sys_renameat
- 294	common	linkat				sys_linkat
-@@ -391,34 +353,31 @@
- 300	common	set_robust_list			sys_set_robust_list		compat_sys_set_robust_list
- 301	common	move_pages			sys_move_pages			compat_sys_move_pages
- 302	common	getcpu				sys_getcpu
--303	nospu	epoll_pwait			sys_epoll_pwait			compat_sys_epoll_pwait
-+303	common	epoll_pwait			sys_epoll_pwait			compat_sys_epoll_pwait
- 304	32	utimensat			sys_utimensat_time32
- 304	64	utimensat			sys_utimensat
--304	spu	utimensat			sys_utimensat
- 305	common	signalfd			sys_signalfd			compat_sys_signalfd
- 306	common	timerfd_create			sys_timerfd_create
- 307	common	eventfd				sys_eventfd
- 308	common	sync_file_range2		sys_sync_file_range2		compat_sys_sync_file_range2
--309	nospu	fallocate			sys_fallocate			compat_sys_fallocate
--310	nospu	subpage_prot			sys_subpage_prot
-+309	common	fallocate			sys_fallocate			compat_sys_fallocate
-+310	common	subpage_prot			sys_subpage_prot
- 311	32	timerfd_settime			sys_timerfd_settime32
- 311	64	timerfd_settime			sys_timerfd_settime
--311	spu	timerfd_settime			sys_timerfd_settime
- 312	32	timerfd_gettime			sys_timerfd_gettime32
- 312	64	timerfd_gettime			sys_timerfd_gettime
--312	spu	timerfd_gettime			sys_timerfd_gettime
- 313	common	signalfd4			sys_signalfd4			compat_sys_signalfd4
- 314	common	eventfd2			sys_eventfd2
- 315	common	epoll_create1			sys_epoll_create1
- 316	common	dup3				sys_dup3
- 317	common	pipe2				sys_pipe2
--318	nospu	inotify_init1			sys_inotify_init1
-+318	common	inotify_init1			sys_inotify_init1
- 319	common	perf_event_open			sys_perf_event_open
- 320	common	preadv				sys_preadv			compat_sys_preadv
- 321	common	pwritev				sys_pwritev			compat_sys_pwritev
--322	nospu	rt_tgsigqueueinfo		sys_rt_tgsigqueueinfo		compat_sys_rt_tgsigqueueinfo
--323	nospu	fanotify_init			sys_fanotify_init
--324	nospu	fanotify_mark			sys_fanotify_mark		compat_sys_fanotify_mark
-+322	common	rt_tgsigqueueinfo		sys_rt_tgsigqueueinfo		compat_sys_rt_tgsigqueueinfo
-+323	common	fanotify_init			sys_fanotify_init
-+324	common	fanotify_mark			sys_fanotify_mark		compat_sys_fanotify_mark
- 325	common	prlimit64			sys_prlimit64
- 326	common	socket				sys_socket
- 327	common	bind				sys_bind
-@@ -439,20 +398,18 @@
- 342	common	recvmsg				sys_recvmsg			compat_sys_recvmsg
- 343	32	recvmmsg			sys_recvmmsg_time32		compat_sys_recvmmsg_time32
- 343	64	recvmmsg			sys_recvmmsg
--343	spu	recvmmsg			sys_recvmmsg
- 344	common	accept4				sys_accept4
- 345	common	name_to_handle_at		sys_name_to_handle_at
- 346	common	open_by_handle_at		sys_open_by_handle_at		compat_sys_open_by_handle_at
- 347	32	clock_adjtime			sys_clock_adjtime32
- 347	64	clock_adjtime			sys_clock_adjtime
--347	spu	clock_adjtime			sys_clock_adjtime
- 348	common	syncfs				sys_syncfs
- 349	common	sendmmsg			sys_sendmmsg			compat_sys_sendmmsg
- 350	common	setns				sys_setns
--351	nospu	process_vm_readv		sys_process_vm_readv		compat_sys_process_vm_readv
--352	nospu	process_vm_writev		sys_process_vm_writev		compat_sys_process_vm_writev
--353	nospu	finit_module			sys_finit_module
--354	nospu	kcmp				sys_kcmp
-+351	common	process_vm_readv		sys_process_vm_readv		compat_sys_process_vm_readv
-+352	common	process_vm_writev		sys_process_vm_writev		compat_sys_process_vm_writev
-+353	common	finit_module			sys_finit_module
-+354	common	kcmp				sys_kcmp
- 355	common	sched_setattr			sys_sched_setattr
- 356	common	sched_getattr			sys_sched_getattr
- 357	common	renameat2			sys_renameat2
-@@ -460,23 +417,22 @@
- 359	common	getrandom			sys_getrandom
- 360	common	memfd_create			sys_memfd_create
- 361	common	bpf				sys_bpf
--362	nospu	execveat			sys_execveat			compat_sys_execveat
-+362	common	execveat			sys_execveat			compat_sys_execveat
- 363	32	switch_endian			sys_ni_syscall
- 363	64	switch_endian			sys_switch_endian
--363	spu	switch_endian			sys_ni_syscall
- 364	common	userfaultfd			sys_userfaultfd
- 365	common	membarrier			sys_membarrier
- # 366-377 originally left for IPC, now unused
--378	nospu	mlock2				sys_mlock2
--379	nospu	copy_file_range			sys_copy_file_range
-+378	common	mlock2				sys_mlock2
-+379	common	copy_file_range			sys_copy_file_range
- 380	common	preadv2				sys_preadv2			compat_sys_preadv2
- 381	common	pwritev2			sys_pwritev2			compat_sys_pwritev2
--382	nospu	kexec_file_load			sys_kexec_file_load
--383	nospu	statx				sys_statx
--384	nospu	pkey_alloc			sys_pkey_alloc
--385	nospu	pkey_free			sys_pkey_free
--386	nospu	pkey_mprotect			sys_pkey_mprotect
--387	nospu	rseq				sys_rseq
-+382	common	kexec_file_load			sys_kexec_file_load
-+383	common	statx				sys_statx
-+384	common	pkey_alloc			sys_pkey_alloc
-+385	common	pkey_free			sys_pkey_free
-+386	common	pkey_mprotect			sys_pkey_mprotect
-+387	common	rseq				sys_rseq
- 388	32	io_pgetevents			sys_io_pgetevents_time32	compat_sys_io_pgetevents
- 388	64	io_pgetevents			sys_io_pgetevents
- # room for arch specific syscalls
-@@ -524,7 +480,6 @@
- 434	common	pidfd_open			sys_pidfd_open
- 435	32	clone3				ppc_clone3			sys_clone3
- 435	64	clone3				sys_clone3
--435	spu	clone3				sys_ni_syscall
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-diff --git a/arch/powerpc/kernel/syscalls/syscalltbl.sh b/arch/powerpc/kernel/syscalls/syscalltbl.sh
-index f7393a7b18aa..1a760242620c 100644
---- a/arch/powerpc/kernel/syscalls/syscalltbl.sh
-+++ b/arch/powerpc/kernel/syscalls/syscalltbl.sh
-@@ -6,6 +6,7 @@ out="$2"
- my_abis=`echo "($3)" | tr ',' '|'`
- my_abi="$4"
- offset="$5"
-+spu_table="$6"
- 
- emit() {
- 	t_nxt="$1"
-@@ -28,9 +29,16 @@ grep -E "^[0-9A-Fa-fXx]+[[:space:]]+${my_abis}" "$in" | sort -n | (
- 	while read nr abi name entry compat ; do
- 		if [ "$my_abi" = "c32" ] && [ ! -z "$compat" ]; then
- 			emit $((nxt+offset)) $((nr+offset)) $compat
-+			nxt=$((nr+1))
-+		elif [ "$my_abi" = "spu" ]; then
-+			grep -E "^$nr[[:space:]]+$name[[:space:]]+spu[[:space:]]*$" "$spu_table" > /dev/null
-+			if [ $? -eq 0 ]; then
-+				emit $((nxt+offset)) $((nr+offset)) $entry
-+				nxt=$((nr+1))
-+			fi
- 		else
- 			emit $((nxt+offset)) $((nr+offset)) $entry
-+			nxt=$((nr+1))
- 		fi
--		nxt=$((nr+1))
- 	done
- ) > "$out"
--- 
-2.25.1
+2.1. Experiment with netperf and two kernels
+
+These tests have been conducted without numactl force settings (all CPUs
+allowed). As it can be seen the kernel with uclamp task has worse
+performance for UDP, but somehow better for TCP.
+
+UDP tests results:
+netperf-udp
+                           ./v5.7-rc7-base       ./v5.7-rc7-ucl-tsk
+Hmean     send-64          62.15 (   0.00%)       59.65 *  -4.02%*
+Hmean     send-128        122.88 (   0.00%)      119.37 *  -2.85%*
+Hmean     send-256        244.85 (   0.00%)      234.26 *  -4.32%*
+Hmean     send-1024       919.24 (   0.00%)      880.67 *  -4.20%*
+Hmean     send-2048      1689.45 (   0.00%)     1647.54 *  -2.48%*
+Hmean     send-3312      2542.36 (   0.00%)     2485.23 *  -2.25%*
+Hmean     send-4096      2935.69 (   0.00%)     2861.09 *  -2.54%*
+Hmean     send-8192      4800.35 (   0.00%)     4680.09 *  -2.51%*
+Hmean     send-16384     7473.66 (   0.00%)     7349.60 *  -1.66%*
+Hmean     recv-64          62.15 (   0.00%)       59.65 *  -4.03%*
+Hmean     recv-128        122.88 (   0.00%)      119.37 *  -2.85%*
+Hmean     recv-256        244.84 (   0.00%)      234.26 *  -4.32%*
+Hmean     recv-1024       919.24 (   0.00%)      880.67 *  -4.20%*
+Hmean     recv-2048      1689.44 (   0.00%)     1647.54 *  -2.48%*
+Hmean     recv-3312      2542.36 (   0.00%)     2485.23 *  -2.25%*
+Hmean     recv-4096      2935.69 (   0.00%)     2861.09 *  -2.54%*
+Hmean     recv-8192      4800.35 (   0.00%)     4678.15 *  -2.55%*
+Hmean     recv-16384     7473.63 (   0.00%)     7349.52 *  -1.66%*
+
+TCP test results:
+netperf-tcp
+                        ./v5.7-rc7-base    ./v5.7-rc7-ucl-tsk
+Hmean     64         756.44 (   0.00%)      881.17 *  16.49%*
+Hmean     128       1425.09 (   0.00%)     1558.70 *   9.38%*
+Hmean     256       2292.65 (   0.00%)     2508.72 *   9.42%*
+Hmean     1024      5068.70 (   0.00%)     5612.17 *  10.72%*
+Hmean     2048      6506.81 (   0.00%)     6739.87 *   3.58%*
+Hmean     3312      7232.42 (   0.00%)     7735.86 *   6.96%*
+Hmean     4096      7597.95 (   0.00%)     7698.76 *   1.33%*
+Hmean     8192      8402.80 (   0.00%)     8540.36 *   1.64%*
+Hmean     16384     8841.60 (   0.00%)     9068.70 *   2.57%*
+
+Using perf for in similar workload:
+Perf difference in the activate_task and deactivate_task is not too
+small.
+v5.7-rc7-base
+      0.62%  netperf          [kernel.kallsyms]        [k] activate_task
+      0.06%  netserver        [kernel.kallsyms]        [k] deactivate_task
+
+v5.7-rc7-ucl-tsk
+      3.43%  netperf          [kernel.kallsyms]        [k] activate_task
+      2.39%  netserver        [kernel.kallsyms]        [k] deactivate_task
+
+It's a starting point, just to align with others who see also some
+regression.
+
+2.2. Experiment with many tests of a single netperf-udp 64B and tracing
+
+I have tried to measure the suspected functions, which were mentioned
+many times. Here are the measurements of functions 'activate_task' and
+'deactivate_task', such as:
+number of hits, total computation time, average time of one call.
+These values have been captured during one single netperf-udp 64B test,
+but repeated many time. These tables below show processed statistics for
+experiments conducted with 3 different kernels. How many times the test
+has been repeated on each kernel is shown in row called 'counts'.
+This is the output from pandas data frame, function describe(). In case
+of confusion with labels in the first row, please check the web for some
+tutorials.
+
+stats: fprof.base (basic kernel v5.7-rc7 nouclamp)
+activate_task
+                Hit    Time_us  Avg_us  s^2_us
+count       138.00     138.00  138.00  138.00
+mean     20,387.44  14,587.33    1.15    0.53
+std     114,980.19  81,427.51    0.42    0.23
+min         110.00     181.68    0.32    0.00
+50%         411.00     461.55    1.32    0.54
+75%         881.75     760.08    1.47    0.66
+90%       2,885.60   1,302.03    1.61    0.80
+95%      55,318.05  41,273.41    1.66    0.92
+99%     501,660.04 358,939.04    1.77    1.09
+max   1,131,457.00 798,097.30    1.80    1.42
+deactivate_task
+                Hit    Time_us  Avg_us  s^2_us
+count       138.00     138.00  138.00  138.00
+mean     81,828.83  39,991.61    0.81    0.28
+std     260,130.01 126,386.89    0.28    0.14
+min          97.00      92.35    0.26    0.00
+50%         424.00     340.35    0.94    0.30
+75%       1,062.25     684.98    1.05    0.37
+90%     330,657.50 168,320.94    1.11    0.46
+95%     748,920.70 359,498.23    1.15    0.51
+99%   1,094,614.76 528,459.50    1.21    0.56
+max   1,630,473.00 789,476.50    1.25    0.60
+
+stats: fprof.uclamp_tsk (kernel v5.7-rc7 + uclamp tasks)
+activate_task
+                Hit      Time_us  Avg_us  s^2_us
+count       113.00       113.00  113.00  113.00
+mean     23,006.46    24,133.29    1.36    0.64
+std     161,171.74   170,299.61    0.45    0.24
+min          98.00       173.13    0.44    0.08
+50%         369.00       575.96    1.55    0.62
+75%         894.00       883.71    1.69    0.74
+90%       1,941.20     1,221.70    1.77    0.90
+95%       3,187.40     1,627.21    1.85    1.14
+99%     431,604.88   437,291.66    1.92    1.35
+max   1,631,657.00 1,729,488.00    2.16    1.35
+deactivate_task
+                Hit      Time_us  Avg_us  s^2_us
+count       113.00       113.00  113.00  113.00
+mean    108,067.93    86,020.56    1.00    0.35
+std     310,429.35   246,938.68    0.33    0.15
+min          89.00       102.46    0.33    0.00
+50%         430.00       495.87    1.14    0.35
+75%       1,361.00       823.63    1.24    0.44
+90%     437,528.40   345,051.10    1.34    0.53
+95%     886,978.60   696,796.74    1.40    0.58
+99%   1,345,052.40 1,086,567.76    1.44    0.68
+max   1,391,534.00 1,116,053.00    1.63    0.80
+
+stats: fprof.uclamp_tsk_grp (kernel v5.7-rc7 + uclamp tasks + uclamp 
+task group)
+activate_task
+                Hit      Time_us  Avg_us  s^2_us
+count       273.00       273.00  273.00  273.00
+mean     15,958.34    16,471.84    1.58    0.67
+std     105,096.88   108,322.03    0.43    0.32
+min           3.00         4.96    0.41    0.00
+50%         245.00       400.23    1.70    0.64
+75%         384.00       565.53    1.85    0.78
+90%       1,602.00     1,069.08    1.95    0.95
+95%       3,403.00     1,573.74    2.01    1.13
+99%     589,484.56   604,992.57    2.11    1.75
+max   1,035,866.00 1,096,975.00    2.40    3.08
+deactivate_task
+                Hit      Time_us  Avg_us  s^2_us
+count       273.00       273.00  273.00  273.00
+mean     94,607.02    63,433.12    1.02    0.34
+std     325,130.91   216,844.92    0.28    0.16
+min           2.00         2.79    0.29    0.00
+50%         244.00       291.49    1.11    0.36
+75%         496.00       448.72    1.19    0.43
+90%     120,304.60    82,964.94    1.25    0.55
+95%     945,480.60   626,793.58    1.33    0.60
+99%   1,485,959.96 1,010,615.72    1.40    0.68
+max   2,120,682.00 1,403,280.00    1.80    1.11
+
+As you can see the data is distributed differently, having
+higher 'Hit' and 'Time_us' value at around .95 for kernels
+with uclamp.
+
+2.3. Experiment forcing test tasks to run in the same NUMA node
+
+The experiment showing if forcing to use only one NUMA node for all test
+tasks can make a difference.
+
+netperf-udp
+                                  ./v5.7-rc7             ./v5.7-rc7 
+        ./v5.7-rc7
+                                  base-numa0          ucl-tsk-numa0 
+ucl-tsk-grp-numa0
+Hmean     send-64          60.99 (   0.00%)       61.19 *   0.32%* 
+64.58 *   5.88%*
+Hmean     send-128        121.92 (   0.00%)      121.37 *  -0.45%* 
+128.26 *   5.20%*
+Hmean     send-256        240.74 (   0.00%)      240.87 *   0.06%* 
+253.86 *   5.45%*
+Hmean     send-1024       905.17 (   0.00%)      908.43 *   0.36%* 
+955.59 *   5.57%*
+Hmean     send-2048      1669.18 (   0.00%)     1681.30 *   0.73%* 
+1752.39 *   4.99%*
+Hmean     send-3312      2496.30 (   0.00%)     2510.48 *   0.57%* 
+2602.42 *   4.25%*
+Hmean     send-4096      2914.13 (   0.00%)     2932.19 *   0.62%* 
+3028.83 *   3.94%*
+Hmean     send-8192      4744.81 (   0.00%)     4762.90 *   0.38%* 
+4916.24 *   3.61%*
+Hmean     send-16384     7489.47 (   0.00%)     7514.17 *   0.33%* 
+7570.39 *   1.08%*
+Hmean     recv-64          60.98 (   0.00%)       61.18 *   0.34%* 
+64.54 *   5.85%*
+Hmean     recv-128        121.86 (   0.00%)      121.29 *  -0.47%* 
+128.26 *   5.26%*
+Hmean     recv-256        240.65 (   0.00%)      240.79 *   0.06%* 
+253.74 *   5.44%*
+Hmean     recv-1024       904.65 (   0.00%)      908.20 *   0.39%* 
+955.58 *   5.63%*
+Hmean     recv-2048      1669.18 (   0.00%)     1680.89 *   0.70%* 
+1752.39 *   4.99%*
+Hmean     recv-3312      2495.08 (   0.00%)     2509.68 *   0.59%* 
+2601.31 *   4.26%*
+Hmean     recv-4096      2911.66 (   0.00%)     2931.46 *   0.68%* 
+3028.83 *   4.02%*
+Hmean     recv-8192      4738.70 (   0.00%)     4762.27 *   0.50%* 
+4911.90 *   3.66%*
+Hmean     recv-16384     7485.81 (   0.00%)     7513.41 *   0.37%* 
+7569.91 *   1.12%*
+
+netperf-tcp
+                         ./v5.7-rc7             ./v5.7-rc7 
+./v5.7-rc7
+                         base-numa0          ucl-tsk-numa0 
+ucl-tsk-grp-numa0
+Hmean     64         762.29 (   0.00%)      826.48 *   8.42%* 
+768.86 *   0.86%*
+Hmean     128       1418.94 (   0.00%)     1573.76 *  10.91%* 
+1444.04 *   1.77%*
+Hmean     256       2302.76 (   0.00%)     2518.75 *   9.38%* 
+2315.00 *   0.53%*
+Hmean     1024      5076.92 (   0.00%)     5351.65 *   5.41%* 
+5061.19 *  -0.31%*
+Hmean     2048      6493.42 (   0.00%)     6645.99 *   2.35%* 
+6493.79 *   0.01%*
+Hmean     3312      7229.76 (   0.00%)     7373.29 *   1.99%* 
+7208.45 *  -0.29%*
+Hmean     4096      7604.00 (   0.00%)     7656.45 *   0.69%* 
+7574.14 *  -0.39%*
+Hmean     8192      8456.24 (   0.00%)     8495.95 *   0.47%* 
+8387.04 *  -0.82%*
+Hmean     16384     8835.74 (   0.00%)     8775.17 *  -0.69%* 
+8837.48 *   0.02%*
+
+Perf values of suspected functions for each kernel for similar test from
+above (pinned to NUMA 0) shows that there is more calls to these
+functions, like usually.
+  base
+      0.57%  netperf          [kernel.kallsyms]        [k] activate_task
+      0.11%  netserver        [kernel.kallsyms]        [k] deactivate_task
+  ucl-tsk
+      3.44%  netperf          [kernel.kallsyms]          [k] activate_task
+      2.49%  netserver        [kernel.kallsyms]          [k] deactivate_task
+  ucl-tsk-grp
+      2.47%  netperf          [kernel.kallsyms]        [k] activate_task
+      1.30%  netserver        [kernel.kallsyms]        [k] deactivate_task
+
+This shows there is more work in the related function, but somehow the
+machine is able to handle it and the performance results are even better
+with uclamp.
+
+2.4. Experiment with one netperf-udp and perf tool.
+
+Repeating nteperd-udp 64B experiment with base kernel vs uclamp task
+group of one test run a few times, I could observed in perf that I have:
+87bln vs 100bln cycles
+~0.8-0.9k  vs ~2.6M context-switches
+  ~73bln vs 76-77bln instr
+task-clock stays the same: ~48s
+
+2.5. Ubuntu server and distro kernel experiments
+
+Here are some results when I checked different distro, to check if it
+can be observed there as well.
+This experiment if for different kernel and different distro:
+Ubuntu server 18.04, but the same machine.
+The results are for kernel uclamp task + task (last column) group might
+look really bad.
+I convinced myself after processing results from experiment 2.2
+that I just might hit worse usecase during these 5 iterations test of
+'netperf-udp send-128', a very bad tasks bouncing.
+Apart from that, in general, worse performance results can be observed.
+
+                       ./v5.6-custom-nouclamp       ./v5.6-custom-uct 
+  ./v5.6-custom-uctg
+Hmean     send-64          99.43 (   0.00%)       94.40 *  -5.06%* 
+90.19 *  -9.29%*
+Hmean     send-128        198.81 (   0.00%)      180.91 *  -9.01%* 
+137.80 * -30.69%*
+Hmean     send-256        393.12 (   0.00%)      341.89 * -13.03%* 
+332.72 * -15.36%*
+Hmean     send-1024      1052.48 (   0.00%)      961.17 *  -8.68%* 
+961.64 *  -8.63%*
+Hmean     send-2048      1935.68 (   0.00%)     1803.86 *  -6.81%* 
+1755.36 *  -9.32%*
+Hmean     send-3312      2983.04 (   0.00%)     2806.50 *  -5.92%* 
+2802.44 *  -6.05%*
+Hmean     send-4096      3558.37 (   0.00%)     3348.70 *  -5.89%* 
+3373.92 *  -5.18%*
+Hmean     send-8192      5335.23 (   0.00%)     5227.89 *  -2.01%* 
+5277.22 *  -1.09%*
+Hmean     send-16384     7552.66 (   0.00%)     7374.27 *  -2.36%* 
+7388.90 *  -2.17%*
+
+3. Some hypothesis and summary
+
+These 1.5M extra ctx-switches might cause + 3-4bln instr,
+which could consume extra 13bln cycles.
+Tasks are jumping around across the CPUs more often.
+More frequently there is context switch.
+The functions 'activate_task' and 'deactivate_task' have worse
+total hit or total computation time in the same netperf-udp test.
+This also makes worse average time for them. It might be because of the
+pressure on caches and branch predictions. Surprisingly the machine can
+handle higher value of bouncing tasks when they are pinned to one single
+NUMA node.
+
+I hope it could help you to investigate further this issue and find a
+solution. IMHO having this uclamp option as a static key is in my
+opinion a good idea.
+Thank you Mel for your help in my machine configuration and setup.
+
+Regards,
+Lukasz Luba
+
 
