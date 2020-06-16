@@ -2,173 +2,101 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20541C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB30C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 083D721532
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE402177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323190;
+	bh=8DHEUyrxUYcT2iumm9RzdbJZzd0UEQ03DEP40wWww9U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zUEaFR3KBH6aLJGy0yoMo+5owv0sG45KF1U3B9ESSzO2AmE8T/eEJfzfDNUg0/K4/
+	 AjOVfqVpV4LCxB82dgAHNC9webEBqDUNQUc1+g5PWpq2E/gGE8QdOrT/UszT6ikHnf
+	 p4HiQvooR5ZR0KF4xfw0W4dH+RNYqzFpIaYZoVlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbgFPP7p (ORCPT
+        id S1732873AbgFPPxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:59:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52486 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732382AbgFPP7m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:59:42 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GFxHG0023277;
-        Tue, 16 Jun 2020 11:59:42 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31pux0bwar-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 11:59:41 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GFxZIv025182;
-        Tue, 16 Jun 2020 11:59:41 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31pux0bw9c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 11:59:41 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GFvCiP005113;
-        Tue, 16 Jun 2020 15:59:38 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 31mpe7t9b8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 15:59:38 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GFxZdT8520138
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 15:59:35 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D0CBA11C058;
-        Tue, 16 Jun 2020 15:59:35 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4956C11C054;
-        Tue, 16 Jun 2020 15:59:35 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.3.58])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 16 Jun 2020 15:59:35 +0000 (GMT)
-Date:   Tue, 16 Jun 2020 17:59:33 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
-Message-ID: <20200616155933.GA12897@oc3871087118.ibm.com>
-References: <20200615221607.7764-1-peterx@redhat.com>
- <20200615222302.8452-1-peterx@redhat.com>
+        Tue, 16 Jun 2020 11:53:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732864AbgFPPxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:53:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 235DE208D5;
+        Tue, 16 Jun 2020 15:53:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322804;
+        bh=8DHEUyrxUYcT2iumm9RzdbJZzd0UEQ03DEP40wWww9U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z3vA4xANUnKFI2Pu5VzCuuSXh1rhlDA/A3uXuQtmljNvGqIRrAgcFVIJLJFvSW6S9
+         uZzCQWreTJuaHwdO5Ypw7m27R919kpg5czFhIOWz8xl+ivC0E/3O6sSbdffCS3jIyz
+         MMDg+VFOcPcKsTfwTsuhGakjnBBSvaJA5G7StZW8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 111/161] net/mlx5e: Fix repeated XSK usage on one channel
+Date:   Tue, 16 Jun 2020 17:35:01 +0200
+Message-Id: <20200616153111.643262034@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
+References: <20200616153106.402291280@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615222302.8452-1-peterx@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- cotscore=-2147483648 lowpriorityscore=0 spamscore=0 suspectscore=0
- malwarescore=0 clxscore=1011 adultscore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 priorityscore=1501 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006160108
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:23:02PM -0400, Peter Xu wrote:
-> Use the new mm_fault_accounting() helper for page fault accounting.
-> 
-> Avoid doing page fault accounting multiple times if the page fault is retried.
-> 
-> CC: Heiko Carstens <heiko.carstens@de.ibm.com>
-> CC: Vasily Gorbik <gor@linux.ibm.com>
-> CC: Christian Borntraeger <borntraeger@de.ibm.com>
-> CC: linux-s390@vger.kernel.org
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  arch/s390/mm/fault.c | 21 +++++----------------
->  1 file changed, 5 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-> index dedc28be27ab..8ca207635b59 100644
-> --- a/arch/s390/mm/fault.c
-> +++ b/arch/s390/mm/fault.c
-> @@ -392,7 +392,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
->  	unsigned long trans_exc_code;
->  	unsigned long address;
->  	unsigned int flags;
-> -	vm_fault_t fault;
-> +	vm_fault_t fault, major = 0;
-> 
->  	tsk = current;
->  	/*
-> @@ -428,7 +428,6 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
->  	}
-> 
->  	address = trans_exc_code & __FAIL_ADDR_MASK;
-> -	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
->  	flags = FAULT_FLAG_DEFAULT;
->  	if (user_mode(regs))
->  		flags |= FAULT_FLAG_USER;
-> @@ -480,6 +479,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
->  	 * the fault.
->  	 */
->  	fault = handle_mm_fault(vma, address, flags);
-> +	major |= fault & VM_FAULT_MAJOR;
->  	if (fault_signal_pending(fault, regs)) {
->  		fault = VM_FAULT_SIGNAL;
->  		if (flags & FAULT_FLAG_RETRY_NOWAIT)
-> @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
->  	if (unlikely(fault & VM_FAULT_ERROR))
->  		goto out_up;
-> 
-> -	/*
-> -	 * Major/minor page fault accounting is only done on the
-> -	 * initial attempt. If we go through a retry, it is extremely
-> -	 * likely that the page will be found in page cache at that point.
-> -	 */
->  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
-> -		if (fault & VM_FAULT_MAJOR) {
-> -			tsk->maj_flt++;
-> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
-> -				      regs, address);
-> -		} else {
-> -			tsk->min_flt++;
-> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
-> -				      regs, address);
-> -		}
->  		if (fault & VM_FAULT_RETRY) {
->  			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
->  			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-Seems like the call to mm_fault_accounting() will be missed if
-we entered here with FAULT_FLAG_RETRY_NOWAIT flag set, since it
-jumps to "out_up"...
+[ Upstream commit 36d45fb9d2fdf348d778bfe73f0427db1c6f9bc7 ]
 
-> @@ -519,6 +505,9 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
->  			goto retry;
->  		}
->  	}
-> +
-> +	mm_fault_accounting(tsk, regs, address, major);
-> +
->  	if (IS_ENABLED(CONFIG_PGSTE) && gmap) {
->  		address =  __gmap_link(gmap, current->thread.gmap_addr,
->  				       address);
-> -- 
-> 2.26.2
-> 
+After an XSK is closed, the relevant structures in the channel are not
+zeroed. If an XSK is opened the second time on the same channel without
+recreating channels, the stray values in the structures will lead to
+incorrect operation of queues, which causes CQE errors, and the new
+socket doesn't work at all.
+
+This patch fixes the issue by explicitly zeroing XSK-related structs in
+the channel on XSK close. Note that those structs are zeroed on channel
+creation, and usually a configuration change (XDP program is set)
+happens on XSK open, which leads to recreating channels, so typical XSK
+usecases don't suffer from this issue. However, if XSKs are opened and
+closed on the same channel without removing the XDP program, this bug
+reproduces.
+
+Fixes: db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
+@@ -152,6 +152,10 @@ void mlx5e_close_xsk(struct mlx5e_channe
+ 	mlx5e_close_cq(&c->xskicosq.cq);
+ 	mlx5e_close_xdpsq(&c->xsksq);
+ 	mlx5e_close_cq(&c->xsksq.cq);
++
++	memset(&c->xskrq, 0, sizeof(c->xskrq));
++	memset(&c->xsksq, 0, sizeof(c->xsksq));
++	memset(&c->xskicosq, 0, sizeof(c->xskicosq));
+ }
+ 
+ void mlx5e_activate_xsk(struct mlx5e_channel *c)
+
+
