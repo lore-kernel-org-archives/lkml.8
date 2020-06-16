@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDC8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16D8320776
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BB12071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322437;
-	bh=Ww/3zxU6fbSSh6OUodW4LyHhRVCSyKXuqOzIlIhcuJs=;
+	s=default; t=1592322441;
+	bh=c+0XdW9O/ZwTbnxHuQHU04UXfdF/gypjdKt3Avss+hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aymEKiCQCSAbJXpBaRoHh6hv4lj7aP33Ra0KmWC4V/D08ERONl94majAJrYHTN/qH
-	 Wh+YFRppvXjlEXSn71FAabXyDAqWATWL0cbN7vL4ymdFPH7uEidVVkYsdn2+SiKray
-	 xr+34xcD8cx15Xsh8ZaU6ZWpsAwsTjgIxEelDhy0=
+	b=JOUCH0SnozO3wcDPRxtQftoytt8zYWhU+jr0Bc/euMUALOCuU2anKY6on5U57UDgX
+	 QdE45VTbIrFoIBUBIhFQUSBwQAcZ/hmxziXHoCHbHlLjrcHb3VsLBmiivzlGBZ2Hxv
+	 DHoodHX8rZG6vitwbYEcEH1HViUwIrqqvd5N7GEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731988AbgFPPrP (ORCPT
+        id S1732319AbgFPPrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40084 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732294AbgFPPrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:47:11 -0400
+        id S1732303AbgFPPrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 224BE21475;
-        Tue, 16 Jun 2020 15:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60A4021508;
+        Tue, 16 Jun 2020 15:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322430;
-        bh=Ww/3zxU6fbSSh6OUodW4LyHhRVCSyKXuqOzIlIhcuJs=;
+        s=default; t=1592322432;
+        bh=c+0XdW9O/ZwTbnxHuQHU04UXfdF/gypjdKt3Avss+hg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N7YOepvPI6Cz7Uk7/oWLgovUDCIXOE45tXh7BC5tQtHFUgTYABpPrq+6V/5LDO7gm
-         vqX72KNbfuLoF4Z2rSdH95bi3fGvrE+hukeRrjyJ+Gcz6X4i9Jq7wniH2WKebyVp4p
-         kJfaf+X2W1bv4wHgVjNZ+/NOKWWq3qiPDq7R/eEI=
+        b=UHM4P+h3ohZcdhF4ayiJVjjkz4z5hU9veFnlWrv0KrQO671eK2xUQa0YpX2XTLTAO
+         Ajrvnw7r7SMjI68I8Dc0KfKb43OaplLLLi1u9nfiajdNRD5exihaPBk22zNhy4s5Tp
+         qWxvH9mV15XLSUX6Ot3LaFFQeJJmTItpTy4Me3Jo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.7 121/163] remoteproc: Fix and restore the parenting hierarchy for vdev
-Date:   Tue, 16 Jun 2020 17:34:55 +0200
-Message-Id: <20200616153112.607448077@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.7 130/163] KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
+Date:   Tue, 16 Jun 2020 17:35:04 +0200
+Message-Id: <20200616153113.040756753@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,46 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit c774ad010873bb89dcc0cdcb1e96aef6664d8caf upstream.
+commit 2ebac8bb3c2d35f5135466490fc8eeaf3f3e2d37 upstream.
 
-The commit 086d08725d34 ("remoteproc: create vdev subdevice with specific
-dma memory pool") has introduced a new vdev subdevice for each vdev
-declared in the firmware resource table and made it as the parent for the
-created virtio rpmsg devices instead of the previous remoteproc device.
-This changed the overall parenting hierarchy for the rpmsg devices, which
-were children of virtio devices, and does not allow the corresponding
-rpmsg drivers to retrieve the parent rproc device through the
-rproc_get_by_child() API.
+Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
+when determining whether a nested VM-Exit should be reflected into L1 or
+handled by KVM in L0.
 
-Fix this by restoring the remoteproc device as the parent. The new vdev
-subdevice can continue to inherit the DMA attributes from the remoteproc's
-parent device (actual platform device).
+For better or worse, the switch statement in nested_vmx_exit_reflected()
+currently defaults to "true", i.e. reflects any nested VM-Exit without
+dedicated logic.  Because the case statements only contain the basic
+exit reason, any VM-Exit with modifier bits set will be reflected to L1,
+even if KVM intended to handle it in L0.
 
+Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
+i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
+L1, as "failed VM-Entry" is the only modifier that KVM can currently
+encounter.  The SMM modifiers will never be generated as KVM doesn't
+support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
+as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
+enter an enclave in a KVM guest (L1 or L2).
+
+Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>
 Cc: stable@vger.kernel.org
-Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Link: https://lore.kernel.org/r/20200420160600.10467-3-s-anna@ti.com
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200227174430.26371-1-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/remoteproc/remoteproc_core.c |    2 +-
+ arch/x86/kvm/vmx/nested.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -517,7 +517,7 @@ static int rproc_handle_vdev(struct rpro
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5577,7 +5577,7 @@ bool nested_vmx_exit_reflected(struct kv
+ 				vmcs_read32(VM_EXIT_INTR_ERROR_CODE),
+ 				KVM_ISA_VMX);
  
- 	/* Initialise vdev subdevice */
- 	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
--	rvdev->dev.parent = rproc->dev.parent;
-+	rvdev->dev.parent = &rproc->dev;
- 	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
- 	rvdev->dev.release = rproc_rvdev_release;
- 	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
+-	switch (exit_reason) {
++	switch ((u16)exit_reason) {
+ 	case EXIT_REASON_EXCEPTION_NMI:
+ 		if (is_nmi(intr_info))
+ 			return false;
 
 
