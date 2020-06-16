@@ -2,127 +2,94 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A78AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2857B21534
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA95207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323123;
-	bh=sgXwaomXepBCa/0fDyNfAVT1CtdQZ5euClhe+3TgUC4=;
+	s=default; t=1592323129;
+	bh=CrzTrc5c9xnViH8P/PW4MxiFG+LWf+qeo9pyDB6PFo0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hBDWEZw/mgdygqeA9M+wTWd6CdNRH+IbasMGc1yw9ffJp3EFWawO4CTfbXJ25qhY8
-	 pE5tWU+RTYu3kUFcuB8PqFWa6pyX9K6+Lh6Lc8eTjxwbU58VQTl4l+Pu33pYL66m4W
-	 2iHLo+XhYv1Apfg/POWxEhWeklfD2HbAGA2pDTc0=
+	b=N9N7vUbuGzBRdXDkBRCc9QroZjWaqEUUdkqMbVnvHIPyWXL5CBQtd6j2joJn1C8TQ
+	 P2heLrhbpYIu4De1w8qRV3Wp6g7Lw2oqjXw68sxIxDJYigc7+fYzzpaTzNXJxrq4zA
+	 hf/Ju9Cu5KAfhBNO8N+MVlEW4+Yrtk1a/hgIlFN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbgFPP6l (ORCPT
+        id S1732953AbgFPPyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:58:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731245AbgFPP6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:58:39 -0400
-Received: from localhost.localdomain (unknown [42.120.72.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1732945AbgFPPyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:54:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C689A207C4;
-        Tue, 16 Jun 2020 15:58:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52A7D208D5;
+        Tue, 16 Jun 2020 15:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592323118;
-        bh=sgXwaomXepBCa/0fDyNfAVT1CtdQZ5euClhe+3TgUC4=;
+        s=default; t=1592322848;
+        bh=CrzTrc5c9xnViH8P/PW4MxiFG+LWf+qeo9pyDB6PFo0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pyl4GXoL86elhFybpnrMPN+eqqMnFaRQvaxnXf6fFPN2JVHWE8boWLKbrJaVWPby0
-         YDgBSkh8Wj3MSc+dkUFKsFUYmgprt6LBlgNxSrB5yfqjVE2uhJ6BIrIA3rdWJXq3vu
-         sshRBXlpUsosDv8ZtiU9Gl+LyjHMsNuhDMWO7wd8=
-From:   guoren@kernel.org
-To:     palmerdabbelt@google.com, paul.walmsley@sifive.com,
-        anup@brainfault.org, zong.li@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, tycho@tycho.ws, nickhu@andestech.com
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH 1/3] riscv: Fixup static_obj() fail
-Date:   Tue, 16 Jun 2020 15:56:59 +0000
-Message-Id: <1592323021-98541-2-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592323021-98541-1-git-send-email-guoren@kernel.org>
-References: <1592323021-98541-1-git-send-email-guoren@kernel.org>
+        b=V9/70D/1Mo8Kh7roos1OlkpFN5TDNvnT/2O23MULA6dCNy/vXcbfQCmAX1KMor1IP
+         Qo7WbrDvVbOKbuTethWg19NcbrCDxTXjxg+HGwch4iNsD6GzREUkxCvSoGnYMR1AYS
+         EdgdR7HGLeb910JInd1wp6Y4wEmqbbQrWWkVtPV0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 126/161] KVM: nSVM: fix condition for filtering async PF
+Date:   Tue, 16 Jun 2020 17:35:16 +0200
+Message-Id: <20200616153112.364158492@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
+References: <20200616153106.402291280@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-When enable LOCKDEP, static_obj() will cause error. Because some
-__initdata static variables is before _stext:
+commit a3535be731c2a343912578465021f50937f7b099 upstream.
 
-static int static_obj(const void *obj)
-{
-        unsigned long start = (unsigned long) &_stext,
-                      end   = (unsigned long) &_end,
-                      addr  = (unsigned long) obj;
+Async page faults have to be trapped in the host (L1 in this case),
+since the APF reason was passed from L0 to L1 and stored in the L1 APF
+data page.  This was completely reversed: the page faults were passed
+to the guest, a L2 hypervisor.
 
-        /*
-         * static variable?
-         */
-        if ((addr >= start) && (addr < end))
-                return 1;
+Cc: stable@vger.kernel.org
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[    0.067192] INFO: trying to register non-static key.
-[    0.067325] the code is fine but needs lockdep annotation.
-[    0.067449] turning off the locking correctness validator.
-[    0.067718] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7-dirty #44
-[    0.067945] Call Trace:
-[    0.068369] [<ffffffe00020323c>] walk_stackframe+0x0/0xa4
-[    0.068506] [<ffffffe000203422>] show_stack+0x2a/0x34
-[    0.068631] [<ffffffe000521e4e>] dump_stack+0x94/0xca
-[    0.068757] [<ffffffe000255a4e>] register_lock_class+0x5b8/0x5bc
-[    0.068969] [<ffffffe000255abe>] __lock_acquire+0x6c/0x1d5c
-[    0.069101] [<ffffffe0002550fe>] lock_acquire+0xae/0x312
-[    0.069228] [<ffffffe000989a8e>] _raw_spin_lock_irqsave+0x40/0x5a
-[    0.069357] [<ffffffe000247c64>] complete+0x1e/0x50
-[    0.069479] [<ffffffe000984c38>] rest_init+0x1b0/0x28a
-[    0.069660] [<ffffffe0000016a2>] 0xffffffe0000016a2
-[    0.069779] [<ffffffe000001b84>] 0xffffffe000001b84
-[    0.069953] [<ffffffe000001092>] 0xffffffe000001092
-
-static __initdata DECLARE_COMPLETION(kthreadd_done);
-
-noinline void __ref rest_init(void)
-{
-	...
-	complete(&kthreadd_done);
-
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- arch/riscv/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/svm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 0339b6b..bf3f34d 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -22,6 +22,7 @@ SECTIONS
- 	/* Beginning of code and text segment */
- 	. = LOAD_OFFSET;
- 	_start = .;
-+	_stext = .;
- 	HEAD_TEXT_SECTION
- 	. = ALIGN(PAGE_SIZE);
- 
-@@ -49,7 +50,6 @@ SECTIONS
- 	. = ALIGN(SECTION_ALIGN);
- 	.text : {
- 		_text = .;
--		_stext = .;
- 		TEXT_TEXT
- 		SCHED_TEXT
- 		CPUIDLE_TEXT
--- 
-2.7.4
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3236,8 +3236,8 @@ static int nested_svm_exit_special(struc
+ 			return NESTED_EXIT_HOST;
+ 		break;
+ 	case SVM_EXIT_EXCP_BASE + PF_VECTOR:
+-		/* When we're shadowing, trap PFs, but not async PF */
+-		if (!npt_enabled && svm->vcpu.arch.apf.host_apf_reason == 0)
++		/* Trap async PF even if not shadowing */
++		if (!npt_enabled || svm->vcpu.arch.apf.host_apf_reason)
+ 			return NESTED_EXIT_HOST;
+ 		break;
+ 	default:
+
 
