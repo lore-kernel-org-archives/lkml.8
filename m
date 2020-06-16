@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 635EF214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731F821527
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322200;
-	bh=6qGzqDRgQtxS+q1RhS4XN3NgSBMUArCOh0uuf57KmI4=;
+	s=default; t=1592322205;
+	bh=Hc6HPcu3lWTLe5pewqxpatHVjTK77/y/ir6dhm7s+s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fGlU2WZpVrUqWwynM0fF4fy0fIDNhsHJyZIvQD3yNCOLoXv4P6eLNPZf7DHK1CWvw
-	 yOZDCuq5SKLhM0aBcuLSHtAYZ7lnjriSta1iiszbJLtl+lNQNGxefdgpyKajg4fdf3
-	 tLuwPgyc0TQZsKWY68/JgvT2oLEaaXhgUgi3zqYg=
+	b=if3/1lHBRkuib/qJl3xv5MXwBE6MxZz48HVf/pwCPIYNdsKuzrRHbKLwvUsoNIIbl
+	 cmsTQ0XeYDSgw6bQWs7civuna0cAHjnj8i8Y7jEvmj0/6VKDVCg54wXI46HLZ6z114
+	 iTi87KzsPvy84taqYrs0DBYLw9T9UpbV7CNTOkbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbgFPPnT (ORCPT
+        id S1731784AbgFPPnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:43:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60168 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731713AbgFPPnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:03 -0400
+        id S1731760AbgFPPnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:43:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E9A8208E4;
-        Tue, 16 Jun 2020 15:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 090BD21475;
+        Tue, 16 Jun 2020 15:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322182;
-        bh=6qGzqDRgQtxS+q1RhS4XN3NgSBMUArCOh0uuf57KmI4=;
+        s=default; t=1592322195;
+        bh=Hc6HPcu3lWTLe5pewqxpatHVjTK77/y/ir6dhm7s+s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WBvsozOsNwxH7zhjRee1wZ+XZVZ7Z/uT3EL3TwiDHhkzBv0r1pm0uW1gsVJc3Upx9
-         cjcM1z/Wy7Jb/izB0+gRkRxFWK1DLSNDC1cKJA/vUZ7JKH3/yFq9KbZRTX6KkbCwCS
-         KvUZRi84ZiLJ5yj1OWDzjOWLMnfK2k10PVOE1xR4=
+        b=n95El8EhWQHFbN+vuirC7i1cT8YSjEd6wywfNI8nJONKOgyxOPWEQQ8CA85mOvfK4
+         Vu40jtXZ57U8bUhugCkOxLHwlU5phPB7F1N6gxenFw49YMlKyscCUaoyQq2cYy54zw
+         wvCaOnVbAcxYiaOVQU90DBtwj9xd3tT09xBfpoQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avi Kivity <avi@scylladb.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.7 033/163] aio: fix async fsync creds
-Date:   Tue, 16 Jun 2020 17:33:27 +0200
-Message-Id: <20200616153108.456489455@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.7 038/163] x86/speculation: Prevent rogue cross-process SSBD shutdown
+Date:   Tue, 16 Jun 2020 17:33:32 +0200
+Message-Id: <20200616153108.689145357@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -61,73 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-commit 530f32fc370fd1431ea9802dbc53ab5601dfccdb upstream.
+commit dbbe2ad02e9df26e372f38cc3e70dab9222c832e upstream.
 
-Avi Kivity reports that on fuse filesystems running in a user namespace
-asyncronous fsync fails with EOVERFLOW.
+On context switch the change of TIF_SSBD and TIF_SPEC_IB are evaluated
+to adjust the mitigations accordingly. This is optimized to avoid the
+expensive MSR write if not needed.
 
-The reason is that f_ops->fsync() is called with the creds of the kthread
-performing aio work instead of the creds of the process originally
-submitting IOCB_CMD_FSYNC.
+This optimization is buggy and allows an attacker to shutdown the SSBD
+protection of a victim process.
 
-Fuse sends the creds of the caller in the request header and it needs to
-translate the uid and gid into the server's user namespace.  Since the
-kthread is running in init_user_ns, the translation will fail and the
-operation returns an error.
+The update logic reads the cached base value for the speculation control
+MSR which has neither the SSBD nor the STIBP bit set. It then OR's the
+SSBD bit only when TIF_SSBD is different and requests the MSR update.
 
-It can be argued that fsync doesn't actually need any creds, but just
-zeroing out those fields in the header (as with requests that currently
-don't take creds) is a backward compatibility risk.
+That means if TIF_SSBD of the previous and next task are the same, then
+the base value is not updated, even if TIF_SSBD is set. The MSR write is
+not requested.
 
-Instead of working around this issue in fuse, solve the core of the problem
-by calling the filesystem with the proper creds.
+Subsequently if the TIF_STIBP bit differs then the STIBP bit is updated
+in the base value and the MSR is written with a wrong SSBD value.
 
-Reported-by: Avi Kivity <avi@scylladb.com>
-Tested-by: Giuseppe Scrivano <gscrivan@redhat.com>
-Fixes: c9582eb0ff7d ("fuse: Fail all requests with invalid uids or gids")
-Cc: stable@vger.kernel.org  # 4.18+
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This was introduced when the per task/process conditional STIPB
+switching was added on top of the existing SSBD switching.
+
+It is exploitable if the attacker creates a process which enforces SSBD
+and has the contrary value of STIBP than the victim process (i.e. if the
+victim process enforces STIBP, the attacker process must not enforce it;
+if the victim process does not enforce STIBP, the attacker process must
+enforce it) and schedule it on the same core as the victim process. If
+the victim runs after the attacker the victim becomes vulnerable to
+Spectre V4.
+
+To fix this, update the MSR value independent of the TIF_SSBD difference
+and dependent on the SSBD mitigation method available. This ensures that
+a subsequent STIPB initiated MSR write has the correct state of SSBD.
+
+[ tglx: Handle X86_FEATURE_VIRT_SSBD & X86_FEATURE_VIRT_SSBD correctly
+        and massaged changelog ]
+
+Fixes: 5bfbe3ad5840 ("x86/speculation: Prepare for per task indirect branch speculation control")
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kernel/process.c |   28 ++++++++++------------------
+ 1 file changed, 10 insertions(+), 18 deletions(-)
 
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -176,6 +176,7 @@ struct fsync_iocb {
- 	struct file		*file;
- 	struct work_struct	work;
- 	bool			datasync;
-+	struct cred		*creds;
- };
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -545,28 +545,20 @@ static __always_inline void __speculatio
  
- struct poll_iocb {
-@@ -1589,8 +1590,11 @@ static int aio_write(struct kiocb *req,
- static void aio_fsync_work(struct work_struct *work)
- {
- 	struct aio_kiocb *iocb = container_of(work, struct aio_kiocb, fsync.work);
-+	const struct cred *old_cred = override_creds(iocb->fsync.creds);
+ 	lockdep_assert_irqs_disabled();
  
- 	iocb->ki_res.res = vfs_fsync(iocb->fsync.file, iocb->fsync.datasync);
-+	revert_creds(old_cred);
-+	put_cred(iocb->fsync.creds);
- 	iocb_put(iocb);
- }
+-	/*
+-	 * If TIF_SSBD is different, select the proper mitigation
+-	 * method. Note that if SSBD mitigation is disabled or permanentely
+-	 * enabled this branch can't be taken because nothing can set
+-	 * TIF_SSBD.
+-	 */
+-	if (tif_diff & _TIF_SSBD) {
+-		if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
++	/* Handle change of TIF_SSBD depending on the mitigation method. */
++	if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
++		if (tif_diff & _TIF_SSBD)
+ 			amd_set_ssb_virt_state(tifn);
+-		} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
++	} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
++		if (tif_diff & _TIF_SSBD)
+ 			amd_set_core_ssb_state(tifn);
+-		} else if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
+-			   static_cpu_has(X86_FEATURE_AMD_SSBD)) {
+-			msr |= ssbd_tif_to_spec_ctrl(tifn);
+-			updmsr  = true;
+-		}
++	} else if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
++		   static_cpu_has(X86_FEATURE_AMD_SSBD)) {
++		updmsr |= !!(tif_diff & _TIF_SSBD);
++		msr |= ssbd_tif_to_spec_ctrl(tifn);
+ 	}
  
-@@ -1604,6 +1608,10 @@ static int aio_fsync(struct fsync_iocb *
- 	if (unlikely(!req->file->f_op->fsync))
- 		return -EINVAL;
- 
-+	req->creds = prepare_creds();
-+	if (!req->creds)
-+		return -ENOMEM;
-+
- 	req->datasync = datasync;
- 	INIT_WORK(&req->work, aio_fsync_work);
- 	schedule_work(&req->work);
+-	/*
+-	 * Only evaluate TIF_SPEC_IB if conditional STIBP is enabled,
+-	 * otherwise avoid the MSR write.
+-	 */
++	/* Only evaluate TIF_SPEC_IB if conditional STIBP is enabled. */
+ 	if (IS_ENABLED(CONFIG_SMP) &&
+ 	    static_branch_unlikely(&switch_to_cond_stibp)) {
+ 		updmsr |= !!(tif_diff & _TIF_SPEC_IB);
 
 
