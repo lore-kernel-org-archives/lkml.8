@@ -2,118 +2,86 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABECC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C165BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B16722074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952EB2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:09:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T6FxFVn1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lpzj/LxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgFPIFp (ORCPT
+        id S1726355AbgFPIJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:05:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgFPIFd (ORCPT
+        Tue, 16 Jun 2020 04:09:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20740 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725710AbgFPIJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:05:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519ABC03E96A
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:05:32 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j10so19703825wrw.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:05:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=nSbbk12sklznSzURmDgyRvyV4JyDaN7OpY0qUFnGrF0=;
-        b=T6FxFVn1hxbyVOJ1IyLfuqYj92YRLnRIsyx3/oowDA+x3BzDhwFFmEeKEnPEP9MPEA
-         Q4cmnsQT8k+IMgfrS+3spLNWSL06RqN5ebkLysnP6qXhcUQk9AGZtEgX1tRfPkNPU28/
-         4jJVm8GVo0U9VldN1mn1ClAGq/x7SH0XL66fJeIzZRX/G6Q1xsok0Y2PUuquOkR1aBlj
-         tApAtsDp/nIGk0fmm6PqW/vfj/Q4Rw28Yj9ozigY3qyY7ZyVtXEVHsL7xsk+ercb4Sqv
-         UZEfOeVoDSU05JYPGHHufWHF007CvNHJQzCssmMv5YBp5l3UD2RZwRoXhJzjSl2+bRq7
-         xLxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=nSbbk12sklznSzURmDgyRvyV4JyDaN7OpY0qUFnGrF0=;
-        b=f9WEePo1j/1YDrL/W98n+sRNxQ0P/2LNWSIw/AMvO2DoDy1Zhj+ZkFM2dX3ltm6UkX
-         O7/7rTD1IuazxjuzEbWn2/fTK0R21IM4UET1owXyq11wCSOEsMr6aliir0dvky8mq8sB
-         7TD/+SHd+1sJE0Wp2PD4m38wJkHAxkClwooXPa6niq/9cxacItRE9T9DjD43lIXJitzM
-         c3VRNFqb3YhfdGZ2Uq9gQfN4nS5GhsRjtD5LJjg/OhUkr70FluwGRu5hM6XPjYFOAv1c
-         JtvREuxTNX0AORO2Xd7v5VSs5wAK82A3QvLEeWZZYYpSlFDIiduzNulED7mdDvj4NDBh
-         WL3g==
-X-Gm-Message-State: AOAM532W9RTNsSxsEGeQzwEvF2Oow98l9mGy39sZbOwTXoStotD+FIsB
-        WO8mdEnd59+GpVwsIyBHJbmnOQ==
-X-Google-Smtp-Source: ABdhPJxU65V0UN6yumv2HUuV4IN5upvbVb+ibQ9xncnrMwZn2lX2xkgru9+/gYpAYeYXxU41grhpcA==
-X-Received: by 2002:adf:ec0a:: with SMTP id x10mr1682760wrn.130.1592294731087;
-        Tue, 16 Jun 2020 01:05:31 -0700 (PDT)
-Received: from dell ([109.180.115.156])
-        by smtp.gmail.com with ESMTPSA id f2sm2679917wmj.39.2020.06.16.01.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 01:05:30 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:05:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wang Qing <wangqing@vivo.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/video/backlight: Use kobj_to_dev() instead
-Message-ID: <20200616080529.GK2608702@dell>
-References: <1592211242-31683-1-git-send-email-wangqing@vivo.com>
+        Tue, 16 Jun 2020 04:09:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592294939;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0lNFuwmVizYLxWwU92PSfYVlqBtEwsiUDHr4aylkwW0=;
+        b=Lpzj/LxPGv0xl3GYVuxS+q8BMexUxywiQIUVrXL+qlJsxgyy2qc57T0Vzqf2fybty86uv2
+        DvX25oGYGBjwWDTdRvwMmTBfzlhnPHcgcBG5Nlj2cuxp/u/UWti2PJd7Ql2WVlZhSO/Irz
+        TxHOku5JG5Xv6mvG2RTnGp2MisWI6JQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-2FzjiqL7O4qN4k74nylQvQ-1; Tue, 16 Jun 2020 04:08:55 -0400
+X-MC-Unique: 2FzjiqL7O4qN4k74nylQvQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6547C803308;
+        Tue, 16 Jun 2020 08:08:53 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1980219C79;
+        Tue, 16 Jun 2020 08:08:53 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 78459833B1;
+        Tue, 16 Jun 2020 08:08:52 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 04:08:52 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Cyril Hrubis <chrubis@suse.cz>,
+        kernel test robot <rong.a.chen@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>, ltp@lists.linux.it,
+        Serge Hallyn <serge@hallyn.com>
+Message-ID: <348139455.16141709.1592294932212.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20200615213843.2ojgm3ob7kp3qq6a@wittgenstein>
+References: <20200615085836.GR12456@shao2-debian> <20200615091850.GA3373@yuki.lan> <1101600340.15989438.1592229781375.JavaMail.zimbra@redhat.com> <20200615213843.2ojgm3ob7kp3qq6a@wittgenstein>
+Subject: Re: [LTP] 303cc571d1: ltp.setns01.fail
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1592211242-31683-1-git-send-email-wangqing@vivo.com>
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.17.25, 10.4.195.3]
+Thread-Topic: 303cc571d1: ltp.setns01.fail
+Thread-Index: nYZtIeM5D1sw8KRcMGIO9za2Kof/yw==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020, Wang Qing wrote:
 
-> Use kobj_to_dev() instead of container_of()
-> 
-> Signed-off-by: Wang Qing <wangqing@vivo.com>
-> ---
->  drivers/video/backlight/lm3533_bl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->  mode change 100644 => 100755 drivers/video/backlight/lm3533_bl.c
 
-I've fixed the broken subject line.
+----- Original Message -----
+> I'll send a pr for this to Linus this week (or next since I'm on
+> vacation this week) and get this fixed. Thanks for spotting this. What's
+> the Reported-by: line format that LTP uses?
 
-For future submissions, please use `git log --oneline -- <SUBSUSTEM>`
-to view the expected formatting for any given <SUBSYSTEM>.
+I'm not sure we ever used one, it's usually various CI systems that
+reference LTP. This thread has been started by kernel test robot:
+  Reported-by: kernel test robot <rong.a.chen@intel.com>
 
-Applied, thanks.
-
-> diff --git a/drivers/video/backlight/lm3533_bl.c b/drivers/video/backlight/lm3533_bl.c
-> index ee09d1b..0c7830f
-> --- a/drivers/video/backlight/lm3533_bl.c
-> +++ b/drivers/video/backlight/lm3533_bl.c
-> @@ -235,7 +235,7 @@ static struct attribute *lm3533_bl_attributes[] = {
->  static umode_t lm3533_bl_attr_is_visible(struct kobject *kobj,
->  					     struct attribute *attr, int n)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct lm3533_bl *bl = dev_get_drvdata(dev);
->  	umode_t mode = attr->mode;
->  
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
