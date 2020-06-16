@@ -2,51 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD213C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 242B9208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F4C208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323915;
-	bh=jxRBAJoYesLcQ4lUzvJzOYBx7xIDXeU3frH7E2O1cAk=;
+	s=default; t=1592323920;
+	bh=KZN4esAhNn4tE9475bsicHCYB2W4CJffoDW1qFb/rn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rhD0Y+fHyQ03xCcJ9si9zGQBtTtLdIcIvVYwCQhrYnPUxxJeaLyFcHeIEwQLCo1+z
-	 PrCu9lyeLSuGfS1PvSQBE4DbZR/FxH+TGCoX+1g+nKF9fn+XAtoc+wu3YLwKyIfHVV
-	 3GY/5EEtH54l+JQasZQzX9c6mMbajAHUTzkRS9UI=
+	b=Br1S3REgO3akBb7swaKY6UF6NSqLBWcA9xxp2bwIv4gM2sp73MHViQNxqaYcx4dsg
+	 mu2WWozqBrzDq+b78SB4tP9WQuQhUnTohJfEQc3w3iQLj/SV69ZDFBvHwEMf4xbca/
+	 /BdguGwWEgBjRVP0drBzF0l+vGwKyAJdrTD+ngh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731925AbgFPPoG (ORCPT
+        id S1732043AbgFPQL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:44:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33574 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730404AbgFPPny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:43:54 -0400
+        id S1731893AbgFPPoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F718214F1;
-        Tue, 16 Jun 2020 15:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7B95214F1;
+        Tue, 16 Jun 2020 15:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322233;
-        bh=jxRBAJoYesLcQ4lUzvJzOYBx7xIDXeU3frH7E2O1cAk=;
+        s=default; t=1592322241;
+        bh=KZN4esAhNn4tE9475bsicHCYB2W4CJffoDW1qFb/rn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IEHHCsCov4R/cUKD35UFhP/IDwmNzmFG1Ed9gx1dDwWSIQMkw+zQUh0mvcBipxyON
-         55iyYtsiJUQj9EFDGDEZr4e0E5LUkpjDFSLgfxKozf627xALoSmYl/WTd7z2foVPJN
-         zEzx4Uw+iei3ojy7j8WE9G32cbpT5fU/BEOTMpkA=
+        b=Icr8ruwyNjiSi96SIdhxaJmS5XcVr8mW45ih3O0PFc2mIAzCHftsj3ZoErjuSeE81
+         s2jwpbNE1UObWHPUJXYFGcS8ASKVsz7ryqLJaxQExOAFQMudwqJZ1N/y+svXNW9j/r
+         BehYgcHhyLUr2nQbvedDQHLvZXPdQAFSP6VSQCpQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.7 051/163] ASoC: tlv320adcx140: Fix mic gain registers
-Date:   Tue, 16 Jun 2020 17:33:45 +0200
-Message-Id: <20200616153109.293589517@linuxfoundation.org>
+        stable@vger.kernel.org, Denis <pro.denis@protonmail.com>,
+        Masashi Honma <masashi.honma@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 025/163] ath9k_htc: Silence undersized packet warnings
+Date:   Tue, 16 Jun 2020 17:33:19 +0200
+Message-Id: <20200616153108.094854243@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,41 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
+From: Masashi Honma <masashi.honma@gmail.com>
 
-commit be8499c48f115b912f5747c420f66a5e2c31defe upstream.
+[ Upstream commit 450edd2805982d14ed79733a82927d2857b27cac ]
 
-Fix the mic gain registers for channels 2-4.
-The incorret register was being set as it was touching the CH1 config
-registers.
+Some devices like TP-Link TL-WN722N produces this kind of messages
+frequently.
 
-Fixes: 37bde5acf040 ("ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200427203608.7031-1-dmurphy@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+kernel: ath: phy0: Short RX data len, dropping (dlen: 4)
 
+This warning is useful for developers to recognize that the device
+(Wi-Fi dongle or USB hub etc) is noisy but not for general users. So
+this patch make this warning to debug message.
+
+Reported-By: Denis <pro.denis@protonmail.com>
+Ref: https://bugzilla.kernel.org/show_bug.cgi?id=207539
+Fixes: cd486e627e67 ("ath9k_htc: Discard undersized packets")
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200504214443.4485-1-masashi.honma@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tlv320adcx140.c |    6 +++---
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -511,11 +511,11 @@ static const struct snd_soc_dapm_route a
- static const struct snd_kcontrol_new adcx140_snd_controls[] = {
- 	SOC_SINGLE_TLV("Analog CH1 Mic Gain Volume", ADCX140_CH1_CFG1, 2, 42, 0,
- 			adc_tlv),
--	SOC_SINGLE_TLV("Analog CH2 Mic Gain Volume", ADCX140_CH1_CFG2, 2, 42, 0,
-+	SOC_SINGLE_TLV("Analog CH2 Mic Gain Volume", ADCX140_CH2_CFG1, 2, 42, 0,
- 			adc_tlv),
--	SOC_SINGLE_TLV("Analog CH3 Mic Gain Volume", ADCX140_CH1_CFG3, 2, 42, 0,
-+	SOC_SINGLE_TLV("Analog CH3 Mic Gain Volume", ADCX140_CH3_CFG1, 2, 42, 0,
- 			adc_tlv),
--	SOC_SINGLE_TLV("Analog CH4 Mic Gain Volume", ADCX140_CH1_CFG4, 2, 42, 0,
-+	SOC_SINGLE_TLV("Analog CH4 Mic Gain Volume", ADCX140_CH4_CFG1, 2, 42, 0,
- 			adc_tlv),
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index 9cec5c216e1f..118e5550b10c 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -999,9 +999,9 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	 * which are not PHY_ERROR (short radar pulses have a length of 3)
+ 	 */
+ 	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
+-		ath_warn(common,
+-			 "Short RX data len, dropping (dlen: %d)\n",
+-			 rs_datalen);
++		ath_dbg(common, ANY,
++			"Short RX data len, dropping (dlen: %d)\n",
++			rs_datalen);
+ 		goto rx_next;
+ 	}
  
- 	SOC_SINGLE_TLV("DRE Threshold", ADCX140_DRE_CFG0, 4, 9, 0,
+-- 
+2.25.1
+
 
 
