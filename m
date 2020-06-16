@@ -2,85 +2,201 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79DE32071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:51:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UEtOfsuq"
+	by mail.kernel.org (Postfix) with ESMTP id 481FD2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgFPJv1 (ORCPT
+        id S1728157AbgFPJwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:51:27 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:19722 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726261AbgFPJv0 (ORCPT
+        Tue, 16 Jun 2020 05:52:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43270 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726467AbgFPJwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:51:26 -0400
-X-UUID: 093abb29ef2141c386ede716f4b65212-20200616
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=PUmd0x9RibPQtgq71WhoBPwcOlI5fEGWCsbX2zCT6VQ=;
-        b=UEtOfsuq7DAjTXOjStRaimXdavQ70uYZhrfrMF/JC850yawuL0VNDaueBR8jq6YoQcClIGW1X4+7BnHLhI68YaERECB1gBD30a6PONW36gouybWqtqxxHnHmpC+csfIn3fIoA2QthvxmVKzmmMjF9J9sn1a3Bd62wiFCH+TvZSM=;
-X-UUID: 093abb29ef2141c386ede716f4b65212-20200616
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1939617296; Tue, 16 Jun 2020 17:51:22 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 16 Jun 2020 17:51:19 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 16 Jun 2020 17:51:19 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
-        <chaotian.jing@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH] scsi: ufs-mediatek: Make ufs_mtk_wait_link_state as static function
-Date:   Tue, 16 Jun 2020 17:51:20 +0800
-Message-ID: <20200616095120.14570-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Tue, 16 Jun 2020 05:52:20 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05G9X2sq115793;
+        Tue, 16 Jun 2020 05:52:14 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31n45de2f1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 05:52:12 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05G9XQeg116519;
+        Tue, 16 Jun 2020 05:52:11 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31n45de2e8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 05:52:11 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05G9ptwq018283;
+        Tue, 16 Jun 2020 09:52:08 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 31mpe8a340-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 09:52:08 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05G9q5OL11338216
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 09:52:05 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B53C811C058;
+        Tue, 16 Jun 2020 09:52:05 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 00A3311C052;
+        Tue, 16 Jun 2020 09:52:05 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.56.227])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jun 2020 09:52:04 +0000 (GMT)
+Date:   Tue, 16 Jun 2020 11:52:02 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        <thomas.lendacky@amd.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+Message-ID: <20200616115202.0285aa08.pasic@linux.ibm.com>
+In-Reply-To: <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+        <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_03:2020-06-15,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ clxscore=1011 cotscore=-2147483648 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rml4IGJ1aWxkIHdhcm5pbmcgcmVwb3J0ZWQgYnkga2VybmVsIHRlc3Qgcm9ib3Q6DQpNYWtlIHVm
-c19tdGtfd2FpdF9saW5rX3N0YXRlKCkgYXMgc3RhdGljIGZ1bmN0b24uDQoNCldhcm5pbmc6DQo+
-PiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jOjE4MTo1OiB3YXJuaW5nOiBubyBwcmV2
-aW91cyBwcm90b3R5cGUNCj4+IGZvciAndWZzX210a193YWl0X2xpbmtfc3RhdGUnIFstV21pc3Np
-bmctcHJvdG90eXBlc10NCg0KU2lnbmVkLW9mZi1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1
-QG1lZGlhdGVrLmNvbT4NClJlcG9ydGVkLWJ5OiBrZXJuZWwgdGVzdCByb2JvdCA8bGtwQGludGVs
-LmNvbT4NCi0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMgfCA0ICsrLS0NCiAx
-IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYyBiL2RyaXZlcnMvc2NzaS91ZnMv
-dWZzLW1lZGlhdGVrLmMNCmluZGV4IDlhNDQzMmM5ZjdkYy4uYWQ5MjkyMzVjMTkzIDEwMDY0NA0K
-LS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KKysrIGIvZHJpdmVycy9zY3Np
-L3Vmcy91ZnMtbWVkaWF0ZWsuYw0KQEAgLTE4NSw4ICsxODUsOCBAQCBzdGF0aWMgdm9pZCB1ZnNf
-bXRrX3NldHVwX3JlZl9jbGtfd2FpdF91cyhzdHJ1Y3QgdWZzX2hiYSAqaGJhLA0KIAlob3N0LT5y
-ZWZfY2xrX3VuZ2F0aW5nX3dhaXRfdXMgPSB1bmdhdGluZ191czsNCiB9DQogDQotaW50IHVmc19t
-dGtfd2FpdF9saW5rX3N0YXRlKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHUzMiBzdGF0ZSwNCi0JCQkg
-ICAgdW5zaWduZWQgbG9uZyBtYXhfd2FpdF9tcykNCitzdGF0aWMgaW50IHVmc19tdGtfd2FpdF9s
-aW5rX3N0YXRlKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHUzMiBzdGF0ZSwNCisJCQkJICAgdW5zaWdu
-ZWQgbG9uZyBtYXhfd2FpdF9tcykNCiB7DQogCWt0aW1lX3QgdGltZW91dCwgdGltZV9jaGVja2Vk
-Ow0KIAl1MzIgdmFsOw0KLS0gDQoyLjE4LjANCg==
+On Mon, 15 Jun 2020 14:39:24 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+I find the subject (commit short) sub optimal. The 'arch' is already
+accepting devices 'without IOMMU feature'. What you are introducing is
+the ability to reject.
+
+> An architecture protecting the guest memory against unauthorized host
+> access may want to enforce VIRTIO I/O device protection through the
+> use of VIRTIO_F_IOMMU_PLATFORM.
+> 
+> Let's give a chance to the architecture to accept or not devices
+> without VIRTIO_F_IOMMU_PLATFORM.
+> 
+
+I don't particularly like the commit message. In general, I believe
+using access_platform instead of iommu_platform would really benefit us.
+
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  arch/s390/mm/init.c     | 6 ++++++
+>  drivers/virtio/virtio.c | 9 +++++++++
+>  include/linux/virtio.h  | 2 ++
+>  3 files changed, 17 insertions(+)
+> 
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 87b2d024e75a..3f04ad09650f 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -46,6 +46,7 @@
+>  #include <asm/kasan.h>
+>  #include <asm/dma-mapping.h>
+>  #include <asm/uv.h>
+> +#include <linux/virtio.h>
+
+arch/s390/mm/init.c including virtio.h looks a bit strange to me, but
+if Heiko and Vasily don't mind, neither do I.
+
+>  
+>  pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>  
+> @@ -162,6 +163,11 @@ bool force_dma_unencrypted(struct device *dev)
+>  	return is_prot_virt_guest();
+>  }
+>  
+> +int arch_needs_iommu_platform(struct virtio_device *dev) 
+
+Maybe prefixing the name with virtio_ would help provide the
+proper context.
+
+> +{
+> +	return is_prot_virt_guest();
+> +}
+> +
+>  /* protected virtualization */
+>  static void pv_init(void)
+>  {
+> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> index a977e32a88f2..30091089bee8 100644
+> --- a/drivers/virtio/virtio.c
+> +++ b/drivers/virtio/virtio.c
+> @@ -167,6 +167,11 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
+>  }
+>  EXPORT_SYMBOL_GPL(virtio_add_status);
+>  
+> +int __weak arch_needs_iommu_platform(struct virtio_device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+
+Adding some people that could be interested in overriding this as well
+to the cc list.
+
+>  int virtio_finalize_features(struct virtio_device *dev)
+>  {
+>  	int ret = dev->config->finalize_features(dev);
+> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
+>  	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+>  		return 0;
+>  
+> +	if (arch_needs_iommu_platform(dev) &&
+> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+> +		return -EIO;
+> +
+
+Why EIO?
+
+Overall, I think it is a good idea to have something that is going to
+protect us from this scenario.
+
+Regards,
+Halil
+
+>  	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
+>  	status = dev->config->get_status(dev);
+>  	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> index a493eac08393..2c46b310c38c 100644
+> --- a/include/linux/virtio.h
+> +++ b/include/linux/virtio.h
+> @@ -195,4 +195,6 @@ void unregister_virtio_driver(struct virtio_driver *drv);
+>  #define module_virtio_driver(__virtio_driver) \
+>  	module_driver(__virtio_driver, register_virtio_driver, \
+>  			unregister_virtio_driver)
+> +
+> +int arch_needs_iommu_platform(struct virtio_device *dev);
+>  #endif /* _LINUX_VIRTIO_H */
 
