@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A447C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3FC208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 511E6208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324191;
-	bh=Y7GdLNJHI2Hd160+eiyQ7RPdrDBWi0SuwVkbiLOYrPs=;
+	s=default; t=1592324199;
+	bh=vmYf8wrr+Mn8iTIgZUODDNK0UKmCF71dcWHs18fgZAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0jvF5gW+Lgz6Et1veozcn4Es9irPR66rkviHUSzJGsOh2yXcCv5e2ylalXTZvEdD
-	 0k4ieXi4Qw998K92kapmE1R7+WJUcTlPsXiXYV9XMhvgIXC2NAqFHY3fsqFbLP7wTw
-	 3GzhoK/oVb4q1FsVAkvabhrQHWfRycnFFLk4XEV4=
+	b=swQtKfMcPWaneRufTL1E1nut/8l4GStsxgR3uygoEoQftc0myOmi09Lj0hTM5hugZ
+	 UICN6fYFRY2K9ZGYb03l0TjodQzlV6xlyMO3j9GTSEH6BW/QIuwBtUIzDvagqAUP0M
+	 fEXQeDhcUQ2APBvjm3ReVjd45vghVf8hYpl4284Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbgFPPkZ (ORCPT
+        id S1731786AbgFPQQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731118AbgFPPkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:40:17 -0400
+        id S1731069AbgFPPkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B7012082F;
-        Tue, 16 Jun 2020 15:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FB8B2145D;
+        Tue, 16 Jun 2020 15:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322016;
-        bh=Y7GdLNJHI2Hd160+eiyQ7RPdrDBWi0SuwVkbiLOYrPs=;
+        s=default; t=1592322006;
+        bh=vmYf8wrr+Mn8iTIgZUODDNK0UKmCF71dcWHs18fgZAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OAU5EevcYAXmYjhK745e9q9LZCwHOl1x2Qh/Z8W+3hD9Dl6ljcMofuMMVBd1cqIy+
-         AVXrGroz47ET1KjUnlKtB4DSq1x0k3qi1iZrN/2/Y8GJ2x4N6NuGqU9W+nShi1lJ1P
-         uH9gMQv3jVKn1Kahu6/jdmhd1Wzl1oYY70uz7Rkk=
+        b=zaETHSQ9MrK6qr5u5zvvcwab5AaBNcQArNPxhjX2dK7D/IIhr5yeBTlqBMz2KeTuD
+         46WPbCo7H9ZcSEX/SVJ2bAqHWqDphEOrU7ezBl9vR8oxzOnP4KquzNMU5TwS96iB5z
+         yywEKSsTBRX26Y6akvU6hvPZEVuQAiJJcUVgBs88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 103/134] KVM: nSVM: fix condition for filtering async PF
-Date:   Tue, 16 Jun 2020 17:34:47 +0200
-Message-Id: <20200616153105.724080334@linuxfoundation.org>
+        stable@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Matthew Riley <mattdr@google.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 5.4 099/134] EDAC/skx: Use the mcmtr register to retrieve close_pg/bank_xor_enable
+Date:   Tue, 16 Jun 2020 17:34:43 +0200
+Message-Id: <20200616153105.527610945@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,36 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-commit a3535be731c2a343912578465021f50937f7b099 upstream.
+commit 1032095053b34d474aa20f2625d97dd306e0991b upstream.
 
-Async page faults have to be trapped in the host (L1 in this case),
-since the APF reason was passed from L0 to L1 and stored in the L1 APF
-data page.  This was completely reversed: the page faults were passed
-to the guest, a L2 hypervisor.
+The skx_edac driver wrongly uses the mtr register to retrieve two fields
+close_pg and bank_xor_enable. Fix it by using the correct mcmtr register
+to get the two fields.
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Reported-by: Matthew Riley <mattdr@google.com>
+Acked-by: Aristeu Rozanski <aris@redhat.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/20200515210146.1337-1-tony.luck@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/edac/i10nm_base.c |    2 +-
+ drivers/edac/skx_base.c   |   20 ++++++++------------
+ drivers/edac/skx_common.c |    6 +++---
+ drivers/edac/skx_common.h |    2 +-
+ 4 files changed, 13 insertions(+), 17 deletions(-)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -3237,8 +3237,8 @@ static int nested_svm_exit_special(struc
- 			return NESTED_EXIT_HOST;
- 		break;
- 	case SVM_EXIT_EXCP_BASE + PF_VECTOR:
--		/* When we're shadowing, trap PFs, but not async PF */
--		if (!npt_enabled && svm->vcpu.arch.apf.host_apf_reason == 0)
-+		/* Trap async PF even if not shadowing */
-+		if (!npt_enabled || svm->vcpu.arch.apf.host_apf_reason)
- 			return NESTED_EXIT_HOST;
- 		break;
- 	default:
+--- a/drivers/edac/i10nm_base.c
++++ b/drivers/edac/i10nm_base.c
+@@ -162,7 +162,7 @@ static int i10nm_get_dimm_config(struct
+ 				 mtr, mcddrtcfg, imc->mc, i, j);
+ 
+ 			if (IS_DIMM_PRESENT(mtr))
+-				ndimms += skx_get_dimm_info(mtr, 0, dimm,
++				ndimms += skx_get_dimm_info(mtr, 0, 0, dimm,
+ 							    imc, i, j);
+ 			else if (IS_NVDIMM_PRESENT(mcddrtcfg, j))
+ 				ndimms += skx_get_nvdimm_info(dimm, imc, i, j,
+--- a/drivers/edac/skx_base.c
++++ b/drivers/edac/skx_base.c
+@@ -151,27 +151,23 @@ static const struct x86_cpu_id skx_cpuid
+ };
+ MODULE_DEVICE_TABLE(x86cpu, skx_cpuids);
+ 
+-#define SKX_GET_MTMTR(dev, reg) \
+-	pci_read_config_dword((dev), 0x87c, &(reg))
+-
+-static bool skx_check_ecc(struct pci_dev *pdev)
++static bool skx_check_ecc(u32 mcmtr)
+ {
+-	u32 mtmtr;
+-
+-	SKX_GET_MTMTR(pdev, mtmtr);
+-
+-	return !!GET_BITFIELD(mtmtr, 2, 2);
++	return !!GET_BITFIELD(mcmtr, 2, 2);
+ }
+ 
+ static int skx_get_dimm_config(struct mem_ctl_info *mci)
+ {
+ 	struct skx_pvt *pvt = mci->pvt_info;
++	u32 mtr, mcmtr, amap, mcddrtcfg;
+ 	struct skx_imc *imc = pvt->imc;
+-	u32 mtr, amap, mcddrtcfg;
+ 	struct dimm_info *dimm;
+ 	int i, j;
+ 	int ndimms;
+ 
++	/* Only the mcmtr on the first channel is effective */
++	pci_read_config_dword(imc->chan[0].cdev, 0x87c, &mcmtr);
++
+ 	for (i = 0; i < SKX_NUM_CHANNELS; i++) {
+ 		ndimms = 0;
+ 		pci_read_config_dword(imc->chan[i].cdev, 0x8C, &amap);
+@@ -182,14 +178,14 @@ static int skx_get_dimm_config(struct me
+ 			pci_read_config_dword(imc->chan[i].cdev,
+ 					      0x80 + 4 * j, &mtr);
+ 			if (IS_DIMM_PRESENT(mtr)) {
+-				ndimms += skx_get_dimm_info(mtr, amap, dimm, imc, i, j);
++				ndimms += skx_get_dimm_info(mtr, mcmtr, amap, dimm, imc, i, j);
+ 			} else if (IS_NVDIMM_PRESENT(mcddrtcfg, j)) {
+ 				ndimms += skx_get_nvdimm_info(dimm, imc, i, j,
+ 							      EDAC_MOD_STR);
+ 				nvdimm_count++;
+ 			}
+ 		}
+-		if (ndimms && !skx_check_ecc(imc->chan[0].cdev)) {
++		if (ndimms && !skx_check_ecc(mcmtr)) {
+ 			skx_printk(KERN_ERR, "ECC is disabled on imc %d\n", imc->mc);
+ 			return -ENODEV;
+ 		}
+--- a/drivers/edac/skx_common.c
++++ b/drivers/edac/skx_common.c
+@@ -283,7 +283,7 @@ static int skx_get_dimm_attr(u32 reg, in
+ #define numrow(reg)	skx_get_dimm_attr(reg, 2, 4, 12, 1, 6, "rows")
+ #define numcol(reg)	skx_get_dimm_attr(reg, 0, 1, 10, 0, 2, "cols")
+ 
+-int skx_get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
++int skx_get_dimm_info(u32 mtr, u32 mcmtr, u32 amap, struct dimm_info *dimm,
+ 		      struct skx_imc *imc, int chan, int dimmno)
+ {
+ 	int  banks = 16, ranks, rows, cols, npages;
+@@ -303,8 +303,8 @@ int skx_get_dimm_info(u32 mtr, u32 amap,
+ 		 imc->mc, chan, dimmno, size, npages,
+ 		 banks, 1 << ranks, rows, cols);
+ 
+-	imc->chan[chan].dimms[dimmno].close_pg = GET_BITFIELD(mtr, 0, 0);
+-	imc->chan[chan].dimms[dimmno].bank_xor_enable = GET_BITFIELD(mtr, 9, 9);
++	imc->chan[chan].dimms[dimmno].close_pg = GET_BITFIELD(mcmtr, 0, 0);
++	imc->chan[chan].dimms[dimmno].bank_xor_enable = GET_BITFIELD(mcmtr, 9, 9);
+ 	imc->chan[chan].dimms[dimmno].fine_grain_bank = GET_BITFIELD(amap, 0, 0);
+ 	imc->chan[chan].dimms[dimmno].rowbits = rows;
+ 	imc->chan[chan].dimms[dimmno].colbits = cols;
+--- a/drivers/edac/skx_common.h
++++ b/drivers/edac/skx_common.h
+@@ -126,7 +126,7 @@ int skx_get_all_bus_mappings(unsigned in
+ 
+ int skx_get_hi_lo(unsigned int did, int off[], u64 *tolm, u64 *tohm);
+ 
+-int skx_get_dimm_info(u32 mtr, u32 amap, struct dimm_info *dimm,
++int skx_get_dimm_info(u32 mtr, u32 mcmtr, u32 amap, struct dimm_info *dimm,
+ 		      struct skx_imc *imc, int chan, int dimmno);
+ 
+ int skx_get_nvdimm_info(struct dimm_info *dimm, struct skx_imc *imc,
 
 
