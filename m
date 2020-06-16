@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13098C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1160C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E816F214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAB220C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321807;
-	bh=GrEoOhZo2pGQjeRLcWJGgk6oFtyW3a2jBQ4YPkul6NI=;
+	s=default; t=1592321815;
+	bh=eZQl0S2K3ZTzZ0LLyydp0Siqt2ix5XFxW31Fv2OTH6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJDT6YuahCClsPI6DBvFP3D58k/54gP3Z8QBoktcHCVIGAxza1ap8EVCwHLwrxGv+
-	 uLnVyigF2Bi42nGVc+WAeEyKaoLkvrEvh3eeT4GU+KfzsvxTAafw2j1BuiYbPMJHZ/
-	 vO9pILUBqnh18H1YZ4aAlloFSBaK3c+X9JA6sW10=
+	b=cEpxFEw0J1fm3OgVeGoVI0m6Dq6W8un3+5rUygTkYmPfCA4c2w7UBdZgjkeV6gc0O
+	 s0N1M4kFdvzvH2qkr3EV2MGNELuLs1esq4lS0MGYaEY2EF81Cuxg1G+VCQ4p/xknxv
+	 D0BxZa3EfJCeDhwzLAmfJBCi8ua3Uf3d7OwxeB30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbgFPPgp (ORCPT
+        id S1730116AbgFPPgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:36:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47598 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730027AbgFPPgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:36:41 -0400
+        id S1730070AbgFPPgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:36:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7317D20C09;
-        Tue, 16 Jun 2020 15:36:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A81D20B1F;
+        Tue, 16 Jun 2020 15:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321801;
-        bh=GrEoOhZo2pGQjeRLcWJGgk6oFtyW3a2jBQ4YPkul6NI=;
+        s=default; t=1592321808;
+        bh=eZQl0S2K3ZTzZ0LLyydp0Siqt2ix5XFxW31Fv2OTH6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WlPlJn8MtMPpLnlEjnOM18qKjw7RpPSOqxvd6bQBxqmYjBZGugjd173mGfln2i7iF
-         yL7lQg3LfU/fDpWvUywRG8xtkYmpOcMJ8m+AGpr2qDSfClQV7yAJ5UlLsXfd2UICYI
-         EldqEoFt0KxstPE5+E5yyPwDLARcugun9osVvvyw=
+        b=K+RuCHmybubuyMxAGbba8ROwr68xdzaJNjxxCjehT3p1bCQvSCcCUFEn0u8tXTNEa
+         oxg9TwHug8aMHlYHXm+uTQfS9a4Nz0k6ffVmNvkyAXefTXzdm7G12m2ztwfb1PgTGH
+         bblYlBkkW4TwajxMQJ66LVyMlnvRxZqLfqlNCa68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
+        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 021/134] smack: avoid unused sip variable warning
-Date:   Tue, 16 Jun 2020 17:33:25 +0200
-Message-Id: <20200616153101.737744147@linuxfoundation.org>
+Subject: [PATCH 5.4 024/134] s390/pci: Log new handle in clp_disable_fh()
+Date:   Tue, 16 Jun 2020 17:33:28 +0200
+Message-Id: <20200616153101.907591519@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -60,164 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Petr Tesarik <ptesarik@suse.com>
 
-[ Upstream commit 00720f0e7f288d29681d265c23b22bb0f0f4e5b4 ]
+[ Upstream commit e1750a3d9abbea2ece29cac8dc5a6f5bc19c1492 ]
 
-The mix of IS_ENABLED() and #ifdef checks has left a combination
-that causes a warning about an unused variable:
+After disabling a function, the original handle is logged instead of
+the disabled handle.
 
-security/smack/smack_lsm.c: In function 'smack_socket_connect':
-security/smack/smack_lsm.c:2838:24: error: unused variable 'sip' [-Werror=unused-variable]
- 2838 |   struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
-
-Change the code to use C-style checks consistently so the compiler
-can handle it correctly.
-
-Fixes: 87fbfffcc89b ("broken ping to ipv6 linklocal addresses on debian buster")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Link: https://lkml.kernel.org/r/20200522183922.5253-1-ptesarik@suse.com
+Fixes: 17cdec960cf7 ("s390/pci: Recover handle in clp_set_pci_fn()")
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack.h     |  6 ------
- security/smack/smack_lsm.c | 25 ++++++++-----------------
- 2 files changed, 8 insertions(+), 23 deletions(-)
+ arch/s390/pci/pci_clp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/security/smack/smack.h b/security/smack/smack.h
-index 62529f382942..335d2411abe4 100644
---- a/security/smack/smack.h
-+++ b/security/smack/smack.h
-@@ -148,7 +148,6 @@ struct smk_net4addr {
- 	struct smack_known	*smk_label;	/* label */
- };
+diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+index 281e0dd4c614..20e093f86329 100644
+--- a/arch/s390/pci/pci_clp.c
++++ b/arch/s390/pci/pci_clp.c
+@@ -309,14 +309,13 @@ int clp_enable_fh(struct zpci_dev *zdev, u8 nr_dma_as)
  
--#if IS_ENABLED(CONFIG_IPV6)
- /*
-  * An entry in the table identifying IPv6 hosts.
-  */
-@@ -159,9 +158,7 @@ struct smk_net6addr {
- 	int			smk_masks;	/* mask size */
- 	struct smack_known	*smk_label;	/* label */
- };
--#endif /* CONFIG_IPV6 */
+ int clp_disable_fh(struct zpci_dev *zdev)
+ {
+-	u32 fh = zdev->fh;
+ 	int rc;
  
--#ifdef SMACK_IPV6_PORT_LABELING
- /*
-  * An entry in the table identifying ports.
-  */
-@@ -174,7 +171,6 @@ struct smk_port_label {
- 	short			smk_sock_type;	/* Socket type */
- 	short			smk_can_reuse;
- };
--#endif /* SMACK_IPV6_PORT_LABELING */
+ 	if (!zdev_enabled(zdev))
+ 		return 0;
  
- struct smack_known_list_elem {
- 	struct list_head	list;
-@@ -335,9 +331,7 @@ extern struct smack_known smack_known_web;
- extern struct mutex	smack_known_lock;
- extern struct list_head smack_known_list;
- extern struct list_head smk_net4addr_list;
--#if IS_ENABLED(CONFIG_IPV6)
- extern struct list_head smk_net6addr_list;
--#endif /* CONFIG_IPV6 */
- 
- extern struct mutex     smack_onlycap_lock;
- extern struct list_head smack_onlycap_list;
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index ad22066eba04..12c0fa85d9f8 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -51,10 +51,8 @@
- #define SMK_RECEIVING	1
- #define SMK_SENDING	2
- 
--#ifdef SMACK_IPV6_PORT_LABELING
--DEFINE_MUTEX(smack_ipv6_lock);
-+static DEFINE_MUTEX(smack_ipv6_lock);
- static LIST_HEAD(smk_ipv6_port_list);
--#endif
- static struct kmem_cache *smack_inode_cache;
- struct kmem_cache *smack_rule_cache;
- int smack_enabled;
-@@ -2326,7 +2324,6 @@ static struct smack_known *smack_ipv4host_label(struct sockaddr_in *sip)
- 	return NULL;
- }
- 
--#if IS_ENABLED(CONFIG_IPV6)
- /*
-  * smk_ipv6_localhost - Check for local ipv6 host address
-  * @sip: the address
-@@ -2394,7 +2391,6 @@ static struct smack_known *smack_ipv6host_label(struct sockaddr_in6 *sip)
- 
- 	return NULL;
- }
--#endif /* CONFIG_IPV6 */
- 
- /**
-  * smack_netlabel - Set the secattr on a socket
-@@ -2483,7 +2479,6 @@ static int smack_netlabel_send(struct sock *sk, struct sockaddr_in *sap)
- 	return smack_netlabel(sk, sk_lbl);
- }
- 
--#if IS_ENABLED(CONFIG_IPV6)
- /**
-  * smk_ipv6_check - check Smack access
-  * @subject: subject Smack label
-@@ -2516,7 +2511,6 @@ static int smk_ipv6_check(struct smack_known *subject,
- 	rc = smk_bu_note("IPv6 check", subject, object, MAY_WRITE, rc);
+ 	rc = clp_set_pci_fn(zdev, 0, CLP_SET_DISABLE_PCI_FN);
+-	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, fh, rc);
++	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, zdev->fh, rc);
  	return rc;
  }
--#endif /* CONFIG_IPV6 */
  
- #ifdef SMACK_IPV6_PORT_LABELING
- /**
-@@ -2605,6 +2599,7 @@ static void smk_ipv6_port_label(struct socket *sock, struct sockaddr *address)
- 	mutex_unlock(&smack_ipv6_lock);
- 	return;
- }
-+#endif
- 
- /**
-  * smk_ipv6_port_check - check Smack port access
-@@ -2667,7 +2662,6 @@ static int smk_ipv6_port_check(struct sock *sk, struct sockaddr_in6 *address,
- 
- 	return smk_ipv6_check(skp, object, address, act);
- }
--#endif /* SMACK_IPV6_PORT_LABELING */
- 
- /**
-  * smack_inode_setsecurity - set smack xattrs
-@@ -2842,24 +2836,21 @@ static int smack_socket_connect(struct socket *sock, struct sockaddr *sap,
- 		return 0;
- 	if (IS_ENABLED(CONFIG_IPV6) && sap->sa_family == AF_INET6) {
- 		struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
--#ifdef SMACK_IPV6_SECMARK_LABELING
--		struct smack_known *rsp;
--#endif
-+		struct smack_known *rsp = NULL;
- 
- 		if (addrlen < SIN6_LEN_RFC2133)
- 			return 0;
--#ifdef SMACK_IPV6_SECMARK_LABELING
--		rsp = smack_ipv6host_label(sip);
-+		if (__is_defined(SMACK_IPV6_SECMARK_LABELING))
-+			rsp = smack_ipv6host_label(sip);
- 		if (rsp != NULL) {
- 			struct socket_smack *ssp = sock->sk->sk_security;
- 
- 			rc = smk_ipv6_check(ssp->smk_out, rsp, sip,
- 					    SMK_CONNECTING);
- 		}
--#endif
--#ifdef SMACK_IPV6_PORT_LABELING
--		rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
--#endif
-+		if (__is_defined(SMACK_IPV6_PORT_LABELING))
-+			rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
-+
- 		return rc;
- 	}
- 	if (sap->sa_family != AF_INET || addrlen < sizeof(struct sockaddr_in))
 -- 
 2.25.1
 
