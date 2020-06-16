@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E16FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDED6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D317208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A17208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323806;
-	bh=qPXtMOTdflutZMIJ3Kxe+EfHyqUsxZqyhk7CaUbd0Do=;
+	s=default; t=1592323813;
+	bh=NKMdgYii+M/cnUvPSQ4mA5hfpf/iT2vn+aa2rpTVPI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vt37CXIsBbRwo7xkL6JYVzIya3lwMJP76yA6lF0iVpwDChBVoLJNYe2Z2O9dNIrjF
-	 r114a8b+5z3y73WIW//ap1IZTMubHgYClPW+ciD6pfX5j2YyhMdDXaUoveeowQPkv+
-	 jcTOpzILSQ/XfmDUWdxB2vPAH+boxRa6c3VT5dlg=
+	b=pI2LvDGqNuNypAbsMTmLDosGta7tc+7zr1fasGVEf6ZxMuKfvZ4hl9nSNjXX68WZy
+	 8cPagMz+J1zfsgK8LyrNomOGGHEymxHMV36vzEA27d5Uls3zeR5OSHinRB9u1V3gbW
+	 P4Fam1E5T0MBozq8mPszWOfaM3/uhIUVp/iaWikk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732288AbgFPQKF (ORCPT
+        id S1732002AbgFPPol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731524AbgFPPo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:44:56 -0400
+        id S1729857AbgFPPof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EA4B21475;
-        Tue, 16 Jun 2020 15:44:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77C7B21475;
+        Tue, 16 Jun 2020 15:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322295;
-        bh=qPXtMOTdflutZMIJ3Kxe+EfHyqUsxZqyhk7CaUbd0Do=;
+        s=default; t=1592322275;
+        bh=NKMdgYii+M/cnUvPSQ4mA5hfpf/iT2vn+aa2rpTVPI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2RhHzeF6FcWwjVkj0fJ2D+N6ImbGM64JMTwLvH3N27tjqVQHxjOyfS0BSgIh/VMmT
-         Ohzv0EeTYiJID8rabn64Eb1dRiTJ4i2PSoP1tAaVYQ81+9sh6t3GftnGg7YNwZDo2b
-         Ft8RQ3tKrcn30HaEjqDNtJae9SgPX+AoVwQcjX34=
+        b=xUD+lPP27rOBUrdbduB4GseULh7FrKfBcNaLct6hRuESrFVgAHEla1P0RkwqZLNKd
+         wdZ2uUTAYTIBCFYsU3ngstowQloRqyT/JBmP2X9OLJdq0+pMDNZKhMH6f1gaRG/Zow
+         9tsyN1MOTg5Ty5YrCWNu/FXuVN7GDM6Hyv71UOE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 5.7 076/163] arm64: acpi: fix UBSAN warning
-Date:   Tue, 16 Jun 2020 17:34:10 +0200
-Message-Id: <20200616153110.486696417@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 069/163] ALSA: pcm: fix snd_pcm_link() lockdep splat
+Date:   Tue, 16 Jun 2020 17:34:03 +0200
+Message-Id: <20200616153110.151343524@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -62,76 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit a194c33f45f83068ef13bf1d16e26d4ca3ecc098 upstream.
+commit e18035cf5cb3d2bf8e4f4d350a23608bd208b934 upstream.
 
-Will reported a UBSAN warning:
+Add and use snd_pcm_stream_lock_nested() in snd_pcm_link/unlink
+implementation.  The code is fine, but generates a lockdep complaint:
 
-UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
-member access within null pointer of type 'struct acpi_madt_generic_interrupt'
-CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc6-00124-g96bc42ff0a82 #1
-Call trace:
- dump_backtrace+0x0/0x384
- show_stack+0x28/0x38
- dump_stack+0xec/0x174
- handle_null_ptr_deref+0x134/0x174
- __ubsan_handle_type_mismatch_v1+0x84/0xa4
- acpi_parse_gic_cpu_interface+0x60/0xe8
- acpi_parse_entries_array+0x288/0x498
- acpi_table_parse_entries_array+0x178/0x1b4
- acpi_table_parse_madt+0xa4/0x110
- acpi_parse_and_init_cpus+0x38/0x100
- smp_init_cpus+0x74/0x258
- setup_arch+0x350/0x3ec
- start_kernel+0x98/0x6f4
+============================================
+WARNING: possible recursive locking detected
+5.7.1mq+ #381 Tainted: G           O
+--------------------------------------------
+pulseaudio/4180 is trying to acquire lock:
+ffff888402d6f508 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xda8/0xee0 [snd_pcm]
 
-This is from the use of the ACPI_OFFSET in
-arch/arm64/include/asm/acpi.h. Replace its use with offsetof from
-include/linux/stddef.h which should implement the same logic using
-__builtin_offsetof, so that UBSAN wont warn.
+but task is already holding lock:
+ffff8883f7a8cf18 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xe4e/0xee0 [snd_pcm]
 
-Reported-by: Will Deacon <will@kernel.org>
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&group->lock);
+  lock(&group->lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by pulseaudio/4180:
+ #0: ffffffffa1a05190 (snd_pcm_link_rwsem){++++}-{3:3}, at: snd_pcm_common_ioctl+0xca0/0xee0 [snd_pcm]
+ #1: ffff8883f7a8cf18 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xe4e/0xee0 [snd_pcm]
+[...]
+
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/lkml/20200521100952.GA5360@willie-the-truck/
-Link: https://lore.kernel.org/r/20200608203818.189423-1-ndesaulniers@google.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: f57f3df03a8e ("ALSA: pcm: More fine-grained PCM link locking")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/37252c65941e58473b1219ca9fab03d48f47e3e3.1591610330.git.mirq-linux@rere.qmqm.pl
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/arm64/include/asm/acpi.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -12,6 +12,7 @@
- #include <linux/efi.h>
- #include <linux/memblock.h>
- #include <linux/psci.h>
-+#include <linux/stddef.h>
+---
+ sound/core/pcm_native.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -138,6 +138,16 @@ void snd_pcm_stream_lock_irq(struct snd_
+ }
+ EXPORT_SYMBOL_GPL(snd_pcm_stream_lock_irq);
  
- #include <asm/cputype.h>
- #include <asm/io.h>
-@@ -31,14 +32,14 @@
-  * is therefore used to delimit the MADT GICC structure minimum length
-  * appropriately.
-  */
--#define ACPI_MADT_GICC_MIN_LENGTH   ACPI_OFFSET(  \
-+#define ACPI_MADT_GICC_MIN_LENGTH   offsetof(  \
- 	struct acpi_madt_generic_interrupt, efficiency_class)
++static void snd_pcm_stream_lock_nested(struct snd_pcm_substream *substream)
++{
++	struct snd_pcm_group *group = &substream->self_group;
++
++	if (substream->pcm->nonatomic)
++		mutex_lock_nested(&group->mutex, SINGLE_DEPTH_NESTING);
++	else
++		spin_lock_nested(&group->lock, SINGLE_DEPTH_NESTING);
++}
++
+ /**
+  * snd_pcm_stream_unlock_irq - Unlock the PCM stream
+  * @substream: PCM substream
+@@ -2200,7 +2210,7 @@ static int snd_pcm_link(struct snd_pcm_s
+ 	snd_pcm_stream_unlock_irq(substream);
  
- #define BAD_MADT_GICC_ENTRY(entry, end)					\
- 	(!(entry) || (entry)->header.length < ACPI_MADT_GICC_MIN_LENGTH || \
- 	(unsigned long)(entry) + (entry)->header.length > (end))
+ 	snd_pcm_group_lock_irq(target_group, nonatomic);
+-	snd_pcm_stream_lock(substream1);
++	snd_pcm_stream_lock_nested(substream1);
+ 	snd_pcm_group_assign(substream1, target_group);
+ 	refcount_inc(&target_group->refs);
+ 	snd_pcm_stream_unlock(substream1);
+@@ -2216,7 +2226,7 @@ static int snd_pcm_link(struct snd_pcm_s
  
--#define ACPI_MADT_GICC_SPE  (ACPI_OFFSET(struct acpi_madt_generic_interrupt, \
-+#define ACPI_MADT_GICC_SPE  (offsetof(struct acpi_madt_generic_interrupt, \
- 	spe_interrupt) + sizeof(u16))
- 
- /* Basic configuration for ACPI */
+ static void relink_to_local(struct snd_pcm_substream *substream)
+ {
+-	snd_pcm_stream_lock(substream);
++	snd_pcm_stream_lock_nested(substream);
+ 	snd_pcm_group_assign(substream, &substream->self_group);
+ 	snd_pcm_stream_unlock(substream);
+ }
 
 
