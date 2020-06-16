@@ -4,61 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A521DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 869E7207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012E0207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323462;
-	bh=rmHaqUT/vvmNrOYOGcZbtU0Y3rBcuPm4m+Rq9ThEigU=;
+	s=default; t=1592323476;
+	bh=KBOFYH+yltsllB5kxgRuQLTpngYArcwUB4vOgu0wmTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iTATT0e5QN8b48jkxA/5kT3WRQzjHHe0nEXTOt8n1+h2Nop9NpAdczg5Mlw7aD8eD
-	 6CXLqCsHg5a5UaR3fLvwSM6UT6vSyx1/5CJaS4P6ZFZSYTNWdMmOPMJFehnV0hLEYi
-	 EM0RuWRPdxxdCxIjY9GYFcx9MpCQ7KxNxcR9BwjI=
+	b=nHCf8CXzn2jce5cIR5nhtAE8DkOL3sAZzCjSZ2MxT/pWj0ec3/itGs0AqVhpOAkY/
+	 vcWMTkpmy+Q+VXl9IIIj7Kv69RrcxVdLeRk2jtmue1W/1WmOZxNgIY52+nEIUue0WU
+	 t6xicaHDUNP0PPzpjbWbj6v4wEdYByN5M4oxjNm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbgFPQEV (ORCPT
+        id S1732526AbgFPPtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44952 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732542AbgFPPtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:47 -0400
+        id S1732509AbgFPPt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A772E21473;
-        Tue, 16 Jun 2020 15:49:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B93320776;
+        Tue, 16 Jun 2020 15:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322586;
-        bh=rmHaqUT/vvmNrOYOGcZbtU0Y3rBcuPm4m+Rq9ThEigU=;
+        s=default; t=1592322568;
+        bh=KBOFYH+yltsllB5kxgRuQLTpngYArcwUB4vOgu0wmTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TGvj7jY0849Ji/C7kQAuwQYvhrDG932aSkTfScu2Bk5VpAIoo3h70yR4U4eqfjTsh
-         U3qLeB9RMOjeoWrq89oY3siJJnH/i7EJ03Dndz0sUI+GMMuGDL6/jJ7vGSOIRo+E3O
-         SyHOoXcIe7nmYNK5lWc2xecNr7k/lUNPc0jBYTCM=
+        b=MDcWO1vCmG8UIy7XlfzS3FXlzBiI08u9OOaFEqP7RgwDvZ2tBPD6IQNs9HIfr/pu0
+         dyAWP67egWiJ6hTBgOEo28nkJXn+yaUs7jb0wUQVjof93rTiD2tOWEfNp9VQJM+HW0
+         eoRW7yrV3walhZESc8kN+fnx/zm/MnpSYXBmNUuo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eric Biggers <ebiggers@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
+        stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 025/161] mm: add kvfree_sensitive() for freeing sensitive data objects
-Date:   Tue, 16 Jun 2020 17:33:35 +0200
-Message-Id: <20200616153107.597339297@linuxfoundation.org>
+Subject: [PATCH 5.6 019/161] csky: Fixup abiv2 syscall_trace break a4 & a5
+Date:   Tue, 16 Jun 2020 17:33:29 +0200
+Message-Id: <20200616153107.324638939@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -71,159 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit d4eaa2837851db2bfed572898bfc17f9a9f9151e ]
+[ Upstream commit e0bbb53843b5fdfe464b099217e3b9d97e8a75d7 ]
 
-For kvmalloc'ed data object that contains sensitive information like
-cryptographic keys, we need to make sure that the buffer is always cleared
-before freeing it.  Using memset() alone for buffer clearing may not
-provide certainty as the compiler may compile it away.  To be sure, the
-special memzero_explicit() has to be used.
+Current implementation could destory a4 & a5 when strace, so we need to get them
+from pt_regs by SAVE_ALL.
 
-This patch introduces a new kvfree_sensitive() for freeing those sensitive
-data objects allocated by kvmalloc().  The relevant places where
-kvfree_sensitive() can be used are modified to use it.
-
-Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Acked-by: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Link: http://lkml.kernel.org/r/20200407200318.11711-1-longman@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h       |  1 +
- mm/util.c                | 18 ++++++++++++++++++
- security/keys/internal.h | 11 -----------
- security/keys/keyctl.c   | 16 +++++-----------
- 4 files changed, 24 insertions(+), 22 deletions(-)
+ arch/csky/abiv2/inc/abi/entry.h | 2 ++
+ arch/csky/kernel/entry.S        | 6 ++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 96deeecd9179..9b9f48489576 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -669,6 +669,7 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
- }
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 9023828ede97..ac8f65a3e75a 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -13,6 +13,8 @@
+ #define LSAVE_A1	28
+ #define LSAVE_A2	32
+ #define LSAVE_A3	36
++#define LSAVE_A4	40
++#define LSAVE_A5	44
  
- extern void kvfree(const void *addr);
-+extern void kvfree_sensitive(const void *addr, size_t len);
- 
- /*
-  * Mapcount of compound page as a whole, does not include mapped sub-pages.
-diff --git a/mm/util.c b/mm/util.c
-index 988d11e6c17c..dc1c877d5481 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -604,6 +604,24 @@ void kvfree(const void *addr)
- }
- EXPORT_SYMBOL(kvfree);
- 
-+/**
-+ * kvfree_sensitive - Free a data object containing sensitive information.
-+ * @addr: address of the data object to be freed.
-+ * @len: length of the data object.
-+ *
-+ * Use the special memzero_explicit() function to clear the content of a
-+ * kvmalloc'ed object containing sensitive data to make sure that the
-+ * compiler won't optimize out the data clearing.
-+ */
-+void kvfree_sensitive(const void *addr, size_t len)
-+{
-+	if (likely(!ZERO_OR_NULL_PTR(addr))) {
-+		memzero_explicit((void *)addr, len);
-+		kvfree(addr);
-+	}
-+}
-+EXPORT_SYMBOL(kvfree_sensitive);
-+
- static inline void *__page_rmapping(struct page *page)
- {
- 	unsigned long mapping;
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 6d0ca48ae9a5..153d35c20d3d 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -350,15 +350,4 @@ static inline void key_check(const struct key *key)
- #define key_check(key) do {} while(0)
- 
- #endif
--
--/*
-- * Helper function to clear and free a kvmalloc'ed memory object.
-- */
--static inline void __kvzfree(const void *addr, size_t len)
--{
--	if (addr) {
--		memset((void *)addr, 0, len);
--		kvfree(addr);
--	}
--}
- #endif /* _INTERNAL_H */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 5e01192e222a..edde63a63007 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -142,10 +142,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
- 
- 	key_ref_put(keyring_ref);
-  error3:
--	if (payload) {
--		memzero_explicit(payload, plen);
--		kvfree(payload);
--	}
-+	kvfree_sensitive(payload, plen);
-  error2:
- 	kfree(description);
-  error:
-@@ -360,7 +357,7 @@ long keyctl_update_key(key_serial_t id,
- 
- 	key_ref_put(key_ref);
- error2:
--	__kvzfree(payload, plen);
-+	kvfree_sensitive(payload, plen);
- error:
- 	return ret;
- }
-@@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 		 */
- 		if (ret > key_data_len) {
- 			if (unlikely(key_data))
--				__kvzfree(key_data, key_data_len);
-+				kvfree_sensitive(key_data, key_data_len);
- 			key_data_len = ret;
- 			continue;	/* Allocate buffer */
- 		}
-@@ -923,7 +920,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 			ret = -EFAULT;
- 		break;
- 	}
--	__kvzfree(key_data, key_data_len);
-+	kvfree_sensitive(key_data, key_data_len);
- 
- key_put_out:
- 	key_put(key);
-@@ -1225,10 +1222,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
- 		keyctl_change_reqkey_auth(NULL);
- 
- error2:
--	if (payload) {
--		memzero_explicit(payload, plen);
--		kvfree(payload);
--	}
-+	kvfree_sensitive(payload, plen);
- error:
- 	return ret;
- }
+ #define KSPTOUSP
+ #define USPTOKSP
+diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
+index 9718388448a4..ff908d28f0a0 100644
+--- a/arch/csky/kernel/entry.S
++++ b/arch/csky/kernel/entry.S
+@@ -170,8 +170,10 @@ csky_syscall_trace:
+ 	ldw	a3, (sp, LSAVE_A3)
+ #if defined(__CSKYABIV2__)
+ 	subi	sp, 8
+-	stw	r5, (sp, 0x4)
+-	stw	r4, (sp, 0x0)
++	ldw	r9, (sp, LSAVE_A4)
++	stw	r9, (sp, 0x0)
++	ldw	r9, (sp, LSAVE_A5)
++	stw	r9, (sp, 0x4)
+ #else
+ 	ldw	r6, (sp, LSAVE_A4)
+ 	ldw	r7, (sp, LSAVE_A5)
 -- 
 2.25.1
 
