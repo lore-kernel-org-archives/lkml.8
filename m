@@ -2,138 +2,179 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E102BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8511EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD0DC20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF9020656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="xNw2XJ3W"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IVV0TzJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgFPIaZ (ORCPT
+        id S1727979AbgFPIbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35064 "EHLO
+        Tue, 16 Jun 2020 04:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgFPIaU (ORCPT
+        with ESMTP id S1726428AbgFPIbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:30:20 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980DCC05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:30:18 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id m2so15299653otr.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:30:18 -0700 (PDT)
+        Tue, 16 Jun 2020 04:31:15 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44FBFC05BD43
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:31:13 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h5so19823644wrc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:31:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iFZu21anIecqeWnmtHDcKq9io7f3G/fD/2SgVahSB5o=;
-        b=xNw2XJ3W6+QRI42l+XFlKIs2oUp3ZMllemOdGovEuifvIF3kEWzDFTdYX+xBKVJZe0
-         XZ+aHBfFXcExTyTXZx2pwIo6GF3KWtHNfN0wD8alb7/4mqnwZMoxYoZfDZcDY6mRwH7X
-         1OI8kbUZYWXgNEdjExp8YSuk1HrapdVEoQ5v4=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=O9PrYTho49Bp6EVdK3E+npj+dEJ0SrzzaYmk25xGQCs=;
+        b=IVV0TzJSfu6Cb6fbIfYYBpYjGCuxgbVN6r850piGyx/5zINEAkRFXfc72poc2cK3SZ
+         VcEF0dEg5+XAe+ur1GnVppYchAQG97vZPiCl91UlA+lO45mdrqXZkQBH73ga3MUse6k8
+         PIJS0YoOXZtsj9PPGtsNUfzRCyLXcKDCZjKMgvvYQcE98rVzgsqVF/3jX6iwWqlzOXnZ
+         spDdTuXYgP3RMFGGFUaiblGaaV/T/RQ3mmLF9ELJoLXNag3y3Jlvcw26NSv+DvAClrkM
+         Od/Kvm4WsC4LM9LUOt0LLdyQgRNEF6e7Ejc1Koa1sidd62IiKTJKeu9cI6v6cmCgIS4t
+         pdUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iFZu21anIecqeWnmtHDcKq9io7f3G/fD/2SgVahSB5o=;
-        b=eMsmfLGCpEE7+NduH8dSJ48ScKggHpc7+uq7sDgi79Xs8souyYRdF9vZ1XOx1DndQe
-         sSjQtLqbGcgjuQPe7SjIfHYIsQPxjjIA/MI7jd5ckMS+9tSMQTc2e4PtLbUy2jLKtSdw
-         iz127bTJEoWJLZL1r0JGyvQPPwaXZk9Mqgfj1wXYrMHWVMqZOeyUAIimD0T5MooY8vP0
-         xlG7XY+SfpOp9Gr2WkJyO0YwrYCcKH79SPp6MBFEupvqnfzbog8PnrAyYJNudgWHIOsx
-         BxhTmGAeMKLhZT6VNNPwpOX852pxOjjefg7SNtZI9SpWzB8ogeBx2yxH8g6G7AesfvqF
-         XkOQ==
-X-Gm-Message-State: AOAM5323ygsDpEE0xN2ClSgejkf0ua1opJ6kSu0vyQyiNKsIn1H1utdv
-        R8+BMuWadVGxFcOZ/3Z2ATXHfrJplA88HLeowkY02g==
-X-Google-Smtp-Source: ABdhPJxrzvbJdzoHn4DvVnkgACjbZuigtgxQERvnRr4I09yrEvDM8GB18hU9JmN3mH7A3JSLwqB26+Qq3j6dQyXGWTc=
-X-Received: by 2002:a9d:5cc1:: with SMTP id r1mr1384294oti.147.1592296217878;
- Tue, 16 Jun 2020 01:30:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=O9PrYTho49Bp6EVdK3E+npj+dEJ0SrzzaYmk25xGQCs=;
+        b=leE0zPwtunkd1dt/wvMk9pSQfWFkQqU0SoE73XslnvnZCRsy9Rn3hcEjwXLQhmcbl1
+         oq4RKu+OEtv2MQCK3NXlEUk1VBF4sDWGjYggWJDZIKkf6T/ql4mMzRWBucTi3iqM/zJg
+         /Wt3pjAqiRNj6MMJ1RLqS4nv6yD+/whMu4cyedLHpKCfPOqUX2xp6NXuLxV9G7r2RcPA
+         C/TC4nZ8rMnkWipmWYnsYbqZn3Im+M6Ni1uHiO++x+RPdteMFLeGDappWsdXN66rGVVd
+         D8J4jqJVkvEhBLosVlxsHJ5P85NPFZ3PKkXqQKpo2g/OCUOhiRCapl20PtHEWHSdX8Bo
+         T97g==
+X-Gm-Message-State: AOAM531HbpKhhPBp2VTswk/0dZYNr9iG88mBOtzw5+CO8WC/s8aSdgxD
+        IoG7AyGd1G5GYOP4+Luz5kxxqQ==
+X-Google-Smtp-Source: ABdhPJyGVDBmCjx821OXOVBJ+fFcT06h8c84Po1Zcr2LqYcehjC7g284lXeFVlBS/b/VGmEgEyVJRg==
+X-Received: by 2002:adf:9ccf:: with SMTP id h15mr1815949wre.275.1592296271800;
+        Tue, 16 Jun 2020 01:31:11 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id b8sm27846943wrm.35.2020.06.16.01.31.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 01:31:10 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 09:31:07 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rjw@rjwysocki.net, rafael@kernel.org, arnd@arndb.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org
+Subject: Re: [PATCH 2/2] cpufreq: Specify default governor on command line
+Message-ID: <20200616083107.GA122049@google.com>
+References: <20200615165554.228063-1-qperret@google.com>
+ <20200615165554.228063-3-qperret@google.com>
+ <20200616043143.obk5k3rv737j5dnd@vireshk-i7>
 MIME-Version: 1.0
-References: <20200612160141.188370-1-lmb@cloudflare.com> <CAADnVQ+owOvkZ03qyodmh+4NkZD=1LpgTN+YJqiKgr0_OKqRtA@mail.gmail.com>
- <CACAyw9-Jy+r2t5Yy83EEZ8GDnxEsGOPdrqr2JSfVqcC2E6dYmQ@mail.gmail.com> <CAADnVQJP_i+KsP771L=GwxousnE=w9o2KckZ7ZCbc064EqSq6w@mail.gmail.com>
-In-Reply-To: <CAADnVQJP_i+KsP771L=GwxousnE=w9o2KckZ7ZCbc064EqSq6w@mail.gmail.com>
-From:   Lorenz Bauer <lmb@cloudflare.com>
-Date:   Tue, 16 Jun 2020 09:30:06 +0100
-Message-ID: <CACAyw99Szs3nUTx=DSmh0x8iTBLNF9TTLGC0GQLZ=FifVnbzBA@mail.gmail.com>
-Subject: Re: [PATCH bpf 1/2] flow_dissector: reject invalid attach_flags
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616043143.obk5k3rv737j5dnd@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 at 04:55, Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, Jun 15, 2020 at 7:43 AM Lorenz Bauer <lmb@cloudflare.com> wrote:
-> >
-> > On Fri, 12 Jun 2020 at 23:36, Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > On Fri, Jun 12, 2020 at 9:02 AM Lorenz Bauer <lmb@cloudflare.com> wrote:
-> > > >
-> > > > Using BPF_PROG_ATTACH on a flow dissector program supports neither flags
-> > > > nor target_fd but accepts any value. Return EINVAL if either are non-zero.
-> > > >
-> > > > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> > > > Fixes: b27f7bb590ba ("flow_dissector: Move out netns_bpf prog callbacks")
-> > > > ---
-> > > >  kernel/bpf/net_namespace.c | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > >
-> > > > diff --git a/kernel/bpf/net_namespace.c b/kernel/bpf/net_namespace.c
-> > > > index 78cf061f8179..56133e78ae4f 100644
-> > > > --- a/kernel/bpf/net_namespace.c
-> > > > +++ b/kernel/bpf/net_namespace.c
-> > > > @@ -192,6 +192,9 @@ int netns_bpf_prog_attach(const union bpf_attr *attr, struct bpf_prog *prog)
-> > > >         struct net *net;
-> > > >         int ret;
-> > > >
-> > > > +       if (attr->attach_flags || attr->target_fd)
-> > > > +               return -EINVAL;
-> > > > +
-> > >
-> > > In theory it makes sense, but how did you test it?
-> >
-> > Not properly it seems, sorry!
-> >
-> > > test_progs -t flow
-> > > fails 5 tests.
-> >
-> > I spent today digging through this, and the issue is actually more annoying than
-> > I thought. BPF_PROG_DETACH for sockmap and flow_dissector ignores
-> > attach_bpf_fd. The cgroup and lirc2 attach point use this to make sure that the
-> > program being detached is actually what user space expects. We actually have
-> > tests that set attach_bpf_fd for these to attach points, which tells
-> > me that this is
-> > an easy mistake to make.
-> >
-> > Unfortunately I can't come up with a good fix that seems backportable:
-> > - Making sockmap and flow_dissector have the same semantics as cgroup
-> >   and lirc2 requires a bunch of changes (probably a new function for sockmap)
->
-> making flow dissector pass prog_fd as cg and lirc is certainly my preference.
-> Especially since tests are passing fd user code is likely doing the same,
-> so breakage is unlikely. Also it wasn't done that long ago, so
-> we can backport far enough.
-> It will remove cap_net_admin ugly check in bpf_prog_detach()
-> which is the only exception now in cap model.
+Hey Viresh,
 
-SGTM. What about sockmap though? The code for that has been around for ages.
+On Tuesday 16 Jun 2020 at 10:01:43 (+0530), Viresh Kumar wrote:
+> On 15-06-20, 17:55, Quentin Perret wrote:
+> > +static void cpufreq_get_default_governor(void)
+> > +{
+> > +	default_governor = cpufreq_parse_governor(cpufreq_param_governor);
+> > +	if (!default_governor) {
+> > +		if (*cpufreq_param_governor)
+> > +			pr_warn("Failed to find %s\n", cpufreq_param_governor);
+> > +		default_governor = cpufreq_default_governor();
+> 
+> A module_get() never happened for this case and so maybe a
+> module_put() should never get called.
 
--- 
-Lorenz Bauer  |  Systems Engineer
-6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
+Correct, however cpufreq_default_governor() being a weak function, we're
+basically guaranteed the governor we get from there is builtin, so
+gov->owner is NULL. That is, module_put() is not actively useful, but it
+doesn't harm. So I figured that should be fine. That could definitely
+use a comment, though :)
 
-www.cloudflare.com
+> > +	}
+> > +}
+> > +
+> > +static void cpufreq_put_default_governor(void)
+> > +{
+> > +	if (!default_governor)
+> > +		return;
+> > +	module_put(default_governor->owner);
+> > +	default_governor = NULL;
+> > +}
+> > +
+> >  static int cpufreq_init_governor(struct cpufreq_policy *policy)
+> >  {
+> >  	int ret;
+> > @@ -2701,6 +2721,8 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+> >  
+> >  	if (driver_data->setpolicy)
+> >  		driver_data->flags |= CPUFREQ_CONST_LOOPS;
+> > +	else
+> > +		cpufreq_get_default_governor();
+> >  
+> >  	if (cpufreq_boost_supported()) {
+> >  		ret = create_boost_sysfs_file();
+> > @@ -2769,6 +2791,7 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
+> >  	subsys_interface_unregister(&cpufreq_interface);
+> >  	remove_boost_sysfs_file();
+> >  	cpuhp_remove_state_nocalls_cpuslocked(hp_online);
+> > +	cpufreq_put_default_governor();
+> >  
+> >  	write_lock_irqsave(&cpufreq_driver_lock, flags);
+> >  
+> > @@ -2792,4 +2815,5 @@ static int __init cpufreq_core_init(void)
+> >  	return 0;
+> >  }
+> 
+> And since this is a per boot thing, there is perhaps no need of doing
+> these at driver register/unregister, I would rather do it at:
+> cpufreq_core_init() time itself and so we will never need to run
+> cpufreq_put_default_governor() and so can be removed.
+
+Right, so the reason I avoided cpufreq_core_init() was because it is
+called at core_initcall() time, which means I can't really assume the
+governors have been loaded by that time. By waiting for the driver to
+probe before detecting the default gov, we get that nice ordering. But
+yes, it feels odd to have it here :/
+
+Thinking about it more, the natural fit for this would rather be the
+register/unregister path for governors directly. If that sounds good to
+you (?) I'll try to move it there in v2.
+
+> And another thing I am not able to understand (despite you commenting
+> about that in the commit log) is what happens if the default governor
+> chosen is built as a module ?
+
+So the answer is 'it depends'. If the driver is built as a module too,
+then you should load the governor module first, and then the driver
+module, and everything will work just fine.
+
+But in the case where the governor is loaded _after_ the driver (either
+because we got the module ordering wrong, or because the driver is
+builtin), then the policies will be initialized with the builtin
+default, and nothing special will happen when the governor module is
+loaded.
+
+That behaviour very much is open for discussion, though. A possible
+alternative would be to automatically switch all policies to the default
+governor upon loading. That would have the nice benefit or removing the
+ordering dependency, but that is more involved and I didn't have a
+use-case for it, so I went for the simpler option ('the-default
+governor-needs-to-be-registered-before-the-policies-are-created').
+
+Thoughts?
+
+Thanks,
+Quentin
