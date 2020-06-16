@@ -2,122 +2,229 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1323FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF1AF206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998D9206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:59:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="qU3gGhZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgFPL6D (ORCPT
+        id S1728428AbgFPL74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:58:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45776 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728481AbgFPL6D (ORCPT
+        Tue, 16 Jun 2020 07:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbgFPL7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:58:03 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GBVkN5176896;
-        Tue, 16 Jun 2020 07:57:56 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7qdxth-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 07:57:56 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GBlCB6032338;
-        Tue, 16 Jun 2020 07:57:56 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7qdxsc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 07:57:55 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GBtjk4016289;
-        Tue, 16 Jun 2020 11:57:53 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7w980-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 11:57:53 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GBvoDl60555284
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 11:57:50 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A55BC4C046;
-        Tue, 16 Jun 2020 11:57:50 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC4D14C040;
-        Tue, 16 Jun 2020 11:57:49 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.56.227])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Jun 2020 11:57:49 +0000 (GMT)
-Date:   Tue, 16 Jun 2020 13:57:26 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-Message-ID: <20200616135726.04fa8314.pasic@linux.ibm.com>
-In-Reply-To: <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
-References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
-        <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
-        <20200616115202.0285aa08.pasic@linux.ibm.com>
-        <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Tue, 16 Jun 2020 07:59:55 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7BBC08C5C2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:59:55 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id t21so14021702edr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vFt52X6ZxnjFhdInzqPTsBTf0H25///Yw0La+Ewwi+o=;
+        b=qU3gGhZyPmAH6X7JfnyHrsDU+7oTdpbz1YAthn1buJ0jnK49tJAfpCusTt5I70ATYx
+         0gOBtgEnf4sVLHiZlKm5pnuNYAZtL3Rzzi/83WU03/jW4uF8lW9YNQSmsWMMziU6Y5Oa
+         Vuklbd5Nus9ElENtzXUkbsmUVT2wjmPP0OAH/Y/CSj1EikMdGljd0ewAMOv1mYeWNWlH
+         wWbdevHWLvxK7U1mqSRRgn8dttBSzPxRw43NT4YSLoheKQwtucMJZQi8WrsliV+pL26W
+         o/2l97fOVDL2+ac20rcG45UJaUaMel5v7Q/2zi5OE6fbzCPP+ehhpmoPCeirYewIILwz
+         KvBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vFt52X6ZxnjFhdInzqPTsBTf0H25///Yw0La+Ewwi+o=;
+        b=sWBuC5oalrMUt+ipJ8/9qaIfUMdKl7LgxBmBFqf+3Ttre7PWy0s0xFpXPYsOlZ1oLq
+         Hp9Le+8qXUmIVbaop2dgMIKtnaiCSeMAdYi+8YkxRzppvWqDUajcS/W1QWG+h3dsIy9g
+         xQy6mK+Z6N9FJgm0ZQh0iW7AtC/KQqb2RnnPB6R/FyGKCkE3S32MCtoFr2kgpt/P0Ozn
+         plYKDhNi49bDCOL/eUdI9SX5yhYCiBkuJ8ok1ATVwdmCsQuX/+tEB5m6/5M3VJR1tE7+
+         b75rjifc4ouahsdRB7pw96I+1biUXJypJ+0m87vhMkxkGXx3S/L/Z1iiCthLYLQwOt6H
+         QrnQ==
+X-Gm-Message-State: AOAM532QJk7MNaaDVVhCXihE3zs3LmQm1RSV6GVXzxmaIsGX/gu7Fqhi
+        Xmmvqw2ccNHusM5ucRqbmy44Eg==
+X-Google-Smtp-Source: ABdhPJyF1u1ezjdAA2rWPEYtw/dAw4UYwl9b/mgLDaDmMHfOk/h17IkWVgv5p5leHslveVvEwX3McQ==
+X-Received: by 2002:aa7:d698:: with SMTP id d24mr2252260edr.56.1592308793605;
+        Tue, 16 Jun 2020 04:59:53 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id lw11sm10833271ejb.58.2020.06.16.04.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 04:59:52 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 13:59:51 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
+Message-ID: <20200616115951.GA3976568@x1>
+References: <20200608125143.GA2789203@x1>
+ <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-16_04:2020-06-15,2020-06-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 impostorscore=0 suspectscore=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0
- clxscore=1015 cotscore=-2147483648 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006160084
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 12:52:50 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-> >>   int virtio_finalize_features(struct virtio_device *dev)
-> >>   {
-> >>   	int ret = dev->config->finalize_features(dev);
-> >> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
-> >>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
-> >>   		return 0;
-> >>   
-> >> +	if (arch_needs_iommu_platform(dev) &&
-> >> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
-> >> +		return -EIO;
-> >> +  
-> > 
-> > Why EIO?  
+On Tue, Jun 16, 2020 at 10:31:54AM +0200, Linus Walleij wrote:
+> On Mon, Jun 8, 2020 at 2:51 PM Drew Fustini <drew@beagleboard.org> wrote:
 > 
-> Because I/O can not occur correctly?
-> I am open to suggestions.
+> > This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
+> > pinctrl_map is added.  The current behavior is to return 0 when
+> > !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+> > incorrectly assumes that a map was added and sets num_maps = 2.
+> >
+> > Analysis:
+> > =========
+> > The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+> > if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+> > returns 0 to indicate there was no error and num_maps is then set to 2:
+> >
+> >  980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+> >  981                                                 struct device_node *np,
+> >  982                                                 struct pinctrl_map **map,
+> >  983                                                 unsigned *num_maps,
+> >  984                                                 const char **pgnames)
+> >  985 {
+> > <snip>
+> > 1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+> > 1054         (*map)->data.mux.group = np->name;
+> > 1055         (*map)->data.mux.function = np->name;
+> > 1056
+> > 1057         if (PCS_HAS_PINCONF && function) {
+> > 1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+> > 1059                 if (res)
+> > 1060                         goto free_pingroups;
+> > 1061                 *num_maps = 2;
+> > 1062         } else {
+> > 1063                 *num_maps = 1;
+> > 1064         }
+> >
+> > However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+> > !nconfs.  I believe these conditions should indicate that no map was
+> > added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
+> > will set num_maps = 2 even though no maps were successfully added, as
+> > it does not reach "m++" on line 940:
+> >
+> >  895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+> >  896                              struct pcs_function *func,
+> >  897                              struct pinctrl_map **map)
+> >  898
+> >  899 {
+> >  900         struct pinctrl_map *m = *map;
+> > <snip>
+> >  917         /* If pinconf isn't supported, don't parse properties in below. */
+> >  918         if (!PCS_HAS_PINCONF)
+> >  919                 return 0;
+> >  920
+> >  921         /* cacluate how much properties are supported in current node */
+> >  922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+> >  923                 if (of_find_property(np, prop2[i].name, NULL))
+> >  924                         nconfs++;
+> >  925         }
+> >  926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+> >  927                 if (of_find_property(np, prop4[i].name, NULL))
+> >  928                         nconfs++;
+> >  929         }
+> >  930         if (!nconfs)
+> >  919                 return 0;
+> >  932
+> >  933         func->conf = devm_kcalloc(pcs->dev,
+> >  934                                   nconfs, sizeof(struct pcs_conf_vals),
+> >  935                                   GFP_KERNEL);
+> >  936         if (!func->conf)
+> >  937                 return -ENOMEM;
+> >  938         func->nconfs = nconfs;
+> >  939         conf = &(func->conf[0]);
+> >  940         m++;
+> >
+> > This situtation will cause a boot failure [0] on the BeagleBone Black
+> > (AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+> > has compatible = "pinconf-single" instead of "pinctrl-single".
+> >
+> > The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+> > or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+> > map was added.
+> >
+> > Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
+> > between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
+> > is set to 1 as it is valid for pinconf to be enabled and a given pin
+> > group to not any pinconf properties.
+> >
+> > [0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+> >
+> > Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> 
+> Patch applied as non-critical (for-next) fix.
+> 
+> If there is no hurry let's merge it this way with lots of testing
+> along the way.
+> 
+> Yours,
+> Linus Walleij
 
-We use -ENODEV if feature when the device rejects the features we
-tried to negotiate (see virtio_finalize_features()) and -EINVAL when
-the F_VERSION_1 and the virtio-ccw revision ain't coherent (in
-virtio_ccw_finalize_features()). Any of those seems more fitting
-that EIO to me. BTW does the error code itself matter in any way,
-or is it just OK vs some error?
+Thanks, I agree more testing is a good idea.
 
-Regards,
-Halil
+In particular, do you have a way to followup with Haojian Zhuang within
+Linaro?
+
+Haojian added the generic pinconf support back in 2013, so it would be
+good to get his review.
+
+Also, neither Tony or I have the Hikey hardware to test.
+
+The most important to test would be those which include a .dtsi with
+"pinconf-single" compatible.  I do plan to add pinconf-single to the
+AM3358 BeagleBone (which is what I am testing on), but the current
+mainline users are:
+
+arch/arm/boot/dts/hi3620.dtsi
+|- arch/arm/boot/dts/hi3620-hi4511.dts
+
+arch/arm/boot/dts/pxa3xx.dtsi
+|- arch/arm/boot/dts/pxa300-raumfeld-common.dtsi
+   |- arch/arm/boot/dts/pxa300-raumfeld-connector.dts
+      arch/arm/boot/dts/pxa300-raumfeld-controller.dts
+      arch/arm/boot/dts/pxa300-raumfeld-speaker-l.dts
+      arch/arm/boot/dts/pxa300-raumfeld-speaker-m.dts
+      arch/arm/boot/dts/pxa300-raumfeld-speaker-one.dts
+      arch/arm/boot/dts/pxa300-raumfeld-speaker-s.dts
+
+I am cc'ing Daniel Mack and Robert Jarzmi as they are listed as
+maintainers for the pxa300 related dts files.
+
+Those platforms using compatible = "pinctrl-single" should not be
+effected by this patch:
+
+arch/arm/boot/dts/am33xx-l4.dtsi (I have changed to pinconf for test)
+arch/arm/boot/dts/da850.dtsi
+arch/arm/boot/dts/dm814x.dtsi
+arch/arm/boot/dts/dm816x.dtsi
+arch/arm/boot/dts/hi3620.dtsi
+arch/arm/boot/dts/keystone-k2g.dtsi
+arch/arm/boot/dts/keystone-k2l.dtsi
+arch/arm/boot/dts/omap3-gta04.dtsi
+
+
+Thanks,
+Drew
