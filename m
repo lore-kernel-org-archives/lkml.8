@@ -2,190 +2,164 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7631BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B472074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592294109;
-	bh=8FPZO3O3J5yEXOHRALaLJwubp6h2AwWSBchtYuoch88=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TllNpoApK3Q70OExeVwhwUftprkBk1+kp0r/H1r9yW++SsXIqX+1Rj4sj2xAZ86VJ
-	 8ZB0mI2vq0HRYn9afhxHvZPA+faAg5UShpT4ljUk6sD48AfpP+hLq8cp9cvTZFwAKx
-	 g8hyPRbKRs1CbumfB1TPHEdAbbMFpqjLIXyrnaSk=
+	by mail.kernel.org (Postfix) with ESMTP id 20615206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:56:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cp8t/bjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgFPHzI (ORCPT
+        id S1726671AbgFPHz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:55:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbgFPHzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:55:07 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2B13206D7;
-        Tue, 16 Jun 2020 07:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592294107;
-        bh=8FPZO3O3J5yEXOHRALaLJwubp6h2AwWSBchtYuoch88=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MkI/+np2dDimaPbgKZ2S6bxxT/H0/5Kcu+KB+40UE7gA4X81MXbwvAb+4UIfSw+i+
-         YJF+ofTwhDTe1xdbZsK8RIVHZdjUn6mBzG7VFvqL0uOFjsRtQJzSC+taURiTbC9zbn
-         QZdzj2cHtUF8b4PLo98a8+0YvyaMtPAqmhmdgVbI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jl6Qz-003LKN-Dg; Tue, 16 Jun 2020 08:55:05 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 16 Jun 2020 08:55:05 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
+        Tue, 16 Jun 2020 03:55:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgFPHz4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 03:55:56 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9A8C03E96A
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:55:56 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id u8so1062459pje.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:55:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=3w3acXY0ruvQ2cOAk5Y6lKlS5LzTqXqZJuB6w0EA294=;
+        b=Cp8t/bjOY0qFMLYTzt16FoouVp9eINWmU8mmUpHX+AsFrDKIXkcT19z0suqBLghibO
+         OsWPTbNQ78wf/cMk9oUek30lb6kngbCTL91Ip4B4OBjsGHxi5xA/ijlrqrQlNLoGn/bn
+         l/7vyPUklqJG1Baun2pVxMHTasoW42ICl3Es6lVrZb83u6aebgtl+kJzIuZw8wkSuD5y
+         eWg48lc4rfg+C2iE2LQQqoBLqeCS++0+HVWVXWygJpkK1vDfoep1tzRrEdYp2cVb/jvQ
+         JC/cob986QCwZA/FpwkUZqZkbS85NacBJV0l0OpFKfn0vQWwu3XC3bjPcGWjDJb+aU5E
+         KZMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=3w3acXY0ruvQ2cOAk5Y6lKlS5LzTqXqZJuB6w0EA294=;
+        b=awoV5ovljTrTIw/eKb059iZqhWStC2E81kPhGILyqTct543fDw/rNo3r9si3LUWKnz
+         TTGzPMCVWm6o48fx+9uhm53VUgi5ZdVt66pbzf4UfpVEEST/+WY4EUbn0KLJ0DC71tS8
+         QKMMD3cqCf9LXhZF6ooLfVU8aSqNZZH6jnjFkPGY5varfTaAIBtZhqayXTy4UJfY9OPf
+         7o9ne+Yy69mhC8LbWfaxKhzAwBDESzkvrVNkBadUzQ7/sNBb7VL0ga0B4CsarMWj8kfZ
+         Lo3yIx6XKHNpQzEXLHSYTFKyuq2Ylz4pYM4+nu2U7EqPN9oGYeNJH03wk5Hre8mC+UAC
+         ytog==
+X-Gm-Message-State: AOAM530zmowY6krtW+uzjwvhS2YTLSjAA3CURX2Oigcr1afI0vvpvD5F
+        1ySw8hZ0Oz2ybXqMiTC9low=
+X-Google-Smtp-Source: ABdhPJxhqk6SDQGJkU/TNYIJx17AQr2syQ5Y+J3NJhmvTDGSm/ZNzAFmXitcdYEV3AsxC8vPnrV8xw==
+X-Received: by 2002:a17:90a:356a:: with SMTP id q97mr1861201pjb.110.1592294155840;
+        Tue, 16 Jun 2020 00:55:55 -0700 (PDT)
+Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id g6sm16168984pfb.164.2020.06.16.00.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 00:55:55 -0700 (PDT)
+From:   Andrei Vagin <avagin@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org, will@kernel.org
-Subject: Re: [RFC][PATCH 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-In-Reply-To: <20200616061338.109499-6-john.stultz@linaro.org>
-References: <20200616061338.109499-1-john.stultz@linaro.org>
- <20200616061338.109499-6-john.stultz@linaro.org>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <0be86735238a0f8b0c25934e2ed39eee@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: john.stultz@linaro.org, linux-kernel@vger.kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, joro@8bytes.org, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, ilina@codeaurora.org, saravanak@google.com, tkjos@google.com, gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org, will@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Dmitry Safonov <dima@arista.com>,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCH 1/6] arm64/vdso: use the fault callback to map vvar pages
+Date:   Tue, 16 Jun 2020 00:55:40 -0700
+Message-Id: <20200616075545.312684-2-avagin@gmail.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200616075545.312684-1-avagin@gmail.com>
+References: <20200616075545.312684-1-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+This is required to support time namespaces where a time namespace data
+page is different for each namespace.
 
-+Will for the SMMU part.
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reviewed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+---
+ arch/arm64/kernel/vdso.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-On 2020-06-16 07:13, John Stultz wrote:
-> Allow the qcom_scm driver to be loadable as a
-> permenent module.
-> 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: iommu@lists.linux-foundation.org
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/firmware/Kconfig    | 2 +-
->  drivers/firmware/Makefile   | 3 ++-
->  drivers/firmware/qcom_scm.c | 4 ++++
->  drivers/iommu/Kconfig       | 2 ++
->  4 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index fbd785dd0513..9e533a462bf4 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -236,7 +236,7 @@ config INTEL_STRATIX10_RSU
->  	  Say Y here if you want Intel RSU support.
-> 
->  config QCOM_SCM
-> -	bool
-> +	tristate "Qcom SCM driver"
->  	depends on ARM || ARM64
->  	select RESET_CONTROLLER
-> 
-> diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-> index 99510be9f5ed..cf24d674216b 100644
-> --- a/drivers/firmware/Makefile
-> +++ b/drivers/firmware/Makefile
-> @@ -17,7 +17,8 @@ obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
->  obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
->  obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
->  obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
-> -obj-$(CONFIG_QCOM_SCM)		+= qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
-> +obj-$(CONFIG_QCOM_SCM)		+= qcom-scm.o
-> +qcom-scm-objs += qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
->  obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
->  obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
->  obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 0e7233a20f34..b5e88bf66975 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -1155,6 +1155,7 @@ static const struct of_device_id 
-> qcom_scm_dt_match[] = {
->  	{ .compatible = "qcom,scm" },
->  	{}
->  };
-> +MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
-> 
->  static struct platform_driver qcom_scm_driver = {
->  	.driver = {
-> @@ -1170,3 +1171,6 @@ static int __init qcom_scm_init(void)
->  	return platform_driver_register(&qcom_scm_driver);
->  }
->  subsys_initcall(qcom_scm_init);
-> +
-> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. SCM driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index b510f67dfa49..714893535dd2 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
->  config ARM_SMMU
->  	tristate "ARM Ltd. System MMU (SMMU) Support"
->  	depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && 
-> MMU
-> +	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
-
-This looks a bit ugly. Could you explain why we need this at the SMMU 
-level? I'd have expected the dependency to flow the other way around...
-
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
->  	select ARM_DMA_USE_IOMMU if ARM
-> @@ -500,6 +501,7 @@ config QCOM_IOMMU
->  	# Note: iommu drivers cannot (yet?) be built as modules
->  	bool "Qualcomm IOMMU Support"
->  	depends on ARCH_QCOM || (COMPILE_TEST && !GENERIC_ATOMIC64)
-> +	depends on QCOM_SCM=y
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
->  	select ARM_DMA_USE_IOMMU
-
-Thanks,
-
-         M.
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 4e016574bd91..b0aec4e8c9b4 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -108,28 +108,32 @@ static int __vdso_init(enum vdso_abi abi)
+ 			PAGE_SHIFT;
+ 
+ 	/* Allocate the vDSO pagelist, plus a page for the data. */
+-	vdso_pagelist = kcalloc(vdso_info[abi].vdso_pages + 1,
++	vdso_pagelist = kcalloc(vdso_info[abi].vdso_pages,
+ 				sizeof(struct page *),
+ 				GFP_KERNEL);
+ 	if (vdso_pagelist == NULL)
+ 		return -ENOMEM;
+ 
+-	/* Grab the vDSO data page. */
+-	vdso_pagelist[0] = phys_to_page(__pa_symbol(vdso_data));
+-
+-
+ 	/* Grab the vDSO code pages. */
+ 	pfn = sym_to_pfn(vdso_info[abi].vdso_code_start);
+ 
+ 	for (i = 0; i < vdso_info[abi].vdso_pages; i++)
+-		vdso_pagelist[i + 1] = pfn_to_page(pfn + i);
++		vdso_pagelist[i] = pfn_to_page(pfn + i);
+ 
+-	vdso_info[abi].dm->pages = &vdso_pagelist[0];
+-	vdso_info[abi].cm->pages = &vdso_pagelist[1];
++	vdso_info[abi].cm->pages = vdso_pagelist;
+ 
+ 	return 0;
+ }
+ 
++static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
++			     struct vm_area_struct *vma, struct vm_fault *vmf)
++{
++	if (vmf->pgoff == 0)
++		return vmf_insert_pfn(vma, vmf->address,
++				sym_to_pfn(vdso_data));
++	return VM_FAULT_SIGBUS;
++}
++
+ static int __setup_additional_pages(enum vdso_abi abi,
+ 				    struct mm_struct *mm,
+ 				    struct linux_binprm *bprm,
+@@ -150,7 +154,7 @@ static int __setup_additional_pages(enum vdso_abi abi,
+ 	}
+ 
+ 	ret = _install_special_mapping(mm, vdso_base, PAGE_SIZE,
+-				       VM_READ|VM_MAYREAD,
++				       VM_READ|VM_MAYREAD|VM_PFNMAP,
+ 				       vdso_info[abi].dm);
+ 	if (IS_ERR(ret))
+ 		goto up_fail;
+@@ -209,6 +213,7 @@ static struct vm_special_mapping aarch32_vdso_maps[] = {
+ #ifdef CONFIG_COMPAT_VDSO
+ 	[AA32_MAP_VVAR] = {
+ 		.name = "[vvar]",
++		.fault = vvar_fault,
+ 	},
+ 	[AA32_MAP_VDSO] = {
+ 		.name = "[vdso]",
+@@ -376,6 +381,7 @@ enum aarch64_map {
+ static struct vm_special_mapping aarch64_vdso_maps[] __ro_after_init = {
+ 	[AA64_MAP_VVAR] = {
+ 		.name	= "[vvar]",
++		.fault = vvar_fault,
+ 	},
+ 	[AA64_MAP_VDSO] = {
+ 		.name	= "[vdso]",
 -- 
-Jazz is not dead. It just smells funny...
+2.24.1
+
