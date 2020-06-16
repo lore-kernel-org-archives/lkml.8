@@ -2,89 +2,234 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C984DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE6FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABACB20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4520120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:08:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ezt4NfB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgFPJHl (ORCPT
+        id S1727928AbgFPJIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:07:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:2617 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgFPJHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:07:40 -0400
-IronPort-SDR: ORynIPXiuOq7oa4qOgs/KQ6t5Qy3jcQwdkPfUL/B6IlXl78m5q97s8VkbP+gQ/rm5j1dI47jHG
- 28fmSYgLOo3Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 02:07:38 -0700
-IronPort-SDR: TQ1XfkGEeoeoG4hDHkgXQaJRHgshwos39SDaXXPyBzCZNxU7kRC1aXIkgF7e87jzOUFOtjhI6l
- rgry9sdwiD5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="382814431"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 16 Jun 2020 02:07:31 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 16 Jun 2020 12:07:30 +0300
-Date:   Tue, 16 Jun 2020 12:07:30 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com
-Subject: Re: [PATCH 2/4] pci: set "untrusted" flag for truly external devices
- only
-Message-ID: <20200616090730.GF2795@lahna.fi.intel.com>
-References: <20200616011742.138975-1-rajatja@google.com>
- <20200616011742.138975-2-rajatja@google.com>
+        Tue, 16 Jun 2020 05:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgFPJIL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:08:11 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69BCFC05BD43
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:08:11 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d66so9198043pfd.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Eu2oq0yjr6Eq5I9NRCK1BJJMT0oPPDxPZXG6oIi1TI0=;
+        b=ezt4NfB4JG+xSwwNShZEsNSM9PWNfoR57G0ueDUBHNAzAqMLXb6Kft8YjHXYBqLP4f
+         87N1XLEK4GD+Q3c1r7MUl0tiKmcWsW+4HnCO5HAm3Ut0a8IivFBhk6eBibNilpHhqaxG
+         HT9HIss0WFfQ5nn45hXP0J1caAdgZEkzMS660=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Eu2oq0yjr6Eq5I9NRCK1BJJMT0oPPDxPZXG6oIi1TI0=;
+        b=j43fTjelw9PcvpGq4qmlYV0YgGfTyAvAe3I6vWnlD2wtrRHOCc/Q8AooF8wrssMCDY
+         gbMaM5CgNcnPInGa9tyw3JAiF3sj28jCaYaW4U7Hq5gqQdPif+z4wsah7cgJdAf1XfcE
+         N0Q6rdXsRYjl9NB58sLIynVkhPqXvj1vwRWQLUNTLjfl0APEpz5QLNOL+faqMT47dgU5
+         f0/4reMN7RhZ8vKtYODZ2mle6MAkUSF5jhVV4OPL1Vzm6+ZnIADL6EJgDIurcJ2MlGAn
+         kfwRazW/rUXNE5/kVC9w68hQNRkmDG6yJU1OPj1nCsnHw7ZFF68dVfrqkF/0MiUygBB5
+         q3IQ==
+X-Gm-Message-State: AOAM530Ba1SRVJZMLhulBW66fI+TV5U+KbgiEHkMBTjDdqQq81ksIvNz
+        xrwKsrh9zw6BJgmEFg4QchvHEg==
+X-Google-Smtp-Source: ABdhPJxa1M9lfXKWXXotDl+Tv4E6TsIr+bwNAHx7um2PrBzY3tZEsYxiPRDcdZ6Eova+j1giK6zZhQ==
+X-Received: by 2002:a62:3645:: with SMTP id d66mr1252372pfa.275.1592298490417;
+        Tue, 16 Jun 2020 02:08:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 6sm16449421pfi.170.2020.06.16.02.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 02:08:09 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 02:08:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     glider@google.com
+Cc:     yamada.masahiro@socionext.com, jmorris@namei.org, maze@google.com,
+        ndesaulniers@google.com, gregkh@linuxfoundation.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] [RFC] security: allow using Clang's zero
+ initialization for stack variables
+Message-ID: <202006160207.E9C6FDDB7@keescook>
+References: <20200616083435.223038-1-glider@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616011742.138975-2-rajatja@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200616083435.223038-1-glider@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:17:40PM -0700, Rajat Jain wrote:
-> The "ExternalFacing" devices (root ports) are still internal devices
-> that sit on the internal system fabric and thus trusted. Currently they
-> were being marked untrusted - likely as an unintended border case.
+On Tue, Jun 16, 2020 at 10:34:35AM +0200, glider@google.com wrote:
+> In addition to -ftrivial-auto-var-init=pattern (used by
+> CONFIG_INIT_STACK_ALL now) Clang also supports zero initialization for
+> locals enabled by -ftrivial-auto-var-init=zero.
+> The future of this flag is still being debated, see
+> https://bugs.llvm.org/show_bug.cgi?id=45497
+> Right now it is guarded by another flag,
+> -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang,
+> which means it may not be supported by future Clang releases.
+> Another possible resolution is that -ftrivial-auto-var-init=zero will
+> persist (as certain users have already started depending on it), but the
+> name of the guard flag will change.
+> 
+> In the meantime, zero initialization has proven itself as a good
+> production mitigation measure against uninitialized locals. Unlike
+> pattern initialization, which has a higher chance of triggering existing
+> bugs, zero initialization provides safe defaults for strings, pointers,
+> indexes, and sizes. On the other hand, pattern initialization remains
+> safer for return values.
+> Performance-wise, the difference between pattern and zero initialization
+> is usually negligible, although the generated code for zero
+> initialization is more compact.
+> 
+> This patch renames CONFIG_INIT_STACK_ALL to
+> CONFIG_INIT_STACK_ALL_PATTERN and introduces another config option,
+> CONFIG_INIT_STACK_ALL_ZERO, that enables zero initialization for locals
+> if the corresponding flags are supported by Clang.
+> 
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Alexander Potapenko <glider@google.com>
 
-It was actually intentional :) At the time this was added we did not see
-benefits from doing this and even with this you actually are going to
-still miss things like a TBT chip that is soldered on the motherboard, I
-guess that can be though as an internal device as well.
+Thanks! I've applied this to my for-next/kspp tree (with a few small
+tweaks).
 
-No objections to this patch, though.
+> --
+
+^^ note, this separator should be "---" for diff tools to do the right
+thing, etc.
+
+> v2:
+>  - as suggested by Kees Cook, make CONFIG_INIT_STACK_ALL_PATTERN and
+>    CONFIG_INIT_STACK_ALL_ZERO separate options.
+> ---
+>  Makefile                   | 12 ++++++++++--
+>  init/main.c                |  6 ++++--
+>  security/Kconfig.hardening | 29 +++++++++++++++++++++++++----
+>  3 files changed, 39 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index fd31992bf918..fa739995ee12 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -802,11 +802,19 @@ KBUILD_CFLAGS	+= -fomit-frame-pointer
+>  endif
+>  endif
+>  
+> -# Initialize all stack variables with a pattern, if desired.
+> -ifdef CONFIG_INIT_STACK_ALL
+> +# Initialize all stack variables with a 0xAA pattern.
+> +ifdef CONFIG_INIT_STACK_ALL_PATTERN
+>  KBUILD_CFLAGS	+= -ftrivial-auto-var-init=pattern
+>  endif
+>  
+> +# Initialize all stack variables with a zero pattern.
+> +ifdef CONFIG_INIT_STACK_ALL_ZERO
+> +# Future support for zero initialization is still being debated, see
+> +# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
+> +# renamed or dropped.
+> +KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
+> +endif
+> +
+>  DEBUG_CFLAGS	:= $(call cc-option, -fno-var-tracking-assignments)
+>  
+>  ifdef CONFIG_DEBUG_INFO
+> diff --git a/init/main.c b/init/main.c
+> index 0ead83e86b5a..ee08cef4aa1a 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -779,8 +779,10 @@ static void __init report_meminit(void)
+>  {
+>  	const char *stack;
+>  
+> -	if (IS_ENABLED(CONFIG_INIT_STACK_ALL))
+> -		stack = "all";
+> +	if (IS_ENABLED(CONFIG_INIT_STACK_ALL_PATTERN))
+> +		stack = "all (pattern)";
+> +	else if (IS_ENABLED(CONFIG_INIT_STACK_ALL_ZERO))
+> +		stack = "all (zero)";
+>  	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL))
+>  		stack = "byref_all";
+>  	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF))
+> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> index af4c979b38ee..7b705611ccaa 100644
+> --- a/security/Kconfig.hardening
+> +++ b/security/Kconfig.hardening
+> @@ -19,13 +19,16 @@ config GCC_PLUGIN_STRUCTLEAK
+>  
+>  menu "Memory initialization"
+>  
+> -config CC_HAS_AUTO_VAR_INIT
+> +config CC_HAS_AUTO_VAR_INIT_PATTERN
+>  	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
+>  
+> +config CC_HAS_AUTO_VAR_INIT_ZERO
+> +	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
+> +
+>  choice
+>  	prompt "Initialize kernel stack variables at function entry"
+>  	default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
+> -	default INIT_STACK_ALL if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT
+> +	default INIT_STACK_ALL_PATTERN if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT_PATTERN
+>  	default INIT_STACK_NONE
+>  	help
+>  	  This option enables initialization of stack variables at
+> @@ -88,15 +91,33 @@ choice
+>  		  of uninitialized stack variable exploits and information
+>  		  exposures.
+>  
+> -	config INIT_STACK_ALL
+> +	config INIT_STACK_ALL_PATTERN
+>  		bool "0xAA-init everything on the stack (strongest)"
+> -		depends on CC_HAS_AUTO_VAR_INIT
+> +		depends on CC_HAS_AUTO_VAR_INIT_PATTERN
+>  		help
+>  		  Initializes everything on the stack with a 0xAA
+>  		  pattern. This is intended to eliminate all classes
+>  		  of uninitialized stack variable exploits and information
+>  		  exposures, even variables that were warned to have been
+>  		  left uninitialized.
+> +		  Pattern initialization is known to provoke many existing bugs
+> +		  related to uninitialized locals, e.g. pointers receive
+> +		  non-NULL values, buffer sizes and indices are very big.
+> +
+> +	config INIT_STACK_ALL_ZERO
+> +		bool "zero-init everything on the stack (strongest and safest)"
+> +		depends on CC_HAS_AUTO_VAR_INIT_ZERO
+> +		help
+> +		  Initializes everything on the stack with a zero
+> +		  pattern. This is intended to eliminate all classes
+> +		  of uninitialized stack variable exploits and information
+> +		  exposures, even variables that were warned to have been
+> +		  left uninitialized.
+> +		  Zero initialization provides safe defaults for strings,
+> +		  pointers, indices and sizes, and is therefore more suitable as
+> +		  a security mitigation measure.
+> +		  The corresponding flag isn't officially supported by Clang and
+> +		  may sooner or later go away or get renamed.
+>  
+>  endchoice
+>  
+> -- 
+> 2.27.0.290.gba653c62da-goog
+> 
+
+-- 
+Kees Cook
