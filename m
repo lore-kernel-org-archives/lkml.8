@@ -2,116 +2,232 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66100C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6A720B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F16D20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fd+q13dn"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="mx9JATAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbgFPRTf (ORCPT
+        id S1729262AbgFPRTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgFPRTd (ORCPT
+        Tue, 16 Jun 2020 13:19:47 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:36548 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgFPRTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:19:33 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA700C0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:19:30 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id e16so16095937qtg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wWTEVC4IvADhgC8WKAFdPBJMykXtWuEzpH/Aah85Qcs=;
-        b=fd+q13dnpRb7sosklNefJkvA0FgEtbX+514cFpXpLhhiNOAvyS/H0qQcCQx7cfQRZa
-         4rh9Q/ZoLUFe0x7JUpc361CfeuZK/IAZud2gStzhirNsoDffnc2VZVHaTihzVXmP3wqE
-         W4h4PmzaSlA5SXNbb1860nwCQOOwf1EZw5Pz89AXzvU86IydYIKA3GHIBnmWdy+vpU9t
-         3+kfMcxSKGu00Aa0iG7gvZtvRzhO/TbhNKd1QkdN/KFxYeqijSeeAI55jwazR6hriiRB
-         56xUWZXy6kVPqQ57aqcuOMqHTxnV3wxH1D+rVTeNzAtv4xr0oH4BCIBYKjVdllNkMxPT
-         q9bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wWTEVC4IvADhgC8WKAFdPBJMykXtWuEzpH/Aah85Qcs=;
-        b=JNhB92ouZUo8eqF/1oJ6HrO+wAQLa6hLYUba1t9pg6lzP6/N9KHWHEXr7VO/sdzD2y
-         6P/0ChWEDLbXrmgjK6Seodv2cSRZG65BzfNIR//fRFByTbKIzS7UcSUGcyR5WY8mdqzS
-         J+BHKlO1sssAdUuyxsapiE67oNWQ6LxRSEntE9KD7OpW2Uto/OufHj/bRzHrStlJC7yr
-         e2E90KgffAER6n8z+0JBc7WOiWtS6xpGBTUn9u9+D/il7Tqr/5zARKz20+ydWe/OCoup
-         Ttpt3IGuZM+4UliW8QqRGyGOdSri4Jnr7Ja2aXEhUF5MQ/P85W40LHDTfj6mBz1BpQEo
-         i7aA==
-X-Gm-Message-State: AOAM532Q9l3bB47zdn3s0v0VQe05W2pbNTN02c8NtQvOhO/1kCIB/e7B
-        F2CFc3PT7q5pAJFpKd/qHRLAHIMY1D8=
-X-Google-Smtp-Source: ABdhPJy8Ml+SRDOIpfMU19h6AyD4PHxw4EEAdOlfy7DVyy6x5lPuP4K3JL/v7tdCndKeai3czWUJcg==
-X-Received: by 2002:ac8:339b:: with SMTP id c27mr21285530qtb.210.1592327969918;
-        Tue, 16 Jun 2020 10:19:29 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id q187sm14335126qka.34.2020.06.16.10.19.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 10:19:29 -0700 (PDT)
-Subject: Re: [PATCH v6 2/6] soc: qcom: rpmhpd: Introduce function to retrieve
- power domain performance state count
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tue, 16 Jun 2020 13:19:47 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id AD54027E0DCF;
+        Tue, 16 Jun 2020 19:19:45 +0200 (CEST)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id xuJ4XXtLGiIV; Tue, 16 Jun 2020 19:19:45 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 1A13E27E0E1C;
+        Tue, 16 Jun 2020 19:19:45 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 1A13E27E0E1C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1592327985;
+        bh=RJx8rdTmBEGjGF7+meLMqUMFBM+UIVoG0vgdabAHYGI=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=mx9JATAnjdUh28JDX+vo1ed+ISscZOInjvN+FqtSEKVJ1qyryH4wuqmJVV9Qa6oQ0
+         UqUfBwRpdEgAp0xj0k8K9QFJR/qMMO5FonQ3wnpNAkUdkM37D7a72sE1Sdot2Q58Dc
+         2OTzD2fJewNI4lTreqISpJDcTSyuypAn6C5hU9eI=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5umFI8WMxyVv; Tue, 16 Jun 2020 19:19:45 +0200 (CEST)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 0421327E0DCF;
+        Tue, 16 Jun 2020 19:19:45 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 19:19:44 +0200 (CEST)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200604015317.31389-1-thara.gopinath@linaro.org>
- <20200604015317.31389-3-thara.gopinath@linaro.org>
- <CAPDyKFqxV20Fv2X7wJ5zKa_csDgSBL5KN9HtrA6+EFpgYPhxyg@mail.gmail.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <6ce39992-2b24-ba55-521b-6f27e52b9f6e@linaro.org>
-Date:   Tue, 16 Jun 2020 13:19:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1643320865.7759489.1592327984836.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <20200616171011.GA461427@xps15>
+References: <20200611185012.23815-1-cleger@kalray.eu> <20200616171011.GA461427@xps15>
+Subject: Re: [PATCH] rpmsg: fix driver_override memory leak
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqxV20Fv2X7wJ5zKa_csDgSBL5KN9HtrA6+EFpgYPhxyg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC81 (Linux)/8.8.15_GA_3895)
+Thread-Topic: rpmsg: fix driver_override memory leak
+Thread-Index: Q4cxPoNNoJgdXDXKUVTMTEQx1KTYvQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mathieu,
 
+----- On 16 Jun, 2020, at 19:10, Mathieu Poirier mathieu.poirier@linaro.org=
+ wrote:
 
-On 6/16/20 5:21 AM, Ulf Hansson wrote:
-> On Thu, 4 Jun 2020 at 03:53, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->>
->> Populate .get_performance_state_count in genpd ops to retrieve the count of
->> performance states supported by a rpmh power domain.
->>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Hi Cl=C3=A9ment,
+>=20
+> On Thu, Jun 11, 2020 at 08:50:12PM +0200, Clement Leger wrote:
+>> rpmsg_core allows to override driver using driver_override sysfs
+>> attribute. When used, the sysfs store function will duplicate the user
+>> provided string using kstrndup. However, when the rpdev is released,
+>> the driver_override attribute is not freed. In order to have a
+>> consistent allocation and release, use kstrdup in
+>> rpmsg_chrdev_register_device and move it in rpmsg_core.c to avoid
+>> header dependencies. Moreover, add a rpmsg_release_device function to
+>> be called in device release. Drivers using rpmsg have been modified to
+>> use this function and ensure there will be no more memory leak when
+>> releasing rpmsg devices.
+>> This was found with kmemleak while using remoteproc and virtio.
+>>=20
+>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+>> ---
+>>  drivers/rpmsg/qcom_glink_native.c |  1 +
+>>  drivers/rpmsg/qcom_smd.c          |  1 +
+>>  drivers/rpmsg/rpmsg_core.c        | 22 ++++++++++++++++++++++
+>>  drivers/rpmsg/rpmsg_internal.h    | 15 ++-------------
+>>  drivers/rpmsg/virtio_rpmsg_bus.c  |  1 +
+>>  5 files changed, 27 insertions(+), 13 deletions(-)
+>>=20
+>> diff --git a/drivers/rpmsg/qcom_glink_native.c
+>> b/drivers/rpmsg/qcom_glink_native.c
+>> index 1995f5b3ea67..076997afc638 100644
+>> --- a/drivers/rpmsg/qcom_glink_native.c
+>> +++ b/drivers/rpmsg/qcom_glink_native.c
+>> @@ -1373,6 +1373,7 @@ static void qcom_glink_rpdev_release(struct device=
+ *dev)
+>>  =09struct glink_channel *channel =3D to_glink_channel(rpdev->ept);
+>> =20
+>>  =09channel->rpdev =3D NULL;
+>> +=09rpmsg_release_device(rpdev);
+>>  =09kfree(rpdev);
+>>  }
+>> =20
+>> diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
+>> index 4abbeea782fa..f01174d0d4d9 100644
+>> --- a/drivers/rpmsg/qcom_smd.c
+>> +++ b/drivers/rpmsg/qcom_smd.c
+>> @@ -1047,6 +1047,7 @@ static void qcom_smd_release_device(struct device =
+*dev)
+>>  =09struct rpmsg_device *rpdev =3D to_rpmsg_device(dev);
+>>  =09struct qcom_smd_device *qsdev =3D to_smd_device(rpdev);
+>> =20
+>> +=09rpmsg_release_device(rpdev);
+>>  =09kfree(qsdev);
+>>  }
+>> =20
+>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+>> index a6361cad608b..31de89c81b27 100644
+>> --- a/drivers/rpmsg/rpmsg_core.c
+>> +++ b/drivers/rpmsg/rpmsg_core.c
+>> @@ -554,6 +554,28 @@ int rpmsg_unregister_device(struct device *parent,
+>>  }
+>>  EXPORT_SYMBOL(rpmsg_unregister_device);
+>> =20
+>> +void rpmsg_release_device(struct rpmsg_device *rpdev)
+>> +{
+>> +=09kfree(rpdev->driver_override);
+>> +}
+>> +EXPORT_SYMBOL(rpmsg_release_device);
+>> +
+>> +/**
+>> + * rpmsg_chrdev_register_device() - register chrdev device based on rpd=
+ev
+>> + * @rpdev:=09prepared rpdev to be used for creating endpoints
+>> + *
+>> + * This function wraps rpmsg_register_device() preparing the rpdev for =
+use as
+>> + * basis for the rpmsg chrdev.
+>> + */
+>> +int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev)
+>> +{
+>> +=09strcpy(rpdev->id.name, "rpmsg_chrdev");
+>> +=09rpdev->driver_override =3D kstrdup("rpmsg_chrdev", GFP_KERNEL);
+>=20
+> Have you considered using devm_kstrdup() instead?  Since the same rpdev i=
+s
+> available here and in field##_store(), proceeding that way would prevent =
+the
+> need to add a new rpmsg_release_device() function.  Depending on header
+> dependencies rpmsg_chrdev_register_device() may also be able to remain in
+> rpmsg_internal.h.
 
-Thanks Ulf for all the reviews.
-> 
-> Kind regards
-> Uffe
-> 
+Indeed, using devm_kstrdup would be better. Regarding the use of kstrdup in
+headers, I only found a really really few occurences of such usage in the
+whole kernel. If you think it's ok, I can go go with it though.
 
+Thanks,
 
--- 
-Warm Regards
-Thara
+Cl=C3=A9ment
+
+>=20
+> Thanks,
+> Mathieu
+>=20
+>> +
+>> +=09return rpmsg_register_device(rpdev);
+>> +}
+>> +EXPORT_SYMBOL(rpmsg_chrdev_register_device);
+>> +
+>>  /**
+>>   * __register_rpmsg_driver() - register an rpmsg driver with the rpmsg =
+bus
+>>   * @rpdrv: pointer to a struct rpmsg_driver
+>> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_intern=
+al.h
+>> index 3fc83cd50e98..043b28f912fd 100644
+>> --- a/drivers/rpmsg/rpmsg_internal.h
+>> +++ b/drivers/rpmsg/rpmsg_internal.h
+>> @@ -75,19 +75,8 @@ int rpmsg_unregister_device(struct device *parent,
+>>  struct device *rpmsg_find_device(struct device *parent,
+>>  =09=09=09=09 struct rpmsg_channel_info *chinfo);
+>> =20
+>> -/**
+>> - * rpmsg_chrdev_register_device() - register chrdev device based on rpd=
+ev
+>> - * @rpdev:=09prepared rpdev to be used for creating endpoints
+>> - *
+>> - * This function wraps rpmsg_register_device() preparing the rpdev for =
+use as
+>> - * basis for the rpmsg chrdev.
+>> - */
+>> -static inline int rpmsg_chrdev_register_device(struct rpmsg_device *rpd=
+ev)
+>> -{
+>> -=09strcpy(rpdev->id.name, "rpmsg_chrdev");
+>> -=09rpdev->driver_override =3D "rpmsg_chrdev";
+>> +int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev);
+>> =20
+>> -=09return rpmsg_register_device(rpdev);
+>> -}
+>> +void rpmsg_release_device(struct rpmsg_device *rpdev);
+>> =20
+>>  #endif
+>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpm=
+sg_bus.c
+>> index 07d4f3374098..af4ea6170f89 100644
+>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> @@ -381,6 +381,7 @@ static void virtio_rpmsg_release_device(struct devic=
+e *dev)
+>>  =09struct rpmsg_device *rpdev =3D to_rpmsg_device(dev);
+>>  =09struct virtio_rpmsg_channel *vch =3D to_virtio_rpmsg_channel(rpdev);
+>> =20
+>> +=09rpmsg_release_device(rpdev);
+>>  =09kfree(vch);
+>>  }
+>> =20
+>> --
+>> 2.17.1
