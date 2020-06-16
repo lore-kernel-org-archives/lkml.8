@@ -2,122 +2,97 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB55C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC62D20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XjCEbPGQ"
+	by mail.kernel.org (Postfix) with ESMTP id CED5B208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592324307;
+	bh=t3syh8NXFdpKAyNciH2hnkU2ovTSPSnl0INFvSsgUww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v7hdI7JUwU/gc+ncMAtmdfp9yVbSVJ4Kd0TxWYLSrIXQUQY67ABG3fGZGv+vN3/Z1
+	 iQ4hmJWZ9+sWIgLcFL2gzaEXx3ODBn9F6eTKDcuCSuOt6u/Fxqrih0RihX5kdzcnKW
+	 OadeipAFTpSGECNnONOSXynmdeCVkdC8GGtKCTbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbgFPQSP (ORCPT
+        id S1732615AbgFPQS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:18:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731751AbgFPQSK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:18:10 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7060AC06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:18:10 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b5so9726629pfp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VPiig07nxQc9lwVFwfYIH3T1ET4UEo+E1D0Wd8u+hBk=;
-        b=XjCEbPGQUfD9AjE8Hevx52b4HKLCh8oQsGbdC1PHF3Q3QbQn9Ygd51hLvkzVjxG3RX
-         UtN728e+HKmcQcP8keX/4Kwc+Ht/ZOiBd+tejEg6vDoXtD7HbPCgbRcKvY43gkmThxUy
-         bNcZxPwfyTV9TOAjM5Nf8FXt7R7jq7FXYA3UM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VPiig07nxQc9lwVFwfYIH3T1ET4UEo+E1D0Wd8u+hBk=;
-        b=tjJx925ycNd2zbFp7d20NcU3d2MjrA7siT+GATRSqMZ7LTpUcma6l94bNuxTF8mgMt
-         2a2iMGyXG9PeLYDyFBXyfuMKug5XG8LtvmNn9radTCHZ4oosnHcUIK4UriuqQJkFRiPQ
-         73QLP2YQYZcZ5ombq50/Gy2X3WSvqYK48u4Bb087XoyeTpQ06EOTh9ncgpAwvDotTnB8
-         pqwyu78S5cSROL7IU9hAYzSK4e9xX3CfnhjDjcILLwNflp5TdNIpvrNjDaRk6G2ZMfsW
-         xINLYyTIT31oJu4Jrga1t3yx0dAibl/nTnUTj0bJ0zjNCS65cMQPtpPIlCDi5iEKG4MP
-         7gyw==
-X-Gm-Message-State: AOAM532Va5WamIcaUUPLHM6TofICHEqQ5aQ2I74l37kHmnecCIH1ymSH
-        ZQLGs2aE6wzeeSX5GuBDMbjd/Q==
-X-Google-Smtp-Source: ABdhPJyXAmJNtObOlU+rzC52vUgZGrV4mSFDLUt84VwfrotzrnZ8vPKhz8hCE9vZvCTtbLg7XCtYDQ==
-X-Received: by 2002:a65:484c:: with SMTP id i12mr2637328pgs.267.1592324290000;
-        Tue, 16 Jun 2020 09:18:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w6sm2996602pjy.15.2020.06.16.09.18.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 09:18:08 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:18:07 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        James Morris <jmorris@namei.org>,
-        Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] [RFC] security: allow using Clang's zero
- initialization for stack variables
-Message-ID: <202006160911.BD403B5@keescook>
-References: <20200616083435.223038-1-glider@google.com>
- <20200616100309.GA2614426@kroah.com>
- <CAG_fn=VYN6ynu2bnW96-p-QRi77NstHC6DXS+AN0r0bm5K2j7w@mail.gmail.com>
+        Tue, 16 Jun 2020 12:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730604AbgFPPiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE39820C56;
+        Tue, 16 Jun 2020 15:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592321896;
+        bh=t3syh8NXFdpKAyNciH2hnkU2ovTSPSnl0INFvSsgUww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0LqlLGrvwCtDebIMJ8LWhf9gd1N/egXrlLSP9H3JtNoFPwjVlK99cX9WrZBW32cAl
+         IPAlph+vSnQ5fAN9VydhxhiJh4gq23ZAqAeQiJee1izhAqbbgrhx3w6t1SGZLyBGJJ
+         nemPO/gh1qwOMEjJ8VEgROlknF2kMK/r3Ed1MIpw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 058/134] ALSA: pcm: disallow linking stream to itself
+Date:   Tue, 16 Jun 2020 17:34:02 +0200
+Message-Id: <20200616153103.552524198@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
+References: <20200616153100.633279950@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG_fn=VYN6ynu2bnW96-p-QRi77NstHC6DXS+AN0r0bm5K2j7w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 02:15:52PM +0200, Alexander Potapenko wrote:
-> > > +KBUILD_CFLAGS        += -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
-> > > +endif
-> >
-> > Gotta love the name...
-> 
-> This is basically the reason why we've been hesitating to add it to
-> the kernel from the very beginning.
-> 
-> > Anyway, if this is enabled, and clang changes the flag or drops it, does
-> > the build suddenly break?
-> 
-> My original intention (see v1 of this patch) was to make
-> zero-initialization a secondary option of INIT_STACK_ALL, so that
-> nothing changes for the existing users.
-> But I agree with Kees that these options should be made distinct, as
-> people may want to use them for different purposes (think debug vs.
-> release builds).
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-Yeah, and if the flag changes again, we can adapt. But at this point,
-it's getting used downstream, so we need to land the config in the
-kernel.
+commit 951e2736f4b11b58dc44d41964fa17c3527d882a upstream.
 
-> We could make INIT_STACK_ALL_ZERO fall back to INIT_STACK_ALL_PATTERN
-> if the compiler flag goes away - does this make sense?
+Prevent SNDRV_PCM_IOCTL_LINK linking stream to itself - the code
+can't handle it. Fixed commit is not where bug was introduced, but
+changes the context significantly.
 
-I don't like this idea -- I'm very hesitant to make security options do
-something different than what they document. It means the end user can't
-reason about how their kernel is built when looking at their CONFIGs.
+Cc: stable@vger.kernel.org
+Fixes: 0888c321de70 ("pcm_native: switch to fdget()/fdput()")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/89c4a2487609a0ed6af3ecf01cc972bdc59a7a2d.1591634956.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> > And does gcc have something like this as well, or does that have to come
-> > in a compiler plugin?
-> 
-> Kees mentioned someone's plans to implement that in GCC, but I don't
-> think they have done it already.
+---
+ sound/core/pcm_native.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I've had some GCC folks reach about about these features, but I haven't
-seen any public discussion yet.
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -1994,6 +1994,12 @@ static int snd_pcm_link(struct snd_pcm_s
+ 	}
+ 	pcm_file = f.file->private_data;
+ 	substream1 = pcm_file->substream;
++
++	if (substream == substream1) {
++		res = -EINVAL;
++		goto _badf;
++	}
++
+ 	group = kzalloc(sizeof(*group), GFP_KERNEL);
+ 	if (!group) {
+ 		res = -ENOMEM;
 
--- 
-Kees Cook
+
