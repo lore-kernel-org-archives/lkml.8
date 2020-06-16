@@ -2,195 +2,120 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1908AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9262FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD16214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F1A21501
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592329346;
-	bh=TO5m+hfFv6LoWMR+qPaBMb/tllGHxEHiNIkPu+8psFI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=uB1h4R3+IKK/oWzBRmvLDcJmHBSDJAqNSJM6vwhA1RvJKlJgDbktDZ3YoHJxrOcsv
-	 cgl8c39HaU+vXhWkBwKC+PTGaAy0+jmhru2Y44yv5L0biQkqRFHx7sMmOQ3V6PhnEd
-	 T9B/nd5V0XPfqvM9uifjEGwvgUQePCjH0NJkuoIc=
+	s=default; t=1592329365;
+	bh=wzCSrtD+bv67Pc6WyKHwxnorzN1Ym43w4yPdOi2yMbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IuFNRx6oxDjx+bMhrD3K3LufMYV3ALxaoimMNFkH/niYzA+G2njRUWGcmsHNNDTat
+	 jnNslFsqsUTvsI5Mnl6czrZp9du1Rhmf69X2yQHDSrTxs7EjwjKoEdK0SOgYyjF/93
+	 inxu1TZae2LZtVX8aoiW3Uu8IN1ajFYADNTuSSL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbgFPRmY (ORCPT
+        id S1730923AbgFPRmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:42:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51126 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 13:42:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729771AbgFPRmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:42:24 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1729771AbgFPRmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:42:43 -0400
+Received: from gmail.com (unknown [104.132.1.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2514F214D8;
-        Tue, 16 Jun 2020 17:42:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46E93214DB;
+        Tue, 16 Jun 2020 17:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592329343;
-        bh=TO5m+hfFv6LoWMR+qPaBMb/tllGHxEHiNIkPu+8psFI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=G3cg1bakLwDh6Ob7BoH5jyuwgaHWma0WMo98q8Kcy2vVTB+LWLBjXwKS/JDtnBvFx
-         vuIzWocX3gyf3PPVykHQRrLh+x2RryajRt1mNjPDgqxv7wyQ3k4wu3a8KjR75kYQJV
-         YLok4gPc+HtlfVb48VgC/iW1q7gcHCjGNuviqGwQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id BB3AC352264F; Tue, 16 Jun 2020 10:42:22 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 10:42:22 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     linux-kernel@vger.kernel.org, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, shuah@kernel.org, rcu@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] torture: Pass --kmake-arg to all make invocations
-Message-ID: <20200616174222.GB2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200616094924.159539-1-elver@google.com>
- <20200616160524.GW2723@paulmck-ThinkPad-P72>
- <20200616164202.GA208325@google.com>
+        s=default; t=1592329362;
+        bh=wzCSrtD+bv67Pc6WyKHwxnorzN1Ym43w4yPdOi2yMbA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OSrp/li3M4T475n9dAUkoKBU4tIm+0xg7jQPIGvpVXN+Au3PgOtGcSEykcgww9/6S
+         KMUTbQ0Ctjao7KL8Gs2pPj6M6XBqwH4TRGnvG4FFAa1HJPtPwo2AV7izArJyFTjqso
+         8XuHxyp6hTawbE97Y6WlZZvETjSTlOVHMGU3N+Ew=
+Date:   Tue, 16 Jun 2020 10:42:40 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>
+Subject: Re: [dm-devel] [PATCH 2/4] crypto: pass the flag
+ CRYPTO_ALG_ALLOCATES_MEMORY
+Message-ID: <20200616174240.GB207319@gmail.com>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200610010450.GA6449@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200610121106.GA23137@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006161101380.28052@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616164202.GA208325@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.LRH.2.02.2006161101380.28052@file01.intranet.prod.int.rdu2.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 06:42:02PM +0200, Marco Elver wrote:
-> On Tue, Jun 16 2020 at 09:05AM -0700, Paul E. McKenney wrote:
+On Tue, Jun 16, 2020 at 11:01:58AM -0400, Mikulas Patocka wrote:
+> Pass the flag CRYPTO_ALG_ALLOCATES_MEMORY down through the crypto API.
 > 
-> > On Tue, Jun 16, 2020 at 11:49:24AM +0200, Marco Elver wrote:
-> > > We need to pass the arguments provided to --kmake-arg to all make
-> > > invocations. In particular, the make invocations generating the configs
-> > > need to see the final make arguments, e.g. if config variables depend on
-> > > particular variables that are passed to make.
-> > > 
-> > > For example, when using '--kcsan --kmake-arg CC=clang-11', we would lose
-> > > CONFIG_KCSAN=y due to 'make oldconfig' not seeing that we want to use a
-> > > compiler that supports KCSAN.
-> > > 
-> > > Signed-off-by: Marco Elver <elver@google.com>
-> > 
-> > Queued and pushed, thank you!
-> > 
-> > Would the following patch make sense, at least until such time
-> > as some other compiler supports KCSAN?
-> > 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > commit 88bcaa730b6d40ddf69b09ed6f0a14803d087d99
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Tue Jun 16 09:02:34 2020 -0700
-> > 
-> >     torture: Make --kcsan default to using Clang 11
-> >     
-> >     Currently, Clang 11 is the only compiler that can support KCSAN.
-> >     Therefore, as a convenience to the KCSAN user, this commit causes
-> >     --kcsan to specify Clang 11 unless a "CC=" argument was already
-> >     specified via the --kmake-arg argument.
+> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 > 
-> As soon as more compilers support KCSAN (e.g. clang-12, etc...) we run
-> the risk of actually inconveniencing ourselves more because then we
-> really need to say '--kmake-arg CC=clang-1X' to not use the old
-> compiler. Or revert this in time.
+> ---
+>  crypto/adiantum.c         |    3 ++-
+>  crypto/authenc.c          |    5 +++--
+>  crypto/authencesn.c       |    5 +++--
+>  crypto/ccm.c              |    7 ++++---
+>  crypto/chacha20poly1305.c |    5 +++--
+>  crypto/cryptd.c           |    7 +++++--
+>  crypto/ctr.c              |    3 ++-
+>  crypto/cts.c              |    5 +++--
+>  crypto/essiv.c            |    5 +++--
+>  crypto/gcm.c              |   15 +++++++++------
+>  crypto/geniv.c            |    3 ++-
+>  crypto/lrw.c              |    5 +++--
+>  crypto/rsa-pkcs1pad.c     |    5 +++--
+>  crypto/xts.c              |    2 +-
+>  include/crypto/algapi.h   |    9 +++++++++
+>  15 files changed, 55 insertions(+), 29 deletions(-)
 > 
-> My command-line looks more like this right now:
-> 
-> 	kvm.sh ... --kmake-arg "CC="${HOME}/local/<gcc-or-clang>-11.kcsan/local/bin/<gcc-or-clang>" ...
-> 
-> I think the safer alternative would be to error if CONFIG_KCSAN=y is not
-> in the config, and simply suggest "Did you forget to switch your
-> compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?" (of course, a
-> 'gcc' in $PATH that supports KCSAN would also be fine -- see below).
-> Eventually, when the default compilers support KCSAN, this will resolve
-> itself gracefully.
-> 
-> Also, I'm going to send a series later this week to re-enable GCC
-> support. ;-)
+> Index: linux-2.6/crypto/authenc.c
+> ===================================================================
+> --- linux-2.6.orig/crypto/authenc.c
+> +++ linux-2.6/crypto/authenc.c
+> @@ -388,7 +388,8 @@ static int crypto_authenc_create(struct
+>  	if ((algt->type ^ CRYPTO_ALG_TYPE_AEAD) & algt->mask)
+>  		return -EINVAL;
+>  
+> -	mask = crypto_requires_sync(algt->type, algt->mask);
+> +	mask = crypto_requires_sync(algt->type, algt->mask) |
+> +	       crypto_requires_nomem(algt->type, algt->mask);
+>  
+>  	inst = kzalloc(sizeof(*inst) + sizeof(*ctx), GFP_KERNEL);
+>  	if (!inst)
+> @@ -424,7 +425,7 @@ static int crypto_authenc_create(struct
+>  		goto err_free_inst;
+>  
+>  	inst->alg.base.cra_flags = (auth_base->cra_flags |
+> -				    enc->base.cra_flags) & CRYPTO_ALG_ASYNC;
+> +				    enc->base.cra_flags) & (CRYPTO_ALG_ASYNC | CRYPTO_ALG_ALLOCATES_MEMORY);
 
-OK, sounds like I should leave well enough alone, then.  ;-)
+ASYNC and ALLOCATES_MEMORY are both handled the same way.  They're both
+"inherited" from inner algorithms to the template instance.  And if someone
+requests that one of these flags be clear when instantiating a template, then we
+have to honor the same for the inner algorithms too.
 
-In its current state, specifying "--kcsan" without a KCSAN-capable
-compiler does get you this:
+So, shouldn't we define something like crypto_algt_mask() and
+CRYPTO_ALG_INHERITED_FLAGS and make them handle both ASYNC and ALLOCATES_MEMORY,
+rather than explicitly handling each of these flags everywhere again?
 
-:CONFIG_KCSAN=y: improperly set
-:CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-:CONFIG_KCSAN_VERBOSE=y: improperly set
-:CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
-
-Which admittedly is a bit obtuse, especially that last line.  So how
-about the following patch, which instead results in this?
-
-:CONFIG_KCSAN=y: improperly set
-:CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-:CONFIG_KCSAN_VERBOSE=y: improperly set
-:CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit f571795b1146007407851675a258b6685ea2d589
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Tue Jun 16 10:38:57 2020 -0700
-
-    torture: Improve diagnostic for KCSAN-incapable compilers
-    
-    Using --kcsan when the compiler does not support KCSAN results in this:
-    
-    :CONFIG_KCSAN=y: improperly set
-    :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-    :CONFIG_KCSAN_VERBOSE=y: improperly set
-    :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-    Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
-    
-    This is a bit obtuse, so this commit adds checks resulting in this:
-    
-    :CONFIG_KCSAN=y: improperly set
-    :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
-    :CONFIG_KCSAN_VERBOSE=y: improperly set
-    :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
-    Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
-    
-    Suggested-by: Marco Elver <elver@google.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-index 357899c..837643a 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
-@@ -44,7 +44,8 @@ do
- 			then
- 				echo QEMU killed
- 			fi
--			configcheck.sh $i/.config $i/ConfigFragment
-+			configcheck.sh $i/.config $i/ConfigFragment > $T 2>&1
-+			cat $T
- 			if test -r $i/Make.oldconfig.err
- 			then
- 				cat $i/Make.oldconfig.err
-@@ -73,7 +74,10 @@ do
- 	done
- 	if test -f "$rd/kcsan.sum"
- 	then
--		if test -s "$rd/kcsan.sum"
-+		if grep -q CONFIG_KCSAN=y $T
-+		then
-+			echo Did you forget to switch your compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?
-+		elif test -s "$rd/kcsan.sum"
- 		then
- 			echo KCSAN summary in $rd/kcsan.sum
- 		else
+- Eric
