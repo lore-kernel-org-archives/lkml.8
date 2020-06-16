@@ -2,101 +2,113 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91670C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 05:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 05:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E367206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 05:23:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lM7xYNKX"
+	by mail.kernel.org (Postfix) with ESMTP id 7DBD220882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 05:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgFPFXY (ORCPT
+        id S1726960AbgFPFYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 01:23:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgFPFXY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 01:23:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267CBC05BD43
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 22:23:24 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id v11so704390pgb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 22:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F8di4l+s/Ly7rCfnAJCSNumrdSsKS4ibEMc0wr155Lw=;
-        b=lM7xYNKXNC3/18xNrWIVK8uekEsB6xz+aF3OvLQ+WQIAjqOxxrV8QNtErcVGyjuFYg
-         g2ekGJtibX1TQHLUZjVom/gQ9oi3PiHmEHLFjd3KY7POCjycjtV/31bAAc+1sdmzT3wg
-         Cx1zS4qoeLjGbtlpMuEJw+mtrkfV25ndvHW68jWZDEuri/PNWiNlS1GwyOUVSu8H+RDY
-         UYtFd2wci0vd0yvpivgutSmG5c70wvCz7AH+y5R5KA6+n/DKwUZ0Qc5blx5dy8Gq7ljM
-         9LF9mi16mdnjqFoTQpRlgZXl+AHQOlwBrEXSMqWB0bmXsUN14uYuObilLRMZRY638bir
-         nDGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F8di4l+s/Ly7rCfnAJCSNumrdSsKS4ibEMc0wr155Lw=;
-        b=iDN9Se+Gi5NFhaL0rjQDCiX815fzVBc3mAhqn3MBrvSCXve7juVm2hDxdgjWRskn25
-         7jofDFFHf5F/1GfO1WAiB5uLByDEclXJa8trfIEPH9usIS9pLlM0aScbOsy7L7l1pv4B
-         4Lr0mgx9j4bb123EX2IN6jObp5DmkkC0RyPHXftXK35fpU3SbHI4yn/IXXaM/aV72Kdd
-         tZcWJ4WG7t6Osw+n4FfMHvmIrVM8qaVVh5RSlBw+78OHk/nHscPL0EdmUr+HbUu5DXZd
-         M+4ChvJ+TYdPIz9bqgSa/5c9IM4XOU6bu/gtVD4E3Cax46l783MRrmKloDyzJRDizq+c
-         PGKQ==
-X-Gm-Message-State: AOAM533yCCuazeXlbrxE1nnLF6dZnga3IzcokMqJiJfX+/WLwL/7nRLu
-        RRYPh5x9YFvaRLCoezkwuNBf9ovAxlA=
-X-Google-Smtp-Source: ABdhPJy/DgyZOR7OSTrsOc0TGFWHgdklAdqqTv+6cq9ydXh1cUOIgbk3cVS/IZxiJP2tDbUJtD47xg==
-X-Received: by 2002:a05:6a00:843:: with SMTP id q3mr579487pfk.107.1592285003585;
-        Mon, 15 Jun 2020 22:23:23 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id h6sm15684333pfq.214.2020.06.15.22.23.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Jun 2020 22:23:23 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 22:23:07 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ASoC: fsl_ssi: Fix bclk calculation for mono channel
-Message-ID: <20200616052304.GA24055@Asurada-Nvidia>
-References: <034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com>
+        Tue, 16 Jun 2020 01:24:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:59462 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726161AbgFPFYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 01:24:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 934931F1;
+        Mon, 15 Jun 2020 22:24:29 -0700 (PDT)
+Received: from [10.163.80.105] (unknown [10.163.80.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9105F3F6CF;
+        Mon, 15 Jun 2020 22:24:27 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH] mm/pgtable: Move extern zero_pfn outside
+ __HAVE_COLOR_ZERO_PAGE
+To:     linux-mm@kvack.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <1592280498-15442-1-git-send-email-anshuman.khandual@arm.com>
+Message-ID: <ca40ed5d-62e9-dff6-ef94-0ae4069ff84b@arm.com>
+Date:   Tue, 16 Jun 2020 10:54:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1592280498-15442-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:53:48AM +0800, Shengjiu Wang wrote:
-> For mono channel, SSI will switch to Normal mode.
+On 06/16/2020 09:38 AM, Anshuman Khandual wrote:
+> zero_pfn variable is required whether __HAVE_COLOR_ZERO_PAGE is enabled
+> or not. Also it should not really be declared individually in all functions
+> where it gets used. Just move the declaration outside, which also makes it
+> available for other potential users.
 > 
-> In Normal mode and Network mode, the Word Length Control bits
-> control the word length divider in clock generator, which is
-> different with I2S Master mode (the word length is fixed to
-> 32bit), it should be the value of params_width(hw_params).
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-arch@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Applies on 5.8-rc1. If the earlier motivation was to hide zero_pfn from
+> general visibility, we could just put in a comment and update the commit
+> message that my_zero_pfn() should always be used rather than zero_pfn.
+> Build tested on many platforms and boot tested on arm64, x86.
 > 
-> The condition "slots == 2" is not good for I2S Master mode,
-> because for Network mode and Normal mode, the slots can also
-> be 2. Then we need to use (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK)
-> to check if it is I2S Master mode.
+>  include/linux/pgtable.h | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> So we refine the formula for mono channel, otherwise there
-> will be sound issue for S24_LE.
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 32b6c52d41b9..078e9864abca 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -1020,10 +1020,11 @@ extern void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
+>  extern void untrack_pfn_moved(struct vm_area_struct *vma);
+>  #endif
+>  
+> +extern unsigned long zero_pfn;
+> +
+>  #ifdef __HAVE_COLOR_ZERO_PAGE
+>  static inline int is_zero_pfn(unsigned long pfn)
+>  {
+> -	extern unsigned long zero_pfn;
+>  	unsigned long offset_from_zero_pfn = pfn - zero_pfn;
+>  	return offset_from_zero_pfn <= (zero_page_mask >> PAGE_SHIFT);
+>  }
+> @@ -1033,13 +1034,11 @@ static inline int is_zero_pfn(unsigned long pfn)
+>  #else
+>  static inline int is_zero_pfn(unsigned long pfn)
+>  {
+> -	extern unsigned long zero_pfn;
+>  	return pfn == zero_pfn;
+>  }
+>  
+>  static inline unsigned long my_zero_pfn(unsigned long addr)
+>  {
+> -	extern unsigned long zero_pfn;
+>  	return zero_pfn;
+>  }
+>  #endif
 > 
-> Fixes: b0a7043d5c2c ("ASoC: fsl_ssi: Caculate bit clock rate using slot number and width")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+The CC list is incomplete. Adding Andrew, Mike and Kirill.
+
++Cc: Andrew Morton <akpm@linux-foundation.org>
++Cc: Mike Rapoport <rppt@linux.ibm.com>
++Cc: Kirill A . Shutemov <kirill.shutemov@linux.intel.com>
+
+Will update the CC list next time around.
+
+- Anshuman
