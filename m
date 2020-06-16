@@ -2,148 +2,244 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	PDS_BTC_ID,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE7A2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05542074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 06:54:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSyfXBKo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YOLSQ/hH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgFPGyb (ORCPT
+        id S1727032AbgFPGyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 02:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48476 "EHLO
+        Tue, 16 Jun 2020 02:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFPGya (ORCPT
+        with ESMTP id S1725768AbgFPGyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 02:54:30 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1008FC05BD43;
-        Mon, 15 Jun 2020 23:54:30 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id h22so1101404pjf.1;
-        Mon, 15 Jun 2020 23:54:30 -0700 (PDT)
+        Tue, 16 Jun 2020 02:54:39 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2325C05BD43
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:54:37 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h5so19532999wrc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 23:54:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=NEdJpkUGB2M0ZFXDWJp7ZD5zy/GYvN+9GDD0rxh6Bew=;
-        b=kSyfXBKoptmUt7kGGlsQ9z9oFh/v07Q65GLrVzKLvBB4jVPvCLQ1DHjA6jFgUrnIRH
-         znUfKnRFhQWZV0ZSyygNBjMajQn9AG3EG70sgjih7T0JQAsMdTUtl3yvDdycx3O9CazT
-         CWq1nEnzCdbnP1Zro1POMhkgSXUDWBpMk19bW2/SCs5D99phGXuRx1oRLry4grb7kPco
-         9n/3JP7mNwO2WFWfYSq/EncTX2jyRDAdpWc8m81O7J+dEsRNLgb9VwNZxauKwe6x0cOV
-         b+ETOzmVvHuX5ncE1oaxfFQIDihXuxhvTv6indZJ5kcbQtK7eMmJqJowTDrOF9SRRriB
-         O2SQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ZEPVAfPR98ffU4HcJ8n3O8Rs7VWQME5L+qY7xcPu2Q8=;
+        b=YOLSQ/hHlyuz2FCheCDZnw7IDNAt7C64qby+01Mik/jYlMiCkM9fd013FSkvy6giKR
+         visuSburUxrjaqyExw+hBUK//ffRx0/pjslvGves3L7lq0ZTGMttXCJcZJy1B/8+142G
+         OMPJUxKWNpTMFJFTC4wyT27oZ0EvzaSQe8nTY4G6lpAh5kMOT/pP81OqWJaeCH9uFoC1
+         XUN4MIWbzy4G1FMhHGK49n0wlPJZ7Fp2u5Gw1VGVZHmkZ+FPsvxDWcf9e65ZT57/g5OU
+         fEhRH16WcE1MKwvhd8lpRY1T6D2lwGlv1GxZFlI0acMntyVLG2Y+FV8Uv7QsNhA6Ya7Q
+         g4bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=NEdJpkUGB2M0ZFXDWJp7ZD5zy/GYvN+9GDD0rxh6Bew=;
-        b=AFXZ6yh2Ylt7TMpUPSjczgedlmHwn0fNh0LSrMf4wPTKHX5hM6ipPOrkNAGQuzurf9
-         oAc36xtR3kp+BylMtzOsgfI9BZ0+owVL59CzLQKfnfcsp8fT3SNsWzr+0nhUDp8ztFRP
-         Xjw2DHE3Yx1twpIv1TuXSGdN8y+vj9jysurTcWADDAwOtyCoVdQUKQbA1Imv1YZ+c2mq
-         bj0FQHqQpFc+bYqMYfmbo6jikMTBnz7gaQfvCEWMarCiJDy9yXHDTVX3SHHWOguwwTkO
-         ms0hggXpFpDeCJHzWXe5PCFGzCHr/ASEcG1dCXoPD57cK0uh0X9FB/w6biKLRnp2+Xmq
-         cY6A==
-X-Gm-Message-State: AOAM5312dpyt+bJFN/mIqIwicjsmiMaa9glYCH4o/gysJvkucIYGUpOc
-        kzxTAaqxFNu9xdUHnY1TvRc=
-X-Google-Smtp-Source: ABdhPJzX3FKDXy5dRw9R1aLIwn8/y8Bxq069uokajv3sH8i+8A9Q88NppKT59ShWp6h3hUO2kd14Qw==
-X-Received: by 2002:a17:90a:a08d:: with SMTP id r13mr1381780pjp.96.1592290469647;
-        Mon, 15 Jun 2020 23:54:29 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id s98sm1433283pjb.33.2020.06.15.23.54.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 23:54:28 -0700 (PDT)
-From:   Geliang Tang <geliangtang@gmail.com>
-To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/3] mptcp: add MP_FAIL suboption handling
-Date:   Tue, 16 Jun 2020 14:47:37 +0800
-Message-Id: <9bb5cb494f4ac53845f2d233409073d8e71d0e4f.1592289629.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1592289629.git.geliangtang@gmail.com>
-References: <cover.1592289629.git.geliangtang@gmail.com>
-In-Reply-To: <f86a2f6f241b7f7a49fec17b3428ae5a0fadc93e.1592289629.git.geliangtang@gmail.com>
-References: <cover.1592289629.git.geliangtang@gmail.com> <f86a2f6f241b7f7a49fec17b3428ae5a0fadc93e.1592289629.git.geliangtang@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ZEPVAfPR98ffU4HcJ8n3O8Rs7VWQME5L+qY7xcPu2Q8=;
+        b=Lr0B0fZYC9WC6guqPywo0u+BqApHpY/A79AxpH3E6uaThFbZNCUfl9/FxhK8Oofaof
+         t2+x8X/CybALx5m0BSqFwxFntn3SyfDFlR8W8x6Osw5iJj5ErO58GJPWwUYRfxnPufDT
+         Qkcid4kczqO1yIyj56JPhfvRPlEupC/BMaz8XsiFHESFC1DkcjKU74LYBtybOFRw6rr5
+         98JXgLBd2lUtthDJ61vHqK9JvrPHIs2YenD/P26O0ihykavODnpv7dlumQfbzsWnddDE
+         FHdJzCs0IxjKVTWV4cj37A6mBO6FIfCvr0BmVlAHEY1F/H6Tdnc2S7G4up2SuGddugu3
+         y/8w==
+X-Gm-Message-State: AOAM533gqWYqBSpVc/lYdhBuC7bCgq+J+ymvlSPF7PXKtsVDxVr5zodo
+        SsXYvVOHur6ERvg/mRrM1gJ8fQ==
+X-Google-Smtp-Source: ABdhPJxI0GVoVyQ/MRgIv7AiXuVqi6L+3wuLe52/Bl06xZTxe35y0eMPzlD2ew8Wb+5/cLTvsbP//Q==
+X-Received: by 2002:adf:f552:: with SMTP id j18mr1318126wrp.279.1592290476475;
+        Mon, 15 Jun 2020 23:54:36 -0700 (PDT)
+Received: from vingu-book ([2a01:e0a:f:6020:5592:7b9c:f9d9:6edb])
+        by smtp.gmail.com with ESMTPSA id g187sm2682245wma.17.2020.06.15.23.54.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Jun 2020 23:54:35 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 08:54:32 +0200
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [LKP] [sched/fair] 070f5e860e: reaim.jobs_per_min -10.5%
+ regression
+Message-ID: <20200616065432.GA18401@vingu-book>
+References: <20200319023819.GO11705@shao2-debian>
+ <20200612110616.20264-1-hdanton@sina.com>
+ <90f4036d-bb16-af67-8776-a2cbe67dfe7f@linux.intel.com>
+ <20200615081041.GA16990@vingu-book>
+ <d60343e9-b3a0-bdc7-84f4-e8c912f92c46@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d60343e9-b3a0-bdc7-84f4-e8c912f92c46@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add handling for sending and receiving MP_FAIL suboption.
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- net/mptcp/options.c  | 18 ++++++++++++++++++
- net/mptcp/protocol.h |  2 ++
- 2 files changed, 20 insertions(+)
+Hi Xing,
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index cc3039f0ac43..82b3d7c566b4 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -288,6 +288,15 @@ static void mptcp_parse_option(const struct sk_buff *skb,
- 		pr_debug("MP_PRIO: backup=%d", mp_opt->backup);
- 		break;
- 
-+	case MPTCPOPT_MP_FAIL:
-+		if (opsize != TCPOLEN_MPTCP_FAIL)
-+			break;
-+
-+		ptr += 2;
-+		mp_opt->data_seq = get_unaligned_be64(ptr);
-+		pr_debug("MP_FAIL: data_seq=%lld", mp_opt->data_seq);
-+		break;
-+
- 	default:
- 		break;
- 	}
-@@ -975,6 +984,15 @@ void mptcp_write_options(__be32 *ptr, struct mptcp_out_options *opts)
- 				      opts->backup, 0);
- 	}
- 
-+	if (OPTION_MPTCP_FAIL & opts->suboptions) {
-+		struct mptcp_ext *mpext = &opts->ext_copy;
-+
-+		*ptr++ = mptcp_option(MPTCPOPT_MP_FAIL,
-+				      TCPOLEN_MPTCP_FAIL,
-+				      0, 0);
-+		put_unaligned_be64(mpext->data_seq, ptr);
-+	}
-+
- 	if (OPTION_MPTCP_MPJ_SYN & opts->suboptions) {
- 		*ptr++ = mptcp_option(MPTCPOPT_MP_JOIN,
- 				      TCPOLEN_MPTCP_MPJ_SYN,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 623c9a1c4343..e6ae0a73716b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -24,6 +24,7 @@
- #define OPTION_MPTCP_ADD_ADDR6	BIT(7)
- #define OPTION_MPTCP_RM_ADDR	BIT(8)
- #define OPTION_MPTCP_PRIO	BIT(9)
-+#define OPTION_MPTCP_FAIL	BIT(10)
- 
- /* MPTCP option subtypes */
- #define MPTCPOPT_MP_CAPABLE	0
-@@ -60,6 +61,7 @@
- #define TCPOLEN_MPTCP_PORT_LEN		2
- #define TCPOLEN_MPTCP_RM_ADDR_BASE	4
- #define TCPOLEN_MPTCP_PRIO		3
-+#define TCPOLEN_MPTCP_FAIL		12
- 
- /* MPTCP MP_JOIN flags */
- #define MPTCPOPT_BACKUP		BIT(0)
--- 
-2.17.1
+Le mardi 16 juin 2020 à 11:17:16 (+0800), Xing Zhengjun a écrit :
+> 
+> 
+> On 6/15/2020 4:10 PM, Vincent Guittot wrote:
+> > Hi Xing,
+> > 
+> > Le lundi 15 juin 2020 à 15:26:59 (+0800), Xing Zhengjun a écrit :
+> > > 
+> > > 
+> > > On 6/12/2020 7:06 PM, Hillf Danton wrote:
+> > > > 
+> > > > On Fri, 12 Jun 2020 14:36:49 +0800 Xing Zhengjun wrote:
+> > 
 
+...
+
+> > 
+> 
+> I apply the patch based on v5.7, the test result is as the following:
+
+TBH, I didn't expect that the results would still be bad, so i wonder if the threshold are
+the root problem.
+
+Could you run tests with the patch below that removes condition with runnable_avg ?
+I just want to make sure that those 2 conditions are the root cause.
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index da3e5b54715b..f5774d0af059 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8210,10 +8210,6 @@ group_has_capacity(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
+        if (sgs->sum_nr_running < sgs->group_weight)
+                return true;
+
+-       if ((sgs->group_capacity * imbalance_pct) <
+-                       (sgs->group_runnable * 100))
+-               return false;
+-
+        if ((sgs->group_capacity * 100) >
+                        (sgs->group_util * imbalance_pct))
+                return true;
+@@ -8239,10 +8235,6 @@ group_is_overloaded(unsigned int imbalance_pct, struct sg_lb_stats *sgs)
+                        (sgs->group_util * imbalance_pct))
+                return true;
+
+-       if ((sgs->group_capacity * imbalance_pct) <
+-                       (sgs->group_runnable * 100))
+-               return true;
+-
+        return false;
+ }
+
+
+
+Thanks.
+Vincent
+
+> 
+> =========================================================================================
+> tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
+> 
+> lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
+> 
+> commit:
+>   9f68395333ad7f5bfe2f83473fed363d4229f11c
+>   070f5e860ee2bf588c99ef7b4c202451faa48236
+>   v5.7
+>   3e1643da53f3fc7414cfa3ad2a16ab2a164b7f4d (the test patch)
+> 
+> 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7
+> 3e1643da53f3fc7414cfa3ad2a1
+> ---------------- --------------------------- ---------------------------
+> ---------------------------
+>          %stddev     %change         %stddev     %change %stddev     %change
+> %stddev
+>              \          |                \          |                \
+> |                \
+>       0.69           -10.3%       0.62            -9.1%       0.62
+> -7.1%       0.64        reaim.child_systime
+>       0.62            -1.0%       0.61            +0.5%       0.62
+> +1.3%       0.63        reaim.child_utime
+>      66870           -10.0%      60187            -7.6%      61787
+> -6.1%      62807        reaim.jobs_per_min
+>      16717           -10.0%      15046            -7.6%      15446
+> -6.1%      15701        reaim.jobs_per_min_child
+>      97.84            -1.1%      96.75            -0.4%      97.43
+> -0.5%      97.34        reaim.jti
+>      72000           -10.8%      64216            -8.3%      66000
+> -5.7%      67885        reaim.max_jobs_per_min
+>       0.36           +10.6%       0.40            +7.8%       0.39
+> +6.9%       0.38        reaim.parent_time
+>       1.58 ±  2%     +71.0%       2.70 ±  2%     +26.9%       2.01 ± 2%
+> +32.5%       2.09 ±  6%  reaim.std_dev_percent
+>       0.00 ±  5%    +110.4%       0.01 ±  3%     +48.8%       0.01 ± 7%
+> +61.7%       0.01 ±  8%  reaim.std_dev_time
+>      50800            -2.4%      49600            -1.6%      50000
+> -1.3%      50133        reaim.workload
+> 
+> 
+> > > 
+> > > =========================================================================================
+> > > tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/test/cpufreq_governor/ucode:
+> > > 
+> > > lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/100%/test/five_sec/performance/0x21
+> > > 
+> > > commit:
+> > >    9f68395333ad7f5bfe2f83473fed363d4229f11c
+> > >    070f5e860ee2bf588c99ef7b4c202451faa48236
+> > >    v5.7
+> > >    6b33257768b8dd3982054885ea310871be2cfe0b (Hillf's patch)
+> > > 
+> > > 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7
+> > > 6b33257768b8dd3982054885ea3
+> > > ---------------- --------------------------- ---------------------------
+> > > ---------------------------
+> > >           %stddev     %change         %stddev     %change %stddev     %change
+> > > %stddev
+> > >               \          |                \          |                \
+> > > |                \
+> > >        0.69           -10.3%       0.62            -9.1%       0.62
+> > > -10.1%       0.62        reaim.child_systime
+> > >        0.62            -1.0%       0.61            +0.5%       0.62
+> > > +0.3%       0.62        reaim.child_utime
+> > >       66870           -10.0%      60187            -7.6%      61787
+> > > -8.3%      61305        reaim.jobs_per_min
+> > >       16717           -10.0%      15046            -7.6%      15446
+> > > -8.3%      15326        reaim.jobs_per_min_child
+> > >       97.84            -1.1%      96.75            -0.4%      97.43
+> > > -0.5%      97.37        reaim.jti
+> > >       72000           -10.8%      64216            -8.3%      66000
+> > > -8.3%      66000        reaim.max_jobs_per_min
+> > >        0.36           +10.6%       0.40            +7.8%       0.39
+> > > +9.4%       0.39        reaim.parent_time
+> > >        1.58 ±  2%     +71.0%       2.70 ±  2%     +26.9%       2.01 ± 2%
+> > > +33.2%       2.11        reaim.std_dev_percent
+> > >        0.00 ±  5%    +110.4%       0.01 ±  3%     +48.8%       0.01 ± 7%
+> > > +65.3%       0.01 ±  3%  reaim.std_dev_time
+> > >       50800            -2.4%      49600            -1.6%      50000
+> > > -1.8%      49866        reaim.workload
+> > > 
+> > > 
+> > > 
+> > > -- 
+> > > Zhengjun Xing
+> 
+> -- 
+> Zhengjun Xing
