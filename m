@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E025C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C4C208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB36208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323606;
-	bh=24ofpfUOvGV2D+ipJB4zYSjP/GGm7wxY4Ps53nNY6OQ=;
+	s=default; t=1592323609;
+	bh=dyqp+Fnlnyi5NeHTmMqL6I3YbaA5yLh7dj/yLkB9YR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S+jUc00IunS+t6f0gtuOIgZqp4rM8hu1c1IMSvk+IWJaHxfpDKhX1KOzhkgSdB9qz
-	 0Ujh2r/NEMbUw4SQ+o/QIBU7CUR8f0F0P+srIVZSCyREaxGbk3y0JEMnYjm19sqsQ4
-	 M8wXwGY9vzoa4Dn8GrUsXrB5A22554BxnOhL60vg=
+	b=vd/RcGUwGVt2OBiaC6/Y8z1p0mLDw931Fc6Y7FhX6XTx1X/YCMHLoMt1zulqI27tI
+	 jdKDkbW1aV0U8sWQyweWFYE7RstiAfVN7SZWyASOTlPlGpzumO1rGl/QaGNtRK59ji
+	 6aFepZmm6fyHkt1G7M16rYNAxizFemZzDPALToMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732695AbgFPQGp (ORCPT
+        id S1732966AbgFPQGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:06:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41204 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:06:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730181AbgFPPrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:47:42 -0400
+        id S1732354AbgFPPrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B85872071A;
-        Tue, 16 Jun 2020 15:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A24920776;
+        Tue, 16 Jun 2020 15:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322461;
-        bh=24ofpfUOvGV2D+ipJB4zYSjP/GGm7wxY4Ps53nNY6OQ=;
+        s=default; t=1592322458;
+        bh=dyqp+Fnlnyi5NeHTmMqL6I3YbaA5yLh7dj/yLkB9YR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0XBWvFJk436nLRt3yiFNFRMo5n+OFGqKV5aTIHFlams+J8YzUT7MM4YfRqFF2B49X
-         FkQxj5xucoCDfqHS2nktZZCg7sI1KAJ3zYQ31x/O+R6J9H3iUzJio+1OxAHsbbaebZ
-         JsMgmX19ZlkvXl9LroUunYPGmC5SzVnu+2+3D35c=
+        b=r7xws0yn4ghR/pp8YZLdYivxZCgWKO7MnvZYorhH+KaJ7b5okWn4RF1i7ov3briv5
+         bXUJQvBAh042DnsPaIMbqpFP9nyaSHe3SmaY2gzJeLJYQ6sxMO6LbfA8UHoV8aefK+
+         F79UzgySrx948+CA4WvitBmApfNyf1aoC/XoxpnM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
-Subject: [PATCH 5.7 140/163] ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
-Date:   Tue, 16 Jun 2020 17:35:14 +0200
-Message-Id: <20200616153113.516044499@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.7 122/163] cpufreq: Fix up cpufreq_boost_set_sw()
+Date:   Tue, 16 Jun 2020 17:34:56 +0200
+Message-Id: <20200616153112.655066932@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -60,152 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit abeaa85054ff8cfe8b99aafc5c70ea067e5d0908 upstream.
+commit 552abb884e97d26589964e5a8c7e736f852f95f0 upstream.
 
-Free wmi later after cmd urb has been killed, as urb cb will access wmi.
+After commit 18c49926c4bf ("cpufreq: Add QoS requests for userspace
+constraints") the return value of freq_qos_update_request(), that can
+be 1, passed by cpufreq_boost_set_sw() to its caller sometimes
+confuses the latter, which only expects to see 0 or negative error
+codes, so notice that cpufreq_boost_set_sw() can return an error code
+(which should not be -EINVAL for that matter) as soon as the first
+policy without a frequency table is found (because either all policies
+have a frequency table or none of them have it) and rework it to meet
+its caller's expectations.
 
-the case reported by syzbot:
-https://lore.kernel.org/linux-usb/0000000000000002fc05a1d61a68@google.com
-BUG: KASAN: use-after-free in ath9k_wmi_ctrl_rx+0x416/0x500
-drivers/net/wireless/ath/ath9k/wmi.c:215
-Read of size 1 at addr ffff8881cef1417c by task swapper/1/0
-
-Call Trace:
-<IRQ>
-ath9k_wmi_ctrl_rx+0x416/0x500 drivers/net/wireless/ath/ath9k/wmi.c:215
-ath9k_htc_rx_msg+0x2da/0xaf0
-drivers/net/wireless/ath/ath9k/htc_hst.c:459
-ath9k_hif_usb_reg_in_cb+0x1ba/0x630
-drivers/net/wireless/ath/ath9k/hif_usb.c:718
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-
-Reported-and-tested-by: syzbot+5d338854440137ea0fef@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-3-hqjagain@gmail.com
+Fixes: 18c49926c4bf ("cpufreq: Add QoS requests for userspace constraints")
+Reported-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c      |    5 +++--
- drivers/net/wireless/ath/ath9k/hif_usb.h      |    1 +
- drivers/net/wireless/ath/ath9k/htc_drv_init.c |   10 +++++++---
- drivers/net/wireless/ath/ath9k/wmi.c          |    5 ++++-
- drivers/net/wireless/ath/ath9k/wmi.h          |    3 ++-
- 5 files changed, 17 insertions(+), 7 deletions(-)
+ drivers/cpufreq/cpufreq.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -973,7 +973,7 @@ err:
- 	return -ENOMEM;
- }
- 
--static void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
-+void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev)
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2535,26 +2535,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
+ static int cpufreq_boost_set_sw(int state)
  {
- 	usb_kill_anchored_urbs(&hif_dev->regout_submitted);
- 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
-@@ -1341,8 +1341,9 @@ static void ath9k_hif_usb_disconnect(str
+ 	struct cpufreq_policy *policy;
+-	int ret = -EINVAL;
  
- 	if (hif_dev->flags & HIF_USB_READY) {
- 		ath9k_htc_hw_deinit(hif_dev->htc_handle, unplugged);
--		ath9k_htc_hw_free(hif_dev->htc_handle);
- 		ath9k_hif_usb_dev_deinit(hif_dev);
-+		ath9k_destoy_wmi(hif_dev->htc_handle->drv_priv);
-+		ath9k_htc_hw_free(hif_dev->htc_handle);
+ 	for_each_active_policy(policy) {
++		int ret;
++
+ 		if (!policy->freq_table)
+-			continue;
++			return -ENXIO;
+ 
+ 		ret = cpufreq_frequency_table_cpuinfo(policy,
+ 						      policy->freq_table);
+ 		if (ret) {
+ 			pr_err("%s: Policy frequency update failed\n",
+ 			       __func__);
+-			break;
++			return ret;
+ 		}
+ 
+ 		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+ 		if (ret < 0)
+-			break;
++			return ret;
  	}
  
- 	usb_set_intfdata(interface, NULL);
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
-@@ -133,5 +133,6 @@ struct hif_device_usb {
- 
- int ath9k_hif_usb_init(void);
- void ath9k_hif_usb_exit(void);
-+void ath9k_hif_usb_dealloc_urbs(struct hif_device_usb *hif_dev);
- 
- #endif /* HTC_USB_H */
---- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-@@ -931,8 +931,9 @@ err_init:
- int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
- 			   u16 devid, char *product, u32 drv_info)
- {
--	struct ieee80211_hw *hw;
-+	struct hif_device_usb *hif_dev;
- 	struct ath9k_htc_priv *priv;
-+	struct ieee80211_hw *hw;
- 	int ret;
- 
- 	hw = ieee80211_alloc_hw(sizeof(struct ath9k_htc_priv), &ath9k_htc_ops);
-@@ -967,7 +968,10 @@ int ath9k_htc_probe_device(struct htc_ta
- 	return 0;
- 
- err_init:
--	ath9k_deinit_wmi(priv);
-+	ath9k_stop_wmi(priv);
-+	hif_dev = (struct hif_device_usb *)htc_handle->hif_dev;
-+	ath9k_hif_usb_dealloc_urbs(hif_dev);
-+	ath9k_destoy_wmi(priv);
- err_free:
- 	ieee80211_free_hw(hw);
- 	return ret;
-@@ -982,7 +986,7 @@ void ath9k_htc_disconnect_device(struct
- 			htc_handle->drv_priv->ah->ah_flags |= AH_UNPLUGGED;
- 
- 		ath9k_deinit_device(htc_handle->drv_priv);
--		ath9k_deinit_wmi(htc_handle->drv_priv);
-+		ath9k_stop_wmi(htc_handle->drv_priv);
- 		ieee80211_free_hw(htc_handle->drv_priv->hw);
- 	}
- }
---- a/drivers/net/wireless/ath/ath9k/wmi.c
-+++ b/drivers/net/wireless/ath/ath9k/wmi.c
-@@ -112,14 +112,17 @@ struct wmi *ath9k_init_wmi(struct ath9k_
- 	return wmi;
+-	return ret;
++	return 0;
  }
  
--void ath9k_deinit_wmi(struct ath9k_htc_priv *priv)
-+void ath9k_stop_wmi(struct ath9k_htc_priv *priv)
- {
- 	struct wmi *wmi = priv->wmi;
- 
- 	mutex_lock(&wmi->op_mutex);
- 	wmi->stopped = true;
- 	mutex_unlock(&wmi->op_mutex);
-+}
- 
-+void ath9k_destoy_wmi(struct ath9k_htc_priv *priv)
-+{
- 	kfree(priv->wmi);
- }
- 
---- a/drivers/net/wireless/ath/ath9k/wmi.h
-+++ b/drivers/net/wireless/ath/ath9k/wmi.h
-@@ -179,7 +179,6 @@ struct wmi {
- };
- 
- struct wmi *ath9k_init_wmi(struct ath9k_htc_priv *priv);
--void ath9k_deinit_wmi(struct ath9k_htc_priv *priv);
- int ath9k_wmi_connect(struct htc_target *htc, struct wmi *wmi,
- 		      enum htc_endpoint_id *wmi_ctrl_epid);
- int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
-@@ -189,6 +188,8 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum
- void ath9k_wmi_event_tasklet(unsigned long data);
- void ath9k_fatal_work(struct work_struct *work);
- void ath9k_wmi_event_drain(struct ath9k_htc_priv *priv);
-+void ath9k_stop_wmi(struct ath9k_htc_priv *priv);
-+void ath9k_destoy_wmi(struct ath9k_htc_priv *priv);
- 
- #define WMI_CMD(_wmi_cmd)						\
- 	do {								\
+ int cpufreq_boost_trigger_state(int state)
 
 
