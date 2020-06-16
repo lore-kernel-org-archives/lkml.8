@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94180C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD85C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4A820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9E620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iqIaqckV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f9r7BI5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgFPHuO (ORCPT
+        id S1727805AbgFPHu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57002 "EHLO
+        Tue, 16 Jun 2020 03:50:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgFPHt5 (ORCPT
+        with ESMTP id S1726606AbgFPHts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:49:57 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4296C08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:49:49 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g12so8012584pll.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:49:49 -0700 (PDT)
+        Tue, 16 Jun 2020 03:49:48 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BC6C08C5CA
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:49:47 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s135so8176505pgs.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:49:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZajOneOdlQKQYlo8Wv9k+OekhqsO1R3/YXgaBEECIjE=;
-        b=iqIaqckVAQUEvZtp4+/qsmQGE37BQNoO7PPWo/5IR2umOLzuafxrc36ojsqisBA3bi
-         4zDJkmA8POCcTYB6xD7jmfglS/ATrJpAhXrtlCt2PRv4l86gJXFiKqXPxzD8cJrtBfyx
-         OCYp+xbwpnhRS2dDLpCWXdlx5v5ovlS/TJnjk=
+        bh=hymiFj42whdy2D05bhHghrqvNPgonrcbk2GbFm3EsyI=;
+        b=f9r7BI5FO+bkXtD3hSIV/gO/wykpcs5Nzg5uxvgwjdkEuE1YiLJ6bjd62HL+z1G7wf
+         9mJpAuojdEY7w8SJooynYRV1iiolNxDFS/JPxuueIwKEPebi8V9NBBP+WhY1V1A2Whbc
+         r5Cq2o+4beGeb3ZnFnvnJTb4H0+uzqyzh9VZk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZajOneOdlQKQYlo8Wv9k+OekhqsO1R3/YXgaBEECIjE=;
-        b=DmGNr3WAGJLGCUNsz0b3lfWQTE3XUZRDp5W5dJQHQrzpoyk4uclRLHqUZ2u11hxY6b
-         szQNA4srHq9iXymy2m/P1eCk0SpLXg79KGbgXmQU4NgrYYck/xtsdHIupySz9/QeNbI4
-         D2uZGLJvowym3mspaKLuRhUK/V0S/L6GdYPfyeYIeLWewf1rgr1RRjiWS8l2u9nPkG1x
-         zYa9K7hdrP/fdyAS6ClQ/8p76VYXRiwozs/3ktSLpQxgI6G4B2fTG//VTTP+rY7LMjDQ
-         n9Fzm/4Oklx7Cq5qH+xOrJFzS7MqYZlytDYZQ41etWpk41Gg7LbBVFZ2VayAmlCj+S80
-         Tuvg==
-X-Gm-Message-State: AOAM532UlVJqIXU/21Mc1cI37Mc1E21Zj/IjahCA+SSrq8cahnjgQHD3
-        fTD1JDoO+VMTN5bC74PDoLxNXA==
-X-Google-Smtp-Source: ABdhPJzFGf3zdAH2lmOL+oV+0KAfuNbBFFTLvoCLw3Vpzi0gDjZEe/FxPo59Sd/M81CmJjESIzVUVw==
-X-Received: by 2002:a17:90a:f508:: with SMTP id cs8mr1719058pjb.16.1592293789402;
-        Tue, 16 Jun 2020 00:49:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m22sm17139899pfk.216.2020.06.16.00.49.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=hymiFj42whdy2D05bhHghrqvNPgonrcbk2GbFm3EsyI=;
+        b=MbAbw4Z3Ga3dsr74DrKZOohQTIJpHJUtJU1ke1qt6m2ytE0G2gXXb8oHOTRUFxoRT/
+         DrprNTie+7DBjoBm5y/M6vigEeOdtZqxwTdyNpPfiNLBpKJMemazPdqmqeadlJoAuSy/
+         UTw5IcPqlNkv1otOgxvYUqI1wo1XSjZxUkTV9uMBlrsa3CCfpisByf206RlFctfFhIzY
+         RG4OsMBi4wsb+StTW0/M970Ny5Q2+CXwEzOunVvcWc7kUz0FzYdypjkymUJpjiRNQRmf
+         bctjk3XHerYwOFpz175+IQl7QZ0uDmR4MttFqkNkiQ8AXHw/Lz97D5iFuDxQpKAmCmGO
+         XNJA==
+X-Gm-Message-State: AOAM5316+BMX4e3+f/JBcPienwMugWNxh735VJj80t92Fvo+xlIAhNNR
+        M+KNsuA1VQhRKwSzOWP9b/eIeg==
+X-Google-Smtp-Source: ABdhPJyJE2ecymVAnnpMx8JwXvxakKaTc+cHmhmj6xoqwH9R6Zju+NCUJsZ1oJjUnMfzMDAdkGqUiA==
+X-Received: by 2002:aa7:9289:: with SMTP id j9mr1077179pfa.124.1592293786493;
         Tue, 16 Jun 2020 00:49:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 140sm16357711pfz.154.2020.06.16.00.49.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 00:49:42 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -74,9 +74,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Hehuazhen <hehuazhen@huawei.com>, x86@kernel.org,
         Linux Containers <containers@lists.linux-foundation.org>,
         linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 6/8] x86: Provide API for local kernel TLB flushing
-Date:   Tue, 16 Jun 2020 00:49:32 -0700
-Message-Id: <20200616074934.1600036-7-keescook@chromium.org>
+Subject: [PATCH 4/8] seccomp: Implement constant action bitmaps
+Date:   Tue, 16 Jun 2020 00:49:30 -0700
+Message-Id: <20200616074934.1600036-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200616074934.1600036-1-keescook@chromium.org>
 References: <20200616074934.1600036-1-keescook@chromium.org>
@@ -87,60 +87,441 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The seccomp constant action bitmap filter evaluation routine depends
-on being able to quickly clear the PTE "accessed" bit for a temporary
-allocation. Provide access to the existing CPU-local kernel memory TLB
-flushing routines.
+One of the most common pain points with seccomp filters has been dealing
+with the overhead of processing the filters, especially for "always allow"
+or "always reject" cases. While BPF is extremely fast[1], it will always
+have overhead associated with it. Additionally, due to seccomp's design,
+filters are layered, which means processing time goes up as the number
+of filters attached goes up.
+
+In the past, efforts have been focused on making filter execution complete
+in a shorter amount of time. For example, filters were rewritten from
+using linear if/then/else syscall search to using balanced binary trees,
+or moving tests for syscalls common to the process's workload to the
+front of the filter. However, there are limits to this, especially when
+some processes are dealing with tens of filters[2], or when some
+architectures have a less efficient BPF engine[3].
+
+The most common use of seccomp, constructing syscall block/allow-lists,
+where syscalls that are always allowed or always rejected (without regard
+to any arguments), also tends to produce the most pathological runtime
+problems, in that a large number of syscall checks in the filter need
+to be performed to come to a determination.
+
+In order to optimize these cases from O(n) to O(1), seccomp can
+use bitmaps to immediately determine the desired action. A critical
+observation in the prior paragraph bears repeating: the common case for
+syscall tests do not check arguments. For any given filter, there is a
+constant mapping from the combination of architecture and syscall to the
+seccomp action result. (For kernels/architectures without CONFIG_COMPAT,
+there is a single architecture.). As such, it is possible to construct
+a mapping of arch/syscall to action, which can be updated as new filters
+are attached to a process.
+
+In order to build this mapping at filter attach time, each filter is
+executed for every syscall (under each possible architecture), and
+checked for any accesses of struct seccomp_data that are not the "arch"
+nor "nr" (syscall) members. If only "arch" and "nr" are examined, then
+there is a constant mapping for that syscall, and bitmaps can be updated
+accordingly. If any accesses happen outside of those struct members,
+seccomp must not bypass filter execution for that syscall, since program
+state will be used to determine filter action result.
+
+During syscall action probing, in order to determine whether other members
+of struct seccomp_data are being accessed during a filter execution,
+the struct is placed across a page boundary with the "arch" and "nr"
+members in the first page, and everything else in the second page. The
+"page accessed" flag is cleared in the second page's PTE, and the filter
+is run. If the "page accessed" flag appears as set after running the
+filter, we can determine that the filter looked beyond the "arch" and
+"nr" members, and exclude that syscall from the constant action bitmaps.
+
+For architectures to support this optimization, they must declare
+their architectures for seccomp to see (via SECCOMP_ARCH and
+SECCOMP_ARCH_COMPAT macros), and provide a way to perform efficient
+CPU-local kernel TLB flushes (via local_flush_tlb_kernel_range()),
+and then set HAVE_ARCH_SECCOMP_BITMAP in their Kconfig.
+
+Areas needing more attention:
+
+On x86, this currently adds 168 bytes (or 336 bytes under CONFIG_COMPAT)
+to the size of task_struct. Allocating these on demand may be a better
+use of memory, but may not result in good cache locality.
+
+For architectures with "synthetic" architectures, like x86_x32,
+additional work is needed. It should be possible to define a simple
+mechanism based on the masking done in the x86 syscall entry path to
+create another set of bitmaps for seccomp to key off of. I am, however,
+considering just leaving HAVE_ARCH_SECCOMP_BITMAP depend on !X86_X32.
+
+[1] https://lore.kernel.org/bpf/20200531171915.wsxvdjeetmhpsdv2@ast-mbp.dhcp.thefacebook.com/
+[2] https://lore.kernel.org/bpf/20200601101137.GA121847@gardel-login/
+[3] https://lore.kernel.org/bpf/717a06e7f35740ccb4c70470ec70fb2f@huawei.com/
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/tlbflush.h |  2 ++
- arch/x86/mm/tlb.c               | 12 +++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
+ arch/Kconfig            |   7 ++
+ include/linux/seccomp.h |  15 +++
+ kernel/seccomp.c        | 227 +++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 246 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 8c87a2e0b660..ae853e77d6bc 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -228,6 +228,8 @@ extern void flush_tlb_all(void);
- extern void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 				unsigned long end, unsigned int stride_shift,
- 				bool freed_tables);
-+extern void local_flush_tlb_kernel_range(unsigned long start,
-+					 unsigned long end);
- extern void flush_tlb_kernel_range(unsigned long start, unsigned long end);
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 8cc35dc556c7..4e692b7a4435 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -465,6 +465,13 @@ config SECCOMP_FILTER
  
- static inline void flush_tlb_page(struct vm_area_struct *vma, unsigned long a)
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 1a3569b43aa5..ffcf2bd0ce1c 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -959,16 +959,22 @@ void flush_tlb_all(void)
- 	on_each_cpu(do_flush_tlb_all, NULL, 1);
- }
+ 	  See Documentation/userspace-api/seccomp_filter.rst for details.
  
--static void do_kernel_range_flush(void *info)
-+void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
--	struct flush_tlb_info *f = info;
- 	unsigned long addr;
- 
- 	/* flush range by one by one 'invlpg' */
--	for (addr = f->start; addr < f->end; addr += PAGE_SIZE)
-+	for (addr = start; addr < end; addr += PAGE_SIZE)
- 		flush_tlb_one_kernel(addr);
- }
- 
-+static void do_kernel_range_flush(void *info)
-+{
-+	struct flush_tlb_info *f = info;
++config HAVE_ARCH_SECCOMP_BITMAP
++	bool
++	help
++	  An arch should select this symbol if it provides all of these things:
++	  - SECCOMP_ARCH (and SECCOMP_ARCH_COMPAT if appropriate)
++	  - local_flush_tlb_kernel_range()
 +
-+	local_flush_tlb_kernel_range(f->start, f->end);
+ config HAVE_ARCH_STACKLEAK
+ 	bool
+ 	help
+diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
+index 6525ddec177a..31ee2d6f4ec0 100644
+--- a/include/linux/seccomp.h
++++ b/include/linux/seccomp.h
+@@ -16,6 +16,17 @@
+ #include <linux/atomic.h>
+ #include <asm/seccomp.h>
+ 
++/* When no bits are set for a syscall, filters are run. */
++struct seccomp_bitmaps {
++#ifdef CONFIG_HAVE_ARCH_SECCOMP_BITMAP
++	/* "allow" are initialized to set and only ever get cleared. */
++	DECLARE_BITMAP(allow, NR_syscalls);
++	/* These are initialized to clear and only ever get set. */
++	DECLARE_BITMAP(kill_thread, NR_syscalls);
++	DECLARE_BITMAP(kill_process, NR_syscalls);
++#endif
++};
++
+ struct seccomp_filter;
+ /**
+  * struct seccomp - the state of a seccomp'ed process
+@@ -35,6 +46,10 @@ struct seccomp {
+ #endif
+ 	atomic_t filter_count;
+ 	struct seccomp_filter *filter;
++	struct seccomp_bitmaps native;
++#ifdef CONFIG_COMPAT
++	struct seccomp_bitmaps compat;
++#endif
+ };
+ 
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 43edf53c2d84..2fbe7d2260f7 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -44,6 +44,11 @@
+ #include <linux/anon_inodes.h>
+ #include <linux/lockdep.h>
+ 
++#ifdef CONFIG_HAVE_ARCH_SECCOMP_BITMAP
++#include <linux/pgtable.h>
++#include <asm/tlbflush.h>
++#endif
++
+ enum notify_state {
+ 	SECCOMP_NOTIFY_INIT,
+ 	SECCOMP_NOTIFY_SENT,
+@@ -476,6 +481,16 @@ static inline void seccomp_sync_threads(unsigned long flags)
+ 		atomic_set(&thread->seccomp.filter_count,
+ 			   atomic_read(&thread->seccomp.filter_count));
+ 
++		/* Copy syscall filter bitmaps. */
++		memcpy(&thread->seccomp.native,
++		       &caller->seccomp.native,
++		       sizeof(caller->seccomp.native));
++#ifdef CONFIG_COMPAT
++		memcpy(&thread->seccomp.compat,
++		       &caller->seccomp.compat,
++		       sizeof(caller->seccomp.compat));
++#endif
++
+ 		/*
+ 		 * Don't let an unprivileged task work around
+ 		 * the no_new_privs restriction by creating
+@@ -578,6 +593,144 @@ seccomp_prepare_user_filter(const char __user *user_filter)
+ 	return filter;
+ }
+ 
++static inline bool sd_touched(pte_t *ptep)
++{
++	return !!pte_young(*(READ_ONCE(ptep)));
 +}
 +
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
++#ifdef CONFIG_HAVE_ARCH_SECCOMP_BITMAP
++/*
++ * We can build bitmaps only when an arch/nr combination reads nothing more
++ * that sd->nr and sd->arch, since those have a constant mapping to the
++ * syscall. To do this, we can run the filters for each syscall number, and
++ * examine the page table entry that is aligned to everything past sd->arch,
++ * checking for the ACCESSED flag.
++ *
++ * This approach could also be used to test for access to sd->arch too,
++ * if we wanted to warn about compat-unsafe filters.
++ */
++static void seccomp_update_bitmap(struct seccomp_filter *filter,
++				  void *pagepair, u32 arch,
++				  struct seccomp_bitmaps *bitmaps)
++{
++	struct seccomp_data *sd;
++	unsigned long vaddr;
++	u32 nr, ret;
++	pte_t *ptep;
++	u64 check;
++
++	/* Initialize bitmaps for first filter. */
++	if (!filter->prev)
++		bitmap_fill(bitmaps->allow, NR_syscalls);
++	/*
++	 * Prepare to detect memory accesses: find the PTE for the second page
++	 * in the page pair.
++	 */
++	vaddr = (unsigned long)(pagepair + PAGE_SIZE);
++	ptep = virt_to_kpte(vaddr);
++	/*
++	 * Split struct seccomp_data across two pages, with everything after
++	 * sd->arch (i.e. starting with sd->instruction_pointer), in the second
++	 * page of the page pair.
++	 */
++	sd = pagepair + PAGE_SIZE - offsetof(struct seccomp_data, instruction_pointer);
++
++	/* Mark the second page as untouched (i.e. "old") */
++	preempt_disable();
++	set_pte_at(&init_mm, vaddr, ptep, pte_mkold(*(READ_ONCE(ptep))));
++	local_flush_tlb_kernel_range(vaddr, vaddr + PAGE_SIZE);
++	preempt_enable();
++	/* Make sure the PTE agrees that it is untouched. */
++	if (WARN_ON_ONCE(sd_touched(ptep)))
++		return;
++	/* Read a portion of struct seccomp_data from the second page. */
++	check = sd->instruction_pointer;
++	/* First, verify the contents are zero from vzalloc(). */
++	if (WARN_ON_ONCE(check))
++		return;
++	/* Now make sure the ACCESSED bit has been set after the read. */
++	if (!sd_touched(ptep)) {
++		/*
++		 * If autodetection fails, fall back to standard beahavior by
++		 * clearing the entire "allow" bitmap.
++		 */
++		pr_warn_once("seccomp: cannot build automatic syscall filters\n");
++		bitmap_zero(bitmaps->allow, NR_syscalls);
++		return;
++	}
++
++	/*
++	 * For every syscall, if we don't already know we need to run
++	 * the full filter, simulate the filter with our static values.
++	 */
++	for (nr = 0; nr < NR_syscalls; nr++) {
++		/* Are we already at the maximal rejection state? */
++		if (test_bit(nr, bitmaps->kill_process))
++			continue;
++
++		sd->nr = nr;
++		sd->arch = arch;
++
++		/* Do we need to reset the ACCESSED bit? */
++		if (sd_touched(ptep)) {
++			preempt_disable();
++			set_pte_at(&init_mm, vaddr, ptep, pte_mkold(*(READ_ONCE(ptep))));
++			local_flush_tlb_kernel_range(vaddr, vaddr + PAGE_SIZE);
++			preempt_enable();
++		}
++
++		/* Evaluate filter for this syscall. */
++		ret = bpf_prog_run_pin_on_cpu(filter->prog, sd);
++		/*
++		 * If this run through the filter didn't access
++		 * beyond "arch", we know the result is a constant
++		 * mapping for arch/nr -> ret.
++		 */
++		if (!sd_touched(ptep)) {
++			/* Constant evaluation. Mark appropriate bitmaps. */
++			switch (ret) {
++			case SECCOMP_RET_KILL_PROCESS:
++				set_bit(nr, bitmaps->kill_process);
++				break;
++			case SECCOMP_RET_KILL_THREAD:
++				set_bit(nr, bitmaps->kill_thread);
++				break;
++			default:
++				break;
++			case SECCOMP_RET_ALLOW:
++				/*
++				 * If we always map to allow, there are
++				 * no changes needed to the bitmaps.
++				 */
++				continue;
++			}
++		}
++
++		/*
++		 * Dynamic evaluation of syscall, or non-allow constant
++		 * mapping to something other than SECCOMP_RET_ALLOW: we
++		 * must not short-circuit-allow it anymore.
++		 */
++		clear_bit(nr, bitmaps->allow);
++	}
++}
++
++static void seccomp_update_bitmaps(struct seccomp_filter *filter,
++				   void *pagepair)
++{
++	seccomp_update_bitmap(filter, pagepair, SECCOMP_ARCH,
++			      &current->seccomp.native);
++#ifdef CONFIG_COMPAT
++	seccomp_update_bitmap(filter, pagepair, SECCOMP_ARCH_COMPAT,
++			      &current->seccomp.compat);
++#endif
++}
++#else
++static void seccomp_update_bitmaps(struct seccomp_filter *filter,
++				   void *pagepair)
++{ }
++#endif
++
+ /**
+  * seccomp_attach_filter: validate and attach filter
+  * @flags:  flags to change filter behavior
+@@ -591,7 +744,8 @@ seccomp_prepare_user_filter(const char __user *user_filter)
+  *   - in NEW_LISTENER mode: the fd of the new listener
+  */
+ static long seccomp_attach_filter(unsigned int flags,
+-				  struct seccomp_filter *filter)
++				  struct seccomp_filter *filter,
++				  void *pagepair)
  {
- 	/* Balance as user space task's flush, a bit conservative */
+ 	unsigned long total_insns;
+ 	struct seccomp_filter *walker;
+@@ -630,6 +784,9 @@ static long seccomp_attach_filter(unsigned int flags,
+ 	current->seccomp.filter = filter;
+ 	atomic_inc(&current->seccomp.filter_count);
+ 
++	/* Evaluate filter for new known-outcome syscalls */
++	seccomp_update_bitmaps(filter, pagepair);
++
+ 	/* Now that the new filter is in place, synchronize to all threads. */
+ 	if (flags & SECCOMP_FILTER_FLAG_TSYNC)
+ 		seccomp_sync_threads(flags);
+@@ -857,6 +1014,56 @@ static int seccomp_do_user_notification(int this_syscall,
+ 	return -1;
+ }
+ 
++#ifdef CONFIG_HAVE_ARCH_SECCOMP_BITMAP
++static inline bool __bypass_filter(struct seccomp_bitmaps *bitmaps,
++				   u32 nr, u32 *filter_ret)
++{
++	if (nr < NR_syscalls) {
++		if (test_bit(nr, current->seccomp.native.allow)) {
++			*filter_ret = SECCOMP_RET_ALLOW;
++			return true;
++		}
++		if (test_bit(nr, current->seccomp.native.kill_process)) {
++			*filter_ret = SECCOMP_RET_KILL_PROCESS;
++			return true;
++		}
++		if (test_bit(nr, current->seccomp.native.kill_thread)) {
++			*filter_ret = SECCOMP_RET_KILL_THREAD;
++			return true;
++		}
++	}
++	return false;
++}
++
++static inline u32 check_syscall(const struct seccomp_data *sd,
++				struct seccomp_filter **match)
++{
++	u32 filter_ret = SECCOMP_RET_KILL_PROCESS;
++
++#ifdef CONFIG_COMPAT
++	if (sd->arch == SECCOMP_ARCH) {
++#endif
++		if (__bypass_filter(&current->seccomp.native, sd->nr, &filter_ret))
++			return filter_ret;
++#ifdef CONFIG_COMPAT
++	} else if (sd->arch == SECCOMP_ARCH_COMPAT) {
++		if (__bypass_filter(&current->seccomp.compat, sd->nr, &filter_ret))
++			return filter_ret;
++	} else {
++		WARN_ON_ONCE(1);
++		return filter_ret;
++	}
++#endif
++	return seccomp_run_filters(sd, match);
++}
++#else
++static inline u32 check_syscall(const struct seccomp_data *sd,
++				struct seccomp_filter **match)
++{
++	return seccomp_run_filters(sd, match);
++}
++#endif
++
+ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
+ 			    const bool recheck_after_trace)
+ {
+@@ -876,7 +1083,7 @@ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
+ 		sd = &sd_local;
+ 	}
+ 
+-	filter_ret = seccomp_run_filters(sd, &match);
++	filter_ret = check_syscall(sd, &match);
+ 	data = filter_ret & SECCOMP_RET_DATA;
+ 	action = filter_ret & SECCOMP_RET_ACTION_FULL;
+ 
+@@ -1346,6 +1553,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
+ 	long ret = -EINVAL;
+ 	int listener = -1;
+ 	struct file *listener_f = NULL;
++	void *pagepair;
+ 
+ 	/* Validate flags. */
+ 	if (flags & ~SECCOMP_FILTER_FLAG_MASK)
+@@ -1391,12 +1599,24 @@ static long seccomp_set_mode_filter(unsigned int flags,
+ 	    mutex_lock_killable(&current->signal->cred_guard_mutex))
+ 		goto out_put_fd;
+ 
++	/*
++	 * This memory will be needed for bitmap testing, but we'll
++	 * be holding a spinlock at that point. Do the allocation
++	 * (and free) outside of the lock.
++	 *
++	 * Alternative: we could do the bitmap update before attach
++	 * to avoid spending too much time under lock.
++	 */
++	pagepair = vzalloc(PAGE_SIZE * 2);
++	if (!pagepair)
++		goto out_put_fd;
++
+ 	spin_lock_irq(&current->sighand->siglock);
+ 
+ 	if (!seccomp_may_assign_mode(seccomp_mode))
+ 		goto out;
+ 
+-	ret = seccomp_attach_filter(flags, prepared);
++	ret = seccomp_attach_filter(flags, prepared, pagepair);
+ 	if (ret)
+ 		goto out;
+ 	/* Do not free the successfully attached filter. */
+@@ -1405,6 +1625,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
+ 	seccomp_assign_mode(current, seccomp_mode, flags);
+ out:
+ 	spin_unlock_irq(&current->sighand->siglock);
++	vfree(pagepair);
+ 	if (flags & SECCOMP_FILTER_FLAG_TSYNC)
+ 		mutex_unlock(&current->signal->cred_guard_mutex);
+ out_put_fd:
 -- 
 2.25.1
 
