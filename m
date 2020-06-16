@@ -2,143 +2,120 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2685C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F782082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592343603;
-	bh=NAcC0C5+lhAkJJBBDMO+UHb5TJKRWin2TviSHE2JPPM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0wxSmJiEcfRO83Dm+KgXMUG7HtYnWzn7/hJ2Bjx2AIRRkxcvRNlXXLS9PG9UevT+T
-	 X5/ueAYEVIgHNPUjlKUiRGHTa6r3O/QLaWMIDWz6SzjtKYNNDmbEINQWrQ/zWkNZde
-	 h3OQXjRAySna//irKqaBkEALIrSNPBQguC/mFu5Q=
+	by mail.kernel.org (Postfix) with ESMTP id 8E4AF2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+eaAvVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgFPVj7 (ORCPT
+        id S1726364AbgFPVkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgFPVj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:39:58 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A742082E;
-        Tue, 16 Jun 2020 21:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592343598;
-        bh=NAcC0C5+lhAkJJBBDMO+UHb5TJKRWin2TviSHE2JPPM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lZ+vVY98S3MdQSrzT7nf8/jg2P0oOocyAto8BzVR96Ti+4lwAl7q/9m+10hINfM9u
-         LrF0pCBZabIwXnZHACZ+2Hwcofw+zdq3R4f/o620KS7tOyZp+Iwbzcy/Da5x6QIXND
-         46h54xMlmpCise5E7WEG12r2zcRmfOKR8Uy6w4fg=
-Date:   Tue, 16 Jun 2020 22:39:53 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] arm64/module: Optimize module load time by optimizing
- PLT counting
-Message-ID: <20200616213953.GA2561@willie-the-truck>
-References: <20200605222257.44882-1-saravanak@google.com>
+        Tue, 16 Jun 2020 17:40:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgFPVkw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 17:40:52 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAF4C061573;
+        Tue, 16 Jun 2020 14:40:52 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x11so3608890plo.7;
+        Tue, 16 Jun 2020 14:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+dajMWjezIJ0QoGB+YVGjkIeaVfvA1ZzMYeFQHxUYCY=;
+        b=G+eaAvVoxKV4s+UrluTAMDCCoQ3u5InSeKWKwrY/m8A9W8k7DbebILXdxDP2iEvG1w
+         Dx3ueS+WBJFUS4KqcBlzHZK3g0OyHhdNB90HprruUOF44s4YF56endRnFxcQsLBCcHIT
+         25htvqS0mTSn9m6xpqwBwWgRbYSVJ7wIySdiWdaujhZ0T1+LNg0b/xJK+YT/Qd3ROMpK
+         ZTpIBogDLhUbbSe9q+6du5LZXYw5mnxPvt4lJphHKaLVTars0IwQE8mAaHXJaopaqezc
+         7nwKWyF9iiyY38FAnSyh0P0C4T34AUOb6NU7rTa2cGsAw/dkW+qCjaKSt0wz+bK9Jy/r
+         CBAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+dajMWjezIJ0QoGB+YVGjkIeaVfvA1ZzMYeFQHxUYCY=;
+        b=VJp9w/Hz2Bp0tTtWgyzsNuzvtSHt2ZEHg2ZLAlhLwNW2JwLAoiXq9qblKm6OvOrB/n
+         7h6gKbn3M1/KO/VJtedzm48EU2srsTZSPP87oRQWyG6yWapojDZiMEBSpSJnE3if882n
+         HNQJCd6nLD23cQFpooPIMJt7XxglLsdWUFcVG4oKIrQtRAmyOPo7839vyr/YP0fKtTMk
+         EKCwX8NBIeq9LlByVDuHMpSNe+HXVdKJFe4mnvuKZapjZzwT75C6UdRcwFemn5gxFfuB
+         ZhS15H6kivLPJpUjtGg+49hIJ3yE8D+mHpWLSXUf/ueuxxi4qQDcFj9/7OYtjk3uLbLX
+         4s4w==
+X-Gm-Message-State: AOAM531c3G0pFGgzQyCpkmLpKTUEIh7vHybQViFh7/SR90FGkZq1/Rzo
+        pw1px3TSbvGzpRJplbyMRePshsI/XvN4obBkfkSQAfoW
+X-Google-Smtp-Source: ABdhPJw+5RcNqV+etOo/4A14LjCKQKf1PiP/HW80zQ3wk0qQ/kI//YDPYeANKr3EqL380La+nt7/YUkbRD/WEM4OPWM=
+X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr4582038pjr.181.1592343651550;
+ Tue, 16 Jun 2020 14:40:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605222257.44882-1-saravanak@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com> <20200616200225.32mwzew3zw3nuiwh@mobilestation>
+In-Reply-To: <20200616200225.32mwzew3zw3nuiwh@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 17 Jun 2020 00:40:35 +0300
+Message-ID: <CAHp75VfZMx8ip=Bo=gZQiGufJvh=7dtr61C3ZcZjETFrErTk6Q@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 03:22:57PM -0700, Saravana Kannan wrote:
-> When loading a module, module_frob_arch_sections() tries to figure out
-> the number of PLTs that'll be needed to handle all the RELAs. While
-> doing this, it tries to dedupe PLT allocations for multiple
-> R_AARCH64_CALL26 relocations to the same symbol. It does the same for
-> R_AARCH64_JUMP26 relocations too.
-> 
-> To make checks for duplicates easier/faster, it sorts the relocation
-> list by type, symbol and addend. That way, to check for a duplicate
-> relocation, it just needs to compare with the previous entry.
-> 
-> However, sorting the entire relocation array is unnecessary and
-> expensive (O(n log n)) because there are a lot of other relocation types
-> that don't need deduping or can't be deduped.
-> 
-> So this commit partitions the array into entries that need deduping and
-> those that don't. And then sorts just the part that needs deduping. And
-> when CONFIG_RANDOMIZE_BASE is disabled, the sorting is skipped entirely
-> because PLTs are not allocated for R_AARCH64_CALL26 and R_AARCH64_JUMP26
-> if it's disabled.
-> 
-> This gives significant reduction in module load time for modules with
-> large number of relocations with no measurable impact on modules with a
-> small number of relocations. In my test setup with CONFIG_RANDOMIZE_BASE
-> enabled, the load time for one module went down from 268ms to 100ms.
-> Another module went down from 143ms to 83ms.
+On Tue, Jun 16, 2020 at 11:03 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
+> > Some devices would need to have a hierarchy of properties and
+> > child nodes passed to the child or children of MFD. For such case
+> > we may utilize software nodes, which is superior on device properties.
+> >
+> > Add support of software nodes to MFD core and convert one driver
+> > to show how it looks like. This allows to get rid of legacy platform
+> > data.
+> >
+> > The change has been tested on Intel Galileo Gen 2.
+>
+> I am wondering whether we could move the {gpio_base, ngpio, irq_shared}
+> part into the gpio-dwapb.c driver and use either the ACPI-based or
+> platform_device_id-based matching to get the device-specific resources
+> info through the driver_data field. By doing so you wouldn't need to
+> introduce a new "snps,gpio-base"-like property and propagate
+> software_node-based properties, but still you could get rid of the
+> dwapb_platform_data structure since all the info would be locally
+> available.
 
-Whilst I can see that's a significant relative saving, what proportion of
-actual boot time are we talking about here? It would be interesting to
-know if there are bigger potential savings elsewhere.
+The idea is to get rid of the driver being dependent on some quirks
+when we may do it clearly and nicely.
+We, by applying this series, make (keep) layers independent: board
+code vs. driver code. Mixing them more is the opposite to what I
+propose.
 
-> This commit also disables the sorting if CONFIG_RANDOMIZE_BASE is
-> disabled because it looks like PLTs are not allocated for
-> R_AARCH64_CALL26 and R_AARCH64_JUMP26 if it's disabled.
-> 
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  arch/arm64/kernel/module-plts.c | 37 ++++++++++++++++++++++++++++++++-
->  1 file changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
-> index 65b08a74aec6..bf5118b3b828 100644
-> --- a/arch/arm64/kernel/module-plts.c
-> +++ b/arch/arm64/kernel/module-plts.c
-> @@ -253,6 +253,36 @@ static unsigned int count_plts(Elf64_Sym *syms, Elf64_Rela *rela, int num,
->  	return ret;
->  }
->  
-> +static bool rela_needs_dedup(Elf64_Rela *rela)
-> +{
-> +	return ELF64_R_TYPE(rela->r_info) == R_AARCH64_JUMP26
-> +	       || ELF64_R_TYPE(rela->r_info) == R_AARCH64_CALL26;
-> +}
+WRT property.
+snps,gpio-base can be easily changed to *already in use* gpio-base or
+being both converted to linux,gpio-base to explicitly show people that
+this is internal stuff that must not be present in firmware nodes.
 
-Does this handle A53 erratum 843419 correctly? I'm worried that we skip
-the ADRP PLTs there.
+> If ACPI-based matching doesn't uniquely address the Quark GPIO node,
+> then you could just replace the intel_quark_mfd_cells[0].name with
+> something like "gpio-dwapb-quark", which then by the MFD core will be
+> copied to the corresponding platform_device->name due to calling
+> platform_device_alloc() with cell-name passed. That name will be used
+> to match a platform_driver with id_table having that new name added.
 
-> +
-> +/* Group the CALL26/JUMP26 relas toward the beginning of the array. */
-> +static int partition_dedup_relas(Elf64_Rela *rela, int numrels)
-> +{
-> +	int i = 0, j = numrels - 1;
-> +	Elf64_Rela t;
-> +
-> +	while (i < j) {
-> +		while (rela_needs_dedup(rela + i) && i < j)
-> +			i++;
-> +		while (!rela_needs_dedup(rela + j) && i < j)
-> +			j--;
-> +		if (i < j) {
-> +			t = *(rela + j);
-> +			*(rela + j) = *(rela + i);
-> +			*(rela + i) = t;
-> +		}
-> +	}
+Oh, that doesn't sound right. It makes things ugly.
 
-This is very hard to read and I think some of the 'i < j' comparisons are
-redundant. Would it make more sense to assign a temporary rather than
-post-inc/decrement and recheck?
-
-Will
+-- 
+With Best Regards,
+Andy Shevchenko
