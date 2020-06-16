@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1091C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC15C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D39A21531
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E7420C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321900;
-	bh=338AucczY2mLow4d9IdceneS8Dm9fzEUvS1ZacGLH8w=;
+	s=default; t=1592321902;
+	bh=8oOdO8G5uDNdbKO90o2ZU39T1Bp6Ti8hqZkMXc9pX6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LaqfaQauXlqP18mBW5L6CTIa/uUwGZOT7Fw2zUfz7wWdwYAfdapgPPA3v7KT+XY34
-	 BsrKmn3NVTHrpTs5orM7BSDV8wJvzrH2FfI7bs7c9Ma4sbqgFp+3x6mRDWyg5coDKH
-	 cTUbR3/IyajHUQ/uxGz4FOw8ftZafQVvJDWKYZaE=
+	b=SzhFOhw1duWQ5PbFt9rgOMh6+49MGSamSnqKJw8gsKg1mYlqfNsFEjSJZp5IfFMV4
+	 eVhhFfbOoScrT7olWDBpWF48MxvEApLKMTpjr2LR3TxdC+jduH8o5FpAWgWMMPnpAz
+	 xPDWk44AwigxA9uaV+npYen8+FTnq6+mCpj3D9N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730608AbgFPPiT (ORCPT
+        id S1730622AbgFPPiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:38:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730552AbgFPPiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:38:09 -0400
+        id S1730567AbgFPPiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:38:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A0E620C56;
-        Tue, 16 Jun 2020 15:38:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF95820C56;
+        Tue, 16 Jun 2020 15:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321888;
-        bh=338AucczY2mLow4d9IdceneS8Dm9fzEUvS1ZacGLH8w=;
+        s=default; t=1592321891;
+        bh=8oOdO8G5uDNdbKO90o2ZU39T1Bp6Ti8hqZkMXc9pX6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WG5k+/gNvwmslUD03xANP6dOwfJDSbTiUvpnwhl9L4SH7FqHvOzLGnxR2+L56zBvS
-         5YG+ER5ulsOenjD4BWKJVuMdrgt/1A0i2tbH2KraRODo4MdujbAPlOMx1dbLUoa8l/
-         bA5LQV0gjdkJxlSA4klhJcvsnNAJIQrT+G/wb2AI=
+        b=KlyOkRLjAVFooyhsy/zKVOv2Qk7dVEmA1J/u6BA9MFi/062aS/VD4VOw4fsMRpXGL
+         /ROao15HpjOF0cpmiikmKWbvkwNm2ORiaQZgO29BeZqL0mR8A0/5WNauWE/aYyz0dI
+         DuuEU+2vxQlWgGa+4be/pomkImmeyA54HQmhpOg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 055/134] ALSA: es1688: Add the missed snd_card_free()
-Date:   Tue, 16 Jun 2020 17:33:59 +0200
-Message-Id: <20200616153103.409759933@linuxfoundation.org>
+Subject: [PATCH 5.4 056/134] ALSA: fireface: fix configuration error for nominal sampling transfer frequency
+Date:   Tue, 16 Jun 2020 17:34:00 +0200
+Message-Id: <20200616153103.456589269@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,37 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit d9b8fbf15d05350b36081eddafcf7b15aa1add50 upstream.
+commit bbd6aac3ae15bef762af03bf62e35ace5c4292bd upstream.
 
-snd_es968_pnp_detect() misses a snd_card_free() in a failed path.
-Add the missed function call to fix it.
+128000 and 192000 are congruence modulo 32000, thus it's wrong to
+distinguish them as multiple of 32000 and 48000 by modulo 32000 at
+first.
 
-Fixes: a20971b201ac ("ALSA: Merge es1688 and es968 drivers")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Additionally, used condition statement to detect quadruple speed can
+cause missing bit flag.
+
+Furthermore, counter to ensure the configuration is wrong and it
+causes false positive.
+
+This commit fixes the above three bugs.
+
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603092459.1424093-1-hslester96@gmail.com
+Fixes: 60aec494b389 ("ALSA: fireface: support allocate_resources operation in latter protocol")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200510074301.116224-2-o-takashi@sakamocchi.jp
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/isa/es1688/es1688.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/firewire/fireface/ff-protocol-latter.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/sound/isa/es1688/es1688.c
-+++ b/sound/isa/es1688/es1688.c
-@@ -267,8 +267,10 @@ static int snd_es968_pnp_detect(struct p
- 		return error;
+--- a/sound/firewire/fireface/ff-protocol-latter.c
++++ b/sound/firewire/fireface/ff-protocol-latter.c
+@@ -107,18 +107,18 @@ static int latter_allocate_resources(str
+ 	int err;
+ 
+ 	// Set the number of data blocks transferred in a second.
+-	if (rate % 32000 == 0)
+-		code = 0x00;
++	if (rate % 48000 == 0)
++		code = 0x04;
+ 	else if (rate % 44100 == 0)
+ 		code = 0x02;
+-	else if (rate % 48000 == 0)
+-		code = 0x04;
++	else if (rate % 32000 == 0)
++		code = 0x00;
+ 	else
+ 		return -EINVAL;
+ 
+ 	if (rate >= 64000 && rate < 128000)
+ 		code |= 0x08;
+-	else if (rate >= 128000 && rate < 192000)
++	else if (rate >= 128000)
+ 		code |= 0x10;
+ 
+ 	reg = cpu_to_le32(code);
+@@ -140,7 +140,7 @@ static int latter_allocate_resources(str
+ 		if (curr_rate == rate)
+ 			break;
  	}
- 	error = snd_es1688_probe(card, dev);
--	if (error < 0)
-+	if (error < 0) {
-+		snd_card_free(card);
- 		return error;
-+	}
- 	pnp_set_card_drvdata(pcard, card);
- 	snd_es968_pnp_is_probed = 1;
- 	return 0;
+-	if (count == 10)
++	if (count > 10)
+ 		return -ETIMEDOUT;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(amdtp_rate_table); ++i) {
 
 
