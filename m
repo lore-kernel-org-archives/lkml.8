@@ -2,51 +2,57 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF109C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C83C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8363C214F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6525421501
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322630;
-	bh=EASFF+si7Jeiw9r8N0JD86TinU8vNlBUIXAnCbib6X0=;
+	s=default; t=1592322635;
+	bh=oXxrqKU3RYuFHlbwhWmrhjiO0p/+PyjSyNfifVE7cVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xzK6I9UmP26H5amNVx4xzxSS0Msv+Qr2b84JB19RGUFOaSOldcVvYjmVQqDGqmLI9
-	 afpGTAs1w6rvsJ5VSIMMxiQ6+nZa+zoBEez9Cs3JvzVab+TtLAMhBtiNh7DGvz9mkp
-	 f8PnSlbv6FfNr3oNkM1GdtYKyWtAveB7QHmKagac=
+	b=ZbINngQdoL7WWtuECZeyVAdnYgrBOzifwx0CnUJPISMc5djyIGM68xPQPwqOMvJiL
+	 EfC46s1l69I56jalfrk5UDFZ+G3YdQEnChUaiDuKq9ARhbxzTEVaBedHi7vjkDstao
+	 ZJCUE2Uqk4tAxrgptUYNAbBFb7zz/ec+n8cK6m4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbgFPPu2 (ORCPT
+        id S1732130AbgFPPud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:50:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45706 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732587AbgFPPuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:50:12 -0400
+        id S1732392AbgFPPuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CDF42071A;
-        Tue, 16 Jun 2020 15:50:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E882720776;
+        Tue, 16 Jun 2020 15:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322611;
-        bh=EASFF+si7Jeiw9r8N0JD86TinU8vNlBUIXAnCbib6X0=;
+        s=default; t=1592322624;
+        bh=oXxrqKU3RYuFHlbwhWmrhjiO0p/+PyjSyNfifVE7cVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mBIyxlWW8XSiwgrXY6AC59uFyup0y0q6KvR1+lebtrKebfIXoob1g0+6AbXvrYwJu
-         sIa11LL4HqcdMYBK3PWf0tx7H5FJAJuRZxUQf/Fgt74y52sHNqaWWXPX/UaUVxRT3z
-         o7C5BdiFnJ+ZwXsrDnjWtXAydq9GCWVDeQVizr00=
+        b=iryt4ZX8sO4ZKPeDKNeQB1Quf2irXnvhbS/KfHgN1zWPHOydQ1GRxyL514frc75uV
+         5eZm6eJc0WjW/69sFGDdMFU+YVSFDPvUNM/KFEnarwEX/OlLMM1D0o36TGg4vOPgj+
+         NLvXwhYnMSrUPDnPqw8+tovHlyrgGn602DF5bMD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 008/161] net: ena: xdp: update napi budget for DROP and ABORTED
-Date:   Tue, 16 Jun 2020 17:33:18 +0200
-Message-Id: <20200616153106.807834339@linuxfoundation.org>
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 041/161] kobject: Make sure the parent does not get released before its children
+Date:   Tue, 16 Jun 2020 17:33:51 +0200
+Message-Id: <20200616153108.333633206@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,55 +65,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-[ Upstream commit 3921a81c31df6057183aeb7f7d204003bf699d6f ]
+[ Upstream commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa ]
 
-This patch fixes two issues with XDP:
+In the function kobject_cleanup(), kobject_del(kobj) is
+called before the kobj->release(). That makes it possible to
+release the parent of the kobject before the kobject itself.
 
-1. If the XDP verdict is XDP_ABORTED we break the loop, which results in
-   us handling one buffer per napi cycle instead of the total budget
-   (usually 64). To overcome this simply change the xdp_verdict check to
-   != XDP_PASS. When the verdict is XDP_PASS, the skb is not expected to
-   be NULL.
+To fix that, adding function __kboject_del() that does
+everything that kobject_del() does except release the parent
+reference. kobject_cleanup() then calls __kobject_del()
+instead of kobject_del(), and separately decrements the
+reference count of the parent kobject after kobj->release()
+has been called.
 
-2. Update the residual budget for XDP_DROP and XDP_ABORTED, since
-   packets are handled in these cases.
-
-Fixes: 548c4940b9f1 ("net: ena: Implement XDP_TX action")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/r/20200513151840.36400-1-heikki.krogerus@linux.intel.com
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ lib/kobject.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -1642,11 +1642,9 @@ static int ena_clean_rx_irq(struct ena_r
- 					 &next_to_clean);
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 83198cb37d8d..2bd631460e18 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
+ }
+ EXPORT_SYMBOL_GPL(kobject_move);
  
- 		if (unlikely(!skb)) {
--			if (xdp_verdict == XDP_TX) {
-+			if (xdp_verdict == XDP_TX)
- 				ena_free_rx_page(rx_ring,
- 						 &rx_ring->rx_buffer_info[rx_ring->ena_bufs[0].req_id]);
--				res_budget--;
--			}
- 			for (i = 0; i < ena_rx_ctx.descs; i++) {
- 				rx_ring->free_ids[next_to_clean] =
- 					rx_ring->ena_bufs[i].req_id;
-@@ -1654,8 +1652,10 @@ static int ena_clean_rx_irq(struct ena_r
- 					ENA_RX_RING_IDX_NEXT(next_to_clean,
- 							     rx_ring->ring_size);
- 			}
--			if (xdp_verdict == XDP_TX || xdp_verdict == XDP_DROP)
-+			if (xdp_verdict != XDP_PASS) {
-+				res_budget--;
- 				continue;
-+			}
- 			break;
- 		}
+-/**
+- * kobject_del() - Unlink kobject from hierarchy.
+- * @kobj: object.
+- *
+- * This is the function that should be called to delete an object
+- * successfully added via kobject_add().
+- */
+-void kobject_del(struct kobject *kobj)
++static void __kobject_del(struct kobject *kobj)
+ {
+ 	struct kernfs_node *sd;
+ 	const struct kobj_type *ktype;
+@@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
  
+ 	kobj->state_in_sysfs = 0;
+ 	kobj_kset_leave(kobj);
+-	kobject_put(kobj->parent);
+ 	kobj->parent = NULL;
+ }
++
++/**
++ * kobject_del() - Unlink kobject from hierarchy.
++ * @kobj: object.
++ *
++ * This is the function that should be called to delete an object
++ * successfully added via kobject_add().
++ */
++void kobject_del(struct kobject *kobj)
++{
++	struct kobject *parent = kobj->parent;
++
++	__kobject_del(kobj);
++	kobject_put(parent);
++}
+ EXPORT_SYMBOL(kobject_del);
+ 
+ /**
+@@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+  */
+ static void kobject_cleanup(struct kobject *kobj)
+ {
++	struct kobject *parent = kobj->parent;
+ 	struct kobj_type *t = get_ktype(kobj);
+ 	const char *name = kobj->name;
+ 
+@@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
+ 	if (kobj->state_in_sysfs) {
+ 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+ 			 kobject_name(kobj), kobj);
+-		kobject_del(kobj);
++		__kobject_del(kobj);
+ 	}
+ 
+ 	if (t && t->release) {
+@@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
+ 		pr_debug("kobject: '%s': free name\n", name);
+ 		kfree_const(name);
+ 	}
++
++	kobject_put(parent);
+ }
+ 
+ #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+-- 
+2.25.1
+
 
 
