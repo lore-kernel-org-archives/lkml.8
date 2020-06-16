@@ -2,107 +2,190 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9695207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rix2pl7O"
+	by mail.kernel.org (Postfix) with ESMTP id 4FD7A207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592322971;
+	bh=sBp50xgtSXUBc3XAEiLd22g9LgGhg066+1c0iNI/n2o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LCQK/mcpsbTuFcMzd4/2TcuprCx9YK3msvdS9430FJ8Sg2cmFljNglJdiFP9IUgJU
+	 i+1vobSQTxX2V/HK14a38j3xjATtn70EQpaqwDq5gEmV1bdTYE+541PGsTp0AqfxLF
+	 57acGD1Ou7MLKJIqxHRqSHYIHw87150H/T5EwTz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733141AbgFPP4C (ORCPT
+        id S1733151AbgFPP4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:56:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60548 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733132AbgFPPz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592322956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GMvFt9x/GME+tYUTng0QoYKwCh/XoVUUjz+YXccVf9k=;
-        b=Rix2pl7O64W4uD1zXV3b8GB/hQEG/jiMJ/dnB1avC8mVxFsaDtckW9Xon74ExM1FicfEf1
-        4olhmdwo4cCqoq7yDX2zd4cJkTLPvqjIJ3SZE0F7iIaG1rTIV87AHehTB9hWaJD13WOEet
-        AXxuZQgWmLU8NpjiyeEJAsHAbb0uHfk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-Vc28Lxq8P5CWEsmSzSE5_g-1; Tue, 16 Jun 2020 11:55:52 -0400
-X-MC-Unique: Vc28Lxq8P5CWEsmSzSE5_g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 16 Jun 2020 11:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732800AbgFPPz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2B8DE918;
-        Tue, 16 Jun 2020 15:55:50 +0000 (UTC)
-Received: from x2.localnet (ovpn-113-82.phx2.redhat.com [10.3.113.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 845DE60C05;
-        Tue, 16 Jun 2020 15:55:44 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Paul Moore <paul@paul-moore.com>, Mimi Zohar <zohar@linux.ibm.com>,
-        rgb@redhat.com, linux-integrity@vger.kernel.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] integrity: Add errno field in audit message
-Date:   Tue, 16 Jun 2020 11:55:42 -0400
-Message-ID: <1717101.NiBDiG0Zly@x2>
-Organization: Red Hat
-In-Reply-To: <958966b6-9972-051f-a7d5-cd6d1beb3244@linux.microsoft.com>
-References: <20200611000400.3771-1-nramas@linux.microsoft.com> <6643272.rC52FQZPYE@x2> <958966b6-9972-051f-a7d5-cd6d1beb3244@linux.microsoft.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id E8ECC208D5;
+        Tue, 16 Jun 2020 15:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322958;
+        bh=sBp50xgtSXUBc3XAEiLd22g9LgGhg066+1c0iNI/n2o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cco7KpE9NcXZgoPGfuVE56pxIPEQ4Do4ygMXzb+AQPyOuGuoK/22f1TWOiCtN7nts
+         tc5y5jfPogTfOCOvfl116nKtPqgY4OpHD+h/EXo6ndoBzPu84W/aj20t0zL8bfKbnE
+         LGOE7Ak8hQZG21lNvz8yEU6ny8rzga3UpevP6yNo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.6 161/161] KVM: arm64: Save the hosts PtrAuth keys in non-preemptible context
+Date:   Tue, 16 Jun 2020 17:35:51 +0200
+Message-Id: <20200616153114.048785126@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
+References: <20200616153106.402291280@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 16, 2020 11:43:31 AM EDT Lakshmi Ramasubramanian wrote:
-> On 6/16/20 8:29 AM, Steve Grubb wrote:
-> >>>>> The idea is a good idea, but you're assuming that "result" is always
-> >>>>> errno.  That was probably true originally, but isn't now.  For
-> >>>>> example, ima_appraise_measurement() calls xattr_verify(), which
-> >>>>> compares the security.ima hash with the calculated file hash.  On
-> >>>>> failure, it returns the result of memcmp().  Each and every code path
-> >>>>> will need to be checked.
-> >>>> 
-> >>>> Good catch Mimi.
-> >>>> 
-> >>>> Instead of "errno" should we just use "result" and log the value given
-> >>>> in the result parameter?
-> >>> 
-> >>> That would likely collide with another field of the same name which is
-> >>> the
-> >>> operation's results. If it really is errno, the name is fine. It's
-> >>> generic
-> >>> enough that it can be reused on other events if that mattered.
-> >> 
-> >> Steve, what is the historical reason why we have both "res" and
-> >> "result" for indicating a boolean success/fail?  I'm just curious how
-> >> we ended up this way, and who may still be using "result".
-> > 
-> > I think its pam and some other user space things did this. But because of
-> > mixed machines in datacenters supporting multiple versions of OS, we have
-> > to leave result alone. It has to be 0,1 or success/fail. We cannot use
-> > it for errno.
-> 
-> As Mimi had pointed out, since the value passed in result parameter is
-> not always an error code, "errno" is not an appropriate name.
-> 
-> Can we add a new field, say, "op_result" to report the result of the
-> specified operation?
+From: Marc Zyngier <maz@kernel.org>
 
-Sure. But since it is errno sometimes, how would we know when to translate 
-it?
+commit ef3e40a7ea8dbe2abd0a345032cd7d5023b9684f upstream.
 
--Steve
+When using the PtrAuth feature in a guest, we need to save the host's
+keys before allowing the guest to program them. For that, we dump
+them in a per-CPU data structure (the so called host context).
 
+But both call sites that do this are in preemptible context,
+which may end up in disaster should the vcpu thread get preempted
+before reentering the guest.
+
+Instead, save the keys eagerly on each vcpu_load(). This has an
+increased overhead, but is at least safe.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
+---
+ arch/arm/include/asm/kvm_emulate.h   |    3 ++-
+ arch/arm64/include/asm/kvm_emulate.h |    6 ------
+ arch/arm64/kvm/handle_exit.c         |   19 ++-----------------
+ virt/kvm/arm/arm.c                   |   22 +++++++++++++++++++++-
+ 4 files changed, 25 insertions(+), 25 deletions(-)
+
+--- a/arch/arm/include/asm/kvm_emulate.h
++++ b/arch/arm/include/asm/kvm_emulate.h
+@@ -367,6 +367,7 @@ static inline unsigned long vcpu_data_ho
+ 	}
+ }
+ 
+-static inline void vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu) {}
++static inline bool vcpu_has_ptrauth(struct kvm_vcpu *vcpu) { return false; }
++static inline void vcpu_ptrauth_disable(struct kvm_vcpu *vcpu) { }
+ 
+ #endif /* __ARM_KVM_EMULATE_H__ */
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -111,12 +111,6 @@ static inline void vcpu_ptrauth_disable(
+ 	vcpu->arch.hcr_el2 &= ~(HCR_API | HCR_APK);
+ }
+ 
+-static inline void vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu)
+-{
+-	if (vcpu_has_ptrauth(vcpu))
+-		vcpu_ptrauth_disable(vcpu);
+-}
+-
+ static inline unsigned long vcpu_get_vsesr(struct kvm_vcpu *vcpu)
+ {
+ 	return vcpu->arch.vsesr_el2;
+--- a/arch/arm64/kvm/handle_exit.c
++++ b/arch/arm64/kvm/handle_exit.c
+@@ -162,31 +162,16 @@ static int handle_sve(struct kvm_vcpu *v
+ 	return 1;
+ }
+ 
+-#define __ptrauth_save_key(regs, key)						\
+-({										\
+-	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
+-	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
+-})
+-
+ /*
+  * Handle the guest trying to use a ptrauth instruction, or trying to access a
+  * ptrauth register.
+  */
+ void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu)
+ {
+-	struct kvm_cpu_context *ctxt;
+-
+-	if (vcpu_has_ptrauth(vcpu)) {
++	if (vcpu_has_ptrauth(vcpu))
+ 		vcpu_ptrauth_enable(vcpu);
+-		ctxt = vcpu->arch.host_cpu_context;
+-		__ptrauth_save_key(ctxt->sys_regs, APIA);
+-		__ptrauth_save_key(ctxt->sys_regs, APIB);
+-		__ptrauth_save_key(ctxt->sys_regs, APDA);
+-		__ptrauth_save_key(ctxt->sys_regs, APDB);
+-		__ptrauth_save_key(ctxt->sys_regs, APGA);
+-	} else {
++	else
+ 		kvm_inject_undefined(vcpu);
+-	}
+ }
+ 
+ /*
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -332,6 +332,16 @@ void kvm_arch_vcpu_unblocking(struct kvm
+ 	preempt_enable();
+ }
+ 
++#ifdef CONFIG_ARM64
++#define __ptrauth_save_key(regs, key)						\
++({										\
++	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
++	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
++})
++#else
++#define  __ptrauth_save_key(regs, key)	do { } while (0)
++#endif
++
+ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ {
+ 	int *last_ran;
+@@ -365,7 +375,17 @@ void kvm_arch_vcpu_load(struct kvm_vcpu
+ 	else
+ 		vcpu_set_wfx_traps(vcpu);
+ 
+-	vcpu_ptrauth_setup_lazy(vcpu);
++	if (vcpu_has_ptrauth(vcpu)) {
++		struct kvm_cpu_context __maybe_unused *ctxt = vcpu->arch.host_cpu_context;
++
++		__ptrauth_save_key(ctxt->sys_regs, APIA);
++		__ptrauth_save_key(ctxt->sys_regs, APIB);
++		__ptrauth_save_key(ctxt->sys_regs, APDA);
++		__ptrauth_save_key(ctxt->sys_regs, APDB);
++		__ptrauth_save_key(ctxt->sys_regs, APGA);
++
++		vcpu_ptrauth_disable(vcpu);
++	}
+ }
+ 
+ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
 
 
