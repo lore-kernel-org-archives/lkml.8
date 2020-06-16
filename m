@@ -2,102 +2,133 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA629C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39024C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD5E920786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C8B20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbgFPQWQ (ORCPT
+        id S1730531AbgFPQWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:22:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27320 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729386AbgFPQWP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:22:15 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GG3U6b164332;
-        Tue, 16 Jun 2020 12:21:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31q15gh1cc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 12:21:46 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GG3rjv166605;
-        Tue, 16 Jun 2020 12:21:45 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31q15gh1b5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 12:21:45 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GGHxhQ003838;
-        Tue, 16 Jun 2020 16:21:43 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma01fra.de.ibm.com with ESMTP id 31mpe7ja2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 16:21:43 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GGLfww47120544
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 16:21:41 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD31511C04A;
-        Tue, 16 Jun 2020 16:21:40 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88FC611C04C;
-        Tue, 16 Jun 2020 16:21:39 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 16 Jun 2020 16:21:39 +0000 (GMT)
-Date:   Tue, 16 Jun 2020 21:51:38 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tue, 16 Jun 2020 12:22:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53216 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729386AbgFPQWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:22:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6D7BEAD33;
+        Tue, 16 Jun 2020 16:22:23 +0000 (UTC)
+Message-ID: <cabeb88787e032d0b241369884720b410142f72b.camel@suse.de>
+Subject: Re: [PATCH v3 2/3] ARM: bcm2835: Switch to use %ptT
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        mingo@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/probe: fix memleak in fetch_op_data operations
-Message-ID: <20200616162138.GB5681@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200615143034.GA1734@cosmos>
- <20200615171337.6525cefa@oasis.local.home>
- <20200616174647.d1985a66fa9bbcbe01e014b4@kernel.org>
- <20200616141921.GA25691@redhat.com>
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stefan Wahren <wahrenst@gmx.net>
+Date:   Tue, 16 Jun 2020 18:22:17 +0200
+In-Reply-To: <20200616161346.GW2428291@smile.fi.intel.com>
+References: <20200415170046.33374-1-andriy.shevchenko@linux.intel.com>
+         <20200415170046.33374-3-andriy.shevchenko@linux.intel.com>
+         <5551ac7d9c7ba7df2b44832af49b3744869b34ef.camel@suse.de>
+         <20200616161346.GW2428291@smile.fi.intel.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-PuZi12gRFbqH4DG5aG9Z"
+User-Agent: Evolution 3.36.3 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200616141921.GA25691@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-16_07:2020-06-16,2020-06-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- cotscore=-2147483648 lowpriorityscore=0 clxscore=1011 suspectscore=0
- adultscore=0 mlxscore=0 priorityscore=1501 malwarescore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006160114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Oleg Nesterov <oleg@redhat.com> [2020-06-16 16:19:22]:
 
-> On 06/16, Masami Hiramatsu wrote:
-> >
-> > BTW, for uprobes, I think Oleg is mainly reviewed changes on that in
-> > these days. Maybe better to assign him?
-> 
-> Well, then I'd suggest both me and Srikar.
-> 
+--=-PuZi12gRFbqH4DG5aG9Z
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Agree with Oleg. Actually he is more upto date with uprobes code.
+On Tue, 2020-06-16 at 19:13 +0300, Andy Shevchenko wrote:
+> On Tue, Jun 16, 2020 at 05:53:23PM +0200, Nicolas Saenz Julienne wrote:
+> > On Wed, 2020-04-15 at 20:00 +0300, Andy Shevchenko wrote:
+> > > Use %ptT instead of open coded variant to print content of
+> > > time64_t type in human readable format.
+> > >=20
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> >=20
+> > as originally reported by Stefan Wahren, this patch is likely to be the
+> > cause
+> > for a regression on RPi3b+ 32bit mode (multi_v7_defconfig,
+> > 5.8.0-rc1-00019-ga5dc8300df75):
+> >=20
+> > [    3.759892] raspberrypi-firmware soc:firmware: Attached to firmware =
+from
+> > 18446744073709048425-02-19T15:52:16
+> >=20
+> > Whereas the same doesn't seem to happen in 64bit mode:
+> >=20
+> > [    1.584126] raspberrypi-firmware soc:firmware: Attached to firmware =
+from
+> > 2020-02-12T12:39:27
+>=20
+> Had you chance to run test_printf on that machine and see if it reports a=
+ny
+> failure?
+> If no, can you provide a raw date which makes this happen?
+>=20
+> Ah, I think I have an idea what is going on... stay tuned!
+>=20
+> Does below fix it?
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+Yes :)
+
+> --- a/drivers/firmware/raspberrypi.c
+> +++ b/drivers/firmware/raspberrypi.c
+> @@ -181,6 +181,7 @@ EXPORT_SYMBOL_GPL(rpi_firmware_property);
+>  static void
+>  rpi_firmware_print_firmware_revision(struct rpi_firmware *fw)
+>  {
+> +	time64_t date_and_time;
+>  	u32 packet;
+>  	int ret =3D rpi_firmware_property(fw,
+>  					RPI_FIRMWARE_GET_FIRMWARE_REVISION,
+> @@ -189,7 +190,8 @@ rpi_firmware_print_firmware_revision(struct rpi_firmw=
+are
+> *fw)
+>  	if (ret)
+>  		return;
+> =20
+> -	dev_info(fw->cl.dev, "Attached to firmware from %ptT\n", &packet);
+> +	date_and_time =3D packet;
+> +	dev_info(fw->cl.dev, "Attached to firmware from %ptT\n",
+> &date_and_time);
+>  }
+>=20
+
+
+--=-PuZi12gRFbqH4DG5aG9Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7o8bkACgkQlfZmHno8
+x/4DUAgAnnaDTkZauG+tPW/V8c3ozayVYYwVlDW3YUC79UDjrI9MRcFuMc1LNPdt
+OaJSdil1QNaG08/X03vfymXUOkKJx18chWPbxmdYxEFOeyb7FrXckTRFDX52qxkK
+b0tfM09kTEFq8GfhBAsMdaRfKESMk5GIh0e7hlzV3uSX4O8EL5k7fcRAMj1Yt29T
+V7QeWYRmAP8VgNUVJzZHz73c6jPLYy+OgxE+YPKXD1NeSKYmatanW76BHppMeOcz
+FKRsIXtJoyepM0dZe9foBKTxi7BG6aIG8mhxrmT3zxZ/3yUX5afMGgGZGyUzG77H
+JHtJ9IjIiDvllUH+9hgazMrJUqff9Q==
+=xiZt
+-----END PGP SIGNATURE-----
+
+--=-PuZi12gRFbqH4DG5aG9Z--
+
