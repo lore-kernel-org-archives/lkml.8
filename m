@@ -2,132 +2,107 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03845C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE53C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0EE220DD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O8XCttay"
+	by mail.kernel.org (Postfix) with ESMTP id E0A182098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgFPNXF (ORCPT
+        id S1728617AbgFPNZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFPNXD (ORCPT
+        Tue, 16 Jun 2020 09:25:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24580 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726467AbgFPNZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:23:03 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B40AAC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:23:02 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id j198so2274771wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 06:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ZUTJ/wJEfNjN2kSpycLtF70cONPP9yJfClX+Aj6V9Gs=;
-        b=O8XCttayTGEgR6Ze2YmbgRKlCGknFu0mBnoBCuNePoL/Z8Ui3Y+GMWFDkhr4nD1Ys/
-         pSc8MREA2ic2OBpCCL3dse5pOucCATESKXW2YRr7ujDe5QexqVToNBwFBXDsAz00UJGO
-         WsbhW2IS1moURIAISxHUAUZ0gL9zWMul3EyUHC208QDnwam9h0bbjuVFmcCZf2Kim1g/
-         /c5sXhisIHX4uqCZSwfsJZMY+hQ55t2kC83rWrRcAHkz/unTvAC1Z6eE7nPBsLL4kCRA
-         nZ7dWAimE7Zo71bmhQGgLmMFQF9JSQQIEl3smr1ibM4LB/o/ZIjBqzne+xWx6u4KohPj
-         CKgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZUTJ/wJEfNjN2kSpycLtF70cONPP9yJfClX+Aj6V9Gs=;
-        b=oaTb3KNAf4aQw/bJgvlN94RUSUuy5Ev1DWkQ0dOC5kPP4TEHOphHXcjVd0g3ItGH2H
-         EWDj0iE3F6DAakNhyWfuAWGsj2JERAUr4r5tmXNmx0PUmC+l5I85PWocRUZNYyhkylOT
-         UGxe6po/xxgQy5nnYt5jAmaG931SUpDXy9u4/S1fXNGQolCJCnF4qGVhUxCSi4OBCGDm
-         FhOaibSgF5Mls+g0TVvRS8K29He2pWiOHsyh11WIynvVsq7AWOcJ1k0t3N5MCUl7Su0t
-         kUFppNm9kvTztiSeD5O7aCDvx0pmUAnTwHeUau8e20JOgwIdVgo2vkp+zVOkejHcgtXp
-         U4Rw==
-X-Gm-Message-State: AOAM5331C6KRV3dlEt8VaxzOifv5gQeGslqfHo+k5+p+guNKfmrutXQv
-        hxYfvxurwB+JmmVl+uFXdYyBsg==
-X-Google-Smtp-Source: ABdhPJwtDboy6TQPzJBTRdGYO9I2ka/GcPEk+ZMra2vr8zWPPVMnHG1cnjbGXDOqfculpO79Cn+gGw==
-X-Received: by 2002:a05:600c:2317:: with SMTP id 23mr3264412wmo.139.1592313781463;
-        Tue, 16 Jun 2020 06:23:01 -0700 (PDT)
-Received: from dell ([109.180.115.156])
-        by smtp.gmail.com with ESMTPSA id f185sm4118618wmf.43.2020.06.16.06.23.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 06:23:00 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 14:22:59 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH v2 1/2] mfd: mfd-core: Add mechanism for removal of a
- subset of children
-Message-ID: <20200616132259.GS2608702@dell>
-References: <20200615150722.5249-1-ckeepax@opensource.cirrus.com>
- <20200616075834.GF2608702@dell>
- <20200616084748.GS71940@ediswmail.ad.cirrus.com>
- <20200616091545.GP2608702@dell>
- <20200616100625.GT71940@ediswmail.ad.cirrus.com>
+        Tue, 16 Jun 2020 09:25:10 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GD3P9i070097;
+        Tue, 16 Jun 2020 09:25:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7npex1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 09:25:05 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GD3ST1070372;
+        Tue, 16 Jun 2020 09:25:04 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7npevt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 09:25:04 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GDJkA3032303;
+        Tue, 16 Jun 2020 13:25:02 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7wd5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 13:25:02 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GDOx0L34275416
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 13:24:59 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4EBDBAE051;
+        Tue, 16 Jun 2020 13:24:59 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0398DAE053;
+        Tue, 16 Jun 2020 13:24:59 +0000 (GMT)
+Received: from osiris (unknown [9.171.4.37])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Jun 2020 13:24:58 +0000 (GMT)
+Date:   Tue, 16 Jun 2020 15:24:57 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390: fix syscall_get_error for compat processes
+Message-ID: <20200616132457.GA4166@osiris>
+References: <20200602180051.GA2427@altlinux.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200616100625.GT71940@ediswmail.ad.cirrus.com>
+In-Reply-To: <20200602180051.GA2427@altlinux.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1
+ mlxlogscore=794 clxscore=1011 impostorscore=0 malwarescore=0
+ cotscore=-2147483648 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ spamscore=0 mlxscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020, Charles Keepax wrote:
+On Tue, Jun 02, 2020 at 09:00:51PM +0300, Dmitry V. Levin wrote:
+> If both the tracer and the tracee are compat processes, and gprs[2]
+> is assigned a value by __poke_user_compat, then the higher 32 bits
+> of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
+> syscall_get_error() always returns 0.
+> 
+> Fix the implementation by sign-extending the value for compat processes
+> the same way as x86 implementation does.
+> 
+> The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
+> PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
+> 
+> This change fixes strace syscall tampering on s390.
+> 
+> Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
+> Cc: Elvira Khabirova <lineprinter@altlinux.org>
+> Cc: stable@vger.kernel.org # v2.6.28+
+> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> ---
+>  arch/s390/include/asm/syscall.h | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
 
-> On Tue, Jun 16, 2020 at 10:15:45AM +0100, Lee Jones wrote:
-> > On Tue, 16 Jun 2020, Charles Keepax wrote:
-> > > On Tue, Jun 16, 2020 at 08:58:34AM +0100, Lee Jones wrote:
-> > > > On Mon, 15 Jun 2020, Charles Keepax wrote:
-> > > Does this match how you would expect this to be used?
-> > 
-> > No, not at all.
-> > 
-> > > I do have some concerns. The code can't use mfd_get_cell since it
-> > > returns a const pointer, although the pointer in platform_device
-> > > isn't const so we access that directly, could update mfd_get_cell? We
-> > > also don't have access to mfd_dev_type outside of the mfd core so
-> > > its hard to check we are actually setting the mfd_cell of actual
-> > > MFD children, I guess just checking for mfd_cell being not NULL is
-> > > good enough?
-> > 
-> > Hmmm... looks like I missed the fact that you needed additional
-> > processing between the removal of each batch of devices.  My
-> > implementation simply handles the order in which devices are removed
-> > (a bit like initcall()s).
-> > 
-> > How about the inclusion of mfd_remove_devices_late(), whereby
-> > mfd_remove_devices() will refuse to remove devices tagged with
-> > MFD_DEP_LEVEL_HIGH.
-> > 
-> 
-> Yeah this should work fine for my use-case.
-> 
-> > Not sure why, but I really dislike the idea of device removal by
-> > arbitrary value/tag, as I see it spawning all sorts of weird and
-> > wonderful implications/hacks/abuse.
-> > 
-> 
-> Its definitely a spectrum with flexibility covering more
-> use-cases but also definitely opening things up to more abuse. If
-> you are more comfortable with this approach that is fine with me.
-> 
-> Would you like me to have a crack at coding it up this way? Or
-> did you want to do a patch?
-
-Either/or.  I don't want to steal your thunder, but I'm happy to draft
-if you are.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Applied, thank you!
