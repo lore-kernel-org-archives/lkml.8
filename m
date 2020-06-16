@@ -2,146 +2,179 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01398C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1061C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8C86214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323311;
-	bh=QWZhGhZw6SXi3y7+QniH5c40RvMZkswOJ864wEI/Dn4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bS1BF8xCPxxDLZRBXswl3SIRyITyjoc2YOrLefpVgQWJhaeKjb5t5x8a5hmEzvmMS
-	 4+V7jQk4SzoGS+5zDxKOHOo+fa/DAj/iCfiu6Hs3oU5x9ND3lZF2DEGEUv3FLcg2kU
-	 DWr0U5b0F4b+1h6UN+u/4GP1VIo2x68Gw4z8geno=
+	by mail.kernel.org (Postfix) with ESMTP id 8D47D21475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aJ8p70Y5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733177AbgFPQBt (ORCPT
+        id S1732511AbgFPQBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 16 Jun 2020 12:01:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733172AbgFPQBt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 12:01:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732715AbgFPPvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:51:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED9CE207C4;
-        Tue, 16 Jun 2020 15:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322709;
-        bh=QWZhGhZw6SXi3y7+QniH5c40RvMZkswOJ864wEI/Dn4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gaff/vqBhlU7gjmeiE7KVO+oPHJeMzt1hob3HgW3cHIMwDPqUWh2QdOKX1A67zTuy
-         gSoDrXYo4nCbUqMkCrIA/lckPX5BE20yljEWcAr98IkdfyK8ziyB/1MkqP52p7vCJe
-         hveoLYRIpVfTOkI9KCfdJmvtFyLyB9xM0zkRRatk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 074/161] ALSA: pcm: fix snd_pcm_link() lockdep splat
-Date:   Tue, 16 Jun 2020 17:34:24 +0200
-Message-Id: <20200616153109.904646314@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
-References: <20200616153106.402291280@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E598C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:01:49 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s10so9435755pgm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:01:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=C2Y4BhWefKmP9iji9eylvkFo4/M9jmgkj2BXKFGkoJE=;
+        b=aJ8p70Y5LnowTS4d6Nvq5WyEu93YaLiozLfkw0uDW6dYUF3xQNCbIJvKarTK5Ed9iD
+         m7i0zsBqFI1pIpAyIluoSmBT0Risms7oI2Pp32JEbx7n0H5pqbwQtOkP1/KHECdDu/FT
+         ltBtg48/YKabACQ+Epr94E4U9IQIdRDp/x9Fs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C2Y4BhWefKmP9iji9eylvkFo4/M9jmgkj2BXKFGkoJE=;
+        b=Tj5B0sOyvW7yiSc/4SvjOK9qZdQaxIUwW5MWDEuTmUijbgjlHy2ib2QhE/J5BvWHZw
+         Pix4kuNJ6+I0gNTuecBWoD/1mVuTDmleF0SRFBgIPQAZqygEcXFWUOQZW7P0tCcvBBz7
+         z0j8cmQb5Xedim1IoC9Etifn6T5XDoCHdl06pKh9bKGJTevl39OzKbbxjY/uIQBf80gA
+         Bl8QhgM8x0YYkO3bVIn8wxO/+jSo/6gMmaY4IhA9fCt9f/1ZAaOfv14tlsqD3E6BNCP+
+         SMNhp0wgfb9MuMaTE/l7qMjW+RqV3KAMLmlVCrVsaOiI8wWdp+UKXXLP4z/2S9FkNTjE
+         ccwQ==
+X-Gm-Message-State: AOAM530JIZKnxe1+Ipxy+6wxLyEFWWspoCWbjwPlnkXnFXRCxIRhrlFT
+        iiPA47z7pz6iAuJ9A7Cv+XYW8w==
+X-Google-Smtp-Source: ABdhPJxZYUpPJAibIwbYuU5zDTSd1Kb3np/+gOul4WD0kGGfyZGJ7hHLOe/iwa9+dycWyfSgo2noGQ==
+X-Received: by 2002:a63:5307:: with SMTP id h7mr2625624pgb.28.1592323309057;
+        Tue, 16 Jun 2020 09:01:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id iq19sm2942471pjb.48.2020.06.16.09.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 09:01:48 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 09:01:46 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        "zhujianwei (C)" <zhujianwei7@huawei.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Hehuazhen <hehuazhen@huawei.com>, x86@kernel.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH 4/8] seccomp: Implement constant action bitmaps
+Message-ID: <202006160851.E8F9928AAB@keescook>
+References: <20200616074934.1600036-1-keescook@chromium.org>
+ <20200616074934.1600036-5-keescook@chromium.org>
+ <fc0c14cd-bcf0-c94c-6cba-d0ce1844e93c@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc0c14cd-bcf0-c94c-6cba-d0ce1844e93c@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+On Tue, Jun 16, 2020 at 07:40:17AM -0700, Dave Hansen wrote:
+> On 6/16/20 12:49 AM, Kees Cook wrote:
+> > +	/* Mark the second page as untouched (i.e. "old") */
+> > +	preempt_disable();
+> > +	set_pte_at(&init_mm, vaddr, ptep, pte_mkold(*(READ_ONCE(ptep))));
+> > +	local_flush_tlb_kernel_range(vaddr, vaddr + PAGE_SIZE);
+> > +	preempt_enable();
+> 
+> If you can, I'd wrap that nugget up in a helper.  I'd also suggest being
+> very explicit in a comment about what it is trying to do: ensure no TLB
+> entries exist so that a future access will always set the Accessed bit.
 
-commit e18035cf5cb3d2bf8e4f4d350a23608bd208b934 upstream.
+Yeah, good idea!
 
-Add and use snd_pcm_stream_lock_nested() in snd_pcm_link/unlink
-implementation.  The code is fine, but generates a lockdep complaint:
+> 
+> > +	/* Make sure the PTE agrees that it is untouched. */
+> > +	if (WARN_ON_ONCE(sd_touched(ptep)))
+> > +		return;
+> > +	/* Read a portion of struct seccomp_data from the second page. */
+> > +	check = sd->instruction_pointer;
+> > +	/* First, verify the contents are zero from vzalloc(). */
+> > +	if (WARN_ON_ONCE(check))
+> > +		return;
+> > +	/* Now make sure the ACCESSED bit has been set after the read. */
+> > +	if (!sd_touched(ptep)) {
+> > +		/*
+> > +		 * If autodetection fails, fall back to standard beahavior by
+> > +		 * clearing the entire "allow" bitmap.
+> > +		 */
+> > +		pr_warn_once("seccomp: cannot build automatic syscall filters\n");
+> > +		bitmap_zero(bitmaps->allow, NR_syscalls);
+> > +		return;
+> > +	}
+> 
+> I can't find any big holes with this.  It's the kind of code that makes
+> me nervous, but mostly because it's pretty different that anything else
+> we have in the kernel.
+> 
+> It's also clear to me here that you probably have a slightly different
+> expectation of what the PTE accessed flag means versus the hardware
+> guys.  What you are looking for it to mean is roughly: "a retired
+> instruction touched this page".
+> 
+> The hardware guys would probably say it's closer to "a TLB entry was
+> established for this page."  Remember that TLB entries can be
+> established speculatively or from things like prefetchers.  While I
+> don't know of anything microarchitectural today which would trip this
+> mechanism, it's entirely possible that something in the future might.
+> Accessing close to the page boundary is the exact kind of place folks
+> might want to optimize.
 
-============================================
-WARNING: possible recursive locking detected
-5.7.1mq+ #381 Tainted: G           O
---------------------------------------------
-pulseaudio/4180 is trying to acquire lock:
-ffff888402d6f508 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xda8/0xee0 [snd_pcm]
+Yeah, and to that end, going the cBPF emulator route removes this kind
+of "weird" behavior.
 
-but task is already holding lock:
-ffff8883f7a8cf18 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xe4e/0xee0 [snd_pcm]
+> 
+> *But*, at least it would err in the direction of being conservative.  It
+> would say "somebody touched the page!" more often than it should, but
+> never _less_ often than it should.
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
+Right -- I made sure to design the bitmaps and the direction of the
+checking to fail towards running the filter instead of bypassing it.
 
-       CPU0
-       ----
-  lock(&group->lock);
-  lock(&group->lock);
+> One thing about the implementation (which is roughly):
+> 
+> 	// Touch the data:
+> 	check = sd->instruction_pointer;
+> 	// Examine the PTE mapping that data:
+> 	if (!sd_touched(ptep)) {
+> 		// something
+> 	}
+> 
+> There aren't any barriers in there, which could lead to the sd_touched()
+> check being ordered before the data touch.  I think a rmb() will
+> suffice.  You could even do it inside sd_touched().
 
- *** DEADLOCK ***
+Ah yeah, I had convinced myself that READ_ONCE() gained me that
+coverage, but I guess that's not actually true here.
 
- May be due to missing lock nesting notation
+> Was there a reason you chose to export a ranged TLB flush?  I probably
+> would have just used the single-page flush_tlb_one_kernel() for this
+> purpose if I were working in arch-specific code.
 
-2 locks held by pulseaudio/4180:
- #0: ffffffffa1a05190 (snd_pcm_link_rwsem){++++}-{3:3}, at: snd_pcm_common_ioctl+0xca0/0xee0 [snd_pcm]
- #1: ffff8883f7a8cf18 (&group->lock){-...}-{2:2}, at: snd_pcm_common_ioctl+0xe4e/0xee0 [snd_pcm]
-[...]
+No particular reason -- it just seemed easiest to make available given
+the interfaces. I could do the single-page version instead, if this way
+of doing things survives review. ;)
 
-Cc: stable@vger.kernel.org
-Fixes: f57f3df03a8e ("ALSA: pcm: More fine-grained PCM link locking")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Link: https://lore.kernel.org/r/37252c65941e58473b1219ca9fab03d48f47e3e3.1591610330.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks for looking at it!
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-
----
- sound/core/pcm_native.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -138,6 +138,16 @@ void snd_pcm_stream_lock_irq(struct snd_
- }
- EXPORT_SYMBOL_GPL(snd_pcm_stream_lock_irq);
- 
-+static void snd_pcm_stream_lock_nested(struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_group *group = &substream->self_group;
-+
-+	if (substream->pcm->nonatomic)
-+		mutex_lock_nested(&group->mutex, SINGLE_DEPTH_NESTING);
-+	else
-+		spin_lock_nested(&group->lock, SINGLE_DEPTH_NESTING);
-+}
-+
- /**
-  * snd_pcm_stream_unlock_irq - Unlock the PCM stream
-  * @substream: PCM substream
-@@ -2197,7 +2207,7 @@ static int snd_pcm_link(struct snd_pcm_s
- 	snd_pcm_stream_unlock_irq(substream);
- 
- 	snd_pcm_group_lock_irq(target_group, nonatomic);
--	snd_pcm_stream_lock(substream1);
-+	snd_pcm_stream_lock_nested(substream1);
- 	snd_pcm_group_assign(substream1, target_group);
- 	refcount_inc(&target_group->refs);
- 	snd_pcm_stream_unlock(substream1);
-@@ -2213,7 +2223,7 @@ static int snd_pcm_link(struct snd_pcm_s
- 
- static void relink_to_local(struct snd_pcm_substream *substream)
- {
--	snd_pcm_stream_lock(substream);
-+	snd_pcm_stream_lock_nested(substream);
- 	snd_pcm_group_assign(substream, &substream->self_group);
- 	snd_pcm_stream_unlock(substream);
- }
-
-
+-- 
+Kees Cook
