@@ -2,93 +2,112 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03494C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48800C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D298620882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AA1208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324153;
-	bh=fYUP88jpvExRcURUv+QWZjf7n0YAKgdb92mnl17R3i8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=tp32r0xa5Bt4uP5jY13PrYennftYqWOhaHfZWtgqVNl5Q9+gOpEApTw/K1ncwIwxs
-	 gEaXO4UhkaGpw/x1OvAvnHjumvctor2zwCAJLsa49yn54nnY0T/FPmcman7YlGlet3
-	 xWm/lUVxNzCSfpQu/TdXxsOFAYUwDR2sm7MuwsfE=
+	s=default; t=1592324163;
+	bh=VwSN0YU9Oj7OXqaDGPp3XR8cYu0IhWpaSJ1/3foAwJ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oI8SmxMhjQOmMZHIqiXOa2ZBSJf+b4D2f2V60e0NqmpcXC3NC9lAhrp7D7jd6INC8
+	 PESMP+xnqvvS6r/pJViDMTYiUMWI5mKOKSqkeObTEok+N96eHhDRfp6j6BPtvhm8vA
+	 pKwGuRN7McsVN/vO0NtR0pyY877NEHZGeEOJZvhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732397AbgFPQPv (ORCPT
+        id S1732336AbgFPQQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48318 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732361AbgFPQPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:15:50 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1731370AbgFPPlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E89A620882;
-        Tue, 16 Jun 2020 16:15:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 274B1208E4;
+        Tue, 16 Jun 2020 15:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592324149;
-        bh=fYUP88jpvExRcURUv+QWZjf7n0YAKgdb92mnl17R3i8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=YtdntdNfZemJzgI8ZdunFonB0oo5zwvT4Ia0yD3Faa2wvrUt1kUwEB1HWiiwVSZkm
-         l14Qz/FzlZQRReDi4nTEjJTixWrKxIuaqUmN1C07cqWpNOo53gj8TumHwvZ2hTaF4d
-         D+CAeNyHNshjkjMsZt2H99PXHU2RwUA/ylN81zqw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C5A8B3521103; Tue, 16 Jun 2020 09:15:49 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 09:15:49 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: rseq.2 Restartable Sequences man page updated
-Message-ID: <20200616161549.GZ2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <1094083824.1256.1591899797181.JavaMail.zimbra@efficios.com>
+        s=default; t=1592322066;
+        bh=VwSN0YU9Oj7OXqaDGPp3XR8cYu0IhWpaSJ1/3foAwJ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uKSDx1cYN/hyKrOlJgj0RNCP/C8HozykYLtaGiBeSJhfp14FNpHphDnmOkc0OuFlL
+         XIkfG1AseULL1xgOAgsFA3MLS+xE1NwGJ3f4C6N46k/I1dsZ/jqyAhFMsE4ZJE9O2W
+         a7pd2wBM6rp0ulfM5RQDAHA2CjVVSBPEgvSaVix0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Andi Shyti <andi.shyti@intel.com>
+Subject: [PATCH 5.4 123/134] agp/intel: Reinforce the barrier after GTT updates
+Date:   Tue, 16 Jun 2020 17:35:07 +0200
+Message-Id: <20200616153106.677326783@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
+References: <20200616153100.633279950@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1094083824.1256.1591899797181.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 02:23:17PM -0400, Mathieu Desnoyers wrote:
-> Hi Michael,
-> 
-> I took the liberty of updating the rseq.2 man page based on your
-> last round of comments:
-> 
-> https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/man/rseq.2
-> 
-> Soon, rseq support will be integrated into glibc, and the maintainers
-> there want a stable link to documentation of the rseq system call.
-> Documentation is pretty much the only remaining blocker for integration
-> of rseq support into glibc.
-> 
-> Ideally it should land into the man-pages project, but since it's been
-> more than a year since I heard back from you, I am tempted to host it
-> myself within the librseq project, even though it's far from ideal for
-> hosting a kernel system call man page. Unfortunately, I suspect that
-> hosting it in two locations (librseq and man-pages) will eventually
-> create much confusion.
-> 
-> Can you look into the updated man page please ? I can do the edits
-> if you have further feedback.
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-For whatever it is worth, this looks good to me.
+commit f30d3ced9fafa03e4855508929b5b6334907f45e upstream.
 
-Michael, any reason this cannot be included into the official set of
-manual pages?
+After changing the timing between GTT updates and execution on the GPU,
+we started seeing sporadic failures on Ironlake. These were narrowed
+down to being an insufficiently strong enough barrier/delay after
+updating the GTT and scheduling execution on the GPU. By forcing the
+uncached read, and adding the missing barrier for the singular
+insert_page (relocation paths), the sporadic failures go away.
 
-							Thanx, Paul
+Fixes: 983d308cb8f6 ("agp/intel: Serialise after GTT updates")
+Fixes: 3497971a71d8 ("agp/intel: Flush chipset writes after updating a single PTE")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Andi Shyti <andi.shyti@intel.com>
+Cc: stable@vger.kernel.org # v4.0+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200410083535.25464-1-chris@chris-wilson.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/char/agp/intel-gtt.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/char/agp/intel-gtt.c
++++ b/drivers/char/agp/intel-gtt.c
+@@ -846,6 +846,7 @@ void intel_gtt_insert_page(dma_addr_t ad
+ 			   unsigned int flags)
+ {
+ 	intel_private.driver->write_entry(addr, pg, flags);
++	readl(intel_private.gtt + pg);
+ 	if (intel_private.driver->chipset_flush)
+ 		intel_private.driver->chipset_flush();
+ }
+@@ -871,7 +872,7 @@ void intel_gtt_insert_sg_entries(struct
+ 			j++;
+ 		}
+ 	}
+-	wmb();
++	readl(intel_private.gtt + j - 1);
+ 	if (intel_private.driver->chipset_flush)
+ 		intel_private.driver->chipset_flush();
+ }
+@@ -1105,6 +1106,7 @@ static void i9xx_cleanup(void)
+ 
+ static void i9xx_chipset_flush(void)
+ {
++	wmb();
+ 	if (intel_private.i9xx_flush_page)
+ 		writel(1, intel_private.i9xx_flush_page);
+ }
+
+
