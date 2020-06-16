@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 497B820FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D832920C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgFPMWb (ORCPT
+        id S1729165AbgFPMWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
+        Tue, 16 Jun 2020 08:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728917AbgFPMWF (ORCPT
+        with ESMTP id S1728960AbgFPMWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:22:05 -0400
+        Tue, 16 Jun 2020 08:22:08 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ECB6C08C5C6;
-        Tue, 16 Jun 2020 05:22:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D07CC08C5C2;
+        Tue, 16 Jun 2020 05:22:08 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbI-0004gu-OD; Tue, 16 Jun 2020 14:22:00 +0200
+        id 1jlAbM-0004ko-SP; Tue, 16 Jun 2020 14:22:05 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EC80B1C0837;
-        Tue, 16 Jun 2020 14:21:52 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:52 -0000
-From:   "tip-bot2 for Peng Liu" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9B8C41C0852;
+        Tue, 16 Jun 2020 14:21:55 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:55 -0000
+From:   "tip-bot2 for Vincent Donnefort" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: correct SD_flags returned by tl->sd_flags()
-Cc:     Peng Liu <iwtbavbm@gmail.com>,
+Subject: [tip: sched/core] sched/debug: Add new tracepoints to track util_est
+Cc:     Vincent Donnefort <vincent.donnefort@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
         Valentin Schneider <valentin.schneider@arm.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ>
-References: <20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ>
+In-Reply-To: <1590597554-370150-1-git-send-email-vincent.donnefort@arm.com>
+References: <1590597554-370150-1-git-send-email-vincent.donnefort@arm.com>
 MIME-Version: 1.0
-Message-ID: <159231011270.16989.15647375607443324340.tip-bot2@tip-bot2>
+Message-ID: <159231011535.16989.4063331664061599328.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,39 +60,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     9b1b234bb86bcdcdb142e900d39b599185465dbb
-Gitweb:        https://git.kernel.org/tip/9b1b234bb86bcdcdb142e900d39b599185465dbb
-Author:        Peng Liu <iwtbavbm@gmail.com>
-AuthorDate:    Tue, 09 Jun 2020 23:09:36 +08:00
+Commit-ID:     4581bea8b4ec4de353369775dfef921191e393b3
+Gitweb:        https://git.kernel.org/tip/4581bea8b4ec4de353369775dfef921191e393b3
+Author:        Vincent Donnefort <vincent.donnefort@arm.com>
+AuthorDate:    Wed, 27 May 2020 17:39:14 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:04 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:02 +02:00
 
-sched: correct SD_flags returned by tl->sd_flags()
+sched/debug: Add new tracepoints to track util_est
 
-During sched domain init, we check whether non-topological SD_flags are
-returned by tl->sd_flags(), if found, fire a waning and correct the
-violation, but the code failed to correct the violation. Correct this.
+The util_est signals are key elements for EAS task placement and
+frequency selection. Having tracepoints to track these signals enables
+load-tracking and schedutil testing and/or debugging by a toolkit.
 
-Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
-Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Link: https://lkml.kernel.org/r/20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ
+Link: https://lkml.kernel.org/r/1590597554-370150-1-git-send-email-vincent.donnefort@arm.com
 ---
- kernel/sched/topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/trace/events/sched.h | 8 ++++++++
+ kernel/sched/core.c          | 2 ++
+ kernel/sched/fair.c          | 6 ++++++
+ 3 files changed, 16 insertions(+)
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index ba81187..9079d86 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1328,7 +1328,7 @@ sd_init(struct sched_domain_topology_level *tl,
- 		sd_flags = (*tl->sd_flags)();
- 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
- 			"wrong sd_flags in topology description\n"))
--		sd_flags &= ~TOPOLOGY_SD_FLAGS;
-+		sd_flags &= TOPOLOGY_SD_FLAGS;
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index ed168b0..04f9a4c 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -634,6 +634,14 @@ DECLARE_TRACE(sched_overutilized_tp,
+ 	TP_PROTO(struct root_domain *rd, bool overutilized),
+ 	TP_ARGS(rd, overutilized));
  
- 	/* Apply detected topology flags */
- 	sd_flags |= dflags;
++DECLARE_TRACE(sched_util_est_cfs_tp,
++	TP_PROTO(struct cfs_rq *cfs_rq),
++	TP_ARGS(cfs_rq));
++
++DECLARE_TRACE(sched_util_est_se_tp,
++	TP_PROTO(struct sched_entity *se),
++	TP_ARGS(se));
++
+ #endif /* _TRACE_SCHED_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9c89b0e..0208b71 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -36,6 +36,8 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_dl_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_irq_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_se_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+ 
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+ 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 69da576..a785a9b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3922,6 +3922,8 @@ static inline void util_est_enqueue(struct cfs_rq *cfs_rq,
+ 	enqueued  = cfs_rq->avg.util_est.enqueued;
+ 	enqueued += _task_util_est(p);
+ 	WRITE_ONCE(cfs_rq->avg.util_est.enqueued, enqueued);
++
++	trace_sched_util_est_cfs_tp(cfs_rq);
+ }
+ 
+ /*
+@@ -3952,6 +3954,8 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+ 	ue.enqueued -= min_t(unsigned int, ue.enqueued, _task_util_est(p));
+ 	WRITE_ONCE(cfs_rq->avg.util_est.enqueued, ue.enqueued);
+ 
++	trace_sched_util_est_cfs_tp(cfs_rq);
++
+ 	/*
+ 	 * Skip update of task's estimated utilization when the task has not
+ 	 * yet completed an activation, e.g. being migrated.
+@@ -4017,6 +4021,8 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+ 	ue.ewma >>= UTIL_EST_WEIGHT_SHIFT;
+ done:
+ 	WRITE_ONCE(p->se.avg.util_est, ue);
++
++	trace_sched_util_est_se_tp(&p->se);
+ }
+ 
+ static inline int task_fits_capacity(struct task_struct *p, long capacity)
