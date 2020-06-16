@@ -2,413 +2,177 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B701C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7C2A20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFF420786
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729218AbgFPOkN (ORCPT
+        id S1729273AbgFPOk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:40:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:9605 "EHLO mga12.intel.com"
+        Tue, 16 Jun 2020 10:40:28 -0400
+Received: from mga04.intel.com ([192.55.52.120]:22009 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgFPOkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:40:09 -0400
-IronPort-SDR: 3RU2amUxxuQChgKhjT2dt/YPWwBIqWJ7QoaBVkEyFo6wVthn8FMgCdk5Y8uoA+9Cd4cRWXpjYt
- Ff5SZHQvVRgA==
+        id S1728448AbgFPOk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 10:40:27 -0400
+IronPort-SDR: DN6jn5jKeblUYcoyTfTUi6pBgSxdvFtp3lPWwv7xpnPQVwBZ1TrdH+YO6KLTfEtQxkK8BvxU93
+ CCmhJI6fI/0Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 07:40:08 -0700
-IronPort-SDR: RdNG+feQIajP52uHNYFcHjbZJbL93X4VJj6IHp/tjJpcwZloQhsVZiQ68+9XHNXws+1i38txZ/
- FC9d607ahFSQ==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 07:40:21 -0700
+IronPort-SDR: qRAAkVPgstsP4BiNwiJ4ZWhpOs0JhFEgky588U/lbruil5tOAuN+ZQw758XauRakiPDe+wl0vn
+ 2O84ffZConlw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
-   d="scan'208";a="317238533"
-Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jun 2020 07:40:06 -0700
-From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, adrian.hunter@intel.com,
-        wan.ahmad.zainie.wan.mohamad@intel.com
-Subject: [PATCH v5 2/2] phy: intel: Add Keem Bay eMMC PHY support
-Date:   Tue, 16 Jun 2020 22:38:18 +0800
-Message-Id: <20200616143818.13579-3-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616143818.13579-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-References: <20200616143818.13579-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+   d="scan'208";a="276937447"
+Received: from osowole-mobl.amr.corp.intel.com (HELO [10.255.5.242]) ([10.255.5.242])
+  by orsmga006.jf.intel.com with ESMTP; 16 Jun 2020 07:40:17 -0700
+Subject: Re: [PATCH 4/8] seccomp: Implement constant action bitmaps
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <christian@brauner.io>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        "zhujianwei (C)" <zhujianwei7@huawei.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Hehuazhen <hehuazhen@huawei.com>, x86@kernel.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
+References: <20200616074934.1600036-1-keescook@chromium.org>
+ <20200616074934.1600036-5-keescook@chromium.org>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <fc0c14cd-bcf0-c94c-6cba-d0ce1844e93c@intel.com>
+Date:   Tue, 16 Jun 2020 07:40:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200616074934.1600036-5-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for eMMC PHY on Intel Keem Bay SoC.
+On 6/16/20 12:49 AM, Kees Cook wrote:
+> +	/* Mark the second page as untouched (i.e. "old") */
+> +	preempt_disable();
+> +	set_pte_at(&init_mm, vaddr, ptep, pte_mkold(*(READ_ONCE(ptep))));
+> +	local_flush_tlb_kernel_range(vaddr, vaddr + PAGE_SIZE);
+> +	preempt_enable();
 
-Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
----
- drivers/phy/intel/Kconfig            |  12 +
- drivers/phy/intel/Makefile           |   1 +
- drivers/phy/intel/phy-keembay-emmc.c | 316 +++++++++++++++++++++++++++
- 3 files changed, 329 insertions(+)
- create mode 100644 drivers/phy/intel/phy-keembay-emmc.c
+If you can, I'd wrap that nugget up in a helper.  I'd also suggest being
+very explicit in a comment about what it is trying to do: ensure no TLB
+entries exist so that a future access will always set the Accessed bit.
 
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-index 7b47682a4e0e..8ddda4fb95d2 100644
---- a/drivers/phy/intel/Kconfig
-+++ b/drivers/phy/intel/Kconfig
-@@ -22,3 +22,15 @@ config PHY_INTEL_EMMC
- 	select GENERIC_PHY
- 	help
- 	  Enable this to support the Intel EMMC PHY
-+
-+config PHY_KEEMBAY_EMMC
-+	tristate "Intel Keem Bay EMMC PHY driver"
-+	depends on ARM64 || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	select GENERIC_PHY
-+	select REGMAP_MMIO
-+	help
-+	  Choose this option if you have an Intel Keem Bay SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called phy-keembay-emmc.
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-index 233d530dadde..6566334e7b77 100644
---- a/drivers/phy/intel/Makefile
-+++ b/drivers/phy/intel/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PHY_INTEL_COMBO)		+= phy-intel-combo.o
- obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-+obj-$(CONFIG_PHY_KEEMBAY_EMMC)		+= phy-keembay-emmc.o
-diff --git a/drivers/phy/intel/phy-keembay-emmc.c b/drivers/phy/intel/phy-keembay-emmc.c
-new file mode 100644
-index 000000000000..68a0e0be7d3c
---- /dev/null
-+++ b/drivers/phy/intel/phy-keembay-emmc.c
-@@ -0,0 +1,316 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel Keem Bay eMMC PHY driver
-+ * Copyright (C) 2020 Intel Corporation
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* eMMC/SD/SDIO core/phy configuration registers */
-+#define PHY_CFG_0		0x24
-+#define  SEL_DLY_TXCLK_MASK	BIT(29)
-+#define  SEL_DLY_TXCLK(x)	(((x) << 29) & SEL_DLY_TXCLK_MASK)
-+#define  OTAP_DLY_ENA_MASK	BIT(27)
-+#define  OTAP_DLY_ENA(x)	(((x) << 27) & OTAP_DLY_ENA_MASK)
-+#define  OTAP_DLY_SEL_MASK	GENMASK(26, 23)
-+#define  OTAP_DLY_SEL(x)	(((x) << 23) & OTAP_DLY_SEL_MASK)
-+#define  DLL_EN_MASK		BIT(10)
-+#define  DLL_EN(x)		(((x) << 10) & DLL_EN_MASK)
-+#define  PWR_DOWN_MASK		BIT(0)
-+#define  PWR_DOWN(x)		(((x) << 0) & PWR_DOWN_MASK)
-+
-+#define PHY_CFG_2		0x2c
-+#define  SEL_FREQ_MASK		GENMASK(12, 10)
-+#define  SEL_FREQ(x)		(((x) << 10) & SEL_FREQ_MASK)
-+
-+#define PHY_STAT		0x40
-+#define  CAL_DONE_MASK		BIT(6)
-+#define  IS_CALDONE(x)		((x) & CAL_DONE_MASK)
-+#define  DLL_RDY_MASK		BIT(5)
-+#define  IS_DLLRDY(x)		((x) & DLL_RDY_MASK)
-+
-+/* From ACS_eMMC51_16nFFC_RO1100_Userguide_v1p0.pdf p17 */
-+#define FREQSEL_200M_170M	0x0
-+#define FREQSEL_170M_140M	0x1
-+#define FREQSEL_140M_110M	0x2
-+#define FREQSEL_110M_80M	0x3
-+#define FREQSEL_80M_50M		0x4
-+
-+struct keembay_emmc_phy {
-+	struct regmap *syscfg;
-+	struct clk *emmcclk;
-+};
-+
-+static const struct regmap_config keembay_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static int keembay_emmc_phy_power(struct phy *phy, bool on_off)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+	unsigned int caldone;
-+	unsigned int dllrdy;
-+	unsigned int freqsel;
-+	unsigned int mhz;
-+	int ret;
-+
-+	/*
-+	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-+	 * initialization of CALIO state M/C DFFs
-+	 */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
-+				 PWR_DOWN(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
-+				 DLL_EN(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn off the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Already finish power off above */
-+	if (!on_off)
-+		return 0;
-+
-+	mhz = DIV_ROUND_CLOSEST(clk_get_rate(priv->emmcclk), 1000000);
-+	if (mhz <= 200 && mhz >= 170)
-+		freqsel = FREQSEL_200M_170M;
-+	else if (mhz <= 170 && mhz >= 140)
-+		freqsel = FREQSEL_170M_140M;
-+	else if (mhz <= 140 && mhz >= 110)
-+		freqsel = FREQSEL_140M_110M;
-+	else if (mhz <= 110 && mhz >= 80)
-+		freqsel = FREQSEL_110M_80M;
-+	else if (mhz <= 80 && mhz >= 50)
-+		freqsel = FREQSEL_80M_50M;
-+	else
-+		freqsel = 0x0;
-+
-+	if (mhz < 50 || mhz > 200)
-+		dev_warn(&phy->dev, "Unsupported rate: %d MHz\n", mhz);
-+
-+	/*
-+	 * According to the user manual, calpad calibration
-+	 * cycle takes more than 2us without the minimal recommended
-+	 * value, so we may need a little margin here
-+	 */
-+	udelay(5);
-+
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
-+				 PWR_DOWN(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * According to the user manual, it asks driver to wait 5us for
-+	 * calpad busy trimming. However it is documented that this value is
-+	 * PVT(A.K.A. process, voltage and temperature) relevant, so some
-+	 * failure cases are found which indicates we should be more tolerant
-+	 * to calpad busy trimming.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-+				       caldone, IS_CALDONE(caldone),
-+				       0, 50);
-+	if (ret) {
-+		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Set the frequency of the DLL operation */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_2, SEL_FREQ_MASK,
-+				 SEL_FREQ(freqsel));
-+	if (ret) {
-+		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Turn on the DLL */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
-+				 DLL_EN(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * We turned on the DLL even though the rate was 0 because we the
-+	 * clock might be turned on later.  ...but we can't wait for the DLL
-+	 * to lock when the rate is 0 because it will never lock with no
-+	 * input clock.
-+	 *
-+	 * Technically we should be checking the lock later when the clock
-+	 * is turned on, but for now we won't.
-+	 */
-+	if (mhz == 0)
-+		return 0;
-+
-+	/*
-+	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-+	 * our source clock is at 50 MHz and that lock time scales linearly
-+	 * with clock speed. If we are powering on the PHY and the card clock
-+	 * is super slow (like 100kHz) this could take as long as 5.1 ms as
-+	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-+	 * hopefully we won't be running at 100 kHz, but we should still make
-+	 * sure we wait long enough.
-+	 *
-+	 * NOTE: There appear to be corner cases where the DLL seems to take
-+	 * extra long to lock for reasons that aren't understood. In some
-+	 * extreme cases we've seen it take up to over 10ms (!). We'll be
-+	 * generous and give it 50ms.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-+				       dllrdy, IS_DLLRDY(dllrdy),
-+				       0, 50 * USEC_PER_MSEC);
-+	if (ret) {
-+		dev_err(&phy->dev, "dllrdy failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int keembay_emmc_phy_init(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem. We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 */
-+	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-+
-+	return PTR_ERR_OR_ZERO(priv->emmcclk);
-+}
-+
-+static int keembay_emmc_phy_exit(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->emmcclk);
-+
-+	return 0;
-+};
-+
-+static int keembay_emmc_phy_power_on(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* Delay chain based txclk: enable */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, SEL_DLY_TXCLK_MASK,
-+				 SEL_DLY_TXCLK(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: delay chain txclk set: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay: enable */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_ENA_MASK,
-+				 OTAP_DLY_ENA(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap delay set: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_SEL_MASK,
-+				 OTAP_DLY_SEL(2));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap delay select: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Power up eMMC phy analog blocks */
-+	return keembay_emmc_phy_power(phy, true);
-+}
-+
-+static int keembay_emmc_phy_power_off(struct phy *phy)
-+{
-+	/* Power down eMMC phy analog blocks */
-+	return keembay_emmc_phy_power(phy, false);
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= keembay_emmc_phy_init,
-+	.exit		= keembay_emmc_phy_exit,
-+	.power_on	= keembay_emmc_phy_power_on,
-+	.power_off	= keembay_emmc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int keembay_emmc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct keembay_emmc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	void __iomem *base;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->syscfg = devm_regmap_init_mmio(dev, base, &keembay_regmap_config);
-+	if (IS_ERR(priv->syscfg))
-+		return PTR_ERR(priv->syscfg);
-+
-+	generic_phy = devm_phy_create(dev, np, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id keembay_emmc_phy_dt_ids[] = {
-+	{ .compatible = "intel,keembay-emmc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, keembay_emmc_phy_dt_ids);
-+
-+static struct platform_driver keembay_emmc_phy_driver = {
-+	.probe		= keembay_emmc_phy_probe,
-+	.driver		= {
-+		.name	= "keembay-emmc-phy",
-+		.of_match_table = keembay_emmc_phy_dt_ids,
-+	},
-+};
-+module_platform_driver(keembay_emmc_phy_driver);
-+
-+MODULE_AUTHOR("Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>");
-+MODULE_DESCRIPTION("Intel Keem Bay eMMC PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+> +	/* Make sure the PTE agrees that it is untouched. */
+> +	if (WARN_ON_ONCE(sd_touched(ptep)))
+> +		return;
+> +	/* Read a portion of struct seccomp_data from the second page. */
+> +	check = sd->instruction_pointer;
+> +	/* First, verify the contents are zero from vzalloc(). */
+> +	if (WARN_ON_ONCE(check))
+> +		return;
+> +	/* Now make sure the ACCESSED bit has been set after the read. */
+> +	if (!sd_touched(ptep)) {
+> +		/*
+> +		 * If autodetection fails, fall back to standard beahavior by
+> +		 * clearing the entire "allow" bitmap.
+> +		 */
+> +		pr_warn_once("seccomp: cannot build automatic syscall filters\n");
+> +		bitmap_zero(bitmaps->allow, NR_syscalls);
+> +		return;
+> +	}
 
+I can't find any big holes with this.  It's the kind of code that makes
+me nervous, but mostly because it's pretty different that anything else
+we have in the kernel.
+
+It's also clear to me here that you probably have a slightly different
+expectation of what the PTE accessed flag means versus the hardware
+guys.  What you are looking for it to mean is roughly: "a retired
+instruction touched this page".
+
+The hardware guys would probably say it's closer to "a TLB entry was
+established for this page."  Remember that TLB entries can be
+established speculatively or from things like prefetchers.  While I
+don't know of anything microarchitectural today which would trip this
+mechanism, it's entirely possible that something in the future might.
+Accessing close to the page boundary is the exact kind of place folks
+might want to optimize.
+
+*But*, at least it would err in the direction of being conservative.  It
+would say "somebody touched the page!" more often than it should, but
+never _less_ often than it should.
+
+One thing about the implementation (which is roughly):
+
+	// Touch the data:
+	check = sd->instruction_pointer;
+	// Examine the PTE mapping that data:
+	if (!sd_touched(ptep)) {
+		// something
+	}
+
+There aren't any barriers in there, which could lead to the sd_touched()
+check being ordered before the data touch.  I think a rmb() will
+suffice.  You could even do it inside sd_touched().
+
+Was there a reason you chose to export a ranged TLB flush?  I probably
+would have just used the single-page flush_tlb_one_kernel() for this
+purpose if I were working in arch-specific code.
