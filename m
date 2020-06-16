@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E15E2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C56206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 00:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QQf3QdM3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BSEPUpGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgFPAZq (ORCPT
+        id S1726669AbgFPAZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 20:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45364 "EHLO
+        Mon, 15 Jun 2020 20:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgFPAZQ (ORCPT
+        with ESMTP id S1726632AbgFPAZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 20:25:16 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 427F6C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 17:25:15 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z63so7703750pfb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 17:25:15 -0700 (PDT)
+        Mon, 15 Jun 2020 20:25:12 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D85C08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 17:25:10 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g12so7568062pll.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Jun 2020 17:25:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=REOPzdd/CmGs51lE8EakNqzbjCuJyFF9ASwe2jIWUkM=;
-        b=QQf3QdM38flae/1AJQInyxK188sA8U7sK5aXS6/+HValDQd3+5X0itgwokmzTrHyA+
-         R1UWCROn/vGGp+i+zlfxxGj+oentym6AFl6A1rlkv5qbNwgGreaxZYNKNATMIjHv4mi3
-         7DH52UPZa2qJy9FxH86xmOA/wr0Eowqi5A8zo=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=26J9i57XuI3tG/PuFvKTO+VO1i2nL2WVB2t8LtWV05c=;
+        b=BSEPUpGU1bfDNggNEUP0Nqj8JTnaO9oNkCnioW9UyA6ww9VVZNq9IKAow/hJO5/x7E
+         K0a10xuT2S8dYWvAS+OXJg+2PHzFd//cNbC1MX+hx4O8Gjm4Qnb2PA9mZaQ+M3UePUPU
+         qznnlg6z29H6l1ei7e5Kvg21Zcq5Wbt/vWFN8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=REOPzdd/CmGs51lE8EakNqzbjCuJyFF9ASwe2jIWUkM=;
-        b=qcyH16AoDiwLtVfI7j6jrlNBShouZwsY7BBEeYrU9mfmPyy6B1SVvTRKrgEJWjtPAz
-         dBfssl7xbG45zZZQsInszr76QQRoMiIgZXl6xWSaFNBTNLsrGgYlB2+IVxEF2kLHqYXZ
-         lASI2AL0h1uFrRP5gVr9UE083uvNU145+6WWFTxwSwE8xqDRcDgfF8Cz/FbzAsO3Ca62
-         d2n0wugnuu6nqU/DOD/Afk0r1Pjmasmerez71LD4UGtsTQrRsviM3Yy9Uk+ZZGs/S/31
-         guuLtzuoEH1vDk+HzVTkvBCeJHgE8jL8FjmGFdEahA5+kKk0b2khBwAtsaK7eUuhyxG0
-         nEAA==
-X-Gm-Message-State: AOAM533KCEf/R4IHr80qV6vYBE6OLDQZt5XSEYEFxalm66e8ki4CQkXI
-        anLmECMNKrJD2iUy/DU/LKIqvvzSeqM=
-X-Google-Smtp-Source: ABdhPJwjD0VRrI+qI5cmgKfPUWYm0j1W4PB/wCepJPAVfYT/jpjtge+l0UXWhTKvO814Lyv1OULk0g==
-X-Received: by 2002:a63:9742:: with SMTP id d2mr85117pgo.95.1592267114775;
-        Mon, 15 Jun 2020 17:25:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=26J9i57XuI3tG/PuFvKTO+VO1i2nL2WVB2t8LtWV05c=;
+        b=syzR+yUPor+z3OdU/OjK2cqe36B7dVQ4i09LJNyI1A2PFINsnfFDz/7Isl64Vw9mnb
+         oI/BAZHqio98PMTimf97O50Xer7zdAr5oW2/m4LkQZfgGygM7gamtnC59R8AnjYtUlEJ
+         IyQfXW/ahsymGihYx1Zcv6MFhZpJhcTH48vOdVBa36tIJhVmedbPtoeu8oby8ISu4AcN
+         oMuE2BOo+19j8DsVeFiprwKSrFW0JPcR25ehLNxI4lbrbv/nNyYqUP9WASJlzvlDAUbj
+         Iwt8mjDFdvIuFg2bcXh1xn4h30z9MW4JmABI5rg8G5fTmBMf3LmygOM2jL5DzHGCm1td
+         Zh9Q==
+X-Gm-Message-State: AOAM532Le3Kr33pBEzCzGSMhikBkj8vIJdltOrxvHEy1r19OFvU8jWEK
+        2wjQURqHRuEN170C5Bp0poKtWw==
+X-Google-Smtp-Source: ABdhPJxVB/SPUO4YceUOYDXgO9v7NEYHhRiD2wKqsOs65ag64IEdo4Lgk8Sgle21byjXPyLlrM8QFg==
+X-Received: by 2002:a17:902:9301:: with SMTP id bc1mr397515plb.116.1592267110266;
+        Mon, 15 Jun 2020 17:25:10 -0700 (PDT)
 Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
-        by smtp.gmail.com with ESMTPSA id x2sm14783781pfr.186.2020.06.15.17.25.13
+        by smtp.gmail.com with ESMTPSA id x2sm14783781pfr.186.2020.06.15.17.25.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 17:25:14 -0700 (PDT)
+        Mon, 15 Jun 2020 17:25:09 -0700 (PDT)
 From:   Miao-chen Chou <mcchou@chromium.org>
 To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
 Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
@@ -68,12 +68,10 @@ Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Johan Hedberg <johan.hedberg@gmail.com>,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v5 4/7] Bluetooth: Add handler of MGMT_OP_REMOVE_ADV_MONITOR
-Date:   Mon, 15 Jun 2020 17:25:02 -0700
-Message-Id: <20200615172440.v5.4.Ib4effd5813fb2f8585e2c7394735050c16a765eb@changeid>
+Subject: [PATCH v5 1/7] Bluetooth: Add definitions for advertisement monitor features
+Date:   Mon, 15 Jun 2020 17:24:59 -0700
+Message-Id: <20200615172440.v5.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200615172440.v5.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
-References: <20200615172440.v5.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,148 +79,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the request handler of MGMT_OP_REMOVE_ADV_MONITOR command.
-Note that the controller-based monitoring is not yet in place. This
-removes the internal monitor(s) without sending HCI traffic, so the
-request returns immediately.
-
-The following test was performed.
-- Issue btmgmt advmon-remove with valid and invalid handles.
+This adds support for Advertisement Monitor API. Here are the commands
+and events added.
+- Read Advertisement Monitor Feature command
+- Add Advertisement Pattern Monitor command
+- Remove Advertisement Monitor command
+- Advertisement Monitor Added event
+- Advertisement Monitor Removed event
 
 Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
 ---
 
-Changes in v5:
-- Fix warnings.
-
-Changes in v4:
-- Fix warnings.
-
+Changes in v5: None
+Changes in v4: None
 Changes in v3:
-- Update the opcode in the mgmt table.
-- Convert the endianness of the returned handle.
+- Update command/event opcodes.
+- Correct data types.
 
 Changes in v2: None
 
- include/net/bluetooth/hci_core.h |  1 +
- net/bluetooth/hci_core.c         | 31 ++++++++++++++++++++++++++++
- net/bluetooth/mgmt.c             | 35 ++++++++++++++++++++++++++++++++
- 3 files changed, 67 insertions(+)
+ include/net/bluetooth/mgmt.h | 49 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 862d94f711bc0..78ac7fd282d77 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -1242,6 +1242,7 @@ void hci_adv_instances_set_rpa_expired(struct hci_dev *hdev, bool rpa_expired);
- void hci_adv_monitors_clear(struct hci_dev *hdev);
- void hci_free_adv_monitor(struct adv_monitor *monitor);
- int hci_add_adv_monitor(struct hci_dev *hdev, struct adv_monitor *monitor);
-+int hci_remove_adv_monitor(struct hci_dev *hdev, u16 handle);
+diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
+index 16e0d87bd8fae..fcc5d0349f549 100644
+--- a/include/net/bluetooth/mgmt.h
++++ b/include/net/bluetooth/mgmt.h
+@@ -702,6 +702,45 @@ struct mgmt_rp_set_exp_feature {
+ 	__le32 flags;
+ } __packed;
  
- void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb);
- 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index fdbb58eb2fb22..d0f30e2e29471 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -3041,6 +3041,37 @@ int hci_add_adv_monitor(struct hci_dev *hdev, struct adv_monitor *monitor)
- 	return 0;
- }
- 
-+static int free_adv_monitor(int id, void *ptr, void *data)
-+{
-+	struct hci_dev *hdev = data;
-+	struct adv_monitor *monitor = ptr;
++#define MGMT_ADV_MONITOR_FEATURE_MASK_OR_PATTERNS    BIT(0)
 +
-+	idr_remove(&hdev->adv_monitors_idr, monitor->handle);
-+	hci_free_adv_monitor(monitor);
++#define MGMT_OP_READ_ADV_MONITOR_FEATURES	0x0051
++#define MGMT_READ_ADV_MONITOR_FEATURES_SIZE	0
++struct mgmt_rp_read_adv_monitor_features {
++	__le32 supported_features;
++	__le32 enabled_features;
++	__le16 max_num_handles;
++	__u8 max_num_patterns;
++	__le16 num_handles;
++	__le16 handles[];
++}  __packed;
 +
-+	return 0;
-+}
++struct mgmt_adv_pattern {
++	__u8 ad_type;
++	__u8 offset;
++	__u8 length;
++	__u8 value[31];
++} __packed;
 +
-+/* This function requires the caller holds hdev->lock */
-+int hci_remove_adv_monitor(struct hci_dev *hdev, u16 handle)
-+{
-+	struct adv_monitor *monitor;
++#define MGMT_OP_ADD_ADV_PATTERNS_MONITOR	0x0052
++struct mgmt_cp_add_adv_patterns_monitor {
++	__u8 pattern_count;
++	struct mgmt_adv_pattern patterns[];
++} __packed;
++#define MGMT_ADD_ADV_PATTERNS_MONITOR_SIZE	1
++struct mgmt_rp_add_adv_patterns_monitor {
++	__le16 monitor_handle;
++} __packed;
 +
-+	if (handle) {
-+		monitor = idr_find(&hdev->adv_monitors_idr, handle);
-+		if (!monitor)
-+			return -ENOENT;
++#define MGMT_OP_REMOVE_ADV_MONITOR		0x0053
++struct mgmt_cp_remove_adv_monitor {
++	__le16 monitor_handle;
++} __packed;
++#define MGMT_REMOVE_ADV_MONITOR_SIZE		2
++struct mgmt_rp_remove_adv_monitor {
++	__le16 monitor_handle;
++} __packed;
 +
-+		idr_remove(&hdev->adv_monitors_idr, monitor->handle);
-+		hci_free_adv_monitor(monitor);
-+	} else {
-+		/* Remove all monitors if handle is 0. */
-+		idr_for_each(&hdev->adv_monitors_idr, &free_adv_monitor, hdev);
-+	}
+ #define MGMT_EV_CMD_COMPLETE		0x0001
+ struct mgmt_ev_cmd_complete {
+ 	__le16	opcode;
+@@ -933,3 +972,13 @@ struct mgmt_ev_exp_feature_changed {
+ 	__u8	uuid[16];
+ 	__le32	flags;
+ } __packed;
 +
-+	return 0;
-+}
++#define MGMT_EV_ADV_MONITOR_ADDED	0x002b
++struct mgmt_ev_adv_monitor_added {
++	__le16 monitor_handle;
++}  __packed;
 +
- struct bdaddr_list *hci_bdaddr_list_lookup(struct list_head *bdaddr_list,
- 					 bdaddr_t *bdaddr, u8 type)
- {
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 8e0d4ccf81f15..559d077a88b24 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -114,6 +114,7 @@ static const u16 mgmt_commands[] = {
- 	MGMT_OP_SET_EXP_FEATURE,
- 	MGMT_OP_READ_ADV_MONITOR_FEATURES,
- 	MGMT_OP_ADD_ADV_PATTERNS_MONITOR,
-+	MGMT_OP_REMOVE_ADV_MONITOR,
- };
- 
- static const u16 mgmt_events[] = {
-@@ -3994,6 +3995,39 @@ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
- 	return err;
- }
- 
-+static int remove_adv_monitor(struct sock *sk, struct hci_dev *hdev,
-+			      void *data, u16 len)
-+{
-+	struct mgmt_cp_remove_adv_monitor *cp = data;
-+	struct mgmt_rp_remove_adv_monitor rp;
-+	u16 handle;
-+	int err;
-+
-+	BT_DBG("request for %s", hdev->name);
-+
-+	hci_dev_lock(hdev);
-+
-+	handle = __le16_to_cpu(cp->monitor_handle);
-+
-+	err = hci_remove_adv_monitor(hdev, handle);
-+	if (err == -ENOENT) {
-+		err = mgmt_cmd_status(sk, hdev->id, MGMT_OP_REMOVE_ADV_MONITOR,
-+				      MGMT_STATUS_INVALID_INDEX);
-+		goto unlock;
-+	}
-+
-+	hci_dev_unlock(hdev);
-+
-+	rp.monitor_handle = cp->monitor_handle;
-+
-+	return mgmt_cmd_complete(sk, hdev->id, MGMT_OP_REMOVE_ADV_MONITOR,
-+				 MGMT_STATUS_SUCCESS, &rp, sizeof(rp));
-+
-+unlock:
-+	hci_dev_unlock(hdev);
-+	return err;
-+}
-+
- static void read_local_oob_data_complete(struct hci_dev *hdev, u8 status,
- 				         u16 opcode, struct sk_buff *skb)
- {
-@@ -7451,6 +7485,7 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
- 	{ read_adv_monitor_features, MGMT_READ_ADV_MONITOR_FEATURES_SIZE },
- 	{ add_adv_patterns_monitor, MGMT_ADD_ADV_PATTERNS_MONITOR_SIZE,
- 						HCI_MGMT_VAR_LEN },
-+	{ remove_adv_monitor, MGMT_REMOVE_ADV_MONITOR_SIZE },
- };
- 
- void mgmt_index_added(struct hci_dev *hdev)
++#define MGMT_EV_ADV_MONITOR_REMOVED	0x002c
++struct mgmt_ev_adv_monitor_removed {
++	__le16 monitor_handle;
++}  __packed;
 -- 
 2.26.2
 
