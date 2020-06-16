@@ -2,114 +2,143 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C988C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9452071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Rkw9rZaV"
+	by mail.kernel.org (Postfix) with ESMTP id 70FD9208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592323794;
+	bh=UGvNsIBI77475V/aFFDuzHClccitPkM+H/tfhf9NUJ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Hau7iQvH20fc0+tB1tYu/yYstLHrF4QToOlB3WtXtfHLWujvq6sJRUc+dNZ3GSt1y
+	 q+rNmRq4G0a/QTihGmVj6xN2AjWIpLvhba/19G2Hj4ZIE6rkV0gsN91LpXwLsJn/kc
+	 whdxJRiWwIOaAMniPO70UmZe/4GZdle1F7VthQIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732967AbgFPQJl (ORCPT
+        id S1732050AbgFPPpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732839AbgFPQJc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:09:32 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1E0C0613EE
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:09:32 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b201so9737555pfb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Qr6LU5AJyvXIew1juXMAoqiI4cF7kmvmZdA39adClnc=;
-        b=Rkw9rZaVLXXtIQ0m20+mYgJQ4gcuayp8YvWp0pVNnyS2Ud5bvdUdx69IRXMW08dI+y
-         pzV/H7bWfkwsJ9crKNCDPM1q0WUffbNtBokPP+PZDWzzEdUIZWHq9M86Wqe0z1bOibJL
-         0kj7zDc/gs1pT2s4SL4bLi137RE65s/ZSVNpo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Qr6LU5AJyvXIew1juXMAoqiI4cF7kmvmZdA39adClnc=;
-        b=I4H/sc//ZKvrG2obVO9D9PbDcSYrsVWUapTeRh5hqU/Itx1jJF6q7BlMB2/AtOZOBr
-         sYOzQxdaHyIWsmhAQ4d+5eQSxDtaRr6HpfdkKRQYg0t6UJcZJnfo6Gq2gbgb5TR/bezP
-         dBSph09Hd2ZKBBnGY5e9qNBpKPxKylw2Znfu11DeG8U+hOfQxKUA/ylNZFn5T66yZ4DJ
-         G1k6JLqfXxin5lm9O3dYd3hNsV2r/0tCggMNop7R5JMvBYzmN+5dJQbSY2dg/AxHNLB5
-         RnhQuP/uqIu/dvkoQgTKw9QB3UhUbyxGyBE9Zfhr22baAETPuevkTSqlZnStnQyxnnRJ
-         1ATA==
-X-Gm-Message-State: AOAM531AukYqid84b/dPQITRprMPYKx6WNsRSAkvQby2sRrexUYo7ufH
-        I+pfJ0odZEgiBlWBXzmNHPaUYA==
-X-Google-Smtp-Source: ABdhPJw0IGP4wrEgB7iuDlwGXE4MMae76XZ2NoGZ/467ZGcMrf6sY2DenPwGzgjt24xH+kDh+E9WqA==
-X-Received: by 2002:a62:9242:: with SMTP id o63mr2821188pfd.310.1592323771469;
-        Tue, 16 Jun 2020 09:09:31 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id p8sm14999992pgs.29.2020.06.16.09.09.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 09:09:30 -0700 (PDT)
-Subject: Re: [PATCH v9 1/8] fs: introduce kernel_pread_file* support
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
+        Tue, 16 Jun 2020 11:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732014AbgFPPpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 103F6214F1;
+        Tue, 16 Jun 2020 15:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592322303;
+        bh=UGvNsIBI77475V/aFFDuzHClccitPkM+H/tfhf9NUJ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WFs1JyMW+Lj5qvjgW6+hud1sP1k7MZLDXp9kxh64nfPa/NCVRTwNDhcMKxudgfuU2
+         NbWPywI44B5nAJmc2ZTPTr+FH/6DhIAVWff81B+H+4E0qKZBvNEX1FezKxBQaRv6TS
+         KsZQmr1GhVhq8w9/JBWZMclmUj5hTp+oDXVn5YtE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
         Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-References: <20200615194151.7011-1-scott.branden@broadcom.com>
- <20200615194151.7011-2-scott.branden@broadcom.com>
- <20200616073423.GC30385@infradead.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <b89a3f0f-51b9-7705-3a23-26196ae7716e@broadcom.com>
-Date:   Tue, 16 Jun 2020 09:09:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 079/163] lib: fix bitmap_parse() on 64-bit big endian archs
+Date:   Tue, 16 Jun 2020 17:34:13 +0200
+Message-Id: <20200616153110.626629451@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
+References: <20200616153106.849127260@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200616073423.GC30385@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-On 2020-06-16 12:34 a.m., Christoph Hellwig wrote:
-> Seriously, no more additions to fs.h for this interface please.  As
-> requested before as the very first thing move it out of this header
-> used by just about every file in the kernel.  That is in addition
-> to all the other issues with the interface.
-I can add such to the start of this patch series. I'm guessing from:
-#define __kernel_read_file_id(id) \
-to
-extern int kernel_read_file_from_fd(int, void **, loff_t *, loff_t,
-                     enum kernel_read_file_id);
+commit 81c4f4d924d5d009b5ed785a3e22b18d0f7b831f upstream.
+
+Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not take into
+account order of halfwords on 64-bit big endian architectures.  As
+result (at least) Receive Packet Steering, IRQ affinity masks and
+runtime kernel test "test_bitmap" get broken on s390.
+
+[andriy.shevchenko@linux.intel.com: convert infinite while loop to a for loop]
+  Link: http://lkml.kernel.org/r/20200609140535.87160-1-andriy.shevchenko@linux.intel.com
+
+Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Yury Norov <yury.norov@gmail.com>
+Cc: Amritha Nambiar <amritha.nambiar@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: "Tobin C . Harding" <tobin@kernel.org>
+Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/1591634471-17647-1-git-send-email-agordeev@linux.ibm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ lib/bitmap.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -740,8 +740,9 @@ int bitmap_parse(const char *start, unsi
+ 	int chunks = BITS_TO_U32(nmaskbits);
+ 	u32 *bitmap = (u32 *)maskp;
+ 	int unset_bit;
++	int chunk;
+ 
+-	while (1) {
++	for (chunk = 0; ; chunk++) {
+ 		end = bitmap_find_region_reverse(start, end);
+ 		if (start > end)
+ 			break;
+@@ -749,7 +750,11 @@ int bitmap_parse(const char *start, unsi
+ 		if (!chunks--)
+ 			return -EOVERFLOW;
+ 
+-		end = bitmap_get_x32_reverse(start, end, bitmap++);
++#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
++		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk ^ 1]);
++#else
++		end = bitmap_get_x32_reverse(start, end, &bitmap[chunk]);
++#endif
+ 		if (IS_ERR(end))
+ 			return PTR_ERR(end);
+ 	}
 
 
