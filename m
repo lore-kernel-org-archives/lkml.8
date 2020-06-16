@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD6AA21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888CD21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322590;
-	bh=7ZXZZYtKZQYMLuPRkXUNG8MFyrdcLd0tNJiKxGN9ECQ=;
+	s=default; t=1592322593;
+	bh=x33DfcqvHmtV7bBLn53MbpkOd18BX8qs2S2kmHLyUbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aVfpGbfgafgTsxTuPMGnlwaynaAIMsXYX4QdHR/wlStNewtNcxaK0p9JmA1VUFf+I
-	 Wxv7GZJMxl3oaR5XuPytIkvC4E/pxOjVg5Mp3/w5Zcr3brLfqS8a1aIwifbkAxQ00C
-	 lZOWWCXiMZH0vGv6FFBr3dut+JrCZLsW725xmRNQ=
+	b=h1ZY472mQNu7fNXGuZ/OaX0+ewZuaS81LcnMmyQPK+qp/yK4NiOB+bz+3NGz2n1q/
+	 KyMqhi48BgcRveu4ba9LM+DUVAagSZnDIa0ai3/Txz6H3+k1M2tipkK3Kcesnx7roQ
+	 8zaHPa2qONKqFp+E9u0hWGNZktUlwyLxZc8cqfPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbgFPPts (ORCPT
+        id S1731693AbgFPPtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:49:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44826 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:49:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732519AbgFPPtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:41 -0400
+        id S1732536AbgFPPto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94DFB21473;
-        Tue, 16 Jun 2020 15:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 435302071A;
+        Tue, 16 Jun 2020 15:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322581;
-        bh=7ZXZZYtKZQYMLuPRkXUNG8MFyrdcLd0tNJiKxGN9ECQ=;
+        s=default; t=1592322583;
+        bh=x33DfcqvHmtV7bBLn53MbpkOd18BX8qs2S2kmHLyUbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1DgsAYLbAvAbJ0VyKdArynCNUW4cjKEoYRCImo2TsNHtzyAB8TF0jl7+PxLMrYs9
-         3oxh5urmXB0E27y1EWmtHpWFPPKgsjkdpZmZePAjse0JPnQOlw7HQCx2RILNRsriV3
-         jSZymRaUxwR+QVGfavInkd5m5a8ZzOYYGOLrBAuk=
+        b=nk6Ys9q1TwwuFvqWmdQ66yBIDXcBlsuI5dCvFNGbgZ+H1jYmccmOshLkgrnB5+AXU
+         2fUrqBXWJPHvQGkjPVyKxFTy9A6phZv2R/+pzIHJ7wszHUsOgt16KGepYVWLP8d8/6
+         m+l8dFvs4Z/c1QJc+CcDsQSzX25ZVBIJxE7WzgsM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        stable@vger.kernel.org, Yuxuan Shui <yshuiv7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 023/161] staging: mt7621-pci: properly power off dual-ported pcie phy
-Date:   Tue, 16 Jun 2020 17:33:33 +0200
-Message-Id: <20200616153107.500127683@linuxfoundation.org>
+Subject: [PATCH 5.6 024/161] perf probe: Accept the instance number of kretprobe event
+Date:   Tue, 16 Jun 2020 17:33:34 +0200
+Message-Id: <20200616153107.549472199@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,73 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 5fcded5e857cf66c9592e4be28c4dab4520c9177 ]
+[ Upstream commit c6aab66a728b6518772c74bd9dff66e1a1c652fd ]
 
-Pcie phy for pcie0 and pcie1 is shared using a dual ported
-one. Current code was assuming that if nothing is connected
-in pcie0 it won't be also nothing connected in pcie1. This
-assumtion is wrong for some devices such us 'Mikrotik rbm33g'
-and 'ZyXEL LTE3301-PLUS' where only connecting a card to the
-second bus on the phy is possible. For such devices kernel
-hangs in the same point because of the wrong poweroff of the
-phy getting the following trace:
+Since the commit 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number
+on kprobe_events") introduced to show the instance number of kretprobe
+events, the length of the 1st format of the kprobe event will not 1, but
+it can be longer.  This caused a parser error in perf-probe.
 
-mt7621-pci-phy 1e149000.pcie-phy: PHY for 0xbe149000 (dual port = 1)
-mt7621-pci-phy 1e14a000.pcie-phy: PHY for 0xbe14a000 (dual port = 0)
-mt7621-pci-phy 1e149000.pcie-phy: Xtal is 40MHz
-mt7621-pci-phy 1e14a000.pcie-phy: Xtal is 40MHz
-mt7621-pci 1e140000.pcie: pcie0 no card, disable it (RST & CLK)
-[hangs]
+Skip the length check the 1st format of the kprobe event to accept this
+instance number.
 
-The wrong assumption is located in the 'mt7621_pcie_init_ports'
-function where we are just making a power off of the phy for
-slots 0 and 2 if nothing is connected in them. Hence, only
-poweroff the phy if nothing is connected in both slot 0 and
-slot 1 avoiding the kernel to hang.
+Without this fix:
 
-Fixes: 5737cfe87a9c ("staging: mt7621-pci: avoid to poweroff the phy for slot one")
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Link: https://lore.kernel.org/r/20200409111652.30964-1-sergio.paracuellos@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  # perf probe -a vfs_read%return
+  Added new event:
+    probe:vfs_read__return (on vfs_read%return)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:vfs_read__return -aR sleep 1
+
+  # perf probe -l
+  Semantic error :Failed to parse event name: r16:probe/vfs_read__return
+    Error: Failed to show event list.
+
+And with this fixes:
+
+  # perf probe -a vfs_read%return
+  ...
+  # perf probe -l
+    probe:vfs_read__return (on vfs_read%return)
+
+Fixes: 6a13a0d7b4d1 ("ftrace/kprobe: Show the maxactive number on kprobe_events")
+Reported-by: Yuxuan Shui <yshuiv7@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Yuxuan Shui <yshuiv7@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207587
+Link: http://lore.kernel.org/lkml/158877535215.26469.1113127926699134067.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/mt7621-pci/pci-mt7621.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-event.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/staging/mt7621-pci/pci-mt7621.c b/drivers/staging/mt7621-pci/pci-mt7621.c
-index a1dafec0890a..6eb7436af462 100644
---- a/drivers/staging/mt7621-pci/pci-mt7621.c
-+++ b/drivers/staging/mt7621-pci/pci-mt7621.c
-@@ -479,17 +479,25 @@ static void mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
- 
- 	mt7621_perst_gpio_pcie_deassert(pcie);
- 
-+	tmp = NULL;
- 	list_for_each_entry(port, &pcie->ports, list) {
- 		u32 slot = port->slot;
- 
- 		if (!mt7621_pcie_port_is_linkup(port)) {
- 			dev_err(dev, "pcie%d no card, disable it (RST & CLK)\n",
- 				slot);
--			if (slot != 1)
--				phy_power_off(port->phy);
- 			mt7621_control_assert(port);
- 			mt7621_pcie_port_clk_disable(port);
- 			port->enabled = false;
-+
-+			if (slot == 0) {
-+				tmp = port;
-+				continue;
-+			}
-+
-+			if (slot == 1 && tmp && !tmp->enabled)
-+				phy_power_off(tmp->phy);
-+
- 		}
- 	}
- 
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index eea132f512b0..c6bcf5709564 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -1765,8 +1765,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
+ 	fmt1_str = strtok_r(argv0_str, ":", &fmt);
+ 	fmt2_str = strtok_r(NULL, "/", &fmt);
+ 	fmt3_str = strtok_r(NULL, " \t", &fmt);
+-	if (fmt1_str == NULL || strlen(fmt1_str) != 1 || fmt2_str == NULL
+-	    || fmt3_str == NULL) {
++	if (fmt1_str == NULL || fmt2_str == NULL || fmt3_str == NULL) {
+ 		semantic_error("Failed to parse event name: %s\n", argv[0]);
+ 		ret = -EINVAL;
+ 		goto out;
 -- 
 2.25.1
 
