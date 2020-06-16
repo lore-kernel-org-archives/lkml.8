@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A223DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AD8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8100720C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497B820FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgFPMW2 (ORCPT
+        id S1729157AbgFPMWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:22:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42712 "EHLO
+        Tue, 16 Jun 2020 08:22:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728900AbgFPMWF (ORCPT
+        with ESMTP id S1728917AbgFPMWF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Jun 2020 08:22:05 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805C8C08C5C4;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ECB6C08C5C6;
         Tue, 16 Jun 2020 05:22:04 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbH-0004f8-V9; Tue, 16 Jun 2020 14:22:00 +0200
+        id 1jlAbI-0004gu-OD; Tue, 16 Jun 2020 14:22:00 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AF04D1C04CC;
-        Tue, 16 Jun 2020 14:21:51 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:51 -0000
-From:   "tip-bot2 for Luca Abeni" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EC80B1C0837;
+        Tue, 16 Jun 2020 14:21:52 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:52 -0000
+From:   "tip-bot2 for Peng Liu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/deadline: Make DL capacity-aware
-Cc:     Luca Abeni <luca.abeni@santannapisa.it>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+Subject: [tip: sched/core] sched: correct SD_flags returned by tl->sd_flags()
+Cc:     Peng Liu <iwtbavbm@gmail.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200520134243.19352-5-dietmar.eggemann@arm.com>
-References: <20200520134243.19352-5-dietmar.eggemann@arm.com>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ>
+References: <20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ>
 MIME-Version: 1.0
-Message-ID: <159231011148.16989.3880543915105728495.tip-bot2@tip-bot2>
+Message-ID: <159231011270.16989.15647375607443324340.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,131 +61,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     b4118988fdcb4554ea6687dd8ff68bcab690b8ea
-Gitweb:        https://git.kernel.org/tip/b4118988fdcb4554ea6687dd8ff68bcab690b8ea
-Author:        Luca Abeni <luca.abeni@santannapisa.it>
-AuthorDate:    Wed, 20 May 2020 15:42:42 +02:00
+Commit-ID:     9b1b234bb86bcdcdb142e900d39b599185465dbb
+Gitweb:        https://git.kernel.org/tip/9b1b234bb86bcdcdb142e900d39b599185465dbb
+Author:        Peng Liu <iwtbavbm@gmail.com>
+AuthorDate:    Tue, 09 Jun 2020 23:09:36 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:05 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:04 +02:00
 
-sched/deadline: Make DL capacity-aware
+sched: correct SD_flags returned by tl->sd_flags()
 
-The current SCHED_DEADLINE (DL) scheduler uses a global EDF scheduling
-algorithm w/o considering CPU capacity or task utilization.
-This works well on homogeneous systems where DL tasks are guaranteed
-to have a bounded tardiness but presents issues on heterogeneous
-systems.
+During sched domain init, we check whether non-topological SD_flags are
+returned by tl->sd_flags(), if found, fire a waning and correct the
+violation, but the code failed to correct the violation. Correct this.
 
-A DL task can migrate to a CPU which does not have enough CPU capacity
-to correctly serve the task (e.g. a task w/ 70ms runtime and 100ms
-period on a CPU w/ 512 capacity).
-
-Add the DL fitness function dl_task_fits_capacity() for DL admission
-control on heterogeneous systems. A task fits onto a CPU if:
-
-    CPU original capacity / 1024 >= task runtime / task deadline
-
-Use this function on heterogeneous systems to try to find a CPU which
-meets this criterion during task wakeup, push and offline migration.
-
-On homogeneous systems the original behavior of the DL admission
-control should be retained.
-
-Signed-off-by: Luca Abeni <luca.abeni@santannapisa.it>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Fixes: 143e1e28cb40 ("sched: Rework sched_domain topology definition")
+Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
-Link: https://lkml.kernel.org/r/20200520134243.19352-5-dietmar.eggemann@arm.com
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lkml.kernel.org/r/20200609150936.GA13060@iZj6chx1xj0e0buvshuecpZ
 ---
- kernel/sched/cpudeadline.c | 14 +++++++++++++-
- kernel/sched/deadline.c    | 18 ++++++++++++++----
- kernel/sched/sched.h       | 15 +++++++++++++++
- 3 files changed, 42 insertions(+), 5 deletions(-)
+ kernel/sched/topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-index 5cc4012..8630f2a 100644
---- a/kernel/sched/cpudeadline.c
-+++ b/kernel/sched/cpudeadline.c
-@@ -121,7 +121,19 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index ba81187..9079d86 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1328,7 +1328,7 @@ sd_init(struct sched_domain_topology_level *tl,
+ 		sd_flags = (*tl->sd_flags)();
+ 	if (WARN_ONCE(sd_flags & ~TOPOLOGY_SD_FLAGS,
+ 			"wrong sd_flags in topology description\n"))
+-		sd_flags &= ~TOPOLOGY_SD_FLAGS;
++		sd_flags &= TOPOLOGY_SD_FLAGS;
  
- 	if (later_mask &&
- 	    cpumask_and(later_mask, cp->free_cpus, p->cpus_ptr)) {
--		return 1;
-+		int cpu;
-+
-+		if (!static_branch_unlikely(&sched_asym_cpucapacity))
-+			return 1;
-+
-+		/* Ensure the capacity of the CPUs fits the task. */
-+		for_each_cpu(cpu, later_mask) {
-+			if (!dl_task_fits_capacity(p, cpu))
-+				cpumask_clear_cpu(cpu, later_mask);
-+		}
-+
-+		if (!cpumask_empty(later_mask))
-+			return 1;
- 	} else {
- 		int best_cpu = cpudl_maximum(cp);
- 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 9ebd0a9..84e84ba 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1643,6 +1643,7 @@ static int
- select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
- {
- 	struct task_struct *curr;
-+	bool select_rq;
- 	struct rq *rq;
- 
- 	if (sd_flag != SD_BALANCE_WAKE)
-@@ -1662,10 +1663,19 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
- 	 * other hand, if it has a shorter deadline, we
- 	 * try to make it stay here, it might be important.
- 	 */
--	if (unlikely(dl_task(curr)) &&
--	    (curr->nr_cpus_allowed < 2 ||
--	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
--	    (p->nr_cpus_allowed > 1)) {
-+	select_rq = unlikely(dl_task(curr)) &&
-+		    (curr->nr_cpus_allowed < 2 ||
-+		     !dl_entity_preempt(&p->dl, &curr->dl)) &&
-+		    p->nr_cpus_allowed > 1;
-+
-+	/*
-+	 * Take the capacity of the CPU into account to
-+	 * ensure it fits the requirement of the task.
-+	 */
-+	if (static_branch_unlikely(&sched_asym_cpucapacity))
-+		select_rq |= !dl_task_fits_capacity(p, cpu);
-+
-+	if (select_rq) {
- 		int target = find_later_rq(p);
- 
- 		if (target != -1 &&
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 91b250f..3368876 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -317,6 +317,21 @@ static inline bool __dl_overflow(struct dl_bw *dl_b, unsigned long cap,
- 	       cap_scale(dl_b->bw, cap) < dl_b->total_bw - old_bw + new_bw;
- }
- 
-+/*
-+ * Verify the fitness of task @p to run on @cpu taking into account the
-+ * CPU original capacity and the runtime/deadline ratio of the task.
-+ *
-+ * The function will return true if the CPU original capacity of the
-+ * @cpu scaled by SCHED_CAPACITY_SCALE >= runtime/deadline ratio of the
-+ * task and false otherwise.
-+ */
-+static inline bool dl_task_fits_capacity(struct task_struct *p, int cpu)
-+{
-+	unsigned long cap = arch_scale_cpu_capacity(cpu);
-+
-+	return cap_scale(p->dl.dl_deadline, cap) >= p->dl.dl_runtime;
-+}
-+
- extern void init_dl_bw(struct dl_bw *dl_b);
- extern int  sched_dl_global_validate(void);
- extern void sched_dl_do_global(void);
+ 	/* Apply detected topology flags */
+ 	sd_flags |= dflags;
