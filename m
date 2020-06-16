@@ -2,189 +2,98 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A12FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF0020882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:06:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592327160;
-	bh=M1QoIBaVC8xhr3iwlouSK+nAIz/rwZJc1l7XAu32pms=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y6pSJjeqdooikIoYzVf//ZibFVUgBkoAIv02TzX/PZjcYZypa9Sv1hB+Cz6moCedG
-	 6I/2LsXbHrJL+7VZhpnSRnrnlIia4TnOoPf6ahkaoYWF91vGvlhWzMwLrXQNaPy/8S
-	 VWPUtfhj+KlughIAYTaZB7Yi1SOA0hSUiF5S9XLw=
+	by mail.kernel.org (Postfix) with ESMTP id 6ACB32098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:07:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fivDMkIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbgFPRF7 (ORCPT
+        id S1730615AbgFPRHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:05:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37618 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729794AbgFPRF6 (ORCPT
+        Tue, 16 Jun 2020 13:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729193AbgFPRHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:05:58 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v13so16495987otp.4;
-        Tue, 16 Jun 2020 10:05:56 -0700 (PDT)
+        Tue, 16 Jun 2020 13:07:05 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D99FC061573;
+        Tue, 16 Jun 2020 10:07:05 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q11so21582985wrp.3;
+        Tue, 16 Jun 2020 10:07:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=XMRBF1iQXQfH8W0ohSSsJlVWNTVQ83/Rjd5oppXCtLI=;
+        b=fivDMkIpU7zc1RLCtNnjZu694XM1KnvZyMTP4oijXbaExASqH0Oa3tHON1Oqyv9G3g
+         qUhYNAnl6KORNi2nzVGi5fpj36Oibrg8Ztjk7odIHBRn1QUIogqFOoilx3AB7DrnN2ZH
+         1cCM8HKluGPQCeBi6Z1UvyFgxcRHKgbFG4KDqgvMdl8RtwYvpFLGXFgfzzRX5T2bYDft
+         d2ybxqYbn/wxEO5ULepxUI5kxC9qoTQcBBrNNV6mFBKOR9S3CQfWIcmI/vq7wje8cMG6
+         5a+3vK/VPNoNX2vrFc9KqxKGOGPcAJQx9VZGR74wEuhi1prQjeASf0/XYWAWSRHQxYpE
+         RZeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L/Co0dsY6weTXBLdw/lf6d5e8d2ZY246r7xqbClu1EE=;
-        b=K5lF5ocsPiDyQIdO7tSkiTYKDYZhuKAC2wnn/fhHwCM1yEU1NBG+tLyArOo+ETqoYa
-         0JmFYDDUVfPclhXI64BrIvSHAvRNVfzVGEvGBefhNEzQP0e6MpEQqx0bCOXs6BtboDYt
-         7TXooqiW/dx38fofBRiDDA8c3u5S7LjD3yb5w4zupZ62Qi7sKwKdqcOa6PP/cpnNIZFF
-         k5VquP3yneBhz9/KH0JqgUuGzhqfyAT7GfZKwCcwXi/tgpdF5jcDdCakBTXC2+QlT+3m
-         p1tEkG/Wh5qPtRlmsIHAz6SSzpU3eWz6hrOE6XeWvsYwOgQ/DkbmD0OMWhattERMB2RF
-         WctQ==
-X-Gm-Message-State: AOAM533DUEigmtOfjdbYzDJFNdea5BX/qXyev+texjWocWEjZXFXqATW
-        c50LQDE/nWXjjgROJNoQm+Pm9UcYkrxnq7jiAfQ=
-X-Google-Smtp-Source: ABdhPJwOkzrlap7CCuO148wWjFvyST6Q50uoiEUj6hNP2kRD0ttrjO13Slx0u+IzH+3dN+OUE9fa7xudPB7nWiLSddQ=
-X-Received: by 2002:a9d:39f5:: with SMTP id y108mr3370579otb.262.1592327156368;
- Tue, 16 Jun 2020 10:05:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XMRBF1iQXQfH8W0ohSSsJlVWNTVQ83/Rjd5oppXCtLI=;
+        b=VK9PnzjxqZuHxMuupwWbjPjqrGiMlNajsHg6cVeYhioT6F5s966Jp4vXr4FaVOYIFl
+         jvvgVQcGSQVRLcwRGWJAosqPiJhKIXKl+weFVQgCfiw/OczoZtrnU70PeqK+8OG9nkx/
+         tyMPPwxEDXtolVn4CP+Zex0m50RhQaKziohjr8TYVvsPrhqe/j7NIofdJFM3F9HX5pk7
+         +IorN3YuvWkZu11EdLng5MVOPwMX6/MS7ksEDscrd/pFcxAhMoYkwHyPA3URCayCyI5R
+         N2+qvACF+fW7yRLo0UNnMSQ3pHYziOU6ZexdadyPSQHERa9RAZkThnVkuL8rlZhXDqNu
+         Hy0w==
+X-Gm-Message-State: AOAM532IgwTDIJ/0jKSLCrMzufw7cLXmyLk3NRc3FcWWKbgbTt9bmjgT
+        yUQi63+ySi96HvgqVC3N9f4=
+X-Google-Smtp-Source: ABdhPJyRfWOKefA3MT1NqEbsEMU8JAdkdhU0tJ2NJpjEQ182ORyfFqdpipoj8k/8d8CeY3edcuA+2g==
+X-Received: by 2002:adf:e751:: with SMTP id c17mr3882788wrn.134.1592327224273;
+        Tue, 16 Jun 2020 10:07:04 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id u4sm5008813wmb.48.2020.06.16.10.07.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 10:07:03 -0700 (PDT)
+Subject: Re: [PATCH v3 3/4] spi: bcm63xx-hsspi: add reset support
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        broonie@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200616070223.3401282-1-noltari@gmail.com>
+ <20200616070223.3401282-4-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <fb07654a-048d-c428-545a-f5cb87cc9acc@gmail.com>
+Date:   Tue, 16 Jun 2020 10:07:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200616153106.402291280@linuxfoundation.org> <20200616153108.333633206@linuxfoundation.org>
-In-Reply-To: <20200616153108.333633206@linuxfoundation.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 16 Jun 2020 19:05:44 +0200
-Message-ID: <CAJZ5v0hgw3atK4F705KDMjX8PAPbP1Hz8G+GXj8=UaMZizNHwQ@mail.gmail.com>
-Subject: Re: [PATCH 5.6 041/161] kobject: Make sure the parent does not get
- released before its children
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200616070223.3401282-4-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 5:50 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->
-> [ Upstream commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa ]
->
-> In the function kobject_cleanup(), kobject_del(kobj) is
-> called before the kobj->release(). That makes it possible to
-> release the parent of the kobject before the kobject itself.
->
-> To fix that, adding function __kboject_del() that does
-> everything that kobject_del() does except release the parent
-> reference. kobject_cleanup() then calls __kobject_del()
-> instead of kobject_del(), and separately decrements the
-> reference count of the parent kobject after kobj->release()
-> has been called.
->
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
-> Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Tested-by: Brendan Higgins <brendanhiggins@google.com>
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> Link: https://lore.kernel.org/r/20200513151840.36400-1-heikki.krogerus@linux.intel.com
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+
+On 6/16/2020 12:02 AM, Álvaro Fernández Rojas wrote:
+> bcm63xx arch resets the HSSPI controller at early boot. However, bmips arch
+> needs to perform a reset when probing the driver.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
->  lib/kobject.c | 30 ++++++++++++++++++++----------
->  1 file changed, 20 insertions(+), 10 deletions(-)
->
-> diff --git a/lib/kobject.c b/lib/kobject.c
-> index 83198cb37d8d..2bd631460e18 100644
-> --- a/lib/kobject.c
-> +++ b/lib/kobject.c
-> @@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
->  }
->  EXPORT_SYMBOL_GPL(kobject_move);
->
-> -/**
-> - * kobject_del() - Unlink kobject from hierarchy.
-> - * @kobj: object.
-> - *
-> - * This is the function that should be called to delete an object
-> - * successfully added via kobject_add().
-> - */
-> -void kobject_del(struct kobject *kobj)
-> +static void __kobject_del(struct kobject *kobj)
->  {
->         struct kernfs_node *sd;
->         const struct kobj_type *ktype;
-> @@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
->
->         kobj->state_in_sysfs = 0;
->         kobj_kset_leave(kobj);
-> -       kobject_put(kobj->parent);
->         kobj->parent = NULL;
->  }
-> +
-> +/**
-> + * kobject_del() - Unlink kobject from hierarchy.
-> + * @kobj: object.
-> + *
-> + * This is the function that should be called to delete an object
-> + * successfully added via kobject_add().
-> + */
-> +void kobject_del(struct kobject *kobj)
-> +{
-> +       struct kobject *parent = kobj->parent;
-> +
-> +       __kobject_del(kobj);
-> +       kobject_put(parent);
-> +}
->  EXPORT_SYMBOL(kobject_del);
->
->  /**
-> @@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
->   */
->  static void kobject_cleanup(struct kobject *kobj)
->  {
-> +       struct kobject *parent = kobj->parent;
->         struct kobj_type *t = get_ktype(kobj);
->         const char *name = kobj->name;
->
-> @@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
->         if (kobj->state_in_sysfs) {
->                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
->                          kobject_name(kobj), kobj);
-> -               kobject_del(kobj);
-> +               __kobject_del(kobj);
->         }
->
->         if (t && t->release) {
-> @@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
->                 pr_debug("kobject: '%s': free name\n", name);
->                 kfree_const(name);
->         }
-> +
-> +       kobject_put(parent);
 
-This is known incorrect, because that should only be done if the
-__kobject_del() above has run.
-
-Also this commit has been reverted from the mainline.
-
-I have posted a fixed replacement for it with no response whatever so far:
-
-https://lore.kernel.org/lkml/1908555.IiAGLGrh1Z@kreacher/
-
->  }
->
->  #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
-> --
+Same comment as patch #1.
+-- 
+Florian
