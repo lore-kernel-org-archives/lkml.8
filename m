@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF62C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07A2121508
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3835E20E65
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322347;
-	bh=rm1bzAXLBXkymLfucPHjI52gwCHPLfYj8Fb3tWjdOxM=;
+	s=default; t=1592322353;
+	bh=6pBozKCjOHj7AkZeu8lezbDBJZhgI7O2YCTuNLUPR2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hHZJVe3F4YUGxlafWknK0gYTnyOhSbf3VKxcmhB/vzaVYczmQ4s06Zs/reQ65dS6l
-	 ps09vNX51cNXx7jMeiB7pFiOthSIUfz//gwJxF0kaaQrdQlNuQ93SbHrdTudHarMoh
-	 qqBQc9EYWAH0kqkjJ0Q/MKWvsa3NW24+syCLgVDc=
+	b=ylqGD0gN5pkPUMI00SqJy/MhoJCVIPjJ4bT0oq5vqRVLyXh2QsA04uhhCDSSZRt1p
+	 durGEVR1P2IlL01jkMPLJKHN6WutnQkWSfaF0U8B4H1uLG5IgkW3bVrpjo5z5nYuvz
+	 ed5W/21scgOgCB+OQk7H70hyrRNfWovavoIiHFp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731453AbgFPPpp (ORCPT
+        id S1731200AbgFPPpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:45:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37164 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:45:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbgFPPpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:45:42 -0400
+        id S1731705AbgFPPpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C2D20C09;
-        Tue, 16 Jun 2020 15:45:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A0221473;
+        Tue, 16 Jun 2020 15:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322342;
-        bh=rm1bzAXLBXkymLfucPHjI52gwCHPLfYj8Fb3tWjdOxM=;
+        s=default; t=1592322345;
+        bh=6pBozKCjOHj7AkZeu8lezbDBJZhgI7O2YCTuNLUPR2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E9bh1UZ1DdFkq3JHLGmOfhZaWTV4H5EmkRg4zZrldxUEYIeFz0bTTD06v3zcdZlOC
-         s80tACP+KOopFOQT1dBbFoslhL3jvcrU4mQIuGEI0I+Cwr0518qnEgdauim64i+gxn
-         VQRNwAD2YOl1nRcupdR2un03rXYCnDknML9i7508=
+        b=q6BkBYaPbyi23YXUgCGWoQU4axneU20xRpAUpLzKoyKWgH338kzsw0g2vYky55m1y
+         nozusB4i7pRdfh8dm7wfVmzkF7l8NoJxCsetI+mHxqpaaMo0o0gQUxIqnIjlTOWmzw
+         jEnY3xKbUxUL4H3mlqJz4RO22XUvoSA7ZRT/Y7RY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.7 054/163] io_uring: re-set iov base/len for buffer select retry
-Date:   Tue, 16 Jun 2020 17:33:48 +0200
-Message-Id: <20200616153109.432071451@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.7 088/163] PM: runtime: clk: Fix clk_pm_runtime_get() error path
+Date:   Tue, 16 Jun 2020 17:34:22 +0200
+Message-Id: <20200616153111.059772720@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -58,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit dddb3e26f6d88c5344d28cb5ff9d3d6fa05c4f7a upstream.
+commit 64c7d7ea22d86cacb65d0c097cc447bc0e6d8abd upstream.
 
-We already have the buffer selected, but we should set the iter list
-again.
+clk_pm_runtime_get() assumes that the PM-runtime usage counter will
+be dropped by pm_runtime_get_sync() on errors, which is not the case,
+so PM-runtime references to devices acquired by the former are leaked
+on errors returned by the latter.
 
-Cc: stable@vger.kernel.org # v5.7
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix this by modifying clk_pm_runtime_get() to drop the reference if
+pm_runtime_get_sync() returns an error.
+
+Fixes: 9a34b45397e5 clk: Add support for runtime PM
+Cc: 4.15+ <stable@vger.kernel.org> # 4.15+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/clk/clk.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2333,8 +2333,14 @@ static ssize_t __io_iov_buffer_select(st
- static ssize_t io_iov_buffer_select(struct io_kiocb *req, struct iovec *iov,
- 				    bool needs_lock)
- {
--	if (req->flags & REQ_F_BUFFER_SELECTED)
-+	if (req->flags & REQ_F_BUFFER_SELECTED) {
-+		struct io_buffer *kbuf;
-+
-+		kbuf = (struct io_buffer *) (unsigned long) req->rw.addr;
-+		iov[0].iov_base = u64_to_user_ptr(kbuf->addr);
-+		iov[0].iov_len = kbuf->len;
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -114,7 +114,11 @@ static int clk_pm_runtime_get(struct clk
  		return 0;
+ 
+ 	ret = pm_runtime_get_sync(core->dev);
+-	return ret < 0 ? ret : 0;
++	if (ret < 0) {
++		pm_runtime_put_noidle(core->dev);
++		return ret;
 +	}
- 	if (!req->rw.len)
- 		return 0;
- 	else if (req->rw.len > 1)
++	return 0;
+ }
+ 
+ static void clk_pm_runtime_put(struct clk_core *core)
 
 
