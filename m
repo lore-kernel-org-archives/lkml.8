@@ -2,94 +2,112 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54ED2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9137A2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:09:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gH1KvEav"
+	by mail.kernel.org (Postfix) with ESMTP id 3D9CB20810
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 07:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgFPHJ1 (ORCPT
+        id S1727079AbgFPHKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 03:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgFPHJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 03:09:26 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E17C05BD43
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:09:25 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c3so19509836wru.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 00:09:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=xjzZA1JVmcnbsQ75mNq0MIUXgWZ/kHv41u1CBA9GBrE=;
-        b=gH1KvEav1y3QBhTi9p6cRJZfAI1yODXt/yZvnFdYmStPCMcgJCVYG/QpoOdSH0rppX
-         tTLisBgXU0C8AKU5KTzUb3ufWgcbIWmQciXnvMejqamc4d3+nCdqSdUtpytIBPqlLhh8
-         isTyMDxQ5jx7pFzzx1VuXKq3OdFCUaGL47qpme0veSNXQLY1/wP/qYDpxzfZ9eVcgtLP
-         QEkakFcMamVQ32fGJyn/rHUzzDiNckLK2lNQDLenpQk//afhzyMfQwyrsziAJ/ntAza8
-         fJAXj7zON0om7A0KoYjPLrJ+tiPKuhWt3rXdbpF+4S63YTk8zmCInVeXgxzKJ8+r3VrV
-         ZQRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xjzZA1JVmcnbsQ75mNq0MIUXgWZ/kHv41u1CBA9GBrE=;
-        b=bGK+tstK48qa/kiql4JxfgE0NUS54Gk8IMzQUb0twRxB8W+igYLS7T4jRgW2wxR2VB
-         eqSWNQw5jUFsnQqY+mb4ACHqTXk+x02tDdzR7BiSqH3AqDNci5o++Ix6muPHPgs/yPbp
-         ZLS1DgV5hSokQr2XIivVuIjh4MyBezOpIWzFyTMc06tQ6eP+ZfoPdWiWMNGQ8BqsIMZN
-         OaN1WTOxVe1Jv974ATQY/eih+xpN1UM2fpo2I6jWbfyb+0ephgZl3lPUAHauj1NllUsD
-         mOizSKDNVzhJaWTlxOV2ccOMsmFZbHYLuTqV0TMT7/cAujP/oRQzGZUC28TcI4eUhpd/
-         0Eeg==
-X-Gm-Message-State: AOAM532dAnLCyQIVoSyLaltwmmGT8AT0SzuEbdhlFZTHWLiNRcdmBk+A
-        gtK5+4UWWwIka0ggFpOQXKOL0g==
-X-Google-Smtp-Source: ABdhPJyloO6MYeNZN1dv3p1GkbCH3pbQl61EBUHj8IXOQT91dm0nhSQ/4DbSP2GoKk+U9j0uU0I0NA==
-X-Received: by 2002:a5d:6085:: with SMTP id w5mr1463840wrt.322.1592291363863;
-        Tue, 16 Jun 2020 00:09:23 -0700 (PDT)
-Received: from dell ([109.180.115.156])
-        by smtp.gmail.com with ESMTPSA id p7sm28067577wro.26.2020.06.16.00.09.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 00:09:23 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 08:09:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
-Message-ID: <20200616070921.GD2608702@dell>
-References: <20200615161032.12906-1-andriy.shevchenko@linux.intel.com>
+        Tue, 16 Jun 2020 03:10:45 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6331 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726091AbgFPHKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 03:10:44 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AC51B34C361747865690;
+        Tue, 16 Jun 2020 15:10:38 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 16 Jun 2020
+ 15:10:31 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC:     <richard@nod.at>, <yi.zhang@huawei.com>, <liu.song11@zte.com.cn>
+Subject: [PATCH RFC 0/5] ubifs: Prevent memory oob accessing while dumping node
+Date:   Tue, 16 Jun 2020 15:11:41 +0800
+Message-ID: <20200616071146.2607061-1-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615161032.12906-1-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020, Andy Shevchenko wrote:
+We use function ubifs_dump_node() to dump bad node caused by some
+reasons (Such as bit flipping caused by hardware error, writing bypass
+ubifs or unknown bugs in ubifs). The node content can not be trusted
+anymore, so we should prevent memory out-of-bounds accessing while
+dumping node in following situations:
 
-> Intel Emmitsburg PCH has the same LPSS than Intel Ice Lake.
-> Add the new IDs to the list of supported devices.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/mfd/intel-lpss-pci.c | 3 +++
->  1 file changed, 3 insertions(+)
+1. bad node_len: Dumping data according to 'ch->len' which may exceed
+   the size of memory allocated for node.
+2. bad node content: Some kinds of node can record additional data, eg.
+   index node and orphan node, make sure the size of additional data
+   not beyond the node length.
+3. node_type changes: Read data according to type A, but expected type
+   B, before that, node is allocated according to type B's size. Length
+   of type A node is greater than type B node.
 
-Applied, thanks.
+Commit acc5af3efa303d5f3 ("ubifs: Fix out-of-bounds memory access caused
+by abnormal value of node_len") handles situation 1 for data node only,
+it would be better if we can solve problems in above situations for all
+kinds of nodes.
+
+Patch 1 adds a new parameter 'node_len'(size of memory which is allocated
+for the node) in function ubifs_dump_node(), safe dumping length of the
+node should be: minimum(ch->len, c->ranges[node_type].max_len, node_len).
+Besides, c->ranges[node_type].min_len can not greater than safe dumping
+length, which may caused by node_type changes(situation 3).
+
+Patch 2 reverts commit acc5af3efa303d5f ("ubifs: Fix out-of-bounds memory
+access caused by abnormal value of node_len") to prepare for patch 3.
+
+Patch 3 replaces modified function ubifs_dump_node() in all node dumping
+places except for ubifs_dump_sleb().
+
+Patch 4 removes unused function ubifs_dump_sleb(),
+
+Patch 5 allows ubifs_dump_node() to dump all branches of the index node.
+
+Some tests after patchset applied:
+https://bugzilla.kernel.org/show_bug.cgi?id=208203
+
+Zhihao Cheng (5):
+  ubifs: Limit dumping length by size of memory which is allocated for
+    the node
+  Revert "ubifs: Fix out-of-bounds memory access caused by abnormal
+    value of node_len"
+  ubifs: Pass node length in all node dumping callers
+  ubifs: ubifs_dump_sleb: Remove unused function
+  ubifs: ubifs_dump_node: Dump all branches of the index node
+
+ fs/ubifs/commit.c   |   4 +-
+ fs/ubifs/debug.c    | 111 ++++++++++++++++++++++++++------------------
+ fs/ubifs/debug.h    |   5 +-
+ fs/ubifs/file.c     |   2 +-
+ fs/ubifs/io.c       |  37 +++++----------
+ fs/ubifs/journal.c  |   3 +-
+ fs/ubifs/master.c   |   4 +-
+ fs/ubifs/orphan.c   |   6 ++-
+ fs/ubifs/recovery.c |   6 +--
+ fs/ubifs/replay.c   |   4 +-
+ fs/ubifs/sb.c       |   2 +-
+ fs/ubifs/scan.c     |   4 +-
+ fs/ubifs/super.c    |   2 +-
+ fs/ubifs/tnc.c      |   8 ++--
+ fs/ubifs/tnc_misc.c |   4 +-
+ fs/ubifs/ubifs.h    |   4 +-
+ 16 files changed, 108 insertions(+), 98 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.25.4
+
