@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F59C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C01208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADABB214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322272;
-	bh=xUyXfkQdON4UZ0F/07NZKKPngMjnfR4FTYVv2FmUUpw=;
+	s=default; t=1592322274;
+	bh=+z2rEzPrdmHOBWRCBOlmjBsTUF6O4EPLsLOg3tNTKG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LajrIqGvfiuDzpyZ6DC9dON/8fqgByWUTfRINND4kN1ka3yXikLIaR3hcTP733G8B
-	 9XWE2hxNEVnPUyG1MftdLQ/Hbjbt1JPrRJlyKYJYFqQ0ccGZzkwSSp734xJinguLlw
-	 1+hjNIbwiC97uUeTcsWbt05Wm7HbdE+ibwASqRuQ=
+	b=EgOwcyWwM9SNQiR8n6IaRw93IfnUKr/yk8cEhuXguL1HnDw/816QZB6yhfxDZQkU3
+	 SReXEqjwDl/7cIJV0/9IPSCq7A/gsDfAc7itmqsu0yN9qhAfD/blzhy3zeu9dBB48W
+	 8sJoNXMqs5bsURGRyKMFDvogxTT6uJj0ASv/Eq+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731984AbgFPPob (ORCPT
+        id S1731993AbgFPPod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34714 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:44:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731975AbgFPPo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:44:27 -0400
+        id S1731981AbgFPPoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E15E3208E4;
-        Tue, 16 Jun 2020 15:44:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F157208D5;
+        Tue, 16 Jun 2020 15:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322267;
-        bh=xUyXfkQdON4UZ0F/07NZKKPngMjnfR4FTYVv2FmUUpw=;
+        s=default; t=1592322270;
+        bh=+z2rEzPrdmHOBWRCBOlmjBsTUF6O4EPLsLOg3tNTKG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NAKUxfis0jS6bB8guFoQMHdBacrcr3koYdAZKBqXhdOv8tRrFCTM2PPiQQR5M+qvy
-         HOkENOQJzL7U7/uzgJq1pXIWr3YIE/rkSB//PpMpNEeaNqRPtWzKEiWICdWuQlCjfF
-         xD9MBPeRTF+8DUMCXb0hP6Wg+0MGLuoztyXu++tY=
+        b=ohl29LXQar4iaKJO8ET6kl43ovC46AfRZx40G7DEvrYLzsFweaKRWgXx98R0NJRit
+         UqvIeLbVFYGRmEm4LTHkUYsDPCqVwQCAPEQd5Yl9Ci6GecUz6BVReD8YEhfszowalO
+         amQDImkw4UAaHg/SFf3c56gQDesG5rQfue6p5Cjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 066/163] ALSA: fireface: start IR context immediately
-Date:   Tue, 16 Jun 2020 17:34:00 +0200
-Message-Id: <20200616153110.005372708@linuxfoundation.org>
+Subject: [PATCH 5.7 067/163] ALSA: hda/realtek - add a pintbl quirk for several Lenovo machines
+Date:   Tue, 16 Jun 2020 17:34:01 +0200
+Message-Id: <20200616153110.053491329@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,56 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit f4588cc425beb62e355bc2a5de5d5c83e26a74ca upstream.
+commit 573fcbfd319ccef26caa3700320242accea7fd5c upstream.
 
-In the latter models of RME Fireface series, device start to transfer
-packets several dozens of milliseconds. On the other hand, ALSA fireface
-driver starts IR context 2 milliseconds after the start. This results
-in loss to handle incoming packets on the context.
-
-This commit changes to start IR context immediately instead of
-postponement. For Fireface 800, this affects nothing because the device
-transfer packets 100 milliseconds or so after the start and this is
-within wait timeout.
+A couple of Lenovo ThinkCentre machines all have 2 front mics and they
+use the same codec alc623 and have the same pin config, so add a
+pintbl entry for those machines to apply the fixup
+ALC283_FIXUP_HEADSET_MIC.
 
 Cc: <stable@vger.kernel.org>
-Fixes: acfedcbe1ce4 ("ALSA: firewire-lib: postpone to start IR context")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200510074301.116224-3-o-takashi@sakamocchi.jp
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20200608115541.9531-1-hui.wang@canonical.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/fireface/ff-stream.c |   10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ sound/pci/hda/patch_realtek.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/sound/firewire/fireface/ff-stream.c
-+++ b/sound/firewire/fireface/ff-stream.c
-@@ -184,7 +184,6 @@ int snd_ff_stream_start_duplex(struct sn
- 	 */
- 	if (!amdtp_stream_running(&ff->rx_stream)) {
- 		int spd = fw_parent_device(ff->unit)->max_speed;
--		unsigned int ir_delay_cycle;
- 
- 		err = ff->spec->protocol->begin_session(ff, rate);
- 		if (err < 0)
-@@ -200,14 +199,7 @@ int snd_ff_stream_start_duplex(struct sn
- 		if (err < 0)
- 			goto error;
- 
--		// The device postpones start of transmission mostly for several
--		// cycles after receiving packets firstly.
--		if (ff->spec->protocol == &snd_ff_protocol_ff800)
--			ir_delay_cycle = 800;	// = 100 msec
--		else
--			ir_delay_cycle = 16;	// = 2 msec
--
--		err = amdtp_domain_start(&ff->domain, ir_delay_cycle);
-+		err = amdtp_domain_start(&ff->domain, 0);
- 		if (err < 0)
- 			goto error;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8124,6 +8124,12 @@ static const struct snd_hda_pin_quirk al
+ 		ALC225_STANDARD_PINS,
+ 		{0x12, 0xb7a60130},
+ 		{0x17, 0x90170110}),
++	SND_HDA_PIN_QUIRK(0x10ec0623, 0x17aa, "Lenovo", ALC283_FIXUP_HEADSET_MIC,
++		{0x14, 0x01014010},
++		{0x17, 0x90170120},
++		{0x18, 0x02a11030},
++		{0x19, 0x02a1103f},
++		{0x21, 0x0221101f}),
+ 	{}
+ };
  
 
 
