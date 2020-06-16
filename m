@@ -2,115 +2,163 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C64C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8143AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 887BC2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:33:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iQzJIz1p"
+	by mail.kernel.org (Postfix) with ESMTP id 68195208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592328984;
+	bh=nOOOW65oSsiGI9JHZ8r9JSIVhwhnVyVo7lW/X1wgbkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hgeCNwytlINmTgIGWzWB856HE3cuoWaqlN7hZ5pIHC152rMhc1lZMf9nlb6VZ3pWy
+	 dN0NVdgKZKzhyamdN663Z4ySaaSDTGAKR1HfoyLgkoJ0Ml4Uh1LGLibsGIU8jvHiti
+	 fUiQWF0oMPv04xwtgihOl/MZHKV/QiSNBQeXSro0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbgFPRdo (ORCPT
+        id S1730814AbgFPRgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:33:44 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10124 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729113AbgFPRdn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:33:43 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee902140001>; Tue, 16 Jun 2020 10:32:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 16 Jun 2020 10:33:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 16 Jun 2020 10:33:42 -0700
-Received: from [10.2.166.236] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Jun
- 2020 17:33:41 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-CC:     <kirill.shutemov@linux.intel.com>, <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: thp: remove debug_cow switch
-Date:   Tue, 16 Jun 2020 13:33:38 -0400
-X-Mailer: MailMate (1.13.1r5690)
-Message-ID: <33C9F202-A610-4C9F-87E9-C50DF77C4329@nvidia.com>
-In-Reply-To: <1592270980-116062-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1592270980-116062-1-git-send-email-yang.shi@linux.alibaba.com>
+        Tue, 16 Jun 2020 13:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729113AbgFPRgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 13:36:22 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71CD52078D;
+        Tue, 16 Jun 2020 17:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592328981;
+        bh=nOOOW65oSsiGI9JHZ8r9JSIVhwhnVyVo7lW/X1wgbkY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pcMIyzy76eQ6NWbIJFiv9deGEHOkhopgx105LCk9GLPsso5fB2vYzvHJbaylXq2of
+         ABqk7+wJ/RfTOL4ifLg6pZiGKkbO8eJRcxjIhKsia2xPOkkUrBNt2uc4BnKqHa0a0w
+         /BFMLqJWCB0wj/7nuI1QDu6PRV4uk+lSDukO0ClE=
+Date:   Tue, 16 Jun 2020 10:36:20 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>
+Subject: Re: [dm-devel] [PATCH 1/4] crypto: introduce
+ CRYPTO_ALG_ALLOCATES_MEMORY
+Message-ID: <20200616173620.GA207319@gmail.com>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200610010450.GA6449@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200610121106.GA23137@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_4F23ADB1-404C-40E3-99A6-9E39630448E4_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592328724; bh=b0XgSPW4uLM1dRrzgrkyFKmnV5pSJjQs4+MeUEM2ySE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=iQzJIz1pDDQX0QpaS+ueJXvwseZo92er7YsIOpxB6+7xXowFxDeIANjiOt4Iueuob
-         BL9q7TLyVq66UY0q/FbzhFeKaeA9AJuqHOekt2z/sOR388t6b95i0sv6+GBYJKTT0b
-         D/wGfXXxb9jESI3ukvGh3gRQ0hrmTU/6VPs3eCtZjAP24vD1xy/yBYCES5j0ZW4+IW
-         Xgk/USsV5H4ePyq6xYTRFDGbeWePLTKu064QZ6GXbHx6j3sQllC265RZ1pItcOewZ+
-         y1hNBAa56f01cO1Yp2dADWNQMFIv/Op9lVErzLqGIZHxdFqVYtaAbml12Lu6U7KYTu
-         HaFt+Ud3WL2/g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_4F23ADB1-404C-40E3-99A6-9E39630448E4_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 16, 2020 at 11:01:31AM -0400, Mikulas Patocka wrote:
+> Introduce a new flag CRYPTO_ALG_ALLOCATES_MEMORY and modify dm-crypt, so
+> that it uses only drivers without this flag.
+> 
+> If the flag is set, then the crypto driver allocates memory in its request
+> routine. Such drivers are not suitable for disk encryption because
+> GFP_ATOMIC allocation can fail anytime (causing random I/O errors) and
+> GFP_KERNEL allocation can recurse into the block layer, causing a
+> deadlock.
+> 
+> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> 
+> Index: linux-2.6/include/linux/crypto.h
+> ===================================================================
+> --- linux-2.6.orig/include/linux/crypto.h
+> +++ linux-2.6/include/linux/crypto.h
+> @@ -97,9 +97,15 @@
+>  #define CRYPTO_ALG_OPTIONAL_KEY		0x00004000
+>  
+>  /*
+> + * The driver is allocating emmory in its encrypt or decrypt callback,
+> + * so it should not be used to encrypt block devices.
+> + */
 
-On 15 Jun 2020, at 21:29, Yang Shi wrote:
+"is allocating emmory" => "may allocate memory"
 
-> Since commit 3917c80280c93a7123f1a3a6dcdb10a3ea19737d ("thp: change CoW=
+"so it should not be used to encrypt block devices" =>
+"so it shouldn't be used in cases where memory allocation failures aren't
+ acceptable, such as during block device encryption".
 
-> semantics for anon-THP"), the CoW page fault of THP has been rewritten,=
+Also, which types of algorithms does this flag apply to?  E.g. if it applies to
+hash algorithms too, it's not sufficient to say "encrypt or decrypt callback".
 
-> debug_cow is not used anymore.  So, just remove it.
->
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
+How about:
 
-Makes sense to me.
+ /*
+  * The driver may allocate memory during request processing, so it shouldn't be
+  * used in cases where memory allocation failures aren't acceptable, such as
+  * during block device encryption.
+  */
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+> +#define CRYPTO_ALG_ALLOCATES_MEMORY	0x00008000
+> +
+> +/*
+>   * Don't trigger module loading
+>   */
+> -#define CRYPTO_NOLOAD			0x00008000
+> +#define CRYPTO_NOLOAD			0x00010000
+>  
+>  /*
+>   * Transform masks and values (for crt_flags).
+> Index: linux-2.6/drivers/md/dm-crypt.c
+> ===================================================================
 
-=E2=80=94
-Best Regards,
-Yan Zi
+This would better belong as two separate patches: one to introduce
+CRYPTO_ALG_ALLOCATES_MEMORY, and one to make dm-crypt use it.
 
---=_MailMate_4F23ADB1-404C-40E3-99A6-9E39630448E4_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
+> --- linux-2.6.orig/drivers/md/dm-crypt.c
+> +++ linux-2.6/drivers/md/dm-crypt.c
+> @@ -419,7 +419,7 @@ static int crypt_iv_lmk_ctr(struct crypt
+>  		return -EINVAL;
+>  	}
+>  
+> -	lmk->hash_tfm = crypto_alloc_shash("md5", 0, 0);
+> +	lmk->hash_tfm = crypto_alloc_shash("md5", 0, CRYPTO_ALG_ALLOCATES_MEMORY);
+>  	if (IS_ERR(lmk->hash_tfm)) {
+>  		ti->error = "Error initializing LMK hash";
+>  		return PTR_ERR(lmk->hash_tfm);
+> @@ -581,7 +581,7 @@ static int crypt_iv_tcw_ctr(struct crypt
+>  		return -EINVAL;
+>  	}
+>  
+> -	tcw->crc32_tfm = crypto_alloc_shash("crc32", 0, 0);
+> +	tcw->crc32_tfm = crypto_alloc_shash("crc32", 0, CRYPTO_ALG_ALLOCATES_MEMORY);
+>  	if (IS_ERR(tcw->crc32_tfm)) {
+>  		ti->error = "Error initializing CRC32 in TCW";
+>  		return PTR_ERR(tcw->crc32_tfm);
+> @@ -768,7 +768,7 @@ static int crypt_iv_elephant_ctr(struct
+>  	struct iv_elephant_private *elephant = &cc->iv_gen_private.elephant;
+>  	int r;
+>  
+> -	elephant->tfm = crypto_alloc_skcipher("ecb(aes)", 0, 0);
+> +	elephant->tfm = crypto_alloc_skcipher("ecb(aes)", 0, CRYPTO_ALG_ALLOCATES_MEMORY);
+>  	if (IS_ERR(elephant->tfm)) {
+>  		r = PTR_ERR(elephant->tfm);
+>  		elephant->tfm = NULL;
+> @@ -2088,7 +2088,7 @@ static int crypt_alloc_tfms_skcipher(str
+>  		return -ENOMEM;
+>  
+>  	for (i = 0; i < cc->tfms_count; i++) {
+> -		cc->cipher_tfm.tfms[i] = crypto_alloc_skcipher(ciphermode, 0, 0);
+> +		cc->cipher_tfm.tfms[i] = crypto_alloc_skcipher(ciphermode, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
 
------BEGIN PGP SIGNATURE-----
+Despite the recent relaxation in rules, the preferred length of a line is still
+80 columns.
 
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl7pAnIPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKuTsQAKbBpdVpN6PpJrFS7avuVDzH6zcuyz/P2xwV
-2w9J2/5MyDJmmObha2qUux2cXAZXWln/v52BsXJYGO2EGV8aeYAj1Py4OxNp2eZ6
-GtKVvq1H0HpQogebLB4WLRx+U2QMJNU70wxPNdrCb0yYUmODs4yQR8k9zj0S26uB
-UIOkb3sW8W725cXjuJ482tVlxyLD+FnE3FWNs2RGRMgOaqv18aQT8x+FsuCpZnRr
-QvIKKBU92j5H7/Q9cLhzNzY1hiG69HfuFzEoSZbXw5Jc2Y4/isU1yQXJIHgbQ8Om
-A/lSqPpfaoGdO3MY/6AKSUqvKsVE87Nwbl5SsG3nN7BxHHTJQO4orLptw+pSo9SK
-9B1QYJOWgkAXml7RA/bABvwdr4abjQJ5ImAfh4tulIKJlCL92Efd8LdYtvegnG5s
-Gs8Twck/JMvzAoP1f2sWYy8jcGJhUKLCzu8VAIUn9gXKm/eAEUUZ+6ue6D9qnWdE
-SRR8TtM1Eo8lFL1lPTrUYyHVMP5p5N4iX63SpFVJRB30eBbKPujGwWfU6+MdB4pV
-6ou9G3FJfBnwUND9J/W/pk7WudW2nV9iIWhFjfTKJz4xbR/xbyCWvEWu13c6VHkA
-WEe3aklnxZPoumt1WyMXe+9UBZoYgUziwXcKx8UqiIZwQlpLTDa3BYpUnlXzl5Xi
-u1b1MXbY
-=NxHz
------END PGP SIGNATURE-----
-
---=_MailMate_4F23ADB1-404C-40E3-99A6-9E39630448E4_=--
+- Eric
