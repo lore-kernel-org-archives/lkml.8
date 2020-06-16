@@ -2,100 +2,122 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5950C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B49FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B55172071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104412071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ry5TuPar"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="frn5/8fp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbgFPMfF (ORCPT
+        id S1728643AbgFPMfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:35:05 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:51647 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726452AbgFPMfA (ORCPT
+        Tue, 16 Jun 2020 08:35:37 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54727 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726052AbgFPMfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:35:00 -0400
-X-UUID: 18f0da544a59497f86ccb810d66781e8-20200616
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=+GHnm45hE2jvr2nHAZ9rbe0xkhq/hG963s3MyoZ72c0=;
-        b=ry5TuParlmxjOx5nT33uoyGIJz056/Nosl70ASUWDDsrb5z9G4U0BVQwv7hHKAGYbYN0087MwM6V3RcO904MgVdYFkiKKHGhH2hk/ORdNmX9zTJ0FDLshfQ6zx2evja7vu2FX3d9eFT2grb3zV3vVvIrYUtYug/DMMJzjm8mvtU=;
-X-UUID: 18f0da544a59497f86ccb810d66781e8-20200616
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1834094559; Tue, 16 Jun 2020 20:34:53 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 16 Jun 2020 20:34:49 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 16 Jun 2020 20:34:50 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Sergey Organov <sorganov@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>
-Subject: [PATCH 2/2] usb: gadget: u_serial: improve performance for large data
-Date:   Tue, 16 Jun 2020 20:34:44 +0800
-Message-ID: <1592310884-4307-2-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1592310884-4307-1-git-send-email-macpaul.lin@mediatek.com>
-References: <1592310884-4307-1-git-send-email-macpaul.lin@mediatek.com>
+        Tue, 16 Jun 2020 08:35:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592310935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iB+tLxbMFnSjf4OCKzC/4HIzsCJg+C3y/2+RqkCXgU8=;
+        b=frn5/8fpcjbNNA7v4SdAj1bplqoGAR4sWzU2fu+FVKBiidMJQseEwnKqCdmv/4XgUoSL1s
+        DL9smDs0sn2K/oay0VE/KdpaIfWMdPj/hd9Plw1weA+aa/0RFFPveb88uSwlWAmkSM5Cn0
+        L1nYYsuzdyprGB08Xxc4wGPPGZtlKLw=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-155-p-iBgtDtPUe-w19YV8D85A-1; Tue, 16 Jun 2020 08:35:32 -0400
+X-MC-Unique: p-iBgtDtPUe-w19YV8D85A-1
+Received: by mail-qv1-f71.google.com with SMTP id v15so15473979qvm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:35:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iB+tLxbMFnSjf4OCKzC/4HIzsCJg+C3y/2+RqkCXgU8=;
+        b=dvmEEqLhBrCFqG51z72B/MdEtfwc5V6prTugeMoag/NNsoUWl/DFjxGjUzvNfnlUWC
+         3QvrvPgpTr2sCY1/GU9lK5+4rkRWtCuck9Ns/aKyHYp67KYLBs44FPHKMzdKaj3VhgTO
+         0LB+PFAAXbKDIKlX9hDsYUw+dY6cOMbZEq9gtyLZYg6GPtiY6DzID4UJtusmFeu1X4EV
+         MALx6UB4tbIzN1PGB+oVU6xdBl8uaU+qtyqFXXP95JQmW5lvlsZqB9rZyHkwIJz7GqDt
+         hcf9YGEBeUKSOxk3MySrHUb5a9fwxVDCTD4ATHgdWrPhesHaDcNrBHHPMXQlBgiLXf6/
+         Pxxg==
+X-Gm-Message-State: AOAM533914WjCOEmESuwIlefcMXPWnrtYZMWhyE2DEdR4tJqYbWd/Gye
+        CgzQb8xRHXAvQTkjz4HqYmoEx1iOcPt70G4BeA8BXeQh01ODdteLODdazkZKs8w490HpBklA5hi
+        tWHhCK3DJdUy1FEi63E2hyBbxwjiaI4C4SY6xAqju
+X-Received: by 2002:a05:620a:1f6:: with SMTP id x22mr19508295qkn.199.1592310931713;
+        Tue, 16 Jun 2020 05:35:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxD4tHLw1E0ehjNHkVDjusAddWEBYWv/x2eWVDzoN/sgBYEWc5uf2aqeTAd6jxRf8hGh0NAJfqwzHHULWAOJcw=
+X-Received: by 2002:a05:620a:1f6:: with SMTP id x22mr19508274qkn.199.1592310931497;
+ Tue, 16 Jun 2020 05:35:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: EDECF17A48CB3E8AC57607178CD1F115DB62B0B3FEBF009D4986F0C9798111442000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200615005036.GU12456@shao2-debian> <ea00a67e-5a61-2e70-215e-004e3dcc57c1@virtuozzo.com>
+In-Reply-To: <ea00a67e-5a61-2e70-215e-004e3dcc57c1@virtuozzo.com>
+From:   Miklos Szeredi <mszeredi@redhat.com>
+Date:   Tue, 16 Jun 2020 14:35:20 +0200
+Message-ID: <CAOssrKdTTZEBEfwFm+3dYJ5XB9FsFAeF5g5ydeSo7ZPKkqjJXQ@mail.gmail.com>
+Subject: Re: [fuse] 6b2fb79963: WARNING:at_fs/fuse/file.c:#tree_insert[fuse]
+To:     Vasily Averin <vvs@virtuozzo.com>
+Cc:     Maxim Patlasov <maximvp@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SWYgdGhlIGhhcmR3YXJlIChsaWtlIERNQSBlbmdpbmUpIGNvdWxkIHN1cHBvcnQgbGFyZ2UgdXNi
-IHJlcXVlc3QgZXhjZWVkcw0KbWF4aW11bSBwYWNrZXQgc2l6ZSwgdXNlIGxhcmdlciBidWZmZXIg
-d2hlbiBwZXJmb3JtaW5nIFJ4L1R4IGNvdWxkIHJlZHVjZQ0KcmVxdWVzdCBudW1iZXJzIGFuZCBp
-bXByb3ZlIHBlcmZvcm1hbmNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBNYWNwYXVsIExpbiA8bWFjcGF1
-bC5saW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy91c2IvZ2FkZ2V0L2Z1bmN0aW9uL3Vf
-c2VyaWFsLmMgfCAgICA5ICsrKysrKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMo
-KyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvZnVu
-Y3Rpb24vdV9zZXJpYWwuYyBiL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi91X3NlcmlhbC5j
-DQppbmRleCAzY2ZjNmUyLi5jZGNjMDcwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0
-L2Z1bmN0aW9uL3Vfc2VyaWFsLmMNCisrKyBiL2RyaXZlcnMvdXNiL2dhZGdldC9mdW5jdGlvbi91
-X3NlcmlhbC5jDQpAQCAtODAsNiArODAsOCBAQA0KICNkZWZpbmUgUVVFVUVfU0laRQkJMTYNCiAj
-ZGVmaW5lIFdSSVRFX0JVRl9TSVpFCQk4MTkyCQkvKiBUWCBvbmx5ICovDQogI2RlZmluZSBHU19D
-T05TT0xFX0JVRl9TSVpFCTgxOTINCisvKiBmb3IgaGFyZHdhcmUgY2FuIGRvIG1vcmUgdGhhbiBt
-YXggcGFja2V0ICovDQorI2RlZmluZSBSRVFfQlVGX1NJWkUJCTQwOTYNCiANCiAvKiBjb25zb2xl
-IGluZm8gKi8NCiBzdHJ1Y3QgZ3NfY29uc29sZSB7DQpAQCAtMjQ3LDcgKzI0OSw4IEBAIHN0YXRp
-YyBpbnQgZ3Nfc3RhcnRfdHgoc3RydWN0IGdzX3BvcnQgKnBvcnQpDQogCQkJYnJlYWs7DQogDQog
-CQlyZXEgPSBsaXN0X2VudHJ5KHBvb2wtPm5leHQsIHN0cnVjdCB1c2JfcmVxdWVzdCwgbGlzdCk7
-DQotCQlsZW4gPSBnc19zZW5kX3BhY2tldChwb3J0LCByZXEtPmJ1ZiwgaW4tPm1heHBhY2tldCk7
-DQorCQlsZW4gPSBnc19zZW5kX3BhY2tldChwb3J0LCByZXEtPmJ1ZiwgaW4tPmNhbl9leGNlZWRf
-bWF4cCA/DQorCQkJCVJFUV9CVUZfU0laRSA6IGluLT5tYXhwYWNrZXQpOw0KIAkJaWYgKGxlbiA9
-PSAwKSB7DQogCQkJd2FrZV91cF9pbnRlcnJ1cHRpYmxlKCZwb3J0LT5kcmFpbl93YWl0KTsNCiAJ
-CQlicmVhazsNCkBAIC01MTQsNyArNTE3LDkgQEAgc3RhdGljIGludCBnc19hbGxvY19yZXF1ZXN0
-cyhzdHJ1Y3QgdXNiX2VwICplcCwgc3RydWN0IGxpc3RfaGVhZCAqaGVhZCwNCiAJICogYmUgYXMg
-c3BlZWR5IGFzIHdlIG1pZ2h0IG90aGVyd2lzZSBiZS4NCiAJICovDQogCWZvciAoaSA9IDA7IGkg
-PCBuOyBpKyspIHsNCi0JCXJlcSA9IGdzX2FsbG9jX3JlcShlcCwgZXAtPm1heHBhY2tldCwgR0ZQ
-X0FUT01JQyk7DQorCQlyZXEgPSBnc19hbGxvY19yZXEoZXAsIGVwLT5jYW5fZXhjZWVkX21heHAg
-Pw0KKwkJCQkJUkVRX0JVRl9TSVpFIDogZXAtPm1heHBhY2tldCwNCisJCQkJCUdGUF9BVE9NSUMp
-Ow0KIAkJaWYgKCFyZXEpDQogCQkJcmV0dXJuIGxpc3RfZW1wdHkoaGVhZCkgPyAtRU5PTUVNIDog
-MDsNCiAJCXJlcS0+Y29tcGxldGUgPSBmbjsNCi0tIA0KMS43LjkuNQ0K
+On Mon, Jun 15, 2020 at 7:59 AM Vasily Averin <vvs@virtuozzo.com> wrote:
+>
+> On 6/15/20 3:50 AM, kernel test robot wrote:
+> > FYI, we noticed the following commit (built with gcc-9):
+> >
+> > commit: 6b2fb79963fbed7db3ef850926d913518fd5c62f ("fuse: optimize writepages search")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>
+> > [ 1030.995703] ------------[ cut here ]------------
+> > [ 1030.997563] WARNING: CPU: 1 PID: 17211 at fs/fuse/file.c:1728 tree_insert+0xab/0xc0 [fuse]
+> > [ 1031.021943] RIP: 0010:tree_insert+0xab/0xc0 [fuse]
+> > [ 1031.057802] Call Trace:
+> > [ 1031.060015]  fuse_writepages_fill+0x5da/0x6a0 [fuse]
+> > [ 1031.062536]  write_cache_pages+0x171/0x470
+> > [ 1031.064933]  ? fuse_writepages+0x100/0x100 [fuse]
+> > [ 1031.067419]  ? terminate_walk+0xd3/0xf0
+> > [ 1031.069707]  ? _cond_resched+0x19/0x30
+> > [ 1031.072140]  ? __kmalloc+0x274/0x280
+> > [ 1031.074407]  fuse_writepages+0x8a/0x100 [fuse]
+> > [ 1031.076599]  do_writepages+0x43/0xe0
+>
+> It is  WARN_ON(!wpa->ia.ap.num_pages);
+> however tree_insert() was called from fuse_writepages_fill() with ap->num_pages = 0;
+> In submitted PATCH RFC we have used
+>
+> +static int tree_insert(struct rb_root *root, struct fuse_req *ins_req)
+> ...
+> +       pgoff_t idx_to   = idx_from + (ins_req->num_pages ?
+> +                               ins_req->num_pages - 1 : 0);
+>
+> Though committed patch version have
+>
+> +static void tree_insert(struct rb_root *root, struct fuse_writepage_args *wpa)
+> ...
+> +       pgoff_t idx_to = idx_from + wpa->ia.ap.num_pages - 1;
+> ...
+> +       WARN_ON(!wpa->ia.ap.num_pages);
+>
+> Miklos,
+> do you have any objections if I return to our initial proposal?
+> Am I missed something and it is not allowed now?
+
+No objections, but you need to explain with a comment why that special
+casing of num_pages == 0 is needed.  I don't understand it yet.
+
+Thanks,
+Miklos
 
