@@ -2,127 +2,140 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C36EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA41820B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:39:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4iG10ZJ"
+	by mail.kernel.org (Postfix) with ESMTP id 24ABE20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 13:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgFPNjh (ORCPT
+        id S1728958AbgFPNlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 09:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728716AbgFPNjc (ORCPT
+        Tue, 16 Jun 2020 09:41:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27524 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726261AbgFPNle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:39:32 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A564BC06174E;
-        Tue, 16 Jun 2020 06:39:32 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id x202so19239000oix.11;
-        Tue, 16 Jun 2020 06:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fFJ7hsEAkS/er/cOkupwhFskmRsM/1kcPNiWDueIbXY=;
-        b=j4iG10ZJifpYKgHpxFg8qDzEBlYXgdm5VO3wEMk8Djzreb8/1M+1D7JoUvD+ARWnFt
-         G/SsOAgt4h0aBFko3AXQB1u7pJqWzSxUUZC9cCbmSLzZH5NLXim0G4AjEITGtSHgVKJy
-         UY/lYyd/w8zNFuRzD8S40PqTIWex5Hn0QXyRGFqPQab6t3gAxvxe3cXZFr6P8Li+eHYZ
-         3VmLm+lqKSyU0Z3EljWvxHULynn7RzS2CJbdL9eCNKMz5Q2k/tigvbQApqqU80wC+XHw
-         ikhqWydTWX6w2+JVtRzyd1YJ+khzJuiM52nj4HyQV+I0z4Pvo+iztULHcpnK4YuISVOe
-         e6jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fFJ7hsEAkS/er/cOkupwhFskmRsM/1kcPNiWDueIbXY=;
-        b=TcINAV2I02Dhm5SADOLLb914w2e/7EiGO7pyrvC8UN8QdXhf9L/yXwaiJkkdmK+KAs
-         ddHT3Pi66Pu51qYQlGxmlPsMC6IrMkuOcvg8ryb+IbWLNMK/c6wM2YzRMhrN2V+jhI8R
-         dPlC0T5UvMajvNbDzUPTR3eLtVOp3nZgLxM8OZzK2wrYeLsrAO3yhcceLugTnEqPHRjC
-         yA+7AXsP6awtcrDDrADw/WCHDM5VH2xRkj+8vLyt7r87XtV7+3UIrfPTbMPBFPuGpStd
-         Yrwsy3iuq3+9qM8qNxI8IXVGV+6u3VhSy3FXYkrKtWkHsUaMzTKx8Lz7Qj6M1xKM2q8R
-         UY7Q==
-X-Gm-Message-State: AOAM5312Vo+sdSQDejr0C/C7LEiNyq2gf4puId29bcS0kubB/PKziGO9
-        AVUFKLe4KfRgOuGtOhPtdfLH5Z19
-X-Google-Smtp-Source: ABdhPJxtZIDe/h3o9urGKjOgErmOyZ1VU5ofx7gTkZNlYtUfz7ARyL6yCCPMT1iittVSZRKV7w6VLA==
-X-Received: by 2002:aca:4145:: with SMTP id o66mr3234036oia.154.1592314772040;
-        Tue, 16 Jun 2020 06:39:32 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:b48d:5aec:2ff2:2476? ([2601:282:803:7700:b48d:5aec:2ff2:2476])
-        by smtp.googlemail.com with ESMTPSA id 35sm4028981otd.68.2020.06.16.06.39.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 06:39:31 -0700 (PDT)
-Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus' tree
-From:   David Ahern <dsahern@gmail.com>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Westphal <fw@strlen.de>
-References: <20200511130015.37103884@canb.auug.org.au>
- <20200602092040.5ef52300@canb.auug.org.au>
- <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
- <20200604112606.25ffde35@canb.auug.org.au>
- <8d943a28-2e9f-9c61-9cff-899e907d6b86@gmail.com>
- <20200604064149.GT19286@gauss3.secunet.de>
- <9b338449-e342-96ab-0ba1-a73058fac037@gmail.com>
-Message-ID: <2aab8efc-783d-8502-d268-ab435f566b06@gmail.com>
-Date:   Tue, 16 Jun 2020 07:39:30 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Tue, 16 Jun 2020 09:41:34 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GDWfeE050969;
+        Tue, 16 Jun 2020 09:41:27 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31px7ra82p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 09:41:27 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GDXnfg056120;
+        Tue, 16 Jun 2020 09:41:26 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31px7ra81b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 09:41:26 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GDeB8T007445;
+        Tue, 16 Jun 2020 13:41:24 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31mpe85e2d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 13:41:24 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GDfLr862193970
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 13:41:21 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 300264C04A;
+        Tue, 16 Jun 2020 13:41:21 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 778D84C04E;
+        Tue, 16 Jun 2020 13:41:20 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.26.88])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jun 2020 13:41:20 +0000 (GMT)
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+ <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+ <20200616115202.0285aa08.pasic@linux.ibm.com>
+ <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
+ <20200616135726.04fa8314.pasic@linux.ibm.com>
+ <20200616141744.61b3a139.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <e130c5e7-40e5-40a8-eac3-c2d17c90ee7b@linux.ibm.com>
+Date:   Tue, 16 Jun 2020 15:41:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <9b338449-e342-96ab-0ba1-a73058fac037@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200616141744.61b3a139.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 cotscore=-2147483648 spamscore=0
+ impostorscore=0 adultscore=0 suspectscore=0 clxscore=1015 bulkscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/20 6:44 AM, David Ahern wrote:
-> On 6/4/20 12:41 AM, Steffen Klassert wrote:
->> On Wed, Jun 03, 2020 at 08:55:01PM -0600, David Ahern wrote:
->>> On 6/3/20 7:26 PM, Stephen Rothwell wrote:
+
+
+On 2020-06-16 14:17, Cornelia Huck wrote:
+> On Tue, 16 Jun 2020 13:57:26 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+> 
+>> On Tue, 16 Jun 2020 12:52:50 +0200
+>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>
+>>>>>    int virtio_finalize_features(struct virtio_device *dev)
+>>>>>    {
+>>>>>    	int ret = dev->config->finalize_features(dev);
+>>>>> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
+>>>>>    	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+>>>>>    		return 0;
+>>>>>    
+>>>>> +	if (arch_needs_iommu_platform(dev) &&
+>>>>> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+>>>>> +		return -EIO;
+>>>>> +
 >>>>
->>>> And now the net-next tree has been merged into Linus' tree without this fix :-(
->>>>
+>>>> Why EIO?
 >>>
->>> I took a look earlier and I think it is fine. Some code was moved around
->>> in ipsec-next and I think the merge is good. I'll run the test cases
->>> later this week and double check. Thanks for the reminder
+>>> Because I/O can not occur correctly?
+>>> I am open to suggestions.
 >>
->> The setting of XFRM_TRANSFORMED moved to xfrm_output() and depends
->> on CONFIG_NETFILTER. So I think the fix is needed. After the merge
->> of the net tree today, I have both conflicting patches patches in
->> the ipsec tree. I'd apply the fix from Stephen unless you say
->> it is not needed.
->>
+>> We use -ENODEV if feature when the device rejects the features we
+>> tried to negotiate (see virtio_finalize_features()) and -EINVAL when
+>> the F_VERSION_1 and the virtio-ccw revision ain't coherent (in
+>> virtio_ccw_finalize_features()). Any of those seems more fitting
+>> that EIO to me. BTW does the error code itself matter in any way,
+>> or is it just OK vs some error?
 > 
-> Indeed. I must have been looking at -net. Both -net and -net-next have
-> it conditional, so yes a fixup patch is needed.
+> If I haven't lost my way, we end up in the driver core probe failure
+> handling; we probably should do -ENODEV if we just want probing to fail
+> and -EINVAL or -EIO if we want the code to moan.
 > 
 
-I see that both net and net-next still have the conditional in xfrm_output:
+what about returning -ENODEV and add a dedicated warning here?
 
-#ifdef CONFIG_NETFILTER
-                IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
-#endif
-                break;
-        case AF_INET6:
-                memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
-
-#ifdef CONFIG_NETFILTER
-                IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
-#endif
-
-Did you submit the merge fix? If not, I can do it today.
+-- 
+Pierre Morel
+IBM Lab Boeblingen
