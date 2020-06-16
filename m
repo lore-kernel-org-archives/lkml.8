@@ -2,116 +2,195 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF74C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C60532098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6418208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 17:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="bBaItCjy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h+fNcFuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbgFPRDp (ORCPT
+        id S1730473AbgFPREe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 13:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58366 "EHLO
+        Tue, 16 Jun 2020 13:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgFPRDo (ORCPT
+        with ESMTP id S1728803AbgFPREe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 13:03:44 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B985BC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:03:43 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id w7so14864592edt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:03:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9xjk5DzZyjpoB1GSJ8tZz8huXPpW+bXfr81ISG5HVdc=;
-        b=bBaItCjyqIeraEzbLMVwYMyHRe013T+gzyWOqvfnQYNP+wnSHONozCb4pfAg4GVN8j
-         jxppjlufBxsiv2qc9vo0azuW47QUZMXH3FMxb3RRDIQpQdS9i+KMZcMkJgTuU3D3MYLN
-         pKpUjLjoKTz/Ql3auxIlClwJ4AULPwNGuvKd3ClWPx0hH0vjNike46+lF+JdNAkvtrFl
-         PGkPOaYR5Y29app4UZHUICuPi2Qf1JlJl5jPUVR9/P/JgF7pi9BbjRcuDDYbBr3NxK06
-         BhuUzZnq1dDVgwGzSx2+QrsVEfXtK+GhhRXsOyJvp6T0xA1woV4PjLWS6zWO1RKsPMXp
-         B+SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9xjk5DzZyjpoB1GSJ8tZz8huXPpW+bXfr81ISG5HVdc=;
-        b=cj9IjgXxVWJtq3N8Nd6zELLb4/JBtUMrpGM3Rri+qbjVY/4sQtin/4aNeoZzvXhAp+
-         lDjMPG95k0+fr5zKoYU1xqJdQe5lEJSO2GxCwPfMduWLl9rZMllAz9+E9oAeTAketaI3
-         WycSopUbRJratjakmQEruG10e8rQ5q2gKtktbC+eEbkkJIsG7GqePTUR8gPzcYsaZPwD
-         WarD25veUXcHBFS4nQe1/2hJt7AduAtS2EW7VPM8KNhKrqc+dPzzmTIPVi7755UE9MCr
-         2S4A+Cxj6IRywPs4DMfifhidVVuuLvwbxWPRvqSgasHIwZFaUtYxq4HQiGnK+QgzQpET
-         ceSg==
-X-Gm-Message-State: AOAM532tZQd4e7vi7pgK/51Iu+Osab1JsihQLKyMYr6JU+3PiziHBFe0
-        Iu/m+L5ci7Xk17WFibpnmFp0U4vq5EMeKnOh8SUULA==
-X-Google-Smtp-Source: ABdhPJzJldCKyqNV/8NHFDtnfKWWcbuB+diPaO82MWlkxKKsCb133mLWTtMSKim2glwNE97g5peGu56W8VgQfaSD/Rg=
-X-Received: by 2002:a05:6402:459:: with SMTP id p25mr1587716edw.383.1592327022502;
- Tue, 16 Jun 2020 10:03:42 -0700 (PDT)
+        Tue, 16 Jun 2020 13:04:34 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB00C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 10:04:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ybfZuvGtNAD3OuHvtY9oE468XrDSMtDlHniKcQPRE+k=; b=h+fNcFuc4tyLe9+CTLgrSHSyKQ
+        1bKNLy1QGBmaJbYvWdKGrrR3DiLw+R7BOEG89qh2lFTHNeOtf4Q+wZJUVVmSG5jxLz4N3+krXlhzO
+        0Xu5Fwi+nbOiPuTq6yoGC2DeGsPl/VmKlw/HD+ASSpIBx41JTb4/IKD36DbZ/5xXAWjsvxhdKZ8mS
+        D8m+U0bhv1VTErYbOqF6bnCxvvu8f4Lyt5sk5J20dl6VsfoorIA6//iDvhyU11OFFyCyFgKoTgVpw
+        /5bNcms948mMZmGSYCfR5tKaKPGmJcD0nwlTx+B6Q1zy6HWJttR5MhC7w9QzMiBH84ycNHtirLNUp
+        ONMmdkrw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlF0O-0006dX-Ph; Tue, 16 Jun 2020 17:04:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 30518301A32;
+        Tue, 16 Jun 2020 19:04:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1565E2B77E16D; Tue, 16 Jun 2020 19:04:10 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 19:04:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, frederic@kernel.org
+Subject: Re: [PATCH 0/6] sched: TTWU, IPI, and assorted stuff
+Message-ID: <20200616170410.GL2554@hirez.programming.kicks-ass.net>
+References: <20200615125654.678940605@infradead.org>
+ <20200615162330.GF2723@paulmck-ThinkPad-P72>
+ <20200615164048.GC2531@hirez.programming.kicks-ass.net>
+ <20200615172149.GJ2723@paulmck-ThinkPad-P72>
+ <20200615191158.GK2531@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200616115213.13109-1-david@redhat.com> <20200616115213.13109-3-david@redhat.com>
- <20200616125051.GH9499@dhcp22.suse.cz> <CAPcyv4hjxyyxVyZbAYoXX2TM3mHF6e4VneVVcmVU+_Q4n9CxzQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4hjxyyxVyZbAYoXX2TM3mHF6e4VneVVcmVU+_Q4n9CxzQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 16 Jun 2020 10:03:31 -0700
-Message-ID: <CAPcyv4gTTVaGAKt91DcgW=t3PgWFioZA7XQrCAU_gAXhcxBe1w@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: don't shuffle complete zone
- when onlining memory
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615191158.GK2531@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:00 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Tue, Jun 16, 2020 at 5:51 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Tue 16-06-20 13:52:12, David Hildenbrand wrote:
-> > > Commit e900a918b098 ("mm: shuffle initial free memory to improve
-> > > memory-side-cache utilization") introduced shuffling of free pages
-> > > during system boot and whenever we online memory blocks.
-> > >
-> > > However, whenever we online memory blocks, all pages that will be
-> > > exposed to the buddy end up getting freed via __free_one_page(). In the
-> > > general case, we free these pages in MAX_ORDER - 1 chunks, which
-> > > corresponds to the shuffle order.
-> > >
-> > > Inside __free_one_page(), we will already shuffle the newly onlined pages
-> > > using "to_tail = shuffle_pick_tail();". Drop explicit zone shuffling on
-> > > memory hotplug.
+On Mon, Jun 15, 2020 at 09:11:58PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 15, 2020 at 10:21:49AM -0700, Paul E. McKenney wrote:
+> > On Mon, Jun 15, 2020 at 06:40:48PM +0200, Peter Zijlstra wrote:
+> 
+> > > Thanks! I've got 16*TREE03 running since this morning, so far so nothing :/
+> > > (FWIW that's 16/9 times overcommit, idle time fluctuates around 10%).
+> > 
+> > My large system as large remote memory latencies, as in the better part
+> > of a microsecond.  My small system is old (Haswell).  So, just to grasp
+> > at the obvious straw, do you have access to a multisocket Haswell system?
+> 
+> I've been running this on a 4 socket haswell ex.
 
-This was already explained in the initial patch submission. The
-shuffle_pick_tail() shuffling at run time is only sufficient for
-maintaining the shuffle. It's not sufficient for effectively
-randomizing the free list.
+Today, with patch 1 commented out, after ~5h20 I finally managed to trigger a splat.
 
-See:
+Let me go stare at it, see if it wants to yield it sekrets
 
-e900a918b098 mm: shuffle initial free memory to improve
-memory-side-cache utilization
-
-    This initial randomization can be undone over time so a follow-on patch is
-    introduced to inject entropy on page free decisions.  It is reasonable to
-    ask if the page free entropy is sufficient, but it is not enough due to
-    the in-order initial freeing of pages.  At the start of that process
-    putting page1 in front or behind page0 still keeps them close together,
-    page2 is still near page1 and has a high chance of being adjacent.  As
-    more pages are added ordering diversity improves, but there is still high
-    page locality for the low address pages and this leads to no significant
-    impact to the cache conflict rate.
+[19324.742887] BUG: kernel NULL pointer dereference, address: 0000000000000150
+[19324.744075] #PF: supervisor read access in kernel mode
+[19324.744919] #PF: error_code(0x0000) - not-present page
+[19324.745786] PGD 0 P4D 0
+[19324.746215] Oops: 0000 [#1] PREEMPT SMP PTI
+[19324.746948] CPU: 10 PID: 76 Comm: ksoftirqd/10 Tainted: G        W         5.8.0-rc1+ #8
+[19324.748080] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
+[19324.749372] RIP: 0010:check_preempt_wakeup+0xad/0x1a0
+[19324.750218] Code: d0 39 d0 7d 2c 83 ea 01 48 8b 9b 48 01 00 00 39 d0 75 f2 48 39 bb 50 01 00 00 74 1e 48 8b ad 48 01 00 00 48 8b 9b 48 01 00 00 <48> 8b bd 50 01 00 00 48 39 bb 50 01 00 00 75 e2 48 85 ff 74 dd e8
+[19324.753364] RSP: 0000:ffffb3cb40320f50 EFLAGS: 00010087
+[19324.754255] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffb400bce0
+[19324.755465] RDX: 0000000000000000 RSI: ffff93c1dbed5b00 RDI: ffff93c1df4a8380
+[19324.756682] RBP: 0000000000000000 R08: 0000000000000000 R09: ffff93c1df2e83b0
+[19324.757848] R10: 0000000000000001 R11: 0000000000000335 R12: 0000000000000001
+[19324.758453] smpboot: CPU 11 is now offline
+[19324.759099] R13: ffff93c1dcf48000 R14: ffff93c1df4a8340 R15: ffff93c1df4a8340
+[19324.761167] FS:  0000000000000000(0000) GS:ffff93c1df480000(0000) knlGS:0000000000000000
+[19324.762559] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[19324.763527] CR2: 0000000000000150 CR3: 000000001e40a000 CR4: 00000000000006e0
+[19324.764726] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[19324.765929] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[19324.767100] Call Trace:
+[19324.767516]  <IRQ>
+[19324.767875]  check_preempt_curr+0x62/0x90
+[19324.768586]  ttwu_do_wakeup.constprop.0+0xf/0x100
+[19324.769407]  sched_ttwu_pending+0xa9/0xe0
+[19324.770077]  __sysvec_call_function_single+0x28/0xe0
+[19324.770926]  asm_call_on_stack+0x12/0x20
+[19324.771594]  </IRQ>
+[19324.771951]  sysvec_call_function_single+0x94/0xd0
+[19324.772596]  asm_sysvec_call_function_single+0x12/0x20
+[19324.773254] RIP: 0010:_raw_spin_unlock_irqrestore+0x5/0x30
+[19324.774169] Code: e4 49 ff c3 90 c6 07 00 bf 01 00 00 00 e8 23 2d 53 ff 65 8b 05 cc 32 4b 4c 85 c0 74 01 c3 e8 b9 e4 49 ff c3 90 c6 07 00 56 9d <bf> 01 00 00 00 e8 01 2d 53 ff 65 8b 05 aa 32 4b 4c 85 c0 74 01 c3
+[19324.777267] RSP: 0000:ffffb3cb4030bd58 EFLAGS: 00000287
+[19324.777956] RAX: 0000000000000001 RBX: ffff93c1dbed5b00 RCX: ffff93c1dcd63400
+[19324.779015] RDX: 0000000000000000 RSI: 0000000000000287 RDI: ffff93c1dbed6284
+[19324.780067] RBP: 000000000000000a R08: 00001193646cd91c R09: ffff93c1df49c008
+[19324.781192] R10: ffffb3cb4030bdf8 R11: 000000000000032e R12: 0000000000000000
+[19324.782386] R13: 0000000000000287 R14: ffff93c1dbed6284 R15: ffff93c1df2e8340
+[19324.783565]  try_to_wake_up+0x232/0x530
+[19324.784057]  ? trace_raw_output_hrtimer_start+0x70/0x70
+[19324.784977]  call_timer_fn+0x28/0x150
+[19324.785606]  ? trace_raw_output_hrtimer_start+0x70/0x70
+[19324.786486]  run_timer_softirq+0x182/0x250
+[19324.787191]  ? set_next_entity+0x8b/0x1a0
+[19324.787867]  ? _raw_spin_unlock_irq+0xe/0x20
+[19324.788597]  ? finish_task_switch+0x7b/0x230
+[19324.789338]  __do_softirq+0xfc/0x32b
+[19324.789961]  ? smpboot_register_percpu_thread+0xd0/0xd0
+[19324.790904]  run_ksoftirqd+0x21/0x30
+[19324.791510]  smpboot_thread_fn+0x195/0x230
+[19324.792203]  kthread+0x13d/0x160
+[19324.792731]  ? kthread_create_worker_on_cpu+0x60/0x60
+[19324.793576]  ret_from_fork+0x22/0x30
+[19324.794186] Modules linked in:
+[19324.794729] CR2: 0000000000000150
+[19324.795303] ------------[ cut here ]------------
+[19324.795304] WARNING: CPU: 10 PID: 76 at kernel/smp.c:138 __smp_call_single_queue+0x40/0x50
+[19324.795305] Modules linked in:
+[19324.795306] CPU: 10 PID: 76 Comm: ksoftirqd/10 Not tainted 5.8.0-rc1+ #8
+[19324.795307] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
+[19324.795307] RIP: 0010:__smp_call_single_queue+0x40/0x50
+[19324.795308] Code: c2 40 91 02 00 4c 89 e6 4c 89 e7 48 03 14 c5 e0 56 2d b4 e8 b2 3a 2f 00 84 c0 75 04 5d 41 5c c3 89 ef 5d 41 5c e9 40 af f9 ff <0f> 0b eb cd 66 66 2e 0f 1f 84 00 00 00 00 00 90 41 54 49 89 f4 55
+[19324.795309] RSP: 0000:ffffb3cb4030bd18 EFLAGS: 00010046
+[19324.795310] RAX: 000000000000000a RBX: 0000000000000000 RCX: 00000000ffffffff
+[19324.795310] RDX: 00000000000090aa RSI: ffffffffb420bc3f RDI: ffffffffb4232e3e
+[19324.795311] RBP: 000000000000000a R08: 00001193646cd91c R09: ffff93c1df49c008
+[19324.795312] R10: ffffb3cb4030bdf8 R11: 000000000000032e R12: ffff93c1dbed5b30
+[19324.795312] R13: ffff93c1df4a8340 R14: 000000000000000a R15: ffff93c1df2e8340
+[19324.795313] FS:  0000000000000000(0000) GS:ffff93c1df480000(0000) knlGS:0000000000000000
+[19324.795313] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[19324.795314] CR2: 00000000ffffffff CR3: 000000001e40a000 CR4: 00000000000006e0
+[19324.795315] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[19324.795315] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[19324.795316] Call Trace:
+[19324.795316]  ttwu_queue_wakelist+0xa4/0xc0
+[19324.795316]  try_to_wake_up+0x432/0x530
+[19324.795317]  ? trace_raw_output_hrtimer_start+0x70/0x70
+[19324.795317]  call_timer_fn+0x28/0x150
+[19324.795318]  ? trace_raw_output_hrtimer_start+0x70/0x70
+[19324.795318]  run_timer_softirq+0x182/0x250
+[19324.795319]  ? set_next_entity+0x8b/0x1a0
+[19324.795319]  ? _raw_spin_unlock_irq+0xe/0x20
+[19324.795319]  ? finish_task_switch+0x7b/0x230
+[19324.795320]  __do_softirq+0xfc/0x32b
+[19324.795320]  ? smpboot_register_percpu_thread+0xd0/0xd0
+[19324.795321]  run_ksoftirqd+0x21/0x30
+[19324.795321]  smpboot_thread_fn+0x195/0x230
+[19324.795321]  kthread+0x13d/0x160
+[19324.795322]  ? kthread_create_worker_on_cpu+0x60/0x60
+[19324.795322]  ret_from_fork+0x22/0x30
+[19324.795323] ---[ end trace 851fe1f1f7a85d8b ]---
+[19324.828475] ---[ end trace 851fe1f1f7a85d8c ]---
+[19324.829250] RIP: 0010:check_preempt_wakeup+0xad/0x1a0
+[19324.830107] Code: d0 39 d0 7d 2c 83 ea 01 48 8b 9b 48 01 00 00 39 d0 75 f2 48 39 bb 50 01 00 00 74 1e 48 8b ad 48 01 00 00 48 8b 9b 48 01 00 00 <48> 8b bd 50 01 00 00 48 39 bb 50 01 00 00 75 e2 48 85 ff 74 dd e8
+[19324.833208] RSP: 0000:ffffb3cb40320f50 EFLAGS: 00010087
+[19324.834098] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffb400bce0
+[19324.835272] RDX: 0000000000000000 RSI: ffff93c1dbed5b00 RDI: ffff93c1df4a8380
+[19324.836466] RBP: 0000000000000000 R08: 0000000000000000 R09: ffff93c1df2e83b0
+[19324.837669] R10: 0000000000000001 R11: 0000000000000335 R12: 0000000000000001
+[19324.838867] R13: ffff93c1dcf48000 R14: ffff93c1df4a8340 R15: ffff93c1df4a8340
+[19324.840019] FS:  0000000000000000(0000) GS:ffff93c1df480000(0000) knlGS:0000000000000000
+[19324.841316] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[19324.842242] CR2: 0000000000000150 CR3: 000000001e40a000 CR4: 00000000000006e0
+[19324.843406] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[19324.844568] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[19324.845710] Kernel panic - not syncing: Fatal exception in interrupt
+[19324.846998] Kernel Offset: 0x32000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[19324.848713] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
