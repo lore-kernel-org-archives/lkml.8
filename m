@@ -2,107 +2,98 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 499712074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1912074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 09:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="BL1D7zf5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lvgHYSHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgFPJDZ (ORCPT
+        id S1727884AbgFPJDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 05:03:25 -0400
-Received: from mail-co1nam11on2067.outbound.protection.outlook.com ([40.107.220.67]:6144
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725710AbgFPJDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:03:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MD0AtnFlewPij0ASAWRT5JIXp0anEdFNgzLycFRyuHQkxoUaUgjKtL4Ze8Fs+vdXyqpSA5XUYP3DaAD7/OrHFuAYytVVglbmJcNWmFXZdaBkOr3Er/EacRHHA2eKl3mSWgcIGNmYmD+pw3+H3DI0RczQXu3Csjpi7Z8JJWCQfchhQWXRJTAvGVTSgMPdbmbdU/fMNIlW+L+d7UWrAGMN/fpVwo+hcbHwRJyGG2ubE/ASsvluxOWCHOMrkNrj9hbMvzGk0hVSMatMf2ExAG8zzeI+NQ6Ca2OaoaiNWHLekDp39Yv0clnkjBlv9/luJKixzSfT40RmS9od2+O3gFrkTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5LIPuUCQfNj+KHiK9rx5zNCPa/+ndf2ma/xPZg6UMoc=;
- b=QSzrnRRiQhMP8tZtlxm4G7QUx0LfnikYw4MZWjqH74QiAIiifrOz190EzMEGIOGddkHztZ/IXFHvaEgkD8ZBAsV8tp6v/BrCXXhtqZYcEdkRg0IGHG0597dsHg3Dp5tR68+ddAl8rlLXALGjqb5wGm6i0f9l6A0kvuk1K/mrrKgwvyJ/A9H6E8LaF+3ic8xVM1JC1tgTAs9BZhNO/3/9yN+3jSGJgC33xPZ4rMJlwV381ibCPIpZ7sgqWw4j9SQJLMwJTm+Qr+MmXTIh8X4tBqp6xLw8UNXxBRv8eGleBRU+VFo9uyOkacl+kCci62CcJr00Vc8Vth2YuLUL4C3TXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Tue, 16 Jun 2020 05:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgFPJD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 05:03:28 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3726C03E96A
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:03:26 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l11so19918840wru.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 02:03:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5LIPuUCQfNj+KHiK9rx5zNCPa/+ndf2ma/xPZg6UMoc=;
- b=BL1D7zf5hbwsdeUFXvtD3TNFE40nfxcHX4lnSSa36YI2y+PAcCBljd9M+gbM7rBXU8AU+FhPXM3l4nVCNYkSHPpXKrdoU7nCQFC0ZjmjnzFsWon6aCom6cc4keuRxHOkAKAA+diOYiZjhxBsYMESCWypzHer3WHTrPPaashd8Mw=
-Authentication-Results: synopsys.com; dkim=none (message not signed)
- header.d=none;synopsys.com; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BYAPR03MB4792.namprd03.prod.outlook.com (2603:10b6:a03:135::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Tue, 16 Jun
- 2020 09:03:21 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3088.028; Tue, 16 Jun 2020
- 09:03:21 +0000
-Date:   Tue, 16 Jun 2020 17:03:11 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Query]usb: dwc2: suspend/resume support for
- DWC2_POWER_DOWN_PARAM_NONE case
-Message-ID: <20200616164712.67bf105c@xhacker.debian>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TY2PR02CA0059.apcprd02.prod.outlook.com
- (2603:1096:404:e2::23) To BYAPR03MB3573.namprd03.prod.outlook.com
- (2603:10b6:a02:ae::15)
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lDNCxnb1DYpdrlf35UqFFy3yTai7H7N9sG+v5i2Zww4=;
+        b=lvgHYSHqKLTgxAzGT3gCKD6NOFxMOgIo+PIl/yDI6gMclwq4OQV1ovp19Kor1PUUrI
+         tKySpt/PQ5tTwntS6GZzuU8k5yeWtrUw1ZKnSWx1pNO2a6ZcRBLLJmB4asgr9qGADtil
+         bSCXvzeeCed3I8OacKe36YhQhSpp4PBme2AkyXxWR8O/kHiRmHkcEe+KPbnI/ZaG2yYU
+         JlpKI+gZLSdFs7OVHGDbm0nG3bX5V4V9zHzFLvfqk//ZXDuz4xT2vcY0TAh482ZBxmIr
+         Sk1KZdP2tlOLbzlPkcJXF7BwFbmRVkut+KsI/qUiyKEaYNNjJ99G8nsmKMqftCOR0ia6
+         2+PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lDNCxnb1DYpdrlf35UqFFy3yTai7H7N9sG+v5i2Zww4=;
+        b=CDhLFgBuMTf/M+j6oOI1/z8zlioXFr+QW1xqamkg0apNVirrsnfF/Sf9K5nzlWQS7r
+         QEmEpAqmY4ac1Zo4PRBHO86zl2VBJ1cXsv52Rvis104SkX1OdZ9ngjquKXOJddQhuSSO
+         3e19/RQwCJUSUDgspHhzj/qFWlVHOV7SMqk/YNTth+yxr9+XJXQrMgE5lH6DCLcixTmx
+         Fsb52Xt34AGyakcU+NAkibMHLPGaMVzjrCRuddL9lJTMB+T4+ORpJMSZFIGFiGGN2U+k
+         q/kCYJY2WPpCsvq7xh/ZOi1KkzMMZUSaWFuCDPclSkLE4RpPNFtph+vGOF/ID9Lyduaf
+         DiCw==
+X-Gm-Message-State: AOAM531YF1o0XzV7XG7hil128y32TCogEKJrK4SvY+syO5RSmFLCicx3
+        Y461Y93eeryLz8ittS1t/rkDTA==
+X-Google-Smtp-Source: ABdhPJzMuAADdmSq767ybrYcZCnAWj09SBWZxI0QASOBJ9pzkRuk1jisXG0pfU51rUiGLS95P85bhQ==
+X-Received: by 2002:a5d:42cd:: with SMTP id t13mr1874691wrr.355.1592298205550;
+        Tue, 16 Jun 2020 02:03:25 -0700 (PDT)
+Received: from localhost.localdomain ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id c66sm3148331wma.20.2020.06.16.02.03.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 02:03:24 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
+        leoyang.li@nxp.com, Anson.Huang@nxp.com, olof@lixom.net,
+        geert+renesas@glider.be, marcin.juszkiewicz@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        georgi.djakov@linaro.org
+Subject: [PATCH] arm64: defconfig: Enable the PM8xxx RTC driver
+Date:   Tue, 16 Jun 2020 12:03:24 +0300
+Message-Id: <20200616090324.6976-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TY2PR02CA0059.apcprd02.prod.outlook.com (2603:1096:404:e2::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21 via Frontend Transport; Tue, 16 Jun 2020 09:03:19 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b6658c7b-9af4-462b-413b-08d811d41e37
-X-MS-TrafficTypeDiagnostic: BYAPR03MB4792:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB4792F8D0B59DF94C3AD60EDCED9D0@BYAPR03MB4792.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 04362AC73B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0qyQ6EsN/fVnp0YS4zkIdX4K4ck1rOvkzemdh9rpWi0lm2PQDwNFvDh1GnW4SUjdZ5ZHuqK33Q6Z5/OJ8l9rn03W5H+6x0wLhmDwmKui6iVbFpdLay0hcS9O4Aw3xFaQxJ7VYc035R1oYCOLKhLQquueW5Hqqk07fXX8HuCFsSyZNPMQVknB6SfjV4SjMeoh6/vCsrAFM42kJeXW1AKMfeaC9CsWvmM0iaL50Tu3Iqm04Fgw8m/uqUV0we5wT1Vl+uxdq/p4cll7Dmde482fJG380dZKw1fV9OhAbsp6a59DtKfg3VoWQMoeb7NpmeePZjceUR9cp+oGArSppQS7Og==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(396003)(39860400002)(366004)(316002)(2906002)(6506007)(66556008)(66946007)(66476007)(26005)(15650500001)(16526019)(4326008)(186003)(55016002)(7696005)(52116002)(956004)(86362001)(9686003)(6666004)(478600001)(1076003)(5660300002)(4744005)(110136005)(83380400001)(8676002)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: RdzuWZJH5n3HhgFx/2kdPW52M4FjdBVzcU+Zm+wgFuK/IK0IMjdJhth6FHCYIaxmyfjPL5z680ibFHjHXy/vInGFOvWviHRyyOgjpfwzNNevjf5iWa/x2nbp3yUS4oTi5ftnu9Y47kIKZuMuu38wGcU0YHG6pt1Sn6yijA8mALiP2lMHnQEW6W+zfnoedAP9QWliZydCE0ffEFF32aEa4ipANaDSNfwDRPj31a3EvYx8XopX2tXHa5yuhZlYwN8C3zALZRn6Mo/nvQTAqvBexURUa2wYDljL96jzHALT97wR3f1ePq794D3ASYgjJckN1y4Ch/MIYW79QdvoXT8AkIX5Lny4osM/ohzVH8cCJWZFr6TKbZXwUSOvfp1HWbFMvmcOqw7f72JO3/PSukT+3ICTifrNa+cYlnbCyc5b7BGqlVPK0v/L717LXwa0zqqjE/q4iK7ng5iYOXo96g0z9UDf0JioI+NET5cZ2W/IbRD7pBSALyXRh4zCIZ+d/g3N
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6658c7b-9af4-462b-413b-08d811d41e37
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2020 09:03:21.4189
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m4QZ32oArkmgJDBX8ghu0IHRvyGgKbbGCITuKwOMFdRedFUMu1F7k4FV/VLfugyKq9bljBD9OoTB3pdfMjKMOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4792
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Enable the driver for the real time clock found in the PMICs on various
+Qualcomm platforms.
 
-After reading current dwc2 code, I got an impression that resume from suspend
-to ram isn't supported for DWC2_POWER_DOWN_PARAM_NONE case, right? In fact
-we do see usb device can't resume properly with DWC2_POWER_DOWN_PARAM_NONE case.
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-If the impression is true, what's the proper technical direction? Add 
-dwc2_host_enter_suspend() as dwc2_host_enter_hibernation()
-and 
-dwc2_host_exit_suspend() as dwc2_host_exit_hibernation()?
-
-Thanks in advance,
-Jisheng
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 883e8bace3ed..387807e40010 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -760,6 +760,7 @@ CONFIG_RTC_DRV_S3C=y
+ CONFIG_RTC_DRV_PL031=y
+ CONFIG_RTC_DRV_SUN6I=y
+ CONFIG_RTC_DRV_ARMADA38X=y
++CONFIG_RTC_DRV_PM8XXX=m
+ CONFIG_RTC_DRV_TEGRA=y
+ CONFIG_RTC_DRV_SNVS=m
+ CONFIG_RTC_DRV_IMX_SC=m
