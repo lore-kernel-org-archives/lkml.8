@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C57C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE292071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAB0207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323352;
-	bh=tm5emzIZe1eyeA5dlv4d4lUnsTh7XE+ZpULMTA+WaiU=;
+	s=default; t=1592323362;
+	bh=0C/mNTEOjZ2lmpONHhiVdH/VB/xNefd/mk9iWbnGayU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJli4K8feimZBN38toxRpq/58cfvB/au1+E/TrV7k15Lj9cC+AeES6MG5cecnIQO+
-	 qUcsbI5mYEPyZVBA7gpJSSPvjnuy7fix7ZO2J4aOZzMATeTn3rMIATBq8e10cRpePb
-	 +A1G0HO7sQfNKxtLeV6iwVAedLHwm0yopxjQkAjM=
+	b=MKxdHqxoTLiPp8w6oGwV4caGWDKdJ/M3rQ6lMmFxRrUQcoU/uJqnnPb7wxRg845jX
+	 ZLmtWYZaZuEGoSFTvXfP9/k7GIcAzs2Bir4JC1Iy2+v0At2XGsTKFzX9smamDBsiqU
+	 8hDZ5wun6ET0J2Odt48G3K4bTAC1wYzVOu/i4j6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732915AbgFPQCb (ORCPT
+        id S1733190AbgFPQCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:02:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47854 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:02:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732496AbgFPPvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:51:23 -0400
+        id S1732471AbgFPPvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:51:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1080C214DB;
-        Tue, 16 Jun 2020 15:51:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E8F621501;
+        Tue, 16 Jun 2020 15:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322681;
-        bh=tm5emzIZe1eyeA5dlv4d4lUnsTh7XE+ZpULMTA+WaiU=;
+        s=default; t=1592322668;
+        bh=0C/mNTEOjZ2lmpONHhiVdH/VB/xNefd/mk9iWbnGayU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upHbOABkb5iRfPHIo1+hLOhUhT2KznMXtTqCfjsyQ4K+dJLMNNVnHHgUfVu05oN9b
-         rxmLOaJjaFzArhP2PQcgJ5wbmUlNpzaDKY71gzG4P5cq44NhKMzNeef9CbeM0JXqwU
-         cmZ7P1lZ70fdTzHfZyS1YYPxueR3ApONiI0ivMu0=
+        b=DXzIQmsk68pBl0oSkXuyTz+Sfx13GZo4WPOJWE6qD+XO6lVrSpuC3sb++3z07Y2OS
+         TnFtYY0H3xJNZKFRzoKMKlqQ397t7H23PQTMqHaaXhIiNy9PgfM9C3qFCxe0iGC6md
+         qQ+iuSAcGJy1eDMzMbj8HCekNxiTHfDIku5TX6tk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Dobias <dobias@2n.cz>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.6 061/161] ASoC: max9867: fix volume controls
-Date:   Tue, 16 Jun 2020 17:34:11 +0200
-Message-Id: <20200616153109.282503835@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 057/161] KVM: x86/mmu: Set mmio_value to 0 if reserved #PF cant be generated
+Date:   Tue, 16 Jun 2020 17:34:07 +0200
+Message-Id: <20200616153109.092314231@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,42 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Dobias <dobias@2n.cz>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 8ba4dc3cff8cbe2c571063a5fd7116e8bde563ca upstream.
+commit 6129ed877d409037b79866327102c9dc59a302fe upstream.
 
-The xmax values for Master Playback Volume and Mic Boost
-Capture Volume are specified incorrectly (one greater)
-which results in the wrong dB gain being shown to the user
-in the case of Master Playback Volume.
+Set the mmio_value to '0' instead of simply clearing the present bit to
+squash a benign warning in kvm_mmu_set_mmio_spte_mask() that complains
+about the mmio_value overlapping the lower GFN mask on systems with 52
+bits of PA space.
 
-Signed-off-by: Pavel Dobias <dobias@2n.cz>
+Opportunistically clean up the code and comments.
+
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200515120757.24669-1-dobias@2n.cz
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: d43e2675e96fc ("KVM: x86: only do L1TF workaround on affected processors")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200527084909.23492-1-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/max9867.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/mmu/mmu.c |   27 +++++++++------------------
+ 1 file changed, 9 insertions(+), 18 deletions(-)
 
---- a/sound/soc/codecs/max9867.c
-+++ b/sound/soc/codecs/max9867.c
-@@ -46,13 +46,13 @@ static const SNDRV_CTL_TLVD_DECLARE_DB_R
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -6132,25 +6132,16 @@ static void kvm_set_mmio_spte_mask(void)
+ 	u64 mask;
  
- static const struct snd_kcontrol_new max9867_snd_controls[] = {
- 	SOC_DOUBLE_R_TLV("Master Playback Volume", MAX9867_LEFTVOL,
--			MAX9867_RIGHTVOL, 0, 41, 1, max9867_master_tlv),
-+			MAX9867_RIGHTVOL, 0, 40, 1, max9867_master_tlv),
- 	SOC_DOUBLE_R_TLV("Line Capture Volume", MAX9867_LEFTLINELVL,
- 			MAX9867_RIGHTLINELVL, 0, 15, 1, max9867_line_tlv),
- 	SOC_DOUBLE_R_TLV("Mic Capture Volume", MAX9867_LEFTMICGAIN,
- 			MAX9867_RIGHTMICGAIN, 0, 20, 1, max9867_mic_tlv),
- 	SOC_DOUBLE_R_TLV("Mic Boost Capture Volume", MAX9867_LEFTMICGAIN,
--			MAX9867_RIGHTMICGAIN, 5, 4, 0, max9867_micboost_tlv),
-+			MAX9867_RIGHTMICGAIN, 5, 3, 0, max9867_micboost_tlv),
- 	SOC_SINGLE("Digital Sidetone Volume", MAX9867_SIDETONE, 0, 31, 1),
- 	SOC_SINGLE_TLV("Digital Playback Volume", MAX9867_DACLEVEL, 0, 15, 1,
- 			max9867_dac_tlv),
+ 	/*
+-	 * Set the reserved bits and the present bit of an paging-structure
+-	 * entry to generate page fault with PFER.RSV = 1.
++	 * Set a reserved PA bit in MMIO SPTEs to generate page faults with
++	 * PFEC.RSVD=1 on MMIO accesses.  64-bit PTEs (PAE, x86-64, and EPT
++	 * paging) support a maximum of 52 bits of PA, i.e. if the CPU supports
++	 * 52-bit physical addresses then there are no reserved PA bits in the
++	 * PTEs and so the reserved PA approach must be disabled.
+ 	 */
+-
+-	/*
+-	 * Mask the uppermost physical address bit, which would be reserved as
+-	 * long as the supported physical address width is less than 52.
+-	 */
+-	mask = 1ull << 51;
+-
+-	/* Set the present bit. */
+-	mask |= 1ull;
+-
+-	/*
+-	 * If reserved bit is not supported, clear the present bit to disable
+-	 * mmio page fault.
+-	 */
+-	if (shadow_phys_bits == 52)
+-		mask &= ~1ull;
++	if (shadow_phys_bits < 52)
++		mask = BIT_ULL(51) | PT_PRESENT_MASK;
++	else
++		mask = 0;
+ 
+ 	kvm_mmu_set_mmio_spte_mask(mask, mask, ACC_WRITE_MASK | ACC_USER_MASK);
+ }
 
 
