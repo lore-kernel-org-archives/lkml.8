@@ -2,191 +2,103 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA851C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44457C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 929AF206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:57:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LwwQxAQp"
+	by mail.kernel.org (Postfix) with ESMTP id 1EBEB21475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 11:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592308676;
+	bh=Errpk4RGUSnVRaYQRQJG/RiPJ8pFfZhX1wfT4d5FgtU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0dxoA+lJljKtD8KjZ+aUf3+taKMghxYv9J9PdrF5gPcCj8Ph+5Nw6cdLgfJ59SpGq
+	 MxvOqJcpYaQUNd33NWvCcL3MMkf4cJZsVZaapoeLACermFILUNXeH70sy1HAUEGt3k
+	 soAWnCkCYciwymbVDne12+Oj5Hp7NhNpglV5CYEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgFPL5u (ORCPT
+        id S1728676AbgFPL5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 07:57:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728518AbgFPL5r (ORCPT
+        Tue, 16 Jun 2020 07:57:49 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:40667 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728144AbgFPL5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:57:47 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ABA3C08C5C4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:57:47 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 10so9382397pfx.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 04:57:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=CrhBgRCkF1offe/wGYgudc00yXLl3OPNVUMs9mpEVnM=;
-        b=LwwQxAQpjHwso9BJ1tR1rhuBrRAfl+cOBMdQ2kjpXaYvvdFG6XW/iCfX/trryaZWsz
-         f2jWqJN5LZq6EXsnQnxlMEl0OSEIJZIAHLrxW3nqWzv7EQUpBAyOo6aLbYkZrtxX+Nhk
-         thevzGm2hI1ltbq2nvWdoEhJl/nxmYDWpDJ3o=
+        Tue, 16 Jun 2020 07:57:46 -0400
+Received: by mail-ej1-f65.google.com with SMTP id q19so21183066eja.7;
+        Tue, 16 Jun 2020 04:57:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=CrhBgRCkF1offe/wGYgudc00yXLl3OPNVUMs9mpEVnM=;
-        b=ZiVlt9XcM2Wlf887dCBHckfreXyRTiuVN95xtbiyAsQC2ZtrMqHyPtOx0zKo0FyiSa
-         hkXyho6vebs/A8w4HgKDa9L3pOGUdhX/Dnf3Mh8+XCdv7FpeYfCQfmhFCMm9OhGu5CGW
-         IIHHFDxpHi8/sKRhBCWQcgKkk7/QCMizZMZi2i6y4nSaEinXIAC0QCGSQR5w0+HavrUO
-         zS/gZq2sbrq+du2xGeLIVnI1srTTtwFPeHIjJT+0LMFwVBoBI8gyWIkJ7LvRrJN0J3Jz
-         dphrIBkrsPi1HyA/JuQ6RsU+abTnunq5WkH9ohOWqfWVviRb7N8sKMJEUTYAvE2Dx0z3
-         lDbg==
-X-Gm-Message-State: AOAM53082vMmdgtSO2UMVuKbAs3/b4JxRlf74+Fy+IX7tumdpdaoWiYX
-        YqoDcdJDpJjXsrRMYXzA4AePHq8sBJg=
-X-Google-Smtp-Source: ABdhPJyPGiUlFFbnEi1GrizQqWMSc+1IJ5buXyebb6Lrv5QYdyrN3i4Ge/Dui3N6HEpy8NH3b+TFzA==
-X-Received: by 2002:a63:f906:: with SMTP id h6mr1859146pgi.134.1592308666320;
-        Tue, 16 Jun 2020 04:57:46 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j8sm2370847pji.3.2020.06.16.04.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 04:57:45 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+v8uCi/MM/jmen9lx+FKaOy5thFlmFvnrtAkhPsEN2s=;
+        b=Kea9gTBuTz9gAlpjaFxFE+HQ0A3C5OA1UCPmqpcnV+orUJP6slNUDP/sEAUvcl7vEi
+         GPKo1sxTSHny8UdwdUp289JVYe0q2kQIgZORdowU7ngnMVuTJiyNOanw5o53aRWogpum
+         FNdCw/rW6iTYPFTuuLHj37vqtBtLqJDWzJYDRSikz679YnfVgPRlNsCBUGJqg7Nh09rE
+         Zv1VwldY5vFkI9UULpznr3/0GMhcojFfQIlIhAA/qwyV+Txz5gI3OA/jwjuX/XW4NNFE
+         SjknAb961v1NWcBdnCgLqxwdvQwrvrvFgY8x5FnIDE+rBYcojNq3HImEIRbppJY9JZ3n
+         Dkng==
+X-Gm-Message-State: AOAM530RfBJx/HfU0PCe5Ovh6S76OcXAh7IPrjI17bIc4xjewU/cvTg/
+        9dhRTb2fbSxwPRPhwkQX/70=
+X-Google-Smtp-Source: ABdhPJxcQNdV/H7nPWwktJ3WW5sRNLcscw+1S7A9rSCDlEe2uCTezR9VSviWZ9JiV63E3GHfZiF0Jw==
+X-Received: by 2002:a17:906:fcb7:: with SMTP id qw23mr2247171ejb.229.1592308664586;
+        Tue, 16 Jun 2020 04:57:44 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id h5sm10994714ejp.45.2020.06.16.04.57.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Jun 2020 04:57:43 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 13:57:41 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     "Andrew F. Davis" <afd@ti.com>, Pali Roh??r <pali@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@proceq.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] power: supply: bq27xxx_battery: Notify about all
+ battery changes
+Message-ID: <20200616115741.GA13274@kozik-lap>
+References: <20200525141200.17199-1-krzk@kernel.org>
+ <fc59bcd5-1868-8c7a-9fc9-67ad70b477f4@ti.com>
+ <20200616105224.GF1718@bug>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-5-git-send-email-mkshah@codeaurora.org> <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com> <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org> <159086679215.69627.4444511187342075544@swboyd.mtv.corp.google.com> <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org>
-Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Tue, 16 Jun 2020 04:57:44 -0700
-Message-ID: <159230866475.62212.10807813558467898966@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200616105224.GF1718@bug>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-06-01 04:38:25)
-> On 5/31/2020 12:56 AM, Stephen Boyd wrote:
-> > Quoting Maulik Shah (2020-05-29 02:20:32)
-> >> On 5/27/2020 3:45 PM, Stephen Boyd wrote:
-> >>> Quoting Maulik Shah (2020-05-23 10:11:13)
-> >>>> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data =
-*d)
-> >>>>           if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
-> >>>>                   return;
-> >>>>   =20
-> >>>> +       pdc_enable_intr(d, true);
-> >>>>           irq_chip_unmask_parent(d);
-> >>>>    }
-> >>>>   =20
-> >>> I find these two hunks deeply confusing. I'm not sure what the
-> >>> maintainers think though. I hope it would be simpler to always enable
-> >>> the hwirqs in the pdc when an irq is requested and only disable it in
-> >>> the pdc when the system goes to suspend and the pdc pin isn't for an =
-irq
-> >>> that's marked for wakeup. Does that break somehow?
-> >> PDC monitors interrupts during CPUidle as well, in cases where deepest
-> >> low power mode happened from cpuidle where GIC is not active.
-> >> If we keep PDC IRQ always enabled/unmasked during idle and then
-> >> disable/mask when entering to suspend, it will break cpuidle.
-> > How does it break cpuidle? The irqs that would be enabled/unmasked in
-> > pdc would only be the irqs that the kernel has setup irq handlers for
-> > (from request_irq() and friends).  We want those irqs to keep working
-> > during cpuidle and wake the CPU from the deepest idle states.
->=20
-> >>I hope it would be simpler to always enable
-> >>the hwirqs in the pdc when an irq is requested and only disable it in
-> >>the pdc when the system goes to suspend and the pdc pin isn't for an irq
-> >>that's marked for wakeup
->=20
-> >>How does it break cpuidle?
->=20
-> Consider a scenario..
-> 1. All PDC irqs enabled/unmasked in HW when request_irq() happened/alloc =
-happens
-> 2. Client driver disable's irq. (lazy disable is there, so in HW its stil=
-l unmasked) but disabled in SW.
-> 3. Device enters deep CPUidle low power modes where only PDC monitors IRQ.
-> 4. This IRQ can still wakeup from CPUidle since it was monitored by PDC.
-> 5. From handler, it comes to know that IRQ is disabled in SW, so it reall=
-y invokes irq_mask callback now to disable in HW.
-> 6. This mask callback doesn't operate on PDC (since in PDC, IRQs gets mas=
-ked only during suspend, all other times its enabled)
-> 7. step 3 to 6 repeats, if this IRQ keeps on coming and waking up from de=
-ep cpuidle states.
+On Tue, Jun 16, 2020 at 12:52:24PM +0200, Pavel Machek wrote:
+> On Tue 2020-05-26 21:24:39, Andrew F. Davis wrote:
+> > On 5/25/20 10:11 AM, Krzysztof Kozlowski wrote:
+> > > All battery related data could be important for user-space.  For example
+> > > time-to-full could be shown to user on the screen or health could be
+> > > monitored for any issues.  Instead of comparing few selected old/new
+> > > values, just check if anything changed in the cache.
+> > > 
+> > 
+> > 
+> > At least some value will change every time we poll the battery, are we
+> > okay with having power_supply_changed() called every time?
+> 
+> I believe that's very bad idea. AFAICT that would wake up userspace every
+> 5 seconds, eating power in unexpected way, and without easy ability of opting
+> out. IOW a regression.
 
-Ok so in summary, irq is left unmasked in pdc during deep cpu idle and
-it keeps waking up the CPU because it isn't masked at the PDC after the
-first time it interrupts? Is this a power problem? Because from a
-correctness standpoint we don't really care. It woke up the CPU because
-it happened, and the GIC can decide to ignore it or not by masking it at
-the GIC. I thought that the PDC wouldn't wake up the CPU if we masked
-the irq at the GIC level. Is that not true?
+It won't be 5 seconds but poll_interval which is 360 seconds by default.
+It can be 5 seconds if user-space changes this time or if user-space
+keeps asking for get_property. In first case: user-space kind of decided
+about it... In second: user-space is already woken-up since it polls get
+properties.
 
->=20
-> >
-> >>> My understanding of the hardware is that the GPIO controller has lines
-> >>> directly connected to various SPI lines on the GIC and PDC has a way =
-to
-> >>> monitor those direct connections and wakeup the CPUs when they trigger
-> >>> the detection logic in the PDC. The enable/disable bit in PDC gates t=
-hat
-> >>> logic for each wire between the GPIO controller and the GIC.
-> >>>
-> >>> So isn't it simpler to leave the PDC monitoring pins that we care abo=
-ut
-> >>> all the time and only stop monitoring when we enter and leave suspend?
-> >> it can affect idle path as explained above.
-> >>
-> >>> And shouldn't the driver set something sane in qcom_pdc_init() to
-> >>> disable all the pdc pins so that we don't rely on boot state to
-> >>> configure pins for wakeup?
-> >> We don't rely on boot state, by default all interrupt will be disabled.
-> > Does 'default' mean the hardware register reset state?
-> correct.
-> > I'm worried that
-> > we will kexec and then various pdc pins will be enabled because the
-> > previous kernel had them enabled but then the new kernel doesn't care
-> > about those pins and we'll never be able to suspend or go idle. I don't
-> > know what happens in the GIC case but I think gic_dist_config() and
-> > things set a sane state at kernel boot.
->=20
-> Right however when switching kernel, i suppose client drivers will do a=20
-> free_irq(), then this will
->=20
-> clear the PDC interrupt in HW by invoking mask_irq() from within free_irq=
-().
+However I understand that this is quite intrusive change and maybe in
+such case user-space should just keep polling (if it wants all data to
+be provided every n-seconds).
 
-We can't rely on drivers to do that.
+Best regards,
+Krzysztof
 
->=20
-> >
-> >> This is same to GIC driver having GICD_ISENABLER register, where all
-> >> bits (one bit per interrupt) set to 0 (masked irqs) during boot up.
-> >>
-> >> Similarly PDC also have all bits set to 0 in PDC's IRQ_ENABLE_BANK.
-> >>
-> > What code sets the IRQ_ENABLE_BANK to all zero when this driver probes?
->=20
-> Enable bank will be zero as part of HW reset status when booting up=20
-> first time.
->=20
-
-It's not a concern about the hardware reset state of these registers at
-boot. I'm worried that the bootloaders or previous OS will configure pdc
-pins to wake us up. It's better to just force it to something sane, i.e.
-everything disabled in the PDC, at driver probe time so that nothing can
-be wrong.
