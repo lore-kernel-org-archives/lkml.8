@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0537CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE8CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E046D21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0572151B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322306;
-	bh=Z1qeNrPzQX2HeO121luRbN2+mEG0uHjTupsRDDT/lHY=;
+	s=default; t=1592322313;
+	bh=wtNPFtGFotQHpz0yNm/HnBPZw/CMNGj4GaPvoRT6xos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zn/JpB5kk2Pjwy51HY5DLJAEZgftU8MoDdWC9ZGPBhf+kuwP2gWapm7gjjsxj0zOX
-	 7j5z2Mnpa9NZygPyywbui02lBe+gNtLUtRXnHTtruMHw+1J+T5r8xyniOBodjgcgn0
-	 aA0Hd6q+NPzQQ8asdCMcGnou+RjrMWT2Iz7eQKL4=
+	b=CcDFLIB4L32f5HQ6m7mHav+naUZI9k0DkTAhaR5ukCNK9Hbav37leM9ID78/BB/HJ
+	 nfO+IY7ARjmRIYO2UGmwFxoU3P84zz6gElFMHwg9VhwvATEid2YWi8Ww1IHJ30D94E
+	 8175jxrzpTECCsyBmfaVAwflKJQ/UdGcRA+LjE+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbgFPPpF (ORCPT
+        id S1732059AbgFPPpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35844 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731542AbgFPPpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:45:01 -0400
+        id S1730829AbgFPPpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:45:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C524821475;
-        Tue, 16 Jun 2020 15:45:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3E4821531;
+        Tue, 16 Jun 2020 15:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322301;
-        bh=Z1qeNrPzQX2HeO121luRbN2+mEG0uHjTupsRDDT/lHY=;
+        s=default; t=1592322306;
+        bh=wtNPFtGFotQHpz0yNm/HnBPZw/CMNGj4GaPvoRT6xos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JFGvF0y3pAGCnxpZjg7dAh364xWSBCclmciY/c+zPl+l1b55FPs5SnOY4PH3uVrxd
-         Qe4YepKuYqEqG3oZbeoAS5uw1hn9G8FAq9DADIB9pH9+/pdNVu5hPSA+ggtc7jqWPu
-         kCpUPPGgh2wsrYef5cYmiJ1f4pVgdzA/st+a39p8=
+        b=XwVRWt9W0ejVXkQyED8lCrjDjlJAC5ZevYFsgRJ0jzvqkNcz8n+00WRPXWLyi0GN8
+         nN8dzAxrnclUctikIrgzUFlQ6U7AFyfewcPxgLFUKh0+J8R8xBZTVU1zk6jGxJZHsT
+         7yUa8Zvivtkc9uNc2UxYJJhc/FXa6fyyGWPRNAgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Walton Hoops <me@waltonhoops.com>,
-        Tomas Hlavaty <tom@logand.com>,
-        ARAI Shun-ichi <hermes@ceres.dti.ne.jp>,
-        Hideki EIRAKU <hdk1983@gmail.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 078/163] nilfs2: fix null pointer dereference at nilfs_segctor_do_construct()
-Date:   Tue, 16 Jun 2020 17:34:12 +0200
-Message-Id: <20200616153110.580658651@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.7 080/163] spi: dw: Fix controller unregister order
+Date:   Tue, 16 Jun 2020 17:34:14 +0200
+Message-Id: <20200616153110.675419172@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -64,67 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 8301c719a2bd131436438e49130ee381d30933f5 upstream.
+commit ca8b19d61e3fce5d2d7790cde27a0b57bcb3f341 upstream.
 
-After commit c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if
-mapping has no dirty pages"), the following null pointer dereference has
-been reported on nilfs2:
+The Designware SPI driver uses devm_spi_register_controller() on bind.
+As a consequence, on unbind, __device_release_driver() first invokes
+dw_spi_remove_host() before unregistering the SPI controller via
+devres_release_all().
 
-  BUG: kernel NULL pointer dereference, address: 00000000000000a8
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  ...
-  RIP: 0010:percpu_counter_add_batch+0xa/0x60
-  ...
-  Call Trace:
-    __test_set_page_writeback+0x2d3/0x330
-    nilfs_segctor_do_construct+0x10d3/0x2110 [nilfs2]
-    nilfs_segctor_construct+0x168/0x260 [nilfs2]
-    nilfs_segctor_thread+0x127/0x3b0 [nilfs2]
-    kthread+0xf8/0x130
-    ...
+This order is incorrect:  dw_spi_remove_host() shuts down the chip,
+rendering the SPI bus inaccessible even though the SPI controller is
+still registered.  When the SPI controller is subsequently unregistered,
+it unbinds all its slave devices.  Because their drivers cannot access
+the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
+in an improper state.
 
-This crash turned out to be caused by set_page_writeback() call for
-segment summary buffers at nilfs_segctor_prepare_write().
+As a rule, devm_spi_register_controller() must not be used if the
+->remove() hook performs teardown steps which shall be performed after
+unregistering the controller and specifically after unbinding of slaves.
 
-set_page_writeback() can call inc_wb_stat(inode_to_wb(inode),
-WB_WRITEBACK) where inode_to_wb(inode) is NULL if the inode of
-underlying block device does not have an associated wb.
+Fix by reverting to the non-devm variant of spi_register_controller().
 
-This fixes the issue by calling inode_attach_wb() in advance to ensure
-to associate the bdev inode with its wb.
+An alternative approach would be to use device-managed functions for all
+steps in dw_spi_remove_host(), e.g. by calling devm_add_action_or_reset()
+on probe.  However that approach would add more LoC to the driver and
+it wouldn't lend itself as well to backporting to stable.
 
-Fixes: c3aab9a0bd91 ("mm/filemap.c: don't initiate writeback if mapping has no dirty pages")
-Reported-by: Walton Hoops <me@waltonhoops.com>
-Reported-by: Tomas Hlavaty <tom@logand.com>
-Reported-by: ARAI Shun-ichi <hermes@ceres.dti.ne.jp>
-Reported-by: Hideki EIRAKU <hdk1983@gmail.com>
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: <stable@vger.kernel.org>	[5.4+]
-Link: http://lkml.kernel.org/r/20200608.011819.1399059588922299158.konishi.ryusuke@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 04f421e7b0b1 ("spi: dw: use managed resources")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org # v3.14+
+Cc: Baruch Siach <baruch@tkos.co.il>
+Link: https://lore.kernel.org/r/3fff8cb8ae44a9893840d0688be15bb88c090a14.1590408496.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nilfs2/segment.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-dw.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/nilfs2/segment.c
-+++ b/fs/nilfs2/segment.c
-@@ -2780,6 +2780,8 @@ int nilfs_attach_log_writer(struct super
- 	if (!nilfs->ns_writer)
- 		return -ENOMEM;
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -534,7 +534,7 @@ int dw_spi_add_host(struct device *dev,
+ 		}
+ 	}
  
-+	inode_attach_wb(nilfs->ns_bdev->bd_inode, NULL);
+-	ret = devm_spi_register_controller(dev, master);
++	ret = spi_register_controller(master);
+ 	if (ret) {
+ 		dev_err(&master->dev, "problem registering spi master\n");
+ 		goto err_dma_exit;
+@@ -558,6 +558,8 @@ void dw_spi_remove_host(struct dw_spi *d
+ {
+ 	dw_spi_debugfs_remove(dws);
+ 
++	spi_unregister_controller(dws->master);
 +
- 	err = nilfs_segctor_start_thread(nilfs->ns_writer);
- 	if (err) {
- 		kfree(nilfs->ns_writer);
+ 	if (dws->dma_ops && dws->dma_ops->dma_exit)
+ 		dws->dma_ops->dma_exit(dws);
+ 
 
 
