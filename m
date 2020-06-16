@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56783C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A03FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1E321532
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2B7421527
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322938;
-	bh=Xur/2ps7vCdybjS3oNBWCqE5T1fBUF+bZqPQ5Ga/7Nw=;
+	s=default; t=1592322944;
+	bh=hO+8taruzOumF0JmkqRzqe8t7k/XeEaxdBhEA14v1oQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwjO8ZPzRs3GQTvIDmxAbwlfqMoEViUjI/pTnyVjvLZ1hq+Negws/Elztyr0IINS+
-	 eTdDjkKKTSWgm4xWQHD8J6X3ZTqH0Bo43nHqhQGjCHgcRnnOTKrpHfZdIv4W5JyRdS
-	 VFn8g07Rao0kJ1xY7oe1DjIAQsXZSR/CITV1lu9A=
+	b=H9cXTJKrLTjsXEhI80EBVEuGJX3NAY0VcvKI02lBsYoo1bxtzeqzm9icuA+KrKDj+
+	 mtehk7hclQ+paNZlQ9Hgpg5+ZbzpShbq2XsKHlsKGFb2VULZIiwiqtxGm2MYMfKsmP
+	 3ammYtDE5Gy0GaFu/EJJMsQsO7QMes8y1zmSqpuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733090AbgFPPzf (ORCPT
+        id S1733110AbgFPPzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55630 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:55:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733082AbgFPPz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:55:29 -0400
+        id S1730949AbgFPPzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:55:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D70DE207C4;
-        Tue, 16 Jun 2020 15:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06EBF20882;
+        Tue, 16 Jun 2020 15:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322929;
-        bh=Xur/2ps7vCdybjS3oNBWCqE5T1fBUF+bZqPQ5Ga/7Nw=;
+        s=default; t=1592322937;
+        bh=hO+8taruzOumF0JmkqRzqe8t7k/XeEaxdBhEA14v1oQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APUyUx3kiFysd/1v8kCaQftFxYcHwaQoTHk+i0NG7zCTuXEOxlmV3jSxTajktz+IF
-         c/jn4fQUch51IKfY98u/7ppgjpQ64fSXZ4rTKsoeXfyVN7NhobzS6cJ2sykxVlDBxp
-         IwNdK228IxfVeXgvAPF7EHizfL6xkO7IBFS603Tk=
+        b=QF5X9+rdp31o/+SwHsyU6snv/Qxbm59BGMi+q3bsaK370Eq0csngOVHsybHgqRkA6
+         S3tndEhnBRmceLSg+vx8W01eufMOPzEAzCNFKCtS7tEXYWS12A9CUMATRZqsVA/liO
+         rW5GxESa8Dh4zL2l1tOSWJ/oBG5Xjcn+vkM9n+5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH 5.6 131/161] KVM: arm64: Stop writing aarch32s CSSELR into ACTLR
-Date:   Tue, 16 Jun 2020 17:35:21 +0200
-Message-Id: <20200616153112.595821051@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.6 160/161] KVM: arm64: Synchronize sysreg state on injecting an AArch32 exception
+Date:   Tue, 16 Jun 2020 17:35:50 +0200
+Message-Id: <20200616153114.001069014@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,65 +59,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 7c582bf4ed84f3eb58bdd1f63024a14c17551e7d upstream.
+commit 0370964dd3ff7d3d406f292cb443a927952cbd05 upstream.
 
-aarch32 has pairs of registers to access the high and low parts of 64bit
-registers. KVM has a union of 64bit sys_regs[] and 32bit copro[]. The
-32bit accessors read the high or low part of the 64bit sys_reg[] value
-through the union.
+On a VHE system, the EL1 state is left in the CPU most of the time,
+and only syncronized back to memory when vcpu_put() is called (most
+of the time on preemption).
 
-Both sys_reg_descs[] and cp15_regs[] list access_csselr() as the accessor
-for CSSELR{,_EL1}. access_csselr() is only aware of the 64bit sys_regs[],
-and expects r->reg to be 'CSSELR_EL1' in the enum, index 2 of the 64bit
-array.
+Which means that when injecting an exception, we'd better have a way
+to either:
+(1) write directly to the EL1 sysregs
+(2) synchronize the state back to memory, and do the changes there
 
-cp15_regs[] uses the 32bit copro[] alias of sys_regs[]. Here CSSELR is
-c0_CSSELR which is the same location in sys_reg[]. r->reg is 'c0_CSSELR',
-index 4 in the 32bit array.
+For an AArch64, we already do (1), so we are safe. Unfortunately,
+doing the same thing for AArch32 would be pretty invasive. Instead,
+we can easily implement (2) by calling the put/load architectural
+backends, and keep preemption disabled. We can then reload the
+state back into EL1.
 
-access_csselr() uses the 32bit r->reg value to access the 64bit array,
-so reads and write the wrong value. sys_regs[4], is ACTLR_EL1, which
-is subsequently save/restored when we enter the guest.
-
-ACTLR_EL1 is supposed to be read-only for the guest. This register
-only affects execution at EL1, and the host's value is restored before
-we return to host EL1.
-
-Convert the 32bit register index back to the 64bit version.
-
-Suggested-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200529150656.7339-2-james.morse@arm.com
+Reported-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/arm64/kvm/sys_regs.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1280,10 +1280,16 @@ static bool access_clidr(struct kvm_vcpu
- static bool access_csselr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 			  const struct sys_reg_desc *r)
- {
-+	int reg = r->reg;
-+
-+	/* See the 32bit mapping in kvm_host.h */
-+	if (p->is_aarch32)
-+		reg = r->reg / 2;
-+
- 	if (p->is_write)
--		vcpu_write_sys_reg(vcpu, p->regval, r->reg);
-+		vcpu_write_sys_reg(vcpu, p->regval, reg);
- 	else
--		p->regval = vcpu_read_sys_reg(vcpu, r->reg);
-+		p->regval = vcpu_read_sys_reg(vcpu, reg);
+---
+ arch/arm/include/asm/kvm_host.h   |    2 ++
+ arch/arm64/include/asm/kvm_host.h |    2 ++
+ virt/kvm/arm/aarch32.c            |   28 ++++++++++++++++++++++++++++
+ 3 files changed, 32 insertions(+)
+
+--- a/arch/arm/include/asm/kvm_host.h
++++ b/arch/arm/include/asm/kvm_host.h
+@@ -453,4 +453,6 @@ static inline bool kvm_arm_vcpu_is_final
  	return true;
  }
  
++#define kvm_arm_vcpu_loaded(vcpu)	(false)
++
+ #endif /* __ARM_KVM_HOST_H__ */
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -685,4 +685,6 @@ bool kvm_arm_vcpu_is_finalized(struct kv
+ #define kvm_arm_vcpu_sve_finalized(vcpu) \
+ 	((vcpu)->arch.flags & KVM_ARM64_VCPU_SVE_FINALIZED)
+ 
++#define kvm_arm_vcpu_loaded(vcpu)	((vcpu)->arch.sysregs_loaded_on_cpu)
++
+ #endif /* __ARM64_KVM_HOST_H__ */
+--- a/virt/kvm/arm/aarch32.c
++++ b/virt/kvm/arm/aarch32.c
+@@ -33,6 +33,26 @@ static const u8 return_offsets[8][2] = {
+ 	[7] = { 4, 4 },		/* FIQ, unused */
+ };
+ 
++static bool pre_fault_synchronize(struct kvm_vcpu *vcpu)
++{
++	preempt_disable();
++	if (kvm_arm_vcpu_loaded(vcpu)) {
++		kvm_arch_vcpu_put(vcpu);
++		return true;
++	}
++
++	preempt_enable();
++	return false;
++}
++
++static void post_fault_synchronize(struct kvm_vcpu *vcpu, bool loaded)
++{
++	if (loaded) {
++		kvm_arch_vcpu_load(vcpu, smp_processor_id());
++		preempt_enable();
++	}
++}
++
+ /*
+  * When an exception is taken, most CPSR fields are left unchanged in the
+  * handler. However, some are explicitly overridden (e.g. M[4:0]).
+@@ -155,7 +175,10 @@ static void prepare_fault32(struct kvm_v
+ 
+ void kvm_inject_undef32(struct kvm_vcpu *vcpu)
+ {
++	bool loaded = pre_fault_synchronize(vcpu);
++
+ 	prepare_fault32(vcpu, PSR_AA32_MODE_UND, 4);
++	post_fault_synchronize(vcpu, loaded);
+ }
+ 
+ /*
+@@ -168,6 +191,9 @@ static void inject_abt32(struct kvm_vcpu
+ 	u32 vect_offset;
+ 	u32 *far, *fsr;
+ 	bool is_lpae;
++	bool loaded;
++
++	loaded = pre_fault_synchronize(vcpu);
+ 
+ 	if (is_pabt) {
+ 		vect_offset = 12;
+@@ -191,6 +217,8 @@ static void inject_abt32(struct kvm_vcpu
+ 		/* no need to shuffle FS[4] into DFSR[10] as its 0 */
+ 		*fsr = DFSR_FSC_EXTABT_nLPAE;
+ 	}
++
++	post_fault_synchronize(vcpu, loaded);
+ }
+ 
+ void kvm_inject_dabt32(struct kvm_vcpu *vcpu, unsigned long addr)
 
 
