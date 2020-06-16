@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7985C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D780AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91CCE21475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7EA20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322444;
-	bh=H74n6MAvvB1UwVfIs7kkoqmc7JsILcseQ+7gWMFrCa8=;
+	s=default; t=1592322446;
+	bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O4F4/LLhGGKQusdh1ccVknhrmQpfcmZ6U48CrPonQCivUAonSw27W26L+jjaOoh/Z
-	 LIUe7ChMy3P9YEbKxwdmHuURQwUkiaMFJLtydu48g53P4oPnuY0E6ToReYmqwaJ4gp
-	 QiMudOTDoR3bkyYUYPf73Ad7ZqfbGj9l6gUuCUSA=
+	b=VKuEPB/MGi6DSofuWwGbH8RKkAORPpZIo11EuIhWzmGBknQ9yh5UyEo0+7nItscFa
+	 XEGO66QW4asYmDTT8fPTpKUEHWks0Gbu0ZIdWH8oNiWnvCn8DJ23NEJ4Q4E1Vk7vxx
+	 itEOCFwqnFuBwVRpplTFmb79jebe7BFy8ulUr0Dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732326AbgFPPrX (ORCPT
+        id S1732332AbgFPPrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:47:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40264 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732309AbgFPPrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:47:16 -0400
+        id S1732317AbgFPPrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:47:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D07552071A;
-        Tue, 16 Jun 2020 15:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BC3820E65;
+        Tue, 16 Jun 2020 15:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322435;
-        bh=H74n6MAvvB1UwVfIs7kkoqmc7JsILcseQ+7gWMFrCa8=;
+        s=default; t=1592322437;
+        bh=NBVUODQbI1T1MtGAlUTn/rshWC+w1j++5qEaRVUjYSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WmN544bd1vEjOrXqxmmFeRUEcoMXQW4rOgRUl5c9aJjJ1ExslbDXfgmEV/uhiY80v
-         4hHMh5IzssEfoGG9wThbHp2dHac0MaJfi8gQWhIn9CxqF25fF3O3WVz8meHslq+ytf
-         UwMrZJTy+/srB/uOX/suNTnE0jx2rk5UAPDgdTZs=
+        b=B9QivGj4rlFN5/RxL5TAjXTPEGclN6xzRt96a8SwwXamI7+Fbh7ZiMAXfqBpgvZ2m
+         QuR5YX+w99/k6mAHnjcH+CRCdlXRpaFjiTBgVYireStRh5fpdwQkbFCS27tjvmNjmC
+         TXIqd1+Zb+UXaJNrg/YPyQFXb2tNscCJFMfxU7yc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
         Xing Li <lixing@loongson.cn>, Huacai Chen <chenhc@lemote.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.7 131/163] KVM: MIPS: Define KVM_ENTRYHI_ASID to cpu_asid_mask(&boot_cpu_data)
-Date:   Tue, 16 Jun 2020 17:35:05 +0200
-Message-Id: <20200616153113.089129006@linuxfoundation.org>
+Subject: [PATCH 5.7 132/163] KVM: MIPS: Fix VPN2_MASK definition for variable cpu_vmbits
+Date:   Tue, 16 Jun 2020 17:35:06 +0200
+Message-Id: <20200616153113.136106158@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -63,43 +63,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xing Li <lixing@loongson.cn>
 
-commit fe2b73dba47fb6d6922df1ad44e83b1754d5ed4d upstream.
+commit 5816c76dea116a458f1932eefe064e35403248eb upstream.
 
-The code in decode_config4() of arch/mips/kernel/cpu-probe.c
+If a CPU support more than 32bit vmbits (which is true for 64bit CPUs),
+VPN2_MASK set to fixed 0xffffe000 will lead to a wrong EntryHi in some
+functions such as _kvm_mips_host_tlb_inv().
 
-        asid_mask = MIPS_ENTRYHI_ASID;
-        if (config4 & MIPS_CONF4_AE)
-                asid_mask |= MIPS_ENTRYHI_ASIDX;
-        set_cpu_asid_mask(c, asid_mask);
+The cpu_vmbits definition of 32bit CPU in cpu-features.h is 31, so we
+still use the old definition.
 
-set asid_mask to cpuinfo->asid_mask.
-
-So in order to support variable ASID_MASK, KVM_ENTRYHI_ASID should also
-be changed to cpu_asid_mask(&boot_cpu_data).
-
-Cc: Stable <stable@vger.kernel.org>  #4.9+
+Cc: Stable <stable@vger.kernel.org>
 Reviewed-by: Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>
 Signed-off-by: Xing Li <lixing@loongson.cn>
-[Huacai: Change current_cpu_data to boot_cpu_data for optimization]
+[Huacai: Improve commit messages]
 Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Message-Id: <1590220602-3547-2-git-send-email-chenhc@lemote.com>
+Message-Id: <1590220602-3547-3-git-send-email-chenhc@lemote.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/kvm_host.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/include/asm/kvm_host.h |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 --- a/arch/mips/include/asm/kvm_host.h
 +++ b/arch/mips/include/asm/kvm_host.h
-@@ -275,7 +275,7 @@ enum emulation_result {
+@@ -274,7 +274,11 @@ enum emulation_result {
+ #define MIPS3_PG_SHIFT		6
  #define MIPS3_PG_FRAME		0x3fffffc0
  
++#if defined(CONFIG_64BIT)
++#define VPN2_MASK		GENMASK(cpu_vmbits - 1, 13)
++#else
  #define VPN2_MASK		0xffffe000
--#define KVM_ENTRYHI_ASID	MIPS_ENTRYHI_ASID
-+#define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
++#endif
+ #define KVM_ENTRYHI_ASID	cpu_asid_mask(&boot_cpu_data)
  #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
  #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
- #define TLB_ASID(x)		((x).tlb_hi & KVM_ENTRYHI_ASID)
 
 
