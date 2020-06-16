@@ -2,169 +2,79 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C47FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09304C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19AAA20C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB81720FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbgFPMYV convert rfc822-to-8bit (ORCPT
+        id S1728900AbgFPMZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728640AbgFPMVz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:21:55 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD75C08C5C6;
-        Tue, 16 Jun 2020 05:21:54 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAb4-0004aR-OY; Tue, 16 Jun 2020 14:21:46 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 444A91C0478;
-        Tue, 16 Jun 2020 14:21:46 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:46 -0000
-From:   "tip-bot2 for Roman Sudarikov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel/uncore: Expose an Uncore unit to PMON mapping
-Cc:     Alexander Antonov <alexander.antonov@linux.intel.com>,
-        Roman Sudarikov <roman.sudarikov@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200601083543.30011-2-alexander.antonov@linux.intel.com>
-References: <20200601083543.30011-2-alexander.antonov@linux.intel.com>
+        Tue, 16 Jun 2020 08:25:12 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7700 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgFPMZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 08:25:12 -0400
+IronPort-SDR: +W2YBVb6ABaB5AD70t65jubEUjv7D3hWOg6HXX7F7PJEwZvjAeae9B56QibNNKwwdRuFXnotI1
+ WN+exJfBjhYQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 05:25:11 -0700
+IronPort-SDR: 1bnQa6Z+nx5XOwk5MnWgETija5ju7Fp+hma9kfl2w+TDxXx95LW9d6xXMsLUpbhdFU57t3uwr/
+ QXMrUFRb4DOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="476444896"
+Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Jun 2020 05:25:10 -0700
+Date:   Tue, 16 Jun 2020 20:24:52 +0800
+From:   Rong Chen <rong.a.chen@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        ltp@lists.linux.it
+Subject: Re: [LKP] Re: [x86/entry] 2bbc68f837: ltp.ptrace08.fail
+Message-ID: <20200616122451.GQ5653@shao2-debian>
+References: <20200616075533.GL5653@shao2-debian>
+ <87y2onbdtb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159231010609.16989.6525389884153038879.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87y2onbdtb.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On Tue, Jun 16, 2020 at 10:44:00AM +0200, Thomas Gleixner wrote:
+> kernel test robot <rong.a.chen@intel.com> writes:
+> > FYI, we noticed the following commit (built with gcc-9):
+> >
+> > commit: 2bbc68f8373c0631ebf137f376fbea00e8086be7 ("x86/entry: Convert Debug exception to IDTENTRY_DB")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> Is the head of linux.git exposing the same problem or is this an
+> intermittent failure, which only affects bisectability?
+> 
 
-Commit-ID:     19a39819818dee57e363bd44bd096e2e940a456b
-Gitweb:        https://git.kernel.org/tip/19a39819818dee57e363bd44bd096e2e940a456b
-Author:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
-AuthorDate:    Mon, 01 Jun 2020 11:35:41 +03:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:09:51 +02:00
+Hi Thomas,
 
-perf/x86/intel/uncore: Expose an Uncore unit to PMON mapping
+The problem still exists in v5.8-rc1:
 
-Each Uncore unit type, by its nature, can be mapped to its own context -
-which platform component each PMON block of that type is supposed to
-monitor.
+9f58fdde95c9509a  2bbc68f8373c0631ebf137f376                    v5.8-rc1  testcase/testparams/testbox
+----------------  --------------------------  --------------------------  ---------------------------
+       fail:runs  %reproduction    fail:runs  %reproduction    fail:runs
+           |             |             |             |             |    
+           :12          92%          11:12         100%          13:13    ltp/1HDD-xfs-syscalls_part4/vm-snb
+           :12          92%          11:12         100%          13:13    TOTAL ltp.ptrace08.fail
 
-Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-significant changes in the integrated I/O (IIO) architecture. The new
-solution introduces IIO stacks which are responsible for managing traffic
-between the PCIe domain and the Mesh domain. Each IIO stack has its own
-PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-or various built-in accelerators. IIO PMON blocks allow concurrent
-monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
-
-Software is supposed to program required perf counters within each IIO
-stack and gather performance data. The tricky thing here is that IIO PMON
-reports data per IIO stack but users have no idea what IIO stacks are -
-they only know devices which are connected to the platform.
-
-Understanding IIO stack concept to find which IIO stack that particular
-IO device is connected to, or to identify an IIO PMON block to program
-for monitoring specific IIO stack assumes a lot of implicit knowledge
-about given Intel server platform architecture.
-
-Usage example:
-    ls /sys/devices/uncore_<type>_<pmu_idx>/die*
-
-Signed-off-by: Alexander Antonov <alexander.antonov@linux.intel.com>
-Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Reviewed-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Link: https://lkml.kernel.org/r/20200601083543.30011-2-alexander.antonov@linux.intel.com
----
- arch/x86/events/intel/uncore.c |  8 ++++++++
- arch/x86/events/intel/uncore.h | 12 ++++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index cbe32d5..49255e6 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -846,10 +846,12 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
- 			.read		= uncore_pmu_event_read,
- 			.module		= THIS_MODULE,
- 			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-+			.attr_update	= pmu->type->attr_update,
- 		};
- 	} else {
- 		pmu->pmu = *pmu->type->pmu;
- 		pmu->pmu.attr_groups = pmu->type->attr_groups;
-+		pmu->pmu.attr_update = pmu->type->attr_update;
- 	}
- 
- 	if (pmu->type->num_boxes == 1) {
-@@ -890,6 +892,9 @@ static void uncore_type_exit(struct intel_uncore_type *type)
- 	struct intel_uncore_pmu *pmu = type->pmus;
- 	int i;
- 
-+	if (type->cleanup_mapping)
-+		type->cleanup_mapping(type);
-+
- 	if (pmu) {
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
- 			uncore_pmu_unregister(pmu);
-@@ -957,6 +962,9 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
- 
- 	type->pmu_group = &uncore_pmu_attr_group;
- 
-+	if (type->set_mapping)
-+		type->set_mapping(type);
-+
- 	return 0;
- 
- err:
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 7859ac0..7caba06 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -73,7 +73,19 @@ struct intel_uncore_type {
- 	struct uncore_event_desc *event_descs;
- 	struct freerunning_counters *freerunning;
- 	const struct attribute_group *attr_groups[4];
-+	const struct attribute_group **attr_update;
- 	struct pmu *pmu; /* for custom pmu ops */
-+	/*
-+	 * Uncore PMU would store relevant platform topology configuration here
-+	 * to identify which platform component each PMON block of that type is
-+	 * supposed to monitor.
-+	 */
-+	u64 *topology;
-+	/*
-+	 * Optional callbacks for managing mapping of Uncore units to PMONs
-+	 */
-+	int (*set_mapping)(struct intel_uncore_type *type);
-+	void (*cleanup_mapping)(struct intel_uncore_type *type);
- };
- 
- #define pmu_group attr_groups[0]
+Best Regards,
+Rong Chen
