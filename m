@@ -2,475 +2,285 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96304C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD6BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 646442082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA022082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 21:49:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DDUC1sUU"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="S0KWAit/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgFPVtZ (ORCPT
+        id S1726483AbgFPVt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 17:49:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23354 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726432AbgFPVtW (ORCPT
+        Tue, 16 Jun 2020 17:49:56 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:31941 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgFPVtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 17:49:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592344159;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oDD3KfbOqwS5bW7URIU0KF/wEHz10zThSyNo+J1Fe9Q=;
-        b=DDUC1sUU9qb6nEDUMVXP6EZno2vu6cm1WzwgW4Kq96uBgmAaK46cfNma90/a2Idh7NI1CC
-        oozmRm5hiL5gR1O7v6N28lPUvP7QmjMm5knqEtXIt08akxOgWzIHHQxCVYhVapUJBL/L2S
-        i8LRFA/sbcr0hoiAR4Aj60JqnV/ISPA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109-44JbRXPJN9ecGvY5VUOvhg-1; Tue, 16 Jun 2020 17:49:16 -0400
-X-MC-Unique: 44JbRXPJN9ecGvY5VUOvhg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 149F010059B8;
-        Tue, 16 Jun 2020 21:49:10 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-114-132.rdu2.redhat.com [10.10.114.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 511E15D9D3;
-        Tue, 16 Jun 2020 21:49:03 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id C8781225E4B; Tue, 16 Jun 2020 17:49:02 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, vgoyal@redhat.com, vkuznets@redhat.com,
-        pbonzini@redhat.com, wanpengli@tencent.com,
-        sean.j.christopherson@intel.com
-Subject: [PATCH 2/3] kvm: Add capability to be able to report async pf error to guest
-Date:   Tue, 16 Jun 2020 17:48:46 -0400
-Message-Id: <20200616214847.24482-3-vgoyal@redhat.com>
-In-Reply-To: <20200616214847.24482-1-vgoyal@redhat.com>
-References: <20200616214847.24482-1-vgoyal@redhat.com>
+        Tue, 16 Jun 2020 17:49:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1592344188; x=1623880188;
+  h=date:from:to:cc:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to:subject;
+  bh=2xZWar77dXkth8tk0V/E/5zPJfDMTckPDO14OJN6cFs=;
+  b=S0KWAit/W96xLY6edIEKux3Zl9R0ulYlurEYcb452/iVIrYLPsdgVvUr
+   eiIA7JRiRy7K/26SH2lDtEaRDHr8AtS7RkrkG+Wmz3R26zaeF5cq/kLQo
+   Ja+nDsTbQg25cN36o2n41AdEhrYSVSz0y6f96V4lPNSp2NMyNYyCmw1hN
+   g=;
+IronPort-SDR: mrYnVTXGTnnqHewBUIddvzzRXlflYMjMyxE96i0WnUJPOgd3L5PuAQgZhdT+1V4jG9PhbPquY9
+ XRYaFMbAvvQw==
+X-IronPort-AV: E=Sophos;i="5.73,519,1583193600"; 
+   d="scan'208";a="44534346"
+Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and hibernation]
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 16 Jun 2020 21:49:43 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 8C216A07C3;
+        Tue, 16 Jun 2020 21:49:41 +0000 (UTC)
+Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
+ EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 16 Jun 2020 21:49:26 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 16 Jun 2020 21:49:25 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Tue, 16 Jun 2020 21:49:25 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 872B240139; Tue, 16 Jun 2020 21:49:25 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 21:49:25 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Valentin, Eduardo" <eduval@amazon.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Message-ID: <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
+ <20200604070548.GH1195@Air-de-Roger>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200604070548.GH1195@Air-de-Roger>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of now asynchronous page fault mecahanism assumes host will always be
-successful in resolving page fault. So there are only two states, that
-is page is not present and page is ready.
+On Thu, Jun 04, 2020 at 09:05:48AM +0200, Roger Pau Monné wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> 
+> 
+> 
+> Hello,
+> 
+> On Wed, Jun 03, 2020 at 11:33:52PM +0000, Agarwal, Anchal wrote:
+> >  CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> >
+> >
+> >
+> >     On Tue, May 19, 2020 at 11:27:50PM +0000, Anchal Agarwal wrote:
+> >     > From: Munehisa Kamata <kamatam@amazon.com>
+> >     >
+> >     > S4 power transition states are much different than xen
+> >     > suspend/resume. Former is visible to the guest and frontend drivers should
+> >     > be aware of the state transitions and should be able to take appropriate
+> >     > actions when needed. In transition to S4 we need to make sure that at least
+> >     > all the in-flight blkif requests get completed, since they probably contain
+> >     > bits of the guest's memory image and that's not going to get saved any
+> >     > other way. Hence, re-issuing of in-flight requests as in case of xen resume
+> >     > will not work here. This is in contrast to xen-suspend where we need to
+> >     > freeze with as little processing as possible to avoid dirtying RAM late in
+> >     > the migration cycle and we know that in-flight data can wait.
+> >     >
+> >     > Add freeze, thaw and restore callbacks for PM suspend and hibernation
+> >     > support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
+> >     > events, need to implement these xenbus_driver callbacks. The freeze handler
+> >     > stops block-layer queue and disconnect the frontend from the backend while
+> >     > freeing ring_info and associated resources. Before disconnecting from the
+> >     > backend, we need to prevent any new IO from being queued and wait for existing
+> >     > IO to complete. Freeze/unfreeze of the queues will guarantee that there are no
+> >     > requests in use on the shared ring. However, for sanity we should check
+> >     > state of the ring before disconnecting to make sure that there are no
+> >     > outstanding requests to be processed on the ring. The restore handler
+> >     > re-allocates ring_info, unquiesces and unfreezes the queue and re-connect to
+> >     > the backend, so that rest of the kernel can continue to use the block device
+> >     > transparently.
+> >     >
+> >     > Note:For older backends,if a backend doesn't have commit'12ea729645ace'
+> >     > xen/blkback: unmap all persistent grants when frontend gets disconnected,
+> >     > the frontend may see massive amount of grant table warning when freeing
+> >     > resources.
+> >     > [   36.852659] deferring g.e. 0xf9 (pfn 0xffffffffffffffff)
+> >     > [   36.855089] xen:grant_table: WARNING:e.g. 0x112 still in use!
+> >     >
+> >     > In this case, persistent grants would need to be disabled.
+> >     >
+> >     > [Anchal Changelog: Removed timeout/request during blkfront freeze.
+> >     > Reworked the whole patch to work with blk-mq and incorporate upstream's
+> >     > comments]
+> >
+> >     Please tag versions using vX and it would be helpful if you could list
+> >     the specific changes that you performed between versions. There where
+> >     3 RFC versions IIRC, and there's no log of the changes between them.
+> >
+> > I will elaborate on "upstream's comments" in my changelog in my next round of patches.
+> 
+> Sorry for being picky, but can you please make sure your email client
+> properly quotes previous emails on reply. Note the lack of '>' added
+> to the quoted parts of your reply.
+That was just my outlook probably. Note taken.
+> 
+> >     > +                     }
+> >     > +
+> >     >                       break;
+> >     > +             }
+> >     > +
+> >     > +             /*
+> >     > +              * We may somehow receive backend's Closed again while thawing
+> >     > +              * or restoring and it causes thawing or restoring to fail.
+> >     > +              * Ignore such unexpected state regardless of the backend state.
+> >     > +              */
+> >     > +             if (info->connected == BLKIF_STATE_FROZEN) {
+> >
+> >     I think you can join this with the previous dev->state == XenbusStateClosed?
+> >
+> >     Also, won't the device be in the Closed state already if it's in state
+> >     frozen?
+> > Yes but I think this mostly due to a hypothetical case if during thawing backend switches to Closed state.
+> > I am not entirely sure if that could happen. Could use some expertise here.
+> 
+> I think the frontend seeing the backend in the closed state during
+> restore would be a bug that should prevent the frontend from
+> resuming.
+> 
+> >     > +     /* Kick the backend to disconnect */
+> >     > +     xenbus_switch_state(dev, XenbusStateClosing);
+> >     > +
+> >     > +     /*
+> >     > +      * We don't want to move forward before the frontend is diconnected
+> >     > +      * from the backend cleanly.
+> >     > +      */
+> >     > +     timeout = wait_for_completion_timeout(&info->wait_backend_disconnected,
+> >     > +                                           timeout);
+> >     > +     if (!timeout) {
+> >     > +             err = -EBUSY;
+> >
+> >     Note err is only used here, and I think could just be dropped.
+> >
+> > This err is what's being returned from the function. Am I missing anything?
+> 
+> Just 'return -EBUSY;' directly, and remove the top level variable. You
+> can also use -EBUSY directly in the xenbus_dev_error call. Anyway, not
+> that important.
+> 
+> >     > +             xenbus_dev_error(dev, err, "Freezing timed out;"
+> >     > +                              "the device may become inconsistent state");
+> >
+> >     Leaving the device in this state is quite bad, as it's in a closed
+> >     state and with the queues frozen. You should make an attempt to
+> >     restore things to a working state.
+> >
+> > You mean if backend closed after timeout? Is there a way to know that? I understand it's not good to
+> > leave it in this state however, I am still trying to find if there is a good way to know if backend is still connected after timeout.
+> > Hence the message " the device may become inconsistent state".  I didn't see a timeout not even once on my end so that's why
+> > I may be looking for an alternate perspective here. may be need to thaw everything back intentionally is one thing I could think of.
+> 
+> You can manually force this state, and then check that it will behave
+> correctly. I would expect that on a failure to disconnect from the
+> backend you should switch the frontend to the 'Init' state in order to
+> try to reconnect to the backend when possible.
+> 
+From what I understand forcing manually is, failing the freeze without
+disconnect and try to revive the connection by unfreezing the
+queues->reconnecting to backend [which never got diconnected]. May be even
+tearing down things manually because I am not sure what state will frontend
+see if backend fails to to disconnect at any point in time. I assumed connected.
+Then again if its "CONNECTED" I may not need to tear down everything and start
+from Initialising state because that may not work.
 
-If a page is backed by a file and that file has been truncated (as
-can be the case with virtio-fs), then page fault handler on host returns
--EFAULT.
+So I am not so sure about backend's state so much, lets say if  xen_blkif_disconnect fail,
+I don't see it getting handled in the backend then what will be backend's state?
+Will it still switch xenbus state to 'Closed'? If not what will frontend see, 
+if it tries to read backend's state through xenbus_read_driver_state ?
 
-As of now async page fault logic does not look at error code (-EFAULT)
-returned by get_user_pages_remote() and returns PAGE_READY to guest.
-Guest tries to access page and page fault happnes again. And this
-gets kvm into an infinite loop. (Killing host process gets kvm out of
-this loop though).
+So the flow be like:
+Front end marks XenbusStateClosing
+Backend marks its state as XenbusStateClosing
+    Frontend marks XenbusStateClosed
+    Backend disconnects calls xen_blkif_disconnect
+       Backend fails to disconnect, the above function returns EBUSY
+       What will be state of backend here? 
+       Frontend did not tear down the rings if backend does not switches the
+       state to 'Closed' in case of failure.
 
-This patch adds another state to async page fault logic which allows
-host to return error to guest. Once guest knows that async page fault
-can't be resolved, it can send SIGBUS to host process (if user space
-was accessing the page in question).
+If backend stays in CONNECTED state, then even if we mark it Initialised in frontend, backend
+won't be calling connect(). {From reading code in frontend_changed}
+IMU, Initialising will fail since backend dev->state != XenbusStateClosed plus
+we did not tear down anything so calling talk_to_blkback may not be needed
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- Documentation/virt/kvm/cpuid.rst     |  4 +++
- Documentation/virt/kvm/msr.rst       | 10 +++++---
- arch/x86/include/asm/kvm_host.h      |  3 +++
- arch/x86/include/asm/kvm_para.h      |  8 +++---
- arch/x86/include/uapi/asm/kvm_para.h | 10 ++++++--
- arch/x86/kernel/kvm.c                | 34 ++++++++++++++++++++-----
- arch/x86/kvm/cpuid.c                 |  3 ++-
- arch/x86/kvm/mmu/mmu.c               |  2 +-
- arch/x86/kvm/x86.c                   | 38 ++++++++++++++++++++--------
- 9 files changed, 83 insertions(+), 29 deletions(-)
-
-diff --git a/Documentation/virt/kvm/cpuid.rst b/Documentation/virt/kvm/cpuid.rst
-index a7dff9186bed..a4497f3a6e7f 100644
---- a/Documentation/virt/kvm/cpuid.rst
-+++ b/Documentation/virt/kvm/cpuid.rst
-@@ -92,6 +92,10 @@ KVM_FEATURE_ASYNC_PF_INT          14          guest checks this feature bit
-                                               async pf acknowledgment msr
-                                               0x4b564d07.
- 
-+KVM_FEATURE_ASYNC_PF_ERROR        15          paravirtualized async PF error
-+                                              can be enabled by setting bit 4
-+                                              when writing to msr 0x4b564d02
-+
- KVM_FEATURE_CLOCSOURCE_STABLE_BIT 24          host will warn if no guest-side
-                                               per-cpu warps are expeced in
-                                               kvmclock
-diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
-index e37a14c323d2..513eb8e0b0eb 100644
---- a/Documentation/virt/kvm/msr.rst
-+++ b/Documentation/virt/kvm/msr.rst
-@@ -202,19 +202,21 @@ data:
- 
- 		/* Used for 'page ready' events delivered via interrupt notification */
- 		__u32 token;
--
--		__u8 pad[56];
-+                __u32 ready_flags;
-+		__u8 pad[52];
- 		__u32 enabled;
- 	  };
- 
--	Bits 5-4 of the MSR are reserved and should be zero. Bit 0 is set to 1
-+	Bits 5 of the MSR is reserved and should be zero. Bit 0 is set to 1
- 	when asynchronous page faults are enabled on the vcpu, 0 when disabled.
- 	Bit 1 is 1 if asynchronous page faults can be injected when vcpu is in
- 	cpl == 0. Bit 2 is 1 if asynchronous page faults are delivered to L1 as
- 	#PF vmexits.  Bit 2 can be set only if KVM_FEATURE_ASYNC_PF_VMEXIT is
- 	present in CPUID. Bit 3 enables interrupt based delivery of 'page ready'
- 	events. Bit 3 can only be set if KVM_FEATURE_ASYNC_PF_INT is present in
--	CPUID.
-+	CPUID. Bit 4 enables reporting of page fault errors if hypervisor
-+        encounters errors while faulting in page. Bit 4 can only be set if
-+        KVM_FEATURE_ASYNC_PF_ERROR is present in CPUID.
- 
- 	'Page not present' events are currently always delivered as synthetic
- 	#PF exception. During delivery of these events APF CR2 register contains
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 348a73106556..ff8dbc604dbe 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -779,6 +779,7 @@ struct kvm_vcpu_arch {
- 		bool delivery_as_pf_vmexit;
- 		bool pageready_pending;
- 		gfn_t error_gfn;
-+		bool send_pf_error;
- 	} apf;
- 
- 	/* OSVW MSRs (AMD only) */
-@@ -1680,6 +1681,8 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu,
- 			       struct kvm_async_pf *work);
- void kvm_arch_async_page_present_queued(struct kvm_vcpu *vcpu);
- bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu);
-+void kvm_arch_async_page_fault_error(struct kvm_vcpu *vcpu,
-+				     struct kvm_async_pf *work);
- extern bool kvm_find_async_pf_gfn(struct kvm_vcpu *vcpu, gfn_t gfn);
- 
- int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-index bbc43e5411d9..6c738e91ca2c 100644
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -89,8 +89,8 @@ static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
- bool kvm_para_available(void);
- unsigned int kvm_arch_para_features(void);
- unsigned int kvm_arch_para_hints(void);
--void kvm_async_pf_task_wait_schedule(u32 token);
--void kvm_async_pf_task_wake(u32 token);
-+void kvm_async_pf_task_wait_schedule(u32 token, bool user_mode);
-+void kvm_async_pf_task_wake(u32 token, bool is_err);
- u32 kvm_read_and_reset_apf_flags(void);
- void kvm_disable_steal_time(void);
- bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token);
-@@ -120,8 +120,8 @@ static inline void kvm_spinlock_init(void)
- #endif /* CONFIG_PARAVIRT_SPINLOCKS */
- 
- #else /* CONFIG_KVM_GUEST */
--#define kvm_async_pf_task_wait_schedule(T) do {} while(0)
--#define kvm_async_pf_task_wake(T) do {} while(0)
-+#define kvm_async_pf_task_wait_schedule(T, U) do {} while(0)
-+#define kvm_async_pf_task_wake(T, I) do {} while(0)
- 
- static inline bool kvm_para_available(void)
- {
-diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-index 812e9b4c1114..b43fd2ddc949 100644
---- a/arch/x86/include/uapi/asm/kvm_para.h
-+++ b/arch/x86/include/uapi/asm/kvm_para.h
-@@ -32,6 +32,7 @@
- #define KVM_FEATURE_POLL_CONTROL	12
- #define KVM_FEATURE_PV_SCHED_YIELD	13
- #define KVM_FEATURE_ASYNC_PF_INT	14
-+#define KVM_FEATURE_ASYNC_PF_ERROR	15
- 
- #define KVM_HINTS_REALTIME      0
- 
-@@ -85,6 +86,7 @@ struct kvm_clock_pairing {
- #define KVM_ASYNC_PF_SEND_ALWAYS		(1 << 1)
- #define KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT	(1 << 2)
- #define KVM_ASYNC_PF_DELIVERY_AS_INT		(1 << 3)
-+#define KVM_ASYNC_PF_SEND_ERROR			(1 << 4)
- 
- /* MSR_KVM_ASYNC_PF_INT */
- #define KVM_ASYNC_PF_VEC_MASK			GENMASK(7, 0)
-@@ -119,14 +121,18 @@ struct kvm_mmu_op_release_pt {
- #define KVM_PV_REASON_PAGE_NOT_PRESENT 1
- #define KVM_PV_REASON_PAGE_READY 2
- 
-+
-+/* Bit flags for ready_flags field */
-+#define KVM_PV_REASON_PAGE_ERROR 1
-+
- struct kvm_vcpu_pv_apf_data {
- 	/* Used for 'page not present' events delivered via #PF */
- 	__u32 flags;
- 
- 	/* Used for 'page ready' events delivered via interrupt notification */
- 	__u32 token;
--
--	__u8 pad[56];
-+	__u32 ready_flags;
-+	__u8 pad[52];
- 	__u32 enabled;
- };
- 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index ff95429d206b..2ee9c9d971ae 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -75,6 +75,7 @@ struct kvm_task_sleep_node {
- 	struct swait_queue_head wq;
- 	u32 token;
- 	int cpu;
-+	bool is_err;
- };
- 
- static struct kvm_task_sleep_head {
-@@ -97,7 +98,14 @@ static struct kvm_task_sleep_node *_find_apf_task(struct kvm_task_sleep_head *b,
- 	return NULL;
- }
- 
--static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
-+static void handle_async_pf_error(bool user_mode)
-+{
-+	if (user_mode)
-+		send_sig_info(SIGBUS, SEND_SIG_PRIV, current);
-+}
-+
-+static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n,
-+				    bool user_mode)
- {
- 	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
- 	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
-@@ -107,6 +115,8 @@ static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
- 	e = _find_apf_task(b, token);
- 	if (e) {
- 		/* dummy entry exist -> wake up was delivered ahead of PF */
-+		if (e->is_err)
-+			handle_async_pf_error(user_mode);
- 		hlist_del(&e->link);
- 		raw_spin_unlock(&b->lock);
- 		kfree(e);
-@@ -128,14 +138,14 @@ static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
-  * Invoked from the async pagefault handling code or from the VM exit page
-  * fault handler. In both cases RCU is watching.
-  */
--void kvm_async_pf_task_wait_schedule(u32 token)
-+void kvm_async_pf_task_wait_schedule(u32 token, bool user_mode)
- {
- 	struct kvm_task_sleep_node n;
- 	DECLARE_SWAITQUEUE(wait);
- 
- 	lockdep_assert_irqs_disabled();
- 
--	if (!kvm_async_pf_queue_task(token, &n))
-+	if (!kvm_async_pf_queue_task(token, &n, user_mode))
- 		return;
- 
- 	for (;;) {
-@@ -148,6 +158,8 @@ void kvm_async_pf_task_wait_schedule(u32 token)
- 		local_irq_disable();
- 	}
- 	finish_swait(&n.wq, &wait);
-+	if (n.is_err)
-+		handle_async_pf_error(user_mode);
- }
- EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait_schedule);
- 
-@@ -177,7 +189,7 @@ static void apf_task_wake_all(void)
- 	}
- }
- 
--void kvm_async_pf_task_wake(u32 token)
-+void kvm_async_pf_task_wake(u32 token, bool is_err)
- {
- 	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
- 	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
-@@ -208,9 +220,11 @@ void kvm_async_pf_task_wake(u32 token)
- 		}
- 		n->token = token;
- 		n->cpu = smp_processor_id();
-+		n->is_err = is_err;
- 		init_swait_queue_head(&n->wq);
- 		hlist_add_head(&n->link, &b->list);
- 	} else {
-+		n->is_err = is_err;
- 		apf_task_wake_one(n);
- 	}
- 	raw_spin_unlock(&b->lock);
-@@ -256,14 +270,15 @@ bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
- 		panic("Host injected async #PF in kernel mode\n");
- 
- 	/* Page is swapped out by the host. */
--	kvm_async_pf_task_wait_schedule(token);
-+	kvm_async_pf_task_wait_schedule(token, user_mode(regs));
- 	return true;
- }
- NOKPROBE_SYMBOL(__kvm_handle_async_pf);
- 
- __visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs)
- {
--	u32 token;
-+	u32 token, ready_flags;
-+	bool is_err;
- 
- 	entering_ack_irq();
- 
-@@ -271,7 +286,9 @@ __visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs)
- 
- 	if (__this_cpu_read(apf_reason.enabled)) {
- 		token = __this_cpu_read(apf_reason.token);
--		kvm_async_pf_task_wake(token);
-+		ready_flags = __this_cpu_read(apf_reason.ready_flags);
-+		is_err = ready_flags & KVM_PV_REASON_PAGE_ERROR;
-+		kvm_async_pf_task_wake(token, is_err);
- 		__this_cpu_write(apf_reason.token, 0);
- 		wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
- 	}
-@@ -335,6 +352,9 @@ static void kvm_guest_cpu_init(void)
- 
- 		wrmsrl(MSR_KVM_ASYNC_PF_INT, KVM_ASYNC_PF_VECTOR);
- 
-+		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_ERROR))
-+			pa |= KVM_ASYNC_PF_SEND_ERROR;
-+
- 		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
- 		__this_cpu_write(apf_reason.enabled, 1);
- 		pr_info("KVM setup async PF for cpu %d\n", smp_processor_id());
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 253b8e875ccd..f811f36e0c24 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -712,7 +712,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 			     (1 << KVM_FEATURE_PV_SEND_IPI) |
- 			     (1 << KVM_FEATURE_POLL_CONTROL) |
- 			     (1 << KVM_FEATURE_PV_SCHED_YIELD) |
--			     (1 << KVM_FEATURE_ASYNC_PF_INT);
-+			     (1 << KVM_FEATURE_ASYNC_PF_INT) |
-+			     (1 << KVM_FEATURE_ASYNC_PF_ERROR);
- 
- 		if (sched_info_on())
- 			entry->eax |= (1 << KVM_FEATURE_STEAL_TIME);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index e207900ab303..634182bb07c7 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4175,7 +4175,7 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
- 	} else if (flags & KVM_PV_REASON_PAGE_NOT_PRESENT) {
- 		vcpu->arch.apf.host_apf_flags = 0;
- 		local_irq_disable();
--		kvm_async_pf_task_wait_schedule(fault_address);
-+		kvm_async_pf_task_wait_schedule(fault_address, 0);
- 		local_irq_enable();
- 	} else {
- 		WARN_ONCE(1, "Unexpected host async PF flags: %x\n", flags);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 4c5205434b9c..c3b2097f2eaa 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2690,8 +2690,8 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
- {
- 	gpa_t gpa = data & ~0x3f;
- 
--	/* Bits 4:5 are reserved, Should be zero */
--	if (data & 0x30)
-+	/* Bits 5 is reserved, Should be zero */
-+	if (data & 0x20)
- 		return 1;
- 
- 	vcpu->arch.apf.msr_en_val = data;
-@@ -2703,11 +2703,12 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
- 	}
- 
- 	if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.apf.data, gpa,
--					sizeof(u64)))
-+					sizeof(u64) + sizeof(u32)))
- 		return 1;
- 
- 	vcpu->arch.apf.send_user_only = !(data & KVM_ASYNC_PF_SEND_ALWAYS);
- 	vcpu->arch.apf.delivery_as_pf_vmexit = data & KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT;
-+	vcpu->arch.apf.send_pf_error = data & KVM_ASYNC_PF_SEND_ERROR;
- 
- 	kvm_async_pf_wakeup_all(vcpu);
- 
-@@ -10481,12 +10482,25 @@ static inline int apf_put_user_notpresent(struct kvm_vcpu *vcpu)
- 				      sizeof(reason));
- }
- 
--static inline int apf_put_user_ready(struct kvm_vcpu *vcpu, u32 token)
-+static inline int apf_put_user_ready(struct kvm_vcpu *vcpu, u32 token,
-+				     bool is_err)
- {
- 	unsigned int offset = offsetof(struct kvm_vcpu_pv_apf_data, token);
-+	int ret;
-+	u32 ready_flags = 0;
-+
-+	if (is_err && vcpu->arch.apf.send_pf_error)
-+		ready_flags = KVM_PV_REASON_PAGE_ERROR;
-+
-+	ret = kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.apf.data,
-+					    &token, offset, sizeof(token));
-+	if (ret < 0)
-+		return ret;
- 
-+	offset = offsetof(struct kvm_vcpu_pv_apf_data, ready_flags);
- 	return kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.apf.data,
--					     &token, offset, sizeof(token));
-+					    &ready_flags, offset,
-+					    sizeof(ready_flags));
- }
- 
- static inline bool apf_pageready_slot_free(struct kvm_vcpu *vcpu)
-@@ -10571,6 +10585,8 @@ bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
- 				 struct kvm_async_pf *work)
- {
-+	bool present_injected = false;
-+
- 	struct kvm_lapic_irq irq = {
- 		.delivery_mode = APIC_DM_FIXED,
- 		.vector = vcpu->arch.apf.vec
-@@ -10584,16 +10600,18 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
- 
- 	if ((work->wakeup_all || work->notpresent_injected) &&
- 	    kvm_pv_async_pf_enabled(vcpu) &&
--	    !apf_put_user_ready(vcpu, work->arch.token)) {
-+	    !apf_put_user_ready(vcpu, work->arch.token, work->error_code)) {
- 		vcpu->arch.apf.pageready_pending = true;
- 		kvm_apic_set_irq(vcpu, &irq, NULL);
-+		present_injected = true;
- 	}
- 
--	if (work->error_code) {
-+	if (work->error_code &&
-+	    (!present_injected || !vcpu->arch.apf.send_pf_error)) {
- 		/*
--		 * Page fault failed and we don't have a way to report
--		 * errors back to guest yet. So save this pfn and force
--		 * sync page fault next time.
-+		 * Page fault failed. If we did not report error back
-+		 * to guest, save this pfn and force sync page fault next
-+		 * time.
- 		 */
- 		vcpu->arch.apf.error_gfn = work->cr2_or_gpa >> PAGE_SHIFT;
- 	}
--- 
-2.25.4
-
+Does that sound correct?
+> >     > +     }
+> >     > +
+> >     > +     return err;
+> >     > +}
+> >     > +
+> >     > +static int blkfront_restore(struct xenbus_device *dev)
+> >     > +{
+> >     > +     struct blkfront_info *info = dev_get_drvdata(&dev->dev);
+> >     > +     int err = 0;
+> >     > +
+> >     > +     err = talk_to_blkback(dev, info);
+> >     > +     blk_mq_unquiesce_queue(info->rq);
+> >     > +     blk_mq_unfreeze_queue(info->rq);
+> >     > +     if (!err)
+> >     > +         blk_mq_update_nr_hw_queues(&info->tag_set, info->nr_rings);
+> >
+> >     Bad indentation. Also shouldn't you first update the queues and then
+> >     unfreeze them?
+> > Please correct me if I am wrong, blk_mq_update_nr_hw_queues freezes the queue
+> > So I don't think the order could be reversed.
+> 
+> Regardless of what blk_mq_update_nr_hw_queues does, I don't think it's
+> correct to unfreeze the queues without having updated them. Also the
+> freezing/unfreezing uses a refcount, so I think it's perfectly fine to
+> call blk_mq_update_nr_hw_queues first and then unfreeze the queues.
+> 
+> Also note that talk_to_blkback returning an error should likely
+> prevent any unfreezing, as the queues won't be updated to match the
+> parameters of the backend.
+>
+I think you are right here. Will send out fixes in V2
+> Thanks, Roger.
+> 
+Thanks,
+Anchal
