@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C83C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA815C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6525421501
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990C9207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322635;
-	bh=oXxrqKU3RYuFHlbwhWmrhjiO0p/+PyjSyNfifVE7cVI=;
+	s=default; t=1592322636;
+	bh=hFRs2wBycnAcMlp6amO8j84cyFWT2H17fb0ZoWm5aJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZbINngQdoL7WWtuECZeyVAdnYgrBOzifwx0CnUJPISMc5djyIGM68xPQPwqOMvJiL
-	 EfC46s1l69I56jalfrk5UDFZ+G3YdQEnChUaiDuKq9ARhbxzTEVaBedHi7vjkDstao
-	 ZJCUE2Uqk4tAxrgptUYNAbBFb7zz/ec+n8cK6m4E=
+	b=ueciMbqD1fMCUJK6VPxhgMKlwDc4SyJDF5zCDkW8r9ZlFiHccgcoT2fz9TMoJg37l
+	 vbHOytXStJj9nC+rp39mo9JqV9Mxt4gYv3mGkGpFUTOcaRnowEyp7GHcVUrn0bdXXu
+	 0v6poPyVl/6oZvDlBZerZONsSGKZIzVDwcuDOpPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732130AbgFPPud (ORCPT
+        id S1732153AbgFPPuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:50:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46190 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:50:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732392AbgFPPuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:50:25 -0400
+        id S1731791AbgFPPub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E882720776;
-        Tue, 16 Jun 2020 15:50:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E19C20776;
+        Tue, 16 Jun 2020 15:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322624;
-        bh=oXxrqKU3RYuFHlbwhWmrhjiO0p/+PyjSyNfifVE7cVI=;
+        s=default; t=1592322630;
+        bh=hFRs2wBycnAcMlp6amO8j84cyFWT2H17fb0ZoWm5aJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iryt4ZX8sO4ZKPeDKNeQB1Quf2irXnvhbS/KfHgN1zWPHOydQ1GRxyL514frc75uV
-         5eZm6eJc0WjW/69sFGDdMFU+YVSFDPvUNM/KFEnarwEX/OlLMM1D0o36TGg4vOPgj+
-         NLvXwhYnMSrUPDnPqw8+tovHlyrgGn602DF5bMD4=
+        b=Ih+nViygGfeI6kGnohobOwafitHWnPkiExSM3h5BtrN3h1r3nAoWEshQ6Oq4J/zVH
+         Nj4EXlb0ttoZBNKxT68w65ndBJh/3DIXNAsGhT+TRFcYIv6rlxJNYMIw8IK53kmCKu
+         szy0CxCQ/g+goYMnU4hHUtDWlfFrYTxxGH3RdgpQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        stable@vger.kernel.org, Matt Coleman <mcoleman@datto.com>,
+        Rahul Kundu <rahul.kundu@chelsio.com>,
+        Maurizio Lombardi <mlombard@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 041/161] kobject: Make sure the parent does not get released before its children
-Date:   Tue, 16 Jun 2020 17:33:51 +0200
-Message-Id: <20200616153108.333633206@linuxfoundation.org>
+Subject: [PATCH 5.6 043/161] scsi: target: fix hang when multiple threads try to destroy the same iscsi session
+Date:   Tue, 16 Jun 2020 17:33:53 +0200
+Message-Id: <20200616153108.424484536@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -65,109 +62,255 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Maurizio Lombardi <mlombard@redhat.com>
 
-[ Upstream commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa ]
+[ Upstream commit 57c46e9f33da530a2485fa01aa27b6d18c28c796 ]
 
-In the function kobject_cleanup(), kobject_del(kobj) is
-called before the kobj->release(). That makes it possible to
-release the parent of the kobject before the kobject itself.
+A number of hangs have been reported against the target driver; they are
+due to the fact that multiple threads may try to destroy the iscsi session
+at the same time. This may be reproduced for example when a "targetcli
+iscsi/iqn.../tpg1 disable" command is executed while a logout operation is
+underway.
 
-To fix that, adding function __kboject_del() that does
-everything that kobject_del() does except release the parent
-reference. kobject_cleanup() then calls __kobject_del()
-instead of kobject_del(), and separately decrements the
-reference count of the parent kobject after kobj->release()
-has been called.
+When this happens, two or more threads may end up sleeping and waiting for
+iscsit_close_connection() to execute "complete(session_wait_comp)".  Only
+one of the threads will wake up and proceed to destroy the session
+structure, the remaining threads will hang forever.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
-Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20200513151840.36400-1-heikki.krogerus@linux.intel.com
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Note that if the blocked threads are somehow forced to wake up with
+complete_all(), they will try to free the same iscsi session structure
+destroyed by the first thread, causing double frees, memory corruptions
+etc...
+
+With this patch, the threads that want to destroy the iscsi session will
+increase the session refcount and will set the "session_close" flag to 1;
+then they wait for the driver to close the remaining active connections.
+When the last connection is closed, iscsit_close_connection() will wake up
+all the threads and will wait for the session's refcount to reach zero;
+when this happens, iscsit_close_connection() will destroy the session
+structure because no one is referencing it anymore.
+
+ INFO: task targetcli:5971 blocked for more than 120 seconds.
+       Tainted: P           OE    4.15.0-72-generic #81~16.04.1
+ "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ targetcli       D    0  5971      1 0x00000080
+ Call Trace:
+  __schedule+0x3d6/0x8b0
+  ? vprintk_func+0x44/0xe0
+  schedule+0x36/0x80
+  schedule_timeout+0x1db/0x370
+  ? __dynamic_pr_debug+0x8a/0xb0
+  wait_for_completion+0xb4/0x140
+  ? wake_up_q+0x70/0x70
+  iscsit_free_session+0x13d/0x1a0 [iscsi_target_mod]
+  iscsit_release_sessions_for_tpg+0x16b/0x1e0 [iscsi_target_mod]
+  iscsit_tpg_disable_portal_group+0xca/0x1c0 [iscsi_target_mod]
+  lio_target_tpg_enable_store+0x66/0xe0 [iscsi_target_mod]
+  configfs_write_file+0xb9/0x120
+  __vfs_write+0x1b/0x40
+  vfs_write+0xb8/0x1b0
+  SyS_write+0x5c/0xe0
+  do_syscall_64+0x73/0x130
+  entry_SYSCALL_64_after_hwframe+0x3d/0xa2
+
+Link: https://lore.kernel.org/r/20200313170656.9716-3-mlombard@redhat.com
+Reported-by: Matt Coleman <mcoleman@datto.com>
+Tested-by: Matt Coleman <mcoleman@datto.com>
+Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/kobject.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ drivers/target/iscsi/iscsi_target.c          | 35 ++++++++++++--------
+ drivers/target/iscsi/iscsi_target_configfs.c |  5 ++-
+ drivers/target/iscsi/iscsi_target_login.c    |  5 +--
+ include/target/iscsi/iscsi_target_core.h     |  2 +-
+ 4 files changed, 30 insertions(+), 17 deletions(-)
 
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 83198cb37d8d..2bd631460e18 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index 1c7514543571..59379d662626 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4301,30 +4301,37 @@ int iscsit_close_connection(
+ 	if (!atomic_read(&sess->session_reinstatement) &&
+ 	     atomic_read(&sess->session_fall_back_to_erl0)) {
+ 		spin_unlock_bh(&sess->conn_lock);
++		complete_all(&sess->session_wait_comp);
+ 		iscsit_close_session(sess);
+ 
+ 		return 0;
+ 	} else if (atomic_read(&sess->session_logout)) {
+ 		pr_debug("Moving to TARG_SESS_STATE_FREE.\n");
+ 		sess->session_state = TARG_SESS_STATE_FREE;
+-		spin_unlock_bh(&sess->conn_lock);
+ 
+-		if (atomic_read(&sess->sleep_on_sess_wait_comp))
+-			complete(&sess->session_wait_comp);
++		if (atomic_read(&sess->session_close)) {
++			spin_unlock_bh(&sess->conn_lock);
++			complete_all(&sess->session_wait_comp);
++			iscsit_close_session(sess);
++		} else {
++			spin_unlock_bh(&sess->conn_lock);
++		}
+ 
+ 		return 0;
+ 	} else {
+ 		pr_debug("Moving to TARG_SESS_STATE_FAILED.\n");
+ 		sess->session_state = TARG_SESS_STATE_FAILED;
+ 
+-		if (!atomic_read(&sess->session_continuation)) {
+-			spin_unlock_bh(&sess->conn_lock);
++		if (!atomic_read(&sess->session_continuation))
+ 			iscsit_start_time2retain_handler(sess);
+-		} else
+-			spin_unlock_bh(&sess->conn_lock);
+ 
+-		if (atomic_read(&sess->sleep_on_sess_wait_comp))
+-			complete(&sess->session_wait_comp);
++		if (atomic_read(&sess->session_close)) {
++			spin_unlock_bh(&sess->conn_lock);
++			complete_all(&sess->session_wait_comp);
++			iscsit_close_session(sess);
++		} else {
++			spin_unlock_bh(&sess->conn_lock);
++		}
+ 
+ 		return 0;
+ 	}
+@@ -4429,9 +4436,9 @@ static void iscsit_logout_post_handler_closesession(
+ 	complete(&conn->conn_logout_comp);
+ 
+ 	iscsit_dec_conn_usage_count(conn);
++	atomic_set(&sess->session_close, 1);
+ 	iscsit_stop_session(sess, sleep, sleep);
+ 	iscsit_dec_session_usage_count(sess);
+-	iscsit_close_session(sess);
  }
- EXPORT_SYMBOL_GPL(kobject_move);
  
--/**
-- * kobject_del() - Unlink kobject from hierarchy.
-- * @kobj: object.
-- *
-- * This is the function that should be called to delete an object
-- * successfully added via kobject_add().
-- */
--void kobject_del(struct kobject *kobj)
-+static void __kobject_del(struct kobject *kobj)
- {
- 	struct kernfs_node *sd;
- 	const struct kobj_type *ktype;
-@@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+ static void iscsit_logout_post_handler_samecid(
+@@ -4576,8 +4583,6 @@ void iscsit_stop_session(
+ 	int is_last;
  
- 	kobj->state_in_sysfs = 0;
- 	kobj_kset_leave(kobj);
--	kobject_put(kobj->parent);
- 	kobj->parent = NULL;
- }
-+
-+/**
-+ * kobject_del() - Unlink kobject from hierarchy.
-+ * @kobj: object.
-+ *
-+ * This is the function that should be called to delete an object
-+ * successfully added via kobject_add().
-+ */
-+void kobject_del(struct kobject *kobj)
-+{
-+	struct kobject *parent = kobj->parent;
-+
-+	__kobject_del(kobj);
-+	kobject_put(parent);
-+}
- EXPORT_SYMBOL(kobject_del);
+ 	spin_lock_bh(&sess->conn_lock);
+-	if (session_sleep)
+-		atomic_set(&sess->sleep_on_sess_wait_comp, 1);
  
- /**
-@@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
-  */
- static void kobject_cleanup(struct kobject *kobj)
- {
-+	struct kobject *parent = kobj->parent;
- 	struct kobj_type *t = get_ktype(kobj);
- 	const char *name = kobj->name;
+ 	if (connection_sleep) {
+ 		list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
+@@ -4635,12 +4640,15 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
+ 		spin_lock(&sess->conn_lock);
+ 		if (atomic_read(&sess->session_fall_back_to_erl0) ||
+ 		    atomic_read(&sess->session_logout) ||
++		    atomic_read(&sess->session_close) ||
+ 		    (sess->time2retain_timer_flags & ISCSI_TF_EXPIRED)) {
+ 			spin_unlock(&sess->conn_lock);
+ 			continue;
+ 		}
++		iscsit_inc_session_usage_count(sess);
+ 		atomic_set(&sess->session_reinstatement, 1);
+ 		atomic_set(&sess->session_fall_back_to_erl0, 1);
++		atomic_set(&sess->session_close, 1);
+ 		spin_unlock(&sess->conn_lock);
  
-@@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
- 	if (kobj->state_in_sysfs) {
- 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
- 			 kobject_name(kobj), kobj);
--		kobject_del(kobj);
-+		__kobject_del(kobj);
+ 		list_move_tail(&se_sess->sess_list, &free_list);
+@@ -4650,8 +4658,9 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
+ 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
+ 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
+ 
++		list_del_init(&se_sess->sess_list);
+ 		iscsit_stop_session(sess, 1, 1);
+-		iscsit_close_session(sess);
++		iscsit_dec_session_usage_count(sess);
+ 		session_count++;
  	}
  
- 	if (t && t->release) {
-@@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
- 		pr_debug("kobject: '%s': free name\n", name);
- 		kfree_const(name);
+diff --git a/drivers/target/iscsi/iscsi_target_configfs.c b/drivers/target/iscsi/iscsi_target_configfs.c
+index 42b369fc415e..0fa1d57b26fa 100644
+--- a/drivers/target/iscsi/iscsi_target_configfs.c
++++ b/drivers/target/iscsi/iscsi_target_configfs.c
+@@ -1476,20 +1476,23 @@ static void lio_tpg_close_session(struct se_session *se_sess)
+ 	spin_lock(&sess->conn_lock);
+ 	if (atomic_read(&sess->session_fall_back_to_erl0) ||
+ 	    atomic_read(&sess->session_logout) ||
++	    atomic_read(&sess->session_close) ||
+ 	    (sess->time2retain_timer_flags & ISCSI_TF_EXPIRED)) {
+ 		spin_unlock(&sess->conn_lock);
+ 		spin_unlock_bh(&se_tpg->session_lock);
+ 		return;
  	}
-+
-+	kobject_put(parent);
++	iscsit_inc_session_usage_count(sess);
+ 	atomic_set(&sess->session_reinstatement, 1);
+ 	atomic_set(&sess->session_fall_back_to_erl0, 1);
++	atomic_set(&sess->session_close, 1);
+ 	spin_unlock(&sess->conn_lock);
+ 
+ 	iscsit_stop_time2retain_timer(sess);
+ 	spin_unlock_bh(&se_tpg->session_lock);
+ 
+ 	iscsit_stop_session(sess, 1, 1);
+-	iscsit_close_session(sess);
++	iscsit_dec_session_usage_count(sess);
  }
  
- #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+ static u32 lio_tpg_get_inst_index(struct se_portal_group *se_tpg)
+diff --git a/drivers/target/iscsi/iscsi_target_login.c b/drivers/target/iscsi/iscsi_target_login.c
+index f53330813207..731ee67fe914 100644
+--- a/drivers/target/iscsi/iscsi_target_login.c
++++ b/drivers/target/iscsi/iscsi_target_login.c
+@@ -156,6 +156,7 @@ int iscsi_check_for_session_reinstatement(struct iscsi_conn *conn)
+ 		spin_lock(&sess_p->conn_lock);
+ 		if (atomic_read(&sess_p->session_fall_back_to_erl0) ||
+ 		    atomic_read(&sess_p->session_logout) ||
++		    atomic_read(&sess_p->session_close) ||
+ 		    (sess_p->time2retain_timer_flags & ISCSI_TF_EXPIRED)) {
+ 			spin_unlock(&sess_p->conn_lock);
+ 			continue;
+@@ -166,6 +167,7 @@ int iscsi_check_for_session_reinstatement(struct iscsi_conn *conn)
+ 		   (sess_p->sess_ops->SessionType == sessiontype))) {
+ 			atomic_set(&sess_p->session_reinstatement, 1);
+ 			atomic_set(&sess_p->session_fall_back_to_erl0, 1);
++			atomic_set(&sess_p->session_close, 1);
+ 			spin_unlock(&sess_p->conn_lock);
+ 			iscsit_inc_session_usage_count(sess_p);
+ 			iscsit_stop_time2retain_timer(sess_p);
+@@ -190,7 +192,6 @@ int iscsi_check_for_session_reinstatement(struct iscsi_conn *conn)
+ 	if (sess->session_state == TARG_SESS_STATE_FAILED) {
+ 		spin_unlock_bh(&sess->conn_lock);
+ 		iscsit_dec_session_usage_count(sess);
+-		iscsit_close_session(sess);
+ 		return 0;
+ 	}
+ 	spin_unlock_bh(&sess->conn_lock);
+@@ -198,7 +199,6 @@ int iscsi_check_for_session_reinstatement(struct iscsi_conn *conn)
+ 	iscsit_stop_session(sess, 1, 1);
+ 	iscsit_dec_session_usage_count(sess);
+ 
+-	iscsit_close_session(sess);
+ 	return 0;
+ }
+ 
+@@ -486,6 +486,7 @@ static int iscsi_login_non_zero_tsih_s2(
+ 		sess_p = (struct iscsi_session *)se_sess->fabric_sess_ptr;
+ 		if (atomic_read(&sess_p->session_fall_back_to_erl0) ||
+ 		    atomic_read(&sess_p->session_logout) ||
++		    atomic_read(&sess_p->session_close) ||
+ 		   (sess_p->time2retain_timer_flags & ISCSI_TF_EXPIRED))
+ 			continue;
+ 		if (!memcmp(sess_p->isid, pdu->isid, 6) &&
+diff --git a/include/target/iscsi/iscsi_target_core.h b/include/target/iscsi/iscsi_target_core.h
+index a49d37140a64..591cd9e4692c 100644
+--- a/include/target/iscsi/iscsi_target_core.h
++++ b/include/target/iscsi/iscsi_target_core.h
+@@ -676,7 +676,7 @@ struct iscsi_session {
+ 	atomic_t		session_logout;
+ 	atomic_t		session_reinstatement;
+ 	atomic_t		session_stop_active;
+-	atomic_t		sleep_on_sess_wait_comp;
++	atomic_t		session_close;
+ 	/* connection list */
+ 	struct list_head	sess_conn_list;
+ 	struct list_head	cr_active_list;
 -- 
 2.25.1
 
