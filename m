@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC420C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97C921473
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0ED82071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322583;
-	bh=vq0pm2QmcOAOo0d5WTjEy1c/6Vkas/xBIPZLnJEYLJ4=;
+	s=default; t=1592322587;
+	bh=h117viqMI6tSMFemKRGUcqrURTlQKffWF6U0GKYbEog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJe/VkQzyQOSkXlX6yNYPWB46tnApZbh7XYIbqDEXpyAyV8QO730L5tS79jqyvTgc
-	 ksNzOpWdzpCZ3ZBSXZ/ZTVOHZD1PVlUE1ZTSo31L5WGPEEOco0h5pHO8b+Y+uAFLfN
-	 bK+oe7dDdGcM8KQWab/6bmSQ1Gok0ZxO4ij7zC1M=
+	b=n425+jPbQwjfk43oDHD9a+2LuNXSGoKljpVjboufZQVSv+SJ2HuGOlyiXOu6v1eL0
+	 6uV07pWFMLOEyFoQYr1DO0ZfcWBQBrvOBtb/ssi59XvbcIB6pZ98f+Tu4pgn/++yJi
+	 lg8soBrjmGOYh4kdYCKUpSPgxZykfIiQocMvdGK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732033AbgFPPtm (ORCPT
+        id S1732544AbgFPPtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44686 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732531AbgFPPtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:49:36 -0400
+        id S1732299AbgFPPti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:49:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 907E82071A;
-        Tue, 16 Jun 2020 15:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 247F42071A;
+        Tue, 16 Jun 2020 15:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322576;
-        bh=vq0pm2QmcOAOo0d5WTjEy1c/6Vkas/xBIPZLnJEYLJ4=;
+        s=default; t=1592322578;
+        bh=h117viqMI6tSMFemKRGUcqrURTlQKffWF6U0GKYbEog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAfySGbSCyXUBNUJ8DVVxrn3KpLyXNAtEEOlTZoa0NqftE6Mj3G4iMVeHqwUIiDKc
-         5OjiHEumMnqy6PFUp4OI3ivtdWcVmPmKZqCGklV3ln4L9u8VC1IFTslINRpQrjPGmv
-         gTDJxf2cL1u+6oC8pB3bAQbNz9XT9/O3fL56w7lw=
+        b=w3Cqtrhgnr9WqsATkgW6qtIaaljFW0UIZsSJ2z7pzAJzlMtUPjXYnJ7go/sonIn02
+         v+ACdD9V9GmodLC2A2ElgwKLxI5dgJUkjsjsaydoSiMZOCVZptpvHXNSVyaqEdnRlu
+         T+IDshehsbuRlcX00F5zYKI1DgXnqSQrZOVzr8Xo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 021/161] drivers/net/ibmvnic: Update VNIC protocol version reporting
-Date:   Tue, 16 Jun 2020 17:33:31 +0200
-Message-Id: <20200616153107.404895674@linuxfoundation.org>
+Subject: [PATCH 5.6 022/161] staging: wfx: fix double free
+Date:   Tue, 16 Jun 2020 17:33:32 +0200
+Message-Id: <20200616153107.452221697@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -60,41 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-[ Upstream commit 784688993ebac34dffe44a9f2fabbe126ebfd4db ]
+[ Upstream commit 832cc98141b4b93acbb9231ca9e36f7fbe347f47 ]
 
-VNIC protocol version is reported in big-endian format, but it
-is not byteswapped before logging. Fix that, and remove version
-comparison as only one protocol version exists at this time.
+In case of error in wfx_probe(), wdev->hw is freed. Since an error
+occurred, wfx_free_common() is called, then wdev->hw is freed again.
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Fixes: 4033714d6cbe ("staging: wfx: fix init/remove vs IRQ race")
+Link: https://lore.kernel.org/r/20200505123757.39506-4-Jerome.Pouiller@silabs.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/staging/wfx/main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 3de549c6c693..197dc5b2c090 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -4678,12 +4678,10 @@ static void ibmvnic_handle_crq(union ibmvnic_crq *crq,
- 			dev_err(dev, "Error %ld in VERSION_EXCHG_RSP\n", rc);
- 			break;
- 		}
--		dev_info(dev, "Partner protocol version is %d\n",
--			 crq->version_exchange_rsp.version);
--		if (be16_to_cpu(crq->version_exchange_rsp.version) <
--		    ibmvnic_version)
--			ibmvnic_version =
-+		ibmvnic_version =
- 			    be16_to_cpu(crq->version_exchange_rsp.version);
-+		dev_info(dev, "Partner protocol version is %d\n",
-+			 ibmvnic_version);
- 		send_cap_queries(adapter);
- 		break;
- 	case QUERY_CAPABILITY_RSP:
+diff --git a/drivers/staging/wfx/main.c b/drivers/staging/wfx/main.c
+index 76b2ff7fc7fe..2c757b81efa9 100644
+--- a/drivers/staging/wfx/main.c
++++ b/drivers/staging/wfx/main.c
+@@ -466,7 +466,6 @@ int wfx_probe(struct wfx_dev *wdev)
+ 
+ err2:
+ 	ieee80211_unregister_hw(wdev->hw);
+-	ieee80211_free_hw(wdev->hw);
+ err1:
+ 	wfx_bh_unregister(wdev);
+ 	return err;
 -- 
 2.25.1
 
