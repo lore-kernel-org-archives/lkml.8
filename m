@@ -2,104 +2,119 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B41C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9382D2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323900;
-	bh=afYkuL4IJ9wYh4b1EA0ALnm7o3MIMxCg80j6YvOoGjc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fKDU/EVKTMgsQ4KVuCVmSFMaWDf8xtCF08hj0rI9hX3RivusMvjSh80GA8HgZhOTs
-	 Fsgw33J/uSc6Y6ZAb0LWHlfIZr95Szs/UqINnnkzYMzqZ3Cx1tIDzGki1PbWPIW43D
-	 kAqqiImDBHmSJMbmssgqd49bK3oR1fbkyDpsfjdc=
+	by mail.kernel.org (Postfix) with ESMTP id BD0DC208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:11:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g6F1vdU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgFPQLg (ORCPT
+        id S1730947AbgFPQLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731258AbgFPPoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:44:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 16 Jun 2020 12:11:46 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43497 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731917AbgFPPoG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:44:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592322245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=L1dWaJdahdYkTYggpJaOYjCAjNoYYXeI8nNv5UV4mug=;
+        b=g6F1vdU4DWFn4JLd7rFBafte4bDWry5NrPyTQZ4wxbFF7Q66i7hU9S1C+HkntPBKAZd2CZ
+        8CLki3B7GcUFa4d7F1X9samCRfXvcZYIZk7wE0cVX+V+62i7e1FFMAGkXKh9iWC7vF0ww8
+        5ndr2vi81zoZ27o0lajGxoSrhQj02ZQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-Oroe0pwpNdy3o79o83xcow-1; Tue, 16 Jun 2020 11:43:58 -0400
+X-MC-Unique: Oroe0pwpNdy3o79o83xcow-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E44E2151B;
-        Tue, 16 Jun 2020 15:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322246;
-        bh=afYkuL4IJ9wYh4b1EA0ALnm7o3MIMxCg80j6YvOoGjc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OkZ8k2vEj/QcfziJXs8G9yMt8FLyMObgsmGizGlBEE3FX4HMnj1h4tdM5NOxUYGEy
-         vq7pDWpYP2w/pUbA9MXO9h32dejwBs37oD9w/rZlrGPR3HoYa94kVCmfgqKXxOPrCu
-         MYmUA1gT+50eRagClPQx6S4PBtGw/NgT+sOBdDPg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Petr Tesarik <ptesarik@suse.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 027/163] s390/pci: Log new handle in clp_disable_fh()
-Date:   Tue, 16 Jun 2020 17:33:21 +0200
-Message-Id: <20200616153108.181441263@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
-References: <20200616153106.849127260@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A289218FE864;
+        Tue, 16 Jun 2020 15:43:50 +0000 (UTC)
+Received: from llong.com (ovpn-114-156.rdu2.redhat.com [10.10.114.156])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BA96B60E1C;
+        Tue, 16 Jun 2020 15:43:45 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        ecryptfs@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org,
+        linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v5 1/2] mm/slab: Use memzero_explicit() in kzfree()
+Date:   Tue, 16 Jun 2020 11:43:10 -0400
+Message-Id: <20200616154311.12314-2-longman@redhat.com>
+In-Reply-To: <20200616154311.12314-1-longman@redhat.com>
+References: <20200616154311.12314-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Tesarik <ptesarik@suse.com>
+The kzfree() function is normally used to clear some sensitive
+information, like encryption keys, in the buffer before freeing it back
+to the pool. Memset() is currently used for buffer clearing. However
+unlikely, there is still a non-zero probability that the compiler may
+choose to optimize away the memory clearing especially if LTO is being
+used in the future. To make sure that this optimization will never
+happen, memzero_explicit(), which is introduced in v3.18, is now used
+in kzfree() to future-proof it.
 
-[ Upstream commit e1750a3d9abbea2ece29cac8dc5a6f5bc19c1492 ]
-
-After disabling a function, the original handle is logged instead of
-the disabled handle.
-
-Link: https://lkml.kernel.org/r/20200522183922.5253-1-ptesarik@suse.com
-Fixes: 17cdec960cf7 ("s390/pci: Recover handle in clp_set_pci_fn()")
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 3ef0e5ba4673 ("slab: introduce kzfree()")
+Cc: stable@vger.kernel.org
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- arch/s390/pci/pci_clp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ mm/slab_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-index ea794ae755ae..179bcecefdee 100644
---- a/arch/s390/pci/pci_clp.c
-+++ b/arch/s390/pci/pci_clp.c
-@@ -309,14 +309,13 @@ int clp_enable_fh(struct zpci_dev *zdev, u8 nr_dma_as)
- 
- int clp_disable_fh(struct zpci_dev *zdev)
- {
--	u32 fh = zdev->fh;
- 	int rc;
- 
- 	if (!zdev_enabled(zdev))
- 		return 0;
- 
- 	rc = clp_set_pci_fn(zdev, 0, CLP_SET_DISABLE_PCI_FN);
--	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, fh, rc);
-+	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, zdev->fh, rc);
- 	return rc;
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 9e72ba224175..37d48a56431d 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1726,7 +1726,7 @@ void kzfree(const void *p)
+ 	if (unlikely(ZERO_OR_NULL_PTR(mem)))
+ 		return;
+ 	ks = ksize(mem);
+-	memset(mem, 0, ks);
++	memzero_explicit(mem, ks);
+ 	kfree(mem);
  }
- 
+ EXPORT_SYMBOL(kzfree);
 -- 
-2.25.1
-
-
+2.18.1
 
