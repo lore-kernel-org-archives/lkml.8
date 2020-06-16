@@ -2,160 +2,84 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D67C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B04C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 570F5207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E310B2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:02:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Gh9RczqW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xums47GE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbgFPOAv (ORCPT
+        id S1729278AbgFPOC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:00:51 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:1290 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbgFPOAm (ORCPT
+        Tue, 16 Jun 2020 10:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728908AbgFPOCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:00:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592316042; x=1623852042;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZwjUqHNGtzEBM75RIQXsqSv3DYyG/znHnZV28mZTKO0=;
-  b=Gh9RczqW46YtK4uuFKxvZOJ+6aYfiFOdQIMvozc2bB01VskWRFDLeQLw
-   ANROT1f+laJepD8Psv3XDulbkKk/OtOXd01Eej2yUXJTSswUltQJOte4p
-   z3IOw+MmSsX3Se5u6sAfTTML+ZDu+ji3goKKocK5wNkPuZ0Fx/O8GBfgs
-   9eLqRb3PSPuM6OgnR4V1yENvIZdZ/dKs0u2mkUxeuN2BpINGIymUwi83A
-   y3Nc4GVlt1se1BMHqd+7jl1Rzbp6Nt3ptiax9XoHd64E6qlYhN8yx0zdn
-   huqQ3flioW7kVTLwZh7koDW91NsvDgnruL3dSvR26wMbBZkRYH2SAYi6J
-   g==;
-IronPort-SDR: kHOYrxDh/iti501DLLgb1RUnDtWNU3/XOP6KmtTeF4gIOFb6SFm+Nm+Ij2FR4qNKVT84DodAnb
- EhxPalSGMDTdOreFj/VIfDPFjwNqcf3fWocPUVmpU8jTc7lsqjsGNtPkC2jUnli7tJhHgoBeD8
- vysf8Dm7tp83I81NujLoD9JUdvSb4ZtrC/RJpqHdMNTEnfcZLtGyRqJbl6khw+WDyfo0HDmN/G
- +NYWef8TmevOQwZCwP9ZmgV0DKe1/JlRcpPwtxtk7JhJr+HWAN/vfxH9WkytTrZKPUS+WROZZH
- psQ=
-X-IronPort-AV: E=Sophos;i="5.73,518,1583218800"; 
-   d="scan'208";a="78647033"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Jun 2020 07:00:36 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 16 Jun 2020 07:00:35 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 16 Jun 2020 07:00:29 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
-Date:   Tue, 16 Jun 2020 16:00:25 +0200
-Message-ID: <20200616140027.4949-2-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616140027.4949-1-lars.povlsen@microchip.com>
-References: <20200616140027.4949-1-lars.povlsen@microchip.com>
+        Tue, 16 Jun 2020 10:02:25 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8B1C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 07:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qo9CnAT+aab0Ut3f7Yuy5n9QdYXS6e410dJb6BVWkRI=; b=Xums47GEWXlRQz7J1HKYxW9gMr
+        JD0TMHDcMhQ8xkqodcrWJFLIQd5swU5qrm/olpW54z3c3jZXeCzb03CYU1OzCW/gPla8Dui8ZQxLd
+        n3flGqm0V+23+DraWxkS6YK/kfUgiJ+BHszJqzJK/lSlL7JvVGprakhRvXTvUA31LaUcBExJR1lA6
+        4gqKweGxBGnoey+ksrWp0GifwLUzSYDUTaddEMsOb9l2HvPjk6UubqlgBJc73xKbG694LiWav9uHY
+        c/2Eq9hTzgS9T2eGm5ztDHu6jRtBrpOvFB6P52AHlZOw24SwWiw+bXPSGI0L7rBTq4d/CaktbIjRN
+        UUMHW0kQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlCA4-0003JY-UF; Tue, 16 Jun 2020 14:02:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E110630018A;
+        Tue, 16 Jun 2020 16:01:58 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CD7F22038E4EB; Tue, 16 Jun 2020 16:01:58 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 16:01:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Lichao Liu <liulichao@loongson.cn>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/rt: Don't active rt throtting when no running cfs
+ task
+Message-ID: <20200616140158.GY2531@hirez.programming.kicks-ass.net>
+References: <20200616123729.153430-1-liulichao@loongson.cn>
+ <20200616095027.1a2048d0@oasis.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616095027.1a2048d0@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Sparx5 SDHCI controller is based on the Designware controller IP.
+On Tue, Jun 16, 2020 at 09:50:27AM -0400, Steven Rostedt wrote:
+> On Tue, 16 Jun 2020 20:37:29 +0800
+> Lichao Liu <liulichao@loongson.cn> wrote:
+> 
+> > Active rt throtting will dequeue rt_rq from rq at least 50ms,
+> > When there is no running cfs task, do we still active it?
+> > 
+> 
+> This is something I would like to have.
+> 
+> Peter, what's your thought on this?
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+I'd love to just delete all of this.. that said, I'm not sure this
+change makes sense, because it doesn't deal sanely with the case where
+the task will appear right after we did this.
 
-diff --git a/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-new file mode 100644
-index 0000000000000..55883290543b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/microchip,dw-sparx5-sdhci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip Sparx5 Mobile Storage Host Controller Binding
-+
-+allOf:
-+  - $ref: "mmc-controller.yaml"
-+
-+maintainers:
-+  - Lars Povlsen <lars.povlsen@microchip.com>
-+
-+# Everything else is described in the common file
-+properties:
-+  compatible:
-+    const: microchip,dw-sparx5-sdhci
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      Handle to "core" clock for the sdhci controller.
-+
-+  clock-names:
-+    items:
-+      - const: core
-+
-+  microchip,clock-delay:
-+    description: Delay clock to card to meet setup time requirements.
-+      Each step increase by 1.25ns.
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    minimum: 1
-+    maximum: 15
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/microchip,sparx5.h>
-+    sdhci0: mmc@600800000 {
-+        compatible = "microchip,dw-sparx5-sdhci";
-+        reg = <0x00800000 0x1000>;
-+        pinctrl-0 = <&emmc_pins>;
-+        pinctrl-names = "default";
-+        clocks = <&clks CLK_ID_AUX1>;
-+        clock-names = "core";
-+        assigned-clocks = <&clks CLK_ID_AUX1>;
-+        assigned-clock-rates = <800000000>;
-+        interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+        bus-width = <8>;
-+        microchip,clock-delay = <10>;
-+    };
--- 
-2.27.0
-
+The right thing to do is that fair deadline server thing.
