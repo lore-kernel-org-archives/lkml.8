@@ -2,230 +2,110 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD76C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AD9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC67E21501
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324388;
-	bh=zpIpPomPOC5UU8WDjgESvYXTrjxI7qC3+cdXH6qAkQI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yj51dR7FMBdqudiqJXeOBW2+wWczxNCTnbgHBPh4fxV2CFC5DLw66KQHeuWSrBzTG
-	 Vd1uKrOQLtUDAXS0L8gl+GXFy1dN9OVxsGJ9LC71oCUA5YJUEFi6z3GWfEYQAaw60A
-	 JLEI0nR65qqylXu87DtJXaZW2ezvQM/0IjjLRXRM=
+	by mail.kernel.org (Postfix) with ESMTP id 4CBB5208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="DZHrUyxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731508AbgFPQTp (ORCPT
+        id S1732646AbgFPQTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:19:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730205AbgFPPhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E9E12098B;
-        Tue, 16 Jun 2020 15:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321826;
-        bh=zpIpPomPOC5UU8WDjgESvYXTrjxI7qC3+cdXH6qAkQI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LHek30uWBypu6+HJdutv0TY/HP76121wj0N30RUXigVSQheMV+WUSXQnmqW1KhANa
-         Q9lT0Qsd214ce5THHE+sUI1i56kbvCkZi8m6ZfasziHuG/uxompuzEy6HrC7ZdV1GJ
-         HKo7bURpzreXoWkvGnoJP28tB1V1zEGiPOocbXII=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eric Biggers <ebiggers@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 030/134] mm: add kvfree_sensitive() for freeing sensitive data objects
-Date:   Tue, 16 Jun 2020 17:33:34 +0200
-Message-Id: <20200616153102.223495522@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
-References: <20200616153100.633279950@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 16 Jun 2020 12:19:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731856AbgFPQTo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:19:44 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F991C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:19:43 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id s28so12643642edw.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hr3yVEPV6lA1nanRTqWI8IJryq24qnnSTFJ14MM/7zs=;
+        b=DZHrUyxnI2wxj8f69u1+U5wzsYX16HUl/aTv7JYK9V6CybdFLK91SGat3bh7Zz5pKw
+         eYWNsiiq8LeeM+qtd7hoZtFM79A0GikMLP2CTK6Vi7ZZ3Pmc8rO8F/88x/U8wjBzFXFN
+         AIPABW4VADwBnv3oGKeg7KUqSBmIPbMNrxfXP5kMM8OMO1Pcj0s8YPKN2cZrU+HnFBrU
+         VqlKs3aaMLtqjjlJwDCST5EVn6wc9W5nXa48X3RPiivOEQlkEzTUg/2yeuO2FyDFZIvX
+         G9k72NLkB0J8o6esTtqZXiRhC3ZF3v+XgQP08ADK7sTgozAKVy3ir0QokMg/k6nW07/+
+         qObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hr3yVEPV6lA1nanRTqWI8IJryq24qnnSTFJ14MM/7zs=;
+        b=kaoLk2KazO7PTTX9SgkC1zHrq7tLgUBfkZvhYvyB55DckSef04UZEF1mz9eKgWMGpc
+         1vzNXOmS4yAB5wtTXC03eR/kyiaNfbmO2Qi1+NXnD+6ZT4ktoDqOSzJDgxOF8R+mrZB7
+         8j+ScR9ZJLMv5J0rHiMG3SL7QfGoxWLaPMDgSKbeZEbRtyGRts/ydKphSQPoQNY2+ig5
+         alaOYqBlYp6tfXlH9CO1IepmNuUoTpmFVEVgarsvCvCMuFwunMR+6WFxcpmaqEXCndg2
+         sK4pBwJd5YC6O9rgVhtwzMRmMozd4LKGZsj5p83VJXkvgSIuAYr+SR0PyL6AbRaAYUA7
+         enFw==
+X-Gm-Message-State: AOAM531oIPs9bYCWZm1WXPN4m5YfMTfqFhzSqXlv0YRG8xTjfudFrJMt
+        +1bTmLqHbPkz+bTB1zjUYCJLtw==
+X-Google-Smtp-Source: ABdhPJwxZcp1lp6WrQvxCOa4+J+L4Hbhu6KDNsF55SP0s+x799vNFH70u0bmPLYwCTn8NeutUxBsnQ==
+X-Received: by 2002:aa7:d6d0:: with SMTP id x16mr3399666edr.175.1592324382014;
+        Tue, 16 Jun 2020 09:19:42 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id ce25sm10330788edb.45.2020.06.16.09.19.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 09:19:41 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 18:19:39 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: am335x-pocketbeagle: Fix mmc0 Write Protect
+Message-ID: <20200616161939.GA4007093@x1>
+References: <20200609214521.GB2995279@x1>
+ <20200616161024.GC37466@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616161024.GC37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+On Tue, Jun 16, 2020 at 09:10:24AM -0700, Tony Lindgren wrote:
+> * Drew Fustini <drew@beagleboard.org> [200609 14:46]:
+> > AM3358 pin mcasp0_aclkr (ZCZ ball B13) [0] is routed to P1.31 header [1]
+> > Mode 4 of this pin is mmc0_sdwp (SD Write Protect).  A signal connected
+> > to P1.31 may accidentally trigger mmc0 write protection.  To avoid this
+> > situation, do not put mcasp0_aclkr in mode 4 (mmc0_sdwp) by default.
+> > 
+> > [0] http://www.ti.com/lit/ds/symlink/am3358.pdf
+> > [1] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#531_Expansion_Headers
+> > 
+> > Fixes: 047905376a16 (ARM: dts: Add am335x-pocketbeagle)
+> > Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> > ---
+> > V2 change:
+> > - correct P1.13 to P1.31, apologies for not catching that in V1
+> 
+> Thanks (manually) applying into fixes. Your outgoing mail server has replaced
+> the tabs in the patch with spaces making it not apply FYI.
+> 
+> Regards,
+> 
+> Tony
 
-[ Upstream commit d4eaa2837851db2bfed572898bfc17f9a9f9151e ]
+Thanks, Tony.
 
-For kvmalloc'ed data object that contains sensitive information like
-cryptographic keys, we need to make sure that the buffer is always cleared
-before freeing it.  Using memset() alone for buffer clearing may not
-provide certainty as the compiler may compile it away.  To be sure, the
-special memzero_explicit() has to be used.
-
-This patch introduces a new kvfree_sensitive() for freeing those sensitive
-data objects allocated by kvmalloc().  The relevant places where
-kvfree_sensitive() can be used are modified to use it.
-
-Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Acked-by: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Link: http://lkml.kernel.org/r/20200407200318.11711-1-longman@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/mm.h       |  1 +
- mm/util.c                | 18 ++++++++++++++++++
- security/keys/internal.h | 11 -----------
- security/keys/keyctl.c   | 16 +++++-----------
- 4 files changed, 24 insertions(+), 22 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 53bad834adf5..3285dae06c03 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -694,6 +694,7 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
- }
- 
- extern void kvfree(const void *addr);
-+extern void kvfree_sensitive(const void *addr, size_t len);
- 
- /*
-  * Mapcount of compound page as a whole, does not include mapped sub-pages.
-diff --git a/mm/util.c b/mm/util.c
-index 3ad6db9a722e..ab358c64bbd3 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -594,6 +594,24 @@ void kvfree(const void *addr)
- }
- EXPORT_SYMBOL(kvfree);
- 
-+/**
-+ * kvfree_sensitive - Free a data object containing sensitive information.
-+ * @addr: address of the data object to be freed.
-+ * @len: length of the data object.
-+ *
-+ * Use the special memzero_explicit() function to clear the content of a
-+ * kvmalloc'ed object containing sensitive data to make sure that the
-+ * compiler won't optimize out the data clearing.
-+ */
-+void kvfree_sensitive(const void *addr, size_t len)
-+{
-+	if (likely(!ZERO_OR_NULL_PTR(addr))) {
-+		memzero_explicit((void *)addr, len);
-+		kvfree(addr);
-+	}
-+}
-+EXPORT_SYMBOL(kvfree_sensitive);
-+
- static inline void *__page_rmapping(struct page *page)
- {
- 	unsigned long mapping;
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 7e9914943616..1ca8bfaed0e8 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -350,15 +350,4 @@ static inline void key_check(const struct key *key)
- #define key_check(key) do {} while(0)
- 
- #endif
--
--/*
-- * Helper function to clear and free a kvmalloc'ed memory object.
-- */
--static inline void __kvzfree(const void *addr, size_t len)
--{
--	if (addr) {
--		memset((void *)addr, 0, len);
--		kvfree(addr);
--	}
--}
- #endif /* _INTERNAL_H */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 5e01192e222a..edde63a63007 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -142,10 +142,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
- 
- 	key_ref_put(keyring_ref);
-  error3:
--	if (payload) {
--		memzero_explicit(payload, plen);
--		kvfree(payload);
--	}
-+	kvfree_sensitive(payload, plen);
-  error2:
- 	kfree(description);
-  error:
-@@ -360,7 +357,7 @@ long keyctl_update_key(key_serial_t id,
- 
- 	key_ref_put(key_ref);
- error2:
--	__kvzfree(payload, plen);
-+	kvfree_sensitive(payload, plen);
- error:
- 	return ret;
- }
-@@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 		 */
- 		if (ret > key_data_len) {
- 			if (unlikely(key_data))
--				__kvzfree(key_data, key_data_len);
-+				kvfree_sensitive(key_data, key_data_len);
- 			key_data_len = ret;
- 			continue;	/* Allocate buffer */
- 		}
-@@ -923,7 +920,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
- 			ret = -EFAULT;
- 		break;
- 	}
--	__kvzfree(key_data, key_data_len);
-+	kvfree_sensitive(key_data, key_data_len);
- 
- key_put_out:
- 	key_put(key);
-@@ -1225,10 +1222,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
- 		keyctl_change_reqkey_auth(NULL);
- 
- error2:
--	if (payload) {
--		memzero_explicit(payload, plen);
--		kvfree(payload);
--	}
-+	kvfree_sensitive(payload, plen);
- error:
- 	return ret;
- }
--- 
-2.25.1
-
-
-
+That is werid about the spaces.  I use mutt to send mail via smtp.google.com
+(beagleboard.org is gsuite).  I'll inspect more closely next time.
