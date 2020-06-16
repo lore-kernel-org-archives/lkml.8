@@ -2,147 +2,104 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D03C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4976FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0D320734
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2602520707
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XqmgLCtG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1rU4R3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgFPKSj (ORCPT
+        id S1728193AbgFPKTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:18:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51804 "EHLO
+        Tue, 16 Jun 2020 06:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgFPKSg (ORCPT
+        with ESMTP id S1726526AbgFPKT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:18:36 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AB0C08C5C2;
-        Tue, 16 Jun 2020 03:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wquZFMN4OPMpdUiihGAlDawgg0Uvcwgrh1bbmAL+MWM=; b=XqmgLCtGPWiSfuqGwrJuMqnp8A
-        s7EauU5s7sVmL/uSLUQ9e+3MKaJcTOXe10kDlyF9T1lit4Eg2pORaW+DkeBsB6FolbaaxfM+FhZ2p
-        yQ2Wt3mElqKHl2Lcbyy+f2A3sTEWP2aqxm5695QKG1LjLnVhiXAsbTnSIEeEDXjb++7QI0bPDL0tj
-        MDg5jLFNT5a4Bwx992bf6mWTFSjyOkUagg6WdcPK4aWkoNuknq7L+s7iudmJfMvlPBQZJ8qQgLCpa
-        0U9U2ih7qM9QvqodbyAn0jdNOcmE5f7kkZj7DP3XVtpZXFuWuBjIvcq+rB2MlxSbbkoARjMmeHIUQ
-        7S75g4MQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jl8fS-0006bT-JI; Tue, 16 Jun 2020 10:18:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C46443010C8;
-        Tue, 16 Jun 2020 12:18:07 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B6FA2203EDAB0; Tue, 16 Jun 2020 12:18:07 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:18:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dexuan Cui <decui@microsoft.com>, vkuznets <vkuznets@redhat.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Ju-Hyoung Lee <juhlee@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: hv_hypercall_pg page permissios
-Message-ID: <20200616101807.GO2531@hirez.programming.kicks-ass.net>
-References: <20200407073830.GA29279@lst.de>
- <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net>
- <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
- <87y2ooiv5k.fsf@vitty.brq.redhat.com>
- <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
- <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
- <20200616072318.GA17600@lst.de>
+        Tue, 16 Jun 2020 06:19:27 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B734C08C5C3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 03:19:27 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id z2so596770ilq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 03:19:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+kqbimwgEbOIJYJLWKEaCLp58PXChrceFH9NU0EWRhU=;
+        b=M1rU4R3TTMMpixDbLk8vBQdiLBBdkyl/aqI2TNZz5CijvpcUThXzf7nyPto9iuemPX
+         DSXchy0Wmvu+MsrVPfMrqvhs2B4wzYuS50D5Bn228HIHQ6J653ZiciJasPxA6BQVxY8q
+         +2S9WcAlCxrPm3bu2WnfIG4rs84SEx3R228KD9aR3gAohvJdn9QaySDUe36PzFp3dyAU
+         UTv9z5+efyF21/cXF+A8hrr+ONGO+DC9QuGJoNKq35h39I+sUT2M3wbIFy78L9oG+EpZ
+         7+KpSneFk/iJleviiW5zpPrsXEbidakr3uD6luITC1HyWTVbKArKedZ+jZYsPF+kWRLt
+         IszA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+kqbimwgEbOIJYJLWKEaCLp58PXChrceFH9NU0EWRhU=;
+        b=Zu7V9uv/JUboqVeP7s1ltZKDKb4XvrgmESrcCtIHSJM7kRH7om4VrdrBOi4as35fzj
+         5lJms8lM9JRdYgRBWWFvYswVORT+hp9WuaOlvwO/JDY/YbS8yedH4K1/89aM2t4NSnat
+         JU62BcT96LTo6mM/3gpLdY3iPIO+ap9V/Ysqw69GZj2163vG+SR1FFiHh+Mb53rFLB8e
+         D/BfX6Zg/hblrUDprCEzF5c8xKDtHx1laLwqyOZbhlHkcVfH2cudO+CTd44Vyp+oWPtg
+         msqSl9h6rzoB2pjGSO8NZOeVbelIgkNuNCrfTbkFYOnCgMrNEr40l8A508UYeocdLmPU
+         Jp6w==
+X-Gm-Message-State: AOAM530vsMhFi2xbsKeTqbSur+X7muVX0tG7ImG8QjM+3If+N6sC/EMX
+        h9HK0RYtmBPDLbnXdeT/HeyAgFF1laVvrZN8NMqMrg==
+X-Google-Smtp-Source: ABdhPJzrGDFJysUCJVNDR5nvOXo7oba4sfOSKBTxtSj3Ckx5zUmbQFAyRZXIJSwxtsNcLB0I7RWmlLHIfQrJfeQ67eg=
+X-Received: by 2002:a92:a112:: with SMTP id v18mr2185623ili.278.1592302766529;
+ Tue, 16 Jun 2020 03:19:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616072318.GA17600@lst.de>
+References: <20200616083435.223038-1-glider@google.com> <20200616100309.GA2614426@kroah.com>
+In-Reply-To: <20200616100309.GA2614426@kroah.com>
+From:   =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>
+Date:   Tue, 16 Jun 2020 03:19:15 -0700
+Message-ID: <CANP3RGckq6_kMLzS-Yp5ottH4fm9Z3BQo3dbY1fMiQKiRMPbPw@mail.gmail.com>
+Subject: Re: [PATCH v2] [RFC] security: allow using Clang's zero
+ initialization for stack variables
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Alexander Potapenko <glider@google.com>,
+        yamada.masahiro@socionext.com, Kees Cook <keescook@chromium.org>,
+        jmorris@namei.org, Nick Desaulniers <ndesaulniers@google.com>,
+        linux-security-module@vger.kernel.org,
+        Kernel hackers <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:23:18AM +0200, Christoph Hellwig wrote:
-> On Mon, Jun 15, 2020 at 07:49:41PM +0000, Dexuan Cui wrote:
-> > I did this experiment:
-> >   1. export vmalloc_exec and ptdump_walk_pgd_level_checkwx.
-> >   2. write a test module that calls them.
-> >   3. It turns out that every call of vmalloc_exec() triggers such a warning.
-> > 
-> > vmalloc_exec() uses PAGE_KERNEL_EXEC, which is defined as
-> >    (__PP|__RW|   0|___A|   0|___D|   0|___G)
-> > 
-> > It looks the logic in note_page() is: for_each_RW_page, if the NX bit is unset,
-> > then report the page as an insecure W+X mapping. IMO this explains the
-> > warning?
-> 
-> It does.  But it also means every other user of PAGE_KERNEL_EXEC
-> should trigger this, of which there are a few (kexec, tboot, hibernate,
-> early xen pv mapping, early SEV identity mapping)
+> Nit, your From: line of your email does not match your signed-off-by:
+> line :(
 
-There are only 3 users in the entire tree afaict:
+This is *probably* a matter of configuring git:
+git config --global user.name "Alexander Potapenko"
+git config --global user.email "glider@google.com"
+git config --global sendemail.from "Alexander Potapenko <glider@google.com>"
 
-arch/arm64/kernel/probes/kprobes.c:     page = vmalloc_exec(PAGE_SIZE);
-arch/x86/hyperv/hv_init.c:      hv_hypercall_pg = vmalloc_exec(PAGE_SIZE);
-kernel/module.c:        return vmalloc_exec(size);
+> Gotta love the name...
 
-And that last one is a weak function that any arch that has STRICT_RWX
-ought to override.
+I've just read through a long discussion thread on clang dev (got
+there from this cl's llvm link)...
+There's a lot of interesting info in there.  But ultimately it seems
+to point out tons of projects already use this or want to use it.
+And there's security and stability benefits for production builds,
+while pattern mode can be used for debug builds.
 
-> We really shouldn't create mappings like this by default.  Either we
-> need to flip PAGE_KERNEL_EXEC itself based on the needs of the above
-> users, or add another define to overload vmalloc_exec as there is no
-> other user of that for x86.
+> Anyway, if this is enabled, and clang changes the flag or drops it, does
+> the build suddenly break?
 
-We really should get rid of the two !module users of this though; both
-x86 and arm64 have STRICT_RWX and sufficient primitives to DTRT.
+(my understanding of the patch is that the option does compiler
+testing before it becomes available...
+in at least some of our build systems built around kbuild the option
+going away would then cause a build error due to its lack in the final
+.config)
 
-What is HV even trying to do with that page? AFAICT it never actually
-writes to it, it seens to give the physica address to an MSR (which I
-suspect then writes crud into the page for us from host context).
-
-Suggesting the page really only needs to be RX.
-
-On top of that, vmalloc_exec() gets us a page from the entire vmalloc
-range, which can be outside of the 2G executable range, which seems to
-suggest vmalloc_exec() is wrong too and all this works by accident.
-
-How about something like this:
-
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index a54c6a401581..82a3a4a9481f 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -375,12 +375,15 @@ void __init hyperv_init(void)
- 	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
- 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
- 
--	hv_hypercall_pg = vmalloc_exec(PAGE_SIZE);
-+	hv_hypercall_pg = module_alloc(PAGE_SIZE);
- 	if (hv_hypercall_pg == NULL) {
- 		wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
- 		goto remove_cpuhp_state;
- 	}
- 
-+	set_memory_ro((unsigned long)hv_hypercall_pg, 1);
-+	set_memory_x((unsigned long)hv_hypercall_pg, 1);
-+
- 	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
- 	hypercall_msr.enable = 1;
- 	hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
+> And does gcc have something like this as well, or does that have to come
+> in a compiler plugin?
