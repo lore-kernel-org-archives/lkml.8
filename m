@@ -2,97 +2,116 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E7B2098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B681208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:57:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="pBngrVW0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p7Di1GMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgFPQ4d (ORCPT
+        id S1730498AbgFPQ5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbgFPQ4c (ORCPT
+        Tue, 16 Jun 2020 12:57:18 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58050 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728861AbgFPQ5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:56:32 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F266CC06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:56:30 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id c3so21487747wru.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hwa2L1ImB15dIKmz7yLgrRrD9ZoRLynU8SCNI5jmVrA=;
-        b=pBngrVW0fXgxGsUIB6iI6b9pR1mda14Neyp1D17D1rL+Hqqb3DpCGo4eohRlSyVnzp
-         uvF3VYCjFeCCj0VsPcT6xwM8ISHlqv4N5ntmdzKgH4vComcnzC9on7c3xslUejjFZWGM
-         hXigSpz86luPhPTAC1e4heu2+L7XscKr5Q3H30PhoXE+OzrYjT1a5miTd3j9fMF9b3iy
-         IfDUsBdSDAtFknCr4P442lz/V/lJ7q39XCwc5W9Er4R5wuYuKbb2U0YDZkPJJ+BElZ1L
-         11ngbe3M814XPzBZu6XvpnCwnqVyASlReBROo1HnYGUcuy3HkB4Ia68i5OwT7Jz11zxs
-         F+5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hwa2L1ImB15dIKmz7yLgrRrD9ZoRLynU8SCNI5jmVrA=;
-        b=Qe8a4/zDqXlhlO5nPikSTmvcMuuNM+A1BALRUw9P7zZJ+F3JhfD3OxU/b78NRDEEAP
-         2k8GoayhRau4XogXd112LpNvbbXKUtitN0kifxtlOXPD3L5rr4xmHSIeZBxEqci9xhqt
-         0mE+2/nWS9SC9jFgvQJmutvHf8sVhTwQGgB8B6pkKElCAq7DUycLrf9Q8juCGq5wBdlZ
-         TnwEYd6HSBbrkIyF/UtMqQPf40dKq1nKDuzeCm/1PrV2Bwy3lm2PuNbf9LDbBS0vjCYp
-         0TMQEQpsG04kHKi3+7CdHuA4GF5XXaiYRO9FKqUErcUqh+MPZZdSOX8FEsKK18h5a303
-         P/Hg==
-X-Gm-Message-State: AOAM532RXgIAe+rNo7mo82BXq6pNupzeziw5Jj4VIULsqWumUOA4VWJH
-        3621wrgUvS+9rr/u0HHePZhs2GTo2iorwv5GncYFIg==
-X-Google-Smtp-Source: ABdhPJwlsWcL5tuSvSwcQCGpYRnQYLKsq+2Pt1JDO4/kJYBxWuUrjKMfTrAQtvwN0YDp9Y7hqi4ccSQZ4XHm6yl3W90=
-X-Received: by 2002:adf:e387:: with SMTP id e7mr3978360wrm.70.1592326589637;
- Tue, 16 Jun 2020 09:56:29 -0700 (PDT)
+        Tue, 16 Jun 2020 12:57:17 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05GGv4c5039757;
+        Tue, 16 Jun 2020 11:57:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592326624;
+        bh=5SNJOnx/JOfRnrAoSOCyZsNKVPe0vOboLu2yYA8Qo+g=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=p7Di1GMM11digdmvF0BR+ZWyhf2oS8veOe9hLPwIC443TStcKogKOcDElHepmLxDs
+         X80+pB0bLhqVfDFcgPlnHehgK2MOwQXu+aeb9HssxCD4mSb2uyp+eVTNt0w/W6z9bX
+         4bsapM7NawXR5nmJoTuYU1Xv2smugOwMEg/P49oI=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05GGv44v029523;
+        Tue, 16 Jun 2020 11:57:04 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 16
+ Jun 2020 11:57:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 16 Jun 2020 11:57:03 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05GGuwQT087296;
+        Tue, 16 Jun 2020 11:56:59 -0500
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+To:     Tony Lindgren <tony@atomide.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+CC:     <linux-omap@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+ <d03dd04f-6f2c-25ba-fe1f-d5fc0dfb5c68@ti.com>
+ <592501c9-2d94-b266-ae76-e383d3bffa29@ti.com>
+ <20200616153042.GZ37466@atomide.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <3f2855cc-48b8-ecb8-5d92-beeabe344b26@ti.com>
+Date:   Tue, 16 Jun 2020 19:56:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200616074934.1600036-1-keescook@chromium.org> <20200616074934.1600036-4-keescook@chromium.org>
-In-Reply-To: <20200616074934.1600036-4-keescook@chromium.org>
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Tue, 16 Jun 2020 09:56:18 -0700
-Message-ID: <CALCETrUs2Xso=Yztmcrx_7bmXYoPLpcHeNpQSgcbSbvM_Jkw5w@mail.gmail.com>
-Subject: Re: [PATCH 3/8] seccomp: Introduce SECCOMP_PIN_ARCHITECTURE
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Will Drewry <wad@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        "zhujianwei (C)" <zhujianwei7@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Hehuazhen <hehuazhen@huawei.com>, X86 ML <x86@kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200616153042.GZ37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:49 AM Kees Cook <keescook@chromium.org> wrote:
->
-> For systems that provide multiple syscall maps based on architectures
-> (e.g. AUDIT_ARCH_X86_64 and AUDIT_ARCH_I386 via CONFIG_COMPAT), allow
-> a fast way to pin the process to a specific syscall mapping, instead of
-> needing to generate all filters with an architecture check as the first
-> filter action.
 
-Can you allow specification of the reject action?  I can see people
-wanting TRAP instead, for example.
+
+On 16/06/2020 18:30, Tony Lindgren wrote:
+> * Tomi Valkeinen <tomi.valkeinen@ti.com> [200616 13:02]:
+>> On 11/06/2020 17:00, Grygorii Strashko wrote:
+>>> I think, suspend might be fixed if all devices, which are now child of ti-sysc, will do
+>>> pm_runtime_force_xxx() calls at noirq suspend stage by adding:
+>>>
+>>>       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>>                         pm_runtime_force_resume)
+>>>
+>>> Am I missing smth?
+>>
+>> Isn't this almost exactly the same my patch does? I just used suspend_late
+>> and resume_early. Is noirq phase better than late & early?
+> 
+> Well up to you as far as I'm concerned. The noirq phase comes with serious
+> limitations, for let's say i2c bus usage if needed. Probably also harder
+> to debug for suspend and resume.
+
+Unfortunately, you can't use PM runtime force API at .suspend() stage as pm_runtime_get will still work and
+there is no sync between suspend and pm_runtime.
+The PM runtime force API can be used only during late/noirq as at this time pm_runtime is disabled.
+
+-- 
+Best regards,
+grygorii
