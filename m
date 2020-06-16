@@ -2,51 +2,51 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E88C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45552C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6AF52071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20BF6207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323299;
-	bh=O3c6iltuc1lppIxXzZtDkjFfjVRwir70kK1um3VlF10=;
+	s=default; t=1592323303;
+	bh=z8VABR2iloijjO5oU3eoMWMuhLAhwBXfYG9CbcWJDuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jMo1w6m3Om4/2Q1dU3QtIgOBkidBAHjPqlsEg3SMhvntSuvyf+UT35ocQ3iCGJn+K
-	 rQvw+nh9yCA+sqVGoIgf9Yly8sa7W0/iOimo1mDc7r27iHPreJbFRz2U7poeaUzj6h
-	 RUofj07MKWzdhpTqi9URpEPyx/E6LJDIIIMflBVI=
+	b=OJz6DotR4kVkrF/fQzPP0CjA3f8EyxNYuQFdwL/ywzAVftfY095KFbHlQCaioSZl4
+	 q0pSIZOSQTwQThftD2ge+bSnmYJEA+Gk/U9k1XH7td2qPLllRgRzm+c8kB3hBPd8TE
+	 l4x0EgZ1vUuim1O4izLZKaZ7BqGB4zOIUpOrQ7rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732554AbgFPPv6 (ORCPT
+        id S1733134AbgFPQBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:51:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48392 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732690AbgFPPvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:51:40 -0400
+        id S1732728AbgFPPv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:51:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A121A208D5;
-        Tue, 16 Jun 2020 15:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B92F5207C4;
+        Tue, 16 Jun 2020 15:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322699;
-        bh=O3c6iltuc1lppIxXzZtDkjFfjVRwir70kK1um3VlF10=;
+        s=default; t=1592322717;
+        bh=z8VABR2iloijjO5oU3eoMWMuhLAhwBXfYG9CbcWJDuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tGndKkhz93fpgybwdEbsRsOYAeVt14GnQ3OPuIHvT2RxDGKmgQo/jPBuAC9T+n5tq
-         Z1xMMIiHCuwLwtBRbAePZ4uuegwyMRcIXke1IaVL0lVovBh/64e6k7LbMZmTr6iFT0
-         jvkO1p6Lky4QrU2Xnztlvz76vjkrNZt5gLkIdElA=
+        b=JFXIqocHV01nGb9kKqpQ4E7Z/oNrUSGZmvAqWDyh9Ks7Kv8M6dh5x0pT6YwhuX/kd
+         6JAstHDPdcH7o2uaVl2sA76JmWsSNE/JCbW24CVluaiJMncX1c4KpnYYT6qvAQP6ii
+         qRMdaLaaSifpDvloYJYK9iPJ28ub8OIsi3lsiD3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 039/161] KVM: x86: only do L1TF workaround on affected processors
-Date:   Tue, 16 Jun 2020 17:33:49 +0200
-Message-Id: <20200616153108.240462359@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.6 077/161] ACPI: sysfs: Fix reference count leak in acpi_sysfs_add_hotplug_profile()
+Date:   Tue, 16 Jun 2020 17:34:27 +0200
+Message-Id: <20200616153110.047742478@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -59,80 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit d43e2675e96fc6ae1a633b6a69d296394448cc32 ]
+commit 6e6c25283dff866308c87b49434c7dbad4774cc0 upstream.
 
-KVM stores the gfn in MMIO SPTEs as a caching optimization.  These are split
-in two parts, as in "[high 11111 low]", to thwart any attempt to use these bits
-in an L1TF attack.  This works as long as there are 5 free bits between
-MAXPHYADDR and bit 50 (inclusive), leaving bit 51 free so that the MMIO
-access triggers a reserved-bit-set page fault.
+kobject_init_and_add() takes reference even when it fails.
+Thus, when kobject_init_and_add() returns an error,
+kobject_put() must be called to properly clean up the kobject.
 
-The bit positions however were computed wrongly for AMD processors that have
-encryption support.  In this case, x86_phys_bits is reduced (for example
-from 48 to 43, to account for the C bit at position 47 and four bits used
-internally to store the SEV ASID and other stuff) while x86_cache_bits in
-would remain set to 48, and _all_ bits between the reduced MAXPHYADDR
-and bit 51 are set.  Then low_phys_bits would also cover some of the
-bits that are set in the shadow_mmio_value, terribly confusing the gfn
-caching mechanism.
+Fixes: 3f8055c35836 ("ACPI / hotplug: Introduce user space interface for hotplug profiles")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-To fix this, avoid splitting gfns as long as the processor does not have
-the L1TF bug (which includes all AMD processors).  When there is no
-splitting, low_phys_bits can be set to the reduced MAXPHYADDR removing
-the overlap.  This fixes "npt=0" operation on EPYC processors.
-
-Thanks to Maxim Levitsky for bisecting this bug.
-
-Cc: stable@vger.kernel.org
-Fixes: 52918ed5fcf0 ("KVM: SVM: Override default MMIO mask if memory encryption is enabled")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mmu/mmu.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/acpi/sysfs.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 87e9ba27ada1..b0138530d085 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -343,6 +343,8 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask)
- {
- 	BUG_ON((u64)(unsigned)access_mask != access_mask);
- 	BUG_ON((mmio_mask & mmio_value) != mmio_value);
-+	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
-+	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
- 	shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
- 	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
- 	shadow_mmio_access_mask = access_mask;
-@@ -591,16 +593,15 @@ static void kvm_mmu_reset_all_pte_masks(void)
- 	 * the most significant bits of legal physical address space.
- 	 */
- 	shadow_nonpresent_or_rsvd_mask = 0;
--	low_phys_bits = boot_cpu_data.x86_cache_bits;
--	if (boot_cpu_data.x86_cache_bits <
--	    52 - shadow_nonpresent_or_rsvd_mask_len) {
-+	low_phys_bits = boot_cpu_data.x86_phys_bits;
-+	if (boot_cpu_has_bug(X86_BUG_L1TF) &&
-+	    !WARN_ON_ONCE(boot_cpu_data.x86_cache_bits >=
-+			  52 - shadow_nonpresent_or_rsvd_mask_len)) {
-+		low_phys_bits = boot_cpu_data.x86_cache_bits
-+			- shadow_nonpresent_or_rsvd_mask_len;
- 		shadow_nonpresent_or_rsvd_mask =
--			rsvd_bits(boot_cpu_data.x86_cache_bits -
--				  shadow_nonpresent_or_rsvd_mask_len,
--				  boot_cpu_data.x86_cache_bits - 1);
--		low_phys_bits -= shadow_nonpresent_or_rsvd_mask_len;
--	} else
--		WARN_ON_ONCE(boot_cpu_has_bug(X86_BUG_L1TF));
-+			rsvd_bits(low_phys_bits, boot_cpu_data.x86_cache_bits - 1);
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -993,8 +993,10 @@ void acpi_sysfs_add_hotplug_profile(stru
+ 
+ 	error = kobject_init_and_add(&hotplug->kobj,
+ 		&acpi_hotplug_profile_ktype, hotplug_kobj, "%s", name);
+-	if (error)
++	if (error) {
++		kobject_put(&hotplug->kobj);
+ 		goto err_out;
 +	}
  
- 	shadow_nonpresent_or_rsvd_lower_gfn_mask =
- 		GENMASK_ULL(low_phys_bits - 1, PAGE_SHIFT);
--- 
-2.25.1
-
+ 	kobject_uevent(&hotplug->kobj, KOBJ_ADD);
+ 	return;
 
 
