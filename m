@@ -2,227 +2,230 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 952CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DE5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8F62080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:07:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="RCyQhgyI"
+	by mail.kernel.org (Postfix) with ESMTP id 3238E2082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592330869;
+	bh=BZVysaZqnl67vY/M5mVFjgt/xrn3O0skxUj6yV26weo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=UFQRnM3C+zNmlcqoaO0FN0QPWI2rVcnllmcaF9PDeCGILqzdFYpRQ7xn9Aq67nGHQ
+	 yAAjDw9fOK662ZeVoq3jmD5EGDiGVKHvx4S5VZRYiU28vXRLaZecgWLa5lzFu1ji7/
+	 bWdbvYTggG0/kthP7rx2hwBKGv6nY5iFeQlt1pik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731411AbgFPSHM (ORCPT
+        id S1731450AbgFPSHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgFPSHK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:07:10 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD05C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 11:07:09 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so8729710plt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 11:07:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bPVOaaVIj3IEJ35IEXDyaVgJGxpBPUItBjOGuVz6Vrg=;
-        b=RCyQhgyIyuDy8/u9yIX9Wyq4Qh6u+F0/7cq6wi47MjSk4MIFA6zPjgvhwHEeiZtBWB
-         VGLleJxPzbjrF1IkhrBLAY7+MU/ZK7FW4Lz/1VLPD35Q0KnPzrhRFi4GwBgp8EL1W+Fn
-         1c9CuFuWBTdroJFgm/XlRcv0FeksnncU5mw2TQqAyEbDXQnnkOksQr/QvqLkHud0HVzk
-         D3ObcCXYgE6Dj5Bgq5MgxpngmHehzDPdyTVgxwHWmC0DXzEl6TayjdGI5KV1KZBLLVOU
-         FhGj+Q8U1qbkbxFkTyJq1fiBNZHWcbWH4n1CCL8ENCeQCN5rIk0C5c2EYSH/KWbrHy4q
-         R27w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=bPVOaaVIj3IEJ35IEXDyaVgJGxpBPUItBjOGuVz6Vrg=;
-        b=NRvfRZxMIbDPcY9CXoZXNU10uXZN6NRh3mAS+ckNv4L9f3saDB3Zyd69xIyP6Yn5jD
-         YSbWxjfWCbhLbjXpCvsqOzU5xI6gEUumQW3Is/5Ny0Zr12AAV+c4AyVliZubTNL87sYz
-         0AlnCJLWyhs/vKI9Nw+yTMpBkNcVGnj+UZbM/CFvvNOYxeO3HFxteBg7JYvdwum674ez
-         aEoHW/lqBNqnOdh+0z8ajP5JJIfnTokVEZw352zfkgK35h2p6yWr+9e7cpDO5tC2ke+p
-         BuI2md//swyhCjMNZgSmQsqHfxmU4dfWvM8Tp48AnHtVa9O5yrf6ijeD78b3bArfQrW0
-         UkTQ==
-X-Gm-Message-State: AOAM532/29nZvsOrfbZ5GqPKuGR/RLZyOsnsxNTzGPUSd/10QCUcokaK
-        XpGzuSMPuyqrSBhWA8lhrgucnw==
-X-Google-Smtp-Source: ABdhPJxKWpmsQ4Gg2Nz1OYscOq9l1dmUhVjXayq4pQwo4tqjqrLCHDaOSKw46e2dwdSRJnxM/FWuqQ==
-X-Received: by 2002:a17:90a:7347:: with SMTP id j7mr4071769pjs.128.1592330828506;
-        Tue, 16 Jun 2020 11:07:08 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id m9sm14170786pgq.61.2020.06.16.11.07.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 11:07:07 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 11:07:07 -0700 (PDT)
-X-Google-Original-Date: Tue, 16 Jun 2020 11:07:06 PDT (-0700)
-Subject:     Re: mm lock issue while booting Linux on 5.8-rc1 for RISC-V
-In-Reply-To: <CAOnJCUKDP=xr=ddFvaTW_1gux=jshycvxmb=CYtt_+jpN6-u4g@mail.gmail.com>
-CC:     walken@google.com, shorne@gmail.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bjorn Topel <bjorn.topel@gmail.com>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     atishp@atishpatra.org
-Message-ID: <mhng-cc304512-36aa-4488-bcbe-fd376f53cc96@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 16 Jun 2020 14:07:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgFPSHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 14:07:46 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ECFA2080D;
+        Tue, 16 Jun 2020 18:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592330866;
+        bh=BZVysaZqnl67vY/M5mVFjgt/xrn3O0skxUj6yV26weo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Pw4W5yFw/l7lO4Jll6CPSzUj625dEi9McWKVnKN0AE2ux5jYWHuLpeeUAVmmdBLUR
+         N8WuCD7X9b9yfKgvyxoR0PiILospc5cD5Y6Roz5whsRqzcl6UYLReocT8T2ANW+zqr
+         SepWw9KZmDzmQAElI9RKb6/LeALmitipNj+gEbGg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 08F14352264F; Tue, 16 Jun 2020 11:07:46 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 11:07:46 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     linux-kernel@vger.kernel.org, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, shuah@kernel.org, rcu@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] torture: Pass --kmake-arg to all make invocations
+Message-ID: <20200616180745.GG2723@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200616094924.159539-1-elver@google.com>
+ <20200616160524.GW2723@paulmck-ThinkPad-P72>
+ <20200616164202.GA208325@google.com>
+ <20200616174222.GB2723@paulmck-ThinkPad-P72>
+ <20200616175720.GA124701@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616175720.GA124701@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 10:54:51 PDT (-0700), atishp@atishpatra.org wrote:
-> On Tue, Jun 16, 2020 at 3:45 AM Michel Lespinasse <walken@google.com> wrote:
->>
->> I am also unable to reproduce the issue so far.
->>
->> I wanted to point to a few things in case this helps:
->> - Commit 42fc541404f2 was bisected as the cause. This commit changes
->> walk_page_range_novma() to use mmap_assert_locked() instead of
->> lockdep_assert_held()
->> - mmap_assert_locked() checks lockdep_assert_held(), but also checks
->> that the rwsem itself is locked.
->>
->> Now how could lockdep think the lock is held, but the lock itself is
->> not marked as locked ???
->>
->> I'm not sure if it helps at all, but a few commits earlier,
->> 0cc55a0213a0 introduces mmap_read_trylock_non_owner(), which is used
->> exclusively by stackmap, and does the opposite: it acquires the mmap
->> lock without telling lockdep about it. I can't see any smoking gun
->> linking this to our bug, but I thought it may be worth mentioning as
->> it involves the same suspects (stackmap and the difference between
->> owning the lock vs lockdep thinking we own the lock).
->>
->> I'm sorry, that's only how far I was able to go on this bug - I'm not
->> sure how to investigate it further as I can not reproduce the issue...
->>
->> On Tue, Jun 16, 2020 at 1:40 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->> >
->> > On Mon, 15 Jun 2020 21:51:08 PDT (-0700), shorne@gmail.com wrote:
->> > > On Tue, Jun 16, 2020 at 06:57:47AM +0900, Stafford Horne wrote:
->> > >> On Mon, Jun 15, 2020 at 12:28:11AM -0700, Atish Patra wrote:
->> > >> > Hi,
->> > >> > I encountered the following issue while booting 5.8-rc1 on Qemu for RV64.
->> > >> > I added additional dump_stack and observed that it's happening in bpf free path.
->> > >> > It happens always if CONFIG_DEBUG_VM is enabled. VM_BUG_ON_MM is
->> > >> > compiled away without that.
->> > >> > ------------------------------------------------------------------------
->> > >> > forked to background, child pid 113
->> > >> > [   10.328850] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted
->> > >> > 5.8.0-rc1-dirty #732
->> > >> > [   10.331739] Workqueue: events bpf_prog_free_deferred
->> > >> > [   10.334133] Call Trace:
->> > >> > [   10.338039] [<ffffffe000202698>] walk_stackframe+0x0/0xa4
->> > >> > [   10.339988] [<ffffffe000202880>] show_stack+0x2e/0x3a
->> > >> > [   10.340902] [<ffffffe00047074c>] dump_stack+0x72/0x8c
->> > >> > [   10.341451] [<ffffffe0002db4ce>] mmap_assert_locked.part.13+0x14/0x1c
->> > >> > [   10.342131] [<ffffffe0002db330>] walk_page_range_novma+0x0/0x4e
->> > >> > [   10.342973] [<ffffffe000204f94>] set_direct_map_invalid_noflush+0x66/0x6e
->> > >> > [   10.343917] [<ffffffe0002e0706>] __vunmap+0xe8/0x212
->> > >> > [   10.344680] [<ffffffe0002e0882>] __vfree+0x22/0x6e
->> > >> > [   10.345270] [<ffffffe0002e0902>] vfree+0x34/0x56
->> > >> > [   10.345834] [<ffffffe00027d752>] __bpf_prog_free+0x2c/0x36
->> > >> > [   10.346529] [<ffffffe0002801a2>] bpf_prog_free_deferred+0x74/0x8a
->> > >> > [   10.347394] [<ffffffe000219c70>] process_one_work+0x13a/0x272
->> > >> > [   10.348239] [<ffffffe00021a4b4>] worker_thread+0x50/0x2e4
->> > >> > [   10.348900] [<ffffffe00021ed98>] kthread+0xfc/0x10a
->> > >> > [   10.349470] [<ffffffe0002013da>] ret_from_exception+0x0/0xc
->> > >> > [   10.354405] mm ffffffe001018600 mmap 0000000000000000 seqnum 0 task_size 0
->> > >> > [   10.354405] get_unmapped_area 0000000000000000
->> > >> > [   10.354405] mmap_base 0 mmap_legacy_base 0 highest_vm_end 0
->> > >> > [   10.354405] pgd ffffffe001074000 mm_users 2 mm_count 1
->> > >> > pgtables_bytes 8192 map_count 0
->> > >> > [   10.354405] hiwater_rss 0 hiwater_vm 0 total_vm 0 locked_vm 0
->> > >> > [   10.354405] pinned_vm 0 data_vm 0 exec_vm 0 stack_vm 0
->> > >> > [   10.354405] start_code ffffffe000200000 end_code ffffffe00084acc2
->> > >> > start_data 0 end_data ffffffe00106dfe4
->> > >> > [   10.354405] start_brk 0 brk ffffffe0010bd6d0 start_stack 0
->> > >> > [   10.354405] arg_start 0 arg_end 0 env_start 0 env_end 0
->> > >> > [   10.354405] binfmt 0000000000000000 flags 0 core_state 0000000000000000
->> > >> > [   10.354405] ioctx_table 0000000000000000
->> > >> > [   10.354405] exe_file 0000000000000000
->> > >> > [   10.354405] tlb_flush_pending 0
->> > >> > [   10.354405] def_flags: 0x0()
->> > >> > [   10.369325] ------------[ cut here ]------------
->> > >> > [   10.370763] kernel BUG at include/linux/mmap_lock.h:81!
->> > >> > [   10.375235] Kernel BUG [#1]
->> > >> > [   10.377198] Modules linked in:
->> > >> > [   10.378931] CPU: 3 PID: 51 Comm: kworker/3:1 Not tainted 5.8.0-rc1-dirty #732
->> > >> > [   10.380179] Workqueue: events bpf_prog_free_deferred
->> > >> > [   10.381270] epc: ffffffe0002db4d4 ra : ffffffe0002db4d4 sp : ffffffe3eaea7c70
->> > >> > [   10.382561]  gp : ffffffe00106d950 tp : ffffffe3ef752f80 t0 :
->> > >> > ffffffe0010836e8
->> > >> > [   10.383996]  t1 : 0000000000000064 t2 : 0000000000000000 s0 :
->> > >> > ffffffe3eaea7c90
->> > >> > [   10.385119]  s1 : ffffffe001018600 a0 : 0000000000000289 a1 :
->> > >> > 0000000000000020
->> > >> > [   10.386099]  a2 : 0000000000000005 a3 : 0000000000000000 a4 :
->> > >> > ffffffe001012758
->> > >> > [   10.387294]  a5 : 0000000000000000 a6 : 0000000000000102 a7 :
->> > >> > 0000000000000006
->> > >> > [   10.388265]  s2 : ffffffe3f00674c0 s3 : ffffffe00106e108 s4 :
->> > >> > ffffffe00106e100
->> > >> > [   10.389250]  s5 : ffffffe00106e908 s6 : 0000000000000000 s7 :
->> > >> > 6db6db6db6db6db7
->> > >> > [   10.390272]  s8 : 0000000000000001 s9 : ffffffe00021a4f8 s10:
->> > >> > ffffffffffffffff
->> > >> > [   10.391293]  s11: ffffffe3f0066600 t3 : 000000000001a7a8 t4 :
->> > >> > 000000000001a7a8
->> > >> > [   10.392314]  t5 : 0000000000000000 t6 : ffffffe00107b76b
->> > >> > [   10.393096] status: 0000000000000120 badaddr: 0000000000000000
->> > >> > cause: 0000000000000003
->> > >> > [   10.397755] ---[ end trace 861659596ac28841 ]---
->> > >> > ---------------------------------------------------------------------------------------------------
->> > >> >
->> > >> > I haven't had the chance to bisect to figure out which commit caused
->> > >> > the issue. Just wanted
->> > >> > to check if it is a known issue already.
->> > >>
->> > >> Hi Atish,
->> > >>
->> > >> Note, I am getting the same (just now) when booting v5.8-rc1 on OpenRISC.  If
->> > >> you have any updates please post back.  I will try to look into this today or
->> > >> tomorrow.
->> > >
->> > > I have bisected this to, 42fc541404f249778e752ab39c8bc25fcb2dbe1e:
->> > >
->> > >   mmap locking API: add mmap_assert_locked() and mmap_assert_write_locked()
->> > >
->> > > This should have just changed the existing lockdep api's but something has
->> > > changed.  I haven't had time to look at it yet.
->> > >
->> > > Ccing: Michel Lespinasse <walken@google.com>
->> >
->> > This isn't manifesting on boot for me, on either rc1 or that commit.  I'm
->> > running a simple buildroot-based userspace, so I doubt anything is triggering
->> > BPF.  I don't run the BPF selftests, as they're a bit of a pain (IIRC they
->> > don't cross compile and need LLVM) -- does anyone have a userspace I can use to
->> > trigger the bug?
->>
-> I am also using buildroot based userspace but it's a bit bulky because
-> of my config.
-> You can access it from here:
-> https://wdc.box.com/s/r8j0d5ynp5gr27n2wo124xi9t8fp0tls
+On Tue, Jun 16, 2020 at 07:57:20PM +0200, Marco Elver wrote:
+> On Tue, Jun 16 2020 at 10:42AM -0700, Paul E. McKenney wrote:
+> > On Tue, Jun 16, 2020 at 06:42:02PM +0200, Marco Elver wrote:
+> > > On Tue, Jun 16 2020 at 09:05AM -0700, Paul E. McKenney wrote:
+> > > > On Tue, Jun 16, 2020 at 11:49:24AM +0200, Marco Elver wrote:
+> > > > > We need to pass the arguments provided to --kmake-arg to all make
+> > > > > invocations. In particular, the make invocations generating the configs
+> > > > > need to see the final make arguments, e.g. if config variables depend on
+> > > > > particular variables that are passed to make.
+> > > > > 
+> > > > > For example, when using '--kcsan --kmake-arg CC=clang-11', we would lose
+> > > > > CONFIG_KCSAN=y due to 'make oldconfig' not seeing that we want to use a
+> > > > > compiler that supports KCSAN.
+> > > > > 
+> > > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > 
+> > > > Queued and pushed, thank you!
+> > > > 
+> > > > Would the following patch make sense, at least until such time
+> > > > as some other compiler supports KCSAN?
+> > > > 
+> > > > 							Thanx, Paul
+> > > > 
+> > > > ------------------------------------------------------------------------
+> > > > 
+> > > > commit 88bcaa730b6d40ddf69b09ed6f0a14803d087d99
+> > > > Author: Paul E. McKenney <paulmck@kernel.org>
+> > > > Date:   Tue Jun 16 09:02:34 2020 -0700
+> > > > 
+> > > >     torture: Make --kcsan default to using Clang 11
+> > > >     
+> > > >     Currently, Clang 11 is the only compiler that can support KCSAN.
+> > > >     Therefore, as a convenience to the KCSAN user, this commit causes
+> > > >     --kcsan to specify Clang 11 unless a "CC=" argument was already
+> > > >     specified via the --kmake-arg argument.
+> > > 
+> > > As soon as more compilers support KCSAN (e.g. clang-12, etc...) we run
+> > > the risk of actually inconveniencing ourselves more because then we
+> > > really need to say '--kmake-arg CC=clang-1X' to not use the old
+> > > compiler. Or revert this in time.
+> > > 
+> > > My command-line looks more like this right now:
+> > > 
+> > > 	kvm.sh ... --kmake-arg "CC="${HOME}/local/<gcc-or-clang>-11.kcsan/local/bin/<gcc-or-clang>" ...
+> > > 
+> > > I think the safer alternative would be to error if CONFIG_KCSAN=y is not
+> > > in the config, and simply suggest "Did you forget to switch your
+> > > compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?" (of course, a
+> > > 'gcc' in $PATH that supports KCSAN would also be fine -- see below).
+> > > Eventually, when the default compilers support KCSAN, this will resolve
+> > > itself gracefully.
+> > > 
+> > > Also, I'm going to send a series later this week to re-enable GCC
+> > > support. ;-)
+> > 
+> > OK, sounds like I should leave well enough alone, then.  ;-)
+> > 
+> > In its current state, specifying "--kcsan" without a KCSAN-capable
+> > compiler does get you this:
+> > 
+> > :CONFIG_KCSAN=y: improperly set
+> > :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+> > :CONFIG_KCSAN_VERBOSE=y: improperly set
+> > :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+> > Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
+> > 
+> > Which admittedly is a bit obtuse, especially that last line.  So how
+> > about the following patch, which instead results in this?
+> > 
+> > :CONFIG_KCSAN=y: improperly set
+> > :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+> > :CONFIG_KCSAN_VERBOSE=y: improperly set
+> 
+> Noticed that CONFIG_KCSAN_VERBOSE=y warning still appears, because it
+> wants CONFIG_PROVE_LOCKING=y.
+> 
+> > :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+> > Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
+> 
+> Sounds good, with another suggestion below, but otherwise
+> 
+> Acked-by: Marco Elver <elver@google.com>
 
-I'm up to ~900M trying to get enough of a userspace to run the BPF selftests,
-so this would be way better.  Unfortunately I'm not actually getting the
-crash with your rootfs.
+Applied and updated as suggested below, so that the output now looks
+like this:
 
->
-> A defconfig build & boot in Qemu with above userspace is sufficient to
-> trigger the bug.
->
-> FYI: I noticed the kernel bug message every time during ssh-key
-> generation. Not sure if that is related.
->
->>
->>
->> --
->> Michel "Walken" Lespinasse
->> A program is never fully debugged until the last user dies.
+:CONFIG_KCSAN=y: improperly set
+:CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+:CONFIG_KCSAN_VERBOSE=y: improperly set
+:CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+Compiler or architecture does not support KCSAN!
+Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
+
+And agreed, much better!
+
+							Thanx, Paul
+
+> Thanks,
+> -- Marco
+> 
+> > 							Thanx, Paul
+> > 
+> > ------------------------------------------------------------------------
+> > 
+> > commit f571795b1146007407851675a258b6685ea2d589
+> > Author: Paul E. McKenney <paulmck@kernel.org>
+> > Date:   Tue Jun 16 10:38:57 2020 -0700
+> > 
+> >     torture: Improve diagnostic for KCSAN-incapable compilers
+> >     
+> >     Using --kcsan when the compiler does not support KCSAN results in this:
+> >     
+> >     :CONFIG_KCSAN=y: improperly set
+> >     :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+> >     :CONFIG_KCSAN_VERBOSE=y: improperly set
+> >     :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+> >     Clean KCSAN run in /home/git/linux-rcu/tools/testing/selftests/rcutorture/res/2020.06.16-09.53.16
+> >     
+> >     This is a bit obtuse, so this commit adds checks resulting in this:
+> >     
+> >     :CONFIG_KCSAN=y: improperly set
+> >     :CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000: improperly set
+> >     :CONFIG_KCSAN_VERBOSE=y: improperly set
+> >     :CONFIG_KCSAN_INTERRUPT_WATCHER=y: improperly set
+> >     Did you forget to switch your compiler with --kmake-arg CC=<cc-that-supports-kcsan>?
+> >     
+> >     Suggested-by: Marco Elver <elver@google.com>
+> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > 
+> > diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+> > index 357899c..837643a 100755
+> > --- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+> > +++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+> > @@ -44,7 +44,8 @@ do
+> >  			then
+> >  				echo QEMU killed
+> >  			fi
+> > -			configcheck.sh $i/.config $i/ConfigFragment
+> > +			configcheck.sh $i/.config $i/ConfigFragment > $T 2>&1
+> > +			cat $T
+> >  			if test -r $i/Make.oldconfig.err
+> >  			then
+> >  				cat $i/Make.oldconfig.err
+> > @@ -73,7 +74,10 @@ do
+> >  	done
+> >  	if test -f "$rd/kcsan.sum"
+> >  	then
+> > -		if test -s "$rd/kcsan.sum"
+> > +		if grep -q CONFIG_KCSAN=y $T
+> > +		then
+> 
+> For completeness, could add this above:
+> 
+> 	echo "Compiler or architecture does not support KCSAN!"
+> 
+> Because we might also be on an unsupported architecture.
+> 
+> > +			echo Did you forget to switch your compiler with '--kmake-arg CC=<cc-that-supports-kcsan>'?
+> > +		elif test -s "$rd/kcsan.sum"
+> >  		then
+> >  			echo KCSAN summary in $rd/kcsan.sum
+> >  		else
