@@ -2,88 +2,130 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A829C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC5D208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592326788;
-	bh=8d3TrxrA8Yg5Ytejwq8g7SbccMfxeMH87bM2/PPxd3Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CdBSiKQHvQczcouqe2I1240bZJopPytn5AJ8/kUsCyukiq6f6axMpTyTZdYCeH+BZ
-	 kAMQfWDJRwGKzC81y3tFA+WHNUWz5lip4V79Rk6jrkR0BRFAWg4g5/brinoAnOQfTa
-	 3WAvVjmtUBN+wzIgy/Y6HBJs2HzXRkNMwydkvsIA=
+	by mail.kernel.org (Postfix) with ESMTP id DF1A6208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:59:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="P6F/6Li0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbgFPQ7q (ORCPT
+        id S1730554AbgFPQ7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:59:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730554AbgFPQ7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:59:43 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40EAB20C09
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 16:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592326782;
-        bh=8d3TrxrA8Yg5Ytejwq8g7SbccMfxeMH87bM2/PPxd3Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0z2UNkU/quQA4kn04Vf3GVxiG8SHeVXqZx4B3gJ0yB3m2GqsQRphvW8smEv0n/nJQ
-         0/q6d8dz8BX3EHKGJQoCAF1xc+hXW5k3Qmf12mVju9jXNmKN0C0J3XHKvWE3h9oyny
-         FY8ilYY6KGMe/1s6s9GDVWIGo78rwBB/+/9bY0W8=
-Received: by mail-wm1-f46.google.com with SMTP id u26so2667928wmn.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:59:42 -0700 (PDT)
-X-Gm-Message-State: AOAM530ahhIVGgh46DpgzAl9hfX5GYfD/lp0RwT96G9gRhECXQ5PCW/Y
-        J1cpGt4XImjv1MvWDAaVL9jYvyG5wjWnUCCd4rsyrA==
-X-Google-Smtp-Source: ABdhPJylrWQKE69MJcAA+tI8FFT9AzaNafaydA0oEjUGWHIJPejchXkcE2A0e1t1EJQPakBymQe8jze29E+inYYItzM=
-X-Received: by 2002:a1c:bb08:: with SMTP id l8mr4204037wmf.21.1592326780898;
- Tue, 16 Jun 2020 09:59:40 -0700 (PDT)
+        Tue, 16 Jun 2020 12:59:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729841AbgFPQ7w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:59:52 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F73AC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:59:52 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id k11so22311340ejr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 09:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9c3XpUNRuxc8tvHN/G/s1TeMtn7R53E47RIpJ3K1Kjo=;
+        b=P6F/6Li0cNofNpVQGyh790TSj0hnEC9itlHPgIsadxqJsMTv2HLDoSobSlbltEfUh2
+         vsx03Q2EGLSEX7+lQl/MFwECf5bdmgM/HEP7HOpYfqkTdczVCH17cPrTGFDJe3AEkS5o
+         pf8zQoNctOFIsW4Qb46xAtZ3QA+nKYUdOu7KlruHzayUM/3u36JTjcwVVu7dI78fRVEu
+         i5HYmeba9xv0+8lhJ3e7NcOji7wdwUegQuxlSH8ohKTtEU1xlc/1cFLccXTVL3AHSEnC
+         6VvaV4Nh34wT3F3OsOOF5xnel9B2+wAVGlu2+qDsFzs4oEACd3ex/bFB2/yaZmCvdUPy
+         0rOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9c3XpUNRuxc8tvHN/G/s1TeMtn7R53E47RIpJ3K1Kjo=;
+        b=HcBsSlmLWxnllwRDLEhI9ycWaw/J0MERNSColFhYHMSHEPsPOcTm+TERtQgGi4EoRi
+         qkCOaY/2yK/hB7Ag3JdtKOQK0ktYEWmEFzhzDeZRAn8UrHhHOQQVFmEUbnqslFWAXDqr
+         lLNE/L/CCPThWS6JDrwY7IPTxSP9C+JCXn1GtnNmENu8uBnqECiEn4s9HffvoiF7nPKY
+         UDZTHDLU28CsdYtjXq9yUvETBoU2XtCwLlmF8wn1KUBktesoRY80zlu4TQZTwasPJPRD
+         gsAykrCm9Q0h90FNhc+mnLYWEhEfQlaq5hgaB3CSiVfgHcttz/O8gGVvuaENWS8aJQsH
+         9Tjg==
+X-Gm-Message-State: AOAM532x8wJOohKyxZioQPIjdvN5y9i7GiTLKgIyVZCgDGU0T6pf02kC
+        J0O4f3NXSE/Gtl72RgrT1dNezN8VfG1zrMe/svnPnA==
+X-Google-Smtp-Source: ABdhPJxUcerRmdzyFUvLtbWcqtliDcNlbqG0p6OLPpFJjZwLdfD/UvIdP+kEnW0mIo2vb6TxUppF8iaiEBWW8qw+7w8=
+X-Received: by 2002:a17:906:22d0:: with SMTP id q16mr3584102eja.455.1592326791128;
+ Tue, 16 Jun 2020 09:59:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616074934.1600036-1-keescook@chromium.org> <20200616074934.1600036-7-keescook@chromium.org>
-In-Reply-To: <20200616074934.1600036-7-keescook@chromium.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 16 Jun 2020 09:59:29 -0700
-X-Gmail-Original-Message-ID: <CALCETrVSnLAkWN_b7rNY1mbF16qXavbXYtv9fVZA-Q4ZVnTXhQ@mail.gmail.com>
-Message-ID: <CALCETrVSnLAkWN_b7rNY1mbF16qXavbXYtv9fVZA-Q4ZVnTXhQ@mail.gmail.com>
-Subject: Re: [PATCH 6/8] x86: Provide API for local kernel TLB flushing
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        "zhujianwei (C)" <zhujianwei7@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Hehuazhen <hehuazhen@huawei.com>, X86 ML <x86@kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
+References: <20200616115213.13109-1-david@redhat.com> <20200616115213.13109-4-david@redhat.com>
+ <20200616124120.GF9499@dhcp22.suse.cz> <30c35cd2-8167-d402-2c7e-94f5fcce0274@redhat.com>
+In-Reply-To: <30c35cd2-8167-d402-2c7e-94f5fcce0274@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 16 Jun 2020 09:59:40 -0700
+Message-ID: <CAPcyv4irwGUU2x+c6b4L=KbB1dnasNKaaZd6oSpYjL9kfsnROQ@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] mm/shuffle: remove dynamic reconfiguration
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Huang Ying <ying.huang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 12:49 AM Kees Cook <keescook@chromium.org> wrote:
+On Tue, Jun 16, 2020 at 6:45 AM David Hildenbrand <david@redhat.com> wrote:
 >
-> The seccomp constant action bitmap filter evaluation routine depends
-> on being able to quickly clear the PTE "accessed" bit for a temporary
-> allocation. Provide access to the existing CPU-local kernel memory TLB
-> flushing routines.
+> On 16.06.20 14:41, Michal Hocko wrote:
+> > [Add Dan]
+>
+> Whops, dropped by mistake. Thanks for adding.
+>
+> >
+> > On Tue 16-06-20 13:52:13, David Hildenbrand wrote:
+> >> Commit e900a918b098 ("mm: shuffle initial free memory to improve
+> >> memory-side-cache utilization") promised "autodetection of a
+> >> memory-side-cache (to be added in a follow-on patch)" over a year ago.
+> >>
+> >> The original series included patches [1], however, they were dropped
+> >> during review [2] to be followed-up later.
+> >>
+> >> Let's simplify for now and re-add when really (ever?) needed.
+> >>
+> >> [1] https://lkml.kernel.org/r/154510700291.1941238.817190985966612531.stgit@dwillia2-desk3.amr.corp.intel.com/
+> >> [2] https://lkml.kernel.org/r/154690326478.676627.103843791978176914.stgit@dwillia2-desk3.amr.corp.intel.com/
+> >>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> >> Cc: Michal Hocko <mhocko@suse.com>
+> >> Cc: Minchan Kim <minchan@kernel.org>
+> >> Cc: Huang Ying <ying.huang@intel.com>
+> >> Cc: Wei Yang <richard.weiyang@gmail.com>
+> >> Cc: Keith Busch <keith.busch@intel.com>
+> >> Cc: Mel Gorman <mgorman@techsingularity.net>
+> >> Signed-off-by: David Hildenbrand <david@redhat.com>
+> >
+> > While I am not against removing this unused code I am really curious
+> > what is the future of the auto detection. Has this just fall through
+> > cracks or there are some more serious problem to make detection
+> > possible/reliable?
+>
+> From the bouncing mails I assume Keith - author of the original patches
+> in [1] -  is no longer working at Intel (or I messed up :) "#5.1.0
+> Address rejected"). Maybe Dan can clarify what the future of this is.
 
-Can you write a better justification?  Also, unless I'm just
-incompetent this morning, I can't find anyone calling this in the
-series.
+People are actively using this via the command line option. In fact it
+has saved some people that have deployed platforms with mistmatched
+DIMM populations where no HMAT autodetection would be possible. It's
+also been useful for mitigating other memory interleaving performance
+problems that are sensitive to a given address line.
+
+The reason this is still manual is the dearth of platforms that
+publish an HMAT, but again the command line option is actively
+mitigating performance issues or otherwise allowing for testing a
+"pre-aged" memory allocator free list.
