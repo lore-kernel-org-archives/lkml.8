@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EACE820C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0C520C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322160;
-	bh=R8b4aXiaDVa9gpxOJ77HU6fmfPrXxPzH9NZlAi6jZ1U=;
+	s=default; t=1592322166;
+	bh=l2hHj3EQa2SlEqLMmln1qh6aS2lh3ArfQw+qqHxklF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePqFhQb1/XL54xPnj9IDGJSFYB1/TXk49ts/OaYkwBLGCKePlfbmPPNnHBYYbSxMe
-	 a/JQhz1Y2jYsoRmxAG5aJjF/TLzqX/G1wAz0O6dl6So6Kck6hT5GC4FzJmUS2C7JX0
-	 ujPzVT+zQPE4DmvQ959gc5H8T1Z3iLVTcUuAIkIE=
+	b=s8yYErARGJgf3ceMnMsvbHlbpRlJ+lXhtT+9COHXXNF26mCbv3ANhR5HWkkBZ5tfZ
+	 6EF2xHZbdAbtiPsXGhLlqnTyuSTBSP92tvFOfamdCjxoq9j+MXw80B0DmfYP1p4v2L
+	 9fPpvp7+Rh4ojFvNrIudMrBd0TxqETqD4/N1UzP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbgFPPmi (ORCPT
+        id S1730987AbgFPPmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:42:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59338 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731692AbgFPPmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:35 -0400
+        id S1731701AbgFPPmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A84D20C56;
-        Tue, 16 Jun 2020 15:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A5F208D5;
+        Tue, 16 Jun 2020 15:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322154;
-        bh=R8b4aXiaDVa9gpxOJ77HU6fmfPrXxPzH9NZlAi6jZ1U=;
+        s=default; t=1592322157;
+        bh=l2hHj3EQa2SlEqLMmln1qh6aS2lh3ArfQw+qqHxklF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1DpcV358vQR6m6+HY5WLeVYQR/gSbhW4EDHnXoOJVnY7ZRKw2nMD9eH+BaKoRtKJ
-         Zj3TD4NM/dYgOeSwNe+z22GuRl9scutu8i0ASmrNF3IS8/EkdWdyTCS7GXQcVFckLI
-         DVtxQaX5bUH+WnxAcY+hbj9FXtePK7//b2Sq9X7g=
+        b=IS4lqPkGt38TO2lnviUWnMec6An1thonCL34XaxeI421NHOQ3BRG+2SAWBmWhOzyD
+         TFZmXURVOZIkflvJ8mP27F+XuRz5rIaZo0BnNk2VQOfmPyUNyixrhRj2L7U7CAsOCd
+         1TPZofT5U2daQRJoK5jogtcJt0YYcFY+1BYkBKyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 003/163] net_failover: fixed rollback in net_failover_open()
-Date:   Tue, 16 Jun 2020 17:32:57 +0200
-Message-Id: <20200616153107.022748125@linuxfoundation.org>
+Subject: [PATCH 5.7 004/163] tun: correct header offsets in napi frags mode
+Date:   Tue, 16 Jun 2020 17:32:58 +0200
+Message-Id: <20200616153107.070996002@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -59,33 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit e8224bfe77293494626f6eec1884fee7b87d0ced ]
+[ Upstream commit 96aa1b22bd6bb9fccf62f6261f390ed6f3e7967f ]
 
-found by smatch:
-drivers/net/net_failover.c:65 net_failover_open() error:
- we previously assumed 'primary_dev' could be null (see line 43)
+Tun in IFF_NAPI_FRAGS mode calls napi_gro_frags. Unlike netif_rx and
+netif_gro_receive, this expects skb->data to point to the mac layer.
 
-Fixes: cfc80d9a1163 ("net: Introduce net_failover driver")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+But skb_probe_transport_header, __skb_get_hash_symmetric, and
+xdp_do_generic in tun_get_user need skb->data to point to the network
+header. Flow dissection also needs skb->protocol set, so
+eth_type_trans has to be called.
+
+Ensure the link layer header lies in linear as eth_type_trans pulls
+ETH_HLEN. Then take the same code paths for frags as for not frags.
+Push the link layer header back just before calling napi_gro_frags.
+
+By pulling up to ETH_HLEN from frag0 into linear, this disables the
+frag0 optimization in the special case when IFF_NAPI_FRAGS is used
+with zero length iov[0] (and thus empty skb->linear).
+
+Fixes: 90e33d459407 ("tun: enable napi_gro_frags() for TUN/TAP driver")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Acked-by: Petar Penkov <ppenkov@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/net_failover.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/tun.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/net/net_failover.c
-+++ b/drivers/net/net_failover.c
-@@ -61,7 +61,8 @@ static int net_failover_open(struct net_
- 	return 0;
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1871,8 +1871,11 @@ drop:
+ 		skb->dev = tun->dev;
+ 		break;
+ 	case IFF_TAP:
+-		if (!frags)
+-			skb->protocol = eth_type_trans(skb, tun->dev);
++		if (frags && !pskb_may_pull(skb, ETH_HLEN)) {
++			err = -ENOMEM;
++			goto drop;
++		}
++		skb->protocol = eth_type_trans(skb, tun->dev);
+ 		break;
+ 	}
  
- err_standby_open:
--	dev_close(primary_dev);
-+	if (primary_dev)
-+		dev_close(primary_dev);
- err_primary_open:
- 	netif_tx_disable(dev);
- 	return err;
+@@ -1929,9 +1932,12 @@ drop:
+ 	}
+ 
+ 	if (frags) {
++		u32 headlen;
++
+ 		/* Exercise flow dissector code path. */
+-		u32 headlen = eth_get_headlen(tun->dev, skb->data,
+-					      skb_headlen(skb));
++		skb_push(skb, ETH_HLEN);
++		headlen = eth_get_headlen(tun->dev, skb->data,
++					  skb_headlen(skb));
+ 
+ 		if (unlikely(headlen > skb_headlen(skb))) {
+ 			this_cpu_inc(tun->pcpu_stats->rx_dropped);
 
 
