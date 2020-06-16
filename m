@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 908D7207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A1C206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 14:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="X694txtr"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Od6LTABf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbgFPOKH (ORCPT
+        id S1729270AbgFPOKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 10:10:07 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:13356 "EHLO
+        Tue, 16 Jun 2020 10:10:24 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:13439 "EHLO
         smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728716AbgFPOKE (ORCPT
+        with ESMTP id S1726261AbgFPOKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 10:10:04 -0400
+        Tue, 16 Jun 2020 10:10:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1592316602; x=1623852602;
+  t=1592316624; x=1623852624;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=lCtpFdulZBcc+gNwg5rlkrBP9DmunmKCV7foIDqhGGw=;
-  b=X694txtrxgQJF6o2+GbQ3MOYWI7WP8ewa8u5jhFT4VfDl2Un3b9MBWrY
-   M+f6rinTywTMB/Sj3b/MhdE2mWyCxKkTINMNo2+M/6sit8ockyneu4w2K
-   PaWUqqrO/+sjS88f0bkFXqZvwgfi4tXRjtgAZbvIzOKcTIyYUuYU60jYg
-   w=;
-IronPort-SDR: a8eMkPs1lh7jsRxSWN2+q3C+E7ibg7gurbneofAEotQlQNLnGPXmyxZOd/I+Jjp2+TVQjxU/Dl
- AhReX4SNufpg==
+  bh=NkQV8XZb6WAEthYy8o1WXcIlkgPfAm++tDmi/3RmsTU=;
+  b=Od6LTABf6O1bDEOR8txPA/jVbdk5ncF93BV2JfeFghS4i3Wgck3j3HgT
+   E45sWczWFHNnTK1sEgbkmFPOpggU5l3+Mly6j5UYFwBYOMQ1opCfRmsJK
+   Zq8SjCqkXplp2ZfxMs1dQQiK/+dSVVo71pgiMS4K1JLWk/7bm2s+8z/h+
+   g=;
+IronPort-SDR: qvKh6XWzQXfZpX7zQAK8XPGEHLAqde90iq+zdKLpTK07lOE7/qKoZw8CsHO3zfm78RCCaKPCkU
+ XShxEVHonoIg==
 X-IronPort-AV: E=Sophos;i="5.73,518,1583193600"; 
-   d="scan'208";a="36584441"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 16 Jun 2020 14:09:59 +0000
+   d="scan'208";a="36584488"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 16 Jun 2020 14:10:20 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com (Postfix) with ESMTPS id 4C357A2685;
-        Tue, 16 Jun 2020 14:09:56 +0000 (UTC)
+        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id C2992A17C1;
+        Tue, 16 Jun 2020 14:10:17 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Jun 2020 14:09:55 +0000
+ id 15.0.1497.2; Tue, 16 Jun 2020 14:10:17 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.109) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 16 Jun 2020 14:09:32 +0000
+ id 15.0.1497.2; Tue, 16 Jun 2020 14:09:58 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -67,9 +67,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <ying.huang@intel.com>, <david@redhat.com>,
         <linux-damon@amazon.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v4 2/8] tools/damon: Implement init target regions feature
-Date:   Tue, 16 Jun 2020 16:08:07 +0200
-Message-ID: <20200616140813.17863-3-sjpark@amazon.com>
+Subject: [RFC v4 3/8] Docs/damon: Document 'initial_regions' feature
+Date:   Tue, 16 Jun 2020 16:08:08 +0200
+Message-ID: <20200616140813.17863-4-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200616140813.17863-1-sjpark@amazon.com>
 References: <20200616140813.17863-1-sjpark@amazon.com>
@@ -85,207 +85,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit updates the damon user space tool to support the initial
-monitoring target regions feature.
+This commit documents the 'initial_regions' feature.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- tools/damon/_damon.py  | 39 +++++++++++++++++++++++++++++++++++++++
- tools/damon/record.py  | 12 +++++++-----
- tools/damon/schemes.py | 12 +++++++-----
- 3 files changed, 53 insertions(+), 10 deletions(-)
+ Documentation/admin-guide/mm/damon/usage.rst | 34 ++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
-index 3620ef12a5ea..ad476cc61421 100644
---- a/tools/damon/_damon.py
-+++ b/tools/damon/_damon.py
-@@ -12,12 +12,25 @@ debugfs_attrs = None
- debugfs_record = None
- debugfs_schemes = None
- debugfs_pids = None
-+debugfs_init_regions = None
- debugfs_monitor_on = None
+diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
+index 2f5b67302094..24f1b05a859a 100644
+--- a/Documentation/admin-guide/mm/damon/usage.rst
++++ b/Documentation/admin-guide/mm/damon/usage.rst
+@@ -329,6 +329,40 @@ having pids 42 and 4242 as the processes to be monitored and check it again::
+ Note that setting the pids doesn't start the monitoring.
  
- def set_target_pid(pid):
-     return subprocess.call('echo %s > %s' % (pid, debugfs_pids), shell=True,
-             executable='/bin/bash')
  
-+def set_target(pid, init_regions=[]):
-+    rc = set_target_pid(pid)
-+    if rc:
-+        return rc
++Initial Monitoring Target Regions
++---------------------------------
 +
-+    if not os.path.exists(debugfs_init_regions):
-+        return 0
++DAMON automatically sets and updates the monitoring target regions so that
++entire memory mappings of target processes can be covered.  However, users
++might want to limit the monitoring region to specific address ranges, such as
++the heap, the stack, or specific file-mapped area.  Or, some users might know
++the initial access pattern of their workloads and therefore want to set optimal
++initial regions for the 'adaptive regions adjustment'.
 +
-+    string = ' '.join(['%s %d %d' % (pid, r[0], r[1]) for r in init_regions])
-+    return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
-+            shell=True, executable='/bin/bash')
++In such cases, users can explicitly set the initial monitoring target regions
++as they want, by writing proper values to the ``init_regions`` file.  Each line
++of the input should represent one region in below form.::
 +
- def turn_damon(on_off):
-     return subprocess.call("echo %s > %s" % (on_off, debugfs_monitor_on),
-             shell=True, executable="/bin/bash")
-@@ -97,6 +110,7 @@ def chk_update_debugfs(debugfs):
-     global debugfs_record
-     global debugfs_schemes
-     global debugfs_pids
-+    global debugfs_init_regions
-     global debugfs_monitor_on
- 
-     debugfs_damon = os.path.join(debugfs, 'damon')
-@@ -104,6 +118,7 @@ def chk_update_debugfs(debugfs):
-     debugfs_record = os.path.join(debugfs_damon, 'record')
-     debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
-     debugfs_pids = os.path.join(debugfs_damon, 'pids')
-+    debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
-     debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
- 
-     if not os.path.isdir(debugfs_damon):
-@@ -131,6 +146,26 @@ def cmd_args_to_attrs(args):
-     return Attrs(sample_interval, aggr_interval, regions_update_interval,
-             min_nr_regions, max_nr_regions, rbuf_len, rfile_path, schemes)
- 
-+def cmd_args_to_init_regions(args):
-+    regions = []
-+    for arg in args.regions.split():
-+        addrs = arg.split('-')
-+        try:
-+            if len(addrs) != 2:
-+                raise Exception('two addresses not given')
-+            start = int(addrs[0])
-+            end = int(addrs[1])
-+            if start >= end:
-+                raise Exception('start >= end')
-+            if regions and regions[-1][1] > start:
-+                raise Exception('regions overlap')
-+        except Exception as e:
-+            print('Wrong \'--regions\' argument (%s)' % e)
-+            exit(1)
++    <pid> <start address> <end address>
 +
-+        regions.append([start, end])
-+    return regions
++The ``pid`` should be already in ``pids`` file, and the regions should be
++passed in address order.  For example, below commands will set a couple of
++address ranges, ``1-100`` and ``100-200`` as the initial monitoring target
++region of process 42, and another couple of address ranges, ``20-40`` and
++``50-100`` as that of process 4242.::
 +
- def set_attrs_argparser(parser):
-     parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
-             default='/sys/kernel/debug', help='debugfs mounted path')
-@@ -144,3 +179,7 @@ def set_attrs_argparser(parser):
-             default=10, help='minimal number of regions')
-     parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
-             default=1000, help='maximum number of regions')
++    # cd <debugfs>/damon
++    # echo "42   1       100
++            42   100     200
++            4242 20      40
++            4242 50      100" > init_regions
 +
-+def set_init_regions_argparser(parser):
-+    parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
-+            type=str, default='', help='monitoring target address regions')
-diff --git a/tools/damon/record.py b/tools/damon/record.py
-index 44fa3a12af35..6ce8721d782a 100644
---- a/tools/damon/record.py
-+++ b/tools/damon/record.py
-@@ -13,7 +13,7 @@ import time
++Note that this sets the initial monitoring target regions only.  DAMON will
++automatically updates the boundary of the regions after one ``regions update
++interval``.  Therefore, users should set the ``regions update interval`` large
++enough.
++
++
+ Record
+ ------
  
- import _damon
- 
--def do_record(target, is_target_cmd, attrs, old_attrs):
-+def do_record(target, is_target_cmd, init_regions, attrs, old_attrs):
-     if os.path.isfile(attrs.rfile_path):
-         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
- 
-@@ -24,8 +24,8 @@ def do_record(target, is_target_cmd, attrs, old_attrs):
-     if is_target_cmd:
-         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-         target = p.pid
--    if _damon.set_target_pid(target):
--        print('pid setting (%s) failed' % target)
-+    if _damon.set_target(target, init_regions):
-+        print('target setting (%s, %s) failed' % (target, init_regions))
-         cleanup_exit(old_attrs, -2)
-     if _damon.turn_damon('on'):
-         print('could not turn on damon' % target)
-@@ -65,6 +65,7 @@ def chk_permission():
- 
- def set_argparser(parser):
-     _damon.set_attrs_argparser(parser)
-+    _damon.set_init_regions_argparser(parser)
-     parser.add_argument('target', type=str, metavar='<target>',
-             help='the target command or the pid to record')
-     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-@@ -88,19 +89,20 @@ def main(args=None):
- 
-     args.schemes = ''
-     new_attrs = _damon.cmd_args_to_attrs(args)
-+    init_regions = _damon.cmd_args_to_init_regions(args)
-     target = args.target
- 
-     target_fields = target.split()
-     if not subprocess.call('which %s > /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
--        do_record(target, True, new_attrs, orig_attrs)
-+        do_record(target, True, init_regions, new_attrs, orig_attrs)
-     else:
-         try:
-             pid = int(target)
-         except:
-             print('target \'%s\' is neither a command, nor a pid' % target)
-             exit(1)
--        do_record(target, False, new_attrs, orig_attrs)
-+        do_record(target, False, init_regions, new_attrs, orig_attrs)
- 
- if __name__ == '__main__':
-     main()
-diff --git a/tools/damon/schemes.py b/tools/damon/schemes.py
-index 2d23dfb4fd13..654345dbdb62 100644
---- a/tools/damon/schemes.py
-+++ b/tools/damon/schemes.py
-@@ -14,7 +14,7 @@ import time
- import _convert_damos
- import _damon
- 
--def run_damon(target, is_target_cmd, attrs, old_attrs):
-+def run_damon(target, is_target_cmd, init_regions, attrs, old_attrs):
-     if os.path.isfile(attrs.rfile_path):
-         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
- 
-@@ -27,8 +27,8 @@ def run_damon(target, is_target_cmd, attrs, old_attrs):
-     if is_target_cmd:
-         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-         target = p.pid
--    if _damon.set_target_pid(target):
--        print('pid setting (%s) failed' % target)
-+    if _damon.set_target(target, init_regions):
-+        print('target setting (%s, %s) failed' % (target, init_regions))
-         cleanup_exit(old_attrs, -2)
-     if _damon.turn_damon('on'):
-         print('could not turn on damon' % target)
-@@ -67,6 +67,7 @@ def chk_permission():
- 
- def set_argparser(parser):
-     _damon.set_attrs_argparser(parser)
-+    _damon.set_init_regions_argparser(parser)
-     parser.add_argument('target', type=str, metavar='<target>',
-             help='the target command or the pid to record')
-     parser.add_argument('-c', '--schemes', metavar='<file>', type=str,
-@@ -91,19 +92,20 @@ def main(args=None):
-     args.out = 'null'
-     args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr)
-     new_attrs = _damon.cmd_args_to_attrs(args)
-+    init_regions = _damon.cmd_args_to_init_regions(args)
-     target = args.target
- 
-     target_fields = target.split()
-     if not subprocess.call('which %s > /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
--        run_damon(target, True, new_attrs, orig_attrs)
-+        run_damon(target, True, init_regions, new_attrs, orig_attrs)
-     else:
-         try:
-             pid = int(target)
-         except:
-             print('target \'%s\' is neither a command, nor a pid' % target)
-             exit(1)
--        run_damon(target, False, new_attrs, orig_attrs)
-+        run_damon(target, False, init_regions, new_attrs, orig_attrs)
- 
- if __name__ == '__main__':
-     main()
 -- 
 2.17.1
 
