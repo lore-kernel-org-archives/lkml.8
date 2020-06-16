@@ -2,120 +2,114 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE95C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21E9E20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:56:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sSHE2J4H"
+	by mail.kernel.org (Postfix) with ESMTP id 8792520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgFPM4f (ORCPT
+        id S1728667AbgFPM5K convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48118 "EHLO
+        Tue, 16 Jun 2020 08:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFPM4d (ORCPT
+        with ESMTP id S1725901AbgFPM5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:56:33 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D33C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:56:33 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id d2so16652641qtw.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=JEQhTwQYPsGwAzZzLRu7bODyjB8wxGLamvh49Pujfk0=;
-        b=sSHE2J4HPUB3tIDmmWhIklNcdHKql+Uyvzmc6XqZpJzmMGO9f6RWeMHzZrA6nd1tSH
-         wMFPzYcAPkUjWTpoSnXWYqcJagGQ/qjFYIRVjH2z9YI/HeVHHQV5Pl3ZS6vTxa7SGj5L
-         j+utHFL7hNCvLLPoFB+AbBI8rZHh9d4+uQVvgsOqCTpmGC27qch98mbMkhW9CKDfvNJ8
-         c1NsXeSe3lzWr+2hbz2PjJhuS2gJbX8ZKdgrN0uNsF4RMooNpcflAm1VQJlWZ+0I9jie
-         0V6sIasNyxIBD6XERhgR0uOqbXiop7Ciwfj1E4eOd1HPeB+YNnkWvso/1bDHoPZ3yCxp
-         kg8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=JEQhTwQYPsGwAzZzLRu7bODyjB8wxGLamvh49Pujfk0=;
-        b=raZRygRs7hzzyj7VQrxroBF0+K2hBZPfQGadIDHKu6eqFWlJ8YdQ/4FWaoy/UtBVj4
-         JpyGuWALEr6hCbjsPMIN+Nhv8PJIGLCeVWTZ637abt6e4yQdfL9a84N+/IgAubIVYWzq
-         Ex0rp+XilR57dx5DP0mzZ8TrWWVKLngfEn12GsEW0oXTPeRy1oKqRYrvjahP5tie/QnR
-         PoL5dwjJPLIhrwpcpkxsVuAs78Q3B2I8IcgtgLSlvqkTT0E288VUsmIJnRY/VSeDbczv
-         DXFRjxuGxl5p/MptWXLjS2TsbO625SfsIsMpy+PbMY4D5OXIbd04FQrvqQgjVyMpOw56
-         s62g==
-X-Gm-Message-State: AOAM531C08HqF9tXErSREP96xwUthGdR5XpI3DUcebycmxRhqvXEm3YC
-        FaMkiCFcT7UacKjvAVFepVUX1iJuWQ==
-X-Google-Smtp-Source: ABdhPJwJECfqDtEzlbRiaVbG9X3exdfTM0hZYMe8eM3LQl2bahV0IpaKa5NjpgAs6dfyJ1u5JrhunEnOKA==
-X-Received: by 2002:a0c:e5c1:: with SMTP id u1mr2081593qvm.140.1592312191743;
- Tue, 16 Jun 2020 05:56:31 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 14:56:17 +0200
-Message-Id: <20200616125617.237428-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH] mm, kcsan: Instrument SLAB/SLUB free with "ASSERT_EXCLUSIVE_ACCESS"
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, akpm@linux-foundation.org
-Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org
+        Tue, 16 Jun 2020 08:57:09 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0861C0613ED
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 05:57:08 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jlB96-0007Oj-Of; Tue, 16 Jun 2020 14:56:56 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jlB95-0004yK-DX; Tue, 16 Jun 2020 14:56:55 +0200
+Message-ID: <706f56a20d318b841792ca19a6fe7135cb6c61e3.camel@pengutronix.de>
+Subject: Re: [PATCH v4 3/3] ARM: dts: bcm2711: Add HDMI DVP
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>, linux-clk@vger.kernel.org
+Date:   Tue, 16 Jun 2020 14:56:55 +0200
+In-Reply-To: <20200616121641.jpoz237p43sbndg2@gilmour.lan>
+References: <cover.4c4625a8e076f3163b800b3d8986b282ee98d908.1591867332.git-series.maxime@cerno.tech>
+         <e22222ca7f41b960e9bb1a31e0dd2de95b8c0cd1.1591867332.git-series.maxime@cerno.tech>
+         <810816166d8ef554e1bb1f4a2b39ea0b8a1a3d5b.camel@suse.de>
+         <20200616121641.jpoz237p43sbndg2@gilmour.lan>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide the necessary KCSAN checks to assist with debugging racy
-use-after-frees. While KASAN is more reliable at generally catching such
-use-after-frees (due to its use of a quarantine), it can be difficult to
-debug racy use-after-frees. If a reliable reproducer exists, KCSAN can
-assist in debugging such issues.
+Hi Maxime,
 
-Note: ASSERT_EXCLUSIVE_ACCESS is a convenience wrapper if the size is
-simply sizeof(var). Instead, here we just use __kcsan_check_access()
-explicitly to pass the correct size.
+On Tue, 2020-06-16 at 14:16 +0200, Maxime Ripard wrote:
+> Hi Nicolas,
+> 
+> On Mon, Jun 15, 2020 at 06:26:19PM +0200, Nicolas Saenz Julienne wrote:
+> > On Thu, 2020-06-11 at 11:23 +0200, Maxime Ripard wrote:
+> > > Now that we have a driver for the DVP, let's add its DT node.
+> > > 
+> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > > ---
+> > 
+> > I can take this patch, but I guess the rest should go trough the clock tree.
+> > Is it OK with you?
+> 
+> We have a build dependency on the reset framework for that driver, so it
+> should rather go through the reset tree (or Philipp should make an
+> immutable branch that the clk maintainers can merge).
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- mm/slab.c | 4 ++++
- mm/slub.c | 4 ++++
- 2 files changed, 8 insertions(+)
+I've prepared an immutable branch that these patches could be based on
+and that could be merged into the clk tree:
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 9350062ffc1a..4c7013eeacd9 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -3426,6 +3426,10 @@ static __always_inline void __cache_free(struct kmem_cache *cachep, void *objp,
- 	if (kasan_slab_free(cachep, objp, _RET_IP_))
- 		return;
- 
-+	/* Use KCSAN to help debug racy use-after-free. */
-+	__kcsan_check_access(objp, cachep->object_size,
-+			     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT);
-+
- 	___cache_free(cachep, objp, caller);
- }
- 
-diff --git a/mm/slub.c b/mm/slub.c
-index b8f798b50d44..57db6ca2e0dc 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1470,6 +1470,10 @@ static __always_inline bool slab_free_hook(struct kmem_cache *s, void *x)
- 	if (!(s->flags & SLAB_DEBUG_OBJECTS))
- 		debug_check_no_obj_freed(x, s->object_size);
- 
-+	/* Use KCSAN to help debug racy use-after-free. */
-+	__kcsan_check_access(x, s->object_size,
-+			     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT);
-+
- 	/* KASAN might put x into memory quarantine, delaying its reuse */
- 	return kasan_slab_free(s, x, _RET_IP_);
- }
--- 
-2.27.0.290.gba653c62da-goog
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.pengutronix.de/git/pza/linux reset/simple
+
+for you to fetch changes up to a9701376ed0fb61a5be4bb438daf26bd9cfa24b5:
+
+  reset: simple: Add reset callback (2020-06-16 14:19:57 +0200)
+
+----------------------------------------------------------------
+Maxime Ripard (2):
+      reset: Move reset-simple header out of drivers/reset
+      reset: simple: Add reset callback
+
+ drivers/reset/reset-simple.c                    | 23 +++++++++++++++++++++--
+ drivers/reset/reset-socfpga.c                   |  3 +--
+ drivers/reset/reset-sunxi.c                     |  3 +--
+ drivers/reset/reset-uniphier-glue.c             |  3 +--
+ {drivers => include/linux}/reset/reset-simple.h |  7 +++++++
+ 5 files changed, 31 insertions(+), 8 deletions(-)
+ rename {drivers => include/linux}/reset/reset-simple.h (74%)
+
+regards
+Philipp
