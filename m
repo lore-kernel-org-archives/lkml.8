@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24EAC207C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D317207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592323393;
-	bh=QLPfxFYbCqhAoVAV8gU3WcOx1/qmLb/p/3Jog8BRv30=;
+	s=default; t=1592323395;
+	bh=j7OcEmK8XA4y3KDzPwvCTXJWkrh36DMJPbqCnvQSD6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MvFkB6xRNGgTaXm2YdMmJV98LXMBKm/A+X4L4MaQ9IjN2fljXH+IktAB3VaT5l7J1
-	 JimTJgFEupuT7FBFBzB5Yh5ft9Jozwu9pQLLR/Hxx/D+XG32BGaVD4Cv2gLlkhQkw8
-	 Sw5yBK1Jh7ttdm/Mv/0BGk3vC/htLcOAVOuzZhIE=
+	b=d12raSdCHBgXXqPcrWkz599gp3p24VbsudPqeMF4Y/srynhV+8EF9L6443xJRi9sT
+	 boovTiJwQ8fG8A+fjwp1TbUxvt5rOsBRAMd1MbXECi0AQv7FUDi0WYINlbwyzsRCQJ
+	 YxVnmJ2ImD3lYIN1x8VVu9hw5Zb8h2fu23eZ02Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732589AbgFPQDJ (ORCPT
+        id S1733202AbgFPQDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 12:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46256 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:03:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731773AbgFPPu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:50:28 -0400
+        id S1731603AbgFPPuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:50:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB0821475;
-        Tue, 16 Jun 2020 15:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1F7E208D5;
+        Tue, 16 Jun 2020 15:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322627;
-        bh=QLPfxFYbCqhAoVAV8gU3WcOx1/qmLb/p/3Jog8BRv30=;
+        s=default; t=1592322622;
+        bh=j7OcEmK8XA4y3KDzPwvCTXJWkrh36DMJPbqCnvQSD6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4GF4mY0zs8bulCGK7N0RWIwIADFM8kDFS86NvliKIndvqAxiHR5rUeN+DxrTHGCb
-         gaOndohVLjcvkWKx8q9ocFqmuVFa3VhrjXUZJbxsL9NPXcRts+tHuxDoOrhyErG/K6
-         T4Yir42Nup2Omr3kajINxbZVn3DQSHIJAI6WIb4E=
+        b=mwPZDAdG/SKFzbXuO9yW/EIwfkbmhlVaPbLwA2rAM2nEcjGtkTI+Ecf5KfB8mO/dy
+         A2RfAspG2I4eBfyX8a9RJ/zEFrV6gydZjkUC5tBJyFfyZuSQv0YtXvehqOU71n8bM4
+         rhzwwC00V8Jpj0PiOU35OwQ6Bl845RfHev3K6u50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rahul Kundu <rahul.kundu@chelsio.com>,
-        Maurizio Lombardi <mlombard@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 042/161] scsi: target: remove boilerplate code
-Date:   Tue, 16 Jun 2020 17:33:52 +0200
-Message-Id: <20200616153108.377377918@linuxfoundation.org>
+Subject: [PATCH 5.6 040/161] PCI/PM: Adjust pcie_wait_for_link_delay() for caller delay
+Date:   Tue, 16 Jun 2020 17:33:50 +0200
+Message-Id: <20200616153108.286969525@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.402291280@linuxfoundation.org>
 References: <20200616153106.402291280@linuxfoundation.org>
@@ -61,98 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio Lombardi <mlombard@redhat.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit e49a7d994379278d3353d7ffc7994672752fb0ad ]
+[ Upstream commit f044baaff1eb7ae5aa7a36f1b7ad5bd8eeb672c4 ]
 
-iscsit_free_session() is equivalent to iscsit_stop_session() followed by a
-call to iscsit_close_session().
+The caller of pcie_wait_for_link_delay() specifies the time to wait after
+the link becomes active.  When the downstream port doesn't support link
+active reporting, obviously we can't tell when the link becomes active, so
+we waited the worst-case time (1000 ms) plus 100 ms, ignoring the delay
+from the caller.
 
-Link: https://lore.kernel.org/r/20200313170656.9716-2-mlombard@redhat.com
-Tested-by: Rahul Kundu <rahul.kundu@chelsio.com>
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Instead, wait for 1000 ms + the delay from the caller.
+
+Fixes: 4827d63891b6 ("PCI/PM: Add pcie_wait_for_link_delay()")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target.c | 46 ++---------------------------
- drivers/target/iscsi/iscsi_target.h |  1 -
- 2 files changed, 2 insertions(+), 45 deletions(-)
+ drivers/pci/pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index 9fc7e374a29b..1c7514543571 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -4566,49 +4566,6 @@ void iscsit_fail_session(struct iscsi_session *sess)
- 	sess->session_state = TARG_SESS_STATE_FAILED;
- }
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d828ca835a98..fe9fbb74ce72 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4616,10 +4616,10 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
  
--int iscsit_free_session(struct iscsi_session *sess)
--{
--	u16 conn_count = atomic_read(&sess->nconn);
--	struct iscsi_conn *conn, *conn_tmp = NULL;
--	int is_last;
--
--	spin_lock_bh(&sess->conn_lock);
--	atomic_set(&sess->sleep_on_sess_wait_comp, 1);
--
--	list_for_each_entry_safe(conn, conn_tmp, &sess->sess_conn_list,
--			conn_list) {
--		if (conn_count == 0)
--			break;
--
--		if (list_is_last(&conn->conn_list, &sess->sess_conn_list)) {
--			is_last = 1;
--		} else {
--			iscsit_inc_conn_usage_count(conn_tmp);
--			is_last = 0;
--		}
--		iscsit_inc_conn_usage_count(conn);
--
--		spin_unlock_bh(&sess->conn_lock);
--		iscsit_cause_connection_reinstatement(conn, 1);
--		spin_lock_bh(&sess->conn_lock);
--
--		iscsit_dec_conn_usage_count(conn);
--		if (is_last == 0)
--			iscsit_dec_conn_usage_count(conn_tmp);
--
--		conn_count--;
--	}
--
--	if (atomic_read(&sess->nconn)) {
--		spin_unlock_bh(&sess->conn_lock);
--		wait_for_completion(&sess->session_wait_comp);
--	} else
--		spin_unlock_bh(&sess->conn_lock);
--
--	iscsit_close_session(sess);
--	return 0;
--}
--
- void iscsit_stop_session(
- 	struct iscsi_session *sess,
- 	int session_sleep,
-@@ -4693,7 +4650,8 @@ int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *tpg, int force)
- 	list_for_each_entry_safe(se_sess, se_sess_tmp, &free_list, sess_list) {
- 		sess = (struct iscsi_session *)se_sess->fabric_sess_ptr;
- 
--		iscsit_free_session(sess);
-+		iscsit_stop_session(sess, 1, 1);
-+		iscsit_close_session(sess);
- 		session_count++;
+ 	/*
+ 	 * Some controllers might not implement link active reporting. In this
+-	 * case, we wait for 1000 + 100 ms.
++	 * case, we wait for 1000 ms + any delay requested by the caller.
+ 	 */
+ 	if (!pdev->link_active_reporting) {
+-		msleep(1100);
++		msleep(timeout + delay);
+ 		return true;
  	}
- 
-diff --git a/drivers/target/iscsi/iscsi_target.h b/drivers/target/iscsi/iscsi_target.h
-index c95f56a3ce31..7409ce2a6607 100644
---- a/drivers/target/iscsi/iscsi_target.h
-+++ b/drivers/target/iscsi/iscsi_target.h
-@@ -43,7 +43,6 @@ extern int iscsi_target_rx_thread(void *);
- extern int iscsit_close_connection(struct iscsi_conn *);
- extern int iscsit_close_session(struct iscsi_session *);
- extern void iscsit_fail_session(struct iscsi_session *);
--extern int iscsit_free_session(struct iscsi_session *);
- extern void iscsit_stop_session(struct iscsi_session *, int, int);
- extern int iscsit_release_sessions_for_tpg(struct iscsi_portal_group *, int);
  
 -- 
 2.25.1
