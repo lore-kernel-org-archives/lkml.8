@@ -2,104 +2,113 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4976FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A763FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2602520707
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:19:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1rU4R3T"
+	by mail.kernel.org (Postfix) with ESMTP id 7D1962074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgFPKTb (ORCPT
+        id S1728235AbgFPKUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgFPKT1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:19:27 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B734C08C5C3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 03:19:27 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id z2so596770ilq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 03:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+kqbimwgEbOIJYJLWKEaCLp58PXChrceFH9NU0EWRhU=;
-        b=M1rU4R3TTMMpixDbLk8vBQdiLBBdkyl/aqI2TNZz5CijvpcUThXzf7nyPto9iuemPX
-         DSXchy0Wmvu+MsrVPfMrqvhs2B4wzYuS50D5Bn228HIHQ6J653ZiciJasPxA6BQVxY8q
-         +2S9WcAlCxrPm3bu2WnfIG4rs84SEx3R228KD9aR3gAohvJdn9QaySDUe36PzFp3dyAU
-         UTv9z5+efyF21/cXF+A8hrr+ONGO+DC9QuGJoNKq35h39I+sUT2M3wbIFy78L9oG+EpZ
-         7+KpSneFk/iJleviiW5zpPrsXEbidakr3uD6luITC1HyWTVbKArKedZ+jZYsPF+kWRLt
-         IszA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+kqbimwgEbOIJYJLWKEaCLp58PXChrceFH9NU0EWRhU=;
-        b=Zu7V9uv/JUboqVeP7s1ltZKDKb4XvrgmESrcCtIHSJM7kRH7om4VrdrBOi4as35fzj
-         5lJms8lM9JRdYgRBWWFvYswVORT+hp9WuaOlvwO/JDY/YbS8yedH4K1/89aM2t4NSnat
-         JU62BcT96LTo6mM/3gpLdY3iPIO+ap9V/Ysqw69GZj2163vG+SR1FFiHh+Mb53rFLB8e
-         D/BfX6Zg/hblrUDprCEzF5c8xKDtHx1laLwqyOZbhlHkcVfH2cudO+CTd44Vyp+oWPtg
-         msqSl9h6rzoB2pjGSO8NZOeVbelIgkNuNCrfTbkFYOnCgMrNEr40l8A508UYeocdLmPU
-         Jp6w==
-X-Gm-Message-State: AOAM530vsMhFi2xbsKeTqbSur+X7muVX0tG7ImG8QjM+3If+N6sC/EMX
-        h9HK0RYtmBPDLbnXdeT/HeyAgFF1laVvrZN8NMqMrg==
-X-Google-Smtp-Source: ABdhPJzrGDFJysUCJVNDR5nvOXo7oba4sfOSKBTxtSj3Ckx5zUmbQFAyRZXIJSwxtsNcLB0I7RWmlLHIfQrJfeQ67eg=
-X-Received: by 2002:a92:a112:: with SMTP id v18mr2185623ili.278.1592302766529;
- Tue, 16 Jun 2020 03:19:26 -0700 (PDT)
+        Tue, 16 Jun 2020 06:20:31 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:46915 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726052AbgFPKUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 06:20:31 -0400
+Received: from [192.168.0.6] (ip5f5af4df.dynamic.kabel-deutschland.de [95.90.244.223])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id DD048206442E6;
+        Tue, 16 Jun 2020 12:20:27 +0200 (CEST)
+Subject: Re: [Intel-wired-lan] [PATCH] e1000e: continue to init phy even when
+ failed to disable ULP
+To:     Aaron Ma <aaron.ma@canonical.com>, jeffrey.t.kirsher@intel.com,
+        davem@davemloft.net, kuba@kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vitaly.lifshits@intel.com,
+        kai.heng.feng@canonical.com, sasha.neftin@intel.com
+References: <20200616100512.22512-1-aaron.ma@canonical.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <74391e62-7226-b0f8-d129-768b88f13160@molgen.mpg.de>
+Date:   Tue, 16 Jun 2020 12:20:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200616083435.223038-1-glider@google.com> <20200616100309.GA2614426@kroah.com>
-In-Reply-To: <20200616100309.GA2614426@kroah.com>
-From:   =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>
-Date:   Tue, 16 Jun 2020 03:19:15 -0700
-Message-ID: <CANP3RGckq6_kMLzS-Yp5ottH4fm9Z3BQo3dbY1fMiQKiRMPbPw@mail.gmail.com>
-Subject: Re: [PATCH v2] [RFC] security: allow using Clang's zero
- initialization for stack variables
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Alexander Potapenko <glider@google.com>,
-        yamada.masahiro@socionext.com, Kees Cook <keescook@chromium.org>,
-        jmorris@namei.org, Nick Desaulniers <ndesaulniers@google.com>,
-        linux-security-module@vger.kernel.org,
-        Kernel hackers <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200616100512.22512-1-aaron.ma@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Nit, your From: line of your email does not match your signed-off-by:
-> line :(
+Dear Aaron,
 
-This is *probably* a matter of configuring git:
-git config --global user.name "Alexander Potapenko"
-git config --global user.email "glider@google.com"
-git config --global sendemail.from "Alexander Potapenko <glider@google.com>"
 
-> Gotta love the name...
+Thank you for your patch.
 
-I've just read through a long discussion thread on clang dev (got
-there from this cl's llvm link)...
-There's a lot of interesting info in there.  But ultimately it seems
-to point out tons of projects already use this or want to use it.
-And there's security and stability benefits for production builds,
-while pattern mode can be used for debug builds.
+(Rant: Some more fallout from the other patch, which nobody reverted.)
 
-> Anyway, if this is enabled, and clang changes the flag or drops it, does
-> the build suddenly break?
+Am 16.06.20 um 12:05 schrieb Aaron Ma:
+> After commit "e1000e: disable s0ix entry and exit flows for ME systems",
+> some ThinkPads always failed to disable ulp by ME.
 
-(my understanding of the patch is that the option does compiler
-testing before it becomes available...
-in at least some of our build systems built around kbuild the option
-going away would then cause a build error due to its lack in the final
-.config)
+Please add the (short) commit hash from the master branch.
 
-> And does gcc have something like this as well, or does that have to come
-> in a compiler plugin?
+s/ulp/ULP/
+
+Please list one ThinkPad as example.
+
+> commit "e1000e: Warn if disabling ULP failed" break out of init phy:
+
+1.  Please add the closing quote ".
+2.  Please add the commit hash.
+
+> error log:
+> [   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
+> [   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast Packet
+> [   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
+> 
+> When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
+> If continue to init phy like before, it can work as before.
+> iperf test result good too.
+> 
+> Chnage e_warn to e_dbg, in case it confuses.
+
+s/Chnage/Change/
+
+Please leave the level warning, and improve the warning message instead, 
+so a user knows what is going on.
+
+Could you please add a `Fixes:` tag and the URL to the bug report?
+
+> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+> ---
+>   drivers/net/ethernet/intel/e1000e/ich8lan.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> index f999cca37a8a..63405819eb83 100644
+> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> @@ -302,8 +302,7 @@ static s32 e1000_init_phy_workarounds_pchlan(struct e1000_hw *hw)
+>   	hw->dev_spec.ich8lan.ulp_state = e1000_ulp_state_unknown;
+>   	ret_val = e1000_disable_ulp_lpt_lp(hw, true);
+>   	if (ret_val) {
+> -		e_warn("Failed to disable ULP\n");
+> -		goto out;
+> +		e_dbg("Failed to disable ULP\n");
+>   	}
+>   
+>   	ret_val = hw->phy.ops.acquire(hw);
+> 
+
+Kind regards,
+
+Paul
