@@ -2,177 +2,281 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC2C620767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F23D206F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:39:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CozLMfRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgFPIjC (ORCPT
+        id S1728013AbgFPIjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:39:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45213 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgFPIjB (ORCPT
+        Tue, 16 Jun 2020 04:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgFPIjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:39:01 -0400
-Received: from static-50-53-52-215.bvtn.or.frontiernet.net ([50.53.52.215] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1jl77R-0005Ng-TC; Tue, 16 Jun 2020 08:38:58 +0000
-Subject: Re: [PATCH 4/5] LSM: Define SELinux function to measure security
- state
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Stephen Smalley <stephen.smalley@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200613024130.3356-1-nramas@linux.microsoft.com>
- <20200613024130.3356-5-nramas@linux.microsoft.com>
- <CAEjxPJ49UaZc9pc-+VN8Cx8rcdrjD6NMoLOO_zqENezobmfwVA@mail.gmail.com>
- <a9a20aa5-963e-5f49-9391-0673fdda378e@linux.microsoft.com>
- <2df1bc4f-675d-7868-de5b-1256346f982e@schaufler-ca.com>
- <1592243068.11061.155.camel@linux.ibm.com>
-From:   John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
- LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgptUUlOQkU1bXJQb0JFQURB
- azE5UHNnVmdCS2tJbW1SMmlzUFE2bzdLSmhUVEtqSmR3VmJrV1NuTm4rbzZVcDVrCm5LUDFm
- NDlFQlFsY2VXZzF5cC9Od2JSOGFkK2VTRU8vdW1hL0srUHFXdkJwdEtDOVNXRDk3Rkc0dUI0
- L2Nhb20KTEVVOTdzTFFNdG52R1dkeHJ4VlJHTTRhbnpXWU1neno1VFptSWlWVFo0M091NVZw
- YVMxVnoxWlN4UDNoL3hLTgpaci9UY1c1V1FhaTh1M1BXVm5ia2poU1pQSHYxQmdoTjY5cXhF
- UG9tckpCbTFnbXR4M1ppVm1GWGx1d1RtVGdKCk9rcEZvbDduYkowaWxuWUhyQTdTWDNDdFIx
- dXBlVXBNYS9XSWFuVk85NldkVGpISElhNDNmYmhtUXViZTR0eFMKM0ZjUUxPSlZxUXN4NmxF
- OUI3cUFwcG05aFExMHFQV3dkZlB5LyswVzZBV3ROdTVBU2lHVkNJbld6bDJIQnFZZAovWmxs
- OTN6VXErTklvQ244c0RBTTlpSCt3dGFHRGNKeXdJR0luK2VkS050SzcyQU1nQ2hUZy9qMVpv
- V0g2WmVXClBqdVVmdWJWelp0bzFGTW9HSi9TRjRNbWRRRzFpUU50ZjRzRlpiRWdYdXk5Y0dp
- MmJvbUYwenZ5QkpTQU5weGwKS05CRFlLek42S3owOUhVQWtqbEZNTmdvbUwvY2pxZ0FCdEF4
- NTlMK2RWSVpmYUYyODFwSWNVWnp3dmg1K0pvRwplT1c1dUJTTWJFN0wzOG5zem9veWtJSjVY
- ckFjaGtKeE5mejdrK0ZuUWVLRWtOekVkMkxXYzNRRjRCUVpZUlQ2ClBISGdhM1JneWtXNSsx
- d1RNcUpJTGRtdGFQYlhyRjNGdm5WMExSUGN2NHhLeDdCM2ZHbTd5Z2Rvb3dBUkFRQUIKdEIx
- S2IyaHVJRXB2YUdGdWMyVnVJRHhxYjJodVFHcHFiWGd1Ym1WMFBva0NPZ1FUQVFvQUpBSWJB
- d1VMQ1FnSApBd1VWQ2drSUN3VVdBZ01CQUFJZUFRSVhnQVVDVG8wWVZ3SVpBUUFLQ1JBRkx6
- WndHTlhEMkx4SkQvOVRKWkNwCndsbmNUZ1llcmFFTWVEZmtXdjhjMUlzTTFqMEFtRTRWdEwr
- ZkU3ODBaVlA5Z2tqZ2tkWVN4dDdlY0VUUFRLTWEKWlNpc3JsMVJ3cVUwb29nWGRYUVNweHJH
- SDAxaWN1LzJuMGpjWVNxWUtnZ1B4eTc4QkdzMkxacTRYUGZKVFptSApaR25YR3EvZURyL21T
- bmowYWF2QkptTVo2amJpUHo2eUh0QllQWjlmZG84YnRjendQNDFZZVdvSXUyNi84SUk2CmYw
- WG0zVkM1b0FhOHY3UmQrUldaYThUTXdsaHpIRXh4ZWwzanRJN0l6ek9zbm1FOS84RG0wQVJE
- NWlUTENYd1IKMWN3SS9KOUJGL1MxWHY4UE4xaHVUM0l0Q05kYXRncDh6cW9Ka2dQVmptdnlM
- NjRRM2ZFa1liZkhPV3NhYmE5LwprQVZ0Qk56OVJURmg3SUhEZkVDVmFUb3VqQmQ3QnRQcXIr
- cUlqV0ZhZEpEM0k1ZUxDVkp2VnJyb2xyQ0FUbEZ0Ck4zWWtRczZKbjFBaUlWSVUzYkhSOEdq
- ZXZnejVMbDZTQ0dIZ1Jya3lScG5TWWFVL3VMZ24zN042QVl4aS9RQUwKK2J5M0N5RUZManpX
- QUV2eVE4YnEzSXVjbjdKRWJoUy9KLy9kVXFMb2VVZjh0c0dpMDB6bXJJVFpZZUZZQVJoUQpN
- dHNmaXpJclZEdHoxaVBmL1pNcDVnUkJuaXlqcFhuMTMxY20zTTNndjZIclFzQUdubjhBSnJ1
- OEdEaTVYSllJCmNvLzEreC9xRWlOMm5DbGFBT3BiaHpOMmVVdlBEWTVXMHEzYkEvWnAybWZH
- NTJ2YlJJK3RRMEJyMUhkL3ZzbnQKVUhPOTAzbU1aZXAyTnpOM0JaNXFFdlB2RzRyVzVacTJE
- cHliV2JRclNtOW9iaUJLYjJoaGJuTmxiaUE4YW05bwpiaTVxYjJoaGJuTmxia0JqWVc1dmJt
- bGpZV3d1WTI5dFBva0NOd1FUQVFvQUlRVUNUbzBYV2dJYkF3VUxDUWdICkF3VVZDZ2tJQ3dV
- V0FnTUJBQUllQVFJWGdBQUtDUkFGTHpad0dOWEQySXRNRC85anliYzg3ZE00dUFIazZ5Tk0K
- TjBZL0JGbW10VFdWc09CaHFPbm9iNGkzOEJyRE8yQzFoUUNQQ1FlNExMczEvNHB0ZW92UXQ4
- QjJGeXJQVmp3Zwo3alpUSE5LNzRyNmxDQ1Z4eDN5dTFCN1U5UG80VlRrY3NsVmIxL3FtV3V4
- OFhXY040eXZrVHFsTCtHeHB5Sm45CjlaWmZmWEpjNk9oNlRtT2ZiS0d2TXV1djVhclNJQTNK
- SEZMZjlhTHZadEExaXNKVXI3cFM5YXBnOXVUVUdVcDcKd2ZWMFdUNlQzZUczbXRVVTJ1cDVK
- VjQ4NTBMMDVqSFM2dVdpZS9ZK3lmSk9iaXlyeE4vNlpxVzVHb25oTEJxLwptc3pjVjV2QlQz
- QkRWZTNSdkY2WGRNOU9oUG4xK1k4MXg1NCt2UTExM044aUx3RjdHR2ExNFp5SVZBTlpEMEkw
- CkhqUnZhMmsvUnFJUlR6S3l1UEg1cGtsY0tIVlBFRk1tT3pNVCtGT294Tmp2Uys3K3dHMktN
- RFlFbUhQcjFQSkIKWlNaZUh6SzE5dGZhbFBNcHBGeGkrc3lZTGFnTjBtQjdKSFF3WTdjclV1
- T0RoeWNxNjBZVnoxdGFFeWd1M1l2MgoyL0kxRUNHSHZLSEc2d2M5MG80M0MvZWxIRUNYbkVo
- N3RLcGxEY3BJQytPQ21NeEtIaFI0NitYY1p2Z3c0RGdiCjdjYTgzZVFSM0NHODlMdlFwVzJM
- TEtFRUJEajdoWmhrTGJra1BSWm0zdzhKWTQ0YXc4VnRneFdkblNFTUNMeEwKSU9OaDZ1Wjcv
- L0RZVnRjSWFNSllrZWJhWnRHZENwMElnVVpiMjQvVmR2WkNZYk82MkhrLzNWbzFuWHdIVUVz
- Mwo2RC92MWJUMFJaRmk2OUxnc0NjT2N4NGdZTGtDRFFST1pxejZBUkFBb3F3NmtrQmhXeU0x
- ZnZnYW1BVmplWjZuCktFZm5SV2JrQzk0TDFFc0pMdXAzV2IyWDBBQk5PSFNrYlNENHBBdUMy
- dEtGL0VHQnQ1Q1A3UWRWS1JHY1F6QWQKNmIyYzFJZHk5Ukx3Nnc0Z2krbm4vZDFQbTFra1lo
- a1NpNXpXYUlnMG01UlFVaytFbDh6a2Y1dGNFLzFOMFo1TwpLMkpoandGdTViWDBhMGw0Y0ZH
- V1ZRRWNpVk1ES1J0eE1qRXRrM1N4RmFsbTZaZFEycHAyODIyY2xucTR6WjltCld1MWQyd2F4
- aXorYjVJYTR3ZURZYTduNDFVUmNCRVViSkFnbmljSmtKdENUd3lJeElXMktuVnlPcmp2a1F6
- SUIKdmFQMEZkUDJ2dlpvUE1kbENJek9sSWtQTGd4RTBJV3VlVFhlQkpoTnMwMXBiOGJMcW1U
- SU1sdTRMdkJFTEEvdgplaWFqajVzOHk1NDJIL2FIc2ZCZjRNUVVoSHhPL0JaVjdoMDZLU1Vm
- SWFZN09nQWdLdUdOQjNVaWFJVVM1K2E5CmduRU9RTER4S1J5L2E3UTF2OVMrTnZ4KzdqOGlI
- M2prUUpoeFQ2WkJoWkdSeDBna0gzVCtGMG5ORG01TmFKVXMKYXN3Z0pycUZaa1VHZDJNcm0x
- cW5Ld1hpQXQ4U0ljRU5kcTMzUjBLS0tSQzgwWGd3ajhKbjMwdlhMU0crTk8xRwpIMFVNY0F4
- TXd5L3B2azZMVTVKR2paUjczSjVVTFZoSDRNTGJEZ2dEM21QYWlHOCtmb3RUckpVUHFxaGc5
- aHlVCkVQcFlHN3NxdDc0WG43OStDRVpjakxIenlsNnZBRkUyVzBreGxMdFF0VVpVSE8zNmFm
- RnY4cUdwTzNacVB2akIKVXVhdFhGNnR2VVFDd2YzSDZYTUFFUUVBQVlrQ0h3UVlBUW9BQ1FV
- Q1RtYXMrZ0liREFBS0NSQUZMelp3R05YRAoyRC9YRC8wZGRNLzRhaTFiK1RsMWp6bkthalgz
- a0crTWVFWWVJNGY0MHZjbzNyT0xyblJHRk9jYnl5ZlZGNjlNCktlcGllNE93b0kxamNUVTBB
- RGVjbmJXbkROSHByMFNjenhCTXJvM2Juckxoc212anVuVFlJdnNzQlp0QjRhVkoKanVMSUxQ
- VWxuaEZxYTdmYlZxMFpRamJpVi9ydDJqQkVOZG05cGJKWjZHam5wWUljQWJQQ0NhL2ZmTDQv
- U1FSUwpZSFhvaEdpaVM0eTVqQlRtSzVsdGZld0xPdzAyZmtleEgrSUpGcnJHQlhEU2c2bjJT
- Z3hubisrTkYzNGZYY205CnBpYXczbUtzSUNtKzBoZE5oNGFmR1o2SVdWOFBHMnRlb29WRHA0
- ZFlpaCsreFgvWFM4ekJDYzFPOXc0bnpsUDIKZ0t6bHFTV2JoaVdwaWZSSkJGYTRXdEFlSlRk
- WFlkMzdqL0JJNFJXV2hueXc3YUFQTkdqMzN5dEdITlVmNlJvMgovanRqNHRGMXkvUUZYcWpK
- Ry93R2pwZHRSZmJ0VWpxTEhJc3ZmUE5OSnEvOTU4cDc0bmRBQ2lkbFdTSHpqK09wCjI2S3Bi
- Rm5td05PMHBzaVVzbmh2SEZ3UE8vdkFibDNSc1I1KzBSbytodnMyY0VtUXV2OXIvYkRsQ2Zw
- enAydDMKY0srcmh4VXFpc094OERaZnoxQm5rYW9DUkZidnZ2ays3TC9mb21QbnRHUGtxSmNp
- WUU4VEdIa1p3MWhPa3UrNApPb00yR0I1bkVEbGorMlRGL2pMUStFaXBYOVBrUEpZdnhmUmxD
- NmRLOFBLS2ZYOUtkZm1BSWNnSGZuVjFqU24rCjh5SDJkakJQdEtpcVcwSjY5YUlzeXg3aVYv
- MDNwYVBDakpoN1hxOXZBenlkTjVVL1VBPT0KPTZQL2IKLS0tLS1FTkQgUEdQIFBVQkxJQyBL
- RVkgQkxPQ0stLS0tLQo=
-Organization: Canonical
-Message-ID: <2359b728-656e-1599-5931-7d7e97625de1@canonical.com>
-Date:   Tue, 16 Jun 2020 01:38:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 16 Jun 2020 04:39:23 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A54BC05BD43;
+        Tue, 16 Jun 2020 01:39:23 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r18so8896127pgk.11;
+        Tue, 16 Jun 2020 01:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=eNyPM9X2/i9pWLHov9MJPoK/TIQ2U6l7XteVn9AsQR0=;
+        b=CozLMfRAuUofkWnz2obZsfwA0YsS5mciwWcItUWz1As5SnSe/McX/1OF5r6qbQrVHW
+         z4I5FcEC242ISDEVDSMIjR9fxYMd5USERJLA1LxPyORkVldPKXDqD14zOcnUD41mGSDY
+         Kl+oS6F3uYmvJO9KYGbIXbJa5OM4Wu41m3HQR/LcpquWYNnZ+zysM+u+8bZzM+FUSCe9
+         iPRjnq6elwTajyHkNHk0m8ZDvTmS/8N1HXp3h4HfOBFXYd0Wj1S3a4gIHT+1zqGp9VmE
+         LQ4zjxsTCcLAyHEAVcJmW3+ltNCQAAuOJleeRmtvdeJfOFKwNZB0QsKTtn/sT0Rjs/Ce
+         c+QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=eNyPM9X2/i9pWLHov9MJPoK/TIQ2U6l7XteVn9AsQR0=;
+        b=jV6Eb79NRZV0In3tZB0ilFUGxrNnojjRjjksy4twVOF3KmIO2932bxjEhEtXWXZj/Q
+         VbIVt2vXYn7yusaEXpO56MN7ujfDph2yyu840zjzHMfZHtrAnJ9QyumDELeQOiowgT0U
+         Cpm1GkhthZJIktuSagzWDKWcWp+Fe/BswADY9EAHaNHkhkpwFqzogCfo74kUkWGNGmJg
+         0R40Rouw7MPwdRcyhxcrRW8KgvQpq0TIowadRe9jv80P/sWVuRVF0n5sUHVSNkLXb/qN
+         WMd8QtSIR4sLlG01u2RcAPgBHY4NCOXHKxxwDIUqKj+IL7jJQM8Toy+uFPt51Rq8YADJ
+         VA9Q==
+X-Gm-Message-State: AOAM532VRGO+nNyCQ7uKhXu+Fd2/OVUT8/HYaI/Tk3n5UuKHWUyPksKZ
+        4an0Jt9j57CkuwDJEKsZ+jQ=
+X-Google-Smtp-Source: ABdhPJx+YYHVLHUO3qih6yEbX9POyfs4H+SwLRy8l88m1TOoqB50d1Hn2+wrCHk6qZ/1Y4okvG1BIQ==
+X-Received: by 2002:a63:dd42:: with SMTP id g2mr1328179pgj.442.1592296762431;
+        Tue, 16 Jun 2020 01:39:22 -0700 (PDT)
+Received: from VM_111_229_centos ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id j13sm1844702pje.25.2020.06.16.01.39.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 01:39:21 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 16:39:13 +0800
+From:   YangYuxi <yx.atom1@gmail.com>
+To:     wensong@linux-vs.org, horms@verge.net.au, ja@ssi.bg,
+        pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org, yx.atom1@gmail.com
+Subject: [PATCH] ipvs: avoid drop first packet by reusing conntrack
+Message-ID: <20200616083913.GA24565@VM_111_229_centos>
 MIME-Version: 1.0
-In-Reply-To: <1592243068.11061.155.camel@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/20 10:44 AM, Mimi Zohar wrote:
-> (Cc'ing John)
-> 
-> On Mon, 2020-06-15 at 10:33 -0700, Casey Schaufler wrote:
->> On 6/15/2020 9:45 AM, Lakshmi Ramasubramanian wrote:
->>> On 6/15/20 4:57 AM, Stephen Smalley wrote:
->>>
->>> Hi Stephen,
->>>
->>> Thanks for reviewing the patches.
->>>
->>>>> +void security_state_change(char *lsm_name, void *state, int state_len)
->>>>> +{
->>>>> +       ima_lsm_state(lsm_name, state, state_len);
->>>>> +}
->>>>> +
->>>>
->>>> What's the benefit of this trivial function instead of just calling
->>>> ima_lsm_state() directly?
->>>
->>> One of the feedback Casey Schaufler had given earlier was that calling an IMA function directly from SELinux (or, any of the Security Modules) would be a layering violation.
->>
->> Hiding the ima_lsm_state() call doesn't address the layering.
->> The point is that SELinux code being called from IMA (or the
->> other way around) breaks the subsystem isolation. Unfortunately,
->> it isn't obvious to me how you would go about what you're doing
->> without integrating the subsystems.
-> 
-> Casey, I'm not sure why you think there is a layering issue here.
->  There were multiple iterations of IMA before it was upstreamed.  One
-> iteration had separate integrity hooks(LIM).  Only when the IMA calls
-> and the security hooks are co-located, are they combined, as requested
-> by Linus.
-> 
-I don't see the layering violation here either, Casey has already
-responded and I don't have anything to add
+Since 'commit f719e3754ee2 ("ipvs: drop first packet to
+redirect conntrack")', when a new TCP connection meet
+the conditions that need reschedule, the first syn packet
+is dropped, this cause one second latency for the new
+connection, more discussion about this problem can easy
+search from google, such as:
 
-> There was some AppArmour discussion about calling IMA directly, but I
-> haven't heard about it in a while or seen the patch.
-> 
-its lower priority than other work. I think calling IMA directly has use
-cases but must be done very carefully, and well reviewed. I have would
-have more concerns with IMA calling directly into the various LSMs.
+1)One second connection delay in masque
+https://marc.info/?t=151683118100004&r=1&w=2
+
+2)IPVS low throughput #70747
+https://github.com/kubernetes/kubernetes/issues/70747
+
+3)Apache Bench can fill up ipvs service proxy in seconds #544
+https://github.com/cloudnativelabs/kube-router/issues/544
+
+4)Additional 1s latency in `host -> service IP -> pod`
+https://github.com/kubernetes/kubernetes/issues/90854
+
+5)kube-proxy ipvs conn_reuse_mode setting causes errors
+with high load from single client
+https://github.com/kubernetes/kubernetes/issues/81775
+
+The root cause is when the old session is expired, the
+conntrack related to the session is dropped by
+ip_vs_conn_drop_conntrack. The code is as follows:
+```
+static void ip_vs_conn_expire(struct timer_list *t)
+{
+...
+
+     if ((cp->flags & IP_VS_CONN_F_NFCT) &&
+         !(cp->flags & IP_VS_CONN_F_ONE_PACKET)) {
+             /* Do not access conntracks during subsys cleanup
+              * because nf_conntrack_find_get can not be used after
+              * conntrack cleanup for the net.
+              */
+             smp_rmb();
+             if (ipvs->enable)
+                     ip_vs_conn_drop_conntrack(cp);
+     }
+...
+}
+```
+As shown in the code, only when condition (cp->flags & IP_VS_CONN_F_NFCT)
+is true, the function ip_vs_conn_drop_conntrack will be called.
+
+So we optimize this by following steps (Administrators
+can choose the following optimization by setting
+net.ipv4.vs.conn_reuse_old_conntrack=1):
+1) erase the IP_VS_CONN_F_NFCT flag (it is safely because
+   no packets will use the old session)
+2) call ip_vs_conn_expire_now to release the old session,
+   then the related conntrack will not be dropped
+3) then ipvs unnecessary to drop the first syn packet, it
+   just continue to pass the syn packet to the next process,
+   create a new ipvs session, and the new session will related
+   to the old conntrack(which is reopened by conntrack as a new
+   one), the next whole things is just as normal as that the old
+   session isn't used to exist.
+
+The above processing has no problems except for passive FTP,
+for passive FTP situation, ipvs can judging from
+condition (atomic_read(&cp->n_control)) and condition (cp->control).
+So, for other conditions(means not FTP), ipvs should give users
+the right to choose，they can choose a high performance one processing
+logical by setting net.ipv4.vs.conn_reuse_old_conntrack=1. It is necessary
+because most business scenarios (such as kubernetes) are very sensitive
+to TCP short connection latency.
+
+This patch has been verified on our thousands of kubernets
+node servers on Tencent Inc.
+
+Signed-off-by: YangYuxi <yx.atom1@gmail.com>
+---
+ Documentation/networking/ipvs-sysctl.rst | 23 +++++++++++++++++++++++
+ include/net/ip_vs.h                      | 11 +++++++++++
+ net/netfilter/ipvs/ip_vs_core.c          | 11 +++++++++--
+ net/netfilter/ipvs/ip_vs_ctl.c           |  2 ++
+ 4 files changed, 45 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/networking/ipvs-sysctl.rst b/Documentation/networking/ipvs-sysctl.rst
+index be36c4600e8f..1c8eac824d2b 100644
+--- a/Documentation/networking/ipvs-sysctl.rst
++++ b/Documentation/networking/ipvs-sysctl.rst
+@@ -50,6 +50,29 @@ conn_reuse_mode - INTEGER
+ 	balancer in Direct Routing mode. This bit helps on adding new
+ 	real servers to a very busy cluster.
+ 
++conn_reuse_old_conntrack - BOOLEAN
++	- 0 - disabled
++	- not 0 - enabled (default)
++
++	If set, when a new TCP syn packet hit an old ipvs connection
++	table and need reschedule to a new dest: if
++		1) the packet use conntrack
++		2) the old ipvs connection table is not a master control
++		   connection (E.g the command connection of passived FTP)
++		3) the old ipvs connection table been not controlled by any
++		   connections (E.g the data connection of passived FTP)
++	ipvs Will not release the old conntrack, just let the conntrack
++	reopen the old session as it is a new one. This is an optimization
++	option selectable by the system administrator.
++
++	If not set, when a new TCP syn packet hit an old ipvs connection
++	table and need reschedule to a new dest: if
++		1) the packet use conntrack
++	ipvs just drop this syn packet, expire the old connection by timer.
++	This will cause the client tcp syn to retransmit.
++
++	Only has effect when conn_reuse_mode not 0.
++
+ conntrack - BOOLEAN
+ 	- 0 - disabled (default)
+ 	- not 0 - enabled
+diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
+index 83be2d93b407..052fa87d2a44 100644
+--- a/include/net/ip_vs.h
++++ b/include/net/ip_vs.h
+@@ -928,6 +928,7 @@ struct netns_ipvs {
+ 	int			sysctl_pmtu_disc;
+ 	int			sysctl_backup_only;
+ 	int			sysctl_conn_reuse_mode;
++	int			sysctl_conn_reuse_old_conntrack;
+ 	int			sysctl_schedule_icmp;
+ 	int			sysctl_ignore_tunneled;
+ 
+@@ -1049,6 +1050,11 @@ static inline int sysctl_conn_reuse_mode(struct netns_ipvs *ipvs)
+ 	return ipvs->sysctl_conn_reuse_mode;
+ }
+ 
++static inline int sysctl_conn_reuse_old_conntrack(struct netns_ipvs *ipvs)
++{
++	return ipvs->sysctl_conn_reuse_old_conntrack;
++}
++
+ static inline int sysctl_schedule_icmp(struct netns_ipvs *ipvs)
+ {
+ 	return ipvs->sysctl_schedule_icmp;
+@@ -1136,6 +1142,11 @@ static inline int sysctl_conn_reuse_mode(struct netns_ipvs *ipvs)
+ 	return 1;
+ }
+ 
++static inline int sysctl_conn_reuse_old_conntrack(struct netns_ipvs *ipvs)
++{
++	return 1;
++}
++
+ static inline int sysctl_schedule_icmp(struct netns_ipvs *ipvs)
+ {
+ 	return 0;
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index aa6a603a2425..06d378394619 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -2066,7 +2066,7 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 
+ 	conn_reuse_mode = sysctl_conn_reuse_mode(ipvs);
+ 	if (conn_reuse_mode && !iph.fragoffs && is_new_conn(skb, &iph) && cp) {
+-		bool uses_ct = false, resched = false;
++		bool uses_ct = false, resched = false, drop = false;
+ 
+ 		if (unlikely(sysctl_expire_nodest_conn(ipvs)) && cp->dest &&
+ 		    unlikely(!atomic_read(&cp->dest->weight))) {
+@@ -2086,10 +2086,17 @@ static int ip_vs_in_icmp_v6(struct netns_ipvs *ipvs, struct sk_buff *skb,
+ 		}
+ 
+ 		if (resched) {
++			if (uses_ct) {
++				if (likely(!atomic_read(&cp->n_control) && !cp->control) &&
++				    likely(sysctl_conn_reuse_old_conntrack(ipvs)))
++					cp->flags &= ~IP_VS_CONN_F_NFCT;
++				else
++					drop = true;
++			}
+ 			if (!atomic_read(&cp->n_control))
+ 				ip_vs_conn_expire_now(cp);
+ 			__ip_vs_conn_put(cp);
+-			if (uses_ct)
++			if (drop)
+ 				return NF_DROP;
+ 			cp = NULL;
+ 		}
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 412656c34f20..eeb87994c21f 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -4049,7 +4049,9 @@ static int __net_init ip_vs_control_net_init_sysctl(struct netns_ipvs *ipvs)
+ 	tbl[idx++].data = &ipvs->sysctl_pmtu_disc;
+ 	tbl[idx++].data = &ipvs->sysctl_backup_only;
+ 	ipvs->sysctl_conn_reuse_mode = 1;
++	ipvs->sysctl_conn_reuse_old_conntrack = 1;
+ 	tbl[idx++].data = &ipvs->sysctl_conn_reuse_mode;
++	tbl[idx++].data = &ipvs->sysctl_conn_reuse_old_conntrack;
+ 	tbl[idx++].data = &ipvs->sysctl_schedule_icmp;
+ 	tbl[idx++].data = &ipvs->sysctl_ignore_tunneled;
+ 
+-- 
+1.8.3.1
 
