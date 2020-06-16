@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6847C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB032151B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C2C207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322010;
-	bh=YpiDX//DCZyndsHiTNDCXemrMW/Ng3bYPltKA4HZ0As=;
+	s=default; t=1592322015;
+	bh=gGUmW2DrTIls4lFdQDuM1ToOLsMmr9KRvqtR7zLRIM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXMjGIIeN7v52sx3UCTEAJ+g1G4E/sF5X3IL93grKftLPH7/7t+Xc9p0+Ra7w/LD3
-	 R+ndo+qjeR6N0Xhi0vouOjo01si+AjiGkgEzp2X7Yhr+dzm27PbZlWegD+CdzW5uCJ
-	 PEaQcatfttzrELmFwJL84r05172ihDK3dcZUJSSg=
+	b=Jyx8rrtAsPIx+Cn1SEIqIb9qfG2VvzGRCoXe04eOw/UMBDpOhllZSRRndkFOSFxLe
+	 j22wFazm5dfDiNlc9WT3XOn3N0iogQ88L/K+LOf+Z3analGJ92DCUSxKNjGn8Degrv
+	 QTVwSoZhwgl2hapfEQHIh56iFR8OmxrlqdvAiM9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731106AbgFPPkJ (ORCPT
+        id S1730291AbgFPPkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730247AbgFPPkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:40:04 -0400
+        id S1731110AbgFPPkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:40:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECE1B21475;
-        Tue, 16 Jun 2020 15:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56705214DB;
+        Tue, 16 Jun 2020 15:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322003;
-        bh=YpiDX//DCZyndsHiTNDCXemrMW/Ng3bYPltKA4HZ0As=;
+        s=default; t=1592322008;
+        bh=gGUmW2DrTIls4lFdQDuM1ToOLsMmr9KRvqtR7zLRIM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tmFkT8IqM5xcIxKS0RUm1FJsyQChqZsDsYh6TPKLISCdEtETbHt8PPfxLkQMStgVj
-         em63ev9P89wpDZV7c16B4caDLG8AGW8WSNW93VN8aYxsstOntS+b9ZP7/ZGpmZUtDW
-         65qsvfy5APIiI5Gkt/Z+T80cNQKvhzURSGv1GEoU=
+        b=rSy40E9v15L3EdQsDlZ7aAcfzUFGgNjXisbs6KeemqgqQGZCIX7RRvMBE5klH8PJr
+         RFi9uLMYA4J6OvTtqkIvcylW3ZG68uammECCBGmrB4U1/EKvcH4yzh70RKSrtxrn5T
+         of7kW+awl9NExus9+GgPyR6JBdw1s1RrSd28Te/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 098/134] cpufreq: Fix up cpufreq_boost_set_sw()
-Date:   Tue, 16 Jun 2020 17:34:42 +0200
-Message-Id: <20200616153105.476609204@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        kbuild test robot <lkp@intel.com>,
+        Alexey Charkov <alchark@gmail.com>,
+        Paul Mundt <lethal@linux-sh.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.4 100/134] video: vt8500lcdfb: fix fallthrough warning
+Date:   Tue, 16 Jun 2020 17:34:44 +0200
+Message-Id: <20200616153105.577537094@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -62,66 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Sam Ravnborg <sam@ravnborg.org>
 
-commit 552abb884e97d26589964e5a8c7e736f852f95f0 upstream.
+commit 1c49f35e9e9156273124a0cfd38b57f7a7d4828f upstream.
 
-After commit 18c49926c4bf ("cpufreq: Add QoS requests for userspace
-constraints") the return value of freq_qos_update_request(), that can
-be 1, passed by cpufreq_boost_set_sw() to its caller sometimes
-confuses the latter, which only expects to see 0 or negative error
-codes, so notice that cpufreq_boost_set_sw() can return an error code
-(which should not be -EINVAL for that matter) as soon as the first
-policy without a frequency table is found (because either all policies
-have a frequency table or none of them have it) and rework it to meet
-its caller's expectations.
+Fix following warning:
+vt8500lcdfb.c: In function 'vt8500lcd_blank':
+vt8500lcdfb.c:229:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+      if (info->fix.visual == FB_VISUAL_PSEUDOCOLOR ||
+         ^
+vt8500lcdfb.c:233:2: note: here
+     case FB_BLANK_UNBLANK:
+     ^~~~
 
-Fixes: 18c49926c4bf ("cpufreq: Add QoS requests for userspace constraints")
-Reported-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Adding a simple "fallthrough;" fixed the warning.
+The fix was build tested.
+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: e41f1a989408 ("fbdev: Implement simple blanking in pseudocolor modes for vt8500lcdfb")
+Cc: Alexey Charkov <alchark@gmail.com>
+Cc: Paul Mundt <lethal@linux-sh.org>
+Cc: <stable@vger.kernel.org> # v2.6.38+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200412202143.GA26948@ravnborg.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/video/fbdev/vt8500lcdfb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2507,26 +2507,27 @@ EXPORT_SYMBOL_GPL(cpufreq_update_limits)
- static int cpufreq_boost_set_sw(int state)
- {
- 	struct cpufreq_policy *policy;
--	int ret = -EINVAL;
- 
- 	for_each_active_policy(policy) {
-+		int ret;
-+
- 		if (!policy->freq_table)
--			continue;
-+			return -ENXIO;
- 
- 		ret = cpufreq_frequency_table_cpuinfo(policy,
- 						      policy->freq_table);
- 		if (ret) {
- 			pr_err("%s: Policy frequency update failed\n",
- 			       __func__);
--			break;
-+			return ret;
- 		}
- 
- 		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
- 		if (ret < 0)
--			break;
-+			return ret;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- int cpufreq_boost_trigger_state(int state)
+--- a/drivers/video/fbdev/vt8500lcdfb.c
++++ b/drivers/video/fbdev/vt8500lcdfb.c
+@@ -230,6 +230,7 @@ static int vt8500lcd_blank(int blank, st
+ 		    info->fix.visual == FB_VISUAL_STATIC_PSEUDOCOLOR)
+ 			for (i = 0; i < 256; i++)
+ 				vt8500lcd_setcolreg(i, 0, 0, 0, 0, info);
++		fallthrough;
+ 	case FB_BLANK_UNBLANK:
+ 		if (info->fix.visual == FB_VISUAL_PSEUDOCOLOR ||
+ 		    info->fix.visual == FB_VISUAL_STATIC_PSEUDOCOLOR)
 
 
