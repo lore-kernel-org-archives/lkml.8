@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEC120B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8475421475
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592321970;
-	bh=5/lH2KRzHCeETvLwWO2Es2Pqsk6+CLgbLIvVr3d8lLE=;
+	s=default; t=1592321973;
+	bh=0JERohV4x/Bj7qeK8SMYNWYmz3BUXkYI0JZHeSB8q1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JXznWyAbN7f8MeFxx1whN2HF/1X8yyG2dLb68tlnRi93Bpa9KjVe/lvMFsfoDjeLn
-	 ltmJMONaL1M9ezbZmQuhqCABKCRE14xNumPvr5seOrJOA/IwpFARo+Zy8r2nN8ZEsf
-	 vrrEqxDLJJk2jR70t7UG4XKriXbisCOrgOVReqIQ=
+	b=O7cjSMJ2FWHBLyz7Lxqm9xWahB/DgyjYpJaIyI5MrE+5TKAmmL5EJBmJTp6W9h2Cm
+	 b9PSvEBt9PljHNJ+sUJqe+wfx7YtxbLFsAIL5fvKxxT9bH10nGDFjnipgTvcWC7xB0
+	 sbrenECieyvadrLWfNp6T4EtlKUJcQqnNdnZbQCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbgFPPj3 (ORCPT
+        id S1729893AbgFPPjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:39:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52558 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730894AbgFPPjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:39:16 -0400
+        id S1730049AbgFPPjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:39:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 060E62166E;
-        Tue, 16 Jun 2020 15:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F30D92145D;
+        Tue, 16 Jun 2020 15:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321956;
-        bh=5/lH2KRzHCeETvLwWO2Es2Pqsk6+CLgbLIvVr3d8lLE=;
+        s=default; t=1592321959;
+        bh=0JERohV4x/Bj7qeK8SMYNWYmz3BUXkYI0JZHeSB8q1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c4X+X//hF/x9XYq0NJfwVe+ClvcEm5FWs5HLBeQY1Oa4CNIip/yXzkGmqwahofGB9
-         aItn9EbQlSTALd0IZJfLbKICSfL7FBA/HyOBBUlYs7v8nydgCE/Z8zJtUiJGWlSHek
-         HbLY7818DNcZ1BFL0pss6F+VDObufx+mwHbgJ5io=
+        b=GugU6MYBufF1kdcSDFGIeb/ov/1UmQrhHdWoXYw3Lg3HEh9N7q08oIwaypd2aF+Nr
+         5lP2ooXKJ7ybfcZkZhXY9lM5Hk147Vrx0odSmwDpfL9xgrJcbai5X2wH2Dzt+JG6Xl
+         NZPc3MjYUhqV50RTZkCY5Vt7vRp+zaxCrIgwOeog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 050/134] io_uring: use kvfree() in io_sqe_buffer_register()
-Date:   Tue, 16 Jun 2020 17:33:54 +0200
-Message-Id: <20200616153103.181618765@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 5.4 051/134] efi/efivars: Add missing kobject_put() in sysfs entry creation error path
+Date:   Tue, 16 Jun 2020 17:33:55 +0200
+Message-Id: <20200616153103.228376763@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit a8c73c1a614f6da6c0b04c393f87447e28cb6de4 upstream.
+commit d8bd8c6e2cfab8b78b537715255be8d7557791c0 upstream.
 
-Use kvfree() to free the pages and vmas, since they are allocated by
-kvmalloc_array() in a loop.
+The documentation provided by kobject_init_and_add() clearly spells out
+the need to call kobject_put() on the kobject if an error is returned.
+Add this missing call to the error path.
 
-Fixes: d4ef647510b1 ("io_uring: avoid page allocation warnings")
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200605093203.40087-1-efremov@linux.com
+Cc: <stable@vger.kernel.org>
+Reported-by: 亿一 <teroincn@gmail.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/efivars.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -3498,8 +3498,8 @@ static int io_sqe_buffer_register(struct
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -522,8 +522,10 @@ efivar_create_sysfs_entry(struct efivar_
+ 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
+ 				   NULL, "%s", short_name);
+ 	kfree(short_name);
+-	if (ret)
++	if (ret) {
++		kobject_put(&new_var->kobj);
+ 		return ret;
++	}
  
- 		ret = 0;
- 		if (!pages || nr_pages > got_pages) {
--			kfree(vmas);
--			kfree(pages);
-+			kvfree(vmas);
-+			kvfree(pages);
- 			pages = kvmalloc_array(nr_pages, sizeof(struct page *),
- 						GFP_KERNEL);
- 			vmas = kvmalloc_array(nr_pages,
+ 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
+ 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
 
 
