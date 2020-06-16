@@ -2,597 +2,390 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB82C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBBBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8952098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttoK+iT5"
+	by mail.kernel.org (Postfix) with ESMTP id B9567207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 18:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbgFPSpw (ORCPT
+        id S1730181AbgFPSrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 14:45:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgFPSpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 14:45:50 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B5EC061573;
-        Tue, 16 Jun 2020 11:45:48 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id y20so4171252wmi.2;
-        Tue, 16 Jun 2020 11:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vdi3H2C/jQuyG7WR8KBqwcaxDEh5+6Bh4PRaCFGZApc=;
-        b=ttoK+iT5v54o+ozc7iSNEMJWme4D9KPsqbec/RShIFlZEsqwv7nW4LOobZeYXK+rCN
-         Lf5KC7Q3yI6B2Pu0zu+pMfM+4G2K4vVW4n1qiDcyowt3/o2COsXm8EQpC0kIhh4e1hfY
-         Fj4JL8f48PPKeJ27KUnAECEWB4shocB6vzKOwDIbJNtPmpWtYMC0fw+ry5ttvVjqxHeX
-         H7egn2lwMhiUq8DU0vpDM9tBdk5IhK26aMA2EKg84ZOSPZwHE5RkhiThTGLPvY90E74r
-         HImBQXVQRLQ07BgDnGfsLEcR0FiLPsbdfa0aNeSYtIBjoIdqoytT/o7yfMB5U6yPUKTn
-         HLIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vdi3H2C/jQuyG7WR8KBqwcaxDEh5+6Bh4PRaCFGZApc=;
-        b=sEuiYNMNB9mlF+y4GR7SIRZ8uhoh3PBh3GnRytYteqVYtU7J5IeBPoCV8jgbpdgkDD
-         /wUe/xMoCmsgOrEoS5rDW4YG1D0nDqPg+UiTBiDkP25yky66fY+47wpiZC8Ya0jjmK6i
-         Gg91FiFSLlpS36vBg8/mdkZwIQbnp25iF7tR5Tu3+nf/DKCbdlMaTnx8hZJPMScVefap
-         LKxx8AM+FcY97FzYfioFSJPi0RNE/thBwBrSJridPF2G5A+O4gOttYnE8QyOxP4I+lxI
-         yFaz8mjblg+ide8Aspq6+1+hxDBF2G+mE6/p4BYlFlFAfgsDcPDkWqPUoiK4obPVGEe0
-         pTwg==
-X-Gm-Message-State: AOAM531rolMWd+gfE3IWcgEXZF4N5poDU2VQcSZ+KykpbqvxrGpj98EB
-        6nnruBAZnuhH0Ha8x0AbnWY=
-X-Google-Smtp-Source: ABdhPJx8miejefYpdnSzJ2sGiZUVWiw6+05YNRxTgUFfx/SeWTuJIxITkyeIogXgJb5zfOUPTHzDyw==
-X-Received: by 2002:a1c:c203:: with SMTP id s3mr4524581wmf.174.1592333146859;
-        Tue, 16 Jun 2020 11:45:46 -0700 (PDT)
-Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id q11sm30528707wrv.67.2020.06.16.11.45.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 11:45:46 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
-        vkoul@kernel.org, robh+dt@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v3 2/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
-Date:   Tue, 16 Jun 2020 20:45:42 +0200
-Message-Id: <20200616184542.3504965-3-noltari@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200616184542.3504965-1-noltari@gmail.com>
-References: <20200616184542.3504965-1-noltari@gmail.com>
+        Tue, 16 Jun 2020 14:47:11 -0400
+Received: from mga14.intel.com ([192.55.52.115]:4613 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727114AbgFPSrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 14:47:09 -0400
+IronPort-SDR: /+l4W6M09FLmJAyYa3TuiTWGX1/mdBgXg6v1HoZwjA9ggqix+PKgWD/YmF4JJPZ4XJdmh2MO03
+ ECWG8kzeqjzw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 11:46:38 -0700
+IronPort-SDR: yS4kdxs3NL8vNSOJdyaZMSBL1jVCCWzOmJc3lPSd14irDK4TUkxn/OPPXN/ybnkz2cjsq+AgLl
+ ZlhPLUZmLgcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,519,1583222400"; 
+   d="scan'208";a="273248485"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by orsmga003.jf.intel.com with ESMTP; 16 Jun 2020 11:46:35 -0700
+Subject: Re: [PATCH v3 2/3] sdhci: sparx5: Add Sparx5 SoC eMMC driver
+List-Id: <soc.lore.kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, SoC Team <soc@kernel.org>
+Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+References: <20200616140027.4949-1-lars.povlsen@microchip.com>
+ <20200616140027.4949-3-lars.povlsen@microchip.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <b4ba671d-aa51-78a4-8e49-f105663a308a@intel.com>
+Date:   Tue, 16 Jun 2020 21:46:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200616140027.4949-3-lars.povlsen@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add BCM63xx USBH PHY driver for BMIPS.
+On 16/06/20 5:00 pm, Lars Povlsen wrote:
+> This adds the eMMC driver for the Sparx5 SoC. It is based upon the
+> designware IP, but requires some extra initialization and quirks.
+> 
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ---
+>  drivers/mmc/host/Kconfig           |  13 ++
+>  drivers/mmc/host/Makefile          |   1 +
+>  drivers/mmc/host/sdhci-of-sparx5.c | 269 +++++++++++++++++++++++++++++
+>  3 files changed, 283 insertions(+)
+>  create mode 100644 drivers/mmc/host/sdhci-of-sparx5.c
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 3b706af35ec31..a3bad4b4ed7ea 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -213,6 +213,19 @@ config MMC_SDHCI_OF_DWCMSHC
+>  	  If you have a controller with this interface, say Y or M here.
+>  	  If unsure, say N.
+>  
+> +config MMC_SDHCI_OF_SPARX5
+> +	tristate "SDHCI OF support for the MCHP Sparx5 SoC"
+> +	depends on MMC_SDHCI_PLTFM
+> +	depends on ARCH_SPARX5
+> +	select MMC_SDHCI_IO_ACCESSORS
+> +	help
+> +	  This selects the Secure Digital Host Controller Interface (SDHCI)
+> +	  found in the MCHP Sparx5 SoC.
+> +
+> +	  If you have a Sparx5 SoC with this interface, say Y or M here.
+> +
+> +	  If unsure, say N.
+> +
+>  config MMC_SDHCI_CADENCE
+>  	tristate "SDHCI support for the Cadence SD/SDIO/eMMC controller"
+>  	depends on MMC_SDHCI_PLTFM
+> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+> index 4d5bcb0144a0a..451c25fc2c692 100644
+> --- a/drivers/mmc/host/Makefile
+> +++ b/drivers/mmc/host/Makefile
+> @@ -94,6 +94,7 @@ obj-$(CONFIG_MMC_SDHCI_OF_AT91)		+= sdhci-of-at91.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
+>  obj-$(CONFIG_MMC_SDHCI_OF_DWCMSHC)	+= sdhci-of-dwcmshc.o
+> +obj-$(CONFIG_MMC_SDHCI_OF_SPARX5)	+= sdhci-of-sparx5.o
+>  obj-$(CONFIG_MMC_SDHCI_BCM_KONA)	+= sdhci-bcm-kona.o
+>  obj-$(CONFIG_MMC_SDHCI_IPROC)		+= sdhci-iproc.o
+>  obj-$(CONFIG_MMC_SDHCI_MSM)		+= sdhci-msm.o
+> diff --git a/drivers/mmc/host/sdhci-of-sparx5.c b/drivers/mmc/host/sdhci-of-sparx5.c
+> new file mode 100644
+> index 0000000000000..972942fed4a68
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-of-sparx5.c
+> @@ -0,0 +1,269 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * drivers/mmc/host/sdhci-of-sparx5.c
+> + *
+> + * MCHP Sparx5 SoC Secure Digital Host Controller Interface.
+> + *
+> + * Copyright (c) 2019 Microchip Inc.
+> + *
+> + * Author: Lars Povlsen <lars.povlsen@microchip.com>
+> + */
+> +
+> +#include <linux/sizes.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_device.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/dma-mapping.h>
+> +
+> +#include "sdhci-pltfm.h"
+> +
+> +#define CPU_REGS_GENERAL_CTRL	(0x22 * 4)
+> +#define  MSHC_DLY_CC_MASK	GENMASK(16, 13)
+> +#define  MSHC_DLY_CC_SHIFT	13
+> +#define  MSHC_DLY_CC_MAX	15
+> +
+> +#define CPU_REGS_PROC_CTRL	(0x2C * 4)
+> +#define  ACP_CACHE_FORCE_ENA	BIT(4)
+> +#define  ACP_AWCACHE		BIT(3)
+> +#define  ACP_ARCACHE		BIT(2)
+> +#define  ACP_CACHE_MASK		(ACP_CACHE_FORCE_ENA|ACP_AWCACHE|ACP_ARCACHE)
+> +
+> +#define MSHC2_VERSION			0x500	/* Off 0x140, reg 0x0 */
+> +#define MSHC2_TYPE			0x504	/* Off 0x140, reg 0x1 */
+> +#define MSHC2_EMMC_CTRL			0x52c	/* Off 0x140, reg 0xB */
+> +#define  MSHC2_EMMC_CTRL_EMMC_RST_N	BIT(2)
+> +#define  MSHC2_EMMC_CTRL_IS_EMMC	BIT(0)
+> +
+> +struct sdhci_sparx5_data {
+> +	struct sdhci_host *host;
+> +	struct regmap *cpu_ctrl;
+> +	int delay_clock;
+> +};
+> +
+> +#define BOUNDARY_OK(addr, len) \
+> +	((addr | (SZ_128M - 1)) == ((addr + len - 1) | (SZ_128M - 1)))
+> +
+> +/*
+> + * If DMA addr spans 128MB boundary, we split the DMA transfer into two
+> + * so that each DMA transfer doesn't exceed the boundary.
+> + */
+> +static void sdhci_sparx5_adma_write_desc(struct sdhci_host *host, void **desc,
+> +					  dma_addr_t addr, int len,
+> +					  unsigned int cmd)
+> +{
+> +	int tmplen, offset;
+> +
+> +	if (likely(!len || BOUNDARY_OK(addr, len))) {
+> +		sdhci_adma_write_desc(host, desc, addr, len, cmd);
+> +		return;
+> +	}
+> +
+> +	pr_debug("%s: write_desc: splitting dma len %d, offset 0x%0llx\n",
+> +		 mmc_hostname(host->mmc), len, addr);
+> +
+> +	offset = addr & (SZ_128M - 1);
+> +	tmplen = SZ_128M - offset;
+> +	sdhci_adma_write_desc(host, desc, addr, tmplen, cmd);
+> +
+> +	addr += tmplen;
+> +	len -= tmplen;
+> +	sdhci_adma_write_desc(host, desc, addr, len, cmd);
+> +}
+> +
+> +static void sparx5_set_cacheable(struct sdhci_host *host, u32 value)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_sparx5_data *sdhci_sparx5 = sdhci_pltfm_priv(pltfm_host);
+> +
+> +	pr_debug("%s: Set Cacheable = 0x%x\n", mmc_hostname(host->mmc), value);
+> +
+> +	/* Update ACP caching attributes in HW */
+> +	regmap_update_bits(sdhci_sparx5->cpu_ctrl,
+> +			   CPU_REGS_PROC_CTRL, ACP_CACHE_MASK, value);
+> +}
+> +
+> +static void sparx5_set_delay(struct sdhci_host *host, u8 value)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_sparx5_data *sdhci_sparx5 = sdhci_pltfm_priv(pltfm_host);
+> +
+> +	pr_debug("%s: Set DLY_CC = %u\n", mmc_hostname(host->mmc), value);
+> +
+> +	/* Update DLY_CC in HW */
+> +	regmap_update_bits(sdhci_sparx5->cpu_ctrl,
+> +			   CPU_REGS_GENERAL_CTRL,
+> +			   MSHC_DLY_CC_MASK,
+> +			   (value << MSHC_DLY_CC_SHIFT));
+> +}
+> +
+> +static void sdhci_sparx5_set_emmc(struct sdhci_host *host)
+> +{
+> +	if (!mmc_card_is_removable(host->mmc)) {
+> +		u8 value;
+> +
+> +		value = sdhci_readb(host, MSHC2_EMMC_CTRL);
+> +		if (!(value & MSHC2_EMMC_CTRL_IS_EMMC)) {
+> +			value |= MSHC2_EMMC_CTRL_IS_EMMC;
+> +			pr_debug("%s: Set EMMC_CTRL: 0x%08x\n",
+> +				 mmc_hostname(host->mmc), value);
+> +			sdhci_writeb(host, value, MSHC2_EMMC_CTRL);
+> +		}
+> +	}
+> +}
+> +
+> +static void sdhci_sparx5_reset_emmc(struct sdhci_host *host)
+> +{
+> +	u8 value;
+> +
+> +	pr_debug("%s: Toggle EMMC_CTRL.EMMC_RST_N\n", mmc_hostname(host->mmc));
+> +	value = sdhci_readb(host, MSHC2_EMMC_CTRL) &
+> +		~MSHC2_EMMC_CTRL_EMMC_RST_N;
+> +	sdhci_writeb(host, value, MSHC2_EMMC_CTRL);
+> +	/* For eMMC, minimum is 1us but give it 10us for good measure */
+> +	usleep_range(10, 20);
+> +	sdhci_writeb(host, value | MSHC2_EMMC_CTRL_EMMC_RST_N,
+> +		     MSHC2_EMMC_CTRL);
+> +	/* For eMMC, minimum is 200us but give it 300us for good measure */
+> +	usleep_range(300, 400);
+> +}
+> +
+> +static void sdhci_sparx5_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	pr_debug("%s: *** RESET: mask %d\n", mmc_hostname(host->mmc), mask);
+> +
+> +	sdhci_reset(host, mask);
+> +
+> +	/* Be sure CARD_IS_EMMC stays set */
+> +	sdhci_sparx5_set_emmc(host);
+> +}
+> +
+> +static const struct sdhci_ops sdhci_sparx5_ops = {
+> +	.set_clock		= sdhci_set_clock,
+> +	.set_bus_width		= sdhci_set_bus_width,
+> +	.set_uhs_signaling	= sdhci_set_uhs_signaling,
+> +	.get_max_clock		= sdhci_pltfm_clk_get_max_clock,
+> +	.reset			= sdhci_sparx5_reset,
+> +	.adma_write_desc	= sdhci_sparx5_adma_write_desc,
+> +};
+> +
+> +static const struct sdhci_pltfm_data sdhci_sparx5_pdata = {
+> +	.quirks  = 0,
+> +	.quirks2 = SDHCI_QUIRK2_HOST_NO_CMD23 | /* Controller issue */
+> +		   SDHCI_QUIRK2_NO_1_8_V, /* No sdr104, ddr50, etc */
+> +	.ops = &sdhci_sparx5_ops,
+> +};
+> +
+> +int sdhci_sparx5_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	const char *syscon = "microchip,sparx5-cpu-syscon";
+> +	struct sdhci_host *host;
+> +	struct sdhci_pltfm_host *pltfm_host;
+> +	struct sdhci_sparx5_data *sdhci_sparx5;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	u32 value;
+> +	u32 extra;
+> +
+> +	host = sdhci_pltfm_init(pdev, &sdhci_sparx5_pdata,
+> +				sizeof(*sdhci_sparx5));
+> +
+> +	if (IS_ERR(host))
+> +		return PTR_ERR(host);
+> +
+> +	/*
+> +	 * extra adma table cnt for cross 128M boundary handling.
+> +	 */
+> +	extra = DIV_ROUND_UP_ULL(dma_get_required_mask(&pdev->dev), SZ_128M);
+> +	if (extra > SDHCI_MAX_SEGS)
+> +		extra = SDHCI_MAX_SEGS;
+> +	host->adma_table_cnt += extra;
+> +
+> +	pltfm_host = sdhci_priv(host);
+> +	sdhci_sparx5 = sdhci_pltfm_priv(pltfm_host);
+> +	sdhci_sparx5->host = host;
+> +
+> +	pltfm_host->clk = devm_clk_get(&pdev->dev, "core");
+> +	if (IS_ERR(pltfm_host->clk)) {
+> +		ret = PTR_ERR(pltfm_host->clk);
+> +		dev_err(&pdev->dev, "failed to get core clk: %d\n", ret);
+> +		goto free_pltfm;
+> +	}
+> +	ret = clk_prepare_enable(pltfm_host->clk);
+> +	if (ret)
+> +		goto free_pltfm;
+> +
+> +	if (!of_property_read_u32(np, "microchip,clock-delay", &value) &&
+> +	    (value > 0 && value <= MSHC_DLY_CC_MAX))
+> +		sdhci_sparx5->delay_clock = value;
+> +
+> +	sdhci_get_of_property(pdev);
+> +
+> +	ret = mmc_of_parse(host->mmc);
+> +	if (ret)
+> +		goto err_clk;
+> +
+> +	sdhci_sparx5->cpu_ctrl = syscon_regmap_lookup_by_compatible(syscon);
+> +	if (IS_ERR(sdhci_sparx5->cpu_ctrl)) {
+> +		dev_err(&pdev->dev, "No CPU syscon regmap !\n");
+> +		ret = PTR_ERR(sdhci_sparx5->cpu_ctrl);
+> +		goto err_clk;
+> +	}
+> +
+> +	if (sdhci_sparx5->delay_clock >= 0)
+> +		sparx5_set_delay(host, sdhci_sparx5->delay_clock);
+> +
+> +	if (!mmc_card_is_removable(host->mmc)) {
+> +		/* Do a HW reset of eMMC card */
+> +		sdhci_sparx5_reset_emmc(host);
+> +		/* Update EMMC_CTRL */
+> +		sdhci_sparx5_set_emmc(host);
+> +		/* If eMMC, disable SD and SDIO */
+> +		host->mmc->caps2 |= (MMC_CAP2_NO_SDIO|MMC_CAP2_NO_SD);
+> +	}
+> +
+> +	ret = sdhci_add_host(host);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "sdhci_add_host() failed (%d)\n", ret);
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- v3: introduce changes suggested by Florian:
-  - Add support for device mode.
- v2: introduce changes suggested by Florian:
-  - Drop OF dependency (use device_get_match_data).
-  - Drop __initconst from variant tables.
-  - Use devm_clk_get_optional.
+Shouldn't this goto err_clk;
 
- drivers/phy/broadcom/Kconfig            |   9 +
- drivers/phy/broadcom/Makefile           |   1 +
- drivers/phy/broadcom/phy-bcm63xx-usbh.c | 456 ++++++++++++++++++++++++
- 3 files changed, 466 insertions(+)
- create mode 100644 drivers/phy/broadcom/phy-bcm63xx-usbh.c
+Also, the error message is not really needed if ret == -EPROBE_DEFER
 
-diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
-index b29f11c19155..a7889df8c541 100644
---- a/drivers/phy/broadcom/Kconfig
-+++ b/drivers/phy/broadcom/Kconfig
-@@ -2,6 +2,15 @@
- #
- # Phy drivers for Broadcom platforms
- #
-+config PHY_BCM63XX_USBH
-+	tristate "BCM63xx USBH PHY driver"
-+	depends on BMIPS_GENERIC || COMPILE_TEST
-+	select GENERIC_PHY
-+	default BMIPS_GENERIC
-+	help
-+	  Enable this to support the BCM63xx USBH PHY driver.
-+	  If unsure, say N.
-+
- config PHY_CYGNUS_PCIE
- 	tristate "Broadcom Cygnus PCIe PHY driver"
- 	depends on OF && (ARCH_BCM_CYGNUS || COMPILE_TEST)
-diff --git a/drivers/phy/broadcom/Makefile b/drivers/phy/broadcom/Makefile
-index c78de546135c..7024127f86ad 100644
---- a/drivers/phy/broadcom/Makefile
-+++ b/drivers/phy/broadcom/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_BCM63XX_USBH)		+= phy-bcm63xx-usbh.o
- obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
- obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
- obj-$(CONFIG_PHY_BCM_NS_USB2)		+= phy-bcm-ns-usb2.o
-diff --git a/drivers/phy/broadcom/phy-bcm63xx-usbh.c b/drivers/phy/broadcom/phy-bcm63xx-usbh.c
-new file mode 100644
-index 000000000000..584807205166
---- /dev/null
-+++ b/drivers/phy/broadcom/phy-bcm63xx-usbh.c
-@@ -0,0 +1,456 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * BCM6328 USBH PHY Controller Driver
-+ *
-+ * Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
-+ * Copyright (C) 2015 Simon Arlott <simon@fire.lp0.eu>
-+ *
-+ * Derived from bcm963xx_4.12L.06B_consumer/kernel/linux/arch/mips/bcm963xx/setup.c:
-+ * Copyright (C) 2002 Broadcom Corporation
-+ *
-+ * Derived from OpenWrt patches:
-+ * Copyright (C) 2013 Jonas Gorski <jonas.gorski@gmail.com>
-+ * Copyright (C) 2013 Florian Fainelli <f.fainelli@gmail.com>
-+ * Copyright (C) 2008 Maxime Bizon <mbizon@freebox.fr>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+/* USBH control register offsets */
-+enum usbh_regs {
-+	USBH_BRT_CONTROL1 = 0,
-+	USBH_BRT_CONTROL2,
-+	USBH_BRT_STATUS1,
-+	USBH_BRT_STATUS2,
-+	USBH_UTMI_CONTROL1,
-+	USBH_TEST_PORT_CONTROL,
-+	USBH_PLL_CONTROL1,
-+#define   USBH_PLLC_REFCLKSEL_SHIFT	0
-+#define   USBH_PLLC_REFCLKSEL_MASK	(0x3 << USBH_PLLC_REFCLKSEL_SHIFT)
-+#define   USBH_PLLC_CLKSEL_SHIFT	2
-+#define   USBH_PLLC_CLKSEL_MASK		(0x3 << USBH_PLLC_CLKSEL_MASK)
-+#define   USBH_PLLC_XTAL_PWRDWNB	BIT(4)
-+#define   USBH_PLLC_PLL_PWRDWNB		BIT(5)
-+#define   USBH_PLLC_PLL_CALEN		BIT(6)
-+#define   USBH_PLLC_PHYPLL_BYP		BIT(7)
-+#define   USBH_PLLC_PLL_RESET		BIT(8)
-+#define   USBH_PLLC_PLL_IDDQ_PWRDN	BIT(9)
-+#define   USBH_PLLC_PLL_PWRDN_DELAY	BIT(10)
-+#define   USBH_6318_PLLC_PLL_SUSPEND_EN	BIT(27)
-+#define   USBH_6318_PLLC_PHYPLL_BYP	BIT(29)
-+#define   USBH_6318_PLLC_PLL_RESET	BIT(30)
-+#define   USBH_6318_PLLC_PLL_IDDQ_PWRDN	BIT(31)
-+	USBH_SWAP_CONTROL,
-+#define   USBH_SC_OHCI_DATA_SWAP	BIT(0)
-+#define   USBH_SC_OHCI_ENDIAN_SWAP	BIT(1)
-+#define   USBH_SC_OHCI_LOGICAL_ADDR_EN	BIT(2)
-+#define   USBH_SC_EHCI_DATA_SWAP	BIT(3)
-+#define   USBH_SC_EHCI_ENDIAN_SWAP	BIT(4)
-+#define   USBH_SC_EHCI_LOGICAL_ADDR_EN	BIT(5)
-+#define   USBH_SC_USB_DEVICE_SEL	BIT(6)
-+	USBH_GENERIC_CONTROL,
-+#define   USBH_GC_PLL_SUSPEND_EN	BIT(1)
-+	USBH_FRAME_ADJUST_VALUE,
-+	USBH_SETUP,
-+#define   USBH_S_IOC			BIT(4)
-+#define   USBH_S_IPP			BIT(5)
-+	USBH_MDIO,
-+	USBH_MDIO32,
-+	USBH_USB_SIM_CONTROL,
-+#define   USBH_USC_LADDR_SEL		BIT(5)
-+
-+	__USBH_ENUM_SIZE
-+};
-+
-+struct bcm63xx_usbh_phy_variant {
-+	/* USB Sim Control bits to set */
-+	u32 usc_set;
-+
-+	/* Test Port Control value to set if non-zero */
-+	u32 tpc_val;
-+
-+	/* Setup bits to set/clear for power on */
-+	u32 setup_set;
-+	u32 setup_clr;
-+
-+	/* PLLC bits to set/clear for power on */
-+	u32 power_pllc_set;
-+	u32 power_pllc_clr;
-+
-+	/* Device mode selectable */
-+	bool dev_mode;
-+
-+	/* Registers */
-+	long regs[__USBH_ENUM_SIZE];
-+};
-+
-+struct bcm63xx_usbh_phy {
-+	void __iomem *base;
-+	struct clk *usbh_clk;
-+	struct clk *usb_ref_clk;
-+	struct reset_control *reset;
-+	const struct bcm63xx_usbh_phy_variant *variant;
-+	bool is_device;
-+};
-+
-+static const struct bcm63xx_usbh_phy_variant usbh_bcm6318 = {
-+	.regs = {
-+		[USBH_BRT_CONTROL1] = -1,
-+		[USBH_BRT_CONTROL2] = -1,
-+		[USBH_BRT_STATUS1] = -1,
-+		[USBH_BRT_STATUS2] = -1,
-+		[USBH_UTMI_CONTROL1] = 0x2c,
-+		[USBH_TEST_PORT_CONTROL] = 0x1c,
-+		[USBH_PLL_CONTROL1] = 0x04,
-+		[USBH_SWAP_CONTROL] = 0x0c,
-+		[USBH_GENERIC_CONTROL] = -1,
-+		[USBH_FRAME_ADJUST_VALUE] = 0x08,
-+		[USBH_SETUP] = 0x00,
-+		[USBH_MDIO] = 0x14,
-+		[USBH_MDIO32] = 0x18,
-+		[USBH_USB_SIM_CONTROL] = 0x20,
-+	},
-+	.setup_set = USBH_S_IOC,
-+	.setup_clr = 0,
-+	.usc_set = USBH_USC_LADDR_SEL,
-+	.tpc_val = 0,
-+	.power_pllc_set = USBH_6318_PLLC_PLL_SUSPEND_EN,
-+	.power_pllc_clr = USBH_6318_PLLC_PLL_IDDQ_PWRDN,
-+	.dev_mode = true,
-+};
-+
-+static const struct bcm63xx_usbh_phy_variant usbh_bcm6328 = {
-+	.regs = {
-+		[USBH_BRT_CONTROL1] = 0x00,
-+		[USBH_BRT_CONTROL2] = 0x04,
-+		[USBH_BRT_STATUS1] = 0x08,
-+		[USBH_BRT_STATUS2] = 0x0c,
-+		[USBH_UTMI_CONTROL1] = 0x10,
-+		[USBH_TEST_PORT_CONTROL] = 0x14,
-+		[USBH_PLL_CONTROL1] = 0x18,
-+		[USBH_SWAP_CONTROL] = 0x1c,
-+		[USBH_GENERIC_CONTROL] = 0x20,
-+		[USBH_FRAME_ADJUST_VALUE] = 0x24,
-+		[USBH_SETUP] = 0x28,
-+		[USBH_MDIO] = 0x2c,
-+		[USBH_MDIO32] = 0x30,
-+		[USBH_USB_SIM_CONTROL] = 0x34,
-+	},
-+	.setup_set = USBH_S_IOC,
-+	.setup_clr = 0,
-+	.usc_set = 0,
-+	.tpc_val = 0,
-+	.power_pllc_set = 0,
-+	.power_pllc_clr = 0,
-+	.dev_mode = true,
-+};
-+
-+static const struct bcm63xx_usbh_phy_variant usbh_bcm6358 = {
-+	.regs = {
-+		[USBH_BRT_CONTROL1] = -1,
-+		[USBH_BRT_CONTROL2] = -1,
-+		[USBH_BRT_STATUS1] = -1,
-+		[USBH_BRT_STATUS2] = -1,
-+		[USBH_UTMI_CONTROL1] = -1,
-+		[USBH_TEST_PORT_CONTROL] = 0x24,
-+		[USBH_PLL_CONTROL1] = -1,
-+		[USBH_SWAP_CONTROL] = 0x00,
-+		[USBH_GENERIC_CONTROL] = -1,
-+		[USBH_FRAME_ADJUST_VALUE] = -1,
-+		[USBH_SETUP] = -1,
-+		[USBH_MDIO] = -1,
-+		[USBH_MDIO32] = -1,
-+		[USBH_USB_SIM_CONTROL] = -1,
-+	},
-+	/*
-+	 * The magic value comes for the original vendor BSP
-+	 * and is needed for USB to work. Datasheet does not
-+	 * help, so the magic value is used as-is.
-+	 */
-+	.tpc_val = 0x1c0020,
-+};
-+
-+static const struct bcm63xx_usbh_phy_variant usbh_bcm6368 = {
-+	.regs = {
-+		[USBH_BRT_CONTROL1] = 0x00,
-+		[USBH_BRT_CONTROL2] = 0x04,
-+		[USBH_BRT_STATUS1] = 0x08,
-+		[USBH_BRT_STATUS2] = 0x0c,
-+		[USBH_UTMI_CONTROL1] = 0x10,
-+		[USBH_TEST_PORT_CONTROL] = 0x14,
-+		[USBH_PLL_CONTROL1] = 0x18,
-+		[USBH_SWAP_CONTROL] = 0x1c,
-+		[USBH_GENERIC_CONTROL] = -1,
-+		[USBH_FRAME_ADJUST_VALUE] = 0x24,
-+		[USBH_SETUP] = 0x28,
-+		[USBH_MDIO] = 0x2c,
-+		[USBH_MDIO32] = 0x30,
-+		[USBH_USB_SIM_CONTROL] = 0x34,
-+	},
-+	.setup_set = USBH_S_IOC,
-+	.setup_clr = 0,
-+	.usc_set = 0,
-+	.tpc_val = 0,
-+	.power_pllc_set = 0,
-+	.power_pllc_clr = USBH_PLLC_PLL_IDDQ_PWRDN | USBH_PLLC_PLL_PWRDN_DELAY,
-+	.dev_mode = true,
-+};
-+
-+static const struct bcm63xx_usbh_phy_variant usbh_bcm63268 = {
-+	.regs = {
-+		[USBH_BRT_CONTROL1] = 0x00,
-+		[USBH_BRT_CONTROL2] = 0x04,
-+		[USBH_BRT_STATUS1] = 0x08,
-+		[USBH_BRT_STATUS2] = 0x0c,
-+		[USBH_UTMI_CONTROL1] = 0x10,
-+		[USBH_TEST_PORT_CONTROL] = 0x14,
-+		[USBH_PLL_CONTROL1] = 0x18,
-+		[USBH_SWAP_CONTROL] = 0x1c,
-+		[USBH_GENERIC_CONTROL] = 0x20,
-+		[USBH_FRAME_ADJUST_VALUE] = 0x24,
-+		[USBH_SETUP] = 0x28,
-+		[USBH_MDIO] = 0x2c,
-+		[USBH_MDIO32] = 0x30,
-+		[USBH_USB_SIM_CONTROL] = 0x34,
-+	},
-+	.setup_set = USBH_S_IOC,
-+	.setup_clr = USBH_S_IPP,
-+	.usc_set = 0,
-+	.tpc_val = 0,
-+	.power_pllc_set = 0,
-+	.power_pllc_clr = USBH_PLLC_PLL_IDDQ_PWRDN | USBH_PLLC_PLL_PWRDN_DELAY,
-+	.dev_mode = true,
-+};
-+
-+static inline bool usbh_has_reg(struct bcm63xx_usbh_phy *usbh, int reg)
-+{
-+	return (usbh->variant->regs[reg] >= 0);
-+}
-+
-+static inline u32 usbh_readl(struct bcm63xx_usbh_phy *usbh, int reg)
-+{
-+	return __raw_readl(usbh->base + usbh->variant->regs[reg]);
-+}
-+
-+static inline void usbh_writel(struct bcm63xx_usbh_phy *usbh, int reg,
-+			       u32 value)
-+{
-+	__raw_writel(value, usbh->base + usbh->variant->regs[reg]);
-+}
-+
-+static int bcm63xx_usbh_phy_init(struct phy *phy)
-+{
-+	struct bcm63xx_usbh_phy *usbh = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(usbh->usbh_clk);
-+	if (ret) {
-+		dev_err(&phy->dev, "unable to enable usbh clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(usbh->usb_ref_clk);
-+	if (ret) {
-+		dev_err(&phy->dev, "unable to enable usb_ref clock: %d\n", ret);
-+		clk_disable_unprepare(usbh->usbh_clk);
-+		return ret;
-+	}
-+
-+	ret = reset_control_reset(usbh->reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "unable to reset device: %d\n", ret);
-+		clk_disable_unprepare(usbh->usb_ref_clk);
-+		clk_disable_unprepare(usbh->usbh_clk);
-+		return ret;
-+	}
-+
-+	/* Configure to work in native CPU endian */
-+	if (usbh_has_reg(usbh, USBH_SWAP_CONTROL)) {
-+		u32 val = usbh_readl(usbh, USBH_SWAP_CONTROL);
-+
-+		val |= USBH_SC_EHCI_DATA_SWAP;
-+		val &= ~USBH_SC_EHCI_ENDIAN_SWAP;
-+
-+		val |= USBH_SC_OHCI_DATA_SWAP;
-+		val &= ~USBH_SC_OHCI_ENDIAN_SWAP;
-+
-+		if (usbh->is_device)
-+			val |= USBH_SC_USB_DEVICE_SEL;
-+
-+		usbh_writel(usbh, USBH_SWAP_CONTROL, val);
-+	}
-+
-+	if (usbh_has_reg(usbh, USBH_SETUP)) {
-+		u32 val = usbh_readl(usbh, USBH_SETUP);
-+
-+		val |= usbh->variant->setup_set;
-+		val &= ~usbh->variant->setup_clr;
-+
-+		usbh_writel(usbh, USBH_SETUP, val);
-+	}
-+
-+	if (usbh_has_reg(usbh, USBH_USB_SIM_CONTROL)) {
-+		u32 val = usbh_readl(usbh, USBH_USB_SIM_CONTROL);
-+
-+		val |= usbh->variant->usc_set;
-+
-+		usbh_writel(usbh, USBH_USB_SIM_CONTROL, val);
-+	}
-+
-+	if (usbh->variant->tpc_val &&
-+	    usbh_has_reg(usbh, USBH_TEST_PORT_CONTROL))
-+		usbh_writel(usbh, USBH_TEST_PORT_CONTROL,
-+			    usbh->variant->tpc_val);
-+
-+	return 0;
-+}
-+
-+static int bcm63xx_usbh_phy_power_on(struct phy *phy)
-+{
-+	struct bcm63xx_usbh_phy *usbh = phy_get_drvdata(phy);
-+
-+	if (usbh_has_reg(usbh, USBH_PLL_CONTROL1)) {
-+		u32 val = usbh_readl(usbh, USBH_PLL_CONTROL1);
-+
-+		val |= usbh->variant->power_pllc_set;
-+		val &= ~usbh->variant->power_pllc_clr;
-+
-+		usbh_writel(usbh, USBH_PLL_CONTROL1, val);
-+	}
-+
-+	return 0;
-+}
-+
-+static int bcm63xx_usbh_phy_power_off(struct phy *phy)
-+{
-+	struct bcm63xx_usbh_phy *usbh = phy_get_drvdata(phy);
-+
-+	if (usbh_has_reg(usbh, USBH_PLL_CONTROL1)) {
-+		u32 val = usbh_readl(usbh, USBH_PLL_CONTROL1);
-+
-+		val &= ~usbh->variant->power_pllc_set;
-+		val |= usbh->variant->power_pllc_clr;
-+
-+		usbh_writel(usbh, USBH_PLL_CONTROL1, val);
-+	}
-+
-+	return 0;
-+}
-+
-+static int bcm63xx_usbh_phy_exit(struct phy *phy)
-+{
-+	struct bcm63xx_usbh_phy *usbh = phy_get_drvdata(phy);
-+
-+	clk_disable_unprepare(usbh->usbh_clk);
-+	clk_disable_unprepare(usbh->usb_ref_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops bcm63xx_usbh_phy_ops = {
-+	.exit = bcm63xx_usbh_phy_exit,
-+	.init = bcm63xx_usbh_phy_init,
-+	.power_off = bcm63xx_usbh_phy_power_off,
-+	.power_on = bcm63xx_usbh_phy_power_on,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct phy *bcm63xx_usbh_phy_xlate(struct device *dev,
-+					  struct of_phandle_args *args)
-+{
-+	struct bcm63xx_usbh_phy *usbh = dev_get_drvdata(dev);
-+
-+	if (usbh->variant->dev_mode)
-+		usbh->is_device = !!args->args[0];
-+
-+	return of_phy_simple_xlate(dev, args);
-+}
-+
-+static int __init bcm63xx_usbh_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct bcm63xx_usbh_phy	*usbh;
-+	const struct bcm63xx_usbh_phy_variant *variant;
-+	struct resource *res;
-+	struct phy *phy;
-+	struct phy_provider *phy_provider;
-+
-+	usbh = devm_kzalloc(dev, sizeof(*usbh), GFP_KERNEL);
-+	if (!usbh)
-+		return -ENOMEM;
-+
-+	variant = device_get_match_data(dev);
-+	if (!variant)
-+		return -EINVAL;
-+	usbh->variant = variant;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	usbh->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(usbh->base))
-+		return PTR_ERR(usbh->base);
-+
-+	usbh->reset = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(usbh->reset)) {
-+		if (PTR_ERR(usbh->reset) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get reset\n");
-+		return PTR_ERR(usbh->reset);
-+	}
-+
-+	usbh->usbh_clk = devm_clk_get_optional(dev, "usbh");
-+	if (IS_ERR(usbh->usbh_clk))
-+		return PTR_ERR(usbh->usbh_clk);
-+
-+	usbh->usb_ref_clk = devm_clk_get_optional(dev, "usb_ref");
-+	if (IS_ERR(usbh->usb_ref_clk))
-+		return PTR_ERR(usbh->usb_ref_clk);
-+
-+	phy = devm_phy_create(dev, NULL, &bcm63xx_usbh_phy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(phy);
-+	}
-+
-+	platform_set_drvdata(pdev, usbh);
-+	phy_set_drvdata(phy, usbh);
-+
-+	phy_provider = devm_of_phy_provider_register(dev,
-+						     bcm63xx_usbh_phy_xlate);
-+	if (IS_ERR(phy_provider)) {
-+		dev_err(dev, "failed to register PHY provider\n");
-+		return PTR_ERR(phy_provider);
-+	}
-+
-+	dev_info(dev, "Registered BCM63xx USB PHY driver\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm63xx_usbh_phy_ids[] __initconst = {
-+	{ .compatible = "brcm,bcm6318-usbh-phy", .data = &usbh_bcm6318 },
-+	{ .compatible = "brcm,bcm6328-usbh-phy", .data = &usbh_bcm6328 },
-+	{ .compatible = "brcm,bcm6358-usbh-phy", .data = &usbh_bcm6358 },
-+	{ .compatible = "brcm,bcm6362-usbh-phy", .data = &usbh_bcm6368 },
-+	{ .compatible = "brcm,bcm6368-usbh-phy", .data = &usbh_bcm6368 },
-+	{ .compatible = "brcm,bcm63268-usbh-phy", .data = &usbh_bcm63268 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, bcm63xx_usbh_phy_ids);
-+
-+static struct platform_driver bcm63xx_usbh_phy_driver __refdata = {
-+	.driver	= {
-+		.name = "bcm63xx-usbh-phy",
-+		.of_match_table = bcm63xx_usbh_phy_ids,
-+	},
-+	.probe	= bcm63xx_usbh_phy_probe,
-+};
-+module_platform_driver(bcm63xx_usbh_phy_driver);
-+
-+MODULE_DESCRIPTION("BCM63xx USBH PHY driver");
-+MODULE_AUTHOR("Álvaro Fernández Rojas <noltari@gmail.com>");
-+MODULE_AUTHOR("Simon Arlott <simon@fire.lp0.eu>");
-+MODULE_LICENSE("GPL");
--- 
-2.27.0
+> +
+> +	/* Set AXI bus master to use un-cached access (for DMA) */
+> +	if (host->flags & (SDHCI_USE_SDMA | SDHCI_USE_ADMA) &&
+> +	    IS_ENABLED(CONFIG_DMA_DECLARE_COHERENT))
+> +		sparx5_set_cacheable(host, ACP_CACHE_FORCE_ENA);
+> +
+> +	pr_debug("%s: SDHC version: 0x%08x\n",
+> +		 mmc_hostname(host->mmc), sdhci_readl(host, MSHC2_VERSION));
+> +	pr_debug("%s: SDHC type:    0x%08x\n",
+> +		 mmc_hostname(host->mmc), sdhci_readl(host, MSHC2_TYPE));
+> +
+> +	return ret;
+> +
+> +err_clk:
+> +	clk_disable_unprepare(pltfm_host->clk);
+> +free_pltfm:
+> +	sdhci_pltfm_free(pdev);
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id sdhci_sparx5_of_match[] = {
+> +	{ .compatible = "microchip,dw-sparx5-sdhci" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sdhci_sparx5_of_match);
+> +
+> +static struct platform_driver sdhci_sparx5_driver = {
+> +	.driver = {
+> +		.name = "sdhci-sparx5",
+> +		.of_match_table = sdhci_sparx5_of_match,
+> +		.pm = &sdhci_pltfm_pmops,
+> +	},
+> +	.probe = sdhci_sparx5_probe,
+> +	.remove = sdhci_pltfm_unregister,
+> +};
+> +
+> +module_platform_driver(sdhci_sparx5_driver);
+> +
+> +MODULE_DESCRIPTION("Sparx5 SDHCI OF driver");
+> +MODULE_AUTHOR("Lars Povlsen <lars.povlsen@microchip.com>");
+> +MODULE_LICENSE("GPL v2");
+> 
 
