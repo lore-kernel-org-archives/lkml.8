@@ -2,54 +2,53 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B72C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB18C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2906E20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF7520882
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 16:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592324370;
-	bh=+utZ7Z+nOSUxMZ2H/E3rSN3fEYGP+BDM+gAtwi9Zr48=;
+	s=default; t=1592324377;
+	bh=bBOGp/s6/QPgSVyXCfA7cetJ8me5h+oJ/UkLC/kJLwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w1SHhfhxsoJTaSI9RKjIULYZVweOWuVbFE1UhEcm/pHbRpIdDB5DomW+qrMgWgj+o
-	 RHtHWm0rHz6HpleVkPPwSE6Kl/TaOThnwnPRRDdcki7GQKFfqajHSwlS32NfAmQ5YR
-	 uZEsscQlQ5zV7dR5ZWWn1E6i2bR/Gag1qHnhYozI=
+	b=AwJzgYHQ9b0i6m3Fp7nONzbA/ew2HJ6CgSKU2v5T2+zyQDSxhGB1B1jVMejH37bZN
+	 u4w2EaCar+2eEaNu4zUb+jJb2cgzi5j/otnksSrQew6s7hQgOkH7aMKUntTRuO68b5
+	 PXvOS3CnYm/HHv+g4OTgCiUhtUy7UZz0HT3byhqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbgFPPh3 (ORCPT
+        id S1731037AbgFPQTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:37:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48890 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 12:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729824AbgFPPh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:37:26 -0400
+        id S1730266AbgFPPhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:37:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A2D214F1;
-        Tue, 16 Jun 2020 15:37:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74C6F20C56;
+        Tue, 16 Jun 2020 15:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592321845;
-        bh=+utZ7Z+nOSUxMZ2H/E3rSN3fEYGP+BDM+gAtwi9Zr48=;
+        s=default; t=1592321837;
+        bh=bBOGp/s6/QPgSVyXCfA7cetJ8me5h+oJ/UkLC/kJLwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5M7sNbvONEp/K4VdHKgG1e4iMqlgkbSbO5zQAvKCs/cvK+segxuIbycMN1nIhrny
-         kAkoTTxWlkHbWqrNexuNLt8E9Z/L3Gu7a1ojWBu8IR8QR9JolyY7HAPZwIsNcFR6bj
-         JQoI9dyhD7zGd5P9EnIo1O3N1T211TzQihrBf2RY=
+        b=HVwKj7l3TXRRtWB5S8nPlyqqpzAP9DOmcZ/eVz3oum3zx4/Vg2cZ9R9uDJBONhsi0
+         y66OoH4rVYO3S5LltplVwPSesMvryX1PGkiIb+mlaBgS0v6ed0L7vNz+rZI8BE8Svu
+         aMiKsCqdKF2fx1SB01/mfm5XrXIH9EAtGovmW1MQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 037/134] sctp: fix refcount bug in sctp_wfree
-Date:   Tue, 16 Jun 2020 17:33:41 +0200
-Message-Id: <20200616153102.562131944@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 034/134] ipv4: fix a RCU-list lock in fib_triestat_seq_show
+Date:   Tue, 16 Jun 2020 17:33:38 +0200
+Message-Id: <20200616153102.422165991@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -62,118 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 5c3e82fe159622e46e91458c1a6509c321a62820 ]
+[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
 
-We should iterate over the datamsgs to move
-all chunks(skbs) to newsk.
+fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
+tb_hlist) without rcu_read_lock() will trigger a warning,
 
-The following case cause the bug:
-for the trouble SKB, it was in outq->transmitted list
+ net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
 
-sctp_outq_sack
-        sctp_check_transmitted
-                SKB was moved to outq->sacked list
-        then throw away the sack queue
-                SKB was deleted from outq->sacked
-(but it was held by datamsg at sctp_datamsg_to_asoc
-So, sctp_wfree was not called here)
+ other info that might help us debug this:
 
-then migrate happened
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by proc01/115277:
+  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
 
-        sctp_for_each_tx_datachunk(
-        sctp_clear_owner_w);
-        sctp_assoc_migrate();
-        sctp_for_each_tx_datachunk(
-        sctp_set_owner_w);
-SKB was not in the outq, and was not changed to newsk
+ Call Trace:
+  dump_stack+0xf4/0x164 (unreliable)
+  lockdep_rcu_suspicious+0x140/0x164
+  fib_triestat_seq_show+0x750/0x880
+  seq_read+0x1a0/0x670
+  proc_reg_read+0x10c/0x1b0
+  __vfs_read+0x3c/0x70
+  vfs_read+0xac/0x170
+  ksys_read+0x7c/0x140
+  system_call+0x5c/0x68
 
-finally
+Fix it by adding a pair of rcu_read_lock/unlock() and use
+cond_resched_rcu() to avoid the situation where walking of a large
+number of items  may prevent scheduling for a long time.
 
-__sctp_outq_teardown
-        sctp_chunk_put (for another skb)
-                sctp_datamsg_put
-                        __kfree_skb(msg->frag_list)
-                                sctp_wfree (for SKB)
-	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
-
-Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <mleitner@redhat.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/socket.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+ net/ipv4/fib_trie.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index ffd3262b7a41..58fe6556cdf5 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -147,29 +147,44 @@ static void sctp_clear_owner_w(struct sctp_chunk *chunk)
- 	skb_orphan(chunk->skb);
+diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
+index f12fa8da6127..1b851fd82613 100644
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -2455,6 +2455,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
+ 		   " %zd bytes, size of tnode: %zd bytes.\n",
+ 		   LEAF_SIZE, TNODE_SIZE(0));
+ 
++	rcu_read_lock();
+ 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
+ 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
+ 		struct fib_table *tb;
+@@ -2474,7 +2475,9 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
+ 			trie_show_usage(seq, t->stats);
+ #endif
+ 		}
++		cond_resched_rcu();
+ 	}
++	rcu_read_unlock();
+ 
+ 	return 0;
  }
- 
-+#define traverse_and_process()	\
-+do {				\
-+	msg = chunk->msg;	\
-+	if (msg == prev_msg)	\
-+		continue;	\
-+	list_for_each_entry(c, &msg->chunks, frag_list) {	\
-+		if ((clear && asoc->base.sk == c->skb->sk) ||	\
-+		    (!clear && asoc->base.sk != c->skb->sk))	\
-+			cb(c);	\
-+	}			\
-+	prev_msg = msg;		\
-+} while (0)
-+
- static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
-+				       bool clear,
- 				       void (*cb)(struct sctp_chunk *))
- 
- {
-+	struct sctp_datamsg *msg, *prev_msg = NULL;
- 	struct sctp_outq *q = &asoc->outqueue;
-+	struct sctp_chunk *chunk, *c;
- 	struct sctp_transport *t;
--	struct sctp_chunk *chunk;
- 
- 	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
- 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
--			cb(chunk);
-+			traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->sacked, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->out_chunk_list, list)
--		cb(chunk);
-+		traverse_and_process();
- }
- 
- static void sctp_for_each_rx_skb(struct sctp_association *asoc, struct sock *sk,
-@@ -9461,9 +9476,9 @@ static int sctp_sock_migrate(struct sock *oldsk, struct sock *newsk,
- 	 * paths won't try to lock it and then oldsk.
- 	 */
- 	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
--	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
-+	sctp_for_each_tx_datachunk(assoc, true, sctp_clear_owner_w);
- 	sctp_assoc_migrate(assoc, newsk);
--	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
-+	sctp_for_each_tx_datachunk(assoc, false, sctp_set_owner_w);
- 
- 	/* If the association on the newsk is already closed before accept()
- 	 * is called, set RCV_SHUTDOWN flag.
 -- 
 2.25.1
 
