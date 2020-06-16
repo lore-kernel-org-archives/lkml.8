@@ -2,98 +2,81 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D49C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 646AC206F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:09:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fynY8KlQ"
+	by mail.kernel.org (Postfix) with ESMTP id 37F4D206D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 01:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgFPBJN (ORCPT
+        id S1726776AbgFPBLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Jun 2020 21:09:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29764 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726327AbgFPBJN (ORCPT
+        Mon, 15 Jun 2020 21:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgFPBLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Jun 2020 21:09:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592269752;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ETWPRcEqi2xYFGp+N9uQV1NdwMdzaSSeQcMx7Y54xII=;
-        b=fynY8KlQ0wPJzTOR0hB2QsARRE4CEPkp/T2nON5CPUOHx17+uJOem06QxjBhmwLQ6EnMEf
-        S1ODIS8HxlGXYUR6v2hmkD4J1Jde7N0jTXl0KJz+J5BB5bolwwVCeuXbx2IxC8v9CUGYg2
-        bDicH8/OgRGsjQ09ipKTJvWQKuh20ps=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-IK-OBL4MO1ew5gV1Gmu6rw-1; Mon, 15 Jun 2020 21:09:10 -0400
-X-MC-Unique: IK-OBL4MO1ew5gV1Gmu6rw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BE8010059BA;
-        Tue, 16 Jun 2020 01:09:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 079B060C05;
-        Tue, 16 Jun 2020 01:09:07 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200615232751.GA22366@embeddedor>
-References: <20200615232751.GA22366@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        Mon, 15 Jun 2020 21:11:32 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BC2C061A0E;
+        Mon, 15 Jun 2020 18:11:31 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AE61E12322A03;
+        Mon, 15 Jun 2020 18:11:30 -0700 (PDT)
+Date:   Mon, 15 Jun 2020 18:11:29 -0700 (PDT)
+Message-Id: <20200615.181129.570239999533845176.davem@davemloft.net>
+To:     heiko@sntech.de
+Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH][next] afs: Use array3_size() helper in afs_extract_to_buf()
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <761786.1592269747.1@warthog.procyon.org.uk>
-Date:   Tue, 16 Jun 2020 02:09:07 +0100
-Message-ID: <761787.1592269747@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        christoph.muellner@theobroma-systems.com,
+        heiko.stuebner@theobroma-systems.com
+Subject: Re: [PATCH v3 1/3] net: phy: mscc: move shared probe code into a
+ helper
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200615144501.1140870-1-heiko@sntech.de>
+References: <20200615144501.1140870-1-heiko@sntech.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 15 Jun 2020 18:11:31 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
+From: Heiko Stuebner <heiko@sntech.de>
+Date: Mon, 15 Jun 2020 16:44:59 +0200
 
-> Use array3_size() helper instead of the open-coded version in
-> afs_extract_to_buf(). These sorts of multiplication factors need
-> to be wrapped in array3_size().
+>  static int vsc8584_probe(struct phy_device *phydev)
+>  {
+>  	struct vsc8531_private *vsc8531;
+> +	int rc;
+>  	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
+>  	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
+>  	   VSC8531_DUPLEX_COLLISION};
+> @@ -2005,32 +2015,24 @@ static int vsc8584_probe(struct phy_device *phydev)
+>  		return -ENOTSUPP;
+>  	}
+>  
+> -	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
+> -	if (!vsc8531)
+> -		return -ENOMEM;
 
-For afs_deliver_cb_callback(), this adds redundant checking, as does the one
-on the kmalloc() on the preceding line:
+Because you removed this devm_kzalloc() code, vsc8531 is never initialized.
 
-		call->buffer = kmalloc(array3_size(call->count, 3, 4),
-				       GFP_KERNEL);
-		if (!call->buffer)
-			return -ENOMEM;
+> +	return devm_phy_package_join(&phydev->mdio.dev, phydev,
+> +				     vsc8531->base_addr, 0);
 
-because directly above them is a range check:
+But it is still dereferenced here.
 
-		if (call->count > AFSCBMAX)
-			return afs_protocol_error(call, afs_eproto_cb_fid_count);
-
-limiting the array size to 50.
-
-Further, note that it's *not* a 3D array.  3 * 4 is the element size and is
-constant.  I've written it that way as the block is 3 XDR units, but the block
-size is actually 12 bytes.
-
-The one in the kmalloc() should also not be using array3_size() for the same
-reason.
-
-David
-
+Did the compiler really not warn you about this when you test built
+these changes?
