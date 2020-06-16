@@ -2,173 +2,171 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C14C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB92C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E18207BC
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592297215;
-	bh=+6RffVL41nfHA+iIpyYaRHncyXY5R7csHoov7Fi6/4Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QD6yM4ccFCCjKaqBp3lSx0dFx5h001Me//NzTsYvhRoTvQTgEB5KABiVOD9uL56hS
-	 yedO5zbmZymHnrWvnZNl/dWZu9kzNR9knMddMvQLyipXZv1j6koswXTJfDez1/18HV
-	 OM2C6lF+BoVcSVPAHBSB/niZrZ5xIGDc81dafowE=
+	by mail.kernel.org (Postfix) with ESMTP id DB190207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:47:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Yffh8200"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgFPIqz (ORCPT
+        id S1727865AbgFPIrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:46:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgFPIqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:46:53 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 716F720776;
-        Tue, 16 Jun 2020 08:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592297212;
-        bh=+6RffVL41nfHA+iIpyYaRHncyXY5R7csHoov7Fi6/4Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=D3v9dH7pxaKjHZKv11qSLjkH055LfWcZy3XnFRAJScDQ3eI+HhblfDzBSEPCP//lr
-         AtKod58RU9KVxtYmC9BgU4z4kwdyp3nQtzZj4Nyy+IWwPN+jboTmJe+lxmvDtymcxj
-         i15LtP5IA5gkt/Ma96tJtOHjHZu56zeH28MsRDFk=
-Date:   Tue, 16 Jun 2020 17:46:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>, oleg@redhat.com
-Subject: Re: [PATCH] tracing/probe: fix memleak in fetch_op_data operations
-Message-Id: <20200616174647.d1985a66fa9bbcbe01e014b4@kernel.org>
-In-Reply-To: <20200615171337.6525cefa@oasis.local.home>
-References: <20200615143034.GA1734@cosmos>
-        <20200615171337.6525cefa@oasis.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 16 Jun 2020 04:47:53 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:30774 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725710AbgFPIrv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 04:47:51 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05G8jK72024707;
+        Tue, 16 Jun 2020 03:47:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=PODMain02222019;
+ bh=y6iVAoQYhB4s4KWOwHCHVro9m7K4E8yWrvdpHQHxqtA=;
+ b=Yffh8200d6wzvhfNckDLknVgmVwCz84juvDOZomg1HeArtm7mxI+kzDl+yDKSTOQgr4B
+ pEpw85y560Q/IIP+ue80z/oSK+tK2X9c6il1YIbkRYnpdS7PZRIP5YTq7gyu12rM5DvJ
+ tTFqHtsi+vXndtnNNwY7mHiCB2sgEWt0Iqws1gWBJ72eOBuOnxUMcI0vVmGRCveaFITy
+ XYPCxrajdCzxI6kDw1DIGUmEz8uT2XXrAyYzdHYwEHx86+JWCicCPIhSBdOvxW0EP87J
+ zR+X0J3UlJ8leF0w1pugELONkfYOfdA54isnHj4wMhYNKxlmKlqipyNQN94S0n+8qqp2 aw== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 31mv73m3t0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 16 Jun 2020 03:47:50 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 16 Jun
+ 2020 09:47:48 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Tue, 16 Jun 2020 09:47:48 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 1032D2C5;
+        Tue, 16 Jun 2020 08:47:48 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 08:47:48 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v2 1/2] mfd: mfd-core: Add mechanism for removal of a
+ subset of children
+Message-ID: <20200616084748.GS71940@ediswmail.ad.cirrus.com>
+References: <20200615150722.5249-1-ckeepax@opensource.cirrus.com>
+ <20200616075834.GF2608702@dell>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200616075834.GF2608702@dell>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 clxscore=1015 spamscore=0 impostorscore=0 mlxlogscore=999
+ malwarescore=0 bulkscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006160063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
-
-On Mon, 15 Jun 2020 17:13:37 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
+On Tue, Jun 16, 2020 at 08:58:34AM +0100, Lee Jones wrote:
+> On Mon, 15 Jun 2020, Charles Keepax wrote:
+> > Happy to discuss other approaches as well, but this one was quite                                                                                                                                                                              │··················
+> > appealing as it was very simple but affords quite a lot of flexibility.                                                                                                                                                                        │··················
 > 
-> Masami or Srikar would you like to look at this patch.
-
-Thanks for letting me know!
-
+> What about this?
 > 
-> And wondering why you were not on the Cc to this patch in the first
-> place, please take a look at the patch I want to add at the bottom ;-)
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index f5a73af60dd40..a06e0332e1e31 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -283,7 +283,7 @@ int mfd_add_devices(struct device *parent, int id,
+>  }
+>  EXPORT_SYMBOL(mfd_add_devices);
+>  
+> -static int mfd_remove_devices_fn(struct device *dev, void *data)
+> +static int mfd_remove_devices_fn(struct device *dev, void *level)
+>  {
+>         struct platform_device *pdev;
+>         const struct mfd_cell *cell;
+> @@ -294,6 +294,9 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
+>         pdev = to_platform_device(dev);
+>         cell = mfd_get_cell(pdev);
+>  
+> +       if (cell->level && (!level || cell->level != *level))
+> +               return 0;
+> +
+>         regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
+>                                                cell->num_parent_supplies);
+>  
+> @@ -303,7 +306,11 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
+>  
+>  void mfd_remove_devices(struct device *parent)
+>  {
+> +       int level = MFD_DEP_LEVEL_HIGH;
+> +
+>         device_for_each_child_reverse(parent, NULL, mfd_remove_devices_fn);
+> +       device_for_each_child_reverse(parent, &level, mfd_remove_devices_fn);
+>  }
+>  EXPORT_SYMBOL(mfd_remove_devices);
+> 
+> No need for special calls from the parent driver in this case.
+> 
+> Just a requirement to set the cell's dependency level.
+> 
 
-Agreed to expand MAINTAINERS to clarify that. For the kprobes part, 
+Apologies if I am missing something here, but this looks like a
+pretty challenging interface from the drivers side.  Rather than
+just statically setting tag in the mfd_cells and separate calls
+to mfd_remove_devices_by_tag, such as:
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+	mfd_remove_devices_by_tag(madera->dev, MADERA_OPTIONAL_DRIVER);
 
-BTW, for uprobes, I think Oleg is mainly reviewed changes on that in
-these days. Maybe better to assign him?
+	pm_runtime_disable(madera->dev);
+	regulator_disable(madera->dcvdd);
+	regulator_put(madera->dcvdd);
+
+	mfd_remove_devices(madera->dev);
+
+You need to statically set the level but then also iterate through
+the children and update the cell level on each subsequent remove,
+in my case:
+
+static int arizona_set_mfd_level(struct device *dev, void *data)
+{
+	struct platform_device *pdev = to_platform_device(dev);
+	if (pdev->mfd_cell)
+		pdev->mfd_cell->level = MFD_DEP_LEVEL_HIGH;
+}
+...
+	mfd_remove_devices(madera->dev);
+
+	device_for_each_child(madera->dev, NULL, arizona_set_mfd_level);
+
+	pm_runtime_disable(madera->dev);
+	regulator_disable(madera->dcvdd);
+	regulator_put(madera->dcvdd);
+
+	mfd_remove_devices(madera->dev);
+
+Does this match how you would expect this to be used?
+
+I do have some concerns. The code can't use mfd_get_cell since it
+returns a const pointer, although the pointer in platform_device
+isn't const so we access that directly, could update mfd_get_cell? We
+also don't have access to mfd_dev_type outside of the mfd core so
+its hard to check we are actually setting the mfd_cell of actual
+MFD children, I guess just checking for mfd_cell being not NULL is
+good enough?
 
 Thanks,
-
-
-> 
-> 
-> On Mon, 15 Jun 2020 20:00:38 +0530
-> Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com> wrote:
-> 
-> > kmemleak report:
-> >     [<57dcc2ca>] __kmalloc_track_caller+0x139/0x2b0
-> >     [<f1c45d0f>] kstrndup+0x37/0x80
-> >     [<f9761eb0>] parse_probe_arg.isra.7+0x3cc/0x630
-> >     [<055bf2ba>] traceprobe_parse_probe_arg+0x2f5/0x810
-> >     [<655a7766>] trace_kprobe_create+0x2ca/0x950
-> >     [<4fc6a02a>] create_or_delete_trace_kprobe+0xf/0x30
-> >     [<6d1c8a52>] trace_run_command+0x67/0x80
-> >     [<be812cc0>] trace_parse_run_command+0xa7/0x140
-> >     [<aecfe401>] probes_write+0x10/0x20
-> >     [<2027641c>] __vfs_write+0x30/0x1e0
-> >     [<6a4aeee1>] vfs_write+0x96/0x1b0
-> >     [<3517fb7d>] ksys_write+0x53/0xc0
-> >     [<dad91db7>] __ia32_sys_write+0x15/0x20
-> >     [<da347f64>] do_syscall_32_irqs_on+0x3d/0x260
-> >     [<fd0b7e7d>] do_fast_syscall_32+0x39/0xb0
-> >     [<ea5ae810>] entry_SYSENTER_32+0xaf/0x102
-> > 
-> > Post parse_probe_arg(), the FETCH_OP_DATA operation type is overwritten
-> > to FETCH_OP_ST_STRING, as a result memory is never freed since
-> > traceprobe_free_probe_arg() iterates only over SYMBOL and DATA op types
-> > 
-> > Setup fetch string operation correctly after fetch_op_data operation.
-> > 
-> > Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-> > ---
-> >  kernel/trace/trace_probe.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index b8a928e..d2867cc 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> > @@ -639,8 +639,8 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
-> >  			ret = -EINVAL;
-> >  			goto fail;
-> >  		}
-> > -		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM) ||
-> > -		     parg->count) {
-> > +		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM ||
-> > +		     code->op == FETCH_OP_DATA) || parg->count) {
-> >  			/*
-> >  			 * IMM, DATA and COMM is pointing actual address, those
-> >  			 * must be kept, and if parg->count != 0, this is an
-> 
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 47873f2e6696..116e5cc7ef95 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9229,6 +9229,8 @@ F:	Documentation/kprobes.txt
->  F:	include/linux/kprobes.h
->  F:	include/asm-generic/kprobes.h
->  F:	kernel/kprobes.c
-> +F:	kernel/trace/trace_kprobe.c
-> +F:	kernel/trace/trace_probe.c
->  
->  KS0108 LCD CONTROLLER DRIVER
->  M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
-> @@ -16996,6 +16998,16 @@ F:	drivers/mtd/ubi/
->  F:	include/linux/mtd/ubi.h
->  F:	include/uapi/mtd/ubi-user.h
->  
-> +UPROBES
-> +M:	Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> +S:	Maintained
-> +F:	Documentation/trace/uprobetracer.rst
-> +F:	Documentation/features/debug/uprobes
-> +F:	include/linux/uprobes.h
-> +F:	kernel/events/uprobes.c
-> +F:	kernel/trace/trace_uprobe.c
-> +F:	kernel/trace/trace_probe.c
-> +
->  USB "USBNET" DRIVER FRAMEWORK
->  M:	Oliver Neukum <oneukum@suse.com>
->  L:	netdev@vger.kernel.org
-> 
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Charles
