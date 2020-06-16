@@ -2,142 +2,104 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0202D20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8130A20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 10:32:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oOVDATDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgFPKbm (ORCPT
+        id S1728324AbgFPKcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 06:31:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49348 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgFPKbj (ORCPT
+        Tue, 16 Jun 2020 06:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbgFPKbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 06:31:39 -0400
-Received: from [114.249.250.117] (helo=[192.168.1.10])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1jl8sS-0008DE-9A; Tue, 16 Jun 2020 10:31:36 +0000
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: continue to init phy even when
- failed to disable ULP
-To:     Paul Menzel <pmenzel@molgen.mpg.de>, jeffrey.t.kirsher@intel.com,
-        davem@davemloft.net, kuba@kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vitaly.lifshits@intel.com,
-        kai.heng.feng@canonical.com, sasha.neftin@intel.com
-References: <20200616100512.22512-1-aaron.ma@canonical.com>
- <74391e62-7226-b0f8-d129-768b88f13160@molgen.mpg.de>
-From:   Aaron Ma <aaron.ma@canonical.com>
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <b42b344b-9bdc-edf5-a940-9e4db3a73928@canonical.com>
-Date:   Tue, 16 Jun 2020 18:31:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 16 Jun 2020 06:31:45 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E83C08C5C2;
+        Tue, 16 Jun 2020 03:31:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Gh7RFTXOWWEwXkqUOJF0XcAnRZHVHCKl/wuld2I2MhA=; b=oOVDATDTspIuLa58Sihodo+6rS
+        8l3QSIsv3BJTw5olTRniYjVZvBpLQmpDhVXlrN4ZndTR5hoxhJoejBG2gVTtYKxRcxKC7etvmwlEb
+        gWLQIz17AakGEAJXJfZc2PhbtoNaWKnPm0HWow/HwIXlJu7JQBZsTrNAoAgDNEG5TJfsYAoXUm9/M
+        62htO08TiKopeDwpiNEeBIIVAmsGB+CYQw+MoGV6AYrvkeRFD4NdoQd56m8KQy4uLMWpQuVlrY6Bo
+        FjB8o1+FzGmmO8KsmISS4Roarxc5kGzvT2BNZG9vxxxbLAKq2Vsm3Xp0/s8IR1VLKVZYDV0sC0jM2
+        2Q1VTIpQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jl8sV-0004v2-AK; Tue, 16 Jun 2020 10:31:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 971833017B7;
+        Tue, 16 Jun 2020 12:31:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 822E22022DEBD; Tue, 16 Jun 2020 12:31:37 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:31:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dexuan Cui <decui@microsoft.com>, vkuznets <vkuznets@redhat.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Ju-Hyoung Lee <juhlee@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: hv_hypercall_pg page permissios
+Message-ID: <20200616103137.GQ2531@hirez.programming.kicks-ass.net>
+References: <20200407073830.GA29279@lst.de>
+ <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net>
+ <HK0P153MB0322D52F61E540CA7515CC4BBF810@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <87y2ooiv5k.fsf@vitty.brq.redhat.com>
+ <HK0P153MB0322DE798AA39BCCD4A208E4BF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <HK0P153MB0322EB3EE51073CC021D4AEABF9C0@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+ <20200616072318.GA17600@lst.de>
+ <20200616101807.GO2531@hirez.programming.kicks-ass.net>
+ <20200616102350.GA29684@lst.de>
+ <20200616102412.GB29684@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <74391e62-7226-b0f8-d129-768b88f13160@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616102412.GB29684@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/16/20 6:20 PM, Paul Menzel wrote:
-> Dear Aaron,
-> 
-> 
-> Thank you for your patch.
-> 
-> (Rant: Some more fallout from the other patch, which nobody reverted.)
-> 
+On Tue, Jun 16, 2020 at 12:24:12PM +0200, Christoph Hellwig wrote:
+> On Tue, Jun 16, 2020 at 12:23:50PM +0200, Christoph Hellwig wrote:
 
-Would you like a revert?
+> > > +	hv_hypercall_pg = module_alloc(PAGE_SIZE);
+> > >  	if (hv_hypercall_pg == NULL) {
+> > >  		wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
+> > >  		goto remove_cpuhp_state;
+> > >  	}
+> > >  
+> > > +	set_memory_ro((unsigned long)hv_hypercall_pg, 1);
+> > > +	set_memory_x((unsigned long)hv_hypercall_pg, 1);
+> > 
+> > The changing of the permissions sucks.  I thought about adding
+> > a module_alloc_prot with an explicit pgprot_t argument.  On x86
+> > alone at least ftrace would also benefit from that.
 
-Thanks,
-Aaron
+How would ftrace benefit from a RX permission? We need to actually write
+to the page first. This HV thing is special in that it lets the host
+write.
 
-> Am 16.06.20 um 12:05 schrieb Aaron Ma:
->> After commit "e1000e: disable s0ix entry and exit flows for ME systems",
->> some ThinkPads always failed to disable ulp by ME.
-> 
-> Please add the (short) commit hash from the master branch.
-> 
-> s/ulp/ULP/
-> 
-> Please list one ThinkPad as example.
-> 
->> commit "e1000e: Warn if disabling ULP failed" break out of init phy:
-> 
-> 1.  Please add the closing quote ".
-> 2.  Please add the commit hash.
-> 
->> error log:
->> [   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
->> [   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast Packet
->> [   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
->>
->> When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
->> If continue to init phy like before, it can work as before.
->> iperf test result good too.
->>
->> Chnage e_warn to e_dbg, in case it confuses.
-> 
-> s/Chnage/Change/
-> 
-> Please leave the level warning, and improve the warning message instead, so a user knows what is going on.
-> 
-> Could you please add a `Fixes:` tag and the URL to the bug report?
-> 
->> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
->> ---
->>   drivers/net/ethernet/intel/e1000e/ich8lan.c | 3 +--
->>   1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> index f999cca37a8a..63405819eb83 100644
->> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> @@ -302,8 +302,7 @@ static s32 e1000_init_phy_workarounds_pchlan(struct e1000_hw *hw)
->>       hw->dev_spec.ich8lan.ulp_state = e1000_ulp_state_unknown;
->>       ret_val = e1000_disable_ulp_lpt_lp(hw, true);
->>       if (ret_val) {
->> -        e_warn("Failed to disable ULP\n");
->> -        goto out;
->> +        e_dbg("Failed to disable ULP\n");
->>       }
->>         ret_val = hw->phy.ops.acquire(hw);
->>
-> 
-> Kind regards,
-> 
-> Paul
+> The above is also missing a set_vm_flush_reset_perms.
+
+Ah, indeed. Otherwise we don't clean up properly.
