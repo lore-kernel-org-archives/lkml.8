@@ -2,199 +2,132 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C906C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04BB420786
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E220A2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:05:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="dsvQ4Dph";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YfteQO+m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HXehFBmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgFPPFE (ORCPT
+        id S1729854AbgFPPFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:05:04 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:59665 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728445AbgFPPFD (ORCPT
+        Tue, 16 Jun 2020 11:05:43 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59908 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729809AbgFPPFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:05:03 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 31B065C00AB;
-        Tue, 16 Jun 2020 11:05:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 16 Jun 2020 11:05:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=+/Free3np84k0kBJDWVF1jSVMhN
-        u9FRY1V3ChXa3w8c=; b=dsvQ4DphF2djb9iaYRtH9j4VQm7shqQLUk5XgA0Vt93
-        2oVR+dcRcLKX9tAQzm/51Zr/WsRetYV4zAKdDIkGvuF5/92+l0hDyc4R5T3j3S5s
-        0f/43NQqAiBMsI4JnDB9kuMSx5ECdOiaBR2sz9e3pOFOR8zVWUneOWT9Gkynk5rn
-        6jK+jgYzW0WNEQXZUfKIJFEfEfvDDsSuyig18T18qtLNoxiEaAnbWv3V6K0dKAHg
-        8SWSTsOl8Ivbp58Br2yjTLxc9eMyL3PYlkJtPfz8LzBF9Xa2JhAaMUAq3KmHqM5H
-        rRarKnzBKK/Lc8N//p2eqN4RGVtr5OGtR+BE+mrnyJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=+/Free
-        3np84k0kBJDWVF1jSVMhNu9FRY1V3ChXa3w8c=; b=YfteQO+m0GL348X5GIWnSy
-        9fs8PdyRFCR/bZqYXpD+IBG6ROAjSUPBs6XyhS85y5QtEOruOlWF8AgrL3IJnpA/
-        GXsHBR44HS6367JtwebmBDHyzjBZzGRBUdaPEbRFAubNQQ4BjpFZuFdu69sKdk9Q
-        GOdQB/1J1J+p1cHytU5yfHkk+qYqHoxI2qQJBIfkQNEPVDh9nv2iMf1iHgBYIFK0
-        69S2qqQBZiGD0MiyzmTBqg6MfxE8s1K/DF2M2/659wZymeJQLBMa9GNBEO06zPX7
-        F/FY/Zaz+UAoxmLs5ftIQJ8CCkPV44/TipaKpFccsTpRq8HnTFu4BJllgqE40B4w
-        ==
-X-ME-Sender: <xms:k9_oXo3iNZdgVrB0xb65jqVksRCtvsSQX_BIBRwkVGY3umwQ7b_A6A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejtddgkeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:k9_oXjFAbjMjEA3tPARwNGHNQWQ34yMoLuy18PXLCKrUDU-qwi_B7Q>
-    <xmx:k9_oXg6zKZb2uVVaeKcANbxOebLSfFsEJbgrKytYuYaoikiuFXy3eA>
-    <xmx:k9_oXh09a-A9ZWJBme-hAE_5PDIIhj-QsUq5PcEH1ReT8jBfeMTbDQ>
-    <xmx:nt_oXuPj6PyWLNQr86spA3S1nr2DsRPH56txu_vj7VrnOrfLpio4zg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 92996328005A;
-        Tue, 16 Jun 2020 11:04:51 -0400 (EDT)
-Date:   Tue, 16 Jun 2020 17:04:49 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Eric Anholt <eric@anholt.net>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH v3 033/105] drm/vc4: crtc: Assign output to channel
- automatically
-Message-ID: <20200616150449.xkgyxd6bwcp3cfkb@gilmour.lan>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <5186409a2b5d290b78f6b518a2eb8e407bf1e83e.1590594512.git-series.maxime@cerno.tech>
- <CADaigPXQ4fLyba3X1mtSnRZb-Z2HgJck_acbpLXGnaL0RqEXQQ@mail.gmail.com>
+        Tue, 16 Jun 2020 11:05:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592319936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rXbjvJPZU9GzTq8LOO4SZ69J1AJAOxGiWdFnkvpgDCI=;
+        b=HXehFBmmXrJjPB68vZLiUa43vbIhWhl/xo31Y43zN+K7lI7kZ3VFPelGQqBvrx53NkSvyh
+        tTAuQ/xDSObfzwhjkj9Q5TK5ehgxrG7yGSF/TX/vewwhnxWtdOiwIJBgEAw6VNtIxWxnK3
+        APBRtIwZWyOT5cpFEzcUZkWaZVpxR9k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-rhm5WjahMFKJc8Xm5_1I2g-1; Tue, 16 Jun 2020 11:05:32 -0400
+X-MC-Unique: rhm5WjahMFKJc8Xm5_1I2g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B20C100CCC9;
+        Tue, 16 Jun 2020 15:05:27 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-114-156.rdu2.redhat.com [10.10.114.156])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 897CF7890A;
+        Tue, 16 Jun 2020 15:05:22 +0000 (UTC)
+Subject: Re: [PATCH v4 3/3] btrfs: Use kfree() in
+ btrfs_ioctl_get_subvol_info()
+To:     dsterba@suse.cz, Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+References: <20200616015718.7812-1-longman@redhat.com>
+ <20200616015718.7812-4-longman@redhat.com>
+ <20200616144804.GD27795@twin.jikos.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <75152002-5f02-04b6-a811-29ef79961e0b@redhat.com>
+Date:   Tue, 16 Jun 2020 11:05:22 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zmtci7znkd6b2wdu"
-Content-Disposition: inline
-In-Reply-To: <CADaigPXQ4fLyba3X1mtSnRZb-Z2HgJck_acbpLXGnaL0RqEXQQ@mail.gmail.com>
+In-Reply-To: <20200616144804.GD27795@twin.jikos.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/16/20 10:48 AM, David Sterba wrote:
+> On Mon, Jun 15, 2020 at 09:57:18PM -0400, Waiman Long wrote:
+>> In btrfs_ioctl_get_subvol_info(), there is a classic case where kzalloc()
+>> was incorrectly paired with kzfree(). According to David Sterba, there
+>> isn't any sensitive information in the subvol_info that needs to be
+>> cleared before freeing. So kfree_sensitive() isn't really needed,
+>> use kfree() instead.
+>>
+>> Reported-by: David Sterba <dsterba@suse.cz>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>   fs/btrfs/ioctl.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+>> index f1dd9e4271e9..e8f7c5f00894 100644
+>> --- a/fs/btrfs/ioctl.c
+>> +++ b/fs/btrfs/ioctl.c
+>> @@ -2692,7 +2692,7 @@ static int btrfs_ioctl_get_subvol_info(struct file *file, void __user *argp)
+>>   	btrfs_put_root(root);
+>>   out_free:
+>>   	btrfs_free_path(path);
+>> -	kfree_sensitive(subvol_info);
+>> +	kfree(subvol_info);
+> I would rather merge a patch doing to kzfree -> kfree instead of doing
+> the middle step to switch it to kfree_sensitive. If it would help
+> integration of your patchset I can push it to the next rc so there are
+> no kzfree left in the btrfs code. Treewide change like that can take
+> time so it would be one less problem to care about for you.
+>
+Sure, I will move it forward in the patch series.
 
---zmtci7znkd6b2wdu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+Longman
 
-Hi Eric,
-
-On Wed, May 27, 2020 at 10:23:23AM -0700, Eric Anholt wrote:
-> On Wed, May 27, 2020 at 8:50 AM Maxime Ripard <maxime@cerno.tech> wrote:
-> >  static int
-> >  vc4_atomic_check(struct drm_device *dev, struct drm_atomic_state *stat=
-e)
-> >  {
-> > -       int ret;
-> > +       unsigned long unassigned_channels =3D GENMASK(NUM_CHANNELS - 1,=
- 0);
-> > +       struct drm_crtc_state *crtc_state;
-> > +       struct drm_crtc *crtc;
-> > +       int i, ret;
-> > +
-> > +       for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
-> > +               struct vc4_crtc_state *vc4_crtc_state =3D
-> > +                       to_vc4_crtc_state(crtc_state);
-> > +               struct vc4_crtc *vc4_crtc =3D to_vc4_crtc(crtc);
-> > +               bool is_assigned =3D false;
-> > +               unsigned int channel;
-> > +
-> > +               if (!crtc_state->active)
-> > +                       continue;
-> > +
-> > +               /*
-> > +                * The problem we have to solve here is that we have
-> > +                * up to 7 encoders, connected to up to 6 CRTCs.
-> > +                *
-> > +                * Those CRTCs, depending on the instance, can be
-> > +                * routed to 1, 2 or 3 HVS FIFOs, and we need to set
-> > +                * the change the muxing between FIFOs and outputs in
-> > +                * the HVS accordingly.
-> > +                *
-> > +                * It would be pretty hard to come up with an
-> > +                * algorithm that would generically solve
-> > +                * this. However, the current routing trees we support
-> > +                * allow us to simplify a bit the problem.
-> > +                *
-> > +                * Indeed, with the current supported layouts, if we
-> > +                * try to assign in the ascending crtc index order the
-> > +                * FIFOs, we can't fall into the situation where an
-> > +                * earlier CRTC that had multiple routes is assigned
-> > +                * one that was the only option for a later CRTC.
-> > +                *
-> > +                * If the layout changes and doesn't give us that in
-> > +                * the future, we will need to have something smarter,
-> > +                * but it works so far.
-> > +                */
-> > +               for_each_set_bit(channel, &unassigned_channels,
-> > +                                sizeof(unassigned_channels)) {
-> > +
-> > +                       if (!(BIT(channel) & vc4_crtc->data->hvs_availa=
-ble_channels))
-> > +                               continue;
-> > +
-> > +                       vc4_crtc_state->assigned_channel =3D channel;
-> > +                       unassigned_channels &=3D ~BIT(channel);
-> > +                       is_assigned =3D true;
-> > +                       break;
-> > +               }
-> > +
-> > +               if (!is_assigned)
-> > +                       return -EINVAL;
->=20
-> I think this logic is just
->=20
-> int matching_channels =3D unassigned_channels &
-> vc4_crtc->data->hvs_available_channels;
-> if (matching_channels) {
->   vc4_crtc_state->assigned_channel =3D ffs(matching_channels) - 1;
->   unassigned_channels &=3D ~BIT(channel);
-> } else {
->   return -EINVAL;
-> }
-
-Thanks for that suggestion (and the others), it indeed works as expected.
-
-> If you're changing the assignment of a channel, I think you're going
-> to need to set state->mode_changed or something to trigger a full
-> modeset, so we don't try to just rewrite the channel of an existing
-> CRTC while scanning out.
-
-Since we won't have any CRTC configuration done outside of atomic_enable
-/ atomic_disable, can we really have a case where we would reallocate a
-new channel to a CRTC without that CRTC being disabled / enabled?
-
-Maxime
-
---zmtci7znkd6b2wdu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXujfkQAKCRDj7w1vZxhR
-xQm+AP9F9MIRdIiijjgN1Mb4ApZjJiIV3vUc+zN2siB+w5+gXAD+NrbAe75hbs1Y
-t37PcJ+IJstdGHrCFC+4QRRYyhPxBgY=
-=qtWX
------END PGP SIGNATURE-----
-
---zmtci7znkd6b2wdu--
