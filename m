@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A491C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B635208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CD1207C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322084;
-	bh=KcBtSG9xpoG4KBKN2wsFVC5ANJ63ngAtb8H3x5Iz6Dw=;
+	s=default; t=1592322086;
+	bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=snLd0OfHLg5/sLd6IW5cPabV2BvawhJHX6XlN8j8OWOb9zQypEoyNvcG2KQEsQHk9
-	 M20TmDQiCBiXRe43smKxs8yDN9LqTb2fyX3ODjvkewQ6PFdaPt15KngHM/c3qlTvuj
-	 TUYS3ilal8tRfVmpkBjutJjivVz1sVUJBZFgIwfU=
+	b=kvLiWhkRYz9oboAvhu71S0YoEFQYocY4CmjCNG7JvUXNh0Vjt2nOGgMNdxWGC+E6i
+	 +4PxxBjxbehLlGzxSEWrHvSGHuFnUmZeQZeprTyORmdzOYaq7R8KzZIv/Aaqsqeo3O
+	 s+ewJG4l/ADF6ED0mdIW5P+mzHlO/ViEdSwt1jbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgFPPlX (ORCPT
+        id S1731418AbgFPPlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:41:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56810 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:41:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729227AbgFPPlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:41:18 -0400
+        id S1731414AbgFPPlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:41:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD1D208D5;
-        Tue, 16 Jun 2020 15:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4028208E4;
+        Tue, 16 Jun 2020 15:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322077;
-        bh=KcBtSG9xpoG4KBKN2wsFVC5ANJ63ngAtb8H3x5Iz6Dw=;
+        s=default; t=1592322082;
+        bh=dGUE12/42yvGP/krDtbWrOV0Sj51B3xIa7MIrNpMlhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=op07wFr9uFiK4u/xPYWyzm5Aa1Z0HBrj4V+6i+3n1yFV63AeFz0A4upGYW0QCNRsL
-         1zo09ioJIws9sk24J1qM4i0Y2n/TpvQRN6CmE3z0cL+KUHJg2N3jeVBr6wHLilzpDg
-         +vGu0ETVQk9+Qnm7ntjQfi3XxGeB7s88x8A0aZkA=
+        b=VTZ7TccO9knwV0vDUhM8pFykbxgG43AkMHv+XMlcpiIAkkowfkaVWSyQNdXEvZsQ6
+         AcBuwnroAtKbma1tu4BK2dzZIcguzssuSyfU6X5EYec1wxkmKuUH+sIcQMRHpTssIF
+         fH1DSjDkoxYn5nLxkzT/sQbe/y1jmPEyjJI2B7tM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 109/134] KVM: arm64: Make vcpu_cp1x() work on Big Endian hosts
-Date:   Tue, 16 Jun 2020 17:34:53 +0200
-Message-Id: <20200616153106.007082794@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 5.4 128/134] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node description
+Date:   Tue, 16 Jun 2020 17:35:12 +0200
+Message-Id: <20200616153106.919058662@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153100.633279950@linuxfoundation.org>
 References: <20200616153100.633279950@linuxfoundation.org>
@@ -59,45 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-commit 3204be4109ad681523e3461ce64454c79278450a upstream.
+commit a1af7f36c70369b971ee1cf679dd68368dad23f0 upstream.
 
-AArch32 CP1x registers are overlayed on their AArch64 counterparts
-in the vcpu struct. This leads to an interesting problem as they
-are stored in their CPU-local format, and thus a CP1x register
-doesn't "hit" the lower 32bit portion of the AArch64 register on
-a BE host.
+Remove non-removable and mmc-ddr-1_8v properties from the sdmmc0
+node which come probably from an unchecked copy/paste.
 
-To workaround this unfortunate situation, introduce a bias trick
-in the vcpu_cp1x() accessors which picks the correct half of the
-64bit register.
-
-Cc: stable@vger.kernel.org
-Reported-by: James Morse <james.morse@arm.com>
-Tested-by: James Morse <james.morse@arm.com>
-Acked-by: James Morse <james.morse@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes:42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
+Cc: stable@vger.kernel.org # 4.19 and later
+Link: https://lore.kernel.org/r/20200401221504.41196-1-ludovic.desroches@microchip.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/kvm_host.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -392,8 +392,10 @@ void vcpu_write_sys_reg(struct kvm_vcpu
-  * CP14 and CP15 live in the same array, as they are backed by the
-  * same system registers.
-  */
--#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r)])
--#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r)])
-+#define CPx_BIAS		IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)
-+
-+#define vcpu_cp14(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
-+#define vcpu_cp15(v,r)		((v)->arch.ctxt.copro[(r) ^ CPx_BIAS])
+--- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+@@ -125,8 +125,6 @@
+ 			bus-width = <8>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
+-			non-removable;
+-			mmc-ddr-1_8v;
+ 			status = "okay";
+ 		};
  
- struct kvm_vm_stat {
- 	ulong remote_tlb_flush;
 
 
