@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73621C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF72820FC3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5584520C56
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 12:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgFPMWM (ORCPT
+        id S1729287AbgFPMXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 08:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42674 "EHLO
+        Tue, 16 Jun 2020 08:23:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728795AbgFPMV5 (ORCPT
+        with ESMTP id S1728782AbgFPMWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 08:21:57 -0400
+        Tue, 16 Jun 2020 08:22:12 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7610CC08C5C2;
-        Tue, 16 Jun 2020 05:21:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3C2C08C5C2;
+        Tue, 16 Jun 2020 05:22:11 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlAbC-0004eT-8x; Tue, 16 Jun 2020 14:21:54 +0200
+        id 1jlAbQ-0004m2-06; Tue, 16 Jun 2020 14:22:08 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 206F51C0095;
-        Tue, 16 Jun 2020 14:21:51 +0200 (CEST)
-Date:   Tue, 16 Jun 2020 12:21:50 -0000
-From:   "tip-bot2 for Christophe JAILLET" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 909371C0854;
+        Tue, 16 Jun 2020 14:21:56 +0200 (CEST)
+Date:   Tue, 16 Jun 2020 12:21:56 -0000
+From:   "tip-bot2 for Dietmar Eggemann" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/deadline: Fix a typo in a comment
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Subject: [tip: sched/core] sched/core: Remove redundant 'preempt' param from
+ sched_class->yield_to_task()
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200602195002.677448-1-christophe.jaillet@wanadoo.fr>
-References: <20200602195002.677448-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20200603080304.16548-3-dietmar.eggemann@arm.com>
+References: <20200603080304.16548-3-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
-Message-ID: <159231011092.16989.8945571092570940296.tip-bot2@tip-bot2>
+Message-ID: <159231011637.16989.10871387940341637458.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,34 +60,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     c49694173da004b1b16082f82f28bd625415fbb2
-Gitweb:        https://git.kernel.org/tip/c49694173da004b1b16082f82f28bd625415fbb2
-Author:        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-AuthorDate:    Tue, 02 Jun 2020 21:50:02 +02:00
+Commit-ID:     0900acf2d8273f79432a4ded122ad5a265e85783
+Gitweb:        https://git.kernel.org/tip/0900acf2d8273f79432a4ded122ad5a265e85783
+Author:        Dietmar Eggemann <dietmar.eggemann@arm.com>
+AuthorDate:    Wed, 03 Jun 2020 10:03:02 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:06 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:01 +02:00
 
-sched/deadline: Fix a typo in a comment
+sched/core: Remove redundant 'preempt' param from sched_class->yield_to_task()
 
-s/deadine/deadline/
+Commit 6d1cafd8b56e ("sched: Resched proper CPU on yield_to()") moved
+the code to resched the CPU from yield_to_task_fair() to yield_to()
+making the preempt parameter in sched_class->yield_to_task()
+unnecessary. Remove it. No other sched_class implements yield_to_task().
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200602195002.677448-1-christophe.jaillet@wanadoo.fr
+Link: https://lkml.kernel.org/r/20200603080304.16548-3-dietmar.eggemann@arm.com
 ---
- kernel/sched/deadline.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/core.c  | 2 +-
+ kernel/sched/fair.c  | 2 +-
+ kernel/sched/sched.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 84e84ba..d4708e2 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1137,7 +1137,7 @@ void init_dl_task_timer(struct sched_dl_entity *dl_se)
-  * cannot use the runtime, and so it replenishes the task. This rule
-  * works fine for implicit deadline tasks (deadline == period), and the
-  * CBS was designed for implicit deadline tasks. However, a task with
-- * constrained deadline (deadine < period) might be awakened after the
-+ * constrained deadline (deadline < period) might be awakened after the
-  * deadline, but before the next period. In this case, replenishing the
-  * task would allow it to run for runtime / deadline. As in this case
-  * deadline < period, CBS enables a task to run for more than the
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8f36032..9c89b0e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5810,7 +5810,7 @@ again:
+ 	if (task_running(p_rq, p) || p->state)
+ 		goto out_unlock;
+ 
+-	yielded = curr->sched_class->yield_to_task(rq, p, preempt);
++	yielded = curr->sched_class->yield_to_task(rq, p);
+ 	if (yielded) {
+ 		schedstat_inc(rq->yld_count);
+ 		/*
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index cbcb2f7..6a4dab2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7157,7 +7157,7 @@ static void yield_task_fair(struct rq *rq)
+ 	set_skip_buddy(se);
+ }
+ 
+-static bool yield_to_task_fair(struct rq *rq, struct task_struct *p, bool preempt)
++static bool yield_to_task_fair(struct rq *rq, struct task_struct *p)
+ {
+ 	struct sched_entity *se = &p->se;
+ 
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 1d4e94c..8d5d068 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1748,7 +1748,7 @@ struct sched_class {
+ 	void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
+ 	void (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
+ 	void (*yield_task)   (struct rq *rq);
+-	bool (*yield_to_task)(struct rq *rq, struct task_struct *p, bool preempt);
++	bool (*yield_to_task)(struct rq *rq, struct task_struct *p);
+ 
+ 	void (*check_preempt_curr)(struct rq *rq, struct task_struct *p, int flags);
+ 
