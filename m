@@ -2,98 +2,114 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5390C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB97C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7AD2098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520FC208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 19:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XGsna6YY"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="auHBa5AE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbgFPTpH (ORCPT
+        id S1731407AbgFPTrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 15:45:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56791 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730630AbgFPTpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 15:45:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592336705;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gyqueuFjC37VTOe25MsKub4gwfM3sfG08StS+6GkW5Y=;
-        b=XGsna6YYQ6p6k6+PMAOtWlC0hioU3mU5/dQm9cyPdCxaDX9igEMn5dlGvVzVkBfvmJSZ2k
-        iXLNJzba0ZMXfX6J//y+1DgJRxGYOkJ0I2zTeU8kPPAdpRCAp6gamhwJq83TnFHYNMc/wM
-        qLq6vta4EPLMMDKbvx1830RbjWazWb8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-6vyUyC-aPkWpBITbqg5EYQ-1; Tue, 16 Jun 2020 15:45:00 -0400
-X-MC-Unique: 6vyUyC-aPkWpBITbqg5EYQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CD5D835BB8;
-        Tue, 16 Jun 2020 19:44:55 +0000 (UTC)
-Received: from krava (unknown [10.40.193.177])
-        by smtp.corp.redhat.com (Postfix) with SMTP id EFA577CAB9;
-        Tue, 16 Jun 2020 19:44:51 +0000 (UTC)
-Date:   Tue, 16 Jun 2020 21:44:51 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@elte.hu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ziqian SUN <zsun@redhat.com>, Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH -tip V6 0/6] kprobes: Fixes mutex, rcu-list warnings and
- cleanups
-Message-ID: <20200616194451.GA2210496@krava>
-References: <158927054236.27680.18209720730136003586.stgit@devnote2>
- <20200527234941.a15490ee50669812df8183dc@kernel.org>
- <20200614153728.GA2009260@krava>
- <20200616150122.4a71d56d@oasis.local.home>
+        Tue, 16 Jun 2020 15:47:08 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:59205 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730609AbgFPTrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 15:47:04 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id f0c01c92;
+        Tue, 16 Jun 2020 19:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=7vGnD2Fc5hFa6zE6l8I/6fYFWTE=; b=auHBa5
+        AEe5pm5r80dgWM49RbxNg2b1wePIyReSMQ0Rz/3L8Yx5mFtqdklxmmgnU69XYlJN
+        hUBaHFgVJALywQiz6/SIkttoZgX1tGyz+Zg+VQcgVldFachBs52tuPslyyMFQ0LX
+        thiKjEu3HP7G7pjaS6Q85sWuiJrjwSZZouMci0xDSFLn39VuLeRw1x/kWL7uYtnC
+        q9lJ9u4WEJkyqJPlHNMFgYZ8GQhbEM4aqhZNPWgxeSvHzabhX4d1A2W++bIgoNgb
+        5POprpu6DVgEzddWZ80fiiLd2tnSpz4DTk3KcXvzj6IQwWQeVy1VhdN6Y6LpuXnz
+        67qrTsLtz03/PXLw==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id def91afe (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 16 Jun 2020 19:29:00 +0000 (UTC)
+Received: by mail-io1-f50.google.com with SMTP id s18so3192212ioe.2;
+        Tue, 16 Jun 2020 12:46:59 -0700 (PDT)
+X-Gm-Message-State: AOAM532ICgqzUljjLdMiLJDrmaM6G2P2VuQ5E+2Wa9rsZgiZCLicoMk2
+        6gPasqRds+Zf64jDUyn/ObteEMB32F2gp413H0M=
+X-Google-Smtp-Source: ABdhPJxC2pRunaModJX8LCWHauaz4Ko5hXWZ58PHme1+4UYNCmQGIC+iarFUNAqn+rNJyw3DywT6LsxlwSFMRJ3z3pU=
+X-Received: by 2002:a6b:6705:: with SMTP id b5mr4346341ioc.29.1592336817452;
+ Tue, 16 Jun 2020 12:46:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616150122.4a71d56d@oasis.local.home>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200616015718.7812-1-longman@redhat.com> <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
+In-Reply-To: <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 16 Jun 2020 13:46:46 -0600
+X-Gmail-Original-Message-ID: <CAHmME9rCD1KJNguthAhZ+OAVZTpBwEvGRLRV0tvQjBaEYG1bHQ@mail.gmail.com>
+Message-ID: <CAHmME9rCD1KJNguthAhZ+OAVZTpBwEvGRLRV0tvQjBaEYG1bHQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] mm, treewide: Rename kzfree() to kfree_sensitive()
+To:     Joe Perches <joe@perches.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Sterba <dsterba@suse.cz>, Linux-MM <linux-mm@kvack.org>,
+        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org,
+        Netdev <netdev@vger.kernel.org>, linux-ppp@vger.kernel.org,
+        WireGuard mailing list <wireguard@lists.zx2c4.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        ecryptfs@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org,
+        linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 03:01:22PM -0400, Steven Rostedt wrote:
-> On Sun, 14 Jun 2020 17:37:28 +0200
-> Jiri Olsa <jolsa@redhat.com> wrote:
-> 
-> > On Wed, May 27, 2020 at 11:49:41PM +0900, Masami Hiramatsu wrote:
-> > > (Oops, I missed Jiri in loop.)
-> > > 
-> > > Hi Ingo,
-> > > 
-> > > Could you take this series?
-> > > These are not adding any feature, but fixing real bugs.  
-> > 
-> > Hi,
-> > I still can't see this being pulled in, did I miss it?
-> > 
-> 
-> I'm getting a pull request ready for -rc2. I can pull these in with that.
+On Tue, Jun 16, 2020 at 12:54 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Mon, 2020-06-15 at 21:57 -0400, Waiman Long wrote:
+> >  v4:
+> >   - Break out the memzero_explicit() change as suggested by Dan Carpenter
+> >     so that it can be backported to stable.
+> >   - Drop the "crypto: Remove unnecessary memzero_explicit()" patch for
+> >     now as there can be a bit more discussion on what is best. It will be
+> >     introduced as a separate patch later on after this one is merged.
+>
+> To this larger audience and last week without reply:
+> https://lore.kernel.org/lkml/573b3fbd5927c643920e1364230c296b23e7584d.camel@perches.com/
+>
+> Are there _any_ fastpath uses of kfree or vfree?
 
-that'd be awesome, thanks!
-
-jirka
-
+The networking stack has various places where there will be a quick
+kmalloc followed by a kfree for an incoming or outgoing packet. One
+place that comes to mind would be esp_alloc_tmp, which does a quick
+allocation of some temporary kmalloc memory, processes some packet
+things inside of that, and then frees it, sometimes in the same
+function, and sometimes later in an async callback. I don't know how
+"fastpath" you consider this, but usually packet processing is
+something people want to do with minimal overhead, considering how
+fast NICs are these days.
