@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC71C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C812C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 964C821475
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2138208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 15:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592322131;
-	bh=xHNThwycT2mB04bLrAmNaSzszSiGQNOOjv31QwYQJNk=;
+	s=default; t=1592322135;
+	bh=iI/BZKi97QLx0JPtrtFK7ox1FG7npbhQVMDwhtTaRYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mX67dwIwD4DFrCx2nFF5qW3rMUZ9IINUCbV65krz3AIXCSTsxf+MvIaXa5XapCvWK
-	 LEKwt1I9X0hMOMOycJ6yEFgTJQbx6YhNAPBksBIZOT9Z1Qlu/Ieanl+DmUyGc3ysSh
-	 rwt18GdPUivNObkSINd3Fj04dLlBwvoE2POke51Y=
+	b=whywIGwT2GeoXMeExvD6sMFGubIcwCQof0dtDIBVjhwHcWGgAWPSh/1Q/75Gqkaop
+	 Qh9Dxk7Kvj/JsHvj+YgyTsPXvQEcZPTZ8YBEhkAChAl1VJL33nIydlutmFj/BpWrw6
+	 zFDqwIK/DHlElS0Zt1d3zH4x9yB4ibIqHQHy1oDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgFPPmK (ORCPT
+        id S1731634AbgFPPmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 11:42:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58354 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 11:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731602AbgFPPmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:42:04 -0400
+        id S1731623AbgFPPmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 11:42:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2419C21475;
-        Tue, 16 Jun 2020 15:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AA80214DB;
+        Tue, 16 Jun 2020 15:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592322123;
-        bh=xHNThwycT2mB04bLrAmNaSzszSiGQNOOjv31QwYQJNk=;
+        s=default; t=1592322128;
+        bh=iI/BZKi97QLx0JPtrtFK7ox1FG7npbhQVMDwhtTaRYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+xILbgysp1/GD/8B8JUIZV9BtiBuP2PKRu9y2N6VAwM1WIkpB6b9+nqbEBJeAQRz
-         U5HbXliivQelR06jFDDfmhGTRhiD/zEz0hjRBbR3DMXl+Rpjgqxo5mIj3LYDkmF97m
-         57slOmOIn+HCIM4APGS9H9BJ84R1ecw4WorkfayU=
+        b=GeWOlSO8zPXAeJgKIbdUgI16cio2151cOlDmhnKgi1q2xKzFrMtYIX5oQNN5TnU8Y
+         bbXJKY8VRhlWLpoiDFEwoo1cb8UJkDs/oESM2qIie5GkEwFw2OU8BVAucvBIskWDUN
+         EoR1/4nPr+Y4cxXjtDyryAUXTlo5lY7ETcrwfLOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+21f04f481f449c8db840@syzkaller.appspotmail.com,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Shaochun Chen <cscnull@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com,
+        Jon Maloy <jmaloy@redhat.com>,
+        Tuong Lien <tuong.t.lien@dektech.com.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 010/163] genetlink: fix memory leaks in genl_family_rcv_msg_dumpit()
-Date:   Tue, 16 Jun 2020 17:33:04 +0200
-Message-Id: <20200616153107.358375030@linuxfoundation.org>
+Subject: [PATCH 5.7 012/163] tipc: fix NULL pointer dereference in streaming
+Date:   Tue, 16 Jun 2020 17:33:06 +0200
+Message-Id: <20200616153107.461137968@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200616153106.849127260@linuxfoundation.org>
 References: <20200616153106.849127260@linuxfoundation.org>
@@ -67,190 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Tuong Lien <tuong.t.lien@dektech.com.au>
 
-[ Upstream commit c36f05559104b66bcd7f617e931e38c680227b74 ]
+[ Upstream commit 5e9eeccc58f3e6bcc99b929670665d2ce047e9c9 ]
 
-There are two kinds of memory leaks in genl_family_rcv_msg_dumpit():
+syzbot found the following crash:
 
-1. Before we call ops->start(), whenever an error happens, we forget
-   to free the memory allocated in genl_family_rcv_msg_dumpit().
+general protection fault, probably for non-canonical address 0xdffffc0000000019: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000000c8-0x00000000000000cf]
+CPU: 1 PID: 7060 Comm: syz-executor394 Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__tipc_sendstream+0xbde/0x11f0 net/tipc/socket.c:1591
+Code: 00 00 00 00 48 39 5c 24 28 48 0f 44 d8 e8 fa 3e db f9 48 b8 00 00 00 00 00 fc ff df 48 8d bb c8 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e2 04 00 00 48 8b 9b c8 00 00 00 48 b8 00 00 00
+RSP: 0018:ffffc90003ef7818 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8797fd9d
+RDX: 0000000000000019 RSI: ffffffff8797fde6 RDI: 00000000000000c8
+RBP: ffff888099848040 R08: ffff88809a5f6440 R09: fffffbfff1860b4c
+R10: ffffffff8c305a5f R11: fffffbfff1860b4b R12: ffff88809984857e
+R13: 0000000000000000 R14: ffff888086aa4000 R15: 0000000000000000
+FS:  00000000009b4880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000140 CR3: 00000000a7fdf000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ tipc_sendstream+0x4c/0x70 net/tipc/socket.c:1533
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x32f/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmmsg+0x195/0x480 net/socket.c:2496
+ __do_sys_sendmmsg net/socket.c:2525 [inline]
+ __se_sys_sendmmsg net/socket.c:2522 [inline]
+ __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2522
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x440199
+...
 
-2. When ops->start() fails, the 'info' has been already installed on
-   the per socket control block, so we should not free it here. More
-   importantly, nlk->cb_running is still false at this point, so
-   netlink_sock_destruct() cannot free it either.
+This bug was bisected to commit 0a3e060f340d ("tipc: add test for Nagle
+algorithm effectiveness"). However, it is not the case, the trouble was
+from the base in the case of zero data length message sending, we would
+unexpectedly make an empty 'txq' queue after the 'tipc_msg_append()' in
+Nagle mode.
 
-The first kind of memory leaks is easier to resolve, but the second
-one requires some deeper thoughts.
+A similar crash can be generated even without the bisected patch but at
+the link layer when it accesses the empty queue.
 
-After reviewing how netfilter handles this, the most elegant solution
-I find is just to use a similar way to allocate the memory, that is,
-moving memory allocations from caller into ops->start(). With this,
-we can solve both kinds of memory leaks: for 1), no memory allocation
-happens before ops->start(); for 2), ops->start() handles its own
-failures and 'info' is installed to the socket control block only
-when success. The only ugliness here is we have to pass all local
-variables on stack via a struct, but this is not hard to understand.
+We solve the issues by building at least one buffer to go with socket's
+header and an optional data section that may be empty like what we had
+with the 'tipc_msg_build()'.
 
-Alternatively, we can introduce a ops->free() to solve this too,
-but it is overkill as only genetlink has this problem so far.
+Note: the previous commit 4c21daae3dbc ("tipc: Fix NULL pointer
+dereference in __tipc_sendstream()") is obsoleted by this one since the
+'txq' will be never empty and the check of 'skb != NULL' is unnecessary
+but it is safe anyway.
 
-Fixes: 1927f41a22a0 ("net: genetlink: introduce dump info struct to be available during dumpit op")
-Reported-by: syzbot+21f04f481f449c8db840@syzkaller.appspotmail.com
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Jiri Pirko <jiri@mellanox.com>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Cc: Shaochun Chen <cscnull@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reported-by: syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com
+Fixes: c0bceb97db9e ("tipc: add smart nagle feature")
+Acked-by: Jon Maloy <jmaloy@redhat.com>
+Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netlink/genetlink.c |   94 +++++++++++++++++++++++++++++-------------------
- 1 file changed, 58 insertions(+), 36 deletions(-)
+ net/tipc/msg.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -513,15 +513,58 @@ static void genl_family_rcv_msg_attrs_fr
- 		kfree(attrbuf);
- }
+--- a/net/tipc/msg.c
++++ b/net/tipc/msg.c
+@@ -221,7 +221,7 @@ int tipc_msg_append(struct tipc_msg *_hd
+ 	accounted = skb ? msg_blocks(buf_msg(skb)) : 0;
+ 	total = accounted;
  
--static int genl_lock_start(struct netlink_callback *cb)
-+struct genl_start_context {
-+	const struct genl_family *family;
-+	struct nlmsghdr *nlh;
-+	struct netlink_ext_ack *extack;
-+	const struct genl_ops *ops;
-+	int hdrlen;
-+};
-+
-+static int genl_start(struct netlink_callback *cb)
- {
--	const struct genl_ops *ops = genl_dumpit_info(cb)->ops;
-+	struct genl_start_context *ctx = cb->data;
-+	const struct genl_ops *ops = ctx->ops;
-+	struct genl_dumpit_info *info;
-+	struct nlattr **attrs = NULL;
- 	int rc = 0;
- 
-+	if (ops->validate & GENL_DONT_VALIDATE_DUMP)
-+		goto no_attrs;
-+
-+	if (ctx->nlh->nlmsg_len < nlmsg_msg_size(ctx->hdrlen))
-+		return -EINVAL;
-+
-+	attrs = genl_family_rcv_msg_attrs_parse(ctx->family, ctx->nlh, ctx->extack,
-+						ops, ctx->hdrlen,
-+						GENL_DONT_VALIDATE_DUMP_STRICT,
-+						true);
-+	if (IS_ERR(attrs))
-+		return PTR_ERR(attrs);
-+
-+no_attrs:
-+	info = genl_dumpit_info_alloc();
-+	if (!info) {
-+		kfree(attrs);
-+		return -ENOMEM;
-+	}
-+	info->family = ctx->family;
-+	info->ops = ops;
-+	info->attrs = attrs;
-+
-+	cb->data = info;
- 	if (ops->start) {
--		genl_lock();
-+		if (!ctx->family->parallel_ops)
-+			genl_lock();
- 		rc = ops->start(cb);
--		genl_unlock();
-+		if (!ctx->family->parallel_ops)
-+			genl_unlock();
-+	}
-+
-+	if (rc) {
-+		kfree(attrs);
-+		genl_dumpit_info_free(info);
-+		cb->data = NULL;
- 	}
- 	return rc;
- }
-@@ -548,7 +591,7 @@ static int genl_lock_done(struct netlink
- 		rc = ops->done(cb);
- 		genl_unlock();
- 	}
--	genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
-+	genl_family_rcv_msg_attrs_free(info->family, info->attrs, false);
- 	genl_dumpit_info_free(info);
- 	return rc;
- }
-@@ -573,43 +616,23 @@ static int genl_family_rcv_msg_dumpit(co
- 				      const struct genl_ops *ops,
- 				      int hdrlen, struct net *net)
- {
--	struct genl_dumpit_info *info;
--	struct nlattr **attrs = NULL;
-+	struct genl_start_context ctx;
- 	int err;
- 
- 	if (!ops->dumpit)
- 		return -EOPNOTSUPP;
- 
--	if (ops->validate & GENL_DONT_VALIDATE_DUMP)
--		goto no_attrs;
--
--	if (nlh->nlmsg_len < nlmsg_msg_size(hdrlen))
--		return -EINVAL;
--
--	attrs = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
--						ops, hdrlen,
--						GENL_DONT_VALIDATE_DUMP_STRICT,
--						true);
--	if (IS_ERR(attrs))
--		return PTR_ERR(attrs);
--
--no_attrs:
--	/* Allocate dumpit info. It is going to be freed by done() callback. */
--	info = genl_dumpit_info_alloc();
--	if (!info) {
--		genl_family_rcv_msg_attrs_free(family, attrs, true);
--		return -ENOMEM;
+-	while (rem) {
++	do {
+ 		if (!skb || skb->len >= mss) {
+ 			prev = skb;
+ 			skb = tipc_buf_acquire(mss, GFP_KERNEL);
+@@ -249,7 +249,7 @@ int tipc_msg_append(struct tipc_msg *_hd
+ 		skb_put(skb, cpy);
+ 		rem -= cpy;
+ 		total += msg_blocks(hdr) - curr;
 -	}
--
--	info->family = family;
--	info->ops = ops;
--	info->attrs = attrs;
-+	ctx.family = family;
-+	ctx.nlh = nlh;
-+	ctx.extack = extack;
-+	ctx.ops = ops;
-+	ctx.hdrlen = hdrlen;
++	} while (rem);
+ 	return total - accounted;
+ }
  
- 	if (!family->parallel_ops) {
- 		struct netlink_dump_control c = {
- 			.module = family->module,
--			.data = info,
--			.start = genl_lock_start,
-+			.data = &ctx,
-+			.start = genl_start,
- 			.dump = genl_lock_dumpit,
- 			.done = genl_lock_done,
- 		};
-@@ -617,12 +640,11 @@ no_attrs:
- 		genl_unlock();
- 		err = __netlink_dump_start(net->genl_sock, skb, nlh, &c);
- 		genl_lock();
--
- 	} else {
- 		struct netlink_dump_control c = {
- 			.module = family->module,
--			.data = info,
--			.start = ops->start,
-+			.data = &ctx,
-+			.start = genl_start,
- 			.dump = ops->dumpit,
- 			.done = genl_parallel_done,
- 		};
 
 
