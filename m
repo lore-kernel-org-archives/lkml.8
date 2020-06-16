@@ -2,221 +2,231 @@ Return-Path: <SRS0=dgGg=75=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DD2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D18E20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:34:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vBPAH5XY"
+	by mail.kernel.org (Postfix) with ESMTP id DA4E220767
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Jun 2020 08:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgFPIel (ORCPT
+        id S1726626AbgFPIgv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 04:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgFPIek (ORCPT
+        Tue, 16 Jun 2020 04:36:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45168 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgFPIgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 04:34:40 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 973F3C03E96A
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:34:39 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id u186so24238492ybf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=f/PPs0Qkdb+BNDNosh43dX0cUVZrsnfYgReHGzPsZME=;
-        b=vBPAH5XYqmqw/nfOiQ2N/eNs2dfNqyYLNkJigMCwwwXy/LWQVSBVb8sNZ8214EfIRV
-         W1h6VtbG7KnXERJ5Sgj+J5ylSVXvKKNIXRq5cEZ3TPgJxYWBDADcCgCcXRaGLzfdjfz2
-         92bYgZJGsyXtdLVnbpzwsmPrWU0Rbxv3oP0jjseZfzwM+TTJVecwpdyvn+LtrllQJWIY
-         g4wNP39drrUvbrKGNb66HuobcNO3f0Yj03JV+ta38+tpSueXCLB4byqjel10T5luL2jc
-         dFD7Sap2u9Hj2sA7ACxphCFux2cU1zWN0ipZBFxCl73uRfKgmgRsN0sIyPBa6HQXlBBt
-         WOJw==
+        Tue, 16 Jun 2020 04:36:51 -0400
+Received: from mail-pj1-f69.google.com ([209.85.216.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jl75M-0005FX-8z
+        for linux-kernel@vger.kernel.org; Tue, 16 Jun 2020 08:36:48 +0000
+Received: by mail-pj1-f69.google.com with SMTP id j43so1780657pje.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 01:36:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=f/PPs0Qkdb+BNDNosh43dX0cUVZrsnfYgReHGzPsZME=;
-        b=nFcxKOG5NonFROXTbl356KZlbJs+PfPg+9p5XyztpZ8m97fSdGF2J0IR6ndZdjt3XR
-         F4ErVfHonTY+4sVmBx/v3D38O6ajQpU8Vc1JWGc7iUvOE8u1TamwUwBUALeUXqgRoe8d
-         IZKT46GosPsAgqkcJPkKeYA3Kjz9GdSSX+xZ8UssOtSx7HZoZgoGPTI7BA03iiR9iajR
-         WUQ906TnIVIrV3+77jlXmzX7GgRgZa2Pom4nbfQ/H4HGD7rGmfgoOOuHEjd/21IxXFUt
-         cThytL+TLw1lvT6YVXAsh3XZZnCRmX+vyLwYt6oMaUHbTqFaahpuvouyAY+FXuSoj8jr
-         YuRQ==
-X-Gm-Message-State: AOAM532XiE32PWmvhB4lnLxzZajizqko/GNaogRP6lLeVjnUY3dJ3maj
-        2n/UdrgVDdisv4BRhPZ/h0N7E91CX00=
-X-Google-Smtp-Source: ABdhPJxZFc4yfRMtSwmjvZSiJAl5T7nMmVObUX/IyCtAeq0iAufq3ykXEn7SrCLy7nTiDtruY1aYBMt/1ek=
-X-Received: by 2002:a25:14d5:: with SMTP id 204mr2534608ybu.446.1592296478781;
- Tue, 16 Jun 2020 01:34:38 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 10:34:35 +0200
-Message-Id: <20200616083435.223038-1-glider@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-Subject: [PATCH v2] [RFC] security: allow using Clang's zero initialization
- for stack variables
-From:   glider@google.com
-To:     yamada.masahiro@socionext.com, keescook@chromium.org,
-        jmorris@namei.org
-Cc:     maze@google.com, ndesaulniers@google.com,
-        gregkh@linuxfoundation.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=4luD9Pjs2w7u5TOT9P/1cM0hYy6m6xjsnc/GO2bXHUI=;
+        b=CLyKLFRIVi9r5MmREDDQoqU8ZmFRu59AM9zb580xkIqsGQm26rbvz4GJ8K1KeyBswv
+         6funrjBMRfdcFIB1Xsf0V1AFJAqzL1ZP96tNDrv7a5QCet2OCaNR/XYY6FeTfgWrtqcd
+         pCQCR0A3tz9TulPD1hHYxJklkiy8Tn/fq78h/ztJzm42hmicg7rbWSkDrZqxqfhUuOtL
+         XpFBsjjEZBcQdGVevb16TdbgXQ3qJ7eTAZD8OrURbdoXno93Ieca35MmBBwtDs8oxtMl
+         r/d1sk+bwPduJiCmV2kQN5CfSMA5M6baKJ/RJ05226YC4gHiYPF7W5s3jms9T1rF8DJ0
+         fXQQ==
+X-Gm-Message-State: AOAM533Y6oMpLYjKOdfEkEJE5vdxgFeJPQUpFlrswSlvL4ebJQRcD/A1
+        9gzBTNoQ3eixwuMrYXmvN3pZtZNTAD6HUQLWDwCqPkfOYPunhzqjOFBPELAd7SSSQfI8HU4gkKs
+        0yGjStsrdHRfvKfxrwShJD0lJK/6VDIMRfOarEhNXrA==
+X-Received: by 2002:a17:902:6bcb:: with SMTP id m11mr1171721plt.126.1592296606482;
+        Tue, 16 Jun 2020 01:36:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwr46RVkzz2pu7Plw4kJd58Tn68BBk+EPxhGs7rpMn1DvmsWcr5I98wLFFpjURYCM5noKBbYQ==
+X-Received: by 2002:a17:902:6bcb:: with SMTP id m11mr1171698plt.126.1592296606019;
+        Tue, 16 Jun 2020 01:36:46 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id a12sm15906822pfr.44.2020.06.16.01.36.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 01:36:45 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 1/2] ALSA: hda: Make codec controlled LED support more
+ generic
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <s5himfr30cv.wl-tiwai@suse.de>
+Date:   Tue, 16 Jun 2020 16:36:41 +0800
+Cc:     tiwai@suse.com, Jaroslav Kysela <perex@perex.cz>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Wenwen Wang <wenwen@cs.uga.edu>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kailang Yang <kailang@realtek.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Tomas Espeleta <tomas.espeleta@gmail.com>,
+        Thomas Hebb <tommyhebb@gmail.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <B11E093E-6A30-4820-AC0E-C2887F5462F2@canonical.com>
+References: <20200616044702.17570-1-kai.heng.feng@canonical.com>
+ <s5himfr30cv.wl-tiwai@suse.de>
+To:     Takashi Iwai <tiwai@suse.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In addition to -ftrivial-auto-var-init=pattern (used by
-CONFIG_INIT_STACK_ALL now) Clang also supports zero initialization for
-locals enabled by -ftrivial-auto-var-init=zero.
-The future of this flag is still being debated, see
-https://bugs.llvm.org/show_bug.cgi?id=45497
-Right now it is guarded by another flag,
--enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang,
-which means it may not be supported by future Clang releases.
-Another possible resolution is that -ftrivial-auto-var-init=zero will
-persist (as certain users have already started depending on it), but the
-name of the guard flag will change.
 
-In the meantime, zero initialization has proven itself as a good
-production mitigation measure against uninitialized locals. Unlike
-pattern initialization, which has a higher chance of triggering existing
-bugs, zero initialization provides safe defaults for strings, pointers,
-indexes, and sizes. On the other hand, pattern initialization remains
-safer for return values.
-Performance-wise, the difference between pattern and zero initialization
-is usually negligible, although the generated code for zero
-initialization is more compact.
 
-This patch renames CONFIG_INIT_STACK_ALL to
-CONFIG_INIT_STACK_ALL_PATTERN and introduces another config option,
-CONFIG_INIT_STACK_ALL_ZERO, that enables zero initialization for locals
-if the corresponding flags are supported by Clang.
+> On Jun 16, 2020, at 16:01, Takashi Iwai <tiwai@suse.de> wrote:
+> 
+> On Tue, 16 Jun 2020 06:46:58 +0200,
+> Kai-Heng Feng wrote:
+>> 
+>> Currently, only HDA codec GPIO controlled LED class is supported, and
+>> only via platform specific quirk.
+>> 
+>> There are systems that control LED via COEF instead of GPIO, and to
+>> support those systems, move the LED class registration to
+>> snd_hda_gen_add_micmute_led(), so all systems can facilitate the same
+>> interface.
+> 
+> This will result in creating the led cdev always when the mic-mute LED
+> feature is used, not only for HP but also for Dell and Huawei.
+> Is this the intended result?
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Alexander Potapenko <glider@google.com>
+Ok, I can see there are other vendors calling snd_hda_gen_fixup_micmute_led() to create LED class.
+And no, that's not the intended result.
 
---
-v2:
- - as suggested by Kees Cook, make CONFIG_INIT_STACK_ALL_PATTERN and
-   CONFIG_INIT_STACK_ALL_ZERO separate options.
----
- Makefile                   | 12 ++++++++++--
- init/main.c                |  6 ++++--
- security/Kconfig.hardening | 29 +++++++++++++++++++++++++----
- 3 files changed, 39 insertions(+), 8 deletions(-)
+I guess a chained function can be a better approach.
 
-diff --git a/Makefile b/Makefile
-index fd31992bf918..fa739995ee12 100644
---- a/Makefile
-+++ b/Makefile
-@@ -802,11 +802,19 @@ KBUILD_CFLAGS	+= -fomit-frame-pointer
- endif
- endif
- 
--# Initialize all stack variables with a pattern, if desired.
--ifdef CONFIG_INIT_STACK_ALL
-+# Initialize all stack variables with a 0xAA pattern.
-+ifdef CONFIG_INIT_STACK_ALL_PATTERN
- KBUILD_CFLAGS	+= -ftrivial-auto-var-init=pattern
- endif
- 
-+# Initialize all stack variables with a zero pattern.
-+ifdef CONFIG_INIT_STACK_ALL_ZERO
-+# Future support for zero initialization is still being debated, see
-+# https://bugs.llvm.org/show_bug.cgi?id=45497. These flags are subject to being
-+# renamed or dropped.
-+KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
-+endif
-+
- DEBUG_CFLAGS	:= $(call cc-option, -fno-var-tracking-assignments)
- 
- ifdef CONFIG_DEBUG_INFO
-diff --git a/init/main.c b/init/main.c
-index 0ead83e86b5a..ee08cef4aa1a 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -779,8 +779,10 @@ static void __init report_meminit(void)
- {
- 	const char *stack;
- 
--	if (IS_ENABLED(CONFIG_INIT_STACK_ALL))
--		stack = "all";
-+	if (IS_ENABLED(CONFIG_INIT_STACK_ALL_PATTERN))
-+		stack = "all (pattern)";
-+	else if (IS_ENABLED(CONFIG_INIT_STACK_ALL_ZERO))
-+		stack = "all (zero)";
- 	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL))
- 		stack = "byref_all";
- 	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF))
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index af4c979b38ee..7b705611ccaa 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -19,13 +19,16 @@ config GCC_PLUGIN_STRUCTLEAK
- 
- menu "Memory initialization"
- 
--config CC_HAS_AUTO_VAR_INIT
-+config CC_HAS_AUTO_VAR_INIT_PATTERN
- 	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
- 
-+config CC_HAS_AUTO_VAR_INIT_ZERO
-+	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
-+
- choice
- 	prompt "Initialize kernel stack variables at function entry"
- 	default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
--	default INIT_STACK_ALL if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT
-+	default INIT_STACK_ALL_PATTERN if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT_PATTERN
- 	default INIT_STACK_NONE
- 	help
- 	  This option enables initialization of stack variables at
-@@ -88,15 +91,33 @@ choice
- 		  of uninitialized stack variable exploits and information
- 		  exposures.
- 
--	config INIT_STACK_ALL
-+	config INIT_STACK_ALL_PATTERN
- 		bool "0xAA-init everything on the stack (strongest)"
--		depends on CC_HAS_AUTO_VAR_INIT
-+		depends on CC_HAS_AUTO_VAR_INIT_PATTERN
- 		help
- 		  Initializes everything on the stack with a 0xAA
- 		  pattern. This is intended to eliminate all classes
- 		  of uninitialized stack variable exploits and information
- 		  exposures, even variables that were warned to have been
- 		  left uninitialized.
-+		  Pattern initialization is known to provoke many existing bugs
-+		  related to uninitialized locals, e.g. pointers receive
-+		  non-NULL values, buffer sizes and indices are very big.
-+
-+	config INIT_STACK_ALL_ZERO
-+		bool "zero-init everything on the stack (strongest and safest)"
-+		depends on CC_HAS_AUTO_VAR_INIT_ZERO
-+		help
-+		  Initializes everything on the stack with a zero
-+		  pattern. This is intended to eliminate all classes
-+		  of uninitialized stack variable exploits and information
-+		  exposures, even variables that were warned to have been
-+		  left uninitialized.
-+		  Zero initialization provides safe defaults for strings,
-+		  pointers, indices and sizes, and is therefore more suitable as
-+		  a security mitigation measure.
-+		  The corresponding flag isn't officially supported by Clang and
-+		  may sooner or later go away or get renamed.
- 
- endchoice
- 
--- 
-2.27.0.290.gba653c62da-goog
+I'll send another series.
+
+Kai-Heng
+
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
+>> 
+>> In addition to that, add LED_CORE_SUSPENDRESUME flag since some systems
+>> don't restore the LED properly after suspend.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> sound/pci/hda/hda_generic.c   | 28 ++++++++++++++++++++++++++++
+>> sound/pci/hda/patch_realtek.c | 30 ------------------------------
+>> 2 files changed, 28 insertions(+), 30 deletions(-)
+>> 
+>> diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+>> index f4e9d9445e18..4242407734c0 100644
+>> --- a/sound/pci/hda/hda_generic.c
+>> +++ b/sound/pci/hda/hda_generic.c
+>> @@ -4006,6 +4006,28 @@ static const struct snd_kcontrol_new micmute_led_mode_ctl = {
+>>  *
+>>  * Returns 0 if the hook is established or a negative error code.
+>>  */
+>> +
+>> +#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+>> +static int micmute_led_set(struct led_classdev *led_cdev,
+>> +			   enum led_brightness brightness)
+>> +{
+>> +	struct hda_codec *codec = dev_to_hda_codec(led_cdev->dev->parent);
+>> +	struct hda_gen_spec *spec = codec->spec;
+>> +
+>> +	spec->micmute_led.led_mode = !brightness;
+>> +	call_micmute_led_update(codec);
+>> +	return 0;
+>> +}
+>> +
+>> +static struct led_classdev micmute_led_cdev = {
+>> +	.name = "hda::micmute",
+>> +	.max_brightness = 1,
+>> +	.brightness_set_blocking = micmute_led_set,
+>> +	.default_trigger = "audio-micmute",
+>> +	.flags = LED_CORE_SUSPENDRESUME,
+>> +};
+>> +#endif
+>> +
+>> int snd_hda_gen_add_micmute_led(struct hda_codec *codec,
+>> 				void (*hook)(struct hda_codec *))
+>> {
+>> @@ -4019,6 +4041,12 @@ int snd_hda_gen_add_micmute_led(struct hda_codec *codec,
+>> 	spec->cap_sync_hook = update_micmute_led;
+>> 	if (!snd_hda_gen_add_kctl(spec, NULL, &micmute_led_mode_ctl))
+>> 		return -ENOMEM;
+>> +
+>> +#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+>> +	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+>> +	if (devm_led_classdev_register(&codec->core.dev, &micmute_led_cdev))
+>> +		codec_warn(codec, "failed to register micmute LED\n");
+>> +#endif
+>> 	return 0;
+>> }
+>> EXPORT_SYMBOL_GPL(snd_hda_gen_add_micmute_led);
+>> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+>> index 6d73f8beadb6..cead44a6c6cd 100644
+>> --- a/sound/pci/hda/patch_realtek.c
+>> +++ b/sound/pci/hda/patch_realtek.c
+>> @@ -4109,26 +4109,6 @@ static void alc_gpio_micmute_update(struct hda_codec *codec)
+>> 			    spec->gen.micmute_led.led_value);
+>> }
+>> 
+>> -#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+>> -static int micmute_led_set(struct led_classdev *led_cdev,
+>> -			   enum led_brightness brightness)
+>> -{
+>> -	struct hda_codec *codec = dev_to_hda_codec(led_cdev->dev->parent);
+>> -	struct alc_spec *spec = codec->spec;
+>> -
+>> -	alc_update_gpio_led(codec, spec->gpio_mic_led_mask,
+>> -			    spec->micmute_led_polarity, !!brightness);
+>> -	return 0;
+>> -}
+>> -
+>> -static struct led_classdev micmute_led_cdev = {
+>> -	.name = "hda::micmute",
+>> -	.max_brightness = 1,
+>> -	.brightness_set_blocking = micmute_led_set,
+>> -	.default_trigger = "audio-micmute",
+>> -};
+>> -#endif
+>> -
+>> /* setup mute and mic-mute GPIO bits, add hooks appropriately */
+>> static void alc_fixup_hp_gpio_led(struct hda_codec *codec,
+>> 				  int action,
+>> @@ -4136,9 +4116,6 @@ static void alc_fixup_hp_gpio_led(struct hda_codec *codec,
+>> 				  unsigned int micmute_mask)
+>> {
+>> 	struct alc_spec *spec = codec->spec;
+>> -#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+>> -	int err;
+>> -#endif
+>> 
+>> 	alc_fixup_gpio(codec, action, mute_mask | micmute_mask);
+>> 
+>> @@ -4151,13 +4128,6 @@ static void alc_fixup_hp_gpio_led(struct hda_codec *codec,
+>> 	if (micmute_mask) {
+>> 		spec->gpio_mic_led_mask = micmute_mask;
+>> 		snd_hda_gen_add_micmute_led(codec, alc_gpio_micmute_update);
+>> -
+>> -#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+>> -		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+>> -		err = devm_led_classdev_register(&codec->core.dev, &micmute_led_cdev);
+>> -		if (err)
+>> -			codec_warn(codec, "failed to register micmute LED\n");
+>> -#endif
+>> 	}
+>> }
+>> 
+>> -- 
+>> 2.17.1
+>> 
 
