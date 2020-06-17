@@ -2,97 +2,87 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7461BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B24721548
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AC02184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592432059;
+	bh=/270UX6h2k5gxPi06yMqpjAVFVEu5xKU10OxRUn3RMw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S/JVnmLHHY0gHjaEVqKsrDpmvlTd0nGBP6+uOVoCzyi469Q47I+R/NIRh1ua6bA3A
+	 p0aJYG+CkclFcgxWzbWxsJ+EnO3eZJ0PT+U+SqZ3gaXJZ4jIWYphJAXa0yx6TqrrFy
+	 VzQaU2lmcQ8jxsRFBbRWJt5qX+hpAG3rDAYrIcGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgFQWOJ (ORCPT
+        id S1727853AbgFQWOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:14:09 -0400
-Received: from mga04.intel.com ([192.55.52.120]:65255 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgFQWOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:14:09 -0400
-IronPort-SDR: 5m4vH1jpzP6kV2PfiZ3HwbWc1/oGDOHghzdvvMHFqPfPxFhYdWu7zcjT568nDkHcU1Y7FKppmF
- 8ayWUh99jQeA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 15:14:08 -0700
-IronPort-SDR: YVAyGkH+SIUj2vgXWJWP/8aHrrgz+moYQGbtC0P7EIh0TRiqP8CMK24wH63PDEdJ8HaR0cFWGS
- JW4Ad0WAqwsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="421288868"
-Received: from ysharon1-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.131])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2020 15:13:57 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     x86@kernel.org, linux-sgx@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, akpm@linux-foundation.org,
-        andriy.shevchenko@linux.intel.com, asapek@google.com,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, sean.j.christopherson@intel.com,
-        yaozhangx@google.com
-Subject: [PATCH v33 21/21] x86/sgx: Update MAINTAINERS
-Date:   Thu, 18 Jun 2020 01:08:43 +0300
-Message-Id: <20200617220844.57423-22-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+        Wed, 17 Jun 2020 18:14:18 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46042 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgFQWOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 18:14:16 -0400
+Received: by mail-io1-f68.google.com with SMTP id y5so4738827iob.12;
+        Wed, 17 Jun 2020 15:14:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DRXryslTGLkMJqQMxB14CHKUq6hyTDjdoN304utJi9Y=;
+        b=A86biCGZ7pKnsRQEEStEZdz59LmUrWX+8fti3y48EXk5NieYJgoOZwPz0+aUeZ3CI5
+         KD6NpsHz1v8LyLsGZ1N5YGJAHhiJzbUO6cnnoBHYSNOSQpNVuQCXfkzaQQjBeH5UTImY
+         p2rN+lJywhel8QhIpBNXmz0Hc37bJNPFHiLM5j4n8YrmGbir27yusQzTlnj04LLvUoXN
+         LJXcPSiYiMqct+CI0ogCwfNs709/T2Ehe7K1L9YldBL2emq9sIot8EJ8RObPlRdR7WL9
+         DZNwDlIJVnU27XPghZovC5UVMpEVyGX/bRvTHOHKdC5lIiCl7UI6Mycu9kjhcTeDtmuX
+         Nlpg==
+X-Gm-Message-State: AOAM532zcyyOqjEJ/MP0hZQ91tKgA8sb3rImTeDNXXpgEAfFScO+XMrR
+        2yegpUmVNZb0ha4PqTD65g==
+X-Google-Smtp-Source: ABdhPJz7QUutK4RE5S/N61ajEcfcIYnRVvw0B0Br3nuAULonfWSMZqjN0BZ4yZD6EFLd0+qnRQpNQQ==
+X-Received: by 2002:a05:6638:35d:: with SMTP id x29mr1434644jap.71.1592432054953;
+        Wed, 17 Jun 2020 15:14:14 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id f1sm494482ilh.17.2020.06.17.15.14.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 15:14:14 -0700 (PDT)
+Received: (nullmailer pid 2927550 invoked by uid 1000);
+        Wed, 17 Jun 2020 22:14:11 -0000
+Date:   Wed, 17 Jun 2020 16:14:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com,
+        digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+Subject: Re: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI
+ port nodes
+Message-ID: <20200617221411.GB2923473@bogus>
+References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+ <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the maintainer information for the SGX subsystem.
+On Tue, Jun 09, 2020 at 11:02:32PM -0700, Sowjanya Komatineni wrote:
+> This patch documents Tegra VI and CSI port and endpoint nodes along
+> with the other required properties.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  .../display/tegra/nvidia,tegra20-host1x.txt        | 87 ++++++++++++++++++++++
+>  1 file changed, 87 insertions(+)
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+This is getting converted to schema by Thierry.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 301330e02bca..1cbdaba79797 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8968,6 +8968,17 @@ F:	Documentation/x86/intel_txt.rst
- F:	arch/x86/kernel/tboot.c
- F:	include/linux/tboot.h
- 
-+INTEL SGX
-+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-+M:	Sean Christopherson <sean.j.christopherson@intel.com>
-+L:	linux-sgx@vger.kernel.org
-+S:	Maintained
-+Q:	https://patchwork.kernel.org/project/intel-sgx/list/
-+T:	git https://github.com/jsakkine-intel/linux-sgx.git
-+F:	arch/x86/include/uapi/asm/sgx.h
-+F:	arch/x86/kernel/cpu/sgx/*
-+K:	\bSGX_
-+
- INTERCONNECT API
- M:	Georgi Djakov <georgi.djakov@linaro.org>
- L:	linux-pm@vger.kernel.org
--- 
-2.25.1
-
+Rob
