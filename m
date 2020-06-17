@@ -2,142 +2,132 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07B0C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E295C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA46020885
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168A42080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IOIRCA/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgFQWsu (ORCPT
+        id S1727774AbgFQWt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:48:50 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57532 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQWsm (ORCPT
+        Wed, 17 Jun 2020 18:49:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50196 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726909AbgFQWt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:48:42 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D295D8001304;
-        Wed, 17 Jun 2020 22:48:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HPmr-td_61q8; Thu, 18 Jun 2020 01:48:35 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-mips@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v6 0/3] serial: 8250_dw: Fix ref clock usage
-Date:   Thu, 18 Jun 2020 01:48:10 +0300
-Message-ID: <20200617224813.23853-1-Sergey.Semin@baikalelectronics.ru>
+        Wed, 17 Jun 2020 18:49:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592434197;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=orWx+/3XMb05Rqs5NYz0sIWDOdOQGOdIAEzCS5djo9E=;
+        b=IOIRCA/+0CP3fAJCQ1lbEo/TiqppwUdzhM5pkJ7fSf9zqZy5oRag5zD32EG+ClHjN/7YPi
+        aa2WKF4m+X4zzkw5B63fnQMQmmaNkhcLPf0IHFG4yRJTEGadEVeaGdpLpNPZKxFg9yNscy
+        jo+TRyeIte3RAh2k9LF179I1EhWc0z4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-kidHweHCNA6cszRyDcFJqg-1; Wed, 17 Jun 2020 18:49:55 -0400
+X-MC-Unique: kidHweHCNA6cszRyDcFJqg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFAF78005AD;
+        Wed, 17 Jun 2020 22:49:53 +0000 (UTC)
+Received: from ovpn-112-150.phx2.redhat.com (ovpn-112-150.phx2.redhat.com [10.3.112.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 70EB85D9D3;
+        Wed, 17 Jun 2020 22:49:49 +0000 (UTC)
+Message-ID: <696309d91635fa965ad8436388e7ae7d098420a1.camel@redhat.com>
+Subject: Re: [PATCH] sched: __set_cpus_allowed_ptr(): Check cpus_mask, not
+ cpus_ptr
+From:   Scott Wood <swood@redhat.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Date:   Wed, 17 Jun 2020 17:49:48 -0500
+In-Reply-To: <jhjmu51eq2k.mognet@arm.com>
+References: <20200617121742.cpxppyi7twxmpin7@linutronix.de>
+         <jhjmu51eq2k.mognet@arm.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg, Jiri. We've missed the last merge window. It would be pity to miss
-the next one. Please review/merge in the series.
+On Wed, 2020-06-17 at 15:15 +0100, Valentin Schneider wrote:
+> On 17/06/20 13:17, Sebastian Andrzej Siewior wrote:
+> > From: Scott Wood <swood@redhat.com>
+> > 
+> > This function is concerned with the long-term cpu mask, not the
+> > transitory mask the task might have while migrate disabled.  Before
+> > this patch, if a task was migrate disabled at the time
+> > __set_cpus_allowed_ptr() was called, and the new mask happened to be
+> > equal to the cpu that the task was running on, then the mask update
+> > would be lost.
+> > 
+> > Signed-off-by: Scott Wood <swood@redhat.com>
+> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > ---
+> >  kernel/sched/core.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -1637,7 +1637,7 @@ static int __set_cpus_allowed_ptr(struct
+> >               goto out;
+> >       }
+> > 
+> > -	if (cpumask_equal(p->cpus_ptr, new_mask))
+> > +	if (cpumask_equal(&p->cpus_mask, new_mask))
+> >               goto out;
+> > 
+> >       /*
+> 
+> Makes sense, but what about the rest of the checks? Further down there is
+> 
+>         /* Can the task run on the task's current CPU? If so, we're done
+> */
+>         if (cpumask_test_cpu(task_cpu(p), new_mask))
+>                 goto out;
+> 
+> If the task is currently migrate disabled and for some stupid reason it
+> gets affined elsewhere, we could try to move it out - which AFAICT we
+> don't
+> want to do because migrate disabled. So I suppose you'd want an extra
+> bailout condition here when the task is migrate disabled.
+> 
+> ISTR in RT you do re-check the affinity and potentially move the task away
+> when re-enabling migration, so that should work out all fine.
 
-Regarding the patchset. It might be dangerous if an UART port reference
-clock rate is suddenly changed. In particular the 8250 port drivers
-(and AFAICS most of the tty drivers using common clock framework clocks)
-rely either on the exclusive reference clock utilization or on the ref
-clock rate being always constant. Needless to say that it turns out not
-true and if some other service suddenly changes the clock rate behind an
-UART port driver back no good can happen. So the port might not only end
-up with an invalid uartclk value saved, but may also experience a
-distorted output/input data since such action will effectively update the
-programmed baud-clock. We discovered such problem on Baikal-T1 SoC where
-two DW 8250 ports have got a shared reference clock. Allwinner SoC is
-equipped with an UART, which clock is derived from the CPU PLL clock
-source, so the CPU frequency change might be propagated down up to the
-serial port reference clock. This patchset provides a way to fix the
-problem to the 8250 serial port controllers and mostly fixes it for the
-DW 8250-compatible UART. I say mostly because due to not having a facility
-to pause/stop and resume/restart on-going transfers we implemented the
-UART clock rate update procedure executed post factum of the actual
-reference clock rate change.
+On RT the above test is:
 
-In addition the patchset includes a small optimization patch. It
-simplifies the DW APB UART ref clock rate setting procedure a bit.
+        /* Can the task run on the task's current CPU? If so, we're done */
+        if (cpumask_test_cpu(task_cpu(p), new_mask) ||
+            p->cpus_ptr != &p->cpus_mask)
+                goto out;
 
-This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-tag: v5.7-rc4
+...so we do bail out if we're migrate disabled.
 
-Changelog v3:
-- Refactor the original patch to adjust the UART port divisor instead of
-  requesting an exclusive ref clock utilization.
+-Scott
 
-Changelog v4:
-- Discard commit b426bf0fb085 ("serial: 8250: Fix max baud limit in generic
-  8250 port") since Greg has already merged it into the tty-next branch.
-- Use EXPORT_SYMBOL_GPL() for the serial8250_update_uartclk() method.
-
-Changelog v5:
-- Refactor dw8250_clk_work_cb() function cheking the clk_get_rate()
-  return value for being erroneous and exit if it is.
-- Don't update p->uartclk in the port startup. It will be updated later in
-  the same procedure at the set_termios() function being invoked by the
-  serial_core anyway.
-
-Changelog v6:
-- Resend
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-
-Serge Semin (3):
-  serial: 8250: Add 8250 port clock update method
-  serial: 8250_dw: Simplify the ref clock rate setting procedure
-  serial: 8250_dw: Fix common clocks usage race condition
-
- drivers/tty/serial/8250/8250_dw.c   | 116 +++++++++++++++++++++++++---
- drivers/tty/serial/8250/8250_port.c |  38 +++++++++
- include/linux/serial_8250.h         |   2 +
- 3 files changed, 144 insertions(+), 12 deletions(-)
-
--- 
-2.26.2
 
