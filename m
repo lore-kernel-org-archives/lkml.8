@@ -2,87 +2,96 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA00FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50003C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2E621852
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9C921582
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592427791;
-	bh=uInEkB+HT/2KqsuO8O1TSpB5xUIeWY3375gq2Sv4Wxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QoNB/4jkHz5e3i84sGQhjxqgduJLD/95v8Je2/pmpUtyDmYJBnXQFwsQMFMV8sbG9
-	 tfMAqj/dMYahu9cIolVBxa3/6O8JnMCfOW73iJ5qvU1524HBQWKXzxtQ5JnlXf6sL8
-	 xD8d1fIYI0I4V8QyZxv/TjBx79NoACBSeXD9HAy8=
+	s=default; t=1592427979;
+	bh=PxleSRdzxhbBNA5Z6VGYwX4pwZygLkPhy8QDrAX3jCk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=gLSInnDR3Zahyk9emHCs9kp0BGAchutM4lKOfZJ0G2vteVVPJ3mPMm8FTO5BOvXEa
+	 CqxWK7KXMmzszSwoGRdXFdGFfiysglEE1gKrpUhOEue6gkPno/8KPIuOBoM5N3C2UW
+	 8l7UAA7LRH2Jb5O2Zt3NT/cTb7FFR84J5cKBIwm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgFQVDK (ORCPT
+        id S1726927AbgFQVGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:03:10 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35573 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQVDK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:03:10 -0400
-Received: by mail-il1-f194.google.com with SMTP id l6so3747302ilo.2;
-        Wed, 17 Jun 2020 14:03:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y2pWRJW3ir9zz84FjRUTFElmgVjVrrix+gOBZgLc5ak=;
-        b=deX4f500Rwh/XuhNDlS+bqey4KgYyk6yYwIoH1FaSV0SMOTHc0IO0QY842RG6+s7VJ
-         OMmDGbgRYGqLt7NflHweC9Ttgu4BElTyubyXGabpBzBiROy1KSQ0DrEJVC8NtWh6IdHT
-         fwCoDSWg1Rk22LgoJZ5jhPbfOriW/qmYHfQuylsSG1BNHXd3qYvVfn4Iot7AIr1mXnKL
-         kwmID9tSPFj931ADb06NVqMNYTIGcmoPD6xKWcJc5Oe4cieShYbo4ktybWG/GcePA0FL
-         sVRua2QRjcUS9A5fMnPGdTqaOHnsBlenWZ3VMbo+z0NL5FndHiYp3VU5nIuucYJxP8Jk
-         jUgw==
-X-Gm-Message-State: AOAM530EcWIidXJvb20lBqVMED29erwxdugDE8SHo1FDpCWgH3Ers78n
-        FFOP8HkGY3aNbsY33k+gvg==
-X-Google-Smtp-Source: ABdhPJzrVkrg6HOgMPJQb6/9AIoRaUc6RAJteP/WGGSlsJCUz6rlkyKSdDN7y1fo4MKb171bLHlrvw==
-X-Received: by 2002:a92:dacf:: with SMTP id o15mr792880ilq.36.1592427789367;
-        Wed, 17 Jun 2020 14:03:09 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id p22sm538722iob.29.2020.06.17.14.03.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 14:03:08 -0700 (PDT)
-Received: (nullmailer pid 2810706 invoked by uid 1000);
-        Wed, 17 Jun 2020 21:03:06 -0000
-Date:   Wed, 17 Jun 2020 15:03:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arm-msm@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>, sibis@codeaurora.org,
-        dmitry.baryshkov@linaro.org, linux-pm@vger.kernel.org,
-        bjorn.andersson@linaro.org
-Subject: Re: [PATCH 1/3] dt-bindings: thermal: qcom-tsens: Add compatible for
- sm8150, sm8250
-Message-ID: <20200617210306.GA2810638@bogus>
-References: <cover.1591684754.git.amit.kucheria@linaro.org>
- <c3361043e66139812bd4cd85b917659d85e1564f.1591684754.git.amit.kucheria@linaro.org>
+        Wed, 17 Jun 2020 17:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726761AbgFQVGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 17:06:15 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F8CE2186A;
+        Wed, 17 Jun 2020 21:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592427975;
+        bh=PxleSRdzxhbBNA5Z6VGYwX4pwZygLkPhy8QDrAX3jCk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=zBAD2pPyr5zueEtIkpdCXgi7IRAM+MnOtTEf0cFRMdnBMiDG6HfNpnK76KbKhg5rY
+         nL9uhthDQKlT/UphVgxG81qqyn4Q9UCBABeqek8Om/jsddbJ0cGZyPSl1rCKFPUmoD
+         2bKIGoBBqDcN4Wm5z+YGkK1H4c1f34HUfl1WHbbc=
+Date:   Wed, 17 Jun 2020 16:11:35 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Zhou Wang <wangzhou1@hisilicon.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] dmaengine: hisilicon: Use struct_size() in
+ devm_kzalloc()
+Message-ID: <20200617211135.GA8660@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c3361043e66139812bd4cd85b917659d85e1564f.1591684754.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 09 Jun 2020 12:14:54 +0530, Amit Kucheria wrote:
-> Added tsens bindings for sm8150 and sm8250
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/dma/hisi_dma.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
+index ed3619266a48..e1a958ae7925 100644
+--- a/drivers/dma/hisi_dma.c
++++ b/drivers/dma/hisi_dma.c
+@@ -511,7 +511,6 @@ static int hisi_dma_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	struct device *dev = &pdev->dev;
+ 	struct hisi_dma_dev *hdma_dev;
+ 	struct dma_device *dma_dev;
+-	size_t dev_size;
+ 	int ret;
+ 
+ 	ret = pcim_enable_device(pdev);
+@@ -534,9 +533,7 @@ static int hisi_dma_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (ret)
+ 		return ret;
+ 
+-	dev_size = sizeof(struct hisi_dma_chan) * HISI_DMA_CHAN_NUM +
+-		   sizeof(*hdma_dev);
+-	hdma_dev = devm_kzalloc(dev, dev_size, GFP_KERNEL);
++	hdma_dev = devm_kzalloc(dev, struct_size(hdma_dev, chan, HISI_DMA_CHAN_NUM), GFP_KERNEL);
+ 	if (!hdma_dev)
+ 		return -EINVAL;
+ 
+-- 
+2.27.0
+
