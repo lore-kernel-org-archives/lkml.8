@@ -2,103 +2,65 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57CB52073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592431521;
-	bh=cvtMTkB4hmn7ysFCDP83MIFxOHZl/oXXu23w2BuLqh4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=WL0fCZs/MOVofquy+V7YIvyPJbAHwRT64D5ZJL6YLMWknIWdj/1mvY0Nz7VJzsdh3
-	 Z4oc9IsLN6aXkA9x0EcdSELOwHlD3ZUIkkPBZGhgNBOrecXYBXlpWt6X1+iyYxIJzo
-	 eg7yWXD1X1FRnRK+J1UuJYBEAEN+KyFsv4091QeA=
+	by mail.kernel.org (Postfix) with ESMTP id CAEFE2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgFQWFU (ORCPT
+        id S1727900AbgFQWFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbgFQWFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:05:19 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B32CF206F7;
-        Wed, 17 Jun 2020 22:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592431519;
-        bh=cvtMTkB4hmn7ysFCDP83MIFxOHZl/oXXu23w2BuLqh4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IGma0ImoEm26f9+Bxg+i9NvHEA81DYTAje110vZX2rDU1u0AsyoPZnR2hGfNjpNKo
-         5+jySRj2JtrrddUpcyGVUbbuSSdGv1IRRSZBkn/R5E22r/NMEK0n4lG4D5n/sXSe0Q
-         nD0bcNrzuWzZ7GUjQKyWUdS18XVdwMeyUNnC4Oeo=
-Date:   Wed, 17 Jun 2020 17:10:39 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] fpga: dfl: Use struct_size() in kzalloc()
-Message-ID: <20200617221039.GA21877@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 17 Jun 2020 18:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgFQWFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 18:05:23 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F807C06174E;
+        Wed, 17 Jun 2020 15:05:23 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 166F01297CA0E;
+        Wed, 17 Jun 2020 15:05:23 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 15:05:22 -0700 (PDT)
+Message-Id: <20200617.150522.1461942636829701792.davem@davemloft.net>
+To:     gustavoars@kernel.org
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gustavo@embeddedor.com,
+        keescook@chromium.org
+Subject: Re: [PATCH][next] ethtool: ioctl: Use array_size() in
+ copy_to_user()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200615230107.GA16907@embeddedor>
+References: <20200615230107.GA16907@embeddedor>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 17 Jun 2020 15:05:23 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes. Also, remove unnecessary
-function dfl_feature_platform_data_size().
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Date: Mon, 15 Jun 2020 18:01:07 -0500
 
-This code was detected with the help of Coccinelle and, audited and
-fixed manually.
+> Use array_size() helper instead of the open-coded version in
+> copy_to_user(). These sorts of multiplication factors need to
+> be wrapped in array_size().
+> 
+> This issue was found with the help of Coccinelle and, audited and fixed
+> manually.
+> 
+> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/fpga/dfl.c | 3 +--
- drivers/fpga/dfl.h | 6 ------
- 2 files changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index 990994874bf1..2dd13e036d45 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -487,8 +487,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
- 	 * it will be automatically freed by device's release() callback,
- 	 * platform_device_release().
- 	 */
--	pdata = kzalloc(dfl_feature_platform_data_size(binfo->feature_num),
--			GFP_KERNEL);
-+	pdata = kzalloc(struct_size(pdata, features, binfo->feature_num), GFP_KERNEL);
- 	if (!pdata)
- 		return -ENOMEM;
- 
-diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-index 2f5d3052e36e..044b0e88e5a8 100644
---- a/drivers/fpga/dfl.h
-+++ b/drivers/fpga/dfl.h
-@@ -299,12 +299,6 @@ struct dfl_feature_ops {
- #define DFL_FPGA_FEATURE_DEV_FME		"dfl-fme"
- #define DFL_FPGA_FEATURE_DEV_PORT		"dfl-port"
- 
--static inline int dfl_feature_platform_data_size(const int num)
--{
--	return sizeof(struct dfl_feature_platform_data) +
--		num * sizeof(struct dfl_feature);
--}
--
- void dfl_fpga_dev_feature_uinit(struct platform_device *pdev);
- int dfl_fpga_dev_feature_init(struct platform_device *pdev,
- 			      struct dfl_feature_driver *feature_drvs);
--- 
-2.27.0
-
+Applied to net-next.
