@@ -2,138 +2,77 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C623FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE1620CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DA620CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:27:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p7IaWiaa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgFQL1D (ORCPT
+        id S1726708AbgFQL1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:27:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4022 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgFQL1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:27:02 -0400
-IronPort-SDR: l7jq627Ux9Yag1bT0UcwQRam8WGYqUOt9HDkQyN9pN6poDmZmL+jO+4ZEerlQvh9R+yUQu90rh
- f8haxB1HyXWA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 04:27:01 -0700
-IronPort-SDR: BkgVvAArN+IaKNT1afXL7/zlb6HR0/Lb6xP/PQ7EfcA+OXVcDfzLjKLL0D5VLc6ybSumlsDK5d
- EG9NiQ63CN4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
-   d="scan'208";a="263296609"
-Received: from mylly.fi.intel.com (HELO [10.237.72.153]) ([10.237.72.153])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Jun 2020 04:26:58 -0700
-Subject: Re: [PATCH v2] HID: i2c-hid: Use block reads when possible to save
- power
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     aaron.ma@canonical.com, admin@kryma.net,
-        andriy.shevchenko@linux.intel.com, benjamin.tissoires@redhat.com,
-        hdegoede@redhat.com, hn.chen@weidahitech.com, jikos@kernel.org,
-        kai.heng.feng@canonical.com, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mika.westerberg@linux.intel.com, vicamo.yang@canonical.com,
-        wsa@kernel.org
-References: <c4373272-e656-773c-dfd2-0efc4c53c92d@linux.intel.com>
- <20200616154951.3050-1-sultan@kerneltoast.com>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <37ceaf7a-3421-e305-4355-a6b40ae54843@linux.intel.com>
-Date:   Wed, 17 Jun 2020 14:17:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 07:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgFQL1V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:27:21 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E399C061573;
+        Wed, 17 Jun 2020 04:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=EQDwNwkQqqmAjMVg8OwDjHllQ9nxS6lVeKEDqW17zmo=; b=p7IaWiaav60yVbFtaSc1bjCUwH
+        mFA9gM3zQFp2w+up707C7CKlNH3o8i6oo63lzENXh3EevGk9qVi51tzbdEHic7i7U8v4iRqhtmfy2
+        9IFrFesEIcCHLXBwWEW447ni/L2O7ZCF8Kl4xSrnuccWCZ10grBSkANEjSLDl1JEjVVI/pA8yNGui
+        UnhuAC4FVr7Q1JojsqU5G0gMs0e/gX2+QO2UlgqUqp0yZXSqljpKz/mDl5pzEjLcnvFtMwFXdJC1h
+        ekKChpDUAfQ9qfwyOmhLZyZlXo6CvO10Igh8zVt5FdQBkz0Dw1mJbrCW9EZT8gUuJ/J1CAXXZX1Cm
+        uXT2opkg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlWDw-0003Ue-Pa; Wed, 17 Jun 2020 11:27:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 44B9430604B;
+        Wed, 17 Jun 2020 13:27:19 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 35A80203EE204; Wed, 17 Jun 2020 13:27:19 +0200 (CEST)
+Date:   Wed, 17 Jun 2020 13:27:19 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/1] fs/namespace.c: use spinlock instead of busy loop
+Message-ID: <20200617112719.GI2531@hirez.programming.kicks-ass.net>
+References: <20200617104058.14902-1-john.ogness@linutronix.de>
+ <20200617104058.14902-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200616154951.3050-1-sultan@kerneltoast.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617104058.14902-2-john.ogness@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/16/20 6:49 PM, Sultan Alsawaf wrote:
-> From: Sultan Alsawaf <sultan@kerneltoast.com>
+On Wed, Jun 17, 2020 at 12:46:58PM +0206, John Ogness wrote:
+> The MNT_WRITE_HOLD flag is used to manually implement a per-cpu
+> optimized rwsem using busy waiting. This implementation is a problem
+> on PREEMPT_RT because write_seqlock() on @mount_lock (i.e. taking a
+> spinlock) does not disable preemption. This allows a writer to
+> preempt a task that has set MNT_WRITE_HOLD and thus that writer will
+> live lock in __mnt_want_write() due to busy looping with preemption
+> disabled.
 > 
-> We have no way of knowing how large an incoming payload is going to be,
-> so the only strategy available up until now has been to always retrieve
-> the maximum possible report length over i2c, which can be quite
-> inefficient. For devices that send reports in block read format, the i2c
-> controller driver can read the payload length on the fly and terminate
-> the i2c transaction early, resulting in considerable power savings.
-> 
-> On a Dell Precision 15 5540 with an i9-9880H, resting my finger on the
-> touchpad causes psys power readings to go up by about 4W and hover there
-> until I remove my finger. With this patch, my psys readings go from 4.7W
-> down to 3.1W, yielding about 1.6W in savings. This is because my
-> touchpad's max report length is 60 bytes, but all of the regular reports
-> it sends for touch events are only 32 bytes, so the i2c transfer is
-> roughly halved for the common case.
-> 
-> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
-> ---
-> Jarkko, could you try this?
->   drivers/hid/i2c-hid/i2c-hid-core.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-> index 294c84e136d7..739dccfc57e1 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -472,11 +472,14 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
->   	int ret;
->   	u32 ret_size;
->   	int size = le16_to_cpu(ihid->hdesc.wMaxInputLength);
-> +	u16 flags;
->   
->   	if (size > ihid->bufsize)
->   		size = ihid->bufsize;
->   
-> -	ret = i2c_master_recv(ihid->client, ihid->inbuf, size);
-> +	/* Try to do a block read if the size fits in one byte */
-> +	flags = size > 255 ? I2C_M_RD : I2C_M_RD | I2C_M_RECV_LEN;
-> +	ret = i2c_transfer_buffer_flags(ihid->client, ihid->inbuf, size, flags);
->   	if (ret != size) {
->   		if (ret < 0)
->   			return;
 
-This still causes a regression for me.
-
-[    9.457656] i2c_hid i2c-ELAN221D:00: Fetching the HID descriptor
-[    9.457663] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=01 00
-[    9.458591] i2c_hid i2c-ELAN221D:00: HID Descriptor: 1e 00 00 01 31 
-02 02 00 03 00 43 00 04 00 ff 00 05 00 06 00 f3 04 1d 22 10 56 00 00 00 00
-[    9.459519] i2c_hid i2c-ELAN221D:00: entering i2c_hid_parse
-[    9.459526] i2c_hid i2c-ELAN221D:00: i2c_hid_hwreset
-[    9.459576] i2c_hid i2c-ELAN221D:00: i2c_hid_set_power
-[    9.459591] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 00 08
-[    9.464070] i2c_hid i2c-ELAN221D:00: resetting...
-[    9.464078] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 00 01
-[    9.464346] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: waiting...
-[   10.497169] i2c_designware i2c_designware.3: controller timed out
-[   10.533940] i2c_designware i2c_designware.3: timeout in disabling adapter
-[   14.528677] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: finished.
-[   14.528695] i2c_hid i2c-ELAN221D:00: failed to reset device.
-[   14.536125] i2c_hid i2c-ELAN221D:00: i2c_hid_set_power
-[   14.536141] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 01 08
-[   14.556335] i2c_designware i2c_designware.3: timeout waiting for bus 
-ready
-[   14.565086] i2c_hid i2c-ELAN221D:00: failed to change power setting.
-[   15.584374] i2c_hid i2c-ELAN221D:00: i2c_hid_hwreset
-[   15.584395] i2c_hid i2c-ELAN221D:00: i2c_hid_set_power
-[   15.584410] i2c_hid i2c-ELAN221D:00: __i2c_hid_command: cmd=05 00 00 08
-[   15.605683] i2c_designware i2c_designware.3: timeout waiting for bus 
-ready
-[   15.614304] i2c_hid i2c-ELAN221D:00: failed to change power setting.
-...
-
--- 
-Jarkko
+Why can't you use a regular percpu-rwsem for this?
