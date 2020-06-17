@@ -2,223 +2,173 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F208FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A010C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7D2620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21BC20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ftQAHhnW"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NMdVqA4+";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="boQWmzOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgFQDcM (ORCPT
+        id S1726721AbgFQDcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 23:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgFQDcL (ORCPT
+        Tue, 16 Jun 2020 23:32:36 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:15922 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726568AbgFQDcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 23:32:11 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E598C061573;
-        Tue, 16 Jun 2020 20:32:10 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id j32so480883qte.10;
-        Tue, 16 Jun 2020 20:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nzA+ElcDbnifqfzX8lfOg2mPfYscDQJ4/Xb5PE+7lMg=;
-        b=ftQAHhnW0hzD4YpGdWc0LllO2OMD/jfP3C4MQqdKOT5C7eeHNFuf4K+O4toru/tGfa
-         M0ivB23w/gyeywiGVuCZ3kCavIsEUJxW2YyS/g0DOG4+iW+DvSMZLCj5gblEB0Co3h93
-         O5KmfqxvIQC+AZFf7dtDsayhkTtx4Gjtpik3xLJbdQ47I/AO2eQqNDg04oYiDPxo4zF5
-         wvphcCLw4AsFpffOfDBt2aD5MeJ8v8EDC6Zz/XhkBL3rvmf7ktHDmE4tH4D8JkXS6fU2
-         qvJz80e1pU8aBXdOeY3q4NtoHG9yuQorBt2J57jYGQumcjXumzorN4FSkwDG8AlEhqBC
-         2MgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nzA+ElcDbnifqfzX8lfOg2mPfYscDQJ4/Xb5PE+7lMg=;
-        b=K3rZp7D3oF961/5OqbgD8F0vDibU7jpB3uGmtQdhcAhY7ouewyKdkGBnomrgv1YN7B
-         fLIJHSGeYGeae42dy7WIDJQEUHp7lCdfnDNis6BNNdbal50w8vHTS09f/aP7igPzSb56
-         9GffNYALEf6JXv/Pkq0bJv8GnrexbPrNPlqupQtM5xiEJM0y2rnxbr/mbDiIKJn+kNIV
-         8x2kxB8UoyZm09IH4PX48ZcDOqlox+Uz1XBVJuzWV6uZ/MO3tB7HA/RhkK8sq0aLg7iZ
-         rd+23ArQk+NxqirUTYpRzbJmAIQ+2Y8nAlMQvsrcMMzNmma3IIU5ixl60EOTyqvDlbLG
-         1zGA==
-X-Gm-Message-State: AOAM5314bcfIY4f8CWaF/UwPxVKWc2e/c5T/ZyWAXDyaFTydLkKCC9qe
-        xtzsu8gXUzKPg18X5veiZEihK9kUQMxZv2T9z1U=
-X-Google-Smtp-Source: ABdhPJyDsNi9Q52RPZTC9rfPswpXtaMmRaUOjgRU4MMGl6dorrqU82mtSiCqR9s3ZZfHZZvEgOKG74qt9+Wv16UivMo=
-X-Received: by 2002:ac8:f47:: with SMTP id l7mr24311236qtk.292.1592364729462;
- Tue, 16 Jun 2020 20:32:09 -0700 (PDT)
+        Tue, 16 Jun 2020 23:32:35 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05H3FFIn030721;
+        Tue, 16 Jun 2020 20:32:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=UmTBwLmgvXLHIH0e6/WtZrf92kRjg7Qw3nTDOZZOU2I=;
+ b=NMdVqA4+7Nf9zoU+LS05KecoUQnEVf/814s5ZfPqohA8lBOGlurP+bMNhSqcAUNgTFcH
+ j2mVd0xJqLyrF3nK31YDBahDbvW2hToYnlivx9Vwk8xyLbflxJC3h58jISsjFFqtCjB8
+ csDR8AvYDXuLSNV8PwB6mc+KNuDYduReUV0= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 31q65sh62v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 16 Jun 2020 20:32:24 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 16 Jun 2020 20:32:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nm16LlggeJBmIETaohi49IVf2nlLE9bnJN3U4A6aYLeDFG5ceZB8HgWMnNnDHETRrpw+j+fSPdpUT/ntrluaxl0HMCklHw+AUre37AaUsJg73icxPPp/iPvbDsNBs2fLbFh/0dVNnGpJ0pHhF6KEEEuni7TC+W/QaG46WeD9ltGdBL0NH+wboAUocA4ULRXWdJGCCHr1b1qrTRc31JFKLf9ixAC768F2pOj8pjIVhosvkAc/Sy8R0ajYIVI6ux6/k6TiUtKg/XZFWCHu+nzNC83EVKSyA6WbWLjI+j+hyOrYZOKxL9z4qaXswj8yVZrKOdXOruB7rEkL9qY8aOi+yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UmTBwLmgvXLHIH0e6/WtZrf92kRjg7Qw3nTDOZZOU2I=;
+ b=P5QJqIPS9FOojpyKGEKkiMYx6XgCqW04fPSrumBcudp3oBQG5Skb63BGdJASRl8xfHQFi6Pj9lv1BogK2R/BRwK+PwonPtXif5AmV9711GWj9Oj/k2a/UdQq3VdNHwKGJFaZo3KfiR9NAybQH3KzBDIT+0Kj/k4JN2tz0iO1W8LuL1RwEVbEH7bR+ZldGty8RobBbbovXTrh8cRp5SIoMVJE7gqEdP3F273czUJh+a2k1GGQEkLHcp0sKP2RhIeEZhXxo3zHwgxF17yw2k27+A6TwzwQW5b25lffYkgxBpYvwBTVF5jODRxZHcONXRh8DhXJoFoGFYIk+3txZ0/otA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UmTBwLmgvXLHIH0e6/WtZrf92kRjg7Qw3nTDOZZOU2I=;
+ b=boQWmzOH0ylnyNsKd+PxDASiWaDmIfHPf/uEF72LxR5+PxVmeJ/3Y9CKxXXkeyowkaCsgiDQDX2ZRqA6sghFzxrCPVKrEnKKRpXc01uFLAzgDCNhEstyw1+BunHP3bQt/IfWrn6VdvP69poEU+hhyDBoktKbsTEfvW0H3F3BBu8=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2662.namprd15.prod.outlook.com (2603:10b6:a03:154::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.28; Wed, 17 Jun
+ 2020 03:32:20 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3088.029; Wed, 17 Jun 2020
+ 03:32:20 +0000
+Date:   Tue, 16 Jun 2020 20:32:17 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 00/19] The new cgroup slab memory controller
+Message-ID: <20200617033217.GE10812@carbon.lan>
+References: <20200608230654.828134-1-guro@fb.com>
+ <CALvZod7ThL=yMwxzCLvrTtq=+Dr5ooUSX-iFP8AhiAGURByFBA@mail.gmail.com>
+ <20200617024147.GA10812@carbon.lan>
+ <CALvZod4vLQb4kns=ao8btL_g--9axZfcaxhMnj+CoTrCkyWoWQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod4vLQb4kns=ao8btL_g--9axZfcaxhMnj+CoTrCkyWoWQ@mail.gmail.com>
+X-ClientProxiedBy: BYAPR06CA0039.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::16) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-References: <1592292637-25734-1-git-send-email-shengjiu.wang@nxp.com>
- <1592292637-25734-2-git-send-email-shengjiu.wang@nxp.com> <20200617004845.GB19896@Asurada-Nvidia>
-In-Reply-To: <20200617004845.GB19896@Asurada-Nvidia>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Wed, 17 Jun 2020 11:31:58 +0800
-Message-ID: <CAA+D8AN_Djr_OTXBWJbymtUY7pjTV_VKKiqwRBqQ8cxo4USgCg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ASoC: fsl-asoc-card: Add MQS support
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.lan (2620:10d:c090:400::5:d0dc) by BYAPR06CA0039.namprd06.prod.outlook.com (2603:10b6:a03:14b::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Wed, 17 Jun 2020 03:32:19 +0000
+X-Originating-IP: [2620:10d:c090:400::5:d0dc]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 563c9ac1-4958-4626-963b-08d8126f0ab8
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2662:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB26626068FA63B5E184FCD334BE9A0@BYAPR15MB2662.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 04371797A5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uEfKxZSO+RuBctUZssYzxKpyeoO5EsWlPgDrZbwFKj080MCzHvvx3+i6EsFoK/wpJqSS11x/QhfmkECvT4HyTVJnpMOzy7t/RF8D+3rxsBzYnTw96jXUCPfVkk28ZfMhCTNSNV3y+LxtLa1ce3ncfIl28zpanDuvykiN0NWaLdyiXJU9QU8qZ0+NC1eNnhTueUIXIAIn9EwnGmy0hwf4GFWKL1mHSmuwV/vLlmquim0IAdRvU3RlPOuh4yuPi6+P2E3oGK4FyvZmifmr9Hu50Ke1zFZr1lTQDUCltyZ6RgoOJHVUZUqMQKee2Vl3e2CLwKvrNf+nIuTFlFD73CNQQw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(39860400002)(366004)(136003)(376002)(36756003)(8676002)(66476007)(66946007)(66556008)(5660300002)(54906003)(2906002)(316002)(478600001)(52116002)(83380400001)(6916009)(1076003)(7696005)(16526019)(33656002)(6506007)(186003)(8936002)(55016002)(4326008)(86362001)(53546011)(8886007)(9686003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 3+YPNBZJ/nUjW9RTi3Zel701x9yC549j6ul1MvmNS5Q5S/G43SJ7E/35SGDFTxiDYtW8UWMuDEzC6+yi9JCR9wFvdeL6NjBNNAE0HhcFmGqFr8fdV1okTl0/4D3AB18RkOTpm0ZT1Ytfm2N2FIh2ZtU1otryNwRlb7Ivpz/JNx/6k4owscM/oy0vnBTiSAChsULdcXv0lk8U0xrxDRTghqOPvRpj3NmpfMO5f3vRXk3m6o8Um3NTxuzjQHCSUCwYiqqe+nMnS1xsoO3fKx10rLB2i4pBTn9B+k35FLL2qNk9yUG5x8MDg48Q/rTJG4kBjj/Og59zRTYhRfbWe3MEsJDa4emt5dKBg0kNykEpiQQlhxKh0dvSoQku8WLXHDRlB8wP1hmw6uqTf/n+nkccZMPaqD64ijsL+mtkgOvRQdkV335h2E5Hy6VMovA+kGwoUZnA7ybdkOl09D5GGN7vpT6QAtV7mPJlEgrvynQy+2Op58RwRxnKljqetXtnzisvId9ctiNn5V3A02smrjYvbQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 563c9ac1-4958-4626-963b-08d8126f0ab8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 03:32:20.4583
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zSlh2hQdcIg36rSkfz/k/N7mSwkJlilpzfYg4Q0BUcoC9eqjNuvs7dN7dqmpMlO9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2662
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_13:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 cotscore=-2147483648
+ phishscore=0 clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 suspectscore=1 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006170026
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 8:50 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Tue, Jun 16, 2020 at 03:30:37PM +0800, Shengjiu Wang wrote:
-> > The MQS codec isn't an i2c device, so add a new platform device for it.
+On Tue, Jun 16, 2020 at 08:05:39PM -0700, Shakeel Butt wrote:
+> On Tue, Jun 16, 2020 at 7:41 PM Roman Gushchin <guro@fb.com> wrote:
 > >
-> > MQS only support playback, so add a new audio map.
+> > On Tue, Jun 16, 2020 at 06:46:56PM -0700, Shakeel Butt wrote:
+> > > On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
+> > > >
+> [...]
+> > >
+> > > Have you performed any [perf] testing on SLAB with this patchset?
 > >
-> > Add there maybe "model" property or no "audio-routing" property insertions
->
-> "Add" => "And"
->
-> > devicetree, so add some enhancement for these two property.
+> > The accounting part is the same for SLAB and SLUB, so there should be no
+> > significant difference. I've checked that it compiles, boots and passes
+> > kselftests. And that memory savings are there.
 > >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  sound/soc/fsl/fsl-asoc-card.c | 70 ++++++++++++++++++++++++++---------
-> >  1 file changed, 52 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-> > index 00be73900888..2ac8cb9ddd10 100644
-> > --- a/sound/soc/fsl/fsl-asoc-card.c
-> > +++ b/sound/soc/fsl/fsl-asoc-card.c
->
-> > @@ -482,6 +489,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> >  {
-> >       struct device_node *cpu_np, *codec_np, *asrc_np;
-> >       struct device_node *np = pdev->dev.of_node;
-> > +     struct platform_device *codec_pdev = NULL; /* used for non i2c device*/
->
-> Having both codec_pdev and codec_dev duplicates things. Actually
-> only a couple of places really need "codec_dev" -- most of them
-> need codec_dev->dev pointer instead. So we could have a cleanup:
->
-> -       struct i2c_client *codec_dev;
-> +       struct device *codec_dev = NULL;
->
-> > @@ -512,10 +520,13 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> >       }
-> >
-> >       codec_np = of_parse_phandle(np, "audio-codec", 0);
-> > -     if (codec_np)
-> > +     if (codec_np) {
-> >               codec_dev = of_find_i2c_device_by_node(codec_np);
-> > -     else
-> > +             if (!codec_dev)
-> > +                     codec_pdev = of_find_device_by_node(codec_np);
-> > +     } else {
-> >               codec_dev = NULL;
-> > +     }
->
-> Here can have something like (feel free to simplify):
->
->         if (codec_np) {
->                 struct platform_device *codec_pdev;
->                 struct i2c_client *codec_i2c;
->
->                 codec_i2c = of_find_i2c_device_by_node(codec_np);
->                 if (codec_i2c)
->                         codec_dev = &codec_i2c->dev;
->
->                 if (!codec_dev) {
->                         codec_pdev = of_find_device_by_node(codec_np);
->                         codec_dev = &codec_pdev->dev;
->                 }
->         }
-> >       asrc_np = of_parse_phandle(np, "audio-asrc", 0);
-> >       if (asrc_np)
-> > @@ -525,6 +536,13 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> >       if (codec_dev) {
-> >               struct clk *codec_clk = clk_get(&codec_dev->dev, NULL);
->
-> Then here:
->
-> -               struct clk *codec_clk = clk_get(&codec_dev->dev, NULL);
-> +               struct clk *codec_clk = clk_get(codec_dev, NULL);
->
-> > @@ -538,6 +556,11 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> >       /* Assign a default DAI format, and allow each card to overwrite it */
-> >       priv->dai_fmt = DAI_FMT_BASE;
-> >
-> > +     memcpy(priv->dai_link, fsl_asoc_card_dai,
-> > +            sizeof(struct snd_soc_dai_link) * ARRAY_SIZE(priv->dai_link));
->
-> > @@ -573,13 +596,25 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> >               codec_dai_name = "ac97-hifi";
-> >               priv->card.set_bias_level = NULL;
-> >               priv->dai_fmt = SND_SOC_DAIFMT_AC97;
-> > +             priv->card.dapm_routes = audio_map_ac97;
-> > +             priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_ac97);
-> > +     } else if (of_device_is_compatible(np, "fsl,imx-audio-mqs")) {
-> > +             codec_dai_name = "fsl-mqs-dai";
-> > +             priv->card.set_bias_level = NULL;
-> > +             priv->dai_fmt = SND_SOC_DAIFMT_LEFT_J |
-> > +                             SND_SOC_DAIFMT_CBS_CFS |
-> > +                             SND_SOC_DAIFMT_NB_NF;
-> > +             priv->dai_link[1].dpcm_playback = 1;
-> > +             priv->dai_link[2].dpcm_playback = 1;
->
-> dpcm_playback = 1? That's the default value in fsl_asoc_card_dai.
+> 
+> What about performance? Also you mentioned that sharing kmem-cache
+> between accounted and non-accounted can have additional overhead. Any
+> difference between SLAB and SLUB for such a case?
 
-ah,  should be dpcm_capture = 0.
+Not really.
 
->
-> > @@ -601,19 +636,18 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
-> >               priv->cpu_priv.sysclk_id[0] = FSL_SAI_CLK_MAST1;
-> >       }
-> >
-> > -     snprintf(priv->name, sizeof(priv->name), "%s-audio",
-> > -              fsl_asoc_card_is_ac97(priv) ? "ac97" :
-> > -              codec_dev->name);
-> > -
-> >       /* Initialize sound card */
-> >       priv->pdev = pdev;
-> >       priv->card.dev = &pdev->dev;
-> > -     priv->card.name = priv->name;
-> > +     ret = snd_soc_of_parse_card_name(&priv->card, "model");
-> > +     if (ret) {
-> > +             snprintf(priv->name, sizeof(priv->name), "%s-audio",
-> > +                      fsl_asoc_card_is_ac97(priv) ? "ac97" :
-> > +                      (codec_dev ? codec_dev->name : codec_pdev->name));
->
-> We can just use dev_name() if codec_dev is struct device *
-> Or having a codec_dev_name to cache codec_pdev/i2c->name.
->
-> > -     ret = snd_soc_of_parse_audio_routing(&priv->card, "audio-routing");
-> > -     if (ret) {
-> > -             dev_err(&pdev->dev, "failed to parse audio-routing: %d\n", ret);
-> > -             goto asrc_fail;
-> > +     if (of_property_read_bool(np, "audio-routing")) {
-> > +             ret = snd_soc_of_parse_audio_routing(&priv->card, "audio-routing");
-> > +             if (ret) {
-> > +                     dev_err(&pdev->dev, "failed to parse audio-routing: %d\n", ret);
-> > +                     goto asrc_fail;
->
-> Hmm...audio-routing is a required property in DT binding doc.
-> So you might need to update that too.
+Sharing a single set of caches adds some overhead to root- and non-accounted
+allocations, which is something I've tried hard to avoid in my original version.
+But I have to admit, it allows to simplify and remove a lot of code, and here
+it's hard to argue with Johanness, who pushed on this design.
 
-will update them in v2.
+With performance testing it's not that easy, because it's not obvious what
+we wanna test. Obviously, per-object accounting is more expensive, and
+measuring something like 1000000 allocations and deallocations in a line from
+a single kmem_cache will show a regression. But in the real world the relative
+cost of allocations is usually low, and we can get some benefits from a smaller
+working set and from having shared kmem_cache objects cache hot.
+Not speaking about some extra memory and the fragmentation reduction.
 
-best regards
-wang shengjiu
+We've done an extensive testing of the original version in Facebook production,
+and we haven't noticed any regressions so far. But I have to admit, we were
+using an original version with two sets of kmem_caches.
+
+If you have any specific tests in mind, I can definitely run them. Or if you
+can help with the performance evaluation, I'll appreciate it a lot.
+
+Thanks!
