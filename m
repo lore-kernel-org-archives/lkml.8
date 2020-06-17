@@ -2,156 +2,136 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A706C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3D6212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D78F212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:38:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="NFZcC0Hx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mN/NJPwU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgFQUhT (ORCPT
+        id S1726890AbgFQUiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgFQUhT (ORCPT
+        Wed, 17 Jun 2020 16:38:00 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:59985 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgFQUh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:37:19 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1829AC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:37:19 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id u25so2158291lfm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:37:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KnLCZJwys+q4B3B05ok3TtEm9HWxcpRhuVgOFrlznhw=;
-        b=NFZcC0HxLVeJtloucD6xkDEeP+TvW++GtU2PKmlM7Pm5PGuHk8vGkD4nuqJXeVe1kD
-         QgPZd8MfuT69OaWTBim3SZi4PnPodruvNDFvFGkGgjPa3MHia3roD+LRImbpilOjbPGE
-         ZzVtW9xZm5CbX8kX5zVUyYCKaCk9XCeyqW6hE//g8E6qJ09W4PLzfAY8BZNDX8d6qwIW
-         1Qc4DTFOYCVWNqpinrn4k92Ax7orPareKeURiV+EcmQMCws9mV6qBAx/bdFaMw3AAaGn
-         UqR2RZde2nOCN7LOw2hqRRTbNcQ4tJZcO8bFVaZ6LfEdkb1oam83UKvwzc2anAMDXPba
-         ji+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KnLCZJwys+q4B3B05ok3TtEm9HWxcpRhuVgOFrlznhw=;
-        b=AeALFQE/YyGxB+vUBnJ5DWca4cI6jfDsLjJYRnuy4wJbjxPyUZhq1M7qkid9A2Ughy
-         Cm4v4oCFmx55+SkKhimyBl/lEplfqJ2JackqGYiLgKAuGqbAq+Zq3tRFXkXlk2ms/Asj
-         +XXErxci5IFsbDppmmWat8WMDT9Cp8LzJ8a7m0q0xQXkQLIfnSVsjcTY5W0gGwjjGv38
-         OpTxRtO9VWbYf5a/qnkRe3ycOZ7WD+83g8xcfGQpf4Flf0jYokjSf4wLZ1B2cam9z8Qz
-         d2dPUBDDppQH4PxqsnWE6DnhEmLHkRH+fKpsVS0vNmDKR/YghWz0JcRg0CYpwKysbNh/
-         p9dg==
-X-Gm-Message-State: AOAM531UgRKfiQ40R75vBh04/P4KnASwlJrufgLxKa81/YYGOmfxlVwO
-        miHQSNmTu2kUJQ4qlI/8RlOpZ4tXvxtG7EfICCnElQ==
-X-Google-Smtp-Source: ABdhPJy5tFufG+SBVUtax2Z87ERt62C9EUZ15mPz3fddCgc6sVOg4TRQp2GozJYEPiXj2lWl6HnY46NpoQCRpZl4fPs=
-X-Received: by 2002:a19:4bd1:: with SMTP id y200mr402640lfa.60.1592426237348;
- Wed, 17 Jun 2020 13:37:17 -0700 (PDT)
+        Wed, 17 Jun 2020 16:37:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592426279; x=1623962279;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=obXSQxEjICW+Yt8ftMsGWA6aehYecXRDu+nvKJxbC/w=;
+  b=mN/NJPwUGOGyYNpvlp5VVG9kdV8a8eQdeh1BWWsub8WiR2QIawmAzLux
+   BMQS7G+Pu1UGOOBWPv4HZrq19qs70EU0mru7hVoyGWqcwsJPClEOj86z6
+   15ihlbRA2leTMAnYKQ4it91p7C7CgzhKnYk83VTSKh0DtjIjCfSdTeD7d
+   OWvZPeg4N1VcNfpHvwO1lurJmoASeobbssyqvV9wyKaRlqjQyrXxqrk+w
+   SWdgMEp8OxN5uY/ZNdSj9XhL0sRjvECjz3qvtAdmlhqPsFAYPqBYevdvB
+   dmLnhBYylp0m4nGSiTQXeAgrWHlL4U5DcNZoAmSWDDbRFjH9Y5D6J6SgP
+   g==;
+IronPort-SDR: Aex0+pkaLi0mrqaVfYxXlK94sepPh8W/HDhkfQ3SElshnt5OkmE2jU2xoKjgf+phBdOso7N8nd
+ iyi2kOv8oAlyNCCYg/+ckARR6a8mR8cELoBTfscC9XzlG3qI1VUXkcnYCYLb93WV+BNn8nwqza
+ +CkWEesTHF/JAjO6N+rcDxPYKlIR2KpMMzSg/kJFihZZOTx5FJ0wnI2acoJYnrQVOzmRKJYrG3
+ KNV4UxxFBC5Bu9VromB27xHeKGM3JKwpGKY+GKZ+nnpPoHBmcj9JLWfRMP4wTGDOLTPN7noqTO
+ PVs=
+X-IronPort-AV: E=Sophos;i="5.73,523,1583164800"; 
+   d="scan'208";a="140260279"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2020 04:37:58 +0800
+IronPort-SDR: lTzWhojd+ewzzxtiLfo2OzynO2z3D1LBR/pVSrcYh/3VPb7LDmTVb01YLlAAohz3oNoU0ETBZh
+ p7TdEtlodqQ59mpbXqwBYhAHFU+ds3Zj4=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 13:27:12 -0700
+IronPort-SDR: zhUy0TZrnbjXxnnsfrT0zttZ0ocHgV32WRoVPnh+Xsp3azyEDgqpotxGdu7x6cjHL7aX3S004I
+ Fk5DgEo8B6iA==
+WDCIronportException: Internal
+Received: from usa003792.ad.shared (HELO yoda.hgst.com) ([10.86.58.133])
+  by uls-op-cesaip01.wdc.com with ESMTP; 17 Jun 2020 13:37:59 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-riscv@lists.infradead.org,
+        Michel Lespinasse <walken@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Zong Li <zong.li@sifive.com>
+Subject: [PATCH] RISC-V: Acquire mmap lock before invoking walk_page_range
+Date:   Wed, 17 Jun 2020 13:37:32 -0700
+Message-Id: <20200617203732.2076611-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200409233350.6343-1-jcrouse@codeaurora.org> <20200409233350.6343-5-jcrouse@codeaurora.org>
- <CADaigPWJDEwPZyUyEO9H3=+zzdEX=h+gSa-w1ppNpM9ryY0LZA@mail.gmail.com>
-In-Reply-To: <CADaigPWJDEwPZyUyEO9H3=+zzdEX=h+gSa-w1ppNpM9ryY0LZA@mail.gmail.com>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Wed, 17 Jun 2020 13:37:06 -0700
-Message-ID: <CADaigPVvZrP_mOcB5f7w77t+4O1=Ya2VW8Ff96EzemO6swr_8Q@mail.gmail.com>
-Subject: Re: [PATCH v6 4/5] drm/msm: Refactor address space initialization
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     iommu@lists.linux-foundation.org, Sam Ravnborg <sam@ravnborg.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        will@kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Brian Masney <masneyb@onstation.org>,
-        freedreno@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-arm-msm@vger.kernel.org,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Paul <sean@poorly.run>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        tongtiangen <tongtiangen@huawei.com>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 1:16 PM Eric Anholt <eric@anholt.net> wrote:
->
-> On Thu, Apr 9, 2020 at 4:34 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> >
-> > Refactor how address space initialization works. Instead of having the
-> > address space function create the MMU object (and thus require separate but
-> > equal functions for gpummu and iommu) use a single function and pass the
-> > MMU struct in. Make the generic code cleaner by using target specific
-> > functions to create the address space so a2xx can do its own thing in its
-> > own space.  For all the other targets use a generic helper to initialize
-> > IOMMU but leave the door open for newer targets to use customization
-> > if they need it.
->
-> I'm seeing regressions in dEQP-VK.memory.allocation.random.* on cheza
-> after this commit.   The symptom is that large allocations fail with
-> -ENOSPC from MSM_GEM_INFO(IOVA).
->
-> Possibly relevant change from having stuffed some debug info in:
->
-> before:
-> [    3.791436] [drm:msm_gem_address_space_create] *ERROR* msmgem
-> address space create: 0x1000000 + 0xfeffffff
-> [    3.801672] platform 506a000.gmu: Adding to iommu group 6
-> [    3.807359] [drm:msm_gem_address_space_create] *ERROR* msmgem
-> address space create: 0x0 + 0x7fffffff
-> [    3.817140] msm ae00000.mdss: bound 5000000.gpu (ops a3xx_ops)
-> [    3.823212] msm_dpu ae01000.mdp: [drm:msm_ioremap] *ERROR* failed
-> to get memory resource: vbif_nrt
-> [    3.832429] msm_dpu ae01000.mdp: [drm:msm_ioremap] *ERROR* failed
-> to get memory resource: regdma
-> [    3.841478] [drm:dpu_kms_hw_init:878] dpu hardware revision:0x40000000
-> [    3.848193] [drm:msm_gem_address_space_create] *ERROR* msmgem
-> address space create: 0x1000 + 0xffffefff
->
-> after:
->
-> [    3.798707] [drm:msm_gem_address_space_create] *ERROR* msmgem
-> address space create: 0x1000000 + 0xfffffff
-> [    3.808731] platform 506a000.gmu: Adding to iommu group 6
-> [    3.814440] [drm:msm_gem_address_space_create] *ERROR* msmgem
-> address space create: 0x0 + 0x7fffffff
-> [    3.820494] hub 2-1:1.0: USB hub found
-> [    3.824108] msm ae00000.mdss: bound 5000000.gpu (ops a3xx_ops)
-> [    3.828554] hub 2-1:1.0: 4 ports detected
-> [    3.833756] msm_dpu ae01000.mdp: [drm:msm_ioremap] *ERROR* failed
-> to get memory resource: vbif_nrt
-> [    3.847038] msm_dpu ae01000.mdp: [drm:msm_ioremap] *ERROR* failed
-> to get memory resource: regdma
-> [    3.856095] [drm:dpu_kms_hw_init:878] dpu hardware revision:0x40000000
-> [    3.862840] [drm:msm_gem_address_space_create] *ERROR* msmgem
-> address space create: 0x1000 + 0xfffffff
->
-> 256MB for GMU address space?
+As per walk_page_range documentation, mmap lock should be acquired by the
+caller before invoking walk_page_range. mmap_assert_locked gets triggered
+without that. The details can be found here.
 
-Found the bug, fixes at the last 2 commits of
-https://github.com/anholt/linux/tree/drm-msm-address-space
+http://lists.infradead.org/pipermail/linux-riscv/2020-June/010335.html
 
-I'm going to try having another go at convincing gmail to let git
-send-email through, but all the howtos in the world didn't work last
-time (gsuite has different behavior from normal gmail).
+Fixes: 395a21ff859c(riscv: add ARCH_HAS_SET_DIRECT_MAP support)
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+---
+ arch/riscv/mm/pageattr.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
+index ec2c70f84994..289a9a5ea5b5 100644
+--- a/arch/riscv/mm/pageattr.c
++++ b/arch/riscv/mm/pageattr.c
+@@ -151,6 +151,7 @@ int set_memory_nx(unsigned long addr, int numpages)
+ 
+ int set_direct_map_invalid_noflush(struct page *page)
+ {
++	int ret;
+ 	unsigned long start = (unsigned long)page_address(page);
+ 	unsigned long end = start + PAGE_SIZE;
+ 	struct pageattr_masks masks = {
+@@ -158,11 +159,16 @@ int set_direct_map_invalid_noflush(struct page *page)
+ 		.clear_mask = __pgprot(_PAGE_PRESENT)
+ 	};
+ 
+-	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
++	mmap_read_lock(&init_mm);
++	ret = walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
++	mmap_read_unlock(&init_mm);
++
++	return ret;
+ }
+ 
+ int set_direct_map_default_noflush(struct page *page)
+ {
++	int ret;
+ 	unsigned long start = (unsigned long)page_address(page);
+ 	unsigned long end = start + PAGE_SIZE;
+ 	struct pageattr_masks masks = {
+@@ -170,7 +176,11 @@ int set_direct_map_default_noflush(struct page *page)
+ 		.clear_mask = __pgprot(0)
+ 	};
+ 
+-	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
++	mmap_read_lock(&init_mm);
++	ret = walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
++	mmap_read_unlock(&init_mm);
++
++	return ret;
+ }
+ 
+ void __kernel_map_pages(struct page *page, int numpages, int enable)
+-- 
+2.26.2
+
