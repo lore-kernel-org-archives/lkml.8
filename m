@@ -2,409 +2,165 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76FE21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB8321532
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:15:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WckloiLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgFQWOq (ORCPT
+        id S1727022AbgFQWPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:14:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:52691 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbgFQWOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:14:45 -0400
-IronPort-SDR: kGTu37fftxt0EqZAGAzjBxGDQr94Nl2ToW0q78nqQ4rzpfCqGZ564pfh9yDc1Vj6m6ooS1aVnN
- sdrtag2izx8w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 15:12:43 -0700
-IronPort-SDR: //cyqJ7pVmg1HZADJQurWDPDoGynxxkvxXe6MuJ5VSKO5lSlZoJJBwEFmB2j5g9xB3Nc3OfJZF
- nMTCQcCmMVgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="421288581"
-Received: from ysharon1-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.131])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2020 15:12:30 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     x86@kernel.org, linux-sgx@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
-        chenalexchen@google.com, conradparker@google.com,
-        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: [PATCH v33 15/21] x86/vdso: Add support for exception fixup in vDSO functions
-Date:   Thu, 18 Jun 2020 01:08:37 +0300
-Message-Id: <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+        Wed, 17 Jun 2020 18:15:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgFQWPs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 18:15:48 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6365AC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:15:48 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s88so1721459pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:15:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=utLyEazY0Lxy25RnigtP2rxCKLns71B2z42HG9ml/D4=;
+        b=WckloiLg0RFwJrJdmcKNlWXSNfZ/6MQx67MHZDFh8c+yAskzSA6l5RIBqs3zddQnm2
+         WzDiiiw1LhLzjc1n7L91A2p7Kxb2n33xRnOvq5adE7m++wo6DD9qe3TIAE0m9ByUu8be
+         zdLjcFokB4JAHoo/6w6q5FnZnghxo3w3kkkeI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=utLyEazY0Lxy25RnigtP2rxCKLns71B2z42HG9ml/D4=;
+        b=fICNu0wcP0xrDa5kUAL9MYtib3roVixeArMHYdyJWT1NA8ITFnEqHHkQIUdqiapioD
+         iGmL1wHs3T4BV1S/qSGRq0Ag0CHvqp8jK+UQLu8JxPxslqyNKPWd7SevICEOYNRpRrYb
+         ouGdgm9Myrk+VkEcYRkldqR4XQOwlcs/z/iqCyihlJY3jjQEbjFyK98Ipms+5KzIxxYo
+         ezg92bLi9MRhFratkewEc2ZmqhrcZB8IMoq80mXjx375pOPTRLrh7hat+GTH0kkpBJ/X
+         +Rk1LaC3uqkvmZSq6yTgBg8/MexdO1/UW4TTKIestuj2zee9QAnFxWuKQYAbLyeKKa8I
+         tUow==
+X-Gm-Message-State: AOAM531Ea+VDn3q1mATwC3UaNNVnS2XhIzGOMkdmbOro/fw0/+4rJ+IE
+        1/e4lgR+wXdAaWYDoYYF8lcYxQ==
+X-Google-Smtp-Source: ABdhPJxlTozeERdzOMihQqX1dEP3H+HnoPVAcG9HIrnzfmpQZGVKOE9LHSN9pSjhSEaGM204Pa8oQQ==
+X-Received: by 2002:a17:902:b206:: with SMTP id t6mr1058159plr.262.1592432147885;
+        Wed, 17 Jun 2020 15:15:47 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id z1sm776586pfr.88.2020.06.17.15.15.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 15:15:47 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 15:15:46 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org, robdclark@gmail.com,
+        robdclark@chromium.org, stanimir.varbanov@linaro.org,
+        viresh.kumar@linaro.org, sboyd@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/6] DVFS for IO devices on sdm845 and sc7180
+Message-ID: <20200617221546.GC4525@google.com>
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+What is the plan for landing these, it seems not all must/should
+go through the QCOM tree.
 
-The basic concept and implementation is very similar to the kernel's
-exception fixup mechanism.  The key differences are that the kernel
-handler is hardcoded and the fixup entry addresses are relative to
-the overall table as opposed to individual entries.
+My guesses:
 
-Hardcoding the kernel handler avoids the need to figure out how to
-get userspace code to point at a kernel function.  Given that the
-expected usage is to propagate information to userspace, dumping all
-fault information into registers is likely the desired behavior for
-the vast majority of yet-to-be-created functions.  Use registers
-DI, SI and DX to communicate fault information, which follows Linux's
-ABI for register consumption and hopefully avoids conflict with
-hardware features that might leverage the fixup capabilities, e.g.
-register usage for SGX instructions was at least partially designed
-with calling conventions in mind.
+tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
+spi: spi-geni-qcom: Use OPP API to set clk/perf state
+  QCOM tree due to shared dependency on change in include/linux/qcom-geni-se.h
 
-Making fixup addresses relative to the overall table allows the table
-to be stripped from the final vDSO image (it's a kernel construct)
-without complicating the offset logic, e.g. entry-relative addressing
-would also need to account for the table's location relative to the
-image.
+drm/msm/dpu: Use OPP API to set clk/perf state
+drm/msm: dsi: Use OPP API to set clk/perf state
+  drm/msm tree
 
-Regarding stripping the table, modify vdso2c to extract the table from
-the raw, a.k.a. unstripped, data and dump it as a standalone byte array
-in the resulting .c file.  The original base of the table, its length
-and a pointer to the byte array are captured in struct vdso_image.
-Alternatively, the table could be dumped directly into the struct,
-but because the number of entries can vary per image, that would
-require either hardcoding a max sized table into the struct definition
-or defining the table as a flexible length array.  The flexible length
-array approach has zero benefits, e.g. the base/size are still needed,
-and prevents reusing the extraction code, while hardcoding the max size
-adds ongoing maintenance just to avoid exporting the explicit size.
+media: venus: core: Add support for opp tables/perf voting
+  venus tree
 
-The immediate use case is for Intel Software Guard Extensions (SGX).
-SGX introduces a new CPL3-only "enclave" mode that runs as a sort of
-black box shared object that is hosted by an untrusted "normal" CPl3
-process.
+spi: spi-qcom-qspi: Use OPP API to set clk/perf state
+  SPI tree
 
-Entering an enclave can only be done through SGX-specific instructions,
-EENTER and ERESUME, and is a non-trivial process.  Because of the
-complexity of transitioning to/from an enclave, the vast majority of
-enclaves are expected to utilize a library to handle the actual
-transitions.  This is roughly analogous to how e.g. libc implementations
-are used by most applications.
 
-Another crucial characteristic of SGX enclaves is that they can generate
-exceptions as part of their normal (at least as "normal" as SGX can be)
-operation that need to be handled *in* the enclave and/or are unique
-to SGX.
+Does this make sense or are there any dependencies I'm missing?
 
-And because they are essentially fancy shared objects, a process can
-host any number of enclaves, each of which can execute multiple threads
-simultaneously.
+Thanks
 
-Putting everything together, userspace enclaves will utilize a library
-that must be prepared to handle any and (almost) all exceptions any time
-at least one thread may be executing in an enclave.  Leveraging signals
-to handle the enclave exceptions is unpleasant, to put it mildly, e.g.
-the SGX library must constantly (un)register its signal handler based
-on whether or not at least one thread is executing in an enclave, and
-filter and forward exceptions that aren't related to its enclaves.  This
-becomes particularly nasty when using multiple levels of libraries that
-register signal handlers, e.g. running an enclave via cgo inside of the
-Go runtime.
+Matthias
 
-Enabling exception fixup in vDSO allows the kernel to provide a vDSO
-function that wraps the low-level transitions to/from the enclave, i.e.
-the EENTER and ERESUME instructions.  The vDSO function can intercept
-exceptions that would otherwise generate a signal and return the fault
-information directly to its caller, thus avoiding the need to juggle
-signal handlers.
-
-Note that unlike the kernel's _ASM_EXTABLE_HANDLE implementation, the
-'C' version of _ASM_VDSO_EXTABLE_HANDLE doesn't use a pre-compiled
-assembly macro.  Duplicating four lines of code is simpler than adding
-the necessary infrastructure to generate pre-compiled assembly and the
-intended benefit of massaging GCC's inlining algorithm is unlikely to
-realized in the vDSO any time soon, if ever.
-
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Acked-by: Jethro Beekman <jethro@fortanix.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- arch/x86/entry/vdso/Makefile          |  6 ++--
- arch/x86/entry/vdso/extable.c         | 46 ++++++++++++++++++++++++
- arch/x86/entry/vdso/extable.h         | 29 ++++++++++++++++
- arch/x86/entry/vdso/vdso-layout.lds.S |  9 ++++-
- arch/x86/entry/vdso/vdso2c.h          | 50 ++++++++++++++++++++++++++-
- arch/x86/include/asm/vdso.h           |  5 +++
- 6 files changed, 140 insertions(+), 5 deletions(-)
- create mode 100644 arch/x86/entry/vdso/extable.c
- create mode 100644 arch/x86/entry/vdso/extable.h
-
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 04e65f0698f6..ebe82b7aecda 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -31,7 +31,7 @@ vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
- vobjs32-y += vdso32/vclock_gettime.o
- 
- # files to link into kernel
--obj-y				+= vma.o
-+obj-y				+= vma.o extable.o
- KASAN_SANITIZE_vma.o		:= y
- UBSAN_SANITIZE_vma.o		:= y
- KCSAN_SANITIZE_vma.o		:= y
-@@ -130,8 +130,8 @@ $(obj)/%-x32.o: $(obj)/%.o FORCE
- 
- targets += vdsox32.lds $(vobjx32s-y)
- 
--$(obj)/%.so: OBJCOPYFLAGS := -S
--$(obj)/%.so: $(obj)/%.so.dbg FORCE
-+$(obj)/%.so: OBJCOPYFLAGS := -S --remove-section __ex_table
-+$(obj)/%.so: $(obj)/%.so.dbg
- 	$(call if_changed,objcopy)
- 
- $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
-diff --git a/arch/x86/entry/vdso/extable.c b/arch/x86/entry/vdso/extable.c
-new file mode 100644
-index 000000000000..afcf5b65beef
---- /dev/null
-+++ b/arch/x86/entry/vdso/extable.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/err.h>
-+#include <linux/mm.h>
-+#include <asm/current.h>
-+#include <asm/traps.h>
-+#include <asm/vdso.h>
-+
-+struct vdso_exception_table_entry {
-+	int insn, fixup;
-+};
-+
-+bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
-+			  unsigned long error_code, unsigned long fault_addr)
-+{
-+	const struct vdso_image *image = current->mm->context.vdso_image;
-+	const struct vdso_exception_table_entry *extable;
-+	unsigned int nr_entries, i;
-+	unsigned long base;
-+
-+	/*
-+	 * Do not attempt to fixup #DB or #BP.  It's impossible to identify
-+	 * whether or not a #DB/#BP originated from within an SGX enclave and
-+	 * SGX enclaves are currently the only use case for vDSO fixup.
-+	 */
-+	if (trapnr == X86_TRAP_DB || trapnr == X86_TRAP_BP)
-+		return false;
-+
-+	if (!current->mm->context.vdso)
-+		return false;
-+
-+	base =  (unsigned long)current->mm->context.vdso + image->extable_base;
-+	nr_entries = image->extable_len / (sizeof(*extable));
-+	extable = image->extable;
-+
-+	for (i = 0; i < nr_entries; i++) {
-+		if (regs->ip == base + extable[i].insn) {
-+			regs->ip = base + extable[i].fixup;
-+			regs->di = trapnr;
-+			regs->si = error_code;
-+			regs->dx = fault_addr;
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-diff --git a/arch/x86/entry/vdso/extable.h b/arch/x86/entry/vdso/extable.h
-new file mode 100644
-index 000000000000..aafdac396948
---- /dev/null
-+++ b/arch/x86/entry/vdso/extable.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __VDSO_EXTABLE_H
-+#define __VDSO_EXTABLE_H
-+
-+/*
-+ * Inject exception fixup for vDSO code.  Unlike normal exception fixup,
-+ * vDSO uses a dedicated handler the addresses are relative to the overall
-+ * exception table, not each individual entry.
-+ */
-+#ifdef __ASSEMBLY__
-+#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
-+	ASM_VDSO_EXTABLE_HANDLE from to
-+
-+.macro ASM_VDSO_EXTABLE_HANDLE from:req to:req
-+	.pushsection __ex_table, "a"
-+	.long (\from) - __ex_table
-+	.long (\to) - __ex_table
-+	.popsection
-+.endm
-+#else
-+#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
-+	".pushsection __ex_table, \"a\"\n"      \
-+	".long (" #from ") - __ex_table\n"      \
-+	".long (" #to ") - __ex_table\n"        \
-+	".popsection\n"
-+#endif
-+
-+#endif /* __VDSO_EXTABLE_H */
-+
-diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
-index 4d152933547d..dc8da7695859 100644
---- a/arch/x86/entry/vdso/vdso-layout.lds.S
-+++ b/arch/x86/entry/vdso/vdso-layout.lds.S
-@@ -75,11 +75,18 @@ SECTIONS
- 	 * stuff that isn't used at runtime in between.
- 	 */
- 
--	.text		: { *(.text*) }			:text	=0x90909090,
-+	.text		: {
-+		*(.text*)
-+		*(.fixup)
-+	}						:text	=0x90909090,
-+
-+
- 
- 	.altinstructions	: { *(.altinstructions) }	:text
- 	.altinstr_replacement	: { *(.altinstr_replacement) }	:text
- 
-+	__ex_table		: { *(__ex_table) }		:text
-+
- 	/DISCARD/ : {
- 		*(.discard)
- 		*(.discard.*)
-diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
-index 6f46e11ce539..1c7cfac7e64a 100644
---- a/arch/x86/entry/vdso/vdso2c.h
-+++ b/arch/x86/entry/vdso/vdso2c.h
-@@ -5,6 +5,41 @@
-  * are built for 32-bit userspace.
-  */
- 
-+static void BITSFUNC(copy)(FILE *outfile, const unsigned char *data, size_t len)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < len; i++) {
-+		if (i % 10 == 0)
-+			fprintf(outfile, "\n\t");
-+		fprintf(outfile, "0x%02X, ", (int)(data)[i]);
-+	}
-+}
-+
-+
-+/*
-+ * Extract a section from the input data into a standalone blob.  Used to
-+ * capture kernel-only data that needs to persist indefinitely, e.g. the
-+ * exception fixup tables, but only in the kernel, i.e. the section can
-+ * be stripped from the final vDSO image.
-+ */
-+static void BITSFUNC(extract)(const unsigned char *data, size_t data_len,
-+			      FILE *outfile, ELF(Shdr) *sec, const char *name)
-+{
-+	unsigned long offset;
-+	size_t len;
-+
-+	offset = (unsigned long)GET_LE(&sec->sh_offset);
-+	len = (size_t)GET_LE(&sec->sh_size);
-+
-+	if (offset + len > data_len)
-+		fail("section to extract overruns input data");
-+
-+	fprintf(outfile, "static const unsigned char %s[%lu] = {", name, len);
-+	BITSFUNC(copy)(outfile, data + offset, len);
-+	fprintf(outfile, "\n};\n\n");
-+}
-+
- static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 			 void *stripped_addr, size_t stripped_len,
- 			 FILE *outfile, const char *image_name)
-@@ -15,7 +50,7 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 	ELF(Ehdr) *hdr = (ELF(Ehdr) *)raw_addr;
- 	unsigned long i, syms_nr;
- 	ELF(Shdr) *symtab_hdr = NULL, *strtab_hdr, *secstrings_hdr,
--		*alt_sec = NULL;
-+		*alt_sec = NULL, *extable_sec = NULL;
- 	ELF(Dyn) *dyn = 0, *dyn_end = 0;
- 	const char *secstrings;
- 	INT_BITS syms[NSYMS] = {};
-@@ -77,6 +112,8 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 		if (!strcmp(secstrings + GET_LE(&sh->sh_name),
- 			    ".altinstructions"))
- 			alt_sec = sh;
-+		if (!strcmp(secstrings + GET_LE(&sh->sh_name), "__ex_table"))
-+			extable_sec = sh;
- 	}
- 
- 	if (!symtab_hdr)
-@@ -155,6 +192,9 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 			(int)((unsigned char *)stripped_addr)[i]);
- 	}
- 	fprintf(outfile, "\n};\n\n");
-+	if (extable_sec)
-+		BITSFUNC(extract)(raw_addr, raw_len, outfile,
-+				  extable_sec, "extable");
- 
- 	fprintf(outfile, "const struct vdso_image %s = {\n", image_name);
- 	fprintf(outfile, "\t.data = raw_data,\n");
-@@ -165,6 +205,14 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 		fprintf(outfile, "\t.alt_len = %lu,\n",
- 			(unsigned long)GET_LE(&alt_sec->sh_size));
- 	}
-+	if (extable_sec) {
-+		fprintf(outfile, "\t.extable_base = %lu,\n",
-+			(unsigned long)GET_LE(&extable_sec->sh_offset));
-+		fprintf(outfile, "\t.extable_len = %lu,\n",
-+			(unsigned long)GET_LE(&extable_sec->sh_size));
-+		fprintf(outfile, "\t.extable = extable,\n");
-+	}
-+
- 	for (i = 0; i < NSYMS; i++) {
- 		if (required_syms[i].export && syms[i])
- 			fprintf(outfile, "\t.sym_%s = %" PRIi64 ",\n",
-diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
-index bbcdc7b8f963..b5d23470f56b 100644
---- a/arch/x86/include/asm/vdso.h
-+++ b/arch/x86/include/asm/vdso.h
-@@ -15,6 +15,8 @@ struct vdso_image {
- 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
- 
- 	unsigned long alt, alt_len;
-+	unsigned long extable_base, extable_len;
-+	const void *extable;
- 
- 	long sym_vvar_start;  /* Negative offset to the vvar area */
- 
-@@ -45,6 +47,9 @@ extern void __init init_vdso_image(const struct vdso_image *image);
- 
- extern int map_vdso_once(const struct vdso_image *image, unsigned long addr);
- 
-+extern bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
-+				 unsigned long error_code,
-+				 unsigned long fault_addr);
- #endif /* __ASSEMBLER__ */
- 
- #endif /* _ASM_X86_VDSO_H */
--- 
-2.25.1
-
+On Mon, Jun 15, 2020 at 05:32:38PM +0530, Rajendra Nayak wrote:
+> Changes in v6:
+> 1. rebased on 5.8-rc1, no functional change. 
+> 
+> Changes in v5:
+> 1. Opp cleanup path fixed up across drivers
+> 
+> Changes in v4:
+> 1. Fixed all review feedback on v3
+> 2. Dropped the dts patches, will post as a seperate series once
+> driver changes are reviewed and merged.
+> The driver changes without DT updates to include OPP tables will
+> have zero functional change.
+> 3. Dropped the mmc/sdhc patch, which is a standalone patch. will
+> repost if needed seperately.
+> 
+> Changes in v3:
+> 1. Added better error handling for dev_pm_opp_of_add_table()
+> 2. Some minor changes and fixes in 'PATCH 12/17' as compared to v2
+> 3. Dropped the mmc patch picked up by Ulf [2]
+> 
+> Changes in v2:
+> 1. Added error handling for dev_pm_opp_set_clkname()
+> and dev_pm_opp_of_add_table()
+> 2. Used dev_pm_opp_put_clkname() in the cleanup path
+> 3. Dropped the OPP patch pulled in by Viresh [1]
+> 4. Dropped the UFS patches since they had some major rework
+> needed because of changes that were merged in the merge window
+> and I don't have a UFS device currently to validate the changes.
+> 
+> We have had support added in the OPP core for a while now to support
+> DVFS for IO devices, and this series uses that infrastructure to
+> add DVFS support for various IO devices in sdm845 and sc7180 SoCs.
+> 
+> [1] https://lkml.org/lkml/2020/4/14/98
+> [2] https://lore.kernel.org/patchwork/patch/1226381/
+> 
+> Rajendra Nayak (6):
+>   tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
+>   spi: spi-geni-qcom: Use OPP API to set clk/perf state
+>   drm/msm/dpu: Use OPP API to set clk/perf state
+>   drm/msm: dsi: Use OPP API to set clk/perf state
+>   media: venus: core: Add support for opp tables/perf voting
+>   spi: spi-qcom-qspi: Use OPP API to set clk/perf state
+> 
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |  3 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        | 26 +++++++++++-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |  4 ++
+>  drivers/gpu/drm/msm/dsi/dsi.h                  |  2 +
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.c              |  4 +-
+>  drivers/gpu/drm/msm/dsi/dsi_host.c             | 58 ++++++++++++++++++++++++++
+>  drivers/media/platform/qcom/venus/core.c       | 43 ++++++++++++++++---
+>  drivers/media/platform/qcom/venus/core.h       |  5 +++
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++--
+>  drivers/spi/spi-geni-qcom.c                    | 26 ++++++++++--
+>  drivers/spi/spi-qcom-qspi.c                    | 28 ++++++++++++-
+>  drivers/tty/serial/qcom_geni_serial.c          | 34 ++++++++++++---
+>  include/linux/qcom-geni-se.h                   |  4 ++
+>  13 files changed, 268 insertions(+), 23 deletions(-)
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
