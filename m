@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D997AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C315FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE7A6214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABEE7207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgFQLij (ORCPT
+        id S1727021AbgFQLiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:38:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:56318 "EHLO foss.arm.com"
+        Wed, 17 Jun 2020 07:38:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:56326 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgFQLif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:38:35 -0400
+        id S1726988AbgFQLih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:38:37 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C31611FB;
-        Wed, 17 Jun 2020 04:38:34 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91C271045;
+        Wed, 17 Jun 2020 04:38:36 -0700 (PDT)
 Received: from monolith.arm.com (unknown [10.37.8.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF3193F71F;
-        Wed, 17 Jun 2020 04:38:32 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D64B03F71F;
+        Wed, 17 Jun 2020 04:38:34 -0700 (PDT)
 From:   Alexandru Elisei <alexandru.elisei@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     maz@kernel.org, will@kernel.org, catalin.marinas@arm.com,
         mark.rutland@arm.com, Julien Thierry <julien.thierry@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v5 6/7] arm_pmu: Introduce pmu_irq_ops
-Date:   Wed, 17 Jun 2020 12:38:50 +0100
-Message-Id: <20200617113851.607706-7-alexandru.elisei@arm.com>
+Subject: [PATCH v5 7/7] arm_pmu: arm64: Use NMIs for PMU
+Date:   Wed, 17 Jun 2020 12:38:51 +0100
+Message-Id: <20200617113851.607706-8-alexandru.elisei@arm.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200617113851.607706-1-alexandru.elisei@arm.com>
 References: <20200617113851.607706-1-alexandru.elisei@arm.com>
@@ -46,174 +46,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Julien Thierry <julien.thierry@arm.com>
 
-Currently the PMU interrupt can either be a normal irq or a percpu irq.
-Supporting NMI will introduce two cases for each existing one. It becomes
-a mess of 'if's when managing the interrupt.
+Add required PMU interrupt operations for NMIs. Request interrupt lines as
+NMIs when possible, otherwise fall back to normal interrupts.
 
-Define sets of callbacks for operations commonly done on the interrupt. The
-appropriate set of callbacks is selected at interrupt request time and
-simplifies interrupt enabling/disabling and freeing.
+NMIs are only supported on the arm64 architecture with a GICv3 irqchip.
 
 Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+[Added that NMIs only work on arm64 + GICv3]
 Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 ---
- drivers/perf/arm_pmu.c | 86 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 70 insertions(+), 16 deletions(-)
+ drivers/perf/arm_pmu.c | 62 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 56 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index df352b334ea7..17e5952d21e4 100644
+index 17e5952d21e4..dd9d7f61ee29 100644
 --- a/drivers/perf/arm_pmu.c
 +++ b/drivers/perf/arm_pmu.c
-@@ -26,8 +26,46 @@
+@@ -45,6 +45,17 @@ static const struct pmu_irq_ops pmuirq_ops = {
+ 	.free_pmuirq = armpmu_free_pmuirq
+ };
  
- #include <asm/irq_regs.h>
- 
-+static int armpmu_count_irq_users(const int irq);
-+
-+struct pmu_irq_ops {
-+	void (*enable_pmuirq)(unsigned int irq);
-+	void (*disable_pmuirq)(unsigned int irq);
-+	void (*free_pmuirq)(unsigned int irq, int cpu, void __percpu *devid);
-+};
-+
-+static void armpmu_free_pmuirq(unsigned int irq, int cpu, void __percpu *devid)
++static void armpmu_free_pmunmi(unsigned int irq, int cpu, void __percpu *devid)
 +{
-+	free_irq(irq, per_cpu_ptr(devid, cpu));
++	free_nmi(irq, per_cpu_ptr(devid, cpu));
 +}
 +
-+static const struct pmu_irq_ops pmuirq_ops = {
-+	.enable_pmuirq = enable_irq,
-+	.disable_pmuirq = disable_irq_nosync,
-+	.free_pmuirq = armpmu_free_pmuirq
++static const struct pmu_irq_ops pmunmi_ops = {
++	.enable_pmuirq = enable_nmi,
++	.disable_pmuirq = disable_nmi_nosync,
++	.free_pmuirq = armpmu_free_pmunmi
 +};
 +
-+static void armpmu_enable_percpu_pmuirq(unsigned int irq)
+ static void armpmu_enable_percpu_pmuirq(unsigned int irq)
+ {
+ 	enable_percpu_irq(irq, IRQ_TYPE_NONE);
+@@ -63,6 +74,31 @@ static const struct pmu_irq_ops percpu_pmuirq_ops = {
+ 	.free_pmuirq = armpmu_free_percpu_pmuirq
+ };
+ 
++static void armpmu_enable_percpu_pmunmi(unsigned int irq)
 +{
-+	enable_percpu_irq(irq, IRQ_TYPE_NONE);
++	if (!prepare_percpu_nmi(irq))
++		enable_percpu_nmi(irq, IRQ_TYPE_NONE);
 +}
 +
-+static void armpmu_free_percpu_pmuirq(unsigned int irq, int cpu,
-+				   void __percpu *devid)
++static void armpmu_disable_percpu_pmunmi(unsigned int irq)
++{
++	disable_percpu_nmi(irq);
++	teardown_percpu_nmi(irq);
++}
++
++static void armpmu_free_percpu_pmunmi(unsigned int irq, int cpu,
++				      void __percpu *devid)
 +{
 +	if (armpmu_count_irq_users(irq) == 1)
-+		free_percpu_irq(irq, devid);
++		free_percpu_nmi(irq, devid);
 +}
 +
-+static const struct pmu_irq_ops percpu_pmuirq_ops = {
-+	.enable_pmuirq = armpmu_enable_percpu_pmuirq,
-+	.disable_pmuirq = disable_percpu_irq,
-+	.free_pmuirq = armpmu_free_percpu_pmuirq
++static const struct pmu_irq_ops percpu_pmunmi_ops = {
++	.enable_pmuirq = armpmu_enable_percpu_pmunmi,
++	.disable_pmuirq = armpmu_disable_percpu_pmunmi,
++	.free_pmuirq = armpmu_free_percpu_pmunmi
 +};
 +
  static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
  static DEFINE_PER_CPU(int, cpu_irq);
-+static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
+ static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
+@@ -633,15 +669,29 @@ int armpmu_request_irq(int irq, int cpu)
+ 			    IRQF_NO_THREAD;
  
- static inline u64 arm_pmu_event_max_period(struct perf_event *event)
- {
-@@ -544,6 +582,19 @@ static int armpmu_count_irq_users(const int irq)
- 	return count;
- }
- 
-+static const struct pmu_irq_ops *armpmu_find_irq_ops(int irq)
-+{
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		if (per_cpu(cpu_irq, cpu) == irq
-+		    && per_cpu(cpu_irq_ops, cpu))
-+			return per_cpu(cpu_irq_ops, cpu);
-+	}
-+
-+	return NULL;
-+}
-+
- void armpmu_free_irq(int irq, int cpu)
- {
- 	if (per_cpu(cpu_irq, cpu) == 0)
-@@ -551,18 +602,18 @@ void armpmu_free_irq(int irq, int cpu)
- 	if (WARN_ON(irq != per_cpu(cpu_irq, cpu)))
- 		return;
- 
--	if (!irq_is_percpu_devid(irq))
--		free_irq(irq, per_cpu_ptr(&cpu_armpmu, cpu));
--	else if (armpmu_count_irq_users(irq) == 1)
--		free_percpu_irq(irq, &cpu_armpmu);
-+	per_cpu(cpu_irq_ops, cpu)->free_pmuirq(irq, cpu, &cpu_armpmu);
- 
- 	per_cpu(cpu_irq, cpu) = 0;
-+	per_cpu(cpu_irq_ops, cpu) = NULL;
- }
- 
- int armpmu_request_irq(int irq, int cpu)
- {
- 	int err = 0;
- 	const irq_handler_t handler = armpmu_dispatch_irq;
-+	const struct pmu_irq_ops *irq_ops;
-+
- 	if (!irq)
- 		return 0;
- 
-@@ -584,15 +635,26 @@ int armpmu_request_irq(int irq, int cpu)
  		irq_set_status_flags(irq, IRQ_NOAUTOEN);
- 		err = request_irq(irq, handler, irq_flags, "arm-pmu",
+-		err = request_irq(irq, handler, irq_flags, "arm-pmu",
++
++		err = request_nmi(irq, handler, irq_flags, "arm-pmu",
  				  per_cpu_ptr(&cpu_armpmu, cpu));
-+
-+		irq_ops = &pmuirq_ops;
+ 
+-		irq_ops = &pmuirq_ops;
++		/* If cannot get an NMI, get a normal interrupt */
++		if (err) {
++			err = request_irq(irq, handler, irq_flags, "arm-pmu",
++					  per_cpu_ptr(&cpu_armpmu, cpu));
++			irq_ops = &pmuirq_ops;
++		} else {
++			irq_ops = &pmunmi_ops;
++		}
  	} else if (armpmu_count_irq_users(irq) == 0) {
- 		err = request_percpu_irq(irq, handler, "arm-pmu",
- 					 &cpu_armpmu);
+-		err = request_percpu_irq(irq, handler, "arm-pmu",
+-					 &cpu_armpmu);
+-
+-		irq_ops = &percpu_pmuirq_ops;
++		err = request_percpu_nmi(irq, handler, "arm-pmu", &cpu_armpmu);
 +
-+		irq_ops = &percpu_pmuirq_ops;
-+	} else {
-+		/* Per cpudevid irq was already requested by another CPU */
-+		irq_ops = armpmu_find_irq_ops(irq);
-+
-+		if (WARN_ON(!irq_ops))
-+			err = -EINVAL;
- 	}
- 
- 	if (err)
- 		goto err_out;
- 
- 	per_cpu(cpu_irq, cpu) = irq;
-+	per_cpu(cpu_irq_ops, cpu) = irq_ops;
- 	return 0;
- 
- err_out:
-@@ -625,12 +687,8 @@ static int arm_perf_starting_cpu(unsigned int cpu, struct hlist_node *node)
- 	per_cpu(cpu_armpmu, cpu) = pmu;
- 
- 	irq = armpmu_get_cpu_irq(pmu, cpu);
--	if (irq) {
--		if (irq_is_percpu_devid(irq))
--			enable_percpu_irq(irq, IRQ_TYPE_NONE);
--		else
--			enable_irq(irq);
--	}
-+	if (irq)
-+		per_cpu(cpu_irq_ops, cpu)->enable_pmuirq(irq);
- 
- 	return 0;
- }
-@@ -644,12 +702,8 @@ static int arm_perf_teardown_cpu(unsigned int cpu, struct hlist_node *node)
- 		return 0;
- 
- 	irq = armpmu_get_cpu_irq(pmu, cpu);
--	if (irq) {
--		if (irq_is_percpu_devid(irq))
--			disable_percpu_irq(irq);
--		else
--			disable_irq_nosync(irq);
--	}
-+	if (irq)
-+		per_cpu(cpu_irq_ops, cpu)->disable_pmuirq(irq);
- 
- 	per_cpu(cpu_armpmu, cpu) = NULL;
- 
++		/* If cannot get an NMI, get a normal interrupt */
++		if (err) {
++			err = request_percpu_irq(irq, handler, "arm-pmu",
++						 &cpu_armpmu);
++			irq_ops = &percpu_pmuirq_ops;
++		} else {
++			irq_ops = &percpu_pmunmi_ops;
++		}
+ 	} else {
+ 		/* Per cpudevid irq was already requested by another CPU */
+ 		irq_ops = armpmu_find_irq_ops(irq);
 -- 
 2.27.0
 
