@@ -2,113 +2,158 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C23C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C92C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3506B208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C317220882
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTHdDJnD"
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="ntvDjUw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgFQC1h (ORCPT
+        id S1726675AbgFQCau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 22:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgFQC1g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 22:27:36 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C527AC061573;
-        Tue, 16 Jun 2020 19:27:35 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id u13so956262iol.10;
-        Tue, 16 Jun 2020 19:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=o+3+WHHJ8/T1Wxlro6VgUKACrLkQwhYAFXZ7kke0D9k=;
-        b=LTHdDJnDrNomSfUbM5PjQjTr9FrUwPmPariJdqPW2HFl+1wAomframy4GqUiajueTS
-         pmGBDsY6llA9/qL5AJSW/Oy5nPqNrBVt5BGlIll+tDOyI57H37kt921kx8hnm6on9OiQ
-         dOuVNJDsBkLtNxm0msEyp1Xn9SWJcmWGajWSaH6o1lYcpg83sr5bAusUKkSjUSR52SZE
-         PTSiXswF+GgMxxoRpHwaVda7kUC4HK0LS1aPxIZSvjhm902Av6i/EQXv5uX6O2B0F3Mf
-         EjzMIaXSnzEdd9171v8M+rpFKnohT4loOpaqu3rpgohdZINXfQWPp7QGgb/Z13dD6ZEr
-         Hrzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=o+3+WHHJ8/T1Wxlro6VgUKACrLkQwhYAFXZ7kke0D9k=;
-        b=hOXthZnwPa022geIyjN2WB8nTXkJy7BM3xFLIBzSlZ96QMWXJ8/NQ5QbN/ercmWf7t
-         MzbcFmflZuvd4bJbZKS4NAsJPI7B2rp1wnSQ3483MhakXOsc61Pq7sowpJSHlb3p5o63
-         gYMfZ6Qm6BMUHxJDFKAqJHN5RaRwZNwuhfml/GvuKAFJVf+yuxPDm14LvHpFCb5qNgMS
-         NDAiGrpTn4LtYy81xoYe3INq0jI9xr74UfsqzlJZ/5UMRahDiOhTV8R/+1zVf9fAST4O
-         Z0z82BiEp9ATJHEJYFm5P4GZH3k4vKzZyo8dEXCjikAX65AbTIvryLbmvQYe+/XZif8e
-         E+Cw==
-X-Gm-Message-State: AOAM530MWyO/wAwdWsDtife9gLY1GgHGia6IYmMTs8lg7m2a0oLafzMi
-        P7I/JSSHBxhcj8ZPlZ+vgfQkWRtlGlKRe/7fZEo=
-X-Google-Smtp-Source: ABdhPJzW2JLOEdfm5n2+1udufWR25HquV0/vCG85pUOkXhf8DeOdEIXFVfOOsjnFIDwFMHJUrRvnDUaBoy0wBiQVTY0=
-X-Received: by 2002:a05:6602:2e96:: with SMTP id m22mr5919832iow.165.1592360854942;
- Tue, 16 Jun 2020 19:27:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <1592310884-4307-1-git-send-email-macpaul.lin@mediatek.com> <20200616140246.GA30975@rowland.harvard.edu>
-In-Reply-To: <20200616140246.GA30975@rowland.harvard.edu>
-From:   Macpaul Lin <macpaul@gmail.com>
-Date:   Wed, 17 Jun 2020 10:27:23 +0800
-Message-ID: <CACCg+XNdnzsn4RH+1OWJXNY6mVA9a6tpaUec3=P53WkywcWfkA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] usb: gadget: introduce flag for large request
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Sergey Organov <sorganov@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 16 Jun 2020 22:30:50 -0400
+Received: from mail-dm6nam10on2133.outbound.protection.outlook.com ([40.107.93.133]:20513
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726494AbgFQCat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 22:30:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O45XG91kwVpRW9W0Igxo5h0+E5N/fW3mmXEdzkYG3pbEHYuCWwxjPgDKNMeFEtxRjuAYnQlRCi80ZtsVtoqef0hKOOHwRJWV0Cxf+Qj/sOP+WDHrd+G+JqHvQggDsBFAa3T9xlao9DIdQ8tK/p6c9qSysb4fAMmH7r1jr2o2EG08bSJVyDr8PYZIGhOA09fTL6X8A2oYhJjXVGIZKQftz4nyVyx4NvN6OzlaBLICKkJ8dXfYsR2PIGb9OQINo+1IG2qt4UGtfM5Nqt74xOPakPwe/M4mA3sad8HgSkYZfRtPkEnbRoospa/DTdC8/v2ykR5BSYgK/NRyBQ2LOl0KKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lH9MJfBzDTmOYAn47dlwC+0lp99Z9cxtad6I4/XFsZs=;
+ b=nYZPv+N9kltIORY2bD9YX2U2T6FxcI3Xyn6WSrSBgb8zcuAH4YgbmAcNtIIAxrGU5PmzWDl/HC0SoJ5PGXE2XUy3nHRDb7Pecv4Q7Mw33kqORQT/2YxdYtVKGIwwsnslVfMX4Q3niVOuvRRoz4RdAqYu5lKZEI/mIQA35G5BhiYv9/2HrK6xPt5TGhylfkvZV01lxX0eFiaKe8JvvhZgxEJyrnMlTYqcIlEeoqaKhoVUDQunDDtH3bSEfPx+3oVojpKc58a9YjkbcMysz06K83chbqiYpMcbAKZhFR7nTCD92XNoF+MdGoaJ11/bYcPBixfG/Tkpi1mwc1316scYuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lH9MJfBzDTmOYAn47dlwC+0lp99Z9cxtad6I4/XFsZs=;
+ b=ntvDjUw1MILJ7AFiovWrEXRDBOhOE+8sxUEpDyvM0M//Xnfo8KssbapHCSJ3kj+1Lm46DNCNi94XQzN+IJMdE/iBMzTziI4XlGuTb+z7qPgdmF8w+wwFiPYfW95F//znraD+/FLbSmBkBfBBpg3m64wpG+kOE03fQqTig7iTU7U=
+Received: from CY4PR13MB1175.namprd13.prod.outlook.com (2603:10b6:903:40::23)
+ by CY4PR1301MB1957.namprd13.prod.outlook.com (2603:10b6:910:46::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.7; Wed, 17 Jun
+ 2020 02:30:45 +0000
+Received: from CY4PR13MB1175.namprd13.prod.outlook.com
+ ([fe80::e486:a4f:7430:536e]) by CY4PR13MB1175.namprd13.prod.outlook.com
+ ([fe80::e486:a4f:7430:536e%9]) with mapi id 15.20.3109.018; Wed, 17 Jun 2020
+ 02:30:45 +0000
+From:   "Bird, Tim" <Tim.Bird@sony.com>
+To:     Kees Cook <keescook@chromium.org>
+CC:     Brendan Higgins <brendanhiggins@google.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Gow <davidgow@google.com>
+Subject: RE: RFC - kernel selftest result documentation (KTAP)
+Thread-Topic: RFC - kernel selftest result documentation (KTAP)
+Thread-Index: AdY/UfZiI2pZQBRwRN+1JBazpeVQogEzX+2AAAAmIWAABsPVgAAExn9A
+Date:   Wed, 17 Jun 2020 02:30:45 +0000
+Message-ID: <CY4PR13MB1175DCC4066FC0839A6B2E84FD9A0@CY4PR13MB1175.namprd13.prod.outlook.com>
+References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
+ <20200616204817.GA212825@google.com>
+ <CY4PR13MB1175A71AE3937C0786721ABFFD9D0@CY4PR13MB1175.namprd13.prod.outlook.com>
+ <202006161703.B2E51605@keescook>
+In-Reply-To: <202006161703.B2E51605@keescook>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=sony.com;
+x-originating-ip: [160.33.195.20]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1cbfa04c-9439-480e-2783-08d81266706d
+x-ms-traffictypediagnostic: CY4PR1301MB1957:
+x-microsoft-antispam-prvs: <CY4PR1301MB195759E24D0AB5C96F4F8220FD9A0@CY4PR1301MB1957.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZDa0/sR19yWNZqoXxE9xMro7IgStIHpnkvzml/iM52ctXR/RGpHUb2Wsqzf3aQiNgTH1hIm8tHONAscCY5QnWaerJfTk5NPzHG/3mqZw5iacg0VFaAf431aloQYMranIZaN/r8zspIbdlCy9O21Z0/OnrGaQIKJJcgaTjYify+ic57iNUUv0xrQ3Ls7AhchE3mwimMUr24RiK9XBAcCDUwzPoNV5spPtK2J8DGyyLUtg6lNhAbw1NiZiJ1rLVBxle0t4T1BltNi396bmoNQoH6mjEGC6ZmShrKoChocRsFAmC8frjkKbo0GE6EejDaO1qCxb7dIBC3TG2zNRckO0TQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR13MB1175.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(5660300002)(6916009)(186003)(66446008)(66556008)(66946007)(64756008)(76116006)(8936002)(66476007)(8676002)(71200400001)(26005)(2906002)(54906003)(316002)(478600001)(33656002)(4326008)(7696005)(52536014)(6506007)(83380400001)(86362001)(55016002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: +dZFu85551v9018U+Fmi5yNKByKY186v6fW8S6XDVweWTFH51otWYmdjvKE37+dfKtN+WH1709/UhvPOTNXUD/Ol3V0tmZF/0VqPgu380ij7PMOkyaUxlITyY4a7jv4+EKKYdY3dlvNHvDW4rqOTJVwSMmijsJSe//fMeTYSZpm50UPKsHSP7fM1JSqGSwILKeJbjUWEMmpEJwGEdsoORmNgbfqEVFpM5w5fnTzE/sTEZcAhaOq0XbSNsjFgmEI4bWESjWMQnTWIOE3GVzP+rtAWkjmjnPbD/edoZOg+x8GCYizpsoHwz2CY60njpN+xbZAqGBFISd+u7NSYfS1doNz+xC3xFwOvgD0J6+N8nRfgj+FQfVzT0nktMDbxOA1cYECdbHs1e5xpPhRWm0fM5h9CJw3RynnwH//m5+vzRmR5rB4BixOw23uSrLpGMGjiq32yszd0gItE1Txl1hIU8uc0+R3cUNf0FjaliTRczo0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cbfa04c-9439-480e-2783-08d81266706d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 02:30:45.3891
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: akndlvcRFDy+Gd3ayiJdXLK2pFHc3KEBAQLudAbWoGXA37yev4/5s6hH7YveJRHEFK5zlHCbg5HP/mzsCtfJvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1301MB1957
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alan Stern <stern@rowland.harvard.edu> =E6=96=BC 2020=E5=B9=B46=E6=9C=8816=
-=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8810:05=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> On Tue, Jun 16, 2020 at 08:34:43PM +0800, Macpaul Lin wrote:
-> > Some USB hardware like DMA engine can help to process (split) the data
-> > of each URB request into small packets. For example, the max packet siz=
-e
-> > of high speed is 512 bytes. These kinds of hardware can help to split
-> > the continue Tx/Rx data requests into packets just at the max packet
-> > size during transmission. Hence upper layer software can reduce some
-> > effort for queueing many requests back and forth for larger data.
-> >
-> > Here we introduce "can_exceed_maxp" flag in gadget when these kinds of
-> > hardware is ready to support these operations.
->
-> This isn't needed.  All UDC drivers must be able to support requests that
-> are larger than the maxpacket size.
->
-> Alan Stern
 
-Thanks for your reply, could we just modify the patch 2 (u_serial.c)
-for improving
-better performance? I'm not sure why there was a restriction about max pack=
-et.
-Isn't there any historical reason?
 
---=20
-Best regards,
-Macpaul Lin
+> -----Original Message-----
+> From: Kees Cook
+>=20
+> On Tue, Jun 16, 2020 at 09:16:01PM +0000, Bird, Tim wrote:
+> > So far, most of the CI systems don't parse out diagnostic data, so it d=
+oesn't
+> > really matter what the format is.  If it's useful for humans, it's valu=
+able as is.
+> > However, it would be nice if that could change.  But without some forma=
+lization
+> > of the format of the diagnostic data, it's an intractable problem for C=
+I systems
+> > to parse it.  So it's really a chicken and egg problem.  To solve it, w=
+e would have
+> > to determine what exactly needs to be provided on a consistent basis fo=
+r diagnostic
+> > data across many tests.  I think that it's too big a problem to handle =
+right now.
+> > I'm not opposed to migrating to some structure with yaml in the future,=
+ but free
+> > form text output seems OK for now.
+>=20
+> For a CI system, if I see a test has failed, I expect to be able to
+> click a link to get the log of that test, which includes the diagnostic
+> lines. The other reason to have them there is to show progress during a
+> manual run.
+Agreed.  You only need machine-parsable data if you expect the CI
+system to do something more with the data than just present it.
+What that would be, that would be common for all tests (or at least
+many test), is unclear.  Maybe there are patterns in the diagnostic
+data that could lead to higher-level analysis, or even automated
+fixes, that don't become apparent if the data is unstructured.  But
+it's hard to know until you have lots of data.  I think just getting
+the other things consistent is a good priority right now.
+ -- Tim
+
+>=20
+> > > Yeah, I think it would be nice if all test frameworks/libraries for t=
+he
+> > > kernel output tests in the same language.
+> > Agreed.
+>=20
+> $ git grep "TAP version"
+> exec/binfmt_script:print("TAP version 1.3")
+> kselftest.h:            printf("TAP version 13\n");
+> kselftest/runner.sh:    echo "TAP version 13"
+> resctrl/resctrl_tests.c:        printf("TAP version 13\n");
+> size/get_size.c:        print("TAP version 13\n");
+>=20
+> Looks like there are 2 tests to convert to kselftest.h, and then we can
+> just change the version to 14 in the header and the runner. ;)
+>=20
+> --
+> Kees Cook
