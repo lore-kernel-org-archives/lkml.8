@@ -2,184 +2,187 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C37C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC29521527
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DG6lUPhA"
+	by mail.kernel.org (Postfix) with ESMTP id 1BDD92065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592409995;
+	bh=TDAkV5Jw68GE23y3fEU7BN2SFiTSUZC3oZl2Y+atGMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GCykcaVH+biO2XwrLgPSRdUx7txd7UE5gpuGd9LAO3h86qiIxJU+ue4VPFqpsvkEN
+	 2YxLWZhDbrgeb9K8U6K0VtZkYmZbHY43CN0dtR470Cy3q7B5+olwLa194Fb+HadrDV
+	 eAYfozEymuXgQ0iHtkPGf7Q/RUNtXYpzxY4zH1xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgFQQG3 (ORCPT
+        id S1726915AbgFQQGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:06:29 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23358 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726558AbgFQQGY (ORCPT
+        Wed, 17 Jun 2020 12:06:33 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:44822 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgFQQGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:06:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592409983;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XqkRPzEJNd4E9Q1G+k445oaqOMVgrxAg/Ac/nNCJrIc=;
-        b=DG6lUPhAhbVCBFh2tHQypaEanewrP7VNJSmg+FFnFkH0z0AEIEiZHJTv0exgjQbwXRlLEK
-        yUMDKkCt4rR5mVOPH0I0aE25ys7kJ5yqEAnOph0FO5b6GehysWhhGJ7BthYFMSdhwi9mBc
-        RxyWiAXd0OlrYMPV0w77dc6rY7rPPjA=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-358-O4-a7qGsMK-6QDyB6f5Lzg-1; Wed, 17 Jun 2020 12:06:21 -0400
-X-MC-Unique: O4-a7qGsMK-6QDyB6f5Lzg-1
-Received: by mail-qt1-f200.google.com with SMTP id h30so493196qtb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:06:21 -0700 (PDT)
+        Wed, 17 Jun 2020 12:06:30 -0400
+Received: by mail-ej1-f65.google.com with SMTP id gl26so2918786ejb.11;
+        Wed, 17 Jun 2020 09:06:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XqkRPzEJNd4E9Q1G+k445oaqOMVgrxAg/Ac/nNCJrIc=;
-        b=Dh3/x8WyaowhdgYd2DHzPb9yDXC5TydNyRamVe4nEi1sIMg2LWGDh1ggvLzFh7geIK
-         StgDrchw+ziJTHOr/lhvC6WmG4Wcv7jwV5dXJTn3rlWoHO+juqWu6mk9AeCczz1NpbR+
-         gVmhoaiEpS3MVbFevy0byNF6RVyaGZlX3n7ZyNa0DkQsmfU/h300dVMzchX5dAca1vWT
-         B3sYu3HblqZcVwT6HR9v9grwujkVAT4D8j7nQR3d8lpcynqz9jfySwFkOmq317YyJKIp
-         B+hzUloEN5viPs1ZyLwnNIqsaxeS58Su/37w0zj/GZ1BcOVXcMjC3b8Mu7ctez5jTgVa
-         4tAw==
-X-Gm-Message-State: AOAM53187Tqat9bPVozkCS6Mgx/jM8GxHpEIGHSzrpz4XUJO+acuezTu
-        3xLH19/Y9QqC6xaJwltYzmxpEXPkR4GXa9xAhANKHT6ydzQaYmTfMY4UFQ3jvhZ6bYTk8EV63EO
-        QkInnMn6mXU5OnCUKBxKF3wS5
-X-Received: by 2002:aed:35c5:: with SMTP id d5mr27411830qte.243.1592409980720;
-        Wed, 17 Jun 2020 09:06:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzK0upNzVKga9t/cXz0nFIHNR+BgMqMR4Y9ZMPK25SOO6oD25NVr9OI+Cadxk2xEZtjGKxkZg==
-X-Received: by 2002:aed:35c5:: with SMTP id d5mr27411804qte.243.1592409980451;
-        Wed, 17 Jun 2020 09:06:20 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id e53sm295633qtk.50.2020.06.17.09.06.18
+        bh=tlbxG54rgd+6fqV6RAW61FEmri3bgkhNHXx9gI+QO08=;
+        b=jb16FbQVFpFEpuyqs/N22alEgPwD8x9ngTuRZ0vTRYYthZqmFk3V7LoVQ2wj9AkjlF
+         J2JXtJG0NfWhxIZzNulG008V2/eAYR5Z7AEaLbZc+hCNbGa+66gI5I2lLRnmbz8VQe4y
+         mNN2U/EeslehTuMbG464S57WoSSt8hPHA/yg5LNAVOdzPgKrR4WvbPhjiUjLUqFi3DAf
+         5aN1UO3M0SFAsjZMRyyZPCDl2zCZ6HSByHVsIrPI62j2ruOZRqRu6HqEtItCV9csBzI6
+         +Otk4KpUCr011snxsdVvHNpefAIlqoD2qvds7b0ewCSDPnhh4CwyATc4dajf+Sjxzp4M
+         g8Ow==
+X-Gm-Message-State: AOAM530gKbqJj/uHcWAZXcXH69lQ3PxM477ZJ6SyO2WEtEg9vR2CeD4L
+        7aZA2kR6eMAVmVh/GEbnoEIR2KWx
+X-Google-Smtp-Source: ABdhPJyTNwsKkxV+Do4IZBMmhJD8BUFelJmhG68Wk1D+d/Hsq8QURbAiEkw9lH4smi6/Pd/IOgjrnQ==
+X-Received: by 2002:a17:906:d0d7:: with SMTP id bq23mr8491327ejb.259.1592409987418;
+        Wed, 17 Jun 2020 09:06:27 -0700 (PDT)
+Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
+        by smtp.gmail.com with ESMTPSA id yw17sm276521ejb.83.2020.06.17.09.06.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:06:19 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 12:06:17 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Wed, 17 Jun 2020 09:06:26 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 18:06:24 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
         Andrea Arcangeli <aarcange@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
-Message-ID: <20200617160617.GD76766@xz-x1>
-References: <20200615221607.7764-1-peterx@redhat.com>
- <20200615222302.8452-1-peterx@redhat.com>
- <20200616155933.GA12897@oc3871087118.ibm.com>
- <20200616163510.GD11838@xz-x1>
- <edb88596-6f2c-2648-748d-591a0b1e0131@de.ibm.com>
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200617160624.GS9499@dhcp22.suse.cz>
+References: <20200519084535.GG32497@dhcp22.suse.cz>
+ <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name>
+ <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz>
+ <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
+ <20200617135758.GA548179@chrisdown.name>
+ <20200617141155.GQ9499@dhcp22.suse.cz>
+ <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <edb88596-6f2c-2648-748d-591a0b1e0131@de.ibm.com>
+In-Reply-To: <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Christian,
-
-On Wed, Jun 17, 2020 at 08:19:29AM +0200, Christian Borntraeger wrote:
+On Wed 17-06-20 21:23:05, Naresh Kamboju wrote:
+> On Wed, 17 Jun 2020 at 19:41, Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > [Our emails have crossed]
+> >
+> > On Wed 17-06-20 14:57:58, Chris Down wrote:
+> > > Naresh Kamboju writes:
+> > > > mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8RQK14KF6XF
+> > > > mke2fs 1.43.8 (1-Jan-2018)
+> > > > Creating filesystem with 244190646 4k blocks and 61054976 inodes
+> > > > Filesystem UUID: 7c380766-0ed8-41ba-a0de-3c08e78f1891
+> > > > Superblock backups stored on blocks:
+> > > > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+> > > > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+> > > > 102400000, 214990848
+> > > > Allocating group tables:    0/7453 done
+> > > > Writing inode tables:    0/7453 done
+> > > > Creating journal (262144 blocks): [   51.544525] under min:0 emin:0
+> > > > [   51.845304] under min:0 emin:0
+> > > > [   51.848738] under min:0 emin:0
+> > > > [   51.858147] under min:0 emin:0
+> > > > [   51.861333] under min:0 emin:0
+> > > > [   51.862034] under min:0 emin:0
+> > > > [   51.862442] under min:0 emin:0
+> > > > [   51.862763] under min:0 emin:0
+> > >
+> > > Thanks, this helps a lot. Somehow we're entering mem_cgroup_below_min even
+> > > when min/emin is 0 (which should indeed be the case if you haven't set them
+> > > in the hierarchy).
+> > >
+> > > My guess is that page_counter_read(&memcg->memory) is 0, which means
+> > > mem_cgroup_below_min will return 1.
+> >
+> > Yes this is the case because this is likely the root memcg which skips
+> > all charges.
+> >
+> > > However, I don't know for sure why that should then result in the OOM killer
+> > > coming along. My guess is that since this memcg has 0 pages to scan anyway,
+> > > we enter premature OOM under some conditions. I don't know why we wouldn't
+> > > have hit that with the old version of mem_cgroup_protected that returned
+> > > MEMCG_PROT_* members, though.
+> >
+> > Not really. There is likely no other memcg to reclaim from and assuming
+> > min limit protection will result in no reclaimable memory and thus the
+> > OOM killer.
+> >
+> > > Can you please try the patch with the `>=` checks in mem_cgroup_below_min
+> > > and mem_cgroup_below_low changed to `>`? If that fixes it, then that gives a
+> > > strong hint about what's going on here.
+> >
+> > This would work but I believe an explicit check for the root memcg would
+> > be easier to spot the reasoning.
 > 
-> 
-> On 16.06.20 18:35, Peter Xu wrote:
-> > Hi, Alexander,
-> > 
-> > On Tue, Jun 16, 2020 at 05:59:33PM +0200, Alexander Gordeev wrote:
-> >>> @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
-> >>>  	if (unlikely(fault & VM_FAULT_ERROR))
-> >>>  		goto out_up;
-> >>>
-> >>> -	/*
-> >>> -	 * Major/minor page fault accounting is only done on the
-> >>> -	 * initial attempt. If we go through a retry, it is extremely
-> >>> -	 * likely that the page will be found in page cache at that point.
-> >>> -	 */
-> >>>  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
-> >>> -		if (fault & VM_FAULT_MAJOR) {
-> >>> -			tsk->maj_flt++;
-> >>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
-> >>> -				      regs, address);
-> >>> -		} else {
-> >>> -			tsk->min_flt++;
-> >>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
-> >>> -				      regs, address);
-> >>> -		}
-> >>>  		if (fault & VM_FAULT_RETRY) {
-> >>>  			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
-> >>>  			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
+> May I request you to send debugging or proposed fix patches here.
+> I am happy to do more testing.
 
-[1]
+Sure, here is the diff to test.
 
-> >>
-> >> Seems like the call to mm_fault_accounting() will be missed if
-> >> we entered here with FAULT_FLAG_RETRY_NOWAIT flag set, since it
-> >> jumps to "out_up"...
-> > 
-> > This is true as a functional change.  However that also means that we've got a
-> > VM_FAULT_RETRY, which hints that this fault has been requested to retry rather
-> > than handled correctly (for instance, due to some try_lock failed during the
-> > fault process).
-> > 
-> > To me, that case should not be counted as a page fault at all?  Or we might get
-> > the same duplicated accounting when the page fault retried from a higher stack.
-> > 
-> > Thanks
-> 
-> This case below (the one with the gmap) is the KVM case for doing a so called
-> pseudo page fault to our guests. (we notify our guests about major host page
-> faults and let it reschedule to something else instead of halting the vcpu).
-> This is being resolved with either gup or fixup_user_fault asynchronously by
-> KVM code (this can also be sync when the guest does not match some conditions)
-> We do not change the counters in that code as far as I can tell so we should
-> continue to do it here.
-> 
-> (see arch/s390/kvm/kvm-s390.c
-> static int vcpu_post_run(struct kvm_vcpu *vcpu, int exit_reason)
-> {
-> [...]
->         } else if (current->thread.gmap_pfault) {
->                 trace_kvm_s390_major_guest_pfault(vcpu);
->                 current->thread.gmap_pfault = 0;
->                 if (kvm_arch_setup_async_pf(vcpu))
->                         return 0;
->                 return kvm_arch_fault_in_page(vcpu, current->thread.gmap_addr, 1);
->         }
-
-Please correct me if I'm wrong... but I still think what this patch does is the
-right thing to do.
-
-Note again that IMHO when reached [1] above it means the page fault is not
-handled correctly so we need to fallback to KVM async page fault, then we
-shouldn't increment the accountings until it's finally handled correctly. That
-final accounting should be done in the async pf path in gup code where the page
-fault is handled:
-
-  kvm_arch_fault_in_page
-    gmap_fault
-      fixup_user_fault
-
-Where in fixup_user_fault() we have:
-
-	if (tsk) {
-		if (major)
-			tsk->maj_flt++;
-		else
-			tsk->min_flt++;
-	}
-
-Thanks,
-
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index c74a8f2323f1..6b5a31672fbe 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -392,6 +392,13 @@ static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
+ 	if (mem_cgroup_disabled())
+ 		return false;
+ 
++	/*
++	 * Root memcg doesn't account charges and doesn't support
++	 * protection
++	 */
++	if (mem_cgroup_is_root(memcg))
++		return false;
++
+ 	return READ_ONCE(memcg->memory.elow) >=
+ 		page_counter_read(&memcg->memory);
+ }
+@@ -401,6 +408,13 @@ static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
+ 	if (mem_cgroup_disabled())
+ 		return false;
+ 
++	/*
++	 * Root memcg doesn't account charges and doesn't support
++	 * protection
++	 */
++	if (mem_cgroup_is_root(memcg))
++		return false;
++
+ 	return READ_ONCE(memcg->memory.emin) >=
+ 		page_counter_read(&memcg->memory);
+ }
 -- 
-Peter Xu
-
+Michal Hocko
+SUSE Labs
