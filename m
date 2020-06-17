@@ -2,195 +2,110 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C18CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0602089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174F521532
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:58:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OGVeyzLc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VgA8Zy7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgFQT6H (ORCPT
+        id S1726964AbgFQT6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgFQT6E (ORCPT
+        Wed, 17 Jun 2020 15:58:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53199 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726496AbgFQT6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:58:04 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69AE0C0613EF
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:58:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n9so1441775plk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mtm26zMhVvziSNAo5SmfL3grFhcLxm63K6Ll3k7pVLA=;
-        b=OGVeyzLchDvvpgrQEJsCwDmB0g5mSK2iyCbWztP7Kq7e12lAsbrbJJ/O765BM1d9FQ
-         vMMvIE3saYLDImlEZ8eBNU3vlyvAG5MdNrvhwK/eP1+c7i+djFuR5nroesN2ZDFLFVQh
-         AMcDeULYTTf+crJp+k+EIY9BLyYqFncTk8mtc=
+        Wed, 17 Jun 2020 15:58:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592423892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gmJWpSwHVjxD6GXTAJ69IeIkc8fh7DM3r6hkTC0cWeE=;
+        b=VgA8Zy7wMoR/1lzsmCN9WMUvteeUwIUoVLkS0gQqhtb3Z6RhHsuuTEKG5rFV9/rihnLKi1
+        sTsaFJqwhedVbsjHshw2kyfyBI+ZJVAfrBuvcKQ+ySH0y6U6tYVndohsj8lxMGh+YLnNej
+        +zHEQ2w9OFfW6+4Q0RRh+MfVX8L1OwA=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-Y1F-9STcO7OuvfQTv4WmjQ-1; Wed, 17 Jun 2020 15:58:10 -0400
+X-MC-Unique: Y1F-9STcO7OuvfQTv4WmjQ-1
+Received: by mail-qt1-f198.google.com with SMTP id p9so2606606qtn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:58:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=mtm26zMhVvziSNAo5SmfL3grFhcLxm63K6Ll3k7pVLA=;
-        b=pIlyfbrh2Sv0EWdf8tAs121MhRKlXRllpAMm/BOaXSo4U1MuiwKzurdpwXvBjG6VUO
-         OJbBNuZT90oHtzc137axspJaaNgyaYultQFahJPiMH/+rIs0FXXTDL23Q9CX2T/iohdl
-         wvz/Uf1l1t3+WseIihFLQ6H3ZCCo2lWO63LqIP43RO0zTw0cPJ70gL2HED56czZUVCdA
-         F8yWAt+poGFgnZSI3nafAJPbPzewW3a/UVo9/JGzmD4BEzCewwG+jv0O4jg5XZn9LBQ0
-         +L43zqeUgw948ff4tEG13q8pyydRBOof4b0+8Is8Nbhr3tziIUiAItnmgheAU5hjR3k5
-         n+EQ==
-X-Gm-Message-State: AOAM531HHqc/3M/ILrEgWRk7jtJnbYJH2LTLVs4Np6NLKZYJV832xLbM
-        9zO7vfs5B/8qL2aakmZGAFgXcg==
-X-Google-Smtp-Source: ABdhPJx1Vhks5l1dJnwJicud25Ov+I84VyGCU0nF8o3XyWLhCCiEEzvHbnFtOemqhaMfq16ly8QKug==
-X-Received: by 2002:a17:90a:7a8f:: with SMTP id q15mr598912pjf.116.1592423882783;
-        Wed, 17 Jun 2020 12:58:02 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w22sm628496pfq.193.2020.06.17.12.58.01
+        bh=gmJWpSwHVjxD6GXTAJ69IeIkc8fh7DM3r6hkTC0cWeE=;
+        b=NRMPops+BJvfrdj4v92oX5cMESiTH0UaLaiGOQ5oXtYL8LvmMleoDOKAhbW0OYDa8i
+         lbXikE7R1L4k5rEBvCmNcEDz4/XEBRvXXmGLlicEBUgHk2cnYTUEKJf60w/MhP+ooSED
+         9bUJplH7HHl2dmTB9+OHfFcMqDD7hGARDjApOA2O7MgA1q9+uB0VZYJnxqkzl41xthJS
+         lyUj/W5KVTpuuApqKmZGOUSkZBqfQ6R8brRWCV5PCvqpXVvAv5+h4J2Edzszo39SAkwe
+         Ii8U0hdkv45D3jiBH2Oeqm2pXn7HIW7Mz3Y21etYk6dt9l2WQYucCDKCsG/ovbCdMFQ3
+         qpuw==
+X-Gm-Message-State: AOAM533D2Im9LaIlW9GdtIahq4YUv4w4Z0dfXGANWCCF8kJdmMytKmP+
+        IhT+yjFNa2qOeNV0Ndhe3GaRkt1TKdbadhOo6GZDuJADeQ+pVZt8wvgfRz/QIhRciIFETmOrIlK
+        Mm5tb/Vg4zoWzK1VxNPox7ouH
+X-Received: by 2002:a05:620a:218b:: with SMTP id g11mr302079qka.251.1592423890285;
+        Wed, 17 Jun 2020 12:58:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwcgg+y34wH1kZsiZl1638g4VhObYVYEjy0Zq1p0HEwGO4go5ztwMhAOlTkmaJl++mH9IdRGQ==
+X-Received: by 2002:a05:620a:218b:: with SMTP id g11mr302063qka.251.1592423890039;
+        Wed, 17 Jun 2020 12:58:10 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id y19sm837132qki.19.2020.06.17.12.58.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 12:58:01 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 12:58:00 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v4 03/11] fs: Add fd_install_received() wrapper for
- __fd_install_received()
-Message-ID: <202006171141.4DA1174979@keescook>
-References: <20200616032524.460144-1-keescook@chromium.org>
- <20200616032524.460144-4-keescook@chromium.org>
- <6de12195ec3244b99e6026b4b46e5be2@AcuMS.aculab.com>
+        Wed, 17 Jun 2020 12:58:08 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 15:58:07 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guo Ren <guoren@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-csky@vger.kernel.org
+Subject: Re: [PATCH 07/25] mm/csky: Use mm_fault_accounting()
+Message-ID: <20200617195807.GH76766@xz-x1>
+References: <20200615221607.7764-1-peterx@redhat.com>
+ <20200615221607.7764-8-peterx@redhat.com>
+ <CAJF2gTSVSXO=phc1eeb-ZmDMrSDjSSLd3tN6ng_8n-pCSZh5zw@mail.gmail.com>
+ <20200617154925.GC76766@xz-x1>
+ <CAHk-=wi=58J7d5iyFyYyHrU+pzjWB55cit_LQCkSkavpH-trsg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6de12195ec3244b99e6026b4b46e5be2@AcuMS.aculab.com>
+In-Reply-To: <CAHk-=wi=58J7d5iyFyYyHrU+pzjWB55cit_LQCkSkavpH-trsg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 03:35:20PM +0000, David Laight wrote:
-> From: Kees Cook
-> > Sent: 16 June 2020 04:25
-> > 
-> > For both pidfd and seccomp, the __user pointer is not used. Update
-> > __fd_install_received() to make writing to ufd optional. (ufd
-> > itself cannot checked for NULL because this changes the SCM_RIGHTS
-> > interface behavior.) In these cases, the new fd needs to be returned
-> > on success.  Update the existing callers to handle it. Add new wrapper
-> > fd_install_received() for pidfd and seccomp that does not use the ufd
-> > argument.
-> ...> 
-> >  static inline int fd_install_received_user(struct file *file, int __user *ufd,
-> >  					   unsigned int o_flags)
-> >  {
-> > -	return __fd_install_received(file, ufd, o_flags);
-> > +	return __fd_install_received(file, true, ufd, o_flags);
-> > +}
+On Wed, Jun 17, 2020 at 10:53:23AM -0700, Linus Torvalds wrote:
+> On Wed, Jun 17, 2020 at 8:49 AM Peter Xu <peterx@redhat.com> wrote:
+> >
+> > I don't think it's a must, but mmap_sem should not be required at least by
+> > observing current code.  E.g., do_user_addr_fault() of x86 does the accounting
+> > without mmap_sem even before this series.
 > 
-> Can you get rid of the 'return user' parameter by adding
-> 	if (!ufd) return -EFAULT;
-> to the above wrapper, then checking for NULL in the function?
+> All the accounting should be per-thread and not need any locking.
 > 
-> Or does that do the wrong horrid things in the fail path?
+> Which is why a remote GUP should never account to the remote mm - not
+> only isn't there an unambiguous thread to account to (an mm can share
+> many threads), but it would require locking not just for the remote
+> update, but for all normal page faults.
 
-Oh, hm. No, that shouldn't break the failure path, since everything gets
-unwound in __fd_install_received if the ufd write fails.
+But currently remote GUP will still do the page fault accounting on the remote
+task_struct, am I right?  E.g., when the get_user_pages_remote() is called with
+"tsk != current", it seems the faultin_page() will still do maj_flt/min_flt
+accounting for that remote task/thread?
 
-Effectively this (I'll chop it up into the correct patches):
-
-diff --git a/fs/file.c b/fs/file.c
-index b583e7c60571..3b80324a31cc 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -939,18 +939,16 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
-  *
-  * @fd: fd to install into (if negative, a new fd will be allocated)
-  * @file: struct file that was received from another process
-- * @ufd_required: true to use @ufd for writing fd number to userspace
-  * @ufd: __user pointer to write new fd number to
-  * @o_flags: the O_* flags to apply to the new fd entry
-  *
-  * Installs a received file into the file descriptor table, with appropriate
-  * checks and count updates. Optionally writes the fd number to userspace, if
-- * @ufd_required is true (@ufd cannot just be tested for NULL because NULL may
-- * actually get passed into SCM_RIGHTS).
-+ * @ufd is non-NULL.
-  *
-  * Returns newly install fd or -ve on error.
-  */
--int __fd_install_received(int fd, struct file *file, bool ufd_required,
-+int __fd_install_received(int fd, struct file *file,
- 			  int __user *ufd, unsigned int o_flags)
- {
- 	struct socket *sock;
-@@ -967,7 +965,7 @@ int __fd_install_received(int fd, struct file *file, bool ufd_required,
- 			return new_fd;
- 	}
- 
--	if (ufd_required) {
-+	if (ufd) {
- 		error = put_user(new_fd, ufd);
- 		if (error) {
- 			put_unused_fd(new_fd);
-diff --git a/include/linux/file.h b/include/linux/file.h
-index f1d16e24a12e..2ade0d90bc5e 100644
---- a/include/linux/file.h
-+++ b/include/linux/file.h
-@@ -91,20 +91,22 @@ extern void put_unused_fd(unsigned int fd);
- 
- extern void fd_install(unsigned int fd, struct file *file);
- 
--extern int __fd_install_received(int fd, struct file *file, bool ufd_required,
-+extern int __fd_install_received(int fd, struct file *file,
- 				 int __user *ufd, unsigned int o_flags);
- static inline int fd_install_received_user(struct file *file, int __user *ufd,
- 					   unsigned int o_flags)
- {
--	return __fd_install_received(-1, file, true, ufd, o_flags);
-+	if (ufd == NULL)
-+		return -EFAULT;
-+	return __fd_install_received(-1, file, ufd, o_flags);
- }
- static inline int fd_install_received(struct file *file, unsigned int o_flags)
- {
--	return __fd_install_received(-1, file, false, NULL, o_flags);
-+	return __fd_install_received(-1, file, NULL, o_flags);
- }
- static inline int fd_replace_received(int fd, struct file *file, unsigned int o_flags)
- {
--	return __fd_install_received(fd, file, false, NULL, o_flags);
-+	return __fd_install_received(fd, file, NULL, o_flags);
- }
- 
- extern void flush_delayed_fput(void);
+Thanks,
 
 -- 
-Kees Cook
+Peter Xu
+
