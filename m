@@ -2,181 +2,145 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4243DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2452721556
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C051F212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592426610;
+	bh=DH+JH7LuAvU3SM3hmsff67bT+aoOZzRe3kh/KZUgd9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NfmxJWLEsS/c7IFJhyjurSTMzx9/wX5jOJ+pOv9vCgCP86hhXJAtjQXY1KFQBkd8n
+	 SRL/y4hHDxnZQpa2yqu+4TwDr0LUDDRRCPZEORcRRniVb4BGF0DykaPDw6teDfeNPQ
+	 Da0cmFQoe9Vl8G7SVvY74J2jEbS2xjp5ZF/qMs+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgFQUnC (ORCPT
+        id S1726964AbgFQUn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:43:02 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:50277
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726496AbgFQUnB (ORCPT
+        Wed, 17 Jun 2020 16:43:29 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34760 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgFQUn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:43:01 -0400
-X-IronPort-AV: E=Sophos;i="5.73,523,1583190000"; 
-   d="scan'208";a="351906301"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 22:42:59 +0200
-Date:   Wed, 17 Jun 2020 22:42:58 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [PATCH v3] coccinelle: api: add kzfree script
-In-Reply-To: <20200614215414.40034-1-efremov@linux.com>
-Message-ID: <alpine.DEB.2.22.394.2006172241551.3083@hadrien>
-References: <20200604140805.111613-1-efremov@linux.com> <20200614215414.40034-1-efremov@linux.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Wed, 17 Jun 2020 16:43:27 -0400
+Received: by mail-io1-f65.google.com with SMTP id m81so4574840ioa.1;
+        Wed, 17 Jun 2020 13:43:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=emJpJjtrMEqB2UXVQWJGyVmpIt4i0tBG2sjF9wqyg6s=;
+        b=lc5B7tRhJGDdbMFm2QSG6dnzrjGuD5l5poYtmeh4CTduzLGiS0dUmdEGdgO8hsbtb9
+         fzRq00NP2OJzklCvpfvqvyiMmfWfu7RxnADUMobKwEhkMsrN70RJb668ZieH8FIApKZ1
+         CZicwgJqPUGEUnMSeAtH01IsgPmsaq/IZWmDTtCDJaMRr2DuGeHt/RVbfmGnD0rmIYFq
+         EMAAv7q+xjnstOCZMkVBUsoDwpj8P+7enirg0nMy/Zcl6HpG/KXEvzScRKwN8BadeEdI
+         eh2sS7OmXh+W0IjdeaVb/wM9xwcIS9n7zhWJOmB9qyXWMXf8dt/IhEMCnfU/1Rly98lA
+         sucA==
+X-Gm-Message-State: AOAM530MkJpdLqYVEObwVd0h+0kABxEPhVoPbbubliH+GeA1jMxhkROx
+        4MzP9xkR6CozOL1Ln2tU+Q==
+X-Google-Smtp-Source: ABdhPJx6D38aHYbkc7/7zEd9UCiEIZ/iKJdovV7uWe+2O6ZR5TDlocKXFkMaZH8WNeCz6fnzzMumHw==
+X-Received: by 2002:a5d:9d03:: with SMTP id j3mr1328409ioj.176.1592426606820;
+        Wed, 17 Jun 2020 13:43:26 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id c20sm499812iot.33.2020.06.17.13.43.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 13:43:26 -0700 (PDT)
+Received: (nullmailer pid 2766741 invoked by uid 1000);
+        Wed, 17 Jun 2020 20:43:24 -0000
+Date:   Wed, 17 Jun 2020 14:43:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
+        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
+        tao.li@vivo.com, christophe.leroy@c-s.fr,
+        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
+        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
+Subject: Re: [v1 PATCH 2/2] Add Documentation regarding the ima-kexec-buffer
+ node in the chosen node documentation
+Message-ID: <20200617204324.GA2740878@bogus>
+References: <20200607233323.22375-1-prsriva@linux.microsoft.com>
+ <20200607233323.22375-3-prsriva@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200607233323.22375-3-prsriva@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jun 07, 2020 at 04:33:23PM -0700, Prakhar Srivastava wrote:
+> Add Documentation regarding the ima-kexec-buffer node in
+>  the chosen node documentation
 
+Run 'git log --oneline Documentation/devicetree/bindings/chosen.txt' and 
+write $subject using the dominate format used.
 
-On Mon, 15 Jun 2020, Denis Efremov wrote:
+For the commit message, answer why you need the change, not what the 
+change is. I can read the diff for that.
 
-> Check for memset()/memzero_explicit() followed by kfree()/vfree()/kvfree().
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+>  
+> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
 > ---
-> Changes in v2:
->  - memset_explicit() added
->  - kvfree_sensitive() added
->  - forall added to r1
->  - ... between memset and kfree added
-> Changes in v3:
->  - Explicit filter for definitions instead of !(file in "...") conditions
->  - type T added to match casts
->  - memzero_explicit() patterns fixed
->  - additional rule "cond" added to filter false-positives
->
->  scripts/coccinelle/api/kzfree.cocci | 90 +++++++++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 scripts/coccinelle/api/kzfree.cocci
->
-> diff --git a/scripts/coccinelle/api/kzfree.cocci b/scripts/coccinelle/api/kzfree.cocci
-> new file mode 100644
-> index 000000000000..4758ca5a781e
-> --- /dev/null
-> +++ b/scripts/coccinelle/api/kzfree.cocci
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
-> +/// Use kzfree, kvfree_sensitive rather than memset or
-> +/// memzero_explicit followed by kfree
-> +///
-> +// Confidence: High
-> +// Copyright: (C) 2020 Denis Efremov ISPRAS
-> +// Options: --no-includes --include-headers
-> +//
-> +// Keywords: kzfree, kvfree_sensitive
-> +//
-> +
-> +virtual context
-> +virtual patch
-> +virtual org
-> +virtual report
-> +
-> +@initialize:python@
-> +@@
-> +# kmalloc_oob_in_memset uses memset to explicitly trigger out-of-bounds access
-> +filter = frozenset(['kmalloc_oob_in_memset', 'kzfree', 'kvfree_sensitive'])
-> +
-> +def relevant(p):
-> +    return not (filter & {el.current_element for el in p})
-> +
-> +@cond@
-> +position ok;
-> +@@
-> +
-> +if (...)
-> +  \(memset@ok\|memzero_explicit@ok\)(...);
-> +
-> +@r depends on !patch forall@
-> +expression E;
-> +position p : script:python() { relevant(p) };
-> +position m != cond.ok;
-> +type T;
-> +@@
-> +
-> +(
-> +* memset@m((T)E, 0, ...);
-> +|
-> +* memzero_explicit@m((T)E, ...);
-> +)
-> +  ... when != E
-> +      when strict
-> +* \(kfree\|vfree\|kvfree\)(E)@p;
-> +
-> +@rp_memzero depends on patch@
-> +expression E, size;
-> +position p : script:python() { relevant(p) };
-> +type T;
-> +@@
-> +
-> +- memzero_explicit((T)E, size)@p;
-> +  ... when != E
-> +      when strict
-> +- \(kfree\|vfree\|kvfree\)(E);
-> ++ kvfree_sensitive(E, size);
-> +
-> +@rp_memset depends on patch@
-> +expression E, size;
-> +position p : script:python() { relevant(p) };
-> +type T;
-> +@@
-> +
-> +- memset((T)E, size)@p;
+>  Documentation/devicetree/bindings/chosen.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 
-This is missing a 0 argument.
+This file has moved to a schema here[1]. You need to update it.
 
+> 
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 45e79172a646..a15f70c007ef 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -135,3 +135,20 @@ e.g.
+>  		linux,initrd-end = <0x82800000>;
+>  	};
+>  };
+> +
+> +linux,ima-kexec-buffer
+> +----------------------
+> +
+> +This property(currently used by powerpc, arm64) holds the memory range,
+> +the address and the size, of the IMA measurement logs that are being carried
+> +over to the kexec session.
 
-
-> +  ... when != E
-> +      when strict
-> +(
-> +- kfree(E);
-> ++ kzfree(E);
-> +|
-> +- \(vfree\|kvfree\)(E);
-> ++ kvfree_sensitive(E, size);
-> +)
-
-I'm not sure why you want kzfree in the first case, but kvfree_sensitive
-in the second case.
-
-julia
-
+What's IMA? 
 
 > +
-> +@script:python depends on report@
-> +p << r.p;
-> +@@
+> +/ {
+> +	chosen {
+> +		linux,ima-kexec-buffer = <0x9 0x82000000 0x0 0x00008000>;
+> +	};
+> +};
 > +
-> +coccilib.report.print_report(p[0],
-> +  "WARNING: opportunity for kzfree/kvfree_sensitive")
-> +
-> +@script:python depends on org@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.org.print_todo(p[0],
-> +  "WARNING: opportunity for kzfree/kvfree_sensitive")
-> --
-> 2.26.2
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
+> +This porperty does not represent real hardware, but the memory allocated for
+
+typo
+
+> +carrying the IMA measurement logs. The address and the suze are expressed in
+
+typo
+
+> +#address-cells and #size-cells, respectively of the root node.
+> -- 
+> 2.25.1
+> 
+
+
+[1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/chosen.yaml
+
