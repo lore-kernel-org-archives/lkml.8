@@ -2,173 +2,153 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01793C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF08C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF680208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580D220CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:13:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pehOUXfm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A2dLbOXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgFQLNo (ORCPT
+        id S1726928AbgFQLNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:13:44 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:26937 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726825AbgFQLNo (ORCPT
+        Wed, 17 Jun 2020 07:13:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33854 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgFQLNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:13:44 -0400
-X-UUID: 9aab6f1766984337876e9e22eefd6c6b-20200617
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JjpDADDiCK+qlE9hxMEA1Nw1DRsXUx4e15ajv8iZahc=;
-        b=pehOUXfm2oBtRs2IrjhACQQlFXiHBIHTYly3LBPvh2EFc/JUzpUduysubyCEp2a/wCG+6jFC7eiqzwVBb4/yZ1tR+Q1Z5LLUVy+/QdsXqr7Hy/m7/2DyfnHRHetlrzbU9vkvB9wPOZrF7BkctoOn6qeuqZHHbwd9Fe/IjCF7wN8=;
-X-UUID: 9aab6f1766984337876e9e22eefd6c6b-20200617
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1191921047; Wed, 17 Jun 2020 19:13:34 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
- (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 17 Jun
- 2020 19:13:34 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 17 Jun 2020 19:13:31 +0800
-Message-ID: <1592392265.20080.11.camel@mhfsdcap03>
-Subject: Re: [PATCH v4 5/7] iommu/mediatek: Add sub_comm id in translation
- fault
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Chao Hao <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        FY Yang <fy.yang@mediatek.com>
-Date:   Wed, 17 Jun 2020 19:11:05 +0800
-In-Reply-To: <4418c5a7-3f17-9d00-43b2-4ffc5d458116@gmail.com>
-References: <20200617030029.4082-1-chao.hao@mediatek.com>
-         <20200617030029.4082-6-chao.hao@mediatek.com>
-         <4418c5a7-3f17-9d00-43b2-4ffc5d458116@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 17 Jun 2020 07:13:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05HBD7dx118817;
+        Wed, 17 Jun 2020 11:13:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=cuNGorMCGRL2h1N6XRNC1GY6mItog4OtrSLpqxId5mo=;
+ b=A2dLbOXcLXjWH4ngUp9sSdKtQGnN8HjUtHi+IMOBdN/OfpbMrsLVjiYgts+NbLwfFU+r
+ veJcPV3EuoS9iaVbn30dR8uAufSE8s0GTKYgVmPUqpMz3rXFGjtcQpvVWOrMjCuUp/uY
+ CpAKRY1wUnhDkXiYtQGMk7YhhxYgRGJom65xHxZxFcFlmt2N/V2Mn8egOo6a5HceycSl
+ Lwj2SxwFKhZtrdV+O3J7unD1OM/g8vU7A3bxLPkqHeoBRHpvyZQJ/JlHi0QdbI+wib5p
+ r3z3270/Pb3GfMF18+aOJlOOZbMo1dYeC9PK0DXJAn2MUZQUQApWf4aadd3YLw48Xv6B Vw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31qecks591-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Jun 2020 11:13:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05HBD8Ds161596;
+        Wed, 17 Jun 2020 11:13:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31q66nr3r8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 11:13:38 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05HBDUql031357;
+        Wed, 17 Jun 2020 11:13:30 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 17 Jun 2020 04:13:29 -0700
+Date:   Wed, 17 Jun 2020 14:13:22 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     gregkh@linuxfoundation.org, jane.pnx9@gmail.com, pakki001@umn.edu,
+        ldufour@linux.ibm.com, harshjain32@gmail.com, simon@nikanor.nu,
+        walken@google.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Bharath Vedartham <linux.bhar@gmail.com>
+Subject: Re: [PATCH 1/4] staging: kpc2000: Unpin partial pinned pages
+Message-ID: <20200617111321.GP4282@kadam>
+References: <1592360843-3440-1-git-send-email-jrdr.linux@gmail.com>
+ <1592360843-3440-2-git-send-email-jrdr.linux@gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 79947D4BE307F06ECA65FD2E22387D3FF8C1D8F5738CBBCA8FB0B3F504850C092000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592360843-3440-2-git-send-email-jrdr.linux@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ bulkscore=0 adultscore=0 phishscore=0 suspectscore=2 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006170088
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 malwarescore=0
+ clxscore=1011 adultscore=0 suspectscore=2 spamscore=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006170088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWF0dGhpYXMsDQoNClRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHlvdXIgcmV2aWV3Lg0KDQpPbiBX
-ZWQsIDIwMjAtMDYtMTcgYXQgMTE6MTcgKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+
-IA0KPiBPbiAxNy8wNi8yMDIwIDA1OjAwLCBDaGFvIEhhbyB3cm90ZToNCj4gPiBUaGUgbWF4IGxh
-cmIgbnVtYmVyIHRoYXQgYSBpb21tdSBIVyBzdXBwb3J0IGlzIDgobGFyYjB+bGFyYjcgaW4gdGhl
-IGJlbG93DQo+ID4gZGlhZ3JhbSkuDQo+ID4gSWYgdGhlIGxhcmIncyBudW1iZXIgaXMgb3ZlciA4
-LCB3ZSB1c2UgYSBzdWJfY29tbW9uIGZvciBtZXJnaW5nDQo+ID4gc2V2ZXJhbCBsYXJicyBpbnRv
-IG9uZSBsYXJiLiBBdCB0aGlzIGNhc2UsIHdlIHdpbGwgZXh0ZW5kIGxhcmJfaWQ6DQo+ID4gYml0
-WzExOjldIG1lYW5zIGNvbW1vbi1pZDsNCj4gPiBiaXRbODo3XSBtZWFucyBzdWJjb21tb24taWQ7
-DQo+ID4gRnJvbSB0aGVzZSB0d28gdmFyaWFibGUsIHdlIGNvdWxkIGdldCB0aGUgcmVhbCBsYXJi
-IG51bWJlciB3aGVuDQo+ID4gdHJhbnNsYXRpb24gZmF1bHQgaGFwcGVuLg0KPiA+IFRoZSBkaWFn
-cmFtIGlzIGFzIGJlbG93Og0KPiA+IAkJIEVNSQ0KPiA+IAkJICB8DQo+ID4gCQlJT01NVQ0KPiA+
-IAkJICB8DQo+ID4gICAgICAgICAgICAtLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IAkgICB8ICAgICAg
-ICAgICAgICAgfA0KPiA+IAljb21tb24xICAgCWNvbW1vbjANCj4gPiAJICAgfAkJICAgfA0KPiA+
-IAkgICAtLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IAkJICB8DQo+ID4gICAgICAgICAgICAgIHNtaSBj
-b21tb24NCj4gPiAJCSAgfA0KPiA+ICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tDQo+ID4gICB8ICAgICAgIHwgICAgICAgfCAgICAgICB8ICAgICB8ICAgIHwNCj4gPiAgMydk
-MCAgICAzJ2QxICAgIDMnZDIgICAgMydkMyAgLi4uICAzJ2Q3ICAgPC1jb21tb25faWQobWF4IGlz
-IDgpDQo+ID4gICB8ICAgICAgIHwgICAgICAgfCAgICAgICB8ICAgICB8ICAgIHwNCj4gPiBMYXJi
-MCAgIExhcmIxICAgICB8ICAgICBMYXJiMyAgLi4uIExhcmI3DQo+ID4gCQkgIHwNCj4gPiAJICAg
-IHNtaSBzdWIgY29tbW9uDQo+ID4gCQkgIHwNCj4gPiAgICAgIC0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tDQo+ID4gICAgICB8ICAgICAgICB8ICAgICAgIHwgICAgICAgfA0KPiA+ICAgICAyJ2Qw
-ICAgICAyJ2QxICAgIDInZDIgICAgMidkMyAgIDwtc3ViX2NvbW1vbl9pZChtYXggaXMgNCkNCj4g
-PiAgICAgIHwgICAgICAgIHwgICAgICAgfCAgICAgICB8DQo+ID4gICAgTGFyYjggICAgTGFyYjkg
-ICBMYXJiMTAgIExhcmIxMQ0KPiA+IA0KPiA+IEluIHRoaXMgcGF0Y2ggd2UgZXh0ZXJuIGxhcmJf
-cmVtYXBbXSB0byBsYXJiX3JlbWFwWzhdWzRdIGZvciB0aGlzLg0KPiANCj4gZXh0ZXJuIC0+IGV4
-dGVuZA0KPiANCj4gPiBsYXJiX3JlbWFwW3hdW3ldOiB4IG1lYW4gY29tbW9uLWlkIGFib3ZlLCB5
-IG1lYW5zIHN1YmNvbW1vbl9pZCBhYm92ZS4NCj4gDQo+IG1lYW4gLT4gbWVhbnMNCj4gDQo+ID4g
-DQo+ID4gV2UgY2FuIGFsc28gZGlzdGluZ3Vpc2ggaWYgdGhlIE00VSBIVyBoYXMgc3ViX2NvbW1v
-biBieSBoYXNfc3ViX2NvbW0NCj4gPiBwcm9wZXJ0eS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBDaGFvIEhhbyA8Y2hhby5oYW9AbWVkaWF0ZWsuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBZb25n
-IFd1IDx5b25nLnd1QG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9pb21tdS9t
-dGtfaW9tbXUuYyB8IDIwICsrKysrKysrKysrKystLS0tLS0tDQo+ID4gIGRyaXZlcnMvaW9tbXUv
-bXRrX2lvbW11LmggfCAgMyArKy0NCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25z
-KCspLCA4IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11
-L210a19pb21tdS5jIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KPiA+IGluZGV4IGYyMzkx
-OWZlYmE0ZS4uYTY4N2U4ZGIwZTUxIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaW9tbXUvbXRr
-X2lvbW11LmMNCj4gPiArKysgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQo+ID4gQEAgLTkx
-LDYgKzkxLDggQEANCj4gPiAgI2RlZmluZSBSRUdfTU1VMV9JTlZMRF9QQQkJCTB4MTQ4DQo+ID4g
-ICNkZWZpbmUgUkVHX01NVTBfSU5UX0lECQkJCTB4MTUwDQo+ID4gICNkZWZpbmUgUkVHX01NVTFf
-SU5UX0lECQkJCTB4MTU0DQo+ID4gKyNkZWZpbmUgRl9NTVVfSU5UX0lEX0NPTU1fSUQoYSkJCQko
-KChhKSA+PiA5KSAmIDB4NykNCj4gPiArI2RlZmluZSBGX01NVV9JTlRfSURfU1VCX0NPTU1fSUQo
-YSkJCSgoKGEpID4+IDcpICYgMHgzKQ0KPiA+ICAjZGVmaW5lIEZfTU1VX0lOVF9JRF9MQVJCX0lE
-KGEpCQkJKCgoYSkgPj4gNykgJiAweDcpDQo+ID4gICNkZWZpbmUgRl9NTVVfSU5UX0lEX1BPUlRf
-SUQoYSkJCQkoKChhKSA+PiAyKSAmIDB4MWYpDQo+ID4gIA0KPiA+IEBAIC0yMjksNyArMjMxLDcg
-QEAgc3RhdGljIGlycXJldHVybl90IG10a19pb21tdV9pc3IoaW50IGlycSwgdm9pZCAqZGV2X2lk
-KQ0KPiA+ICAJc3RydWN0IG10a19pb21tdV9kYXRhICpkYXRhID0gZGV2X2lkOw0KPiA+ICAJc3Ry
-dWN0IG10a19pb21tdV9kb21haW4gKmRvbSA9IGRhdGEtPm00dV9kb207DQo+ID4gIAl1MzIgaW50
-X3N0YXRlLCByZWd2YWwsIGZhdWx0X2lvdmEsIGZhdWx0X3BhOw0KPiA+IC0JdW5zaWduZWQgaW50
-IGZhdWx0X2xhcmIsIGZhdWx0X3BvcnQ7DQo+ID4gKwl1bnNpZ25lZCBpbnQgZmF1bHRfbGFyYiwg
-ZmF1bHRfcG9ydCwgc3ViX2NvbW0gPSAwOw0KPiA+ICAJYm9vbCBsYXllciwgd3JpdGU7DQo+ID4g
-IA0KPiA+ICAJLyogUmVhZCBlcnJvciBpbmZvIGZyb20gcmVnaXN0ZXJzICovDQo+ID4gQEAgLTI0
-NSwxMCArMjQ3LDE0IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBtdGtfaW9tbXVfaXNyKGludCBpcnEs
-IHZvaWQgKmRldl9pZCkNCj4gPiAgCX0NCj4gPiAgCWxheWVyID0gZmF1bHRfaW92YSAmIEZfTU1V
-X0ZBVUxUX1ZBX0xBWUVSX0JJVDsNCj4gPiAgCXdyaXRlID0gZmF1bHRfaW92YSAmIEZfTU1VX0ZB
-VUxUX1ZBX1dSSVRFX0JJVDsNCj4gPiAtCWZhdWx0X2xhcmIgPSBGX01NVV9JTlRfSURfTEFSQl9J
-RChyZWd2YWwpOw0KPiA+ICAJZmF1bHRfcG9ydCA9IEZfTU1VX0lOVF9JRF9QT1JUX0lEKHJlZ3Zh
-bCk7DQo+ID4gLQ0KPiA+IC0JZmF1bHRfbGFyYiA9IGRhdGEtPnBsYXRfZGF0YS0+bGFyYmlkX3Jl
-bWFwW2ZhdWx0X2xhcmJdOw0KPiA+ICsJaWYgKGRhdGEtPnBsYXRfZGF0YS0+aGFzX3N1Yl9jb21t
-KSB7DQo+ID4gKwkJZmF1bHRfbGFyYiA9IEZfTU1VX0lOVF9JRF9DT01NX0lEKHJlZ3ZhbCk7DQo+
-ID4gKwkJc3ViX2NvbW0gPSBGX01NVV9JTlRfSURfU1VCX0NPTU1fSUQocmVndmFsKTsNCj4gPiAr
-CX0gZWxzZSB7DQo+ID4gKwkJZmF1bHRfbGFyYiA9IEZfTU1VX0lOVF9JRF9MQVJCX0lEKHJlZ3Zh
-bCk7DQo+ID4gKwl9DQo+ID4gKwlmYXVsdF9sYXJiID0gZGF0YS0+cGxhdF9kYXRhLT5sYXJiaWRf
-cmVtYXBbZmF1bHRfbGFyYl1bc3ViX2NvbW1dOw0KPiA+ICANCj4gPiAgCWlmIChyZXBvcnRfaW9t
-bXVfZmF1bHQoJmRvbS0+ZG9tYWluLCBkYXRhLT5kZXYsIGZhdWx0X2lvdmEsDQo+ID4gIAkJCSAg
-ICAgICB3cml0ZSA/IElPTU1VX0ZBVUxUX1dSSVRFIDogSU9NTVVfRkFVTFRfUkVBRCkpIHsNCj4g
-PiBAQCAtNzc4LDcgKzc4NCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRf
-ZGF0YSBtdDI3MTJfZGF0YSA9IHsNCj4gPiAgCS5oYXNfYmNsayAgICAgICA9IHRydWUsDQo+ID4g
-IAkuaGFzX3ZsZF9wYV9ybmcgPSB0cnVlLA0KPiA+ICAJLmludl9zZWxfcmVnICAgID0gUkVHX01N
-VV9JTlZfU0VMX0dFTjEsDQo+ID4gLQkubGFyYmlkX3JlbWFwICAgPSB7MCwgMSwgMiwgMywgNCwg
-NSwgNiwgNywgOCwgOX0sDQo+ID4gKwkubGFyYmlkX3JlbWFwICAgPSB7ezB9LCB7MX0sIHsyfSwg
-ezN9LCB7NH0sIHs1fSwgezZ9LCB7N319LA0KPiA+ICB9Ow0KPiA+ICANCj4gPiAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBtdGtfaW9tbXVfcGxhdF9kYXRhIG10ODE3M19kYXRhID0gew0KPiA+IEBAIC03
-ODcsMTQgKzc5MywxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEg
-bXQ4MTczX2RhdGEgPSB7DQo+ID4gIAkuaGFzX2JjbGsgICAgID0gdHJ1ZSwNCj4gPiAgCS5yZXNl
-dF9heGkgICAgPSB0cnVlLA0KPiA+ICAJLmludl9zZWxfcmVnICA9IFJFR19NTVVfSU5WX1NFTF9H
-RU4xLA0KPiA+IC0JLmxhcmJpZF9yZW1hcCA9IHswLCAxLCAyLCAzLCA0LCA1fSwgLyogTGluZWFy
-IG1hcHBpbmcuICovDQo+ID4gKwkubGFyYmlkX3JlbWFwID0ge3swfSwgezF9LCB7Mn0sIHszfSwg
-ezR9LCB7NX19LCAvKiBMaW5lYXIgbWFwcGluZy4gKi8NCj4gPiAgfTsNCj4gPiAgDQo+ID4gIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDgxODNfZGF0YSA9IHsNCj4g
-PiAgCS5tNHVfcGxhdCAgICAgPSBNNFVfTVQ4MTgzLA0KPiA+ICAJLnJlc2V0X2F4aSAgICA9IHRy
-dWUsDQo+ID4gIAkuaW52X3NlbF9yZWcgID0gUkVHX01NVV9JTlZfU0VMX0dFTjEsDQo+ID4gLQku
-bGFyYmlkX3JlbWFwID0gezAsIDQsIDUsIDYsIDcsIDIsIDMsIDF9LA0KPiA+ICsJLmxhcmJpZF9y
-ZW1hcCA9IHt7MH0sIHs0fSwgezV9LCB7Nn0sIHs3fSwgezJ9LCB7M30sIHsxfX0sDQo+ID4gIH07
-DQo+ID4gIA0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfaW9tbXVf
-b2ZfaWRzW10gPSB7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11Lmgg
-Yi9kcml2ZXJzL2lvbW11L210a19pb21tdS5oDQo+ID4gaW5kZXggYWZkN2EyZGU1YzFlLi5kNTFm
-Zjk5YzJjNzEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiA+
-ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gPiBAQCAtNDEsMTAgKzQxLDExIEBA
-IHN0cnVjdCBtdGtfaW9tbXVfcGxhdF9kYXRhIHsNCj4gPiAgCS8qIEhXIHdpbGwgdXNlIHRoZSBF
-TUkgY2xvY2sgaWYgdGhlcmUgaXNuJ3QgdGhlICJiY2xrIi4gKi8NCj4gPiAgCWJvb2wgICAgICAg
-ICAgICAgICAgaGFzX2JjbGs7DQo+ID4gIAlib29sCQkgICAgaGFzX21pc2NfY3RybDsNCj4gPiAr
-CWJvb2wJCSAgICBoYXNfc3ViX2NvbW07DQo+ID4gIAlib29sICAgICAgICAgICAgICAgIGhhc192
-bGRfcGFfcm5nOw0KPiA+ICAJYm9vbCAgICAgICAgICAgICAgICByZXNldF9heGk7DQo+ID4gIAl1
-MzIgICAgICAgICAgICAgICAgIGludl9zZWxfcmVnOw0KPiA+IC0JdW5zaWduZWQgY2hhciAgICAg
-ICBsYXJiaWRfcmVtYXBbTVRLX0xBUkJfTlJfTUFYXTsNCj4gPiArCXVuc2lnbmVkIGNoYXIgICAg
-ICAgbGFyYmlkX3JlbWFwWzhdWzRdOw0KPiANCj4gTVRLX0xBUkJfTlJfTUFYIGlzIDE2LCB3aHkg
-ZG8geW91IGRlY3JlYXNlIGl0IHRvIDg/DQoNCkZyb20gdGhlIGRpYWdyYW0gYWJvdmUsIHRoZSBt
-YXggbnVtYmVyIG9mIHRoZSBsYXJicyB0aGF0IGNvdWxkIGNvbm5lY3RlZA0Kd2l0aCBhIElPTU1V
-IEhXIGlzIDguIHRodXMsIDggaXMgcmlnaHQgaGVyZSBmb3IgZWFjaCBhIElPTU1VIEhXLg0KDQph
-cyBJIGNvbW1lbnRlZCB3aGVuIHYzLiBtdDI3MTIgaGF2ZSB0aGUgbGFyYnMgb3ZlciA4IHNpbmNl
-IGl0IGhhcyAyDQpJT01NVSBIV2VzLg0KDQphbmQgTVRLX0xBUkJfTlJfTUFYIG1lYW5zIHRoZSBt
-YXggbGFyYnMgbnVtYmVyIHRoYXQgdGhpcyBTb0Mgc3VwcG9ydC4NCktlZXAgaXRzIHZhbHVlIGFz
-IGlzLg0KDQoNCj4gU2hvdWxkIHdlIHVzZSBhIGRlZmluZSBmb3IgdGhlIHN1YmNvbW1vbiBhcyB3
-ZWxsPw0KPiANCj4gUmVnYXJkcywNCj4gTWF0dGhpYXMNCj4gDQo+ID4gIH07DQo+ID4gIA0KPiA+
-ICBzdHJ1Y3QgbXRrX2lvbW11X2RvbWFpbjsNCj4gPiANCg0K
+On Wed, Jun 17, 2020 at 07:57:20AM +0530, Souptick Joarder wrote:
+> There is a bug, when get_user_pages() failed but partially pinned
+> pages are not unpinned. Fixed it.
+> 
+> Also, int is more appropriate type for rv. Changed it.
+> 
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Bharath Vedartham <linux.bhar@gmail.com>
+> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/staging/kpc2000/kpc_dma/fileops.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> index 8975346..b136353 100644
+> --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
+> +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> @@ -35,7 +35,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+>  			    unsigned long iov_base, size_t iov_len)
+>  {
+>  	unsigned int i = 0;
+> -	long rv = 0;
+> +	int rv = 0;
+>  	struct kpc_dma_device *ldev;
+>  	struct aio_cb_data *acd;
+>  	DECLARE_COMPLETION_ONSTACK(done);
+> @@ -193,6 +193,10 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+>  		put_page(acd->user_pages[i]);
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>  
+>   err_get_user_pages:
+> +	if (rv > 0) {
+> +		for (i = 0; i < rv; i++)
+> +			put_pages(acd->user_pages[i])
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+> +	}
+
+This isn't a complete fix.  "rv" is the negative error code but here we
+are returning a positive value on this path.  Also it's ugly to have
+same put_page() loop repeated twice.
+
+It would be better to write it like this:
+
+	rv = get_user_pages(iov_base, acd->page_count, FOLL_TOUCH | FOLL_WRITE | FOLL_GET, acd->user_pages, NULL);
+	mmap_read_unlock(current->mm);        /*  release the semaphore */
+	if (rv < 0)
+		goto free_pages;
+	if (rv != acd->page_count) {
+		acd->page_count = rv;
+		rv = -EFAULT;
+		goto put_pages;
+	}
+
+	...
+
+put_pages:
+	for (i = 0 ; i < acd->page_count ; i++)
+		put_pages(acd->user_pages[i]);
+free_pages:
+	kfree(acd->user_pages);
+
+regards,
+dan carpenter
 
