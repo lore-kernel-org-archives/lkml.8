@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1864FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D5621556
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B25208D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DMsK/ch1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzvQe3XY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgFQQ0n (ORCPT
+        id S1727781AbgFQQ0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:26:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49062 "EHLO
+        Wed, 17 Jun 2020 12:26:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgFQQ0c (ORCPT
+        with ESMTP id S1727069AbgFQQ0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:26:32 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E405BC06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:31 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id k15so2090014otp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:31 -0700 (PDT)
+        Wed, 17 Jun 2020 12:26:31 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF7BAC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:29 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id k15so2089885otp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xMISypJy5HssmY7ZOHD++0rXBYTP+eiNwEA2VO5Y7fo=;
-        b=DMsK/ch1ZVFLSVaVqEe8saDhSxQGphh7kCvpt4pHA7jr5VHD3USoHwSfkYqcyNvYEC
-         JL24Rpx94JXU0ZL+H16UqKShCXvc5zljcp9S0N8b2U6ZYoBPd/JJ7LN91b9HiY8XZ/1A
-         ZhVl8eyTrmXnP2FhVC2+JVxW54BfPDpK8UncRSs784yW+8R5H6N/dw0XAdUBKISw/f4X
-         uQoiDksVLh5Bw+ui4mIMzgp2rYzytFqh+7gmfuJxzgp/pMhZFpKF5ijgGZMQ4ldzolKY
-         hY1Mn9PA+4dR+ZMSxWZR7xi+65pwSWRtROCgBzZhG69XOhNuksywVyekuzrzJAId6Yeq
-         vh2g==
+        bh=0hrRgLXuRhMeQ6slbSOKJC3oaC69Z2SF3rsc7qez2XE=;
+        b=HzvQe3XY2utflOg0HvS6MWNBANwSa7sL1NOqNtveiZ8KEicEUoKTea/M6qBwQgmgvu
+         rgz36hkD3lUzeBI9hDQalRU1CKozULtTN/Dw/m7j+Wc/uK7uea+FL+3WUUkIzDR3mj3t
+         lDcwWQhDImnve4Qex48kxHCxQ7L2kbXyM7aecvTcBUUVt44leDClTxIStN+q6SgzkTjv
+         xREsRTM9q2pZFeH5yITwDPZOf1z8VCIVaJKujiDwm3WxgSxrU0Bt/GYvnlDtaRZ7PXl1
+         4eNosi5+pJA9TXwUAHX9Oye56vwQS4xo/hQMh8HawaltAP7gySGlXLzX3+rtT26CWp1P
+         Dp+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xMISypJy5HssmY7ZOHD++0rXBYTP+eiNwEA2VO5Y7fo=;
-        b=DrEWj098TLeUfotERYlBMetCVtEGNLoAe9scqC5Lna7yJNs7BRCpuuuqS2MY8DlYWR
-         0rGWJij+tKYiTnLaD2aEmzqtUinUep0di3K0dR9mRSThwAhjVgfnbAiR3ncmaRR4MStQ
-         Eqyjcqp2BRPHum5eKmOlYt3d40yWtvDdfDcFbyYwZezhes0yv/q92jGM8mt3iLlXn6wS
-         zKaf3CIlb+X+40OpkTlvRrV4rr2x02t9XJ8pAeOFnC+RdvYaBrhueaUp+obTyMDCiI5y
-         aednwYvh+z+ZohAu0zxT+4X1604g8D4cAfJDwm43PfTZ5COYe4QvfJM9uteiWLMg1suW
-         UtbQ==
-X-Gm-Message-State: AOAM530JpxNyoPppsPFu2+kvbrdL9NDFq41vpL1OOizmlLBq6vuah/gQ
-        qoYNgNXAHbJNuI8u2X8aysjUTlQfxWA=
-X-Google-Smtp-Source: ABdhPJx1FK6LDfNFTimwSOF+3L4oo/oOEwjS5v8+Bmm8IBqc6oaVuLC3QPSoqGPLNgnmhtxuKThyxQ==
-X-Received: by 2002:a9d:d24:: with SMTP id 33mr7237069oti.26.1592411191292;
-        Wed, 17 Jun 2020 09:26:31 -0700 (PDT)
+        bh=0hrRgLXuRhMeQ6slbSOKJC3oaC69Z2SF3rsc7qez2XE=;
+        b=jkEs9AnxiE9b9kyybSiMYRrCMSHfpCq8ZSovBjbqm/hv1iCDlgo9rjeb3n7Z5BHbzO
+         c0VYPCJbsPihGJKZYECO/HUBsLXmJXzSNFUlZMHMnQcbyASeDDbt7FrbVWBTwn2GaM9A
+         YAYXn0FlKKYH8GZUMds8SI1MRH+nR+JGe4Qpe44Mxzx8QR+TXvDd3TIeev0an1t9ZieS
+         kZ+u0sgUqLYPvXlMmAtZyIcKIUqaheYpCzc1/30IJFOfNRMTE8byB/CgI+q0tkH+iJHO
+         QLnzeTQMz3KLkXEYrO1/MtOq3eJDmc1QhBGf0h6ChSEtxG9D+LCzbnENlrG50sgsK7lQ
+         Cj+Q==
+X-Gm-Message-State: AOAM533UfGcw/JuyCmh2SRTz8hHMuj+KDqmdkaHfpd4bdxb10Wqta3rH
+        ZpfvOKD/Gvy+q5GBb1M6txM=
+X-Google-Smtp-Source: ABdhPJwRoYQ3cqC/VxFyhvWCwHvWxIvB8ZVqxOLtoPHUduYWXh+yujaxk+V5S7JmjdbT37oUewAseA==
+X-Received: by 2002:a9d:32f7:: with SMTP id u110mr7486878otb.217.1592411189081;
+        Wed, 17 Jun 2020 09:26:29 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::ae4b])
-        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.29
+        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:26:30 -0700 (PDT)
+        Wed, 17 Jun 2020 09:26:28 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
         akpm@linuxfoundation.org, gregkh@linuxfoundation.org
 Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v3 18/21] dyndbg: add filter channel to the internals
-Date:   Wed, 17 Jun 2020 10:25:33 -0600
-Message-Id: <20200617162536.611386-21-jim.cromie@gmail.com>
+Subject: [PATCH v3 17/21] dyndbg: refactor ddebug_read_flags out of ddebug_parse_flags
+Date:   Wed, 17 Jun 2020 10:25:32 -0600
+Message-Id: <20200617162536.611386-20-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200617162536.611386-1-jim.cromie@gmail.com>
 References: <20200617162536.611386-1-jim.cromie@gmail.com>
@@ -77,89 +77,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Once again, adjust the interface between 3 static functions:
+Move flag-char reading and validating code to a separate function.
 
- - ddebug_exec_query calls ..
-   - ddebug_parse_query - unchanged here, mentioned for context
-   - ddebug_parse_flags, to read the modifying flags
-   - ddebug_change, to apply mods to callsites that match the query
+This will allow later reuse to read 2 sets of flags:
 
-This time, add a 2nd flag_settings variable int ddebug_exec_query(),
-to specify a secondary constraint on callsites which match the query,
-and which are therefore about to be modified.
-
-Here, we only add the channel; ddebug_parse_flags doesnt fill the
-filter, and ddebug_change doesnt act upon it.
-
-Also, ddebug_change doesn't alter any of its arguments, including its 2
-new ones; mods, filter.  Say so by adding const modifier to them.
+  1- flags to set or clear (after the [=-+] Operator)
+  2- flags to require or prohibit before changing a callsite's flagstate
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ lib/dynamic_debug.c | 37 +++++++++++++++++++++++--------------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 8400e4f90b67..0fcc688789f4 100644
+index 22335f7dbac1..8400e4f90b67 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -146,7 +146,8 @@ static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
-  * logs the changes.  Takes ddebug_lock.
-  */
- static int ddebug_change(const struct ddebug_query *query,
--			 struct flag_settings *modifiers)
-+			 const struct flag_settings *modifiers,
-+			 const struct flag_settings *filter)
- {
- 	int i;
- 	struct ddebug_table *dt;
-@@ -456,7 +457,9 @@ static int ddebug_read_flags(const char *str, struct flag_settings *modifiers)
-  * flags fields of matched _ddebug's.  Returns 0 on success
-  * or <0 on error.
-  */
--static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
-+static int ddebug_parse_flags(const char *str,
-+			      struct flag_settings *modifiers,
-+			      struct flag_settings *filter)
- {
- 	int op;
- 
-@@ -489,7 +492,8 @@ static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
- 		modifiers->flags = 0;
- 		break;
- 	}
--	vpr_info("*flagsp=0x%x *maskp=0x%x\n", modifiers->flags, modifiers->mask);
-+	vpr_info("mods:flags=0x%x,mask=0x%x filter:flags=0x%x,mask=0x%x\n",
-+		 modifiers->flags, modifiers->mask, filter->flags, filter->mask);
- 
+@@ -430,6 +430,26 @@ static int ddebug_parse_query(char *words[], int nwords,
  	return 0;
  }
-@@ -498,6 +502,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
- {
- 	struct flag_settings modifiers = {};
- 	struct ddebug_query query = {};
-+	struct flag_settings filter = {};
- #define MAXWORDS 9
- 	int nwords, nfound;
- 	char *words[MAXWORDS];
-@@ -508,7 +513,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
- 		return -EINVAL;
- 	}
- 	/* check flags 1st (last arg) so query is pairs of spec,val */
--	if (ddebug_parse_flags(words[nwords-1], &modifiers)) {
-+	if (ddebug_parse_flags(words[nwords-1], &modifiers, &filter)) {
- 		pr_err("flags parse failed\n");
- 		return -EINVAL;
- 	}
-@@ -517,7 +522,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
- 		return -EINVAL;
- 	}
- 	/* actually go and implement the change */
--	nfound = ddebug_change(&query, &modifiers);
-+	nfound = ddebug_change(&query, &modifiers, &filter);
- 	vpr_info_dq(&query, nfound ? "applied" : "no-match");
  
- 	return nfound;
++static int ddebug_read_flags(const char *str, struct flag_settings *modifiers)
++{
++	int i;
++
++	for (; *str ; ++str) {
++		for (i = ARRAY_SIZE(opt_array) - 1; i >= 0; i--) {
++			if (*str == opt_array[i].opt_char) {
++				modifiers->flags |= opt_array[i].flag;
++				break;
++			}
++		}
++		if (i < 0) {
++			pr_err("unknown flag '%c'\n", *str);
++			return -EINVAL;
++		}
++	}
++	vpr_info("flags=0x%x\n", modifiers->flags);
++	return 0;
++}
++
+ /*
+  * Parse `str' as a flags specification, format [-+=][p]+.
+  * Sets up *maskp and *flagsp to be used when changing the
+@@ -438,7 +458,7 @@ static int ddebug_parse_query(char *words[], int nwords,
+  */
+ static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
+ {
+-	int op, i;
++	int op;
+ 
+ 	switch (*str) {
+ 	case '+':
+@@ -452,19 +472,8 @@ static int ddebug_parse_flags(const char *str, struct flag_settings *modifiers)
+ 	}
+ 	vpr_info("op='%c'\n", op);
+ 
+-	for (; *str ; ++str) {
+-		for (i = ARRAY_SIZE(opt_array) - 1; i >= 0; i--) {
+-			if (*str == opt_array[i].opt_char) {
+-				modifiers->flags |= opt_array[i].flag;
+-				break;
+-			}
+-		}
+-		if (i < 0) {
+-			pr_err("unknown flag '%c'\n", *str);
+-			return -EINVAL;
+-		}
+-	}
+-	vpr_info("flags=0x%x\n", modifiers->flags);
++	if (ddebug_read_flags(str, modifiers))
++		return -EINVAL;
+ 
+ 	/* calculate final flags, mask based upon op */
+ 	switch (op) {
 -- 
 2.26.2
 
