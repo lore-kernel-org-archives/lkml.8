@@ -2,104 +2,163 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D43C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 932D72082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3832082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgFQWAO (ORCPT
+        id S1726979AbgFQWBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:00:14 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37450 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726758AbgFQWAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:00:14 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7632131C4F4978AC70FE;
-        Thu, 18 Jun 2020 06:00:12 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.200.210) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 18 Jun 2020 06:00:04 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <nsaenzjulienne@suse.de>, <steve.capper@arm.com>,
-        <rppt@linux.ibm.com>, <akpm@linux-foundation.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        "Anshuman Khandual" <anshuman.khandual@arm.com>
-Subject: [PATCH v3] arm64: mm: reserve hugetlb CMA after numa_init
-Date:   Thu, 18 Jun 2020 09:58:28 +1200
-Message-ID: <20200617215828.25296-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Wed, 17 Jun 2020 18:01:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:64267 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgFQWBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 18:01:38 -0400
+IronPort-SDR: ZTxUTwedU8zfNokmnhtQfHSuMwsdR6nxL94l3NvsX2APF/Wu4HBmlaw5BM55Q5+xjMs2TGv/UJ
+ HYUmyw5x0aIg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 15:01:38 -0700
+IronPort-SDR: ghAb02lFo4C2CJ4JhiraEh5yUJGCqCviIy114e9ObRA5heLbT15ZkRYJTQ2teosNiYb+leIaN3
+ 7vFHo7Jh+B7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
+   d="scan'208";a="450410847"
+Received: from lkp-server02.sh.intel.com (HELO cd649bb48ab3) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2020 15:01:36 -0700
+Received: from kbuild by cd649bb48ab3 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jlg7k-00006e-3d; Wed, 17 Jun 2020 22:01:36 +0000
+Date:   Thu, 18 Jun 2020 06:01:09 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:objtool/core] BUILD SUCCESS
+ 14bda4e5293ed9722f1dc39b543024e37707d6c6
+Message-ID: <5eea92a5.C/UHrYSh/AweW1+S%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.200.210]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hugetlb_cma_reserve() is called at the wrong place. numa_init has not been
-done yet. so all reserved memory will be located at node0.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  objtool/core
+branch HEAD: 14bda4e5293ed9722f1dc39b543024e37707d6c6  Merge branch 'objtool/core' of git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux into objtool/core
 
-Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Will Deacon <will@kernel.org>
-Acked-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+elapsed time: 738m
+
+configs tested: 96
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arc                      axs103_smp_defconfig
+sh                   secureedge5410_defconfig
+powerpc                      pmac32_defconfig
+openrisc                    or1ksim_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a006-20200617
+i386                 randconfig-a002-20200617
+i386                 randconfig-a001-20200617
+i386                 randconfig-a004-20200617
+i386                 randconfig-a005-20200617
+i386                 randconfig-a003-20200617
+i386                 randconfig-a015-20200617
+i386                 randconfig-a011-20200617
+i386                 randconfig-a014-20200617
+i386                 randconfig-a016-20200617
+i386                 randconfig-a013-20200617
+i386                 randconfig-a012-20200617
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- -v3:
- add review-by;
- add comment according to Will's feedback
-
- arch/arm64/mm/init.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index e631e6425165..1e93cfc7c47a 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
- 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
- 
- 	dma_contiguous_reserve(arm64_dma32_phys_limit);
--
--#ifdef CONFIG_ARM64_4K_PAGES
--	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
--#endif
--
- }
- 
- void __init bootmem_init(void)
-@@ -424,6 +419,16 @@ void __init bootmem_init(void)
- 	min_low_pfn = min;
- 
- 	arm64_numa_init();
-+
-+	/*
-+	 * must be done after arm64_numa_init() which calls numa_init() to
-+	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
-+	 * while allocating required CMA size across online nodes.
-+	 */
-+#ifdef CONFIG_ARM64_4K_PAGES
-+	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-+#endif
-+
- 	/*
- 	 * Sparsemem tries to allocate bootmem in memory_present(), so must be
- 	 * done after the fixed reservations.
--- 
-2.23.0
-
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
