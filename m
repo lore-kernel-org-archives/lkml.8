@@ -2,114 +2,89 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52820C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2BE208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:33:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jL7+9eMJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2B0E2208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgFQPdw (ORCPT
+        id S1726958AbgFQPeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:33:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgFQPdv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:33:51 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39B5C06174E;
-        Wed, 17 Jun 2020 08:33:51 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id z63so1316485pfb.1;
-        Wed, 17 Jun 2020 08:33:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9XYCr6Zy0SFc/eo2kKcuSj+TDFOwpW8ayTc9YaNvQW4=;
-        b=jL7+9eMJJS22Gqpqh5AtGiabAxqRW3TL1kfyDKeARpjfoLdm5DlqJPm2YFc7Uf2c8e
-         iiXwaEi5/fNkce1wIJhXRk5+bQ1nCxWhul9bHB4167Y9RMJMWBw2YopUQUWoSDLXDuZS
-         +rY9HipdU7tLK1LoKHontQjuq9r+qSThpIrGluB/AKf7YfFg9jNJtlnXehv7kzDxTm9R
-         4QbAp+jlWm3Z+fCjTP6ye3jh32Tc6LNPVgR7Lo/ykgiuJaRgmIEtz5Y2sKstd+Xh3hxo
-         e8ePuyiGn6mK8Zba3CyfQtU/sMJ1zad3OTRRdBXTlNjWAmXL5WxVq+7IIewimQzUzQUw
-         mLVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9XYCr6Zy0SFc/eo2kKcuSj+TDFOwpW8ayTc9YaNvQW4=;
-        b=uMBjfvJti32wVXU6Conak5YaUsyuyAvUtCOq9v/WGWdjQw0WWHQ6ekHbx0I/B9b6YO
-         OWCa4g6+ELSTwExuL6R/ZIatS+MkJ+eHQCppLB+vNmRDfg/0L9ohfiYQAnTGAVsSKk5K
-         3eRfb0fLdRT68E0UL/E6LkIkKRZQxvHovFjUbrG7zn1ef8v54Vf/hsBn0+rDfVKGUonL
-         988oSNre1yr0TX6jHZfC+0BpSc6foZSDFXMjX7hC3VPMmsjwAgupANTEc1CAXSTyvq45
-         G5MptyS7x1zVdl75qJkC5F3aziyja3OYeGfyGKoHvf4g9Wm92z60aS/O10BaGXh6JodR
-         pQWw==
-X-Gm-Message-State: AOAM532wQKLf05fjYaOTlZUZFXTS3wsjx7JiyWwYTlnjwLMLQB5MM/2M
-        Q8/3ymvpSnY2379FNqs3z1c0QsF7oR8=
-X-Google-Smtp-Source: ABdhPJy0mCD2xf2PUcMQKbv+6h9HAiiov65Br/IND4/ngNnMk7XnTejRwTuypmQ49c+OUM7F+J5fRQ==
-X-Received: by 2002:aa7:9404:: with SMTP id x4mr7284949pfo.158.1592408031222;
-        Wed, 17 Jun 2020 08:33:51 -0700 (PDT)
-Received: from localhost ([144.34.193.30])
-        by smtp.gmail.com with ESMTPSA id g17sm24275pju.11.2020.06.17.08.33.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jun 2020 08:33:50 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Kevin Groeneveld <kgroeneveld@gmail.com>
-Subject: [PATCH net v1] net: phy: smsc: fix printing too many logs
-Date:   Wed, 17 Jun 2020 23:33:40 +0800
-Message-Id: <20200617153340.17371-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 17 Jun 2020 11:34:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:59784 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726878AbgFQPeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:34:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55BD131B;
+        Wed, 17 Jun 2020 08:34:20 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9374A3F73C;
+        Wed, 17 Jun 2020 08:34:18 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/2] arm64: kvm: Introduce MTE VCPU feature
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        James Morse <James.Morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave P Martin <Dave.Martin@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200617123844.29960-1-steven.price@arm.com>
+ <20200617123844.29960-3-steven.price@arm.com> <20200617143809.GF5388@gaia>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <9d4ef6cf-2333-83b8-c555-e70b99b95b28@arm.com>
+Date:   Wed, 17 Jun 2020 16:34:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200617143809.GF5388@gaia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7ae7ad2f11ef47 ("net: phy: smsc: use phy_read_poll_timeout()
-to simplify the code") will print a lot of logs as follows when Ethernet
-cable is not connected:
+On 17/06/2020 15:38, Catalin Marinas wrote:
+> On Wed, Jun 17, 2020 at 01:38:44PM +0100, Steven Price wrote:
+>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>> index e3b9ee268823..040a7fffaa93 100644
+>> --- a/virt/kvm/arm/mmu.c
+>> +++ b/virt/kvm/arm/mmu.c
+>> @@ -1783,6 +1783,17 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>>   			vma_pagesize = PMD_SIZE;
+>>   	}
+>>   
+>> +	if (system_supports_mte() && kvm->arch.vcpu_has_mte) {
+>> +		/*
+>> +		 * VM will be able to see the page's tags, so we must ensure
+>> +		 * they have been initialised.
+>> +		 */
+>> +		struct page *page = pfn_to_page(pfn);
+>> +
+>> +		if (!test_and_set_bit(PG_mte_tagged, &page->flags))
+>> +			mte_clear_page_tags(page_address(page), page_size(page));
+>> +	}
+> 
+> Are all the guest pages always mapped via a Stage 2 fault? It may be
+> better if we did that via kvm_set_spte_hva().
+> 
 
-[    4.473105] SMSC LAN8710/LAN8720 2188000.ethernet-1:00: lan87xx_read_status failed: -110
+I was under the impression that pages are always faulted into the stage 
+2, but I have to admit I'm not 100% sure about that.
 
-So fix it by read_poll_timeout().
+kvm_set_spte_hva() may be more appropriate, although on first look I 
+don't understand how that function deals with huge pages. Is it actually 
+called for normal mappings or only for changes due to the likes of KSM?
 
-Fixes: 7ae7ad2f11ef47 ("net: phy: smsc: use phy_read_poll_timeout() to simplify the code")
-Reported-by: Kevin Groeneveld <kgroeneveld@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/net/phy/smsc.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
-index 93da7d3d0954..36c5a57917b8 100644
---- a/drivers/net/phy/smsc.c
-+++ b/drivers/net/phy/smsc.c
-@@ -123,9 +123,10 @@ static int lan87xx_read_status(struct phy_device *phydev)
- 			return rc;
- 
- 		/* Wait max 640 ms to detect energy */
--		phy_read_poll_timeout(phydev, MII_LAN83C185_CTRL_STATUS, rc,
--				      rc & MII_LAN83C185_ENERGYON, 10000,
--				      640000, true);
-+		read_poll_timeout(phy_read, rc,
-+				  rc & MII_LAN83C185_ENERGYON || rc < 0,
-+				  10000, 640000, true, phydev,
-+				  MII_LAN83C185_CTRL_STATUS);
- 		if (rc < 0)
- 			return rc;
- 
--- 
-2.25.0
-
+Steve
