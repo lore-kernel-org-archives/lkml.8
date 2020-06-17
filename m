@@ -2,163 +2,154 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2180DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4341EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACA12073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190942073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e5EgTXL0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgFQIkv (ORCPT
+        id S1726628AbgFQIld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:40:51 -0400
-Received: from mga03.intel.com ([134.134.136.65]:55161 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbgFQIkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:40:51 -0400
-IronPort-SDR: 0KpBszN8KlwMazYkKgzb/Dfbkgdx/7V27Q2V662EAe23+zi//K7BsO1kGQ/Rw8H7Dp/iCS/LsH
- xXQX8mQvvbMg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:40:50 -0700
-IronPort-SDR: XecbNr9oMhQT9id9eoiKcoKEH1X69lOMvLnn8wFFi5sF79Kw/PeYmo9mxf8WRE76PISVDQ2Axh
- qOzJ2fkJhz+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
-   d="scan'208";a="352013850"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 17 Jun 2020 01:40:50 -0700
-Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
-        by linux.intel.com (Postfix) with ESMTP id 54BB1580223;
-        Wed, 17 Jun 2020 01:40:48 -0700 (PDT)
-Subject: [PATCH v8 08/13] perf stat: extend -D,--delay option with -1 value
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <0c521b60-720d-4ecf-31d4-6a949870ede0@linux.intel.com>
-Date:   Wed, 17 Jun 2020 11:40:47 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 04:41:33 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:30398 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgFQIlc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:41:32 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200617084130epoutp03eb143ae742ad5acc4cbe1b2bf534e926~ZSCpgfLrD1211912119epoutp03a
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:41:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200617084130epoutp03eb143ae742ad5acc4cbe1b2bf534e926~ZSCpgfLrD1211912119epoutp03a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592383290;
+        bh=gh6W5yGrV5Q3pLGykvDTaDSZ77Dm0FvSvxUgpDFLAOQ=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=e5EgTXL0OT0qOMcwlROb8cMsF296WOJPgV8jBTuAxsVbUTuDYZl00IlyBdqbYiDu+
+         ck2+APFJqpEL6ESov8+uJo91Ut+El/m4cWUay9mbwGQYSWJXj1QSycQ0Je7IrUk4Nm
+         9qDvl3LByuaWSlzDNVh2h9SByYL9p7u4KsJQpuao=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200617084129epcas1p4bddc803e422c6a63a2ad977ce81f2a41~ZSCpE71MB3009130091epcas1p4F;
+        Wed, 17 Jun 2020 08:41:29 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.163]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49mz7W2ck3zMqYkp; Wed, 17 Jun
+        2020 08:41:27 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0B.50.28581.737D9EE5; Wed, 17 Jun 2020 17:41:27 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200617084126epcas1p40e74869e9d0aa50ccc3ca7285712ceb2~ZSCmiTcgH2746027460epcas1p4P;
+        Wed, 17 Jun 2020 08:41:26 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200617084126epsmtrp27819972cf5f2d905d187fda3f6080885~ZSCmhXFf41225612256epsmtrp2b;
+        Wed, 17 Jun 2020 08:41:26 +0000 (GMT)
+X-AuditID: b6c32a38-2cdff70000006fa5-c4-5ee9d7377685
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8E.33.08303.637D9EE5; Wed, 17 Jun 2020 17:41:26 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200617084126epsmtip225bb24d6730469f22c009e9cb1d6c5c7~ZSCmXu9_M1775117751epsmtip2m;
+        Wed, 17 Jun 2020 08:41:26 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <414101d64477$ccb661f0$662325d0$@samsung.com>
+Subject: RE: [PATCH v3] exfat: remove EXFAT_SB_DIRTY flag
+Date:   Wed, 17 Jun 2020 17:41:26 +0900
+Message-ID: <001f01d64483$16ce1f20$446a5d60$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQF0BoMPlscPSpT3Th8lCwQKqdMbhQJGtMGMAcFEUC2pgLlC4A==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmvq759ZdxBteOCVr8mHubxeLNyaks
+        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
+        YvT4vEkugC0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
+        LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGhQYFecWJucWleul5yfq6V
+        oYGBkSlQZUJOxsutD1gLpnNW/P/9gqmBcQt7FyMHh4SAicS1t25djJwcQgI7GCVaXkpD2J8Y
+        JT7OyOhi5AKyPzNK3F+/iw0kAVLfvH4JC0RiF6NEw/dNrBDOS0aJWS8bwarYBHQl/v3ZD2aL
+        CERLHNtxnhGkiFngCqPEg0ezmEASnAJWEm2LHrGBnCEsYCmx8LoySJhFQFViwoStLCA2L1D4
+        2/dOdghbUOLkzCdgcWYBeYntb+cwQ1ykIPHz6TJWiF1OEi9mP2GGqBGRmN3ZxgyyV0JgLofE
+        5Qt7oF5wkfh1+g8ThC0s8er4FnYIW0ri87u9bJBgqZb4uB9qfgejxIvvthC2scTN9RtYQUqY
+        BTQl1u/ShwgrSuz8PZcRYi2fxLuvPawQU3glOtqEIEpUJfouHYZaKi3R1f6BfQKj0iwkj81C
+        8tgsJA/MQli2gJFlFaNYakFxbnpqsWGBCXJMb2IEJ1Itix2Mc99+0DvEyMTBeIhRgoNZSYTX
+        +feLOCHelMTKqtSi/Pii0pzU4kOMpsCgnsgsJZqcD0zleSXxhqZGxsbGFiZm5mamxkrivCet
+        LsQJCaQnlqRmp6YWpBbB9DFxcEo1MBk6zPt1Q9l4/1veUH6e2zE+T++e2Lx8QUCA+dNa1msz
+        hBQ3T9i03X5z14H1peUJUX29H1582nA2JTJzVtbE+9rslotLzLMfbT1WUlzUE87O9f7Sok83
+        xDJnSi5m5Gb7ErLv76u/S4TkF0gdVpBKF7/O/ec3k9SVGZkn3yp9OvN2S9x9/h2THx7ojl+5
+        7fbf7QKR0o7BCmGB15LEZhuklpq/r5ugONPw5WT/suYHQvs5EtNZDH3dIvoZf4bbXzd6OUFQ
+        9/zcTU9j/OZanDNT631zeB3PokDn6y+LmKsPbheI+zvxwUE3y/erZUtEnuxTuq8bF+THr/Lh
+        /oa63z1/U3aZTp3caKkefb3Hfo3A989KLMUZiYZazEXFiQB3tWnRLQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJXtfs+ss4gx8txhY/5t5msXhzciqL
+        xZ69J1ksLu+aw2Zx+f8nFotlXyazWGz5d4TVgd3jy5zj7B5tk/+xezQfW8nmsXPWXXaPvi2r
+        GD0+b5ILYIvisklJzcksSy3St0vgyni59QFrwXTOiv+/XzA1MG5h72Lk5JAQMJFoXr+EpYuR
+        i0NIYAejRGf/V6iEtMSxE2eYuxg5gGxhicOHiyFqnjNKHD+5jRmkhk1AV+Lfn/1sILaIQLTE
+        1b9/WUBsZoFrjBLfp2dDNGxnlHgx8yRYA6eAlUTbokdsIEOFBSwlFl5XBgmzCKhKTJiwFayX
+        Fyj87XsnO4QtKHFy5hOomdoSvQ9bGSFseYntb+cwQ9ypIPHz6TJWiBucJF7MfsIMUSMiMbuz
+        jXkCo/AsJKNmIRk1C8moWUhaFjCyrGKUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vOz93ECI4r
+        La0djHtWfdA7xMjEwXiIUYKDWUmE1/n3izgh3pTEyqrUovz4otKc1OJDjNIcLErivF9nLYwT
+        EkhPLEnNTk0tSC2CyTJxcEo1MPUs7/k/r/fH/smR6yaWr3v6J/7JJ6vzxY+/Pqq6s2dPPuOt
+        uiy3KLVG8ftiecezLnhE52UFvVfTPvj1X+fsDPW7U/4UrWqJ+PdP5XCbiOqPdyJ2+RF+GlrG
+        kp+nCs+bOmVN/YZJlrH1kY2zFDbfyTEucJV6O8E0rvFu8/V1mivXyK/v/Hh96oe2Jdp9vT8T
+        DK5WXw0++PXEpwV8JxnN1HTKq4QXmu/8eSzP7NOShc7p6/Uctm+f/t6iK53FT2XVBV5joRWJ
+        jitqvti3PGbwsVZ9fn/p9WWS0zy/pHrvOZAQ32RVcnvRQzNH46WNk74eauJUcDC2OBw0dRXD
+        7LMqW3bPSereLmP388QH1tV981uUWIozEg21mIuKEwFo64rBGgMAAA==
+X-CMS-MailID: 20200617084126epcas1p40e74869e9d0aa50ccc3ca7285712ceb2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3
+References: <CGME20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3@epcas1p2.samsung.com>
+        <20200616021808.5222-1-kohada.t2@gmail.com>
+        <414101d64477$ccb661f0$662325d0$@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Extend -D,--delay option with -1 value to start monitoring with
-events disabled to be enabled later by enable command provided
-via control file descriptor.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/perf-stat.txt |  5 +++--
- tools/perf/builtin-stat.c              | 18 ++++++++++++++----
- tools/perf/util/evlist.h               |  3 +++
- tools/perf/util/stat.h                 |  2 +-
- 4 files changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index b029ee728a0b..9f32f6cd558d 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -238,8 +238,9 @@ mode, use --per-node in addition to -a. (system-wide).
- 
- -D msecs::
- --delay msecs::
--After starting the program, wait msecs before measuring. This is useful to
--filter out the startup phase of the program, which is often very different.
-+After starting the program, wait msecs before measuring (-1: start with events
-+disabled). This is useful to filter out the startup phase of the program,
-+which is often very different.
- 
- -T::
- --transaction::
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 39749c290508..f88d5ee55022 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -494,16 +494,26 @@ static bool process_timeout(int timeout, unsigned int interval, int *times)
- 
- static void enable_counters(void)
- {
--	if (stat_config.initial_delay)
-+	if (stat_config.initial_delay < 0) {
-+		pr_info(EVLIST_DISABLED_MSG);
-+		return;
-+	}
-+
-+	if (stat_config.initial_delay > 0) {
-+		pr_info(EVLIST_DISABLED_MSG);
- 		usleep(stat_config.initial_delay * USEC_PER_MSEC);
-+	}
- 
- 	/*
- 	 * We need to enable counters only if:
- 	 * - we don't have tracee (attaching to task or cpu)
- 	 * - we have initial delay configured
- 	 */
--	if (!target__none(&target) || stat_config.initial_delay)
-+	if (!target__none(&target) || stat_config.initial_delay) {
- 		evlist__enable(evsel_list);
-+		if (stat_config.initial_delay > 0)
-+			pr_info(EVLIST_ENABLED_MSG);
-+	}
- }
- 
- static void disable_counters(void)
-@@ -1060,8 +1070,8 @@ static struct option stat_options[] = {
- 		     "aggregate counts per thread", AGGR_THREAD),
- 	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
- 		     "aggregate counts per numa node", AGGR_NODE),
--	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
--		     "ms to wait before starting measurement after program start"),
-+	OPT_INTEGER('D', "delay", &stat_config.initial_delay,
-+		    "ms to wait before starting measurement after program start (-1: start with events disabled)"),
- 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
- 			"Only print computed metrics. No raw values", enable_metric_only),
- 	OPT_BOOLEAN(0, "metric-no-group", &stat_config.metric_no_group,
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index bccf0a970371..7c3726a685f5 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -377,4 +377,7 @@ int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
- int evlist__finalize_ctlfd(struct evlist *evlist);
- int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
- 
-+#define EVLIST_ENABLED_MSG "Events enabled\n"
-+#define EVLIST_DISABLED_MSG "Events disabled\n"
-+
- #endif /* __PERF_EVLIST_H */
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index f75ae679eb28..626421ef35c2 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -116,7 +116,7 @@ struct perf_stat_config {
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--	unsigned int		 initial_delay;
-+	int			 initial_delay;
- 	unsigned int		 unit_width;
- 	unsigned int		 metric_only_len;
- 	int			 times;
--- 
-2.24.1
-
+> > remove EXFAT_SB_DIRTY flag and related codes.
+> >
+> > This flag is set/reset in exfat_put_super()/exfat_sync_fs() to avoid
+> > sync_blockdev().
+> > However ...
+> > - exfat_put_super():
+> > Before calling this, the VFS has already called sync_filesystem(), so
+> > sync is never performed here.
+> > - exfat_sync_fs():
+> > After calling this, the VFS calls sync_blockdev(), so, it is
+> > meaningless to check EXFAT_SB_DIRTY or to bypass sync_blockdev() here.
+> > Not only that, but in some cases can't clear VOL_DIRTY.
+> > ex:
+> > VOL_DIRTY is set when rmdir starts, but when non-empty-dir is
+> > detected, return error without setting EXFAT_SB_DIRTY.
+> > If performe 'sync' in this state, VOL_DIRTY will not be cleared.
+> >
+> 
+> Since this patch does not resolve 'VOL_DIRTY in ENOTEMPTY' problem you mentioned, it would be better
+> to remove the description above for that and to make new patch.
+> 
+> > Remove the EXFAT_SB_DIRTY check to ensure synchronization.
+> > And, remove the code related to the flag.
+> >
+> > Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+> 
+> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+Applied. Thanks!
 
