@@ -2,250 +2,109 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A9CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AC6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9FF2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBE72070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwx5FqjF"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="R6qNHWtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgFQVsZ (ORCPT
+        id S1727072AbgFQVst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:48:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgFQVsZ (ORCPT
+        Wed, 17 Jun 2020 17:48:49 -0400
+Received: from mail-40136.protonmail.ch ([185.70.40.136]:33616 "EHLO
+        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgFQVst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:48:25 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD56CC06174E;
-        Wed, 17 Jun 2020 14:48:24 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id i8so2250331lfo.4;
-        Wed, 17 Jun 2020 14:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5Jselfb+tn7C8hTjnU6+q8jejO6KT7yeJaOlgUUkDfU=;
-        b=mwx5FqjFDSptmsKzHcONWpBLtprM57vaBgakUrQH//+Wi7aKJIAIWuPst+Zp0Iuhk3
-         tfIlYgUDzeYSqxUUURx/O1dx7s2TvPzzgiE2BOy1dqoRKBK66qjg/mVCQkt0dJXpo3Si
-         RwrJthyDNFbxLFXPejydJ9Q28ONzS1aPctaHlo31bNgQcGI5sQaLTfIO8JIhNmKCh+FF
-         4VA6pZ7phh/s/FVUZT57NjB+vXPPivPPpJemdR3i11XE16SUYdZgLoY9MNPQQkp/oEoY
-         9lLMohB4e94cWM+epe2qOogrOff4WMh1tRlevLQyiF9w25fRBJ7F/DzNTrRHbF03Ocgw
-         OsCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5Jselfb+tn7C8hTjnU6+q8jejO6KT7yeJaOlgUUkDfU=;
-        b=OjxrtoJT9PBDdzDNUXDDDJ/N5pM1BBH3Uu7wGxaRVWvDA78lOyHYnhzoxUHc+0F+pA
-         hN6QdNAqv0f/nZpwtL1IegpC+fQU/I1bRBTsgNDVk7jEg/5a+MQCzRTqMwo3bygGxK5/
-         EG7eOY0dEYXOtg8ozvz1Efyk2U/EVZaTlbXb0uhFqEdx4oBPuxzVHyptNgAf1YHbqUbg
-         VvoHGl43ymRLPz9iqsgydw8y85pYVcyqFa49jNd0k69gaFrSuykYiBxrZFuKVHebuNxJ
-         RLTuHuvPzdI2dDdima4yGuaQ1ODz+6+zhrAql6ipUwdeZL/JotDdB19TdErO/26hKjmZ
-         ilFA==
-X-Gm-Message-State: AOAM530qA/6stQJ9I6XAyw1ySuaQP77R0IZctKYvLGJ2VVQkXVrk6ZoU
-        K5pxf+boxtjgm3Y3aYQX/VoyQPWC
-X-Google-Smtp-Source: ABdhPJwRVLd8CkSuYn2vqquecgWKtSaPyyIaPzfp8KTngx8hhBHL8y1WDBsfFbYEaKVYw5U+60MERw==
-X-Received: by 2002:a19:787:: with SMTP id 129mr500303lfh.147.1592430502790;
-        Wed, 17 Jun 2020 14:48:22 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id s9sm198055ljc.43.2020.06.17.14.48.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 14:48:22 -0700 (PDT)
-Subject: Re: [PATCH v4 22/37] dt-bindings: host1x: Document new interconnect
- properties
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200609131404.17523-1-digetx@gmail.com>
- <20200609131404.17523-23-digetx@gmail.com> <20200617213726.GA2837398@bogus>
- <5303317a-2cb6-d7a8-361a-30867fc6eab7@gmail.com>
-Message-ID: <8fc5c06f-ee0f-f907-6631-05b45b89c7da@gmail.com>
-Date:   Thu, 18 Jun 2020 00:48:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 17 Jun 2020 17:48:49 -0400
+X-Greylist: delayed 596 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jun 2020 17:48:48 EDT
+Date:   Wed, 17 Jun 2020 21:38:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1592429930; bh=BHRlybEla9RSsqJCF1ZBfvNg6UHwGh4px8zN0yh041Y=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=R6qNHWtP0rxd8v7/aRGEPRJvP4R8ESGedaF+i3uFy2jPt8eiRBw92z6JyEGMzgGPZ
+         qH2M+gtPZGuDSm+LZs44XjkaF1/muj3+r8yYkDMcHhnD3GFWgzDed/ifFPgRYzDn0s
+         D7GZYev0c/TWWUneeOtrfIGJepec04eaHjlowIvOtxikryLjtMEOGAzx5d9V+LrjjA
+         In1bqJCgrXLBAb6lfnbqyJOY7u0YKOS8PHkMGLvVQ7j9Y5GgxFDPJ2tRjH/cFaZJtl
+         pYh+mofJ9e2rN0GqJsdp4dn+WnhFDEjHruogaPlqN9sGcEjmmILJKqoJhAs95obRaO
+         a39S5301L53Qg==
+To:     Michal Kubecek <mkubecek@suse.cz>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: Re: [PATCH resend net] net: ethtool: add missing NETIF_F_GSO_FRAGLIST feature string
+Message-ID: <5u_BsHq6Jk0q09sGWsVKfvv0NRa5kBHjxdOr9VpNknRnxHpbRO_80JSHl_AWS-C_wBS7B15KetRleLaluF8tOysTNYyLVRUG4BRFQZxnhXw=@pm.me>
+In-Reply-To: <20200617211844.kupsyijuurjpb5kd@lion.mk-sys.cz>
+References: <9oPfKdiVuoDf251VBJXgNs-Hv-HWPnIJk52x-SQc1frfg8QSf9z3rCL-CBSafkp9SO0CjNzU8QvUv9Abe4SvoUpejeob9OImDPbflzRC-0Y=@pm.me> <20200617211844.kupsyijuurjpb5kd@lion.mk-sys.cz>
 MIME-Version: 1.0
-In-Reply-To: <5303317a-2cb6-d7a8-361a-30867fc6eab7@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.06.2020 00:44, Dmitry Osipenko пишет:
-> 18.06.2020 00:37, Rob Herring пишет:
->> On Tue, Jun 09, 2020 at 04:13:49PM +0300, Dmitry Osipenko wrote:
->>> Most of Host1x devices have at least one memory client. These clients
->>> are directly connected to the memory controller. The new interconnect
->>> properties represent the memory client's connection to the memory
->>> controller.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  .../display/tegra/nvidia,tegra20-host1x.txt   | 68 +++++++++++++++++++
->>>  1 file changed, 68 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>> index 47319214b5f6..ab4fbee7bccf 100644
->>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>> @@ -20,6 +20,10 @@ Required properties:
->>>  - reset-names: Must include the following entries:
->>>    - host1x
->>>  
->>> +Each host1x client module having to perform DMA through the Memory Controller
->>> +should have the interconnect endpoints set to the Memory Client and External
->>> +Memory respectively.
->>> +
->>>  The host1x top-level node defines a number of children, each representing one
->>>  of the following host1x client modules:
->>>  
->>> @@ -36,6 +40,12 @@ of the following host1x client modules:
->>>    - reset-names: Must include the following entries:
->>>      - mpe
->>>  
->>> +  Optional properties:
->>> +  - interconnects: Must contain entry for the MPE memory clients.
->>> +  - interconnect-names: Must include name of the interconnect path for each
->>> +    interconnect entry. Consult TRM documentation for information about
->>> +    available memory clients, see MEMORY CONTROLLER section.
->>> +
->>>  - vi: video input
->>>  
->>>    Required properties:
->>> @@ -65,6 +75,12 @@ of the following host1x client modules:
->>>        - power-domains: Must include sor powergate node as csicil is in
->>>          SOR partition.
->>>  
->>> +  Optional properties:
->>> +  - interconnects: Must contain entry for the VI memory clients.
->>> +  - interconnect-names: Must include name of the interconnect path for each
->>> +    interconnect entry. Consult TRM documentation for information about
->>> +    available memory clients, see MEMORY CONTROLLER section.
->>> +
->>>  - epp: encoder pre-processor
->>>  
->>>    Required properties:
->>> @@ -78,6 +94,12 @@ of the following host1x client modules:
->>>    - reset-names: Must include the following entries:
->>>      - epp
->>>  
->>> +  Optional properties:
->>> +  - interconnects: Must contain entry for the EPP memory clients.
->>> +  - interconnect-names: Must include name of the interconnect path for each
->>> +    interconnect entry. Consult TRM documentation for information about
->>> +    available memory clients, see MEMORY CONTROLLER section.
->>> +
->>>  - isp: image signal processor
->>>  
->>>    Required properties:
->>> @@ -91,6 +113,12 @@ of the following host1x client modules:
->>>    - reset-names: Must include the following entries:
->>>      - isp
->>>  
->>> +  Optional properties:
->>> +  - interconnects: Must contain entry for the ISP memory clients.
->>> +  - interconnect-names: Must include name of the interconnect path for each
->>> +    interconnect entry. Consult TRM documentation for information about
->>> +    available memory clients, see MEMORY CONTROLLER section.
->>> +
->>>  - gr2d: 2D graphics engine
->>>  
->>>    Required properties:
->>> @@ -104,6 +132,12 @@ of the following host1x client modules:
->>>    - reset-names: Must include the following entries:
->>>      - 2d
->>>  
->>> +  Optional properties:
->>> +  - interconnects: Must contain entry for the GR2D memory clients.
->>> +  - interconnect-names: Must include name of the interconnect path for each
->>> +    interconnect entry. Consult TRM documentation for information about
->>> +    available memory clients, see MEMORY CONTROLLER section.
->>> +
->>>  - gr3d: 3D graphics engine
->>>  
->>>    Required properties:
->>> @@ -122,6 +156,12 @@ of the following host1x client modules:
->>>      - 3d
->>>      - 3d2 (Only required on SoCs with two 3D clocks)
->>>  
->>> +  Optional properties:
->>> +  - interconnects: Must contain entry for the GR3D memory clients.
->>> +  - interconnect-names: Must include name of the interconnect path for each
->>> +    interconnect entry. Consult TRM documentation for information about
->>> +    available memory clients, see MEMORY CONTROLLER section.
->>> +
->>>  - dc: display controller
->>>  
->>>    Required properties:
->>> @@ -149,6 +189,10 @@ of the following host1x client modules:
->>>    - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
->>>    - nvidia,edid: supplies a binary EDID blob
->>>    - nvidia,panel: phandle of a display panel
->>> +  - interconnects: Must contain entry for the DC memory clients.
->>> +  - interconnect-names: Must include name of the interconnect path for each
->>> +    interconnect entry. Consult TRM documentation for information about
->>> +    available memory clients, see MEMORY CONTROLLER section.
->>>  
->>>  - hdmi: High Definition Multimedia Interface
->>>  
->>> @@ -297,6 +341,12 @@ of the following host1x client modules:
->>>    - reset-names: Must include the following entries:
->>>      - vic
->>>  
->>> +  Optional properties:
->>> +  - interconnects: Must contain entry for the VIC memory clients.
->>> +  - interconnect-names: Must include name of the interconnect path for each
->>> +    interconnect entry. Consult TRM documentation for information about
->>> +    available memory clients, see MEMORY CONTROLLER section.
->>> +
->>>  Example:
->>>  
->>>  / {
->>> @@ -410,6 +460,15 @@ Example:
->>>  			resets = <&tegra_car 27>;
->>>  			reset-names = "dc";
->>>  
->>> +			interconnects = <&mc TEGRA20_MC_DISPLAY0A &emc>,
->>> +					<&mc TEGRA20_MC_DISPLAY0B &emc>,
->>> +					<&mc TEGRA20_MC_DISPLAY0C &emc>,
->>> +					<&mc TEGRA20_MC_DISPLAY1B &emc>;
->>
->> This looks odd or wrong. Each entry has 2 phandles? 
-> 
-> Each entry defines interconnect path, where MC is the start of the path
-> and EMC is the end. So yes, 2 phandles for each path.
-> 
-> Please see arm/boot/dts/qcom-msm8974.dtsi for another example [1].
-> 
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/qcom-msm8974.dtsi?h=v5.8-rc1#n1448
-> 
+Hi Michal,
 
-Actually, there are even better examples:
+On Thursday, 18 June 2020, 0:18, Michal Kubecek <mkubecek@suse.cz> wrote:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sc7180.dtsi?h=v5.8-rc1#n1044
+> On Wed, Jun 17, 2020 at 08:42:47PM +0000, Alexander Lobakin wrote:
+>
+> > Commit 3b33583265ed ("net: Add fraglist GRO/GSO feature flags") missed
+> > an entry for NETIF_F_GSO_FRAGLIST in netdev_features_strings array. As
+> > a result, fraglist GSO feature is not shown in 'ethtool -k' output and
+> > can't be toggled on/off.
+> > The fix is trivial.
+> >
+> > Fixes: 3b33583265ed ("net: Add fraglist GRO/GSO feature flags")
+> > Signed-off-by: Alexander Lobakin alobakin@pm.me
+> >
+> > -----------------------------------------------------------------------=
+-----------------------------------------
+> >
+> > net/ethtool/common.c | 1 +
+> > 1 file changed, 1 insertion(+)
+> > diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+> > index 423e640e3876..47f63526818e 100644
+> > --- a/net/ethtool/common.c
+> > +++ b/net/ethtool/common.c
+> > @@ -43,6 +43,7 @@ const char netdev_features_strings[NETDEV_FEATURE_COU=
+NT][ETH_GSTRING_LEN] =3D {
+> > [NETIF_F_GSO_SCTP_BIT] =3D "tx-sctp-segmentation",
+> > [NETIF_F_GSO_ESP_BIT] =3D "tx-esp-segmentation",
+> > [NETIF_F_GSO_UDP_L4_BIT] =3D "tx-udp-segmentation",
+> >
+> > -   [NETIF_F_GSO_FRAGLIST_BIT] =3D "tx-gso-list",
+> >     [NETIF_F_FCOE_CRC_BIT] =3D "tx-checksum-fcoe-crc",
+> >     [NETIF_F_SCTP_CRC_BIT] =3D "tx-checksum-sctp",
+> >
+>
+> Reviewed-by: Michal Kubecekmkubecek@suse.cz
+
+Thanks!
+
+> AFAICS the name for NETIF_F_GSO_TUNNEL_REMCSUM_BIT is also missing but
+> IMHO it will be better to fix that by a separate patch with its own
+> Fixes tag.
+
+Oh, nice catch! I'll make a separate for this one.
+I also wanted to add any sort of static_assert() / BUILD_BUG_ON() to
+prevent such misses, but don't see any easy pattern to check for now,
+as netdev_features_strings[] is always NETDEV_FEATURE_COUNT-sized.
+
+> Michal
