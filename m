@@ -2,112 +2,196 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1B321897
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E263221548
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8L/mum3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c99QlzL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgFQWDt (ORCPT
+        id S1727846AbgFQWD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
+        Wed, 17 Jun 2020 18:03:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbgFQWDq (ORCPT
+        with ESMTP id S1727776AbgFQWDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:03:46 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26ECDC06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:03:45 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ne5so1604493pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:03:45 -0700 (PDT)
+        Wed, 17 Jun 2020 18:03:39 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC433C0617BF
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:03:36 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ne5so1604374pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FxWBzqH20Ldut/ncbfepnMWFG7FF0MXXG+/ZQ1Q/k20=;
-        b=Q8L/mum3I/Hjh9d+oNtQ/w09JtOl4ahKeV0h2TqgLkmhSyQ0mUf4EwhseOmSA3Kt47
-         oRGdFqyRqOS3w00z7fjchxraFVbvK5caeXqNwRhwaZbR5lKuA6XMnx3BGvZ/91G9e5BW
-         r7WpLacvYI3YIeR1zbACg4BQtwVGgMhWTN0r3h/wiFJcHKPNep8SgrvjOfin44XQXoxx
-         Ngw9EcQ3/Jp/u7dp+kYjK6SH3I8kKCb7zKvZm4Hwh98+zX1MjAIBVbNUsvDKeSI2vlvY
-         +lbfI7/eNNJklE+c2SOgIw/nfyE/seqM40xxsiwi/VPpCZF06UjdDzI3F5d9xxL4hAGi
-         GGEQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bMyqNAArtVNszcHrT7hbrHR3KGZeRc+Wdy+CDx/HSOE=;
+        b=c99QlzL+vb52wHSMq2IhOXRkR899TunU/gm5RTSzYbT4UXIY6a0A3aI6Cz1MpXhAcK
+         WMkTb7Crux0hfeow/zGeuszL+/t8eFGOKkXadEFHzSqPdbs++DEBvRaIKCqw7sP7dNmv
+         gL2+KE6/YuTlFLgIY7Z/bm0fVIU+eJglNWXhc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FxWBzqH20Ldut/ncbfepnMWFG7FF0MXXG+/ZQ1Q/k20=;
-        b=iSOTJfokol7uVRywBv4vfJU9g2xVaj4ThANrSlM324Wx1TaQAj5J3AScEqtDBcqGZe
-         yohOoUetABbqU++n0VomedpCArph9Kmf7gztbjduiLbLToiuaLuR5uZs+xtWS0eUc+1o
-         3NCPvrNGvtpCmHTWETsBIZxJdrRZM3V/a96X1/37ecRjo6b7KuxYjtbpqmyJiUGJg7fo
-         s7K2gRB/umTYGMnJg+ySvRqFxCfOFEogS//ojODjON2kVic/AVy2N5b6W1TXMpwufq4R
-         2V+3K4amuea1CndCZM39Ni//R+3D4ErzvfYURMhc0glETXg+gERa1F/gGEM7XZ96czYR
-         P4FQ==
-X-Gm-Message-State: AOAM53029FSM6eo78e7XDxnHOnU5PMI+eVaEJNXJXckwZ2+X2WSCiWhI
-        UxKCLIc4N1EvzMBLTDKqlhM=
-X-Google-Smtp-Source: ABdhPJytA/fm6+Sl/XlT8Ovsoq9qBn/cy71kg2hsfEpLahwJljbs66yJm9Fn8uiKl5Pw8GYrfcQgSA==
-X-Received: by 2002:a17:90a:b384:: with SMTP id e4mr1049797pjr.1.1592431424672;
-        Wed, 17 Jun 2020 15:03:44 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id j6sm745499pfi.183.2020.06.17.15.03.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 15:03:43 -0700 (PDT)
-Subject: Re: [GIT PULL 1/1] bcm2835-drivers-fixes-2020-0-17
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200617111453.23345-1-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7979468c-3781-ea2f-ec36-1f949a14e807@gmail.com>
-Date:   Wed, 17 Jun 2020 15:03:42 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bMyqNAArtVNszcHrT7hbrHR3KGZeRc+Wdy+CDx/HSOE=;
+        b=nDO2E4uWAJhtOrt2Tq76PBcf9gxyW6a10EMgkIdY9GXb1cNo9ykwoiGyqgOpEgvmjY
+         U1cxLfNhxDO9+uqHwGNaTQAke4DHke1fRBrtfCsOBiHOalEW/UZl9KbjEh1NzVXHv70L
+         VFAg70qsa1EiSPqoNdspRmKa6s3JBb5BQMl87A52BkSBCPnIbC+TxqYx0C1zdPh9Wxwz
+         PSYvOlgMX2EkxMIp3Xvkkx0jpM6QiBjyk6YflNZIIyr29bojJKx4wGqW8dpAeM1xtefq
+         vNwTJnzs4DUwRU4E0LtNaRFMTvcF9K7UD+Xgz3BJqjs/FaHwY7fHUJDatOjqAST0gXF0
+         lmOA==
+X-Gm-Message-State: AOAM530Ivbklh9st+nt9mr8KWki4J04vFke4kzJYKSj1nUrasmF5+v+t
+        kz/rQ1l8eLWT8bYLNoIsOzpWyA==
+X-Google-Smtp-Source: ABdhPJyH669Vs7q6n5s9zYcdhTuLSHHg0GExur8GysnHPMjfY4l3Jea773ViskgyM9ZuqB0ob4lEiQ==
+X-Received: by 2002:a17:90a:22ad:: with SMTP id s42mr1039880pjc.200.1592431416440;
+        Wed, 17 Jun 2020 15:03:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s13sm784326pfc.136.2020.06.17.15.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 15:03:34 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH v5 5/7] fs: Expand __fd_install_received() to accept fd
+Date:   Wed, 17 Jun 2020 15:03:25 -0700
+Message-Id: <20200617220327.3731559-6-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200617220327.3731559-1-keescook@chromium.org>
+References: <20200617220327.3731559-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200617111453.23345-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Expand __fd_install_received() with support for replace_fd() for the
+coming seccomp "addfd" ioctl(). Add new wrapper fd_replace_received()
+for the new mode and update existing wrappers to retain old mode.
 
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/file.c            | 22 +++++++++++++++++-----
+ include/linux/file.h | 10 +++++++---
+ 2 files changed, 24 insertions(+), 8 deletions(-)
 
-On 6/17/2020 4:14 AM, Nicolas Saenz Julienne wrote:
-> Hi Florian,
-> 
-> The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-> 
->   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-> 
-> are available in the Git repository at:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/nsaenz/linux-rpi.git tags/bcm2835-drivers-fixes-2020-0-17
-> 
-> for you to fetch changes up to da785a87787c97823d12107a4f0ec7adcc2a78d9:
-> 
->   ARM: bcm2835: Fix integer overflow in rpi_firmware_print_firmware_revision() (2020-06-17 12:51:45 +0200)
-> 
-> ----------------------------------------------------------------
-> Fixes raspberry pi firmware version output
-> 
-> ----------------------------------------------------------------
-> Andy Shevchenko (1):
->       ARM: bcm2835: Fix integer overflow in rpi_firmware_print_firmware_revision()
-
-Merged into drivers/fixes, thanks!
+diff --git a/fs/file.c b/fs/file.c
+index de85a42defe2..9568bcfd1f44 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -937,6 +937,7 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+ /**
+  * __fd_install_received() - Install received file into file descriptor table
+  *
++ * @fd: fd to install into (if negative, a new fd will be allocated)
+  * @file: struct file that was received from another process
+  * @ufd: __user pointer to write new fd number to
+  * @o_flags: the O_* flags to apply to the new fd entry
+@@ -947,7 +948,8 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+  *
+  * Returns newly install fd or -ve on error.
+  */
+-int __fd_install_received(struct file *file, int __user *ufd, unsigned int o_flags)
++int __fd_install_received(int fd, struct file *file, int __user *ufd,
++			  unsigned int o_flags)
+ {
+ 	struct socket *sock;
+ 	int new_fd;
+@@ -957,9 +959,11 @@ int __fd_install_received(struct file *file, int __user *ufd, unsigned int o_fla
+ 	if (error)
+ 		return error;
+ 
+-	new_fd = get_unused_fd_flags(o_flags);
+-	if (new_fd < 0)
+-		return new_fd;
++	if (fd < 0) {
++		new_fd = get_unused_fd_flags(o_flags);
++		if (new_fd < 0)
++			return new_fd;
++	}
+ 
+ 	if (ufd) {
+ 		error = put_user(new_fd, ufd);
+@@ -969,6 +973,15 @@ int __fd_install_received(struct file *file, int __user *ufd, unsigned int o_fla
+ 		}
+ 	}
+ 
++	if (fd < 0)
++		fd_install(new_fd, get_file(file));
++	else {
++		new_fd = fd;
++		error = replace_fd(new_fd, file, o_flags);
++		if (error)
++			return error;
++	}
++
+ 	/* Bump the usage count and install the file. The resulting value of
+ 	 * "error" is ignored here since we only need to take action when
+ 	 * the file is a socket and testing "sock" for NULL is sufficient.
+@@ -978,7 +991,6 @@ int __fd_install_received(struct file *file, int __user *ufd, unsigned int o_fla
+ 		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+ 		sock_update_classid(&sock->sk->sk_cgrp_data);
+ 	}
+-	fd_install(new_fd, get_file(file));
+ 	return new_fd;
+ }
+ 
+diff --git a/include/linux/file.h b/include/linux/file.h
+index e19974ed9322..04389b0da11b 100644
+--- a/include/linux/file.h
++++ b/include/linux/file.h
+@@ -92,18 +92,22 @@ extern void put_unused_fd(unsigned int fd);
+ 
+ extern void fd_install(unsigned int fd, struct file *file);
+ 
+-extern int __fd_install_received(struct file *file, int __user *ufd,
++extern int __fd_install_received(int fd, struct file *file, int __user *ufd,
+ 				 unsigned int o_flags);
+ static inline int fd_install_received_user(struct file *file, int __user *ufd,
+ 					   unsigned int o_flags)
+ {
+ 	if (ufd == NULL)
+ 		return -EFAULT;
+-	return __fd_install_received(file, ufd, o_flags);
++	return __fd_install_received(-1, file, ufd, o_flags);
+ }
+ static inline int fd_install_received(struct file *file, unsigned int o_flags)
+ {
+-	return __fd_install_received(file, NULL, o_flags);
++	return __fd_install_received(-1, file, NULL, o_flags);
++}
++static inline int fd_replace_received(int fd, struct file *file, unsigned int o_flags)
++{
++	return __fd_install_received(fd, file, NULL, o_flags);
+ }
+ 
+ extern void flush_delayed_fput(void);
 -- 
-Florian
+2.25.1
+
