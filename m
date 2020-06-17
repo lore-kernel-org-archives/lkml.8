@@ -2,220 +2,428 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A22DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C227214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DoVHZEx4"
+	by mail.kernel.org (Postfix) with ESMTP id CBDD020853
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgFQU3U (ORCPT
+        id S1726940AbgFQUas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:29:20 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50592 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgFQU3U (ORCPT
+        Wed, 17 Jun 2020 16:30:48 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:29316 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726496AbgFQUas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:29:20 -0400
-Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id BA4AB20B7192;
-        Wed, 17 Jun 2020 13:29:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BA4AB20B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1592425758;
-        bh=nTnDxgYdbln+2Ap546pVuSBhXez+BJpTi4VKFr4mt1I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DoVHZEx4akiPuZCUm2tmg/wzrlat9Nvc9OeYX6ln5zVVNtdUt+K/tAEWpTO8sqmzH
-         XSSdWMO0WlAh3D+ACduv5Pbgyea/D+QfILYQH3Q/zUF68MtUnSBeg2rvYQVugjbxeS
-         Ocqfnlh74xfLbBqthBibumlfUA9zJtyiJ+4Yr47E=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, sgrubb@redhat.com, paul@paul-moore.com
-Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] IMA: Add audit log for failure conditions
-Date:   Wed, 17 Jun 2020 13:29:14 -0700
-Message-Id: <20200617202914.20576-1-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 17 Jun 2020 16:30:48 -0400
+X-IronPort-AV: E=Sophos;i="5.73,523,1583190000"; 
+   d="scan'208";a="455255405"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 22:30:43 +0200
+Date:   Wed, 17 Jun 2020 22:30:43 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     Kees Cook <keescook@chromium.org>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Cocci] [PATCH] coccinelle: misc: add array_size_dup script to
+ detect missed overlow checks
+In-Reply-To: <20200615102045.4558-1-efremov@linux.com>
+Message-ID: <alpine.DEB.2.22.394.2006172229550.3083@hadrien>
+References: <20200615102045.4558-1-efremov@linux.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-process_buffer_measurement() and ima_alloc_key_entry() functions need to
-log an audit message for auditing integrity measurement failures.
 
-Add audit message in these two functions. Remove "pr_devel" log message
-in process_buffer_measurement().
 
-Sample audit messages:
+On Mon, 15 Jun 2020, Denis Efremov wrote:
 
-[    6.415374] audit: type=1804 audit(1592005945.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=measuring_kexec_cmdline cause=alloc_entry comm="swapper/0" name="kexec-cmdline" res=0
+> Detect an opencoded expression that is used before or after
+> array_size()/array3_size()/struct_size() to compute the same size.
 
-[    8.128004] audit: type=1804 audit(1592005947.341:11): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_key cause=hashing_error comm="systemd" name=".builtin_trusted_keys" res=0
+This would benefit from the assignemnt operator metavariables as well.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
----
- security/integrity/ima/ima.h            | 48 ++++++++++++++++---------
- security/integrity/ima/ima_main.c       | 18 +++++++---
- security/integrity/ima/ima_policy.c     |  2 +-
- security/integrity/ima/ima_queue_keys.c |  5 +++
- 4 files changed, 51 insertions(+), 22 deletions(-)
+Also, it could be better to put the python rules up next the SmPL pattern
+matching rules that they are associated with.
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index df93ac258e01..c3a32e181b48 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -186,27 +186,43 @@ static inline unsigned int ima_hash_key(u8 *digest)
- 	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
- }
- 
--#define __ima_hooks(hook)		\
--	hook(NONE)			\
--	hook(FILE_CHECK)		\
--	hook(MMAP_CHECK)		\
--	hook(BPRM_CHECK)		\
--	hook(CREDS_CHECK)		\
--	hook(POST_SETATTR)		\
--	hook(MODULE_CHECK)		\
--	hook(FIRMWARE_CHECK)		\
--	hook(KEXEC_KERNEL_CHECK)	\
--	hook(KEXEC_INITRAMFS_CHECK)	\
--	hook(POLICY_CHECK)		\
--	hook(KEXEC_CMDLINE)		\
--	hook(KEY_CHECK)			\
--	hook(MAX_CHECK)
--#define __ima_hook_enumify(ENUM)	ENUM,
-+#define __ima_hooks(hook)				\
-+	hook(NONE, none)				\
-+	hook(FILE_CHECK, file)				\
-+	hook(MMAP_CHECK, mmap)				\
-+	hook(BPRM_CHECK, bprm)				\
-+	hook(CREDS_CHECK, creds)			\
-+	hook(POST_SETATTR, post_setattr)		\
-+	hook(MODULE_CHECK, module)			\
-+	hook(FIRMWARE_CHECK, firmware)			\
-+	hook(KEXEC_KERNEL_CHECK, kexec_kernel)		\
-+	hook(KEXEC_INITRAMFS_CHECK, kexec_initramfs)	\
-+	hook(POLICY_CHECK, policy)			\
-+	hook(KEXEC_CMDLINE, kexec_cmdline)		\
-+	hook(KEY_CHECK, key)				\
-+	hook(MAX_CHECK, none)
-+
-+#define __ima_hook_enumify(ENUM, str)	ENUM,
-+#define __ima_stringify(arg) (#arg)
-+#define __ima_hook_measuring_stringify(ENUM, str) \
-+		(__ima_stringify(measuring_ ##str)),
- 
- enum ima_hooks {
- 	__ima_hooks(__ima_hook_enumify)
- };
- 
-+static const char * const ima_hooks_measure_str[] = {
-+	__ima_hooks(__ima_hook_measuring_stringify)
-+};
-+
-+static inline const char *func_measure_str(enum ima_hooks func)
-+{
-+	if (func >= MAX_CHECK)
-+		return ima_hooks_measure_str[NONE];
-+
-+	return ima_hooks_measure_str[func];
-+}
-+
- extern const char *const func_tokens[];
- 
- struct modsig;
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index c1583d98c5e5..8a001aa8e592 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -740,6 +740,7 @@ void process_buffer_measurement(const void *buf, int size,
- 				int pcr, const char *keyring)
- {
- 	int ret = 0;
-+	const char *audit_cause = "ENOMEM";
- 	struct ima_template_entry *entry = NULL;
- 	struct integrity_iint_cache iint = {};
- 	struct ima_event_data event_data = {.iint = &iint,
-@@ -794,21 +795,28 @@ void process_buffer_measurement(const void *buf, int size,
- 	iint.ima_hash->length = hash_digest_size[ima_hash_algo];
- 
- 	ret = ima_calc_buffer_hash(buf, size, iint.ima_hash);
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "hashing_error";
- 		goto out;
-+	}
- 
- 	ret = ima_alloc_init_template(&event_data, &entry, template);
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "alloc_entry";
- 		goto out;
-+	}
- 
- 	ret = ima_store_template(entry, violation, NULL, buf, pcr);
--
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "store_entry";
- 		ima_free_template_entry(entry);
-+	}
- 
- out:
- 	if (ret < 0)
--		pr_devel("%s: failed, result: %d\n", __func__, ret);
-+		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL, eventname,
-+				    func_measure_str(func),
-+				    audit_cause, ret, 0);
- 
- 	return;
- }
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index e493063a3c34..66aa3e17a888 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -1414,7 +1414,7 @@ void ima_delete_rules(void)
- 	}
- }
- 
--#define __ima_hook_stringify(str)	(#str),
-+#define __ima_hook_stringify(func, str)	(#func),
- 
- const char *const func_tokens[] = {
- 	__ima_hooks(__ima_hook_stringify)
-diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-index cb3e3f501593..631fd7ab2dcd 100644
---- a/security/integrity/ima/ima_queue_keys.c
-+++ b/security/integrity/ima/ima_queue_keys.c
-@@ -68,6 +68,7 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
- 						 size_t payload_len)
- {
- 	int rc = 0;
-+	const char *audit_cause = "ENOMEM";
- 	struct ima_key_entry *entry;
- 
- 	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-@@ -88,6 +89,10 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
- 
- out:
- 	if (rc) {
-+		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL,
-+				    keyring->description,
-+				    func_measure_str(KEY_CHECK),
-+				    audit_cause, rc, 0);
- 		ima_free_key_entry(entry);
- 		entry = NULL;
- 	}
--- 
-2.27.0
+julia
 
+
+>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  scripts/coccinelle/misc/array_size_dup.cocci | 347 +++++++++++++++++++
+>  1 file changed, 347 insertions(+)
+>  create mode 100644 scripts/coccinelle/misc/array_size_dup.cocci
+>
+> diff --git a/scripts/coccinelle/misc/array_size_dup.cocci b/scripts/coccinelle/misc/array_size_dup.cocci
+> new file mode 100644
+> index 000000000000..08919a938754
+> --- /dev/null
+> +++ b/scripts/coccinelle/misc/array_size_dup.cocci
+> @@ -0,0 +1,347 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+> +/// Check for array_size(), array3_size(), struct_size() duplicates.
+> +/// Three types of patterns for these functions:
+> +///  1. An opencoded expression is used before array_size() to compute the same size
+> +///  2. An opencoded expression is used after array_size() to compute the same size
+> +///  3. Consecutive calls of array_size() with the same values
+> +/// From security point of view only first case is relevant. These functions
+> +/// perform arithmetic overflow check. Thus, if we use an opencoded expression
+> +/// before a call to the *_size() function we can miss an overflow.
+> +///
+> +// Confidence: High
+> +// Copyright: (C) 2020 Denis Efremov ISPRAS
+> +// Options: --no-includes --include-headers --no-loops
+> +
+> +virtual context
+> +virtual report
+> +virtual org
+> +
+> +@as@
+> +expression E1, E2;
+> +@@
+> +
+> +array_size(E1, E2)
+> +
+> +@as_next@
+> +expression subE1 <= as.E1;
+> +expression as.E1;
+> +expression subE2 <= as.E2;
+> +expression as.E2;
+> +expression E3;
+> +position p1, p2;
+> +@@
+> +
+> +* E1 * E2@p1
+> +  ... when != \(E1\|E2\|subE1\|subE2\)=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)+=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)-=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)*=E3
+> +      when != \(&E1\|&E2\|&subE1\|&subE2\)
+> +* array_size(E1, E2)@p2
+> +
+> +@as_prev@
+> +expression subE1 <= as.E1;
+> +expression as.E1;
+> +expression subE2 <= as.E2;
+> +expression as.E2;
+> +expression E3;
+> +position p1, p2;
+> +@@
+> +
+> +* array_size(E1, E2)@p1
+> +  ... when != \(E1\|E2\|subE1\|subE2\)=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)+=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)-=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)*=E3
+> +      when != \(&E1\|&E2\|&subE1\|&subE2\)
+> +* E1 * E2@p2
+> +
+> +@as_dup@
+> +expression subE1 <= as.E1;
+> +expression as.E1;
+> +expression subE2 <= as.E2;
+> +expression as.E2;
+> +expression E3;
+> +position p1, p2;
+> +@@
+> +
+> +* array_size(E1, E2)@p1
+> +  ... when != \(E1\|E2\|subE1\|subE2\)=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)+=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)-=E3
+> +      when != \(E1\|E2\|subE1\|subE2\)*=E3
+> +      when != \(&E1\|&E2\|&subE1\|&subE2\)
+> +* array_size(E1, E2)@p2
+> +
+> +@as3@
+> +expression E1, E2, E3;
+> +@@
+> +
+> +array3_size(E1, E2, E3)
+> +
+> +@as3_next@
+> +expression subE1 <= as3.E1;
+> +expression as3.E1;
+> +expression subE2 <= as3.E2;
+> +expression as3.E2;
+> +expression subE3 <= as3.E3;
+> +expression as3.E3;
+> +expression E4;
+> +position p1, p2;
+> +@@
+> +
+> +* E1 * E2 * E3@p1
+> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
+> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
+> +* array3_size(E1, E2, E3)@p2
+> +
+> +@as3_prev@
+> +expression subE1 <= as3.E1;
+> +expression as3.E1;
+> +expression subE2 <= as3.E2;
+> +expression as3.E2;
+> +expression subE3 <= as3.E3;
+> +expression as3.E3;
+> +expression E4;
+> +position p1, p2;
+> +@@
+> +
+> +* array3_size(E1, E2, E3)@p1
+> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
+> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
+> +* E1 * E2 * E3@p2
+> +
+> +@as3_dup@
+> +expression subE1 <= as3.E1;
+> +expression as3.E1;
+> +expression subE2 <= as3.E2;
+> +expression as3.E2;
+> +expression subE3 <= as3.E3;
+> +expression as3.E3;
+> +expression E4;
+> +position p1, p2;
+> +@@
+> +
+> +* array3_size(E1, E2, E3)@p1
+> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
+> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
+> +* array3_size(E1, E2, E3)@p2
+> +
+> +@ss@
+> +expression E1, E2, E3;
+> +@@
+> +
+> +struct_size(E1, E2, E3)
+> +
+> +@ss_next@
+> +expression subE1 <= ss.E1;
+> +expression ss.E1;
+> +expression subE2 <= ss.E2;
+> +expression ss.E2;
+> +expression subE3 <= ss.E3;
+> +expression ss.E3;
+> +expression E4;
+> +position p1, p2;
+> +@@
+> +
+> +* E1 * E2 + E3@p1
+> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
+> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
+> +* struct_size(E1, E2, E3)@p2
+> +
+> +@ss_prev@
+> +expression subE1 <= ss.E1;
+> +expression ss.E1;
+> +expression subE2 <= ss.E2;
+> +expression ss.E2;
+> +expression subE3 <= ss.E3;
+> +expression ss.E3;
+> +expression E4;
+> +position p1, p2;
+> +@@
+> +
+> +* struct_size(E1, E2, E3)@p1
+> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
+> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
+> +* E1 * E2 + E3@p2
+> +
+> +@ss_dup@
+> +expression subE1 <= ss.E1;
+> +expression ss.E1;
+> +expression subE2 <= ss.E2;
+> +expression ss.E2;
+> +expression subE3 <= ss.E3;
+> +expression ss.E3;
+> +expression E4;
+> +position p1, p2;
+> +@@
+> +
+> +* struct_size(E1, E2, E3)@p1
+> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
+> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
+> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
+> +* struct_size(E1, E2, E3)@p2
+> +
+> +@script:python depends on report@
+> +p1 << as_next.p1;
+> +p2 << as_next.p2;
+> +@@
+> +
+> +msg = "WARNING: array_size is used down the code (line %s) to compute the same size" % (p2[0].line)
+> +coccilib.report.print_report(p1[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << as_next.p1;
+> +p2 << as_next.p2;
+> +@@
+> +
+> +msg = "WARNING: array_size is used down the code (line %s) to compute the same size" % (p2[0].line)
+> +coccilib.org.print_todo(p1[0], msg)
+> +
+> +@script:python depends on report@
+> +p1 << as_prev.p1;
+> +p2 << as_prev.p2;
+> +@@
+> +
+> +msg = "WARNING: array_size is already used (line %s) to compute the same size" % (p1[0].line)
+> +coccilib.report.print_report(p2[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << as_prev.p1;
+> +p2 << as_prev.p2;
+> +@@
+> +
+> +msg = "WARNING: array_size is already used (line %s) to compute the same size" % (p1[0].line)
+> +coccilib.org.print_todo(p2[0], msg)
+> +
+> +@script:python depends on report@
+> +p1 << as_dup.p1;
+> +p2 << as_dup.p2;
+> +@@
+> +
+> +msg = "WARNING: same array_size (line %s)" % (p1[0].line)
+> +coccilib.report.print_report(p2[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << as_dup.p1;
+> +p2 << as_dup.p2;
+> +@@
+> +
+> +msg = "WARNING: same array_size (line %s)" % (p1[0].line)
+> +coccilib.org.print_todo(p2[0], msg)
+> +
+> +
+> +@script:python depends on report@
+> +p1 << as3_next.p1;
+> +p2 << as3_next.p2;
+> +@@
+> +
+> +msg = "WARNING: array3_size is used down the code (line %s) to compute the same size" % (p2[0].line)
+> +coccilib.report.print_report(p1[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << as3_next.p1;
+> +p2 << as3_next.p2;
+> +@@
+> +
+> +msg = "WARNING: array3_size is used down the code (line %s) to compute the same size" % (p2[0].line)
+> +coccilib.org.print_todo(p1[0], msg)
+> +
+> +@script:python depends on report@
+> +p1 << as3_prev.p1;
+> +p2 << as3_prev.p2;
+> +@@
+> +
+> +msg = "WARNING: array3_size is already used (line %s) to compute the same size" % (p1[0].line)
+> +coccilib.report.print_report(p2[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << as3_prev.p1;
+> +p2 << as3_prev.p2;
+> +@@
+> +
+> +msg = "WARNING: array3_size is already used (line %s) to compute the same size" % (p1[0].line)
+> +coccilib.org.print_todo(p2[0], msg)
+> +
+> +@script:python depends on report@
+> +p1 << as3_dup.p1;
+> +p2 << as3_dup.p2;
+> +@@
+> +
+> +msg = "WARNING: same array3_size (line %s)" % (p1[0].line)
+> +coccilib.report.print_report(p2[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << as3_dup.p1;
+> +p2 << as3_dup.p2;
+> +@@
+> +
+> +msg = "WARNING: same array3_size (line %s)" % (p1[0].line)
+> +coccilib.org.print_todo(p2[0], msg)
+> +
+> +
+> +@script:python depends on report@
+> +p1 << ss_next.p1;
+> +p2 << ss_next.p2;
+> +@@
+> +
+> +msg = "WARNING: struct_size is used down the code (line %s) to compute the same size" % (p2[0].line)
+> +coccilib.report.print_report(p1[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << ss_next.p1;
+> +p2 << ss_next.p2;
+> +@@
+> +
+> +msg = "WARNING: struct_size is used down the code (line %s) to compute the same size" % (p2[0].line)
+> +coccilib.org.print_todo(p1[0], msg)
+> +
+> +@script:python depends on report@
+> +p1 << ss_prev.p1;
+> +p2 << ss_prev.p2;
+> +@@
+> +
+> +msg = "WARNING: struct_size is already used (line %s) to compute the same size" % (p1[0].line)
+> +coccilib.report.print_report(p2[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << ss_prev.p1;
+> +p2 << ss_prev.p2;
+> +@@
+> +
+> +msg = "WARNING: struct_size is already used (line %s) to compute the same size" % (p1[0].line)
+> +coccilib.org.print_todo(p2[0], msg)
+> +
+> +@script:python depends on report@
+> +p1 << ss_dup.p1;
+> +p2 << ss_dup.p2;
+> +@@
+> +
+> +msg = "WARNING: same struct_size (line %s)" % (p1[0].line)
+> +coccilib.report.print_report(p2[0], msg)
+> +
+> +@script:python depends on org@
+> +p1 << ss_dup.p1;
+> +p2 << ss_dup.p2;
+> +@@
+> +
+> +msg = "WARNING: same struct_size (line %s)" % (p1[0].line)
+> +coccilib.org.print_todo(p2[0], msg)
+> --
+> 2.26.2
+>
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
